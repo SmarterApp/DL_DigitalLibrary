@@ -1,0 +1,736 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC User feature.
+ */
+
+include_once 'sbac_user.features.inc';
+include_once 'sbac_user.theme.inc';
+
+/*
+ * Implements hook_menu().
+ */
+function sbac_user_menu() {
+  $items = array();
+
+  $items['terms-of-service'] = array(
+    'title' => 'Terms of Service',
+    'page callback' => 'sbac_user_terms_page',
+    'access arguments' => array('download terms and conditions pdf'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['admin/reports/sbac_user'] = array(
+    'title' => "SBAC Reports",
+    'description' => "Custom SBAC reports.",
+    'page callback' => 'sbac_user_login_report',
+    'weight' => 1,
+    'access arguments' => array("administer site configuration"),
+    'file' => "sbac_user.admin.inc",
+    'position' => 'left',
+  );
+
+  $items['admin/reports/sbac_user/user_login'] = array(
+    'title' => 'System Access',
+    'description' => 'View a report about user logins such as total count and last login.',
+    'page callback' => 'sbac_user_login_report',  # aka System Access Report
+    'page arguments' => array('html', 'csv'),
+    'access arguments' => array('administer site configuration'),
+    'file' => "sbac_user.admin.inc",
+  );
+
+  $items['user/%user/edit/remove_picture'] = array(
+    'page callback' => 'sbac_user_remove_picture',
+    'page arguments' => array(1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
+  );
+
+  $items['user/password/confirmation'] = array(
+    'title' => t('User Password Confirmation'),
+    'description' => t('Standalone change password form'),
+    'page callback' => array('sbac_user__pages_user_password_confirmation_page'),
+    'access arguments' => array('download terms and conditions pdf'),
+    'file' => 'sbac_user.pages.inc',
+  );
+
+  $items['change-password'] = array(
+    'title' => t('Change password'),
+    'description' => t('Standalone change password form'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_user_change_password_form'),
+    'access callback' => 'user_is_logged_in',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_init().
+ */
+function sbac_user_init() {
+  // Intercept page request to user/uid/edit with pass-reset-token query value and send to change-password instead.
+  // Is this the best place to do this? Can't seem to use hook_user_login() because there is no way to
+  // retrieve the pass-reset-token value.
+  if (isset($_GET['pass-reset-token'])) {
+    global $user;
+    $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
+
+    if ($pass_reset && arg(0) == 'user' && arg(1) == $user->uid && arg(2) == 'edit') {
+      drupal_goto('change-password', array('query' => array('pass-reset-token' => $_GET['pass-reset-token'])));
+    }
+  }
+}
+
+/*
+ * Implements hook_permission().
+ */
+function sbac_user_permission() {
+  $perms = array();
+  $perms['download terms and conditions pdf'] = array(
+      'title'       => t('Download Terms and Conditions PDF'),
+      'description' => t('Download the pdf version of the terms and conditions.')
+  );
+  $perms['view and edit account information'] = array(
+      'title'       => t('View and edit account information on user profile page'),
+//      'description' => t('View and edit account information on user profile page.')
+  );
+  return $perms;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * @param $implementations
+ * @param $hook
+ */
+function sbac_user_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'user_view') {
+    $module = $implementations['sbac_user'];
+    unset($implementations['sbac_user']);
+    $implementations['sbac_user'] = $module;
+  }
+}
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_user_update_projects_alter(&$projects) {
+  unset($projects['sbac_user']);
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @return array
+ */
+function sbac_user_theme() {
+  return sbac_user_theme__theme();
+}
+
+function sbac_user_profile_submit($form, &$form_state){
+  global $user;
+
+  $fname = $form_state['input']['fname'];
+  $lname = $form_state['input']['lname'];
+  $edit = array(
+    'field_first_name_value' => $fname,
+  );
+  db_update('field_data_field_first_name')
+    ->fields($edit)
+    ->condition('entity_id', $user->uid,'=')
+    ->execute();
+  cache_clear_all();
+  drupal_set_message(t('The changes have been saved.'));
+}
+function sbac_user_user_pass_form_submit($form, &$form_state) {
+  global $language;
+
+  $account = $form_state['values']['account'];
+  // Mail one time login URL and instructions using current language.
+  $mail = _user_mail_notify('password_reset', $account, $language);
+  if (!empty($mail)) {
+    watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail));
+    //drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
+  }
+
+  $form_state['redirect'] = 'user/password/confirmation&mail=' . $account->mail;
+  return;
+}
+/**
+ * Implements hook_form_alter().
+ */
+function sbac_user_form_alter(&$form, &$form_state, $form_id) {
+  if($form_id == 'user_login' || $form_id == 'user_login_block') {
+     $form['name']['#title'] = 'Email Address';
+     unset($form['name']['#description']);
+     $form['pass']['#description'] = l(t('Forgot Your Password?'), 'user/password');
+     $form['actions']['submit']['#value'] = 'Log into the Digital Library';
+  }
+
+  if($form_id == 'user_pass'){
+    $form['name']['#title'] = 'Email Address';
+    $form['name']['#description'] = l(t('<< Back to Login'), '<front>');
+    $form['submit']['#value'] = 'Submit';
+    $form['#submit'] = array('sbac_user_user_pass_form_submit');
+  }
+
+  if ($form_id == 'user_profile_form') {
+    $is_edit_page = strpos($_GET['q'], '/edit');
+    if ($is_edit_page !== FALSE) {
+      $form['field_first_name']['#disabled'] = TRUE;
+      $form['field_last_name']['#disabled'] = TRUE;
+      $form['account']['mail']['#disabled'] = TRUE; // primary email address
+      $form['field_alternate_email_address']['#disabled'] = TRUE;
+      $form['field_phone_number']['#disabled'] = TRUE;
+      $form['field_district_name']['#disabled'] = TRUE;
+      $form['field_school_name']['#disabled'] = TRUE;
+      $form['field_university_name']['#disabled'] = TRUE;
+    } else {
+      $form['account']['name']['#type'] = 'hidden';
+      $form['account']['pass']['#type'] = 'hidden';
+      $form['account']['current_pass']['#type'] = 'hidden';
+      $form['account']['current_pass_required_values']['#type'] = 'hidden';
+      $form['account']['status']['#type'] = 'hidden';
+//      $form['account']['roles']['#type'] = 'hidden';
+      $form['account']['notify']['#type'] = 'hidden';
+      $form['field_alternate_email_address']['#type'] = 'hidden';
+      $form['field_phone_number']['#type'] = 'hidden';
+      $form['field_school_name']['#type'] = 'hidden';
+      $form['field_swd_ell']['#type'] = 'hidden';
+      $form['field_university_name']['#type'] = 'hidden';
+      $form['field_district_name']['#type'] = 'hidden';
+      $form['field_slt_member']['#type'] = 'hidden';
+      $form['field_sne_member']['#type'] = 'hidden';
+      $form['legal']['#type'] = 'hidden';
+
+      if(isset($form['picture']['picture']['#value'])) {
+        $uid = $form_state['user']->entity_id;
+        $form['picture']['picture_delete_link'] = array(
+          '#markup' => l(t('Remove Picture'), "user/$uid/edit/remove_picture", array('absolute' => TRUE, 'attributes' => array('class' =>'remove-picture'), 'query' => array('destination' => 'user')))
+        );
+      }
+
+      $form['account']['mail']['#disabled'] = TRUE; // primary email address
+      $form['account']['mail']['#title'] = t('Email');
+      $form['account']['mail']['#description'] = t('As provided by your state.');
+      $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save Changes'));
+    }
+    // Populate first name from the LDAP if it hasn't been already done so
+    $field_first_name_default = $form['field_first_name']['und'][0]['value']['#default_value'];
+    $field_ldap_first_name_default = $form['field_ldap_first_name']['und'][0]['value']['#default_value'];
+    if(!isset($field_first_name_default) && isset($field_ldap_first_name_default) && $field_ldap_first_name_default) {
+      $form['field_first_name']['und'][0]['value']['#default_value'] = $field_ldap_first_name_default;
+    }
+    // Populate last name from the LDAP if it hasn't been already done so
+    $field_last_name_default = $form['field_last_name']['und'][0]['value']['#default_value'];
+    $field_ldap_last_name_default = $form['field_ldap_last_name']['und'][0]['value']['#default_value'];
+    if(!isset($field_last_name_default) && isset($field_ldap_last_name_default) && $field_ldap_last_name_default) {
+      $form['field_last_name']['und'][0]['value']['#default_value'] = $field_ldap_last_name_default;
+    }
+    $form['#validate'][] = 'sbac_user_profile_validate';
+  }
+
+  if ($form_id == 'legal_login') {
+    drupal_add_js(drupal_get_path('module', 'sbac_user') . '/js/sbac_user.js');
+    drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/colorbox/js/colorbox.js');
+
+    $form['save']['#value'] = t('Continue to Digital Library');
+    $form['download'] = array(
+      '#title'  => 'Download as PDF',
+      '#prefix' => '<div id="download-button"><h1 class="left page-title">'.t('Terms of Service').'</h1>',
+      '#suffix' => '</div>',
+      '#markup' =>l('<i class="gen-enclosed foundicon-inbox"></i> Download','printpdf/terms-of-service',array(
+        'attributes'=>array('class' =>'right button small secondary'),'html'=>'true'))
+    );
+
+    $form['legal'] = array(
+      '#title'  => t('Terms and Conditions of Use'),
+      '#weight' => 29,
+      '#prefix' => '<div id="terms-and-conditions-body"><br>',
+      '#suffix' => '</a></div>',
+    );
+
+    $conditions = legal_get_conditions();
+    $accept_label = theme('legal_accept_label');
+
+    $form['legal']['conditions'] = array(
+      '#prefix' => '<div class="terms">',
+       '#markup' => filter_xss_admin($conditions['conditions']),
+      '#suffix' => '</div>',
+    );
+
+
+    $form['cancel'] = array(
+      '#markup' => sbac_user_login_overlay(),
+      '#prefix' => '<div id="cancel-button">',
+      '#suffix' => '</div>',
+      '#weight' => 49,
+    );
+
+    $form['legal']['legal_accept'] = array(
+      '#type'          => 'checkbox',
+      '#title'         => 'I agree with the Terms of Service',
+      '#default_value' => 0,
+      '#weight'        => 50,
+      '#required'      => TRUE,
+    );
+
+    drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/legal.css');
+  }
+}
+
+/*
+ * Helper function for this module.
+ * Parses out user-id from the filename passed.
+ *
+ * @param $fname
+ */
+function sbac_user_util_parse_user_id($fname) {
+  $tmparr = preg_split('/-/', $fname, 3);
+  $userid = "";
+  if (isset($tmparr[1])) {
+    $userid = $tmparr[1];
+  }
+  return $userid;
+}
+
+
+/*
+ * Helper function for this module.
+ * Returns a string, hashed directory based on user-id.
+ *
+ * @param $uid - user-id
+ */
+function sbac_user_util_compute_hash_dir($uid) {
+  $uhash = md5($uid);
+  $s = DIRECTORY_SEPARATOR;
+  $hashdir = substr($uhash, 0, 1) .$s. substr($uhash, 1, 1) .$s. substr($uhash, 2, 1) .$s. substr($uhash, 3, 1) .$s. $uid;
+  return $hashdir;
+}
+
+/*
+ * Helper function for this module.
+ * Given original path of a file returns the new hashed version.
+ *
+ * @param $oldabsolute - original path
+ * @param $hashdir - hasing directory needed
+ */
+function sbac_user_util_compute_new_path($oldabsolute, $hashdir) {
+  $s = DIRECTORY_SEPARATOR;
+  $new_path = dirname($oldabsolute) .$s. $hashdir .$s. basename($oldabsolute);
+  return $new_path;
+}
+
+/*
+ * Helper function for this module.
+ * Given public uploads directory returns the thumbnail directory.
+ *
+ * @param $orgdir - original directory
+ */
+function sbac_user_util_compute_thumbnail_dir($orgdir) {
+  return preg_replace("/\/files\/pictures\//", "/files/styles/thumbnail/public/pictures/", $orgdir);
+}
+
+/*
+ * Helpfer function for this module.
+ * Moves file but also creates hashed directory structure needed.
+ * Also takes care of the thumbnail directory.
+ *
+ * @param $old_name
+ * @param $new_name
+ */
+function sbac_user_util_move_file($old_name, $new_name) {
+  //error_log("moving [$old_name] to [$new_name]\n", 3, "/tmp/sbac.log");
+
+  $dir_needed = dirname($new_name);
+  umask(0);
+  if (!is_dir($dir_needed) && !mkdir($dir_needed, 0777, true)) {
+    return false;
+  }
+  $thumbdir = sbac_user_util_compute_thumbnail_dir($dir_needed);
+  if (!is_dir($thumbdir)) {
+    if (!mkdir($thumbdir, 0777, true)) {
+      drupal_set_message(t('Creation of thumbnail directory failed.'));
+    }
+  }
+
+  // copy and unlink should work across different nfs mounted volumes
+  $res = copy($old_name, $new_name);
+  if (!$res) {
+    return false;
+  }
+  unlink($old_name);
+
+  //drupal_move_uploaded_file($old_name, $new_name);  // doesn't seem to work for me
+  return true;
+}
+
+/*
+ * Implements hook_entity_presave($entity, $type)
+ */
+function sbac_user_entity_presave($entity, $type) {
+  if ($type == 'user') {
+    // check that user !is_new, original roles is less than new roles, in on-boarding role
+    $rid = array_search('on-boarding', user_roles());
+    if (isset($entity->is_new) && !$entity->is_new && count($entity->roles) > count($entity->original->roles) && array_key_exists($rid, $entity->roles)) {
+      // remove on-boarding role
+      unset($entity->roles[$rid]);
+      // format mail
+      $params = sbac_user_mail_format($entity);
+      // send email
+      $result = sbac_user_mail_send($entity, $params);
+    } elseif (isset($entity->is_new) && !$entity->is_new
+      && array_key_exists($rid, $entity->original->roles)
+      && !array_key_exists($rid, $entity->roles)) {
+      global $user;
+      if ($user->uid != 1 || !in_array('system administrator', $entity->roles)) {
+      // prevent on-boarding role from being removed if not admin
+        $entity->roles[$rid] = 'on-boarding';
+      }
+    }
+    // @TODO picture is getting removed on login - traced to bug in LDAP module, remove
+    // egregious hack: only allow picture change if base path = user/id
+    if (arg(0) == 'user' && arg(1) && is_numeric(arg(1))) {
+      // user edit page, allow picture change
+    } else {
+      // don't allow picture change
+      $entity->picture = $entity->original->picture;
+    }
+  }
+}
+
+function sbac_user_mail_format($user) {
+  $result = array();
+  if (isset($user->field_slt_member['und'][0]['value']) && $user->field_slt_member['und'][0]['value']) {
+    // slt email
+    $result['subject'] = t('State Leadership Team Members in All Governing States');
+    $result['body'] = $result['message'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
+      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta site. You will learn more about the Digital Library and Quality Criteria using the materials previously provided to you and during your upcoming training. In the meantime, follow the instructions below to log in to the Digital Library for the first time:" .
+      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
+      "\n\n" . user_pass_reset_url($user) .
+      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
+      "\n\nAfter you complete these steps, please take a few moments to ensure that the \“Account\” profile information we have pre-populated for you is accurate." .
+      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
+      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or [Help Desk Phone Number] if you have any difficulties." .
+      "\n\nThank you," .
+      "\n\nThe Digital Library team.";
+  } elseif (isset($user->field_sne_member['und'][0]['value']) && $user->field_sne_member['und'][0]['value']) {
+    // sne email
+    $result['subject'] = t('State Leadership Team Members in All Governing States');
+    $result['body'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
+      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library. You will need this access to support the upcoming training led by your State Leadership Team member. Please follow the steps below to activate your account prior to your training. In the meantime, follow the instructions below to log in to the Digital Library for the first time:" .
+      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
+      "\n\n" . user_pass_reset_url($user) .
+      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
+      "\n\nAfter you complete these steps, please take a few moments to ensure that the \“Account\” profile information we have pre-populated for you is accurate." .
+      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
+      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or [Help Desk Phone Number] if you have any difficulties." .
+      "\n\nThank you," .
+      "\n\nThe Digital Library team.";
+  } else {
+    // default
+    $result['subject'] = t('State Leadership Team Members in All Governing States');
+    $result['body'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
+      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta site. Follow the instructions below to log in to the Digital Library for the first time:" .
+      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
+      "\n\n" . user_pass_reset_url($user) .
+      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
+      "\n\nAfter you complete these steps, please take a few moments to ensure that the \“Account\” profile information we have pre-populated for you is accurate." .
+      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
+      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or [Help Desk Phone Number] if you have any difficulties." .
+      "\n\nThank you," .
+      "\n\nThe Digital Library team.";
+  }
+  return $result;
+}
+
+function sbac_user_mail_send($user, $params) {
+  $language = user_preferred_language($user);
+  return drupal_mail('sbac_user', 'sbac_send_mail', $user->mail, $language, $params);
+}
+
+/*
+ * Implements hook_mail()
+ *
+ * Provides subject, body for drupal_mail function
+ */
+function sbac_user_mail($key, &$message, $params) {
+  switch($key) {
+    case 'sbac_send_mail':
+      $langcode = $message['language']->language;
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['body'];
+      break;
+  }
+}
+
+/*
+ * Implements hook_entity_update()
+ *
+ * Used to intercept uploaded user image and move it to a hashed directory for scalability.
+ * IMPORTANT: For production deployment the directory for full-sized pics will need to be NFS mounted (S3 will do).
+ *  Same goes for the thumbnail directory on all the Drupal nodes.
+ *  The hashed dir structures will be created there and should scale nicely.
+ */
+function sbac_user_entity_update($entity, $type) {
+  //error_log("====================\n". var_export($entity, true) ."\n", 3, "/tmp/sbac.log");
+
+  // UGLY WORKAROUND WARNING: this hook is called twice for some reason, don't know why.
+  // on 2nd call the image was already hashed so preg_match will fail and cause this to skip.
+  if ($type == 'file' && isset($entity->source) && $entity->source == 'picture_upload' &&
+      preg_match('/public\:\/\/pictures\/picture-/', $entity->uri)) {
+    //error_log("====================\n". var_export($entity, true) ."\n", 3, "/tmp/sbac.log");
+    $userid = sbac_user_util_parse_user_id($entity->filename);
+    $hashdir = sbac_user_util_compute_hash_dir($userid);
+
+    $new_uri = sbac_user_util_compute_new_path($entity->uri, $hashdir);
+    $old_absolute_path = drupal_realpath($entity->uri);
+    $new_absolute_path = sbac_user_util_compute_new_path($old_absolute_path, $hashdir);
+
+    $res = sbac_user_util_move_file($old_absolute_path, $new_absolute_path);
+    if (!$res) {
+      drupal_set_message(t('Error moving image to hashed directory.'));
+    }
+    $entity->uri = $new_uri;
+    field_attach_update($type, $entity); // save changes to db
+  }
+}
+
+/**
+ * Implements hook_block_info_alter().
+ *
+ * @param $blocks
+ * @param $theme
+ * @param $code_blocks
+ */
+function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
+  if (isset($blocks['user']['login']['pages'])) {
+    $blocks['user']['login']['pages'] = "legal_accept/*\r\nlegal_accept";
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * @param $edit
+ * @param $account
+ */
+function sbac_user_user_login(&$edit, $account) {
+  /* count user logins and save them in an array in account->data */
+  if (!$account->data) { // initialize for new users
+    $account->data = array();
+  }
+  if (!isset($account->data['login_count'])) {
+    $account->data['login_count'] = 1;
+  } else {
+    $account->data['login_count'] +=1;
+  }
+  if (!isset($account->data['first_login'])) {
+    $account->data['first_login'] = time();
+  }
+  user_save($account, array());
+  user_cookie_save(array('sbac_just_logged_in'=> TRUE));
+  // $edit['redirect'] = 'digital-library-resources';
+}
+
+/**
+ * Implements hook_user_view().
+ *
+ * @param $account
+ * @param $view_mode
+ * @param $langcode
+ */
+function sbac_user_user_view($account, $view_mode, $langcode) {
+  if ($view_mode == 'search_result') {
+    unset($account->content);
+    if (isset($account->mail)) {
+      $account->content['email'] = array(
+        '#type' => 'user_profile_item',
+        '#markup' => $account->mail,
+        '#title' => t('Mail:'),
+      );
+    }
+    if (isset($account->field_first_name['und'][0]['safe_value'])) {
+      $account->content['first'] = array(
+        '#type' => 'user_profile_item',
+        '#markup' => $account->field_first_name['und'][0]['safe_value'],
+        '#title' => t('First Name:'),
+      );
+    }
+    if (isset($account->field_last_name['und'][0]['safe_value'])) {
+      $account->content['last'] = array(
+        '#type' => 'user_profile_item',
+        '#markup' => $account->field_last_name['und'][0]['safe_value'],
+        '#title' => t('Last Name:'),
+      );
+    }
+  }
+  else {
+    $account->content['summary']['mail'] = array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Mail'),
+      '#markup' => $account->mail,
+    );
+
+    $account->content['summary']['created_on'] = array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Created On'),
+      '#markup' => date("Y-m-d H:i", $account->created) . " (" . format_interval(REQUEST_TIME - $account->created) . " ago)",
+    );
+
+    $first_login = 0;
+    if ($account->data && isset($account->data['first_login'])) {
+      $first_login = $account->data['first_login'];
+    }
+    $account->content['summary']['first_login'] = array(
+      '#type' => 'user_profile_item',
+      '#title' => t('First Login'),
+      '#markup' => $first_login ? date("Y-m-d H:i", $first_login) . " (" . format_interval(REQUEST_TIME - $first_login) . " ago)" : t("never"),
+    );
+
+    $account->content['summary']['last_login'] = array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Last Login'),
+      '#markup' => $account->login ? date("Y-m-d H:i", $account->login) . " (" . format_interval(REQUEST_TIME - $account->login) . " ago)" : t("never"),
+    );
+
+    $login_count = 0;
+    if ($account->data && isset($account->data['login_count'])) {
+      $login_count = $account->data['login_count'];
+    }
+    $account->content['summary']['login_count'] = array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Login Count'),
+      '#markup' => $login_count,
+    );
+
+    $account->content['summary']['last_access'] = array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Last Access'),
+      '#markup' => $account->access ? date("Y-m-d H:i", $account->access) . " (" . format_interval(REQUEST_TIME - $account->access) . " ago)" : t("never"),
+    );
+  }
+}
+
+/*
+ * Overlay to leave Digital Library if disagree with T & C
+ */
+function sbac_user_login_overlay() {
+  $output = '<a href="#" class="left button secondary medium"data-reveal-id="overlay">I disagree</a>
+
+            <div id="overlay" class="reveal-modal">
+              <h3>You are about to leave the Digital Library</h3>
+              <p>If you do not agree to the Terms of Service, you will be unable to access the Digital Library.</p>
+
+              <h5> Are you sure you want to leave?  </h5>
+              <div id="decision">
+                <a class="button small otherClose">No, return to Terms of Service</a>
+                 or
+                <a class="button small secondary" href="/"> Yes, log me out </a>
+              </div>
+            </div>';
+
+
+  return $output;
+}
+
+/*
+ * Callback function for terms-and-conditions-print menu item
+ */
+function sbac_user_terms_page() {
+
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  $form = drupal_get_form('legal_login');
+
+  $form['cancel'] = array();
+  $form['legal']['legal_accept'] = array();
+  $form['save'] = array();
+
+  return $form;
+}
+
+/**
+ * Validation callback to check profanity
+ */
+function sbac_user_profile_validate(&$form, &$form_state) {
+  foreach($form_state['field'] as $key => $field) {
+    $lang = $form[$key]['#language'];
+    if(stripos($field[$lang]['field']['type'], 'text') !== FALSE && stripos($key, 'ldap') === FALSE) {
+      $text = $form_state['values'][$key][$lang][0]['value'];
+      $bad_words = profanity_validate_text($text);
+      if ($bad_words) {
+        $error = t('You must remove inappropriate language from :field_name to continue.', array(':field_name' => $form[$key][$lang]['#title']));
+        form_set_error($key, $error);
+      }
+    }
+  }
+}
+
+/**
+ * Callback to delete user's profile picture
+ */
+function sbac_user_remove_picture($account) {
+  if (isset($account->picture->fid) && $account->picture->fid) {
+    $edit['picture_delete'] = 1;
+    user_save($account, $edit);
+  }
+  drupal_set_message(t('Picture removed.'));
+  drupal_goto($_GET['destination']);
+}
+
+function sbac_user_js_alter(&$js) {
+  $js['sites/all/modules/custom/sbac_user/js/sbac_user.js']['scope'] = 'footer';
+}
+
+/**
+ * Build the password changing form
+ */
+function sbac_user_change_password_form($form, &$form_state) {
+  global $user;
+  // double check the token in the query matches the session
+  $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
+
+  if ($pass_reset) {
+    $form['pass'] = array(
+      '#type' => 'password_confirm',
+      '#size' => 25,
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Submit'),
+    );
+  }
+  else {
+    $form['description'] = array(
+      '#markup' => t('You must be logged in and request a temporary password to change it.')
+    );
+  }
+  return $form;
+}
+
+/**
+ * Submit handler for sbac_user_change_form()
+ */
+function sbac_user_change_password_form_submit($form, &$form_state) {
+  // edit password and redirect to the user profile page
+  // include password file to hash password
+  require_once('includes/password.inc');
+  global $user;
+  $account = user_load($user->uid);
+  $account->pass = user_hash_password($form_state['values']['pass']);
+  user_save($account);
+  drupal_set_message(t('Your password was successfully changed.'));
+  $redirect = 'user/' . $user->uid;
+  $form_state['redirect'] = $redirect;
+}
+
+/*
+ * Implements hook_menu_alter
+ */
+function sbac_user_menu_alter(&$items) {
+  $items['legal']['title'] = 'Terms of Service';
+  $items['legal_accept/%/%']['title'] = 'Terms of Service';
+}

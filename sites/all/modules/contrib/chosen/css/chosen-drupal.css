@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Drupal-specific CSS fixes for the Chosen module
+ */
+.chzn-container {
+  display: table !important;
+}
+
+.chzn-container.error .chzn-choices {
+  border: 2px solid red;
+}
+
+.chzn-choices input {
+    min-width: 200px !important;
+}

@@ -1,0 +1,270 @@
+<?php
+/**
+ * Variable Definition
+ */
+define('SBAC_CUSTOM_VOCAB_NAME', 'education_alignment');
+define('SBAC_CUSTOM_MAX_DEPTH', 1);
+define('SBAC_CUSTOM_MOD_PATH', drupal_get_path('module', 'sbac_custom'));
+/**
+ * Implements hook_menu().
+ *
+ */
+function sbac_custom_menu(){
+  $items = array();
+  
+  $items['devajax'] = array(
+    'title'           => 'AJAX',
+    'page callback'   => 'sbac_custom_devajax',
+    'access arguments'=> array('admin'),
+    'type'            => MENU_CALLBACK,
+  );
+  
+  $items['ajax-terms'] = array(
+    'title'           => 'AJAX',
+    'page callback'   => 'sbac_custom_ajax_terms_callback',
+    'access arguments'=> array('admin'),
+    'type'            => MENU_CALLBACK,
+  );
+  
+  $items['ajax_form'] = array(
+		'title' => 'Ajax multistep form example',
+		'description' => 'Creates an ajax multistep form',
+		'page callback' => 'sbac_custom_ajax_form_multistep_form',
+		'access callback' => TRUE,
+	);
+  
+  $items['alignment_form'] = array(
+		'title' => 'Ajax multistep form example',
+		'description' => 'Creates an ajax multistep form',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('sbac_custom_alignment_form'),
+		'access callback' => TRUE,
+	);
+  
+  return $items;
+}
+/**
+ *
+ */
+function sbac_custom_devajax() {
+  drupal_add_js(SBAC_CUSTOM_MOD_PATH . '/js/sbac_custom.ccss.js');
+  $output = '';
+  
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_CUSTOM_VOCAB_NAME);
+  $parent = 0;
+  $terms = taxonomy_get_tree($vocab->vid, $parent, SBAC_CUSTOM_MAX_DEPTH);
+  
+  
+  $subject_array = array();
+  
+  foreach ($terms as $term) {
+    $options = array(
+      'attributes' => array(
+        'id' => 'term-' . $term->tid,
+        'class' => 'button small sbac-custom-term',
+        'tid' => $term->tid,
+      ),
+      'html' => TRUE,
+    );
+    $subject_array[] = l($term->name, '#', $options);
+  }
+  
+  $output .= theme('item_list', array('items' => $subject_array, 'attributes' => array('class' => 'sbac_custom_list')));
+  
+  return $output;
+}
+/**
+ *
+ */
+function term_depth($tid) {
+  $parent = db_query("SELECT parent FROM {taxonomy_term_hierarchy} WHERE tid = :tid", array(':tid' => $tid))->fetchField();
+  if($parent == 0) {
+    return 1;
+  }else  {
+    return 1+term_depth($parent);
+  }
+}
+/**
+ *
+ */
+function term_depth_levels($tid) {
+    $tid = db_query("SELECT tid FROM {taxonomy_term_hierarchy} WHERE parent = :parent", array(':parent' => $tid))->fetchField();
+    if ($tid == 0) {
+      return 1;
+    }
+    else {
+      return 1 + term_depth($tid);
+    }
+  }
+/**
+ *
+ */
+function sbac_custom_ajax_terms_callback() {
+  $subject_array = $output_array = array();
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_CUSTOM_VOCAB_NAME);
+  $parent = taxonomy_term_load($_POST['parent']);
+  $parent->depth = term_depth($parent->tid);
+  $output_array['parent'] = $parent;
+  $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_CUSTOM_MAX_DEPTH);
+  
+  $output_array['depth'] = term_depth($parent->tid);
+  $output_array['tids'] = array();
+  foreach ($terms as $term) {
+    $output_array['tids'][] = $term;
+    $children = taxonomy_get_children($term->tid);
+    $output_array['children'][] = $children;  
+    if(empty($children)) {
+      $output_array['last_term'] = 'true';
+      //break;
+      
+    }
+    $options = array(
+      'attributes' => array(
+        'id' => 'term-' . $term->tid,
+        'class' => 'sbac-custom-term',
+        'tid' => $term->tid,
+      ),
+      'html' => TRUE,
+    );
+    $subject_array[] = l($term->name, '#', $options);
+  }
+  $output_array['tids_count'] = count($output_array['tids']);
+  
+  
+  $output .= theme('item_list', array('items' => $subject_array, 'attributes' => array('class' => 'sbac_custom_list')));
+  $output_array['html'] = $output;
+  
+  print drupal_json_encode($output_array);
+  exit;
+}
+/**
+ *
+ */
+function sbac_custom_ajax_form_multistep_form(){
+  drupal_add_css(SBAC_CUSTOM_MOD_PATH . '/css/sbac_custom.ccss.css');
+  drupal_add_js(SBAC_CUSTOM_MOD_PATH . '/js/sbac_custom.ccss.js');
+  $output = '';
+  $disabled = TRUE;
+  
+  $parent = 0;
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_CUSTOM_VOCAB_NAME);
+  $terms = taxonomy_get_tree($vocab->vid, $parent, SBAC_CUSTOM_MAX_DEPTH);
+  
+  
+  $options = array(
+    'attributes' => array(
+      'id' => 'term-1',//. $term->tid,
+      'class' => 'button tiny sbac-custom-term',
+      'tid' => '1',//$term->tid,
+    ),
+    'html' => TRUE,
+  );
+  $breadcrumb = array(' ');
+  $output .= theme('item_list', array('items'=> $breadcrumb, 'attributes' => array('class' => 'inline-list sbac-breadcrumb')));  
+  
+  $subject_array = array();
+  
+  foreach ($terms as $term) {
+    $options = array(
+      'attributes' => array(
+        'id' => 'term-' . $term->tid,
+        'class' => 'button small sbac-custom-term',
+        'tid' => $term->tid,
+      ),
+      'html' => TRUE,
+    );
+    $subject_array[] = '<div class="large-6 columns">'.l($term->name, '#', $options).'</div>';
+  }
+  $output .= '<div class="standards-browser subject sbac_custom_area">
+		<h2>Choose Your Subject Area</h2>
+		<div class="row">';
+  $output .= theme('item_list', array('items' => $subject_array, 'attributes' => array('class' => 'sbac_custom_list')));
+  $output .= '</div></div>';
+  
+ 
+	return $output;
+}
+
+
+/**
+ *
+ */
+function sbac_custom_alignment_form($form, &$form_state, $vars = array('parent' => 218)){
+  $disabled = TRUE;
+
+  //@TODO KS - change to taxonomy [alignment_type]
+  $options = array('Assesses', 'Teaches', 'Requires');
+  
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_CUSTOM_VOCAB_NAME);
+  $parent = taxonomy_term_load($vars['parent']);
+  $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_CUSTOM_MAX_DEPTH);
+  
+  $form['terms'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Select terms'),
+    '#prefix' => '<div class="standards-browser select">',
+    '#suffix' => '</div>',
+  );
+  
+  foreach ($terms as $term) {
+    $desc = $term->description;
+    $more = "<div class='more-info'><a href=''>Read More</a><div class='more'>$desc</div></div>";
+    
+    $form['terms']['term-' . $term->tid] = array(
+      '#type' => 'checkbox',
+      '#title' => t($term->name) . $more,
+      '#description' => $term->description,
+    );    
+  }
+  
+  $form['alignment_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Alignment Type'),
+    '#required' => TRUE,
+    '#options' => $options,
+  );
+ 
+	// Create a container for our buttons
+	$form['buttons'] = array(
+		'#type' => 'container',
+	);
+  
+  $form['buttons']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#ajax' => array(
+      // We pass in the wrapper we created at the start of the form
+      'wrapper' => 'ajax_form_multistep_form',
+      // We pass a callback function we will use later to render the form for the user
+      'callback' => 'ajax_form_multistep_form_ajax_callback',
+    ),
+  );
+
+	
+  $form['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add alignment to resource'),
+    '#disabled' => $disabled,
+    '#ajax' => array(
+      // We pass in the wrapper we created at the start of the form
+      'wrapper' => 'ajax_form_multistep_form',
+      // We pass a callback function we will use later to render the form for the user
+      'callback' => 'ajax_form_multistep_form_ajax_callback',
+    ),
+  );
+  
+  $path = drupal_get_path('module', 'form_theme');
+  // Attach the CSS and JS to the form
+  $form['#attached'] = array(
+    'css' => array(
+      'sites/all/themes/css/custom.css',
+      SBAC_CUSTOM_MOD_PATH . '/css/sbac_custom.ccss.css',
+    ),
+    'js' => array(
+      'type' => 'file',
+      'data' => SBAC_CUSTOM_MOD_PATH . '/js/sbac_custom.ccss.js',
+    ),
+  );
+ 
+	return $form;
+}

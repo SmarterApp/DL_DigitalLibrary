@@ -1,0 +1,4 @@
+/* line 1, ../sass/sections.scss */
+section.disabled {
+  opacity: 0.7;
+}

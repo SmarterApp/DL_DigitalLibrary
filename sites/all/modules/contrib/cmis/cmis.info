@@ -1,0 +1,11 @@
+name = CMIS
+description = CMIS implementation for interacting with a CMIS compliant repository
+package = CMIS
+core = "7.x"
+project = "cmis"
+; Information added by drupal.org packaging script on 2013-07-30
+version = "7.x-1.4"
+core = "7.x"
+project = "cmis"
+datestamp = "1375174577"
+

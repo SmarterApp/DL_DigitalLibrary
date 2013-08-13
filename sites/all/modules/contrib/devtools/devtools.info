@@ -1,0 +1,13 @@
+name = Dev Tools
+description = Helpful tools for Drupal developers.
+core = 7.x
+version = "7.x-1.x-dev"
+package = Development
+php = 5.3
+
+; Information added by drupal.org packaging script on 2013-03-12
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "devtools"
+datestamp = "1363049889"
+

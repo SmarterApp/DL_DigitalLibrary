@@ -1,0 +1,13 @@
+diff --git a/sites/all/modules/contrib/joyride/inc/js/joyride_context.js b/sites/all/modules/contrib/joyride/inc/js/joyride_context.js
+index f303ab6..0bee117 100644
+--- a/sites/all/modules/contrib/joyride/inc/js/joyride_context.js
++++ b/sites/all/modules/contrib/joyride/inc/js/joyride_context.js
+@@ -21,6 +21,7 @@
+       } else joyride_options.cookieMonster = true;
+ 
+       $('ol#joyride-tips-content').joyride(joyride_options);
++      $('ol#joyride-tips-content').joyride();
+     }
+   };
+ }(jQuery));
+\ No newline at end of file

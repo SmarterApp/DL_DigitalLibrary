@@ -1,0 +1,13 @@
+name = CMIS Common
+description = CMIS common client implementation
+package = CMIS
+core = "7.x"
+project = "cmis"
+
+
+; Information added by drupal.org packaging script on 2013-07-30
+version = "7.x-1.4"
+core = "7.x"
+project = "cmis"
+datestamp = "1375174577"
+

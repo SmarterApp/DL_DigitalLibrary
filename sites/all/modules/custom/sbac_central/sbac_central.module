@@ -1,0 +1,254 @@
+<?php
+
+include_once 'sbac_central.features.inc';
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_central_update_projects_alter(&$projects) {
+  unset($projects['sbac_central']);
+}
+
+/**
+ * Implements hook_init().
+ *
+ * Forces the user to login.
+ *
+ */
+function sbac_central_init() {
+//  global $user, $base_path;
+//  if (request_uri() != $base_path . 'cron.php' && !$user->uid && !(arg(0) == 'user' && (!arg(1) || arg(1) == 'password' || arg(1) == 'register'))) {
+//    if (!drupal_is_cli()) {
+//      // drupal_set_message(t('You must login to use this site.'));
+//      drupal_goto('user', array('query' => array('destination' => $_GET['q'])));
+//    }
+//  }
+}
+
+/**
+ * Determines the users most priveleged role.
+ *
+ * @param null $account
+ * @return bool
+ */
+function sbac_central_determine_user_role($account = NULL) {
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+  $role = FALSE;
+  $weighted_roles = array();
+  $system_roles = sbac_central_user_roles();
+  foreach ($account->roles AS $rid => $role_name) {
+    $weighted_roles[$system_roles[$rid]->weight] = $system_roles[$rid];
+  }
+
+  if ($weighted_roles) {
+    $max_weight = max(array_keys($weighted_roles));
+    $role = $weighted_roles[$max_weight];
+  }
+  return $role;
+}
+
+/**
+ * Returns user roles with weight.
+ *
+ * @return array
+ */
+function sbac_central_user_roles() {
+  $query = db_select('role', 'r');
+  $query->fields('r', array('rid', 'name', 'weight'));
+  $query->orderBy('weight');
+  $result = $query->execute();
+  $roles = array();
+  foreach ($result as $role) {
+    $roles[$role->rid] = $role;
+  }
+  return $roles;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function sbac_central_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  if ($form_id == 'taxonomy_form_term') {
+    if (!in_array('administrator', $user->roles) || $user->uid != 1) {
+      $form['relations']['#access'] = FALSE;
+    }
+  }
+
+  if ($form_id == 'taxonomy_form_vocabulary') {
+    if (!in_array('administrator', $user->roles) || $user->uid != 1) {
+      $form['machine_name']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * @param $items
+ */
+function sbac_central_menu_alter(&$items) {
+  if (isset($items['admin/structure/taxonomy/add'])) {
+    $items['admin/structure/taxonomy/add']['access callback'] = 'sbac_central_access_taxonomy';
+  }
+
+  if (isset($items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/fields'])) {
+    $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/fields']['access callback'] = 'sbac_central_access_taxonomy';
+  }
+
+  if (isset($items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/display'])) {
+    $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/display']['access callback'] = 'sbac_central_access_taxonomy';
+  }
+
+  if (isset($items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add'])) {
+    $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add']['access callback'] = 'sbac_central_access_taxonomy';
+  }
+}
+
+/**
+ * Access callback function for menu altered items above.
+ *
+ * @param $string
+ * @param null $account
+ * @return bool
+ */
+function sbac_central_access_taxonomy($string, $account = NULL) {
+  if (!user_access('administer site configuration')) {
+    return FALSE;
+  }
+  return user_access($string);
+}
+
+/**
+ * Implements hook_registry_alter().
+ *
+ * @param $theme_registry
+ */
+function sbac_central_theme_registry_alter(&$theme_registry) {
+  if (isset($theme_registry['taxonomy_overview_vocabularies'])) {
+    $theme_registry['taxonomy_overview_vocabularies']['function'] = 'theme_sbac_central_taxonomy_overview_vocabularies';
+  }
+}
+
+/**
+ * Returns HTML for the vocabulary overview form as a sortable list of vocabularies.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
+ * @see taxonomy_overview_vocabularies()
+ * @ingroup themeable
+ */
+function theme_sbac_central_taxonomy_overview_vocabularies($variables) {
+  $form = $variables['form'];
+  $rows = array();
+  foreach (element_children($form) as $key) {
+    if (isset($form[$key]['name'])) {
+      $vocabulary = & $form[$key];
+      $row = array();
+      $row[] = drupal_render($vocabulary['name']);
+      if (isset($vocabulary['weight'])) {
+        $vocabulary['weight']['#attributes']['class'] = array('vocabulary-weight');
+        $row[] = drupal_render($vocabulary['weight']);
+      }
+      $row[] = drupal_render($vocabulary['edit']);
+      $row[] = drupal_render($vocabulary['list']);
+      if (user_access('administer site configuration')) {
+        $row[] = drupal_render($vocabulary['add']);
+      }
+      else {
+        unset($form[$key]['add']);
+      }
+      $rows[] = array('data' => $row, 'class' => array('draggable'));
+    }
+  }
+
+  $header = array(t('Vocabulary name'));
+  if (isset($form['actions'])) {
+    $header[] = t('Weight');
+    drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
+  }
+  $header[] = array('data' => t('Operations'), 'colspan' => '3');
+  return theme('table', array(
+    'header' => $header,
+    'rows' => $rows,
+    'empty' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/structure/taxonomy/add'))),
+    'attributes' => array('id' => 'taxonomy')
+  )) . drupal_render_children($form);
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function sbac_central_block_info() {
+  $blocks['feedback-box'] = array(
+    'info' => t('Feedback Box'),
+    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    'weight' => -23,
+    'status' => 0,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function sbac_central_block_view($delta = '') {
+  $block = array();
+  
+  switch ($delta) {
+    case 'feedback-box':
+      $body = variable_get('feedback_block_body', array('value' => '', 'format' => 'full_html'));
+
+      $block['subject'] = t('Feedback Block');
+      $block['content'] = $body['value'];
+
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function sbac_central_block_configure($delta = '') {
+  $form = array();
+  
+  if ($delta == 'feedback-box') {
+    $body = variable_get('feedback_block_body', array('value' => '', 'format' => 'full_html'));
+
+    $form['feedback_block_body'] = array(
+      '#type' => 'text_format',
+      '#base_type' => 'textarea',
+      '#title' => t('Block Body'),
+      '#size' => 600,
+      '#description' => t('Content shown on the Feedback pop-up block.'),
+      '#default_value' => $body['value'],
+      '#format' => $body['format'],
+    );
+  }
+  
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function sbac_central_block_save($delta = '', $edit = array()) {
+  if ($delta == 'feedback-box') {
+    variable_set('feedback_block_body', $edit['feedback_block_body']);
+  }
+}

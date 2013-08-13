@@ -1,0 +1,11 @@
+name = CMIS Sync
+description = Provides synchronization with other CMIS repositories 
+package = CMIS
+dependencies[] = cmis
+core = "7.x"
+; Information added by drupal.org packaging script on 2013-07-30
+version = "7.x-1.4"
+core = "7.x"
+project = "cmis"
+datestamp = "1375174577"
+
