@@ -1,0 +1,237 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Help feature.
+ */
+include_once 'sbac_help.features.inc';
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_help_update_projects_alter(&$projects) {
+  unset($projects['sbac_help']);
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @param $existing
+ * @param $type
+ * @param $theme
+ * @param $path
+ * @return array
+ */
+function sbac_help_theme($existing, $type, $theme, $path) {
+  $themes = array();
+
+  $themes['views_view__help_topics__block'] = array(
+    'template' => 'templates/views-view--help-topics--block',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_help_preprocess_views_view__help_topics__block',
+    ),
+  );
+
+  $themes['help_dropdown'] = array(
+    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'template' => 'help-drop-down',
+  );
+
+  return $themes;
+}
+
+/*
+ * Implements hook_menu().
+ */
+function sbac_help_menu() {
+  $items['get-node-content'] = array(
+    'title'         => 'Get Node Content',
+    'page callback' => 'sbac_help_get_node_content',
+    'access arguments'  => array('access content'),
+    'type'          => MENU_CALLBACK,
+  );
+
+  $items['welcome-tutorial/remove/%'] = array(
+    'page callback' => 'sbac_help_remove',
+    'page arguments' => array(2),
+    'access callback' => 'user_access',
+    'access arguments' => array('remove from list'),
+  );
+
+  return $items;
+}
+
+/**
+ * Preprocessor for the help_topics__block view.
+ *
+ * @param $vars
+ */
+function sbac_help_preprocess_views_view__help_topics__block(&$vars){
+	drupal_add_css(drupal_get_path('module','sbac_help') . '/css/help.css');
+}
+
+/**
+ * Unless disabled or first time user, trigger helper modal overlay
+ */
+function sbac_help_init() {
+  drupal_add_js(drupal_get_path('module','sbac_help') . '/js/help.js');
+
+  global $user;
+  if (isset($_COOKIE['Drupal_visitor_sbac_just_logged_in'])) {
+    if (!isset($user->data['disable_help']) || (isset($user->data['disable_help']) && $user->data['disable_help'] == 0)) {
+      drupal_add_js("jQuery(document).ready(function () { jQuery('.help-modal').colorbox({open:true, inline:true, href: '#helpmodal', width:'80%', height:'600px', onComplete: initSlider}); });", array('type' => 'inline'));
+    }
+
+    user_cookie_delete('sbac_just_logged_in');
+  }
+}
+
+/*
+ * Form to enable/disable helper modal
+ */
+function sbac_help_disable_help() {
+  global $user;
+  $form = array();
+
+  $form['disable_help'] = array (
+    '#type'           => 'checkbox',
+    '#title'          => t('Do not show this screen after next Log in') . '<br><i>' . t('View this screen again by selecting Welcome Tutorial from Help on top menu') . '</i>',
+  );
+
+  $form['submit'] = array (
+    '#type'           => 'submit',
+    '#value'          => 'Close Welcome Tutorial',
+  );
+
+  if (!isset($user->data['disable_help'])) {
+    $form['disable_help']['#default_value'] = 0;
+  }
+  else {
+    $form['disable_help']['#default_value'] = $user->data['disable_help'];
+  }
+
+  return $form;
+}
+
+/**
+ * Submit handler for form submit.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_help_disable_help_submit($form, &$form_state) {
+  global $user;
+  
+  user_save($user, array(
+    'data' => array(
+      'disable_help' => (int) $form_state['values']['disable_help'],
+    )
+  ));
+
+  $url = $form_state['redirect'] = 'digital-library-resources';
+  drupal_goto($url);
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * @param $variables
+ */
+function sbac_help_preprocess_page(&$variables) {
+  global $user;
+  $variables['help_dropdown'] = NULL;
+  if ($user->uid) {
+    $variables['help_dropdown'] = theme('help_dropdown');
+  }
+}
+
+/**
+ * Function callback for get-node-content
+ *
+ * @param $nid
+ */
+function sbac_help_get_node_content() {
+  $nid = $_GET['nid'];
+  if ($nid) {
+    $node = node_load($nid, $vid = NULL, $reset = FALSE);
+    if ($node) {
+      $node_view = node_view($node, $view_mode = 'teaser', $langcode = NULL);
+      $data = array(
+        'results' => array(
+          'body' => drupal_render($node_view['body']),
+          'title' => $node->title
+        )
+      );
+      return drupal_json_output($data);
+    }
+  }
+  exit();
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function sbac_help_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'help_page_node_form') {
+    $form['actions']['submit']['#submit'][] = 'sbac_help_remove_previous_resource_tutorial';
+  }
+}
+
+/**
+ * Remove the previously set resource tutorial help page
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_help_remove_previous_resource_tutorial(&$form, &$form_state) {
+  foreach ($form['field_help_page_topic']['und']['#options'] as $key => $value) {
+    if ($value == 'Resource Tutorial') {
+      $val = $key;
+    }
+  }
+  // Check if Resource Tutorial checkbox is checked
+  $nid = $form_state['values']['nid'];
+  if (isset($val) && $form_state['input']['field_help_page_topic']['und'][$val]) {
+    db_query('DELETE FROM {field_data_field_help_page_topic} WHERE field_help_page_topic_tid = :val AND entity_id <> :nid', array(':val' => $val, ':nid' => $nid));
+    db_query('DELETE FROM {field_revision_field_help_page_topic} WHERE field_help_page_topic_tid = :val AND entity_id <> :nid', array(':val' => $val, ':nid' => $nid));
+  }
+}
+
+/*
+ * Implements hook_permission().
+ *
+ * remove welcome topics from list
+ */
+function sbac_help_permission() {
+  return array(
+    'send approval emails' => array(
+      'title' => t('remove from list'),
+    ),
+  );
+}
+
+function sbac_help_remove($nid) {
+  $node = node_load($nid);
+  $node->field_help_page_topic = array();
+
+  node_save($node);
+  drupal_goto(drupal_get_origin() . '#topics-tab2');
+}
+
+function drupal_get_origin() {
+  /* @var $_SERVER HTTP_REFERER works on our servers. */
+  $path = $_SERVER['HTTP_REFERER'];
+  if (isset($_GET['destination'])) {
+    $path = $_GET['destination'];
+  }
+  return $path;
+}

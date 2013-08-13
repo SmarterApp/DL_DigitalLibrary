@@ -1,0 +1,294 @@
+/* -----------------------------------------
+   Alignment Tags Browser
+   ----------------------------------------- */
+/* line 7, ../sass/alignment.scss */
+#alignment-node-form {
+  max-height: 95%;
+  overflow-y: scroll;
+}
+/* line 11, ../sass/alignment.scss */
+#alignment-node-form .row {
+  max-width: 100%;
+}
+/* line 16, ../sass/alignment.scss */
+#alignment-node-form .add-aligmnet table {
+  width: 100%;
+}
+/* line 22, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb ul, #alignment-node-form .alignment-breadcrumb li {
+  margin: 0;
+  padding: 0;
+}
+/* line 28, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb li:last-child .arrow {
+  display: none;
+}
+/* line 32, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb li:last-child .sbac-custom-term-remove {
+  -webkit-border-radius: 0 10px 10px 0;
+  -moz-border-radius: 0 10px 10px 0;
+  -ms-border-radius: 0 10px 10px 0;
+  -o-border-radius: 0 10px 10px 0;
+  border-radius: 0 10px 10px 0;
+}
+/* line 38, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb li:first-child .sbac-custom-term-remove .b-label {
+  padding-left: 5px;
+}
+/* line 42, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb .sbac-custom-term-remove {
+  display: inline-block;
+  cursor: pointer;
+  margin-right: -20px;
+  background-color: #DFE5CC;
+  color: #3C7646;
+  border: none;
+  height: 28px;
+  line-height: normal;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  font-size: emCalc(12px);
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+}
+/* line 56, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb .sbac-custom-term-remove:hover {
+  background-color: #0085AD;
+  color: white;
+  text-shadow: 0px -1px 0px black;
+}
+/* line 61, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb .sbac-custom-term-remove:hover .arrow span {
+  background-color: #0085AD;
+}
+/* line 66, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb .sbac-custom-term-remove .b-label {
+  padding: 5px 7px 7px 7px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  display: inline-block;
+  padding-left: 25px;
+}
+/* line 73, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb .sbac-custom-term-remove .arrow {
+  width: 20px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  margin-left: -5px;
+}
+/* line 81, ../sass/alignment.scss */
+#alignment-node-form .alignment-breadcrumb .sbac-custom-term-remove .arrow span {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+  width: 26px;
+  height: 26px;
+  display: inline-block;
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  margin-left: -12px;
+  margin-top: 1px;
+  border: 2px solid #fff;
+  background-color: #DFE5CC;
+}
+/* line 100, ../sass/alignment.scss */
+#alignment-node-form .standards-browser {
+  margin: 10px 0 20px;
+  padding: 20px 0 10px;
+  border: 1px solid silver;
+  border-width: 1px 0;
+}
+/* line 106, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .button {
+  width: 100%;
+  padding: 20px 40px 20px 20px;
+  background: #8d9297 url("../images/caret-right.png") no-repeat 95% center;
+  border: 1px #646464 solid;
+  position: relative;
+  float: left;
+  text-align: left;
+  color: white;
+  font-size: emCalc(16px);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  text-shadow: 0px -1px 0px black;
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+}
+/* line 121, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .button:hover {
+  background-color: #0085AD;
+}
+/* line 123, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .button:hover .tooltip-b {
+  opacity: 1;
+  display: block;
+}
+/* line 131, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .tooltip-b {
+  opacity: 0;
+  display: none;
+  transition-property: opacity;
+  transition-duration: 500ms;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 500ms;
+  width: 272px;
+  position: absolute;
+  top: 62px;
+  left: 20px;
+  background: #DFE5CC;
+  padding: 20px;
+  border-radius: 6px;
+  color: #3C7646;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  z-index: 999;
+  border: 1px solid #3C7646;
+}
+/* line 151, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .tooltip-b p {
+  font-size: inherit;
+  margin: 0;
+}
+/* line 156, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .tooltip-b:after {
+  content: ' ';
+  position: absolute;
+  top: -28px;
+  left: 16px;
+  border-color: transparent transparent #DFE5CC transparent;
+  border-style: solid;
+  border-width: 14px;
+  width: 0;
+  height: 0;
+  z-index: 99;
+}
+/* line 169, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .tooltip-b:before {
+  content: ' ';
+  position: absolute;
+  top: -30px;
+  left: 15px;
+  border-color: transparent transparent #3C7646 transparent;
+  border-style: solid;
+  border-width: 15px;
+  width: 0;
+  height: 0;
+  z-index: 97;
+}
+/* line 183, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .arrow_box {
+  position: absolute;
+  background: #DFE5CC;
+  border: 1px solid #3C7646;
+}
+/* line 189, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .standard {
+  padding: 10px;
+  border: 1px solid silver;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+/* line 195, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .more-info {
+  display: block;
+  cursor: pointer;
+  position: relative;
+  width: 100px;
+  height: 15px;
+}
+/* line 202, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .more-info a {
+  display: block;
+}
+/* line 206, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .more-info .more {
+  display: none;
+  transition-property: opacity;
+  transition-duration: 500ms;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 500ms;
+  width: 272px;
+  position: absolute;
+  top: 25px;
+  left: 20px;
+  background: #DFE5CC;
+  padding: 20px;
+  border-radius: 6px;
+  color: #3C7646;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  z-index: 999;
+  border: 1px solid #3C7646;
+}
+/* line 225, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .more-info .more p {
+  font-size: inherit;
+  margin: 0;
+}
+/* line 230, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .more-info .more:after {
+  content: ' ';
+  position: absolute;
+  top: -28px;
+  left: 16px;
+  border-color: transparent transparent #DFE5CC transparent;
+  border-style: solid;
+  border-width: 14px;
+  width: 0;
+  height: 0;
+  z-index: 99;
+}
+/* line 242, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .more-info .more:before {
+  content: ' ';
+  position: absolute;
+  top: -30px;
+  left: 15px;
+  border-color: transparent transparent #3C7646 transparent;
+  border-style: solid;
+  border-width: 15px;
+  width: 0;
+  height: 0;
+  z-index: 97;
+}
+/* line 257, ../sass/alignment.scss */
+#alignment-node-form .standards-browser .more-info:hover .more {
+  display: block;
+}
+/* line 264, ../sass/alignment.scss */
+#alignment-node-form .form-type-checkbox label {
+  color: #0085AD;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* line 271, ../sass/alignment.scss */
+#edit-field-education-alignment {
+  display: none;
+}

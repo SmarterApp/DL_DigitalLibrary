@@ -1,0 +1,59 @@
+<?php
+
+/*----------------------------------------------------------------------------
+      DRUPAL HOOKS
+----------------------------------------------------------------------------*/
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the taskit module.
+ */
+function sbac_core_update_7001() {
+  $modules = array(
+    'taskit',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the entitycache module.
+ */
+function sbac_core_update_7002() {
+  $modules = array(
+    'entitycache',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disables the entitycache module.
+ */
+function sbac_core_update_7003() {
+  $modules = array(
+    'entitycache',
+  );
+
+  module_disable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the taskit, devtools, dialog modules.
+ */
+function sbac_core_update_7004() {
+  $modules = array(
+    'taskit',
+    'dialog',
+    'devtools',
+  );
+
+  module_enable($modules);
+}

@@ -1,0 +1,12 @@
+diff --git a/workbench_moderation.module b/workbench_moderation.module
+index e1caaa5..4a8bf4c 100644
+--- a/workbench_moderation.module
++++ b/workbench_moderation.module
+@@ -1726,7 +1726,6 @@ function workbench_moderation_moderate_form_submit($form, $form_state) {
+     else {
+       $form_state['redirect'] = $form['#destination'];
+     }
+-    drupal_redirect_form($form_state);
+   }
+ }
+ 

@@ -1,0 +1,467 @@
+<?php
+
+/**
+ * Implemnts hook_update_N().
+ *
+ * Initial setup of contrib modules, disable some core.
+ */
+function sbac_central_install() {
+  $modules = array(
+    'admin_menu',
+    'admin_menu_toolbar',
+    'ctools',
+    'diff',
+    'features',
+    'imce',
+    'imce_wysiwyg',
+    'libraries',
+    'module_filter',
+    'pathauto',
+    'strongarm',
+    'token',
+    'views',
+    'views_ui',
+    'wysiwyg',
+    'cmis',
+    'cmis_common',
+    'cmis_browser',
+    'cmis_query'
+  );
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_ldap module.
+ */
+function sbac_central_update_7001() {
+  $modules = array('sbac_ldap');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_user
+ */
+function sbac_central_update_7002() {
+  $modules = array('sbac_user');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the SBAC theme
+ */
+function sbac_central_update_7003() {
+  theme_disable(array('bartik'));
+  theme_enable(array('SBAC', 'seven'));
+  variable_set('theme_default', 'SBAC');
+  variable_set('admin_theme', 'seven');
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the views_bulk_operations, entityreference, og module
+ */
+function sbac_central_update_7004() {
+  $modules = array('views_bulk_operations', 'entityreference', 'og');
+  module_enable($modules);
+}
+
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_page, sbac_search
+ */
+function sbac_central_update_7005() {
+  $modules = array('sbac_page', 'sbac_search');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables apache_solr attachments, apachesolr_user, apachesolr_views
+ */
+function sbac_central_update_7006() {
+  $modules = array('apachesolr_attachments', 'apachesolr_user', 'apachesolr_views');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disable the views_bulk_operations, entityreference, og module
+ */
+function sbac_central_update_7007() {
+  $modules = array('views_bulk_operations', 'entityreference', 'og');
+  module_disable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables joyride module
+ */
+function sbac_central_update_7008() {
+  $modules = array('joyride');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables features extra module
+ */
+function sbac_central_update_7009() {
+  $modules = array('fe_block');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables Views PDF and JQuery Update
+ */
+function sbac_central_update_7010() {
+  $modules = array('views_pdf', 'jquery_update');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables SBAC_help
+ */
+function sbac_central_update_7011() {
+  $modules = array('sbac_help');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables SBAC_digital_library
+ */
+function sbac_central_update_7012() {
+  $modules = array('sbac_digital_library');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables print, print_pdf
+ */
+function sbac_central_update_7013() {
+  $modules = array('print', 'print_pdf');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disable views_pdf
+ */
+function sbac_central_update_7014() {
+  $modules = array('views_pdf');
+  module_disable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Removes page content type.
+ */
+function sbac_central_update_7015() {
+  node_type_delete('page');
+  variable_del('node_preview_page');
+  node_types_rebuild();
+  menu_rebuild();
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_resource and sbac_user module.
+ */
+function sbac_central_update_7016() {
+  $modules = array('sbac_resource', 'sbac_user');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the field_groups module.
+ */
+function sbac_central_update_7017() {
+  $modules = array('field_group');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_alignment module
+ */
+function sbac_central_update_7019() {
+  $modules = array('sbac_alignment');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the label_help module
+ */
+function sbac_central_update_7020() {
+  $modules = array('label_help');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the Chosen module for sbac_resource
+ */
+function sbac_central_update_7021() {
+  $modules = array('chosen');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disable sbac_digital_library module
+ */
+function sbac_central_update_7022() {
+  $modules = array('sbac_digital_library');
+  module_disable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the link module
+ */
+function sbac_central_update_7023() {
+  $modules = array('link');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the title and maxlength modules
+ */
+function sbac_central_update_7024() {
+  $modules = array('title', 'maxlength');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disable seven theme.
+ */
+function sbac_central_update_7025() {
+  theme_disable(array('seven'));
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Removes page content type.
+ */
+function sbac_central_update_7026() {
+  node_type_delete('page');
+  variable_del('node_preview_page');
+  node_types_rebuild();
+  menu_rebuild();
+}
+
+/**
+ * Add the taxonomy terms to the help_page_topic vocab
+ */
+function sbac_central_update_7027() {
+  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'help_page_topic'))->fetchAssoc();
+  if ($vocab) {
+    // Define the terms.
+    $terms[] = array('name' => 'Resource Tutorial');
+    $terms[] = array('name' => 'Welcome Tutorial');
+    sbac_central_save_taxonomy_term($terms, $vocab);
+  }
+}
+
+/**
+ * Helper function to create terms.
+ *
+ * @param $terms
+ */
+function sbac_central_save_taxonomy_term($terms, $vocab) {
+  foreach ($terms as $term) {
+    taxonomy_term_save((object) array(
+      'name' => $term['name'],
+      'vid' => $vocab['vid'],
+    ));
+  }
+}
+
+/**
+ * Set all current Help Pages to Welcome Tutorial type
+ */
+function sbac_central_update_7028() {
+  $terms = taxonomy_get_term_by_name('Welcome Tutorial', 'help_page_topic');
+  $term = array_shift($terms);
+
+  $result = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'help_page'));
+  foreach($result as $record) {
+    $node = node_load($record->nid);
+    $node->field_help_page_topic[LANGUAGE_NONE][0]['tid'] = $term->tid;
+    node_save($node);
+  }
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the phonetic module
+ */
+function sbac_central_update_7029() {
+  $modules = array('phonetic');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables sbac_core module
+ */
+function sbac_central_update_7030() {
+  $modules = array('sbac_core');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_lexicon module
+ */
+function sbac_central_update_7031() {
+  $modules = array('lexicon', 'sbac_lexicon');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_paradata module
+ */
+function sbac_central_update_7032() {
+  $modules = array('sbac_paradata');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the Google Analytics module
+ */
+function sbac_central_update_7033() {
+  $modules = array('googleanalytics');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables modules for help topics user and admin page
+ */
+function sbac_central_update_7034() {
+  $modules = array(
+    'views_fields_combine',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables Acquia Connector modules.
+ */
+function sbac_central_update_7035() {
+  $modules = array(
+    'acquia_agent',
+    'acquia_search',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables Views Load More module.
+ */
+function sbac_central_update_7036() {
+  $modules = array(
+    'views_load_more'
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables Embedded Media Feld & related modules.
+ */
+function sbac_central_update_7037() {
+  $modules = array(
+    'file_entity',
+    'media',
+    'media_internet',
+    'emfield',
+  );
+  
+  module_enable($modules);
+}
+
+/**
+ * Enables media_vimeo and media_youtube.
+ */
+function sbac_central_update_7038() {
+  $modules = array(
+    'media_vimeo',
+    'media_youtube',
+  );
+  
+  module_enable($modules);
+}
+
+/**
+ * Enables Upload QC.
+ */
+function sbac_central_update_7039() {
+  sbac_central_update_7036();
+  sbac_central_update_7037();
+  sbac_central_update_7038();
+
+  $modules = array(
+    'upload_qc',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Disables Acquia Search.
+ */
+function sbac_central_update_7040() {
+  $modules = array(
+    'acquia_search',
+  );
+  module_disable($modules);
+}
+

@@ -1,0 +1,510 @@
+/* mixins */
+/* resource review tabs */
+/* line 11, ../sass/feedback.scss */
+.review-wrap {
+  padding: 10px 30px;
+  /* intro form elements */
+  /* entity form elements */
+  /* helpful info block */
+  /* buttons */
+  /* get rid of the ajax progres div, throbber, etc. */
+  /* criteria sets */
+  /* radio button set with inline descriptions */
+  /* retionale for recommedation */
+  /* feedback comments */
+  /* asterisk/required info */
+  /* error element selector */
+  /* review items content on post tab */
+  /* inline field title/desc */
+  /* post options */
+}
+/* line 14, ../sass/feedback.scss */
+.review-wrap p {
+  font-size: 1em;
+}
+/* line 18, ../sass/feedback.scss */
+.review-wrap .gate-keeper-intro {
+  border-bottom: 1px #cccccc solid;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  padding: 10px 30px 0;
+}
+/* line 23, ../sass/feedback.scss */
+.review-wrap .dialog-trigger-gk {
+  margin-left: 30px;
+}
+/* line 29, ../sass/feedback.scss */
+.review-wrap input[type="checkbox"],
+.review-wrap input[type="radio"] {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+/* line 35, ../sass/feedback.scss */
+.review-wrap .helpful-info {
+  background: #eee;
+  border: 1px #cccccc solid;
+  margin: 10px 0;
+  padding: 1em 2em 0;
+}
+/* line 41, ../sass/feedback.scss */
+.review-wrap .helpful-info .helpful-info-title {
+  color: #666;
+  font-size: 1.3em;
+}
+/* line 49, ../sass/feedback.scss */
+.review-wrap .button,
+.review-wrap button {
+  margin: 10px 10px 10px 0;
+  padding: 12px 20px;
+}
+/* line 57, ../sass/feedback.scss */
+.review-wrap .ajax-progress,
+.review-wrap .alert-box {
+  display: none;
+}
+/* line 65, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .sticky-header,
+.review-wrap .field-name-field-review-set .tabledrag-toggle-weight-wrapper,
+.review-wrap .field-name-field-quality-set .sticky-header,
+.review-wrap .field-name-field-quality-set .tabledrag-toggle-weight-wrapper {
+  display: none !important;
+}
+/* line 69, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table,
+.review-wrap .field-name-field-quality-set .field-multiple-table {
+  border: 0;
+  width: 100%;
+}
+/* line 73, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table thead,
+.review-wrap .field-name-field-quality-set .field-multiple-table thead {
+  display: none !important;
+}
+/* line 77, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody {
+  border: 0;
+}
+/* line 80, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr {
+  background: none;
+  border: 0;
+  border-bottom: 1px #ccc solid;
+}
+/* line 85, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td {
+  padding: 1.5em 0;
+  /* title */
+  /* comments text */
+  /* comments field */
+  /* radios */
+}
+/* line 88, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td.field-multiple-drag, .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td.delta-order,
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .grippie,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td.field-multiple-drag,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td.delta-order,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .grippie {
+  display: none;
+}
+/* line 96, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-title p,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-title p {
+  font-size: 1em;
+  font-weight: bold;
+  max-width: 800px;
+}
+/* line 109, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments {
+  float: left;
+  position: relative;
+  width: 70%;
+  max-width: 700px;
+}
+/* line 115, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .grippie,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .grippie {
+  display: none;
+}
+/* line 119, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments label,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments label {
+  font-size: 1em;
+}
+/* line 122, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .counter,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .counter {
+  position: absolute;
+  right: 25px;
+  top: 15px;
+  font-size: 12px;
+}
+/* line 128, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .counter.messages,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .counter.messages {
+  background: #fff;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+/* line 136, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .form-textarea-wrapper,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .form-textarea-wrapper {
+  padding-right: 25px;
+}
+/* line 139, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .form-textarea-wrapper textarea,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .form-textarea-wrapper textarea {
+  min-height: 75px;
+}
+/* line 146, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios {
+  float: left;
+  margin-left: 1em;
+  width: 26%;
+  /* the field allows full html, but we don't want paragraphs to mess up layout */
+  /* force radio buttons to display inline */
+}
+/* line 151, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios label,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios label {
+  font-size: 1em;
+}
+/* line 156, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios p,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios p {
+  font-size: 0.9em;
+  margin: 0;
+  white-space: normal;
+}
+/* line 162, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .field-widget-options-buttons,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .field-widget-options-buttons {
+  display: inline-block;
+}
+/* line 165, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .field-widget-options-buttons .form-type-radios,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .field-widget-options-buttons .form-type-radios {
+  padding-right: 25px;
+}
+/* line 170, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .form-type-radios,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .form-type-radios {
+  min-height: 50px;
+}
+/* line 175, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .form-radios .form-item,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .form-radios .form-item {
+  display: inline;
+  margin-right: .5em;
+}
+/* line 180, ../sass/feedback.scss */
+.review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .desc,
+.review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .desc {
+  background: #eee;
+  border: 1px #ccc solid;
+  margin-top: 1em;
+  padding: 0.5em;
+}
+/* line 196, ../sass/feedback.scss */
+.review-wrap .radios-with-desc label span * {
+  color: #666;
+  display: inline-block;
+  font-size: 1em;
+}
+/* line 202, ../sass/feedback.scss */
+.review-wrap .radios-with-desc label span p {
+  margin: 0;
+}
+/* line 207, ../sass/feedback.scss */
+.review-wrap .radios-with-desc .form-item-error-holder.error + .form-type-radios {
+  display: inline-block;
+  padding-right: 25px;
+}
+/* line 214, ../sass/feedback.scss */
+.review-wrap .field-name-field-rec-rationale {
+  position: relative;
+}
+/* line 217, ../sass/feedback.scss */
+.review-wrap .field-name-field-rec-rationale .counter {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  font-size: 12px;
+}
+/* line 224, ../sass/feedback.scss */
+.review-wrap .field-name-field-rec-rationale textarea {
+  min-height: 75px;
+}
+/* line 233, ../sass/feedback.scss */
+.review-wrap .field-name-field-to-contributor,
+.review-wrap .field-name-field-to-reviewer-1,
+.review-wrap .field-name-field-to-reviewer-2,
+.review-wrap .field-name-field-to-reviewer-3 {
+  float: left;
+  position: relative;
+  width: 49%;
+}
+/* line 238, ../sass/feedback.scss */
+.review-wrap .field-name-field-to-contributor textarea,
+.review-wrap .field-name-field-to-reviewer-1 textarea,
+.review-wrap .field-name-field-to-reviewer-2 textarea,
+.review-wrap .field-name-field-to-reviewer-3 textarea {
+  min-height: 70px;
+}
+/* line 242, ../sass/feedback.scss */
+.review-wrap .field-name-field-to-contributor .counter,
+.review-wrap .field-name-field-to-reviewer-1 .counter,
+.review-wrap .field-name-field-to-reviewer-2 .counter,
+.review-wrap .field-name-field-to-reviewer-3 .counter {
+  font-size: 0.8em;
+  position: absolute;
+  right: 0;
+  top: 15px;
+}
+/* line 251, ../sass/feedback.scss */
+.review-wrap .field-name-field-to-reviewer-1,
+.review-wrap .field-name-field-to-reviewer-3 {
+  float: right;
+}
+/* line 256, ../sass/feedback.scss */
+.review-wrap .criteria-set-required-info {
+  border-bottom: 1px #ccc solid;
+  font-size: 0.9em;
+  margin: .5em 0;
+  padding-bottom: 0.5em;
+}
+/* line 264, ../sass/feedback.scss */
+.review-wrap .form-item-error-holder {
+  display: none;
+}
+/* line 267, ../sass/feedback.scss */
+.review-wrap .form-item-error-holder.error + .form-item {
+  background: white url("/sites/all/themes/SBAC/images/icon-validation-fail.png") right 30px no-repeat;
+}
+/* line 270, ../sass/feedback.scss */
+.review-wrap .form-item-error-holder.error + .form-item .form-item {
+  background: none;
+}
+/* line 278, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item {
+  border-bottom: 1px #ccc solid;
+  margin: 0 0 1em 0;
+  padding: 0 0 1em 0;
+}
+/* line 284, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .criteria-set-title {
+  margin: 0 0 1em 0;
+}
+/* line 285, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .criteria-set-title p {
+  font-weight: bold;
+}
+/* line 292, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .criteria-set-comments-text {
+  margin: 0 0 1em 0;
+}
+/* line 296, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .reviewer-comments-title {
+  /*font-size: 0.8em;*/
+}
+/* line 300, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .comments-title {
+  font-size: 0.8em;
+  font-weight: bold;
+  margin: 0 0 1em 0;
+}
+/* line 306, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .feedback-review {
+  float: left;
+  font-size: 0.8em;
+  margin-right: 1%;
+  width: 32%;
+}
+/* line 307, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .feedback-review:last-child {
+  margin-right: 0;
+}
+/* line 316, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .feedback-review .author {
+  margin: 0 0 0.5em 0;
+}
+/* line 319, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .feedback-review .author a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+/* line 325, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .feedback-review .created {
+  margin: 0 0 1em 0;
+}
+/* line 329, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .feedback-review .headline {
+  font-weight: bold;
+}
+/* line 342, ../sass/feedback.scss */
+.review-wrap .field-title {
+  font-size: 0.8em;
+  font-weight: bold;
+  margin: 0 0 0.5em 0;
+}
+/* line 348, ../sass/feedback.scss */
+.review-wrap .field-description {
+  color: #666;
+  font-size: 0.8em;
+  margin: 0 0 1em 0;
+}
+/* line 355, ../sass/feedback.scss */
+.review-wrap .field-name-field-post-options {
+  border-bottom: 1px #ccc solid;
+  margin: 0 0 1em 0;
+  padding: 0 0 1em 0;
+}
+/* line 360, ../sass/feedback.scss */
+.review-wrap .field-name-field-post-options label {
+  margin: 0 0 0.5em 0;
+}
+/* line 364, ../sass/feedback.scss */
+.review-wrap .field-name-field-post-options .description {
+  color: #666;
+  font-size: 0.8em;
+}
+
+/* description */
+/* line 373, ../sass/feedback.scss */
+.form-item .description {
+  margin-bottom: .5em;
+}
+
+/* text in gate keeper confirmation modal */
+/* line 379, ../sass/feedback.scss */
+#dialog .gate-keeper-modal-intro {
+  border-bottom: 1px solid silver;
+  padding-bottom: 1em;
+  border-bottom: 1em;
+  font-size: 0.8em;
+  line-height: normal;
+}
+/* line 387, ../sass/feedback.scss */
+#dialog .form-submit {
+  float: right;
+}
+/* line 391, ../sass/feedback.scss */
+#dialog .devtools-dialog-content.close-dialog {
+  float: left;
+}
+/* line 394, ../sass/feedback.scss */
+#dialog .devtools-dialog-content.close-dialog a {
+  color: #fff;
+}
+
+/* modal */
+/* line 401, ../sass/feedback.scss */
+.ui-dialog.ui-widget {
+  position: fixed !important;
+}
+
+/* misc */
+/* line 406, ../sass/feedback.scss */
+.clear {
+  clear: both;
+  float: none;
+}
+
+/* line 411, ../sass/feedback.scss */
+.hidden {
+  display: none;
+}
+
+/** Columns on About **/
+/* line 418, ../sass/feedback.scss */
+.ds-2col .group-left {
+  width: 45% !important;
+  margin-right: 3%;
+}
+/* line 423, ../sass/feedback.scss */
+.ds-2col .group-right {
+  width: 45%;
+  margin-right: 0;
+  float: right !important;
+}
+/* line 429, ../sass/feedback.scss */
+.ds-2col .field-label {
+  font-size: 1.1em;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid silver;
+  color: #18577E;
+}
+/* line 437, ../sass/feedback.scss */
+.ds-2col .field {
+  margin-bottom: 1.5em;
+  line-height: normal;
+  font-size: 0.9em;
+}
+/* line 442, ../sass/feedback.scss */
+.ds-2col .field ul {
+  font-size: 0.9em;
+}
+
+/* line 451, ../sass/feedback.scss */
+.field-name-resource-slideshow {
+  margin: 0 0 70px 0;
+}
+/* line 454, ../sass/feedback.scss */
+.field-name-resource-slideshow .flexslider {
+  font-size: 1.4em;
+  margin: 0 auto;
+  max-width: 834px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+/* line 462, ../sass/feedback.scss */
+.field-name-resource-slideshow .flexslider ul {
+  margin: 0;
+}
+/* line 468, ../sass/feedback.scss */
+.field-name-resource-slideshow .flexslider .flex-viewport ul li {
+  margin: 0;
+  overflow: hidden;
+}
+/* line 472, ../sass/feedback.scss */
+.field-name-resource-slideshow .flexslider .flex-viewport ul li label {
+  font-size: 1em;
+  font-weight: bold;
+  cursor: default;
+}
+/* line 478, ../sass/feedback.scss */
+.field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field {
+  margin: 0 0 10px 0;
+  padding: 0 10px;
+}
+/* line 479, ../sass/feedback.scss */
+.field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field:last-child {
+  margin-bottom: 0;
+}
+
+@media all and (max-width: 980px) {
+  /* line 497, ../sass/feedback.scss */
+  .field-name-resource-slideshow .flexslider {
+    margin: 0 auto;
+    width: 510px;
+  }
+}
+@media all and (max-width: 670px) {
+  /* line 504, ../sass/feedback.scss */
+  .field-name-resource-slideshow .flexslider {
+    margin: 0 auto;
+    width: 250px;
+  }
+}

@@ -1,0 +1,935 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC resource feature.
+ */
+
+include_once 'sbac_resource.features.inc';
+include_once 'sbac_resource.forms.inc';
+include_once 'sbac_resource.theme.inc';
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_resource_update_projects_alter(&$projects) {
+  unset($projects['sbac_resource']);
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
+function sbac_resource_menu() {
+  $items = array();
+
+  $items['sbac_resource/%ctools_js/add-alignment'] = array(
+    'page callback' => 'sbac_resource_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['sbac_resource/%ctools_js/submit-resource'] = array(
+    'page callback' => 'sbac_resource_submit_resource_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['sbac_resource/%ctools_js/delete-resource'] = array(
+    'page callback' => 'sbac_resource_delete_resource_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['sbac-resource/download/%node'] = array(
+    'page callback' => 'sbac_resource_download_contents',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+  );
+
+  $items['sbac-resource/download/%node'] = array(
+    'page callback' => 'sbac_resource_download_contents',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+  );
+
+  $items['digital-library-resources'] = array(
+    'title' => 'Digital Library Resources',
+    'page callback' => 'sbac_resource_digital_library_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -50,
+  );
+
+  $items['admin/structure/types/manage/%node_type/messages'] = array(
+    'title' => 'Messages',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_form_messages'),
+    'access arguments' => array(4),
+    'access callback' => array('sbac_resource_form_messages_access'),
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+    'file' => 'sbac_resource.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Packages and downloads all materials into a zip.
+ *
+ * @param $node
+ */
+function sbac_resource_download_contents($node) {
+  if ($node) {
+    if ($node->field_file['und'][0]) {
+      $destination = variable_get('file_public_path', conf_path() . '/files') . '/resource_zips/';
+      if (!file_exists($destination)) {
+        mkdir($destination);
+      }
+
+      $zip = new ZipArchive;
+      $archive_uri = 'public://resource_zips/';
+      $filename = 'download_' . REQUEST_TIME . '.zip';
+      $archive_uri .= $filename;
+      $real_path = drupal_realpath($archive_uri);
+      $open = $zip->open($real_path, ZipArchive::CREATE);
+      if ($open === TRUE) {
+        foreach ($node->field_file['und'] as $key => $file) {
+          $zip->addFile(drupal_realpath($file['uri']), $file['filename']);
+        }
+        $zip->close();
+      }
+
+      if (file_exists($real_path)) {
+	      $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
+		    entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
+        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+        header("Cache-Control: public"); // needed for i.e.
+        header("Content-Type: application/zip");
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-Length:".filesize($real_path));
+        header("Content-Disposition: attachment; filename=" . $filename);
+        readfile($real_path);
+      }
+    }
+  }
+}
+
+/**
+ * Access callback for menu item.
+ *
+ * @param $node_type
+ * @return bool
+ */
+function sbac_resource_form_messages_access($node_type) {
+  if ($node_type->type == 'resource') {
+    return user_access('administer site configuration');
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of hook_preprocess_node()
+ *
+ * @param $vars
+ */
+function sbac_resource_preprocess_node(&$vars) {
+  if ($vars['type'] == 'resource') {
+    drupal_add_js(libraries_get_path('jwplayer') . '/jwplayer.js');
+    drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.node.js');
+    $vars['author'] = ''; $vars['license'] = ''; $vars['owner'] = '';
+    if (isset($vars['field_author'][0]['safe_value'])) {
+      $vars['author'] = $vars['field_author'][0]['safe_value'];
+    }
+    if (isset($vars['field_publisher']['und'][0]['safe_value'])) {
+      $vars['owner'] = $vars['field_publisher']['und'][0]['safe_value'];
+    }
+    if (isset($vars['field_license'][0]['taxonomy_term']->name)) {
+      $vars['license'] = $vars['field_license'][0]['taxonomy_term']->name;
+    }
+    if (isset($vars['field_file'][0]['uri'])) {
+      // Determine the file type, load up the correct video player, doc viewer or image viewer.
+      $viewer = _sbac_resource_preview_content($vars);
+      $materials = _sbac_resource_preview_materials($vars);
+      $vars['download'] = l('Download', 'sbac-resource/download/' . $vars['nid'], array('attributes' => array('class' => 'button small right')));
+      $vars['viewer'] = $viewer['viewer'];
+      $vars['viewer_filename'] = $viewer['viewer_filename'];
+      $vars['viewer_type'] = $viewer['viewer_type'];
+      $vars['materials'] = $materials;
+    }
+  }
+}
+
+/**
+ * Creates the preview content.
+ *
+ * @param $vars
+ * @return string
+ */
+function _sbac_resource_preview_content(&$vars) {
+  $viewer = NULL;
+  if ($vars['field_file'][0]['uri']) {
+    $url = file_create_url($vars['field_file'][0]['uri']);
+    $ext = pathinfo($url, PATHINFO_EXTENSION);
+    $media = _sbac_resource_determine_extension($ext);
+    $viewer['viewer_filename'] = $vars['field_file'][0]['filename'];
+    $viewer['viewer_type'] = $media;
+    if ($media == 'document') {
+      $viewer['viewer'] = '<iframe src="http://docs.google.com/viewer?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+    }
+    else if ($media == 'video') {
+      $jwplayer = 'jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 850 });';
+      drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 20));
+      $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
+    }
+    else {
+      $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400));
+    }
+  }
+  return $viewer;
+}
+
+/**
+ * Creates the materials dropdown.
+ *
+ * @param $vars
+ * @return array
+ */
+function _sbac_resource_preview_materials(&$vars) {
+  $materials = '';
+  $material_urls = array();
+
+  if (isset($vars['field_file'][0]['uri'])) {
+    foreach ($vars['field_file'] as $key => $material) {
+      $url = file_create_url($material['uri']);
+      $ext = pathinfo($url, PATHINFO_EXTENSION);
+      $media = _sbac_resource_determine_extension($ext);
+      $material_urls[] = l(ucwords($material['filename']), $url, array('attributes' => array('sbac-type' => $media)));
+    }
+  }
+
+  if (isset($vars['field_video'][0]['fid'])) {
+    foreach ($vars['field_video'] as $video) {
+      $material_urls[] = l($video['filename'], file_create_url($video['uri']), array('attributes' => array('sbac-type' => 'video')));
+    }
+  }
+
+  if ($material_urls) {
+    $materials = '<a class="button small arrow" data-dropdown="sbac-materials">'. t('View All Materials'). '<span></span></a>';
+    $materials .= theme('item_list', array(
+      'items' => $material_urls, 
+      'attributes' => array(
+        'class' => 'materials-dropdown f-dropdown', 
+        'id' => 'sbac-materials'
+      )
+    ));
+  }
+
+  return $materials;
+}
+
+/**
+ * Determine the filename extension.
+ *
+ * @param $ext
+ * @return string
+ */
+function _sbac_resource_determine_extension($ext) {
+  $media = 'document';
+
+  switch ($ext) {
+    case 'txt';
+    case 'doc';
+    case 'docx';
+    case 'pdf';
+    case 'xls';
+    case 'xlsx';
+    case 'pptx';
+    case 'ppt';
+      $media = 'document';
+      break;
+    case 'mp4';
+    case 'mpg';
+    case 'mov';
+    case 'avi';
+    case 'mp3';
+    case 'aac';
+      $media = 'video';
+      break;
+    case 'png';
+    case 'jpg';
+    case 'jpeg';
+      $media = 'image';
+      break;
+  }
+
+  return $media;
+}
+/**
+ * Determine the filename extension.
+ *
+ * @param $ext
+ * @return string
+ */
+function _sbac_resource_determine_file_type_icon($ext) {
+  $media = 'document';
+
+  switch ($ext) {
+    case 'txt';
+    case 'doc';
+    case 'docx';
+      $media = 'doc';
+      break;
+    case 'pdf';
+      $media = 'pdf';
+      break;
+    case 'xls';
+    case 'xlsx';
+      $media = 'xls';
+      break;
+    case 'pptx';
+    case 'ppt';
+      $media = 'ppt';
+      break;
+    case 'mp4';
+    case 'mpg';
+    case 'mov';
+    case 'avi';
+    case 'mp3';
+    case 'aac';
+      $media = 'video';
+      break;
+    case 'png';
+    case 'jpg';
+    case 'jpeg';
+      $media = 'image';
+      break;
+  }
+
+  return $media;
+}
+
+/**
+ * Implementation of hook_preprocess_page()
+ *
+ * @param $vars
+ */
+function sbac_resource_preprocess_page(&$vars) {
+  if (isset($vars['node']->type) && $vars['node']->type == 'resource') {
+    if (isset($vars['page']['#type']) && $vars['page']['#type'] == 'page') {
+      unset($vars['tabs']);
+    }
+  }
+}
+
+/**
+ * overide theme_status_messages, in function check if yours, else call theme_status_messages or soemthing
+ *
+ * @param $theme_registry
+ */
+ function sbac_resource_theme_registry_alter(&$theme_registry) {
+   if (isset($theme_registry['status_messages'])) {
+     $theme_registry['status_messages']['function'] = 'sbac_resource_status_messages';
+   }
+ }
+
+/**
+ *
+ *
+ * @param $variables
+ * @return string
+ */
+function sbac_resource_status_messages($variables) {
+  $output = '';
+  $structured_messages = array();
+  $messages = drupal_get_messages('sbac_resource_error');
+  if (isset($messages['sbac_resource_error'])) {
+    foreach ($messages['sbac_resource_error'] as $message) {
+      $elements = explode(':', $message);
+      $section = $elements[0];
+      $field = $elements[1];
+      $error_type = $elements[2];
+      $error_message = $elements[3];
+      $structured_messages[$section][$error_type][$field] = $error_message;
+    }
+  }
+
+  $final_messages = array();
+  if ($structured_messages) {
+    foreach ($structured_messages as $section => $field_errors) {
+      if (count($field_errors['group']) > 1) { // Group is needed, create structure, extra Parent label
+        foreach ($field_errors['group'] as $field => $error) {
+          $final_messages[$section]['messages'][] = $error;
+          $final_messages[$section]['group'] = TRUE;
+        }
+      }
+      else {
+        $single_message = array_shift($field_errors['single']);
+        $final_messages[$section]['messages'][] = $single_message;
+      }
+    }
+
+    if ($final_messages) {
+      $output = sbac_resource_status_messages_output($variables, $final_messages);
+    }
+  }
+
+  if (!$final_messages) {
+    $output = sbac_status_messages($variables);
+  }
+
+  return $output;
+}
+
+/**
+ * Takes the final array structure from sbac_resource_status_messages
+ * and builds the desired output.
+ *
+ * @param $variables
+ * @param $final_messages
+ */
+function sbac_resource_status_messages_output($variables, $final_messages) {
+  $output = '';
+  foreach ($final_messages as $section => $messages) {
+    $header = $section;
+    if (isset($messages['group'])) {
+      $header = "You must do the following to continue: ";
+    }
+
+    $output .= "<div class='sbac-resource-alert-box alert-box alert'>\n";
+    $output .= "<h2 class='sbac-resource-error-section'>" . ucwords($header) . "</h2>\n";
+    $output .= " <ul>\n";
+    foreach ($messages['messages'] as $message) {
+      $output .= '  <li>' . $message . "</li>\n";
+    }
+    $output .= " </ul>\n";
+    $output .= "</div>\n";
+  }
+  return $output;
+}
+
+/**
+ * Override drupal core messages with zurb foundation alert-box messages.
+ * Customize the colors within the _settings.scss file
+ *
+ * http://foundation.zurb.com/docs/elements.php#panelEx
+ */
+function sbac_status_messages($variables) {
+  $display = $variables['display'];
+  $output = '';
+
+  $status_heading = array(
+    'error' => t('Error message'),
+    'status' => t('Status message'),
+    'warning' => t('Warning message'),
+  );
+  $status_mapping = array(
+    'error' => 'alert',
+    'success' => 'success',
+    'warning' => 'secondary'
+  );
+  $error_messages = drupal_get_messages($display);
+  foreach ($error_messages as $type => $messages) {
+    if ($messages) {
+      if (isset($status_mapping[$type])) {
+        $output .= "<div class=\"alert-box $status_mapping[$type]\">\n";
+      }
+      else {
+        $output .= "<div class=\"alert-box\">\n";
+      }
+
+      if (!empty($status_heading[$type])) {
+        $output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
+      }
+      if (count($messages) > 1) {
+        $output .= " <ul>\n";
+        foreach ($messages as $message) {
+          $output .= '  <li>' . $message . "</li>\n";
+        }
+        $output .= " </ul>\n";
+      }
+      else {
+        if ($messages) {
+          $output .= $messages[0];
+        }
+      }
+      $output .= "</div>\n";
+    }
+  }
+  return $output;
+}
+
+/**
+ * Populates contextual filters with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ */
+function _sbac_resource_apply_filters(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+
+  // Current filter session - create the args where needed.
+  if (isset($_SESSION['sbac-current-filters'])) {
+    $current_filters = $_SESSION['sbac-current-filters'];
+    $filters = explode('::', $current_filters);
+    if ($filters) {
+      foreach ($filters as $filter) {
+        $filter_info = explode(':', $filter);
+        if ($filter_info && sizeof($filter_info) == 2) {
+          $vid = $filter_info[0];
+          $tid = $filter_info[1];
+          if ($vid && $tid) {
+            $vocabulary = taxonomy_vocabulary_load($vid);
+            $term = taxonomy_term_load($tid);
+            if ($vocabulary && $term) {
+              switch ($vocabulary->machine_name) {
+                case 'attributes':
+                  $view_filters['field_attributes_tid']['value'][] = $tid;
+                  break;
+                case 'focus':
+                  $view_filters['field_focus_tid']['value'][] = $tid;
+                  break;
+                case 'grades':
+                  $view_filters['field_grades_tid']['value'][] = $tid;
+                  // $view_filters['field_grades_tid']['operator'] = 'and';
+                  break;
+                case 'intended_student_populations':
+                  $view_filters['field_intended_student_tid']['value'][] = $tid;
+                  break;
+                case 'digital_media_type':
+                  $view_filters['field_digital_media_type_tid']['value'][] = $tid;
+                  break;
+                case 'subject':
+                  $view_filters['field_subject_tid']['value'][] = $tid;
+                  break;
+                case 'geographical_settings':
+                  $view_filters['field_geographical_settings_tid']['value'][] = $tid;
+                  break;
+                case 'educational_use':
+                  $view_filters['field_educational_use_tid']['value'][] = $tid;
+                  break;
+                case 'intended_end_user':
+                  $view_filters['field_intended_end_user_tid']['value'][] = $tid;
+                  break;
+                case 'smarter_balanced_keyword':
+                  $view_filters['field_smarter_balanced_keyword_tid']['value'][] = $tid;
+                  break;
+                case 'technologies_for_classroom_use':
+                  $view_filters['field_classroom_technologies_tid']['value'][] = $tid;
+                  break;
+              }
+            }
+          }
+        }
+      }
+    }
+    $view->display_handler->set_option('filters', $view_filters);
+  }
+
+  if (isset($_SESSION['sbac-search-keywords'])) {
+    $keywords = $_SESSION['sbac-search-keywords'];
+    $view_filters['keys']['value'] = $keywords;
+    $view->display_handler->set_option('filters', $view_filters);
+  }
+}
+
+/**
+ * Menu Callback.
+ *
+ * @return string
+ */
+function sbac_resource_digital_library_page() {
+  menu_set_active_item('digital-library-resources');
+  if (isset($_SESSION['dlp-view-mode'])) {
+    $display = $_SESSION['dlp-view-mode'];
+    if (arg(1) == 'list') {
+      $display = 'list_view';
+    }
+    else if (arg(1) == 'grid') {
+      $display = 'grid_view';
+    }
+    $_SESSION['dlp-view-mode'] = $display;
+  }
+  else {
+    // By default show grid layout with link to list layout
+    $display = 'grid_view';
+    if (arg(1) == 'list') {
+      $display = 'list_view';
+    }
+    // Add session variable to persist for users session.
+    $_SESSION['dlp-view-mode'] = $display;
+  }
+
+  // Add appropriate JS.
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
+
+  $view = views_get_view('resources');
+  $view->set_display($display);
+  _sbac_resource_apply_filters($view);
+  $view->pre_execute();
+  $view->execute();
+  $view->_post_execute();
+  $resource_layout_view = $view->preview();
+  $_SESSION['sbac_search_count'] = $view->total_rows;
+
+  return theme('digital_library', array('resource_layout_view' => $resource_layout_view));
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Cleanup routine for temporary nodes that may have been abandoned during Resource creation.
+ * ie. Resource CT creates a node
+ */
+function sbac_resource_cron() {
+  $secsback = 60 * 60 * 2; // 2h
+  $sql = "SELECT n.nid AS nid FROM {node} n JOIN {field_data_field_temp} t ON n.nid = t.entity_id ";
+  $sql .= "WHERE n.type = :resource AND t.field_temp_value = :temp AND (UNIX_TIMESTAMP() - n.created) > :secsback";
+  $result = db_query($sql, array(':resource' => 'resource', ':temp' => 1, ':secsback' => $secsback));
+  foreach ($result as $record) {
+    node_delete($record->nid);
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ *
+ * @param $node
+ */
+function sbac_resource_node_presave($node) {
+  if (isset($node->nid) && $node->nid) { //update node
+    if (isset($node->field_file['und'][0]['fid'])) {
+      try {
+        $file = file_load($node->field_file['und'][0]['fid']);
+        if ((isset($node->original->field_file['und'][0]['filename']) &&
+            $file->filename != $node->original->field_file['und'][0]['filename']) ||
+          (isset($node->original->field_file['und'][0]['filename']) &&
+            $file->filesize != $node->original->field_file['und'][0]['filesize'])
+        ) { // existing file changed.
+          sbac_resource_delete_file_from_cmis($node);
+          // Create new doc
+          sbac_resource_create_file_from_cmis($node);
+        }
+        else {
+          if ($file && !isset($node->original->field_file['und'][0]['filename'])) {
+            sbac_resource_create_file_from_cmis($node); // new file
+          }
+        }
+      } catch (CMISException $e) {
+        cmis_error_handler('sbac_documents_update_document', $e);
+      }
+    }
+    else {
+      if (!isset($node->field_file['und'][0]['fid']) && isset($node->original->field_file['und'][0]['filename'])) {
+        sbac_resource_delete_file_from_cmis($node); // delete the file
+      }
+    }
+  }
+  else { // new node
+    if (isset($node->field_file['und'][0]['fid'])) {
+      sbac_resource_create_file_from_cmis($node);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ *
+ * @param $node
+ */
+function sbac_resource_node_delete($node) {
+  if (isset($node->field_document_id['und'][0]['value']) && $node->field_document_id['und'][0]['value']) {
+    sbac_resource_delete_file_from_cmis($node);
+  }
+}
+
+/**
+ * Adds the file to Alfresco.
+ *
+ * @param $node
+ */
+function sbac_resource_create_file_from_cmis(&$node) {
+  module_load_include('api.inc', 'cmis');
+  global $user;
+  $role = sbac_central_determine_user_role($user);
+  $file = file_load($node->field_file['und'][0]['fid']);
+  $folder_path = '/Roles/' . strtolower(str_replace(' ', '_', $role->name));
+  try {
+    $repository = cmis_get_repository();
+    $folder = cmisapi_getObjectByPath($repository->repositoryId, $folder_path);
+    $document_id = cmisapi_createDocument($repository->repositoryId, $folder->id, $file->filename, array(), file_get_contents($file->uri), $file->filemime);
+    $node->field_document_id['und'][0]['value'] = $document_id->id;
+  } catch (CMISException $e) {
+    cmis_error_handler('sbac_documents_presave_document', $e);
+  }
+}
+
+/**
+ * Deletes the file from Alfresco.
+ *
+ * @param $node
+ */
+function sbac_resource_delete_file_from_cmis(&$node) {
+  module_load_include('api.inc', 'cmis');
+  try {
+    $repository = cmis_get_repository();
+    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $node->field_document_id['und'][0]['value']);
+    cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
+    $node->field_document_id['und'][0]['value'] = NULL;
+  } catch (CMISException $e) {
+    cmis_error_handler('sbac_documents_delete_document', $e);
+  }
+}
+
+/**
+ * Helper function for Resource form magic.
+ * We need to create a node when a user enters a Resource CT form so
+ * that we can tie Alignment reference back to the node it belongs to.
+ *
+ * @param $node
+ */
+function sbac_resource_create_node(&$node) {
+  global $user;
+
+  $node->title = '';
+  $node->type = "resource";
+  node_object_prepare($node);
+  $node->language = LANGUAGE_NONE;
+  $node->uid = $user->uid;
+  $node->status = 0;
+  $node->promote = 0;
+  $node->comment = 1;
+  $node->field_temp['und'][0]['value'] = 1;
+
+  $node = node_submit($node);
+  node_save($node);
+}
+
+/**
+ * Implements of hook_page_alter().
+ *
+ * @param $page
+ */
+function sbac_resource_page_alter(&$page) {
+  if (!isset($page['content']['system_main']['#form_id'])) {
+  }
+  else {
+    if (isset($page['content']['system_main']['#form_id']) && $page['content']['system_main']['#form_id'] == 'resource_node_form') {
+      $page['help']['system_help']['#markup'] = '';
+    }
+  }
+}
+
+/**
+ * Text to display when "Has No License" option is selected on Licensing radio boxes
+ * in Resource - Materials
+ *
+ * @return string
+ */
+function sbac_resource_licensing_form_has_no_license() {
+  $output = '
+              <ul>
+                <li>Before continuing, you must obtain permission to use the resource in the Digital Library.</li>
+                <li>Download, complete and submit the Copyright Clearance Form to resume your submittal.</li>
+              </ul>
+            ';
+
+  return $output;
+}
+
+/**
+ * Creates a grid or list button.
+ *
+ * @return string
+ */
+function sbac_resource_grid_list_button() {
+  $path = 'digital-library-resources';
+  if (isset($_SESSION['dlp-view-mode'])) {
+    $display_mode = $_SESSION['dlp-view-mode'];
+    if ($display_mode == 'grid_view') {
+      $button = l('List View', $path . '/list', array(
+        'absolute' => TRUE,
+        'attributes' => array(
+          'class' => array('sbac-list-layout')
+        )
+      ));
+    }
+    else {
+      $button = l('Grid View', $path . '/grid', array(
+        'absolute' => TRUE,
+        'attributes' => array(
+          'class' => array('sbac-grid-layout')
+        )
+      ));
+    }
+  }
+  else {
+    $button = l('List View', $path . '/list', array(
+      'absolute' => TRUE,
+      'attributes' => array(
+        'class' => array('sbac-list-layout')
+      )
+    ));
+    if (arg(1) != NULL && arg(1) == 'list') {
+      $button = l('Grid View', $path . '/grid', array(
+        'absolute' => TRUE,
+        'attributes' => array(
+          'class' => array('sbac-grid-layout')
+        )
+      ));
+    }
+  }
+
+  return $button;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ */
+function sbac_resource_block_info() {
+  $blocks['sbac_resource_results_count'] = array(
+    'info' => t('Search Results Count'),
+    'region' => 'sub-header',
+    'pages' => 'digital-library-resources*',
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -23,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_create_button'] = array(
+    'info' => t('Create New Resource'),
+    'region' => 'sub-header',
+    'pages' => 'digital-library-resources*',
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'weight' => -22,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_grid_list_button'] = array(
+    'info' => t('Grid / List button'),
+    'region' => 'search',
+    'pages' => "digital-library-resources*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'status' => 1,
+    'weight' => 0,
+  );
+
+  $blocks['sbac_resource_back_button'] = array(
+    'info' => t('Back Button'),
+    'region' => 'sub-header',
+    'pages' => "content*\nterms-of-service",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *
+ * @return array
+ */
+function sbac_resource_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'sbac_resource_results_count':
+      $count = 0;
+      if (isset($_SESSION["sbac_search_count"])) {
+        $count = $_SESSION["sbac_search_count"];
+      }
+      $block['subject'] = NULL;
+      $block['content'] = '<h3 class="left">' . t('Resources (' . $count . ')') . '</h3>';
+      break;
+
+    case 'sbac_resource_create_button':
+      $block['subject'] = NULL;
+      global $user;
+      $content = NULL;
+      if (in_array('resource contributor', $user->roles)) {
+        $content = l('Create New Resource', 'node/add/resource', array(
+          'absolute' => TRUE,
+          'attributes' => array('class' => array('small', 'button'))
+        ));
+      }
+      $block['content'] = $content;
+      break;
+
+    case 'sbac_resource_grid_list_button':
+      $block['subject'] = NULL;
+      $block['content'] = sbac_resource_grid_list_button();
+      break;
+
+    case 'sbac_resource_back_button':
+      $block['subject'] = NULL;
+      $block['content'] = "<a href='#' class='button' onclick='history.back(); return false;'>Back</a>";
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_block_info_alter().
+ *
+ * @param $blocks
+ * @param $theme
+ * @param $code_blocks
+ */
+function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
+  $blocks['system']['navigation']['status'] = FALSE;
+  $blocks['workbench']['block']['status'] = FALSE;
+
+  // If I do not do this, the blocks do not propogate correctly. I'm not sure why.
+//  $blocks['sbac_resource']['sbac_resource_results_count']['visibility'] = BLOCK_VISIBILITY_LISTED;
+//  $blocks['sbac_resource']['sbac_resource_results_count']['pages'] = 'digital-library-resources*';
+//  $blocks['sbac_resource']['sbac_resource_results_count']['region'] = 'sub-header';
+//  $blocks['sbac_resource']['sbac_resource_results_count']['theme'] = 'SBAC';
+//  $blocks['sbac_resource']['sbac_resource_results_count']['status'] = TRUE;
+//  $blocks['sbac_resource']['sbac_resource_results_count']['weight'] = -23;
+//
+//  $blocks['sbac_resource']['sbac_resource_create_button']['visibility'] = BLOCK_VISIBILITY_LISTED;
+//  $blocks['sbac_resource']['sbac_resource_create_button']['pages'] = 'digital-library-resources*';
+//  $blocks['sbac_resource']['sbac_resource_create_button']['region'] = 'sub-header';
+//  $blocks['sbac_resource']['sbac_resource_create_button']['theme'] = 'SBAC';
+//  $blocks['sbac_resource']['sbac_resource_create_button']['status'] = TRUE;
+//  $blocks['sbac_resource']['sbac_resource_create_button']['weight'] = -22;
+//
+//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['visibility'] = BLOCK_VISIBILITY_LISTED;
+//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['pages'] = 'digital-library-resources*';
+//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['region'] = 'search';
+//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['theme'] = 'SBAC';
+//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['status'] = TRUE;
+//
+// $blocks['sbac_resource']['sbac_resource_back_button']['visibility'] = BLOCK_VISIBILITY_LISTED;
+// $blocks['sbac_resource']['sbac_resource_back_button']['pages'] = "content/*\nterms-of-service";
+// $blocks['sbac_resource']['sbac_resource_back_button']['region'] = 'sub-header';
+// $blocks['sbac_resource']['sbac_resource_back_button']['theme'] = 'SBAC';
+// $blocks['sbac_resource']['sbac_resource_back_button']['status'] = TRUE;
+}
+
+/**
+ * Cleans the text and remove's any malicious text.
+ *
+ * @param $form_state
+ */
+function sbac_resource_clean_text(&$form_state) {
+  foreach ($form_state['values'] as $field_name => $field) {
+    if (is_array($field) && isset($field['und'][0]['value']) && $field['und'][0]['value'] != NULL) {
+      $form_state['values'][$field_name]['und'][0]['value'] = filter_xss($field['und'][0]['value']);
+    }
+    if ($field_name == 'title' && $field != NULL) {
+      $form_state['values']['title'] = filter_xss($field);
+    }
+  }
+}

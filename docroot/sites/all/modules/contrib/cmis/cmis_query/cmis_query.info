@@ -1,0 +1,13 @@
+name = CMIS Query
+description = Allows users to run CMIS queries against a CMIS repository.
+package = CMIS
+dependencies[] = cmis
+dependencies[] = cmis_browser
+core = "7.x"
+project = "cmis"
+; Information added by drupal.org packaging script on 2013-07-30
+version = "7.x-1.4"
+core = "7.x"
+project = "cmis"
+datestamp = "1375174577"
+

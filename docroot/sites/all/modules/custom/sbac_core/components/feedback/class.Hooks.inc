@@ -1,0 +1,444 @@
+<?php
+namespace sbac_core\components\feedback;
+
+class Hooks extends \devtools\Hooks {
+  protected $_info = '';
+  protected $_bundles = array();
+
+  function __construct() {
+    $this->_info = field_info_bundles('feedback');
+    $this->_bundles = array_keys($this->_info);
+  }
+
+  /**
+   * Post-initialization operations.
+   * @return [type] [description]
+   */
+  function postInit() {
+    // add custom Display Suite fields
+    $ds_args = array(
+      'path' => $this->_path,
+      'file' => 'feedback.theme.inc',
+      'variables' => array(),
+    );
+
+    add_ds_field('node',  array(
+      'key' => 'resource_slideshow',
+      'name' => t('Resource Slideshow'),
+      'ui_limit' => array(
+        'resource|*', // limit to displaying on Resource bundles
+      ),
+    ) + $ds_args);
+  }
+
+  /*----------------------------------------------------------------------------
+      DRUPAL HOOKS
+  ----------------------------------------------------------------------------*/
+
+  /**
+   * Extends hook_init().
+   */
+  function hook_init() {
+    // redirect gate keeper entities to their appropriate resource node;
+    // in the "natural" user-flow, the user will only end up here after
+    // submitting a Gate Keeper entity as either "meets" or "doesn't meet."
+    // we can use that info to direct the user to an appropriate tab
+    if ($feedback = current_feedback()) {
+      if (!isset($feedback->node_id)) {
+        return;
+      }
+
+      if ($feedback->type == 'gate_keeper') {
+        // figure out which review tab we want to default to
+        $fragment = 'about';
+
+        if ($feedback->completed) {
+          if ($feedback->met_criteria) {
+            $fragment = 'qc'; // quality review tab
+          }
+          else {
+            $fragment = 'gk'; // gate keeper tab
+          }
+        }
+
+        drupal_goto('node/' . $feedback->node_id, array(
+          'fragment' => 'review-' . $fragment,
+        ));
+      }
+      elseif ($feedback->type == 'review') {
+        drupal_goto('node/' . $feedback->node_id, array(
+          'fragment' => 'review-qc',
+        ));
+      }
+    }
+    elseif (preg_match('#node/(\d+)/edit#', $_GET['q'], $matches)) {
+      // can't edit resources unless they're in draft state
+      $node = node_load($matches[1]);
+
+      if ($node && $node->type == 'resource') {
+        $states = array(
+          'needs_review',
+          'being_reviewed',
+          'rejected',
+          'approved',
+          'published',
+        );
+
+        if (in_array($node->workbench_moderation['current']->state, $states) && !user_access('administer nodes')) {
+          drupal_access_denied();
+          exit();
+        }
+      }
+    }
+  }
+
+  /**
+   * Extends hook_menu().
+   */
+  function hook_menu() {
+    $base = array(
+      'file' => 'feedback.pages.inc',
+      'file path' => $this->_path,
+    );
+
+    $items['admin/sbac/feedback'] = array(
+      'title' => 'Feedback Flow', 
+      'page callback' => 'sbac_core_index_page',
+      'access arguments' => array('configure sbac'), 
+    ) + $base;
+
+    $items['admin/sbac/feedback/gate_keeper'] = array(
+      'title' => 'Gate Keeper', 
+      'page callback' => 'drupal_get_form', 
+      'page arguments' => array('feedback_gate_keeper_admin_form'),
+      'access arguments' => array('configure sbac'), 
+      'file' => 'feedback.admin.inc',
+      'weight' => 0,
+    ) + $base;
+
+    $items['admin/sbac/feedback/quality_review'] = array(
+      'title' => 'Quality Review', 
+      'page callback' => 'drupal_get_form', 
+      'page arguments' => array('feedback_quality_review_admin_form'),
+      'access arguments' => array('configure sbac'), 
+      'file' => 'feedback.admin.inc',
+      'weight' => 1,
+    ) + $base;
+
+    $items['admin/sbac/feedback/post'] = array(
+      'title' => 'Post', 
+      'page callback' => 'drupal_get_form', 
+      'page arguments' => array('feedback_post_admin_form'),
+      'access arguments' => array('configure sbac'), 
+      'file' => 'feedback.admin.inc',
+      'weight' => 2,
+    ) + $base;
+
+    $items['node/%node/review'] = array(
+      'title' => 'Review',
+      'page callback' => 'resource_review_page',
+      'page arguments' => array(1),
+      'access callback' => 'resource_access',
+      'access arguments' => array('view about', 1),
+      'weight' => 2,
+      'type' => MENU_LOCAL_TASK,
+      'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    ) + $base;
+
+    $items['node/%node/review/gate-keeper'] = array(
+      'title' => 'Gate Keeper',
+      'page callback' => 'resource_feedback_ajax_page',
+      'page arguments' => array('gate_keeper', 1),
+      'access callback' => 'resource_access',
+      'access arguments' => array('edit gate keeper', 1),
+      'weight' => 2,
+      'type' => MENU_LOCAL_TASK,
+      'context' => MENU_CALLBACK,
+    ) + $base;
+
+    $items['node/%node/review/review'] = array(
+      'title' => 'Quality Criteria Review',
+      'page callback' => 'resource_feedback_ajax_page',
+      'page arguments' => array('review', 1),
+      'access callback' => 'resource_access',
+      'access arguments' => array('edit quality criteria', 1),
+      'weight' => 2,
+      'type' => MENU_LOCAL_TASK,
+      'context' => MENU_CALLBACK,
+    ) + $base;
+
+    $items['node/%node/review/post'] = array(
+      'title' => 'Post',
+      'page callback' => 'resource_feedback_ajax_page',
+      'page arguments' => array('post', 1),
+      'access callback' => 'resource_access',
+      'access arguments' => array('edit post', 1),
+      'weight' => 3,
+      'type' => MENU_LOCAL_TASK,
+      'context' => MENU_CALLBACK,
+    ) + $base;
+
+    $items['node/%node/review/redirect'] = array(
+      'title' => 'Gate Keeper',
+      'page callback' => 'resource_redirect_page',
+      'page arguments' => array(1, 4),
+      'access callback' => TRUE,
+      'weight' => 2,
+      'type' => MENU_CALLBACK,
+    ) + $base;
+
+    return $items;
+  }
+
+  /**
+   * Extends hook_theme().
+   */
+  function hook_theme($existing, $type, $theme, $path) {
+    $base = array(
+      'path' => $this->_path . '/templates',
+    );
+
+    $items = array(
+      'feedback_helpful_info' => array(
+        'variables' => array(
+          'helpful_info' => NULL,
+        ),
+        'template' => 'feedback_helpful_info',
+      ),
+      'review_teaser' => array(
+        'variables' => array(
+          'id' => NULL,
+          'author' => NULL,
+          'created' => NULL,
+          'headline' => NULL,
+          'comments' => NULL,
+        ),
+        'template' => 'review_teaser',
+      ),
+    );
+
+    foreach ($items as &$item) {
+      $item += $base;
+    }
+
+    return $items;
+  }
+
+  /**
+   * Extends hook_permission().
+   */
+  function hook_permission() {
+    return array(
+      'edit feedback properties' => array(
+        'title' => t('Edit Feedback properties.'),
+        'description' => t('Grants permission to edit the properties on existing Feedback entities.'),
+      ),
+    );
+  }
+
+  /**
+   * Extends hook_form_alter().
+   */
+  function hook_form_alter(&$form, &$form_state, $form_id) {
+    // feedback add/edit form
+    if (preg_match('/^eck__entity__form_(edit|add)_feedback_(' . implode('|', $this->_bundles) . ')$/', $form_id, $matches)) {
+      // basic form data
+        $bundle = $matches[2];
+
+      // build form utility object to take care of the heavy lifting
+        switch ($bundle) {
+          case 'gate_keeper':
+            $class_name = 'GateKeeper';
+            break;
+
+          case 'review':
+            $class_name = 'Review';
+            break;
+
+          case 'post':
+            $class_name = 'Post';
+            break;
+        }
+
+        if ($class_name) {
+          module_load_include('inc', 'sbac_core', 'components/feedback/includes/form_utility/class.Base');
+          module_load_include('inc', 'sbac_core', 'components/feedback/includes/form_utility/class.' . $class_name);
+
+          $full_class_name = 'sbac_core\\components\\feedback\\form_utility\\' . $class_name;
+          $form_utility = new $full_class_name($form, $form_state, $this->_info[$bundle]);
+
+          $form_utility->attachHelpfulInfo();
+          $form_utility->process();
+          $form_utility->postProcess();
+        }
+    }
+  }
+
+  /**
+   * Extends hook_cron().
+   */
+  function hook_cron() {
+    // don't simply subtract seconds from the current timestamp - that'll get messed up
+    // during daylight time changes
+    $time_ago = strtotime('-' . FEEDBACK_REVIEW_TIMEOUT . ' hours');
+
+    $args = array(
+      ':time_ago' => $time_ago,
+    );
+
+    // pull up active, yet incomplete gate keeper entities which are past the time limitation
+    $query = "  SELECT    id, node_id
+                FROM      eck_feedback
+                WHERE     status = 1
+                AND       completed = 0
+                AND       created <= :time_ago 
+                AND       type = 'gate_keeper'
+             ";
+
+    $result = db_query($query, $args)->fetchAll();
+    foreach ($result as $row) {
+      if ($node = node_load($row->node_id)) {
+        // if this is an incomplete gate keeper, then the resource won't have any reviews
+        // and we can safely bump it back to draft; we don't need to worry about
+        // review entities, because to have one of those in the system, the resource must
+        // have a completed gate keeper, meaning we don't need to change any node workflow
+        // properties
+        workbench_moderation_moderate($node, 'draft');
+      }
+    }
+
+    // now disable all incomplete feedback entities
+    $query = "  UPDATE  eck_feedback
+                SET     status = 0
+                WHERE   status = 1
+                AND     completed = 0
+                AND     created <= :time_ago
+             ";
+
+    db_query($query, $args);
+  }
+
+  /**
+   * Extends hook_node_view_alter().
+   */
+  function hook_node_view_alter(&$build) {
+    // add the review tabs to resource nodes
+    if ($build['#node']->type == 'resource' && $build['#view_mode'] == 'full') {
+      module_load_include('inc', 'sbac_core', 'components/feedback/feedback.pages');
+
+      $build['review'] = array(
+        '#markup' => resource_review_page($build['#node']),
+      );
+    }
+  }
+
+  /**
+   * Extends hook_js_alter().
+   */
+  function hook_js_alter(&$javascript) {
+    // this JS is throwing errors and is breaking everything; we don't need it
+    unset($javascript['sites/all/themes/SBAC/js/vendor/jquery.migrate.1.1.1.js']);
+  }
+
+  /**
+   * Extends hook_theme_registry_alter().
+   */
+  function hook_theme_registry_alter(&$theme_registry) {
+    // We alter the registry and add a new theme callback so we can append a div
+    // right before the regular theme element; this div gets the 'error' class
+    // whenever the subsequent element contains a validation error. By not 
+    // wrapping the original element we don't break any selectors or markup,
+    // and can still use CSS siblings selector to target it.
+    // 
+    // All this headache is required to add the red 'x' (validation fail icon)
+    // on form elements, yet outside the element's immediate DOM structure
+
+    $theme_registry['form_element_original'] = $theme_registry['form_element'];
+
+    $theme_registry['form_element']['function'] = 'feedback_theme_form_element';
+    $theme_registry['form_element']['file'] = 'feedback.theme.inc';
+    $theme_registry['form_element']['theme path'] = $this->_path;
+    $theme_registry['form_element']['includes'] = array(
+      $this->_path . '/feedback.theme.inc',
+    );
+  }
+
+  /**
+   * Exends hook_field_attach_form().
+   */
+  function hook_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
+    // required to do proper field validation on Field Collection items;
+    // see https://drupal.org/node/1289062#comment-7584113 for more info
+    if ($entity_type == 'field_collection_item') {
+      $info = entity_get_info($entity_type);
+      $bundle_key = $info['entity keys']['bundle'];
+
+      if (in_array($entity->{$bundle_key}, array('field_quality_set', 'field_review_set'))) {
+        $form['#required'] = TRUE;
+      }
+    }
+  }
+
+  /**
+   * Extends hook_entity_presave();
+   */
+  function hook_entity_presave($entity, $type) {
+    // set active status for new Review entities
+    if ($type == 'feedback' && $entity->type == 'review' && (!isset($entity->id) || !$entity->id)) {
+      $entity->status = 1;
+    }
+  }
+
+  /**
+   * Extends hook_entity_insert().
+   */
+  function hook_entity_insert($entity, $type) {
+    if ($type == 'feedback') {
+      $this->_check_resource_review_state($entity);
+    }
+  }
+
+  /**
+   * Extends hook_entity_update().
+   */
+  function hook_entity_update($entity, $type) {
+    if ($type == 'feedback') {
+      $this->_check_resource_review_state($entity);
+    }
+  }
+
+  /*----------------------------------------------------------------------------
+      MODULE HOOKS
+  ----------------------------------------------------------------------------*/
+
+  /**
+   * Extends hook_workbench_moderation_transition().
+   */
+  function hook_workbench_moderation_transition($node, $previous_state, $new_state) {
+    if ($node->type == 'resource' && $new_state == 'needs_review') {
+      $query = "  UPDATE    eck_feedback
+                  SET       status = 0,
+                            current = 0
+                  WHERE     node_id = :node_id
+               ";
+
+      db_query($query, array(':node_id' => $node->nid));
+    }
+  }
+
+  /*----------------------------------------------------------------------------
+      INTERNAL / HELPERS
+  ----------------------------------------------------------------------------*/
+
+  protected function _check_resource_review_state($review) {
+    if ($node = node_load($review->node_id)) {
+      // if the node isn't in review yet, set it to being_reviewed
+      if (isset($node->workbench_moderation['my_revision']->state) && $node->workbench_moderation['my_revision']->state == 'needs_review') {
+        workbench_moderation_moderate($node, 'being_reviewed');
+      }
+    }
+  }  
+}
+
+
+

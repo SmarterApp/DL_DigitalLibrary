@@ -1,0 +1,12 @@
+diff --git a/sites/all/libraries/tcpdf/tcpdf.php b/sites/all/libraries/tcpdf/tcpdf.php
+index 9d73a74..c909595 100644
+--- a/sites/all/libraries/tcpdf/tcpdf.php
++++ b/sites/all/libraries/tcpdf/tcpdf.php
+@@ -6839,6 +6839,7 @@ class TCPDF {
+ 				if (function_exists('curl_init')) {
+ 					// try to get remote file data using cURL
+ 					$cs = curl_init(); // curl session
++          $file = str_replace('http://', 'http://sbac:sb4c@', $file);
+ 					curl_setopt($cs, CURLOPT_URL, $file);
+ 					curl_setopt($cs, CURLOPT_BINARYTRANSFER, true);
+ 					curl_setopt($cs, CURLOPT_FAILONERROR, true);

@@ -1,0 +1,45 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Paradata feature.
+ */
+
+include_once 'sbac_paradata.features.inc';
+
+
+/* 
+ * Implementation of hook_node_load
+ *
+*/
+
+function sbac_paradata_node_load($nodes, $types) {
+  //make sure we are only viewing through the content/* path
+  global $user;
+  foreach ($nodes as $node) {
+    //make sure we are looking at a node along the node path and it is published before we start to count views
+    if ($node->type == 'resource' && $node->status == '1') {
+      //update the raw data table
+      $query = "insert into node_user_paradata (
+						uid, 
+						nid, 
+						hits) 
+					values (
+						" . $user->uid . ", 
+						" . $node->nid . ", 
+						1) 
+					on duplicate key 
+						update hits = hits + 1";
+      $result = db_query($query);
+      //send the denormed data to the node
+      $query = "select sum(hits) as hits, count(distinct(uid)) as unique_hits from node_user_paradata where nid=" . $node->nid;
+      $result = db_query($query);
+      $thisrow = $result->fetchAssoc();
+      $node->field_total_views[LANGUAGE_NONE] = array(0 => array('value' => $thisrow['hits']));
+      $node->field_unique_views[LANGUAGE_NONE] = array(0 => array('value' => $thisrow['unique_hits']));
+      entity_save_field(array('field_total_views', 'field_unique_views'), $node, 'node', $node->nid);
+    }
+  }
+}
+
+
+

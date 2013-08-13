@@ -1,0 +1,67 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC LDAP feature.
+ */
+
+include_once 'sbac_ldap.features.inc';
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_ldap_update_projects_alter(&$projects) {
+  unset($projects['sbac_ldap']);
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $from_state
+ * @param $form_id
+ */
+function sbac_ldap_form_alter(&$form, &$from_state, $form_id) {
+  if ($form_id == 'user_login') {
+    $form['#validate'][] = 'sbac_ldap_login_validate';
+  }
+}
+
+/**
+ * Validate handler for login.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_ldap_login_validate(&$form, &$form_state) {
+  $error = sbac_ldap_test_connect();
+  if ($error) {
+    $messages = drupal_get_messages(NULL, FALSE);
+    if (isset($messages['error'])) {
+      foreach ($messages['error'] as $key => $message) {
+        if (strpos($message, 'Sorry, unrecognized username or password') !== FALSE) {
+          drupal_get_messages('error');
+          drupal_set_message('User authentication is currently unavailable. Please try again in a few minutes', 'error');
+          break;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Tests that the LDAP server is up and running.
+ *
+ * @return bool
+ */
+function sbac_ldap_test_connect() {
+  if (!$auth_conf = ldap_authentication_get_valid_conf()) {
+    return TRUE;
+  }
+
+  if (!$auth_conf->hasEnabledAuthenticationServers()) {
+    return TRUE;
+  }
+  return FALSE;
+}

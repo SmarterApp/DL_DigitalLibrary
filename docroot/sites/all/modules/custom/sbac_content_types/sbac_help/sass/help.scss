@@ -1,0 +1,48 @@
+@import "compass/css3";
+
+/**
+ * Help Page CSS
+ **/
+
+.view-help-topics {
+	 width: 750px;
+	 margin: 0 auto;
+
+	 .flexslider {
+		 @include border-radius(0);
+		 @include box-shadow(none);
+	 	.views-row{
+	 		text-align: center;
+	 		//width: 250px;
+	 		margin: 0;
+	 		overflow: hidden;
+
+	 		img {
+	 			margin: 0 auto;
+	 		}
+
+	 		div {
+	 			margin:0 5px;
+	 		}
+
+	 	}
+	 }
+	.views-field-nid {
+		display: none;
+}
+
+}
+
+@media all and (max-width: 980px) {
+	.view-help-topics {
+		 width: 510px;
+		 margin: 0 auto;
+	}
+}
+
+@media all and (max-width: 670px) {
+	.view-help-topics {
+		 width: 250px;
+		 margin: 0 auto;
+	}
+}

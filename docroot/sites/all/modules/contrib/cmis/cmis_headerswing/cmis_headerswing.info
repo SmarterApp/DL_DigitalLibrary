@@ -1,0 +1,12 @@
+name = CMIS headerswing transport
+description = Provides CMIS service. Requires a third party component(ie. HTTPAuth) to populate request headers with authentication details.   
+package = CMIS
+dependencies[] = cmis
+dependencies[] = cmis_common
+core = "7.x"
+; Information added by drupal.org packaging script on 2013-07-30
+version = "7.x-1.4"
+core = "7.x"
+project = "cmis"
+datestamp = "1375174577"
+

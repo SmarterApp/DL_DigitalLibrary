@@ -1,0 +1,13 @@
+diff --git a/chosen.js b/chosen.js
+index c8b4a7f..332ab0e 100644
+--- a/chosen.js
++++ b/chosen.js
+@@ -21,7 +21,7 @@
+       });
+        
+       //enable Chosen for widgets  
+-      $('.chosen-widget', context).each(function() {
++      $('select.chosen-widget', context).each(function() {
+         $(this).css({
+           width : ($(this).width() < minWidth) ? minWidth : $(this).width()
+         }).chosen(options);

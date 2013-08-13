@@ -1,0 +1,13 @@
+diff --git a/sites/all/modules/custom/sbac_search/sbac_search.apachesolr_environments.inc b/sites/all/modules/custom/sbac_search/sbac_search.apachesolr_environments.inc
+index df300ef..e91dbe3 100644
+--- a/sites/all/modules/custom/sbac_search/sbac_search.apachesolr_environments.inc
++++ b/sites/all/modules/custom/sbac_search/sbac_search.apachesolr_environments.inc
+@@ -14,7 +14,7 @@ function sbac_search_apachesolr_environments() {
+   $environment->api_version = 1;
+   $environment->env_id = 'amazon_apache_solr_environment';
+   $environment->name = 'Amazon Apache Solr Environment';
+-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/dev';
++  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/staging';
+   $environment->service_class = '';
+   $environment->conf = array(
+     'apachesolr_search_facet_pages' => '',

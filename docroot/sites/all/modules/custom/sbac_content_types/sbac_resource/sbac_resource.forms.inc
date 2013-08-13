@@ -1,0 +1,1749 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC resource feature.
+ */
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'resource_node_form') {
+    // Attach required JS
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    drupal_set_title('');
+    $form['#attached']['js'] = array(
+      drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
+      drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
+      libraries_get_path('jquery.more') . '/jquery.more.js',
+    );
+    $form['#attached']['css'] = array(
+      drupal_get_path('module','sbac_resource').'/css/sbac_resource.css',
+      libraries_get_path('jquery.more') . '/jquery.more.css',
+    );
+
+    if (!isset($form['nid']['#value'])) {
+      drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
+      //drupal_add_js("jQuery(document).ready(function () { jQuery.colorbox({inline:true, href:'#resource-help-box',width:'80%',height:'80%'}); });", array('type' => 'inline'));
+    }
+
+    // Create node if doesn't exist, gives us an NID to attached alignment content type to.
+    if (!isset($form['#node']->nid)) {
+      sbac_resource_create_node($form['#node']);
+      drupal_add_js(array('sbac_resource_nid' => $form['#node']->nid), 'setting');
+    }
+
+    // Set the state in JS for later use.
+    if (isset($form['#node']->workbench_moderation->current['state'])) {
+      drupal_add_js(array('resource_workbench_current_state' => $form['#node']['workbench_moderation']->current['state']), 'setting');
+    }
+    else {
+      drupal_add_js(array('resource_workbench_current_state' => 'creation'), 'setting');
+    }
+
+    // Hide the Advanced fieldset if not DLRB member.
+    global $user;
+    if (!in_array('DLRB member', $user->roles)) {
+      field_group_hide_field_groups($form, array('group_advanced'));
+    }
+
+    // Setup the form
+    $generate = FALSE;
+    if (isset($form_state['triggering_element']) && $form_state['triggering_element']['#value'] != 'Upload') {
+      $generate = TRUE;
+    }
+    else if (!isset($form_state['triggering_element'])) {
+      $generate = TRUE;
+    }
+
+    if ($generate) {
+      _sbac_resource_create_complete_flag($form, $form_state);
+    }
+
+    _sbac_resource_create_open_container($form, $form_state);
+    _sbac_resource_create_resource_title($form, $form_state);
+    _sbac_resource_content_type_description($form, $form_state);
+    _sbac_resource_create_close_container($form, $form_state);
+    _sbac_resource_form_basic($form, $form_state);
+    _sbac_resource_form_summary($form, $form_state);
+    _sbac_resource_form_materials($form, $form_state);
+    _sbac_resource_form_tags($form, $form_state);
+    _sbac_resource_form_advanced($form, $form_state);
+    _sbac_resource_form_submit_button($form, $form_state);
+    _sbac_resource_form_save_continue_button($form, $form_state);
+    _sbac_resource_form_cancel_button($form, $form_state);
+    _sbac_resource_form_submit_resource($form, $form_state);
+    _sbac_resource_form_required_fields($form, $form_state);
+    _sbac_resource_form_remove_elements($form, $form_state);
+  }
+}
+
+/**
+ * Loops through the elements and picks the correct one.
+ *
+ * @param array $element
+ *   The element.
+ * @return array mixed
+ *   The array.
+ */
+function sbac_resource_form_license_after_build($element) {
+  // We'll not loop through all the attributes inside the element
+  // since there are just 3 options to choose from. Let's just pick them out.
+  for ($i = 0; $i < 3; $i++) {
+    if ($element[$i]['#id'] == 'edit-field-license-information-und-0') {
+      $element[$i]['#suffix'] = '<div id="sbac-0-appender"></div>';
+    }
+    else if ($element[$i]['#id'] == 'edit-field-license-information-und-1') {
+      $element[$i]['#suffix'] = '<div id="sbac-1-appender"></div>';
+    }
+    else {
+      $element[$i]['#suffix'] = '<div id="sbac-2-appender"></div>';
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * Submit handler for resource node form
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_save_and_close(&$form, &$form_state) {
+  if (isset($form_state['values']['workbench_moderation_state_new']) && $form_state['values']['workbench_moderation_state_new'] == 'creation') {
+    $form_state['values']['workbench_moderation_state_new'] = 'draft';
+  }
+  if ($form_state['values']['title'] && $form_state['node']) {
+    $form_state['values']['path']['pathauto'] = TRUE;
+  }
+  $form_state['values']['field_temp']['und'][0]['value'] = 0;
+  sbac_resource_clean_text($form_state);
+  node_form_submit($form, $form_state);
+  $form_state['redirect'] = 'digital-library-resources';
+  drupal_redirect_form($form_state);
+}
+
+
+/**
+ * After build function to remove workbench's form submit.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_after_build_resource_form(&$form, &$form_state) {
+  foreach ($form['actions']['submit']['#submit'] as $key => $function) {
+    if ($function == 'workbench_moderation_node_form_submit') {
+      unset($form['actions']['submit']['#submit'][$key]);
+    }
+  }
+  $form['field_alt_body'][LANGUAGE_NONE][0]['format']['guidelines']['#access'] = FALSE; // Note ‘und’, you may need to set your comment form language code instead
+  $form['field_alt_body'][LANGUAGE_NONE][0]['format']['help']['#access'] = FALSE;
+
+  return $form;
+}
+
+/**
+ * Save and continue submit handler for resource node form.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_save_and_continue(&$form, &$form_state) {
+  $errors = form_get_errors();
+  if ($errors) {
+    $selector = NULL;
+    foreach ($errors AS $field_name => $error_message) {
+      if ($field_name == 'title' || $field_name == 'field_attributes' || $field_name == 'field_focus' || $field_name == 'field_student_agency') {
+        $selector = ".vertical-tabs-list li:nth-child(1) a";
+        break;
+      }
+      if ($field_name == 'field_file' || $field_name == 'field_author' || $field_name == 'field_license') {
+        $selector = ".vertical-tabs-list li:nth-child(2) a";
+        break;
+      }
+      if ($field_name == 'field_alt_body' || $field_name == 'field_contexts' || $field_name == 'field_connection_to_ccss' || $field_name == 'field_connection_to_fap' ||
+        $field_name == 'field_learning_goals' || $field_name == 'field_success_criteria' || $field_name == 'field_supporting_evidence' || $field_name == 'field_principles'
+      ) {
+        $selector = ".vertical-tabs-list li:nth-child(3) a";
+        break;
+      }
+      if ($field_name == 'field_subject' || $field_name == 'field_grades') {
+        $selector = ".vertical-tabs-list li:nth-child(4) a";
+        break;
+      }
+    }
+
+    if ($selector) {
+      drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
+    }
+    drupal_add_js(array('sbac_resource_valid_state' => FALSE), 'setting');
+    return $form;
+  }
+  else{
+    ctools_include('ajax');
+    $selector = NULL; $valid = FALSE;
+    $active_tab = $form_state['values']['additional_settings__active_tab'];
+    switch ($active_tab) {
+      case 'edit-group_materials':
+        $selector = ".vertical-tabs-list li:nth-child(3) a";
+        $valid = FALSE;
+        break;
+      case 'edit-group_basic':
+        $selector = ".vertical-tabs-list li:nth-child(2) a";
+        $valid = FALSE;
+        break;
+      case 'edit-group_tags':
+        $selector = NULL;
+        $valid = TRUE;
+        break;
+      case 'edit-group_summary':
+        $valid = FALSE;
+        $selector = ".vertical-tabs-list li:nth-child(4) a";
+        break;
+    }
+
+    // Set state to Draft.
+    $form_state['values']['workbench_moderation_state_new'] = 'draft';
+    // Cleans the text
+    sbac_resource_clean_text($form_state);
+    // Set path alias
+    $form_state['values']['path']['pathauto'] = TRUE;
+    // Save node and rebuild form.
+    node_form_submit($form, $form_state);
+    $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
+    // Clear drupal messages.
+    drupal_get_messages();
+    // Add appropriate JS.
+    drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
+    if ($selector) {
+      drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
+    }
+    return $form;
+  }
+}
+
+/**
+ * Implements hook_validate_form().
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_validate_form(&$form, &$form_state) {
+  if (isset($form_state['clicked_button']['#value']) && $form_state['clicked_button']['#value'] == 'Cancel') {
+    $form_state['redirect'] = 'digital-library-resources';
+    drupal_redirect_form($form_state);
+  }
+  // Do not validate on ajax events like "Upload"
+  if ($form_state['submitted']) {
+    switch ($form_state['values']['additional_settings__active_tab']) {
+      case 'edit-group_materials':
+        sbac_resource_validate_general($form, $form_state);
+        sbac_resource_validate_materials($form, $form_state);
+        break;
+      case 'edit-group_basic':
+        sbac_resource_validate_general($form, $form_state);
+        break;
+      case 'edit-group_tags':
+        sbac_resource_validate_general($form, $form_state);
+        sbac_resource_validate_materials($form, $form_state);
+        sbac_resource_validate_summary($form, $form_state);
+        sbac_resource_validate_tags($form, $form_state);
+        break;
+      case 'edit-group_summary':
+        sbac_resource_validate_general($form, $form_state);
+        sbac_resource_validate_materials($form, $form_state);
+        sbac_resource_validate_summary($form, $form_state);
+        break;
+      case 'edit-group_advanced':
+        break;
+    }
+    $check = node_last_changed($form['#node']->nid);
+    $form_state['values']['changed'] = $check + 120;
+  }
+}
+
+/**
+ * Validation function for general section.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_validate_general(&$form, $form_state) {
+  if (!$form_state['values']['title']) {
+    $error = 'You must add a title to continue';
+    form_set_error('title', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:title:group:Add a title', 'sbac_resource_error');
+  }
+  else {
+    $title = $form_state['values']['title'];
+    $bad_words = profanity_validate_text($title);
+    if ($bad_words) {
+      $error = 'Please remove any inappropriate language from the title';
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:Please remove any inappropriate language from the title', 'sbac_resource_error');
+      drupal_set_message('general:title:group:Please remove any inappropriate language from the title', 'sbac_resource_error');
+    }
+  }
+
+  if (!$form_state['values']['field_attributes']['und'][0]['tid']) {
+    $error = 'Please indicate at least one attribute to continue';
+    form_set_error('field_attributes', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:field_attributes:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:field_attributes:group:Please indicate at least one attribute to continue', 'sbac_resource_error');
+  }
+  if (!$form_state['values']['field_focus']['und'][0]['tid']) {
+    $error = 'You must select the resource type of this resource to continue';
+    form_set_error('field_focus', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:field_focus:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:field_focus:group:Select the resource type', 'sbac_resource_error');
+  }
+
+  if ($form_state['values']['field_student_agency']['und'][0]['value'] == NULL) {
+    $error = 'You must explain how the resource enables students to actively engage in the formative assessment process to continue';
+    form_set_error('field_student_agency', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:field_student_agency:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:field_student_agency:group:Explain how the resource enables students to actively engage in the formative process', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_student_agency']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from student engagement to continue';
+      form_set_error('field_student_agency', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:field_student_agency:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:field_student_agency:group:Remove inappropriate language from student engagement', 'sbac_resource_error');
+    }
+  }
+}
+
+/**
+ * Validation function for summary section.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_validate_summary(&$form, $form_state) {
+  if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
+    $error = 'You must add a resource summary to continue';
+    form_set_error('field_alt_body', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_alt_body:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_alt_body:group:Add a resource summary', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_alt_body']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the resource summary to continue';
+      form_set_error('field_alt_body', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_alt_body:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_alt_body:group:Remove inappropriate language from the resource summary', 'sbac_resource_error');
+    }
+  }
+  if (!$form_state['values']['field_contexts']['und'][0]['value']) {
+    $error = 'You must add context(s) within which the resource could be used to continue';
+    form_set_error('field_contexts', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_contexts:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_contexts:group:Please enter the context(s) in which the resource could be used to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_contexts']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the context(s) within which the resource could be used to continue';
+      form_set_error('field_contexts', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_contexts:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_contexts:group:Remove inappropriate language from context(s) within which the resource could be used', 'sbac_resource_error');
+    }
+  }
+
+  if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
+    $error = 'Please add a connection to the Common Core State Standards to continue';
+    form_set_error('field_connection_to_ccss', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_connection_to_ccss:group:Please add a connection to the Common Core State Standards to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_connection_to_ccss']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the Specific Connection to the Common Core State Standards to continue';
+      form_set_error('field_connection_to_ccss', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_connection_to_ccss:group:Remove inappropriate language from the Common Core Standards', 'sbac_resource_error');
+    }
+  }
+
+  if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
+    $error = 'Please add a connection to the formative assessment process to continue';
+    form_set_error('field_connection_to_fap', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_connection_to_fap:group:Please add the connection to a connection to the formative assessment process to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_connection_to_fap']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the connection to the formative assessment process to continue';
+      form_set_error('field_connection_to_fap', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_connection_to_fap:group:Remove inappropriate language from connection to the formative assesment process', 'sbac_resource_error');
+    }
+  }
+
+  if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
+    $error = 'You must must add learning targets to continue';
+    form_set_error('field_learning_goals', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_learning_goals:group:Add learning targets', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_learning_goals']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the learning targets to continue';
+      form_set_error('field_learning_goals', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_learning_goals:group:Remove inappropriate language from the learning targets', 'sbac_resource_error');
+    }
+  }
+
+  if (!$form_state['values']['field_success_criteria']['und'][0]['value']) {
+    $error = 'You must add success criteria to continue';
+    form_set_error('field_success_criteria', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_success_criteria:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_success_criteria:group:Add success criteria', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_success_criteria']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the success criteria to continue';
+      form_set_error('field_success_criteria', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_success_criteria:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_success_criteria:group:Remove inappropriate language from the sucess criteria', 'sbac_resource_error');
+    }
+  }
+
+  if (!$form_state['values']['field_supporting_evidence']['und'][0]['value']) {
+    $error = 'You must must add supporting evidence to continue';
+    form_set_error('field_supporting_evidence', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_supporting_evidence:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_supporting_evidence:group:Add supporting evidence', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_supporting_evidence']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the supporting evidence to continue';
+      form_set_error('field_supporting_evidence', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_supporting_evidence:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_supporting_evidence:group:Remove inappropriate language from the supporting evidence', 'sbac_resource_error');
+    }
+  }
+
+  if ($form_state['values']['field_principles']['und'][0]['value'] == NULL) {
+    $error = 'Please add Principles, Literature, or Research to continue';
+    form_set_error('field_principles', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_principles:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_principles:group:Please add Principles, Literature, or Research to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_principles']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the principles, literature or research field to continue';
+      form_set_error('field_principles', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_principles:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_principles:group:Remove inappropriate language from the principles, literature or research field', 'sbac_resource_error');
+    }
+  }
+}
+
+/**
+ * Validation function for materials section.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_validate_materials(&$form, $form_state) {
+  if (!$form_state['values']['field_file']['und'][0]['fid']) {
+    $error = 'You must provide a material for this Resource to continue';
+    form_set_error('field_file', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('materials:field_file:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('materials:field_file:group:Provide a material', 'sbac_resource_error');
+  }
+  if ($form_state['values']['field_author']['und'][0]['value'] == NULL) {
+    $error = 'Please enter an author to continue';
+    form_set_error('field_author', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('materials:field_author:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('materials:field_author:group:Please enter an author to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_author']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the author to continue';
+      form_set_error('field_author', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('materials:field_author:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('materials:field_author:group:Remove inappropriate language from the author', 'sbac_resource_error');
+    }
+  }
+  if ($form_state['values']['field_publisher']['und'][0]['value'] == NULL) {
+    $error = 'Please enter an owner to continue';
+    form_set_error('field_publisher', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('materials:field_publisher:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('materials:field_publisher:group:Please enter an owner to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_publisher']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the source to continue';
+      form_set_error('field_publisher', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('materials:field_publisher:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('materials:field_publisher:group:Remove inappropriate language from the source', 'sbac_resource_error');
+    }
+  }
+  if ($form_state['values']['field_license_information']['und'][0]['value'] != 0 && $form_state['values']['field_license']['und'][0]['tid'] == NULL) {
+    $error = 'Please enter a license that allows you to post to continue';
+    form_set_error('field_license', $error);
+    form_set_error('field_license_information', 'nono');
+    _sbac_resource_remove_error_message($error);
+    _sbac_resource_remove_error_message('nono');
+    drupal_set_message('materials:field_license:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('materials:field_license:group:Please enter a license that allows you to post to continue', 'sbac_resource_error');
+  }
+  if ($form_state['values']['field_pii']['und'][0]['value'] == NULL) {
+    $error = 'You must certify that there is no information included that allows users to personally identify students to continue';
+    form_set_error('field_pii', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('materials:field_pii:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('materials:field_pii:group:' . $error, 'sbac_resource_error');
+  }
+  if ($form_state['values']['field_use_of_student_images']['und'][0]['value'] == NULL) {
+    $error = 'You must certify that you have the necessary written approval, consent, and clearance to post any images of the specific students to continue';
+    form_set_error('field_use_of_student_images', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('materials:field_use_of_student_images:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('materials:field_use_of_student_images:group:' . $error, 'sbac_resource_error');
+  }
+}
+
+/**
+ * Validation function for tags section.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_validate_tags(&$form, $form_state) {
+  // Select all alignments with this nid
+  if (!$form_state['values']['field_subject']['und'][0]['tid']) {
+    $error = 'Please select a subject tag to continue';
+    form_set_error('field_subject', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('tags:field_subject:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('tags:field_subject:group:Please select a subject tag to continue', 'sbac_resource_error');
+  }
+  if (!$form_state['values']['field_grades']['und'][0]['tid']) {
+    $error = 'Please select a grade tag to continue';
+    form_set_error('field_grades', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('tags:field_grades:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('tags:field_grades:group:Please select a grade tag to continue', 'sbac_resource_error');
+  }
+  if (!$form_state['values']['field_intended_end_user']['und'][0]['tid']) {
+    $error = 'Please select an end user tag to continue';
+    form_set_error('field_intended_end_user', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('tags:field_intended_end_user:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('tags:field_intended_end_user:group:Please select an end user tag to continue', 'sbac_resource_error');
+  }
+  if (!$form_state['values']['field_digital_media_type']['und'][0]['tid']) {
+    $error = 'Please select a media type to continue';
+    form_set_error('field_digital_media_type', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('tags:field_digital_media_type:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('tags:field_digital_media_type:group:Please select a media type to continue', 'sbac_resource_error');
+  }
+}
+
+/**
+ * Remove disabled from submit.
+ *
+ * @param $errors
+ */
+function sbac_resource_enable_submit($errors) {
+  if (!drupal_get_messages(NULL, FALSE) && !$errors) {
+    ctools_include('ajax');
+    $output = array();
+    $output[] = ajax_command_invoke('#sbac-resource-save-continue #edit-submit', 'removeAttr', array('disabled'));
+    $output[] = ajax_command_invoke('#edit-save-continue', 'removeAttr', array('disabled'));
+    print ajax_render($output);
+    exit();
+  }
+}
+
+/**
+ * Modal callback
+ *
+ * @param bool $js
+ * @return array|mixed
+ */
+function sbac_resource_modal_callback($js = FALSE) {
+  if ($js) {
+    form_load_include($form_state, 'inc', 'node', 'node.pages');
+    ctools_include('ajax');
+    ctools_include('modal');
+    global $user;
+
+    $node = (object) array(
+      'uid' => $user->uid,
+      'name' => (isset($user->name) ? $user->name : ''),
+      'type' => 'alignment',
+      'language' => LANGUAGE_NONE
+    );
+
+    $form_state = array(
+      'title' => t('Common Core Standard Browser'),
+      'ajax' => TRUE,
+      'build_info' => array('args' => array($node)),
+    );
+
+    $output = ctools_modal_form_wrapper('alignment_node_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
+      $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Modal callback
+ *
+ * @param bool $js
+ * @return array|mixed
+ */
+function sbac_resource_submit_resource_modal_callback($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $form_state = array(
+      'title' => t('To continue, confirm that you wish to submit this resource'),
+      'ajax' => $js,
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_resource_submit_resource_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        // TODO: using the nid from $_GET isn't safe - the user can modify it; can we pull
+        // this value from $form_state?
+        if (isset($_GET['nid'])) {
+          $node = node_load($_GET['nid']);
+          if ($node) {
+            workbench_moderation_moderate($node, 'needs_review');
+            $output[] = ctools_ajax_command_redirect('digital-library-resources');
+
+            // create notificaton for resource author
+            if ($task = taskit_get_object('resource_submitted')) {
+              global $user;
+
+              $task->addVisibility($task::VISIBILITY_USER);
+              $task->addEntity('node', $node->nid);
+              $task->addOwningUser($node->uid);
+              $task->addTriggeringUser($user->uid);
+              $task->save();
+            }
+          }
+        }
+      }
+      else {
+        drupal_add_js(array('sbac_resource_valid_state' => FALSE), 'setting');
+      }
+    }
+
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Modal callback
+ *
+ * @param bool $js
+ * @return array|mixed
+ */
+function sbac_resource_delete_resource_modal_callback($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    $form_state = array(
+      'title' => t('You are about to delete this draft resource'),
+      'ajax' => TRUE,
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_resource_delete_resource_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        if (isset($_GET['nid'])) {
+          node_delete($_GET['nid']);
+          $url = 'digital-library-resources';
+          if (isset($form_state['values']['hidden_url'])) {
+            $url = $form_state['values']['hidden_url'];
+          }
+          $output[] = ctools_ajax_command_redirect($url);
+        }
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+
+/**
+ * Creates the completed flag for the form.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_create_complete_flag(&$form, &$form_state) {
+  $general_valid = sbac_resource_check_general($form, $form_state);
+  $form['completed_flag_basic'] = array(
+    '#markup' => ($general_valid ? '<span class="section-complete"></span>' : '<span class="section-incomplete"></span>'),
+    '#prefix' => '<div class="completed-flag" id="completed-flag-basic">',
+    '#suffix' => '</div>'
+  );
+  $form['#group_children']['completed_flag_basic'] = "group_basic";
+  if ($general_valid) {
+    drupal_add_js(array('sbac_general' => TRUE), 'setting');
+  }
+  else {
+    drupal_add_js(array('sbac_general' => FALSE), 'setting');
+  }
+
+  $summary_valid = sbac_resource_check_summary($form, $form_state);
+  $form['completed_flag_summary'] = array(
+    '#markup' => ($summary_valid ? '<span class="section-complete"></span>' : '<span class="section-incomplete"></span>'),
+    '#prefix' => '<div class="completed-flag" id="completed-flag-basic">',
+    '#suffix' => '</div>'
+  );
+  $form['#group_children']['completed_flag_summary'] = "group_summary";
+  if ($summary_valid) {
+    drupal_add_js(array('sbac_summary' => TRUE), 'setting');
+  }
+  else {
+    drupal_add_js(array('sbac_summary' => FALSE), 'setting');
+  }
+
+  $materials_valid = sbac_resource_check_materials($form, $form_state);
+  $form['completed_flag_materials'] = array(
+    '#markup' => ($materials_valid ? '<span class="section-complete"></span>' : '<span class="section-incomplete"></span>'),
+    '#prefix' => '<div class="completed-flag" id="completed-flag-basic">',
+    '#suffix' => '</div>'
+  );
+  $form['#group_children']['completed_flag_materials'] = "group_materials";
+  if ($materials_valid) {
+    drupal_add_js(array('sbac_materials' => TRUE), 'setting');
+  }
+  else {
+    drupal_add_js(array('sbac_materials' => FALSE), 'setting');
+  }
+
+  $tags_valid = sbac_resource_check_tags($form, $form_state);
+  $form['completed_flag_tags'] = array(
+    '#markup' => ($tags_valid ? '<span class="section-complete"></span>' : '<span class="section-incomplete"></span>'),
+    '#prefix' => '<div class="completed-flag" id="completed-flag-tags">',
+    '#suffix' => '</div>'
+  );
+  $form['#group_children']['completed_flag_tags'] = "group_tags";
+  if ($tags_valid) {
+    drupal_add_js(array('sbac_tags' => TRUE), 'setting');
+  }
+  else {
+    drupal_add_js(array('sbac_tags' => FALSE), 'setting');
+  }
+
+  $advanced_valid = TRUE;
+  // $advanced_valid = sbac_resource_check_advanced($form, $form_state);
+  $form['completed_flag_advanced'] = array(
+    '#markup' => ($advanced_valid ? '<span class="section-complete"></span>' : '<span class="section-incomplete"></span>'),
+    '#prefix' => '<div id="completed-flag-advanced">',
+    '#suffix' => '</div>'
+  );
+  $form['#group_children']['completed_flag_advanced'] = "group_advanced";
+  if ($advanced_valid) {
+    drupal_add_js(array('sbac_advanced' => TRUE), 'setting');
+  }
+  else {
+    drupal_add_js(array('sbac_advanced' => FALSE), 'setting');
+  }
+}
+
+/**
+ * Creates the opening title / description container.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_create_open_container(&$form, &$form_state) {
+  $form['resource_basic_container_open'] = array(
+    '#markup' => '<div class="sbac-resource-container">',
+  );
+  $form['#group_children']['resource_basic_container_open'] = "group_basic";
+  $form['resource_summary_container_open'] = array(
+    '#markup' => '<div class="sbac-resource-container">',
+  );
+  $form['#group_children']['resource_summary_container_open'] = "group_summary";
+  $form['resource_materials_container_open'] = array(
+    '#markup' => '<div class="sbac-resource-container">',
+  );
+  $form['#group_children']['resource_materials_container_open'] = "group_materials";
+  $form['resource_tags_container_open'] = array(
+    '#markup' => '<div class="sbac-resource-container">',
+  );
+  $form['#group_children']['resource_tags_container_open'] = "group_tags";
+  $form['resource_advanced_container_open'] = array(
+    '#markup' => '<div class="sbac-resource-container">',
+  );
+  $form['#group_children']['resource_advanced_container_open'] = "group_advanced";
+}
+
+/**
+ * Creates the title of the resource field.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_create_resource_title(&$form, &$form_state) {
+  $default_value = "Untitled Resource";
+  if ($form['title']['#default_value']) {
+    $default_value = $form['title']['#default_value'];
+  }
+  if (isset($form_state['values']['title']) && $form_state['values']['title']) {
+    $default_value = $form_state['values']['title'];
+  }
+
+  $form['title_of_resource_basic'] = array(
+    '#markup' => $default_value,
+    '#prefix' => '<h2 class="title-of-resource">',
+    '#suffix' => '</h2>'
+  );
+  $form['#group_children']['title_of_resource_basic'] = "group_basic";
+
+  $form['title_of_resource_summary'] = array(
+    '#markup' => $default_value,
+    '#prefix' => '<h2 class="title-of-resource">',
+    '#suffix' => '</h2>'
+  );
+  $form['#group_children']['title_of_resource_summary'] = "group_summary";
+
+  $form['title_of_resource_materials'] = array(
+    '#markup' => $default_value,
+    '#prefix' => '<h2 class="title-of-resource">',
+    '#suffix' => '</h2>'
+  );
+  $form['#group_children']['title_of_resource_materials'] = "group_materials";
+
+  $form['title_of_resource_tags'] = array(
+    '#markup' => $default_value,
+    '#prefix' => '<h2 class="title-of-resource">',
+    '#suffix' => '</h2>'
+  );
+  $form['#group_children']['title_of_resource_tags'] = "group_tags";
+
+  $form['title_of_resource_advanced'] = array(
+      '#markup' => $default_value,
+      '#prefix' => '<h2 class="title-of-resource">',
+      '#suffix' => '</h2>'
+    );
+  $form['#group_children']['title_of_resource_advanced'] = "group_advanced";
+}
+
+/**
+ * Creates the content type description.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_content_type_description(&$form, &$form_state) {
+  $submission_general_guidelines = variable_get('sbac_resource_general_guide');
+  $submission_material_guidelines = variable_get('sbac_resource_materials_guide');
+  $submission_tags_guidelines = variable_get('sbac_resource_tags_guide');
+  $submission_summary_guidelines = variable_get('sbac_resource_summary_guide');
+  $submission_advanced_guidelines = variable_get('sbac_resource_advanced_guide');
+
+  $form['submisison_general_guidelines'] = array (
+    '#markup'   => $submission_general_guidelines,
+    '#prefix'   => '<p id="submission-general-guidelines">',
+    '#suffix'   => '</p>'
+  );
+  $form['#group_children']['submisison_general_guidelines'] = "group_basic";
+
+  $form['submisison_material_guidelines'] = array (
+    '#markup'   => $submission_material_guidelines,
+    '#prefix'   => '<p id="submission-materials-guidelines">',
+    '#suffix'   => '</p>'
+  );
+  $form['#group_children']['submisison_material_guidelines'] = "group_materials";
+
+  $form['submisison_tags_guidelines'] = array (
+    '#markup'   => $submission_tags_guidelines,
+    '#prefix'   => '<p id="submission-tags-guidelines">',
+    '#suffix'   => '</p>'
+  );
+  $form['#group_children']['submisison_tags_guidelines'] = "group_tags";
+
+  $form['submisison_summary_guidelines'] = array (
+    '#markup'   => $submission_summary_guidelines,
+    '#prefix'   => '<p id="submission-summary-guidelines">',
+    '#suffix'   => '</p>'
+  );
+  $form['#group_children']['submisison_summary_guidelines'] = "group_summary";
+
+  $form['submisison_advanced_guidelines'] = array (
+    '#markup'   => $submission_advanced_guidelines,
+    '#prefix'   => '<p id="submission-advanced-guidelines">',
+    '#suffix'   => '</p>'
+  );
+  $form['#group_children']['submisison_advanced_guidelines'] = "group_advanced";
+}
+
+/**
+ * Creates the closing title / description container.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_create_close_container(&$form, &$form_state) {
+  $form['resource_basic_container_close'] = array(
+    '#markup' => '</div>',
+  );
+  $form['#group_children']['resource_basic_container_close'] = "group_basic";
+
+  $form['resource_summary_container_close'] = array(
+    '#markup' => '</div>',
+  );
+  $form['#group_children']['resource_summary_container_close'] = "group_summary";
+
+  $form['resource_materials_container_close'] = array(
+    '#markup' => '</div>',
+  );
+  $form['#group_children']['resource_materials_container_close'] = "group_materials";
+
+  $form['resource_tags_container_close'] = array(
+    '#markup' => '</div>',
+  );
+  $form['#group_children']['resource_tags_container_close'] = "group_tags";
+
+  $form['resource_advanced_container_close'] = array(
+    '#markup' => '</div>',
+  );
+  $form['#group_children']['resource_advanced_container_close'] = "group_advanced";
+}
+
+/**
+ * Alters the general (basic) tab elements.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_basic(&$form, &$form_state) {
+  // Title.
+  $form['title']['#title'] = t('Title') . ' ' . theme('form_required_marker');
+  $form['title']['#theme_options']['description at top'] = t('Please enter a user-friendly name for the resource.');
+  $form['title']['#maxlength'] = 75;
+  $form['title']['#attributes']['maxlength_js_label'][0] = 'Character count: @remaining';
+  $form['title']['#maxlength_js'] = TRUE;
+  $form['title']['#required'] = FALSE;
+
+  // Attributes
+  $title = "Attributes of Formative Assessment Process";
+  $form['field_attributes']['und']['#title'] = t('@title', array('@title' => $title)) . ' ' . theme('form_required_marker');
+
+  // Student Engagement
+  $form['field_student_agency']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
+
+  // Focus
+  unset($form['field_focus']['und']['#options']['_none']);
+  $form['field_focus']['und']['#title'] = t('Resource Type') . ' ' . theme('form_required_marker');
+}
+
+
+/**
+ * Alters the summary elements.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_summary(&$form, $form_state) {
+  // Resource Summary.
+  $form['field_resource_summary'] = array(
+    '#type' => 'item',
+    '#markup' => '<p>'.t('The following fields represent an abstract of the resource that includes the topics covered by the resource and how the resource should be used. Please enter information into each of the following sub-sections.').'</p>',
+    '#weight' => 1,
+  );
+  $form['#group_children']['field_resource_summary'] = "group_summary";
+  // Body
+  $form['field_alt_body']['und'][0]['value']['#title'] = t('Resource Summary') . ' ' . theme('form_required_marker');
+  // Contexts
+  $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could be Used') . ' ' . theme('form_required_marker');
+  // Connection to CCSS
+  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core Standards') . ' ' . theme('form_required_marker');
+  // Connection to FAP
+  $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process') . ' ' . theme('form_required_marker');
+  // Learning Targets
+  $form['field_learning_goals']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
+  // Success Critieria
+  $form['field_success_criteria']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
+  // Supporting Evidence
+  $form['field_supporting_evidence']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
+  // Principles
+  $form['field_principles']['und'][0]['value']['#title'] = t('Principles, Literature, or Research') . ' ' . theme('form_required_marker');
+}
+
+/**
+ * Creates the materials form field.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_materials(&$form, $form_state) {
+  // Materials
+  $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
+
+  // License Information
+  // Let's remove the N/A Option from the license information section
+  unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);
+  $form['field_license_information'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_license_after_build';
+  $form['field_license_information'][LANGUAGE_NONE]['#id'] = 'sbac-license-information-field';
+
+  //Show this when field_license_information option 0 or 1 is selected
+  $state_condition = array(
+    'input[name="field_license_information[und]"]' => array(
+      array('value' => 0),
+      array('value' => 1),
+    ),
+  );
+
+  $form['field_author']['#states']['visible'] = $state_condition;
+  $form['field_author']['#states']['required'] = $state_condition;
+  $form['field_author']['und'][0]['value']['#maxlength'] = 75;
+
+  //Show this when field_license_information option 0 or 1 is selected
+  $form['field_publisher']['und'][0]['value']['#maxlength'] = 75;
+  $form['field_publisher']['#states']['visible'] = $state_condition;
+
+  //Show this when field_license_information option 0  is selected
+  $form['field_license_text'] = array(
+    '#markup' => '
+      <div id="field_static_license_text" class="form-item">
+        <label>' . $form['field_license']['und']['#title'] . '</label>
+        <div class="description">' . t('The license language is identified in detail under Section 6 of the Terms of Service') . '</div>
+        <div class="field-content">' . l(url('terms-of-service', array('absolute' => TRUE)), 'terms-of-service') . '</div>
+      </div>
+    ',
+    '#weight' => $form['field_license']['#weight'],
+  );
+
+  //Show this when field_license_information option 1  is selected
+  $license_state_condition = array(
+    'input[name="field_license_information[und]"]' => array(
+      array('value' => 1),
+    ),
+  );
+
+  $form['field_license']['#states']['visible'] = $license_state_condition;
+  $form['field_license']['#states']['required'] = $license_state_condition;
+  $form['field_license']['und']['#options']['_none'] = '--Select License--';
+  $form['field_license']['und']['#ajax'] = array(
+    'wrapper' => 'sbac-resource-license-url',
+    'callback' => 'sbac_resource_license_url',
+    'method' => 'replace',
+    'effect' => 'fade',
+    'event' => 'change',
+  );
+
+  $form['group_license_information'] = array(
+    '#prefix' => '<div id="license-information-group">',
+    '#suffix' => '</div>',
+    // '#type' => 'container',
+    // '#states' => array(
+    //   'visible' => $state_condition,
+    // ),
+  );
+
+  $form['group_license_information']['field_license_url'] = array(
+    '#prefix' => '<div id="sbac-resource-license-url">',
+    '#suffix' => '</div>',
+    '#weight' => 40,
+  );
+
+  global $user;
+  $form['user_name'] = array(
+    '#type' => 'hidden',
+    '#value' => ucwords($user->name),
+    '#prefix' => '<div id="sbac-resource-user-name">',
+    '#suffix' => '</div>',
+  );
+  $form['#group_children']['user_name'] = 'group_materials';
+  $form['#group_children']['group_license_information'] = 'group_materials';
+  $form['group_license_information']['field_author'] = $form['field_author'];
+  $form['group_license_information']['field_publisher'] = $form['field_publisher'];
+  $form['group_license_information']['field_license'] = $form['field_license'];
+  $form['group_license_information']['field_license_text'] = $form['field_license_text'];
+  unset($form['field_author'], $form['field_publisher'], $form['field_license'], $form['field_license_text']);
+  unset($form['#group_children']['field_author'], $form['#group_children']['field_publisher'], $form['#group_children']['field_license'], $form['#group_children']['field_license_text']);
+
+  $form['no license'] = array(
+    '#markup' => sbac_resource_licensing_form_has_no_license(),
+    '#prefix' => "<div id= 'no-license-text'>",
+    '#suffix' => '</div>',
+    '#weight' => '130',
+  );
+  $form['#group_children']['no license'] = 'group_materials';
+
+  $form['field_pii']['und']['#title'] .= ' ' . theme('form_required_marker');
+  unset($form['field_pii']['und']['#options'][0]);
+  $form['field_use_of_student_images']['und']['#title'] .= ' ' . theme('form_required_marker');
+  unset($form['field_use_of_student_images']['und']['#options'][0]);
+}
+
+/**
+ * Container for the license url.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_license_url(&$form, &$form_state) {
+  if (isset($form_state['values']['field_license']['und'][0]['tid'])) {
+    $term = taxonomy_term_load($form_state['values']['field_license']['und'][0]['tid']);
+    if ($term) {
+      $license_url = '';
+
+      if ($term->description) {
+        $license_url = '
+          <div id="edit-field-license-url" class="form-item form-type-item">
+            <label for="edit-field-license-url">License URL</label>
+          ' . $term->description . '
+          </div>
+        ';
+      }
+
+      $prefix = '<div id="sbac-resource-license-url">' . $license_url . '</div>';
+      $form['group_license_information']['field_license_url']['#prefix'] = $prefix;
+      $form['group_license_information']['field_license_url']['#weight'] = 40;
+    }
+  }
+  return $form['group_license_information']['field_license_url'];
+}
+
+/**
+ * Creates the tags form field.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_tags(&$form, &$form_state) {
+  // Resource Title
+  $form['resource_tag_title'] = array(
+    '#type' => 'item',
+    '#markup' => '<h2>'.t('Resource Tags') . ' ' . theme('form_required_marker').'</h2>',
+    '#description' => t('Select tags that best describe this resource. You may choose as many as apply.'),
+    '#prefix' => '<div class="form-item-title resource-tag-title">',
+    '#suffix' => '</div>',
+  );
+  $form['#group_children']['resource_tag_title'] = "group_tags";
+
+  $form['field_subject']['und']['#title'] = t('Subjects and Domains') . ' ' . theme('form_required_marker');
+  if (isset($form['field_subject']['und']['#options']['_none'])) {
+    unset($form['field_subject']['und']['#options']['_none']);
+  }
+  $form['field_grades']['und']['#title'] = t('Grade(s)') . ' ' . theme('form_required_marker');
+  if (isset($form['field_grades']['und']['#options']['_none'])) {
+    unset($form['field_grades']['und']['#options']['_none']);
+  }
+  $form['field_intended_end_user']['und']['#title'] = t('Intended End User(s)') . ' ' . theme('form_required_marker');
+  if (isset($form['field_intended_end_user']['und']['#options']['_none'])) {
+    unset($form['field_intended_end_user']['und']['#options']['_none']);
+  }
+  $form['field_digital_media_type']['und']['#title'] = t('Media Type(s)') . ' ' . theme('form_required_marker');
+  if (isset($form['field_digital_media_type']['und']['#options']['_none'])) {
+    unset($form['field_digital_media_type']['und']['#options']['_none']);
+  }
+  if (isset($form['field_view_permissions']['und']['#options']['_none'])) {
+    unset($form['field_view_permissions']['und']['#options']['_none']);
+  }
+  $form['field_classroom_technologies']['und']['#title'] = t('Technologies Required for Use in Classroom');
+
+  // Title
+  $form['alignment_tag_title'] = array(
+    '#markup' => '<h2>'.t('Common Core State Standard Alignment(s)').'</h2>',
+    '#prefix' => '<div class="form-item-title alignment-tag-title">',
+    '#suffix' => '</div>',
+    '#weight' => 100,
+  );
+  $form['#group_children']['alignment_tag_title'] = "group_tags";
+
+  // Description
+  $form['alignment_tag_description'] = array(
+    '#markup' => '<p>'.t('Identify the Common Core State Standard(s) and the alignment type(s) to which this resource is aligned.').'</p>',
+    '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
+    '#suffix' => '</div>',
+    '#weight' => 101,
+  );
+  $form['#group_children']['alignment_tag_description'] = "group_tags";
+
+  // Alignment View
+  $form['alignment_tag_view'] = array(
+    '#markup' => views_embed_view('alignment', 'resource_admin_view', $form['#node']->nid),
+    '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
+    '#suffix' => '</div>',
+    '#weight' => 102,
+  );
+  $form['#group_children']['alignment_tag_view'] = "group_tags";
+
+  // Alignment Button
+  $form['add_alignment_tag_button'] = array(
+    '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
+      'attributes' => array('class' => 'ctools-use-modal small button', 'id' => 'sbac-resource-modal-alignment'),
+      'query' => array('nid' => $form['#node']->nid))),
+    '#weight' => 103,
+  );
+  $form['#group_children']['add_alignment_tag_button'] = "group_tags";
+}
+
+/**
+ * Creates the advanced section.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_advanced(&$form, &$form_state) {
+//  $form['advanced_tag_title'] = array(
+//    '#type' => 'item',
+//    '#markup' => '<h2>'.t('Advanced') . '</h2>',
+//    '#prefix' => '<div class="form-item-title resource-tag-title">',
+//    '#suffix' => '</div>',
+//  );
+//  $form['#group_children']['advanced_tag_title'] = "group_advanced";
+}
+
+/**
+ * Creates the tags form field.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_submit_button(&$form, &$form_state) {
+  unset($form['#submit']);
+  unset($form['#validate']);
+  unset($form['actions']['submit']['#submit']);
+  unset($form['actions']['submit']['#validation']);
+  $form['actions']['submit']['#value'] = t('Save and Close');
+  $form['actions']['submit']['#submit'] = array('sbac_resource_save_and_close');
+  $form['actions']['submit']['#prefix'] = '<div id="sbac-resource-save-continue">';
+  $form['actions']['submit']['#suffix'] = '</div>';
+  $form['actions']['submit']['#weight'] = 1;
+}
+
+/**
+ * Creates the tags form field.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
+  $form['actions']['save_continue'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save and Continue',
+    '#weight' => 2,
+    '#validate' => array('sbac_resource_validate_form'),
+    '#attributes' => array('id' => 'edit-save-continue'),
+    '#ajax' => array(
+      'wrapper' => 'resource-node-form',
+      'callback' => 'sbac_resource_save_and_continue',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+  $form['#after_build'][] = 'sbac_resource_after_build_resource_form';
+}
+
+/**
+ * Creates the tags form field.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_cancel_button(&$form, &$form_state) {
+  if ($form['#node']->workbench_moderation['current']->state != 'creation') {
+    return;
+  }
+
+  $form['actions']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#weight' => 0,
+    '#validate' => array('sbac_resource_validate_form'),
+    "#executes_submit_callback" => FALSE,
+    '#limit_validation_errors' => array(),
+  );
+}
+
+/**
+ * Submit the resource button.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_submit_resource(&$form, &$form_state) {
+  $form['actions']['submit_resource'] = array(
+    '#markup' => l(t('Submit Resource'), 'sbac_resource/nojs/submit-resource', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-resource-modal-submit-resource',
+        'id' => 'sbac-resource-modal-submit-resource'
+      ),
+      'query' => array(
+        'nid' => $form['#node']->nid
+      )
+    )),
+    '#weight' => 3,
+  );
+
+  // JS to properly size the modal when submit resource is clicked.
+  $js_settings = array(
+    'sbac-resource-modal-submit-resource' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 600,
+        'height' => 240,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting');
+}
+
+/**
+ * Creates the tags form field.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_required_fields(&$form, &$form_state) {
+  $form['required_fields_basic'] = array (
+    '#markup'   => '* Required Information',
+    '#prefix'   => '<p class="sbac-resource-required">',
+    '#suffix'   => '</p>',
+    '#weight'   => 150,
+  );
+  $form['#group_children']['required_fields_basic'] = "group_basic";
+
+  $form['required_fields_summary'] = array (
+    '#markup'   => '* Required Information',
+    '#prefix'   => '<p class="sbac-resource-required">',
+    '#suffix'   => '</p>',
+    '#weight'   => 150,
+  );
+  $form['#group_children']['required_fields_summary'] = "group_summary";
+
+  $form['required_fields_materials'] = array (
+    '#markup'   => '* Required Information',
+    '#prefix'   => '<p class="sbac-resource-required">',
+    '#suffix'   => '</p>',
+    '#weight'   => 150,
+  );
+  $form['#group_children']['required_fields_materials'] = "group_materials";
+
+  $form['required_fields_tags'] = array (
+    '#markup'   => '* Required Information',
+    '#prefix'   => '<p class="sbac-resource-required">',
+    '#suffix'   => '</p>',
+    '#weight'   => 150,
+  );
+  $form['#group_children']['required_fields_tags'] = "group_tags";
+}
+
+/**
+ * Removes unwanted form elements.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_remove_elements(&$form, &$form_state) {
+  global $user;
+  (isset($form['actions']['preview_changes']) ? $form['actions']['preview_changes']['#access'] = FALSE : '');
+  (isset($form['actions']['delete']) ? $form['actions']['delete']['#access'] = FALSE : '');
+  if (!in_array('administrator', $user->roles)) {
+    $form['revision_information']['#access'] = FALSE;
+    $form['author']['#access'] = FALSE;
+    $form['options']['#access'] = FALSE;
+  }
+  $form['field_alignment_tags']['#access'] = FALSE;
+  $form['field_temp']['#access'] = FALSE;
+  $form['field_asset_downloads']['#access'] = FALSE;
+  $form['field_total_views']['#access'] = FALSE;
+  $form['field_unique_views']['#access'] = FALSE;
+}
+
+/**
+ * Checks if the section is in a valid state or not
+ *
+ * @param array $form
+ * @param array $form_state
+ * @return bool
+ */
+function sbac_resource_check_general($form, $form_state) {
+  $valid = TRUE;
+
+  // Return if 'remove' was clicked.
+  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
+    return $valid;
+  }
+
+  // Submitted via ajax.
+  if (isset($form_state['values'])) {
+    if (!$form_state['values']['title']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_attributes']['und'][0]['tid']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_student_agency']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_focus']['und'][0]['tid']) {
+      $valid = FALSE;
+    }
+  }
+  else {
+    if (empty($form['title']['#default_value'])) {
+      $valid = FALSE;
+    }
+    if (empty($form['field_attributes']['und']['#default_value'][0])) {
+      $valid = FALSE;
+    }
+    if (empty($form['field_student_agency']['und'][0]['value']['#default_value'])) {
+      $valid = FALSE;
+    }
+    if (empty($form['field_focus']['und']['#default_value'])) {
+      $valid = FALSE;
+    }
+  }
+  return $valid;
+}
+
+/**
+ * Checks if the section is in a valid state or not.
+ *
+ * @param $form
+ * @return bool
+ */
+function sbac_resource_check_summary($form, $form_state) {
+  $valid = TRUE;
+
+  // Return if 'remove' was clicked.
+  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
+    return $valid;
+  }
+
+  if(isset($form_state['values'])) {
+    if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_contexts']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_success_criteria']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_supporting_evidence']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_principles']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+  }
+  else {
+    if (!$form['field_alt_body']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_contexts']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_connection_to_ccss']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_connection_to_fap']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_learning_goals']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_success_criteria']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_supporting_evidence']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_principles']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+  }
+  return $valid;
+}
+
+/**
+ * Checks if the section is in a valid state or not.
+ *
+ * @param $form
+ * @return bool
+ */
+function sbac_resource_check_materials($form, $form_state) {
+  $valid = TRUE;
+
+  // Return if 'remove' was clicked.
+  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
+    return $valid;
+  }
+
+  if (isset($form_state['values'])) {
+    if (!$form_state['values']['field_file']['und'][0]['fid']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_author']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_publisher']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (isset($form_state['field_license_information']['und'][0]['value']) && $form_state['field_license_information']['und'][0]['value'] == 0) {
+      if (!$form_state['values']['field_license']['und'][0]['tid']) {
+        $valid = FALSE;
+      }
+    }
+    if (!$form_state['values']['field_pii']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_use_of_student_images']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+  }
+  else {
+    if (!$form['field_file']['und'][0]['#default_value']['fid']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_author']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_publisher']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (isset($form['field_license_information']['und']['#default_value']) && $form['field_license_information']['und']['#default_value'] == 1) {
+      if (!$form['field_license']['und']['#default_value']) {
+        $valid = FALSE;
+      }
+    }
+    if (!$form['field_pii']['und']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_use_of_student_images']['und']['#default_value']) {
+      $valid = FALSE;
+    }
+  }
+  return $valid;
+}
+
+/**
+ * Checks if the section is in a valid state or not.
+ *
+ * @param $form
+ * @return bool
+ */
+function sbac_resource_check_tags($form, $form_state) {
+  $valid = TRUE;
+
+  // Return if 'remove' was clicked.
+  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
+    return $valid;
+  }
+
+  if (isset($form_state['values'])) {
+    if (!$form_state['values']['field_subject']['und'][0]['tid']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_grades']['und'][0]['tid']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_intended_end_user']['und'][0]['tid']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_digital_media_type']['und'][0]['tid']) {
+      $valid = FALSE;
+    }
+  }
+  else {
+    if (!$form['field_subject']['und']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_grades']['und']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_intended_end_user']['und']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_digital_media_type']['und']['#default_value']) {
+      $valid = FALSE;
+    }
+  }
+  return $valid;
+}
+
+/**
+ * The cancel / submit form
+ *
+ * @return array
+ */
+function sbac_resource_submit_resource_form() {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>'.t('
+    Submitting this resource may make it accessible to
+    Smarter Balanced Digital Library resource reviewers.
+    You cannot edit your resource once it is submitted unless
+    a reviewer returns it to you').'</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-overlay'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit Resource',
+    '#attributes' => array('id' => array('edit-submit-overlay'))
+  );
+
+  return $form;
+}
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_resource_delete_resource_form() {
+  $form = array();
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => $_SERVER['HTTP_REFERER'],
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t('
+    If you continue, you will no longer be able to edit
+    or submit this resource. All of the information you have already
+    entered will be lost.') . '</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-overlay'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Delete Draft Resource',
+    '#attributes' => array('id' => array('edit-delete-overlay'))
+  );
+
+  return $form;
+}
+
+/**
+ * Helper to remove error message from session.
+ *
+ * @param $value
+ */
+function _sbac_resource_remove_error_message($value) {
+  if (isset($_SESSION['messages']['error'])) {
+    $key = array_search($value, $_SESSION['messages']['error']);
+    if ($key !== FALSE) {
+      unset($_SESSION['messages']['error'][$key]);
+    }
+  }
+}

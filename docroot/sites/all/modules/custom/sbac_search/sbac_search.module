@@ -1,0 +1,411 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Search feature.
+ */
+
+include_once 'sbac_search.features.inc';
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_search_update_projects_alter(&$projects) {
+  unset($projects['sbac_search']);
+}
+
+/**
+ * Build the documents before sending them to Solr.
+ *
+ * Supports all types of
+ * hook_apachesolr_index_document_build_' . $entity_type($documents[$id], $entity, $env_id);
+ *
+ * The function is the follow-up for apachesolr_update_index but then for
+ * specific entity types
+ *
+ * @param ApacheSolrDocument $document
+ * @param object $entity
+ * @param string $env_id
+ *   The machine name of the environment.
+ */
+function sbac_search_apachesolr_index_document_build_user(ApacheSolrDocument $document, $entity, $env_id) {
+  $user = user_load($entity->uid);
+
+  if (isset($user->field_first_name['und'][0]['value'])) {
+    $document->ss_first_name = $user->field_first_name['und'][0]['value'];
+  }
+  if (isset($user->field_last_name['und'][0]['value'])) {
+    $document->ss_last_name = $user->field_last_name['und'][0]['value'];
+  }
+  if (isset($user->field_alternate_email_address['und'][0]['value'])) {
+    $document->ss_alternate_email = $user->field_alternate_email_address['und'][0]['value'];
+  }
+  if (isset($user->field_phone_number['und'][0]['value'])) {
+    $document->ss_phone_number = $user->field_phone_number['und'][0]['value'];
+  }
+
+  if (isset($user->field_school_name['und'])) {
+    foreach ($user->field_school_name['und'] as $key => $value) {
+      $document->setMultiValue('sm_school_name', $value['value']);
+    }
+  }
+
+  if (isset($user->field_district_name['und'][0]['value'])) {
+    $document->ss_district_name = $user->field_district_name['und'][0]['value'];
+  }
+  if  (isset($user->field_university_name['und'][0]['value'])) {
+    $document->ss_university_name = $user->field_university_name['und'][0]['value'];
+  }
+
+  if (isset($user->field_subject_s_['und'])) {
+    foreach ($user->field_subject_s_['und'] as $key => $value) {
+      $document->setMultiValue('sm_subject_s', $value['value']);
+    }
+  }
+
+  if (isset($user->field_grade_level_s_['und'])) {
+    foreach ($user->field_grade_level_s_['und'] as $key => $value) {
+      $document->setMultiValue('sm_grade_level_s', $value['value']);
+    }
+  }
+}
+
+
+/**
+ * Implements hook_facetapi_facet_info().
+ */
+function sbac_search_facetapi_facet_info($searcher_info) {
+  $facets = array();
+  if (isset($searcher_info['types']['user'])) {
+    $facets['school_name'] = array(
+      'label' => t('School Name'),
+      'description' => t('Filter by School Name.'),
+      'field' => 'sm_school_name',
+      'values callback' => 'facetapi_callback_user_values',
+      'facet mincount allowed' => TRUE,
+    );
+
+    $facets['district_name'] = array(
+      'label' => t('District Name'),
+      'description' => t('Filter by District Name.'),
+      'field' => 'ss_district_name',
+      'values callback' => 'facetapi_callback_user_values',
+      'facet mincount allowed' => TRUE,
+    );
+
+    $facets['university_name'] = array(
+      'label' => t('University Name'),
+      'description' => t('Filter by University Name.'),
+      'field' => 'ss_university_name',
+      'values callback' => 'facetapi_callback_user_values',
+      'facet mincount allowed' => TRUE,
+    );
+
+    $facets['subjects'] = array(
+      'label' => t('Subjects'),
+      'description' => t('Filter by Subjects.'),
+      'field' => 'sm_subject_s',
+      'values callback' => 'facetapi_callback_user_values',
+      'facet mincount allowed' => TRUE,
+    );
+
+    $facets['grade_levels'] = array(
+      'label' => t('Grade Levels'),
+      'description' => t('Filter by Grade Levels.'),
+      'field' => 'sm_grade_level_s',
+      'values callback' => 'facetapi_callback_user_values',
+      'facet mincount allowed' => TRUE,
+    );
+
+    // Add facets for all fields attached to the user entity.
+    $facets = array_merge($facets, apachesolr_entity_field_facets('user'));
+  }
+  return $facets;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ * @return mixed
+ */
+function sbac_search_block_info() {
+  $blocks['sbac_search_categories'] = array(
+    'info' => t('Categories'),
+    'region' => 'filter',
+    'pages' => "digital-library-resources*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['sbac_search_categories_button'] = array(
+    'info' => t('Categories'),
+    'region' => 'search',
+    'pages' => "digital-library-resources*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => 1,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_info_alter().
+ *
+ * @param $blocks
+ * @param $theme
+ * @param $code_blocks
+ */
+function sbac_search_block_info_alter(&$blocks, $theme, $code_blocks) {
+  $blocks['search']['form']['status'] = TRUE;
+  $blocks['search']['form']['region'] = 'search';
+  $blocks['search']['form']['visibility'] = BLOCK_VISIBILITY_LISTED;
+  $blocks['search']['form']['pages'] = "digital-library-resources*\ncontent*";
+  $blocks['search']['form']['weight'] = 2;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *
+ * @return array
+ */
+function sbac_search_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'sbac_search_categories':
+      $block['subject'] = t('');
+      $block['content'] = drupal_get_form('sbac_search_categories_form');
+      break;
+    case 'sbac_search_categories_button':
+      $block['subject'] = t('');
+      $content = '<a href="#" id="sbac-search-cat-button" class="active">' . t('Categories') . '</a>';
+      $block['content'] = $content;
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Form for submitting the category filters.
+ *
+ * @return array
+ */
+function sbac_search_categories_form() {
+  $form = array();
+
+  $current_filters = NULL;
+  if (isset($_SESSION['sbac-current-filters'])) {
+    $current_filters = $_SESSION['sbac-current-filters'];
+  }
+
+  $form['current_filters'] = array(
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-search-current-filters'),
+  );
+
+  $form['search_categories'] = array(
+    '#markup' => sbac_search_categories(),
+  );
+
+  $current_keywords = NULL;
+  if (isset($_SESSION['sbac-search-keywords'])) {
+    $current_keywords = $_SESSION['sbac-search-keywords'];
+  }
+  $form['search_keywords'] = array(
+    '#type' => 'hidden',
+    '#value' => $current_keywords,
+    '#attributes' => array('id' => 'sbac-search-keywords'),
+  );
+
+  $form['close'] = array(
+    '#type' => 'submit',
+    '#value' => 'Close',
+    '#attributes' => array('id' => 'sbac-search-close-button'),
+    '#prefix' => '<div class="category-buttons">',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  $form['filter'] = array(
+    '#type' => 'submit',
+    '#value' => 'Apply Filters',
+    '#attributes' => array('id' => 'sbac-search-filter-button'),
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for categories.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_search_categories_form_submit(&$form, &$form_state) {
+  $_SESSION['sbac-current-filters'] = $form_state['input']['current_filters'];
+  if (isset($_SESSION['sbac-search-keywords'])) {
+    $current_keywords = $_SESSION['sbac-search-keywords'];
+    // If the keywords are different, remove filters.
+    if ($current_keywords && $current_keywords != $form_state['input']['search_keywords']) {
+      $_SESSION['sbac-current-filters'] = '';
+    }
+  }
+  $_SESSION['sbac-search-keywords'] = $form_state['input']['search_keywords'];
+}
+
+/**
+ * Returns the category filters.
+ *
+ * @return null
+ */
+function sbac_search_categories() {
+  $categories = array();
+  drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
+
+  $subject = taxonomy_vocabulary_machine_name_load('subject');
+  $categories['subject']['display_name'] = 'Subjects';
+  $categories['subject']['vocabulary'] = $subject;
+  $categories['subject']['terms'] = taxonomy_get_tree($subject->vid);
+
+  $grades = taxonomy_vocabulary_machine_name_load('grades');
+  $categories['grades']['display_name'] = 'Grades';
+  $categories['grades']['vocabulary'] = $grades;
+  $categories['grades']['terms'] = taxonomy_get_tree($grades->vid);
+
+  $attributes = taxonomy_vocabulary_machine_name_load('attributes');
+  $categories['attributes']['display_name'] = 'Attributes of the Formative Assessment Process';
+  $categories['attributes']['vocabulary'] = $attributes;
+  $categories['attributes']['terms'] = taxonomy_get_tree($attributes->vid);
+
+  $digital_media_type = taxonomy_vocabulary_machine_name_load('digital_media_type');
+  $categories['digital_media_type']['display_name'] = 'Media Types';
+  $categories['digital_media_type']['vocabulary'] = $digital_media_type;
+  $categories['digital_media_type']['terms'] = taxonomy_get_tree($digital_media_type->vid);
+
+  $focus = taxonomy_vocabulary_machine_name_load('focus');
+  $categories['focus']['display_name'] = 'Resource Type';
+  $categories['focus']['vocabulary'] = $focus;
+  $categories['focus']['terms'] = taxonomy_get_tree($focus->vid);
+
+  $intended_end_user = taxonomy_vocabulary_machine_name_load('intended_end_user');
+  $categories['intended_end_user']['display_name'] = 'Intended End Users';
+  $categories['intended_end_user']['vocabulary'] = $intended_end_user;
+  $categories['intended_end_user']['terms'] = taxonomy_get_tree($intended_end_user->vid);
+
+  $intended_student_populations = taxonomy_vocabulary_machine_name_load('intended_student_populations');
+  $categories['intended_student_populations']['display_name'] = 'Intended Student Populations';
+  $categories['intended_student_populations']['vocabulary'] = $intended_student_populations;
+  $categories['intended_student_populations']['terms'] = taxonomy_get_tree($intended_student_populations->vid);
+
+  //learning resource type
+//  $grades = taxonomy_vocabulary_machine_name_load('grades');
+//  $categories['grades']['vocabulary'] = $grades;
+//  $categories['grades']['terms'] = taxonomy_get_tree($grades->vid);
+
+  $educational_use = taxonomy_vocabulary_machine_name_load('educational_use');
+  $categories['educational_use']['display_name'] = 'Educational Use';
+  $categories['educational_use']['vocabulary'] = $educational_use;
+  $categories['educational_use']['terms'] = taxonomy_get_tree($educational_use->vid);
+
+  $smarter_balanced_keyword = taxonomy_vocabulary_machine_name_load('smarter_balanced_keyword');
+  $categories['smarter_balanced_keyword']['display_name'] = 'Smarter Balanced Keywords';
+  $categories['smarter_balanced_keyword']['vocabulary'] = $smarter_balanced_keyword;
+  $categories['smarter_balanced_keyword']['terms'] = taxonomy_get_tree($smarter_balanced_keyword->vid);
+
+  $geographical_settings = taxonomy_vocabulary_machine_name_load('geographical_settings');
+  $categories['geographical_settings']['display_name'] = 'Geographic Settings';
+  $categories['geographical_settings']['vocabulary'] = $geographical_settings;
+  $categories['geographical_settings']['terms'] = taxonomy_get_tree($geographical_settings->vid);
+
+  $cf_value = NULL;
+  $cf_html = array();
+  if (isset($_SESSION['sbac-current-filters'])) {
+    $cf_value = $_SESSION['sbac-current-filters'];
+    if ($cf_value) {
+      $filters = explode('::', $cf_value);
+      if ($filters) {
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            if ($vid && $tid) {
+              $term = taxonomy_term_load($tid);
+              if ($term) {
+                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $output = NULL;
+  if ($categories) {
+    $output = theme('sbac_search_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function sbac_search_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'search_block_form') {
+    unset($form['#submit']);
+    $form['search_block_form']['#attributes'] = array('id' => 'sbac-search-textbox');
+    if (isset($_SESSION['sbac-search-keywords'])) {
+      $form['search_block_form']['#default_value'] = $_SESSION['sbac-search-keywords'];
+    }
+    $form['#action'] = '/digital-library-resources';
+    $form['#submit'][] = 'sbac_search_form_submit';
+  }
+}
+
+/**
+ * Submit handler for search submission.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_search_form_submit(&$form, &$form_state) {
+  $_SESSION['sbac-search-keywords'] = $form_state['input']['search_block_form'];
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function sbac_search_theme($existing, $type, $theme, $path) {
+  $items['sbac_search_categories'] = array(
+    'path' => drupal_get_path('module', 'sbac_search') . '/templates',
+    'template' => 'sbac-search-categories',
+    'variables' => array(
+      'categories' => NULL,
+      'cf_value' => NULL,
+      'cf_html' => NULL,
+    ),
+  );
+
+  return $items;
+}
