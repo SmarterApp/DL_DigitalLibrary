@@ -4,12 +4,10 @@
 /* -----------------------------------------
    Alignment Tags Browser
    ----------------------------------------- */
-#alignment-node-form {
-  max-height: 95%;
-  overflow-y:scroll;
 
-  .row {
-    max-width: 100%;
+#alignment-page {
+  .form-item {
+    margin: 5px 0;
   }
 
   .add-aligmnet {
@@ -191,6 +189,10 @@
       border: 1px solid silver;
       @include border-radius(5px);
 
+      p {
+        font-size: 16px;
+        color: #8d9297;
+      }
     }
     .more-info {
       display: block;
@@ -265,9 +267,32 @@
     color: #0085AD;
     font-size: 16px;
     font-weight: bold;
+    cursor: default;
   }
 }
 
 #edit-field-education-alignment{
   display: none;
+}
+
+.form-item-alignment-type {
+  select {
+    width: 200px;
+    display: inline-block;
+  }
+
+  label {
+    width: 120px !important;
+    float: left !important;
+    display: inline-block;
+  }
+}
+
+.alignment-buttons {
+  text-align: right;
+    
+  a.button {
+    display: inline-block;
+    margin-left: 10px;
+  }
 }

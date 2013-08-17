@@ -7,15 +7,18 @@
  * @param  [type] $node           [description]
  * @param  [type] $state          [description]
  * @param  [type] $trigger_id     [description]
- * @param  [type] $review_id      [description]
+ * @param  [type] $id             [description]
  * @return [type]                 [description]
  */
-function resource_review_form($form, &$form_state, $node, $state, $trigger_id, $review_id) {
+function resource_review_form($form, &$form_state, $node, $state, $trigger_id, $id) {
   $form = array();
   global $user;
 
-  $review = entity_load_single('feedback', $review_id);
-  $hours_left = feedback_hours_left($review);
+  $hours_left = NULL;
+  if ($id) {
+    $entity = entity_load_single('feedback', $id);
+    $hours_left = feedback_hours_left($entity);
+  }
 
   // start state
     $form['state_start']['intro'] = array(
@@ -51,7 +54,7 @@ function resource_review_form($form, &$form_state, $node, $state, $trigger_id, $
 
   // elements common to recommendation states
     $reco_desc = t("If you continue, you will no longer be able to adjust your Quality Criteria levels.
-                    Your comments will be saved and provided either to the poster for use during the final review or dirrectly to the contributor for use in revision. Be sure you've provided actionable feedback.");
+                    Your comments will be saved and provided either to the poster for use during the final review or directly to the contributor for use in revision. Be sure you've provided actionable feedback.");
 
     $reco_submit = array('submit' => array(
       '#type' => 'submit',
@@ -198,9 +201,7 @@ function resource_review_form_submit($form, &$form_state) {
       break;
 
     case 'cancel':
-      $entity = entity_load_single('feedback', $form_state['build_info']['args'][3]);
-
-      if (isset($entity->id) && $entity->id) {
+      if ($entity = entity_load_single('feedback', $form_state['build_info']['args'][3])) {
         $entity->status = 0;
         entity_save('feedback', $entity);
       }

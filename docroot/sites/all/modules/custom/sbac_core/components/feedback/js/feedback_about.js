@@ -6,19 +6,37 @@ if (typeof Feedback == 'undefined') {
 
 // About data
 Feedback.about = {
-  slider: '.flexslider'
-};
+  slider: '#review .flexslider',
+  slider_child: '.slides li',
+  slider_width: 413,
 
-Drupal.behaviors.feedback_about = {
-  attach: function (context, settings) {
+  init_flexslider : function() {
     // set up flexslider on the about page's resource slideshow
     if ((slider = $(Feedback.about.slider)).length) {
       slider.flexslider({
         animation: "slide",
         animationLoop: false,
         itemMargin: 0,
-        itemWidth: 413,
+        itemWidth: Feedback.about.slider_width,
         slideshow: false
+      });
+
+      $(Feedback.about.slider_child, slider).css('width', Feedback.about.slider_width + 'px');
+    }
+  }
+};
+
+Drupal.behaviors.feedback_about = {
+  attach: function (context, settings) {
+    Feedback.about.init_flexslider();
+
+    // we need to re-initialize the flexslider when a user clicks on the about tab
+    var section = $('#review .section-container .section-1');
+    if (section.length) {
+      section.bind('classAdded', function(e, css_class) {
+        if (css_class == 'active') {
+          Feedback.about.init_flexslider();
+        }
       });
     }
   }

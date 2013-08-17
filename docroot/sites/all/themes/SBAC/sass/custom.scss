@@ -19,7 +19,7 @@
    - Resource
 :: Legal
 :: Admin theme fixes
- 
+
 */
 
 /* -----------------------------------------
@@ -34,7 +34,7 @@ $darkgreen: #246a34;
 /* -----------------------------------------
    Shared Styles
    ----------------------------------------- */
-//sticky footer   
+//sticky footer
 html, body {
   height: 100%;
 }
@@ -61,10 +61,15 @@ ul,
 ol,
 dl {
   font-size: 1em;
+  list-style-position: inside; /* this can create issues */
 }
 
 .f-dropdown ul {
   padding: 0;
+}
+
+.reveal-modal .close-reveal-modal {
+  position: static;
 }
 
 //fixes issue caused by different compiled versions of custom css
@@ -102,6 +107,108 @@ h3, h4, h5, h6 {
   padding: 0.5em;
 }
 
+/*button, .button, #edit-submit {
+  padding: 8px 18px;
+  background: rgba(191, 216, 229, 1);
+  border: 1px rgba(0, 98, 152, .5) solid;
+  font-size: 1em;
+  font-weight: bold;
+  color: rgba(0, 98, 152, 1);
+  @include text-shadow(0px 1px 0px rgba(255,255,255,.5));
+  @include border-radius (6px);
+  @include transition (all 500ms ease);
+  cursor: pointer;
+
+  &:hover, &:focus, &.form-submit.ajax-processed {
+    color: $white;
+    background: rgba(0, 133, 173, 1);
+    @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
+  }
+}
+*/
+button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus {
+  background: rgba(191, 216, 229, 0.9);
+}
+
+/*button.secondary, .button.secondary, #edit-cancel {
+  background: rgba(226, 226, 226, 1);
+  border: 1px rgba(100, 100, 100, 1) solid;
+  color: rgba(100, 100, 100, 1);
+  padding: 8px 18px;
+  @include border-radius (6px);
+
+  &:hover, &:focus  {
+    background: rgba(138, 21, 56, 1);
+    border: 1px rgba(138, 21, 56, 1) solid;
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+  }
+}*/
+
+
+  .button {
+    margin-left: 0;
+
+    &.ctools-modal-sbac-resource-modal-delete-resource, &#edit-delete-overlay.form-submit {
+      background: rgba(226, 226, 226, 1);
+      border: 1px rgba(100, 100, 100, 1) solid;
+      color: rgba(100, 100, 100, 1);
+
+      &:hover {
+        background: rgba(138, 21, 56, 1);
+        border: 1px rgba(138, 21, 56, 1) solid;
+        color: rgba(255, 255, 255, 1);
+        text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+      }
+    }
+  }
+
+@mixin global-button {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    @include text-shadow(0px 1px 0px rgba(255,255,255,.5));
+    color: rgba(0, 98, 152, 1);
+    @include border-radius(6px);
+    background: rgba(191, 216, 229, 1);
+    border: 1px rgba(0, 98, 152, .5) solid;
+    padding: 8px 18px;
+    text-align: center;
+
+    &:hover{
+      @include transition(all 500ms ease);
+      background: rgba(0, 133, 173, 1);
+      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
+      color: white;
+  }
+
+  &:focus {
+    background: rgba(191, 216, 229, 1);
+  }
+}
+
+@mixin global-button-negative {
+  background: rgba(226, 226, 226, 1);
+  border: 1px rgba(100, 100, 100, 1) solid;
+  color: rgba(100, 100, 100, 1);
+  padding: 8px 18px;
+  @include border-radius (6px);
+
+  &:hover, &:focus  {
+    background: rgba(138, 21, 56, 1);
+    border: 1px rgba(138, 21, 56, 1) solid;
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+  }
+}
+
+button, .button, .form-submit, #edit-submit, #edit-submit--2, #edit-submit--5, #edit-meet-button--2, button.disabled, button[disabled], .button.disabled, .button[disabled], #review-trigger-2, #edit-submit--4 {
+  @include global-button;
+}
+
+button.secondary, .button.secondary, #edit-cancel, #sbac-search-close-button, .devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay {
+  @include global-button-negative;
+}
 
 .alert-box {
   padding: 30px;
@@ -156,6 +263,33 @@ h3, h4, h5, h6 {
 
 }
 
+
+/* -----------------------------------------
+  Vertical Tabs
+  ------------------------------------------ */
+
+.vertical-tabs ul.vertical-tabs-list {
+  li {
+    a{
+      &:hover{
+        background:#bfd8e5;
+        text-decoration: none !important;
+      }
+      color: #717880;
+      background:white;
+    }
+
+    &.selected {
+      a {
+        background: #0085ad;
+        strong{color: white;}
+      }
+    }
+  }
+
+
+}
+
 /* -----------------------------------------
    Forms
    ----------------------------------------- */
@@ -164,7 +298,15 @@ h3, h4, h5, h6 {
 label {
   font-weight: bold;
   font-size: 0.8em;
+  cursor: default;
 }
+.form-type-checkbox,
+.form-type-radio {
+  label {
+    cursor: pointer;
+  }
+}
+
 
 input[type="file"], input[type="checkbox"], input[type="radio"], select{
   margin: 5px;
@@ -226,6 +368,28 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     margin-left: 30px;
     font-size: emCalc(18px);
     line-height: 45px;
+  }
+
+  .button {
+    padding: 8px 18px;
+    margin-left: 10px;
+    background: rgba(191, 216, 229, 1);
+    border: 1px rgba(0, 98, 152, .5) solid;
+    font-size: 1em;
+    font-weight: bold;
+    color: rgba(0, 98, 152, 1);
+    text-shadow: 0px -1px 0px rgba(000,000,000,0), 0px 1px 0px rgba(255,255,255,.5);
+    @include border-radius (6px);
+    @include transition (all 500ms ease);
+    cursor: pointer;
+    line-height: 1em;
+    height: auto;
+
+    &:hover, &:focus, &.form-submit.ajax-processed {
+      color: rgba(255, 255, 255, 1);
+      background: rgba(0, 133, 173, 1);
+      text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+    }
   }
 
   .user-nav {
@@ -299,20 +463,21 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     }
 
     ul {
-      width: 450px;
+      width: 445px;
       height: 42px;
+      margin: 0;
+      padding: 0;
     }
 
     li {
       border-left: 1px solid black;
       padding: 0px;
-      padding-left: 20px;
       margin: 0px;
-      
+
       &:hover {
         background: #505050;
       }
-      
+
       .active {
         background: #777777;
       }
@@ -320,9 +485,9 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       a {
         color: inherit;
         font-size: 0.75em;
-        padding-left: 25px;
+        padding-left: 55px;
         padding-right: 25px;
-        background: url('../images/icons/terms-small.png') left center no-repeat;
+        background: url('../images/icons/terms-small.png') 20px center no-repeat;
 
         &.help {
           background-image: url('../images/icons/help-small.png');
@@ -336,6 +501,56 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     img {
       display: inline-block;
       margin-right: 10px;
+    }
+  }
+  .footer-links {
+   overflow: visible !important;
+  }
+  .footer-help{
+    position: relative;
+    #drop2 {
+      top: -105px !important;
+      left: -140px !important;
+      height: auto;
+      display: none;
+
+      &.open {
+        display: block;
+      }
+
+     li {
+      color: #333;
+      padding: 0;
+      margin: 0;
+      border-left: none;
+        a {
+          color: inherit;
+          padding: 0;
+          margin: 0;
+          background: none;
+          padding: 5px;
+          &:hover{
+            color:white;
+          }
+        }
+      }
+
+      &:before{
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid white;
+        border-bottom: 0;
+        bottom: -8px;
+        top: auto;
+      }
+      &:after{
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid #ccc;
+        border-bottom: 0;
+        bottom: -9px;
+        top: auto;
+      }
     }
   }
 }
@@ -381,7 +596,9 @@ nav.main-nav {
   }
 }
 
-
+#drop3{
+  margin-top: -10px;
+}
 .help-dropdown {
   float: right;
   height: 45px;
@@ -404,6 +621,36 @@ nav.main-nav {
   }
 }
 
+/** dropdown styles **/
+.f-dropdown {
+  @include border-radius(6px);
+  @include box-shadow(1px 2px 2px rgba(0, 0, 0, 0.3 ));
+  border-top-color: #ccc;
+  padding: 10px !important;
+  display: none;
+    &.open{
+      display:block;
+    }
+
+  li {
+    /* sorry for all the !importants but those are desperate times - footer and grid styles are messign this up */
+    padding: 0 !important;
+    margin: 0 !important;
+    float: none !important;
+    a {
+      padding: 5px !important;
+      color:rgba(0, 98, 152, 1) !important;
+      @include transition(all 500ms ease);
+      background: white !important;
+      font-size: 14px !important;
+
+      &:hover{
+        background:rgb(176, 230, 244) !important;
+      }
+    }
+  }
+}
+
 .textify{
   *, *:before, *:after {
     @include box-sizing(content-box);
@@ -413,6 +660,8 @@ nav.main-nav {
     padding:0;
     position:static;
   }
+
+  font-size:inherit;
 }
 
 // fix handle on draggable table views
@@ -454,57 +703,25 @@ a.tabledrag-handle .handle {
     font-size: 0.8em;
     padding: 0.8em;
   }
+
+  .ui-resizable-handle {
+    display: none !important;
+  }
 }
 
 /* -----------------------------------------
    User login
    ----------------------------------------- */
 
-.page-user-login {
-  ul.button-group,
-  #page-title {
-    display: none;
-  }
-  h1 {
-    font-size: emCalc(41px);
-  }
-  .login-text {
-    ul {
-      list-style: none;
-      margin: 15px 0 0;
-      padding: 0;
-      .big {
-        text-transform: uppercase;
-        font-size: emCalc(20px);
-        font-weight: bold;
-        margin-top: 4px;
-      }
-      .small {
-        font-size: emCalc(15px);
-      }
-      .top,
-      .middle,
-      .bottom {
-        .big,
-        .small {
-          margin-left: 18px;
-          display: inline-block;
-        }
-        i {
-          float: left;
-          font-size: emCalc(36px);
-        }
-      }
-    }
-    li {
-      margin-bottom: 10px;
-    }
+#user-login {
+  .small {
+      font-size: emCalc(14px);
   }
 }
 
-//forgot password 
+/* forgot password */
 
-#user-pass, #change-password {
+#user-pass, #change-password, #sbac-user-change-password-form {
   text-align: center;
 
   h1 {
@@ -519,8 +736,47 @@ a.tabledrag-handle .handle {
   }
 
   input {
-    width: 50%;
+    width: 40%;
     margin: 1em auto;
+  }
+}
+
+.page-change-password {
+  h1 {
+    text-align: center;
+  }
+
+  .password-parent, .confirm-parent {
+    width: auto;
+    position: relative;
+
+    .password-strength, div.password-confirm {
+      width: auto;
+      float: none;
+      margin: 0;
+      position: absolute;
+      bottom: -30px;
+      left: 40%;
+    }
+  }
+
+  .confirm-parent {
+    margin-top: 3.5em;
+  }
+
+  div .form-item div.password-suggestions {
+    margin: 4em auto;
+    width: 50%;
+  }
+}
+
+.page-user-reset {
+  #user-pass-reset {
+    text-align: center;
+
+    p {
+      font-size: 1em;
+    }
   }
 }
 /* -----------------------------------------
@@ -550,7 +806,7 @@ a.tabledrag-handle .handle {
   }
   .profile-title {
     font-size: 18px;
-    color: #494949;    
+    color: #494949;
   }
   .profile-details {
     border-top: 1px solid #ccc;
@@ -583,7 +839,7 @@ a.tabledrag-handle .handle {
       width: 100%;
     }
   }
-  
+
   .introduction {
     font-size: 14px;
     border-top: 1px #ccc solid;
@@ -642,6 +898,12 @@ a.tabledrag-handle .handle {
   }
 }
 
+#current-help-topic-modal{
+   .helpBack {
+    position: absolute;
+  }
+}
+
 
 .flexslider .flex-direction-nav a {
   display: block;
@@ -678,6 +940,7 @@ a.tabledrag-handle .handle {
   position: absolute;
   top: -15px;
   right: -15px;
+  display: none;
 }
 
 #cboxContent {
@@ -767,7 +1030,7 @@ a.tabledrag-handle .handle {
 }
 
 .resource-info {
-  
+
   background: #f2f8e5;
   border-radius: 0 0 12px 12px;
   margin: 0 -40px -51px;
@@ -813,13 +1076,9 @@ a.tabledrag-handle .handle {
    Create Resource
    ----------------------------------------- */
 
-/*div.error {
-  background-repeat: no-repeat;
-  height: 24px;
-  width: 24px;
-  margin: 0 10px -10px 0;
-}*/
-
+#modalContent .ctools-modal-content .modal-content{
+  overflow:scroll;
+}
 
 #edit-field-alt-body,
 #edit-field-contexts,
@@ -838,28 +1097,14 @@ a.tabledrag-handle .handle {
   }
 }
 
-#edit-field-file-und-1-upload {
-  float: right;
-  width: 200px;
-  margin-top: -1.5em;
-}
-
-.form-item-field-file-und-1{
-  label {
-    text-align: center;
-    font-size: 1.5em;
-    margin-top: 2em;
-  }
-}
-
-#edit-field-file-und-1-upload-button {
-  margin-top: -2.5em;
-  float: left;
-}
 .sbac-resource-container {
   padding: 5px 10px;
   background-color: #F6F6F6;
   border: 1px solid #ddd;
+}
+
+#sbac-resource-submit-resource-form {
+  margin: 0;
 }
 
 
@@ -872,19 +1117,51 @@ a.tabledrag-handle .handle {
 .field-name-field-license-information {
   margin-top: 30px;
 
-
   label[for="edit-field-license-information-und"]{
     font-size: 1em;
   }
 
-  #license-information-group{
+  #license-information-group {
+    display: block;
     margin-left: 20px;
+    margin-bottom: 20px;
+
+    .field-name-field-author {
+      display: block !important;
+    }
+
+    .field-name-field-publisher {
+      display: block !important;
+    }
+  }
+
+  .form-radios .form-item { 
+    margin: .5em 0 1em;
+  }
+
+  #no-license-text {
+    li {
+      font-size: 0.8em;
+    }
+  }
+}
+
+#field_static_license_text {
+  .field-content {
+    font-size: emCalc(12px);
   }
 }
 
 #edit-field-license-url {
-  font-size: emCalc(14px);
-  margin: 0 0 20px 5px;
+  font-size: emCalc(16px);
+
+  label {
+    margin: 0 0 5px 0;
+  }
+
+  a {
+    font-size: emCalc(12px);
+  }
 }
 
 .completed-flag {
@@ -924,7 +1201,8 @@ a.tabledrag-handle .handle {
   #edit-group_basic,
   #edit-group_summary,
   #edit-field-author,
-  #edit-field-publisher {
+  #edit-field-publisher,
+  #edit-group_materials  {
     .form-type-textfield,
     .form-type-textarea {
       position: relative;
@@ -942,7 +1220,8 @@ a.tabledrag-handle .handle {
     }
   }
   // materials tab
-  #edit-group_materials .field-name-field-file {
+  #edit-group_materials {
+  .field-name-field-file {
     .fieldset-wrapper {
       table {
         width: 100%;
@@ -956,7 +1235,7 @@ a.tabledrag-handle .handle {
             font-weight: normal;
             font-size: emCalc(12px);
           }
-        } 
+        }
         tr:nth-child(2) {
           td:nth-child(1) {
             padding-top: 20px;
@@ -1006,6 +1285,42 @@ a.tabledrag-handle .handle {
       }
     }
   }
+
+  .field-name-field-pii {
+    margin: 1.5em 0;
+  }
+
+  ul, ol {
+    margin-left: emCalc(45px);
+  }
+
+  #edit-field-file-und-ajax-wrapper {
+
+    .form-file {
+      float: none;
+      width: 200px;
+      margin-top: .5em;
+      clear: both;
+    }
+
+    .form-submit {
+      float: right;
+    }
+
+    label {
+      font-size: 1em;
+    }
+
+    .form-managed-file .form-file {
+    }
+  }
+}
+
+#edit-group_summary {
+  ul, ol {
+    margin-left: emCalc(45px);
+  }
+}
   // tags tab
   #edit-group_tags {
     .fieldset-wrapper {
@@ -1092,6 +1407,14 @@ a.tabledrag-handle .handle {
     .ctools-modal-content {
       height: 160px !important;
     }
+
+    .description {
+      max-width: 220px;
+    }
+
+    div.error {
+      background-image: none;
+    }
   }
 }
 
@@ -1117,6 +1440,11 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    CTools Modal
    ----------------------------------------- */
+
+#modalBackdrop {
+  background: url(../images/colorbox/overlay.png) repeat 0 0 !important;
+  opacity: 0.9 !important;
+}
 // add alignment modal
 #modalContent {
   .ctools-modal-content {
@@ -1137,6 +1465,8 @@ a.tabledrag-handle .handle {
     .modal-content {
       padding-top: 0;
       overflow: hidden;
+      overflow-y:auto;
+
       .form-item {
         margin-top: 0;
         label {
@@ -1149,6 +1479,10 @@ a.tabledrag-handle .handle {
         display: inline-block;
         width: 48%;
         margin-right: 15px;
+      }
+
+      #edit-delete-overlay, #edit-submit-overlay {
+        float: right;
       }
     }
     .field-type-taxonomy-term-reference {
@@ -1272,7 +1606,7 @@ a.tabledrag-handle .handle {
       font-weight: normal;
     }
   }
-  
+
   .label {
     background-color: #fff;
     color: #000;
@@ -1319,11 +1653,198 @@ a.tabledrag-handle .handle {
 .block-sbac-central-feedback-box {
   display: none;
   width: 300px;
-  padding: 30px;
+  padding: 10px 20px 0;
   position: absolute;
   right: 150px;
   bottom: 50px;
   background: white;
-  border-radius: 10px;
-  border: 1px solid black;
+  @include border-radius(6px);
+  @include box-shadow(1px 2px 2px rgba(0, 0, 0, 0.3 ));
+  font-size: 14px;
+  z-index: 97;
+  border: 1px solid #ccc;
+
+  /**&:before{
+    content:'';
+    position: relative;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid white;
+    border-bottom: 0;
+    bottom: -24px;
+    right: 0;
+    top: auto;
+    z-index: 99;
+  }**/
+  &:after{
+    content:'';
+    position: relative;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid white;
+    border-bottom: 0;
+    bottom: -23px;
+    left: 250px;
+    top: auto;
+    z-index: 98;
+  }
+
+  p {
+    line-height: normal !important;
+    margin-bottom: 10px !important;
+  }
+
+}
+.block-sbac-central-feedback-box p {
+  color: black;
+}
+/* -----------------------------------------
+   Help topics styles
+   ----------------------------------------- */
+
+#views-form-help-topics-page-4 .views-field-nid-1 a {
+/*  background: white;
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 3px;*/
+  background: none repeat scroll 0 0 #BFD8E5;
+  border: 1px solid rgba(0, 98, 152, 0.5);
+  border-radius: 6px 6px 6px 6px;
+  color: #006298;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 18px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+#views-form-help-topics-page-4 .views-field-nid-1 a:hover {
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+  background: #0085ad;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+  color: white;
+}
+#views-form-help-topics-page-4 .views-field-nid-1 a:focus {
+  background: #bfd8e5;
+}
+
+#views-form-help-topics-page-4,
+#views-form-help-topics-page-2 {
+  margin-bottom: 50px;
+}
+
+.help-topic-link,
+.welcome-tutorial-topic-link {
+/*  background: none repeat scroll 0 0 #DDDDDD;
+  border: 1px solid;
+  border-radius: 5px 5px 5px 5px;
+  display: block;
+  padding: 8px 20px;*/
+  background: none repeat scroll 0 0 #BFD8E5;
+  border: 1px solid rgba(0, 98, 152, 0.5);
+  border-radius: 6px 6px 6px 6px;
+  color: #006298;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 18px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.help-topic-link:hover,
+.welcome-tutorial-topic-link:hover {
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+  background: #0085ad;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+  color: white;
+}
+.help-topic-link:focus,
+.welcome-tutorial-topic-link:focus {
+  background: #bfd8e5;
+  color: #006298;
+}
+
+.page-welcome-tutorial-topics .help-topic-link,
+.page-help-topics .help-topic-link {
+  top: 10px;
+  position: absolute;
+  right: 10px;
+}
+.view-id-help_topics .help-topic-link1 {
+
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.view-id-help_topics .help-topic-link2,
+.welcome-tutorial-topic-link {
+  bottom: 20px;
+  position: absolute;
+  right: 150px;
+}
+.view-id-help_topics #edit-submit,
+.view-id-help_topics #edit-submit--2 {
+  position: absolute;
+  right: 10px;
+  bottom: 0px;
+}
+
+#views-form-help-topics-page-2 .tabledrag-toggle-weight,
+#views-form-help-topics-page-4 .tabledrag-toggle-weight {
+  display: none;
+}
+
+#draggableviews-table-help_topics-page_2,
+#draggableviews-table-help_topics-page_4 {
+  width: 100%;
+}
+
+.view-help-topics ul li {
+  list-style: none;
+  margin-bottom: 20px;
+}
+.view-help-topics ul li .views-field-title a {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.view-help-topics ul li .views-field-body {
+  p {
+    font-size: 15px;
+  }
+}
+.view-help-topics ul li .views-field-field-summary {
+  margin-bottom: 20px;
+}
+
+.page-help-topics h1#page-title {
+  margin-bottom: 20px;
+  margin-top: 30px;
+  padding-left: 22px;
+}
+#admin-welcome-tab-message {
+  padding: 10px;
+  background: #ddd;
+  border: 1px solid #999;
+  margin-bottom: 20px;
+}
+#draggableviews-table-help_topics-page_4 .views-field-nid-1{
+  text-align: center;
+  width: 200px;
+}
+#draggableviews-table-help_topics-page_2 .views-field-status, #draggableviews-table-help_topics-page_4 .views-field-status, #draggableviews-table-help_topics-page_2 .views-field-fields-combine {
+  text-align: center;
+}
+/* -----------------------------------------
+   Login text styles
+   ----------------------------------------- */
+.login-text {
+  padding-left: 50px;
 }

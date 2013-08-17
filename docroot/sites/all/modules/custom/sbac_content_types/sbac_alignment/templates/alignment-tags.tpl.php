@@ -1,5 +1,7 @@
 <div class="standards-browser subject">
-  <h2><?php print $level_title;?></h2>
+  <div class="row">
+    <div class="large-12 columns"><h2><?php print $level_title;?></h2></div>
+  </div>
   <?php $count = 0; ?>
     <?php if ($terms): ?>
       <?php foreach ($terms as $term) : ?>

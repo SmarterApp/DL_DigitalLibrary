@@ -1,4 +1,5 @@
 <?php
+	// @TODO this template file needs to be cleaned up
 	hide($user_profile['summary']);
 	$cols = 12;
 	if ($user_profile['user_picture']['#markup']) {
@@ -7,8 +8,19 @@
 ?>
 <div class="row first">
 	<?php if ($user_profile['user_picture']['#markup']): ?>
-		<div class="column large-3">
-			<?php echo drupal_render($user_profile['user_picture']); ?>
+		<div class="column large-3 profile-pic">
+			<?php 
+			// display default photo if privacy on for picture
+			// we use field_first_name because field_privacy may not exist
+			if (isset($user_profile['field_first_name']['#object'])) {
+				if (!sbac_user_privacy_check('picture', $user_profile['field_first_name']['#object'])) {
+				  $filepath = variable_get('user_picture_default', '');
+				  $alt = t("@user's picture", array('@user' => format_username($user_profile['field_first_name']['#object'])));
+			      $user_profile['user_picture']['#markup'] = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt));
+			    }
+			}
+		    echo drupal_render($user_profile['user_picture']);
+			?>
 		</div>
 	<?php endif; ?>
 
@@ -25,36 +37,50 @@
 		//	));
 		?>
 
-		<h2 class="name">
+		<h2 class="name clearfix">
 			<?php
-				echo drupal_render($user_profile['field_first_name'][0]) . ' ';
-				echo drupal_render($user_profile['field_last_name'][0]);
+				echo drupal_render($user_profile['field_first_name']) . ' ';
+				echo drupal_render($user_profile['field_last_name']);
 			?>
 		</h2>
 
 		<div class="profile-title">
 			<?php
+			// @TODO this needs to be fixed and use drupal_render
+			if (isset($user_profile['field_position']['#access']) && $user_profile['field_position']['#access'] && isset($user_profile['field_position'][0]['#markup'])) {
+				echo $user_profile['field_position'][0]['#markup'];
+			}
+			
 			if (isset($user_profile['field_retired'][0]['#markup'])) {
-				$user_profile['field_retired'][0]['#markup'] = "I am currently retired" ;
-				echo  drupal_render($user_profile['field_position'][0]). ' (retired)';
-			} else {
-				echo  drupal_render($user_profile['field_position'][0]);
+				echo ' (Retired)';
 			}
 			?>
 		</div>
 
 		<div class="profile-school">
 			<?php
-				echo t('!school in !district', array(
-					'!school'    => drupal_render($user_profile['field_school_name'][0]),
-					'!district'  => drupal_render($user_profile['field_district_name'][0]),
-				));
+				$school = drupal_render($user_profile['field_school_name']);
+				$district = drupal_render($user_profile['field_district_name']);
+				$state = drupal_render($user_profile['field_state']);
+
+				if ($school && $district && $state) {
+					echo t('!school in !district, !state', array(
+						'!school'    => $school,
+						'!district'  => $district,
+						'!state' => $state,
+					));
+				} else {
+					echo $school;
+					echo $district;
+					echo ($school || $district ? ', ' : '');
+					echo $state;
+				}
 			?>
 		</div>
 
 		<div class="introduction">
 			<?php
-				echo drupal_render($user_profile['field_introduction'][0]);
+				echo drupal_render($user_profile['field_introduction']);
 			?>
 		</div>
 

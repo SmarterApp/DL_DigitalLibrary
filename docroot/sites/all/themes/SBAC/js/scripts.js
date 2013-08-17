@@ -10,7 +10,7 @@
         width: "auto",
         height: "400",
         showArrows : true,
-        showNavigation: true,
+        showNavigation: true
       });
     }
   };
@@ -25,7 +25,7 @@
           width: "auto",
           height: "400",
           showArrows : true,
-          showNavigation: true,
+          showNavigation: true
         });
       }
 
@@ -41,6 +41,18 @@
       //   height:'80%',
       //   onComplete: initTextify,
       // });
+    }
+  };
+
+  Drupal.behaviors.accountDropdown = {
+    attach: function (context, settings) {
+      $(document).click(function() {
+        if (!$(this).hasClass('open')) {
+          var selectedDiv = $('.open');
+          selectedDiv.hide();
+          selectedDiv.removeClass('open');
+        }
+      });
     }
   };
 

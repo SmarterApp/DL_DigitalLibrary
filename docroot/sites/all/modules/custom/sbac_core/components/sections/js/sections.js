@@ -1,25 +1,5 @@
 (function($) {
 
-// we need to log events on css class changes, so we create a closure
-// and override jQuery's addClass and removeClass functions
-/*
-(function() {
-  var original = jQuery.fn.addClass;
-
-  jQuery.fn.addClass = function() {
-      var result = original.apply(this, arguments);
-      jQuery(this).trigger('classAdded', arguments);
-      return result;
-  }
-
-  jQuery.fn.removeClass = function() {
-      var result = original.apply(this, arguments);
-      jQuery(this).trigger('classRemoved', arguments);
-      return result;
-  }
-})();
-*/
-
 Drupal.behaviors.sections = {
   attach: function (context, settings) {
     // check for tab hash and switch the active tab
@@ -42,14 +22,6 @@ Drupal.behaviors.sections = {
             return false;
           }
         });
-        
-        /*
-        el.bind('classAdded', function(e, css_class) {
-          if (css_class == 'active') {
-            window.location.hash = hash;
-          }
-        });
-        */
       });
     }
   },

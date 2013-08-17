@@ -51,6 +51,7 @@ function sbac_resource_image_default_styles() {
         'weight' => -9,
       ),
     ),
+    'label' => 'resource_image_grid',
   );
 
   return $styles;

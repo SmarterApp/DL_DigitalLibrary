@@ -51,6 +51,7 @@ function sbac_help_image_default_styles() {
         'weight' => 1,
       ),
     ),
+    'label' => 'help_icon',
   );
 
   return $styles;

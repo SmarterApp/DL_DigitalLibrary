@@ -7,15 +7,18 @@
  * @param  [type] $node           [description]
  * @param  [type] $state          [description]
  * @param  [type] $trigger_id     [description]
- * @param  [type] $gate_keeper_id [description]
+ * @param  [type] $ud             [description]
  * @return [type]                 [description]
  */
-function resource_gate_keeper_form($form, &$form_state, $node, $state, $trigger_id, $gate_keeper_id) {
+function resource_gate_keeper_form($form, &$form_state, $node, $state, $trigger_id, $id) {
   $form = array();
   global $user;
 
-  $gate_keeper = entity_load_single('feedback', $gate_keeper_id);
-  $hours_left = feedback_hours_left($gate_keeper);
+  $hours_left = NULL;
+  if ($id) {
+    $entity = entity_load_single('feedback', $id);
+    $hours_left = feedback_hours_left($entity);
+  }
 
   // start state
     $form['state_start']['intro'] = array(
@@ -53,7 +56,7 @@ function resource_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
     $form['state_not_meet']['intro'] = array(
       '#markup' => '
                     <div class="gate-keeper-modal-intro">
-                      ' . t("You’ve indicated that this resource does not meet all the Gate-Keeping Criteria. If you wish to continue, the resource will be returned to the resource contributor with your comments. Be sure to provided actionable feedback.") . '
+                      ' . t("You’ve indicated that this resource does not meet all the Gate-Keeping Criteria. If you wish to continue, the resource will be returned to the resource contributor with your comments. Be sure to provide actionable feedback.") . '
                     </div>
                    ',
     );
@@ -174,10 +177,10 @@ function resource_gate_keeper_form_submit($form, &$form_state) {
       break;
 
     case 'cancel':
-      $gate_keeper = entity_load_single('feedback', $form_state['build_info']['args'][3]);
-      $gate_keeper->status = 0;
-
-      entity_save('feedback', $gate_keeper);
+      if ($entity = entity_load_single('feedback', $form_state['build_info']['args'][3])) {
+        $entity->status = 0;
+        entity_save('feedback', $entity);
+      }
 
       break;
 

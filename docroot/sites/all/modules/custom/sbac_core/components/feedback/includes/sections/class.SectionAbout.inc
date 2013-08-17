@@ -12,7 +12,7 @@ class SectionAbout extends Base {
     $output = '';
     $teaser = node_view($this->_node, 'secondary_teaser');
     $output .= drupal_render($teaser);
-    
+
     return $output;
   }
 }

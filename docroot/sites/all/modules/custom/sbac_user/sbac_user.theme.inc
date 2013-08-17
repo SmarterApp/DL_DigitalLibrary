@@ -25,7 +25,7 @@ function sbac_user_theme__theme() {
       'template_preprocess',
     ),
   );
-  $items['change_password'] = array(
+  $items['sbac_user_change_password_form'] = array(
     'render element' => 'form',
     'path' => drupal_get_path('module', 'sbac_user') . '/templates',
     'template' => 'change-password',
@@ -72,13 +72,13 @@ function sbac_user_theme__preprocess_user_profile(&$vars) {
  */
 function sbac_user_theme__preprocess_user_login(&$vars) {
   $vars['left_top_big'] = t('Smarter Balanced Assessment Consortium');
-  $vars['left_top_small'] = l(t('Learn More'),"http://www.smarterbalanced.org/");
+  $vars['left_top_small'] = t('<div class="login-text">The Smarter Balanced Assessment Consortium is a state-led consortium working to develop next-generation assessments that accurately measure student progress toward college- and career-readiness.</div>').l(t('Click here to learn more'),"http://www.smarterbalanced.org/", array('attributes' => array('target' => '_blank', 'class' => 'login-text')));
 
   $vars['left_middle_big'] = t('The Smarter Balanced Digital Library');
-  $vars['left_middle_small'] = t('Resources you need in one place');
+  $vars['left_middle_small'] = t('<div class="login-text">The Digital Library is an online, user friendly, searchable library for educators that contains only high quality vetted resources. It is interactive and allows educators from member states to use and rate resources and to collaborate.</div>');
 
-  $vars['left_bottom_big'] = t('Help');
-  $vars['left_bottom_small'] = t('Find answers to common topics');
+  // $vars['left_bottom_big'] = t('Help');
+  // $vars['left_bottom_small'] = t('Find answers to common topics');
 
   $vars['form']['actions']['submit']['#value'] = t('Log into the Digital Library');
 }

@@ -90,6 +90,28 @@ class Hooks extends \devtools\Hooks {
         }
       }
     }
+
+    // we need to re-arrange some hook calls to call our stuff *after* workbench, and
+    // workbench attempts to set itself to run after everything else, so we run
+    // workbench's stuff, and then our own.
+    $hooks_cache = &drupal_static('module_implements');
+    unset($hooks_cache['module_implements_alter']['workbench_email']);
+    
+    foreach ($hooks_cache as $hook => &$implementations) {
+      if (strpos($hook, 'form') !== FALSE) {
+        // call workbench's code
+        if (module_exists('workbench_email')) {
+          workbench_email_module_implements_alter($implementations, $hook);
+        }
+
+        // now move our hook to the end
+        if ($hook == 'form_node_form_alter' && isset($implementations['sbac_core'])) {
+          $group = $implementations['sbac_core'];
+          unset($implementations['sbac_core']);
+          $implementations['sbac_core'] = $group;
+        }
+      }
+    }
   }
 
   /**
@@ -272,6 +294,9 @@ class Hooks extends \devtools\Hooks {
           $form_utility->postProcess();
         }
     }
+    elseif ($form_id == 'resource_node_form') {
+
+    }
   }
 
   /**
@@ -404,6 +429,41 @@ class Hooks extends \devtools\Hooks {
   function hook_entity_update($entity, $type) {
     if ($type == 'feedback') {
       $this->_check_resource_review_state($entity);
+    }
+  }
+
+  /**
+   * Extends hook_form_BASE_FORM_ID_alter().
+   */
+  function hook_form_node_form_alter(&$form, $form_state) {
+    // this must be a node form and a type that has moderation enabled
+    if (!workbench_moderation_node_type_moderated($form['type']['#value'])) {
+      return;
+    }
+
+    // get current state
+    if (isset($form['#node']->workbench_moderation['current']->state)) {
+      $moderation_state = $form['#node']->workbench_moderation['current']->state;
+    }
+    else {
+      $moderation_state = variable_get('workbench_moderation_default_state_' . $form['type']['#value'], workbench_moderation_state_none());
+    }
+
+    // if the current state is published, then workbench_moderation will have changed
+    // the form's default value to Draft, in order to force the creation of a new
+    // revision. We don't need/want this workflow, so we change the form's state back
+    // to published.
+    if ($moderation_state == workbench_moderation_state_published()) {
+      $form['options']['workbench_moderation_state_new']['#default_value'] = $moderation_state;
+
+      // workbench replaces the revision checkbox with a hardcoded value, let's put
+      // the original back
+      $form['revision_information']['revision'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Create new revision'),
+        '#default_value' => 1,
+        '#access' => user_access('administer nodes'),
+      );
     }
   }
 

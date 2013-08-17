@@ -10,8 +10,6 @@ $header: #18577e;
 $teal: #0085ad;
 $darkgreen: #246a34;
 
-
-
 /* -----------------------------------------
    Forms
    ----------------------------------------- */
@@ -122,15 +120,6 @@ a.sbac-grid-layout {
 
   .pager-load-more {
     .button {
-      border: 1px solid #e0e0e0; // stroke
-      @include border-radius(4px); // border radius
-      @include background-clip(padding-box); // prevents bg color from leaking outside the border
-      background-color: #c9c9c9; // layer fill content
-      @include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%)); // gradient overlay
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1f1f1', endColorstr='#c9c9c9');
-      color: #494949; // text color + color overlay
-      font-weight: bold;
-      @include text-shadow(0 1px 0 #fff); // drop shadow
     }
   }
 
@@ -150,6 +139,7 @@ a.sbac-grid-layout {
         font-weight: bold;
       }
     }
+
     li {
       span {
         display: inline-block;
@@ -157,6 +147,7 @@ a.sbac-grid-layout {
       }
     }
   }
+
   .resource-card {
     background: $white;
     border: 1px solid #eee;
@@ -164,7 +155,6 @@ a.sbac-grid-layout {
     padding: 0px;
     @include border-radius(8px);
     margin-bottom: 2em;
-    max-width: 290px;
     
     .resoruce-bottom {
     	background-color: #eaeaea;
@@ -236,7 +226,8 @@ a.sbac-grid-layout {
       font-size: 1em;
       font-weight: normal;
       font-family: Arial, sans-serif;
-      max-width: 255px;
+      max-width: 250px;
+      word-wrap: break-word;
 
       span a {
         color: #0085ad;
@@ -258,6 +249,7 @@ a.sbac-grid-layout {
         margin: 0;
         @include box-shadow (none);
       }
+
     }
 
     .shield-drop {
@@ -269,6 +261,7 @@ a.sbac-grid-layout {
 
         li {
           padding: 5px;
+          cursor: default;
         }
       }
       .f-dropdown:after, .f-dropdown:before {
@@ -299,18 +292,6 @@ a.sbac-grid-layout {
       margin: 10px 0 0;
       @include border-radius(2px);
  	  @include box-shadow(inset 1px 2px 5px rgba(0,0,0,.4)); // inner shadow
-    }
-
-    .button {
-		border: 1px solid #e0e0e0; // stroke
-		@include border-radius(4px); // border radius
-		@include background-clip(padding-box); // prevents bg color from leaking outside the border
-		background-color: #c9c9c9; // layer fill content
-		@include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%)); // gradient overlay
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1f1f1', endColorstr='#c9c9c9');
-		color: #494949; // text color + color overlay
-		font-weight: bold;
-		@include text-shadow(0 1px 0 #fff); // drop shadow
     }
 
     .resource-stats {
@@ -349,7 +330,6 @@ a.sbac-grid-layout {
     .resource-card {
       padding: 10px 25px 10px 10px;
       margin-bottom: 0;
-      max-width: 100%;
 
       .resource-name {
         border-bottom: 1px solid #aaaaaa;
@@ -359,7 +339,7 @@ a.sbac-grid-layout {
 
       h3 {
         font-size: 16px;
-        max-width: 90%;
+        max-width: 100%;
       }
 
     .distinction span a {
@@ -368,9 +348,6 @@ a.sbac-grid-layout {
 
       .button {
         margin-right: 10px;
-        margin-bottom: 0;
-        background-color: #c9c9c9;
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1f1f1', endColorstr='#c9c9c9');
       }
 
       img {
@@ -416,6 +393,10 @@ a.sbac-grid-layout {
   }
 }
 
+.ie9 .digital-library .resource-card h3 {
+  padding-right: 10px;
+}
+
 //Resource Dropdown 
 
 .filters {
@@ -423,11 +404,12 @@ a.sbac-grid-layout {
   color: $white;
   padding: 20px 0;
   border-top: 2px solid #575656;
+  position: relative;
 
   .column {
     &:first-child {
       .categories-filter-choices {
-
+        left:20px;
       }
     }
 
@@ -454,7 +436,6 @@ a.sbac-grid-layout {
   }
 
   li {
-
     background: #8d9297 url('../images/icon-drop.png') no-repeat 97% center;
     padding: 5px 10px;
     margin:0 0 10px;
@@ -470,11 +451,10 @@ a.sbac-grid-layout {
       color: $white;
     }
 
-    h3 {
+  .sbac-search-filter-name {
       margin: 0;
       font-weight: normal;
       font-size: 1.1em;
-      position: relative;
     }
 
     span {
@@ -487,29 +467,20 @@ a.sbac-grid-layout {
   }
 
   .category-buttons {
-
+    padding-right: 5px;
     text-align: right;
 
     button {
-      border: 1px solid #e0e0e0; // stroke
-      @include border-radius(3px); // border radius
-      @include background-clip(padding-box); // prevents bg color from leaking outside the border
-      background-color: #c9c9c9; // layer fill content
-      @include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%)); // gradient overlay
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1f1f1', endColorstr='#c9c9c9');
-      color: #494949;
-      font-size: 0.8em;
       margin: 10px;
-      padding: 5px 15px;
     }
   }
 }
 
 .categories-filter-choices {
   position: absolute;
-  top: 95px;
+  top: 100px;
   left: 20px;
-  margin-top: -100px;
+  margin: -100px 0 0 0;
   z-index: 9999;
 
 
@@ -584,6 +555,7 @@ a.sbac-grid-layout {
     }
 
     .current-filter {
+      cursor:pointer;
       float: left;
       margin:10px 10px 10px 0;
       font-size: 0.8em;
@@ -600,9 +572,11 @@ a.sbac-grid-layout {
 
 .search {
   text-align: right;
+
   label {
     display: none;
   }
+
   .block{
     display: inline-block;
   }
@@ -634,7 +608,7 @@ a.sbac-grid-layout {
   margin-right: 1em;
 
   button {
-    display: none;
+    display: none !important;
   }
 
   .form-text {
@@ -651,20 +625,21 @@ a.sbac-grid-layout {
   border-top: none;
   border-bottom: none;
   margin: .5em;
-  padding-left: 5px;
+  padding-left: 15px;
 
   .button {
     margin: 0px 1em 1em 2em;
     float: left;
-    background: none;
-    color: #494949;
-    border: none;
+    background: none !important;
+    color: #494949 !important;
+    border: none !important;
     top: 0 !important;
 
     &:hover, &:focus, &:active {
       background: transparent;
       color: inherit;
       @include box-shadow (none);
+      text-shadow: none !important;
     }
   }
 }
@@ -690,19 +665,6 @@ a.sbac-grid-layout {
 
   .button {
     margin-bottom: 0;
-    padding: 0.5em;
-    color: #494949;
-    background-color: #cecece;
-    background: -webkit-linear-gradient(top, #f6f6f6, #cecece);
-    background: -moz-linear-gradient(top, #f6f6f6, #cecece);
-    background: -ms-linear-gradient(top, #f6f6f6, #cecece);
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    text-shadow:  0 1px #fff;
-
-    &:hover {
-      color: inherit;
-    }
   }
 
   .arrow {
@@ -734,6 +696,7 @@ a.sbac-grid-layout {
     color: $teal;
     margin: 35px 0 10px;
     padding: 0 25px;
+    word-wrap: break-word;
   }
 
   .main-container {
@@ -841,9 +804,14 @@ a.sbac-grid-layout {
 
   .button, button {
     margin-bottom: 0;
-    color: white;
   }
 
+}
+
+.view-resource-tutorial {
+  ul {
+    list-style: none;
+  }
 }
 /* -----------------------------------------
    Node
@@ -861,3 +829,75 @@ a.sbac-grid-layout {
   color: #494949;
   @include text-shadow(1px, 1px, rgba(white,0.5));
 }
+
+
+
+/* -----------------------------------------
+   Responsive Grid
+   ----------------------------------------- */
+
+.grid-view {
+  .grid-library {
+    margin: 0;
+    padding: 0;
+    
+    .resource-card {
+      max-width: 290px;
+    }
+    
+    li {
+      list-style-type: none;
+      float: left;
+      margin: 0 10px 10px;
+    }
+  }
+}
+
+
+@media all and (min-width: 1271px){
+  .grid-view {
+    .main-row {
+      max-width: 1270px;
+    }
+
+    .grid-library {
+      li {
+        &:nth-child(4n+1){
+          clear:left;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 1270px) and (min-width: 961px){
+  .grid-view {
+    .main-row {
+      max-width: 960px;
+    }
+
+    .grid-library {
+      li {
+        &:nth-child(3n+1){
+          clear:left;
+        }
+      }
+    } 
+  }
+}
+
+@media all and (max-width: 960px){
+  .grid-view {
+    .main-row {
+      max-width: 656px;
+    }
+    .grid-library{
+      li {
+        &:nth-child(2n + 1){
+          clear:left;
+        }
+      }
+    } 
+  }
+}
+

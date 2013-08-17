@@ -103,8 +103,7 @@
         <?php print $materials; ?>
       </div>
       <div class="column large-7">
-<!--         <span id="sbac-resource-doc-type" class="<?php //print $viewer_type; ?>"><?php //print $viewer_type; ?></span>
- -->        <p><span id="sbac-filename"><?php print $viewer_filename; ?></span></p>
+        <p><span id="sbac-filename"><?php print $viewer_filename; ?></span></p>
       </div>
       <div class="column large-2">
         <?php print $download; ?>

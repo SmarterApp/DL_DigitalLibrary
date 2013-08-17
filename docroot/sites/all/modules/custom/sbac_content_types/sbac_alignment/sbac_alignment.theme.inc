@@ -29,5 +29,11 @@ function sbac_alignment_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['sbac_alignment_alignment_form'] = array(
+    'path' => drupal_get_path('module', 'sbac_alignment') . '/templates',
+    'template' => 'alignment-form',
+    'render element' => 'form',
+  );
+
   return $items;
 }

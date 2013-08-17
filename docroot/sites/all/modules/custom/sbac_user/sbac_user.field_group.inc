@@ -21,7 +21,7 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Expertise',
-    'weight' => '2',
+    'weight' => '1',
     'children' => array(
       0 => 'field_swd_ell',
       1 => 'field_special_populations',
@@ -53,14 +53,14 @@ function sbac_user_field_group_info() {
     'label' => 'Personal Information',
     'weight' => '0',
     'children' => array(
-      1 => 'picture',
-      2 => 'field_first_name',
-      3 => 'field_last_name',
-      4 => 'account',
-      5 => 'field_alternate_email_address',
-      6 => 'field_position',
-      7 => 'field_retired',
-      8 => 'field_introduction',
+      0 => 'field_alternate_email_address',
+      1 => 'field_first_name',
+      2 => 'field_last_name',
+      3 => 'field_introduction',
+      4 => 'field_retired',
+      5 => 'field_position',
+      6 => 'account',
+      7 => 'picture',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -85,8 +85,10 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Privacy',
-    'weight' => '3',
-    'children' => array(),
+    'weight' => '2',
+    'children' => array(
+      0 => 'field_privacy',
+    ),
     'format_type' => 'tab',
     'format_settings' => array(
       'formatter' => 'closed',

@@ -9,23 +9,27 @@
   <?php global $user; ?>
   <?php if ($user->uid): ?>
   <ul class="inline-list right user-nav">
-    <li class="user-info" >
-     <a href="<?php echo url('user'); ?>">
-      <?php
-        $user_item = user_load($user->uid);
+    <li class="user-info">
+       <a data-dropdown="drop3" href="">
+        <?php
+          $user_item = user_load($user->uid);
 
-        if (isset($user_item->picture->uri)) {
-          echo theme('image_style', array(
-            'path' => $user_item->picture->uri,
-            'style_name' => 'small',
-            'attributes' => array(
-              'class'=>'left'
-            )
-          ));
-        }
-        echo $user->name;
-      ?>
-      </a>
+          if (isset($user_item->picture->uri)) {
+            echo theme('image_style', array(
+              'path' => $user_item->picture->uri,
+              'style_name' => 'small',
+              'attributes' => array(
+                'class'=>'left'
+              )
+            ));
+          }
+          echo sbac_user_format_username($user);
+        ?>
+        </a>
+        <ul id="drop3" class="f-dropdown">
+          <li><?php echo l('Account','user'); ?></li>
+          <li><?php echo l('Logout','user/logout');?></li>
+        </ul>
     </li>
     <li class="notifications">
       <?php
@@ -94,7 +98,7 @@
     </div>
 </div>
 <?php endif; ?>
-<div class="row">
+<div class="row main-row">
   <div class="main-container clearfix">
   <div id="main" class="<?php print $main_grid; ?> columns">
     <?php if ($messages): print $messages; endif; ?>
@@ -173,13 +177,24 @@
         if(!empty($page['bottom_menu'])) {
           print render($page['bottom_menu']);
         }
-        
-        echo '<div class="block-sbac-central-feedback-box">' . block_render('sbac_central','feedback-box', TRUE) . '</div>';
+        $feedback_block = block_load('sbac_central','feedback-box');
+        $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
+        print render($render_array);
+        //echo '<div class="block-sbac-central-feedback-box">' . block_render('sbac_central','feedback-box', TRUE) . '</div>';
       ?>
-      <ul class="inline-list right">
+      <ul class="footer-links inline-list right">
         <li><a class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
         <li><a class="feedback" href="#">Feedback</a></li>
-        <li><a class="help" href="#">Help</a></li>
+        <li>
+          <div class="footer-help">
+            <a class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
+            <ul id="drop2" class="f-dropdown" data-dropdown-content>
+              <li><a href="#helpmodal" class="help-modal">Welcome Tutorial</a></li>
+              <li><?php print l(t('Glossary'), 'glossary', array('absolute' => TRUE)); ?></li>
+              <li><a href="help-topics">Help Topics</a></li>
+            </ul>
+          </div>
+        </li>
       </ul>
     </div>
   </div>

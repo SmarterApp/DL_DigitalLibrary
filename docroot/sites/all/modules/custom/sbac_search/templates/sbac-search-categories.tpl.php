@@ -26,7 +26,7 @@
         echo '<div class="category-filter-name column large-4">';
         echo '<ul>';
       }
-      echo '<li><h3 class="sbac-search-filter-name" vid="' . $category['vocabulary']->vid . '">' . $category['display_name'];
+      echo '<li><div class="sbac-search-filter-name" vid="' . $category['vocabulary']->vid . '">' . $category['display_name'];
 
       // The choices per vocabulary.
       echo '<div class="categories-filter-choices">';
@@ -35,16 +35,17 @@
       echo '<h2 class="category-filter-header">' . $category['display_name'] . '<i class="gen-enclosed foundicon-remove right"></i></h2>';
       echo '<ul>';
       foreach ($category['terms'] as $key => $term) {
-      $class = '';
-      if (strpos($cf_value, $category_vid . ':' . $term->tid) !== FALSE) {
-      $class = ' current ';
+        $class = '';
+        if (strpos($cf_value, $category_vid . ':' . $term->tid) !== FALSE) {
+          $class = ' current ';
+        }
+        echo '<li class="category-filter category-filter-' . $category_vid . '-' . $term->tid . ' ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '"><span class="highlight"></span><span class="filter-name" vid="' . $category_vid . '" tid="' . $term->tid . '">' . $term->name . '</span></li>';
       }
-      echo '<li class="category-filter category-filter-' . $category_vid . '-' . $term->tid . ' ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '"><span class="highlight"></span><span class="filter-name" vid="' . $category_vid . '" tid="' . $term->tid . '">' . $term->name . '</span></li>';
-      }
+
       echo '</ul>';
       echo '</div>';
       echo '</div>';
-      echo '</h3></li>';
+      echo '</div></li>';
 
 
       // Close of the loop.

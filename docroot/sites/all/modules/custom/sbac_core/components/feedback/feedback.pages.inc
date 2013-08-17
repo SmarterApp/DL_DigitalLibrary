@@ -52,11 +52,11 @@ function resource_review_page($node) {
  * @param  [type] $node           [description]
  * @param  [type] $state          [description]
  * @param  [type] $trigger_id     [description]
- * @param  [type] $gate_keeper_id [description]
+ * @param  [type] $entity_id      [description]
  * @return [type]                 [description]
  */
-function resource_feedback_ajax_page($bundle, $node, $state, $trigger_id, $gate_keeper_id) {
-  $commands = dialog_show_form('resource_' . $bundle . '_form', $node, $state, $trigger_id, $gate_keeper_id);
+function resource_feedback_ajax_page($bundle, $node, $state, $trigger_id, $entity_id = NULL) {
+  $commands = dialog_show_form('resource_' . $bundle . '_form', $node, $state, $trigger_id, $entity_id);
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }

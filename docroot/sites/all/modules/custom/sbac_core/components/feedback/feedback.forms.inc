@@ -56,11 +56,7 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
         $set_title = trim(check_plain(strip_tags($values[$container][$lang][$delta]['set_title'])));
 
-        $new_text = t('Please remove inappropriate language from the comment to Quality Criteria set
-          !set_count (!set_name) to continue.', array(
-            '!set_count' => $delta + 1,
-            '!set_name' => $set_title,
-          ));
+        $new_text = t('Please remove inappropriate language from the comment in Quality Criteria X to continue');
 
         // ugly, but works
         $location = array_search($text, $_SESSION['messages']['error']);
@@ -192,6 +188,10 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
  * Submit handler for ECK Gate Keeper form.
  */
 function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
+  if ($form_state['values']['action'] == 'validate') {
+    return;
+  }
+
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
   global $user;
@@ -263,6 +263,10 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
  * Submit handler for ECK Review form.
  */
 function feedback_eck_review_form_submit($form, &$form_state) {
+  if ($form_state['values']['action'] == 'validate') {
+    return;
+  }
+
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
   global $user;
@@ -332,8 +336,6 @@ function feedback_eck_review_form_submit($form, &$form_state) {
             case 2: $do++;     break; // recommend
             case 3: $do_dis++; break; // recommend w/ distinction
           }
-
-          $score += ((int) $rec_value + 1);
         }
 
         $task = FALSE;
@@ -388,6 +390,10 @@ function feedback_eck_review_form_submit($form, &$form_state) {
  * Submit handler for ECK Post form.
  */
 function feedback_eck_post_form_submit($form, &$form_state) {
+  if ($form_state['values']['action'] == 'validate') {
+    return;
+  }
+
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
   global $user;
@@ -454,6 +460,8 @@ function feedback_eck_post_form_submit($form, &$form_state) {
   }
 
   send_review_notifications($task, $node, $reviews);
+
+  $form_state['redirect'] = 'node/' . $node->nid;
 }
 
 /**

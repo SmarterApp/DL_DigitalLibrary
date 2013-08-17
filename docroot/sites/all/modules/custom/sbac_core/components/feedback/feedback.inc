@@ -329,7 +329,7 @@ function resource_field_label($field_name) {
     'field_learning_goals' => 'Learning Targets',
     'field_success_criteria' => 'Success Criteria',
     'field_supporting_evidence' => 'Supporting Evidence',
-    'field_contexts' => 'Context(s) Within Which the Resource Could be Used',
+    'field_contexts' => 'Context(s) Within Which the Resource Could Be Used',
     'field_connection_to_ccss' => 'Specific Connection to the Common Core State Standards',
     'field_connection_to_fap' => 'Specific Connection to the Formative Assessment Process',
     'field_principles' => 'Principles, Literature, or Research',

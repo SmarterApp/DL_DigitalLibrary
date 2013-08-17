@@ -98,6 +98,11 @@ class Base {
 
     // total number of sets
       $this->_set_total = $this->getVar('criteria_num', FEEDBACK_DEFAULT_SET_COUNT, FALSE);
+
+    // set the common (across feedback types) & default action
+      $this->_action_options += array(
+        'validate' => t('Validate'),
+      );
   }
 
   /**
@@ -106,9 +111,9 @@ class Base {
    */
   protected function hideFormProperties() {
     $properties = array(
-      'status', 
-      'completed', 
-      'met_criteria', 
+      'status',
+      'completed',
+      'met_criteria',
       'node_id',
       'current',
       'title',
@@ -147,7 +152,7 @@ class Base {
    */
   protected function getCriteriaSets() {
     $set_count = 0;
-    
+
     $this->setWeight($this->_form[$this->_set_field]);
 
     $sets = array();
@@ -158,7 +163,7 @@ class Base {
       }
 
       // track data & check for empty items in set
-      $set_count++; 
+      $set_count++;
 
       if ($set_count > $this->_set_total) {
         $item = array();
@@ -323,21 +328,21 @@ class Base {
 
       // description
       $item += $this->getSetDescription($set_count);
-      
+
       // comments
       $this->wrapFapi($item[$this->_comments_field], 'criteria-set-comments');
-     
+
       // radio
       $this->updateRadioDesc($item[$this->_radio_field][$this->_lang], $set_count);
       $this->wrapFapi($item[$this->_radio_field], 'criteria-set-radios');
 
       // log radio to JS
-      $this->_radios[] = 'input[name="' . $item[$this->_radio_field][$this->_lang]['#field_parents'][0] . 
+      $this->_radios[] = 'input[name="' . $item[$this->_radio_field][$this->_lang]['#field_parents'][0] .
                           '[' . $item[$this->_radio_field][$this->_lang]['#field_parents'][1] . ']' .
                           '[' . $item[$this->_radio_field][$this->_lang]['#field_parents'][2] . ']' .
                           '[' . $item[$this->_radio_field][$this->_lang]['#field_name'] . ']' .
                           '[' . $this->_lang . ']"]';
-    
+
       $set_count++;
     }
   }
@@ -350,13 +355,13 @@ class Base {
     // hidden select to determine which action the user has performed. this is necessary because all form submissions
     // actually happen through the same 'Save and Close' (submit) button:
     // 1. a link is clicked to trigger a modal
-    // 2. a button is clicked in the modal (which submits the modal form) and the modal's callback 
+    // 2. a button is clicked in the modal (which submits the modal form) and the modal's callback
     //    triggers Drupal.behaviors.feedback.submit_modal_callback(), which sets the appropriate value in this
     //    select element, and then triggers the click() event on the 'Save and Close' button
     $this->_form['action'] = array(
       '#type' => 'select',
       '#options' => $this->_action_options,
-      '#default_value' => 'save_close',
+      '#default_value' => 'validate',
       '#attributes' => array(
         'class' => array(
           'hidden',
@@ -404,7 +409,7 @@ class Base {
   /**
    * Retrieves variables with the proper contextual prefix. Optionally filters
    * text values.
-   * 
+   *
    * @param  [type]  $setting     [description]
    * @param  string  $default     [description]
    * @param  boolean $filter_text [description]
@@ -499,7 +504,7 @@ class Base {
   public function notMeetButton() {
     /*
       dialog modals can only be added on anchor links (not form buttons), but we have a requirement to
-      selectively disable the buttons (and thus prevent dialog from opening). since we can't actually 
+      selectively disable the buttons (and thus prevent dialog from opening). since we can't actually
       disable anchor links, we have to create 'fake' buttons which propagate the click events to the hidden
       links when they're clicked. since these buttons are proper form elements, their disabled state is
       respected by Drupal (or is it the browser?) and nothing happens when a disabled button is clicked.

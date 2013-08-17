@@ -815,6 +815,7 @@ function workbench_moderation_form_node_form_alter(&$form, $form_state) {
   if ($moderation_state == workbench_moderation_state_published()) {
     $moderation_state = workbench_moderation_state_none();
   }
+  
   // Get all the states *this* user can access. If states is false, this user
   // can not change the moderation state
   if ($states = workbench_moderation_states_next($moderation_state, $user, $form['#node'])) {

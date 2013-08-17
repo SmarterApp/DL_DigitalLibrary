@@ -1,25 +1,42 @@
 <?php
 namespace taskit\sbac_core;
 
-class ResourceRejected extends \taskit\Task {
+require_once('class.BaseTask.inc');
+
+class ResourceRejected extends \taskit\sbac_core\BaseTask {
   public function display($entities, $accounts) {
     $node     = node_load(current($entities['node']));
     $account  = user_load(current($accounts));
 
     if ($node && $account) {
-      $path     = 'node/' . $node->nid;
+      $this->setTaskUrl('node/' . $node->nid);
 
       $viewing_account = current_user();
 
+      $feedback = entity_load('feedback', FALSE, array(
+        'node_id' => $node->nid,
+        'type' => 'post',
+      ));
+
+      $post = FALSE;
+      if ($feedback) {
+        $post = array_shift($feedback);
+      }
+
       $output = array();
+      $details = '';
       if ($node->uid == $viewing_account->uid) {
         $output[] = t('!title was returned to you for revision', array(
-          '!title' => '<span class="taskit-title">' .l($node->title, 'node/' . $node->nid) . '</span>',
+          '!title' => '<span class="taskit-title">' . $node->title . '</span>',
         ));
+
+        if ($post) {
+          $details = field_get_value($post, 'field_to_contributor');
+        }
       }
       else {
-        $output[] = t('!title, a resource you reviewed, was returned to the reviewer', array(
-          '!title' => '<span class="taskit-title">' .l($node->title, 'node/' . $node->nid) . '</span>',
+        $output[] = t('!title, a resource you reviewed, was returned to the submitter', array(
+          '!title' => '<span class="taskit-title">' . $node->title. '</span>',
         ));
       }
 
@@ -34,10 +51,14 @@ class ResourceRejected extends \taskit\Task {
       )));
 
       $output[] = '<span class="taskit-timestamp">' . date($this->_date_format, $this->_created). '</span>';
+      
       // $output[] = '<span class="taskit-expand">' . $trigger . '</span>';
-      // $output[] = '<div class="taskit-content-toggle">- comments from the three reviewers, or a link to the summary tab? - </div>';
+      
+      if ($details) {
+        $output[] = '<div class="taskit-content-toggle">' . $details . '</div>';
+      }
 
-      return '<div class="taskit-content">' . implode(' ', $output) . '</div>';
+      return $this->linkDisplay($output);
     }
 
     return '';

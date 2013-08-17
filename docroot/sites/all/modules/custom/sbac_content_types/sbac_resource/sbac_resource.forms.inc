@@ -288,11 +288,11 @@ function sbac_resource_validate_general(&$form, $form_state) {
     $title = $form_state['values']['title'];
     $bad_words = profanity_validate_text($title);
     if ($bad_words) {
-      $error = 'Please remove any inappropriate language from the title';
+      $error = 'Please remove any inappropriate language to continue';
       form_set_error('title', $error);
       _sbac_resource_remove_error_message($error);
-      drupal_set_message('general:title:single:Please remove any inappropriate language from the title', 'sbac_resource_error');
-      drupal_set_message('general:title:group:Please remove any inappropriate language from the title', 'sbac_resource_error');
+      drupal_set_message('general:title:single:Please remove any inappropriate language to continue', 'sbac_resource_error');
+      drupal_set_message('general:title:group:Please remove any inappropriate language to continue', 'sbac_resource_error');
     }
   }
 
@@ -627,32 +627,24 @@ function sbac_resource_enable_submit($errors) {
  */
 function sbac_resource_modal_callback($js = FALSE) {
   if ($js) {
-    form_load_include($form_state, 'inc', 'node', 'node.pages');
     ctools_include('ajax');
     ctools_include('modal');
-    global $user;
 
-    $node = (object) array(
-      'uid' => $user->uid,
-      'name' => (isset($user->name) ? $user->name : ''),
-      'type' => 'alignment',
-      'language' => LANGUAGE_NONE
-    );
+    drupal_add_js(array(
+    'ctools-ccss-style' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 800,
+        'height' => 580,
+      ),
+    ),
+  ), 'setting');
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
+    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
+    $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
 
-    $form_state = array(
-      'title' => t('Common Core Standard Browser'),
-      'ajax' => TRUE,
-      'build_info' => array('args' => array($node)),
-    );
-
-    $output = ctools_modal_form_wrapper('alignment_node_form', $form_state);
-    // This means the form has been executed
-    if (!empty($form_state['executed'])) {
-      $output = array();
-      $output[] = ctools_modal_command_dismiss();
-      $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
-      $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
-    }
     print ajax_render($output);
     exit();
   }
@@ -1011,7 +1003,7 @@ function _sbac_resource_create_close_container(&$form, &$form_state) {
 function _sbac_resource_form_basic(&$form, &$form_state) {
   // Title.
   $form['title']['#title'] = t('Title') . ' ' . theme('form_required_marker');
-  $form['title']['#theme_options']['description at top'] = t('Please enter a user-friendly name for the resource.');
+  $form['title']['#theme_options']['description at top'] = t('Enter a user-friendly name for the resource.');
   $form['title']['#maxlength'] = 75;
   $form['title']['#attributes']['maxlength_js_label'][0] = 'Character count: @remaining';
   $form['title']['#maxlength_js'] = TRUE;
@@ -1047,7 +1039,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Body
   $form['field_alt_body']['und'][0]['value']['#title'] = t('Resource Summary') . ' ' . theme('form_required_marker');
   // Contexts
-  $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could be Used') . ' ' . theme('form_required_marker');
+  $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
   // Connection to CCSS
   $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core Standards') . ' ' . theme('form_required_marker');
   // Connection to FAP
@@ -1069,6 +1061,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
+  $form['field_video']['#access'] = FALSE;
   // Materials
   $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
 
@@ -1079,20 +1072,35 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_license_information'][LANGUAGE_NONE]['#id'] = 'sbac-license-information-field';
 
   //Show this when field_license_information option 0 or 1 is selected
-  $state_condition = array(
+  $state_license_either = array(
     'input[name="field_license_information[und]"]' => array(
-      array('value' => 0),
-      array('value' => 1),
+      array('value' => '0'),
+      array('value' => '1'),
     ),
   );
 
-  $form['field_author']['#states']['visible'] = $state_condition;
-  $form['field_author']['#states']['required'] = $state_condition;
+  $state_license_1 = array(
+    'input[name="field_license_information[und]"]' => array(
+      array('value' => '1'),
+    ),
+  );
+
+  $state_license_2 = array(
+    'input[name="field_license_information[und]"]' => array(
+      array('value' => '2'),
+    ),
+  );
+
+  $form['field_author']['#states']['visible'] = $state_license_either;
+  $form['field_author']['#states']['required'] = $state_license_either;
+  $form['field_author']['#states']['invisible'] = $state_license_2;
   $form['field_author']['und'][0]['value']['#maxlength'] = 75;
 
   //Show this when field_license_information option 0 or 1 is selected
   $form['field_publisher']['und'][0]['value']['#maxlength'] = 75;
-  $form['field_publisher']['#states']['visible'] = $state_condition;
+  $form['field_publisher']['#states']['visible'] = $state_license_either;
+  $form['field_publisher']['#states']['required'] = $state_license_either;
+  $form['field_publisher']['#states']['invisible'] = $state_license_2;
 
   //Show this when field_license_information option 0  is selected
   $form['field_license_text'] = array(
@@ -1106,15 +1114,9 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     '#weight' => $form['field_license']['#weight'],
   );
 
-  //Show this when field_license_information option 1  is selected
-  $license_state_condition = array(
-    'input[name="field_license_information[und]"]' => array(
-      array('value' => 1),
-    ),
-  );
-
-  $form['field_license']['#states']['visible'] = $license_state_condition;
-  $form['field_license']['#states']['required'] = $license_state_condition;
+  //Show this when field_license_information option 1 is selected
+  $form['field_license']['#states']['visible'] = $state_license_1;
+  $form['field_license']['#states']['required'] = $state_license_1;
   $form['field_license']['und']['#options']['_none'] = '--Select License--';
   $form['field_license']['und']['#ajax'] = array(
     'wrapper' => 'sbac-resource-license-url',
@@ -1127,10 +1129,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['group_license_information'] = array(
     '#prefix' => '<div id="license-information-group">',
     '#suffix' => '</div>',
-    // '#type' => 'container',
-    // '#states' => array(
-    //   'visible' => $state_condition,
-    // ),
   );
 
   $form['group_license_information']['field_license_url'] = array(
@@ -1184,8 +1182,8 @@ function sbac_resource_license_url(&$form, &$form_state) {
       if ($term->description) {
         $license_url = '
           <div id="edit-field-license-url" class="form-item form-type-item">
-            <label for="edit-field-license-url">License URL</label>
-          ' . $term->description . '
+            <label for="edit-field-license-url">' . t('License URL') . '</label>
+          ' . l($term->description, $term->description) . '
           </div>
         ';
       }
@@ -1238,7 +1236,7 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
 
   // Title
   $form['alignment_tag_title'] = array(
-    '#markup' => '<h2>'.t('Common Core State Standard Alignment(s)').'</h2>',
+    '#markup' => '<h2>'.t('Common Core State Standard(s)').'</h2>',
     '#prefix' => '<div class="form-item-title alignment-tag-title">',
     '#suffix' => '</div>',
     '#weight' => 100,
@@ -1247,7 +1245,7 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
 
   // Description
   $form['alignment_tag_description'] = array(
-    '#markup' => '<p>'.t('Identify the Common Core State Standard(s) and the alignment type(s) to which this resource is aligned.').'</p>',
+    '#markup' => '<p>'.t('Identify the Common Core State Standard(s) and the alignment type(s) to which this resource is aligned. Select all that apply.').'</p>',
     '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
     '#suffix' => '</div>',
     '#weight' => 101,
@@ -1266,7 +1264,7 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   // Alignment Button
   $form['add_alignment_tag_button'] = array(
     '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
-      'attributes' => array('class' => 'ctools-use-modal small button', 'id' => 'sbac-resource-modal-alignment'),
+      'attributes' => array('class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
       'query' => array('nid' => $form['#node']->nid))),
     '#weight' => 103,
   );
@@ -1377,7 +1375,7 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
       'modalSize' => array(
         'type' => 'fixed',
         'width' => 600,
-        'height' => 240,
+        'height' => 160,
       ),
     ),
   );

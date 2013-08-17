@@ -11,6 +11,7 @@ include_once 'sbac_alignment.features.inc';
  * Variable Definition
  */
 define('SBAC_ALIGNMENT_VOCAB_NAME', 'education_alignment');
+define('SBAC_ALIGNMENT_TYPE_VOCAB_NAME', 'alignment_type');
 define('SBAC_ALIGNMENT_MAX_DEPTH', 1);
 define('SBAC_ALIGNMENT_MOD_PATH', drupal_get_path('module', 'sbac_alignment'));
 /**
@@ -34,190 +35,170 @@ function sbac_alignment_menu(){
     'type'            => MENU_CALLBACK,
   );
 
+  $items['ajax-alignment-page'] = array(
+    'title'           => 'AJAX',
+    'page callback'   => 'sbac_alignment_ajax_alignment_page',
+    'access arguments'=> array('access content'),
+    'type'            => MENU_CALLBACK,
+  );
+
+  $items['ajax-alignment-form'] = array(
+    'title'           => 'AJAX',
+    'page callback'   => 'sbac_alignment_ajax_alignment_form_callback',
+    'access arguments'=> array('access content'),
+    'type'            => MENU_CALLBACK,
+  );
+
+  $items['alignment-form'] = array(
+    'title'           => 'AJAX',
+    'page callback'   => 'drupal_get_form',
+    'page arguments'  => array('sbac_alignment_alignment_form'),
+    'access arguments'=> array('access content'),
+    'type'            => MENU_CALLBACK,
+  );
+
   $items['devtest'] = array(
     'title'           => 'DEV',
     'page callback'   => 'sbac_alignment_devtest',
     'access arguments'=> array('admin'),
     'type'            => MENU_CALLBACK,
+    'file'            => 'sbac_alignment.dev.inc',
   );
   $items['devdelete'] = array(
     'title'           => 'DEV',
     'page callback'   => 'sbac_alignment_devdelete',
     'access arguments'=> array('access content'),
     'type'            => MENU_CALLBACK,
+    'file'            => 'sbac_alignment.dev.inc',
   );
 
   return $items;
 }
-/**
- *
- */
-function sbac_alignment_devtest() {
-  $edu_alignment_vocab_name = "education_alignment";
-  $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
-  $grade_terms = array();
+function sbac_alignment_ajax_alignment_page($ref_node = null) {
+  drupal_add_js(drupal_get_path('theme', 'sbac') . '/js/custom.js');
+  drupal_add_css(drupal_get_path('module', 'sbac_alignment') . '/css/alignment.css');
 
-  $read = true;
-  $create_base = FALSE;
-  $create = FALSE;
-  $print = FALSE;
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
 
-  if($read) {
-  //get data
-    $filename = '/var/www/sbac.dev/' . drupal_get_path('module', 'sbac_alignment') . '/data/ma.json';
-    $handle = fopen($filename, "r");
-    $contents = fread($handle, filesize($filename));
-    fclose($handle);
+  $output .= '<div id="alignment-page"><input id="ref_node" style="display:none" value="' . $ref_node . '"> ';
+  $output .= '<div class="alignment-breadcrumb"></div>';
+  $output .= '<div class="alignment-filter">';
+  $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject'));
+  $output .= '</div><div class="alignment-form"></div>';
+  $output .= '<div class="alignment-buttons"><a href="" id="edit-cancel" class="button ctools-close-modal">Cancel</a><a href="" id="edit-submit" class="button disabled">Add to Resource</a></div>';
+  $output .= '</div></div>';
 
-    $json = drupal_json_decode($contents);
-    dsm($json);
+  return $output;
+}
+function sbac_alignment_ajax_alignment_form_callback() {
+  $tid = $_POST['tid'];
+  $output['html'] = drupal_render(drupal_get_form('sbac_alignment_alignment_form', $tid));
+  print drupal_json_encode($output);
+  exit;
+}
+function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
+  $ref_node = 0;
+  if(isset($_GET['tid'])) {
+    $tid = $_GET['tid'];
   }
 
-  // create base terms
-  if ($create_base) {
-    // Add education alignment
-    $terms = array(
-      'English Language Arts' => array(
-        'desc' => 'lorem ipsum',
-        'children' => array(
-          'KG - Kindergarten' =>  array(
-            'desc' => 'lorem ipsum',
+  if(isset($_POST['ref_node'])) {
+    $ref_node = $_POST['ref_node'];
+  }
+
+  $form['alignment_ref'] = array(
+    '#type' => 'hidden',
+    '#value' => $ref_node,
+    '#default_value' => $ref_node,
+  );
+
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  $terms = taxonomy_get_tree($vocab->vid, $tid, SBAC_ALIGNMENT_MAX_DEPTH);
+
+  foreach($terms as $term) {
+    $form['term-' . $term->tid] = array(
+      '#type' => 'checkbox',
+      '#title' => $term->name,
+      '#title_display' => 'none',
+    );
+  }
+
+  //@TODO KS- change to terms
+  $form['alignment_type'] = array(
+    '#type' => 'select',
+    '#title' => 'Alignment Type',
+    '#required' => TRUE,
+    '#options' => array(
+      'Assesses' => 'Assesses',
+      'Teaches' => 'Teaches',
+      'Requires' => 'Requires'
+    ),
+  );
+
+  $form['cancel'] = array(
+    '#markup' => l(t('Cancel'), '#',
+       array(
+         'attributes' => array(
+           'class' => 'button ctools-close-modal close'
           ),
-          '1 - First Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '2 - Second Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '3 - Third Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '4 - Fourth Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '5 - Fifth Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '6 - Sixth Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '7 - Seventh Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '8 - Eight Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '9 - Ninth Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '10 - Tenth Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '11 - Eleventh Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-          '12 - Twelveth Grade' =>  array(
-            'desc' => 'lorem ipsum',
-          ),
-        ),
+         'external' => TRUE
+       )
+     )
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Add to Resource',
+    '#submit' => array('sbac_alignment_alignment_form_submit'),
+  );
+
+  $form['#attached'] = array(
+      'css' => array(
+        SBAC_ALIGNMENT_MOD_PATH . '/css/alignment.css',
       ),
     );
-    sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
-  }
 
-  //create terms
-  if ($create) {
-    // get grades tids
-    $terms = taxonomy_get_tree($edu_alignment_vocab->vid, 0, 2, TRUE);
-    foreach ($terms as $term) {
-      if($term->depth == 1) {
-        $name = explode('-', $term->name);
-        $grade_terms[''+truncate($name[0])] = $term;
-      }
-    }
+  return $form;
+}
+function sbac_alignment_alignment_form_submit(&$form, &$form_state){
+  global $user;
+  $values = $form_state['input'];
+  //@TODO KS - save node;
 
-    //get data
-    $filename = '/var/www/sbac.dev/' . drupal_get_path('module', 'sbac_alignment') . '/data/ela.json';
-    $handle = fopen($filename, "r");
-    $contents = fread($handle, filesize($filename));
-    fclose($handle);
+  $alignment_ref = $values['alignment_ref'];
+  $alignment_type = $values['alignment_type'];
 
-    $json = drupal_json_decode($contents);
-    //dsm($json);
+  foreach($values as $key => $val) {
+    if (strpos($key, 'term-') !== FALSE){
+      if(!empty($val)) {
+        $temp = explode('term-', $key);
+        $tid = $temp[1];
 
-    // build tree
-    $parent_tid = 0;
-    foreach ($json as $term) {
-      //dsm($term);
-      $grade = truncate($term['fkGradeLevel']);
+        $types = array();
+        $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_TYPE_VOCAB_NAME);
+        $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
 
-      // Root term. first set after the grade
-      if ($term['treeLevel'] < 2) {
-        $parent_tid = $grade_terms[$grade]->tid;
-        sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
-      }
-      elseif($term['treeLevel'] >=2) {
-        $parent_key = $grade . '|' . $term['fkParent'];
-        $parent_tid = sbac_alignment_get_parent($parent_key);
-        dsm(array($parent_key, $parent_tid));
-        if (empty($parent_tid)) {
-          //cannot find parent save to grade
-          $parent_tid = $grade_terms[$grade]->tid;
+        foreach($terms as $term) {
+          $types[$term->name] = $term->tid;
         }
 
-        sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
-      }
-      else{
-        dsm('BAD TERM');dsm($term);
-        //@TODO KS - need to output in case of error
-      }
-    }
-  }
+        //create alignment
+        $node = new stdClass();
+        $node->title = "resource-$alignment_ref-alignment-$tid";
+        node_object_prepare($node);
 
-  if($print) {
-    $terms = taxonomy_get_tree($edu_alignment_vocab->vid, 0, NULL, TRUE);
-    dsm($terms);
-  }
 
-  return '';
-}
-/**
- *
- */
-function sbac_alignment_get_parent($key) {
-  $result = db_query('SELECT frfak.entity_id
-    FROM {field_revision_field_alignment_key} frfak WHERE frfak.field_alignment_key_value = :field_alignment_key_value',
-    array(':field_alignment_key_value' => $key));
-
-  return $result->fetchObject()->entity_id;
-}
-/**
- *
- */
-function sbac_alignment_devdelete() {
-  $edu_alignment_vocab_name = "education_alignment";
-  $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
-  $grade_terms = array();
-
-  $delete = TRUE;
-  $print = TRUE;
-
-  //delete terms
-  if ($delete) {
-    $terms = taxonomy_get_tree($edu_alignment_vocab->vid);
-    foreach ($terms as $term) {
-      if($term->depth > 1){
-        taxonomy_term_delete($term->tid);
+        $node->type = 'alignment';
+        $node->uid = $user->uid;
+        $node->field_education_alignment['und'][]['tid'] = $tid;
+        $node->field_alignment_type['und'][]['tid'] = $types[$alignment_type];
+        $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
+        node_save($node);
       }
     }
   }
-
-  if($print) {
-    $terms = taxonomy_get_tree($edu_alignment_vocab->vid, 0, NULL, TRUE);
-    dsm($terms);
-  }
-
-  return '';
+  $form_state['redirect'] = 'node/' . $alignment_ref . '/edit';
 }
 
 /**
@@ -275,6 +256,7 @@ function sbac_alignment_add_term($vid, $term, $parent_tid) {
     ),
   );
   taxonomy_term_save($parent);
+  return $parent;
 }
 /**
  * Helper function
@@ -303,6 +285,23 @@ function sbac_alignment_add_terms ($vid, $terms, $parent_tid = 0) {
  */
 function sbac_alignment_ajax_terms_callback() {
   $subject_array = $output_array = array();
+  $ela_titles = array(
+    'Choose Your Subject',
+    'Choose Your Grade',
+    'Choose Your SBAC Claim',
+    'Choose Your SBAC Assessment Target',
+    'Choose Your Common Core Standard',
+  );
+  $ma_titles = array(
+    'Choose Your Subject',
+    'Choose Your Grade',
+    'Choose Your Claim',
+    'Choose Your Content Domain',
+    'Choose Your Target',
+    'Choose Your Emphasis',
+    'Choose Your Common Core Standard',
+  );
+
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
   $parent = taxonomy_term_load($_POST['parent']);
   if(isset($_POST['remove'])) {
@@ -318,7 +317,10 @@ function sbac_alignment_ajax_terms_callback() {
   $output_array['parent'] = $parent;
   $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
 
-  $output_array['depth'] = sbac_alignment_term_depth($parent->tid);
+  $output_array['depth'] = $depth = sbac_alignment_term_depth($parent->tid);
+
+  $level_title = $ela_titles[$depth];
+
   $output_array['tids'] = array();
   foreach ($terms as $term) {
     $output_array['tids'][] = $term;
@@ -338,7 +340,7 @@ function sbac_alignment_ajax_terms_callback() {
 
   $output_array['tids_count'] = count($output_array['tids']);
 
-  $output .= theme('alignment_tags', array('terms' => $terms));
+  $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => $level_title));
   $output_array['html'] = $output;
 
   print drupal_json_encode($output_array);
@@ -372,32 +374,6 @@ function sbac_alignment_update_projects_alter(&$projects) {
  */
 function sbac_alignment_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'alignment_node_form') {
-    $form['field_education_alignment']['#attributes']['class'][] = 'standard';
-    //$form['field_education_alignment']['#theme'] = 'alignment_container';
-
-    $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
-    $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
-
-    $form['alignment_breadcrumb'] = array(
-      '#type' => 'markup',
-      '#markup' => '',
-      '#prefix' => '<div class="alignment-breadcrumb">',
-      '#suffix' => '</div>',
-    );
-
-    $form['alignment_filter'] = array(
-      '#type' => 'markup',
-      '#markup' => theme('alignment_tags', array('terms' => $terms)),
-      '#prefix' => '<div class="alignment-filter">',
-      '#suffix' => '</div>',
-    );
-
-    $form['#attached'] = array(
-      'css' => array(
-        SBAC_ALIGNMENT_MOD_PATH . '/css/alignment.css',
-      ),
-    );
-
     //if (arg(0) == 'sbac_resource' && arg(1) == 'ajax') {//@TODO KS - rmeove
       global $user;
       /* let administrator see the entire form */
@@ -408,7 +384,7 @@ function sbac_alignment_form_alter(&$form, &$form_state, $form_id) {
         $form['path']['#access'] = FALSE;
         $form['revision_information']['#access'] = FALSE;
         $form['title']['#access'] = FALSE;
-        $form['field_resource_reference']['#access'] = FALSE;
+        //$form['field_resource_reference']['#access'] = FALSE;
       //}//@TODO KS - rmeove
 
       $form['title']['#required'] = FALSE;

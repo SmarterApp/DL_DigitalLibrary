@@ -88,7 +88,7 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'Lorem ipsum dolor sit amet...',
+        'label_help_description' => 'Based on your evaluation of the three reviewers’ input, decide if the resource is to be returned, posted, or posted with distinction.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
@@ -313,7 +313,7 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'Based on your evaluation of the three reviewers’ input, decided if the resource is to be returned, posted, or posted with distinction.',
+        'label_help_description' => 'Based on your evaluation of the three reviewers’ input, decide if the resource is to be returned, posted, or posted with distinction.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',

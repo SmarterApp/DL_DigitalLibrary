@@ -14,6 +14,24 @@
     }
   };
 
+  // set the default vertical tab on user profile form
+  $("form#user-profile-form #edit-submit").click(function() {
+    if($('#edit-group_expertise[style*="display: block;"]').length) {
+      $("#vertical-tabs-default").val("edit-group_expertise");
+    } 
+    if($('#edit-group_privacy[style*="display: block;"]').length) {
+      $("#vertical-tabs-default").val("edit-group_privacy");
+    }
+  });
+
+  // user field privacy, cannot modify these fields
+  $("#edit-field-privacy-und-field-first-name").prop('disabled', true);
+  $("#edit-field-privacy-und-field-position").prop('disabled', true);
+  $("#edit-field-privacy-und-field-state").prop('disabled', true);
+  $("#edit-field-privacy-und-field-grade-level-s-").prop('disabled', true);
+  $("#edit-field-privacy-und-field-subject-s-").prop('disabled', true);
+  $("#edit-field-privacy-und-field-special-populations").prop('disabled', true);
+
   var placeholder = ($('#edit-picture').has('div.form-item-picture-delete').length) ? 'Change Picture' : 'Add Picture';
   $('.row #edit-picture-upload').after('<input id="upload-cover" value="'+ placeholder +'" type="text">');
   $(".row #edit-picture-upload").change( function(){

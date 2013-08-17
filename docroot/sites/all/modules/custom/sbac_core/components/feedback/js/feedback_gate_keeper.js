@@ -45,7 +45,6 @@ Feedback.gk = {
   }
 };
 
-
 Drupal.behaviors.feedback_gate_keeper = {
   attach: function (context, settings) {
     // make sure we've got a clean start with the scores

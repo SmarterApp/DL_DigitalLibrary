@@ -250,6 +250,42 @@ function sbac_user_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
+  // Exported field_base: 'field_privacy'
+  $field_bases['field_privacy'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_privacy',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'picture' => 'Photo',
+        'field_first_name' => 'First Name',
+        'field_last_name' => 'Last Name',
+        'mail' => 'Email Address',
+        'field_position' => 'Title',
+        'field_state' => 'State(s)',
+        'field_school_name' => 'School(s)',
+        'field_district_name' => 'District(s)',
+        'field_introduction' => 'About Me',
+        'field_grade_level_s_' => 'Grade(s)',
+        'field_subject_s_' => 'Subject(s)',
+        'field_special_populations' => 'Student Population(s)',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_retired'
   $field_bases['field_retired'] = array(
     'active' => 1,
@@ -388,6 +424,35 @@ function sbac_user_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
+  );
+
+  // Exported field_base: 'field_state'
+  $field_bases['field_state'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_state',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
   );
 
   // Exported field_base: 'field_subject_s_'

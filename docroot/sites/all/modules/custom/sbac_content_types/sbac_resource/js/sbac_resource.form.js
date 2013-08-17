@@ -201,6 +201,16 @@
       $("#no-license-text").appendTo($('#sbac-2-appender'));
       if (checked.length) {
         if ($(checked).attr('id') == 'edit-field-license-information-und-0') {
+         
+          var name = $('#sbac-resource-user-name').children().val();
+          if ($('#edit-field-author-und-0-value').val() == '') {
+            $('#edit-field-author-und-0-value').val(name);
+          }
+
+          if ($('#edit-field-publisher-und-0-value').val() == '') {
+            $('#edit-field-publisher-und-0-value').val(name);
+          }
+
           $('#license-information-group').appendTo($('#sbac-0-appender'));
           $('#field_static_license_text').show();
         }
@@ -210,6 +220,7 @@
         else {
           $('#license-information-group').appendTo($('#sbac-2-appender'));
         }
+
         if ($(checked).attr('id') == 'edit-field-license-information-und-2') {
           $("#no-license-text").show();
         }
@@ -218,15 +229,27 @@
       var save_continue = $('#edit-save-continue');
       $('#edit-field-license-information-und-0').click(function () {
         $('#field_static_license_text').show();
+        $('#license-information-group').show();
+        $('#sbac-resource-license-url').hide();
         $('#license-information-group').appendTo($('#sbac-0-appender'));
         $("#no-license-text").hide();
-        $('#edit-field-author-und-0-value').val($('#sbac-resource-user-name').children().val());
-        $('#edit-field-publisher-und-0-value').val($('#sbac-resource-user-name').children().val());
+
+        var name = $('#sbac-resource-user-name').children().val();
+        if ($('#edit-field-author-und-0-value').val() == '') {
+          $('#edit-field-author-und-0-value').val(name);
+        }
+
+        if ($('#edit-field-publisher-und-0-value').val() == '') {
+          $('#edit-field-publisher-und-0-value').val(name);
+        }
+        
         save_continue.removeAttr('disabled');
         save_continue.bind('click');
       });
       $('#edit-field-license-information-und-1').click(function () {
         $('#field_static_license_text').hide();
+        $('#license-information-group').show();
+        $('#sbac-resource-license-url').show();
         $('#license-information-group').appendTo($('#sbac-1-appender'));
         $("#no-license-text").hide();
         $('#edit-field-author-und-0-value').val('');
@@ -236,12 +259,12 @@
       });
       $('#edit-field-license-information-und-2').click(function () {
         $('#field_static_license_text').hide();
+        $('#license-information-group').hide();
         $("#no-license-text").show();
         $('#edit-field-author-und-0-value').val();
         $('#edit-field-publisher-und-0-value').val('');
         save_continue.attr('disabled', 'disabled');
         save_continue.unbind('click');
-        $('#sbac-resource-license-url').empty();
       });
     }
   };

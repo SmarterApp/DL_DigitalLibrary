@@ -1,4 +1,4 @@
-diff --git a/sites/all/modules/custom/sbac_ldap/sbac_ldap.ldap_authorization.inc b/sites/all/modules/custom/sbac_ldap/sbac_ldap.ldap_authorization.inc
+  diff --git a/sites/all/modules/custom/sbac_ldap/sbac_ldap.ldap_authorization.inc b/sites/all/modules/custom/sbac_ldap/sbac_ldap.ldap_authorization.inc
 index 95eb31f..c59ff00 100644
 --- a/sites/all/modules/custom/sbac_ldap/sbac_ldap.ldap_authorization.inc
 +++ b/sites/all/modules/custom/sbac_ldap/sbac_ldap.ldap_authorization.inc
@@ -33,25 +33,3 @@ index e2195c6..e756ffb 100644
    $ldap_servers_conf->ldap_type = 'default';
    $ldap_servers_conf->address = '10.202.150.211';
    $ldap_servers_conf->port = 389;
-diff --git a/sites/all/modules/custom/sbac_ldap/sbac_ldap.strongarm.inc b/sites/all/modules/custom/sbac_ldap/sbac_ldap.strongarm.inc
-index 68cdecf..b71c0a8 100644
---- a/sites/all/modules/custom/sbac_ldap/sbac_ldap.strongarm.inc
-+++ b/sites/all/modules/custom/sbac_ldap/sbac_ldap.strongarm.inc
-@@ -16,7 +16,7 @@ function sbac_ldap_strongarm() {
-   $strongarm->name = 'ldap_authentication_conf';
-   $strongarm->value = array(
-     'sids' => array(
--      'SBAC' => 'SBAC',
-+      'SBAC Internal' => 'SBAC Internal',
-     ),
-     'authenticationMode' => 1,
-     'loginUIUsernameTxt' => NULL,
-@@ -6740,7 +6740,7 @@ function sbac_ldap_strongarm() {
-   $strongarm->api_version = 1;
-   $strongarm->name = 'ldap_user_conf';
-   $strongarm->value = array(
--    'drupalAcctProvisionServer' => 'SBAC',
-+    'drupalAcctProvisionServer' => 'SBAC Internal',
-     'ldapEntryProvisionServer' => 0,
-     'drupalAcctProvisionTriggers' => array(
-       2 => '2',

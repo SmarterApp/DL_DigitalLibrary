@@ -310,7 +310,7 @@ function _sbac_resource_contributor_links($fields) {
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
         $variables['text'] = t('In Review');
         break;
-      case 'returned':
+      case 'rejected':
         $variables['buttons'][] = l('View Notification', 'user', array('absolute' => TRUE, 'fragment' => 'profile-notifications', 'attributes' => array('class' => array('medium', 'button'))));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
         $variables['links'][] = l('View Notification', 'user', array('absolute' => TRUE, 'fragment' => 'profile-notifications'));
@@ -350,7 +350,7 @@ function _sbac_resource_contributor_links($fields) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 240,
+          'height' => 160,
         ),
       ),
     );
@@ -427,11 +427,11 @@ function _sbac_resource_reviewer_links($fields) {
         global $user;
         $under_review = FALSE;
         // if the current user is performing the gate keeper process
-        $gate_keeper = _sbac_resource_determine_gate_keeper($nid, $user->uid);
+        $gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', $user->uid, 1, 0, 1);
         if ($gate_keeper) {
           if (!$gate_keeper['completed'] || !$gate_keeper['status']) {
             $url = url('node/' . $nid, array('absolute' => TRUE));
-            $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('small', 'button'))));
+            $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
             $variables['links'][] = l('Continue Review', 'node/' . $nid, array('absolute' => TRUE));
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
             $variables['text'] = t('Being Reviewed');
@@ -440,18 +440,18 @@ function _sbac_resource_reviewer_links($fields) {
         }
 
         if (!$under_review) {
-          $feedback = _sbac_resource_determine_feedback($nid, 'review', $user->uid, NULL, NULL, 'single');
+          $feedback = _sbac_resource_determine_feedback($nid, 'review', $user->uid, 1, 0, 1, 'set');
           if ($feedback) {
             // if the user is reviewing it, its "being reviewed"
             $url = url('node/' . $nid, array('absolute' => TRUE));
-            $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('small', 'button'))));
+            $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
             $variables['links'][] = l('Continue Review', 'node/' . $nid, array('absolute' => TRUE));
             $variables['text'] = t('Being Reviewed');
           }
           else {
             $url = url('node/' . $nid, array('absolute' => TRUE));
-            $variables['buttons'][] = l('Start Review', $url, array('attributes' => array('class' => array('small', 'button'))));
+            $variables['buttons'][] = l('Start Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
             $variables['links'][] = l('Start Review', 'node/' . $nid, array('absolute' => TRUE));
             $variables['text'] = t('Needs Review');
@@ -496,14 +496,24 @@ function _sbac_resource_publisher_links($fields) {
     $nid = $fields['nid']->raw;
     $node = node_load($nid);
     $state = $fields['state']->raw;
-    $feedback = _sbac_resource_determine_feedback($nid);
     switch ($state) {
       case 'approved':
-        $url = url('node/' . $nid, array('absolute' => TRUE));
-        $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
-        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
-        $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
-        $variables['text'] = t('Needs Posting');
+        global $user;
+        $feedback = _sbac_resource_determine_feedback($nid, 'post', $user->uid, 1, 0, 1, 'single');
+        if ($feedback) {
+          $url = url('node/' . $nid, array('absolute' => TRUE));
+          $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
+          $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
+          $variables['text'] = t('Being Reviewed');
+        }
+        else {
+          $url = url('node/' . $nid, array('absolute' => TRUE));
+          $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
+          $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
+          $variables['text'] = t('Needs Posting');
+        }
         break;
       case 'published':
         $variables['sticky'] = FALSE;
@@ -535,23 +545,30 @@ function _sbac_resource_publisher_links($fields) {
  * @param $uid
  * @param $nid
  */
-function _sbac_resource_determine_feedback($nid, $type = 'review', $uid = FALSE, $status = NULL, $completed = NULL, $return_type = 'set') {
+function _sbac_resource_determine_feedback($nid, $type = 'review', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE) {
   $feedback = array();
   if ($nid) {
     $query = db_select('eck_feedback', 'f');
     $query->fields('f', array('id', 'uid', 'node_id', 'created', 'changed', 'title', 'status', 'completed', 'met_criteria', 'current'));
     $query->condition('f.node_id', $nid);
     $query->condition('f.type', $type);
-    if ($uid) {
-      $query->condition('f.uid', $uid);
+    if ($uid !== FALSE) {
+      if ($uid_not) {
+        $query->condition('f.uid', array($uid), 'NOT IN');
+      }
+      else{
+        $query->condition('f.uid', $uid);
+      }
     }
-    if ($status != NULL) {
+    if ($status !== FALSE) {
       $query->condition('f.status', $status);
     }
-    if ($completed != NULL) {
+    if ($completed !== FALSE) {
       $query->condition('f.completed', $completed);
     }
-
+    if ($current !== FALSE) {
+      $query->condition('f.current', $current);
+    }
     if ($return_type == 'single') { // get the latest result.
       $query->orderBy('f.id', 'DESC');
       $query->range(0, 1);
@@ -633,7 +650,7 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
         'class' => array(
           'use-ajax',
           'use-dialog',
-          'small',
+          'medium',
           'button',
         ),
         'id' => $trigger_id,

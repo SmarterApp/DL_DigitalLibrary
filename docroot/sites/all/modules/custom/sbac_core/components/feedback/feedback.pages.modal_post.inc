@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The form to initialize Post Modal.
  * @param  [type] $form           [description]
@@ -14,8 +13,11 @@ function resource_post_form($form, &$form_state, $node, $state, $trigger_id, $id
   $form = array();
   global $user;
 
-  $entity = entity_load_single('feedback', $id);
-  $hours_left = feedback_hours_left($entity);
+  $hours_left = NULL;
+  if ($id) {
+    $entity = entity_load_single('feedback', $id);
+    $hours_left = feedback_hours_left($entity);
+  }
 
   // start state
     $form['state_start']['intro'] = array(
@@ -51,12 +53,12 @@ function resource_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
   // reject state
     $form['state_reject']['intro'] = array(
-      '#markup' => '<div class="gate-keeper-modal-intro">' . t('Returning this resource will send it and your comments back to the contributor forrevision. It will also send a message to each of the reviewers. Be sure you’ve included actionable feedback.')  . '</div>',
+      '#markup' => '<div class="gate-keeper-modal-intro">' . t('Returning this resource will send it and your comments back to the contributor for revision. It will also send a message to each of the reviewers. Be sure you’ve included actionable feedback.')  . '</div>',
     );
 
     $form['state_reject']['submit'] =  array(
       '#type' => 'submit',
-      '#value' => t('Reject Resource'),
+      '#value' => t('Return Resource'),
     );
 
   // recommend state
@@ -186,10 +188,10 @@ function resource_post_form_submit($form, &$form_state) {
       break;
 
     case 'cancel':
-      $entity = entity_load_single('feedback', $form_state['build_info']['args'][3]);
-      $entity->status = 0;
-
-      entity_save('feedback', $entity);
+      if ($entity = entity_load_single('feedback', $form_state['build_info']['args'][3])) {
+        $entity->status = 0;
+        entity_save('feedback', $entity);
+      }
 
       break;
     // nothing needs to happen in these cases as the processing is handled in

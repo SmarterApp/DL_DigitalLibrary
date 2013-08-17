@@ -188,8 +188,12 @@ function _sbac_resource_preview_content(&$vars) {
       drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 20));
       $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
     }
-    else {
+    else if ($media == 'image') {
       $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400));
+    }
+    else {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      $viewer['viewer'] = theme('image', array('path' => $url));
     }
   }
   return $viewer;
@@ -210,6 +214,9 @@ function _sbac_resource_preview_materials(&$vars) {
       $url = file_create_url($material['uri']);
       $ext = pathinfo($url, PATHINFO_EXTENSION);
       $media = _sbac_resource_determine_extension($ext);
+      if ($media == 'none') {
+        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      }
       $material_urls[] = l(ucwords($material['filename']), $url, array('attributes' => array('sbac-type' => $media)));
     }
   }
@@ -221,11 +228,11 @@ function _sbac_resource_preview_materials(&$vars) {
   }
 
   if ($material_urls) {
-    $materials = '<a class="button small arrow" data-dropdown="sbac-materials">'. t('View All Materials'). '<span></span></a>';
+    $materials = '<a class="button small arrow sbac-materials-dropdown" data-dropdown="sbac-materials">'. t('View All Materials'). '<span></span></a>';
     $materials .= theme('item_list', array(
       'items' => $material_urls, 
       'attributes' => array(
-        'class' => 'materials-dropdown f-dropdown', 
+        'class' => 'materials-dropdown f-dropdown',
         'id' => 'sbac-materials'
       )
     ));
@@ -243,7 +250,7 @@ function _sbac_resource_preview_materials(&$vars) {
 function _sbac_resource_determine_extension($ext) {
   $media = 'document';
 
-  switch ($ext) {
+  switch (strtolower($ext)) {
     case 'txt';
     case 'doc';
     case 'docx';
@@ -255,9 +262,7 @@ function _sbac_resource_determine_extension($ext) {
       $media = 'document';
       break;
     case 'mp4';
-    case 'mpg';
     case 'mov';
-    case 'avi';
     case 'mp3';
     case 'aac';
       $media = 'video';
@@ -266,6 +271,10 @@ function _sbac_resource_determine_extension($ext) {
     case 'jpg';
     case 'jpeg';
       $media = 'image';
+      break;
+    case 'mpg';
+    case 'avi';
+      $media = 'none';
       break;
   }
 
@@ -280,7 +289,7 @@ function _sbac_resource_determine_extension($ext) {
 function _sbac_resource_determine_file_type_icon($ext) {
   $media = 'document';
 
-  switch ($ext) {
+  switch (strtolower($ext)) {
     case 'txt';
     case 'doc';
     case 'docx';
@@ -324,6 +333,25 @@ function sbac_resource_preprocess_page(&$vars) {
   if (isset($vars['node']->type) && $vars['node']->type == 'resource') {
     if (isset($vars['page']['#type']) && $vars['page']['#type'] == 'page') {
       unset($vars['tabs']);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ *
+ * Determine the page display and toss a class on the body.
+ *
+ * @param $vars
+ */
+function sbac_resource_preprocess_html(&$vars) {
+  if (arg(0) == 'digital-library-resources') {
+    $display = sbac_resource_determine_grid_or_list();
+    if ($display == 'grid_view') {
+      $vars['classes_array'][] = 'grid-view';
+    }
+    else {
+      $vars['classes_array'][] = 'list-view';
     }
   }
 }
@@ -545,26 +573,7 @@ function _sbac_resource_apply_filters(&$view) {
  * @return string
  */
 function sbac_resource_digital_library_page() {
-  menu_set_active_item('digital-library-resources');
-  if (isset($_SESSION['dlp-view-mode'])) {
-    $display = $_SESSION['dlp-view-mode'];
-    if (arg(1) == 'list') {
-      $display = 'list_view';
-    }
-    else if (arg(1) == 'grid') {
-      $display = 'grid_view';
-    }
-    $_SESSION['dlp-view-mode'] = $display;
-  }
-  else {
-    // By default show grid layout with link to list layout
-    $display = 'grid_view';
-    if (arg(1) == 'list') {
-      $display = 'list_view';
-    }
-    // Add session variable to persist for users session.
-    $_SESSION['dlp-view-mode'] = $display;
-  }
+  $display = sbac_resource_determine_grid_or_list();
 
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
@@ -577,7 +586,9 @@ function sbac_resource_digital_library_page() {
   $view->_post_execute();
   $resource_layout_view = $view->preview();
   $_SESSION['sbac_search_count'] = $view->total_rows;
+  //dpq($view->build_info['query']);
 
+  menu_set_active_item('digital-library-resources');
   return theme('digital_library', array('resource_layout_view' => $resource_layout_view));
 }
 
@@ -622,7 +633,7 @@ function sbac_resource_node_presave($node) {
           }
         }
       } catch (CMISException $e) {
-        cmis_error_handler('sbac_documents_update_document', $e);
+        //cmis_error_handler('sbac_documents_update_document', $e);
       }
     }
     else {
@@ -666,7 +677,7 @@ function sbac_resource_create_file_from_cmis(&$node) {
     $document_id = cmisapi_createDocument($repository->repositoryId, $folder->id, $file->filename, array(), file_get_contents($file->uri), $file->filemime);
     $node->field_document_id['und'][0]['value'] = $document_id->id;
   } catch (CMISException $e) {
-    cmis_error_handler('sbac_documents_presave_document', $e);
+    //cmis_error_handler('sbac_documents_presave_document', $e);
   }
 }
 
@@ -683,7 +694,7 @@ function sbac_resource_delete_file_from_cmis(&$node) {
     cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
     $node->field_document_id['und'][0]['value'] = NULL;
   } catch (CMISException $e) {
-    cmis_error_handler('sbac_documents_delete_document', $e);
+    //cmis_error_handler('sbac_documents_delete_document', $e);
   }
 }
 
@@ -873,7 +884,7 @@ function sbac_resource_block_view($delta = '') {
 
     case 'sbac_resource_back_button':
       $block['subject'] = NULL;
-      $block['content'] = "<a href='#' class='button' onclick='history.back(); return false;'>Back</a>";
+      $block['content'] = "<a href='/digital-library-resources' class='button'>Back</a>";
       break;
   }
   return $block;
@@ -932,4 +943,34 @@ function sbac_resource_clean_text(&$form_state) {
       $form_state['values']['title'] = filter_xss($field);
     }
   }
+}
+
+/**
+ * Determines if the display is grid / list.
+ *
+ * @return string
+ */
+function sbac_resource_determine_grid_or_list() {
+  if (isset($_SESSION['dlp-view-mode'])) {
+    $display = $_SESSION['dlp-view-mode'];
+    if (arg(1) == 'list') {
+      $display = 'list_view';
+    }
+    else {
+      if (arg(1) == 'grid') {
+        $display = 'grid_view';
+      }
+    }
+    $_SESSION['dlp-view-mode'] = $display;
+  }
+  else {
+    // By default show grid layout with link to list layout
+    $display = 'grid_view';
+    if (arg(1) == 'list') {
+      $display = 'list_view';
+    }
+    // Add session variable to persist for users session.
+    $_SESSION['dlp-view-mode'] = $display;
+  }
+  return $display;
 }

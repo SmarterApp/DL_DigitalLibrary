@@ -83,7 +83,7 @@ class Post extends Base {
                         <span class="required"></span>
                       </div>
                       <div class="field-description">
-                        ' . t('Lorem ipsum dolor sit amet...') . '
+                        ' . t("") . '
                       </div>
                    ',
     );
@@ -103,9 +103,10 @@ class Post extends Base {
     $this->_form['field_post_options']['#prefix'] = '<div class="radios-with-desc">';
     $this->_form['field_post_options']['#suffix'] = '</div>';
     foreach ($this->_form['field_post_options'][$this->_lang]['#options'] as $option_key => &$option) {
-      if ($option_desc = variable_get('post_options_' . $option_key, input_default_full_html())) {
-        $option .= '<span>' . t(' - ') . filter_text($option_desc) . '</span>';
-      }
+      // commented out descriptions for now
+      // if ($option_desc = variable_get('post_options_' . $option_key, input_default_full_html())) {
+      //   $option .= '<span>' . t(' - ') . filter_text($option_desc) . '</span>';
+      // }
     }
 
     // figure out current state
@@ -140,8 +141,8 @@ class Post extends Base {
    */
   public function postProcess() {
     // set hidden select action options
-    $this->_action_options = array(
-      'reject' => t('Reject'),
+    $this->_action_options += array(
+      'reject' => t('Return'),
       'post' => t('Post'),
       'post_distinction' => t('Post with Distinction'),
     );

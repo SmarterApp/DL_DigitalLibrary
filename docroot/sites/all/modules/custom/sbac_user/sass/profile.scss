@@ -1,7 +1,57 @@
 @import "compass/css3/";
-@import "compass/css3/opacity";
-@import "compass/css3/transition";
-@import "compass/css3/border-radius";
+
+@mixin global-button-negative {
+  background: rgba(226, 226, 226, 1);
+  border: 1px rgba(100, 100, 100, 1) solid;
+  color: rgba(100, 100, 100, 1);
+  padding: 8px 18px;
+  @include border-radius (6px);
+
+  &:hover, &:focus  {
+    @include transition(all 500ms ease);
+    background: rgba(138, 21, 56, 1);
+    border: 1px rgba(138, 21, 56, 1) solid;
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+  }
+}
+
+h2.name {
+  .field {
+    float: left;
+    margin-right: 5px;
+  }
+}
+
+.profile-school {
+  .field {
+    display: inline-block;
+    font-size: inherit;
+  }
+}
+
+.profile-pic img {
+  @include border-radius(6px);
+}
+.profile-title {
+  margin-bottom: 5px;
+}
+
+.introduction{
+  .field{
+    font-size: inherit;
+  }
+}
+
+.profile-details {
+  div {
+    margin-bottom: 4px;
+    line-height:18px
+  }
+  .field {
+    font-size: inherit;
+  }
+}
 
 
 .page-user .row.second {
@@ -19,6 +69,7 @@
       border: none;
     }
   }
+
   .section-container.auto > section.active > .title a {
       text-shadow: 0px -1px 1px #000;
       font-weight: bold;
@@ -109,7 +160,9 @@
         margin-top: 130px;
         margin-left: 20px;
       }
-      .form-item-files-picture-upload {
+
+
+      /** .form-item-files-picture-upload {
         margin-bottom: 0px;
         margin-top: 5px;
         input[type='file'] {
@@ -142,16 +195,21 @@
         input[type='text'].error {
           border: 2px solid red;
         }
+      } **/
+
+      #upload-cover {
+        display: none;
       }
 
       .remove-picture {
+        @include global-button-negative;
         display: inline-block;
-        margin-left: 20px;
+        margin-left: 25px;
         width: 159px;
         color: #7f7f7f;
         font-weight: bold;
         font-size: 0.875em;
-        border: 1px #e0e0e0 solid;
+/*        border: 1px #e0e0e0 solid;
         border-radius: 5px;
         padding: 8px;
         text-shadow: 1px 1px 1px #fff;
@@ -165,7 +223,7 @@
           background-image: -webkit-linear-gradient(top, #c8edf5 0%, #95dff3 25%, #6dd0ee 50%, #56c2e3 75%, #41b2d4 100%) !important;
           background-image: -moz-linear-gradient(top, #c8edf5 0%, #95dff3 25%, #6dd0ee 50%, #56c2e3 75%, #41b2d4 100%);
           border: 1px #38bfde solid;
-        }
+        }*/
       }
     }
 
@@ -224,7 +282,7 @@
           div {
             width: 50px;
             b {
-              background: url('/sites/all/themes/SBAC/images/arrow-down-large.png') no-repeat;
+              background: url('../../../../sites/all/themes/SBAC/images/arrow-down-large.png') no-repeat;
             }
           }
         }
@@ -339,7 +397,8 @@
     }
     #edit-actions {
       #edit-submit {
-        color: #7f7f7f;
+        cursor: pointer;
+/*        color: #7f7f7f;
         height: 40px;
         width: 160px;
         font-size: 17px;
@@ -358,7 +417,7 @@
           background-image: -webkit-linear-gradient(top, #c8edf5 0%, #95dff3 25%, #6dd0ee 50%, #56c2e3 75%, #41b2d4 100%);
           background-image: -moz-linear-gradient(top, #c8edf5 0%, #95dff3 25%, #6dd0ee 50%, #56c2e3 75%, #41b2d4 100%);
           border: 1px #38bfde solid;
-        }
+        }*/
       }
       #edit-cancel {
         color: #7f7f7f;
@@ -436,5 +495,11 @@
         }
       }
     }
+  }
+  .chzn-container-multi .chzn-choices .search-field input {
+    height: auto;
+  }
+  .vertical-tabs ul.vertical-tabs-list li.selected a strong {
+    color: #18577e;
   }
 }

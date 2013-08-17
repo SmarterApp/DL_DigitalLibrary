@@ -6,6 +6,21 @@
 
 include_once 'sbac_ldap.features.inc';
 
+/*
+ * Implements hook_menu().
+ */
+function sbac_ldap_menu() {
+  $items['home'] = array(
+    'page callback' => 'sbac_ldap_frontpage_view',
+    'access callback' => TRUE,
+    // 'access arguments' => array('access content'),
+    'type'  => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -36,13 +51,18 @@ function sbac_ldap_form_alter(&$form, &$from_state, $form_id) {
  */
 function sbac_ldap_login_validate(&$form, &$form_state) {
   $error = sbac_ldap_test_connect();
-  if ($error) {
+  $logged_in = user_is_logged_in();
+  if ($error || (!$logged_in)) {
     $messages = drupal_get_messages(NULL, FALSE);
     if (isset($messages['error'])) {
       foreach ($messages['error'] as $key => $message) {
         if (strpos($message, 'Sorry, unrecognized username or password') !== FALSE) {
           drupal_get_messages('error');
-          drupal_set_message('User authentication is currently unavailable. Please try again in a few minutes', 'error');
+          if ($error)
+            drupal_set_message('User authentication is currently unavailable. Please try again in a few minutes', 'error');
+          elseif (!$logged_in)
+            drupal_set_message('Your email address or password was not recognized.', 'error');
+          else {}
           break;
         }
       }
@@ -64,4 +84,25 @@ function sbac_ldap_test_connect() {
     return TRUE;
   }
   return FALSE;
+}
+
+/*
+ * Function to check which front page to display
+ */
+function sbac_ldap_frontpage_view() {
+  $logged_in = user_is_logged_in();
+  global $user;
+
+  if($logged_in) {
+    if (!isset($user->data['disable_help'])) {
+      drupal_goto('user');
+    }
+    else {
+      drupal_goto('digital-library-resources');
+    }
+  }
+  else {
+    drupal_goto('user');
+  }
+
 }

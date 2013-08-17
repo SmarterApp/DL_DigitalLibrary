@@ -60,7 +60,7 @@ class GateKeeper extends Base {
    */
   function postProcess() {
     // set hidden select action options
-    $this->_action_options = array(
+    $this->_action_options += array(
       'cancel' => t('Cancel review'),
       'save_close' => t('Save and close'),
       'not_meet' => t('Does not meet all criteria'),

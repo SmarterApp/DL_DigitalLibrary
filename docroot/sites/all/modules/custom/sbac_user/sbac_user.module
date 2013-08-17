@@ -55,7 +55,7 @@ function sbac_user_menu() {
   );
 
   $items['change-password'] = array(
-    'title' => t('Change password'),
+    'title' => t('Reset password'),
     'description' => t('Standalone change password form'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sbac_user_change_password_form'),
@@ -95,6 +95,10 @@ function sbac_user_permission() {
       'title'       => t('View and edit account information on user profile page'),
 //      'description' => t('View and edit account information on user profile page.')
   );
+  $perms['access private fields'] = array(
+      'title' => t('Access private fields'),
+      'description' => t('Allows a user to access private fields of other users.'),
+  );
   return $perms;
 }
 
@@ -130,21 +134,23 @@ function sbac_user_theme() {
   return sbac_user_theme__theme();
 }
 
-function sbac_user_profile_submit($form, &$form_state){
-  global $user;
+// not sure what this is supposed to do, commenting it out @TODO remove
+// function sbac_user_profile_submit($form, &$form_state){
+//   global $user;
 
-  $fname = $form_state['input']['fname'];
-  $lname = $form_state['input']['lname'];
-  $edit = array(
-    'field_first_name_value' => $fname,
-  );
-  db_update('field_data_field_first_name')
-    ->fields($edit)
-    ->condition('entity_id', $user->uid,'=')
-    ->execute();
-  cache_clear_all();
-  drupal_set_message(t('The changes have been saved.'));
-}
+//   $fname = $form_state['input']['fname'];
+//   $lname = $form_state['input']['lname'];
+//   $edit = array(
+//     'field_first_name_value' => $fname,
+//   );
+//   db_update('field_data_field_first_name')
+//     ->fields($edit)
+//     ->condition('entity_id', $user->uid,'=')
+//     ->execute();
+//   cache_clear_all();
+//   drupal_set_message(t('The changes have been saved.'));
+// }
+
 function sbac_user_user_pass_form_submit($form, &$form_state) {
   global $language;
 
@@ -166,7 +172,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
   if($form_id == 'user_login' || $form_id == 'user_login_block') {
      $form['name']['#title'] = 'Email Address';
      unset($form['name']['#description']);
-     $form['pass']['#description'] = l(t('Forgot Your Password?'), 'user/password');
+     $form['pass']['#description'] = l(t('Forget Your Password?'), 'user/password');
      $form['actions']['submit']['#value'] = 'Log into the Digital Library';
   }
 
@@ -204,7 +210,13 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_district_name']['#type'] = 'hidden';
       $form['field_slt_member']['#type'] = 'hidden';
       $form['field_sne_member']['#type'] = 'hidden';
+      $form['field_state']['#type'] = 'hidden';
       $form['legal']['#type'] = 'hidden';
+      // remove user_profile_submit handler and then re-add so we can re-order the submit handlers
+      $form['#submit'] = array_diff($form['#submit'], array('user_profile_form_submit'));
+      $form['#submit'][] = 'sbac_user_user_profile_add_values_submit';
+      $form['#submit'][] = 'user_profile_form_submit';
+      $form['#submit'][] = 'sbac_user_user_profile_default_tab_submit';
 
       if(isset($form['picture']['picture']['#value'])) {
         $uid = $form_state['user']->entity_id;
@@ -217,6 +229,19 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['account']['mail']['#title'] = t('Email');
       $form['account']['mail']['#description'] = t('As provided by your state.');
       $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save Changes'));
+
+      // add hidden form field to set default vertical tab state
+      $form['vertical_tabs_default'] = array(
+        '#type' => 'hidden',
+        '#attributes' => array(
+          'id' => 'vertical-tabs-default',
+        ),
+      );
+
+      // form modifications to field_privacy
+      $form['field_privacy']['und']['#after_build'][] = 'sbac_user_privacy_after_build';
+      $form['field_privacy']['und']['#theme_options']['description at top'] = $form['field_privacy']['und']['#description'];
+      $form['field_privacy']['und']['#description'] = '';
     }
     // Populate first name from the LDAP if it hasn't been already done so
     $field_first_name_default = $form['field_first_name']['und'][0]['value']['#default_value'];
@@ -243,7 +268,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       '#prefix' => '<div id="download-button"><h1 class="left page-title">'.t('Terms of Service').'</h1>',
       '#suffix' => '</div>',
       '#markup' =>l('<i class="gen-enclosed foundicon-inbox"></i> Download','printpdf/terms-of-service',array(
-        'attributes'=>array('class' =>'right button small secondary'),'html'=>'true'))
+        'attributes'=>array('class' =>'right button small'),'html'=>'true'))
     );
 
     $form['legal'] = array(
@@ -280,6 +305,103 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
 
     drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/legal.css');
   }
+}
+
+/**
+ * Implements hook_field_access().
+ */
+function sbac_user_field_access($op, $field, $entity_type, $entity, $account) {
+  if ($entity_type == 'user') {
+    switch ($op) {
+      case 'view':
+        if (isset($entity->field_privacy['und']) && count($entity->field_privacy['und'])) {
+          // Grant access if this permission is granted to the viewer.
+          if (user_access('access private fields')) {
+            return TRUE;
+          }
+          if (!is_object($entity)) {
+            return TRUE;
+          }
+          // If the field is to be kept private, deny to even the user himself
+          // so he can see the changes to his profile
+          if (sbac_user_privacy_check($field['field_name'], $entity)) {
+            return TRUE;
+          }
+          // If the field is not to be displayed, deny.
+          return FALSE;
+        }
+        break;
+    }
+  }
+}
+
+/**
+ * Returns array of privacy fields
+ *
+ * @param $entity
+ *   User object.
+ * @return array
+ *   Array of fields.
+ */
+function sbac_user_privacy_fields($entity) {
+  $fields = &drupal_static(__FUNCTION__);
+  if (isset($entity->field_privacy['und'])) {
+    if (!count($fields)) {
+      foreach ($entity->field_privacy['und'] as $key => $value) {
+        $fields[] = $value['value'];
+      }
+    }
+  } else {
+    $fields = array();
+  }
+  return $fields;
+}
+
+/**
+ * Returns if a field value should be kept private.
+ *
+ * @param $field
+ *   Field Name.
+ * @param $entity
+ *   User object.
+ * @return bool
+ *   TRUE if the field value should be kept private.
+ */
+function sbac_user_privacy_check($field, $entity) {
+  // commented out fields are required (and disabled on account privacy tab)
+  $privacy_fields = array(
+    'picture',
+    // 'field_first_name',
+    'field_last_name',
+    'mail',
+    // 'field_position',
+    // 'field_state',
+    'field_school_name',
+    'field_district_name',
+    'field_introduction',
+    // 'field_grade_level_s_',
+    // 'field_subject_s_',
+    // 'field_special_populations',
+  );
+  if (in_array($field, $privacy_fields)) {
+    return (bool) in_array($field, sbac_user_privacy_fields($entity));
+  }
+  else {
+    return TRUE;
+  }
+}
+
+/*
+ * After build function to set some disabled privacy checkboxes to checked
+ */
+function sbac_user_privacy_after_build($form, &$form_state) {
+  $form['field_first_name']['#checked'] = TRUE;
+  $form['field_position']['#checked'] = TRUE;
+  $form['field_state']['#checked'] = TRUE;
+  $form['field_grade_level_s_']['#checked'] = TRUE;
+  $form['field_subject_s_']['#checked'] = TRUE;
+  $form['field_special_populations']['#checked'] = TRUE;
+  return $form;
 }
 
 /*
@@ -392,12 +514,22 @@ function sbac_user_entity_presave($entity, $type) {
       }
     }
     // @TODO picture is getting removed on login - traced to bug in LDAP module, remove
-    // egregious hack: only allow picture change if base path = user/id
-    if (arg(0) == 'user' && arg(1) && is_numeric(arg(1))) {
+    // egregious @HACK: only allow picture change if base path = user/id
+    if (arg(0) == 'user' && arg(1) && is_numeric(arg(1)) && isset($entity->picture->fid)) {
       // user edit page, allow picture change
     } else {
       // don't allow picture change
       $entity->picture = $entity->original->picture;
+    }
+
+    // display disabled fields by default for new users (field_privacy)
+    if (isset($entity->is_new) && $entity->is_new) {
+      $entity->field_privacy['und'][]['value'] = 'field_first_name';
+      $entity->field_privacy['und'][]['value'] = 'field_position';
+      $entity->field_privacy['und'][]['value'] = 'field-state';
+      $entity->field_privacy['und'][]['value'] = 'field-grade-level-s-';
+      $entity->field_privacy['und'][]['value'] = 'field-subject-s-';
+      $entity->field_privacy['und'][]['value'] = 'special-populations';      
     }
   }
 }
@@ -508,7 +640,7 @@ function sbac_user_entity_update($entity, $type) {
  */
 function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
   if (isset($blocks['user']['login']['pages'])) {
-    $blocks['user']['login']['pages'] = "legal_accept/*\r\nlegal_accept";
+    $blocks['user']['login']['pages'] = "legal_accept/*\r\nlegal_accept\r\nterms-of-service";
   }
 }
 
@@ -533,7 +665,7 @@ function sbac_user_user_login(&$edit, $account) {
   }
   user_save($account, array());
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
-  // $edit['redirect'] = 'digital-library-resources';
+  $edit['redirect'] = 'home';
 }
 
 /**
@@ -619,7 +751,7 @@ function sbac_user_user_view($account, $view_mode, $langcode) {
  * Overlay to leave Digital Library if disagree with T & C
  */
 function sbac_user_login_overlay() {
-  $output = '<a href="#" class="left button secondary medium"data-reveal-id="overlay">I disagree</a>
+  $output = '<a href="#" class="left button secondary medium" data-reveal-id="overlay">I disagree</a>
 
             <div id="overlay" class="reveal-modal">
               <h3>You are about to leave the Digital Library</h3>
@@ -627,7 +759,7 @@ function sbac_user_login_overlay() {
 
               <h5> Are you sure you want to leave?  </h5>
               <div id="decision">
-                <a class="button small otherClose">No, return to Terms of Service</a>
+                <a class="button small close-reveal-modal">No, return to Terms of Service</a>
                  or
                 <a class="button small secondary" href="/"> Yes, log me out </a>
               </div>
@@ -656,17 +788,18 @@ function sbac_user_terms_page() {
  * Validation callback to check profanity
  */
 function sbac_user_profile_validate(&$form, &$form_state) {
-  foreach($form_state['field'] as $key => $field) {
-    $lang = $form[$key]['#language'];
-    if(stripos($field[$lang]['field']['type'], 'text') !== FALSE && stripos($key, 'ldap') === FALSE) {
-      $text = $form_state['values'][$key][$lang][0]['value'];
-      $bad_words = profanity_validate_text($text);
-      if ($bad_words) {
-        $error = t('You must remove inappropriate language from :field_name to continue.', array(':field_name' => $form[$key][$lang]['#title']));
-        form_set_error($key, $error);
-      }
-    }
-  }
+  // commented out as per Yuriy
+  // foreach($form_state['field'] as $key => $field) {
+  //   $lang = $form[$key]['#language'];
+  //   if(stripos($field[$lang]['field']['type'], 'text') !== FALSE && stripos($key, 'ldap') === FALSE) {
+  //     $text = $form_state['values'][$key][$lang][0]['value'];
+  //     $bad_words = profanity_validate_text($text);
+  //     if ($bad_words) {
+  //       $error = t('You must remove inappropriate language from :field_name to continue.', array(':field_name' => $form[$key][$lang]['#title']));
+  //       form_set_error($key, $error);
+  //     }
+  //   }
+  // }
 }
 
 /**
@@ -727,10 +860,57 @@ function sbac_user_change_password_form_submit($form, &$form_state) {
   $form_state['redirect'] = $redirect;
 }
 
+/**
+ * Submit handler for user profile form to set disabled values on privacy field
+ */
+function sbac_user_user_profile_add_values_submit($form, &$form_state) {
+  $form_state['values']['field_privacy']['und'][]['value'] = 'field_first_name';
+  $form_state['values']['field_privacy']['und'][]['value'] = 'field_position';
+  $form_state['values']['field_privacy']['und'][]['value'] = 'field-state';
+  $form_state['values']['field_privacy']['und'][]['value'] = 'field-grade-level-s-';
+  $form_state['values']['field_privacy']['und'][]['value'] = 'field-subject-s-';
+  $form_state['values']['field_privacy']['und'][]['value'] = 'special-populations';
+}
+
+/**
+ * Submit handler for user profile form to set default tab state
+ */
+function sbac_user_user_profile_default_tab_submit($form, &$form_state) {
+  if ($form_state['values']['vertical_tabs_default']) {
+    $form_state['redirect'] = array(
+      'user', 
+      array('fragment' => $form_state['values']['vertical_tabs_default']),
+    );
+  }
+}
+
 /*
  * Implements hook_menu_alter
  */
 function sbac_user_menu_alter(&$items) {
   $items['legal']['title'] = 'Terms of Service';
   $items['legal_accept/%/%']['title'] = 'Terms of Service';
+}
+
+/*
+ * Custom username format function for displaying the full name
+ * We are not using hook_username_alter and format_username because 
+ * it has far reaching effects and its just before demo time
+ */
+function sbac_user_format_username($user) {
+  $username = '';
+  $account = user_load($user->uid);
+  if (sbac_user_privacy_check('field_first_name', $account) && isset($account->field_first_name['und'][0]['value']) && $account->field_first_name['und'][0]['value']) {
+    $username = $account->field_first_name['und'][0]['value'];
+  }
+  if (sbac_user_privacy_check('field_last_name', $account) && isset($account->field_last_name['und'][0]['value']) && $account->field_last_name['und'][0]['value']) {
+    if ($username) {
+      $username .= ' ';
+    }
+    $username .= $account->field_last_name['und'][0]['value'];
+  }
+  if (!$username) {
+    return $account->name;
+  }
+  return $username;
 }

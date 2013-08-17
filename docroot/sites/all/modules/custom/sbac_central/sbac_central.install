@@ -464,4 +464,3 @@ function sbac_central_update_7040() {
   );
   module_disable($modules);
 }
-

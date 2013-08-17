@@ -109,7 +109,7 @@ function sbac_core_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        0 => 'Reject',
+        0 => 'Return',
         1 => 'Post',
         2 => 'Post with Distinction',
       ),
@@ -156,7 +156,7 @@ function sbac_core_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         0 => 'Do not recommend',
-        1 => 'Recommend with Reservation',
+        1 => 'Recommend with Revisions',
         2 => 'Recommend',
         3 => 'Recommend with Distinction',
       ),

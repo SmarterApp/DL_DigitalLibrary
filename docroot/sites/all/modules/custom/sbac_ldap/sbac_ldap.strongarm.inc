@@ -16,7 +16,7 @@ function sbac_ldap_strongarm() {
   $strongarm->name = 'ldap_authentication_conf';
   $strongarm->value = array(
     'sids' => array(
-      'SBAC' => 'SBAC',
+      'SBAC Internal' => 'SBAC Internal',
     ),
     'authenticationMode' => 1,
     'loginUIUsernameTxt' => NULL,
@@ -6740,11 +6740,11 @@ function sbac_ldap_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'ldap_user_conf';
   $strongarm->value = array(
-    'drupalAcctProvisionServer' => 'SBAC',
+    'drupalAcctProvisionServer' => 'SBAC Internal',
     'ldapEntryProvisionServer' => 0,
     'drupalAcctProvisionTriggers' => array(
-      2 => '2',
-      1 => '1',
+      2 => 0,
+      1 => 0,
     ),
     'ldapEntryProvisionTriggers' => array(
       6 => 0,
@@ -6815,6 +6815,20 @@ function sbac_ldap_strongarm() {
             1 => 1,
           ),
         ),
+        '[field.field_state]' => array(
+          'ldap_attr' => '[stateIDNumber]',
+          'user_attr' => '[field.field_state]',
+          'convert' => 0,
+          'direction' => '1',
+          'user_tokens' => NULL,
+          'config_module' => 'ldap_user',
+          'prov_module' => 'ldap_user',
+          'enabled' => 1,
+          'prov_events' => array(
+            0 => 2,
+            1 => 1,
+          ),
+        ),
       ),
       2 => array(
         '[firstName]' => array(
@@ -6826,9 +6840,6 @@ function sbac_ldap_strongarm() {
           'config_module' => 'ldap_user',
           'prov_module' => 'ldap_user',
           'enabled' => 1,
-          'prov_events' => array(
-            0 => 3,
-          ),
         ),
         '[cn]' => array(
           'ldap_attr' => '[cn]',
@@ -6839,9 +6850,6 @@ function sbac_ldap_strongarm() {
           'config_module' => 'ldap_user',
           'prov_module' => 'ldap_user',
           'enabled' => 1,
-          'prov_events' => array(
-            0 => 3,
-          ),
         ),
         '[dn]' => array(
           'ldap_attr' => '[dn]',
@@ -6852,9 +6860,26 @@ function sbac_ldap_strongarm() {
           'config_module' => 'ldap_user',
           'prov_module' => 'ldap_user',
           'enabled' => 1,
-          'prov_events' => array(
-            0 => 3,
-          ),
+        ),
+        '[uid]' => array(
+          'ldap_attr' => '[uid]',
+          'user_attr' => '[property.name]',
+          'convert' => 0,
+          'direction' => '2',
+          'user_tokens' => '',
+          'config_module' => 'ldap_user',
+          'prov_module' => 'ldap_user',
+          'enabled' => 1,
+        ),
+        '[lastName]' => array(
+          'ldap_attr' => '[lastName]',
+          'user_attr' => '[field.field_last_name]',
+          'convert' => 0,
+          'direction' => '2',
+          'user_tokens' => '',
+          'config_module' => 'ldap_user',
+          'prov_module' => 'ldap_user',
+          'enabled' => 1,
         ),
       ),
     ),

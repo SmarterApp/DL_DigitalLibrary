@@ -51,6 +51,7 @@ function sbac_user_image_default_styles() {
         'weight' => 1,
       ),
     ),
+    'label' => 'profile_image',
   );
 
   // Exported image style: small.
@@ -73,6 +74,7 @@ function sbac_user_image_default_styles() {
         'weight' => 1,
       ),
     ),
+    'label' => 'small',
   );
 
   return $styles;

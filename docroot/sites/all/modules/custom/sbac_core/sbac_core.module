@@ -168,6 +168,13 @@ function sbac_core_user_view($account, $view_mode, $langcode) {
   \sbac_core\Core::hook('user_view', NULL, $account, $view_mode, $langcode);
 }
 
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sbac_core_form_node_form_alter(&$form, $form_state) {
+  \sbac_core\Core::hook('form_node_form_alter', NULL, $form, $form_state);
+}
+
 /*----------------------------------------------------------------------------
       MODULE HOOKS
 ----------------------------------------------------------------------------*/

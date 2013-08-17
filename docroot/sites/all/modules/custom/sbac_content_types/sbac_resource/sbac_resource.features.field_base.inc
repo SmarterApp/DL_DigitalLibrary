@@ -623,7 +623,7 @@ function sbac_resource_field_default_field_bases() {
       'allowed_values' => array(
         0 => 'I created all the uploaded materials in this resource and license those materials for use in the Digital Library under the Smarter Balanced Terms of Service (Section 6)',
         1 => 'I have collected all or some of the uploaded materials in this resource from other sources and I have confirmed that all the uploaded materials in this resource can be used in the Digital Library',
-        2 => 'I have collected all or some of the uploaded materials in this resource and am not sure whether I have the necessary permission for all the materials to be used in the Digital Library.',
+        2 => 'I have collected all or some of the uploaded materials in this resource and am not sure whether I have the necessary permission for all the materials to be used in the Digital Library',
       ),
       'allowed_values_function' => '',
     ),
@@ -649,7 +649,11 @@ function sbac_resource_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         0 => 'None',
-        1 => 'By checking this box, you confirm that users cannot access the following information via the materials included in this resource:' . '<ul><li>' . "Students' education records such as summative, interim, and formative assessment results; grades, GPAs, and report cards; and special education records; and" . '</li><li>' .'Personal identifiers such as student, parent, and family names and addreses, Social Security IDs, Student IDs, driver license numbers, or other information that identifies students (e.g., birth dates)' . '</li> </ul>' ,
+        1 => 'By checking this box, you confirm that users cannot access the following information via the materials included in this resource:
+        <ul>
+        <li> Students’ education records such as summative, interim, and formative assessment results; grades, GPAs, and report cards; and special education records; and
+        <li>Personal identifiers such as student, parent, and family names and addresses, Social Security IDs, Student IDs, driver license numbers, or other information that identifies students (e.g., birth dates)
+        </ul>',
       ),
       'allowed_values_function' => '',
     ),
@@ -933,7 +937,12 @@ function sbac_resource_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         0 => 'None',
-        1 => 'By checking this box, you confirm that:' . '<ul><li>' . 'You did not create any of the materials in this resource; or' . '</li><li>' . 'You did create some of the materials in this resource, but the materials you created do not contain images of students; or' . '</li><li>' . 'You did create some of the materials in this resource, the materials you created in this resource contain images of students, and your school district has approved the posting of these images in the Smarter Balanced Digital Library.' . '</li></ul>',
+        1 => 'By checking this box, you confirm that:
+        <ul>
+        <li> You did not create any of the materials in this resource; or
+        <li> You did create some of the materials in this resource, but the materials you created do not contain images of students; or
+        <li>You did create some of the materials in this resource, the materials you created in this resource contain images of students, and your school district has approved the posting of these images in the Smarter Balanced Digital Library
+        </ul>',
       ),
       'allowed_values_function' => '',
     ),

@@ -48,7 +48,6 @@
     .button,
     button {
       margin: 10px 10px 10px 0;
-      padding: 12px 20px;
     }
 
   /* get rid of the ajax progres div, throbber, etc. */
@@ -390,10 +389,6 @@
 
   .devtools-dialog-content.close-dialog {
     float: left;
-
-    a {
-      color: #fff;
-    } 
   }
 }
 

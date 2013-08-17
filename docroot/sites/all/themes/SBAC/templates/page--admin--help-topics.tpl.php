@@ -9,23 +9,27 @@
   <?php global $user; ?>
   <?php if ($user->uid): ?>
   <ul class="inline-list right user-nav">
-    <li class="user-info" >
-     <a href="<?php echo url('user'); ?>">
-      <?php
-        $user_item = user_load($user->uid);
+    <li class="user-info">
+       <a data-dropdown="drop3" href="">
+        <?php
+          $user_item = user_load($user->uid);
 
-        if (isset($user_item->picture->uri)) {
-          echo theme('image_style', array(
-            'path' => $user_item->picture->uri,
-            'style_name' => 'small',
-            'attributes' => array(
-              'class'=>'left'
-            )
-          ));
-        }
-        echo $user->name;
-      ?>
-      </a>
+          if (isset($user_item->picture->uri)) {
+            echo theme('image_style', array(
+              'path' => $user_item->picture->uri,
+              'style_name' => 'small',
+              'attributes' => array(
+                'class'=>'left'
+              )
+            ));
+          }
+          echo $user->name;
+        ?>
+        </a>
+        <ul id="drop3" class="f-dropdown">
+          <li><?php echo l('Account','user'); ?></li>
+          <li><?php echo l('Logout','user/logout');?></li>
+        </ul>
     </li>
     <li class="notifications">
       <?php
@@ -81,7 +85,7 @@
     global $user;
     if ($user->uid == 1) {
         $sections = array();
-        
+
         $view_help = views_get_view('help_topics');
         $view_help->set_item('page_2');
         $view_help->execute();
@@ -96,11 +100,11 @@
         $welcome_block = "<div id='admin-welcome-tab-message'><h3>Helpful Information
         </h3><p>Welcome Tutorial consists of help topics. You can create a help topic in <a href='/admin/help-topics'>
         help topics tab</a> and mark it for display in Welcome Tutorial.</p></div>";
-        
+
         $view_welcome = views_get_view('help_topics');
         $view_welcome->set_item('page_4');
         $view_welcome->execute();
-        
+
         $sections['tab2'] = array(
           'title' => t('Welcome Tutorial ('. count($view_welcome->result) . ') '),
           'content' => '<div id="tab2">' . $welcome_block . $view_welcome->render() . '</div>',
@@ -132,18 +136,28 @@
       <?php endif; ?></p>
     </div>
     <div class="large-6 small-12 columns">
-      <?php if(!empty($page['bottom_menu'])) :?>
-        <?php print render($page['bottom_menu']); ?>
-      <?php endif; ?>
       <?php
-      $feedback_box = block_load('sbac_central','feedback-box');
-      $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_box)));
-      print render($render_array);
+        if(!empty($page['bottom_menu'])) {
+          print render($page['bottom_menu']);
+        }
+        $feedback_block = block_load('sbac_central','feedback-box');
+        $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
+        print render($render_array);
+        //echo '<div class="block-sbac-central-feedback-box">' . block_render('sbac_central','feedback-box', TRUE) . '</div>';
       ?>
-      <ul class="inline-list right">
+      <ul class="footer-links inline-list right">
         <li><a class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
         <li><a class="feedback" href="#">Feedback</a></li>
-        <li><a class="help" href="#">Help</a></li>
+        <li>
+          <div class="footer-help">
+            <a class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
+            <ul id="drop2" class="f-dropdown" data-dropdown-content>
+              <li><a href="#helpmodal" class="help-modal">Welcome Tutorial</a></li>
+              <li><?php print l(t('Glossary'), 'glossary', array('absolute' => TRUE)); ?></li>
+              <li><a href="help-topics">Help Topics</a></li>
+            </ul>
+          </div>
+        </li>
       </ul>
     </div>
   </div>

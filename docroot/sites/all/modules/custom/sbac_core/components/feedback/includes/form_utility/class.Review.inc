@@ -22,7 +22,7 @@ class Review extends Base {
       $this->_prefix = 'qc_' . $focus->tid . '_';
     }
   }
- 
+
   /**
    * Updates FAPI element to set correct description text.
    * @param  [type] $element   [description]
@@ -35,7 +35,7 @@ class Review extends Base {
     $desc = '';
     $level_class = 'hidden';
     $level_val = $element['#default_value'];
-    
+
     if ($level_val) {
       $desc = variable_get('qc_level_' . $level_val, '');
       $desc = filter_text($desc);
@@ -110,7 +110,7 @@ class Review extends Base {
    */
   function postProcess() {
     // set hidden select action options
-    $this->_action_options = array(
+    $this->_action_options += array(
       'cancel' => t('Cancel review'),
       'save_close' => t('Save and close'),
       'complete' => t('Complete Review'),
@@ -133,7 +133,7 @@ class Review extends Base {
     $query = "  SELECT    id
                 FROM      eck_feedback
                 WHERE     type = 'review'
-                AND       status = 1 
+                AND       status = 1
                 AND       completed = 1
                 AND       node_id = :node_id
              ";
@@ -143,10 +143,10 @@ class Review extends Base {
     $i = 0;
     foreach ($result as $row) {
       $entity = entity_load_single('feedback', $row->id);
-      
+
       $author = theme('username', array(
         'account' => user_load($entity->uid)
-      )); 
+      ));
 
       $created = format_date($entity->created, 'full');
 

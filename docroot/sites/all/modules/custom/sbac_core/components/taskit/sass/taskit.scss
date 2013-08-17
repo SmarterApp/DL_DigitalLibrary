@@ -61,16 +61,21 @@
       }
 
       .item {
-        padding-right: 30px;
+        /*padding-right: 30px;*/
 
         .taskit-content {
+          background: url('/sites/all/themes/SBAC/images/arrow-right.png') 99% center no-repeat;
+          color: #5a5a5a;
+          display: block;
           padding: 10px;
 
+          &:hover {
+            background-color: #eee;
+          }
 
           .taskit-title {
-            a {
-              font-weight: bold;
-            }
+            color: #0085ad;
+            font-weight: bold;
           }
 
           .taskit-timestamp {

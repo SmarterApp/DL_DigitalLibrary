@@ -157,20 +157,12 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Summary */
-  $handler->display->display_options['fields']['field_summary']['id'] = 'field_summary';
-  $handler->display->display_options['fields']['field_summary']['table'] = 'field_data_field_summary';
-  $handler->display->display_options['fields']['field_summary']['field'] = 'field_summary';
-  $handler->display->display_options['fields']['field_summary']['label'] = '';
-  $handler->display->display_options['fields']['field_summary']['alter']['ellipsis'] = FALSE;
-  $handler->display->display_options['fields']['field_summary']['alter']['more_link'] = TRUE;
-  $handler->display->display_options['fields']['field_summary']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_summary']['settings'] = array(
-    'readmore_trim_length' => '100',
-    'readmore_show_readless' => 1,
-    'readmore_ellipsis' => 0,
-    'readmore_wordsafe' => 0,
-  );
+  /* Field: Content: Description */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   /* Sort criterion: Draggableviews: Weight */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
@@ -212,7 +204,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
     'title' => array(
-      'sortable' => 1,
+      'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -282,6 +274,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Draggableviews: Content */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
@@ -306,7 +299,9 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['status']['field'] = 'status';
   $handler->display->display_options['fields']['status']['label'] = 'Status';
   $handler->display->display_options['fields']['status']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['status']['type'] = 'enabled-disabled';
+  $handler->display->display_options['fields']['status']['type'] = 'custom';
+  $handler->display->display_options['fields']['status']['type_custom_true'] = 'Active';
+  $handler->display->display_options['fields']['status']['type_custom_false'] = 'Inactive';
   $handler->display->display_options['fields']['status']['not'] = 0;
   /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
@@ -314,6 +309,8 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['label'] = '';
   $handler->display->display_options['fields']['edit_node']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['edit_node']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['edit_node']['alter']['text'] = '<i class="general foundicon-edit"></i>';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
   /* Field: Content: Delete link */
   $handler->display->display_options['fields']['delete_node']['id'] = 'delete_node';
@@ -321,6 +318,8 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['delete_node']['field'] = 'delete_node';
   $handler->display->display_options['fields']['delete_node']['label'] = '';
   $handler->display->display_options['fields']['delete_node']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['delete_node']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['delete_node']['alter']['text'] = '<i class="general foundicon-trash"></i>';
   $handler->display->display_options['fields']['delete_node']['element_label_colon'] = FALSE;
   /* Field: Global: Combined fields */
   $handler->display->display_options['fields']['fields_combine']['id'] = 'fields_combine';
@@ -332,15 +331,11 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['fields_combine']['combined_fields'] = array(
     'edit_node' => 'edit_node',
     'delete_node' => 'delete_node',
-    'field_help_icon' => 0,
     'title' => 0,
-    'nid' => 0,
     'draggableviews' => 0,
     'field_help_page_topic' => 0,
-    'php' => 0,
     'status' => 0,
   );
-  $handler->display->display_options['fields']['fields_combine']['separator'] = '|';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   /* Sort criterion: Draggableviews: Weight */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
@@ -380,15 +375,12 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Summary */
-  $handler->display->display_options['fields']['field_summary']['id'] = 'field_summary';
-  $handler->display->display_options['fields']['field_summary']['table'] = 'field_data_field_summary';
-  $handler->display->display_options['fields']['field_summary']['field'] = 'field_summary';
-  $handler->display->display_options['fields']['field_summary']['label'] = '';
-  $handler->display->display_options['fields']['field_summary']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_summary']['settings'] = array(
-    'trim_length' => '150',
-  );
+  /* Field: Content: Description */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   /* Sort criterion: Draggableviews: Weight */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
@@ -436,7 +428,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
     'title' => array(
-      'sortable' => 1,
+      'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -490,6 +482,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Draggableviews: Content */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
@@ -505,7 +498,9 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['status']['field'] = 'status';
   $handler->display->display_options['fields']['status']['label'] = 'Status';
   $handler->display->display_options['fields']['status']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['status']['type'] = 'enabled-disabled';
+  $handler->display->display_options['fields']['status']['type'] = 'custom';
+  $handler->display->display_options['fields']['status']['type_custom_true'] = 'Active';
+  $handler->display->display_options['fields']['status']['type_custom_false'] = 'Inactive';
   $handler->display->display_options['fields']['status']['not'] = 0;
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid_1']['id'] = 'nid_1';

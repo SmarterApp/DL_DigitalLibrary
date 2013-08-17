@@ -41,12 +41,12 @@ function theme_resource_slideshow($variables) {
     $items[] = resource_slider_text($node, 'field_student_agency');
     $items[] = resource_slider_taxonomy($node, 'field_focus');
     $items[] = resource_slider_text($node, 'field_alt_body');
-    $items[] = resource_slider_text($node, 'field_contexts');
-    $items[] = resource_slider_text($node, 'field_connection_to_ccss');
-    $items[] = resource_slider_text($node, 'field_connection_to_fap');
     $items[] = resource_slider_text($node, 'field_learning_goals');
     $items[] = resource_slider_text($node, 'field_success_criteria');
     $items[] = resource_slider_text($node, 'field_supporting_evidence');
+    $items[] = resource_slider_text($node, 'field_contexts');
+    $items[] = resource_slider_text($node, 'field_connection_to_ccss');
+    $items[] = resource_slider_text($node, 'field_connection_to_fap');
     $items[] = resource_slider_text($node, 'field_principles');
 
     // break up the fields into columns
@@ -119,6 +119,10 @@ function resource_slider_taxonomy($node, $field_name) {
 
   if ($terms = field_entity_value($node, $field_name)) {
     $label = resource_field_label($field_name);
+
+    if (!is_array($terms) && is_object($terms)) {
+      $terms = array($terms);
+    }
 
     $data = array();
     foreach ($terms as $term) {

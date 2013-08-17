@@ -48,27 +48,6 @@ function sbac_alignment_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: delete terms in 2.
-  $permissions['delete terms in 2'] = array(
-    'name' => 'delete terms in 2',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: delete terms in 21.
-  $permissions['delete terms in 21'] = array(
-    'name' => 'delete terms in 21',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: delete terms in 24.
-  $permissions['delete terms in 24'] = array(
-    'name' => 'delete terms in 24',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: edit any alignment content.
   $permissions['edit any alignment content'] = array(
     'name' => 'edit any alignment content',
@@ -92,27 +71,6 @@ function sbac_alignment_user_default_permissions() {
       'resource reviewer' => 'resource reviewer',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: edit terms in 2.
-  $permissions['edit terms in 2'] = array(
-    'name' => 'edit terms in 2',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: edit terms in 21.
-  $permissions['edit terms in 21'] = array(
-    'name' => 'edit terms in 21',
-    'roles' => array(),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: edit terms in 24.
-  $permissions['edit terms in 24'] = array(
-    'name' => 'edit terms in 24',
-    'roles' => array(),
-    'module' => 'taxonomy',
   );
 
   return $permissions;

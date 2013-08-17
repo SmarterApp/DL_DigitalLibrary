@@ -22,6 +22,13 @@
           jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850 });
           jwplayer('sbac-jwplayer').play();
         }
+        else if (type == 'image') {
+          var img = $('<img>');
+          img.attr('src', $(this).attr('href'));
+          img.attr('height', 400);
+          img.attr('width', 850);
+          resource.empty().html(img);
+        }
         else {
           var img = $('<img>');
           img.attr('src', $(this).attr('href'));
@@ -36,6 +43,38 @@
         doc_type.addClass(type);
         doc_type.html(type);
         return false;
+      });
+
+      // when the list loses focus.
+      $(document).click(function() {
+        var selectedDiv = $('.selectedDiv');
+        selectedDiv.hide();
+        selectedDiv.removeClass('selectedDiv');
+        selectedDiv.removeClass('open');
+      });
+
+      // when the list is clicked.
+      $('.sbac-materials-dropdown').click( function () {
+        var sbac_materials = $('#sbac-materials');
+        if (sbac_materials.hasClass('open')) {
+          sbac_materials.removeClass('open');
+          sbac_materials.removeClass('selectedDiv');
+          sbac_materials.hide();
+        }
+        else {
+          sbac_materials.addClass('open');
+          sbac_materials.addClass('selectedDiv');
+          sbac_materials.show();
+        }
+        return false;
+      });
+
+      // when an item in the list is clicked.
+      $('#sbac-materials li a').click( function() {
+        var selectedDiv = $('.selectedDiv');
+        selectedDiv.hide();
+        selectedDiv.removeClass('selectedDiv');
+        selectedDiv.removeClass('open');
       });
     }
   };

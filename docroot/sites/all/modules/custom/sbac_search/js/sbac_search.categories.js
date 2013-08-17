@@ -8,6 +8,14 @@
    */
   Drupal.behaviors.sbac_search_categories = {
     attach: function (context, settings) {
+      $(document).click(function() {
+        if (!$(this).hasClass('selectedDiv')) {
+          var selectedDiv = $('.selectedDiv');
+          selectedDiv.hide();
+          selectedDiv.removeClass('selectedDiv');
+        }
+      });
+
       // Add filter to current filters
       $('.category-filter').click(function () {
         var filter_name = $(this).children('.filter-name');
@@ -53,26 +61,31 @@
       // Close the individual filter list.
       $('.category-filter-header').click( function () {
         $('.category-filter-list').hide();
+        $('.category-filter-list').removeClass('selectedDiv');
         return false;
       });
 
       // Open / Close the individual filter lists.
-      $('.sbac-search-filter-name').click( function () {
+      $('.sbac-search-filter-name').click( function (e) {
         var vid = $(this).attr('vid');
         $('.category-filter-list').hide();
         $('.category-filter-list-' + vid).show();
+        $('.category-filter-list-' + vid).addClass('selectedDiv');
+        e.stopPropagation();
         return false;
       });
 
       // Open / Close the filter list.
       $('#sbac-search-cat-button').click( function () {
         close_categories_list();
+        $('.selectedDiv').hide();
         return false;
       });
 
-      // Open / Close the filter list.
-      $('#sbac-search-close-button').mousedown( function () {
+      // Close the filter list.
+      $('#sbac-search-close-button').click( function () {
         close_categories_list();
+        $('.selectedDiv').hide();
         return false;
       });
 
@@ -101,6 +114,7 @@
     attach: function (context, settings) {
       // Remove's the individual filters.
       $('#sbac-category-current-filters .current-filter').click( function() {
+        $('.selectedDiv').hide();
         var current_filters = $('#sbac-search-current-filters');
         var vid = $(this).children().attr('vid');
         var tid = $(this).children().attr('tid');
@@ -149,6 +163,7 @@
         $('#sbac-category-current-filters .current-filter').remove();
         $('.category-filter-list ul li').removeClass('current');
         current_filters.val('');
+        $('.selectedDiv').hide();
         return false;
       });
     }

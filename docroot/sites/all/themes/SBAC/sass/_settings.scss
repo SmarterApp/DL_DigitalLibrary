@@ -89,7 +89,7 @@ $success-color: #0085aD;
 
 // Media Queries
 
-// $small-screen: 768px;
+ $small-screen: 400px;
 // $medium-screen: 1280px;
 // $large-screen: 1440px;
 
@@ -972,11 +972,11 @@ $paragraph-font-size: emCalc(12px);
 
 // Reveal close button
 
-// $reveal-close-font-size: emCalc(22px);
-// $reveal-close-top: emCalc(8px);
-// $reveal-close-side: emCalc(11px);
-// $reveal-close-color: #aaa;
-// $reveal-close-weight: bold;
+$reveal-close-font-size: 0.81em;
+$reveal-close-top: auto;
+$reveal-close-side: auto;
+$reveal-close-color: #006298;
+$reveal-close-weight: bold;
 
 // Modal border
 
@@ -1184,10 +1184,10 @@ $paragraph-font-size: emCalc(12px);
 // $has-tip-cursor-type: help;
 
 // $tooltip-padding: emCalc(8px);
-// $tooltip-bg: #000;
-// $tooltip-font-size: emCalc(15px);
-// $tooltip-font-weight: bold;
-// $tooltip-font-color: #fff;
+   $tooltip-bg: #fff;
+   $tooltip-font-size: emCalc(13px);
+   $tooltip-font-weight: normal;
+   $tooltip-font-color: #000;
 // $tooltip-line-height: 1.3;
 // $tooltip-close-font-size: emCalc(10px);
 // $tooltip-close-font-weight: normal;

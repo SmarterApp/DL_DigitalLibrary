@@ -51,7 +51,7 @@ function zurb_foundation_button($vars) {
   // Prepare input whitelist - added to ensure ajax functions don't break
   $whitelist = _zurb_foundation_element_whitelist();
 
-  if (in_array($element['#id'], $whitelist)) {
+  if (isset($element['#id']) && in_array($element['#id'], $whitelist)) {
     return '<input' . drupal_attributes($element['#attributes']) . ">\n"; // This line break adds inherent margin between multiple buttons
   }
   else {

@@ -22,7 +22,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 2,
       ),
     ),
     'entity_type' => 'user',
@@ -60,7 +60,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'user',
@@ -82,7 +82,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 7,
+      'weight' => 11,
     ),
   );
 
@@ -98,7 +98,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 1,
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -136,12 +136,12 @@ function sbac_user_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 22,
+        'weight' => 11,
       ),
     ),
     'entity_type' => 'user',
     'field_name' => 'field_grade_level_s_',
-    'label' => 'Grade level(s)',
+    'label' => 'Grade(s)',
     'required' => 1,
     'settings' => array(
       'user_register_form' => 1,
@@ -155,7 +155,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 23,
+      'weight' => 4,
     ),
   );
 
@@ -167,11 +167,11 @@ function sbac_user_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 5,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'user',
@@ -211,7 +211,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 2,
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'user',
@@ -249,7 +249,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 6,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'user',
@@ -271,7 +271,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 7,
     ),
   );
 
@@ -283,11 +283,11 @@ function sbac_user_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 26,
+        'weight' => 14,
       ),
     ),
     'entity_type' => 'user',
@@ -310,6 +310,40 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_privacy'
+  $field_instances['user-user-field_privacy'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Select the personal information and expertise you’d like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown at the top of this page. Note that no educators can access your full account and no information will be displayed publicly.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 19,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_privacy',
+    'label' => 'Privacy',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 6,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_retired'
   $field_instances['user-user-field_retired'] = array(
     'bundle' => 'user',
@@ -318,11 +352,11 @@ function sbac_user_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_key',
-        'weight' => 25,
+        'weight' => 13,
       ),
     ),
     'entity_type' => 'user',
@@ -356,7 +390,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'user',
@@ -378,7 +412,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 10,
     ),
   );
 
@@ -398,7 +432,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 28,
+        'weight' => 18,
       ),
     ),
     'entity_type' => 'user',
@@ -417,7 +451,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 27,
+      'weight' => 23,
     ),
   );
 
@@ -437,7 +471,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 27,
+        'weight' => 16,
       ),
     ),
     'entity_type' => 'user',
@@ -456,7 +490,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 26,
+      'weight' => 22,
     ),
   );
 
@@ -472,12 +506,12 @@ function sbac_user_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 20,
+        'weight' => 12,
       ),
     ),
     'entity_type' => 'user',
     'field_name' => 'field_special_populations',
-    'label' => 'Special Populations',
+    'label' => 'Student Population(s)',
     'required' => 1,
     'settings' => array(
       'user_register_form' => 1,
@@ -491,6 +525,44 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_state'
+  $field_instances['user-user-field_state'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 20,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_state',
+    'label' => 'State',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
       'weight' => 24,
     ),
   );
@@ -507,7 +579,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 21,
+        'weight' => 10,
       ),
     ),
     'entity_type' => 'user',
@@ -526,7 +598,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 22,
+      'weight' => 3,
     ),
   );
 
@@ -546,7 +618,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 12,
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'user',
@@ -563,7 +635,7 @@ function sbac_user_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 25,
+      'weight' => 6,
     ),
   );
 
@@ -579,7 +651,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'user',
@@ -601,7 +673,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 8,
+      'weight' => 12,
     ),
   );
 
@@ -610,16 +682,19 @@ function sbac_user_field_default_field_instances() {
   t('About me');
   t('Alternate email address');
   t('District Name');
-  t('Grade level(s)');
+  t('Grade(s)');
   t('Last name');
   t('Name');
   t('Phone number');
+  t('Privacy');
   t('Retired');
   t('SLT Member');
   t('SNE Member');
   t('SWD/ELL');
   t('School Name');
-  t('Special Populations');
+  t('Select the personal information and expertise you’d like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown at the top of this page. Note that no educators can access your full account and no information will be displayed publicly.');
+  t('State');
+  t('Student Population(s)');
   t('Subject(s)');
   t('Title');
   t('University Name');

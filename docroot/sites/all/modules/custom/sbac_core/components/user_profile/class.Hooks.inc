@@ -17,30 +17,30 @@ class Hooks extends \devtools\Hooks {
     );
 
     $items['admin/sbac/users/account'] = array(
-      'title' => 'Account', 
-      'page callback' => 'drupal_get_form', 
+      'title' => 'Account',
+      'page callback' => 'drupal_get_form',
       'page arguments' => array('user_profile_account_admin_form'),
-      'access arguments' => array('configure sbac'), 
+      'access arguments' => array('configure sbac'),
       'file' => 'user_profile.admin.inc',
       'type' => MENU_LOCAL_TASK,
       'weight' => 0,
     ) + $base;
 
     $items['admin/sbac/users/activity'] = array(
-      'title' => 'Activity', 
-      'page callback' => 'drupal_get_form', 
+      'title' => 'Activity',
+      'page callback' => 'drupal_get_form',
       'page arguments' => array('user_profile_activity_admin_form'),
-      'access arguments' => array('configure sbac'), 
+      'access arguments' => array('configure sbac'),
       'file' => 'user_profile.admin.inc',
       'type' => MENU_LOCAL_TASK,
       'weight' => 1,
     ) + $base;
 
     $items['admin/sbac/users/notifications'] = array(
-      'title' => 'Notifications', 
-      'page callback' => 'drupal_get_form', 
+      'title' => 'Notifications',
+      'page callback' => 'drupal_get_form',
       'page arguments' => array('user_profile_notifications_admin_form'),
-      'access arguments' => array('configure sbac'), 
+      'access arguments' => array('configure sbac'),
       'file' => 'user_profile.admin.inc',
       'type' => MENU_LOCAL_TASK,
       'weight' => 2,
@@ -79,21 +79,21 @@ class Hooks extends \devtools\Hooks {
         );
       }
 
-    // add activity tab
-      $activity_content = '';
-      $help_content = variable_get('user_activity_help', input_default_full_html());
-      $activity_content .= '<div id="activity">';
-      $activity_content .= '<div class="helpful-info">';
-      $activity_content .= '<h2>' . t('Helpful Information') . '</h2>';
-      $activity_content .= more_less_text(filter_text($help_content));
-      $activity_content .= '</div>';
-      $activity_content .= '</div>';
+    // // add activity tab
+    //   $activity_content = '';
+    //   $help_content = variable_get('user_activity_help', input_default_full_html());
+    //   $activity_content .= '<div id="activity">';
+    //   $activity_content .= '<div class="helpful-info">';
+    //   $activity_content .= '<h2>' . t('Helpful Information') . '</h2>';
+    //   $activity_content .= more_less_text(filter_text($help_content));
+    //   $activity_content .= '</div>';
+    //   $activity_content .= '</div>';
 
-      $account->content['sections']['activity'] = array(
-        'title' => t('Activity'),
-        'content' => $activity_content,
-        'disabled' => FALSE,
-      );
+    //   $account->content['sections']['activity'] = array(
+    //     'title' => t('Activity'),
+    //     'content' => $activity_content,
+    //     'disabled' => FALSE,
+    //   );
 
     // add notificatons tab (pulled in via taskit module)
       if (taskit_task_access($account)) {

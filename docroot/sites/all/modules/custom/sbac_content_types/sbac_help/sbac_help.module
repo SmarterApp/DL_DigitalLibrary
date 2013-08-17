@@ -82,12 +82,12 @@ function sbac_help_init() {
   drupal_add_js(drupal_get_path('module','sbac_help') . '/js/help.js');
 
   global $user;
-  if (isset($_COOKIE['Drupal_visitor_sbac_just_logged_in'])) {
+  // added check to make sure not on path change-password
+  if (isset($_COOKIE['Drupal_visitor_sbac_just_logged_in']) && arg(0) != 'change-password') {
     if (!isset($user->data['disable_help']) || (isset($user->data['disable_help']) && $user->data['disable_help'] == 0)) {
       drupal_add_js("jQuery(document).ready(function () { jQuery('.help-modal').colorbox({open:true, inline:true, href: '#helpmodal', width:'80%', height:'600px', onComplete: initSlider}); });", array('type' => 'inline'));
     }
-
-    user_cookie_delete('sbac_just_logged_in');
+    // remove cookie moved to sbac_help_disable_help function to ensure its removed only when welcome modal is displayed
   }
 }
 
@@ -114,7 +114,8 @@ function sbac_help_disable_help() {
   else {
     $form['disable_help']['#default_value'] = $user->data['disable_help'];
   }
-
+  // remove cookie only when welcome modal is displayed
+  user_cookie_delete('sbac_just_logged_in');
   return $form;
 }
 
@@ -126,15 +127,15 @@ function sbac_help_disable_help() {
  */
 function sbac_help_disable_help_submit($form, &$form_state) {
   global $user;
-  
+
   user_save($user, array(
     'data' => array(
       'disable_help' => (int) $form_state['values']['disable_help'],
     )
   ));
 
-  $url = $form_state['redirect'] = 'digital-library-resources';
-  drupal_goto($url);
+  // $url = $form_state['redirect'] = 'digital-library-resources';
+  // drupal_goto($url);
 }
 
 /**
@@ -160,7 +161,7 @@ function sbac_help_get_node_content() {
   if ($nid) {
     $node = node_load($nid, $vid = NULL, $reset = FALSE);
     if ($node) {
-      $node_view = node_view($node, $view_mode = 'teaser', $langcode = NULL);
+      $node_view = node_view($node, $view_mode = 'full', $langcode = NULL);
       $data = array(
         'results' => array(
           'body' => drupal_render($node_view['body']),
@@ -234,4 +235,16 @@ function drupal_get_origin() {
     $path = $_GET['destination'];
   }
   return $path;
+}
+
+/*
+ * Implements hook_form_alter().
+ *
+ * change "save" to "save order"
+ */
+function sbac_help_form_views_form_help_topics_page_2_alter(&$form, &$form_state, $form_id) {
+  $form['actions']['submit']['#value'] = 'Save Order';
+}
+function sbac_help_form_views_form_help_topics_page_4_alter(&$form, &$form_state, $form_id) {
+  $form['actions']['submit']['#value'] = 'Save Order';
 }

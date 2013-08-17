@@ -29,7 +29,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 4,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -75,7 +75,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 27,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -114,7 +114,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Which attributes of the formative assessment process does this resource include? Select all that apply',
+    'description' => 'Which attributes of the formative assessment process does this resource include? Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -127,7 +127,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 21,
+        'weight' => 35,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -147,7 +147,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'Which attributes of the formative assessment process does this resource include? Select all that apply',
+        'label_help_description' => 'Which attributes of the formative assessment process does this resource include? Select all that apply.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
@@ -160,7 +160,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The name(s) of the person/people who wrote or developed the resource',
+    'description' => 'The name(s) of the person/people who wrote or developed the resource:',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -173,7 +173,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 29,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -195,7 +195,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'The name(s) of the person/people who wrote or developed the resource',
+        'label_help_description' => 'The name(s) of the person/people who wrote or developed the resource:',
         'maxlength_js' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'size' => 75,
@@ -210,7 +210,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The technologies required to use this resource in the classroom.',
+    'description' => 'The technologies required to use this resource in the classroom. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -221,9 +221,10 @@ function sbac_resource_field_default_field_instances() {
       ),
       'secondary_teaser' => array(
         'label' => 'above',
+        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -244,7 +245,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'The technologies required to use this resource in the classroom.',
+        'label_help_description' => 'The technologies required to use this resource in the classroom. Select all that apply.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
@@ -270,7 +271,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 25,
+        'weight' => 39,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -322,7 +323,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 26,
+        'weight' => 40,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -373,7 +374,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 24,
+        'weight' => 38,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -411,7 +412,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The type(s) of media included in the resource.',
+    'description' => 'The type(s) of media included in the resource. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -425,7 +426,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 7,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -446,7 +447,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'The type(s) of media included in the resource.',
+        'label_help_description' => 'The type(s) of media included in the resource. Select all that apply.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
@@ -471,7 +472,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 25,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -502,7 +503,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The purpose of the instructional resources in the context of a lesson.',
+    'description' => 'The purpose of the instructional resources in the context of a lesson. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -516,7 +517,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -537,7 +538,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'The purpose of the instructional resources in the context of a lesson.',
+        'label_help_description' => 'The purpose of the instructional resources in the context of a lesson. Select all that apply.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
@@ -562,7 +563,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 1,
+        'weight' => 24,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -600,7 +601,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'From the list below, select the one choice that most closely describes the type of resource.',
+    'description' => 'From the list, select the one choice that most closely describes the type of resource.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -613,7 +614,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 23,
+        'weight' => 37,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -633,7 +634,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'From the list below, select the one choice that most closely describes the type of resource.',
+        'label_help_description' => 'From the list, select the one choice that most closely describes the type of resource.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
@@ -646,7 +647,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Setting(s) for which this resource is appropriate.',
+    'description' => 'Setting(s) for which this resource is appropriate. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -660,7 +661,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 34,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -681,7 +682,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Setting(s) for which this resource is appropriate.',
+        'label_help_description' => 'Setting(s) for which this resource is appropriate. Select all that apply.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
@@ -694,7 +695,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The grade(s) in which the resource might be used, regardless of curriculum alignment.',
+    'description' => 'The Grade(s) in which the resource might be used, regardless of curriculum alignment. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -708,7 +709,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 32,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -729,7 +730,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'The grade(s) in which the resource might be used, regardless of curriculum alignment.',
+        'label_help_description' => 'The Grade(s) in which the resource might be used, regardless of curriculum alignment. Select all that apply.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
@@ -742,7 +743,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Individual(s) or group(s) for which the resource was produced. ',
+    'description' => 'Individual(s) or group(s) for whom the resource was produced. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -756,7 +757,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 6,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -777,7 +778,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Individual(s) or group(s) for which the resource was produced. ',
+        'label_help_description' => 'Individual(s) or group(s) for whom the resource was produced. Select all that apply.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
@@ -790,7 +791,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Student population(s) for which the resource is best suited.',
+    'description' => 'Student population(s) for which the resource is best suited. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -804,7 +805,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 33,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -825,7 +826,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Student population(s) for which the resource is best suited.',
+        'label_help_description' => 'Student population(s) for which the resource is best suited. Select all that apply.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
@@ -851,7 +852,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 28,
+        'weight' => 41,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -903,7 +904,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 20,
+        'weight' => 34,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -924,7 +925,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 0,
-        'label_help_description' => 'The license and terms governing use of the resource. <a href=\'http://creativecommons.org/choose/\' target="_blank">Need help choosing?</a>',
+        'label_help_description' => 'The license under which all the uploaded materials in this resource can be used in the Digital Library.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
@@ -954,7 +955,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 28,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -974,7 +975,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'Select the appropriate licensing option for your resource materials.  Note: Any materials submitted to the Library through a link to YouTube, Vimeo, SchoolTube, TeacherTube, or SlideShare are made available under the terms that govern the embedding functions of that service.',
+        'label_help_description' => 'Select one choice. Any materials submitted to the Library through a link to YouTube, Vimeo, SchoolTube, TeacherTube, or SlideShare are made available under the terms that govern the embedding functions of that service.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
@@ -987,7 +988,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Per FERPA regulations, resources in the Digital Library cannot contain student records or other information that identify a specific student.',
+    'description' => 'Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1000,7 +1001,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 20,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1020,7 +1021,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'Per FERPA regulations, resources in the Digital Library cannot contain student records or other information that identify a specific student.',
+        'label_help_description' => 'Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_buttons',
@@ -1034,9 +1035,9 @@ function sbac_resource_field_default_field_instances() {
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'List either:
-<ul><li>the principles of adult learning or professional development reflected in the resource, and/or</li>
-<li>the literature, research, or widely accepted practices used to inform the content in the resource.</li>
-</ul>',
+<ol type=\'A\'><li>the principles of adult learning or professional development reflected in the resource; and/or</li>
+<li>the literature, research, or widely accepted practices used to inform the content in the resource. </li>
+</ol>',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1049,7 +1050,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 31,
+        'weight' => 44,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1071,9 +1072,9 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'List either:
-<ul><li>the principles of adult learning or professional development reflected in the resource, and/or</li>
+<ol type=\'A\'><li>the principles of adult learning or professional development reflected in the resource; and/or</li>
 <li>the literature, research, or widely accepted practices used to inform the content in the resource.</li>
-</ul>',
+</ol>',
         'maxlength_js' => 600,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -1090,7 +1091,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The name(s) of the person/people/entities/publishers who own the copyright for the resource',
+    'description' => 'The name(s) of the person/people/entities/publishers who own the copyright for the resource:',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1103,7 +1104,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 30,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1125,7 +1126,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'The name(s) of the person/people/entities/publishers who own the copyright for the resource',
+        'label_help_description' => 'The name(s) of the person/people/entities/publishers who own the copyright for the resource:',
         'maxlength_js' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'size' => 75,
@@ -1163,7 +1164,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 26,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1193,7 +1194,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Identifiers aligned to Smarter Balanced topics.',
+    'description' => 'Identifiers aligned to Smarter Balanced topics. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1207,7 +1208,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 11,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1228,7 +1229,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Identifiers aligned to Smarter Balanced topics.',
+        'label_help_description' => 'Identifiers aligned to Smarter Balanced topics. Select all that apply.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
@@ -1254,7 +1255,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 22,
+        'weight' => 36,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1293,7 +1294,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The subject area(s) and domain(s) to which the learning resource applies. ',
+    'description' => 'The Subject area(s) and domain(s) to which the learning resource applies. Select all that apply.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1307,7 +1308,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 9,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1328,7 +1329,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'The subject area(s) and domain(s) to which the learning resource applies. ',
+        'label_help_description' => 'The Subject area(s) and domain(s) to which the learning resource applies. Select all that apply.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
@@ -1341,7 +1342,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Identify the Success Criteria that describes from a learner’s perspective what success looks like when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.',
+    'description' => 'Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1354,7 +1355,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 29,
+        'weight' => 42,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1375,7 +1376,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Identify the Success Criteria that describes from a learner’s perspective what success looks like when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.',
+        'label_help_description' => 'Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.',
         'maxlength_js' => 600,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -1392,7 +1393,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Include evidence that the resource has been tied succesfully with educators (or students) or has resulted in a positive impact on educator practices (student outcomes).`',
+    'description' => 'Include evidence that the resource has been tried successfully with educators (or students) and has resulted in a positive impact on educator practices (or student outcomes)',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1405,7 +1406,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 30,
+        'weight' => 43,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1426,7 +1427,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Include evidence that the resource has been tied succesfully with educators (or students) or has resulted in a positive impact on educator practices (student outcomes).`',
+        'label_help_description' => 'Include evidence that the resource has been tried successfully with educators (or students) and has resulted in a positive impact on educator practices (or student outcomes)',
         'maxlength_js' => 600,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -1460,7 +1461,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 18,
+        'weight' => 33,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1507,7 +1508,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 19,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1553,7 +1554,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 16,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1608,7 +1609,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 16,
+        'weight' => 31,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1651,7 +1652,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 17,
+        'weight' => 32,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1695,53 +1696,53 @@ function sbac_resource_field_default_field_instances() {
   t('Educational Use');
   t('Embedded Video');
   t('Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).');
-  t('From the list below, select the one choice that most closely describes the type of resource.');
+  t('From the list, select the one choice that most closely describes the type of resource.');
   t('Geographical Setting(s)');
   t('Grade(s)');
-  t('Identifiers aligned to Smarter Balanced topics.');
+  t('Identifiers aligned to Smarter Balanced topics. Select all that apply.');
   t('Identify how this includes, reflects, and addresses the formative assessment process.');
   t('Identify how this resource addresses the Common Core State Standards (e.g., how it addresses particular claims, clusters, targets, and/or “standards”). Pay special attention to the interconnectedness of claims.');
-  t('Identify the Success Criteria that describes from a learner’s perspective what success looks like when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.');
+  t('Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.');
   t('Identify the learning targets associated with this resource. Learning targets can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.');
   t('If any materials you created contain necessary images of students, please confirm that your school district has clearance to post the images in the Smarter Balanced Assessment Consortium’s Digital Library. ');
-  t('Include evidence that the resource has been tied succesfully with educators (or students) or has resulted in a positive impact on educator practices (student outcomes).`');
-  t('Individual(s) or group(s) for which the resource was produced. ');
+  t('Include evidence that the resource has been tried successfully with educators (or students) and has resulted in a positive impact on educator practices (or student outcomes)');
+  t('Individual(s) or group(s) for whom the resource was produced. Select all that apply.');
   t('Intended End User(s)');
   t('Intended Student Population(s)');
   t('Learning Targets');
   t('License Information');
   t('List either:
-<ul><li>the principles of adult learning or professional development reflected in the resource, and/or</li>
-<li>the literature, research, or widely accepted practices used to inform the content in the resource.</li>
-</ul>');
+<ol type=\'A\'><li>the principles of adult learning or professional development reflected in the resource; and/or</li>
+<li>the literature, research, or widely accepted practices used to inform the content in the resource. </li>
+</ol>');
   t('Materials');
   t('Owner');
-  t('Per FERPA regulations, resources in the Digital Library cannot contain student records or other information that identify a specific student.');
+  t('Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.');
   t('Personally Identifiable Student Information');
   t('Principles');
   t('Resource Action');
   t('Resource Type');
-  t('Setting(s) for which this resource is appropriate.');
+  t('Setting(s) for which this resource is appropriate. Select all that apply.');
   t('Smarter Balanced Keyword(s)');
   t('Specific License');
   t('Student Engagement in the Formative Assesment Process');
-  t('Student population(s) for which the resource is best suited.');
+  t('Student population(s) for which the resource is best suited. Select all that apply.');
   t('Subjects and Domains');
   t('Success Criteria');
   t('Supporting Evidence');
   t('Temp');
-  t('The grade(s) in which the resource might be used, regardless of curriculum alignment.');
+  t('The Grade(s) in which the resource might be used, regardless of curriculum alignment. Select all that apply.');
+  t('The Subject area(s) and domain(s) to which the learning resource applies. Select all that apply.');
   t('The license under which all the uploaded materials in this resource can be used in the Digital Library.');
-  t('The name(s) of the person/people who wrote or developed the resource');
-  t('The name(s) of the person/people/entities/publishers who own the copyright for the resource');
-  t('The purpose of the instructional resources in the context of a lesson.');
-  t('The subject area(s) and domain(s) to which the learning resource applies. ');
-  t('The technologies required to use this resource in the classroom.');
-  t('The type(s) of media included in the resource.');
+  t('The name(s) of the person/people who wrote or developed the resource:');
+  t('The name(s) of the person/people/entities/publishers who own the copyright for the resource:');
+  t('The purpose of the instructional resources in the context of a lesson. Select all that apply.');
+  t('The technologies required to use this resource in the classroom. Select all that apply.');
+  t('The type(s) of media included in the resource. Select all that apply.');
   t('Use of Student Images');
   t('View Permissions');
   t('View Permissions Per State');
-  t('Which attributes of the formative assessment process does this resource include? Select all that apply');
+  t('Which attributes of the formative assessment process does this resource include? Select all that apply.');
 
   return $field_instances;
 }
