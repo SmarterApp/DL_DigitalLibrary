@@ -18,7 +18,7 @@ function sbac_search_apachesolr_search_default_searchers() {
   $searcher->description = '';
   $searcher->search_path = 'admin/people/search';
   $searcher->page_title = 'User Search';
-  $searcher->env_id = 'amazon_apache_solr_environment';
+  $searcher->env_id = 'acquia_search_server_1';
   $searcher->settings = array(
     'fq' => array(
       0 => 'entity_type:user',
@@ -41,7 +41,7 @@ function sbac_search_apachesolr_search_default_searchers() {
   $searcher->description = 'Searches the digital library resources';
   $searcher->search_path = 'search/digital-library';
   $searcher->page_title = 'Digital Library Search';
-  $searcher->env_id = 'amazon_apache_solr_environment';
+  $searcher->env_id = 'acquia_search_server_1';
   $searcher->settings = array(
     'fq' => array(
       0 => 'entity_type:node',

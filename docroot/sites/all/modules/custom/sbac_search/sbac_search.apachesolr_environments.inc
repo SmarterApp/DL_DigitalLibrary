@@ -12,13 +12,11 @@ function sbac_search_apachesolr_environments() {
 
   $environment = new stdClass();
   $environment->api_version = 1;
-  $environment->env_id = 'amazon_apache_solr_environment';
-  $environment->name = 'Amazon Apache Solr Environment';
-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/dev';
-  $environment->service_class = '';
-  $environment->conf = array(
-    'apachesolr_search_facet_pages' => '',
-  );
+  $environment->env_id = 'acquia_search_server_1';
+  $environment->name = 'Acquia Search';
+  $environment->url = 'http://useast1-c1.acquia-search.com/solr/KQRU-38122';
+  $environment->service_class = 'AcquiaSearchService';
+  $environment->conf = array();
   $environment->index_bundles = array(
     'node' => array(
       0 => 'alignment',
@@ -32,7 +30,7 @@ function sbac_search_apachesolr_environments() {
       0 => 'user',
     ),
   );
-  $export['amazon_apache_solr_environment'] = $environment;
+  $export['acquia_search_server_1'] = $environment;
 
   return $export;
 }
