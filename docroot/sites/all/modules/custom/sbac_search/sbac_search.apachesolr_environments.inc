@@ -21,7 +21,7 @@ function sbac_search_apachesolr_environments() {
     'apachesolr_read_only' => '0',
   );
   $environment->index_bundles = array();
-  $export['amazon_apache_solr_environment'] = $environment;
+  $export['amazon_apache_solr_dev'] = $environment;
 
   $environment = new stdClass();
   $environment->api_version = 1;
