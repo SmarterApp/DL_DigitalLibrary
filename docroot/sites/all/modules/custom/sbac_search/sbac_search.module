@@ -411,32 +411,3 @@ function sbac_search_theme($existing, $type, $theme, $path) {
 
   return $items;
 }
-
-/**
- * Implements hook_default_search_api_server_alter().
- * 
- * @param $servers
- */
-function sbac_search_default_search_api_server_alter(&$servers) {
-  // This is not an Acquia env.
-  if (!isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-    // Disable Acquia server.
-    $servers['acquia_search']->enabled = 0;
-    // Enable the local server.
-    $servers['localhost_server']->enabled = 1;
-  }
-  else {
-    // Set the solr path as this is an Acquia env.
-    switch ($_ENV['AH_SITE_ENVIRONMENT']) {
-      case 'dev':
-        $servers['acquia_search']->options['path'] = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/dev';
-        break;
-      case 'test':
-        $servers['acquia_search']->options['path'] = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/test';
-        break;
-      case 'prod';
-        $servers['acquia_search']->options['path'] = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/prod';
-        break;
-    }
-  }
-}

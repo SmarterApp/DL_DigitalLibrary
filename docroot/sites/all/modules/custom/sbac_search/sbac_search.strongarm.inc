@@ -20,6 +20,34 @@ function sbac_search_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'apachesolr_attachments_excluded_mime';
+  $strongarm->value = array(
+    'audio/x-aiff' => 1,
+    'image/x-jg' => 1,
+    'video/x-msvideo' => 1,
+    'image/x-ms-bmp' => 1,
+    'image/gif' => 1,
+    'image/vnd.microsoft.icon' => 1,
+    'image/jpeg' => 1,
+    'video/quicktime' => 1,
+    'audio/mpeg' => 1,
+    'video/mp4' => 1,
+    'video/mpeg' => 1,
+    'audio/ogg' => 1,
+    'video/ogg' => 1,
+    'image/png' => 1,
+    'image/x-photoshop' => 1,
+    'audio/x-realaudio' => 1,
+    'audio/x-pn-realaudio' => 1,
+    'image/x-rgb' => 1,
+    'image/tiff' => 1,
+    'video/x-ms-wmv' => 1,
+  );
+  $export['apachesolr_attachments_excluded_mime'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'apachesolr_attachments_extract_using';
   $strongarm->value = 'solr';
   $export['apachesolr_attachments_extract_using'] = $strongarm;
