@@ -29,7 +29,7 @@
 ?>
 <?php
 global $user;
-if ($user->uid == 1) {
+if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) {
   print "<a class='help-topic-link' href='/admin/help-topics'>Edit Help Topics</a>";
 }
 ?>

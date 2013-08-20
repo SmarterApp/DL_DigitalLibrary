@@ -33,11 +33,11 @@
     <?php endif; ?>
 
     <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-      <?php print $fields['downloads'] . ','; ?>
+      <?php print $fields['downloads']; ?>
     <?php endif; ?>
 
     <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
-      <?php print $fields['collaborators'] . ','; ?>
+      <?php //print $fields['collaborators'] . ','; ?>
     <?php endif; ?>
   </div>
 

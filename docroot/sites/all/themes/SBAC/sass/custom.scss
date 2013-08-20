@@ -206,7 +206,9 @@ button, .button, .form-submit, #edit-submit, #edit-submit--2, #edit-submit--5, #
   @include global-button;
 }
 
-button.secondary, .button.secondary, #edit-cancel, #sbac-search-close-button, .devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay {
+button.secondary, .button.secondary, #edit-cancel, #sbac-search-close-button,
+.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay,
+div.ctools-modal-content a.close {
   @include global-button-negative;
 }
 
@@ -229,6 +231,7 @@ button.secondary, .button.secondary, #edit-cancel, #sbac-search-close-button, .d
 
   ul {
     list-style-type: none;
+    margin: 0 !important;
   }
 
   &.alert {
@@ -1219,6 +1222,13 @@ a.tabledrag-handle .handle {
       margin-top: -18px;
     }
   }
+
+  #edit-group_basic {
+    .description {
+      max-width: 95%;
+    }
+  }
+
   // materials tab
   #edit-group_materials {
   .field-name-field-file {
@@ -1310,15 +1320,19 @@ a.tabledrag-handle .handle {
     label {
       font-size: 1em;
     }
-
-    .form-managed-file .form-file {
-    }
+  }
+  .description {
+    max-width: 95%;
   }
 }
 
 #edit-group_summary {
   ul, ol {
     margin-left: emCalc(45px);
+  }
+
+  .description {
+    max-width: 95%;
   }
 }
   // tags tab
@@ -1409,7 +1423,7 @@ a.tabledrag-handle .handle {
     }
 
     .description {
-      max-width: 220px;
+      max-width: 90%;
     }
 
     div.error {
@@ -1530,11 +1544,18 @@ a.tabledrag-handle .handle {
   > div {
 
     #edit-cancel-overlay {
-      margin-right: 10px;
+      margin-left: 220px;
     }
 
     #edit-delete-overlay {
+      @include global-button;
     }
+  }
+}
+
+#sbac-resource-submit-resource-form {
+  #edit-cancel-overlay {
+    margin-left: 250px;
   }
 }
 
@@ -1580,6 +1601,11 @@ a.tabledrag-handle .handle {
     &.selected, &:hover {
       background: rgba(0,0,0,0.5);
     }
+  }
+
+  font-size:14px;
+  p {
+    font-size: 14px;
   }
 }
 
@@ -1805,14 +1831,15 @@ a.tabledrag-handle .handle {
   width: 100%;
 }
 
-.view-help-topics ul li {
+.view-help-topics ul li.views-row {
   list-style: none;
   margin-bottom: 20px;
 }
-.view-help-topics ul li .views-field-title a {
+.view-help-topics ul li .views-field-title{
   display: block;
   font-size: 18px;
   font-weight: bold;
+  color: #42a747;
 }
 
 .view-help-topics ul li .views-field-body {
@@ -1848,3 +1875,111 @@ a.tabledrag-handle .handle {
 .login-text {
   padding-left: 50px;
 }
+
+
+
+
+/* ----------------------------------------
+    Read More
+  _________________________________________ */
+
+.read-more {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  width: 16px;
+  height: 15px;
+
+  a {
+    display: block;
+  }
+
+  .description-hover {
+    display: none;
+    transition-property: opacity;
+    transition-duration: 500ms;
+    -webkit-transition-property: opacity;
+    -webkit-transition-duration: 500ms;
+    width: 400px;
+    position: absolute;
+    top: 25px;
+    left: -25px;
+    background: #DFE5CC;
+    padding: 20px;
+    border-radius: 6px;
+    color: #3C7646;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    font-size: 12px;
+    z-index: 999;
+    border: 1px solid #3C7646;
+
+
+    p {
+      font-size: inherit;
+      margin: 0;
+    }
+
+    &:after{
+      content: ' ';
+      position: absolute;
+      top: -28px;
+      left: 16px;
+      border-color: transparent transparent #DFE5CC transparent;
+      border-style: solid;
+      border-width: 14px;
+      width: 0;
+      height: 0;
+      z-index: 99;
+    }
+    &:before{
+      content: ' ';
+      position: absolute;
+      top: -30px;
+      left: 15px;
+      border-color: transparent transparent #3C7646 transparent;
+      border-style: solid;
+      border-width: 15px;
+      width: 0;
+      height: 0;
+      z-index: 97;
+    }
+  }
+
+  &:hover{
+    .more {
+      display:block;
+    }
+  }
+}
+
+
+/**
+ Help Topic
+ **/
+
+ .node-help-page {
+  p {
+    font-size: inherit;
+  }
+
+  ul.inline {
+    margin: 0;
+    padding: 0;
+
+    li{
+      display: inline-block;
+      margin: 0;
+      padding: 0 10px 0 5px;
+      border-right:1px solid #ccc;
+
+      &:last-child{
+        border-right:none;
+      }
+
+      &:first-child{
+        padding-left: 0;
+      }
+    }
+  }
+
+ }

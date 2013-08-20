@@ -84,18 +84,20 @@ function sbac_resource_views_pre_render(&$view) {
  */
 function sbac_resource_views_default_views_alter(&$views) {
   if (isset($views['help_topics'])) {
-    $welcome_tutorial = taxonomy_get_term_by_name('Welcome Tutorial');
+    $welcome_tutorial = taxonomy_get_term_by_name('Welcome Tutorial', 'help_page_topic');
     if ($welcome_tutorial) {
       $welcome_tutorial = array_shift($welcome_tutorial);
       $views['help_topics']->display['default']->display_options['filters']['field_help_page_topic_tid']['value'][$welcome_tutorial->tid] = $welcome_tutorial->tid;
+      $views['help_topics']->display['block']->display_options['filters']['field_help_page_topic_tid']['value'][$welcome_tutorial->tid] = $welcome_tutorial->tid;
     }
   }
 
   if (isset($views['resource_tutorial'])) {
-    $resource_tutorial = taxonomy_get_term_by_name('Resource Tutorial');
+    $resource_tutorial = taxonomy_get_term_by_name('Resource Tutorial', 'help_page_topic');
     if ($resource_tutorial) {
       $resource_tutorial = array_shift($resource_tutorial);
       $views['resource_tutorial']->display['default']->display_options['filters']['field_help_page_topic_tid']['value'][$resource_tutorial->tid] = $resource_tutorial->tid;
+      $views['help_topics']->display['page_1']->display_options['filters']['field_help_page_topic_tid']['value'][$resource_tutorial->tid] = $resource_tutorial->tid;
     }
   }
 }

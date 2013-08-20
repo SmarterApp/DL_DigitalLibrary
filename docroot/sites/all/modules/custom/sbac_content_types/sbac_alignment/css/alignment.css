@@ -315,3 +315,8 @@
   display: inline-block;
   margin-left: 10px;
 }
+/* line 299, ../sass/alignment.scss */
+.alignment-buttons #edit-submit {
+  float: right;
+  margin-left: 10px;
+}

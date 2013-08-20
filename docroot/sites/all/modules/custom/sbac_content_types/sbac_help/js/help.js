@@ -1,4 +1,6 @@
 (function ($) {
+  Drupal.behaviors = Drupal.behaviors || {};
+
   Drupal.behaviors.flexslider = {
     attach: function (context, settings) {
       initSlider = function() {
@@ -15,22 +17,24 @@
             inline: true,
             width: "80%",
             height: "600px",
-            onComplete: initSlider,
+            onComplete: initSlider
         });
       }
       helpColorBox();
     }
   };
 
-  Drupal.behaviors.sbac_help = {
+  Drupal.behaviors.sbac_help_area = {
     attach: function (context, settings) {
-      $('.view-help-topics .views-field-field-help-icon a').click(function () {
+      $('#helpmodal .views-field-field-help-icon a').click(function (e) {
+        alert("NO WAY");
         var nid = $(this).parents('.views-field-field-help-icon').next('.views-field-title').next('.views-field-nid').find('.field-content').html();
         sbacHelpAjax(nid);
         return false;
       });
 
-      $('.view-help-topics .views-field-title a').click(function () {
+      $('#helpmodal .views-field-title a').click(function (e) {
+        alert("NO WAY 2");
         var nid = $(this).parents('.views-field-title').next('.views-field-nid').find('.field-content').html();
         sbacHelpAjax(nid);
         return false;
@@ -45,7 +49,7 @@
           width: "auto",
           height: "400",
           showArrows : true,
-          showNavigation: true,
+          showNavigation: true
         });
       }
 
@@ -62,7 +66,7 @@
               href: '#current-help-topic-modal',
               width:"80%",
               height:"600px",
-              onComplete:initTextify,
+              onComplete:initTextify
             });
           }
         });
@@ -78,7 +82,7 @@
           inline:true,
           href: '#helpmodal',
           width:"80%",
-          height:"600px",
+          height:"600px"
         });
       })
     }

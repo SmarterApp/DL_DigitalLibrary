@@ -202,8 +202,10 @@
 
 <div style='display:none;'>
   <div id="helpmodal">
-    <?php if (user_access('administrator')) : ?>
-      <div class="sort-link"><a href="/help-sort" class="small button radius">Reorganize Help</a></div>
+    <?php
+      global $user;
+      if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
+      <div class="sort-link"><a href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>
     <?php endif; ?>
     <center>
       <h2>Welcome to the Smarter Balanced Digital Library</h2>

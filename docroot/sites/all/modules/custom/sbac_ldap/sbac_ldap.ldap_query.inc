@@ -15,7 +15,7 @@ function sbac_ldap_default_ldap_query() {
   $qid->api_version = 1;
   $qid->qid = 'sbac_districts';
   $qid->name = 'SBAC Districts';
-  $qid->sid = 'SBAC';
+  $qid->sid = 'SBAC Internal';
   $qid->status = FALSE;
   $qid->base_dn_str = 'ou=Districts,dc=incose,dc=com';
   $qid->filter = '(objectClass=posixGroup)';
@@ -31,7 +31,7 @@ function sbac_ldap_default_ldap_query() {
   $qid->api_version = 1;
   $qid->qid = 'sbac_groups';
   $qid->name = 'Groups Structure';
-  $qid->sid = 'SBAC';
+  $qid->sid = 'SBAC Internal';
   $qid->status = FALSE;
   $qid->base_dn_str = 'dc=incose,dc=com';
   $qid->filter = '(objectClass=posixGroup)';
@@ -47,7 +47,7 @@ function sbac_ldap_default_ldap_query() {
   $qid->api_version = 1;
   $qid->qid = 'sbac_schools';
   $qid->name = 'SBAC Schools';
-  $qid->sid = 'SBAC';
+  $qid->sid = 'SBAC Internal';
   $qid->status = FALSE;
   $qid->base_dn_str = 'ou=Schools,dc=incose,dc=com';
   $qid->filter = '(objectClass=posixGroup)';
@@ -63,7 +63,7 @@ function sbac_ldap_default_ldap_query() {
   $qid->api_version = 1;
   $qid->qid = 'sbac_states';
   $qid->name = 'SBAC States';
-  $qid->sid = 'SBAC';
+  $qid->sid = 'SBAC Internal';
   $qid->status = FALSE;
   $qid->base_dn_str = 'ou=States,dc=incose,dc=com';
   $qid->filter = '(objectClass=posixGroup)';
@@ -79,7 +79,7 @@ function sbac_ldap_default_ldap_query() {
   $qid->api_version = 1;
   $qid->qid = 'sbac_user';
   $qid->name = 'User Structure';
-  $qid->sid = 'SBAC';
+  $qid->sid = 'SBAC Internal';
   $qid->status = FALSE;
   $qid->base_dn_str = 'ou=People,dc=incose,dc=com';
   $qid->filter = '(&(objectClass=sbacperson)(uid=[uid]))';

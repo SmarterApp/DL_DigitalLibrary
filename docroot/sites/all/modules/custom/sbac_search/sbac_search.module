@@ -183,7 +183,7 @@ function sbac_search_block_view($delta = '') {
       break;
     case 'sbac_search_categories_button':
       $block['subject'] = t('');
-      $content = '<a href="#" data-tooltip title="Categories allow you to filter results using specific attributes. Click to see the available options" id="sbac-search-cat-button" class="active">' . t('Categories') . '</a>';
+      $content = '<a href="#" data-tooltip title="Categories allow you to filter results using specific attributes. Click to see the available options." id="sbac-search-cat-button" class="active">' . t('Categories') . '</a>';
       $block['content'] = $content;
       break;
   }

@@ -1,12 +1,28 @@
 (function ($) {
   Drupal.behaviors.sbac_custom = {
     attach: function (context, settings) {
+      $('.ccss-term-delete').click(function(){
+        var nid = $(this).attr('nid');
+        var update_form = function(data) {
+          $('tr#term-' + nid).hide();
+        }
+
+        $.ajax({
+          type: "POST",
+          url: "/ajax-alignment-crud",
+          success: update_form,
+          data:'op=delete&nid=' + nid
+        });
+        return false;
+      });
+
       $('.sbac-custom-term-remove').click(function () {
         var parentTerm = $(this);
         var parentId = $(this).attr("tid");
         var update_data = function(data) {
           var obj = jQuery.parseJSON(data);
-          if (obj.depth < 3) {
+          if ((obj.publication == 'SBAC-ELA-v1' && obj.depth >= 3)
+              || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)){
             $('.alignment-form').hide();
             $('.alignment-buttons').show();
           }
@@ -35,26 +51,22 @@
 
         var update_data = function(data) {
           var obj = jQuery.parseJSON(data);
-          $('ul.sbac-breadcrumb').append('<li id="term-' + obj.parent.tid + '"><a href="#" tid="' + obj.parent.tid + '"class="sbac-custom-term-remove"><span class="b-label">' + obj.parent.name + '&nbsp;&nbsp;&nbsp;|&nbsp; x</span><span class="arrow"><span></span></span></a></li>')
-          if (obj.depth >= 3) {
+
+          if ((obj.publication == 'SBAC-ELA-v1' && obj.depth >= 3)
+              || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)){
             $('.alignment-form').show();
             $('.alignment-buttons').hide();
             $('.alignment-filter').html('');
 
-            //
-            //$('#edit-field-education-alignment').show();
-            //$('.form-type-checkbox').hide();
-            //var length = obj.tids_count,
-            //    element = null;
-            //
-            //for (var i = 0; i < length; i++) {
-            //  var id = obj.tids[i].tid;
-            //  $('.form-item-field-education-alignment-und-' + id).show();
-            //}
-
             var update_form = function(data) {
               var obj = jQuery.parseJSON(data);
               $('.alignment-form').html(obj.html);
+              $('p[id^=description-]').more({length:200, moreText: 'read more', lessText: 'read less'});
+
+              $('#ccss-cancel').click(function() {
+                $('#modalBackdrop').hide();
+                $('#modalContent').hide();
+              });
             }
 
             var refNode = $('input#ref_node').val();
@@ -65,8 +77,8 @@
               success: update_form,
               data:'tid=' + parentId + '&ref_node=' + refNode
             });
-
-          }else {
+          }
+          else {
             $('.alignment-form').hide();
             $('.alignment-buttons').show();
             $('.alignment-filter').html(obj.html);

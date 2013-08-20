@@ -586,6 +586,18 @@ function sbac_resource_digital_library_page() {
   $view->_post_execute();
   $resource_layout_view = $view->preview();
   $_SESSION['sbac_search_count'] = $view->total_rows;
+
+  // if no results, display results but also a message....
+  if ($view->total_rows == 0) {
+    $view = views_get_view('resources');
+    $view->set_display($display);
+    $view->pre_execute();
+    $view->execute();
+    $view->_post_execute();
+    $resource_layout_view = $view->preview();
+    $_SESSION['sbac_search_count'] = 0;
+  }
+
   //dpq($view->build_info['query']);
 
   menu_set_active_item('digital-library-resources');

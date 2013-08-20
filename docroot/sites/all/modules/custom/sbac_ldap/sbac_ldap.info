@@ -42,6 +42,7 @@ features[ldap_query][] = sbac_schools
 features[ldap_query][] = sbac_states
 features[ldap_query][] = sbac_user
 features[ldap_servers][] = SBAC
+features[ldap_servers][] = SBAC Internal
 features[variable][] = ldap_authentication_conf
 features[variable][] = ldap_help_watchdog_detail
 features[variable][] = ldap_servers_encrypt_key

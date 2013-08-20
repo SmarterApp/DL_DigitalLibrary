@@ -26,8 +26,8 @@
   <?php print drupal_render($form['alignment_type']); ?>
 
   <div class="alignment-buttons">
-    <?php print drupal_render($form['cancel']); ?>
     <?php print drupal_render($form['submit']); ?>
+    <?php print drupal_render($form['cancel']); ?>
   </div>
   <?php print drupal_render_children($form); ?>
 <!--</div>-->

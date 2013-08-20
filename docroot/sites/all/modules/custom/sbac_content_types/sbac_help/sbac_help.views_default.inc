@@ -92,6 +92,7 @@ function sbac_help_views_default_views() {
   /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['field_help_page_topic_tid']['value'] = array(
     121 => '121',
+    309 => '309',
   );
 
   /* Display: Help Slideshow */
@@ -111,7 +112,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
   $handler->display->display_options['sorts']['weight']['table'] = 'draggableviews_structure';
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
-  $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'sbac_help_sort:page';
+  $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'help_topics:page_4';
   $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
@@ -134,7 +135,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['filters']['field_help_page_topic_tid']['table'] = 'field_data_field_help_page_topic';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['field'] = 'field_help_page_topic_tid';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['value'] = array(
-    121 => '121',
+    309 => '309',
   );
   $handler->display->display_options['filters']['field_help_page_topic_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['vocabulary'] = 'help_page_topic';
@@ -157,12 +158,17 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Description */
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
   $handler->display->display_options['fields']['body']['label'] = '';
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['body']['settings'] = array(
+    'trim_length' => '300',
+  );
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   /* Sort criterion: Draggableviews: Weight */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
@@ -186,6 +192,16 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'help_page' => 'help_page',
   );
+  /* Filter criterion: Content: Help Page Topic (field_help_page_topic) */
+  $handler->display->display_options['filters']['field_help_page_topic_tid']['id'] = 'field_help_page_topic_tid';
+  $handler->display->display_options['filters']['field_help_page_topic_tid']['table'] = 'field_data_field_help_page_topic';
+  $handler->display->display_options['filters']['field_help_page_topic_tid']['field'] = 'field_help_page_topic_tid';
+  $handler->display->display_options['filters']['field_help_page_topic_tid']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_help_page_topic_tid']['value'] = array(
+    308 => '308',
+  );
+  $handler->display->display_options['filters']['field_help_page_topic_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_help_page_topic_tid']['vocabulary'] = 'help_page_topic';
   $handler->display->display_options['path'] = 'help-topics';
 
   /* Display: Help Topic reorder */
@@ -261,7 +277,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['footer']['area']['table'] = 'views';
   $handler->display->display_options['footer']['area']['field'] = 'area';
   $handler->display->display_options['footer']['area']['content'] = '<div id="help-topic-links">
-<a href=\'/node/add/help-page\' class=\'help-topic-link help-topic-link1\'>Add New Help Topic</a>
+<a href=\'/node/add/help-page?destination=admin/help-topics\' class=\'help-topic-link help-topic-link1\'>Add New Help Topic</a>
 <a href=\'/help-topics\' class=\'help-topic-link help-topic-link2\'>View Help Topics</a>
 </div>';
   $handler->display->display_options['footer']['area']['format'] = 'full_html';
@@ -375,7 +391,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Description */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -409,7 +425,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['filters']['field_help_page_topic_tid']['table'] = 'field_data_field_help_page_topic';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['field'] = 'field_help_page_topic_tid';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['value'] = array(
-    121 => '121',
+    309 => '309',
   );
   $handler->display->display_options['filters']['field_help_page_topic_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['vocabulary'] = 'help_page_topic';
@@ -530,7 +546,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['filters']['field_help_page_topic_tid']['table'] = 'field_data_field_help_page_topic';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['field'] = 'field_help_page_topic_tid';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['value'] = array(
-    121 => '121',
+    309 => '309',
   );
   $handler->display->display_options['filters']['field_help_page_topic_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['vocabulary'] = 'help_page_topic';
@@ -562,7 +578,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['row_options']['inline'] = array(
     'field_alt_body' => 'field_alt_body',
   );
-  /* Field: Content: Description */
+  /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';

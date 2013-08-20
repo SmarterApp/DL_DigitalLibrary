@@ -49,6 +49,13 @@ function sbac_alignment_menu(){
     'type'            => MENU_CALLBACK,
   );
 
+  $items['ajax-alignment-crud'] = array(
+    'title'           => 'AJAX',
+    'page callback'   => 'sbac_alignment_ajax_alignment_crud_callback',
+    'access arguments'=> array('access content'),
+    'type'            => MENU_CALLBACK,
+  );
+
   $items['alignment-form'] = array(
     'title'           => 'AJAX',
     'page callback'   => 'drupal_get_form',
@@ -57,6 +64,13 @@ function sbac_alignment_menu(){
     'type'            => MENU_CALLBACK,
   );
 
+  $items['devfix'] = array(
+    'title'           => 'DEV',
+    'page callback'   => 'sbac_alignment_devfix',
+    'access arguments'=> array('admin'),
+    'type'            => MENU_CALLBACK,
+    'file'            => 'sbac_alignment.dev.inc',
+  );
   $items['devtest'] = array(
     'title'           => 'DEV',
     'page callback'   => 'sbac_alignment_devtest',
@@ -74,7 +88,29 @@ function sbac_alignment_menu(){
 
   return $items;
 }
+function sbac_alignment_ajax_alignment_crud_callback() {
+  $op = 'none';
+  $nid = 0;
+  if(isset($_POST['op'])){
+    $op = $_POST['op'];
+  }
+  if(isset($_POST['nid'])){
+    $nid = $_POST['nid'];
+  }
+
+  switch($op) {
+    case 'delete':
+      node_delete($nid);
+    break;
+  }
+
+  print drupal_json_encode('deleted: ' . $nid);
+
+  exit;
+}
 function sbac_alignment_ajax_alignment_page($ref_node = null) {
+  drupal_add_js(libraries_get_path('jquery.more') . '/jquery.more.js');
+  drupal_add_css(libraries_get_path('jquery.more') . '/jquery.more.css');
   drupal_add_js(drupal_get_path('theme', 'sbac') . '/js/custom.js');
   drupal_add_css(drupal_get_path('module', 'sbac_alignment') . '/css/alignment.css');
 
@@ -86,7 +122,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = null) {
   $output .= '<div class="alignment-filter">';
   $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject'));
   $output .= '</div><div class="alignment-form"></div>';
-  $output .= '<div class="alignment-buttons"><a href="" id="edit-cancel" class="button ctools-close-modal">Cancel</a><a href="" id="edit-submit" class="button disabled">Add to Resource</a></div>';
+  $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add to Resource</a><a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
   $output .= '</div></div>';
 
   return $output;
@@ -136,15 +172,16 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
     ),
   );
 
-  $form['cancel'] = array(
+  $form['ccss-cancel'] = array(
     '#markup' => l(t('Cancel'), '#',
        array(
          'attributes' => array(
-           'class' => 'button ctools-close-modal close'
+           'class' => 'button ctools-close-modal close',
+           'id' => 'ccss-cancel',
           ),
-         'external' => TRUE
-       )
-     )
+         'external' =>  TRUE,
+      )
+    )
   );
 
   $form['submit'] = array(
@@ -317,9 +354,17 @@ function sbac_alignment_ajax_terms_callback() {
   $output_array['parent'] = $parent;
   $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
 
+  $output_array['publication'] = $publication = $parent->field_alignment_publication['und'][0]['value'];
+
   $output_array['depth'] = $depth = sbac_alignment_term_depth($parent->tid);
 
-  $level_title = $ela_titles[$depth];
+  if($publication == 'SBAC-MA-v1') {
+    $level_title = $ma_titles[$depth];
+  }
+  else {
+    $level_title = $ela_titles[$depth];
+  }
+
 
   $output_array['tids'] = array();
   foreach ($terms as $term) {
@@ -374,6 +419,7 @@ function sbac_alignment_update_projects_alter(&$projects) {
  */
 function sbac_alignment_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'alignment_node_form') {
+    $form['field_education_alignment']['#options'] = array();
     //if (arg(0) == 'sbac_resource' && arg(1) == 'ajax') {//@TODO KS - rmeove
       global $user;
       /* let administrator see the entire form */

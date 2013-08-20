@@ -486,7 +486,7 @@ function sbac_form_element($variables) {
   }
 
   if ($element['#type'] == 'checkbox' && strpos($element['#parents'][0], 'term-') !== FALSE){
-    $attributes['class'][] = 'large-6 columns';
+    $attributes['class'][] = 'large-12 columns';
   }
 
   $output = '<div' . drupal_attributes($attributes) . '>' . "\n";

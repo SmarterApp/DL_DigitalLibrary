@@ -50,7 +50,7 @@ function sbac_user_menu() {
     'title' => t('User Password Confirmation'),
     'description' => t('Standalone change password form'),
     'page callback' => array('sbac_user__pages_user_password_confirmation_page'),
-    'access arguments' => array('download terms and conditions pdf'),
+    'access callback' => TRUE,
     'file' => 'sbac_user.pages.inc',
   );
 
@@ -529,7 +529,7 @@ function sbac_user_entity_presave($entity, $type) {
       $entity->field_privacy['und'][]['value'] = 'field-state';
       $entity->field_privacy['und'][]['value'] = 'field-grade-level-s-';
       $entity->field_privacy['und'][]['value'] = 'field-subject-s-';
-      $entity->field_privacy['und'][]['value'] = 'special-populations';      
+      $entity->field_privacy['und'][]['value'] = 'special-populations';
     }
   }
 }
@@ -878,7 +878,7 @@ function sbac_user_user_profile_add_values_submit($form, &$form_state) {
 function sbac_user_user_profile_default_tab_submit($form, &$form_state) {
   if ($form_state['values']['vertical_tabs_default']) {
     $form_state['redirect'] = array(
-      'user', 
+      'user',
       array('fragment' => $form_state['values']['vertical_tabs_default']),
     );
   }
@@ -894,7 +894,7 @@ function sbac_user_menu_alter(&$items) {
 
 /*
  * Custom username format function for displaying the full name
- * We are not using hook_username_alter and format_username because 
+ * We are not using hook_username_alter and format_username because
  * it has far reaching effects and its just before demo time
  */
 function sbac_user_format_username($user) {

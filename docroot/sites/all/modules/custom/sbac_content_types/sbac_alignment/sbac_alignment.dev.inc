@@ -1,10 +1,19 @@
 <?php
-/**
- *
- */
+ini_set('max_execution_time', '999');
+ini_set('memory_limit', '1024M');
+
+function sbac_alignment_devfix(){
+
+}
+
+ function cmp($a, $b) {
+    if ($a['treeLevel'] == $b['treeLevel']) {
+        return 0;
+    }
+    return ($a['treeLevel'] < $b['treeLevel']) ? -1 : 1;
+}
+
 function sbac_alignment_devtest() {
-  dsm($_SERVER);
-  //dsm('http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/ela.json');
   if(isset($_GET['vocab'])) {
     $edu_alignment_vocab_name = $_GET['vocab'];
   }
@@ -12,74 +21,66 @@ function sbac_alignment_devtest() {
     $edu_alignment_vocab_name = "education_alignment2";
   }
 
+  if(isset($_GET['type'])) {
+    $filename = $_GET['type'];
+  }
+  else {
+    $filename = "ela.json";
+  }
+
+
   $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
   $grade_terms = array();
 
-  $read = FALSE;
   $create_base = TRUE;
   $create = TRUE;
   $print = FALSE;
-
-  if($read) {
-    $data = drupal_http_request( 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/ela.sample.json');
-    dsm($data->data);
-    $contents = $data->data;
-   // return '';
-  ////get data
-  //  $filename = $_SERVER['DOCUMENT_ROOT'] . '/' . drupal_get_path('module', 'sbac_alignment') . '/data/ela.sample.json';
-  //  $handle = fopen($filename, "r");
-  //  $contents = fread($handle, filesize($filename));
-  //  fclose($handle);
-
-    $json = drupal_json_decode($contents);
-    dsm($json);
-  }
 
   // create base terms
   if ($create_base) {
     // Add education alignment
     $terms = array(
       'English Language Arts' => array(
-        'desc' => 'lorem ipsum',
+        'desc' => '',
         'children' => array(
           'KG - Kindergarten' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '1 - First Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '2 - Second Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '3 - Third Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '4 - Fourth Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '5 - Fifth Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '6 - Sixth Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '7 - Seventh Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '8 - Eight Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '9 - Ninth Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '10 - Tenth Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '11 - Eleventh Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
           '12 - Twelveth Grade' =>  array(
-            'desc' => 'lorem ipsum',
+            'desc' => '',
           ),
         ),
       ),
@@ -94,24 +95,30 @@ function sbac_alignment_devtest() {
     foreach ($terms as $term) {
       if($term->depth == 1) {
         $name = explode('-', $term->name);
-        $grade_terms[''+truncate($name[0])] = $term;
+        //dsm(array($term->name, truncate($name[0])));
+        $grade_terms[trim($name[0])] = $term;
+
       }
     }
-
     //get data
-    $data = drupal_http_request( 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/ela.json');
+    $data = drupal_http_request( 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/' . $filename);
 
     $contents = $data->data;
 
     $json = drupal_json_decode($contents);
     //dsm($json);
 
+    uasort($json, 'cmp');
+    //dsm($json);
+
+
+
     // build tree
     $parent_tid = 0;
     $parents = array();
     foreach ($json as $term) {
       //dsm($term);
-      $grade = truncate($term['fkGradeLevel']);
+      $grade = trim($term['fkGradeLevel']);
 
       // Root term. first set after the grade
       if ($term['treeLevel'] < 2) {

@@ -22,4 +22,4 @@
  * the view is modified.
  */
 ?>
-<?php print more_less_text($output, 100, FALSE);; ?>
+<?php print more_less_text($output, 300, FALSE);; ?>
