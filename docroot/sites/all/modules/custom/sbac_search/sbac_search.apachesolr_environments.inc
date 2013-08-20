@@ -20,7 +20,16 @@ function sbac_search_apachesolr_environments() {
     'apachesolr_access_always_add_grants' => 0,
     'apachesolr_read_only' => '0',
   );
-  $environment->index_bundles = array();
+  $environment->index_bundles = array(
+    'node' => array(
+      0 => 'alignment',
+      1 => 'help_page',
+      2 => 'resource',
+    ),
+    'user' => array(
+      0 => 'user',
+    ),
+  );
   $export['amazon_apache_solr_dev'] = $environment;
 
   $environment = new stdClass();
@@ -33,7 +42,6 @@ function sbac_search_apachesolr_environments() {
     'apachesolr_access_always_add_grants' => 0,
     'apachesolr_read_only' => '1',
   );
-  $environment->index_bundles = array();
   $export['amazon_apache_solr_environment_local'] = $environment;
 
   $environment = new stdClass();
@@ -46,7 +54,16 @@ function sbac_search_apachesolr_environments() {
     'apachesolr_access_always_add_grants' => 0,
     'apachesolr_read_only' => '0',
   );
-  $environment->index_bundles = array();
+  $environment->index_bundles = array(
+    'node' => array(
+      0 => 'alignment',
+      1 => 'help_page',
+      2 => 'resource',
+    ),
+    'user' => array(
+      0 => 'user',
+    ),
+  );
   $export['amazon_apache_solr_prod'] = $environment;
 
   $environment = new stdClass();
