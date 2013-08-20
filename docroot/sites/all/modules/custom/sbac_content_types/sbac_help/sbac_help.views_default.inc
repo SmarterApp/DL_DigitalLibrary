@@ -135,7 +135,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['filters']['field_help_page_topic_tid']['table'] = 'field_data_field_help_page_topic';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['field'] = 'field_help_page_topic_tid';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['value'] = array(
-    309 => '309',
+    121 => '121',
   );
   $handler->display->display_options['filters']['field_help_page_topic_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['vocabulary'] = 'help_page_topic';
@@ -160,7 +160,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Content: Body */
+  /* Field: Content: Description */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -199,6 +199,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['filters']['field_help_page_topic_tid']['operator'] = 'not';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['value'] = array(
     308 => '308',
+    120 => '120',
   );
   $handler->display->display_options['filters']['field_help_page_topic_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['vocabulary'] = 'help_page_topic';
@@ -358,8 +359,11 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['sorts']['weight']['table'] = 'draggableviews_structure';
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
   $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'help_topics:page_2';
-  $handler->display->display_options['sorts']['weight']['draggableviews_setting_arguments'] = 'none';
   $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
+  /* Sort criterion: Content: Title */
+  $handler->display->display_options['sorts']['title']['id'] = 'title';
+  $handler->display->display_options['sorts']['title']['table'] = 'node';
+  $handler->display->display_options['sorts']['title']['field'] = 'title';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Type */
@@ -391,7 +395,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Body */
+  /* Field: Content: Description */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -578,7 +582,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['row_options']['inline'] = array(
     'field_alt_body' => 'field_alt_body',
   );
-  /* Field: Content: Body */
+  /* Field: Content: Description */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';

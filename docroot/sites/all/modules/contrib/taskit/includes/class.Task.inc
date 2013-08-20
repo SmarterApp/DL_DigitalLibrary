@@ -43,6 +43,8 @@ class Task extends \taskit\Base implements iTask {
   protected $_triggering_users = array();
   // user(s) that this task applies to (if it's that specific)
   protected $_owning_users = array();
+  // user(s) that have viewed this task (if we're using user-specific task visibility)
+  protected $_viewed_users = array();
   // html classes set on row wrapper
   protected $_classes = array();
 
@@ -192,6 +194,35 @@ class Task extends \taskit\Base implements iTask {
     return $this->_viewed;
   }
 
+   /**
+   * Adds viewed user.
+   * @param [type] $uid [description]
+   */
+  public function addViewedUser($uid) {
+    $this->_viewed_users[$uid] = $uid;
+  }
+
+  /**
+   * Checks whether the task is "viewed" in current context.
+   * @return boolean [description]
+   */
+  public function isViewed() {
+    switch (variable_get('taskit_visibility', 'global')) {
+      case 'global':
+        return (bool) $this->getViewed();
+        break;
+
+      case 'user':
+        $uid = $this->currentUser();
+        return isset($this->_viewed_users[$uid]);
+        break;
+
+      default:
+        return FALSE;
+        break;
+    }
+  }
+
   /**
    * Adds task class.
    * @param [type] $class [description]
@@ -266,7 +297,8 @@ class Task extends \taskit\Base implements iTask {
                             te.*,
                             tr.*,
                             tuo.*,
-                            tut.*
+                            tut.*,
+                            tv.*
                 FROM        taskit t
                 LEFT JOIN   taskit_entity te
                   ON        t.task_id = te.task_id
@@ -276,6 +308,8 @@ class Task extends \taskit\Base implements iTask {
                   ON        t.task_id = tuo.task_id
                 LEFT JOIN   taskit_user_trigger tut
                   ON        t.task_id = tut.task_id
+                LEFT JOIN   taskit_viewed tv
+                  ON        t.task_id = tv.task_id
                 WHERE       t.task_id = :tid
              ";
 
@@ -364,7 +398,8 @@ class Task extends \taskit\Base implements iTask {
                             t.visibility,
                             GROUP_CONCAT(DISTINCT CONCAT(te.entity_type, '/', te.entity_id)) AS entities,
                             GROUP_CONCAT(DISTINCT tut.user_id) AS triggering_users,
-                            GROUP_CONCAT(DISTINCT tuo.user_id) AS owning_users
+                            GROUP_CONCAT(DISTINCT tuo.user_id) AS owning_users,
+                            GROUP_CONCAT(DISTINCT tv.user_id) AS viewed_users
                 FROM        taskit t
                 LEFT JOIN   taskit_entity te
                   ON        te.task_id = t.task_id
@@ -372,6 +407,8 @@ class Task extends \taskit\Base implements iTask {
                   ON        tut.task_id = t.task_id
                 LEFT JOIN   taskit_user_owner tuo
                   ON        tuo.task_id = t.task_id  
+                LEFT JOIN   taskit_viewed tv
+                  ON        tv.task_id = t.task_id
                 WHERE       t.task_id = :tid
                 GROUP BY    t.task_id
              ";
@@ -404,13 +441,20 @@ class Task extends \taskit\Base implements iTask {
       }
     }
 
+    // set the viewed users
+    if ($data->viewed_users) {
+      foreach (explode(',', $data->viewed_users) as $uid) {
+        $this->addViewedUser($uid);
+      }
+    }
+
     // set created timestamp
     $this->setCreated($data->created);
 
     // set viewed timestamp
     $this->setViewed($data->viewed);
 
-    if ($data->viewed != 0) {
+    if ($this->isViewed()) {
       $this->removeClass('taskit-new');
       $this->addClass('taskit-viewed');
     }
@@ -538,9 +582,11 @@ class Task extends \taskit\Base implements iTask {
 
   /**
    * Creates or updates the task, returning the task id.
-   * @return [type] [description]
+   * @param  boolean $multi_update [description]
+   * @param  [type]  $uid          [description]
+   * @return [type]                [description]
    */
-  public function save($multi_update = TRUE) {
+  public function save($multi_update = TRUE, $uid = NULL) {
     // insert new task
       if ($this->getTaskId() == 0) {
         $fields = array(
@@ -576,6 +622,16 @@ class Task extends \taskit\Base implements iTask {
           ->fields($fields)
           ->condition('task_id', $this->getTaskId())
           ->execute();
+
+        $visibility_type = variable_get('taskit_visibility', 'global');
+        if ($visibility_type == 'user' && $uid) {
+          db_merge('taskit_viewed')
+            ->key(array(
+              'task_id' => $this->getTaskId(),
+              'user_id' => $uid,
+            ))
+            ->execute();
+        }
       }
 
     // regardless of whether we insterted a new task or are updating
@@ -651,7 +707,9 @@ class Task extends \taskit\Base implements iTask {
    * central handler which is used to mark the task as 'viewed'
    */
   protected function l($text, $path, array $options = array()) {
-    return l($text, 'taskit/view/' . $path, $options);
+    $uid = $this->currentUser();
+
+    return l($text, 'taskit/view/' . $uid . '/' . $path, $options);
   }
 
   /**
@@ -669,11 +727,29 @@ class Task extends \taskit\Base implements iTask {
   public function processDisplay($entities, $accounts) {
     $output = $this->display($entities, $accounts);
 
+    $uid = $this->currentUser();
+
     $pattern = '#(<a\s*href\s*=\s*[\'"])(/[^"]*)#';
-    $replacement = '${1}/taskit/view/' . $this->getTaskId() . '${2}';
+    $replacement = '${1}/taskit/view/' . $this->getTaskId() . '/' . $uid . '${2}';
 
     $output = preg_replace($pattern, $replacement, $output);
 
     return $output;
+  }
+
+  /**
+   * Returns the UID of the user being looked at.
+   * @return [type] [description]
+   */
+  public function currentUser() {
+    if (preg_match('#user/([0-9]+)#', $_GET['q'], $matches)) {
+      $uid = $matches[1];
+    }
+    else {
+      global $user;
+      $uid = $user->uid;
+    }
+
+    return $uid;
   }
 }

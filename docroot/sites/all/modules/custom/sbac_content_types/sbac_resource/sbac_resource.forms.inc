@@ -278,7 +278,7 @@ function sbac_resource_validate_form(&$form, &$form_state) {
  */
 function sbac_resource_validate_general(&$form, $form_state) {
   if (!$form_state['values']['title']) {
-    $error = 'You must add a title to continue';
+    $error = 'Please add a title to continue.';
     form_set_error('title', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
@@ -357,11 +357,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
     }
   }
   if (!$form_state['values']['field_contexts']['und'][0]['value']) {
-    $error = 'You must add context(s) within which the resource could be used to continue';
+    $error = 'Add the context(s) in which the resource could be used';
     form_set_error('field_contexts', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_contexts:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_contexts:group:Please enter the context(s) in which the resource could be used to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_contexts:group:Add the context(s) in which the resource could be used', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_contexts']['und'][0]['value'];
@@ -376,11 +376,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
-    $error = 'Please add a connection to the Common Core State Standards to continue';
+    $error = 'Add a connection to the Common Core State Standards';
     form_set_error('field_connection_to_ccss', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_connection_to_ccss:group:Please add a connection to the Common Core State Standards to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_connection_to_ccss:group:Add a connection to the Common Core State Standards', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_connection_to_ccss']['und'][0]['value'];
@@ -927,36 +927,36 @@ function _sbac_resource_content_type_description(&$form, &$form_state) {
 
   $form['submisison_general_guidelines'] = array (
     '#markup'   => $submission_general_guidelines,
-    '#prefix'   => '<p id="submission-general-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-general-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_general_guidelines'] = "group_basic";
 
   $form['submisison_material_guidelines'] = array (
     '#markup'   => $submission_material_guidelines,
-    '#prefix'   => '<p id="submission-materials-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-materials-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_material_guidelines'] = "group_materials";
 
   $form['submisison_tags_guidelines'] = array (
     '#markup'   => $submission_tags_guidelines,
-    '#prefix'   => '<p id="submission-tags-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-tags-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_tags_guidelines'] = "group_tags";
 
   $form['submisison_summary_guidelines'] = array (
     '#markup'   => $submission_summary_guidelines,
-    '#prefix'   => '<p id="submission-summary-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-summary-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_summary_guidelines'] = "group_summary";
 
   $form['submisison_advanced_guidelines'] = array (
     '#markup'   => $submission_advanced_guidelines,
-    '#prefix'   => '<p id="submission-advanced-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-advanced-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_advanced_guidelines'] = "group_advanced";
 }
@@ -1063,9 +1063,9 @@ function _sbac_resource_form_summary(&$form, $form_state) {
 function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
   // Materials
-  $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
+  $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
 
-  // License Information
+  // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);
   $form['field_license_information'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_license_after_build';

@@ -393,7 +393,7 @@ a.sbac-grid-layout {
   }
 }
 
-.ie9 .digital-library .resource-card h3 {
+.no-ie8compat .digital-library .resource-card h3 {
   padding-right: 10px;
 }
 
@@ -455,6 +455,7 @@ a.sbac-grid-layout {
       margin: 0;
       font-weight: normal;
       font-size: 1.1em;
+      position: relative;
     }
 
     span {
@@ -706,6 +707,7 @@ a.sbac-grid-layout {
 
 .node-resource {
   padding: 0 25px;
+  @include hyphenation;
 
   #review {
     background: transparent;

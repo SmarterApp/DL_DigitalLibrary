@@ -255,8 +255,8 @@ Please use the following link within 24 hours to reset your password:
 
 [user:one-time-login-url]
 
-Sincerely,
-Smarter Balanced Digital Libarary Team';
+Thank you,
+The Digital Library team';
   $export['user_mail_password_reset_body'] = $strongarm;
 
   $strongarm = new stdClass();

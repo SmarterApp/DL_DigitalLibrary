@@ -16,6 +16,27 @@ function sbac_search_update_projects_alter(&$projects) {
 }
 
 /**
+ * Implements hook_init().
+ */
+function sbac_search_init() {
+  // hide categories if the cookie exists and is set to 1
+  if (isset($_COOKIE['sbacSearchCatButton']) && $_COOKIE['sbacSearchCatButton']) {
+    sbac_search_hide_category();
+  }
+}
+
+/*
+ * Hides category filter if called
+ */
+function sbac_search_hide_category() {
+  static $hidden;
+  if (!$hidden) {
+    drupal_add_css('.sbac-filter-cat-area {display:none;}', 'inline');
+    $hidden = TRUE;
+  }
+}
+
+/**
  * Build the documents before sending them to Solr.
  *
  * Supports all types of
@@ -375,9 +396,8 @@ function sbac_search_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'search_block_form') {
     unset($form['#submit']);
     $form['search_block_form']['#attributes'] = array('id' => 'sbac-search-textbox');
-    if (isset($_SESSION['sbac-search-keywords'])) {
-      $form['search_block_form']['#default_value'] = $_SESSION['sbac-search-keywords'];
-    }
+    $form['search_block_form']['#default_value'] = $_SESSION['sbac-search-keywords'];
+
     if (current_path() != 'digital-library-resources') {
       $form['#action'] = '/digital-library-resources';
       $form['#submit'][] = 'sbac_search_form_submit';

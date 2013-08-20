@@ -12,13 +12,12 @@ function sbac_search_apachesolr_environments() {
 
   $environment = new stdClass();
   $environment->api_version = 1;
-  $environment->env_id = 'amazon_apache_solr_dev';
-  $environment->name = 'Amazon Apache Solr - Dev';
+  $environment->env_id = 'amazon_apache_solr_environment';
+  $environment->name = 'Amazon Apache Solr Environment';
   $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/dev';
   $environment->service_class = '';
   $environment->conf = array(
-    'apachesolr_access_always_add_grants' => 0,
-    'apachesolr_read_only' => '0',
+    'apachesolr_search_facet_pages' => '',
   );
   $environment->index_bundles = array(
     'node' => array(
@@ -26,67 +25,14 @@ function sbac_search_apachesolr_environments() {
       1 => 'help_page',
       2 => 'resource',
     ),
-    'user' => array(
-      0 => 'user',
-    ),
-  );
-  $export['amazon_apache_solr_dev'] = $environment;
-
-  $environment = new stdClass();
-  $environment->api_version = 1;
-  $environment->env_id = 'amazon_apache_solr_environment_local';
-  $environment->name = 'Amazon Apache Solr - Local';
-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/dev';
-  $environment->service_class = '';
-  $environment->conf = array(
-    'apachesolr_access_always_add_grants' => 0,
-    'apachesolr_read_only' => '1',
-  );
-  $export['amazon_apache_solr_environment_local'] = $environment;
-
-  $environment = new stdClass();
-  $environment->api_version = 1;
-  $environment->env_id = 'amazon_apache_solr_prod';
-  $environment->name = 'Amazon Apache Solr - Prod';
-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/production';
-  $environment->service_class = '';
-  $environment->conf = array(
-    'apachesolr_access_always_add_grants' => 0,
-    'apachesolr_read_only' => '0',
-  );
-  $environment->index_bundles = array(
-    'node' => array(
-      0 => 'alignment',
-      1 => 'help_page',
-      2 => 'resource',
+    'file' => array(
+      0 => 'file',
     ),
     'user' => array(
       0 => 'user',
     ),
   );
-  $export['amazon_apache_solr_prod'] = $environment;
-
-  $environment = new stdClass();
-  $environment->api_version = 1;
-  $environment->env_id = 'amazon_apache_solr_test';
-  $environment->name = 'Amazon Apache Solr - Test';
-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/staging';
-  $environment->service_class = '';
-  $environment->conf = array(
-    'apachesolr_access_always_add_grants' => 0,
-    'apachesolr_read_only' => '0',
-  );
-  $environment->index_bundles = array(
-    'node' => array(
-      0 => 'alignment',
-      1 => 'help_page',
-      2 => 'resource',
-    ),
-    'user' => array(
-      0 => 'user',
-    ),
-  );
-  $export['amazon_apache_solr_test'] = $environment;
+  $export['amazon_apache_solr_environment'] = $environment;
 
   return $export;
 }

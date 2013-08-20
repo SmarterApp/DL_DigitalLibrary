@@ -731,7 +731,7 @@ function sbac_resource_update_7031() {
     'The Smarter Balanced Copyright Clearance Form' => '',
     'Creative Commons Attribution' => 'http://creativecommons.org/licenses/by/3.0/',
     'Creative Commons Attribution No Derivatives' => 'http://creativecommons.org/licenses/by-nd/3.0/',
-    'All of the submitted materials are free of copyright restrictions and in the public domain.' => '',
+    'All of the submitted materials are free of copyright restrictions and in the public domain' => '',
   );
 
   $weight = -10;

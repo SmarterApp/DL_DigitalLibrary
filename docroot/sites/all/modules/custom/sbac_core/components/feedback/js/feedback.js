@@ -81,6 +81,19 @@ Feedback.utilities = {
   },
 
   /**
+   * Sets the form action.
+   * 
+   * @param {[type]} type [description]
+   * @param {[type]} val  [description]
+   */
+  set_action: function (type, val) {
+    // update the action which took place
+    if (Feedback[type] && Feedback[type]['form']) {
+      $(Feedback[type]['form'] + ' ' + Feedback.action_select).val(val);
+    }
+  },
+
+  /**
    * JS callback for modal form submissions.
    * We set the form's action select to identify the form action being performed
    * (button being clicked).
@@ -90,10 +103,10 @@ Feedback.utilities = {
    * @return {[type]}      [description]
    */
   submit_modal_callback: function (type, val) {
+    Feedback.utilities.set_action(type, val);
+
     // update the action which took place
     if (Feedback[type] && Feedback[type]['form']) {
-      $(Feedback[type]['form'] + ' ' + Feedback.action_select).val(val);
-
       // by triggering the form's submit() and not doing a click/mousedown on an 
       // actual button, we bypass the AJAX form submission and do a regular page
       // reload, which will show the 'completed' version of content
@@ -198,6 +211,11 @@ Drupal.behaviors.feedback = {
           $.each(Feedback[name].buttons, function(button_key, data) {
             $(data.button).click(function(e) {
               e.preventDefault();
+
+              // update action
+              if (data.action) {
+                Feedback.utilities.set_action(name, data.action);
+              }
 
               // a modal-triggering button has been clicked, so the first thing we need to do
               // is ajax-submit the form to validate it, and we do this by clicking the Save &

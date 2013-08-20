@@ -54,6 +54,7 @@
           <div class="read-more">
             <a href="" class=""><i class="accessibility foundicon-eyeball"></i></a>
             <div class="more description-hover">
+              <div class="description-content">
               <h2><?php print $subject->name; ?></h2>
               <div class="ccss-standard">
                  <h2><?php print $tag_node->field_alignment_key['und'][0]['value']; ?></h2>
@@ -85,6 +86,7 @@
                     <?php print $emphasis->description; ?>
                  </div>
               <?php endif; ?>
+              </div>
             </div>
           </div>
 

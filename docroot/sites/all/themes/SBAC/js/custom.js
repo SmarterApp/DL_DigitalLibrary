@@ -1,6 +1,11 @@
 (function ($) {
   Drupal.behaviors.sbac_custom = {
     attach: function (context, settings) {
+      $('.disabled').click(function(e) {
+          e.preventDefault();
+          //do other stuff when a click happens
+      });
+      
       $('.ccss-term-delete').click(function(){
         var nid = $(this).attr('nid');
         var update_form = function(data) {
@@ -22,7 +27,8 @@
         var update_data = function(data) {
           var obj = jQuery.parseJSON(data);
           if ((obj.publication == 'SBAC-ELA-v1' && obj.depth >= 3)
-              || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)){
+              || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)
+              || (obj.publication == '0')){
             $('.alignment-form').hide();
             $('.alignment-buttons').show();
           }
@@ -34,6 +40,10 @@
 
           //reattached the behaviors
           Drupal.attachBehaviors('.sbac-custom-term-remove');
+          $('.disabled').click(function(e) {
+              e.preventDefault();
+              //do other stuff when a click happens
+          });
         }
 
         $.ajax({
@@ -82,6 +92,11 @@
             $('.alignment-form').hide();
             $('.alignment-buttons').show();
             $('.alignment-filter').html(obj.html);
+            
+            $('.disabled').click(function(e) {
+                e.preventDefault();
+                //do other stuff when a click happens
+            });
           }
 
           //reattached the behaviors

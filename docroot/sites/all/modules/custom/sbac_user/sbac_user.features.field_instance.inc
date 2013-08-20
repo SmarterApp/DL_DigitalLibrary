@@ -114,7 +114,7 @@ function sbac_user_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Enter your first and last name as you\'d like them to appear to others',
+        'label_help_description' => 'Enter your first and last name as you\'d like them to appear to others.',
         'maxlength_js' => 0,
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
@@ -151,7 +151,7 @@ function sbac_user_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Enter the grades with which you are most comfortable teaching / supporting.',
+        'label_help_description' => 'Enter the grades you are most comfortable teaching / supporting.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
@@ -302,7 +302,7 @@ function sbac_user_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 0,
-        'label_help_description' => 'Select your current or former title',
+        'label_help_description' => 'Select your current or former title.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',

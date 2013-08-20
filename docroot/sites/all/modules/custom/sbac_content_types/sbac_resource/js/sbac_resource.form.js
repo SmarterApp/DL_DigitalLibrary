@@ -12,6 +12,7 @@
     attach: function (context, settings) {
       if (Drupal.settings.sbac_save_continue_tab != null) {
         $(Drupal.settings.sbac_save_continue_tab).click();
+        Drupal.settings.sbac_save_continue_tab = null;
       }
 
       control_form_buttons();

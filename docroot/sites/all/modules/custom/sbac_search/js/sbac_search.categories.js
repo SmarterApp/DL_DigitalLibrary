@@ -93,14 +93,18 @@
       close_categories_list = function () {
         var filter_container = $('.sbac-filter-cat-area');
         if (filter_container.is(':visible')) {
+          // remember user closed cat button
+          $.cookie("sbacSearchCatButton", 1); 
           filter_container.hide();
           $(this).removeClass("active");
         }
         else{
+          // remember user opened cat button
+          $.cookie("sbacSearchCatButton", 0);       
           filter_container.show();
           $(this).addClass("active");
         }
-      }
+      }    
     }
   };
 
@@ -194,6 +198,11 @@
       $('#views-exposed-form-resources-list-view').hide();
 
       $('.pager-next a').html('Load More Resources').addClass('button');
+
+      // remove contents when user clicks in text box
+      // $('#sbac-search-textbox').click( function() {
+      //   $('#sbac-search-textbox').val('');
+      // });
     }
   };
 

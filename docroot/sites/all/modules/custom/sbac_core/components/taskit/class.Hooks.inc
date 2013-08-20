@@ -103,17 +103,11 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Resource published.'),
         'class' => 'ResourcePublished',
       ),
-      // resource publication to reviewer
+      // an incomplete review has reached reminder time
       array(
-        'name' => 'resource_published_reviewer',
-        'description' => t('Resource published.'),
-        'class' => 'ResourcePublishedReviewer',
-      ),
-      // resource rejection to reviewer
-      array(
-        'name' => 'resource_rejected_reviewer',
-        'description' => t('Resource rejected.'),
-        'class' => 'ResourceRejectedReviewer',
+        'name' => 'review_reminder',
+        'description' => t('Review reminder.'),
+        'class' => 'ReviewReminder',
       ),
     );
 

@@ -87,6 +87,32 @@ function taskit_schema() {
     ),
   );
 
+  $schema['taskit_notify'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'last_sent' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+
   $schema['taskit_removed'] = array(
     'description' => 'TODO: please describe this table!',
     'fields' => array(
@@ -102,7 +128,6 @@ function taskit_schema() {
         'not null' => TRUE,
       ),
     ),
-    'primary key' => array('task_id'),
     'indexes' => array(
       'user_id' => array('user_id', 'task_id'),
     ),
@@ -184,6 +209,26 @@ function taskit_schema() {
     ),
   );
 
+  $schema['taskit_viewed'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'user_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'user_id' => array('user_id', 'task_id'),
+    ),
+  );
+
   return $schema;
 }
 
@@ -195,14 +240,14 @@ function taskit_uninstall() {
 }
 
 /**
- * Adds 'viewed' column to {taskit}
+ * Adds 'viewed' column to {taskit}.
  */
 function taskit_update_7001(&$sandbox) {
   db_query("ALTER TABLE taskit ADD viewed INT NOT NULL DEFAULT 0 AFTER created;");
 }
 
 /**
- * Creates the taskit_notify table
+ * Creates the {taskit_notify} table.
  */
 function taskit_update_7002(&$sandbox) {
   $schema['taskit_notify'] = array(
@@ -233,3 +278,41 @@ function taskit_update_7002(&$sandbox) {
 
   db_create_table('taskit_notify', $schema['taskit_notify']);
 }
+
+/**
+ * Adds 'removed' column on {taskit_removed}.
+ * Creates the {taskit_viewed} table.
+ */
+function taskit_update_7003(&$sandbox) {
+  $schema['taskit_viewed'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'user_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'user_id' => array('user_id', 'task_id'),
+    ),
+  );
+
+  db_create_table('taskit_viewed', $schema['taskit_viewed']);
+}
+
+/**
+ * Removes unnecessary primary keys on taskit_removed and taskit_viewed.
+ */
+function taskit_update_7004(&$sandbox) {
+  db_query("ALTER TABLE taskit_removed DROP INDEX `PRIMARY`");
+  db_query("ALTER TABLE taskit_viewed DROP INDEX `PRIMARY`");
+}
+
+

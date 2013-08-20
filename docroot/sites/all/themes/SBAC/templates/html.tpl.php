@@ -51,6 +51,18 @@
 <!--[if gt IE 10]><!--> <html xmlns="http://www.w3.org/1999/xhtml" class="no-js" lang="en"> <!--<![endif]-->
 
 <head>
+   <!-- defeat x-site framing and click jacking attempts by forcing the site to load outside of an iframe -->
+	<style>
+		html { display:none; }
+	</style>
+	<script type='text/javascript'>
+		if (self==top) {
+			document.documentElement.style.display='block';
+		} else {
+			top.location = self.location;
+		}
+	</script>
+	
   <?php print $head; ?>
   <title><?php print $head_title; ?></title>
   <?php print $styles; ?>
@@ -62,6 +74,14 @@
   <!-- @todo convert fallback into head alter function -->
   <!-- Check for Zepto support, load jQuery if necessary -->
 </head>
+<style> html { display: none; }</style>
+<script type='text/javascript'>
+	if (self==top) {
+			document.documentElement.style.display='block';
+			} else {
+				top.location = self.location;
+			}
+</script>
 <body class="<?php print $classes; ?>" <?php print $attributes;?>>
   <div class="skip-link">
     <a href="#main-content" class="element-invisible element-focusable"><?php print t('Skip to main content'); ?></a>

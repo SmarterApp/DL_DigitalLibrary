@@ -18,11 +18,13 @@ Feedback.gk = {
   buttons: {
     meet: {
       button: '.action-meet',
-      anchor: '#gate-keeper-meet'
+      anchor: '#gate-keeper-meet',
+      action : 'meet'
     },
     not_meet: {
       button: '.action-not-meet',
-      anchor: '#gate-keeper-not-meet'
+      anchor: '#gate-keeper-not-meet',
+      action : 'not_meet'
     }
   },
 
@@ -92,6 +94,5 @@ Drupal.behaviors.feedback_gate_keeper = {
       Feedback.gk.update_buttons();
   }
 };
-
 
 })(jQuery);

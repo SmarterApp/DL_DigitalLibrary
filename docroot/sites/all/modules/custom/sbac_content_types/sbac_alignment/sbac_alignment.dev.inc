@@ -1,16 +1,83 @@
 <?php
+/**
+ * Set server 
+ */
 ini_set('max_execution_time', '999');
 ini_set('memory_limit', '1024M');
+/**
+ * Global Variables
+ */
+define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/');
 
+
+/**
+ *
+ */
 function sbac_alignment_devfix(){
+  $shortnames = get_shortnames();
+  //dsm($shortnames);
+  
+  $publication = 'SBAC-ELA-v1';
+  
+  foreach ($shortnames as $key => $shortname) {
+    //dsm(array($key, $shortname));
+    //select fdfak.field_alignment_key_value, fdfas.field_alignment_shortname_value from field_data_field_alignment_key fdfak left join field_data_field_alignment_shortname fdfas on fdfak.entity_id = fdfas.entity_id order by fdfak.field_alignment_key_value;
 
+    $sql = "
+      UPDATE {field_data_field_alignment_shortname} fdfas
+      LEFT JOIN {field_data_field_alignment_key} fdfak
+      ON fdfak.entity_id = fdfas.entity_id
+      SET fdfas.field_alignment_shortname_value= '$shortname'
+      WHERE fdfak.field_alignment_key_value LIKE '%|$publication:$key'";
+      db_query($sql);
+  }
+  
+  return '';
 }
 
- function cmp($a, $b) {
+function cmp2($a, $b) {
+    if ($a->depth == $b->depth) {
+        return 0;
+    }
+    return ($a->depth > $b->depth) ? -1 : 1;
+}
+
+
+function cmp($a, $b) {
     if ($a['treeLevel'] == $b['treeLevel']) {
         return 0;
     }
     return ($a['treeLevel'] < $b['treeLevel']) ? -1 : 1;
+}
+
+/**
+ * Helper Function
+ * Gets the file name via http.
+ */
+function get_file($filename) {
+   //@TODO KS - add error handler
+   $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
+   return $data->data;
+}
+/**
+ * Helper Function
+ * Gets the shortnames from file.
+ */
+function get_shortnames() {
+  $shortnames = array();
+  $data = explode("\n", get_file('ela.shortname.csv'));
+  array_shift($data);
+  
+  foreach ($data as $row) {
+    $temp = explode(',', $row);
+    //$shortnames[trim($temp[0])] = array(
+    //  'key' => $temp[0],
+    //  'shortname' => $temp[1],
+    //);
+    $shortnames[trim($temp[0])] = $temp[1];
+  }
+  
+  return $shortnames;
 }
 
 function sbac_alignment_devtest() {
@@ -101,8 +168,7 @@ function sbac_alignment_devtest() {
       }
     }
     //get data
-    $data = drupal_http_request( 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/' . $filename);
-
+    $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
     $contents = $data->data;
 
     $json = drupal_json_decode($contents);
@@ -115,6 +181,7 @@ function sbac_alignment_devtest() {
 
     // build tree
     $parent_tid = 0;
+    $clean_parent = TRUE;
     $parents = array();
     foreach ($json as $term) {
       //dsm($term);
@@ -123,12 +190,13 @@ function sbac_alignment_devtest() {
       // Root term. first set after the grade
       if ($term['treeLevel'] < 2) {
         $parent_tid = $grade_terms[$grade]->tid;
-        sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
+        $key = $grade . '|' . $term['key'];
+        $parents[$key] = sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
       }
-      elseif($term['treeLevel'] >=2) {
+      elseif(($tree_level = $term['treeLevel']) >=2) {
         $parent_key = $grade . '|' . $term['fkParent'];
-        $parent_tid = sbac_alignment_get_parent($parent_key);
-        //$parent_tid = $parents[$parent_key]->tid;
+        //$parent_tid = sbac_alignment_get_parent($parent_key);
+        $parent_tid = $parents[$parent_key]->tid;
         //dsm(array($parent_key, $parent_tid));
         if (empty($parent_tid)) {
           //cannot find parent save to grade
@@ -165,6 +233,12 @@ function sbac_alignment_get_parent($key) {
  *
  */
 function sbac_alignment_devdelete() {
+  if (isset($_GET['tid'])) {
+  
+  }
+   
+   
+   
   if(isset($_GET['vocab'])) {
     $edu_alignment_vocab_name = $_GET['vocab'];
   }
@@ -193,4 +267,24 @@ function sbac_alignment_devdelete() {
   }
 
   return '';
+
+  
+  if (!isset($_GET['tid'])) {
+      return '';
+   }
+   
+   $tid = $_GET['tid'];
+   
+   $terms = taxonomy_get_tree('2', $tid);
+   dsm($terms);
+   
+   uasort($terms, 'cmp2');
+   
+   dsm($terms);
+   foreach($terms as $term) {
+      taxonomy_term_delete($term->tid);
+   }
+   
+   
+   return '';
 }

@@ -170,7 +170,7 @@ function resource_gate_keeper_form_submit($form, &$form_state) {
       $entity->current = 1;
       $entity->node_id = $node->nid;
 
-      drupal_set_message(t('Gate Keeper review process started.'));
+      drupal_set_message(t('Gate Keeping review process started.'));
 
       entity_save('feedback', $entity);
 
