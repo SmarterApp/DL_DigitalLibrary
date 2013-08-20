@@ -552,9 +552,28 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
  */
 # $conf['allow_authorize_operations'] = FALSE;
 
+// Acquia DB String
 if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/willappnovationcom/willappnovationcom-settings.inc');
 }
+
+// Alfresco / CMIS repo.
+$conf['cmis_repositories'] = array(
+  'default' => array(
+    'user' => 'admin',
+    'password' => 'm3rcury',
+    'label' => 'local cmis repo',
+    'url' => 'http://ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/s/cmis',
+    'transport' => 'cmis_headerswing',
+    'headerswing_headers' => array(
+      'HTTP_HOST' => 'FRONTEND_HOST',
+      'HTTP_HOST' => 'FRONTEND_HOST_AGAIN',
+      'HTTP_USER' => 'FRONTEND_USER',
+      'PHP_AUTH_USER' => 'FRONTEND_USER',
+      'PHP_AUTH_DIGEST' => 'FRONTEND_AUTH'
+    )
+  )
+);
 
 // Sets the Apache Solr Environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
