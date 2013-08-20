@@ -603,7 +603,7 @@ function sbac_resource_digital_library_page() {
 
   // if no results, display results but also a message....
   if ($view->total_rows == 0) {
-    drupal_goto('digital-library-resources/no-results');
+    //drupal_goto('digital-library-resources/no-results');
   }
 
   menu_set_active_item('digital-library-resources');
