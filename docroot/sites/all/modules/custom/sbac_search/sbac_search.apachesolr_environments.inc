@@ -12,7 +12,7 @@ function sbac_search_apachesolr_environments() {
 
   $environment = new stdClass();
   $environment->api_version = 1;
-  $environment->env_id = 'amazon_apache_solr_environment';
+  $environment->env_id = 'amazon_apache_solr_dev';
   $environment->name = 'Amazon Apache Solr - Dev';
   $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/dev';
   $environment->service_class = '';

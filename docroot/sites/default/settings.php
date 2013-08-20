@@ -555,3 +555,23 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/willappnovationcom/willappnovationcom-settings.inc');
 }
+
+// Sets the Apache Solr Environment
+if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+    case 'dev':
+      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_dev';
+      // do something on dev
+      break;
+
+    case 'test':
+      // do something on staging
+      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_test';
+      break;
+
+    case 'prod':
+      // do something on prod
+      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_prod';
+      break;
+  }
+}
