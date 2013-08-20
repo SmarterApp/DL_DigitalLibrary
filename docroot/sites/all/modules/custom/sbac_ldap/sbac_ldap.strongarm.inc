@@ -25,7 +25,7 @@ function sbac_ldap_strongarm() {
     'ldapUserHelpLinkText' => 'Logon Help',
     'emailOption' => 3,
     'emailUpdate' => 1,
-    'passwordOption' => 4,
+    'passwordOption' => 2,
     'allowOnlyIfTextInDn' => array(),
     'excludeIfTextInDn' => array(),
     'allowTestPhp' => '',
@@ -50,7 +50,7 @@ function sbac_ldap_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'ldap_servers_encryption';
-  $strongarm->value = '10';
+  $strongarm->value = '6';
   $export['ldap_servers_encryption'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -6741,14 +6741,14 @@ function sbac_ldap_strongarm() {
   $strongarm->name = 'ldap_user_conf';
   $strongarm->value = array(
     'drupalAcctProvisionServer' => 'SBAC',
-    'ldapEntryProvisionServer' => 'SBAC',
+    'ldapEntryProvisionServer' => 0,
     'drupalAcctProvisionTriggers' => array(
       2 => 0,
       1 => 0,
     ),
     'ldapEntryProvisionTriggers' => array(
-      6 => '6',
-      7 => '7',
+      6 => 0,
+      7 => 0,
       8 => 0,
       3 => 0,
     ),

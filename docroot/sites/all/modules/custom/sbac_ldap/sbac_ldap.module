@@ -61,7 +61,7 @@ function sbac_ldap_login_validate(&$form, &$form_state) {
           if ($error)
             drupal_set_message('User authentication is currently unavailable. Please try again in a few minutes', 'error');
           elseif (!$logged_in)
-            drupal_set_message('Your email address or password was not recognized', 'error');
+            drupal_set_message('Your email address or password was not recognized.', 'error');
           else {}
           break;
         }
