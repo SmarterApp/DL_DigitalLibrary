@@ -413,7 +413,9 @@ function sbac_search_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_default_search_api_server_ater().
+ * Implements hook_default_search_api_server_alter().
+ * 
+ * @param $servers
  */
 function sbac_search_default_search_api_server_alter(&$servers) {
   // This is not an Acquia env.
