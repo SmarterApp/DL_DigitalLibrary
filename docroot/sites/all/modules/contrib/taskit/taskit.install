@@ -311,8 +311,8 @@ function taskit_update_7003(&$sandbox) {
  * Removes unnecessary primary keys on taskit_removed and taskit_viewed.
  */
 function taskit_update_7004(&$sandbox) {
-  db_query("ALTER TABLE taskit_removed DROP INDEX `PRIMARY`");
-  db_query("ALTER TABLE taskit_viewed DROP INDEX `PRIMARY`");
+  //db_query("ALTER TABLE taskit_removed DROP INDEX `PRIMARY`");
+  //db_query("ALTER TABLE taskit_viewed DROP INDEX `PRIMARY`");
 }
 
 
