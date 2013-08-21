@@ -23,10 +23,10 @@
       });
 
       $('.date-range-custom #to-date input').on('change', function() {
-        var toInput = $(this).attr('value');
+        var toInput = getDateInput(this);
         var fromInput = getDateInput('.date-range-custom #from-date input');
         if (fromInput && toInput) {
-          var value = fromInput.replace(/-/g, '') + '--' + toInput.replace(/-/g, '');
+          var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
           $dateRangeField.text(value);
           $dateRangeField.attr('value', value);
           $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
@@ -34,18 +34,35 @@
       });
 
       $('.date-range-custom #from-date input').on('change', function() {
-        var fromInput = $(this).attr('value').replace(/-/g, '');
-        var toInput = $('.date-range-custom #to-date input').attr('value').replace(/-/g, '');
+        var fromInput = getDateInput(this);
+        var toInput = getDateInput('.date-range-custom #to-date input');
         if (fromInput && toInput) {
-          var value = fromInput.replace(/-/g, '') + '--' + toInput.replace(/-/g, '');
+          var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
           $dateRangeField.text(value);
           $dateRangeField.attr('value', value);
           $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
         }
       });
 
+      /**
+       * Return the custom date input.
+       */
       function getDateInput(el) {
-        return $(el).attr('value');
+        return $.trim($(el).attr('value'));
+      }
+
+      /**
+       * Parse the custom date input into Ymd format.
+       */
+      function parseDateInput(input) {
+        var dateArr = input.split('/');
+        var month = date = year = '';
+        if (dateArr[0] && dateArr[1] && dateArr[2]) {
+          var month = dateArr[0];
+          var date = dateArr[1];
+          var year = dateArr[2];
+        }
+        return year + month + date;
       }
 
       $(context).on('click', '.autocomplete-suggestion', function() {

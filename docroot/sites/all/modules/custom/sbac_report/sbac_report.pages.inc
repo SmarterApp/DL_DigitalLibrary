@@ -14,6 +14,7 @@ function sbac_report_page() {
   $contributed_summary = '';
   $contributed_details = '';
 
+  // unset($_SESSION['sbac_report']);
   $uid = sbac_report_get_session_value('sne', 'uid');
   $date_range = sbac_report_get_session_value('date_range', 'range');
   if (!empty($uid) && !empty($date_range)) {

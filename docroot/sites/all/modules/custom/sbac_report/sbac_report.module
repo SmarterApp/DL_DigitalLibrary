@@ -89,6 +89,7 @@ function sbac_report_theme($existing, $type, $theme, $path) {
  */
 function sbac_report_form($form, &$form_state) {
   $form = array();
+
   $form['state'] = array(
     '#type' => 'select',
     '#title' => t('Choose a state'),
@@ -100,33 +101,8 @@ function sbac_report_form($form, &$form_state) {
     ),
   );
 
-  $form['date_popup_from_date'] = date_popup_element_process(array(
-    '#id' => 'from-date',
-    '#title' => t('From'),
-    '#type' => 'date_popup',
-    '#date_type' => DATE_DATETIME,
-    '#date_timezone' => date_default_timezone(),
-    '#default_value' => date("Y-m-d", REQUEST_TIME),
-    '#date_format' => 'Y-m-d',
-    '#date_increment' => 1,
-    '#date_year_range' => '-1:+1',
-    '#datepicker_options' => array(),
-    ), $form_state, $form
-  );
-
-  $form['date_popup_to_date'] = date_popup_element_process(array(
-    '#id' => 'to-date',
-    '#title' => t('To'),
-    '#type' => 'date_popup',
-    '#date_type' => DATE_DATETIME,
-    '#date_timezone' => date_default_timezone(),
-    '#default_value' => date("Y-m-d", REQUEST_TIME),
-    '#date_format' => 'Y-m-d',
-    '#date_increment' => 1,
-    '#date_year_range' => '-1:+1',
-    '#datepicker_options' => array(),
-    ), $form_state, $form
-  );
+  $from_date_element = sbac_report_create_date_popup_element('from-date', t('From'));
+  $to_date_element = sbac_report_create_date_popup_element('to-date', t('To'));
 
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
@@ -139,7 +115,7 @@ function sbac_report_form($form, &$form_state) {
   }
   // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
   elseif ($key = array_search($session_date_range, $date_options)) {
-    $default_display = $key;
+    $default_display = t($key);
   }
   // If it was a custom selection, format the string.
   else {
@@ -153,23 +129,21 @@ function sbac_report_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Choose a time period'),
     '#default_value' => $session_date_range,
-    '#required' => TRUE,
     '#attributes' => array(
       'id' => 'date-range-field',
     ),
-    // '#prefix' => '<div class="hide">',
-    // '#suffix' => '</div>',
   );
 
   $form['date_range_dropdown'] = array(
+    '#type' => 'markup',
     '#markup' => theme('sbac_report_date_range_dropdown',
       array(
-        'default_display' => $default_display,
+        'default_display' => $default_display ? $default_display : t('Last 30 Days'),
         'ago_30' => $date_options['Last 30 Days'],
         'ago_60' => $date_options['Last 60 Days'],
         'ago_90' => $date_options['Last 90 Days'],
-        'from_date_popup' => $form['date_popup_from_date'],
-        'to_date_popup' => $form['date_popup_to_date'],
+        'from_date_popup' => $from_date_element,
+        'to_date_popup' => $to_date_element,
       )
     )
   );
@@ -198,7 +172,17 @@ function sbac_report_form($form, &$form_state) {
     '#value' => t('Submit'),
   );
 
+  $form['#validate'][] = 'sbac_report_form_validate';
+
   return $form;
+}
+
+function sbac_report_form_validate($form, &$form_state) {
+  if (!sbac_report_validate_date_range($form_state['values']['date_range'])) {
+    sbac_report_date_popup_js_settings(array('from-date', 'to-date'));
+    form_set_error('date_range_dropdown', t('Invalid date format'));
+    return;
+  }
 }
 
 /**
@@ -266,6 +250,57 @@ function sbac_report_date_range_options() {
   );
 
   return $options;
+}
+
+/**
+ * Create date_popup form element.
+ */
+function sbac_report_create_date_popup_element($id, $title) {
+  $form = $form_state = array();
+  $key = 'date_popup_' . str_replace('-', '_', $id);
+  $element = array(
+    '#id' => $id,
+    '#title' => $title,
+    '#type' => 'date_popup',
+    '#date_type' => DATE_DATETIME,
+    '#date_label_position' => 'inline',
+    '#date_timezone' => date_default_timezone(),
+    '#date_format' => 'm/d/Y',
+    '#date_increment' => 1,
+    '#date_year_range' => '-3:+3',
+    '#datepicker_options' => array(),
+    '#value' => NULL,
+    '#parents' => array(),
+    '#attributes' => array(),
+  );
+
+  $popup_element = date_popup_element_process($element, $form_state, $form);
+  return $popup_element;
+}
+
+/**
+ * Add the common js and settings for the date popup.
+ */
+function sbac_report_date_popup_js_settings($ids) {
+  static $js_added = FALSE;
+  if (!$js_added && !empty($ids)) {
+    $settings = array(
+      'changeMonth' => TRUE,
+      'changeYear' => TRUE,
+      'autoPopUp' => 'focus',
+      'closeAtTop' => FALSE,
+      'speed' => 'immediate',
+      'firstDay' => intval(variable_get('date_first_day', 0)),
+      'dateFormat' => 'mm/dd/yy',
+      'yearRange' => '-3:+3',
+      'fromTo' => isset($fromto),
+    );
+    foreach ($ids as $id) {
+      date_popup_js_settings_id($id, 'datepicker', $settings);
+    }
+    drupal_add_library('system', 'ui.datepicker');
+    $js_added = TRUE;
+  }
 }
 
 /**
