@@ -235,7 +235,7 @@ function sbac_report_state_options() {
     in_array('digital library administrator', $roles) ||
     in_array('system administrator', $roles)) {
 
-    $options['all'] = t('- All - ');
+    $options['all'] = t('All');
 
   }
 
