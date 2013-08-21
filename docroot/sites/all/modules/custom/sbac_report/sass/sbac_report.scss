@@ -38,3 +38,60 @@
 /* #date-range-dropdown .container-inline-date { */
 /*   display: block; */
 /* } */
+
+.report-form-container {
+	position: relative;
+
+	/* state container */
+	.form-item-state {
+		width: 25%;
+		margin-right: 10px;
+		float: left;
+
+		.chzn-container {
+			width: 200px !important;
+		}
+	}
+
+
+	/* date range container */
+	.date-range-container {
+		width: 25%;
+		margin: 1em 10px 1em 0;
+		float: left;
+	}
+
+	.report-dropdown  {
+		position: absolute;
+		background: white;
+		width: 500px;
+		height: 500px;
+		z-index: 500;
+	}
+
+
+	.form-item-sne {
+		width: 25%;
+		float: left;
+		margin-right: 10px;
+	}
+
+	button {
+		float: right;
+		margin-top: 1.875em;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
