@@ -26,7 +26,7 @@
         var parentId = $(this).attr("tid");
         var update_data = function(data) {
           var obj = jQuery.parseJSON(data);
-          if ((obj.publication == 'SBAC-ELA-v1' && obj.depth >= 3)
+          if ((obj.publication == 'SBAC-ELA-v1' && obj.depth > 3)
               || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)
               || (obj.publication == '0')){
             $('.alignment-form').hide();
@@ -62,7 +62,7 @@
         var update_data = function(data) {
           var obj = jQuery.parseJSON(data);
 
-          if ((obj.publication == 'SBAC-ELA-v1' && obj.depth >= 3)
+          if ((obj.publication == 'SBAC-ELA-v1' && obj.depth > 3)
               || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)){
             $('.alignment-form').show();
             $('.alignment-buttons').hide();
