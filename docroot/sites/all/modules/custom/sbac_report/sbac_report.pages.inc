@@ -91,13 +91,13 @@ SQL;
     $last_name = $record->last_name;
     $full_name = $first_name . ' ' . $last_name;
     $uid = $record->uid;
-    $suggestion = '<span class="autocomplete-suggestion" data-uid=" ' . $uid . '">' . check_plain($full_name) . '</span>';
     if (!isset($matches[$full_name])) {
-      $matches[$full_name] = $suggestion;
+      $matches[$full_name] = '<span class="autocomplete-suggestion" data-uid=" ' . $uid . '">' . check_plain($full_name) . '</span>';
     }
     // Prevent overriding, if some matches have the same full name.
     else {
-      $matches[$full_name . ' [id:' . $uid . ']'] = $suggestion;
+      $id = ' [id:' . $uid . ']';
+      $matches[$full_name . $id] = '<span class="autocomplete-suggestion" data-uid=" ' . $uid . '">' . check_plain($full_name) . $id . '</span>';
     }
   }
   print drupal_json_encode($matches);
