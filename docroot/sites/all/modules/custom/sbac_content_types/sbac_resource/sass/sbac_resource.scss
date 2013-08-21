@@ -2,13 +2,16 @@
 
 
 /* -----------------------------------------
-   Color Variables
+    Variables
    ----------------------------------------- */
 $white: #FFF;
 $text: #5a5a5a;
 $header: #18577e;
 $teal: #0085ad;
 $darkgreen: #246a34;
+
+
+$body-font-family: Arial, Helvetica sans-serif;
 
 /* -----------------------------------------
    Forms
@@ -391,6 +394,25 @@ a.sbac-grid-layout {
       margin-top: 2em;
     }
   }
+
+  /* Search Results */
+
+  .no-results {
+    @include border-radius (12px);
+    background: $white;
+    padding: 1.5em 2em;
+    width: 96%;
+    margin: 0 auto 2em;
+
+    h3 {
+      font-size: 1.5em;
+      font-family: $body-font-family;
+    }
+
+    p {
+      font-size: 1em;
+    }
+  }
 }
 
 .no-ie8compat .digital-library .resource-card h3 {
@@ -612,10 +634,11 @@ a.sbac-grid-layout {
     display: none !important;
   }
 
-  .form-text {
-    background: url('../images/search.png') 95% center no-repeat;
+  .form-text, .form-text:focus {
+    background: url('../images/search.png') 5% center no-repeat, url('../images/icon-validation-fail.png') 95% center no-repeat;
     border-radius: 20px;
     top: 0;
+    padding-left: 25px;
   }
 }
 
