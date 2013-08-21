@@ -1333,7 +1333,7 @@ a.tabledrag-handle .handle {
       #sbac-resource-modal-alignment {
         display: inline-block;
         float: right;
-        margin: 20px 0 0;
+        margin: 20px 0 10px;
       }
       .alignment-tag-title,
       .educational-tag-title {
@@ -1458,6 +1458,7 @@ a.tabledrag-handle .handle {
         display: inline-block;
         color: #000;
         padding: 15px 0;
+        height: 35px;
       }
       .close {
         display: none;
