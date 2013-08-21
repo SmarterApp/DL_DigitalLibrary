@@ -77,8 +77,16 @@
 
       // Open / Close the filter list.
       $('#sbac-search-cat-button').click( function () {
-        close_categories_list();
-        $('.selectedDiv').hide();
+        // first check if on the no-results page because 
+        // category link is disabled
+        var a = location.pathname.split("/");
+        if (a.length > 2 && a[2] == "no-results") {
+          // insert logic here if we want 
+        } else {
+          // allow open/close category if not on no results page
+          close_categories_list();
+          $('.selectedDiv').hide();
+        }
         return false;
       });
 
