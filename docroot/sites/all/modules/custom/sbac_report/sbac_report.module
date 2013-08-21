@@ -267,11 +267,13 @@ function sbac_report_date_range_options() {
  */
 function sbac_report_get_session_value($field, $key) {
   if (isset($_SESSION['sbac_report'][$field][$key]) && !empty($_SESSION['sbac_report'][$field][$key])) {
-    $value = check_plain($_SESSION['sbac_report'][$field][$key]);
-    if ($key == 'date_range' && !sbac_report_validate_date_range($value)) {
+    $value = $_SESSION['sbac_report'][$field][$key];
+    // If the stored date range is invalid, unset everything to prevent further error.
+    if ($field == 'date_range' && !sbac_report_validate_date_range($value)) {
+      unset($_SESSION['sbac_report']);
       $value = NULL;
     }
-    return $value;
+    return check_plain($value);
   }
   return NULL;
 }
