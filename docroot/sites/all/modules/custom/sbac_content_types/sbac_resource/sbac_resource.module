@@ -569,15 +569,14 @@ function _sbac_resource_apply_filters($view) {
         }
       }
     }
-    // $view->display_handler->set_option('filters', $view_filters);
+    $view->display_handler->set_option('filters', $view_filters);
   }
 
   if (isset($_SESSION['sbac-search-keywords'])) {
     $keywords = $_SESSION['sbac-search-keywords'];
     $view_filters['keys']['value'] = $keywords;
-    // $view->display_handler->set_option('filters', $view_filters);
+    $view->display_handler->set_option('filters', $view_filters);
   }
-  return $view_filters;
 }
 
 /**
@@ -593,8 +592,7 @@ function sbac_resource_digital_library_page() {
 
   $view = views_get_view('resources');
   $view->set_display($display);
-  $view_filters = _sbac_resource_apply_filters($view);
-  $view->display_handler->set_option('filters', $view_filters);
+  _sbac_resource_apply_filters($view);
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
@@ -602,7 +600,7 @@ function sbac_resource_digital_library_page() {
   $_SESSION['sbac_search_count'] = $view->total_rows;
 
   if ($view->total_rows == 0) {
-    // drupal_goto('digital-library-resources/no-results');
+    drupal_goto('digital-library-resources/no-results');
   }
 
   menu_set_active_item('digital-library-resources');
@@ -616,6 +614,7 @@ function sbac_resource_digital_library_page() {
  */
 function sbac_resource_digital_library_no_results_page() {
   $display = sbac_resource_determine_grid_or_list();
+  // hide category drawer
   sbac_search_hide_category();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
@@ -630,7 +629,11 @@ function sbac_resource_digital_library_no_results_page() {
   $_SESSION['sbac_search_count'] = 0;
 
   menu_set_active_item('digital-library-resources');
-  return theme('digital_library', array('resource_layout_view' => $resource_layout_view));
+  $output = theme('digital_library', array('resource_layout_view' => $resource_layout_view));
+  
+  // remove keyword search variables
+  unset($_SESSION['sbac-search-keywords']);
+  return $output;
 }
 
 /**

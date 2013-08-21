@@ -13,3 +13,4 @@ have been identified for you using the subject(s) and grade(s) in your profile.<
     <?php print $resource_layout_view; ?>
 </div>
 </div>
+?>
