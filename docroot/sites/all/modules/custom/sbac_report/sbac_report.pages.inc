@@ -43,7 +43,7 @@ function sbac_report_sne_autocomplete($string = '') {
 
   $state = sbac_report_get_session_value('state', 'name');
   $state_condition = '';
-  if (!empty($state) && $state != 'all') {
+  if (!empty($state)) {
     $state_condition = "AND (field_data_field_state.field_state_value = '$state')";
   }
 
