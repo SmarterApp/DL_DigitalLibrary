@@ -29,5 +29,5 @@ sites/all/themes/SBAC/.sass-cache/
 sites/all/modules/contrib/masquerade
 
 #ignore sample data set
-sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ela.*.json
-sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ma.*.json
+#sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ela.*.json
+#sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ma.*.json

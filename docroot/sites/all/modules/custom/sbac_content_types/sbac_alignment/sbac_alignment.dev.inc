@@ -15,6 +15,49 @@ define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  dr
  */
 function sbac_alignment_devfix(){
   $shortnames = get_shortnames();
+  
+  $filename = 'ma.json';
+  
+  //get data
+  $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
+  $contents = $data->data;
+
+  $json = drupal_json_decode($contents);
+  //dsm($json);
+
+  usort($json, 'cmp');
+  $count = 0;
+  foreach($json as &$term) {
+    dsm($term);
+    $temp = explode(':', $term['key']);
+    $key = $temp[1];
+    
+    if(empty($term['shortname'])) {
+      $term['shortName'] = $shortnames[$key];  
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    if($count++ >10){
+      //break;
+    }
+  }
+  print drupal_json_encode($json);
+  
+  return '';
+}
+
+/**
+ *
+ */
+function sbac_alignment_devfix2(){
+  $shortnames = get_shortnames();
   //dsm($shortnames);
   
   $publication = 'SBAC-ELA-v1';
@@ -65,7 +108,7 @@ function get_file($filename) {
  */
 function get_shortnames() {
   $shortnames = array();
-  $data = explode("\n", get_file('ela.shortname.csv'));
+  $data = explode("\n", get_file('ma.shortname.csv'));
   array_shift($data);
   
   foreach ($data as $row) {
