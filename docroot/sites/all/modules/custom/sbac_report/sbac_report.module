@@ -54,7 +54,6 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     'file' => 'sbac_report.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
-      'sbac_report_preprocess_date_range_dropdown',
     ),
   );
 
