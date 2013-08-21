@@ -15,13 +15,20 @@ function sbac_report_page() {
   $contributed_details = '';
 
   // unset($_SESSION['sbac_report']);
+  // Get SESSION values.
   $uid = sbac_report_get_session_value('sne', 'uid');
+  $state = sbac_report_get_session_value('state', 'name');
   $date_range = sbac_report_get_session_value('date_range', 'range');
-  if (!empty($uid) && !empty($date_range)) {
-    $sne_details = views_embed_view('sne_details', 'sne_details', $uid);
-    $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
-    $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
+
+  if (!empty($uid) && !empty($date_range) && !empty($state)) {
+    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state);
+    // If there are no SNE with the selected state and uid. Display none.
+    if (!empty($sne_details)) {
+      $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
+      $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
+    }
   }
+
   return theme('sbac_report', array(
       'form' => $form,
       'sne_details' => $sne_details,
@@ -43,7 +50,7 @@ function sbac_report_sne_autocomplete($string = '') {
   $rids = array($rv_role->rid, $rc_role->rid);
 
   $state = sbac_report_get_session_value('state', 'name');
-  if ($state == t('All') || $state == 'all') {
+  if ($state == 'all') {
     $state_condition = '';
   }
   elseif (!empty($state)) {
