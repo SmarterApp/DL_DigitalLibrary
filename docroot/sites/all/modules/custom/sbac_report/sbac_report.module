@@ -110,7 +110,7 @@ function sbac_report_form($form, &$form_state) {
     '#date_format' => 'Y-m-d',
     '#date_increment' => 1,
     '#date_year_range' => '-1:+1',
-    '#datepicker_options' => array('minDate' => 0),
+    '#datepicker_options' => array(),
     ), $form_state, $form
   );
 
@@ -124,7 +124,7 @@ function sbac_report_form($form, &$form_state) {
     '#date_format' => 'Y-m-d',
     '#date_increment' => 1,
     '#date_year_range' => '-1:+1',
-    '#datepicker_options' => array('minDate' => 0),
+    '#datepicker_options' => array(),
     ), $form_state, $form
   );
 
