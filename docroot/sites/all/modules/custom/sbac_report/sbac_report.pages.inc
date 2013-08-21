@@ -49,25 +49,25 @@ function sbac_report_sne_autocomplete($string = '') {
 
   $sql = <<<SQL
 
-SELECT users.uid AS uid,
-  field_data_field_last_name.field_last_name_value as 'last_name',
-  field_data_field_first_name.field_first_name_value as 'first_name',
-  field_data_field_state.field_state_value as 'state'
-FROM {users} users
-INNER JOIN {users_roles} users_roles ON users.uid = users_roles.uid
-LEFT JOIN {field_data_field_last_name} field_data_field_last_name
-  ON users.uid = field_data_field_last_name.entity_id AND (field_data_field_last_name.entity_type = 'user' AND field_data_field_last_name.deleted = '0')
-LEFT JOIN {field_data_field_first_name} field_data_field_first_name
-  ON users.uid = field_data_field_first_name.entity_id AND (field_data_field_first_name.entity_type = 'user' AND field_data_field_first_name.deleted = '0')
-LEFT JOIN {field_data_field_state} field_data_field_state
-  ON users.uid = field_data_field_state.entity_id AND (field_data_field_state.entity_type = 'user' AND field_data_field_state.deleted = '0')
-WHERE (
-  ((field_data_field_first_name.field_first_name_value LIKE :str) OR (field_data_field_last_name.field_last_name_value LIKE :str))
-  AND (users.status <> '0')
-  AND (users_roles.rid IN (:rids))
-  $state_condition
-)
-LIMIT 10 OFFSET 0
+  SELECT users.uid AS uid,
+    field_data_field_last_name.field_last_name_value as 'last_name',
+    field_data_field_first_name.field_first_name_value as 'first_name',
+    field_data_field_state.field_state_value as 'state'
+  FROM {users} users
+  INNER JOIN {users_roles} users_roles ON users.uid = users_roles.uid
+  LEFT JOIN {field_data_field_last_name} field_data_field_last_name
+    ON users.uid = field_data_field_last_name.entity_id AND (field_data_field_last_name.entity_type = 'user' AND field_data_field_last_name.deleted = '0')
+  LEFT JOIN {field_data_field_first_name} field_data_field_first_name
+    ON users.uid = field_data_field_first_name.entity_id AND (field_data_field_first_name.entity_type = 'user' AND field_data_field_first_name.deleted = '0')
+  LEFT JOIN {field_data_field_state} field_data_field_state
+    ON users.uid = field_data_field_state.entity_id AND (field_data_field_state.entity_type = 'user' AND field_data_field_state.deleted = '0')
+  WHERE (
+    ((field_data_field_first_name.field_first_name_value LIKE :str) OR (field_data_field_last_name.field_last_name_value LIKE :str))
+    AND (users.status <> '0')
+    AND (users_roles.rid IN (:rids))
+    $state_condition
+  )
+  LIMIT 10 OFFSET 0
 
 SQL;
 
