@@ -176,6 +176,10 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
   $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'help_topics:page_2';
   $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
+  /* Sort criterion: Content: Title */
+  $handler->display->display_options['sorts']['title']['id'] = 'title';
+  $handler->display->display_options['sorts']['title']['table'] = 'node';
+  $handler->display->display_options['sorts']['title']['field'] = 'title';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -550,7 +554,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['filters']['field_help_page_topic_tid']['table'] = 'field_data_field_help_page_topic';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['field'] = 'field_help_page_topic_tid';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['value'] = array(
-    309 => '309',
+    121 => '121',
   );
   $handler->display->display_options['filters']['field_help_page_topic_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_help_page_topic_tid']['vocabulary'] = 'help_page_topic';

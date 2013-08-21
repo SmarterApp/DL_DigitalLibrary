@@ -31,10 +31,10 @@
   content: "Up to ";
 }
 
-.container-inline-date {
-  display: none;
-}
+/* .container-inline-date { */
+/*   display: none; */
+/* } */
 
-#date-range-dropdown .container-inline-date {
-  display: block;
-}
+/* #date-range-dropdown .container-inline-date { */
+/*   display: block; */
+/* } */

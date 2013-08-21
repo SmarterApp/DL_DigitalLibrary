@@ -152,11 +152,21 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
   $terms = taxonomy_get_tree($vocab->vid, $tid, SBAC_ALIGNMENT_MAX_DEPTH);
 
-  foreach($terms as $term) {
-    $form['term-' . $term->tid] = array(
-      '#type' => 'checkbox',
-      '#title' => $term->name,
-      '#title_display' => 'none',
+  if(!empty($terms)) {
+    foreach($terms as $term) {
+      $form['term-' . $term->tid] = array(
+        '#type' => 'checkbox',
+        '#title' => $term->name,
+        '#title_display' => 'none',
+      );
+    }
+  }
+  else {
+    $form['noterm'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="form-item large-12 columns"><div class="standard">',
+      '#suffix' => '</div></div>',
+      '#markup' => t('No Common Core Standard Available'),
     );
   }
 
