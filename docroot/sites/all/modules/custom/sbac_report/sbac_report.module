@@ -312,12 +312,20 @@ function sbac_report_validate_date_range($str) {
   }
 }
 
+/**
+ * Format the date range 'Ymd--Ymd' to 'm/d/Y to m/d/Y'.
+ */
 function sbac_report_format_date_range($str) {
   $date_range = contextual_range_filter_split($str);
   $from_date = DateTime::createFromFormat("Ymd", $date_range[0]);
   $to_date = DateTime::createFromFormat("Ymd", $date_range[1]);
 
-  $from_date_format = $from_date->format("Y-m-d");
-  $to_date_format = $to_date->format("Y-m-d");
-  return t($from_date_format . ' to ' . $to_date_format);
+  if (is_object($from_date) && is_object($to_date)) {
+    $from_date_format = $from_date->format("m/d/Y");
+    $to_date_format = $to_date->format("m/d/Y");
+    return t($from_date_format . ' to ' . $to_date_format);
+  }
+  else {
+    return '';
+  }
 }
