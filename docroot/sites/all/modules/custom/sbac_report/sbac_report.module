@@ -300,7 +300,16 @@ function sbac_report_state_ajax($form, &$form_state) {
  * Validate the date range string used for Views Contextual Range filter.
  */
 function sbac_report_validate_date_range($str) {
-  return preg_match("/\d{4}\d{2}\d{2}--\d{4}\d{2}\d{2}/", $str);
+  if (!preg_match("/^\d{4}\d{2}\d{2}--\d{4}\d{2}\d{2}$/", $str)) {
+    return FALSE;
+  }
+  // If the regex check passed, check again by creating a DateTime object.
+  else {
+    $date_range = contextual_range_filter_split($str);
+    $from_date = DateTime::createFromFormat("Ymd", $date_range[0]);
+    $to_date = DateTime::createFromFormat("Ymd", $date_range[1]);
+    return is_object($from_date) && is_object($to_date);
+  }
 }
 
 function sbac_report_format_date_range($str) {
