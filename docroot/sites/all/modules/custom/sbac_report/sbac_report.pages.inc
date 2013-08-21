@@ -43,7 +43,7 @@ function sbac_report_sne_autocomplete($string = '') {
   $rids = array($rv_role->rid, $rc_role->rid);
 
   $state = sbac_report_get_session_value('state', 'name');
-  if ($state == 'all' || $state == t('All')) {
+  if ($state == t('All') || $state == 'all') {
     $state_condition = '';
   }
   elseif (!empty($state)) {
