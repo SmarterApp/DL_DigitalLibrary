@@ -20,7 +20,7 @@ function resource_review_page($node) {
   try {
     $control = new \sbac_core\components\feedback\Control($node);
 
-    $control->addSection('about', 'about', t('About'));
+    $control->addSection('about', 'about', t('About this Resource'));
     $control->addSection('review', 'gk', t('Gate-Keeping Criteria'));
     $control->addSection('review', 'qc', t('Quality Criteria Review'), TRUE);
 

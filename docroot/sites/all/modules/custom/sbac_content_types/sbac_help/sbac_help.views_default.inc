@@ -495,7 +495,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['footer']['area']['table'] = 'views';
   $handler->display->display_options['footer']['area']['field'] = 'area';
   $handler->display->display_options['footer']['area']['content'] = '<div id="welcome-tutorial-topic-links">
-<a href=\'/welcome-tutorial-topics\' class=\'welcome-tutorial-topic-link welcome-tutorial-topic-link3\'>View Welcome Tutorial</a>
+<a href="#helpmodal" class="help-modal welcome-tutorial-topic-link welcome-tutorial-topic-link3">View Welcome Tutorial</a>
 </div>';
   $handler->display->display_options['footer']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
