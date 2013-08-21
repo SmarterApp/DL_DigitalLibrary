@@ -81,7 +81,16 @@ SQL;
   foreach ($result as $record) {
     $first_name = $record->first_name;
     $last_name = $record->last_name;
-    $matches[$record->uid] = check_plain($first_name . ' ' . $last_name);
+    $full_name = $first_name . ' ' . $last_name;
+    $uid = $record->uid;
+    $suggestion = '<span class="autocomplete-suggestion" data-uid=" ' . $uid . '">' . check_plain($full_name) . '</span>';
+    if (!isset($matches[$full_name])) {
+      $matches[$full_name] = $suggestion;
+    }
+    // Prevent overriding, if some matches have the same full name.
+    else {
+      $matches[$full_name . ' [id:' . $uid . ']'] = $suggestion;
+    }
   }
   print drupal_json_encode($matches);
 }

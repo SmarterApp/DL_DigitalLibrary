@@ -48,6 +48,13 @@
         return $(el).attr('value');
       }
 
+      $(context).on('click', '.autocomplete-suggestion', function() {
+        var uid = $(this).data('uid');
+        $('#sne-uid-field').text(uid);
+        $('#sne-uid-field').attr('value', uid);
+        console.log(uid);
+      });
+
     }
   }
 })(jQuery);
