@@ -210,11 +210,24 @@ function sbac_report_form_submit($form, &$form_state) {
  * Options for the state field.
  */
 function sbac_report_state_options() {
+  global $user;
+  $roles = $user->roles;
+
   $states = taxonomy_vocabulary_machine_name_load("states");
   $vid = $states->vid;
   $terms = taxonomy_get_tree($vid);
   $options = array();
-  $options['all'] = t('- All - ');
+
+  // Admin user can see the option "All".
+  if ($user->uid == 1 ||
+    in_array('DLRB member', $roles) ||
+    in_array('digital library administrator', $roles) ||
+    in_array('system administrator', $roles)) {
+
+    $options['all'] = t('- All - ');
+
+  }
+
   foreach ($terms as $key => $val) {
     $options[$val->tid] = $val->name;
   }
