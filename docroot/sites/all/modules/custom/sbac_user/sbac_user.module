@@ -569,45 +569,81 @@ function sbac_user_entity_presave($entity, $type) {
 
 function sbac_user_mail_format($user) {
   $result = array();
+  
+  $firstname = $user->field_first_name['und'][0]['value'];
+  $lastname = $user->field_last_name['und'][0]['value'];
+  $reset_link =  user_pass_reset_url($user);
+  $email = $user->mail;
+  
   if (isset($user->field_slt_member['und'][0]['value']) && $user->field_slt_member['und'][0]['value'] && isset($user->field_sne_member['und'][0]['value']) && !$user->field_sne_member['und'][0]['value']) {
     // slt email and make sure not sne
-    $result['subject'] = t('State Leadership Team Members in All Governing States');
-    $result['body'] = $result['message'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
-      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta site. You will learn more about the Digital Library and Quality Criteria using the materials previously provided to you and during your upcoming training. In the meantime, follow the instructions below to log in to the Digital Library for the first time:" .
-      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
-      "\n\n" . user_pass_reset_url($user) .
-      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
-      "\n\nAfter you complete these steps, please take a few moments to ensure that the " . '"Account"' . " profile information we have pre-populated for you is accurate." .
-      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
-      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties." .
-      "\n\nThank you," .
-      "\n\nThe Digital Library team";
+    $result['subject'] = t('Smarter Balanced Digital Library Login Information');
+    $result['body'] = $result['message'] = <<<HTML
+Dear $firstname $lastname: 
+The purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta website.  You will learn more about the Digital Library and Quality Criteria during your upcoming training.  In the meantime, follow the instructions below to log in to the Digital Library for the first time:
+1) Click the unique activation link below. Note that it will expire in 24 hours. If clicking the link does not work, copy and paste it into a web browser (Internet Explorer 9+, Safari, Chrome, or Firefox).
+
+$reset_link
+
+2) Read and agree to the Terms of Service. If you do not agree you will not be able to access the Digital Library.
+
+3) Follow the prompts to set a new password. Note that passwords are case-sensitive.
+
+After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
+
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+
+Thank you,
+The Digital Library team
+HTML;
   } elseif (isset($user->field_sne_member['und'][0]['value']) && $user->field_sne_member['und'][0]['value'] && isset($user->field_slt_member['und'][0]['value']) && !$user->field_slt_member['und'][0]['value'] ) {
     // sne email and make sure not slt
-    $result['subject'] = t('State Leadership Team Members in All Governing States');
-    $result['body'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
-      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library. You will need this access to support the upcoming training led by your State Leadership Team member. Please follow the steps below to activate your account prior to your training. In the meantime, follow the instructions below to log in to the Digital Library for the first time:" .
-      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
-      "\n\n" . user_pass_reset_url($user) .
-      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
-      "\n\nAfter you complete these steps, please take a few moments to ensure that the " . '"Account"' . " profile information we have pre-populated for you is accurate." .
-      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
-      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties." .
-      "\n\nThank you," .
-      "\n\nThe Digital Library team";
+    $result['subject'] = t('Smarter Balanced Digital Library Login Information');
+    $result['body'] = $result['message'] = <<<HTML
+Dear $firstname $lastname: 
+The purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta website.  You will need to activate your Digital Library account prior to the upcoming training led by your State Leadership Team member.  Follow the instructions below to log in to the Digital Library for the first time:
+1) Click the unique activation link below. Note that it will expire in 24 hours. If clicking the link does not work, copy and paste it into a web browser (Internet Explorer 9+, Safari, Chrome, or Firefox).
+
+$reset_link
+
+2) Read and agree to the Terms of Service. If you do not agree you will not be able to access the Digital Library.
+
+3) Follow the prompts to set a new password. Note that passwords are case-sensitive.
+
+After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
+
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+
+Thank you,
+The Digital Library team
+HTML;
   } else {
     // default
     $result['subject'] = t('Smarter Balanced Digital Library Login Information');
-    $result['body'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
-      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta site. Follow the instructions below to log in to the Digital Library for the first time:" .
-      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
-      "\n\n" . user_pass_reset_url($user) .
-      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
-      "\n\nAfter you complete these steps, please take a few moments to ensure that the " . '"Account"' . " profile information we have pre-populated for you is accurate." .
-      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
-      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties." .
-      "\n\nThank you," .
-      "\n\nThe Digital Library team";
+    $result['body'] = $result['message'] = <<<HTML
+Dear $firstname $lastname:
+The purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta website.  Follow the instructions below to log in to the Digital Library for the first time:
+1) Click the unique activation link below. If clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox).
+
+$reset_link
+
+2) Read and agree to the Terms of Service. Note that it will expire in 24 hours. If you do not agree you will not be able to access the Digital Library.
+
+3) Follow the prompts to set a new password. Note that passwords are case-sensitive.
+
+After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
+
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+
+Thank you,
+The Digital Library team
+HTML;
   }
   return $result;
 }
