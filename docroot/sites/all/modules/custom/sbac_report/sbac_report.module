@@ -203,6 +203,12 @@ function sbac_report_form($form, &$form_state) {
 
 /**
  * Form submit.
+ * Store in SESSION:
+ * $_SESSION['sbac_report'] = array(
+ *   'state' => array('name' => 'California', 'tid' => 123),
+ *   'date_range' => array('range' => '20130515--20140515'),
+ *   'sne' => array('uid' => 1, 'name' => 'first last'),
+ * );
  */
 function sbac_report_form_submit($form, &$form_state) {
   // State.
@@ -264,6 +270,7 @@ function sbac_report_date_range_options() {
 
 /**
  * Get the stored SESSION values.
+ * @see submit handler.
  *
  * @param string $field
  *   The field name: state, date_range, sne.
