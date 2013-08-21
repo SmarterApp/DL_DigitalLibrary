@@ -4,7 +4,7 @@
  * Date range dropdown template.
  */
 ?>
-<div class="form-item" id="edit-date-range-dropdown">
+<div id="edit-date-range-dropdown">
   <label>
   <?php print t('Choose a time period'); ?>
   <span class="form-required" title="This field is required.">*</span>
