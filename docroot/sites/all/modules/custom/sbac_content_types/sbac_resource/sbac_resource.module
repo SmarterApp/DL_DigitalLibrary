@@ -123,7 +123,7 @@ function sbac_resource_download_contents($node) {
         header("Content-Transfer-Encoding: Binary");
         header("Content-Length:".filesize($real_path));
         header("Content-Disposition: attachment; filename=" . $filename);
-        if (readfile($real_path)=== true) {
+        if (readfile($real_path) != false) {
 				$node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
 				entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
 			}
