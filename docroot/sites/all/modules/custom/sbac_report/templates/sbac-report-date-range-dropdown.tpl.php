@@ -15,6 +15,6 @@
       <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_30; ?>"><?php print t('Last 30 days'); ?></a></li>
       <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_60; ?>"><?php print t('Last 60 days'); ?></a></li>
       <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_90; ?>"><?php print t('Last 90 days'); ?></a></li>
-      <li><?php print t('Custom Date'); ?></li>
     </ul>
+    <div><?php print t('Custom Date'); ?></div>
 <?php // The closing tags are attached to the date popup form element. ?>
