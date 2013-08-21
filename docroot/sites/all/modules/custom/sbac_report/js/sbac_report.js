@@ -22,9 +22,9 @@
         }
       });
 
-      $('.date-range-custom #to-date input').on('change', function() {
+      $('#to-date input').on('change', function() {
         var toInput = getDateInput(this);
-        var fromInput = getDateInput('.date-range-custom #from-date input');
+        var fromInput = getDateInput('#from-date input');
         if (fromInput && toInput) {
           var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
           $dateRangeField.text(value);
@@ -33,9 +33,9 @@
         }
       });
 
-      $('.date-range-custom #from-date input').on('change', function() {
+      $('#from-date input').on('change', function() {
         var fromInput = getDateInput(this);
-        var toInput = getDateInput('.date-range-custom #to-date input');
+        var toInput = getDateInput('#to-date input');
         if (fromInput && toInput) {
           var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
           $dateRangeField.text(value);
