@@ -160,6 +160,23 @@
         </li>
       </ul>
     </div>
+    <div style='display:none'>
+      <div id="helpmodal">
+      <?php
+        global $user;
+        if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
+        <div class="sort-link"><a href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>
+      <?php endif; ?>
+      <center>
+        <h2>Welcome to the Smarter Balanced Digital Library</h2>
+        <p>The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate resources and collaborate. To learn more, click through the various welcome tutorials provided below:</p>
+      </center>
+      <?php print views_embed_view('help_topics','block'); ?>
+      <?php $form = drupal_get_form('sbac_help_disable_help');?>
+      <?php print drupal_render($form);?>
+      </ul>
+    </div>
+  </div>
   </div>
 </div>
 

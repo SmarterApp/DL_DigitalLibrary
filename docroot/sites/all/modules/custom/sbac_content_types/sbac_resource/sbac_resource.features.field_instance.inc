@@ -235,7 +235,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_classroom_technologies',
-    'label' => 'Classroom Technologies',
+    'label' => 'Technologies Required for Use in Classroom',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1685,7 +1685,7 @@ function sbac_resource_field_default_field_instances() {
   t('Attributes');
   t('Author');
   t('Body');
-  t('Classroom Technologies');
+  t('Technologies Required for Use in Classroom');
   t('Connection to CCSS');
   t('Connection to FAP');
   t('Contexts');

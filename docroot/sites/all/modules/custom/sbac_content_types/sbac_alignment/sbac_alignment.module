@@ -345,7 +345,7 @@ function sbac_alignment_add_terms ($vid, $terms, $parent_tid = 0) {
 
     $parent = (object) array(
       'name' => $term,
-      'description' => $data['desc'],
+      'description' => (isset($data['desc']))? '' : $data['desc'],
       'weight' => 0,
       'vid' => $vid,
       'parent' => $parent_tid,
