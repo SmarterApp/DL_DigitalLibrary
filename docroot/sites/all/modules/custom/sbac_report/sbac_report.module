@@ -181,6 +181,9 @@ function sbac_report_form($form, &$form_state) {
   );
 
   // Hidden field to store the selected uid.
+  // When the autocomplete suggetion is selected,
+  // the uid value will be set here.
+  // @see sbac_report.js
   $form['uid'] = array(
     '#type' => 'hidden',
     '#default_value' => sbac_report_get_session_value('sne', 'uid'),
