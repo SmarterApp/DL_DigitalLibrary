@@ -300,12 +300,7 @@ function sbac_report_state_ajax($form, &$form_state) {
     $state_tid = $form_state['values']['state'];
     $_SESSION['sbac_report']['state']['tid'] = $state_tid;
     $state_options = $form['state']['#options'];
-    if (is_numeric($state_tid)) {
-      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
-    }
-    else {
-      $_SESSION['sbac_report']['state']['name'] = '';
-    }
+    $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
   }
   return $form;
 }
