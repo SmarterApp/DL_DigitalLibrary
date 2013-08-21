@@ -61,13 +61,27 @@
 .report-form-container .form-item-state .chzn-container {
   width: 200px !important;
 }
-/* line 58, ../sass/sbac_report.scss */
+/* line 54, ../sass/sbac_report.scss */
+.report-form-container .form-item-state .chzn-container .chzn-single {
+  height: 2.3125em;
+}
+/* line 62, ../sass/sbac_report.scss */
 .report-form-container .date-range-container {
   width: 25%;
   margin: 1em 10px 1em 0;
   float: left;
 }
-/* line 64, ../sass/sbac_report.scss */
+/* line 67, ../sass/sbac_report.scss */
+.report-form-container .date-range-container .report-dropdown-toggle {
+  color: #4d4d4d;
+  height: 2.3125em;
+  border: 1px solid #ccc;
+  width: 100%;
+  display: inline-block;
+  padding: 5px;
+  font-size: 0.875em;
+}
+/* line 78, ../sass/sbac_report.scss */
 .report-form-container .report-dropdown {
   position: absolute;
   background: white;
@@ -75,13 +89,13 @@
   height: 500px;
   z-index: 500;
 }
-/* line 73, ../sass/sbac_report.scss */
+/* line 87, ../sass/sbac_report.scss */
 .report-form-container .form-item-sne {
   width: 25%;
   float: left;
   margin-right: 10px;
 }
-/* line 79, ../sass/sbac_report.scss */
+/* line 93, ../sass/sbac_report.scss */
 .report-form-container button {
   float: right;
   margin-top: 1.875em;
