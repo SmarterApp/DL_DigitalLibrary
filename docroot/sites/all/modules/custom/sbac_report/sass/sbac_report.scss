@@ -1,3 +1,5 @@
+@import "compass/css3/";
+
 .view-content table {
   width: 100%;
 }
@@ -79,7 +81,6 @@
 		position: absolute;
 		background: white;
 		width: 500px;
-		height: 500px;
 		z-index: 500;
 	}
 
@@ -96,7 +97,24 @@
 	}
 }
 
+#date-range-dropdown {
+	margin: 0;
+	padding: 10px;
+	border: 1px solid #ddd;
+	@include box-shadow(0,1px, 1px, rgba(black, 0.5));
 
+	ul {
+		margin: 0;
+		padding: 0;
+
+		li {
+			list-style-type: none;
+			padding: 0;
+			margin: 10px 0;
+			display: block;
+		}
+	}
+}
 
 
 

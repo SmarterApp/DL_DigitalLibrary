@@ -165,7 +165,7 @@ function sbac_report_form($form, &$form_state) {
     '#date_increment' => 1,
     '#date_year_range' => '-3:+3',
     '#datepicker_options' => array(),
-    '#suffix' => '</ul></div>', // Closing tags for the dropdown template.
+    '#suffix' => '</div></div>', // Closing tags for the dropdown template.
   );
 
   $form['sne'] = array(
