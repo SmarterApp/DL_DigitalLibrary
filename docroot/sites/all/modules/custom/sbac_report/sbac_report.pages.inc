@@ -43,9 +43,16 @@ function sbac_report_sne_autocomplete($string = '') {
   $rids = array($rv_role->rid, $rc_role->rid);
 
   $state = sbac_report_get_session_value('state', 'name');
-  $state_condition = '';
-  if (!empty($state)) {
+  if ($state == 'all' || $state == t('All')) {
+    $state_condition = '';
+  }
+  elseif (!empty($state)) {
     $state_condition = "AND (field_data_field_state.field_state_value = '$state')";
+  }
+  else {
+    $matches['none'] = t('Please select a state');
+    print drupal_json_encode($matches);
+    exit;
   }
 
   $sql = <<<SQL
