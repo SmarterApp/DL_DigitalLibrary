@@ -86,6 +86,17 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: access draggableviews.
+  $permissions['access draggableviews'] = array(
+    'name' => 'access draggableviews',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'draggableviews',
+  );
+
   // Exported permission: access site in maintenance mode.
   $permissions['access site in maintenance mode'] = array(
     'name' => 'access site in maintenance mode',

@@ -53,6 +53,54 @@ function sbac_resource_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
+      'weight' => 29,
+    ),
+  );
+
+  // Exported field_instance: 'node-resource-field_alignment_term'
+  $field_instances['node-resource-field_alignment_term'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 42,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_alignment_term',
+    'label' => 'Alignment Term',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
       'weight' => 30,
     ),
   );
@@ -235,7 +283,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_classroom_technologies',
-    'label' => 'Technologies Required for Use in Classroom',
+    'label' => 'Classroom Technologies',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -249,7 +297,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
-      'weight' => 29,
+      'weight' => 28,
     ),
   );
 
@@ -451,7 +499,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
-      'weight' => 27,
+      'weight' => 26,
     ),
   );
 
@@ -542,7 +590,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 28,
+      'weight' => 27,
     ),
   );
 
@@ -1233,7 +1281,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 26,
+      'weight' => 25,
     ),
   );
 
@@ -1682,10 +1730,11 @@ function sbac_resource_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Alignment Tags');
+  t('Alignment Term');
   t('Attributes');
   t('Author');
   t('Body');
-  t('Technologies Required for Use in Classroom');
+  t('Classroom Technologies');
   t('Connection to CCSS');
   t('Connection to FAP');
   t('Contexts');
