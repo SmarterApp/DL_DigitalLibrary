@@ -1436,6 +1436,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
     $form['revision_information']['#access'] = FALSE;
     $form['author']['#access'] = FALSE;
     $form['options']['#access'] = FALSE;
+    $form['field_alignment_terms']['#access'] = FALSE;
   }
   $form['field_alignment_tags']['#access'] = FALSE;
   $form['field_temp']['#access'] = FALSE;

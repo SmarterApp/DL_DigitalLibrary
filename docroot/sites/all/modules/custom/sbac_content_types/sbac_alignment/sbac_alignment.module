@@ -213,10 +213,13 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
 
   return $form;
 }
+/**
+ * Form Submit Handler
+ * sbac_alignment_alignment_form
+ */
 function sbac_alignment_alignment_form_submit(&$form, &$form_state){
   global $user;
   $values = $form_state['input'];
-  //@TODO KS - save node;
 
   $alignment_ref = $values['alignment_ref'];
   $alignment_type = $values['alignment_type'];
@@ -247,12 +250,19 @@ function sbac_alignment_alignment_form_submit(&$form, &$form_state){
         $node->field_alignment_type['und'][]['tid'] = $types[$alignment_type];
         $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
         node_save($node);
+        
+        $node = node_load($alignment_ref);
+        $node->field_alignment_term['und'][]['tid'] = $tid;
+        node_save($node);
       }
     }
   }
   drupal_custom_goto('node/' . $alignment_ref . '/edit#edit-group_tags');
 }
-
+/**
+ * Custom override
+ * Modified drupal_goto to not encode the path
+ */
 function drupal_custom_goto($path = '', array $options = array(), $http_response_code = 302) {
   // A destination in $_GET always overrides the function arguments.
   // We do not allow absolute URLs to be passed via $_GET, as this can be an attack vector.
@@ -277,7 +287,6 @@ function drupal_custom_goto($path = '', array $options = array(), $http_response
   // drupal_goto() call gets executed upon redirection.
   drupal_exit($url);
 }
-
 /**
  * AJAX Callback
  */
