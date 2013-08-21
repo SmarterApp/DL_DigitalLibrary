@@ -20,7 +20,7 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
             $container,
             $lang,
             $key,
-            $field,
+            $field_key,
           ));
 
           // default "empty field" message
@@ -71,24 +71,20 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
   switch ($values['entity']->type) {
     case 'gate_keeper':
       $container = 'field_quality_set';
-      $required_fields = array(
-        'field_comments' => 'You must add a comment to Quality Criteria !delta to continue',
-        'field_meets_criterion' => 'field_meets_criterion',
-      );
-
-      $required_check($container, $required_fields);
 
       switch ($values['action']) {
         case 'not_meet':
         case 'meet':
 
+          $required_fields = array(
+            'field_comments' => 'You must add a comment to Quality Criteria !delta to continue',
+            'field_meets_criterion' => 'You must make a decision in Quality Criteria !delta to continue',
+          );
+
+          $required_check($container, $required_fields);
+
           break;
       }
-
-      // dsmm($values['action']);
-      // dsmm($values['op']);
-
-      // form_set_error('test', 'test');
 
       $profanity_check($container);
 

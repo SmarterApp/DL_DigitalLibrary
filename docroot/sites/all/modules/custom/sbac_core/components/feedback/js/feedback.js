@@ -30,6 +30,16 @@ Feedback.utilities = {
    * @return {[type]}                 [description]
    */
   watch_value: function(default_value, value_callback, change_callback) {
+    // current_value = value_callback();
+    // while (current_value == default_value) {
+    //   setTimeout(function() {
+    //    current_value = value_callback();
+    //   }, 200);
+    // }
+
+    // change_callback(current_value);
+    // value_callback(default_value);
+
     setTimeout(function() {
       var current_value = value_callback();
       // target value is still set to the default, so call self again
@@ -138,7 +148,7 @@ Feedback.utilities = {
         var parts = link.attr('href').split('/');
         parts[5] = states[val];
         var new_url = parts.join('/');
-        link.attr('href', new_url)
+        link.attr('href', new_url);
 
         // bind new ajax behavior to all items showing the class.
         var element_settings = {};
@@ -158,7 +168,7 @@ Feedback.utilities = {
 Drupal.behaviors.feedback = {
   attach: function (context, settings) {
     // catch the submit button's submit behaviour and assign form error-watching functionality
-      $(Feedback.wrapper + ' ' + Feedback.submit_button).mousedown(function(e, modal_anchor) {
+      $(Feedback.wrapper + ' ' + Feedback.submit_button).once('mousedown-trigger').mousedown(function(e, modal_anchor) {
         // this is the default flag value, prior to form submission
         var default_value = -1;
         
@@ -177,10 +187,15 @@ Drupal.behaviors.feedback = {
         var change_callback = function (error_status) {
           Feedback.utilities.move_messages();
 
+          // now that the form submission is complete, we set the action back to default
+          // state; this must happen in the change callback!!
+          Feedback.utilities.set_action('gk', 'save_close');
+
           // proceed only if there are no form errors
           if (!error_status) {
             // if we got here via a modal button, we should now open the modal
             if (modal_anchor) {
+              console.log('triggering anchor: ' + modal_anchor);
               $(modal_anchor).trigger('click');
             }
             // othewise we got here via the Save & Close button, so let's "close" this tab
@@ -204,18 +219,14 @@ Drupal.behaviors.feedback = {
 
     // propagate click events on our form buttons to the anchors which will trigger the
     // appropriate modals
-      var tabs = ['gk', 'qc', 'post'];
-
-      $.each(tabs, function (key, name) {
+      $.each(['gk', 'qc', 'post'], function (key, name) {
         if (Feedback[name] && Feedback[name].buttons) {
           $.each(Feedback[name].buttons, function(button_key, data) {
-            $(data.button).click(function(e) {
+            $(data.button).once('mousedown-event').click(function(e) {
               e.preventDefault();
 
-              // update action
-              if (data.action) {
-                Feedback.utilities.set_action(name, data.action);
-              }
+              // update action to the one taking place
+              Feedback.utilities.set_action(name, data.action);
 
               // a modal-triggering button has been clicked, so the first thing we need to do
               // is ajax-submit the form to validate it, and we do this by clicking the Save &
