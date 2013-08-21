@@ -123,7 +123,7 @@ function sbac_report_form($form, &$form_state) {
   // Value is set when the user selects an item in the dropdown.
   // @see sbac_report.js
   $form['date_range'] = array(
-    '#type' => 'textfield',
+    '#type' => 'hidden',
     '#title' => t('Choose a time period'),
     '#default_value' => $session_date_range,
     '#attributes' => array(
