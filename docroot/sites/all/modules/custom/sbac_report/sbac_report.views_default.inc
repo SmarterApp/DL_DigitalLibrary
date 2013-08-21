@@ -190,6 +190,7 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['hide_empty'] = TRUE;
   /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
@@ -309,6 +310,16 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
+  /* Contextual filter: User: State (field_state) */
+  $handler->display->display_options['arguments']['field_state_value']['id'] = 'field_state_value';
+  $handler->display->display_options['arguments']['field_state_value']['table'] = 'field_data_field_state';
+  $handler->display->display_options['arguments']['field_state_value']['field'] = 'field_state_value';
+  $handler->display->display_options['arguments']['field_state_value']['default_action'] = 'empty';
+  $handler->display->display_options['arguments']['field_state_value']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_state_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_state_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_state_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_state_value']['limit'] = '0';
   /* Filter criterion: User: Roles */
   $handler->display->display_options['filters']['rid']['id'] = 'rid';
   $handler->display->display_options['filters']['rid']['table'] = 'users_roles';
