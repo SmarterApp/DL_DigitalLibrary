@@ -181,7 +181,6 @@ function sbac_report_form($form, &$form_state) {
   // Hidden field to store the selected uid.
   $form['uid'] = array(
     '#type' => 'hidden',
-    '#hidden' => TRUE,
     '#default_value' => sbac_report_get_session_value('sne', 'uid'),
     '#attributes' => array(
       'id' => 'sne-uid-field',
