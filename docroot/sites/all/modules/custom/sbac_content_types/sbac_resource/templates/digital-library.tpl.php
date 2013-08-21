@@ -6,6 +6,7 @@
 returned no results.</h3>
 <p>Please try a different search term or browse any of the resources below that 
 have been identified for you using the subject(s) and grade(s) in your profile.</p>
+<a href="#" class="browse-all-button">Browse All Resources</a>
 </div>
 <?php endif; ?>
 <div class='column large-12'>

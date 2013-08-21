@@ -190,6 +190,18 @@ function sbac_search_block_view($delta = '') {
   return $block;
 }
 
+/*
+ * Hides category filter if called
+ */
+function sbac_search_hide_category() {
+  static $hidden;
+  if (!$hidden) {
+    drupal_add_css('.sbac-filter-cat-area {display:none;}', 'inline');
+    $hidden = TRUE;
+  }
+}
+
+
 /**
  * Form for submitting the category filters.
  *

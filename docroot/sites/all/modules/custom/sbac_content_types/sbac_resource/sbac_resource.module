@@ -601,9 +601,8 @@ function sbac_resource_digital_library_page() {
   $resource_layout_view = $view->preview();
   $_SESSION['sbac_search_count'] = $view->total_rows;
 
-  // if no results, display results but also a message....
   if ($view->total_rows == 0) {
-    //drupal_goto('digital-library-resources/no-results');
+    // drupal_goto('digital-library-resources/no-results');
   }
 
   menu_set_active_item('digital-library-resources');
@@ -620,6 +619,8 @@ function sbac_resource_digital_library_no_results_page() {
   sbac_search_hide_category();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
+
+  // render resource view
   $view = views_get_view('resources');
   $view->set_display($display);
   $view->pre_execute();
