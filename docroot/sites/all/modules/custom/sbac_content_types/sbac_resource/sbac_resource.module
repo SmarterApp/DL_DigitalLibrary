@@ -711,7 +711,7 @@ function sbac_resource_create_file_from_cmis(&$node) {
   global $user;
   $role = sbac_central_determine_user_role($user);
   $file = file_load($node->field_file['und'][0]['fid']);
-  $folder_path = '/Roles/' . strtolower(str_replace(' ', '_', $role->name));
+  $folder_path = 'Assets';
   try {
     $repository = cmis_get_repository();
     $folder = cmisapi_getObjectByPath($repository->repositoryId, $folder_path);
