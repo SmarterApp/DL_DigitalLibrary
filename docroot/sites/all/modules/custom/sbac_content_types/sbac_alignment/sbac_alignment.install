@@ -114,3 +114,91 @@ function sbac_alignment_update_7003() {
   
   return ;
 }
+/**
+ * Implements hook_update_N().
+ * Install sample set for ELA terms
+ */
+function sbac_alignment_update_7004() {
+  $edu_alignment_vocab_name = "education_alignment";
+  $filename = 'ela.sample.json';
+
+  $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
+  $parents = $grade_terms = array();
+  $parent_tid = 0;
+  
+  //DELETE old terms
+  $terms = taxonomy_get_tree($edu_alignment_vocab->vid);
+  foreach ($terms as $term) {
+    taxonomy_term_delete($term->tid);
+  }
+
+  // Add education alignment
+  $terms = array(
+    'English / Language Arts' => array(
+      'children' => array(
+        'KG - Kindergarten' =>  array(),
+        '1 - First Grade' =>  array(),
+        '2 - Second Grade' =>  array(),
+        '3 - Third Grade' =>  array(),
+        '4 - Fourth Grade' =>  array(),
+        '5 - Fifth Grade' =>  array(),
+        '6 - Sixth Grade' =>  array(),
+        '7 - Seventh Grade' =>  array(),
+        '8 - Eight Grade' =>  array(),
+        '9 - Ninth Grade' =>  array(),
+        '10 - Tenth Grade' =>  array(),
+        '11 - Eleventh Grade' =>  array(),
+        '12 - Twelveth Grade' =>  array(),
+      ),
+    ),
+  );
+  
+  sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
+
+  $subject = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
+  
+  /** create terms*/
+  // get grades tids
+  $terms = taxonomy_get_tree($edu_alignment_vocab->vid, $subject->tid, 1, TRUE);
+  foreach ($terms as $term) {
+    if($term->depth == 0) {
+      $name = explode('-', $term->name);
+      $grade_terms[trim($name[0])] = $term;
+    }
+  }
+  //get data
+  $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
+  $contents = $data->data;
+  $json = drupal_json_decode($contents);
+
+  uasort($json, 'cmp');
+  
+  foreach ($json as $term) {
+    $grade = trim($term['fkGradeLevel']);
+
+    // Root term. first set after the grade
+    if ($term['treeLevel'] < 2) {
+      $parent_tid = $grade_terms[$grade]->tid;
+      $key = $grade . '|' . $term['key'];
+      $parents[$key] = sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
+    }
+    elseif(($tree_level = $term['treeLevel']) >=2) {
+      $parent_key = $grade . '|' . $term['fkParent'];
+      //$parent_tid = sbac_alignment_get_parent($parent_key);
+      $parent_tid = $parents[$parent_key]->tid;
+      //dsm(array($parent_key, $parent_tid));
+      if (empty($parent_tid)) {
+        //cannot find parent save to grade
+        $parent_tid = $grade_terms[$grade]->tid;
+        $broken_terms[] = $term;
+      }
+      else {
+      $key = $grade . '|' . $term['key'];
+      $parents[$key] = sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
+      }
+    }
+    else{
+      //@TODO KS - need to output in case of error
+    }
+  }
+}
