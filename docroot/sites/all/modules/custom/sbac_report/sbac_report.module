@@ -13,7 +13,7 @@ function sbac_report_menu() {
   $items['reports'] = array(
     'title' => 'Reports',
     'file' => 'sbac_report.pages.inc',
-    'page callback' => 'sbac_report_page',
+    'page callback' => 'sbac_report_individual',
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
     'menu_name' => 'main-menu',
@@ -38,13 +38,13 @@ function sbac_report_theme($existing, $type, $theme, $path) {
   $themes = array();
   $module_path = drupal_get_path('module', 'sbac_report');
 
-  $themes['sbac_report'] = array(
-    'template' => 'templates/sbac-report',
+  $themes['sbac_report_individual'] = array(
+    'template' => 'templates/sbac-report-individual',
     'path' => $module_path,
     'file' => 'sbac_report.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
-      'sbac_report_preprocess_sbac_report',
+      'sbac_report_preprocess_sbac_report_individual',
     ),
   );
 
@@ -86,7 +86,7 @@ function sbac_report_theme($existing, $type, $theme, $path) {
 /**
  * Report filter form.
  */
-function sbac_report_form($form, &$form_state) {
+function sbac_report_individual_form($form, &$form_state) {
   $form = array();
 
   $form['state'] = array(
@@ -209,7 +209,7 @@ function sbac_report_form($form, &$form_state) {
  *   'sne' => array('uid' => 1, 'name' => 'first last'),
  * );
  */
-function sbac_report_form_submit($form, &$form_state) {
+function sbac_report_individual_form_submit($form, &$form_state) {
   // State.
   $state_tid = $form_state['values']['state'];
   $_SESSION['sbac_report']['state']['tid'] = $state_tid;

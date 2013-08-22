@@ -7,9 +7,9 @@
 /**
  * Page callback for the report.
  */
-function sbac_report_page() {
+function sbac_report_individual() {
   drupal_set_title(t('Usage and Activity Reports'));
-  $form = drupal_get_form('sbac_report_form');
+  $form = drupal_get_form('sbac_report_individual_form');
   $sne_details = '';
   $contributed_summary = '';
   $contributed_details = '';
@@ -30,7 +30,7 @@ function sbac_report_page() {
     }
   }
 
-  return theme('sbac_report', array(
+  return theme('sbac_report_individual', array(
       'form' => $form,
       'sne_details' => $sne_details,
       'contributed_summary' => $contributed_summary,
