@@ -953,37 +953,6 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_use_of_student_images'
-  $field_bases['field_use_of_student_images'] = array(
-    'active' => 1,
-    'cardinality' => 2,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_use_of_student_images',
-    'foreign keys' => array(),
-    'indexes' => array(
-      'value' => array(
-        0 => 'value',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'list',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => 'None',
-        1 => 'By checking this box, you confirm that:
-        <ul>
-        <li> You did not create any of the materials in this resource; or
-        <li> You did create some of the materials in this resource, but the materials you created do not contain images of students; or
-        <li>You did create some of the materials in this resource, the materials you created in this resource contain images of students, and your school district has approved the posting of these images in the Smarter Balanced Digital Library
-        </ul>',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => 0,
-    'type' => 'list_text',
-  );
-
   // Exported field_base: 'field_video'
   $field_bases['field_video'] = array(
     'active' => 1,

@@ -21,14 +21,36 @@ function sbac_media_file_formatter_info() {
     'settings callback' => 'sbac_media_file_formatter_schooltube_video_settings',
   );
 
+  $formatters['sbac_media_teachertube'] = array(
+    'label' => t('TeacherTube Video'),
+    'file types' => array('video'),
+    'default settings' => array(
+      'width' => 560,
+      'height' => 315,
+    ),
+    'view callback' => 'sbac_media_file_formatter_teachertube_video_view',
+    'settings callback' => 'sbac_media_file_formatter_teachertube_video_settings',
+  );
+
+  $formatters['sbac_media_slideshare'] = array(
+    'label' => t('SlideShare Presentation'),
+    'file types' => array('video'),
+    'default settings' => array(
+      'width' => 427,
+      'height' => 356,
+    ),
+    'view callback' => 'sbac_media_file_formatter_slideshare_video_view',
+    'settings callback' => 'sbac_media_file_formatter_slideshare_video_settings',
+  );  
+
   $formatters['sbac_media_image'] = array(
-    'label' => t('SchoolTube Preview Image'),
+    'label' => t('SBAC Media Preview Image'),
     'file types' => array('video'),
     'default settings' => array(
       'image_style' => '',
     ),
     'view callback' => 'sbac_media_file_formatter_image_view',
-    'settings callback' => 'sbac_media_file_formatter_schooltube_image_settings',
+    'settings callback' => 'sbac_media_file_formatter_image_settings',
   );
 
   return $formatters;
@@ -43,6 +65,52 @@ function sbac_media_file_formatter_schooltube_video_view($file, $display, $langc
   if ($scheme == 'schooltube' && empty($file->override['wysiwyg'])) {
     $element = array(
       '#theme' => 'sbac_media_schooltube_video',
+      '#uri' => $file->uri,
+      '#options' => array(),
+    );
+
+    // Fake a default for attributes so the ternary doesn't choke.
+    $display['settings']['attributes'] = array();
+
+    foreach (array('width', 'height') as $setting) {
+      $element['#options'][$setting] = isset($file->override[$setting]) ? $file->override[$setting] : $display['settings'][$setting];
+    }
+    return $element;
+  }
+}
+
+/**
+ * Implements hook_file_formatter_FORMATTER_view().
+ */
+function sbac_media_file_formatter_teachertube_video_view($file, $display, $langcode) {
+  $scheme = file_uri_scheme($file->uri);
+  // WYSIWYG does not yet support video inside a running editor instance.
+  if ($scheme == 'teachertube' && empty($file->override['wysiwyg'])) {
+    $element = array(
+      '#theme' => 'sbac_media_teachertube_video',
+      '#uri' => $file->uri,
+      '#options' => array(),
+    );
+
+    // Fake a default for attributes so the ternary doesn't choke.
+    $display['settings']['attributes'] = array();
+
+    foreach (array('width', 'height') as $setting) {
+      $element['#options'][$setting] = isset($file->override[$setting]) ? $file->override[$setting] : $display['settings'][$setting];
+    }
+    return $element;
+  }
+}
+
+/**
+ * Implements hook_file_formatter_FORMATTER_view().
+ */
+function sbac_media_file_formatter_slideshare_video_view($file, $display, $langcode) {
+  $scheme = file_uri_scheme($file->uri);
+  // WYSIWYG does not yet support video inside a running editor instance.
+  if ($scheme == 'slideshare' && empty($file->override['wysiwyg'])) {
+    $element = array(
+      '#theme' => 'sbac_media_slidleshare_presentation',
       '#uri' => $file->uri,
       '#options' => array(),
     );
