@@ -379,3 +379,21 @@ function sbac_report_embed_view($name, $display_id = 'default') {
 
   return NULL;
 }
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Fix the broken contextual filter for eck "created" date field.
+ */
+function sbac_report_views_query_alter(&$view, &$query) {
+  if ($view->name == 'gate_keeping_reviews') {
+    foreach ($query->where as &$condition_group) {
+      foreach ($condition_group['conditions'] as &$condition) {
+        if ($condition['operator'] == 'formula' && strpos($condition['field'], 'eck_feedback. SECOND') !== FALSE) {
+          $condition['field'] = str_replace('eck_feedback. SECOND', 'eck_feedback.created SECOND', $condition['field']);
+          break 2;
+        }
+      }
+    }
+  }
+}
