@@ -13,7 +13,8 @@
             $shortname = $term_data->field_alignment_shortname['und'][0]['value'];
           ?>
             <?php if (!empty($shortname)): ?>
-              <?php print $shortname . ' ( ' . $term->name . ' )'; ?>
+              <?php //print $shortname . ' ( ' . $term->name . ' )'; ?>
+              <?php print $shortname; ?>
             <?php else: ?>
               <?php print $term->name; ?>
             <?php endif; ?>
