@@ -50,12 +50,12 @@ function sbac_report_sne_autocomplete($string = '') {
   $rv_role = user_role_load_by_name('resource reviewer');
   $rids = array($rv_role->rid, $rc_role->rid);
 
-  $state = sbac_report_get_session_value('state', 'name');
-  if ($state == 'all') {
+  $state_tid = sbac_report_get_session_value('state', 'tid');
+  if ($state_tid == 'all') {
     $state_condition = '';
   }
-  elseif (!empty($state)) {
-    $state_condition = "AND (field_data_field_state.field_state_value = '$state')";
+  elseif (!empty($state_tid)) {
+    $state_condition = "AND (field_data_field_state.field_state_tid = '$state_tid')";
   }
   else {
     $matches['none'] = t('Please select a state');
@@ -68,7 +68,7 @@ function sbac_report_sne_autocomplete($string = '') {
   SELECT users.uid AS uid,
     field_data_field_last_name.field_last_name_value as 'last_name',
     field_data_field_first_name.field_first_name_value as 'first_name',
-    field_data_field_state.field_state_value as 'state'
+    field_data_field_state.field_state_tid as 'state_tid'
   FROM {users} users
   INNER JOIN {users_roles} users_roles ON users.uid = users_roles.uid
   LEFT JOIN {field_data_field_last_name} field_data_field_last_name
