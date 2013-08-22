@@ -1,6 +1,6 @@
 name = SBAC Media
 description = Provides media support for File Entity and the Media module to display SchoolTube, TeacherTube and Slideshare.
-package = "Media"
+package = "~SBAC"
 core = 7.x
 files[] = includes/MediaInternetSchoolTubeHandler.inc
 files[] = includes/MediaSchoolTubeStreamWrapper.inc
