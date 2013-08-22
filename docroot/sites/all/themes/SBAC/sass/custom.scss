@@ -1109,6 +1109,43 @@ a.tabledrag-handle .handle {
     margin-left: 10px;
     margin-top: 10px;
   }
+  thead th:first-child {
+    background-color: #fff;
+    padding:5px 5px 25px;
+
+    &:after {
+      display:block;
+      content: 'Primary material. This is the main material with which you want users to interact.';
+      font-weight: normal;
+      font-size: emCalc(12px);
+      width: 93%;
+      position: absolute;
+      border-top: 1px solid #eee;
+      padding: 5px 0;
+      margin-top: 0px;
+    }
+  }
+  tr:nth-child(2) {
+    td:nth-child(1) {
+      padding-top: 20px;
+      .file-widget {
+        position: relative;
+        &:before {
+          display: block;
+          content: 'Secondary material(s). These will be shown adjacent to the primary material.';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: calc(132%);
+          width: -webkit-calc(130.2%); // ** semi-hackish **
+          margin: -43px 0 0 -10px;
+          padding: 0 0 5px 10px;
+          font-size: emCalc(14px);
+          border-bottom: 1px solid #ccc;
+        }
+      }
+    }
+  }
 }
 
 #edit-field-file-und {
@@ -1233,7 +1270,7 @@ a.tabledrag-handle .handle {
   #edit-group_materials {
   .field-name-field-file {
     .fieldset-wrapper {
-      table {
+      #field-file-values {
         width: 100%;
         border: none;
         thead {
