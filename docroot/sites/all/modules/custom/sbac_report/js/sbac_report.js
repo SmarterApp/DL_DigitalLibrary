@@ -96,6 +96,7 @@
         if (op == 'show') {
           if ($dropdown.hasClass('hide')) {
             $dropdown.removeClass('hide');
+            $dropdown.addClass('open');
             $dropdown.unbind('hide');
             $dropdown.trigger('show');
           }
@@ -104,6 +105,7 @@
         else {
           if (!$dropdown.hasClass('hide')) {
             $dropdown.addClass('hide');
+            $dropdown.removeClass('open');
             $dropdown.unbind('show');
             $dropdown.trigger('hide');
           }
