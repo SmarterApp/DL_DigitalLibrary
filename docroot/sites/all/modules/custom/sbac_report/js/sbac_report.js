@@ -16,13 +16,22 @@
       });
       $('.report-dropdown-toggle').click(function(e) {
         e.preventDefault();
-        var $dropdown = $('#date-range-dropdown');
-        if ($dropdown.hasClass('hide')) {
-          $dropdown.removeClass('hide');
-        }
-        else {
-          $dropdown.addClass('hide');
-        }
+        e.stopPropagation();
+        toggleDropdown();
+      });
+
+      // On "show" event.
+      $dropdown.on('show', function(e) {
+        $(context).on('click keydown', function(e) {
+          // ESC closes the dropdown.
+          if (e.keyCode === 27) {
+            dropdown('hide');
+          }
+          // Clicking outside the dropdown will close the dropdown.
+          if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 && $('#ui-datepicker-div').has(e.target).length === 0) {
+            dropdown('hide');
+          }
+        });
       });
 
       $('#to-date input').on('change', function() {
