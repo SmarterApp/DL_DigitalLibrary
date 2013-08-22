@@ -37,3 +37,19 @@ function sbac_media_preprocess_media_schooltube_video(&$variables) {
   // $variables['url'] = url($protocol . '//www.' . $url_base . '/embed/' . $variables['video_id'], array('query' => $query, 'external' => TRUE));
   $variables['url'] = url('http://www.schooltube.com/embed_force/' . $variables['video_id'], array('external' => TRUE));  
 }
+
+/**
+ * NOT IMPLEMENTED: See schooltube function above for example implementation
+ * Preprocess function for theme('sbac_media_teachertube_video').
+ */
+function sbac_media_preprocess_media_teachertube_video(&$variables) {
+  $variables = array();
+}
+
+/**
+ * NOT IMPLEMENTED: See schooltube function above for example implementation
+ * Preprocess function for theme('sbac_media_slideshare_video').
+ */
+function sbac_media_preprocess_media_slideshare_video(&$variables) {
+  $variables = array();
+}

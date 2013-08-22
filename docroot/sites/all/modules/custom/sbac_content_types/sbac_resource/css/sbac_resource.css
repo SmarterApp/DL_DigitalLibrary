@@ -655,7 +655,7 @@ a.sbac-grid-layout {
 }
 /* line 637, ../sass/sbac_resource.scss */
 .block-search .form-text, .block-search .form-text:focus {
-  background: url("../images/search.png") 5% center no-repeat, url("../images/icon-validation-fail.png") 95% center no-repeat;
+  background: url("../images/search.png") 5% center no-repeat;
   border-radius: 20px;
   top: 0;
   padding-left: 25px;
