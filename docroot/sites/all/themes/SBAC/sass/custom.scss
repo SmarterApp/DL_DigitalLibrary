@@ -1147,6 +1147,80 @@ a.tabledrag-handle .handle {
   }
 }
 
+
+.ui-dialog {
+  padding: 0;
+  @include box-shadow(1px, 1px, 1px,rgba(black,0.5));
+}
+.page-media-browser {
+
+  background: white;
+
+  //tabs
+  .button-group {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  form {
+    margin: 0;
+  }
+
+  .ui-tabs{
+    .ui-tabs-nav{
+      li {
+        margin: 0;
+        @include border-radius(0);
+        border:none;
+
+        &:last-child{
+          border-right: 1px solid #ccc;
+        }
+
+        a{
+          @include border-radius(0);
+          border: none;
+          background: white;
+        }
+
+        &.ui-tabs-selected {
+          a {
+            color: white;
+            background-color: #0085ad;
+          }
+        }
+      }
+    }
+
+    .media-browser-tab.ui-tabs-panel {
+      border-width: 1px 0 0;
+      padding: 10px;
+    }
+  }
+
+  label {
+    float: left;
+    margin-bottom: 10px;
+  }
+  #edit-upload-upload {
+    float: left;
+    width: 50%;
+    clear:left;
+  }
+
+  #edit-upload-upload-button {
+    float:right;
+  }
+
+  .form-item .description {
+    clear: both;
+    margin-top: 20px;
+    font-size: 12px;
+    width: 80%;
+  }
+}
+
 #edit-field-file-und {
   border: none;
   padding: 10px 0 0;
