@@ -94,7 +94,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
     '#multiple' => FALSE,
-    '#default_value' => sbac_report_get_session_value('state', 'tid'),
+    '#default_value' => sbac_report_get_default_state_tid(),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
     ),

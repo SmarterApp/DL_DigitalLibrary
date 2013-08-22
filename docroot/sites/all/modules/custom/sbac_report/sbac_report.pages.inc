@@ -50,7 +50,7 @@ function sbac_report_sne_autocomplete($string = '') {
   $rv_role = user_role_load_by_name('resource reviewer');
   $rids = array($rv_role->rid, $rc_role->rid);
 
-  $state_tid = sbac_report_get_session_value('state', 'tid');
+  $state_tid = sbac_report_get_default_state_tid();
   if ($state_tid == 'all') {
     $state_condition = '';
   }
