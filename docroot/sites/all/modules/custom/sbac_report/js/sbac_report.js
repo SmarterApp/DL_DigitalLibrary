@@ -1,6 +1,6 @@
 /**
  * @todo: separate out stuff that is only for the individual report.
- * But possibly can reuse the dropdown and date range field.
+ * But possibly can reuse the dropdown and date range.
  */
 (function($) {
   Drupal.behaviors.sbac_report = {
