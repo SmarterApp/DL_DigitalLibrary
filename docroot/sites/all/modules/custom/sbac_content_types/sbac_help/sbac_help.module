@@ -60,7 +60,7 @@ function sbac_help_menu() {
     'page callback' => 'sbac_help_remove',
     'page arguments' => array(2),
     'access callback' => 'user_access',
-    'access arguments' => array('remove from list'),
+    'access arguments' => array('send approval emails'),
   );
 
   return $items;
