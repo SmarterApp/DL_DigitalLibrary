@@ -1,3 +1,7 @@
+/**
+ * @todo: separate out stuff that is only for the individual report.
+ * But possibly can reuse the dropdown and date range field.
+ */
 (function($) {
   Drupal.behaviors.sbac_report = {
     attach: function(context, settings) {
@@ -120,7 +124,7 @@
         }
       }
 
-      // Get the id from the autocomplete suggestion.
+      // Individual Report: Get the id from the autocomplete suggestion.
       $(context).on('click', '#autocomplete li', function() {
         var uid = $(this).find('.autocomplete-suggestion').data('uid');
         $uidField.text(uid);
