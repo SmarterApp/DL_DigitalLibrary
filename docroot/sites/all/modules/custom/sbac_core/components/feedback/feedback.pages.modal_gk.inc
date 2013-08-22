@@ -41,8 +41,7 @@ function resource_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
     $form['state_cancel']['intro'] = array(
       '#markup' => '
                     <div class="gate-keeper-modal-intro">
-                      ' . t('If you continue, you will no longer be able to review this resource. All of your responses
-                        and comments will be lost.') . '
+                      ' . t('If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '
                     </div>
                    ',
     );
@@ -114,7 +113,7 @@ function resource_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
         ) + $state_common_options,
 
         'cancel' => array(
-          'dialog' => array('title' => t('You are about to cancel the Review')) + $dialog_common_options,
+          'dialog' => array('title' => t('You are about to cancel the review')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_cancel']['submit'])),
         ) + $state_common_options + $state_redirect_options,
 

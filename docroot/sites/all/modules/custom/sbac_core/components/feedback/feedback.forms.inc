@@ -56,7 +56,7 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
           $set_title = trim(check_plain(strip_tags($values[$container][$lang][$delta]['set_title'])));
 
-          $new_text = t('Please remove inappropriate language from the comment in Quality Criteria !delta to continue', array('!delta' => $delta + 1));
+          $new_text = t('Please remove inappropriate language from the comment in Quality Criterion to continue');
 
           // ugly, but works
           $location = array_search($text, $_SESSION['messages']['error']);

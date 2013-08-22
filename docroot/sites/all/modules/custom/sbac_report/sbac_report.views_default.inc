@@ -66,6 +66,9 @@ function sbac_report_views_default_views() {
 
   /* Display: Resources Summary */
   $handler = $view->new_display('block', 'Resources Summary', 'resources_summary');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: COUNT(Content: Nid) */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
