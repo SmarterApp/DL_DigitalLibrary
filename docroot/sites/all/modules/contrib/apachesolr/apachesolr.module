@@ -1187,6 +1187,10 @@ function apachesolr_get_solr($env_id = NULL) {
       }
       // Takes advantage of auto-loading.
       $solr = new $class($environments[$env_id]['url'], $env_id);
+      $soft_commit = apachesolr_environment_variable_get($env_id, 'apachesolr_soft_commit', FALSE);
+      if ($soft_commit) {
+        $solr->setSoftCommit($soft_commit);
+      }
       $solr_cache[$env_id] = $solr;
     }
     return $solr_cache[$env_id];
@@ -1821,6 +1825,21 @@ function apachesolr_field_name_map($field_name) {
 function apachesolr_facet_form_validate($form, &$form_state) {
   if (($form_state['values']['global']['operator'] == FACETAPI_OPERATOR_OR) && $form_state['values']['global']['facet_missing']) {
     form_set_error('operator', t('Apache Solr does not support <em>facet missing</em> in combination with the OR operator.'));
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function apachesolr_module_implements_alter(&$implementations, $hook) {
+  // This module's hook_entity_info_alter() implementation should run last
+  // since it needs to examine the list of bundles for each entity type, which
+  // may have been changed in earlier hook_entity_info_alter() implementations
+  // (for example, the File Entity module does this for file entities).
+  if ($hook == 'entity_info_alter') {
+    $group = $implementations['apachesolr'];
+    unset($implementations['apachesolr']);
+    $implementations['apachesolr'] = $group;
   }
 }
 

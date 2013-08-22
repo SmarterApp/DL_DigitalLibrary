@@ -1,5 +1,7 @@
 Apache Solr integration 7.x-1.x, xxxx-xx-xx
 -----------------------------
+#1974124 by Nick_vh: Fixed Allow a more configurable soft commit status so we can start taking advantage of Solr 4."
+#2014067 by David_Rothstein: Fixed File types provided by the File Entity module are not always recognized by Apache Solr.
 
 Apache Solr integration 7.x-1.4, 2013-07-25
 -----------------------------
