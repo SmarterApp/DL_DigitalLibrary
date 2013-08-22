@@ -1,6 +1,8 @@
 (function ($) {
   Drupal.behaviors.sbac_custom = {
     attach: function (context, settings) {
+      
+      
       $('.disabled').click(function(e) {
           e.preventDefault();
           //do other stuff when a click happens
@@ -76,6 +78,40 @@
               $('#ccss-cancel').click(function() {
                 $('#modalBackdrop').hide();
                 $('#modalContent').hide();
+              });
+              
+              $('#ccss-submit').click(function() {
+                var countType = countStandard = 0;
+                $('#alignment-msg').html('<ul><li style="display:none;"></li></ul>');
+                //counts type
+                $('#edit-alignment-type option').each(function() {
+                  if($(this).is(':selected') && $(this).val() != ''){
+                    countType++;
+                  }
+                });
+                //count standards
+                $('input[id^=edit-term-]').each(function() {
+                  if($(this).is(':checked')){
+                    countStandard++;
+                  }
+                });
+                
+                if (countStandard < 1) {
+                  $('#alignment-msg ul').append('<li>Please select a standard.</li>');
+                }
+                if (countType < 1) {
+                  console.log('noe enought');
+                  $('#alignment-msg ul').append('<li>Please select alignment type.</li>');
+                }
+                
+                $('#modal-content').animate({ scrollTop: 0 });
+              });
+              
+              
+              
+              $('#edit-submit').click(function() {
+                $(this).hide();
+                 return false;
               });
             }
 

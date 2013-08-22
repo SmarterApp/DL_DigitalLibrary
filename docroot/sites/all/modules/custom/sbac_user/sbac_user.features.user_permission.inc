@@ -556,6 +556,17 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: send approval emails.
+  $permissions['send approval emails'] = array(
+    'name' => 'send approval emails',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'sbac_help',
+  );
+
   // Exported permission: use workbench_moderation my drafts tab.
   $permissions['use workbench_moderation my drafts tab'] = array(
     'name' => 'use workbench_moderation my drafts tab',

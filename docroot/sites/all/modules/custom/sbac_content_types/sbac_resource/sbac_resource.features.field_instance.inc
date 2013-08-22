@@ -349,7 +349,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 8,
+      'weight' => 4,
     ),
   );
 
@@ -400,7 +400,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 9,
+      'weight' => 5,
     ),
   );
 
@@ -451,7 +451,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 7,
+      'weight' => 3,
     ),
   );
 
@@ -949,7 +949,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 6,
     ),
   );
 
@@ -1149,7 +1149,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 10,
+      'weight' => 9,
     ),
   );
 
@@ -1451,7 +1451,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 5,
+      'weight' => 7,
     ),
   );
 
@@ -1502,7 +1502,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 6,
+      'weight' => 8,
     ),
   );
 
@@ -1726,7 +1726,6 @@ function sbac_resource_field_default_field_instances() {
   t('Identify how this resource addresses the Common Core State Standards (e.g., how it addresses particular claims, clusters, targets, and/or “standards”). Pay special attention to the interconnectedness of claims.');
   t('Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.');
   t('Identify the learning targets associated with this resource. Learning targets can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.');
-  t('If any materials you created contain necessary images of students, please confirm that your school district has clearance to post the images in the Smarter Balanced Assessment Consortium’s Digital Library. ');
   t('Include evidence that the resource has been tried successfully with educators (or students) and has resulted in a positive impact on educator practices (or student outcomes)');
   t('Individual(s) or group(s) for whom the resource was produced. Select all that apply.');
   t('Intended End User(s)');
@@ -1761,7 +1760,6 @@ function sbac_resource_field_default_field_instances() {
   t('The purpose of the instructional resources in the context of a lesson. Select all that apply.');
   t('The technologies required to use this resource in the classroom. Select all that apply.');
   t('The type(s) of media included in the resource. Select all that apply.');
-  t('Use of Student Images');
   t('View Permissions');
   t('View Permissions Per State');
   t('Which attributes of the formative assessment process does this resource include? Select all that apply.');

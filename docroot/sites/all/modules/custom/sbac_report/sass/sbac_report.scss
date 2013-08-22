@@ -1,5 +1,40 @@
 @import "compass/css3/";
 
+
+/* -----------------------------------------
+   Color Variables
+   ----------------------------------------- */
+$white: #FFF;
+$text: #5a5a5a;
+$header: #18577e;
+$teal: #0085ad;
+$darkgreen: #246a34;
+
+@mixin global-button {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    @include text-shadow(0px 1px 0px rgba(255,255,255,.5));
+    color: rgba(0, 98, 152, 1);
+    @include border-radius(6px);
+    background: rgba(191, 216, 229, 1);
+    border: 1px rgba(0, 98, 152, .5) solid;
+    padding: 8px 18px;
+    text-align: center;
+
+    &:hover{
+      @include transition(all 500ms ease);
+      background: rgba(0, 133, 173, 1);
+      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
+      color: white;
+  }
+
+  &:focus {
+    background: rgba(191, 216, 229, 1);
+  }
+}
+
+
 .view-content table {
   width: 100%;
 }
@@ -47,40 +82,69 @@
 	/* state container */
 	.form-item-state {
 		width: 25%;
-		margin-right: 10px;
+		margin-right: 20px;
 		float: left;
 
-		.chzn-container {
-			width: 200px !important;
+		.chzn-container-single {
+			width: 100% !important;
 
 			.chzn-single {
-				height: 2.3125em;
+				height: 32px;
+
+				span {
+					font-size: 14px;
+					line-height: 24px;
+				}
 			}
 		}
 	}
 
-
 	/* date range container */
 	.date-range-container {
 		width: 25%;
-		margin: 1em 10px 1em 0;
+		margin: 1em 20px 1em 0;
 		float: left;
 
 		.report-dropdown-toggle {
 			color: #4d4d4d;
 			height: 2.3125em;
-			border: 1px solid #ccc;
+			border: 1px solid #aaa;
 			width: 100%;
 			display: inline-block;
 			padding: 5px;
 			font-size: 0.875em;
+			@include border-radius (5px);
+			@include background-image(linear-gradient(#ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%));
+			line-height: 1em;
+
+			&:after {
+				content: " ";
+				background: url(../images/icon-arrow-down.png) no-repeat;
+				display: block;
+				width: 10px;
+				height: 10px;
+				float: right;
+				margin: 3px 3px 0 0;
+			}
+
+			&.show {
+				&:after {
+					content: " ";
+					background: url(../images/icon-arrow-up.png) no-repeat;
+					display: block;
+					width: 10px;
+					height: 10px;
+					float: right;
+					margin: 3px 3px 0 0;					
+				}
+			}
 		}
 	}
 
 	.report-dropdown  {
 		position: absolute;
-		background: white;
-		width: 500px;
+		background: $white;
+		width: 52%;
 		z-index: 500;
 	}
 
@@ -95,25 +159,64 @@
 		float: right;
 		margin-top: 1.875em;
 	}
+
+	.container-inline-date {
+		margin-right: 20px;
+		clear: none;
+
+		> .form-item {
+			margin-right: 1.5em;
+		}
+
+		.form-type-date-popup {
+			float: left;
+		}
+
+		.date-padding {
+			padding: 10px 0;
+		}
+	}
 }
 
 #date-range-dropdown {
 	margin: 0;
 	padding: 10px;
 	border: 1px solid #ddd;
-	@include box-shadow(0,1px, 1px, rgba(black, 0.5));
+  @include box-shadow(1px 2px 2px rgba(0,0,0,.3));
+  border-radius: 0 12px 12px 12px;
 
 	ul {
-		margin: 0;
+		margin: .5em 0 1em;
 		padding: 0;
+
+		+ div {
+			margin-bottom: 20px;
+			font-weight: bold;
+		}
 
 		li {
 			list-style-type: none;
-			padding: 0;
-			margin: 10px 0;
-			display: block;
+			display: inline-block;
+			margin: 0 20px 10px 0;
+
+			.report-dropdown-toggle.date-range-item {
+				border: none;
+				width: auto;
+				height: auto;
+				@include global-button;
+				padding: 3px 5px;
+
+				&:after {
+					background: none;
+					margin: 0;
+				}
+			} 
 		}
 	}
+}
+
+html.js input.form-autocomplete {
+	background-position: 100% 12px;
 }
 
 
