@@ -1126,23 +1126,22 @@ a.tabledrag-handle .handle {
     }
   }
   tr:nth-child(2) {
-    td:nth-child(1) {
+    td:nth-child(2) {
       padding-top: 20px;
-      .file-widget {
-        position: relative;
-        &:before {
+      .media-widget{
+      position: relative;
+      &:before {
           display: block;
           content: 'Secondary material(s). These will be shown adjacent to the primary material.';
           position: absolute;
-          top: 0;
-          left: 0;
-          width: calc(132%);
-          width: -webkit-calc(130.2%); // ** semi-hackish **
+          top: 30px;
+          left: -35px;
+          right: 0;
           margin: -43px 0 0 -10px;
           padding: 0 0 5px 10px;
           font-size: emCalc(14px);
           border-bottom: 1px solid #ccc;
-        }
+      }
       }
     }
   }
