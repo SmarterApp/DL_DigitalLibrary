@@ -3,6 +3,68 @@
  * But possibly can reuse the dropdown and date range.
  */
 (function($) {
+  /**
+   * Action on the dropdown.
+   *
+   * @param {op}
+   *   'show' or 'hide'.
+   */
+  function dropdown($dropdown, op) {
+    // Show.
+    if (op == 'show') {
+      if ($dropdown.hasClass('hide')) {
+        $dropdown.removeClass('hide');
+        $('#date-selected').addClass('show');
+        $dropdown.unbind('hide');
+        $dropdown.trigger('show');
+      }
+    }
+    // Hide.
+    else {
+      if (!$dropdown.hasClass('hide')) {
+        $dropdown.addClass('hide');
+        $('#date-selected').removeClass('show');
+        $dropdown.unbind('show');
+        $dropdown.trigger('hide');
+      }
+    }
+  }
+
+  /**
+   * Toggle dropdown.
+   */
+  function toggleDropdown($dropdown) {
+    // Show.
+    if ($dropdown.hasClass('hide')) {
+      dropdown($dropdown, 'show');
+    }
+    // Hide.
+    else {
+      dropdown($dropdown, 'hide');
+    }
+  }
+
+  /**
+   * Return the custom date input.
+   */
+  function getDateInput(el) {
+    return $.trim($(el).val());
+  }
+
+  /**
+   * Parse the custom date input into Ymd format.
+   */
+  function parseDateInput(input) {
+    var dateArr = input.split('/');
+    var month = date = year = '';
+    if (dateArr[0] && dateArr[1] && dateArr[2]) {
+      var month = dateArr[0];
+      var date = dateArr[1];
+      var year = dateArr[2];
+    }
+    return year + month + date;
+  }
+
   // DOM ready.
   $(function() {
     var $dateRangeField = $('#date-range-field');
@@ -23,7 +85,7 @@
     $('.report-dropdown-toggle').click(function(e) {
       e.preventDefault();
       e.stopPropagation();
-      toggleDropdown();
+      toggleDropdown($dropdown);
     });
 
     // On "show" event.
@@ -31,11 +93,11 @@
       $(document).on('click keydown', function(e) {
         // ESC closes the dropdown.
         if (e.keyCode === 27) {
-          dropdown('hide');
+          dropdown($dropdown, 'hide');
         }
         // Clicking outside the dropdown will close the dropdown.
         if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 && $('#ui-datepicker-div').has(e.target).length === 0) {
-          dropdown('hide');
+          dropdown($dropdown, 'hide');
         }
       });
     });
@@ -55,6 +117,7 @@
 
     // Update the dropdown text, when the user enters a custom date.
     $('#from-date input').on('change', function() {
+      console.log('from-date');
       var fromInput = getDateInput(this);
       var toInput = getDateInput('#to-date input');
       if (fromInput && toInput) {
@@ -64,68 +127,6 @@
         $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
       }
     });
-
-    /**
-     * Return the custom date input.
-     */
-    function getDateInput(el) {
-      return $.trim($(el).val());
-    }
-
-    /**
-     * Parse the custom date input into Ymd format.
-     */
-    function parseDateInput(input) {
-      var dateArr = input.split('/');
-      var month = date = year = '';
-      if (dateArr[0] && dateArr[1] && dateArr[2]) {
-        var month = dateArr[0];
-        var date = dateArr[1];
-        var year = dateArr[2];
-      }
-      return year + month + date;
-    }
-
-    /**
-     * Action on the dropdown.
-     *
-     * @param {op}
-     *   'show' or 'hide'.
-     */
-    function dropdown(op) {
-      // Show.
-      if (op == 'show') {
-        if ($dropdown.hasClass('hide')) {
-          $dropdown.removeClass('hide');
-          $('#date-selected').addClass('show');
-          $dropdown.unbind('hide');
-          $dropdown.trigger('show');
-        }
-      }
-      // Hide.
-      else {
-        if (!$dropdown.hasClass('hide')) {
-          $dropdown.addClass('hide');
-          $('#date-selected').removeClass('show');
-          $dropdown.unbind('show');
-          $dropdown.trigger('hide');
-        }
-      }
-    }
-
-    /**
-     * Toggle dropdown.
-     */
-    function toggleDropdown() {
-      // Show.
-      if ($dropdown.hasClass('hide')) {
-        dropdown('show');
-      }
-      // Hide.
-      else {
-        dropdown('hide');
-      }
-    }
 
     // Individual Report: Get the id from the autocomplete suggestion.
     $(document).on('click', '#autocomplete li', function() {
