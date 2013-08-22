@@ -1097,6 +1097,9 @@ a.tabledrag-handle .handle {
   margin: 0;
 }
 
+.sticky-header {
+  z-index: 99;
+}
 
 #field-file-values {
   width: 100%;
