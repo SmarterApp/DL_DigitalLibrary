@@ -288,6 +288,18 @@ function sbac_report_state_options() {
 }
 
 /**
+ * Get default state.
+ */
+function sbac_report_get_default_state_tid() {
+  $state_tid = sbac_report_get_session_value('state', 'tid');
+  if (empty($state_tid)) {
+    $state = sbac_report_state_options(TRUE);
+    $state_tid = key($state);
+  }
+  return $state_tid;
+}
+
+/**
  * Check if the user is an SLT.
  *
  * @param object $account
