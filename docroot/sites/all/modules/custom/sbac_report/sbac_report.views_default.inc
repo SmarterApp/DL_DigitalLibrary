@@ -345,9 +345,18 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['field_state']['table'] = 'field_data_field_state';
   $handler->display->display_options['fields']['field_state']['field'] = 'field_state';
   $handler->display->display_options['fields']['field_state']['label'] = '';
-  $handler->display->display_options['fields']['field_state']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_state']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_state']['alter']['text'] = 'SNE from [field_state]';
   $handler->display->display_options['fields']['field_state']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_state']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_state']['delta_offset'] = '0';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_3']['id'] = 'nothing_3';
+  $handler->display->display_options['fields']['nothing_3']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_3']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_3']['label'] = '';
+  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = 'SNE from [field_state]';
+  $handler->display->display_options['fields']['nothing_3']['element_label_colon'] = FALSE;
   /* Field: User: District Name */
   $handler->display->display_options['fields']['field_district_name']['id'] = 'field_district_name';
   $handler->display->display_options['fields']['field_district_name']['table'] = 'field_data_field_district_name';
@@ -434,15 +443,14 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
   /* Contextual filter: User: State (field_state) */
-  $handler->display->display_options['arguments']['field_state_value']['id'] = 'field_state_value';
-  $handler->display->display_options['arguments']['field_state_value']['table'] = 'field_data_field_state';
-  $handler->display->display_options['arguments']['field_state_value']['field'] = 'field_state_value';
-  $handler->display->display_options['arguments']['field_state_value']['default_action'] = 'empty';
-  $handler->display->display_options['arguments']['field_state_value']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_state_value']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_state_value']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_state_value']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_state_value']['limit'] = '0';
+  $handler->display->display_options['arguments']['field_state_tid']['id'] = 'field_state_tid';
+  $handler->display->display_options['arguments']['field_state_tid']['table'] = 'field_data_field_state';
+  $handler->display->display_options['arguments']['field_state_tid']['field'] = 'field_state_tid';
+  $handler->display->display_options['arguments']['field_state_tid']['default_action'] = 'empty';
+  $handler->display->display_options['arguments']['field_state_tid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_state_tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_state_tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_state_tid']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: User: Roles */
   $handler->display->display_options['filters']['rid']['id'] = 'rid';
   $handler->display->display_options['filters']['rid']['table'] = 'users_roles';
