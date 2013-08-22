@@ -14,7 +14,7 @@ function sbac_report_menu() {
     'title' => 'Reports',
     'file' => 'sbac_report.pages.inc',
     'page callback' => 'sbac_report_individual',
-    'access arguments' => array('access content'),
+    'access callback' => 'sbac_report_user_access',
     'type' => MENU_NORMAL_ITEM,
     'menu_name' => 'main-menu',
     'weight' => -10,
@@ -29,6 +29,20 @@ function sbac_report_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Custom user access.
+ */
+function sbac_report_user_access() {
+  global $user;
+  $roles = $user->roles;
+
+  return $user->uid == 1 ||
+    in_array('DLRB member', $roles) ||
+    in_array('digital library administrator', $roles) ||
+    in_array('system administrator', $roles) ||
+    sbac_report_is_slt($user);
 }
 
 /**
