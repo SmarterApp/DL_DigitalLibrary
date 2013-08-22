@@ -13,18 +13,19 @@ Feedback.gk = {
     total: 0, // total number of Criteria Sets
     score: 0  // total number of 'yes' selections
   },
+
+  // the default form action
+  default_action: 'save_close',
   
   // modal button data
   buttons: {
     meet: {
       button: '.action-meet',
       anchor: '#gate-keeper-meet',
-      action : 'meet'
     },
     not_meet: {
       button: '.action-not-meet',
       anchor: '#gate-keeper-not-meet',
-      action : 'not_meet'
     }
   },
 

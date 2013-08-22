@@ -765,3 +765,16 @@ function sbac_resource_update_7033() {
 function sbac_resource_update_7034() {
   sbac_resource_update_7031();
 }
+
+/**
+ * Delete the Use of Student Images field.
+ */
+function sbac_resource_update_7035() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+  field_del_instance('field_use_of_student_images', 'node', 'resource');
+  field_delete_field('field_use_of_student_images');
+
+  return $ret;
+}

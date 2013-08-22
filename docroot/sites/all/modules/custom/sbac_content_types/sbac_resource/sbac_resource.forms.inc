@@ -550,12 +550,13 @@ function sbac_resource_validate_materials(&$form, $form_state) {
     drupal_set_message('materials:field_license:group:Please enter a license that allows you to post to continue', 'sbac_resource_error');
   }
   if ($form_state['values']['field_pii']['und'][0]['value'] == NULL) {
-    $error = 'You must certify that there is no information included that allows users to personally identify students to continue';
+    $error = 'Please certify that the files and Cover Profile adhere to the personally identifiable student information clause to continue';
     form_set_error('field_pii', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('materials:field_pii:single:' . $error, 'sbac_resource_error');
     drupal_set_message('materials:field_pii:group:' . $error, 'sbac_resource_error');
   }
+  /*
   if ($form_state['values']['field_use_of_student_images']['und'][0]['value'] == NULL) {
     $error = 'You must certify that you have the necessary written approval, consent, and clearance to post any images of the specific students to continue';
     form_set_error('field_use_of_student_images', $error);
@@ -563,6 +564,7 @@ function sbac_resource_validate_materials(&$form, $form_state) {
     drupal_set_message('materials:field_use_of_student_images:single:' . $error, 'sbac_resource_error');
     drupal_set_message('materials:field_use_of_student_images:group:' . $error, 'sbac_resource_error');
   }
+  */
 }
 
 /**
@@ -1163,8 +1165,9 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   $form['field_pii']['und']['#title'] .= ' ' . theme('form_required_marker');
   unset($form['field_pii']['und']['#options'][0]);
-  $form['field_use_of_student_images']['und']['#title'] .= ' ' . theme('form_required_marker');
-  unset($form['field_use_of_student_images']['und']['#options'][0]);
+  
+  // $form['field_use_of_student_images']['und']['#title'] .= ' ' . theme('form_required_marker');
+  // unset($form['field_use_of_student_images']['und']['#options'][0]);
 }
 
 /**
@@ -1593,9 +1596,9 @@ function sbac_resource_check_materials($form, $form_state) {
     if (!$form_state['values']['field_pii']['und'][0]['value']) {
       $valid = FALSE;
     }
-    if (!$form_state['values']['field_use_of_student_images']['und'][0]['value']) {
-      $valid = FALSE;
-    }
+    // if (!$form_state['values']['field_use_of_student_images']['und'][0]['value']) {
+    //   $valid = FALSE;
+    // }
   }
   else {
     if (!$form['field_file']['und'][0]['#default_value']['fid']) {
@@ -1615,9 +1618,9 @@ function sbac_resource_check_materials($form, $form_state) {
     if (!$form['field_pii']['und']['#default_value']) {
       $valid = FALSE;
     }
-    if (!$form['field_use_of_student_images']['und']['#default_value']) {
-      $valid = FALSE;
-    }
+    // if (!$form['field_use_of_student_images']['und']['#default_value']) {
+    //   $valid = FALSE;
+    // }
   }
   return $valid;
 }
@@ -1710,9 +1713,7 @@ function sbac_resource_delete_resource_form() {
 
   $form['submit_description'] = array(
     '#markup' => '<p>' . t('
-    If you continue, you will no longer be able to edit
-    or submit this resource. All of the information you have already
-    entered will be lost.') . '</p>',
+    If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '</p>',
   );
 
   $form['cancel'] = array(

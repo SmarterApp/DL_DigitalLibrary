@@ -320,6 +320,39 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: create help_page content.
+  $permissions['create help_page content'] = array(
+    'name' => 'create help_page content',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: delete any help_page content.
+  $permissions['delete any help_page content'] = array(
+    'name' => 'delete any help_page content',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: delete own help_page content.
+  $permissions['delete own help_page content'] = array(
+    'name' => 'delete own help_page content',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: delete revisions.
   $permissions['delete revisions'] = array(
     'name' => 'delete revisions',
@@ -338,6 +371,28 @@ function sbac_user_user_default_permissions() {
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'sbac_user',
+  );
+
+  // Exported permission: edit any help_page content.
+  $permissions['edit any help_page content'] = array(
+    'name' => 'edit any help_page content',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: edit own help_page content.
+  $permissions['edit own help_page content'] = array(
+    'name' => 'edit own help_page content',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: moderate content from approved to needs_review.

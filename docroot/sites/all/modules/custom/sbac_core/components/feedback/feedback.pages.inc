@@ -21,7 +21,7 @@ function resource_review_page($node) {
     $control = new \sbac_core\components\feedback\Control($node);
 
     $control->addSection('about', 'about', t('About this Resource'));
-    $control->addSection('review', 'gk', t('Gate-Keeping Criteria'));
+    $control->addSection('review', 'gk', t('Gate-Keeping Criteria Review'));
     $control->addSection('review', 'qc', t('Quality Criteria Review'), TRUE);
 
     $control->addSection('post', 'tags', t('Edit Resource Tags'), TRUE);
