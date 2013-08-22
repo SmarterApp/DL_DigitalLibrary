@@ -243,26 +243,55 @@ function sbac_report_individual_form_submit($form, &$form_state) {
 function sbac_report_state_options() {
   global $user;
   $roles = $user->roles;
-
-  $states = taxonomy_vocabulary_machine_name_load("states");
-  $vid = $states->vid;
-  $terms = taxonomy_get_tree($vid);
   $options = array();
 
-  // Admin user can see the option "All".
+  // Admin user can select between state.
   if ($user->uid == 1 ||
     in_array('DLRB member', $roles) ||
     in_array('digital library administrator', $roles) ||
     in_array('system administrator', $roles)) {
 
     $options['all'] = t('All');
-
+    $states = taxonomy_vocabulary_machine_name_load("states");
+    $vid = $states->vid;
+    $terms = taxonomy_get_tree($vid);
+    foreach ($terms as $key => $val) {
+      $options[$val->tid] = $val->name;
+    }
+  }
+  // SLT user can only select their own states.
+  elseif (sbac_report_is_slt($user)) {
+    $state_tids = field_get_items('user', $user, 'field_state');
+    foreach ($state_tids as $key => $val) {
+      $tid = $val['tid'];
+      $state_term = taxonomy_term_load($tid);
+      $state = $state_term->name;
+      $options[$tid] = $state;
+    }
+    ksort($options);
   }
 
-  foreach ($terms as $key => $val) {
-    $options[$val->tid] = $val->name;
-  }
   return $options;
+}
+
+/**
+ * Check if the user is an SLT.
+ *
+ * @param object $account
+ *   User object.
+ *
+ * @return bool
+ *   True if an SLT. False otherwise.
+ */
+function sbac_report_is_slt($account) {
+  // First check if the user has resource publisher role.
+  if (in_array('resource publisher', $account->roles)) {
+    $slt_field = field_get_items('user', $account, 'field_slt_member');
+    if (isset($slt_field[0]['value'])) {
+      return $stl_field[0]['value'] == 1;
+    }
+  }
+  return FALSE;
 }
 
 /**
