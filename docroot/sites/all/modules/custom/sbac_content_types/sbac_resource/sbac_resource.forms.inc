@@ -34,12 +34,6 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
       //drupal_add_js("jQuery(document).ready(function () { jQuery.colorbox({inline:true, href:'#resource-help-box',width:'80%',height:'80%'}); });", array('type' => 'inline'));
     }
 
-    // Create node if doesn't exist, gives us an NID to attached alignment content type to.
-    if (!isset($form['#node']->nid)) {
-      sbac_resource_create_node($form['#node']);
-      drupal_add_js(array('sbac_resource_nid' => $form['#node']->nid), 'setting');
-    }
-
     // Set the state in JS for later use.
     if (isset($form['#node']->workbench_moderation->current['state'])) {
       drupal_add_js(array('resource_workbench_current_state' => $form['#node']['workbench_moderation']->current['state']), 'setting');
@@ -82,6 +76,16 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_submit_resource($form, $form_state);
     _sbac_resource_form_required_fields($form, $form_state);
     _sbac_resource_form_remove_elements($form, $form_state);
+
+    // Create node if doesn't exist, gives us an NID to attached alignment content type to.
+    if (!isset($form['#node']->nid)) {
+      sbac_resource_create_node($form, $form_state);
+      drupal_add_js(array('sbac_resource_nid' => $form['#node']->nid), 'setting');
+    }
+    else {
+      // The node is always published... except for when the node is not created.
+      $form['options']['status']['#default_value'] = 1;
+    }
   }
 }
 
@@ -118,13 +122,20 @@ function sbac_resource_form_license_after_build($element) {
  * @param $form_state
  */
 function sbac_resource_save_and_close(&$form, &$form_state) {
-  if (isset($form_state['values']['workbench_moderation_state_new']) && $form_state['values']['workbench_moderation_state_new'] == 'creation') {
+  // If there's a title, lets push this to the new state.
+  if ($form_state['values']['workbench_moderation_state_new'] == 'creation') {
     $form_state['values']['workbench_moderation_state_new'] = 'draft';
   }
-  if ($form_state['values']['title'] && $form_state['node']) {
+  // If there's a title, lets create a URL for the node.
+  if ($form_state['values']['title']) {
     $form_state['values']['path']['pathauto'] = TRUE;
+    $form_state['values']['status'] = 1;
   }
-  $form_state['values']['field_temp']['und'][0]['value'] = 0;
+  // If the nid is not set, set it to prevent blank nodes.
+  if ($form_state['values']['nid'] == NULL) {
+    $form_state['values']['nid'] = $form_state['node']->nid;
+    $form_state['values']['vid'] = $form_state['node']->vid;
+  }
   sbac_resource_clean_text($form_state);
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
@@ -216,6 +227,11 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     sbac_resource_clean_text($form_state);
     // Set path alias
     $form_state['values']['path']['pathauto'] = TRUE;
+    // If the nid is not set, set it to prevent blank nodes.
+    if ($form_state['values']['nid'] == NULL) {
+      $form_state['values']['nid'] = $form_state['node']->nid;
+      $form_state['values']['vid'] = $form_state['node']->vid;
+    }
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
     $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
@@ -1251,24 +1267,26 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
     '#weight' => 101,
   );
   $form['#group_children']['alignment_tag_description'] = "group_tags";
+  // Alignment View -> The initial load of the form does not have an nid.
+  if (isset($form['#node']->nid)) {
+    $form['alignment_tag_view'] = array(
+      '#markup' => views_embed_view('alignment', 'resource_admin_view', $form['#node']->nid),
+      '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
+      '#suffix' => '</div>',
+      '#weight' => 102,
+    );
+    $form['#group_children']['alignment_tag_view'] = "group_tags";
 
-  // Alignment View
-  $form['alignment_tag_view'] = array(
-    '#markup' => views_embed_view('alignment', 'resource_admin_view', $form['#node']->nid),
-    '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
-    '#suffix' => '</div>',
-    '#weight' => 102,
-  );
-  $form['#group_children']['alignment_tag_view'] = "group_tags";
+    // Alignment Button
+    $form['add_alignment_tag_button'] = array(
+      '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
+        'attributes' => array('class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
+        'query' => array('nid' => $form['#node']->nid))),
+      '#weight' => 103,
+    );
+    $form['#group_children']['add_alignment_tag_button'] = "group_tags";
+  }
 
-  // Alignment Button
-  $form['add_alignment_tag_button'] = array(
-    '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
-      'attributes' => array('class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
-      'query' => array('nid' => $form['#node']->nid))),
-    '#weight' => 103,
-  );
-  $form['#group_children']['add_alignment_tag_button'] = "group_tags";
 }
 
 /**
@@ -1356,30 +1374,32 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_submit_resource(&$form, &$form_state) {
-  $form['actions']['submit_resource'] = array(
-    '#markup' => l(t('Submit Resource'), 'sbac_resource/nojs/submit-resource', array(
-      'attributes' => array(
-        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-resource-modal-submit-resource',
-        'id' => 'sbac-resource-modal-submit-resource'
-      ),
-      'query' => array(
-        'nid' => $form['#node']->nid
-      )
-    )),
-    '#weight' => 3,
-  );
+  if (isset($form['#node']->nid)) {
+    $form['actions']['submit_resource'] = array(
+      '#markup' => l(t('Submit Resource'), 'sbac_resource/nojs/submit-resource', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-resource-modal-submit-resource',
+          'id' => 'sbac-resource-modal-submit-resource'
+        ),
+        'query' => array(
+          'nid' => $form['#node']->nid
+        )
+      )),
+      '#weight' => 3,
+    );
 
-  // JS to properly size the modal when submit resource is clicked.
-  $js_settings = array(
-    'sbac-resource-modal-submit-resource' => array(
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 600,
-        'height' => 160,
+    // JS to properly size the modal when submit resource is clicked.
+    $js_settings = array(
+      'sbac-resource-modal-submit-resource' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 160,
+        ),
       ),
-    ),
-  );
-  drupal_add_js($js_settings, 'setting');
+    );
+    drupal_add_js($js_settings, 'setting');
+  }
 }
 
 /**
