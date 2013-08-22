@@ -91,8 +91,7 @@ function sbac_resource_field_group_info() {
       3 => 'field_publisher',
       4 => 'field_license',
       5 => 'field_pii',
-      6 => 'field_use_of_student_images',
-      7 => 'field_video',
+      6 => 'field_video',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
