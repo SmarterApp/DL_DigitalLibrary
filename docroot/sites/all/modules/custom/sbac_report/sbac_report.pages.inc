@@ -100,12 +100,12 @@ SQL;
     $full_name = $first_name . ' ' . $last_name;
     $uid = $record->uid;
     if (!isset($matches[$full_name])) {
-      $matches[$full_name] = '<span class="autocomplete-suggestion" data-uid=" ' . $uid . '">' . check_plain($full_name) . '</span>';
+      $matches[$full_name] = '<span class="autocomplete-suggestion" data-uid="' . $uid . '">' . check_plain($full_name) . '</span>';
     }
     // Prevent overriding, if some matches have the same full name.
     else {
       $id = ' [id:' . $uid . ']';
-      $matches[$full_name . $id] = '<span class="autocomplete-suggestion" data-uid=" ' . $uid . '">' . check_plain($full_name) . $id . '</span>';
+      $matches[$full_name . $id] = '<span class="autocomplete-suggestion" data-uid="' . $uid . '">' . check_plain($full_name) . $id . '</span>';
     }
   }
   print drupal_json_encode($matches);

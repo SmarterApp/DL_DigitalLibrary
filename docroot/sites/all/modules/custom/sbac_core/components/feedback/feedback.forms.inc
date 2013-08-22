@@ -8,28 +8,55 @@
  * Validation handler for ECK Feedback forms.
  */
 function feedback_eck_feedback_form_validate($form, &$form_state) {
-  $values = $form_state['values'];
+  $values = &$form_state['values'];
   $lang = $values['entity']->language;
+
+  $clean_check = function($container, $fields) use (&$values, &$form_state, $lang) {
+    // TODO: I feel filthy writing this; there has GOT to be a cleaner way
+    foreach ($fields as $field_name) {
+      // the values which get saved to the entity object
+      foreach ($values[$container][$lang] as &$item) {
+        foreach ($item['entity']->{$field_name}[$lang] as &$child) {
+          $child['value'] = filter_xss($child['value']);
+        }
+      }
+
+      // the values which get output as part of the form on page-reload
+      foreach ($form_state['complete form'][$container][$lang] as &$item) {
+        if (is_array($item) && isset($item[$field_name][$lang])) {
+          foreach ($item[$field_name][$lang] as &$child) {
+            if (is_array($child)) {
+              $child['value']['#value'] = filter_xss($child['value']['#value']);
+            }
+          }
+        }
+      }
+    }
+  };
 
   $required_check = function($container, $required_fields) use ($values, $lang) {
     foreach ($values[$container][$lang] as $key => $item) {
-      foreach ($required_fields as $field_key => $field_message) {
-        $value = trim(field_get_value($item, $field_key));
+      foreach ($required_fields as $field_name => $field_message) {
+        $value = trim(field_get_value($item, $field_name));
         if (is_null($value) || $value == '') {
           $error_key = implode('][', array(
             $container,
             $lang,
             $key,
-            $field,
+            $field_name,
           ));
 
           // default "empty field" message
-          if ($field_key == $field_message) {
+          if ($field_name == $field_message) {
             $error_text = t('Field is required.');
           }
           // customized message
           else {
-            $error_text = t($field_message, array('!delta' => $key + 1));
+            $error_text = t($field_message, array(
+              '!delta'      => $key,
+              '!delta+1'    => $key + 1,
+              '!field_name' => $field_name,
+            ));
           }
 
           form_set_error($error_key, $error_text);
@@ -71,24 +98,19 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
   switch ($values['entity']->type) {
     case 'gate_keeper':
       $container = 'field_quality_set';
-      $required_fields = array(
-        'field_comments' => 'You must add a comment to Quality Criteria !delta to continue',
-        'field_meets_criterion' => 'field_meets_criterion',
-      );
 
-      $required_check($container, $required_fields);
+      $clean_check($container, array('field_comments', 'field_meets_criterion'));
 
       switch ($values['action']) {
-        case 'not_meet':
-        case 'meet':
+        case 'validate':
+
+          $required_check($container, array(
+            'field_comments' => 'Please add a comment to Gate-Keeping Criteria !delta+1 to continue',
+            'field_meets_criterion' => 'You must make a decision in Quality Criteria !delta+1 to continue',
+          ));
 
           break;
       }
-
-      // dsmm($values['action']);
-      // dsmm($values['op']);
-
-      // form_set_error('test', 'test');
 
       $profanity_check($container);
 
@@ -146,6 +168,9 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
         }
       }
     };
+
+    // dsmm($form_state['values']);
+
 
     if ($entity->type == 'review') {
       // we need to rebuild the complete review buttons when the recommendation

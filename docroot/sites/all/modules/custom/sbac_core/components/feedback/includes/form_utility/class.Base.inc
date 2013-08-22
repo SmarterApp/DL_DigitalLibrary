@@ -103,6 +103,7 @@ class Base {
 
     // set the common (across feedback types) & default action
       $this->_action_options += array(
+        'save_close' => t('Save and close'),
         'validate' => t('Validate'),
       );
 
@@ -388,7 +389,7 @@ class Base {
     $this->_form['action'] = array(
       '#type' => 'select',
       '#options' => $this->_action_options,
-      '#default_value' => 'validate',
+      '#default_value' => 'save_close',
       '#attributes' => array(
         'class' => array(
           'hidden',
