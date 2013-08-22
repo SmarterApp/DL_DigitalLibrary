@@ -127,6 +127,12 @@
         $uidField.val(uid);
       });
 
+      // Individual Report: clear the id on event "input".
+      $('#edit-sne').bind('input', function(e) {
+        $uidField.text('');
+        $uidField.val('');
+      });
+
     }
   }
 })(jQuery);
