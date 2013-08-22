@@ -200,3 +200,18 @@ function sbac_user_update_7006() {
 
   return $ret;
 }
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_state
+ */
+function sbac_user_update_7007() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  $field = field_info_instance('user', 'field_state', 'user');
+  field_delete_instance($field);
+
+  return $ret;
+}

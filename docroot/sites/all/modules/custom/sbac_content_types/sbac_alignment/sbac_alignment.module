@@ -120,7 +120,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = null) {
   $output .= '<div id="alignment-page"><input id="ref_node" style="display:none" value="' . $ref_node . '"> ';
   $output .= '<div class="alignment-breadcrumb"></div>';
   $output .= '<div class="alignment-filter">';
-  $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject'));
+  $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject Area'));
   $output .= '</div><div class="alignment-form"></div>';
   $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add to Resource</a><a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
   $output .= '</div></div>';
@@ -372,20 +372,20 @@ function sbac_alignment_add_terms ($vid, $terms, $parent_tid = 0) {
 function sbac_alignment_ajax_terms_callback() {
   $subject_array = $output_array = array();
   $ela_titles = array(
-    'Choose Your Subject',
-    'Choose Your Grade',
-    'Choose Your SBAC Claim',
-    'Choose Your SBAC Assessment Target',
-    'Choose Your Common Core Standard',
-  );
-  $ma_titles = array(
-    'Choose Your Subject',
+    'Choose Your Subject Area',
     'Choose Your Grade',
     'Choose Your Claim',
-    'Choose Your Content Domain',
+    'Choose Your Target',
+    'Select Your Common Core State Standard(s)',
+  );
+  $ma_titles = array(
+    'Choose Your Subject Area',
+    'Choose Your Grade',
+    'Choose Your Claim',
+    'Choose Your Domain',
     'Choose Your Target',
     'Choose Your Emphasis',
-    'Choose Your Common Core Standard',
+    'Select Your Common Core State Standard(s)',
   );
 
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);

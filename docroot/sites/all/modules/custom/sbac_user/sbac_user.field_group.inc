@@ -24,8 +24,8 @@ function sbac_user_field_group_info() {
     'weight' => '1',
     'children' => array(
       0 => 'field_swd_ell',
-      1 => 'field_special_populations',
-      2 => 'field_grade_level_s_',
+      1 => 'field_grade_level_s_',
+      2 => 'field_special_populations',
       3 => 'field_subject_s_',
     ),
     'format_type' => 'tab',

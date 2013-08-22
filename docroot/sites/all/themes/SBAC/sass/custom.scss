@@ -1098,6 +1098,19 @@ a.tabledrag-handle .handle {
 }
 
 
+#field-file-values {
+  width: 100%;
+
+  .preview {
+    height: auto;
+  }
+
+  .button {
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+}
+
 #edit-field-file-und {
   border: none;
   padding: 10px 0 0;

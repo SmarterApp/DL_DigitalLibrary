@@ -683,11 +683,7 @@ function sbac_resource_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         0 => 'None',
-        1 => 'By checking this box, you confirm that users cannot access the following information via the materials included in this resource:
-        <ul>
-        <li> Students’ education records such as summative, interim, and formative assessment results; grades, GPAs, and report cards; and special education records; and
-        <li>Personal identifiers such as student, parent, and family names and addresses, Social Security IDs, Student IDs, driver license numbers, or other information that identifies students (e.g., birth dates)
-        </ul>',
+        1 => 'To the best of your abilities, please confirm the materials in your resource comply with all applicable laws and school district policies regarding the following:<ul><li>Use of student education records such as summative, interim, and formative assessment results, grades, GPAs, report cards, and special education records</li><li>Use of personal identifiers such as student, parent, and family names and addresses, Social Security IDs, Student IDs, driver license numbers, birth dates, and other information that identifies students</li><li>Use of photos and videos of students and adults</li></ul>',
       ),
       'allowed_values_function' => '',
     ),
