@@ -88,7 +88,7 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'Based on your evaluation of the three reviewers’ input, decide if the resource is to be returned, posted, or posted with distinction.',
+        'label_help_description' => 'Based on your evaluation of the three reviews, decide if the resource is to be returned, posted, or posted with distinction.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
@@ -313,7 +313,7 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'Based on your evaluation of the three reviewers’ input, decide if the resource is to be returned, posted, or posted with distinction.',
+        'label_help_description' => 'Based on your evaluation of the three reviews, decide if the resource is to be returned, posted, or posted with distinction.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
@@ -440,7 +440,7 @@ function sbac_core_field_default_field_instances() {
     'label' => 'Comments',
     'profanity' => 1,
     'profanity_filter' => 1,
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -449,7 +449,7 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Use the space to explain your reasoning',
+        'label_help_description' => 'Use the space below to provide your reasoning.',
         'maxlength_js' => 300,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -479,7 +479,7 @@ function sbac_core_field_default_field_instances() {
     'entity_type' => 'field_collection_item',
     'field_name' => 'field_meets_criterion',
     'label' => 'Meets Gate-Keeping Criterion?',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -514,7 +514,7 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_comments',
     'label' => 'Comments',
     'profanity' => 1,
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -523,7 +523,7 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Use the space to explain your reasoning',
+        'label_help_description' => 'Use the space below to provide your reasoning.',
         'maxlength_js' => 300,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -553,7 +553,7 @@ function sbac_core_field_default_field_instances() {
     'entity_type' => 'field_collection_item',
     'field_name' => 'field_level',
     'label' => 'Quality Criterion Level',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),

@@ -13,16 +13,19 @@ Feedback.gk = {
     total: 0, // total number of Criteria Sets
     score: 0  // total number of 'yes' selections
   },
+
+  // the default form action
+  default_action: 'save_close',
   
   // modal button data
   buttons: {
     meet: {
       button: '.action-meet',
-      anchor: '#gate-keeper-meet'
+      anchor: '#gate-keeper-meet',
     },
     not_meet: {
       button: '.action-not-meet',
-      anchor: '#gate-keeper-not-meet'
+      anchor: '#gate-keeper-not-meet',
     }
   },
 
@@ -92,6 +95,5 @@ Drupal.behaviors.feedback_gate_keeper = {
       Feedback.gk.update_buttons();
   }
 };
-
 
 })(jQuery);

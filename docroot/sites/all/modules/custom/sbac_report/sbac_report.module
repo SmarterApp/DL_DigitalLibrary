@@ -1,0 +1,399 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Report feature.
+ */
+
+include_once 'sbac_report.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function sbac_report_menu() {
+  $items['reports'] = array(
+    'title' => 'Reports',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_report_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -10,
+  );
+
+  $items['sne/autocomplete'] = array(
+    'title' => 'Autocomplete SNE Names',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_report_sne_autocomplete',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sbac_report_theme($existing, $type, $theme, $path) {
+  $themes = array();
+  $module_path = drupal_get_path('module', 'sbac_report');
+
+  $themes['sbac_report'] = array(
+    'template' => 'templates/sbac-report',
+    'path' => $module_path,
+    'file' => 'sbac_report.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'sbac_report_preprocess_sbac_report',
+    ),
+  );
+
+  $themes['sbac_report_date_range_dropdown'] = array(
+    'template' => 'templates/sbac-report-date-range-dropdown',
+    'path' => $module_path,
+    'file' => 'sbac_report.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['views_view_fields__sne_details'] = array(
+    'template' => 'views-view-fields--sne-details',
+    'path' => $module_path . '/templates/views',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'orginal hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+    ),
+  );
+
+  // Take care of the pager and "items per page".
+  $themes['views_view__contributed_resources'] = array(
+    'template' => 'views-view--contributed-resources',
+    'path' => $module_path . '/templates/views',
+    'arguments' => array('view' => NULL),
+    'orginal hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+    ),
+  );
+
+  return $themes;
+}
+
+/**
+ * Report filter form.
+ */
+function sbac_report_form($form, &$form_state) {
+  $form = array();
+
+  $form['state'] = array(
+    '#type' => 'select',
+    '#title' => t('Choose a state'),
+    '#options' => sbac_report_state_options(),
+    '#multiple' => FALSE,
+    '#default_value' => sbac_report_get_session_value('state', 'tid'),
+    '#ajax' => array(
+      'callback' => 'sbac_report_state_ajax',
+    ),
+    '#required' => TRUE,
+  );
+
+  $date_options = sbac_report_date_range_options();
+  $session_date_range = sbac_report_get_session_value('date_range', 'range');
+
+  // If there was no date range stored in SESSION.
+  // Default to the "Last 30 Days".
+  if (empty($session_date_range)) {
+    $session_date_range = $date_options['Last 30 Days'];
+    $default_display = t('Last 30 Days');
+  }
+  // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
+  elseif ($key = array_search($session_date_range, $date_options)) {
+    $default_display = t($key);
+  }
+  // If it was a custom selection, format the string.
+  else {
+    $default_display = sbac_report_format_date_range($session_date_range);
+  }
+
+  // Hidden, used to pass the value through submit handler.
+  // Value is set when the user selects an item in the dropdown.
+  // @see sbac_report.js
+  $form['date_range'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Choose a time period'),
+    '#default_value' => $session_date_range,
+    '#attributes' => array(
+      'id' => 'date-range-field',
+    ),
+  );
+
+  // --- Date Dropdown ---
+  $form['date_range_dropdown'] = array(
+    '#type' => 'markup',
+    '#markup' => theme('sbac_report_date_range_dropdown',
+      array(
+        'default_display' => $default_display ? $default_display : t('Last 30 Days'),
+        'ago_30' => $date_options['Last 30 Days'],
+        'ago_60' => $date_options['Last 60 Days'],
+        'ago_90' => $date_options['Last 90 Days'],
+      )
+    )
+  );
+
+  $form['from_date'] = array(
+    '#id' => 'from-date',
+    '#title' => t('From'),
+    '#type' => 'date_popup',
+    '#date_type' => DATE_DATETIME,
+    '#date_timezone' => date_default_timezone(),
+    '#date_format' => 'm/d/Y',
+    '#date_increment' => 1,
+    '#date_year_range' => '-3:+3',
+    '#datepicker_options' => array(),
+  );
+
+  $form['to_date'] = array(
+    '#id' => 'to-date',
+    '#title' => t('To'),
+    '#type' => 'date_popup',
+    '#date_type' => DATE_DATETIME,
+    '#date_timezone' => date_default_timezone(),
+    '#date_format' => 'm/d/Y',
+    '#date_increment' => 1,
+    '#date_year_range' => '-3:+3',
+    '#datepicker_options' => array(),
+    '#suffix' => '</div></div>', // Closing tags for the dropdown template.
+  );
+
+  // --- End of Date Dropdown ---
+
+  $form['sne'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Choose a SNE'),
+    '#autocomplete_path' => 'sne/autocomplete',
+    '#required' => TRUE,
+    '#size' => 30,
+    '#default_value' => sbac_report_get_session_value('sne', 'name'),
+  );
+
+  // Hidden field to store the selected uid.
+  // When the autocomplete suggetion is selected,
+  // the uid value will be set here.
+  // @see sbac_report.js
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' => sbac_report_get_session_value('sne', 'uid'),
+    '#attributes' => array(
+      'id' => 'sne-uid-field',
+    ),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form submit.
+ * Store in SESSION:
+ * $_SESSION['sbac_report'] = array(
+ *   'state' => array('name' => 'California', 'tid' => 123),
+ *   'date_range' => array('range' => '20130515--20140515'),
+ *   'sne' => array('uid' => 1, 'name' => 'first last'),
+ * );
+ */
+function sbac_report_form_submit($form, &$form_state) {
+  // State.
+  $state_tid = $form_state['values']['state'];
+  $_SESSION['sbac_report']['state']['tid'] = $state_tid;
+  if (!is_numeric($state_tid) && $state_tid == 'all') {
+    $_SESSION['sbac_report']['state']['name'] = 'all';
+  }
+  else {
+    $state_options = $form['state']['#options'];
+    $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+  }
+
+  // Time range.
+  $_SESSION['sbac_report']['date_range']['range'] = $form_state['values']['date_range'];
+
+  // SNE.
+  $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
+  $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
+}
+
+/**
+ * Options for the state field.
+ */
+function sbac_report_state_options() {
+  global $user;
+  $roles = $user->roles;
+
+  $states = taxonomy_vocabulary_machine_name_load("states");
+  $vid = $states->vid;
+  $terms = taxonomy_get_tree($vid);
+  $options = array();
+
+  // Admin user can see the option "All".
+  if ($user->uid == 1 ||
+    in_array('DLRB member', $roles) ||
+    in_array('digital library administrator', $roles) ||
+    in_array('system administrator', $roles)) {
+
+    $options['all'] = t('All');
+
+  }
+
+  foreach ($terms as $key => $val) {
+    $options[$val->tid] = $val->name;
+  }
+  return $options;
+}
+
+/**
+ * Options for the date range field.
+ */
+function sbac_report_date_range_options() {
+  $today = format_date(REQUEST_TIME, 'custom', 'Ymd');
+  $ago_30 = format_date(strtotime('30 days ago'), 'custom', 'Ymd');
+  $ago_60 = format_date(strtotime('60 days ago'), 'custom', 'Ymd');
+  $ago_90 = format_date(strtotime('90 days ago'), 'custom', 'Ymd');
+  $options = array(
+    'Last 30 Days' => $ago_30 . '--' . $today,
+    'Last 60 Days' => $ago_60 . '--' . $today,
+    'Last 90 Days' => $ago_90 . '--' . $today,
+  );
+
+  return $options;
+}
+
+/**
+ * Get the stored SESSION values.
+ * @see submit handler.
+ *
+ * @param string $field
+ *   The field name: state, date_range, sne.
+ * @param string $key
+ *   The type of the value to be returned.
+ *   e.g: for state field: "tid", "name".
+ *        for date field: "range".
+ *        for SNE field: "uid".
+ *
+ * @return string|int
+ *   The value stored in SESSION.
+ */
+function sbac_report_get_session_value($field, $key) {
+  if (isset($_SESSION['sbac_report'][$field][$key]) && !empty($_SESSION['sbac_report'][$field][$key])) {
+    $value = $_SESSION['sbac_report'][$field][$key];
+    // If the stored date range is invalid, unset everything to prevent further error.
+    if ($field == 'date_range' && !sbac_report_validate_date_range($value)) {
+      unset($_SESSION['sbac_report']);
+      $value = NULL;
+    }
+    return check_plain($value);
+  }
+  return NULL;
+}
+
+/**
+ * Ajax callback for the State field.
+ * Store the selected state in SESSION
+ * so the autocomplete for SNE text field is filtered based on the state.
+ */
+function sbac_report_state_ajax($form, &$form_state) {
+  if (isset($form_state['values']['state'])) {
+    $state_tid = $form_state['values']['state'];
+    $_SESSION['sbac_report']['state']['tid'] = $state_tid;
+    if (!is_numeric($state_tid) && $state_tid == 'all') {
+      $_SESSION['sbac_report']['state']['name'] = 'all';
+    }
+    else {
+      $state_options = $form['state']['#options'];
+      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+    }
+  }
+  return $form;
+}
+
+/**
+ * Validate the date range string used for Views Contextual Range filter.
+ */
+function sbac_report_validate_date_range($str) {
+  if (!preg_match("/^\d{4}\d{2}\d{2}--\d{4}\d{2}\d{2}$/", $str)) {
+    return FALSE;
+  }
+  // If the regex check passed, check again by creating a DateTime object.
+  else {
+    $date_range = contextual_range_filter_split($str);
+    $from_date = DateTime::createFromFormat("Ymd", $date_range[0]);
+    $to_date = DateTime::createFromFormat("Ymd", $date_range[1]);
+    return is_object($from_date) && is_object($to_date);
+  }
+}
+
+/**
+ * Format the date range 'Ymd--Ymd' to 'm/d/Y to m/d/Y'.
+ */
+function sbac_report_format_date_range($str) {
+  $date_range = contextual_range_filter_split($str);
+  $from_date = DateTime::createFromFormat("Ymd", $date_range[0]);
+  $to_date = DateTime::createFromFormat("Ymd", $date_range[1]);
+
+  if (is_object($from_date) && is_object($to_date)) {
+    $from_date_format = $from_date->format("m/d/Y");
+    $to_date_format = $to_date->format("m/d/Y");
+    return t($from_date_format . ' to ' . $to_date_format);
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * Custom embed view. Return NULL if no result.
+ */
+function sbac_report_embed_view($name, $display_id = 'default') {
+  $args = func_get_args();
+  array_shift($args); // remove $name.
+  if (count($args)) {
+    array_shift($args); // remove $display_id.
+  }
+
+  $view = views_get_view($name);
+  if (is_object($view)) {
+    if (is_array($args)) {
+      $view->set_arguments($args);
+    }
+    $preview = $view->preview($display_id);
+    if (!empty($view->result)) {
+      return $preview;
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Fix the broken contextual filter for eck "created" date field.
+ */
+function sbac_report_views_query_alter(&$view, &$query) {
+  if ($view->name == 'gate_keeping_reviews') {
+    foreach ($query->where as &$condition_group) {
+      foreach ($condition_group['conditions'] as &$condition) {
+        if ($condition['operator'] == 'formula' && strpos($condition['field'], 'eck_feedback. SECOND') !== FALSE) {
+          $condition['field'] = str_replace('eck_feedback. SECOND', 'eck_feedback.created SECOND', $condition['field']);
+          break 2;
+        }
+      }
+    }
+  }
+}

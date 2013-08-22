@@ -112,7 +112,6 @@ class Review extends Base {
     // set hidden select action options
     $this->_action_options += array(
       'cancel' => t('Cancel review'),
-      'save_close' => t('Save and close'),
       'complete' => t('Complete Review'),
     );
 

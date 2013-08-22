@@ -79,7 +79,7 @@ class Post extends Base {
     $comments_title = array(
       '#markup' => '
                       <div class="field-title">
-                        ' . t("Poster's Comments") . '
+                        ' . t("Poster Comments") . '
                         <span class="required"></span>
                       </div>
                       <div class="field-description">

@@ -292,6 +292,9 @@ class Hooks extends \devtools\Hooks {
           $form_utility->attachHelpfulInfo();
           $form_utility->process();
           $form_utility->postProcess();
+
+          // $form['field_quality_set']['und'][0]['field_comments']['und'][0]['value']['#needs_validation'] = FALSE;
+          // print_rr($form['field_quality_set']['und'][0]['field_comments']);exit();
         }
     }
     elseif ($form_id == 'resource_node_form') {
@@ -303,44 +306,73 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_cron().
    */
   function hook_cron() {
-    // don't simply subtract seconds from the current timestamp - that'll get messed up
-    // during daylight time changes
-    $time_ago = strtotime('-' . FEEDBACK_REVIEW_TIMEOUT . ' hours');
+    // send out reminder notifications for resources which are approaching expiry time
+      $notification_time = strtotime('-' . FEEDBACK_REVIEW_NOTIFICATION . ' hours');
 
-    $args = array(
-      ':time_ago' => $time_ago,
-    );
+      $query =  " SELECT    id, uid, node_id
+                  FROM      eck_feedback
+                  WHERE     status = 1
+                  AND       completed = 0
+                  AND       created  <= :time
+                  AND       type = 'post'
+                  AND       reminder = 0
+                ";
 
-    // pull up active, yet incomplete gate keeper entities which are past the time limitation
-    $query = "  SELECT    id, node_id
-                FROM      eck_feedback
-                WHERE     status = 1
-                AND       completed = 0
-                AND       created <= :time_ago 
-                AND       type = 'gate_keeper'
-             ";
+      $args = array(
+        ':time' => $notification_time,
+      );
 
-    $result = db_query($query, $args)->fetchAll();
-    foreach ($result as $row) {
-      if ($node = node_load($row->node_id)) {
-        // if this is an incomplete gate keeper, then the resource won't have any reviews
-        // and we can safely bump it back to draft; we don't need to worry about
-        // review entities, because to have one of those in the system, the resource must
-        // have a completed gate keeper, meaning we don't need to change any node workflow
-        // properties
-        workbench_moderation_moderate($node, 'draft');
+      $result = db_query($query, $args);
+
+      foreach ($result as $row) {
+        $task = taskit_get_object('review_reminder');
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $row->node_id);
+        $task->addEntity('feedback', $row->id);
+        $task->addOwningUser($row->uid);
+        $task->addTriggeringUser(1);
+        $task->save();
       }
-    }
 
-    // now disable all incomplete feedback entities
-    $query = "  UPDATE  eck_feedback
-                SET     status = 0
-                WHERE   status = 1
-                AND     completed = 0
-                AND     created <= :time_ago
-             ";
+    // disable feedback entities which have reached the expiry time
+      // don't simply subtract seconds from the current timestamp - that'll get messed up
+      // during daylight time changes
+      $expiry_time = strtotime('-' . FEEDBACK_REVIEW_TIMEOUT . ' hours');
 
-    db_query($query, $args);
+      $args = array(
+        ':time' => $expiry_time,
+      );
+
+      // pull up active, yet incomplete gate keeper entities which are past the time limitation
+      $query = "  SELECT    id, node_id
+                  FROM      eck_feedback
+                  WHERE     status = 1
+                  AND       completed = 0
+                  AND       created <= :time 
+                  AND       type = 'gate_keeper'
+               ";
+
+      $result = db_query($query, $args)->fetchAll();
+      foreach ($result as $row) {
+        if ($node = node_load($row->node_id)) {
+          // if this is an incomplete gate keeper, then the resource won't have any reviews
+          // and we can safely bump it back to draft; we don't need to worry about
+          // review entities, because to have one of those in the system, the resource must
+          // have a completed gate keeper, meaning we don't need to change any node workflow
+          // properties
+          workbench_moderation_moderate($node, 'draft');
+        }
+      }
+
+      // now disable all incomplete feedback entities
+      $query = "  UPDATE  eck_feedback
+                  SET     status = 0
+                  WHERE   status = 1
+                  AND     completed = 0
+                  AND     created <= :time
+               ";
+
+      db_query($query, $args);
   }
 
   /**

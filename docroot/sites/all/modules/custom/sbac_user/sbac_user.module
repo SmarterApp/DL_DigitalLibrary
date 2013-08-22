@@ -47,7 +47,7 @@ function sbac_user_menu() {
   );
 
   $items['user/password/confirmation'] = array(
-    'title' => t('User Password Confirmation'),
+    'title' => t('Password Reset Confirmation Sent Successfully!'),
     'description' => t('Standalone change password form'),
     'page callback' => array('sbac_user__pages_user_password_confirmation_page'),
     'access callback' => TRUE,
@@ -69,17 +69,36 @@ function sbac_user_menu() {
  * Implements hook_init().
  */
 function sbac_user_init() {
+  global $user;
   // Intercept page request to user/uid/edit with pass-reset-token query value and send to change-password instead.
   // Is this the best place to do this? Can't seem to use hook_user_login() because there is no way to
   // retrieve the pass-reset-token value.
   if (isset($_GET['pass-reset-token'])) {
-    global $user;
     $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
 
     if ($pass_reset && arg(0) == 'user' && arg(1) == $user->uid && arg(2) == 'edit') {
       drupal_goto('change-password', array('query' => array('pass-reset-token' => $_GET['pass-reset-token'])));
     }
   }
+  // redirect any user not admin from the user/id/edit screen to user
+  if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
+    drupal_goto('user');
+  }
+
+  // remove change password message if already logged in and replace - don't try this at home
+  $messages = drupal_get_messages('status', FALSE);
+  if (isset($messages['status'])) {
+    foreach ($messages['status'] as $message) {
+      if (strpos($message, 'You are logged in as') !== FALSE) {
+        // clear status message queue -- BLAMMO
+        drupal_get_messages('status', TRUE);
+        drupal_set_message(t('You are already logged in.'));
+        break;
+      }
+    }
+  }
+
+
 }
 
 /*
@@ -153,8 +172,8 @@ function sbac_user_theme() {
 
 function sbac_user_user_pass_form_submit($form, &$form_state) {
   global $language;
-
   $account = $form_state['values']['account'];
+
   // Mail one time login URL and instructions using current language.
   $mail = _user_mail_notify('password_reset', $account, $language);
   if (!empty($mail)) {
@@ -162,9 +181,9 @@ function sbac_user_user_pass_form_submit($form, &$form_state) {
     //drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
   }
 
-  $form_state['redirect'] = 'user/password/confirmation&mail=' . $account->mail;
-  return;
+  $form_state['redirect'] = array('user/password/confirmation', array('query' => array('mail' => $account->mail)));
 }
+
 /**
  * Implements hook_form_alter().
  */
@@ -212,11 +231,16 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_sne_member']['#type'] = 'hidden';
       $form['field_state']['#type'] = 'hidden';
       $form['legal']['#type'] = 'hidden';
+      // add custom text for legal terms and conditions form item
+      // $form['legal_accept']['#element_validate'] = 'sbac_user_legal_validate';
+
       // remove user_profile_submit handler and then re-add so we can re-order the submit handlers
       $form['#submit'] = array_diff($form['#submit'], array('user_profile_form_submit'));
       $form['#submit'][] = 'sbac_user_user_profile_add_values_submit';
       $form['#submit'][] = 'user_profile_form_submit';
       $form['#submit'][] = 'sbac_user_user_profile_default_tab_submit';
+
+
 
       if(isset($form['picture']['picture']['#value'])) {
         $uid = $form_state['user']->entity_id;
@@ -305,6 +329,15 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
 
     drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/legal.css');
   }
+}
+
+/**
+ * Custom validation error message handler for legal field
+ */
+function sbac_user_legal_accept_validate($element, &$form_state, $form) {
+   if (empty($element['#value'])) {
+     form_set_error($element, t('The Terms of Service have changed. Please log out and log in again to continue making edits to your account profile.'));
+   }
 }
 
 /**
@@ -536,45 +569,81 @@ function sbac_user_entity_presave($entity, $type) {
 
 function sbac_user_mail_format($user) {
   $result = array();
-  if (isset($user->field_slt_member['und'][0]['value']) && $user->field_slt_member['und'][0]['value']) {
-    // slt email
-    $result['subject'] = t('State Leadership Team Members in All Governing States');
-    $result['body'] = $result['message'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
-      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta site. You will learn more about the Digital Library and Quality Criteria using the materials previously provided to you and during your upcoming training. In the meantime, follow the instructions below to log in to the Digital Library for the first time:" .
-      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
-      "\n\n" . user_pass_reset_url($user) .
-      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
-      "\n\nAfter you complete these steps, please take a few moments to ensure that the \“Account\” profile information we have pre-populated for you is accurate." .
-      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
-      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or [Help Desk Phone Number] if you have any difficulties." .
-      "\n\nThank you," .
-      "\n\nThe Digital Library team.";
-  } elseif (isset($user->field_sne_member['und'][0]['value']) && $user->field_sne_member['und'][0]['value']) {
-    // sne email
-    $result['subject'] = t('State Leadership Team Members in All Governing States');
-    $result['body'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
-      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library. You will need this access to support the upcoming training led by your State Leadership Team member. Please follow the steps below to activate your account prior to your training. In the meantime, follow the instructions below to log in to the Digital Library for the first time:" .
-      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
-      "\n\n" . user_pass_reset_url($user) .
-      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
-      "\n\nAfter you complete these steps, please take a few moments to ensure that the \“Account\” profile information we have pre-populated for you is accurate." .
-      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
-      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or [Help Desk Phone Number] if you have any difficulties." .
-      "\n\nThank you," .
-      "\n\nThe Digital Library team.";
+  
+  $firstname = $user->field_first_name['und'][0]['value'];
+  $lastname = $user->field_last_name['und'][0]['value'];
+  $reset_link =  user_pass_reset_url($user);
+  $email = $user->mail;
+  
+  if (isset($user->field_slt_member['und'][0]['value']) && $user->field_slt_member['und'][0]['value'] && isset($user->field_sne_member['und'][0]['value']) && !$user->field_sne_member['und'][0]['value']) {
+    // slt email and make sure not sne
+    $result['subject'] = t('Smarter Balanced Digital Library Login Information');
+    $result['body'] = $result['message'] = <<<HTML
+Dear $firstname $lastname: 
+The purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta website.  You will learn more about the Digital Library and Quality Criteria during your upcoming training.  In the meantime, follow the instructions below to log in to the Digital Library for the first time:
+1) Click the unique activation link below. Note that it will expire in 24 hours. If clicking the link does not work, copy and paste it into a web browser (Internet Explorer 9+, Safari, Chrome, or Firefox).
+
+$reset_link
+
+2) Read and agree to the Terms of Service. If you do not agree you will not be able to access the Digital Library.
+
+3) Follow the prompts to set a new password. Note that passwords are case-sensitive.
+
+After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
+
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+
+Thank you,
+The Digital Library team
+HTML;
+  } elseif (isset($user->field_sne_member['und'][0]['value']) && $user->field_sne_member['und'][0]['value'] && isset($user->field_slt_member['und'][0]['value']) && !$user->field_slt_member['und'][0]['value'] ) {
+    // sne email and make sure not slt
+    $result['subject'] = t('Smarter Balanced Digital Library Login Information');
+    $result['body'] = $result['message'] = <<<HTML
+Dear $firstname $lastname: 
+The purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta website.  You will need to activate your Digital Library account prior to the upcoming training led by your State Leadership Team member.  Follow the instructions below to log in to the Digital Library for the first time:
+1) Click the unique activation link below. Note that it will expire in 24 hours. If clicking the link does not work, copy and paste it into a web browser (Internet Explorer 9+, Safari, Chrome, or Firefox).
+
+$reset_link
+
+2) Read and agree to the Terms of Service. If you do not agree you will not be able to access the Digital Library.
+
+3) Follow the prompts to set a new password. Note that passwords are case-sensitive.
+
+After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
+
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+
+Thank you,
+The Digital Library team
+HTML;
   } else {
     // default
-    $result['subject'] = t('State Leadership Team Members in All Governing States');
-    $result['body'] = 'Dear ' . $user->field_first_name['und'][0]['value'] . ' ' . $user->field_last_name['und'][0]['value'] . ':' .
-      "\n\nThe purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta site. Follow the instructions below to log in to the Digital Library for the first time:" .
-      "\n\n- Click the unique activation link below. If the clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox)." .
-      "\n\n" . user_pass_reset_url($user) .
-      "\n\n- Follow the prompts to set a new password that contains at least one number. Note that passwords are case-sensitive." .
-      "\n\nAfter you complete these steps, please take a few moments to ensure that the \“Account\” profile information we have pre-populated for you is accurate." .
-      "\n\nThe next time you visit, log in by navigating to https://beta.smarterbalancedlibrary.org, entering your email address (" . $user->mail . ") and using the password you set previously." .
-      "\n\nFeel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or [Help Desk Phone Number] if you have any difficulties." .
-      "\n\nThank you," .
-      "\n\nThe Digital Library team.";
+    $result['subject'] = t('Smarter Balanced Digital Library Login Information');
+    $result['body'] = $result['message'] = <<<HTML
+Dear $firstname $lastname:
+The purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta website.  Follow the instructions below to log in to the Digital Library for the first time:
+1) Click the unique activation link below. If clicking the link does not work, copy and paste it into a web browser (preferably Internet Explorer 9+, Safari, Chrome, or Firefox).
+
+$reset_link
+
+2) Read and agree to the Terms of Service. Note that it will expire in 24 hours. If you do not agree you will not be able to access the Digital Library.
+
+3) Follow the prompts to set a new password. Note that passwords are case-sensitive.
+
+After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
+
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+
+Thank you,
+The Digital Library team
+HTML;
   }
   return $result;
 }
@@ -800,6 +869,37 @@ function sbac_user_profile_validate(&$form, &$form_state) {
   //     }
   //   }
   // }
+
+  $errors = form_get_errors();
+  if (isset($errors['legal_accept'])) {
+    // Clear errors.
+    form_clear_error();
+    // Clear error messages.
+    $error_messages = drupal_get_messages('error');
+    // Initialize an array where removed error messages are stored.
+    $removed_messages = array();
+    // Remove all errors originated by the 'foo][bar' element.
+    foreach ($errors as $name => $error_message) {
+      if ($name == 'legal_accept') {
+        $removed_messages[] = $error_message;
+        unset($errors[$name]);
+      }
+    }
+    // Reinstate remaining errors.
+    foreach ($errors as $name => $error) {
+      form_set_error($name, $error);
+      // form_set_error() calls drupal_set_message(), so we have to filter out
+      // these from the error messages as well.
+      $removed_messages[] = $error;
+    }
+    // Reinstate remaining error messages (which, at this point, are messages that
+    // were originated outside of the validation process).
+    foreach (array_diff($error_messages['error'], $removed_messages) as $message) {
+      drupal_set_message($message, 'error');      
+    }
+    // now all of that was just to override this error message
+    form_set_error('legal_accept', 'The Terms of Service have changed. Please log out and log in again to continue making edits to your account profile.');
+  }
 }
 
 /**
@@ -823,6 +923,9 @@ function sbac_user_js_alter(&$js) {
  */
 function sbac_user_change_password_form($form, &$form_state) {
   global $user;
+
+  drupal_add_js('$("a").bind("click.myDisable", function() { return false; });', 'inline');
+
   // double check the token in the query matches the session
   $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
 
@@ -845,6 +948,15 @@ function sbac_user_change_password_form($form, &$form_state) {
 }
 
 /**
+ * Validation handler for sbac_user_change_form()
+ */
+function sbac_user_change_password_form_validate($form, &$form_state) {
+  if (!$form_state['values']['pass']) {
+    form_set_error('pass', 'You must enter a password.');
+  }
+}
+
+/**
  * Submit handler for sbac_user_change_form()
  */
 function sbac_user_change_password_form_submit($form, &$form_state) {
@@ -858,6 +970,7 @@ function sbac_user_change_password_form_submit($form, &$form_state) {
   drupal_set_message(t('Your password was successfully changed.'));
   $redirect = 'user/' . $user->uid;
   $form_state['redirect'] = $redirect;
+  user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 }
 
 /**
@@ -890,6 +1003,7 @@ function sbac_user_user_profile_default_tab_submit($form, &$form_state) {
 function sbac_user_menu_alter(&$items) {
   $items['legal']['title'] = 'Terms of Service';
   $items['legal_accept/%/%']['title'] = 'Terms of Service';
+  $items['user/password']['title'] = 'Password Reset or Account Activation';
 }
 
 /*

@@ -104,6 +104,11 @@ $items = array(
       'type' => 'integer',
       'behavior' => 'checkbox',
     ),
+    'reminder' => array(
+      'label' => 'reminder',
+      'type' => 'integer',
+      'behavior' => 'textfield',
+    ),
   ),
 ),
   );

@@ -464,3 +464,35 @@ function sbac_central_update_7040() {
   );
   module_disable($modules);
 }
+
+/**
+ * Enable m4032404 module
+ */
+function sbac_central_update_7041() {
+  $modules = array(
+    'm4032404',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables Report.
+ */
+function sbac_central_update_7042() {
+  $modules = array(
+    'contextual_range_filter',
+    'sbac_report',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables Date and Date Popup.
+ */
+function sbac_central_update_7043() {
+  $modules = array(
+    'date',
+    'date_popup',
+  );
+  module_enable($modules);
+}

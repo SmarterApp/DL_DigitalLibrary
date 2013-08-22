@@ -15,6 +15,8 @@ class Base {
   protected $_comments_field = 'field_comments';
   protected $_set_total = 0;
 
+  protected $_required_marker = '';
+
   protected $_action_options = array();
 
   protected $_js_settings = array(
@@ -101,8 +103,12 @@ class Base {
 
     // set the common (across feedback types) & default action
       $this->_action_options += array(
+        'save_close' => t('Save and close'),
         'validate' => t('Validate'),
       );
+
+    // get the required form item asterisk
+      $this->_required_marker = ' ' . theme('form_required_marker');
   }
 
   /**
@@ -117,6 +123,7 @@ class Base {
       'node_id',
       'current',
       'title',
+      'reminder',
     );
 
     foreach ($properties as $property) {
@@ -221,6 +228,25 @@ class Base {
     }
 
     $element['#suffix'] = $suffix . '</div>';
+  }
+
+  /**
+   * Sets up the fields with required asterisks.
+   * @param  [type] $item [description]
+   * @return [type]       [description]
+   */
+  public function markRequiredFields(&$item) {
+    // add required asterisk to textarea
+    $children = element_num_children($item[$this->_comments_field][$this->_lang]);
+    foreach ($children as &$child) {
+      $child['value']['#title'] .= $this->_required_marker;
+    }
+
+    // add required asterisk to radio
+    $item[$this->_radio_field][$this->_lang]['#title'] .= $this->_required_marker;
+
+    // remove the N/A value
+    unset($item[$this->_radio_field][$this->_lang]['#options']['_none']);
   }
 
   /**
@@ -332,6 +358,8 @@ class Base {
       // comments
       $this->wrapFapi($item[$this->_comments_field], 'criteria-set-comments');
 
+      $this->markRequiredFields($item);
+
       // radio
       $this->updateRadioDesc($item[$this->_radio_field][$this->_lang], $set_count);
       $this->wrapFapi($item[$this->_radio_field], 'criteria-set-radios');
@@ -361,7 +389,7 @@ class Base {
     $this->_form['action'] = array(
       '#type' => 'select',
       '#options' => $this->_action_options,
-      '#default_value' => 'validate',
+      '#default_value' => 'save_close',
       '#attributes' => array(
         'class' => array(
           'hidden',
@@ -482,19 +510,6 @@ class Base {
     );
 
     $this->setWeight($this->_form['actions']['submit']);
-
-    // $this->_form['actions']['no_validation_submit'] = $this->_form['actions']['submit'];
-    // $this->_form['actions']['no_validation_submit']['#value'] = 'test save';
-    // $this->_form['actions']['no_validation_submit']['#submit'] = array();
-    // $this->_form['actions']['no_validation_submit']['#limit_validation_errors'] = array();
-
-    /*
-    $this->_form['actions']['no_validation_submit']['#validate'] = array(
-      'feedback_eck_feedback_form_no_validate',
-    );
-    $this->_form['actions']['no_validation_submit']['#submit'] = $this->_form['#submit'];
-    $this->_form['actions']['no_validation_submit']['#submit'][] = 'feedback_eck_feedback_form_submit';
-    */
   }
 
   /**

@@ -107,44 +107,9 @@ h3, h4, h5, h6 {
   padding: 0.5em;
 }
 
-/*button, .button, #edit-submit {
-  padding: 8px 18px;
-  background: rgba(191, 216, 229, 1);
-  border: 1px rgba(0, 98, 152, .5) solid;
-  font-size: 1em;
-  font-weight: bold;
-  color: rgba(0, 98, 152, 1);
-  @include text-shadow(0px 1px 0px rgba(255,255,255,.5));
-  @include border-radius (6px);
-  @include transition (all 500ms ease);
-  cursor: pointer;
-
-  &:hover, &:focus, &.form-submit.ajax-processed {
-    color: $white;
-    background: rgba(0, 133, 173, 1);
-    @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
-  }
-}
-*/
 button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus {
   background: rgba(191, 216, 229, 0.9);
 }
-
-/*button.secondary, .button.secondary, #edit-cancel {
-  background: rgba(226, 226, 226, 1);
-  border: 1px rgba(100, 100, 100, 1) solid;
-  color: rgba(100, 100, 100, 1);
-  padding: 8px 18px;
-  @include border-radius (6px);
-
-  &:hover, &:focus  {
-    background: rgba(138, 21, 56, 1);
-    border: 1px rgba(138, 21, 56, 1) solid;
-    color: rgba(255, 255, 255, 1);
-    text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
-  }
-}*/
-
 
   .button {
     margin-left: 0;
@@ -246,6 +211,7 @@ div.ctools-modal-content a.close {
     color: rgba(0, 98, 152, 1);
   }
 }
+
 /* -----------------------------------------
    Colorbox
    ----------------------------------------- */
@@ -263,9 +229,7 @@ div.ctools-modal-content a.close {
   #cboxBottomRight{
     background:white;
   }
-
 }
-
 
 /* -----------------------------------------
   Vertical Tabs
@@ -289,14 +253,11 @@ div.ctools-modal-content a.close {
       }
     }
   }
-
-
 }
 
 /* -----------------------------------------
    Forms
    ----------------------------------------- */
-
 
 label {
   font-weight: bold;
@@ -344,9 +305,11 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   margin: 0;
 
   &.main-top{
+    background-color: #313131;
     @include background-image(linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), linear-gradient(top, #a9a9a9 0%, #ebebe5 100%)); // gradient overlay and layer fill content
     background-image: -webkit-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
     background-image: -moz-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
+    background-image: -ms-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#494949', endColorstr='#313131');
   }
   &.sub-top{
@@ -356,6 +319,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     background-image: -webkit-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
     background-image: -moz-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
     height: auto;
+    background-image: -ms-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebe5', endColorstr='#e4e4dc');
   }
   &.last-top{
@@ -452,6 +416,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   @include background-image(linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), linear-gradient(top, #a9a9a9 0%, #ebebe5 100%)); // gradient overlay and layer fill content
   background-image: -webkit-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
   background-image: -moz-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
+  background-image: -ms-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%);
   color: $white;
   padding: 5px;
 
@@ -724,7 +689,7 @@ a.tabledrag-handle .handle {
 
 /* forgot password */
 
-#user-pass, #change-password, #sbac-user-change-password-form {
+#user-pass, #change-password, #sbac-user-change-password-form, .user-pass-confirm {
   text-align: center;
 
   h1 {
@@ -780,6 +745,19 @@ a.tabledrag-handle .handle {
     p {
       font-size: 1em;
     }
+  }
+}
+
+#sbac-user-change-password-form {
+  #edit-submit {
+    margin-top: 2.5em;
+  }
+}
+
+.user-pass-confirm {
+  a {
+    @include global-button;
+    margin-bottom: 1.5em;
   }
 }
 /* -----------------------------------------
@@ -856,17 +834,15 @@ a.tabledrag-handle .handle {
       color: #246a34;
     }
   }
-
 }
 
 .line{
-    position: relative;
-    width: 930px;
-    margin-left: -15px;
-    top: 55px;
-    border-bottom: 1px #ccc solid;
+  position: relative;
+  width: 930px;
+  margin-left: -15px;
+  top: 55px;
+  border-bottom: 1px #ccc solid;
 }
-
 
 /* -----------------------------------------
    Help Modal
@@ -907,7 +883,6 @@ a.tabledrag-handle .handle {
   }
 }
 
-
 .flexslider .flex-direction-nav a {
   display: block;
   @include opacity(1);
@@ -927,12 +902,11 @@ a.tabledrag-handle .handle {
   .flexslider{
   .flex-next {
     right: -36px;
-
   }
-  .flex-prev {
-    left: -36px;
+    .flex-prev {
+      left: -36px;
+    }
   }
-}
 }
 
 /* -----------------------------------------
@@ -1104,6 +1078,19 @@ a.tabledrag-handle .handle {
   padding: 5px 10px;
   background-color: #F6F6F6;
   border: 1px solid #ddd;
+
+  .title-of-resource {
+    @include hyphenation;
+  }
+
+  div {
+    font-size: 14px;
+    line-height: 18px;
+
+    p {
+      font-size: inherit;
+    }
+  }
 }
 
 #sbac-resource-submit-resource-form {
@@ -1346,7 +1333,7 @@ a.tabledrag-handle .handle {
       #sbac-resource-modal-alignment {
         display: inline-block;
         float: right;
-        margin: 20px 0 0;
+        margin: 20px 0 10px;
       }
       .alignment-tag-title,
       .educational-tag-title {
@@ -1471,6 +1458,7 @@ a.tabledrag-handle .handle {
         display: inline-block;
         color: #000;
         padding: 15px 0;
+        height: 35px;
       }
       .close {
         display: none;
@@ -1615,6 +1603,11 @@ a.tabledrag-handle .handle {
 
    #terms-and-conditions-body {
     clear: both;
+   }
+
+   .terms {
+    max-height: 400px;
+    overflow-y:auto;
    }
 
 /* -----------------------------------------
@@ -1895,6 +1888,13 @@ a.tabledrag-handle .handle {
   }
 
   .description-hover {
+
+    .description-content {
+      max-height: 200px;
+      overflow-y:auto;
+      padding: 20px
+    }
+
     display: none;
     transition-property: opacity;
     transition-duration: 500ms;
@@ -1902,10 +1902,9 @@ a.tabledrag-handle .handle {
     -webkit-transition-duration: 500ms;
     width: 400px;
     position: absolute;
-    top: 25px;
-    left: -25px;
+    bottom: 25px;
+    left: -365px;
     background: #DFE5CC;
-    padding: 20px;
     border-radius: 6px;
     color: #3C7646;
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
@@ -1922,9 +1921,9 @@ a.tabledrag-handle .handle {
     &:after{
       content: ' ';
       position: absolute;
-      top: -28px;
-      left: 16px;
-      border-color: transparent transparent #DFE5CC transparent;
+      bottom: -28px;
+      left: 356px;
+      border-color: #DFE5CC transparent transparent transparent;
       border-style: solid;
       border-width: 14px;
       width: 0;
@@ -1934,9 +1933,9 @@ a.tabledrag-handle .handle {
     &:before{
       content: ' ';
       position: absolute;
-      top: -30px;
-      left: 15px;
-      border-color: transparent transparent #3C7646 transparent;
+      bottom: -30px;
+      left: 355px;
+      border-color:  #3C7646 transparent transparent transparent;
       border-style: solid;
       border-width: 15px;
       width: 0;
@@ -1952,6 +1951,14 @@ a.tabledrag-handle .handle {
   }
 }
 
+
+/* ----------------------------------------
+    Read More - JS
+  _________________________________________ */
+
+.more-link {
+  padding: 0 3px;
+}
 
 /**
  Help Topic

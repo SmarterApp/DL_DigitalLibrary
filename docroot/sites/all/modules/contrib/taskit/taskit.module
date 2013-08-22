@@ -378,9 +378,9 @@ function taskit_state($js = 'nojs', $task, $op) {
  */
 function taskit_view() {
   $args = func_get_args();
-  $task = taskit_load(array_shift($args));
+  $task = taskit_load($task_id = array_shift($args));
   $task->setViewed();
-  $task->save(FALSE);
+  $task->save(FALSE, $uid = array_shift($args));
 
   if ($args) {
     $uri = implode('/', $args);
@@ -635,9 +635,21 @@ function taskit_count_tasks($uid, $rids, $new = FALSE) {
   if (is_null($counts[$type])) {
     $counts[$type] = array();
 
+    $new_join = '';
     $new_condition = '';
     if ($new) {
-      $new_condition = ' AND t.viewed = 0 ';
+      $visibility_type = variable_get('taskit_visibility', 'global');
+      if ($visibility_type == 'global') {
+        $new_condition = ' AND t.viewed = 0 ';
+      }
+      elseif ($visibility_type == 'user') {
+        $new_join = ' LEFT JOIN   taskit_viewed tv
+                        ON        tv.task_id = t.task_id
+                        AND       tv.user_id = :uid
+                    ';
+
+        $new_condition = ' AND tv.user_id IS NULL ';
+      }
     }
     
     $query = "  SELECT      COUNT(t.task_id) AS count,
@@ -653,6 +665,8 @@ function taskit_count_tasks($uid, $rids, $new = FALSE) {
                 LEFT JOIN   taskit_removed trr
                   ON        trr.task_id = t.task_id
                   AND       trr.user_id = tuo.user_id
+
+                " . $new_join . "
 
                 -- restrict by state
                 WHERE       !(t.state & :state_completed)
@@ -699,6 +713,8 @@ function taskit_count_tasks($uid, $rids, $new = FALSE) {
   if (!isset($counts[$type]['_no_role_'])) {
     $counts[$type]['_no_role_'] = 0;
   }
+
+  // print_rr($counts);exit();
 
   return $counts[$type];
 } 

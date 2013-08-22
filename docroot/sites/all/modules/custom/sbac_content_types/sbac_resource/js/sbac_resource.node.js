@@ -29,6 +29,9 @@
           img.attr('width', 850);
           resource.empty().html(img);
         }
+        else if (type == 'embed') {
+          resource.html('<iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>');
+        }
         else {
           var img = $('<img>');
           img.attr('src', $(this).attr('href'));

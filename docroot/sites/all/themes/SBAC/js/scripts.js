@@ -1,7 +1,7 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
 
-  Drupal.behaviors.textify = {
+  /** Drupal.behaviors.textify = {
     attach: function (context, settings) {
       jQuery('.terms').textify({
         numberOfColumn: 2,
@@ -13,7 +13,7 @@
         showNavigation: true
       });
     }
-  };
+  }; **/
 
   Drupal.behaviors.helpTextify = {
     attach: function (context, settings) {
@@ -56,7 +56,13 @@
     }
   };
 
-
+Drupal.behaviors.helpTextify = {
+  attach: function (context, settings) {
+    $(function() {
+      $('#edit-pass').attr('autocomplete', 'off');
+    });
+  }
+};
 
 // Window load event used just in case window height is dependant upon images
 //  $(window).bind("load", function() {

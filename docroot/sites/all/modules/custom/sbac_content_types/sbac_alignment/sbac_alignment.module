@@ -152,11 +152,21 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
   $terms = taxonomy_get_tree($vocab->vid, $tid, SBAC_ALIGNMENT_MAX_DEPTH);
 
-  foreach($terms as $term) {
-    $form['term-' . $term->tid] = array(
-      '#type' => 'checkbox',
-      '#title' => $term->name,
-      '#title_display' => 'none',
+  if(!empty($terms)) {
+    foreach($terms as $term) {
+      $form['term-' . $term->tid] = array(
+        '#type' => 'checkbox',
+        '#title' => $term->name,
+        '#title_display' => 'none',
+      );
+    }
+  }
+  else {
+    $form['noterm'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="form-item large-12 columns"><div class="standard">',
+      '#suffix' => '</div></div>',
+      '#markup' => t('No Common Core Standard Available'),
     );
   }
 
@@ -187,7 +197,12 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Add to Resource',
-    '#submit' => array('sbac_alignment_alignment_form_submit'),
+    '#ajax' => array(
+      'callback' => 'sbac_alignment_alignment_form_submit',
+      'wrapper' => 'checkboxes-div',
+      'method' => 'replace',
+      'effect' => 'fade',
+    ),
   );
 
   $form['#attached'] = array(
@@ -198,10 +213,13 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
 
   return $form;
 }
+/**
+ * Form Submit Handler
+ * sbac_alignment_alignment_form
+ */
 function sbac_alignment_alignment_form_submit(&$form, &$form_state){
   global $user;
   $values = $form_state['input'];
-  //@TODO KS - save node;
 
   $alignment_ref = $values['alignment_ref'];
   $alignment_type = $values['alignment_type'];
@@ -232,12 +250,43 @@ function sbac_alignment_alignment_form_submit(&$form, &$form_state){
         $node->field_alignment_type['und'][]['tid'] = $types[$alignment_type];
         $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
         node_save($node);
+        
+        $node = node_load($alignment_ref);
+        $node->field_alignment_term['und'][]['tid'] = $tid;
+        node_save($node);
       }
     }
   }
-  $form_state['redirect'] = 'node/' . $alignment_ref . '/edit';
+  drupal_custom_goto('node/' . $alignment_ref . '/edit#edit-group_tags');
 }
+/**
+ * Custom override
+ * Modified drupal_goto to not encode the path
+ */
+function drupal_custom_goto($path = '', array $options = array(), $http_response_code = 302) {
+  // A destination in $_GET always overrides the function arguments.
+  // We do not allow absolute URLs to be passed via $_GET, as this can be an attack vector.
+  if (isset($_GET['destination']) && !url_is_external($_GET['destination'])) {
+    $destination = drupal_parse_url($_GET['destination']);
+    $path = $destination['path'];
+    $options['query'] = $destination['query'];
+    $options['fragment'] = $destination['fragment'];
+  }
 
+  drupal_alter('drupal_goto', $path, $options, $http_response_code);
+
+  // The 'Location' HTTP header must be absolute.
+  $options['absolute'] = TRUE;
+
+  $url = $path;
+
+  header('Location: ' . $url, TRUE, $http_response_code);
+
+  // The "Location" header sends a redirect status code to the HTTP daemon. In
+  // some cases this can be wrong, so we make sure none of the code below the
+  // drupal_goto() call gets executed upon redirection.
+  drupal_exit($url);
+}
 /**
  * AJAX Callback
  */
@@ -305,7 +354,7 @@ function sbac_alignment_add_terms ($vid, $terms, $parent_tid = 0) {
 
     $parent = (object) array(
       'name' => $term,
-      'description' => $data['desc'],
+      'description' => (isset($data['desc']))? '' : $data['desc'],
       'weight' => 0,
       'vid' => $vid,
       'parent' => $parent_tid,
@@ -354,7 +403,8 @@ function sbac_alignment_ajax_terms_callback() {
   $output_array['parent'] = $parent;
   $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
 
-  $output_array['publication'] = $publication = $parent->field_alignment_publication['und'][0]['value'];
+  $publication = $parent->field_alignment_publication['und'][0]['value'];
+  $output_array['publication'] = (empty($publication))? 0 : $publication;
 
   $output_array['depth'] = $depth = sbac_alignment_term_depth($parent->tid);
 

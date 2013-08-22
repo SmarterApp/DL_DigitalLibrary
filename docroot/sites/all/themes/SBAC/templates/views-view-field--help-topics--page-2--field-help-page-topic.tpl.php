@@ -31,6 +31,6 @@ else if (strpos($output ,'Welcome Tutorial') !== false) {
     print 'Welcome Tutorial Topics';
 }
 else {
-    print($output); 
+    print($output);
 }
 ?>

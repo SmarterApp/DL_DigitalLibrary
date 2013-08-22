@@ -13,6 +13,20 @@ function sbac_central_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'acquia_identifier';
+  $strongarm->value = 'ELMV-37594';
+  $export['acquia_identifier'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'acquia_key';
+  $strongarm->value = '59c1ebc67969e29e4b0d3d505242ea8f';
+  $export['acquia_key'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'admin_theme';
   $strongarm->value = 'SBAC';
   $export['admin_theme'] = $strongarm;
@@ -151,7 +165,7 @@ function sbac_central_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'site_403';
-  $strongarm->value = '';
+  $strongarm->value = 'm4032404';
   $export['site_403'] = $strongarm;
 
   $strongarm = new stdClass();

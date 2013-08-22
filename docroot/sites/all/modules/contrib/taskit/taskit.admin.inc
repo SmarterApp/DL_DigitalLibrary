@@ -40,6 +40,17 @@ function taskit_admin_settings_form($form, &$form_state) {
     '#default_value' => variable_get('taskit_grouping', 'none'),
   );
 
+  $form['taskit_visibility'] = array(
+    '#title' => t('Task visibility'),
+    '#description' => t('Should a task applying to multiple users have global or per-user visibility?'),
+    '#type' => 'radios',
+    '#options' => array(
+      'global' => t('Global'),
+      'user' => t('Per user'),
+    ),
+    '#default_value' => variable_get('taskit_visibility', 'global'),
+  );
+
   return system_settings_form($form);
 }
 

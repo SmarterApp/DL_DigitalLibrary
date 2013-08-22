@@ -30,6 +30,16 @@ Feedback.utilities = {
    * @return {[type]}                 [description]
    */
   watch_value: function(default_value, value_callback, change_callback) {
+    // current_value = value_callback();
+    // while (current_value == default_value) {
+    //   setTimeout(function() {
+    //    current_value = value_callback();
+    //   }, 200);
+    // }
+
+    // change_callback(current_value);
+    // value_callback(default_value);
+
     setTimeout(function() {
       var current_value = value_callback();
       // target value is still set to the default, so call self again
@@ -81,6 +91,26 @@ Feedback.utilities = {
   },
 
   /**
+   * Sets the form action.
+   * 
+   * @param {[type]} action [description]
+   * @param {[type]} name   [description]
+   */
+  set_action: function (action, name) {
+    var selector = '';
+
+    // update the action which took place
+    if (Feedback[name] && Feedback[name]['form']) {
+      selector += Feedback[name]['form'];
+    }
+
+    selector += ' ';
+    selector += Feedback.action_select;
+
+    $(selector).val(action);
+  },
+
+  /**
    * JS callback for modal form submissions.
    * We set the form's action select to identify the form action being performed
    * (button being clicked).
@@ -90,10 +120,10 @@ Feedback.utilities = {
    * @return {[type]}      [description]
    */
   submit_modal_callback: function (type, val) {
+    Feedback.utilities.set_action(val, type);
+
     // update the action which took place
     if (Feedback[type] && Feedback[type]['form']) {
-      $(Feedback[type]['form'] + ' ' + Feedback.action_select).val(val);
-
       // by triggering the form's submit() and not doing a click/mousedown on an 
       // actual button, we bypass the AJAX form submission and do a regular page
       // reload, which will show the 'completed' version of content
@@ -125,7 +155,7 @@ Feedback.utilities = {
         var parts = link.attr('href').split('/');
         parts[5] = states[val];
         var new_url = parts.join('/');
-        link.attr('href', new_url)
+        link.attr('href', new_url);
 
         // bind new ajax behavior to all items showing the class.
         var element_settings = {};
@@ -145,7 +175,7 @@ Feedback.utilities = {
 Drupal.behaviors.feedback = {
   attach: function (context, settings) {
     // catch the submit button's submit behaviour and assign form error-watching functionality
-      $(Feedback.wrapper + ' ' + Feedback.submit_button).mousedown(function(e, modal_anchor) {
+      $(Feedback.wrapper + ' ' + Feedback.submit_button).once('mousedown-trigger').mousedown(function(e, modal_anchor) {
         // this is the default flag value, prior to form submission
         var default_value = -1;
         
@@ -163,6 +193,10 @@ Drupal.behaviors.feedback = {
         // and error_status will contain the new flag value
         var change_callback = function (error_status) {
           Feedback.utilities.move_messages();
+
+          // now that the form submission is complete, we set the action back to default
+          // state; this must happen in the change callback!!
+          Feedback.utilities.set_action('save_close');
 
           // proceed only if there are no form errors
           if (!error_status) {
@@ -191,13 +225,14 @@ Drupal.behaviors.feedback = {
 
     // propagate click events on our form buttons to the anchors which will trigger the
     // appropriate modals
-      var tabs = ['gk', 'qc', 'post'];
-
-      $.each(tabs, function (key, name) {
+      $.each(['gk', 'qc', 'post'], function (key, name) {
         if (Feedback[name] && Feedback[name].buttons) {
           $.each(Feedback[name].buttons, function(button_key, data) {
-            $(data.button).click(function(e) {
+            $(data.button).once('mousedown-event').click(function(e) {
               e.preventDefault();
+
+              // update action
+              Feedback.utilities.set_action('validate', name);
 
               // a modal-triggering button has been clicked, so the first thing we need to do
               // is ajax-submit the form to validate it, and we do this by clicking the Save &

@@ -247,23 +247,23 @@ function sbac_user_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_password_reset_body';
-  $strongarm->value = 'Forgot Password
+  $strongarm->value = 'Dear [current-user:field_first_name] [current-user:field_last_name]: 
 
-Dear [user:name],
-
-Please use the following link within 24 hours to reset your password:
-
+You have requested a password reset or account activation link be sent to you. 
+To continue, click the one-time link below. Note that it will expire in 24 hours. If clicking the link does not work, copy and paste it into a web browser (Internet Explorer 9+, Safari, Chrome, or Firefox).
 [user:one-time-login-url]
 
-Sincerely,
-Smarter Balanced Digital Libarary Team';
+Follow the prompts to set a new password and note that passwords are case-sensitive.
+
+Thank you,
+The Digital Library team';
   $export['user_mail_password_reset_body'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_password_reset_subject';
-  $strongarm->value = 'Smarter Balanced DL Forgot Password';
+  $strongarm->value = 'Smarter Balanced Digital Library Password Reset or Account Activation';
   $export['user_mail_password_reset_subject'] = $strongarm;
 
   $strongarm = new stdClass();

@@ -67,6 +67,15 @@ function sbac_resource_menu() {
     'weight' => -50,
   );
 
+  $items['digital-library-resources/no-results'] = array(
+    'title' => 'Digital Library Resources',
+    'page callback' => 'sbac_resource_digital_library_no_results_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'menu_name' => 'main-menu',
+    'weight' => -50,
+  );
+
   $items['admin/structure/types/manage/%node_type/messages'] = array(
     'title' => 'Messages',
     'page callback' => 'drupal_get_form',
@@ -107,15 +116,17 @@ function sbac_resource_download_contents($node) {
       }
 
       if (file_exists($real_path)) {
-	      $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
-		    entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
+
         header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
         header("Cache-Control: public"); // needed for i.e.
         header("Content-Type: application/zip");
         header("Content-Transfer-Encoding: Binary");
         header("Content-Length:".filesize($real_path));
         header("Content-Disposition: attachment; filename=" . $filename);
-        readfile($real_path);
+        if (readfile($real_path) != false) {
+				$node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
+				entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
+			}
       }
     }
   }
@@ -230,7 +241,7 @@ function _sbac_resource_preview_materials(&$vars) {
   if ($material_urls) {
     $materials = '<a class="button small arrow sbac-materials-dropdown" data-dropdown="sbac-materials">'. t('View All Materials'). '<span></span></a>';
     $materials .= theme('item_list', array(
-      'items' => $material_urls, 
+      'items' => $material_urls,
       'attributes' => array(
         'class' => 'materials-dropdown f-dropdown',
         'id' => 'sbac-materials'
@@ -248,7 +259,7 @@ function _sbac_resource_preview_materials(&$vars) {
  * @return string
  */
 function _sbac_resource_determine_extension($ext) {
-  $media = 'document';
+  $media = 'embed';
 
   switch (strtolower($ext)) {
     case 'txt';
@@ -277,7 +288,7 @@ function _sbac_resource_determine_extension($ext) {
       $media = 'none';
       break;
   }
-
+  watchdog('sbac_media', $media);
   return $media;
 }
 /**
@@ -427,11 +438,11 @@ function sbac_resource_status_messages_output($variables, $final_messages) {
   foreach ($final_messages as $section => $messages) {
     $header = $section;
     if (isset($messages['group'])) {
-      $header = "You must do the following to continue: ";
+      $header = "Please correct the following to continue: ";
     }
 
     $output .= "<div class='sbac-resource-alert-box alert-box alert'>\n";
-    $output .= "<h2 class='sbac-resource-error-section'>" . ucwords($header) . "</h2>\n";
+    // $output .= "<h2 class='sbac-resource-error-section'>" . ucwords($header) . "</h2>\n";
     $output .= " <ul>\n";
     foreach ($messages['messages'] as $message) {
       $output .= '  <li>' . $message . "</li>\n";
@@ -498,8 +509,9 @@ function sbac_status_messages($variables) {
  *
  * @param $view
  *   The view object.
+ *
  */
-function _sbac_resource_apply_filters(&$view) {
+function _sbac_resource_apply_filters($view) {
   $view_filters = $view->display_handler->get_option('filters');
 
   // Current filter session - create the args where needed.
@@ -587,21 +599,41 @@ function sbac_resource_digital_library_page() {
   $resource_layout_view = $view->preview();
   $_SESSION['sbac_search_count'] = $view->total_rows;
 
-  // if no results, display results but also a message....
   if ($view->total_rows == 0) {
-    $view = views_get_view('resources');
-    $view->set_display($display);
-    $view->pre_execute();
-    $view->execute();
-    $view->_post_execute();
-    $resource_layout_view = $view->preview();
-    $_SESSION['sbac_search_count'] = 0;
+    drupal_goto('digital-library-resources/no-results');
   }
-
-  //dpq($view->build_info['query']);
 
   menu_set_active_item('digital-library-resources');
   return theme('digital_library', array('resource_layout_view' => $resource_layout_view));
+}
+
+/**
+ * Menu Callback for digital library no results.
+ *
+ * @return string
+ */
+function sbac_resource_digital_library_no_results_page() {
+  $display = sbac_resource_determine_grid_or_list();
+  // hide category drawer
+  sbac_search_hide_category();
+  // Add appropriate JS.
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
+
+  // render resource view
+  $view = views_get_view('resources');
+  $view->set_display($display);
+  $view->pre_execute();
+  $view->execute();
+  $view->_post_execute();
+  $resource_layout_view = $view->preview();
+  $_SESSION['sbac_search_count'] = 0;
+
+  menu_set_active_item('digital-library-resources');
+  $output = theme('digital_library', array('resource_layout_view' => $resource_layout_view));
+
+  // remove keyword search variables
+  unset($_SESSION['sbac-search-keywords']);
+  return $output;
 }
 
 /**

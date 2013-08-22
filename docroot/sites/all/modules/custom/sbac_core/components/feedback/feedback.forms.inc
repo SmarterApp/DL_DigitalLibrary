@@ -4,22 +4,115 @@
       GENERAL FORMS
 ----------------------------------------------------------------------------*/
 
-function feedback_eck_feedback_form_no_validate($form, &$form_state) {
-  // drupal_static_reset('form_set_error:limit_validation_errors');
-}
-
 /**
  * Validation handler for ECK Feedback forms.
  */
 function feedback_eck_feedback_form_validate($form, &$form_state) {
-  $values = $form_state['values'];
+  $values = &$form_state['values'];
   $lang = $values['entity']->language;
+
+  $clean_check = function($container, $fields) use (&$values, &$form_state, $lang) {
+    // TODO: I feel filthy writing this; there has GOT to be a cleaner way
+    foreach ($fields as $field_name) {
+      // the values which get saved to the entity object
+      foreach ($values[$container][$lang] as &$item) {
+        foreach ($item['entity']->{$field_name}[$lang] as &$child) {
+          $child['value'] = filter_xss($child['value']);
+        }
+      }
+
+      // the values which get output as part of the form on page-reload
+      foreach ($form_state['complete form'][$container][$lang] as &$item) {
+        if (is_array($item) && isset($item[$field_name][$lang])) {
+          foreach ($item[$field_name][$lang] as &$child) {
+            if (is_array($child)) {
+              $child['value']['#value'] = filter_xss($child['value']['#value']);
+            }
+          }
+        }
+      }
+    }
+  };
+
+  $required_check = function($container, $required_fields) use ($values, $lang) {
+    foreach ($values[$container][$lang] as $key => $item) {
+      foreach ($required_fields as $field_name => $field_message) {
+        $value = trim(field_get_value($item, $field_name));
+        if (is_null($value) || $value == '') {
+          $error_key = implode('][', array(
+            $container,
+            $lang,
+            $key,
+            $field_name,
+          ));
+
+          // default "empty field" message
+          if ($field_name == $field_message) {
+            $error_text = t('Field is required.');
+          }
+          // customized message
+          else {
+            $error_text = t($field_message, array(
+              '!delta'      => $key,
+              '!delta+1'    => $key + 1,
+              '!field_name' => $field_name,
+            ));
+          }
+
+          form_set_error($error_key, $error_text);
+        }
+      }
+    }
+  };
+
+  $profanity_check = function($container) use ($values) {
+    if ($errors = form_get_errors()) {
+      $profanity_error_text = profanity_error_message_text();
+
+      foreach ($errors as $key => $text) {
+        // make sure we're looking at an error from the profanity component
+        if ($text !== $profanity_error_text) {
+          continue;
+        }
+
+        $key_parts = explode('][', $key);
+
+        // basic sanity check
+        if ((sizeof($key_parts) == 7) && ($key_parts[0] == $container) && ($key_parts[3] == 'field_comments')) {
+          $delta = $key_parts[2];
+
+          $set_title = trim(check_plain(strip_tags($values[$container][$lang][$delta]['set_title'])));
+
+          $new_text = t('Please remove inappropriate language from the comment in Quality Criterion to continue');
+
+          // ugly, but works
+          $location = array_search($text, $_SESSION['messages']['error']);
+          $_SESSION['messages']['error'][$location] = $new_text;
+        }
+      }
+    }
+  };
 
   // we use this validation callback to override the error messages set by the
   // profanity component
   switch ($values['entity']->type) {
     case 'gate_keeper':
       $container = 'field_quality_set';
+
+      $clean_check($container, array('field_comments', 'field_meets_criterion'));
+
+      switch ($values['action']) {
+        case 'validate':
+
+          $required_check($container, array(
+            'field_comments' => 'Please add a comment to Gate-Keeping Criteria !delta+1 to continue',
+            'field_meets_criterion' => 'You must make a decision in Quality Criteria !delta+1 to continue',
+          ));
+
+          break;
+      }
+
+      $profanity_check($container);
 
       break;
 
@@ -35,34 +128,13 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       }
 
       $container = 'field_review_set';
+      $profanity_check($container);
 
       break;
-  }
 
-  if (isset($container) && $errors = form_get_errors()) {
-    $profanity_error_text = profanity_error_message_text();
+    case 'post':
 
-    foreach ($errors as $key => $text) {
-      // make sure we're looking at an error from the profanity component
-      if ($text !== $profanity_error_text) {
-        continue;
-      }
-
-      $key_parts = explode('][', $key);
-
-      // basic sanity check
-      if ((sizeof($key_parts) == 7) && ($key_parts[0] == $container) && ($key_parts[3] == 'field_comments')) {
-        $delta = $key_parts[2];
-
-        $set_title = trim(check_plain(strip_tags($values[$container][$lang][$delta]['set_title'])));
-
-        $new_text = t('Please remove inappropriate language from the comment in Quality Criteria X to continue');
-
-        // ugly, but works
-        $location = array_search($text, $_SESSION['messages']['error']);
-        $_SESSION['messages']['error'][$location] = $new_text;
-      }
-    }
+      break;
   }
 }
 
@@ -70,33 +142,6 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
  * AJAX submit callback for the ECK feedback forms.
  */
 function feedback_eck_feedback_form_submit($form, &$form_state) {
-  if (isset($form_state['values']['no_validation_submit'])) {
-    // $form_copy = $form;
-    // $form_state_copy = $form_state;
-
-    // $form_copy = form_builder($form['#id'], $form_copy, $form_state_copy);
-
-    // $form_state['values'] = $form_state_copy['values'];
-
-    // $entity = $form_state['values']['entity'];
-
-    // dsmm($entity->field_quality_set);
-
-    // unset($form_state['triggering_element']['#limit_validation_errors']);
-    // unset($form_state['clicked_button']['#limit_validation_errors']);
-
-    // $form_state['buttons'][1]['#limit_validation_errors'] = FALSE;
-
-    // $form_state['complete form']['actions']['no_validation_submit']['#limit_validation_errors'] = FALSE;
-
-    // eck__entity__form_submit($form, $form_state);
-
-    // $entity = $form_state['values']['entity'];
-
-    // entity_save('feedback', $entity);
-
-  }
-
   $entity = $form_state['values']['entity'];
 
   // set correct values to bundle-specific fields
@@ -123,6 +168,9 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
         }
       }
     };
+
+    // dsmm($form_state['values']);
+
 
     if ($entity->type == 'review') {
       // we need to rebuild the complete review buttons when the recommendation

@@ -17,7 +17,7 @@ function sbac_paradata_node_load($nodes, $types) {
   global $user;
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
-    if ($node->type == 'resource' && $node->status == '1') {
+    if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
       //update the raw data table
       $query = "insert into node_user_paradata (
 						uid, 

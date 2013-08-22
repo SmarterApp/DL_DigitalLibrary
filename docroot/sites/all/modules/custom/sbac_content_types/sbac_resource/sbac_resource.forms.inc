@@ -278,7 +278,7 @@ function sbac_resource_validate_form(&$form, &$form_state) {
  */
 function sbac_resource_validate_general(&$form, $form_state) {
   if (!$form_state['values']['title']) {
-    $error = 'You must add a title to continue';
+    $error = 'Please add a title to continue.';
     form_set_error('title', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
@@ -339,11 +339,11 @@ function sbac_resource_validate_general(&$form, $form_state) {
  */
 function sbac_resource_validate_summary(&$form, $form_state) {
   if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
-    $error = 'You must add a resource summary to continue';
+    $error = 'Please add a resource summary to continue';
     form_set_error('field_alt_body', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_alt_body:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_alt_body:group:Add a resource summary', 'sbac_resource_error');
+    drupal_set_message('summary:field_alt_body:group:Please add a resource summary to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_alt_body']['und'][0]['value'];
@@ -357,11 +357,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
     }
   }
   if (!$form_state['values']['field_contexts']['und'][0]['value']) {
-    $error = 'You must add context(s) within which the resource could be used to continue';
+    $error = 'Please add context(s) within which the resource could be used to continue';
     form_set_error('field_contexts', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_contexts:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_contexts:group:Please enter the context(s) in which the resource could be used to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_contexts:group:Please add context(s) within which the resource could be used to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_contexts']['und'][0]['value'];
@@ -376,11 +376,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
-    $error = 'Please add a connection to the Common Core State Standards to continue';
+    $error = 'Add a connection to the Common Core State Standards';
     form_set_error('field_connection_to_ccss', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_connection_to_ccss:group:Please add a connection to the Common Core State Standards to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_connection_to_ccss:group:Add a connection to the Common Core State Standards', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_connection_to_ccss']['und'][0]['value'];
@@ -399,7 +399,7 @@ function sbac_resource_validate_summary(&$form, $form_state) {
     form_set_error('field_connection_to_fap', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_connection_to_fap:group:Please add the connection to a connection to the formative assessment process to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_connection_to_fap:group:Add the connection to a connection to the formative assessment process', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_connection_to_fap']['und'][0]['value'];
@@ -414,11 +414,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
-    $error = 'You must must add learning targets to continue';
+    $error = 'Please add learning targets to continue';
     form_set_error('field_learning_goals', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_learning_goals:group:Add learning targets', 'sbac_resource_error');
+    drupal_set_message('summary:field_learning_goals:group:Please add learning targets to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_learning_goals']['und'][0]['value'];
@@ -433,11 +433,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if (!$form_state['values']['field_success_criteria']['und'][0]['value']) {
-    $error = 'You must add success criteria to continue';
+    $error = 'Please add success criteria to continue';
     form_set_error('field_success_criteria', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_success_criteria:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_success_criteria:group:Add success criteria', 'sbac_resource_error');
+    drupal_set_message('summary:field_success_criteria:group:Please add success criteria to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_success_criteria']['und'][0]['value'];
@@ -452,11 +452,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if (!$form_state['values']['field_supporting_evidence']['und'][0]['value']) {
-    $error = 'You must must add supporting evidence to continue';
+    $error = 'Please add supporting evidence to continue';
     form_set_error('field_supporting_evidence', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_supporting_evidence:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_supporting_evidence:group:Add supporting evidence', 'sbac_resource_error');
+    drupal_set_message('summary:field_supporting_evidence:group:Please add supporting evidence to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_supporting_evidence']['und'][0]['value'];
@@ -471,11 +471,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if ($form_state['values']['field_principles']['und'][0]['value'] == NULL) {
-    $error = 'Please add Principles, Literature, or Research to continue';
+    $error = 'Add Principles, Literature, or Research';
     form_set_error('field_principles', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_principles:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_principles:group:Please add Principles, Literature, or Research to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_principles:group:Add Principles, Literature, or Research', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_principles']['und'][0]['value'];
@@ -550,12 +550,13 @@ function sbac_resource_validate_materials(&$form, $form_state) {
     drupal_set_message('materials:field_license:group:Please enter a license that allows you to post to continue', 'sbac_resource_error');
   }
   if ($form_state['values']['field_pii']['und'][0]['value'] == NULL) {
-    $error = 'You must certify that there is no information included that allows users to personally identify students to continue';
+    $error = 'Please certify that the files and Cover Profile adhere to the personally identifiable student information clause to continue';
     form_set_error('field_pii', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('materials:field_pii:single:' . $error, 'sbac_resource_error');
     drupal_set_message('materials:field_pii:group:' . $error, 'sbac_resource_error');
   }
+  /*
   if ($form_state['values']['field_use_of_student_images']['und'][0]['value'] == NULL) {
     $error = 'You must certify that you have the necessary written approval, consent, and clearance to post any images of the specific students to continue';
     form_set_error('field_use_of_student_images', $error);
@@ -563,6 +564,7 @@ function sbac_resource_validate_materials(&$form, $form_state) {
     drupal_set_message('materials:field_use_of_student_images:single:' . $error, 'sbac_resource_error');
     drupal_set_message('materials:field_use_of_student_images:group:' . $error, 'sbac_resource_error');
   }
+  */
 }
 
 /**
@@ -574,11 +576,11 @@ function sbac_resource_validate_materials(&$form, $form_state) {
 function sbac_resource_validate_tags(&$form, $form_state) {
   // Select all alignments with this nid
   if (!$form_state['values']['field_subject']['und'][0]['tid']) {
-    $error = 'Please select a subject tag to continue';
+    $error = 'Please select a subject and domain tag to continue';
     form_set_error('field_subject', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('tags:field_subject:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('tags:field_subject:group:Please select a subject tag to continue', 'sbac_resource_error');
+    drupal_set_message('tags:field_subject:group:Please select a subject and domain tag to continue', 'sbac_resource_error');
   }
   if (!$form_state['values']['field_grades']['und'][0]['tid']) {
     $error = 'Please select a grade tag to continue';
@@ -927,36 +929,36 @@ function _sbac_resource_content_type_description(&$form, &$form_state) {
 
   $form['submisison_general_guidelines'] = array (
     '#markup'   => $submission_general_guidelines,
-    '#prefix'   => '<p id="submission-general-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-general-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_general_guidelines'] = "group_basic";
 
   $form['submisison_material_guidelines'] = array (
     '#markup'   => $submission_material_guidelines,
-    '#prefix'   => '<p id="submission-materials-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-materials-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_material_guidelines'] = "group_materials";
 
   $form['submisison_tags_guidelines'] = array (
     '#markup'   => $submission_tags_guidelines,
-    '#prefix'   => '<p id="submission-tags-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-tags-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_tags_guidelines'] = "group_tags";
 
   $form['submisison_summary_guidelines'] = array (
     '#markup'   => $submission_summary_guidelines,
-    '#prefix'   => '<p id="submission-summary-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-summary-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_summary_guidelines'] = "group_summary";
 
   $form['submisison_advanced_guidelines'] = array (
     '#markup'   => $submission_advanced_guidelines,
-    '#prefix'   => '<p id="submission-advanced-guidelines">',
-    '#suffix'   => '</p>'
+    '#prefix'   => '<div id="submission-advanced-guidelines">',
+    '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_advanced_guidelines'] = "group_advanced";
 }
@@ -1063,9 +1065,9 @@ function _sbac_resource_form_summary(&$form, $form_state) {
 function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
   // Materials
-  $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
+  $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
 
-  // License Information
+  // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);
   $form['field_license_information'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_license_after_build';
@@ -1163,8 +1165,9 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   $form['field_pii']['und']['#title'] .= ' ' . theme('form_required_marker');
   unset($form['field_pii']['und']['#options'][0]);
-  $form['field_use_of_student_images']['und']['#title'] .= ' ' . theme('form_required_marker');
-  unset($form['field_use_of_student_images']['und']['#options'][0]);
+  
+  // $form['field_use_of_student_images']['und']['#title'] .= ' ' . theme('form_required_marker');
+  // unset($form['field_use_of_student_images']['und']['#options'][0]);
 }
 
 /**
@@ -1436,6 +1439,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
     $form['revision_information']['#access'] = FALSE;
     $form['author']['#access'] = FALSE;
     $form['options']['#access'] = FALSE;
+    $form['field_alignment_terms']['#access'] = FALSE;
   }
   $form['field_alignment_tags']['#access'] = FALSE;
   $form['field_temp']['#access'] = FALSE;
@@ -1592,9 +1596,9 @@ function sbac_resource_check_materials($form, $form_state) {
     if (!$form_state['values']['field_pii']['und'][0]['value']) {
       $valid = FALSE;
     }
-    if (!$form_state['values']['field_use_of_student_images']['und'][0]['value']) {
-      $valid = FALSE;
-    }
+    // if (!$form_state['values']['field_use_of_student_images']['und'][0]['value']) {
+    //   $valid = FALSE;
+    // }
   }
   else {
     if (!$form['field_file']['und'][0]['#default_value']['fid']) {
@@ -1614,9 +1618,9 @@ function sbac_resource_check_materials($form, $form_state) {
     if (!$form['field_pii']['und']['#default_value']) {
       $valid = FALSE;
     }
-    if (!$form['field_use_of_student_images']['und']['#default_value']) {
-      $valid = FALSE;
-    }
+    // if (!$form['field_use_of_student_images']['und']['#default_value']) {
+    //   $valid = FALSE;
+    // }
   }
   return $valid;
 }
@@ -1676,10 +1680,7 @@ function sbac_resource_submit_resource_form() {
 
   $form['submit_description'] = array(
     '#markup' => '<p>'.t('
-    Submitting this resource may make it accessible to
-    Smarter Balanced Digital Library resource reviewers.
-    You cannot edit your resource once it is submitted unless
-    a reviewer returns it to you').'</p>',
+    Submitting this resource may make it accessible to Smarter Balanced Digital Library resource reviewers. You cannot edit your resource once it is submitted unless a reviewer returns it to you.').'</p>',
   );
 
   $form['cancel'] = array(
@@ -1712,9 +1713,7 @@ function sbac_resource_delete_resource_form() {
 
   $form['submit_description'] = array(
     '#markup' => '<p>' . t('
-    If you continue, you will no longer be able to edit
-    or submit this resource. All of the information you have already
-    entered will be lost.') . '</p>',
+    If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '</p>',
   );
 
   $form['cancel'] = array(

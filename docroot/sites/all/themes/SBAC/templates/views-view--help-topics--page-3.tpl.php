@@ -93,4 +93,5 @@ if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help d
     </div>
   <?php endif; ?>
 
-</div><?php /* class view */ ?>
+</div>
+<?php /* class view */ ?>

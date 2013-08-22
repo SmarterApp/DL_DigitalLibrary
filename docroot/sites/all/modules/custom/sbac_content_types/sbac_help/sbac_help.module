@@ -244,7 +244,31 @@ function drupal_get_origin() {
  */
 function sbac_help_form_views_form_help_topics_page_2_alter(&$form, &$form_state, $form_id) {
   $form['actions']['submit']['#value'] = 'Save Order';
+  $form['actions']['reset'] = array(
+    '#type'   =>  'submit',
+    '#value'  =>  'Reset to Alphabetical',
+    '#submit' =>  array('sbac_help_delete_draggableviews_weights'),
+  );
 }
+
 function sbac_help_form_views_form_help_topics_page_4_alter(&$form, &$form_state, $form_id) {
   $form['actions']['submit']['#value'] = 'Save Order';
+  $form['actions']['submit']['#submit'][] = 'sbac_help_stay_on_welcome_tutorial_tab';
+}
+
+function sbac_help_stay_on_welcome_tutorial_tab(&$form, &$form_state) {
+  drupal_custom_goto('/admin/help-topics#topics-tab2');
+}
+
+/**
+ * Delete previous draggableviews weights on sort help topics screen
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_help_delete_draggableviews_weights(&$form, &$form_state) {
+  db_delete('draggableviews_structure')
+    ->condition('view_name', 'help_topics')
+    ->condition('view_display', 'page_2')
+    ->execute();
 }
