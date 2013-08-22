@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * !NOT USED BECAUSE EMBED CODE IS IMPLEMENTED IN JQUERY FUNCTION!
+ *
  * @file sbac_media/templates/media-schooltube-video.tpl.php
  *
  * Template file for theme('media_schooltube_video').
