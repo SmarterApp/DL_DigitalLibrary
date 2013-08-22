@@ -147,7 +147,7 @@ function sbac_alignment_devtest() {
   $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
   $grade_terms = array();
 
-  $create_base = false;
+  $create_base = TRUE;
   $create = TRUE;
   $print = FALSE;
 

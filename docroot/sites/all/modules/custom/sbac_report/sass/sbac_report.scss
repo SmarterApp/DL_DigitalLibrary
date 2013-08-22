@@ -1,3 +1,5 @@
+@import "compass/css3/";
+
 .view-content table {
   width: 100%;
 }
@@ -50,6 +52,10 @@
 
 		.chzn-container {
 			width: 200px !important;
+
+			.chzn-single {
+				height: 2.3125em;
+			}
 		}
 	}
 
@@ -59,13 +65,22 @@
 		width: 25%;
 		margin: 1em 10px 1em 0;
 		float: left;
+
+		.report-dropdown-toggle {
+			color: #4d4d4d;
+			height: 2.3125em;
+			border: 1px solid #ccc;
+			width: 100%;
+			display: inline-block;
+			padding: 5px;
+			font-size: 0.875em;
+		}
 	}
 
 	.report-dropdown  {
 		position: absolute;
 		background: white;
 		width: 500px;
-		height: 500px;
 		z-index: 500;
 	}
 
@@ -82,7 +97,24 @@
 	}
 }
 
+#date-range-dropdown {
+	margin: 0;
+	padding: 10px;
+	border: 1px solid #ddd;
+	@include box-shadow(0,1px, 1px, rgba(black, 0.5));
 
+	ul {
+		margin: 0;
+		padding: 0;
+
+		li {
+			list-style-type: none;
+			padding: 0;
+			margin: 10px 0;
+			display: block;
+		}
+	}
+}
 
 
 
