@@ -17,11 +17,11 @@ function sbac_report_individual() {
   // unset($_SESSION['sbac_report']);
   // Get SESSION values.
   $uid = sbac_report_get_session_value('sne', 'uid');
-  $state = sbac_report_get_session_value('state', 'name');
+  $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range', 'range');
 
-  if (!empty($uid) && !empty($date_range) && !empty($state)) {
-    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state);
+  if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
+    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
     // If there are no SNE with the selected state and uid. Display none.
     // @todo: custom message if there's no result.
     if (!empty($sne_details)) {
