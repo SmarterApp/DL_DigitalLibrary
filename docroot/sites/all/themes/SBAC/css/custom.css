@@ -7920,7 +7920,7 @@ a.tabledrag-handle .handle {
 }
 /* line 1129, ../sass/custom.scss */
 #field-file-values tr:nth-child(2) td:nth-child(2) {
-  padding-top: 20px;
+  padding-top: 30px;
 }
 /* line 1131, ../sass/custom.scss */
 #field-file-values tr:nth-child(2) td:nth-child(2) .media-widget {
@@ -7931,7 +7931,7 @@ a.tabledrag-handle .handle {
   display: block;
   content: 'Secondary material(s). These will be shown adjacent to the primary material.';
   position: absolute;
-  top: 30px;
+  top: 20px;
   left: -35px;
   right: 0;
   margin: -43px 0 0 -10px;
