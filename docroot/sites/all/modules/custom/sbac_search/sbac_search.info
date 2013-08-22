@@ -7,7 +7,6 @@ version = 7.x-1.0
 project = sbac_search
 dependencies[] = apachesolr
 dependencies[] = apachesolr_access
-dependencies[] = apachesolr_attachments
 dependencies[] = apachesolr_search
 dependencies[] = apachesolr_user
 dependencies[] = apachesolr_views
