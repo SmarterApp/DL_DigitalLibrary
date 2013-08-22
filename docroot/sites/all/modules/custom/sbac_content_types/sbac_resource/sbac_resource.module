@@ -224,7 +224,13 @@ function _sbac_resource_preview_materials(&$vars) {
     foreach ($vars['field_file'] as $key => $material) {
       $url = file_create_url($material['uri']);
       $ext = pathinfo($url, PATHINFO_EXTENSION);
-      $media = _sbac_resource_determine_extension($ext);
+      // the _sbac_resource_determine_media shoudl take over because 
+      // extension is no longer good enough to determine media type
+      if ($ext) {
+        $media = _sbac_resource_determine_extension($ext);
+      } else {
+        $media = _sbac_resource_determine_media($material);
+      }
       if ($media == 'none') {
         $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       }
@@ -253,13 +259,28 @@ function _sbac_resource_preview_materials(&$vars) {
 }
 
 /**
+ * Determine the media type based on URL.
+ *
+ * @param $file object
+ * @return string
+ */
+function _sbac_resource_determine_media($file) {
+  $media = 'document';
+  preg_match('#video/(.*)#i', $file['filemime'], $matches);
+  if (isset($matches[1]) && $matches[1]) {
+    return $matches[1];
+  } 
+  return $media;
+}
+
+/**
  * Determine the filename extension.
  *
  * @param $ext
  * @return string
  */
 function _sbac_resource_determine_extension($ext) {
-  $media = 'embed';
+  $media = 'document';
 
   switch (strtolower($ext)) {
     case 'txt';
@@ -288,9 +309,9 @@ function _sbac_resource_determine_extension($ext) {
       $media = 'none';
       break;
   }
-  watchdog('sbac_media', $media);
   return $media;
 }
+
 /**
  * Determine the filename extension.
  *

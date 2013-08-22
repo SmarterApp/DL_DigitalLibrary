@@ -17,7 +17,7 @@
           var google_viewer = '<iframe src="http://docs.google.com/viewer?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
           resource.empty().html(google_viewer);
         }
-        else if (type == 'video') {
+        else if (type == 'video') { // includes youtube
           resource.html('<div id="sbac-jwplayer"></div>');
           jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850 });
           jwplayer('sbac-jwplayer').play();
@@ -29,9 +29,18 @@
           img.attr('width', 850);
           resource.empty().html(img);
         }
-        else if (type == 'embed') {
+        else if (type == 'schooltube') {
           resource.html('<iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>');
         }
+        else if (type == 'teachertube') {
+          resource.html('<iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe>');
+        }
+        else if (type == 'slideshare') {
+          resource.html('<iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>');
+        }
+        else if (type == 'vimeo') {
+          resource.html('<iframe src="' + $(this).attr('href') + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
+        }       
         else {
           var img = $('<img>');
           img.attr('src', $(this).attr('href'));
