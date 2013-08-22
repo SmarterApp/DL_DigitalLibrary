@@ -339,11 +339,11 @@ function sbac_resource_validate_general(&$form, $form_state) {
  */
 function sbac_resource_validate_summary(&$form, $form_state) {
   if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
-    $error = 'You must add a resource summary to continue';
+    $error = 'Please add a resource summary to continue';
     form_set_error('field_alt_body', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_alt_body:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_alt_body:group:Add a resource summary', 'sbac_resource_error');
+    drupal_set_message('summary:field_alt_body:group:Please add a resource summary to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_alt_body']['und'][0]['value'];
@@ -357,11 +357,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
     }
   }
   if (!$form_state['values']['field_contexts']['und'][0]['value']) {
-    $error = 'Add the context(s) in which the resource could be used';
+    $error = 'Please add context(s) within which the resource could be used to continue';
     form_set_error('field_contexts', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_contexts:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_contexts:group:Add the context(s) in which the resource could be used', 'sbac_resource_error');
+    drupal_set_message('summary:field_contexts:group:Please add context(s) within which the resource could be used to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_contexts']['und'][0]['value'];
@@ -399,7 +399,7 @@ function sbac_resource_validate_summary(&$form, $form_state) {
     form_set_error('field_connection_to_fap', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_connection_to_fap:group:Please add the connection to a connection to the formative assessment process to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_connection_to_fap:group:Add the connection to a connection to the formative assessment process', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_connection_to_fap']['und'][0]['value'];
@@ -414,11 +414,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
-    $error = 'You must must add learning targets to continue';
+    $error = 'Please add learning targets to continue';
     form_set_error('field_learning_goals', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_learning_goals:group:Add learning targets', 'sbac_resource_error');
+    drupal_set_message('summary:field_learning_goals:group:Please add learning targets to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_learning_goals']['und'][0]['value'];
@@ -433,11 +433,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if (!$form_state['values']['field_success_criteria']['und'][0]['value']) {
-    $error = 'You must add success criteria to continue';
+    $error = 'Please add success criteria to continue';
     form_set_error('field_success_criteria', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_success_criteria:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_success_criteria:group:Add success criteria', 'sbac_resource_error');
+    drupal_set_message('summary:field_success_criteria:group:Please add success criteria to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_success_criteria']['und'][0]['value'];
@@ -452,11 +452,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if (!$form_state['values']['field_supporting_evidence']['und'][0]['value']) {
-    $error = 'You must must add supporting evidence to continue';
+    $error = 'Please add supporting evidence to continue';
     form_set_error('field_supporting_evidence', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_supporting_evidence:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_supporting_evidence:group:Add supporting evidence', 'sbac_resource_error');
+    drupal_set_message('summary:field_supporting_evidence:group:Please add supporting evidence to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_supporting_evidence']['und'][0]['value'];
@@ -471,11 +471,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
   }
 
   if ($form_state['values']['field_principles']['und'][0]['value'] == NULL) {
-    $error = 'Please add Principles, Literature, or Research to continue';
+    $error = 'Add Principles, Literature, or Research';
     form_set_error('field_principles', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_principles:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_principles:group:Please add Principles, Literature, or Research to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_principles:group:Add Principles, Literature, or Research', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_principles']['und'][0]['value'];
@@ -574,11 +574,11 @@ function sbac_resource_validate_materials(&$form, $form_state) {
 function sbac_resource_validate_tags(&$form, $form_state) {
   // Select all alignments with this nid
   if (!$form_state['values']['field_subject']['und'][0]['tid']) {
-    $error = 'Please select a subject tag to continue';
+    $error = 'Please select a subject and domain tag to continue';
     form_set_error('field_subject', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('tags:field_subject:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('tags:field_subject:group:Please select a subject tag to continue', 'sbac_resource_error');
+    drupal_set_message('tags:field_subject:group:Please select a subject and domain tag to continue', 'sbac_resource_error');
   }
   if (!$form_state['values']['field_grades']['und'][0]['tid']) {
     $error = 'Please select a grade tag to continue';
@@ -1436,6 +1436,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
     $form['revision_information']['#access'] = FALSE;
     $form['author']['#access'] = FALSE;
     $form['options']['#access'] = FALSE;
+    $form['field_alignment_terms']['#access'] = FALSE;
   }
   $form['field_alignment_tags']['#access'] = FALSE;
   $form['field_temp']['#access'] = FALSE;
@@ -1676,10 +1677,7 @@ function sbac_resource_submit_resource_form() {
 
   $form['submit_description'] = array(
     '#markup' => '<p>'.t('
-    Submitting this resource may make it accessible to
-    Smarter Balanced Digital Library resource reviewers.
-    You cannot edit your resource once it is submitted unless
-    a reviewer returns it to you').'</p>',
+    Submitting this resource may make it accessible to Smarter Balanced Digital Library resource reviewers. You cannot edit your resource once it is submitted unless a reviewer returns it to you.').'</p>',
   );
 
   $form['cancel'] = array(

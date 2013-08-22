@@ -9,7 +9,7 @@
 <div class="row first">
 	<?php if ($user_profile['user_picture']['#markup']): ?>
 		<div class="column large-3 profile-pic">
-			<?php 
+			<?php
 			// display default photo if privacy on for picture
 			// we use field_first_name because field_privacy may not exist
 			if (isset($user_profile['field_first_name']['#object'])) {
@@ -50,7 +50,7 @@
 			if (isset($user_profile['field_position']['#access']) && $user_profile['field_position']['#access'] && isset($user_profile['field_position'][0]['#markup'])) {
 				echo $user_profile['field_position'][0]['#markup'];
 			}
-			
+
 			if (isset($user_profile['field_retired'][0]['#markup'])) {
 				echo ' (Retired)';
 			}
@@ -112,7 +112,7 @@
 
 				echo '<div><span class="title">Grades: </span>'. $grade .'</div>';
 				echo '<div><span class="title">Subjects: </span>'. $subject .'</div>';
-				echo '<div><span class="title">Special Populations: </span>'. $sp .'</div>';
+				echo '<div><span class="title">Student Populations: </span>'. $sp .'</div>';
 			?>
 		</div>
 	</div>

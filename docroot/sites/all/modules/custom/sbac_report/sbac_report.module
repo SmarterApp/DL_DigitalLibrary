@@ -131,6 +131,7 @@ function sbac_report_form($form, &$form_state) {
     ),
   );
 
+  // --- Date Dropdown ---
   $form['date_range_dropdown'] = array(
     '#type' => 'markup',
     '#markup' => theme('sbac_report_date_range_dropdown',
@@ -165,8 +166,10 @@ function sbac_report_form($form, &$form_state) {
     '#date_increment' => 1,
     '#date_year_range' => '-3:+3',
     '#datepicker_options' => array(),
-    '#suffix' => '</ul></div>', // Closing tags for the dropdown template.
+    '#suffix' => '</div></div>', // Closing tags for the dropdown template.
   );
+
+  // --- End of Date Dropdown ---
 
   $form['sne'] = array(
     '#type' => 'textfield',
@@ -178,6 +181,9 @@ function sbac_report_form($form, &$form_state) {
   );
 
   // Hidden field to store the selected uid.
+  // When the autocomplete suggetion is selected,
+  // the uid value will be set here.
+  // @see sbac_report.js
   $form['uid'] = array(
     '#type' => 'hidden',
     '#default_value' => sbac_report_get_session_value('sne', 'uid'),
@@ -206,11 +212,18 @@ function sbac_report_form($form, &$form_state) {
 function sbac_report_form_submit($form, &$form_state) {
   // State.
   $state_tid = $form_state['values']['state'];
-  $state_options = $form['state']['#options'];
-  $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
   $_SESSION['sbac_report']['state']['tid'] = $state_tid;
+  if (!is_numeric($state_tid) && $state_tid == 'all') {
+    $_SESSION['sbac_report']['state']['name'] = 'all';
+  }
+  else {
+    $state_options = $form['state']['#options'];
+    $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+  }
+
   // Time range.
   $_SESSION['sbac_report']['date_range']['range'] = $form_state['values']['date_range'];
+
   // SNE.
   $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
   $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
@@ -298,8 +311,13 @@ function sbac_report_state_ajax($form, &$form_state) {
   if (isset($form_state['values']['state'])) {
     $state_tid = $form_state['values']['state'];
     $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-    $state_options = $form['state']['#options'];
-    $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+    if (!is_numeric($state_tid) && $state_tid == 'all') {
+      $_SESSION['sbac_report']['state']['name'] = 'all';
+    }
+    else {
+      $state_options = $form['state']['#options'];
+      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+    }
   }
   return $form;
 }
@@ -335,5 +353,47 @@ function sbac_report_format_date_range($str) {
   }
   else {
     return '';
+  }
+}
+
+/**
+ * Custom embed view. Return NULL if no result.
+ */
+function sbac_report_embed_view($name, $display_id = 'default') {
+  $args = func_get_args();
+  array_shift($args); // remove $name.
+  if (count($args)) {
+    array_shift($args); // remove $display_id.
+  }
+
+  $view = views_get_view($name);
+  if (is_object($view)) {
+    if (is_array($args)) {
+      $view->set_arguments($args);
+    }
+    $preview = $view->preview($display_id);
+    if (!empty($view->result)) {
+      return $preview;
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Fix the broken contextual filter for eck "created" date field.
+ */
+function sbac_report_views_query_alter(&$view, &$query) {
+  if ($view->name == 'gate_keeping_reviews') {
+    foreach ($query->where as &$condition_group) {
+      foreach ($condition_group['conditions'] as &$condition) {
+        if ($condition['operator'] == 'formula' && strpos($condition['field'], 'eck_feedback. SECOND') !== FALSE) {
+          $condition['field'] = str_replace('eck_feedback. SECOND', 'eck_feedback.created SECOND', $condition['field']);
+          break 2;
+        }
+      }
+    }
   }
 }
