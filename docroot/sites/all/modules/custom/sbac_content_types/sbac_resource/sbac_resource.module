@@ -259,7 +259,7 @@ function _sbac_resource_preview_materials(&$vars) {
  * @return string
  */
 function _sbac_resource_determine_extension($ext) {
-  $media = 'document';
+  $media = 'embed';
 
   switch (strtolower($ext)) {
     case 'txt';
@@ -288,7 +288,7 @@ function _sbac_resource_determine_extension($ext) {
       $media = 'none';
       break;
   }
-
+  watchdog('sbac_media', $media);
   return $media;
 }
 /**
