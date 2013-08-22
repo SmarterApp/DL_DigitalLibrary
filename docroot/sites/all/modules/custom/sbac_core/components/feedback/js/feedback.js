@@ -93,14 +93,21 @@ Feedback.utilities = {
   /**
    * Sets the form action.
    * 
-   * @param {[type]} type [description]
-   * @param {[type]} val  [description]
+   * @param {[type]} action [description]
+   * @param {[type]} name   [description]
    */
-  set_action: function (type, val) {
+  set_action: function (action, name) {
+    var selector = '';
+
     // update the action which took place
-    if (Feedback[type] && Feedback[type]['form']) {
-      $(Feedback[type]['form'] + ' ' + Feedback.action_select).val(val);
+    if (Feedback[name] && Feedback[name]['form']) {
+      selector += Feedback[name]['form'];
     }
+
+    selector += ' ';
+    selector += Feedback.action_select;
+
+    $(selector).val(action);
   },
 
   /**
@@ -113,7 +120,7 @@ Feedback.utilities = {
    * @return {[type]}      [description]
    */
   submit_modal_callback: function (type, val) {
-    Feedback.utilities.set_action(type, val);
+    Feedback.utilities.set_action(val, type);
 
     // update the action which took place
     if (Feedback[type] && Feedback[type]['form']) {
@@ -189,13 +196,12 @@ Drupal.behaviors.feedback = {
 
           // now that the form submission is complete, we set the action back to default
           // state; this must happen in the change callback!!
-          Feedback.utilities.set_action('gk', 'save_close');
+          Feedback.utilities.set_action('save_close');
 
           // proceed only if there are no form errors
           if (!error_status) {
             // if we got here via a modal button, we should now open the modal
             if (modal_anchor) {
-              console.log('triggering anchor: ' + modal_anchor);
               $(modal_anchor).trigger('click');
             }
             // othewise we got here via the Save & Close button, so let's "close" this tab
@@ -225,8 +231,8 @@ Drupal.behaviors.feedback = {
             $(data.button).once('mousedown-event').click(function(e) {
               e.preventDefault();
 
-              // update action to the one taking place
-              Feedback.utilities.set_action(name, data.action);
+              // update action
+              Feedback.utilities.set_action('validate', name);
 
               // a modal-triggering button has been clicked, so the first thing we need to do
               // is ajax-submit the form to validate it, and we do this by clicking the Save &
