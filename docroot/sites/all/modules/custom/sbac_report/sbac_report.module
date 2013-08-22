@@ -213,11 +213,11 @@ function sbac_report_form_submit($form, &$form_state) {
   // State.
   $state_tid = $form_state['values']['state'];
   $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-  $state_options = $form['state']['#options'];
   if (!is_numeric($state_tid) && $state_tid == 'all') {
     $_SESSION['sbac_report']['state']['name'] = 'all';
   }
   else {
+    $state_options = $form['state']['#options'];
     $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
   }
 
@@ -311,8 +311,13 @@ function sbac_report_state_ajax($form, &$form_state) {
   if (isset($form_state['values']['state'])) {
     $state_tid = $form_state['values']['state'];
     $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-    $state_options = $form['state']['#options'];
-    $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+    if (!is_numeric($state_tid) && $state_tid == 'all') {
+      $_SESSION['sbac_report']['state']['name'] = 'all';
+    }
+    else {
+      $state_options = $form['state']['#options'];
+      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+    }
   }
   return $form;
 }
