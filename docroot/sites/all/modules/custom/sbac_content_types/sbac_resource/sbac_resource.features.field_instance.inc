@@ -633,13 +633,32 @@ function sbac_resource_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'file',
+      'module' => 'media',
       'settings' => array(
+        'allowed_schemes' => array(
+          'public' => 'public',
+          'schooltube' => 'schooltube',
+          'vimeo' => 'vimeo',
+          'youtube' => 'youtube',
+        ),
+        'allowed_types' => array(
+          'audio' => 'audio',
+          'document' => 'document',
+          'image' => 'image',
+          'video' => 'video',
+        ),
+        'browser_plugins' => array(
+          'media_default--media_browser_1' => 0,
+          'media_default--media_browser_my_files' => 0,
+          'media_internet' => 'media_internet',
+          'upload' => 'upload',
+          'youtube' => 0,
+        ),
         'label_help_description' => 'You can add videos, images and documents to this resource. This resource must contain at least one (1) material.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'progress_indicator' => 'throbber',
       ),
-      'type' => 'file_generic',
+      'type' => 'media_generic',
       'weight' => 31,
     ),
   );
