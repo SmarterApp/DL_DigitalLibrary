@@ -173,7 +173,7 @@ button, .button, .form-submit, #edit-submit, #edit-submit--2, #edit-submit--5, #
 
 button.secondary, .button.secondary, #edit-cancel, #sbac-search-close-button,
 .devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay,
-div.ctools-modal-content a.close {
+div.ctools-modal-content a.close, a.remove, a.fake-cancel {
   @include global-button-negative;
 }
 
@@ -1152,8 +1152,12 @@ a.tabledrag-handle .handle {
   padding: 0;
   @include box-shadow(1px, 1px, 1px,rgba(black,0.5));
 }
-.page-media-browser {
 
+.ui-widget-overlay  {
+  background: url('../images/colorbox/overlay.png') top left repeat;
+  @include opacity(0.9);
+}
+.page-media-browser {
   background: white;
 
   //tabs
@@ -1227,6 +1231,15 @@ a.tabledrag-handle .handle {
 
     li {
       margin: 0 0 2px 10px;
+      &:after {
+        content:',';
+      }
+
+      &:last-child{
+        &:after{
+          content:'.';
+        }
+      }
     }
   }
 

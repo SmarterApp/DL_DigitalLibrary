@@ -109,10 +109,7 @@
               
               
               
-              $('#edit-submit').click(function() {
-                $(this).hide();
-                 return false;
-              });
+              
             }
 
             var refNode = $('input#ref_node').val();
