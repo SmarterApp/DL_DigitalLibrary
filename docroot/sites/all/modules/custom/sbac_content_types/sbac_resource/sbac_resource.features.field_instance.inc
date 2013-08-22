@@ -1557,52 +1557,6 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_use_of_student_images'
-  $field_instances['node-resource-field_use_of_student_images'] = array(
-    'bundle' => 'resource',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'If any materials you created contain necessary images of students, please confirm that your school district has clearance to post the images in the Smarter Balanced Assessment Consortium’s Digital Library. ',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 37,
-      ),
-      'secondary_teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 19,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_use_of_student_images',
-    'label' => 'Use of Student Images',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'label_help_description' => 'If any materials you created contain necessary images of students, please confirm that your school district has clearance to post the images in the Smarter Balanced Assessment Consortium’s Digital Library. ',
-        'maxlength_js_label' => '',
-      ),
-      'type' => 'options_buttons',
-      'weight' => 38,
-    ),
-  );
-
   // Exported field_instance: 'node-resource-field_video'
   $field_instances['node-resource-field_video'] = array(
     'bundle' => 'resource',
