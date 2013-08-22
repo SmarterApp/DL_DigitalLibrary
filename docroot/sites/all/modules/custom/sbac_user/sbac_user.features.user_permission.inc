@@ -537,36 +537,28 @@ function sbac_user_user_default_permissions() {
   // Exported permission: edit own audio files.
   $permissions['edit own audio files'] = array(
     'name' => 'edit own audio files',
-    'roles' => array(
-      'resource contributor' => 'resource contributor',
-    ),
+    'roles' => array(),
     'module' => 'file_entity',
   );
 
   // Exported permission: edit own document files.
   $permissions['edit own document files'] = array(
     'name' => 'edit own document files',
-    'roles' => array(
-      'resource contributor' => 'resource contributor',
-    ),
+    'roles' => array(),
     'module' => 'file_entity',
   );
 
   // Exported permission: edit own image files.
   $permissions['edit own image files'] = array(
     'name' => 'edit own image files',
-    'roles' => array(
-      'resource contributor' => 'resource contributor',
-    ),
+    'roles' => array(),
     'module' => 'file_entity',
   );
 
   // Exported permission: edit own video files.
   $permissions['edit own video files'] = array(
     'name' => 'edit own video files',
-    'roles' => array(
-      'resource contributor' => 'resource contributor',
-    ),
+    'roles' => array(),
     'module' => 'file_entity',
   );
 
