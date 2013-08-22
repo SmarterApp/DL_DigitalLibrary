@@ -4,6 +4,8 @@
       var $dateRangeField = $('#date-range-field');
       var $dateSelected = $('#date-selected');
       var $uidField = $('#sne-uid-field');
+      var dropdownId = '#date-range-dropdown';
+      var $dropdown = $(dropdownId);
 
       $('.date-range-item').click(function() {
         var value = $(this).data('value');
@@ -66,6 +68,46 @@
         return year + month + date;
       }
 
+      /**
+       * Action on the dropdown.
+       *
+       * @param {op}
+       *   'show' or 'hide'.
+       */
+      function dropdown(op) {
+        // Show.
+        if (op == 'show') {
+          if ($dropdown.hasClass('hide')) {
+            $dropdown.removeClass('hide');
+            $dropdown.unbind('hide');
+            $dropdown.trigger('show');
+          }
+        }
+        // Hide.
+        else {
+          if (!$dropdown.hasClass('hide')) {
+            $dropdown.addClass('hide');
+            $dropdown.unbind('show');
+            $dropdown.trigger('hide');
+          }
+        }
+      }
+
+      /**
+       * Toggle dropdown.
+       */
+      function toggleDropdown() {
+        // Show.
+        if ($dropdown.hasClass('hide')) {
+          dropdown('show');
+        }
+        // Hide.
+        else {
+          dropdown('hide');
+        }
+      }
+
+      // Get the id from the autocomplete suggestion.
       $(context).on('click', '#autocomplete li', function() {
         var uid = $(this).find('.autocomplete-suggestion').data('uid');
         $uidField.text(uid);
