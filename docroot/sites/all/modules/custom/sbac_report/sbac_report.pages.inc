@@ -23,6 +23,7 @@ function sbac_report_page() {
   if (!empty($uid) && !empty($date_range) && !empty($state)) {
     $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state);
     // If there are no SNE with the selected state and uid. Display none.
+    // @todo: custom message if there's no result.
     if (!empty($sne_details)) {
       $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
       $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
