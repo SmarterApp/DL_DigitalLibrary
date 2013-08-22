@@ -17,7 +17,7 @@ Drupal.media.browser.selectionFinalized = function (selectedMedia) {
 
 Drupal.behaviors.MediaBrowser = {
   attach: function (context) {
-    if (Drupal.settings.media.selectedMedia) {
+    if (Drupal.settings.media && Drupal.settings.media.selectedMedia) {
       Drupal.media.browser.selectMedia(Drupal.settings.media.selectedMedia);
       // Fire a confirmation of some sort.
       Drupal.media.browser.finalizeSelection();

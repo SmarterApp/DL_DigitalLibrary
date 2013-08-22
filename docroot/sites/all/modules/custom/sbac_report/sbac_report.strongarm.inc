@@ -16,6 +16,7 @@ function sbac_report_strongarm() {
   $strongarm->name = 'contextual_range_filter_date_field_names';
   $strongarm->value = array(
     'node:created_fulldate' => 'node:created_fulldate',
+    'eck_feedback:created' => 'eck_feedback:created',
   );
   $export['contextual_range_filter_date_field_names'] = $strongarm;
 

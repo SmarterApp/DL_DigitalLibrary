@@ -9,11 +9,25 @@ ini_set('memory_limit', '1024M');
  */
 define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/');
 
+function sbac_alignment_devfix() {
+  $terms = taxonomy_get_tree(2);
+  dsm($terms);
+  
+  $ela = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
+  dsm($ela);
+  
+  $terms = taxonomy_get_tree(2, $ela->tid, NULL, TRUE);
+  dsm($terms);
+  $ma = taxonomy_get_term_by_name('Math');
+  dsm($ma);
+  
+  return '';
+}
 
 /**
  *
  */
-function sbac_alignment_devfix(){
+function sbac_alignment_devfix3(){
   $shortnames = get_shortnames();
   
   $filename = 'ma.json';
@@ -36,23 +50,14 @@ function sbac_alignment_devfix(){
       $term['shortName'] = $shortnames[$key];  
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
     if($count++ >10){
       //break;
     }
   }
   print drupal_json_encode($json);
   
-  return '';
+  exit;
 }
-
 /**
  *
  */
@@ -131,8 +136,8 @@ function sbac_alignment_devtest() {
     $edu_alignment_vocab_name = "education_alignment2";
   }
 
-  if(isset($_GET['type'])) {
-    $filename = $_GET['type'];
+  if(isset($_GET['file'])) {
+    $filename = $_GET['file'];
   }
   else {
     $filename = "ela.json";
@@ -150,66 +155,73 @@ function sbac_alignment_devtest() {
   if ($create_base) {
     // Add education alignment
     $terms = array(
-      'English Language Arts' => array(
-        'desc' => '',
+      'English / Language Arts' => array(
         'children' => array(
-          'KG - Kindergarten' =>  array(
-            'desc' => '',
-          ),
-          '1 - First Grade' =>  array(
-            'desc' => '',
-          ),
-          '2 - Second Grade' =>  array(
-            'desc' => '',
-          ),
-          '3 - Third Grade' =>  array(
-            'desc' => '',
-          ),
-          '4 - Fourth Grade' =>  array(
-            'desc' => '',
-          ),
-          '5 - Fifth Grade' =>  array(
-            'desc' => '',
-          ),
-          '6 - Sixth Grade' =>  array(
-            'desc' => '',
-          ),
-          '7 - Seventh Grade' =>  array(
-            'desc' => '',
-          ),
-          '8 - Eight Grade' =>  array(
-            'desc' => '',
-          ),
-          '9 - Ninth Grade' =>  array(
-            'desc' => '',
-          ),
-          '10 - Tenth Grade' =>  array(
-            'desc' => '',
-          ),
-          '11 - Eleventh Grade' =>  array(
-            'desc' => '',
-          ),
-          '12 - Twelveth Grade' =>  array(
-            'desc' => '',
-          ),
+          'KG - Kindergarten' =>  array(),
+          '1 - First Grade' =>  array(),
+          '2 - Second Grade' =>  array(),
+          '3 - Third Grade' =>  array(),
+          '4 - Fourth Grade' =>  array(),
+          '5 - Fifth Grade' =>  array(),
+          '6 - Sixth Grade' =>  array(),
+          '7 - Seventh Grade' =>  array(),
+          '8 - Eight Grade' =>  array(),
+          '9 - Ninth Grade' =>  array(),
+          '10 - Tenth Grade' =>  array(),
+          '11 - Eleventh Grade' =>  array(),
+          '12 - Twelveth Grade' =>  array(),
+        ),
+      ),
+      'Math' => array(
+        'children' => array(
+          'KG - Kindergarten' =>  array(),
+        '1 - First Grade' =>  array(),
+        '2 - Second Grade' =>  array(),
+        '3 - Third Grade' =>  array(),
+        '4 - Fourth Grade' =>  array(),
+        '5 - Fifth Grade' =>  array(),
+        '6 - Sixth Grade' =>  array(),
+        '7 - Seventh Grade' =>  array(),
+        '8 - Eight Grade' =>  array(),
+        '9 - Ninth Grade' =>  array(),
+        '10 - Tenth Grade' =>  array(),
+        '11 - Eleventh Grade' =>  array(),
+        '12 - Twelveth Grade' =>  array(),
         ),
       ),
     );
+    
     sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
   }
 
+  
+  
+  if(isset($_GET['type'])) {
+    $subject = array_pop(taxonomy_get_term_by_name($_GET['type']));
+  }
+  else {
+    $subject = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
+  }
+  
+  
+  dsm($subject);
+  
   //create terms
   if ($create) {
     // get grades tids
-    $terms = taxonomy_get_tree($edu_alignment_vocab->vid, 0, 2, TRUE);
+    $terms = taxonomy_get_tree($edu_alignment_vocab->vid, $subject->tid, 1, TRUE);
+    //dsm($terms);
     foreach ($terms as $term) {
-      if($term->depth == 1) {
+      if($term->depth == 0) {
         $name = explode('-', $term->name);
         //dsm(array($term->name, truncate($name[0])));
         $grade_terms[trim($name[0])] = $term;
 
       }
     }
+    //dsm($grade_terms);
+    
+    //return '';
     //get data
     $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
     $contents = $data->data;
@@ -226,6 +238,9 @@ function sbac_alignment_devtest() {
     $parent_tid = 0;
     $clean_parent = TRUE;
     $parents = array();
+    
+    $broken_terms = array();
+    
     foreach ($json as $term) {
       //dsm($term);
       $grade = trim($term['fkGradeLevel']);
@@ -244,15 +259,20 @@ function sbac_alignment_devtest() {
         if (empty($parent_tid)) {
           //cannot find parent save to grade
           $parent_tid = $grade_terms[$grade]->tid;
+          $broken_terms[] = $term;
         }
+        else {
         $key = $grade . '|' . $term['key'];
         $parents[$key] = sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
+        }
       }
       else{
         //dsm('BAD TERM');dsm($term);
         //@TODO KS - need to output in case of error
       }
     }
+    
+    dsm($broken_terms);
   }
 
   if($print) {

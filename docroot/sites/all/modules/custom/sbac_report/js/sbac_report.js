@@ -3,6 +3,7 @@
     attach: function(context, settings) {
       var $dateRangeField = $('#date-range-field');
       var $dateSelected = $('#date-selected');
+      var $uidField = $('#sne-uid-field');
 
       $('.date-range-item').click(function() {
         var value = $(this).data('value');
@@ -67,9 +68,8 @@
 
       $(context).on('click', '.autocomplete-suggestion', function() {
         var uid = $(this).data('uid');
-        $('#sne-uid-field').text(uid);
-        $('#sne-uid-field').attr('value', uid);
-        console.log(uid);
+        $uidField.text(uid);
+        $uidField.attr('value', uid);
       });
 
     }

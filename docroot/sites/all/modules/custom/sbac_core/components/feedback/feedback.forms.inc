@@ -5,26 +5,6 @@
 ----------------------------------------------------------------------------*/
 
 /**
- * My custom validation handler.
- */
-function feedback_eck_entity_form_validate($form, &$form_state) {
-  $values = &$form_state['values'];
-  
-  $fields = array('field_text', 'field_radios');
-
-  foreach ($fields as $field_name) {
-    // the values which get saved to the entity object
-    foreach ($values[$container][$lang] as &$item) {
-      foreach ($item['entity']->{$field_name}[$lang] as &$child) {
-        $child['value'] = filter_xss($child['value']);
-      }
-    }
-  }
-}
-
-
-
-/**
  * Validation handler for ECK Feedback forms.
  */
 function feedback_eck_feedback_form_validate($form, &$form_state) {
@@ -103,7 +83,7 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
           $set_title = trim(check_plain(strip_tags($values[$container][$lang][$delta]['set_title'])));
 
-          $new_text = t('Please remove inappropriate language from the comment in Quality Criterion !delta to continue', array('!delta' => $delta + 1));
+          $new_text = t('Please remove inappropriate language from the comment in Quality Criterion to continue');
 
           // ugly, but works
           $location = array_search($text, $_SESSION['messages']['error']);
