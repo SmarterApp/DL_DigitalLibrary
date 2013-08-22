@@ -423,3 +423,32 @@ function sbac_search_theme($existing, $type, $theme, $path) {
 
   return $items;
 }
+
+
+/**
+ * Build the documents before sending them to Solr.
+ * The function is the follow-up for apachesolr_update_index
+ *
+ * @param ApacheSolrDocument $document
+ * @param object $entity
+ * @param string $entity_type
+ * @param string $env_id
+ *   The machine name of the environment.
+ */
+function sbac_search_apachesolr_index_document_build(ApacheSolrDocument $document, $entity, $entity_type, $env_id) {
+  $var = '';
+}
+
+/**
+ * Alter the prepared documents from one entity before sending them to Solr.
+ *
+ * @param $documents
+ *   Array of ApacheSolrDocument objects.
+ * @param object $entity
+ * @param string $entity_type
+ * @param string $env_id
+ *   The machine name of the environment.
+ */
+function sbac_search_apachesolr_index_documents_alter(array &$documents, $entity, $entity_type, $env_id) {
+  $var = '';
+}

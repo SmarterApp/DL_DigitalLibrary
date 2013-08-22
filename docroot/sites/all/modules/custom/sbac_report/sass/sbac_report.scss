@@ -116,13 +116,35 @@ $darkgreen: #246a34;
 			@include border-radius (5px);
 			@include background-image(linear-gradient(#ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%));
 			line-height: 1em;
+
+			&:after {
+				content: " ";
+				background: url(../images/icon-arrow-down.png) no-repeat;
+				display: block;
+				width: 10px;
+				height: 10px;
+				float: right;
+				margin: 3px 3px 0 0;
+			}
+
+			&.show {
+				&:after {
+					content: " ";
+					background: url(../images/icon-arrow-up.png) no-repeat;
+					display: block;
+					width: 10px;
+					height: 10px;
+					float: right;
+					margin: 3px 3px 0 0;					
+				}
+			}
 		}
 	}
 
 	.report-dropdown  {
 		position: absolute;
-		background: white;
-		width: 500px;
+		background: $white;
+		width: 52%;
 		z-index: 500;
 	}
 
@@ -142,6 +164,10 @@ $darkgreen: #246a34;
 		margin-right: 20px;
 		clear: none;
 
+		> .form-item {
+			margin-right: 1.5em;
+		}
+
 		.form-type-date-popup {
 			float: left;
 		}
@@ -160,7 +186,7 @@ $darkgreen: #246a34;
   border-radius: 0 12px 12px 12px;
 
 	ul {
-		margin: .5em 0 1.5em;
+		margin: .5em 0 1em;
 		padding: 0;
 
 		+ div {
@@ -171,7 +197,7 @@ $darkgreen: #246a34;
 		li {
 			list-style-type: none;
 			display: inline-block;
-			margin-right: 20px;
+			margin: 0 20px 10px 0;
 
 			.report-dropdown-toggle.date-range-item {
 				border: none;
@@ -179,6 +205,11 @@ $darkgreen: #246a34;
 				height: auto;
 				@include global-button;
 				padding: 3px 5px;
+
+				&:after {
+					background: none;
+					margin: 0;
+				}
 			} 
 		}
 	}
