@@ -77,10 +77,13 @@ function sbac_report_sne_autocomplete($string = '') {
     ON users.uid = field_data_field_first_name.entity_id AND (field_data_field_first_name.entity_type = 'user' AND field_data_field_first_name.deleted = '0')
   LEFT JOIN {field_data_field_state} field_data_field_state
     ON users.uid = field_data_field_state.entity_id AND (field_data_field_state.entity_type = 'user' AND field_data_field_state.deleted = '0')
+  LEFT JOIN {field_data_field_sne_member} field_data_field_sne_member
+    ON users.uid = field_data_field_sne_member.entity_id AND (field_data_field_sne_member.entity_type = 'user' AND field_data_field_sne_member.deleted = '0')
   WHERE (
     ((field_data_field_first_name.field_first_name_value LIKE :str) OR (field_data_field_last_name.field_last_name_value LIKE :str))
     AND (users.status <> '0')
     AND (users_roles.rid IN (:rids))
+    AND (field_data_field_sne_member.field_sne_member_value = 1)
     $state_condition
   )
   LIMIT 10 OFFSET 0
