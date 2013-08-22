@@ -1215,9 +1215,38 @@ a.tabledrag-handle .handle {
 
   .form-item .description {
     clear: both;
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 12px;
+    line-height: 14px;
     width: 80%;
+  }
+
+  .media-internet-providers {
+
+    font-size: 12px;
+
+    li {
+      margin: 0 0 2px 10px;
+    }
+  }
+
+  #media-tab-media_internet {
+    .form-item {
+      margin: 5px 0;
+    }
+
+    li {
+      display: inline;
+      margin: 0;
+    }
+
+    ul {
+      margin: 0 0 5px;
+    }
+  }
+
+  .button {
+    margin-bottom: 0;
   }
 }
 
