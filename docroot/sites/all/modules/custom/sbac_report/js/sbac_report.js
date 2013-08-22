@@ -12,7 +12,7 @@
         var value = $(this).data('value');
         var text = $(this).text();
         $dateRangeField.text(value);
-        $dateRangeField.attr('value', value);
+        $dateRangeField.val(value);
         $dateSelected.text(text);
       });
 
@@ -43,7 +43,7 @@
         if (fromInput && toInput) {
           var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
           $dateRangeField.text(value);
-          $dateRangeField.attr('value', value);
+          $dateRangeField.val(value);
           $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
         }
       });
@@ -55,7 +55,7 @@
         if (fromInput && toInput) {
           var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
           $dateRangeField.text(value);
-          $dateRangeField.attr('value', value);
+          $dateRangeField.val(value);
           $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
         }
       });
@@ -64,7 +64,7 @@
        * Return the custom date input.
        */
       function getDateInput(el) {
-        return $.trim($(el).attr('value'));
+        return $.trim($(el).val());
       }
 
       /**
@@ -124,7 +124,7 @@
       $(context).on('click', '#autocomplete li', function() {
         var uid = $(this).find('.autocomplete-suggestion').data('uid');
         $uidField.text(uid);
-        $uidField.attr('value', uid);
+        $uidField.val(uid);
       });
 
     }
