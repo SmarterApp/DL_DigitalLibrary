@@ -7,6 +7,7 @@
       var dropdownId = '#date-range-dropdown';
       var $dropdown = $(dropdownId);
 
+      // Update the text when an item is selected.
       $('.date-range-item').click(function() {
         var value = $(this).data('value');
         var text = $(this).text();
@@ -14,6 +15,7 @@
         $dateRangeField.attr('value', value);
         $dateSelected.text(text);
       });
+
       $('.report-dropdown-toggle').click(function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -34,6 +36,7 @@
         });
       });
 
+      // Update the dropdown text, when the user enters a custom date.
       $('#to-date input').on('change', function() {
         var toInput = getDateInput(this);
         var fromInput = getDateInput('#from-date input');
@@ -45,6 +48,7 @@
         }
       });
 
+      // Update the dropdown text, when the user enters a custom date.
       $('#from-date input').on('change', function() {
         var fromInput = getDateInput(this);
         var toInput = getDateInput('#to-date input');
