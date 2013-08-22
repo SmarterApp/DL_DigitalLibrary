@@ -66,7 +66,7 @@
         return year + month + date;
       }
 
-      $(document).on('click', '.autocomplete-suggestion', function() {
+      $(context).on('click', '.autocomplete-suggestion', function() {
         var uid = $(this).data('uid');
         $uidField.text(uid);
         $uidField.attr('value', uid);
