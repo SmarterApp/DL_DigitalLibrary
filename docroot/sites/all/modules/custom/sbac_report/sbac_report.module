@@ -252,6 +252,11 @@ function sbac_report_state_options() {
     in_array('system administrator', $roles)) {
 
     $options['all'] = t('All');
+    // Return if we only want the first one.
+    if ($first_only) {
+      return $options;
+    }
+
     $states = taxonomy_vocabulary_machine_name_load("states");
     $vid = $states->vid;
     $terms = taxonomy_get_tree($vid);
@@ -261,14 +266,22 @@ function sbac_report_state_options() {
   }
   // SLT user can only select their own states.
   elseif (sbac_report_is_slt($user)) {
-    $state_tids = field_get_items('user', $user, 'field_state');
-    foreach ($state_tids as $key => $val) {
-      $tid = $val['tid'];
+    $result = db_select('field_data_field_state', 'fs')
+      ->fields('fs', array('field_state_tid'))
+      ->condition('entity_type', 'user')
+      ->condition('entity_id', $user->uid)
+      ->orderBy('field_state_tid')
+      ->execute();
+    foreach ($result as $record) {
+      $tid = $record->field_state_tid;
       $state_term = taxonomy_term_load($tid);
       $state = $state_term->name;
       $options[$tid] = $state;
+      // Return if we only want the first one.
+      if ($first_only) {
+        return $options;
+      }
     }
-    ksort($options);
   }
 
   return $options;
