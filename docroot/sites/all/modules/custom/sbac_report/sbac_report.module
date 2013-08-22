@@ -286,10 +286,13 @@ function sbac_report_state_options() {
 function sbac_report_is_slt($account) {
   // First check if the user has resource publisher role.
   if (in_array('resource publisher', $account->roles)) {
-    $slt_field = field_get_items('user', $account, 'field_slt_member');
-    if (isset($slt_field[0]['value'])) {
-      return $stl_field[0]['value'] == 1;
-    }
+    $result = db_select('field_data_field_slt_member', 'slt')
+      ->fields('slt', array('field_slt_member_value'))
+      ->condition('entity_type', 'user')
+      ->condition('entity_id', $account->uid)
+      ->condition('field_slt_member_value', '1')
+      ->execute();
+    return !empty($result);
   }
   return FALSE;
 }
