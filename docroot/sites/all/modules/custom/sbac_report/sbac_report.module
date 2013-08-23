@@ -65,7 +65,7 @@ function sbac_report_theme($existing, $type, $theme, $path) {
   $themes['sbac_report_date_range_dropdown'] = array(
     'template' => 'templates/sbac-report-date-range-dropdown',
     'path' => $module_path,
-    'file' => 'sbac_report.preprocess.inc',
+    'arguments' => array('date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL),
     'preprocess functions' => array(
       'template_preprocess',
     ),
