@@ -19,7 +19,7 @@
         }
         else if (type == 'video') { // includes youtube
           resource.html('<div id="sbac-jwplayer"></div>');
-          jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850 });
+          jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850, primary: "flash" });
           jwplayer('sbac-jwplayer').play();
         }
         else if (type == 'image') {

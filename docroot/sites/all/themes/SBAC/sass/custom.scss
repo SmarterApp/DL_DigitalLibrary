@@ -212,6 +212,18 @@ div.ctools-modal-content a.close, a.remove, a.fake-cancel {
   }
 }
 
+/* override default drupal throbber gif position */
+html.js {
+  input {
+    &.form-autocomplete {
+      background-position: 100% 10px;
+    }
+    &.throbbing {
+      background-position: 100% -15px;
+    }
+  }
+}
+
 /* -----------------------------------------
    Colorbox
    ----------------------------------------- */
@@ -1840,53 +1852,22 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Feedback block
    ----------------------------------------- */
-.block-sbac-central-feedback-box {
-  display: none;
-  width: 300px;
-  padding: 10px 20px 0;
-  position: absolute;
-  right: 150px;
-  bottom: 50px;
-  background: white;
-  @include border-radius(6px);
-  @include box-shadow(1px 2px 2px rgba(0, 0, 0, 0.3 ));
-  font-size: 14px;
-  z-index: 97;
-  border: 1px solid #ccc;
 
-  /**&:before{
-    content:'';
-    position: relative;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 8px solid white;
-    border-bottom: 0;
-    bottom: -24px;
-    right: 0;
-    top: auto;
-    z-index: 99;
-  }**/
-  &:after{
-    content:'';
-    position: relative;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 8px solid white;
-    border-bottom: 0;
-    bottom: -23px;
-    left: 250px;
-    top: auto;
-    z-index: 98;
+#feedback-dropdown{
+  display:none;
+  &.open {
+    top: 50px !important;
+    right: 100px;
+    left: auto !important;
+    display:block;
   }
+  color: #333;
 
-  p {
-    line-height: normal !important;
-    margin-bottom: 10px !important;
+  a {
+  color: #0085AD;
+  padding:0;
+  word-wrap:break-word;
   }
-
-}
-.block-sbac-central-feedback-box p {
-  color: black;
 }
 /* -----------------------------------------
    Help topics styles
