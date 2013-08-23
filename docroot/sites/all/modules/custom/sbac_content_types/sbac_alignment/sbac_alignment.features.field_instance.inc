@@ -10,6 +10,51 @@
 function sbac_alignment_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-alignment-body'
+  $field_instances['node-alignment-body'] = array(
+    'bundle' => 'alignment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The description of a node in an established educational framework.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'trim_length' => 600,
+        ),
+        'type' => 'text_summary_or_trimmed',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'body',
+    'label' => 'Description',
+    'required' => 0,
+    'settings' => array(
+      'display_summary' => 0,
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 20,
+        'summary_rows' => 5,
+      ),
+      'type' => 'text_textarea_with_summary',
+      'weight' => 6,
+    ),
+  );
+
   // Exported field_instance: 'node-alignment-field_alignment_type'
   $field_instances['node-alignment-field_alignment_type'] = array(
     'bundle' => 'alignment',
@@ -51,6 +96,50 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-alignment-field_dot_notation'
+  $field_instances['node-alignment-field_dot_notation'] = array(
+    'bundle' => 'alignment',
+    'default_value' => array(
+      0 => array(
+        'value' => 'Dot Notation',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'The name of a node in an established educational framework.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_dot_notation',
+    'label' => 'Dot Notation',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'node-alignment-field_education_alignment'
   $field_instances['node-alignment-field_education_alignment'] = array(
     'bundle' => 'alignment',
@@ -88,6 +177,46 @@ function sbac_alignment_field_default_field_instances() {
       ),
       'type' => 'options_buttons',
       'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'node-alignment-field_item_url'
+  $field_instances['node-alignment-field_item_url'] = array(
+    'bundle' => 'alignment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'A category of alignment between the learning resource and the framework node.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_item_url',
+    'label' => 'Item URL',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 5,
     ),
   );
 
@@ -150,6 +279,12 @@ function sbac_alignment_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 6,
       ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_alignment_grade',
@@ -187,6 +322,12 @@ function sbac_alignment_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 3,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -226,6 +367,12 @@ function sbac_alignment_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 5,
       ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_alignment_publication',
@@ -263,6 +410,12 @@ function sbac_alignment_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 4,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -554,8 +707,13 @@ function sbac_alignment_field_default_field_instances() {
   t('Alignment ShortName');
   t('Alignment Type');
   t('An alignment to an established educational framework.');
+  t('Description');
+  t('Dot Notation');
+  t('Item URL');
   t('Resource Reference');
   t('Select your Common Core Standard(s)');
+  t('The description of a node in an established educational framework.');
+  t('The name of a node in an established educational framework.');
   t('sbacdrupaluid');
   t('sbacgrade');
   t('sbackey');

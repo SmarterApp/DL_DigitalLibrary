@@ -16,6 +16,22 @@
     }
   }
 
+
+  .alignment-error {
+    background-color: #E2C4CD;
+    border: 1px solid #8A1538;
+    color: #8A1538;
+    font-weight: normal;
+    margin: 1em 0;
+    border-radius: 12px;
+    padding: 30px;
+
+    ul {
+      list-style-type: none;
+      margin: 0 !important;
+    }
+  }
+
   .alignment-breadcrumb {
     ul, li {
       margin: 0;
@@ -301,3 +317,8 @@
     margin-left: 10px;
   }
 }
+
+#ccss-submit {
+  margin-right: 10px;
+}
+

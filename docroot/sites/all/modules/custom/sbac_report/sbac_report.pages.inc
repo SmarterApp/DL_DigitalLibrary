@@ -55,7 +55,7 @@ function sbac_report_sne_autocomplete($string = '') {
     $state_condition = '';
   }
   elseif (!empty($state_tid)) {
-    $state_condition = "AND (field_data_field_state.field_state_tid = '$state_tid')";
+    $state_condition = "AND (field_state.field_state_tid = '$state_tid')";
   }
   else {
     $matches['none'] = t('Please select a state');
@@ -66,24 +66,33 @@ function sbac_report_sne_autocomplete($string = '') {
   $sql = <<<SQL
 
   SELECT users.uid AS uid,
-    field_data_field_last_name.field_last_name_value as 'last_name',
-    field_data_field_first_name.field_first_name_value as 'first_name',
-    field_data_field_state.field_state_tid as 'state_tid'
+    field_last_name.field_last_name_value AS 'last_name',
+    field_first_name.field_first_name_value AS 'first_name'
   FROM {users} users
+
   INNER JOIN {users_roles} users_roles ON users.uid = users_roles.uid
-  LEFT JOIN {field_data_field_last_name} field_data_field_last_name
-    ON users.uid = field_data_field_last_name.entity_id AND (field_data_field_last_name.entity_type = 'user' AND field_data_field_last_name.deleted = '0')
-  LEFT JOIN {field_data_field_first_name} field_data_field_first_name
-    ON users.uid = field_data_field_first_name.entity_id AND (field_data_field_first_name.entity_type = 'user' AND field_data_field_first_name.deleted = '0')
-  LEFT JOIN {field_data_field_state} field_data_field_state
-    ON users.uid = field_data_field_state.entity_id AND (field_data_field_state.entity_type = 'user' AND field_data_field_state.deleted = '0')
-  LEFT JOIN {field_data_field_sne_member} field_data_field_sne_member
-    ON users.uid = field_data_field_sne_member.entity_id AND (field_data_field_sne_member.entity_type = 'user' AND field_data_field_sne_member.deleted = '0')
+
+  LEFT JOIN {field_data_field_last_name} AS field_last_name
+    ON users.uid = field_last_name.entity_id AND (field_last_name.entity_type = 'user' AND field_last_name.deleted = '0')
+
+  LEFT JOIN {field_data_field_first_name} AS field_first_name
+    ON users.uid = field_first_name.entity_id AND (field_first_name.entity_type = 'user' AND field_first_name.deleted = '0')
+
+  LEFT JOIN {field_data_field_state} AS field_state
+    ON users.uid = field_state.entity_id AND (field_state.entity_type = 'user' AND field_state.deleted = '0')
+
+  LEFT JOIN {field_data_field_sne_member} AS field_sne_member
+    ON users.uid = field_sne_member.entity_id AND (field_sne_member.entity_type = 'user' AND field_sne_member.deleted = '0')
+
   WHERE (
-    ((field_data_field_first_name.field_first_name_value LIKE :str) OR (field_data_field_last_name.field_last_name_value LIKE :str))
+    (
+      (field_first_name.field_first_name_value LIKE :str)
+      OR (field_last_name.field_last_name_value LIKE :str)
+      OR (CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str)
+    )
     AND (users.status <> '0')
     AND (users_roles.rid IN (:rids))
-    AND (field_data_field_sne_member.field_sne_member_value = 1)
+    AND (field_sne_member.field_sne_member_value = 1)
     $state_condition
   )
   LIMIT 10 OFFSET 0

@@ -17,7 +17,7 @@
 :: Digital Library Resources (DLR)
 :: Create
    - Resource
-:: Legal
+:: Legal 
 :: Admin theme fixes
 
 */
@@ -1047,6 +1047,12 @@ a.tabledrag-handle .handle {
       font-size: emCalc(16px);
     }
   }
+
+  .field-name-field-alignment-term {
+    li {
+      line-height: 0.8em;
+    }
+  }
 }
 
 /* -----------------------------------------
@@ -1097,6 +1103,9 @@ a.tabledrag-handle .handle {
   margin: 0;
 }
 
+.sticky-header {
+  z-index: 99;
+}
 
 #field-file-values {
   width: 100%;
@@ -2155,3 +2164,75 @@ a.tabledrag-handle .handle {
   }
 
  }
+
+ /* ----------------------------------------
+    Taxonomy tool tips
+  _________________________________________ */
+
+  .view-mode-tooltip {
+    display: inline-block;
+    position: relative;
+
+    &:hover {
+      .taxonomy-term-description {
+        background: #DFE5CC;
+        border: 1px solid #3C7646;
+        border-radius: 6px;
+        color: #3C7646;
+        display: block;
+        font-size: 12px;
+        left: 20px;
+        opacity: 1;
+        padding: 20px;
+        position: absolute;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        top: 30px;
+        transition-property: opacity;
+        transition-duration: 500ms;
+        -webkit-transition-property: opacity;
+        -webkit-transition-duration: 500ms;
+        width: 272px;
+        z-index: 999;
+      }
+    }
+
+    .taxonomy-term-description {
+      display: none;
+      opacity: 0;
+      
+      p {
+        font-size: inherit;
+        margin: 0;
+      }
+
+      &:after {
+        content: ' ';
+        position: absolute;
+        top: -28px;
+        left: 16px;
+        border-color: transparent transparent #DFE5CC transparent;
+        border-style: solid;
+        border-width: 14px;
+        width: 0;
+        height: 0;
+        z-index: 99;
+      }
+      
+      &:before {
+        content: ' ';
+        position: absolute;
+        top: -30px;
+        left: 15px;
+        border-color: transparent transparent #3C7646 transparent;
+        border-style: solid;
+        border-width: 15px;
+        width: 0;
+        height: 0;
+        z-index: 97;
+      }
+    }
+  }
+
+
+
+

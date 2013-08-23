@@ -16,6 +16,8 @@ function sbac_alignment_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
+      'entity_type' => 'taxonomy_vocabulary',
+      'entity_id' => 23,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -39,6 +41,8 @@ function sbac_alignment_taxonomy_default_vocabularies() {
       'hierarchy' => 1,
       'module' => 'taxonomy',
       'weight' => -1,
+      'entity_type' => 'taxonomy_vocabulary',
+      'entity_id' => 11,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -62,6 +66,8 @@ function sbac_alignment_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
+      'entity_type' => 'taxonomy_vocabulary',
+      'entity_id' => 20,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',

@@ -63,6 +63,11 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'resource' => 'resource',
   );
+  /* Filter criterion: Workbench Moderation: Current */
+  $handler->display->display_options['filters']['current']['id'] = 'current';
+  $handler->display->display_options['filters']['current']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['filters']['current']['field'] = 'current';
+  $handler->display->display_options['filters']['current']['value'] = '1';
 
   /* Display: Resources Summary */
   $handler = $view->new_display('block', 'Resources Summary', 'resources_summary');
@@ -77,14 +82,14 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['nid']['group_type'] = 'count';
   $handler->display->display_options['fields']['nid']['label'] = 'Resources Contributed';
   $handler->display->display_options['fields']['nid']['empty'] = '0';
-  /* Field: SUM(Content: Published) */
-  $handler->display->display_options['fields']['status']['id'] = 'status';
-  $handler->display->display_options['fields']['status']['table'] = 'node';
-  $handler->display->display_options['fields']['status']['field'] = 'status';
-  $handler->display->display_options['fields']['status']['group_type'] = 'sum';
-  $handler->display->display_options['fields']['status']['label'] = 'Contributed Resources Posted';
-  $handler->display->display_options['fields']['status']['type'] = 'boolean';
-  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Field: SUM(Workbench Moderation: Published) */
+  $handler->display->display_options['fields']['published']['id'] = 'published';
+  $handler->display->display_options['fields']['published']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['fields']['published']['field'] = 'published';
+  $handler->display->display_options['fields']['published']['group_type'] = 'sum';
+  $handler->display->display_options['fields']['published']['label'] = 'Contributed Resources Posted';
+  $handler->display->display_options['fields']['published']['type'] = 'boolean';
+  $handler->display->display_options['fields']['published']['not'] = 0;
   /* Field: SUM(Content: Sticky) */
   $handler->display->display_options['fields']['sticky']['id'] = 'sticky';
   $handler->display->display_options['fields']['sticky']['table'] = 'node';

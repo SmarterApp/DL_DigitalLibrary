@@ -82,7 +82,7 @@
               
               $('#ccss-submit').click(function() {
                 var countType = countStandard = 0;
-                $('#alignment-msg').html('<ul><li style="display:none;"></li></ul>');
+                $('#alignment-msg').html('');
                 //counts type
                 $('#edit-alignment-type option').each(function() {
                   if($(this).is(':selected') && $(this).val() != ''){
@@ -96,15 +96,51 @@
                   }
                 });
                 
-                if (countStandard < 1) {
-                  $('#alignment-msg ul').append('<li>Please select a standard.</li>');
-                }
-                if (countType < 1) {
-                  console.log('noe enought');
-                  $('#alignment-msg ul').append('<li>Please select alignment type.</li>');
-                }
+                
                 
                 $('#modal-content').animate({ scrollTop: 0 });
+                
+                if (countStandard > 0 && countType > 0) {
+                  var alignmentStandards = alignmentType = '';
+                  
+                  //counts type
+                  $('#edit-alignment-type option').each(function() {
+                    if($(this).is(':selected') && $(this).val() != ''){
+                      alignmentType = $(this).val();
+                    }
+                  });
+                  //count standards
+                  $('input[id^=edit-term-]').each(function() {
+                    if($(this).is(':checked')){
+                      var temp = $(this).attr('id');
+                      var id = temp.split('-');
+                      id = id[2];
+                      alignmentStandards += '|' + id;
+                    }
+                  });
+                  
+                  console.log(alignmentType);
+                  
+                  var closeModal = function() {
+                    
+                  }
+                  
+                  $.ajax({
+                    type: "POST",
+                    url: "/foobario",
+                    success: closeModal,
+                    data:'alignment_type=' + alignmentType + '&alignment_standards=' + alignmentStandards,
+                  });   
+                }
+                else {
+                  $('#alignment-msg').append('<div class="alignment-error"><ul></ul></div>');
+                  if (countStandard < 1) {
+                    $('#alignment-msg .alignment-error ul').append('<li>Please select a standard.</li>');
+                  }
+                  if (countType < 1) {
+                    $('#alignment-msg .alignment-error ul').append('<li>Please select alignment type.</li>');
+                  }
+                }
               });
               
               
