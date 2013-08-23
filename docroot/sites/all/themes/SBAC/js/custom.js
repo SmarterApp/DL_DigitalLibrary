@@ -1,13 +1,13 @@
 (function ($) {
   Drupal.behaviors.sbac_custom = {
     attach: function (context, settings) {
-      
-      
+
+
       $('.disabled').click(function(e) {
           e.preventDefault();
           //do other stuff when a click happens
       });
-      
+
       $('.ccss-term-delete').click(function(){
         var nid = $(this).attr('nid');
         var update_form = function(data) {
@@ -79,7 +79,7 @@
                 $('#modalBackdrop').hide();
                 $('#modalContent').hide();
               });
-              
+
               $('#ccss-submit').click(function() {
                 var countType = countStandard = 0;
                 $('#alignment-msg').html('');
@@ -95,10 +95,10 @@
                     countStandard++;
                   }
                 });
-                
+
                 if (countStandard > 0 && countType > 0) {
                   var alignmentStandards = alignmentType = '';
-                  
+
                   //get ref
                   var alignmentRef = $('input[id=alignment_ref]').val();
                   //counts type
@@ -116,7 +116,7 @@
                       alignmentStandards += '|' + id;
                     }
                   });
-                  
+
                   var closeModal = function(data) {
                     var obj = jQuery.parseJSON(data);
                     $('#sbac-resource-alignment-tag-view').html(obj.html);
@@ -124,13 +124,13 @@
                     $('#modalContent').hide();
                     Drupal.attachBehaviors('.ccss-term-delete');
                   }
-                  
+
                   $.ajax({
                     type: "POST",
                     url: "/ajax-alignment-crud",
                     success: closeModal,
                     data:'op=create&alignment_type=' + alignmentType + '&alignment_ref=' + alignmentRef + '&alignment_standards=' + alignmentStandards,
-                  });   
+                  });
                 }
                 else {
                   $('#modal-content').animate({ scrollTop: 0 });
@@ -143,10 +143,10 @@
                   }
                 }
               });
-              
-              
-              
-              
+
+
+
+
             }
 
             var refNode = $('input#ref_node').val();
@@ -162,7 +162,7 @@
             $('.alignment-form').hide();
             $('.alignment-buttons').show();
             $('.alignment-filter').html(obj.html);
-            
+
             $('.disabled').click(function(e) {
                 e.preventDefault();
                 //do other stuff when a click happens
@@ -205,7 +205,7 @@
            url: Drupal.settings.basePath + 'disable-feedback',
            success: function (data, textStatus, jqXHR) {
             document.getElementById('feedback-click').click();
-            document.getElementById('disable-feedback').click();
+            document.getElementById('feedback-dropdown').click();
            }
         });
        });

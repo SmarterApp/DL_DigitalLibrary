@@ -375,7 +375,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     font-size: 1em;
     color: $white;
     line-height: 45px;
-    
+
     li {
       border-left:1px solid black;
       padding: 0px;
@@ -383,7 +383,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       &:hover {
         background: #515151;
       }
-      
+
       li {
         a {
           padding-left: 20px;
@@ -1054,7 +1054,7 @@ a.tabledrag-handle .handle {
       &:last-child:after {
         content: " ";
       }
-    } 
+    }
 
     a {
       color: #717880;
@@ -1316,7 +1316,7 @@ a.tabledrag-handle .handle {
     }
   }
 
-  .form-radios .form-item { 
+  .form-radios .form-item {
     margin: .5em 0 1em;
   }
 
@@ -1881,6 +1881,9 @@ a.tabledrag-handle .handle {
   padding:0;
   word-wrap:break-word;
   }
+  &#disable-feedback{
+    cursor:pointer;
+  }
 }
 /* -----------------------------------------
    Help topics styles
@@ -2190,7 +2193,7 @@ a.tabledrag-handle .handle {
     .taxonomy-term-description {
       display: none;
       opacity: 0;
-      
+
       p {
         font-size: inherit;
         margin: 0;
@@ -2208,7 +2211,7 @@ a.tabledrag-handle .handle {
         height: 0;
         z-index: 99;
       }
-      
+
       &:before {
         content: ' ';
         position: absolute;
