@@ -169,12 +169,12 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     $context['sandbox']['progress']++;
     $context['message'] = $term['key'];
     $context['results'][] = $term['key'];
-    if ($context['sandbox']['progress'] == 1000) {
-      $context['results'][] = 'BREAK';
-      $context['sandbox']['counter'] = $i;
-      $context['sandbox']['broken'] = $broken_terms;
-      break;
-    }
+    //if ($context['sandbox']['progress'] == 1000) {
+    //  $context['results'][] = 'BREAK';
+    //  $context['sandbox']['counter'] = $i;
+    //  $context['sandbox']['broken'] = $broken_terms;
+    //  break;
+    //}
   }
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
