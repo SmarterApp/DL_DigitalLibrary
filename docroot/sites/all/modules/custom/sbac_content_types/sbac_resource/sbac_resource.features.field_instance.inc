@@ -89,7 +89,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_alignment_term',
-    'label' => 'Alignment Term',
+    'label' => 'Common Core Standard(s)',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1706,11 +1706,11 @@ function sbac_resource_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Alignment Tags');
-  t('Alignment Term');
   t('Attributes');
   t('Author');
   t('Body');
   t('Classroom Technologies');
+  t('Common Core Standard(s)');
   t('Connection to CCSS');
   t('Connection to FAP');
   t('Contexts');
