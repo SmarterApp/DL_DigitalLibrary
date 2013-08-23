@@ -302,7 +302,7 @@ function sbac_alignment_devtest() {
     $json = drupal_json_decode($contents);
     //dsm($json);
 
-    uasort($json, 'cmp');
+    //uasort($json, 'cmp');
     //dsm($json);
 
 
@@ -346,7 +346,8 @@ function sbac_alignment_devtest() {
     }
     
     //dsm($broken_terms);
-    print var_export($broken_terms);
+    //print drupal_json_encode($broken_terms);
+    print drupal_json_encode($parents);
     exit;
   }
 
