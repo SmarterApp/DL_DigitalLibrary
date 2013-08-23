@@ -83,9 +83,6 @@ function sbac_alignment_devtest() {
     $subject = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
   }
   
-  
-  dsm($subject);
-  
   //create terms
   if ($create) {
     // get grades tids
@@ -99,17 +96,12 @@ function sbac_alignment_devtest() {
 
       }
     }
-    //dsm($grade_terms);
     
-    //return '';
     //get data
     $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
     $contents = $data->data;
-
     $json = drupal_json_decode($contents);
-
-dsm($json);
-dsm(count($json));  
+    uasort($json, 'cmp');
   
     $batch = array(
       'title' => t('Exporting'),
@@ -152,15 +144,20 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
       }
       elseif(($tree_level = $term['treeLevel']) >= 2) {
         $parent_key = $grade . '|' . $term['fkParent'];
-        $parent_tid = $parents[$parent_key]->tid;
-        if (empty($parent_tid)) {
-          //cannot find parent save to grade
-          $parent_tid = $grade_terms[$grade]->tid;
-          $broken_terms[] = $term;
+        if(isset($parents[$parent_key])) {
+          $parent_tid = $parents[$parent_key]->tid;
+          if (empty($parent_tid)) {
+            //cannot find parent save to grade
+            $parent_tid = $grade_terms[$grade]->tid;
+            $broken_terms[] = $term;
+          }
+          else {
+          $key = $grade . '|' . $term['key'];
+          $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
+          }
         }
         else {
-        $key = $grade . '|' . $term['key'];
-        $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
+          $broken_terms[] = $term;
         }
       }
       else{
@@ -175,6 +172,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     if ($context['sandbox']['progress'] == 1000) {
       $context['results'][] = 'BREAK';
       $context['sandbox']['counter'] = $i;
+      $context['sandbox']['broken'] = $broken_terms;
       break;
     }
   }
@@ -198,7 +196,6 @@ function sbac_alignment_batch_test_finished($success, $results, $operations) {
     $items[] = t('Loaded node %title.', array('%title' => $result));
   }
   $_SESSION['my_batch_results'] = $items;
-  dsm($items);
 }
 
 function sbac_alignment_devfix() {
