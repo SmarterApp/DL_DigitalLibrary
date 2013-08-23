@@ -68,7 +68,7 @@ $darkgreen: #246a34;
 }
 
 .view-filters .throbber {
-  margin-top: -80px;
+	display: none;
 }
 
 .report-form-container {
@@ -119,7 +119,7 @@ $darkgreen: #246a34;
 				width: 10px;
 				height: 10px;
 				float: right;
-				margin: 3px 3px 0 0;
+				margin: 4px 3px 0 0;
 			}
 
 			&.show {

@@ -35,7 +35,7 @@
 
 /* line 70, ../sass/sbac_report.scss */
 .view-filters .throbber {
-  margin-top: -80px;
+  display: none;
 }
 
 /* line 74, ../sass/sbac_report.scss */
@@ -98,7 +98,7 @@
   width: 10px;
   height: 10px;
   float: right;
-  margin: 3px 3px 0 0;
+  margin: 4px 3px 0 0;
 }
 /* line 126, ../sass/sbac_report.scss */
 .report-form-container .date-range-container .report-dropdown-toggle.show:after {
