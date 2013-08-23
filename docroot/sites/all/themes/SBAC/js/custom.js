@@ -134,7 +134,8 @@
         $.ajax({
            url: Drupal.settings.basePath + 'disable-feedback',
            success: function (data, textStatus, jqXHR) {
-            location.reload();
+            document.getElementById('feedback-click').click();
+            document.getElementById('disable-feedback').click();
            }
         });
       });
