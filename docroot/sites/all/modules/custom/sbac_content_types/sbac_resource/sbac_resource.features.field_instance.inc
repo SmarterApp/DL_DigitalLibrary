@@ -286,7 +286,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_classroom_technologies',
-    'label' => 'Classroom Technologies',
+    'label' => 'Technologies Required for Use in Classroom',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,

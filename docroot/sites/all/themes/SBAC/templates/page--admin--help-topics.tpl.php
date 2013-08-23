@@ -157,7 +157,6 @@
       ?>
       <ul class="footer-links inline-list right">
         <li><a class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
-        <li><a class="feedback" href="#">Feedback</a></li>
         <li>
           <div class="footer-help">
             <a class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
