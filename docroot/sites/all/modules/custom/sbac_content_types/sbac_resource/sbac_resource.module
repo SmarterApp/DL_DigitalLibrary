@@ -308,6 +308,9 @@ function _sbac_resource_determine_extension($ext) {
     case 'xlsx';
     case 'pptx';
     case 'ppt';
+    case 'odt';
+    case 'odp';
+    case 'ods';
       $media = 'document';
       break;
     case 'mp4';
