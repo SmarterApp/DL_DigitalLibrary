@@ -2,7 +2,7 @@
 
 
 /* -----------------------------------------
-   Color Variables
+    Variables and Mixins
    ----------------------------------------- */
 $white: #FFF;
 $text: #5a5a5a;
@@ -45,11 +45,12 @@ $darkgreen: #246a34;
 
 .form-item-items-per-page select {
   display: inline-block;
-  width: 80px;
+  width: 100px;
 }
 
 .view-filters {
   float: right;
+  text-align: right;
 }
 
 .view-filters .throbber {
