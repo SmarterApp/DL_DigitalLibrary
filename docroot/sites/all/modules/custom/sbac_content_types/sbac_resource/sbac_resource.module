@@ -784,7 +784,8 @@ function sbac_resource_delete_file_from_cmis(&$node) {
 function sbac_resource_create_node(&$form, &$form_state) {
   $form['#limit_validation_errors'] = array();
   $form_state['values'] = array();
-  $form_state['values']['workbench_moderation_state_new'] = 'creation';
+  $form_state['values']['workbench_moderation_state_new'] = 'draft';
+  $form_state['values']['workbench_moderation_state_current'] = 'creation';
   node_form_submit($form, $form_state);
   drupal_get_messages(NULL, TRUE);
 }
