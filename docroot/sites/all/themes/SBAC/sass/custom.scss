@@ -1808,13 +1808,12 @@ a.tabledrag-handle .handle {
    Feedback block
    ----------------------------------------- */
 
-#feedback-dropdown, .open {
+#feedback-dropdown{
+  &.open {
     top: 50px !important;
     right: 100px;
     left: auto !important;
   }
-
-#feedback-dropdown {
   color: #333;
 
   a {
@@ -1823,6 +1822,7 @@ a.tabledrag-handle .handle {
   word-wrap:break-word;
   }
 }
+
 
 /* -----------------------------------------
    Help topics styles
