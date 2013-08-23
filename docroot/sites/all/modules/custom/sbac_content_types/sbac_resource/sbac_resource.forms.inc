@@ -400,11 +400,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
     }
   }
   if (!$form_state['values']['field_contexts']['und'][0]['value']) {
-    $error = 'Please add context(s) within which the resource could be used to continue';
+    $error = 'Add the context(s) in which the resource could be used';
     form_set_error('field_contexts', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_contexts:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_contexts:group:Please add context(s) within which the resource could be used to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_contexts:group:Add the context(s) in which the resource could be used', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_contexts']['und'][0]['value'];
