@@ -130,7 +130,7 @@ dsm(count($json));
 function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
   if (empty($context['sandbox'])) {
     $context['sandbox']['progress'] = 0;
-    $context['sandbox']['max'] = 2000;//count($json);
+    $context['sandbox']['max'] = count($json);
     $context['sandbox']['counter'] = 0;
   }
   $output = '';
@@ -173,6 +173,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     $context['message'] = $term['key'];
     $context['results'][] = $term['key'];
     if ($context['sandbox']['progress'] == 1000) {
+      $context['results'][] = 'BREAK';
       $context['sandbox']['counter'] = $i;
       break;
     }
