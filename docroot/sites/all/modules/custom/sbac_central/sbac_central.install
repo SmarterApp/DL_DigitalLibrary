@@ -497,6 +497,9 @@ function sbac_central_update_7043() {
   module_enable($modules);
 }
 
+/**
+ * Enables SMTP.
+ */
 function sbac_central_update_7044() {
   $modules = array(
     'smtp',
