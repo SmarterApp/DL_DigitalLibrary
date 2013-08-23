@@ -30,19 +30,19 @@
           resource.empty().html(img);
         }
         else if (type == 'schooltube') {
-          resource.html('<iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>');
+          resource.html('<div class="flex-video"><iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>');
         }
         else if (type == 'teachertube') {
-          resource.html('<iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe>');
+          resource.html('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe></div>');
         }
         else if (type == 'slideshare') {
-          resource.html('<iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>');
+          resource.html('<div class="flex-video"><iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>');
         }
         else if (type == 'vimeo') {
-          resource.html('<iframe src="' + $(this).attr('href') + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
+          resource.html('<div class="flex-video"><iframe src="' + $(this).attr('href') + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>');
         }
         else if (type == 'youtube') {
-          resource.html('<iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe>');
+          resource.html('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>');
         }        
         else {
           var img = $('<img>');
