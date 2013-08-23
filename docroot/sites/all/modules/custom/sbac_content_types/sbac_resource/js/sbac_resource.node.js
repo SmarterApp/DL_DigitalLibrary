@@ -40,7 +40,10 @@
         }
         else if (type == 'vimeo') {
           resource.html('<iframe src="' + $(this).attr('href') + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
-        }       
+        }
+        else if (type == 'youtube') {
+          resource.html('<iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe>');
+        }        
         else {
           var img = $('<img>');
           img.attr('src', $(this).attr('href'));
