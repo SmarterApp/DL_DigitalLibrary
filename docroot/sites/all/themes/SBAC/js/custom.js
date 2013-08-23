@@ -7,7 +7,7 @@
           e.preventDefault();
           //do other stuff when a click happens
       });
-      
+
       $('.ccss-term-delete').click(function(){
         var nid = $(this).attr('nid');
         var update_form = function(data) {
@@ -162,7 +162,7 @@
             $('.alignment-form').hide();
             $('.alignment-buttons').show();
             $('.alignment-filter').html(obj.html);
-            
+
             $('.disabled').click(function(e) {
                 e.preventDefault();
                 //do other stuff when a click happens
@@ -199,15 +199,6 @@
 
         return false;
       });
-
-      $('.feedback').click(function() {
-        $('.block-sbac-central-feedback-box').show();
-        return false;
-      });
-      $('body').click(function() {
-        $('.block-sbac-central-feedback-box').hide();
-      });
-
     }
   };
 })(jQuery);
