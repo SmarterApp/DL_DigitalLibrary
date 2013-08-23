@@ -690,31 +690,28 @@ function sbac_resource_node_presave($node) {
   if ($node->title) {
     $node->status = 1;
   }
-	if (isset($node->nid) && $node->nid) //update node
-	{ 
-		$node->field_document_id['und']=array(); //use this to clean up the node during test
-		$i=0;
-		while ($i < count($node->field_file['und'])) 
-		{
-			try 
-			{
-				$file = file_load($node->field_file['und'][$i]['fid']); 
-				if ($file!==false) //this file still exists on Drupal so we have to load it...
-				{
-					sbac_resource_create_file_from_cmis($node, $i); // Create new doc
-					file_delete($file); //delete the file from drupal
-				}
-			}
-			catch (CMISException $e) 
-			{
-				drupal_set_message($e);
-				cmis_error_handler('sbac_documents_update_document', $e);
-			}
-			$i++;
-		}
-		//clean up the file array at the end
-		$node->field_file=array();
-	}
+
+  if (isset($node->nid) && $node->nid) {
+    $node->field_document_id['und'] = array(); //use this to clean up the node during test
+    $i = 0;
+    while ($i < count($node->field_file['und'])) {
+      try {
+        $file = file_load($node->field_file['und'][$i]['fid']);
+        //this file still exists on Drupal so we have to load it...{
+        if ($file !== FALSE) {
+          sbac_resource_create_file_from_cmis($node, $i); // Create new doc
+          file_delete($file); //delete the file from drupal
+        }
+      }
+      catch (CMISException $e) {
+        drupal_set_message($e);
+        cmis_error_handler('sbac_documents_update_document', $e);
+      }
+      $i++;
+    }
+    //clean up the file array at the end
+    $node->field_file = array();
+  }
 }
 
 /**
@@ -722,17 +719,14 @@ function sbac_resource_node_presave($node) {
  *
  * @param $node, $i = file index
  */
-function sbac_resource_node_delete(&$node, $i) 
-{
+function sbac_resource_node_delete(&$node, $i) {
   $i=0;
-  while ($i < count($node->field_file['und'])) 
-  {
-	if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) 
-	{
-		sbac_resource_delete_file_from_cmis($node, $i);
-		unset($node->field_document_id['und'][$i]);
-	}
-	$i++;
+  while ($i < count($node->field_file['und'])) {
+	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
+		  sbac_resource_delete_file_from_cmis($node, $i);
+		  unset($node->field_document_id['und'][$i]);
+	  }
+	  $i++;
   }
 }
 
@@ -746,81 +740,73 @@ function sbac_resource_node_delete(&$node, $i)
   module_load_include('api.inc', 'cmis');
   $file = file_load($node->field_file['und'][$i]['fid']);
   $folder_path = '/Assets/' . floor($node->nid/32000) . "/" . $node->nid;
-  try 
-  {
-	$repository = cmis_get_repository();
-	//test to see of the folder is there
-	$root_folder=cmisapi_getObjectByPath($repository->repositoryId, '/Assets');
-	try 
-	{
-		$folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
-	}
-	catch (CMISException $e) 
-	{
+  try {
+	  $repository = cmis_get_repository();
+	  //test to see of the folder is there
+	  $root_folder=cmisapi_getObjectByPath($repository->repositoryId, '/Assets');
+	  try {
+		  $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
+	  }
+	  catch (CMISException $e) {
 	  //do nothing
-	}
-	if (!is_object($folder)) //no resource folder
-	{
-		//is the parent folder there?
-		try 
-		{
-			$parent_folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000));
-		}
-		catch (CMISException $e) 
-		{
-			cmis_error_handler('sbac_documents_presave_document', $e);
-		}
-		if (is_object($parent_folder)) //ok, the parent folder is there, now try to create the child folder
-		{
-			try
-			{
-				$folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
-			}
-			catch (CMISException $e) 
-			{
-				cmis_error_handler('sbac_documents_presave_document', $e);
-			}
-		}
-		else
-		{
-			try //neither folder is there, so we have to create both the parent and the child (resource node) folders
-			{
-				$parent_folder=cmisapi_createFolder($repository->repositoryId, $root_folder->id, floor($node->nid/32000));
-				$folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
-			}
-			catch (CMISException $e) 
-			{
-				cmis_error_handler('sbac_documents_presave_document', $e);
-			}
-		}
-	}
-	//set the folder object to the /Assets/$cardinal/$node->nid
-	$folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
-	//sbac_resource_delete_file_from_cmis($node, $i);  //try to delete the file first.  likely not needed
-	
-	$document = cmisapi_createDocument($repository->repositoryId, $folder->id, $file->filename, array(), file_get_contents($file->uri), $file->filemime);
-	$cnt=count($node->field_document_id['und'])+1; //increment the node->field_document_id array to hold the new alfresco field_document_id
-	$node->field_document_id['und'][$cnt]['value'] = $document->id; //store the document ID
-	//update the doc with the drupalId
+	  }
 
-	$alfresco=variable_get('cmis_repositories');
-	$ch = curl_init();
-	//set the url, number of POST vars, POST data and login details
-	curl_setopt($ch,CURLOPT_URL, $alfresco['default']['update_url']);
-	curl_setopt($ch,CURLOPT_POST, 1);
-	curl_setopt($ch,CURLOPT_POSTFIELDS, 'data=' . json_encode(array('nodeRef'=>$document->id, 'drupalId'=>$node->nid)));
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch,CURLOPT_USERPWD,$alfresco['default']['user']. ":" . $alfresco['default']['password']);
-	$result = curl_exec ($ch);
-	curl_close ($ch);
+    if (!is_object($folder)) { //no resource folder
+      //is the parent folder there?
+      try {
+        $parent_folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000));
+      }
+      catch (CMISException $e) {
+        cmis_error_handler('sbac_documents_presave_document', $e);
+      }
 
-	//uncomment to dump the document and properties after save
-	//echo "<pre>";
-	//print_r($document);
-	//die();
-  } 
-  catch (CMISException $e) 
-  {
+      //ok, the parent folder is there, now try to create the child folder
+      if (is_object($parent_folder)) {
+        try {
+          $folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
+        }
+        catch (CMISException $e) {
+          cmis_error_handler('sbac_documents_presave_document', $e);
+        }
+      }
+      else {
+        try {
+          //neither folder is there, so we have to create both the parent and the child (resource node) folders
+          $parent_folder=cmisapi_createFolder($repository->repositoryId, $root_folder->id, floor($node->nid/32000));
+          $folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
+        }
+        catch (CMISException $e) {
+          cmis_error_handler('sbac_documents_presave_document', $e);
+        }
+      }
+    }
+
+    //set the folder object to the /Assets/$cardinal/$node->nid
+    $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
+
+    //sbac_resource_delete_file_from_cmis($node, $i);  //try to delete the file first.  likely not needed
+    $document = cmisapi_createDocument($repository->repositoryId, $folder->id, $file->filename, array(), file_get_contents($file->uri), $file->filemime);
+    $cnt=count($node->field_document_id['und'])+1; //increment the node->field_document_id array to hold the new alfresco field_document_id
+    $node->field_document_id['und'][$cnt]['value'] = $document->id; //store the document ID
+
+    //update the doc with the drupalId
+    $alfresco=variable_get('cmis_repositories');
+    $ch = curl_init();
+    //set the url, number of POST vars, POST data and login details
+    curl_setopt($ch,CURLOPT_URL, $alfresco['default']['update_url']);
+    curl_setopt($ch,CURLOPT_POST, 1);
+    curl_setopt($ch,CURLOPT_POSTFIELDS, 'data=' . json_encode(array('nodeRef'=>$document->id, 'drupalId'=>$node->nid)));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_USERPWD,$alfresco['default']['user']. ":" . $alfresco['default']['password']);
+    $result = curl_exec ($ch);
+    curl_close ($ch);
+
+    //uncomment to dump the document and properties after save
+    //echo "<pre>";
+    //print_r($document);
+    //die();
+  }
+  catch (CMISException $e) {
     cmis_error_handler('sbac_documents_presave_document', $e);
   }
 }
@@ -834,28 +820,28 @@ function sbac_resource_node_delete(&$node, $i)
 function sbac_resource_delete_file_from_cmis(&$node, $i) 
 {
   module_load_include('api.inc', 'cmis');
-  try 
-  {
+  try {
     $repository = cmis_get_repository();
     $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $node->field_document_id['und'][$i]['value']);
     cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
     $node->field_document_id['und'][$i]['value'] = NULL;
   } 
-  catch (CMISException $e) 
-  {
+  catch (CMISException $e) {
     cmis_error_handler('sbac_documents_delete_document', $e);
   }
 }
 
-
-function sbac_resource_node_load($nodes, $types) 
-{
-	foreach ($nodes as $node) 
-	{
+/**
+ * Implemenets hook_node_load().
+ *
+ * @param $nodes
+ * @param $types
+ */
+function sbac_resource_node_load($nodes, $types) {
+	foreach ($nodes as $node) {
 		//echo "<pre>";
 		//print_r($node);
 	}
-	//die();
 }
 
 
