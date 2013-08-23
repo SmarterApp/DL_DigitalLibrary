@@ -346,7 +346,8 @@ function sbac_alignment_devtest() {
     }
     
     //dsm($broken_terms);
-    print var_export($broken_terms);
+    //print drupal_json_encode($broken_terms);
+    print drupal_json_encode($parents);
     exit;
   }
 
