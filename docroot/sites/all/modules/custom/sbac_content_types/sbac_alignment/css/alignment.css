@@ -338,5 +338,6 @@
 
 /* line 321, ../sass/alignment.scss */
 #ccss-submit {
-  margin-right: 10px;
+  margin-left: 10px;
+  float: right;
 }
