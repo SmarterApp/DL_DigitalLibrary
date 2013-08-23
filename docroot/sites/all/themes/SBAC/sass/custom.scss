@@ -375,6 +375,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     font-size: 1em;
     color: $white;
     line-height: 45px;
+    
     li {
       border-left:1px solid black;
       padding: 0px;
@@ -382,6 +383,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       &:hover {
         background: #515151;
       }
+      
       li {
         a {
           padding-left: 20px;
