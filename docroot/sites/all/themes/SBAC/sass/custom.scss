@@ -1402,6 +1402,11 @@ a.tabledrag-handle .handle {
   // materials tab
   #edit-group_materials {
   .field-name-field-file {
+
+    .description p {
+      font-size: 12px;
+      line-height: 14px;
+    }
     .fieldset-wrapper {
       #field-file-values {
         width: 100%;
