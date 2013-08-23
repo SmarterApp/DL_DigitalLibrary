@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Template for SBAC Report page.
+ * Template for SBAC Individual Report page.
  */
 ?>
 <h2><?php print t('Individual SNE Report'); ?></h2>
