@@ -138,9 +138,11 @@
 
     // Individual Report: clear the id on event "input".
     $('#edit-sne').bind('input', function(e) {
-      console.log('clear');
-      $uidField.text('');
-      $uidField.val('');
+      if ($uidField.val() != '') {
+        console.log('clear');
+        $uidField.text('');
+        $uidField.val('');
+      }
     });
 
   });
