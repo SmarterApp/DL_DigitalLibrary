@@ -19,6 +19,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
     drupal_set_title('');
+    $form['#id'] = 'sbac-resource-form';
     $form['#attached']['js'] = array(
       drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
       drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
@@ -1340,7 +1341,7 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
     '#validate' => array('sbac_resource_validate_form'),
     '#attributes' => array('id' => 'edit-save-continue'),
     '#ajax' => array(
-      'wrapper' => 'resource-node-form',
+      'wrapper' => 'sbac-resource-form',
       'callback' => 'sbac_resource_save_and_continue',
       'method' => 'replace',
       'effect' => 'fade'
