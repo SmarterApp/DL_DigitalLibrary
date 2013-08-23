@@ -1808,7 +1808,7 @@ a.tabledrag-handle .handle {
    Feedback block
    ----------------------------------------- */
 
-#feedback-dropdown, .open{
+.notifications > .open {
     top: 50px !important;
   }
 
