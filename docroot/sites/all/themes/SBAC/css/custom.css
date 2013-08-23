@@ -8706,15 +8706,17 @@ a.tabledrag-handle .handle {
    Feedback block
    ----------------------------------------- */
 /* line 1811, ../sass/custom.scss */
-.notifications > .open {
+#feedback-dropdown, .open {
   top: 50px !important;
+  right: 100px;
+  left: auto !important;
 }
 
-/* line 1815, ../sass/custom.scss */
+/* line 1817, ../sass/custom.scss */
 #feedback-dropdown {
   color: #333;
 }
-/* line 1818, ../sass/custom.scss */
+/* line 1820, ../sass/custom.scss */
 #feedback-dropdown a {
   color: #0085AD;
   padding: 0;
@@ -8724,7 +8726,7 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Help topics styles
    ----------------------------------------- */
-/* line 1829, ../sass/custom.scss */
+/* line 1831, ../sass/custom.scss */
 #views-form-help-topics-page-4 .views-field-nid-1 a {
   /*  background: white;
     padding: 5px;
@@ -8742,7 +8744,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-/* line 1845, ../sass/custom.scss */
+/* line 1847, ../sass/custom.scss */
 #views-form-help-topics-page-4 .views-field-nid-1 a:hover {
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
@@ -8753,18 +8755,18 @@ a.tabledrag-handle .handle {
   color: white;
 }
 
-/* line 1854, ../sass/custom.scss */
+/* line 1856, ../sass/custom.scss */
 #views-form-help-topics-page-4 .views-field-nid-1 a:focus {
   background: #bfd8e5;
 }
 
-/* line 1859, ../sass/custom.scss */
+/* line 1861, ../sass/custom.scss */
 #views-form-help-topics-page-4,
 #views-form-help-topics-page-2 {
   margin-bottom: 50px;
 }
 
-/* line 1864, ../sass/custom.scss */
+/* line 1866, ../sass/custom.scss */
 .help-topic-link,
 .welcome-tutorial-topic-link {
   /*  background: none repeat scroll 0 0 #DDDDDD;
@@ -8784,7 +8786,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-/* line 1882, ../sass/custom.scss */
+/* line 1884, ../sass/custom.scss */
 .help-topic-link:hover,
 .welcome-tutorial-topic-link:hover {
   -webkit-transition: all 500ms ease;
@@ -8796,14 +8798,14 @@ a.tabledrag-handle .handle {
   color: white;
 }
 
-/* line 1892, ../sass/custom.scss */
+/* line 1894, ../sass/custom.scss */
 .help-topic-link:focus,
 .welcome-tutorial-topic-link:focus {
   background: #bfd8e5;
   color: #006298;
 }
 
-/* line 1898, ../sass/custom.scss */
+/* line 1900, ../sass/custom.scss */
 .page-welcome-tutorial-topics .help-topic-link,
 .page-help-topics .help-topic-link {
   top: 10px;
@@ -8811,14 +8813,14 @@ a.tabledrag-handle .handle {
   right: 10px;
 }
 
-/* line 1903, ../sass/custom.scss */
+/* line 1905, ../sass/custom.scss */
 .view-id-help_topics .help-topic-link1 {
   position: absolute;
   right: 10px;
   top: 10px;
 }
 
-/* line 1910, ../sass/custom.scss */
+/* line 1912, ../sass/custom.scss */
 .view-id-help_topics .help-topic-link2,
 .welcome-tutorial-topic-link {
   bottom: 20px;
@@ -8826,7 +8828,7 @@ a.tabledrag-handle .handle {
   right: 150px;
 }
 
-/* line 1916, ../sass/custom.scss */
+/* line 1918, ../sass/custom.scss */
 .view-id-help_topics #edit-submit,
 .view-id-help_topics #edit-submit--2 {
   position: absolute;
@@ -8834,25 +8836,25 @@ a.tabledrag-handle .handle {
   bottom: 0px;
 }
 
-/* line 1923, ../sass/custom.scss */
+/* line 1925, ../sass/custom.scss */
 #views-form-help-topics-page-2 .tabledrag-toggle-weight,
 #views-form-help-topics-page-4 .tabledrag-toggle-weight {
   display: none;
 }
 
-/* line 1928, ../sass/custom.scss */
+/* line 1930, ../sass/custom.scss */
 #draggableviews-table-help_topics-page_2,
 #draggableviews-table-help_topics-page_4 {
   width: 100%;
 }
 
-/* line 1932, ../sass/custom.scss */
+/* line 1934, ../sass/custom.scss */
 .view-help-topics ul li.views-row {
   list-style: none;
   margin-bottom: 20px;
 }
 
-/* line 1936, ../sass/custom.scss */
+/* line 1938, ../sass/custom.scss */
 .view-help-topics ul li .views-field-title {
   display: block;
   font-size: 18px;
@@ -8860,24 +8862,24 @@ a.tabledrag-handle .handle {
   color: #42a747;
 }
 
-/* line 1944, ../sass/custom.scss */
+/* line 1946, ../sass/custom.scss */
 .view-help-topics ul li .views-field-body p {
   font-size: 15px;
 }
 
-/* line 1948, ../sass/custom.scss */
+/* line 1950, ../sass/custom.scss */
 .view-help-topics ul li .views-field-field-summary {
   margin-bottom: 20px;
 }
 
-/* line 1952, ../sass/custom.scss */
+/* line 1954, ../sass/custom.scss */
 .page-help-topics h1#page-title {
   margin-bottom: 20px;
   margin-top: 30px;
   padding-left: 22px;
 }
 
-/* line 1957, ../sass/custom.scss */
+/* line 1959, ../sass/custom.scss */
 #admin-welcome-tab-message {
   padding: 10px;
   background: #ddd;
@@ -8885,13 +8887,13 @@ a.tabledrag-handle .handle {
   margin-bottom: 20px;
 }
 
-/* line 1963, ../sass/custom.scss */
+/* line 1965, ../sass/custom.scss */
 #draggableviews-table-help_topics-page_4 .views-field-nid-1 {
   text-align: center;
   width: 200px;
 }
 
-/* line 1967, ../sass/custom.scss */
+/* line 1969, ../sass/custom.scss */
 #draggableviews-table-help_topics-page_2 .views-field-status, #draggableviews-table-help_topics-page_4 .views-field-status, #draggableviews-table-help_topics-page_2 .views-field-fields-combine {
   text-align: center;
 }
@@ -8899,7 +8901,7 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Login text styles
    ----------------------------------------- */
-/* line 1973, ../sass/custom.scss */
+/* line 1975, ../sass/custom.scss */
 .login-text {
   padding-left: 50px;
 }
@@ -8907,7 +8909,7 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Read More
   _________________________________________ */
-/* line 1984, ../sass/custom.scss */
+/* line 1986, ../sass/custom.scss */
 .read-more {
   display: inline-block;
   cursor: pointer;
@@ -8915,11 +8917,11 @@ a.tabledrag-handle .handle {
   width: 16px;
   height: 15px;
 }
-/* line 1991, ../sass/custom.scss */
+/* line 1993, ../sass/custom.scss */
 .read-more a {
   display: block;
 }
-/* line 1995, ../sass/custom.scss */
+/* line 1997, ../sass/custom.scss */
 .read-more .description-hover {
   display: none;
   transition-property: opacity;
@@ -8938,18 +8940,18 @@ a.tabledrag-handle .handle {
   z-index: 999;
   border: 1px solid #3C7646;
 }
-/* line 1997, ../sass/custom.scss */
+/* line 1999, ../sass/custom.scss */
 .read-more .description-hover .description-content {
   max-height: 200px;
   overflow-y: auto;
   padding: 20px;
 }
-/* line 2021, ../sass/custom.scss */
+/* line 2023, ../sass/custom.scss */
 .read-more .description-hover p {
   font-size: inherit;
   margin: 0;
 }
-/* line 2026, ../sass/custom.scss */
+/* line 2028, ../sass/custom.scss */
 .read-more .description-hover:after {
   content: ' ';
   position: absolute;
@@ -8962,7 +8964,7 @@ a.tabledrag-handle .handle {
   height: 0;
   z-index: 99;
 }
-/* line 2038, ../sass/custom.scss */
+/* line 2040, ../sass/custom.scss */
 .read-more .description-hover:before {
   content: ' ';
   position: absolute;
@@ -8975,7 +8977,7 @@ a.tabledrag-handle .handle {
   height: 0;
   z-index: 97;
 }
-/* line 2053, ../sass/custom.scss */
+/* line 2055, ../sass/custom.scss */
 .read-more:hover .more {
   display: block;
 }
@@ -8983,7 +8985,7 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Read More - JS
   _________________________________________ */
-/* line 2064, ../sass/custom.scss */
+/* line 2066, ../sass/custom.scss */
 .more-link {
   padding: 0 3px;
 }
@@ -8991,27 +8993,27 @@ a.tabledrag-handle .handle {
 /**
  Help Topic
  **/
-/* line 2073, ../sass/custom.scss */
+/* line 2075, ../sass/custom.scss */
 .node-help-page p {
   font-size: inherit;
 }
-/* line 2077, ../sass/custom.scss */
+/* line 2079, ../sass/custom.scss */
 .node-help-page ul.inline {
   margin: 0;
   padding: 0;
 }
-/* line 2081, ../sass/custom.scss */
+/* line 2083, ../sass/custom.scss */
 .node-help-page ul.inline li {
   display: inline-block;
   margin: 0;
   padding: 0 10px 0 5px;
   border-right: 1px solid #ccc;
 }
-/* line 2087, ../sass/custom.scss */
+/* line 2089, ../sass/custom.scss */
 .node-help-page ul.inline li:last-child {
   border-right: none;
 }
-/* line 2091, ../sass/custom.scss */
+/* line 2093, ../sass/custom.scss */
 .node-help-page ul.inline li:first-child {
   padding-left: 0;
 }
@@ -9019,12 +9021,12 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
    Taxonomy tool tips
  _________________________________________ */
-/* line 2102, ../sass/custom.scss */
+/* line 2104, ../sass/custom.scss */
 .view-mode-tooltip {
   display: inline-block;
   position: relative;
 }
-/* line 2107, ../sass/custom.scss */
+/* line 2109, ../sass/custom.scss */
 .view-mode-tooltip:hover .taxonomy-term-description {
   background: #DFE5CC;
   border: 1px solid #3C7646;
@@ -9045,17 +9047,17 @@ a.tabledrag-handle .handle {
   width: 272px;
   z-index: 999;
 }
-/* line 2129, ../sass/custom.scss */
+/* line 2131, ../sass/custom.scss */
 .view-mode-tooltip .taxonomy-term-description {
   display: none;
   opacity: 0;
 }
-/* line 2133, ../sass/custom.scss */
+/* line 2135, ../sass/custom.scss */
 .view-mode-tooltip .taxonomy-term-description p {
   font-size: inherit;
   margin: 0;
 }
-/* line 2138, ../sass/custom.scss */
+/* line 2140, ../sass/custom.scss */
 .view-mode-tooltip .taxonomy-term-description:after {
   content: ' ';
   position: absolute;
@@ -9068,7 +9070,7 @@ a.tabledrag-handle .handle {
   height: 0;
   z-index: 99;
 }
-/* line 2151, ../sass/custom.scss */
+/* line 2153, ../sass/custom.scss */
 .view-mode-tooltip .taxonomy-term-description:before {
   content: ' ';
   position: absolute;
