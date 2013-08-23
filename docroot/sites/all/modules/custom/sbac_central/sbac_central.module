@@ -207,7 +207,7 @@ function sbac_central_block_info() {
  */
 function sbac_central_block_view($delta = '') {
   $block = array();
-  
+
   switch ($delta) {
     case 'feedback-box':
       $body = variable_get('feedback_block_body', array('value' => '', 'format' => 'full_html'));
@@ -226,7 +226,7 @@ function sbac_central_block_view($delta = '') {
  */
 function sbac_central_block_configure($delta = '') {
   $form = array();
-  
+
   if ($delta == 'feedback-box') {
     $body = variable_get('feedback_block_body', array('value' => '', 'format' => 'full_html'));
 
@@ -239,8 +239,14 @@ function sbac_central_block_configure($delta = '') {
       '#default_value' => $body['value'],
       '#format' => $body['format'],
     );
+
+    $form['enable_feedback'] = array(
+      '#type' => 'checkbox',
+      '#title'=> t('Display Feedback overlay to user on login'),
+      '#default_value' => variable_get('enable_feedback'),
+    );
   }
-  
+
   return $form;
 }
 
@@ -248,7 +254,9 @@ function sbac_central_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function sbac_central_block_save($delta = '', $edit = array()) {
+  global $user;
   if ($delta == 'feedback-box') {
     variable_set('feedback_block_body', $edit['feedback_block_body']);
+    variable_set('enable_feedback', $edit['enable_feedback']);
   }
 }

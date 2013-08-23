@@ -373,62 +373,6 @@ function sbac_user_user_default_permissions() {
     'module' => 'sbac_user',
   );
 
-  // Exported permission: edit any audio files.
-  $permissions['edit any audio files'] = array(
-    'name' => 'edit any audio files',
-    'roles' => array(),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit any document files.
-  $permissions['edit any document files'] = array(
-    'name' => 'edit any document files',
-    'roles' => array(),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit any image files.
-  $permissions['edit any image files'] = array(
-    'name' => 'edit any image files',
-    'roles' => array(),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit any video files.
-  $permissions['edit any video files'] = array(
-    'name' => 'edit any video files',
-    'roles' => array(),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit own audio files.
-  $permissions['edit own audio files'] = array(
-    'name' => 'edit own audio files',
-    'roles' => array(),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit own document files.
-  $permissions['edit own document files'] = array(
-    'name' => 'edit own document files',
-    'roles' => array(),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit own image files.
-  $permissions['edit own image files'] = array(
-    'name' => 'edit own image files',
-    'roles' => array(),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: edit own video files.
-  $permissions['edit own video files'] = array(
-    'name' => 'edit own video files',
-    'roles' => array(),
-    'module' => 'file_entity',
-  );
-
   // Exported permission: edit any help_page content.
   $permissions['edit any help_page content'] = array(
     'name' => 'edit any help_page content',

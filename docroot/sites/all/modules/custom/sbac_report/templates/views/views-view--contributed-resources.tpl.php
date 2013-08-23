@@ -62,7 +62,7 @@
   <?php endif; ?>
 
   <?php if ($exposed): ?>
-    <div class="view-filters large-2">
+    <div class="view-filters large-3">
       <?php print $exposed; ?>
     </div>
   <?php endif; ?>
