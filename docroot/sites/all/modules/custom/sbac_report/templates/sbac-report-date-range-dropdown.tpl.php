@@ -9,7 +9,7 @@
   <?php print t('Choose a time period'); ?>
   <span class="form-required" title="This field is required.">*</span>
   </label>
-  <a href="#" id="date-selected" class="report-dropdown-toggle"><?php print $default_display; ?></a>
+  <a href="#" id="date-selected" class="report-dropdown-toggle"><?php print $date_display; ?></a>
   <div id="date-range-dropdown" class="report-dropdown hide">
     <ul>
       <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_30; ?>"><?php print t('Last 30 Days'); ?></a></li>

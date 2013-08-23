@@ -1,6 +1,5 @@
 /**
- * @todo: separate out stuff that is only for the individual report.
- * But possibly can reuse the dropdown and date range.
+ * Date range dropdown.
  */
 (function($) {
   /**
@@ -47,7 +46,7 @@
   /**
    * Return the custom date input.
    */
-  function getDateInput(el) {
+  function getInput(el) {
     return $.trim($(el).val());
   }
 
@@ -69,7 +68,6 @@
   $(function() {
     var $dateRangeField = $('#date-range-field');
     var $dateSelected = $('#date-selected');
-    var $uidField = $('#sne-uid-field');
     var dropdownId = '#date-range-dropdown';
     var $dropdown = $(dropdownId);
 
@@ -105,8 +103,8 @@
     // Update the dropdown text, when the user enters a custom date.
     $('#to-date input').on('change', function() {
       console.log('to-date');
-      var toInput = getDateInput(this);
-      var fromInput = getDateInput('#from-date input');
+      var toInput = getInput(this);
+      var fromInput = getInput('#from-date input');
       if (fromInput && toInput) {
         var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
         $dateRangeField.text(value);
@@ -118,30 +116,13 @@
     // Update the dropdown text, when the user enters a custom date.
     $('#from-date input').on('change', function() {
       console.log('from-date');
-      var fromInput = getDateInput(this);
-      var toInput = getDateInput('#to-date input');
+      var fromInput = getInput(this);
+      var toInput = getInput('#to-date input');
       if (fromInput && toInput) {
         var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
         $dateRangeField.text(value);
         $dateRangeField.val(value);
         $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
-      }
-    });
-
-    // Individual Report: Get the id from the autocomplete suggestion.
-    $(document).on('click', '#autocomplete li', function() {
-      console.log('auto');
-      var uid = $(this).find('.autocomplete-suggestion').data('uid');
-      $uidField.text(uid);
-      $uidField.val(uid);
-    });
-
-    // Individual Report: clear the id on event "input".
-    $('#edit-sne').bind('input', function(e) {
-      if ($uidField.val() != '') {
-        console.log('clear');
-        $uidField.text('');
-        $uidField.val('');
       }
     });
 

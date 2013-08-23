@@ -65,7 +65,7 @@ function sbac_report_theme($existing, $type, $theme, $path) {
   $themes['sbac_report_date_range_dropdown'] = array(
     'template' => 'templates/sbac-report-date-range-dropdown',
     'path' => $module_path,
-    'file' => 'sbac_report.preprocess.inc',
+    'arguments' => array('date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL),
     'preprocess functions' => array(
       'template_preprocess',
     ),
@@ -103,6 +103,8 @@ function sbac_report_theme($existing, $type, $theme, $path) {
 function sbac_report_individual_form($form, &$form_state) {
   $form = array();
 
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_report') . '/js/sbac_report.individual.js';
+
   $form['state'] = array(
     '#type' => 'select',
     '#title' => t('Choose a state'),
@@ -122,65 +124,18 @@ function sbac_report_individual_form($form, &$form_state) {
   // Default to the "Last 30 Days".
   if (empty($session_date_range)) {
     $session_date_range = $date_options['Last 30 Days'];
-    $default_display = t('Last 30 Days');
+    $date_display = t('Last 30 Days');
   }
   // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
   elseif ($key = array_search($session_date_range, $date_options)) {
-    $default_display = t($key);
+    $date_display = t($key);
   }
   // If it was a custom selection, format the string.
   else {
-    $default_display = sbac_report_format_date_range($session_date_range);
+    $date_display = sbac_report_format_date_range($session_date_range);
   }
 
-  // Hidden, used to pass the value through submit handler.
-  // Value is set when the user selects an item in the dropdown.
-  // @see sbac_report.js
-  $form['date_range'] = array(
-    '#type' => 'hidden',
-    '#title' => t('Choose a time period'),
-    '#default_value' => $session_date_range,
-    '#attributes' => array(
-      'id' => 'date-range-field',
-    ),
-  );
-
-  // --- Date Dropdown ---
-  $form['date_range_dropdown'] = array(
-    '#type' => 'markup',
-    '#markup' => theme('sbac_report_date_range_dropdown',
-      array(
-        'default_display' => $default_display ? $default_display : t('Last 30 Days'),
-        'ago_30' => $date_options['Last 30 Days'],
-        'ago_60' => $date_options['Last 60 Days'],
-        'ago_90' => $date_options['Last 90 Days'],
-      )
-    )
-  );
-
-  $form['from_date'] = array(
-    '#id' => 'from-date',
-    '#title' => t('From'),
-    '#type' => 'date_popup',
-    '#date_type' => DATE_DATETIME,
-    '#date_format' => 'm/d/Y',
-    '#date_increment' => 1,
-    '#date_year_range' => '-3:+3',
-    '#datepicker_options' => array(),
-  );
-
-  $form['to_date'] = array(
-    '#id' => 'to-date',
-    '#title' => t('To'),
-    '#type' => 'date_popup',
-    '#date_type' => DATE_DATETIME,
-    '#date_format' => 'm/d/Y',
-    '#date_increment' => 1,
-    '#date_year_range' => '-3:+3',
-    '#datepicker_options' => array(),
-    '#suffix' => '</div></div>', // Closing tags for the dropdown template.
-  );
-  // --- End of Date Dropdown ---
+  sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options);
 
   $form['sne'] = array(
     '#type' => 'textfield',
@@ -217,7 +172,7 @@ function sbac_report_individual_form($form, &$form_state) {
  * Individual Report: form validate.
  */
 function sbac_report_individual_form_validate($form, &$form_state) {
-  if (empty($form_state['values']['uid'])) {
+  if (empty($form_state['values']['uid']) || !is_numeric($form_state['values']['uid'])) {
     form_set_error('sne', t('Please type and select an existing SNE'));
   }
 }
@@ -249,6 +204,70 @@ function sbac_report_individual_form_submit($form, &$form_state) {
   // SNE.
   $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
   $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
+}
+
+/**
+ * Build the date range dropdown for the filter form.
+ *
+ * @param array $form
+ *   The form array passed by reference.
+ * @param string $default_date_range
+ *   The default value for the date range field in format Ymd--Ymd.
+ * @param string $date_display
+ *   The date display on the dropdown top level.
+ * @param array $date_options
+ *   An associative array of default date options.
+ */
+function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $date_display, $date_options) {
+
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_report') . '/js/sbac_report.date_dropdown.js';
+
+  // Hidden, used to pass the value through submit handler.
+  // Value is set when the user selects an item in the dropdown.
+  // @see sbac_report.js
+  $form['date_range'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Choose a time period'),
+    '#default_value' => $default_date_range,
+    '#attributes' => array(
+      'id' => 'date-range-field',
+    ),
+  );
+
+  $form['date_range_dropdown'] = array(
+    '#type' => 'markup',
+    '#markup' => theme('sbac_report_date_range_dropdown',
+      array(
+        'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+        'ago_30' => $date_options['Last 30 Days'],
+        'ago_60' => $date_options['Last 60 Days'],
+        'ago_90' => $date_options['Last 90 Days'],
+      )
+    )
+  );
+
+  $form['from_date'] = array(
+    '#id' => 'from-date',
+    '#title' => t('From'),
+    '#type' => 'date_popup',
+    '#date_type' => DATE_DATETIME,
+    '#date_format' => 'm/d/Y',
+    '#date_increment' => 1,
+    '#date_year_range' => '-3:+3',
+    '#datepicker_options' => array(),
+  );
+
+  $form['to_date'] = array(
+    '#id' => 'to-date',
+    '#title' => t('To'),
+    '#type' => 'date_popup',
+    '#date_type' => DATE_DATETIME,
+    '#date_format' => 'm/d/Y',
+    '#date_increment' => 1,
+    '#date_year_range' => '-3:+3',
+    '#datepicker_options' => array(),
+    '#suffix' => '</div></div>', // Closing tags for the dropdown template.
+  );
 }
 
 /**
@@ -474,5 +493,22 @@ function sbac_report_views_query_alter(&$view, &$query) {
         }
       }
     }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter.
+ */
+function sbac_report_form_views_exposed_form_alter(&$form, &$form_state) {
+  switch ($form['#id']) {
+    case 'views-exposed-form-contributed-resources-resources-details':
+      if (isset($form['items_per_page'])) {
+        foreach ($form['items_per_page']['#options'] as $key => $val) {
+          if (is_numeric($key)) {
+            $form['items_per_page']['#options'][$key] = t('Up to !num', array('!num' => $val));
+          }
+        }
+      }  
+      break;
   }
 }

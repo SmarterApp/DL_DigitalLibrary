@@ -199,6 +199,9 @@ function get_shortnames() {
 }
 
 function sbac_alignment_devtest() {
+  ini_set('max_execution_time', '9999');
+  ini_set('memory_limit', '2048M');
+  
   if(isset($_GET['vocab'])) {
     $edu_alignment_vocab_name = $_GET['vocab'];
   }
@@ -342,7 +345,9 @@ function sbac_alignment_devtest() {
       }
     }
     
-    dsm($broken_terms);
+    //dsm($broken_terms);
+    print var_export($broken_terms);
+    exit;
   }
 
   if($print) {

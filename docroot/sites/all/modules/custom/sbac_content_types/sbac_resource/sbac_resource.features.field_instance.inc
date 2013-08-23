@@ -630,7 +630,7 @@ function sbac_resource_field_default_field_instances() {
     'settings' => array(
       'description_field' => 0,
       'file_directory' => 'resource',
-      'file_extensions' => 'doc docx pdf xls xlsx ppt pptx txt jpg png jpeg mp4 mpg mov avi mp3 aac',
+      'file_extensions' => 'doc docx odt pdf xls xlsx ods ppt pptx odp txt jpg png jpeg mp4 mpg mov avi mp3 aac',
       'max_filesize' => '100 MB',
       'user_register_form' => FALSE,
     ),
