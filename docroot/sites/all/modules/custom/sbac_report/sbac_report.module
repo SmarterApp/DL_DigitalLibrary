@@ -495,3 +495,20 @@ function sbac_report_views_query_alter(&$view, &$query) {
     }
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter.
+ */
+function sbac_report_form_views_exposed_form_alter(&$form, &$form_state) {
+  switch ($form['#id']) {
+    case 'views-exposed-form-contributed-resources-resources-details':
+      if (isset($form['items_per_page'])) {
+        foreach ($form['items_per_page']['#options'] as $key => $val) {
+          if (is_numeric($key)) {
+            $form['items_per_page']['#options'][$key] = t('Up to !num', array('!num' => $val));
+          }
+        }
+      }  
+      break;
+  }
+}
