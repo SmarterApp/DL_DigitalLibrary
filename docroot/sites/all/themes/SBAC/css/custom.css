@@ -8706,7 +8706,7 @@ a.tabledrag-handle .handle {
    Feedback block
    ----------------------------------------- */
 /* line 1811, ../sass/custom.scss */
-#feedback-dropdown, .open {
+.notifications > .open {
   top: 50px !important;
 }
 
@@ -9028,7 +9028,7 @@ a.tabledrag-handle .handle {
 .view-mode-tooltip:hover .taxonomy-term-description {
   background: #DFE5CC;
   border: 1px solid #3C7646;
-  border-radius: 7px;
+  border-radius: 6px;
   color: #3C7646;
   display: block;
   font-size: 12px;
