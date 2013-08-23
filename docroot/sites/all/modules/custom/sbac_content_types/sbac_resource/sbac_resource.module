@@ -178,7 +178,7 @@ function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
   if ($vars['field_file'][0]['uri']) {
     $url = file_create_url($vars['field_file'][0]['uri']);
-    $media = _sbac_resource_media(&$url, $vars['field_file'][0]);
+    $media = _sbac_resource_media($url, $vars['field_file'][0]);
     $viewer['viewer_filename'] = $vars['field_file'][0]['filename'];
     $viewer['viewer_type'] = $media;
     if ($media == 'document') {
@@ -258,6 +258,13 @@ function _sbac_resource_preview_materials(&$vars) {
   return $materials;
 }
 
+/**
+ * Creates the resource media variables.
+ *
+ * @param $url
+ * @param $file
+ * @return string
+ */
 function _sbac_resource_media(&$url, $file) {
   $media = 'document';
   $ext = pathinfo($url, PATHINFO_EXTENSION);
