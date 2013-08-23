@@ -48,6 +48,7 @@
     </li>
     <li><a data-dropdown="feedback-dropdown" href="#">Feedback</a>
       <div id="feedback-dropdown" class="f-dropdown content small">
+        <a id="disable-feedback" class="small right"> x </a>
       <?php
         $feedback_block = block_load('sbac_central','feedback-box');
         $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
