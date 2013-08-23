@@ -95,7 +95,7 @@
 
   <?php if (isset($viewer)) : ?>
   <div id="resource-element-wrapper">
-    <div id="resource-element" class="flex-video"><?php print $viewer; ?></div>
+    <div id="resource-element"><?php print $viewer; ?></div>
   </div>
     <div class="infobar">
     <div class="row">
