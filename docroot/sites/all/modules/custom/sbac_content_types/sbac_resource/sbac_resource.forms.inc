@@ -1621,7 +1621,7 @@ function sbac_resource_check_materials($form, $form_state) {
     // }
   }
   else {
-    if (!$form['field_file']['und'][0]['#default_value']['fid']) {
+    if (!isset($form['field_file']['und'][0]['#default_value']['fid'])) {
       $valid = FALSE;
     }
     if (!$form['field_author']['und'][0]['value']['#default_value']) {
