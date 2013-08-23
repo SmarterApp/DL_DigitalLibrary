@@ -48,13 +48,27 @@ $darkgreen: #246a34;
   width: 100px;
 }
 
+.view-sne-details {
+	.row.first {
+		padding: 20px 0;
+	}
+}
+
+.view-display-id-resources_summary {
+	tbody {
+		td {
+			text-align: center;
+		}
+	}
+}
+
 .view-filters {
   float: right;
   text-align: right;
 }
 
 .view-filters .throbber {
-  margin-top: -80px;
+	display: none;
 }
 
 .report-form-container {
@@ -105,7 +119,7 @@ $darkgreen: #246a34;
 				width: 10px;
 				height: 10px;
 				float: right;
-				margin: 3px 3px 0 0;
+				margin: 4px 3px 0 0;
 			}
 
 			&.show {
@@ -195,19 +209,3 @@ $darkgreen: #246a34;
 		}
 	}
 }
-
-html.js input.form-autocomplete {
-	background-position: 100% 12px;
-}
-
-
-
-
-
-
-
-
-
-
-
-

@@ -173,6 +173,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     $context['message'] = $term['key'];
     $context['results'][] = $term['key'];
     if ($context['sandbox']['progress'] == 1000) {
+      $context['results'][] = 'BREAK';
       $context['sandbox']['counter'] = $i;
       break;
     }
