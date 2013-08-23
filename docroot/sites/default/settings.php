@@ -594,6 +594,3 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       break;
   }
 }
-
-ini_set('max_execution_time', '999');
-ini_set('memory_limit', '512M');

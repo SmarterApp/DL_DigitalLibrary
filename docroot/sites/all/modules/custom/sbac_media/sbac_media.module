@@ -72,18 +72,6 @@ function sbac_media_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_media_parse().
- *
- * @todo This hook should be deprecated. Refactor Media module to not call it
- *   any more, since media_internet should be able to automatically route to the
- *   appropriate handler.
- */
-// function sbac_media_media_parse($embed_code) {
-//   $handler = new MediaInternetSchoolTubeHandler($embed_code);
-//   return $handler->parse($embed_code);
-// }
-
-/**
  * Implements hook_file_mimetype_mapping_alter().
  *
  * Regster the video/youtube mimetype.
@@ -106,6 +94,34 @@ function sbac_media_ctools_plugin_api($owner, $api) {
   if (isset($api_versions[$owner][$api])) {
     return array('version' => $api_versions[$owner][$api]);
   }
+}
+
+/*
+ * Helper function to create embed URLs because of different implmenetation
+ */
+function sbac_media_create_embed_url($file) {
+  $wrapper = file_stream_wrapper_get_instance_by_uri($file['uri']);
+  $parts = $wrapper->get_parameters();
+  $id = check_plain($parts['v']);
+
+  switch($file['filemime']) {
+    case 'video/schooltube': 
+      $url = 'http://www.schooltube.com/embed_force/' . $id;
+      break;
+    case 'video/slideshare':
+      $url = 'http://www.slideshare.net/slideshow/embed_code/' . $id . '?rel=0';
+      break;
+    case 'video/teachertube':
+      $url = 'http://www.teachertube.com/embed.php?pg=' . $id;
+      break;
+    case 'video/vimeo':
+      $url = 'http://player.vimeo.com/video/' . $id . '?title=0&amp;byline=0&amp;portrait=0';
+      break;
+    case 'video/youtube':
+      $url = '//www.youtube.com/embed/' . $id;
+      break;
+  }
+  return url($url, array('external' => TRUE));
 }
 
 /**

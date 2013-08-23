@@ -114,7 +114,7 @@ function sbac_resource_download_contents($node) {
         header("Content-Transfer-Encoding: Binary");
         header("Content-Length:".filesize($real_path));
         header("Content-Disposition: attachment; filename=" . $filename);
-        if (readfile($real_path) != false) {
+        if (readfile($real_path) !== false) {
 				$node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
 				entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
 			}
@@ -178,8 +178,7 @@ function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
   if ($vars['field_file'][0]['uri']) {
     $url = file_create_url($vars['field_file'][0]['uri']);
-    $ext = pathinfo($url, PATHINFO_EXTENSION);
-    $media = _sbac_resource_determine_extension($ext);
+    $media = _sbac_resource_media($url, $vars['field_file'][0]);
     $viewer['viewer_filename'] = $vars['field_file'][0]['filename'];
     $viewer['viewer_type'] = $media;
     if ($media == 'document') {
@@ -193,6 +192,22 @@ function _sbac_resource_preview_content(&$vars) {
     else if ($media == 'image') {
       $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400));
     }
+    // replace with theming functions, preprocess theme functions haven't been implemented (except for schooltube), although templates have been
+    else if ($media == 'schooltube') {
+      $viewer['viewer'] = '<iframe width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>';
+    }
+    else if ($media == 'teachertube') {
+      $viewer['viewer'] = '<iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/></iframe>';
+    }
+    else if ($media == 'slideshare') {
+      $viewer['viewer'] = '<iframe src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>';
+    }
+    else if ($media == 'vimeo') {
+      $viewer['viewer'] = '<iframe src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+    }
+    else if ($media == 'youtube') {
+      $viewer['viewer'] = '<iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen></iframe>';
+    }      
     else {
       $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       $viewer['viewer'] = theme('image', array('path' => $url));
@@ -214,8 +229,7 @@ function _sbac_resource_preview_materials(&$vars) {
   if (isset($vars['field_file'][0]['uri'])) {
     foreach ($vars['field_file'] as $key => $material) {
       $url = file_create_url($material['uri']);
-      $ext = pathinfo($url, PATHINFO_EXTENSION);
-      $media = _sbac_resource_determine_extension($ext);
+      $media = _sbac_resource_media($url, $material);
       if ($media == 'none') {
         $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       }
@@ -244,13 +258,52 @@ function _sbac_resource_preview_materials(&$vars) {
 }
 
 /**
+ * Creates the resource media variables.
+ *
+ * @param $url
+ * @param $file
+ * @return string
+ */
+function _sbac_resource_media(&$url, $file) {
+  $media = 'document';
+  $ext = pathinfo($url, PATHINFO_EXTENSION);
+  // the _sbac_resource_determine_media should take over because 
+  // extension is no longer good enough to determine media type
+  if ($ext) {
+    $media = _sbac_resource_determine_extension($ext);
+  } elseif (module_exists('sbac_media')) { // don't want to create dependancy   
+    // this is for embed code
+    $media = _sbac_resource_determine_media($file);
+    if ($media) { //override url with embed code
+      $url = sbac_media_create_embed_url($file);
+    }
+  }
+  return $media;
+}
+
+/**
+ * Determine the media type based on URL.
+ *
+ * @param $file object
+ * @return string
+ */
+function _sbac_resource_determine_media($file) {
+  $media = 'document';
+  preg_match('#video/(.*)#i', $file['filemime'], $matches);
+  if (isset($matches[1]) && $matches[1]) {
+    return $matches[1];
+  } 
+  return $media;
+}
+
+/**
  * Determine the filename extension.
  *
  * @param $ext
  * @return string
  */
 function _sbac_resource_determine_extension($ext) {
-  $media = 'embed';
+  $media = 'document';
 
   switch (strtolower($ext)) {
     case 'txt';
@@ -261,6 +314,8 @@ function _sbac_resource_determine_extension($ext) {
     case 'xlsx';
     case 'pptx';
     case 'ppt';
+    case 'odt';
+    case 'odp';
       $media = 'document';
       break;
     case 'mp4';
@@ -276,12 +331,13 @@ function _sbac_resource_determine_extension($ext) {
       break;
     case 'mpg';
     case 'avi';
+    case 'ods';
       $media = 'none';
       break;
   }
-  watchdog('sbac_media', $media);
   return $media;
 }
+
 /**
  * Determine the filename extension.
  *
