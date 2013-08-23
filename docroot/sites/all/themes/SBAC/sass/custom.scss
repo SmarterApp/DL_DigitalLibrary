@@ -1106,7 +1106,9 @@ a.tabledrag-handle .handle {
 .sticky-header {
   z-index: 99;
 }
-
+.tabledrag-toggle-weight {
+  display: none;
+}
 #field-file-values {
   width: 100%;
 
