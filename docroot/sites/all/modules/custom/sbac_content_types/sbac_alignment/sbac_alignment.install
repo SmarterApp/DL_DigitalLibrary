@@ -202,3 +202,14 @@ function sbac_alignment_update_7004() {
   //  }
   //}
 }
+/**
+ * Implements hook_update_N().
+ * Deleting dot notation and item url field.
+ */
+function sbac_alignment_update_7005() {
+  $field = field_info_instance('node', 'field_dot_notation', 'alignment');
+  field_delete_instance($field);
+  
+  $field = field_info_instance('node', 'field_item_url', 'alignment');
+  field_delete_instance($field);
+}

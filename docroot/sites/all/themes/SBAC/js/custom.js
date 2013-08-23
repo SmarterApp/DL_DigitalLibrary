@@ -96,13 +96,11 @@
                   }
                 });
                 
-                
-                
-                $('#modal-content').animate({ scrollTop: 0 });
-                
                 if (countStandard > 0 && countType > 0) {
                   var alignmentStandards = alignmentType = '';
                   
+                  //get ref
+                  var alignmentRef = $('input[id=alignment_ref]').val();
                   //counts type
                   $('#edit-alignment-type option').each(function() {
                     if($(this).is(':selected') && $(this).val() != ''){
@@ -119,20 +117,23 @@
                     }
                   });
                   
-                  console.log(alignmentType);
-                  
-                  var closeModal = function() {
-                    
+                  var closeModal = function(data) {
+                    var obj = jQuery.parseJSON(data);
+                    $('#sbac-resource-alignment-tag-view').html(obj.html);
+                    $('#modalBackdrop').hide();
+                    $('#modalContent').hide();
+                    Drupal.attachBehaviors('.ccss-term-delete');
                   }
                   
                   $.ajax({
                     type: "POST",
-                    url: "/foobario",
+                    url: "/ajax-alignment-crud",
                     success: closeModal,
-                    data:'alignment_type=' + alignmentType + '&alignment_standards=' + alignmentStandards,
+                    data:'op=create&alignment_type=' + alignmentType + '&alignment_ref=' + alignmentRef + '&alignment_standards=' + alignmentStandards,
                   });   
                 }
                 else {
+                  $('#modal-content').animate({ scrollTop: 0 });
                   $('#alignment-msg').append('<div class="alignment-error"><ul></ul></div>');
                   if (countStandard < 1) {
                     $('#alignment-msg .alignment-error ul').append('<li>Please select a standard.</li>');

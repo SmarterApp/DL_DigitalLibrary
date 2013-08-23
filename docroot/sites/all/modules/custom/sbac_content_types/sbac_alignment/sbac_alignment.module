@@ -27,42 +27,30 @@ function sbac_alignment_menu(){
     'access arguments'=> array('access content'),
     'type'            => MENU_CALLBACK,
   );
-
   $items['ajax-alignment-breadcrumbs'] = array(
     'title'           => 'AJAX',
     'page callback'   => 'sbac_alignment_ajax_alignment_breadcrumbs_callback',
     'access arguments'=> array('access content'),
     'type'            => MENU_CALLBACK,
   );
-
   $items['ajax-alignment-page'] = array(
     'title'           => 'AJAX',
     'page callback'   => 'sbac_alignment_ajax_alignment_page',
     'access arguments'=> array('access content'),
     'type'            => MENU_CALLBACK,
   );
-
   $items['ajax-alignment-form'] = array(
     'title'           => 'AJAX',
     'page callback'   => 'sbac_alignment_ajax_alignment_form_callback',
     'access arguments'=> array('access content'),
     'type'            => MENU_CALLBACK,
   );
-
   $items['ajax-alignment-crud'] = array(
     'title'           => 'AJAX',
     'page callback'   => 'sbac_alignment_ajax_alignment_crud_callback',
     'access arguments'=> array('access content'),
     'type'            => MENU_CALLBACK,
   );
-
-  $items['ajax-alignment-crud'] = array(
-    'title'           => 'AJAX',
-    'page callback'   => 'sbac_alignment_ajax_alignment_crud_callback',
-    'access arguments'=> array('access content'),
-    'type'            => MENU_CALLBACK,
-  );
-  
   $items['alignment-form'] = array(
     'title'           => 'AJAX',
     'page callback'   => 'drupal_get_form',
@@ -96,25 +84,72 @@ function sbac_alignment_menu(){
   return $items;
 }
 function sbac_alignment_ajax_alignment_crud_callback() {
+  global $user;
   $op = 'none';
   $nid = 0;
   if(isset($_POST['op'])){
     $op = $_POST['op'];
   }
-  if(isset($_POST['nid'])){
-    $nid = $_POST['nid'];
-  }
-
+  
   switch($op) {
     case 'delete':
+      if(isset($_POST['nid'])){
+        $nid = $_POST['nid'];
+      }
+
       node_delete($nid);
-    break;
+      print drupal_json_encode('deleted: ' . $nid);
+      break;
+    case 'create':
+      if(isset($_POST['alignment_standards'])){
+        $standards = explode('|', $_POST['alignment_standards']);
+        array_shift($standards);
+      }
+      if(isset($_POST['alignment_type'])){
+        $alignment_type = $_POST['alignment_type'];
+      }
+      if(isset($_POST['alignment_ref'])){
+        $alignment_ref = $_POST['alignment_ref'];
+      } else {$alignment_ref = 537;}
+      
+      $types = array();
+      $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_TYPE_VOCAB_NAME);
+      $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
+
+      foreach($terms as $term) {
+        $types[$term->name] = $term->tid;
+      }
+      
+      foreach($standards as $tid) {
+        //create alignment
+        $node = new stdClass();
+        $node->title = "resource-$alignment_ref-alignment-$tid";
+        $node->type = 'alignment';
+        $node->uid = $user->uid;
+        $entity->node_type = 'comment_node_alignment';
+        node_object_prepare($node);
+        
+        
+        $node->field_education_alignment['und'][]['tid'] = $tid;
+        $node->field_alignment_type['und'][]['tid'] = $types[$alignment_type];
+        $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
+        node_save($node);
+        
+        $node = node_load($alignment_ref);
+        $node->field_alignment_term['und'][]['tid'] = $tid;
+        //node_save($node);
+        
+        print drupal_json_encode(array('html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref)));
+        exit;
+      }
+      break;
   }
-
-  print drupal_json_encode('deleted: ' . $nid);
-
   exit;
 }
+/**
+ * Page Callback
+ * Outputs the alignment tagger UI.
+ */
 function sbac_alignment_ajax_alignment_page($ref_node = null) {
   drupal_add_js(libraries_get_path('jquery.more') . '/jquery.more.js');
   drupal_add_css(libraries_get_path('jquery.more') . '/jquery.more.css');
@@ -135,12 +170,20 @@ function sbac_alignment_ajax_alignment_page($ref_node = null) {
 
   return $output;
 }
+/**
+ * AJAX Callback
+ * Lazy-loading the form.
+ */
 function sbac_alignment_ajax_alignment_form_callback() {
   $tid = $_POST['tid'];
   $output['html'] = drupal_render(drupal_get_form('sbac_alignment_alignment_form', $tid));
   print drupal_json_encode($output);
   exit;
 }
+/**
+ * Form Callback
+ * Alignment form.
+ */
 function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $ref_node = 0;
   if(isset($_GET['tid'])) {
@@ -155,6 +198,9 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
     '#type' => 'hidden',
     '#value' => $ref_node,
     '#default_value' => $ref_node,
+    '#attributes' =>  array(
+      'id' => 'alignment_ref',
+    ),
   );
 
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
@@ -203,10 +249,10 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   );
   
   $form['ccss-submit'] = array(
-    '#markup' => l(t('submiting'), '#',
+    '#markup' => l(t('Add to Resource'), '#',
        array(
          'attributes' => array(
-           'class' => 'button ctools-close-modal close',
+           'class' => 'form-submit',
            'id' => 'ccss-submit',
           ),
          'external' =>  TRUE,
@@ -214,16 +260,16 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
     )
   );
 
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Add to Resource',
-    '#ajax' => array(
-      'callback' => 'sbac_alignment_alignment_form_submit',
-      'wrapper' => 'checkboxes-div',
-      'method' => 'replace',
-      'effect' => 'fade',
-    ),
-  );
+  //$form['submit'] = array(
+  //  '#type' => 'submit',
+  //  '#value' => 'Add to Resource',
+  //  '#ajax' => array(
+  //    'callback' => 'sbac_alignment_alignment_form_submit',
+  //    'wrapper' => 'checkboxes-div',
+  //    'method' => 'replace',
+  //    'effect' => 'fade',
+  //  ),
+  //);
 
   $form['#attached'] = array(
       'css' => array(
