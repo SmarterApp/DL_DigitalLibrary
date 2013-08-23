@@ -258,5 +258,12 @@ function sbac_central_block_save($delta = '', $edit = array()) {
   if ($delta == 'feedback-box') {
     variable_set('feedback_block_body', $edit['feedback_block_body']);
     variable_set('enable_feedback', $edit['enable_feedback']);
+    if ($edit['enable_feedback'] == 1) {
+      db_update('field_data_field_feedback_flag')
+        ->fields(array(
+          'field_feedback_flag_value' => 0,
+        ))
+        ->execute();
+    }
   }
 }
