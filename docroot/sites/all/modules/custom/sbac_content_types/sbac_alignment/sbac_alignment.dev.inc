@@ -131,7 +131,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
   if (empty($context['sandbox'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_node'] = 0;
-    $context['sandbox']['max'] = 10000;//count($json);
+    $context['sandbox']['max'] = 2000;//count($json);
   }
   $output = '';
   $parent_tid = 0;
@@ -172,6 +172,9 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     $context['sandbox']['progress']++;
     $context['message'] = $term['key'];
     $context['results'][] = $term['key'];
+    if ($context['sandbox']['progress'] == 1000) {
+      break;
+    }
   }
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
