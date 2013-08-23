@@ -489,7 +489,9 @@ function sbac_resource_status_messages_output($variables, $final_messages) {
     }
 
     $output .= "<div class='sbac-resource-alert-box alert-box alert'>\n";
-    // $output .= "<h2 class='sbac-resource-error-section'>" . ucwords($header) . "</h2>\n";
+    if (isset($messages['group'])) {
+      $output .= "<h2 class='sbac-resource-error-section'>" . ucwords($header) . "</h2>\n";
+    }
     $output .= " <ul>\n";
     foreach ($messages['messages'] as $message) {
       $output .= '  <li>' . $message . "</li>\n";
