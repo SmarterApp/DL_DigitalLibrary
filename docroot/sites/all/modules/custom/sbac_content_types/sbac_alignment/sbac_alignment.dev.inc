@@ -130,14 +130,17 @@ dsm(count($json));
 function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
   if (empty($context['sandbox'])) {
     $context['sandbox']['progress'] = 0;
-    $context['sandbox']['current_node'] = 0;
     $context['sandbox']['max'] = 2000;//count($json);
+    $context['sandbox']['counter'] = 0;
   }
   $output = '';
   $parent_tid = 0;
   $parents = array();
+  $json_count = count($json);
   
-  foreach ($json as $term) {
+  for ($i=$context['sandbox']['counter']; $i < $json_count; $i++) {
+    $term = $json[$i];
+  //foreach ($json as $term) {
     //dsm($term);
       $grade = trim($term['fkGradeLevel']);
 
@@ -147,11 +150,9 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
         $key = $grade . '|' . $term['key'];
         $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
       }
-      elseif(($tree_level = $term['treeLevel']) >=2) {
+      elseif(($tree_level = $term['treeLevel']) >= 2) {
         $parent_key = $grade . '|' . $term['fkParent'];
-        //$parent_tid = sbac_alignment_get_parent($parent_key);
         $parent_tid = $parents[$parent_key]->tid;
-        //dsm(array($parent_key, $parent_tid));
         if (empty($parent_tid)) {
           //cannot find parent save to grade
           $parent_tid = $grade_terms[$grade]->tid;
@@ -168,11 +169,11 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
       }
     
     
-    //$output .= $row['key'] . '<br/>';
     $context['sandbox']['progress']++;
     $context['message'] = $term['key'];
     $context['results'][] = $term['key'];
     if ($context['sandbox']['progress'] == 1000) {
+      $context['sandbox']['counter'] = $i;
       break;
     }
   }
