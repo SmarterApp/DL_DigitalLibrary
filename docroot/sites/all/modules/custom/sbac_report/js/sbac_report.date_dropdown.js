@@ -102,7 +102,6 @@
 
     // Update the dropdown text, when the user enters a custom date.
     $('#to-date input').on('change', function() {
-      console.log('to-date');
       var toInput = getInput(this);
       var fromInput = getInput('#from-date input');
       if (fromInput && toInput) {
@@ -115,7 +114,6 @@
 
     // Update the dropdown text, when the user enters a custom date.
     $('#from-date input').on('change', function() {
-      console.log('from-date');
       var fromInput = getInput(this);
       var toInput = getInput('#to-date input');
       if (fromInput && toInput) {
