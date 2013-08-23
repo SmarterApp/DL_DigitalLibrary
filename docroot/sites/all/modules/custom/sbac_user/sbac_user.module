@@ -62,6 +62,13 @@ function sbac_user_menu() {
     'access callback' => 'user_is_logged_in',
   );
 
+  $items['disable-feedback'] = array(
+    'title'         => 'Disable Feedback',
+    'page callback' => 'sbac_user_disable_feedback',
+    'access arguments'  => array('access content'),
+    'type'          => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -97,7 +104,22 @@ function sbac_user_init() {
       }
     }
   }
-
+  if (user_is_logged_in() && (variable_get('enable_feedback') == 1) && ($user->data['disable_feedback'] == 0)) {
+    $feedback_dropdown =
+      "#feedback-dropdown {
+        position: absolute;
+        top: 50px !important;
+        left: 946px;
+        display: block;
+      }
+      .f-dropdown:before {
+        right: 9px !important;
+      }
+      .f-dropdown:after {
+        right: 9px !important;
+      }";
+    drupal_add_css($feedback_dropdown, 'inline');
+  }
 
 }
 
@@ -569,17 +591,17 @@ function sbac_user_entity_presave($entity, $type) {
 
 function sbac_user_mail_format($user) {
   $result = array();
-  
+
   $firstname = $user->field_first_name['und'][0]['value'];
   $lastname = $user->field_last_name['und'][0]['value'];
   $reset_link =  user_pass_reset_url($user);
   $email = $user->mail;
-  
+
   if (isset($user->field_slt_member['und'][0]['value']) && $user->field_slt_member['und'][0]['value'] && isset($user->field_sne_member['und'][0]['value']) && !$user->field_sne_member['und'][0]['value']) {
     // slt email and make sure not sne
     $result['subject'] = t('Smarter Balanced Digital Library Login Information');
     $result['body'] = $result['message'] = <<<HTML
-Dear $firstname $lastname: 
+Dear $firstname $lastname:
 The purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta website.  You will learn more about the Digital Library and Quality Criteria during your upcoming training.  In the meantime, follow the instructions below to log in to the Digital Library for the first time:
 1) Click the unique activation link below. Note that it will expire in 24 hours. If clicking the link does not work, copy and paste it into a web browser (Internet Explorer 9+, Safari, Chrome, or Firefox).
 
@@ -591,9 +613,9 @@ $reset_link
 
 After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
 
-The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously.
 
-Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties.
 
 Thank you,
 The Digital Library team
@@ -602,7 +624,7 @@ HTML;
     // sne email and make sure not slt
     $result['subject'] = t('Smarter Balanced Digital Library Login Information');
     $result['body'] = $result['message'] = <<<HTML
-Dear $firstname $lastname: 
+Dear $firstname $lastname:
 The purpose of this email is to provide you with access to the Smarter Balanced Digital Library beta website.  You will need to activate your Digital Library account prior to the upcoming training led by your State Leadership Team member.  Follow the instructions below to log in to the Digital Library for the first time:
 1) Click the unique activation link below. Note that it will expire in 24 hours. If clicking the link does not work, copy and paste it into a web browser (Internet Explorer 9+, Safari, Chrome, or Firefox).
 
@@ -614,9 +636,9 @@ $reset_link
 
 After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
 
-The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously.
 
-Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties.
 
 Thank you,
 The Digital Library team
@@ -637,9 +659,9 @@ $reset_link
 
 After you complete these steps, please take a few moments to ensure that the “Account” profile information we have pre-populated for you is accurate.
 
-The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously. 
+The next time you visit, navigate to https://beta.smarterbalancedlibrary.org, enter your email address ($email) and use the password you set previously.
 
-Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties. 
+Feel free to contact the Help Desk at smarterbalancedlibrary@amplify.com or 1 (855) 657-8587 if you have any difficulties.
 
 Thank you,
 The Digital Library team
@@ -720,6 +742,7 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
  * @param $account
  */
 function sbac_user_user_login(&$edit, $account) {
+  global $user;
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -731,6 +754,13 @@ function sbac_user_user_login(&$edit, $account) {
   }
   if (!isset($account->data['first_login'])) {
     $account->data['first_login'] = time();
+  }
+  if(!isset($user->data['disable_feedback'])) {
+    user_save($user, array(
+    'data' => array(
+      'disable_feedback' => 0,
+    )
+  ));
   }
   user_save($account, array());
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
@@ -895,7 +925,7 @@ function sbac_user_profile_validate(&$form, &$form_state) {
     // Reinstate remaining error messages (which, at this point, are messages that
     // were originated outside of the validation process).
     foreach (array_diff($error_messages['error'], $removed_messages) as $message) {
-      drupal_set_message($message, 'error');      
+      drupal_set_message($message, 'error');
     }
     // now all of that was just to override this error message
     form_set_error('legal_accept', 'The Terms of Service have changed. Please log out and log in again to continue making edits to your account profile.');
@@ -1027,4 +1057,17 @@ function sbac_user_format_username($user) {
     return $account->name;
   }
   return $username;
+}
+
+/*
+ * Page callback for disable-feedback
+ */
+function sbac_user_disable_feedback() {
+  global $user;
+
+  user_save($user, array(
+    'data' => array(
+      'disable_feedback' => 1,
+    )
+  ));
 }
