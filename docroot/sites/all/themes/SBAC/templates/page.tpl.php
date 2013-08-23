@@ -46,7 +46,7 @@
         ));
       ?>
     </li>
-    <li><a data-dropdown="feedback-dropdown" href="#">Feedback</a>
+    <li><a id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
       <div id="feedback-dropdown" class="f-dropdown content small">
         <a id="disable-feedback" class="small right"> x </a>
       <?php
