@@ -65,10 +65,16 @@ $darkgreen: #246a34;
 .view-filters {
   float: right;
   text-align: right;
+
+  .throbber {
+		display: none;
+  }
 }
 
-.view-filters .throbber {
-	display: none;
+.view-contributed-resources {
+	.throbber {
+		display: none;
+	}
 }
 
 .report-form-container {
