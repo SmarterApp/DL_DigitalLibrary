@@ -19,6 +19,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
     drupal_set_title('');
+    $form['#id'] = 'sbac-resource-form';
     $form['#attached']['js'] = array(
       drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
       drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
@@ -1059,7 +1060,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
   // Connection to CCSS
-  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core Standards') . ' ' . theme('form_required_marker');
+  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards') . ' ' . theme('form_required_marker');
   // Connection to FAP
   $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process') . ' ' . theme('form_required_marker');
   // Learning Targets
@@ -1340,7 +1341,7 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
     '#validate' => array('sbac_resource_validate_form'),
     '#attributes' => array('id' => 'edit-save-continue'),
     '#ajax' => array(
-      'wrapper' => 'resource-node-form',
+      'wrapper' => 'sbac-resource-form',
       'callback' => 'sbac_resource_save_and_continue',
       'method' => 'replace',
       'effect' => 'fade'
@@ -1621,7 +1622,7 @@ function sbac_resource_check_materials($form, $form_state) {
     // }
   }
   else {
-    if (!$form['field_file']['und'][0]['#default_value']['fid']) {
+    if (!isset($form['field_file']['und'][0]['#default_value']['fid'])) {
       $valid = FALSE;
     }
     if (!$form['field_author']['und'][0]['value']['#default_value']) {

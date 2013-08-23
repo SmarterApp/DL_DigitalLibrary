@@ -13,38 +13,32 @@
   <?php endif; ?>
   <tbody>
     <?php foreach ($rows as $row_count => $row): ?>
-    <?php //print $row['title']; ?>
-          <?php
-            $alignment_node = node_load($row['nid']);
-            $tid = $alignment_node->field_education_alignment['und'][0]['tid'];
-            //dsm($tid);
-            $tag_node = taxonomy_term_load($tid);
-            //dsm($tag_node);
-            $parents = taxonomy_get_parents_all($tid);
-            //dsm($parents);
+      <?php
+        $alignment_node = node_load($row['nid']);
+        $tid = $alignment_node->field_education_alignment['und'][0]['tid'];
+        //dsm($tid);
+        $tag_node = taxonomy_term_load($tid);
+        //dsm($tag_node);
+        $parents = taxonomy_get_parents_all($tid);
+        //dsm($parents);
 
-            $subject = array_pop($parents);
+        $subject = array_pop($parents);
 
-
-
-            if($is_ela = ($subject->name == 'English Language Arts')) {
-               $grade = array_pop($parents);
-               $claim = array_pop($parents);
-            }
-            elseif($is_ma = ($subject->name == 'Mathematics')) {
-               $grade = array_pop($parents);
-               $claim = array_pop($parents);
-               $domain = array_pop($parents);
-               $target = array_pop($parents);
-               $emphasis = array_pop($parents);
-
-            }
-            else {
-               //do nothing
-            }
-
-          ?>
-
+        if ($is_ela = ($subject->name == 'English Language Arts')) {
+           $grade = array_pop($parents);
+           $claim = array_pop($parents);
+        }
+        elseif ($is_ma = ($subject->name == 'Mathematics')) {
+           $grade = array_pop($parents);
+           $claim = array_pop($parents);
+           $domain = array_pop($parents);
+           $target = array_pop($parents);
+           $emphasis = array_pop($parents);
+        }
+        else {
+           //do nothing
+        }
+      ?>
 
       <tr id="term-<?php print $row['nid']; ?>">
         <td><?php print $tag_node->field_alignment_key['und'][0]['value']; ?></td>
@@ -61,13 +55,21 @@
                  <?php print $tag_node->description; ?>
               </div>
               <div class="ccss-grade">
-                 <h3>Grade</h3>
-                 <?php print $grade->name; ?>
+                <h3>Grade</h3>
+                <?php
+                  if (isset($grade)) {
+                    print $grade->name;
+                  }
+                ?>
               </div>
               <div class="ccss-claim">
-                 <h3>Claim</h3>
-                 <h2><?php print $claim->field_alignment_shortname['und'][0]['value']; ?></h2>
-                 <?php print $claim->description; ?>
+                <h3>Claim</h3>
+                <?php if (isset($claim)): ?>
+                  <h2>
+                    <?php print $claim->field_alignment_shortname['und'][0]['value']; ?>
+                  </h2>
+                  <?php print $claim->description; ?>
+                <?php endif; ?>
               </div>
               <?php if ($is_ma):?>
                   <div class="ccss-target">

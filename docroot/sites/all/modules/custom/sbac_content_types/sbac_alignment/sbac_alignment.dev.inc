@@ -8,6 +8,197 @@ ini_set('memory_limit', '1024M');
  * Global Variables
  */
 define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/');
+function sbac_alignment_devtest() {
+  if(isset($_GET['vocab'])) {
+    $edu_alignment_vocab_name = $_GET['vocab'];
+  }
+  else {
+    $edu_alignment_vocab_name = "education_alignment2";
+  }
+
+  if(isset($_GET['file'])) {
+    $filename = $_GET['file'];
+  }
+  else {
+    $filename = "ela.json";
+  }
+
+
+  $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
+  $grade_terms = array();
+
+  $create_base = TRUE;
+  $create = TRUE;
+  $print = FALSE;
+
+  // create base terms
+  if ($create_base) {
+    // Add education alignment
+    $terms = array(
+      'English / Language Arts' => array(
+        'children' => array(
+          'KG - Kindergarten' =>  array(),
+          '1 - First Grade' =>  array(),
+          '2 - Second Grade' =>  array(),
+          '3 - Third Grade' =>  array(),
+          '4 - Fourth Grade' =>  array(),
+          '5 - Fifth Grade' =>  array(),
+          '6 - Sixth Grade' =>  array(),
+          '7 - Seventh Grade' =>  array(),
+          '8 - Eight Grade' =>  array(),
+          '9 - Ninth Grade' =>  array(),
+          '10 - Tenth Grade' =>  array(),
+          '11 - Eleventh Grade' =>  array(),
+          '12 - Twelveth Grade' =>  array(),
+        ),
+      ),
+      'Math' => array(
+        'children' => array(
+          'KG - Kindergarten' =>  array(),
+        '1 - First Grade' =>  array(),
+        '2 - Second Grade' =>  array(),
+        '3 - Third Grade' =>  array(),
+        '4 - Fourth Grade' =>  array(),
+        '5 - Fifth Grade' =>  array(),
+        '6 - Sixth Grade' =>  array(),
+        '7 - Seventh Grade' =>  array(),
+        '8 - Eight Grade' =>  array(),
+        '9 - Ninth Grade' =>  array(),
+        '10 - Tenth Grade' =>  array(),
+        '11 - Eleventh Grade' =>  array(),
+        '12 - Twelveth Grade' =>  array(),
+        ),
+      ),
+    );
+    
+    sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
+  }
+
+  
+  
+  if(isset($_GET['type'])) {
+    $subject = array_pop(taxonomy_get_term_by_name($_GET['type']));
+  }
+  else {
+    $subject = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
+  }
+  
+  
+  dsm($subject);
+  
+  //create terms
+  if ($create) {
+    // get grades tids
+    $terms = taxonomy_get_tree($edu_alignment_vocab->vid, $subject->tid, 1, TRUE);
+    //dsm($terms);
+    foreach ($terms as $term) {
+      if($term->depth == 0) {
+        $name = explode('-', $term->name);
+        //dsm(array($term->name, truncate($name[0])));
+        $grade_terms[trim($name[0])] = $term;
+
+      }
+    }
+    //dsm($grade_terms);
+    
+    //return '';
+    //get data
+    $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
+    $contents = $data->data;
+
+    $json = drupal_json_decode($contents);
+
+dsm($json);
+dsm(count($json));  
+  
+    $batch = array(
+      'title' => t('Exporting'),
+      'operations' => array(
+        array('sbac_alignment_batch', array($edu_alignment_vocab->vid, $json, $grade_terms)),
+      ),
+      'finished' => 'sbac_alignment_batch_test_finished',
+      'file' => drupal_get_path('module', 'sbac_alignment') . '/sbac_alignment.dev.inc',
+    );
+    batch_set($batch);
+    // Only needed if not inside a form _submit handler.
+    // Setting redirect in batch_process.
+    batch_process('foo');
+  }
+}
+
+
+function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
+  if (empty($context['sandbox'])) {
+    $context['sandbox']['progress'] = 0;
+    $context['sandbox']['max'] = 2000;//count($json);
+    $context['sandbox']['counter'] = 0;
+  }
+  $output = '';
+  $parent_tid = 0;
+  $parents = array();
+  $json_count = count($json);
+  
+  for ($i=$context['sandbox']['counter']; $i < $json_count; $i++) {
+    $term = $json[$i];
+  //foreach ($json as $term) {
+    //dsm($term);
+      $grade = trim($term['fkGradeLevel']);
+
+      // Root term. first set after the grade
+      if ($term['treeLevel'] < 2) {
+        $parent_tid = $grade_terms[$grade]->tid;
+        $key = $grade . '|' . $term['key'];
+        $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
+      }
+      elseif(($tree_level = $term['treeLevel']) >= 2) {
+        $parent_key = $grade . '|' . $term['fkParent'];
+        $parent_tid = $parents[$parent_key]->tid;
+        if (empty($parent_tid)) {
+          //cannot find parent save to grade
+          $parent_tid = $grade_terms[$grade]->tid;
+          $broken_terms[] = $term;
+        }
+        else {
+        $key = $grade . '|' . $term['key'];
+        $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
+        }
+      }
+      else{
+        //dsm('BAD TERM');dsm($term);
+        //@TODO KS - need to output in case of error
+      }
+    
+    
+    $context['sandbox']['progress']++;
+    $context['message'] = $term['key'];
+    $context['results'][] = $term['key'];
+    if ($context['sandbox']['progress'] == 1000) {
+      $context['sandbox']['counter'] = $i;
+      break;
+    }
+  }
+  if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+  }
+}
+
+function sbac_alignment_batch_test_finished($success, $results, $operations) {
+  // The 'success' parameter means no fatal PHP errors were detected. All
+  // other error management should be handled using 'results'.
+  if ($success) {
+    $message = format_plural(count($results), 'One post processed.', '@count posts processed.');
+  }
+  else {
+    $message = t('Finished with an error.');
+  }
+  drupal_set_message($message);
+  // Providing data for the redirected page is done through $_SESSION.
+  foreach ($results as $result) {
+    $items[] = t('Loaded node %title.', array('%title' => $result));
+  }
+  $_SESSION['my_batch_results'] = $items;
+  dsm($items);
+}
 
 function sbac_alignment_devfix() {
   $edu_alignment_vocab_name = "education_alignment";
@@ -198,7 +389,10 @@ function get_shortnames() {
   return $shortnames;
 }
 
-function sbac_alignment_devtest() {
+function sbac_alignment_devtest2() {
+  ini_set('max_execution_time', '9999');
+  ini_set('memory_limit', '2048M');
+  
   if(isset($_GET['vocab'])) {
     $edu_alignment_vocab_name = $_GET['vocab'];
   }
@@ -299,7 +493,7 @@ function sbac_alignment_devtest() {
     $json = drupal_json_decode($contents);
     //dsm($json);
 
-    uasort($json, 'cmp');
+    //uasort($json, 'cmp');
     //dsm($json);
 
 
@@ -342,7 +536,10 @@ function sbac_alignment_devtest() {
       }
     }
     
-    dsm($broken_terms);
+    //dsm($broken_terms);
+    //print drupal_json_encode($broken_terms);
+    print drupal_json_encode($parents);
+    exit;
   }
 
   if($print) {
