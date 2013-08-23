@@ -83,7 +83,7 @@ function sbac_alignment_menu(){
 
   return $items;
 }
-function sbac_alignment_ajax_alignment_crud_callback() {
+function sbac_alignment__ajax_alignmentcrud_callback() {
   global $user;
   $op = 'none';
   $nid = 0;
@@ -137,7 +137,7 @@ function sbac_alignment_ajax_alignment_crud_callback() {
         
         $node = node_load($alignment_ref);
         $node->field_alignment_term['und'][]['tid'] = $tid;
-        //node_save($node);
+        node_save($node);
         
         print drupal_json_encode(array('html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref)));
         exit;
