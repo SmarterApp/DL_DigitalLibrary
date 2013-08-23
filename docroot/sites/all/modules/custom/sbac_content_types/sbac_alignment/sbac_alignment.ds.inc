@@ -25,6 +25,26 @@ function sbac_alignment_ds_field_settings_info() {
   );
   $export['taxonomy_term|education_alignment|default'] = $ds_fieldsetting;
 
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'taxonomy_term|education_alignment|tooltip';
+  $ds_fieldsetting->entity_type = 'taxonomy_term';
+  $ds_fieldsetting->bundle = 'education_alignment';
+  $ds_fieldsetting->view_mode = 'tooltip';
+  $ds_fieldsetting->settings = array(
+    'title' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'default',
+      'formatter_settings' => array(
+        'link' => '0',
+        'wrapper' => '',
+        'class' => '',
+      ),
+    ),
+  );
+  $export['taxonomy_term|education_alignment|tooltip'] = $ds_fieldsetting;
+
   return $export;
 }
 

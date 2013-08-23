@@ -20,6 +20,7 @@ features[ctools][] = ds:ds:1
 features[ctools][] = strongarm:strongarm:1
 features[ctools][] = views:views_default:3.0
 features[ds_field_settings][] = taxonomy_term|education_alignment|default
+features[ds_field_settings][] = taxonomy_term|education_alignment|tooltip
 features[ds_layout_settings][] = taxonomy_term|education_alignment|default
 features[ds_layout_settings][] = taxonomy_term|education_alignment|tooltip
 features[ds_view_modes][] = tooltip
