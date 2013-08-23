@@ -266,6 +266,7 @@ function _sbac_resource_preview_materials(&$vars) {
  */
 function _sbac_resource_media(&$url, $file) {
   $media = 'document';
+
   $ext = pathinfo($url, PATHINFO_EXTENSION);
   // the _sbac_resource_determine_media should take over because 
   // extension is no longer good enough to determine media type
@@ -278,6 +279,7 @@ function _sbac_resource_media(&$url, $file) {
       $url = sbac_media_create_embed_url($file);
     }
   }
+
   return $media;
 }
 
