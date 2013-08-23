@@ -744,7 +744,6 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
  */
 function sbac_user_user_login(&$edit, $account) {
   global $user;
-  $full_user = user_load($user->uid);
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -757,8 +756,8 @@ function sbac_user_user_login(&$edit, $account) {
   if (!isset($account->data['first_login'])) {
     $account->data['first_login'] = time();
   }
-  if(!isset($full_user->field_feedback_flag)) {
-    user_save($full_user, array(
+  if(!isset($account->field_feedback_flag['und'][0])) {
+    user_save($account, array(
     'field_feedback_flag' => (int) 0, ));
   }
   user_save($account, array());
