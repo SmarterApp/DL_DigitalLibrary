@@ -375,6 +375,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     font-size: 1em;
     color: $white;
     line-height: 45px;
+    
     li {
       border-left:1px solid black;
       padding: 0px;
@@ -382,6 +383,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       &:hover {
         background: #515151;
       }
+      
       li {
         a {
           padding-left: 20px;
@@ -1059,12 +1061,6 @@ a.tabledrag-handle .handle {
       font-size: emCalc(16px);
     }
   }
-
-  .field-name-field-alignment-term {
-    li {
-      line-height: 0.8em;
-    }
-  }
 }
 
 /* -----------------------------------------
@@ -1118,6 +1114,7 @@ a.tabledrag-handle .handle {
 .sticky-header {
   z-index: 99;
 }
+
 .tabledrag-toggle-weight {
   display: none;
 }
@@ -1131,6 +1128,42 @@ a.tabledrag-handle .handle {
   .button {
     margin-left: 10px;
     margin-top: 10px;
+  }
+  thead th:first-child {
+    background-color: #fff;
+    padding:5px 5px 25px;
+
+    &:after {
+      display:block;
+      content: 'Primary material. This is the main material with which you want users to interact.';
+      font-weight: normal;
+      font-size: emCalc(12px);
+      width: 93%;
+      position: absolute;
+      border-top: 1px solid #eee;
+      padding: 5px 0;
+      margin-top: 0px;
+    }
+  }
+  tr:nth-child(2) {
+    td:nth-child(2) {
+      padding-top: 30px;
+      .media-widget{
+      position: relative;
+      &:before {
+          display: block;
+          content: 'Secondary material(s). These will be shown adjacent to the primary material.';
+          position: absolute;
+          top: 20px;
+          left: -35px;
+          right: 0;
+          margin: -43px 0 0 -10px;
+          padding: 0 0 5px 10px;
+          font-size: emCalc(14px);
+          border-bottom: 1px solid #ccc;
+      }
+      }
+    }
   }
 }
 
@@ -1277,7 +1310,7 @@ a.tabledrag-handle .handle {
     }
   }
 
-  .form-radios .form-item {
+  .form-radios .form-item { 
     margin: .5em 0 1em;
   }
 
@@ -1371,8 +1404,13 @@ a.tabledrag-handle .handle {
   // materials tab
   #edit-group_materials {
   .field-name-field-file {
+
+    .description p {
+      font-size: 12px;
+      line-height: 14px;
+    }
     .fieldset-wrapper {
-      table {
+      #field-file-values {
         width: 100%;
         border: none;
         thead {
@@ -1838,8 +1876,6 @@ a.tabledrag-handle .handle {
   word-wrap:break-word;
   }
 }
-
-
 /* -----------------------------------------
    Help topics styles
    ----------------------------------------- */
@@ -2113,71 +2149,3 @@ a.tabledrag-handle .handle {
   }
 
  }
- /* ----------------------------------------
-    Taxonomy tool tips
-  _________________________________________ */
-
-  .view-mode-tooltip {
-    display: inline-block;
-    position: relative;
-
-    &:hover {
-      .taxonomy-term-description {
-        background: #DFE5CC;
-        border: 1px solid #3C7646;
-        border-radius: 6px;
-        color: #3C7646;
-        display: block;
-        font-size: 12px;
-        left: 20px;
-        opacity: 1;
-        padding: 20px;
-        position: absolute;
-        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-        top: 30px;
-        transition-property: opacity;
-        transition-duration: 500ms;
-        -webkit-transition-property: opacity;
-        -webkit-transition-duration: 500ms;
-        width: 272px;
-        z-index: 999;
-      }
-    }
-
-    .taxonomy-term-description {
-      display: none;
-      opacity: 0;
-
-      p {
-        font-size: inherit;
-        margin: 0;
-      }
-
-      &:after {
-        content: ' ';
-        position: absolute;
-        top: -28px;
-        left: 16px;
-        border-color: transparent transparent #DFE5CC transparent;
-        border-style: solid;
-        border-width: 14px;
-        width: 0;
-        height: 0;
-        z-index: 99;
-      }
-
-      &:before {
-        content: ' ';
-        position: absolute;
-        top: -30px;
-        left: 15px;
-        border-color: transparent transparent #3C7646 transparent;
-        border-style: solid;
-        border-width: 15px;
-        width: 0;
-        height: 0;
-        z-index: 97;
-      }
-    }
-  }
-

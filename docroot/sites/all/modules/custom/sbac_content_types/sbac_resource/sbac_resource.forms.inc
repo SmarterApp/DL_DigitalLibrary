@@ -19,6 +19,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
     drupal_set_title('');
+    $form['#id'] = 'sbac-resource-form';
     $form['#attached']['js'] = array(
       drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
       drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
@@ -127,10 +128,9 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
     $form_state['values']['workbench_moderation_state_new'] = 'draft';
   }
   // If there's a title, lets create a URL for the node.
-  if ($form_state['values']['title']) {
-    $form_state['values']['path']['pathauto'] = TRUE;
-    $form_state['values']['status'] = 1;
-  }
+  $form_state['values']['path']['pathauto'] = TRUE;
+  $form_state['values']['status'] = 1;
+
   // If the nid is not set, set it to prevent blank nodes.
   if ($form_state['values']['nid'] == NULL) {
     $form_state['values']['nid'] = $form_state['node']->nid;
@@ -283,6 +283,33 @@ function sbac_resource_validate_form(&$form, &$form_state) {
     }
     $check = node_last_changed($form['#node']->nid);
     $form_state['values']['changed'] = $check + 120;
+  }
+}
+
+/**
+ * Validation function for the title on save and close click.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_validate_title(&$form, &$form_state) {
+  if (!$form_state['values']['title']) {
+    $error = 'Please add a title to save and close.';
+    form_set_error('title', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
+  }
+  else {
+    $title = $form_state['values']['title'];
+    $bad_words = profanity_validate_text($title);
+    if ($bad_words) {
+      $error = 'Please remove any inappropriate language to save and close.';
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
+    }
   }
 }
 
@@ -1318,7 +1345,8 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
   unset($form['#submit']);
   unset($form['#validate']);
   unset($form['actions']['submit']['#submit']);
-  unset($form['actions']['submit']['#validation']);
+  //unset($form['actions']['submit']['#validation']);
+  $form['actions']['submit']['#validate'][] = 'sbac_resource_validate_title';
   $form['actions']['submit']['#value'] = t('Save and Close');
   $form['actions']['submit']['#submit'] = array('sbac_resource_save_and_close');
   $form['actions']['submit']['#prefix'] = '<div id="sbac-resource-save-continue">';
@@ -1340,7 +1368,7 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
     '#validate' => array('sbac_resource_validate_form'),
     '#attributes' => array('id' => 'edit-save-continue'),
     '#ajax' => array(
-      'wrapper' => 'resource-node-form',
+      'wrapper' => 'sbac-resource-form',
       'callback' => 'sbac_resource_save_and_continue',
       'method' => 'replace',
       'effect' => 'fade'
