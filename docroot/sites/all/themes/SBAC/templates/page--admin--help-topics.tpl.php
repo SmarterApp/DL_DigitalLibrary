@@ -48,6 +48,7 @@
     </li>
     <li><a data-dropdown="feedback-dropdown" href="#">Feedback</a>
       <div id="feedback-dropdown" class="f-dropdown content small">
+      <a id="disable-feedback" class="small right"> x </a>
       <?php
         $feedback_block = block_load('sbac_central','feedback-box');
         $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
@@ -149,9 +150,9 @@
         if(!empty($page['bottom_menu'])) {
           print render($page['bottom_menu']);
         }
-        $feedback_block = block_load('sbac_central','feedback-box');
-        $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
-        print render($render_array);
+        // $feedback_block = block_load('sbac_central','feedback-box');
+        // $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
+        // print render($render_array);
         //echo '<div class="block-sbac-central-feedback-box">' . block_render('sbac_central','feedback-box', TRUE) . '</div>';
       ?>
       <ul class="footer-links inline-list right">

@@ -212,7 +212,6 @@ div.ctools-modal-content a.close, a.remove, a.fake-cancel {
   }
 }
 
-
 /* override default drupal throbber gif position */
 html.js {
   input { 
@@ -1119,7 +1118,9 @@ a.tabledrag-handle .handle {
 .sticky-header {
   z-index: 99;
 }
-
+.tabledrag-toggle-weight {
+  display: none;
+}
 #field-file-values {
   width: 100%;
 
@@ -1821,13 +1822,12 @@ a.tabledrag-handle .handle {
    Feedback block
    ----------------------------------------- */
 
-#feedback-dropdown, .open {
+#feedback-dropdown{
+  &.open {
     top: 50px !important;
     right: 100px;
     left: auto !important;
   }
-
-#feedback-dropdown {
   color: #333;
 
   a {
@@ -1836,6 +1836,7 @@ a.tabledrag-handle .handle {
   word-wrap:break-word;
   }
 }
+
 
 /* -----------------------------------------
    Help topics styles
