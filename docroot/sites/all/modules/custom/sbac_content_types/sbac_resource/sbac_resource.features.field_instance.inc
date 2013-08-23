@@ -29,7 +29,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -73,9 +73,12 @@ function sbac_resource_field_default_field_instances() {
       ),
       'secondary_teaser' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'tooltip',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -86,7 +89,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_alignment_term',
-    'label' => 'Alignment Term',
+    'label' => 'Common Core Standard(s)',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -272,7 +275,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -474,7 +477,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -565,7 +568,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -728,7 +731,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -872,7 +875,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1068,7 +1071,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 20,
+        'weight' => 23,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1275,7 +1278,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1575,7 +1578,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 16,
+        'weight' => 22,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1703,11 +1706,11 @@ function sbac_resource_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Alignment Tags');
-  t('Alignment Term');
   t('Attributes');
   t('Author');
   t('Body');
   t('Classroom Technologies');
+  t('Common Core Standard(s)');
   t('Connection to CCSS');
   t('Connection to FAP');
   t('Contexts');

@@ -1,0 +1,2462 @@
+[
+    {
+        "description": "Read Analytically: Literary Text - Students can read closely and analytically to comprehend a range of increasingly complex literary and informational texts.", 
+        "fkGradeLevel": "11", 
+        "fkParent": null, 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT", 
+        "name": "1-LT", 
+        "shortName": "Read Analytically: Literary Text", 
+        "treeLevel": 1
+    }, 
+    {
+        "description": "Write Effectively - Students can produce effective and well-grounded writing for a range of purposes and audiences.", 
+        "fkGradeLevel": "11", 
+        "fkParent": null, 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W", 
+        "name": "2-W", 
+        "shortName": "Write Effectively", 
+        "treeLevel": 1
+    }, 
+    {
+        "description": "Conduct Research- Students can engage in research/ inquiry to investigate topics and to analyze, integrate, and present information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": null, 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR", 
+        "name": "4-CR", 
+        "shortName": "Conduct Research", 
+        "treeLevel": 1
+    }, 
+    {
+        "description": "Speak and Listen purposefully - Students can employ effective speaking and listening skills for a range of purposes and audiences.", 
+        "fkGradeLevel": "11", 
+        "fkParent": null, 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-L", 
+        "name": "3-L", 
+        "shortName": "Listen Purposefully", 
+        "treeLevel": 1
+    }, 
+    {
+        "description": "Speak and Listen purposefully - Students can employ effective speaking and listening skills for a range of purposes and audiences.", 
+        "fkGradeLevel": "11", 
+        "fkParent": null, 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S", 
+        "name": "3-S", 
+        "shortName": "Speak Purposefully", 
+        "treeLevel": 1
+    }, 
+    {
+        "description": "Read Analytically: Informational Text - Students can read closely and analytically to comprehend a range of increasingly complex literary and informational texts.", 
+        "fkGradeLevel": "11", 
+        "fkParent": null, 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT", 
+        "name": "1-IT", 
+        "shortName": "Read Analytically: Informational Text", 
+        "treeLevel": 1
+    }, 
+    {
+        "description": "REASONING & EVALUATION: Apply reasoning and a range of textual evidence to justify inferences or judgments made (development of universal themes, characters; impact of point of view or discourse style (e.g., dramatic irony, humor, satire, understatement) on plot/subplot development", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|4-11", 
+        "name": "4-11", 
+        "shortName": "Reasoning & Evaluation", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "ANALYSIS WITHIN OR ACROSS TEXTS: Analyze interrelationships among literary elements within a text, or how different texts address topics, themes, or use of source material", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|5-11", 
+        "name": "5-11", 
+        "shortName": "Analysis Within Or Across Texts", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "PLAN/RESEARCH: Devise an approach and conduct short focused research projects to explore a topic, issue or problem, analyzing interrelationships among concepts or perspectives", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|1-11", 
+        "name": "1-11", 
+        "shortName": "Plan/Research", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "COMPOSE FULL TEXTS: Write full persuasive pieces/arguments about topics or texts, attending to purpose and audience: establishing and supporting a claim, organizing and citing supporting evidence (from texts when appropriate) from credible sources, and providing a conclusion appropriate to purpose and audience", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11", 
+        "name": "7-11", 
+        "shortName": "Compose Full Texts", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "TEXT STRUCTURES/FEATURES: Analyze text structures, genre-specific features, or formats (visual/graphic/auditory effects) of texts and the impact of those choices on meaning or presentation)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|6-11", 
+        "name": "6-11", 
+        "shortName": "Text Structures/Features", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "PLAN/SPEAK/PRESENT: Compose (gather and organize) and orally deliver short (e.g., summaries) and longer (presentations) for different purposes and audiences, drawing from a range of digital media to enhance the message or intent", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|3-11", 
+        "name": "3-11", 
+        "shortName": "Plan/Speak/Present", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "WORD MEANINGS: Determine intended, precise, or nuanced meanings of words, including distinguishing connotation-denotation and words with multiple meanings (academic/tier 2 words), based on context, word patterns, word relationships, etymology, or use of specialized resources (e.g., dictionary, thesaurus, digital tools", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|3-11", 
+        "name": "3-11", 
+        "shortName": "Word Meanings", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "CENTRAL IDEAS: Summarize central ideas/key events using key relevant details)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|2-11", 
+        "name": "2-11", 
+        "shortName": "Central Ideas", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "EDIT/CLARIFY: Apply grade-appropriate grammar usage and mechanics to clarify a message (narrative, informational, and persuasive texts)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|6-11", 
+        "name": "6-11", 
+        "shortName": "Edit/Clarify", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "CLARIFY MESSAGE: Use grade-appropriate grammar and mechanics to clarify a message appropriate to the purpose and audience", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|2-11", 
+        "name": "2-11", 
+        "shortName": "Clarify Message", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "LANGUAGE & VOCABULARY USE: Strategically use precise language and vocabulary (including academic and domain-specific vocabulary), figurative language, and syntax appropriate to the purpose and audience", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|5-11", 
+        "name": "5-11", 
+        "shortName": "Language & Vocabulary Use", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "ANALYZE/INTEGRATE INFORMATION: Gather, analyze, and integrate multiple sources of information/evidence to support a presentation on a topic", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11", 
+        "name": "2-11", 
+        "shortName": "Analyze/Integrate Information", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "EVALUATE INFORMATION/SOURCES: Evaluate relevancy, accuracy, and completeness of information from multiple sources", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|3-11", 
+        "name": "3-11", 
+        "shortName": "Evaluate Information/Sources", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "WRITE/REVISE BRIEF TEXTS: Apply narrative strategies (e.g., dialogue, description) and appropriate text structures and transitions when writing or revising one or more paragraphs of narrative text (e.g., introduce narrator point of view, use dialogue to advance the action)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|1-11", 
+        "name": "1-11", 
+        "shortName": "Write/Revise Brief Texts", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "LANGUAGE USE: Determine or analyze the figurative (e.g., euphemism, oxymoron, hyperbole, paradox), or connotative meanings of words and phrases used in context and the impact of those word choices on meaning and tone", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-RL", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-RL|7-11", 
+        "name": "7-11", 
+        "shortName": null, 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "TECHNOLOGY: Use tools of technology to gather information, make revisions, or to produce texts", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|10-11", 
+        "name": "10-11", 
+        "shortName": "Technology", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "USE TEXT FEATURES: Employ text features and visual components appropriate to purpose and style", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|5-11", 
+        "name": "5-11", 
+        "shortName": "Use Text Features", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "USE EVIDENCE: Cite evidence to support arguments or conjectures", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11", 
+        "name": "4-11", 
+        "shortName": "Use Evidence", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "TEXT STRUCTURES/FEATURES: Analyze text structures, genre-specific features, or formats (visual/graphic/auditory effects) of texts and the impact of those choices on meaning or presentation", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-RL", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-RL|6-11", 
+        "name": "6-11", 
+        "shortName": null, 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "COMPOSE FULL TEXTS: The CC places low instructional emphasis (20%) on narrative writing at high school. Developing full narrative compositions will not be required in the SBAC summative assessment; however the use of narrative strategies may be included as a scoring criterion when evaluating writing for other purposes in high school.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11", 
+        "name": "2-11", 
+        "shortName": "Compose Full Texts", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "LANGUAGE USE: Determine or analyze the figurative (e.g., euphemism, oxymoron, hyperbole, paradox), or connotative meanings of words and phrases used in context and the impact of those word choices on meaning and tone", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|7-11", 
+        "name": "7-11", 
+        "shortName": "Language Use", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "WRITE/REVISE BRIEF TEXTS: Apply a variety of strategies when writing or revising one or more paragraphs of text that express arguments about topics or texts: establishing a precise claim, organizing and citing supporting evidence (from texts when appropriate) and counter claims using credible sources, or providing a conclusion (e.g., articulating implications or stating significance of the problem) appropriate to purpose and audience", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|6-11", 
+        "name": "6-11", 
+        "shortName": "Write/Revise Brief Texts", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "WORD MEANINGS: Determine intended, precise, or nuanced meanings of words, including distinguishing connotationdenotation and words with multiple meanings (academic/tier 2 words), based on context, word patterns, word relationships, etymology, or use of specialized resources (e.g., dictionary, thesaurus, digital tools)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-RL", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-RL|3-11", 
+        "name": "3-11", 
+        "shortName": null, 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "REASONING & EVALUATION: Apply reasoning and a range of textual evidence to justify inferences or judgments made (development of universal themes, characters; impact of point of view or discourse style (e.g., dramatic irony, humor, satire, understatement) on plot/subplot development)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-RL", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-RL|4-11", 
+        "name": "4-11", 
+        "shortName": null, 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "ANALYSIS WITHIN OR ACROSS TEXTS: Analyze interrelationships among literary elements within a text, or how different texts address topics, themes, or use of source material", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-RL", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-RL|5-11", 
+        "name": "5-11", 
+        "shortName": null, 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "CENTRAL IDEAS: Summarize central ideas/key events using key relevant details", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-RL", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-RL|2-11", 
+        "name": "2-11", 
+        "shortName": null, 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "KEY DETAILS: Cite explicit textual evidence to support inferences made or conclusions drawn about texts", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-RL", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-RL|1-11", 
+        "name": "1-11", 
+        "shortName": null, 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "Standards not listed within an SBAC claim", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11", 
+        "name": "NA-11", 
+        "shortName": "Standards not listed within an SBAC claim", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "TEXT STRUCTURES/ FEATURES: Relate knowledge of text structures or formats, or genre features (e.g., graphic/visual information) to integrate information or analyze the impact on meaning or presentation", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|13-11", 
+        "name": "13-11", 
+        "shortName": "Text Structures/Features", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "TECHNOLOGY: Use tools of technology to gather information, make revisions, or to produce texts/presentations", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|7-11", 
+        "name": "7-11", 
+        "shortName": "Technology", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "WRITE/REVISE BRIEF TEXTS: Apply a variety of strategies when writing or revising one or more paragraphs of informational texts: organizing ideas by stating a thesis and maintaining a focus, developing a complex topic/subtopics, including relevant supporting evidence (from texts when appropriate) and elaboration, or providing a conclusion appropriate to purpose and audience", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|3-11", 
+        "name": "3-11", 
+        "shortName": "Write/Revise Brief Texts", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "EDIT/CLARIFY: Apply or edit grade-appropriate grammar usage and mechanics to clarify a message and edit narrative, informational, and persuasive/argument texts", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|9-11", 
+        "name": "9-11", 
+        "shortName": "Edit/Clarify", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "LANGUAGE USE: Analyze the figurative (e.g., euphemism, oxymoron, hyperbole, paradox) or connotative meanings of words and phrases used in context and the impact of these word choices on meaning and tone", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|14-11", 
+        "name": "14-11", 
+        "shortName": "Language Use", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "LISTEN/INTERPRET: Analyze, interpret, and use information delivered orally or visually", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-L", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-L|4-11", 
+        "name": "4-11", 
+        "shortName": "Listen/Interpret", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "REASONING & EVALUATION: Apply reasoning and a range of textual evidence to or justify analyses of author\u0092s presentation of information (author\u0092s line of reasoning, point of view/purpose; relevance of evidence or elaboration to support claims; development or connections among complex concepts ideas)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|11-11", 
+        "name": "11-11", 
+        "shortName": "Reasoning & Evaluation", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "ANALYSIS WITHIN OR ACROSS TEXTS: Analyze texts to determine how connections are made in development of complex ideas or events; or in development of topics, themes, rhetorical features", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|12-11", 
+        "name": "12-11", 
+        "shortName": "Analysis Within Or Across Texts", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "COMPOSE FULL TEXTS: Write full informational/ explanatory texts, attending to purpose and audience: organizing ideas by stating a thesis and maintaining a focus, developing a complex topic/subtopics, including relevant supporting evidence (from texts when appropriate) and elaboration with appropriate transitions for coherence, and providing a conclusion appropriate to purpose and audience", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11", 
+        "name": "4-11", 
+        "shortName": "Compose Full Texts", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "CENTRAL IDEAS: Summarize central ideas, topics/subtopics, key events, or procedures using supporting ideas and relevant details", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|9-11", 
+        "name": "9-11", 
+        "shortName": "Central Ideas", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "KEY DETAILS: Cite explicit textual evidence to support inferences made or conclusions drawn about texts", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|1-11", 
+        "name": "1-11", 
+        "shortName": "Key Details", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "LANGUAGE & VOCABULARY USE: Strategically use precise language and vocabulary (including academic and domain-specific vocabulary and figurative language) and style appropriate to the purpose and audience when revising or composing texts", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|8-11", 
+        "name": "8-11", 
+        "shortName": "Language & Vocabulary Use", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "LANGUAGE & VOCABULARY USE: Strategically use precise language (including academic and domainspecific vocabulary), figurative language, syntax, and discourse appropriate to the intent, purpose, and audience when speaking", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|1-11", 
+        "name": "1-11", 
+        "shortName": "Language & Vocabulary Use", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "KEY DETAILS: Cite explicit text evidence to support inferences made or conclusions drawn about texts", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|8-11", 
+        "name": "8-11", 
+        "shortName": "Key Details", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "WORD MEANINGS: Determine intended or precise meanings of words, including domain-specific/technical (tier 3) terms, distinguishing connotation-denotation, and words with multiple meanings (academic/tier 2 words), based on context, word patterns, relationships, etymology, or use of specialized resources (e.g., dictionary, glossary, digital tools)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11", 
+        "name": "10-11", 
+        "shortName": "Word Meanings", 
+        "treeLevel": 2
+    }, 
+    {
+        "description": "Conduct short as well as more sustained research projects to answer a question (including a selfgenerated question) or solve a problem; narrow or broaden the inquiry when appropriate; synthesize multiple sources on the subject, demonstrating understanding of the subject under investigation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|1-11|11-12.WHST.7", 
+        "name": "11-12.WHST.7", 
+        "shortName": "4-CR|1-11|11-12.WHST.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Conduct short as well as more sustained research projects to answer a question (including a self-generated question) or solve a problem; narrow or broaden the inquiry when appropriate; synthesize multiple sources on the subject, demonstrating understanding of the subject under investigation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|1-11|11-12.W.7", 
+        "name": "11-12.W.7", 
+        "shortName": "4-CR|1-11|11-12.W.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate multiple sources of information presented in diverse formats and media (e.g., visually, quantitatively, orally) in order to make informed decisions and solve problems, evaluating the credibility and accuracy of each source and noting any discrepancies among the data.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|1-11|11-12.SL.2", 
+        "name": "11-12.SL.2", 
+        "shortName": "4-CR|1-11|11-12.SL.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Present information, findings, and supporting evidence, conveying a clear and distinct perspective, such that listeners can follow the line of reasoning, alternative or opposing perspectives are addressed, and the organization, development, substance, and style are appropriate to purpose, audience, and a range or formal and informal tasks.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|1-11|11-12.SL.4", 
+        "name": "11-12.SL.4", 
+        "shortName": "4-CR|1-11|11-12.SL.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Make strategic use of digital media (e.g., textual, graphical, audio, visual, and interactive elements) in presentations to enhance understanding of findings, reasoning, and evidence and to add interest.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|1-11|11-12.SL.5", 
+        "name": "11-12.SL.5", 
+        "shortName": "4-CR|1-11|11-12.SL.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Acquire and use accurately general academic and domain-specific words and phrases, sufficient for reading, writing, speaking, and listening at the college and career readiness level; demonstrate independence in gathering vocabulary knowledge when considering a word or phrase important to comprehension or expression.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|1-11|11-12.L.6", 
+        "name": "11-12.L.6", 
+        "shortName": "3-S|1-11|11-12.L.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Apply knowledge of language to understand how language functions in different contexts, to make effective choices for meaning or style, and to comprehend more fully when reading or listening. A) Vary syntax for effect, consulting references (e.g., Tufte\u0092s Artful Sentences) for guidance as needed; apply an understanding of syntax to the study of complex texts when reading.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|1-11|11-12.L.3a", 
+        "name": "11-12.L.3a", 
+        "shortName": "3-S|1-11|11-12.L.3a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate multiple sources of information presented in diverse formats and media (e.g., visually, quantitatively, orally) in order to make informed decisions and solve problems, evaluating the credibility and accuracy of each source and noting any discrepancies among the data.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-L|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-L|4-11|11-12.SL.2", 
+        "name": "11-12.SL.2", 
+        "shortName": "3-L|4-11|11-12.SL.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Initiate and participate effectively in a range of collaborative discussions (one on- one, in groups, and teacher-led) with diverse partners on grades 11\u009612 topics, texts, and issues, building on others\u0092 ideas and expressing their own clearly and persuasively. D) Respond thoughtfully to diverse perspectives; synthesize comments, claims, and evidence made on all sides of an issue; resolve contradictions when possible; and determine what additional information or research is required to deepen the investigation or complete the task.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-L|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-L|4-11|11-12.SL.1d", 
+        "name": "11-12.SL.1d", 
+        "shortName": "3-L|4-11|11-12.SL.1d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Initiate and participate effectively in a range of collaborative discussions (one on- one, in groups, and teacher-led) with diverse partners on grades 11\u009612 topics, texts, and issues, building on others\u0092 ideas and expressing their own clearly and persuasively. C) Propel conversations by posing and responding to questions that probe reasoning and evidence; ensure a hearing for a full range of positions on a topic or issue; clarify, verify, or challenge ideas and conclusions; and promote divergent and creative perspectives.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-L|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-L|4-11|11-12.SL.1c", 
+        "name": "11-12.SL.1c", 
+        "shortName": "3-L|4-11|11-12.SL.1c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate a speaker\u0092s point of view, reasoning, and use of evidence and rhetoric, assessing the stance, premises, links among ideas, word choice, points of emphasis, and tone used.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-L|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-L|4-11|11-12.SL.3", 
+        "name": "11-12.SL.3", 
+        "shortName": "3-L|4-11|11-12.SL.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Initiate and participate effectively in a range of collaborative discussions (one on- one, in groups, and teacher-led) with diverse partners on grades 11\u009612 topics, texts, and issues, building on others\u0092 ideas and expressing their own clearly and persuasively. B) Work with peers to promote civil, democratic discussions and decisionmaking, set clear goals and deadlines, and establish individual roles asneeded.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-L|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-L|4-11|11-12.SL.1b", 
+        "name": "11-12.SL.1b", 
+        "shortName": "3-L|4-11|11-12.SL.1b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Initiate and participate effectively in a range of collaborative discussions (one on- one, in groups, and teacher-led) with diverse partners on grades 11\u009612 topics, texts, and issues, building on others\u0092 ideas and expressing their own clearly and persuasively. A) Come to discussions prepared, having read and researched material under study; explicitly draw on that preparation by referring to evidence from texts and other research on the topic or issue to stimulate a thoughtful, wellreasoned exchange of ideas.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-L|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-L|4-11|11-12.SL.1a", 
+        "name": "11-12.SL.1a", 
+        "shortName": "3-L|4-11|11-12.SL.1a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Adapt speech to a variety of contexts and tasks, demonstrating a command of formal English when indicated or appropriate. (See grades 11\u009612 Language standards 1 and 3 on page 54 for specific expectations.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|3-11|11-12.SL.6", 
+        "name": "11-12.SL.6", 
+        "shortName": "3-S|3-11|11-12.SL.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Make strategic use of digital media (e.g., textual, graphical, audio, visual, and interactive elements) in presentations to enhance understanding of findings, reasoning, and evidence and to add interest.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|3-11|11-12.SL.5", 
+        "name": "11-12.SL.5", 
+        "shortName": "3-S|3-11|11-12.SL.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Present information, findings, and supporting evidence, conveying a clear and distinct perspective, such that listeners can follow the line of reasoning, alternative or opposing perspectives are addressed, and the organization, development, substance, and style are appropriate to purpose, audience, and a range or formal and informal tasks.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|3-11|11-12.SL.4", 
+        "name": "11-12.SL.4", 
+        "shortName": "3-S|3-11|11-12.SL.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate multiple sources of information presented in diverse formats and media (e.g., visually, quantitatively, orally) in order to make informed decisions and solve problems, evaluating the credibility and accuracy of each source and noting any discrepancies among the data.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|3-11|11-12.SL.2", 
+        "name": "11-12.SL.2", 
+        "shortName": "3-S|3-11|11-12.SL.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Adapt speech to a variety of contexts and tasks, demonstrating a command of formal English when indicated or appropriate. (See grades 11\u009612 Language standards 1 and 3 on page 54 for specific expectations.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|2-11|11-12.SL.6", 
+        "name": "11-12.SL.6", 
+        "shortName": "3-S|2-11|11-12.SL.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. B) Resolve issues of complex or contested usage, consulting references (e.g., Merriam-Webster\u0092s Dictionary of English Usage, Garner\u0092s Modern American Usage) as needed.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|2-11|11-12.L.1b", 
+        "name": "11-12.L.1b", 
+        "shortName": "3-S|2-11|11-12.L.1b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. A) Apply the understanding that usage is a matter of convention, can change over time, and is sometimes contested.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:3-S|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:3-S|2-11|11-12.L.1a", 
+        "name": "11-12.L.1a", 
+        "shortName": "3-S|2-11|11-12.L.1a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate an author\u0092s premises, claims, and evidence by corroborating or challenging them with other information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RH.8", 
+        "name": "11-12.RH.8", 
+        "shortName": "4-CR|4-11|11-12.RH.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. D) Use precise words and phrases, telling details, and sensory language to convey a vivid picture of the experiences, events, setting, and/or characters.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|5-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|5-11|11-12.W.3d", 
+        "name": "11-12.W.3d", 
+        "shortName": "4-CR|5-11|11-12.W.3d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. D) Use precise language, domain-specific vocabulary, and techniques such as metaphor, simile, and analogy to manage the complexity of the topic.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|5-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|5-11|11-12.W.2d", 
+        "name": "11-12.W.2d", 
+        "shortName": "4-CR|5-11|11-12.W.2d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Acquire and use accurately general academic and domain-specific words and phrases, sufficient for reading, writing, speaking, and listening at the college and career readiness level; demonstrate independence in gathering vocabulary knowledge when considering a word or phrase important to comprehension or expression.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|5-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|5-11|11-12.L.6", 
+        "name": "11-12.L.6", 
+        "shortName": "4-CR|5-11|11-12.L.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. B) Spell correctly.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|6-11|11-12.L.2b", 
+        "name": "11-12.L.2b", 
+        "shortName": "4-CR|6-11|11-12.L.2b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. A) Observe hyphenation conventions.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|6-11|11-12.L.2a", 
+        "name": "11-12.L.2a", 
+        "shortName": "4-CR|6-11|11-12.L.2a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. B) Resolve issues of complex or contested usage, consulting references (e.g., Merriam-Webster\u0092s Dictionary of English Usage, Garner\u0092s Modern American Usage) as needed.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|6-11|11-12.L.1b", 
+        "name": "11-12.L.1b", 
+        "shortName": "4-CR|6-11|11-12.L.1b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. A) Apply the understanding that usage is a matter of convention, can change over time, and is sometimes contested.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|6-11|11-12.L.1a", 
+        "name": "11-12.L.1a", 
+        "shortName": "4-CR|6-11|11-12.L.1a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Develop and strengthen writing as needed by planning, revising, editing, rewriting, or trying a new approach, focusing on addressing what is most significant for a specific purpose and audience.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.5", 
+        "name": "11-12.WHST.5", 
+        "shortName": "NA|NA-11|11-12.WHST.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Produce clear and coherent writing in which the development, organization, and style are appropriate to task, purpose, and audience.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.4", 
+        "name": "11-12.WHST.4", 
+        "shortName": "NA|NA-11|11-12.WHST.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts, including the narration of historical events, scientific procedures/ experiments, or technical processes. E) Provide a concluding statement or section that follows from and supports the information or explanation provided (e.g., articulating implications or the significance of the topic).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.2e", 
+        "name": "11-12.WHST.2e", 
+        "shortName": "NA|NA-11|11-12.WHST.2e", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts, including the narration of historical events, scientific procedures/ experiments, or technical processes. D) Use precise language, domain-specific vocabulary and techniques such as metaphor, simile, and analogy to manage the complexity of the topic; convey a knowledgeable stance in a style that responds to the discipline and context as well as to the expertise of likely readers.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.2d", 
+        "name": "11-12.WHST.2d", 
+        "shortName": "NA|NA-11|11-12.WHST.2d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Use technology, including the Internet, to produce, publish, and update individual or shared writing products in response to ongoing feedback, including new arguments or information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|7-11|11-12.WHST.6", 
+        "name": "11-12.WHST.6", 
+        "shortName": "4-CR|7-11|11-12.WHST.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Use technology, including the Internet, to produce, publish, and update individual or shared writing products in response to ongoing feedback, including new arguments or information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|7-11|11-12.W.6", 
+        "name": "11-12.W.6", 
+        "shortName": "4-CR|7-11|11-12.W.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments focused on discipline-specific content. C) Use words, phrases, and clauses as well as varied syntax to link the major sections of the text, create cohesion, and clarify the relationships between claim(s) and reasons, between reasons and evidence, and between claim(s) and counterclaims.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.1c", 
+        "name": "11-12.WHST.1c", 
+        "shortName": "NA|NA-11|11-12.WHST.1c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments focused on discipline-specific content. B) Develop claim(s) and counterclaims fairly and thoroughly, supplying the most relevant data and evidence for each while pointing out the strengths and limitations of both claim(s) and counterclaims in a discipline-appropriate form that anticipates the audience\u0092s knowledge level, concerns, values, and possible biases.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.1b", 
+        "name": "11-12.WHST.1b", 
+        "shortName": "NA|NA-11|11-12.WHST.1b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments focused on discipline-specific content. A) Introduce precise, knowledgeable claim(s), establish the significance of the claim(s), distinguish the claim(s) from alternate or opposing claims, and create an organization that logically sequences the claim(s), counterclaims, reasons, and evidence.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.1a", 
+        "name": "11-12.WHST.1a", 
+        "shortName": "NA|NA-11|11-12.WHST.1a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write routinely over extended time frames (time for reflection and revision) and shorter time frames (a single sitting or a day or two) for a range of discipline-specific tasks, purposes, and audiences.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.10", 
+        "name": "11-12.WHST.10", 
+        "shortName": "NA|NA-11|11-12.WHST.10", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments focused on discipline-specific content. D) Establish and maintain a formal style and objective tone while attending to the norms and conventions of the discipline in which they are writing.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.1d", 
+        "name": "11-12.WHST.1d", 
+        "shortName": "NA|NA-11|11-12.WHST.1d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments focused on discipline-specific content. E) Provide a concluding statement or section that follows from or supports the argument presented.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.1e", 
+        "name": "11-12.WHST.1e", 
+        "shortName": "NA|NA-11|11-12.WHST.1e", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts, including the narration of historical events, scientific procedures/ experiments, or technical processes. C) Use varied transitions and sentence structures to link the major sections of the text, create cohesion, and clarify the relationships among complex ideas and concepts.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.2c", 
+        "name": "11-12.WHST.2c", 
+        "shortName": "NA|NA-11|11-12.WHST.2c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts, including the narration of historical events, scientific procedures/ experiments, or technical processes. B) Develop the topic thoroughly by selecting the most significant and relevant facts, extended definitions, concrete details, quotations, or other information and examples appropriate to the audience\u0092s knowledge of the topic.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.2b", 
+        "name": "11-12.WHST.2b", 
+        "shortName": "NA|NA-11|11-12.WHST.2b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts, including the narration of historical events, scientific procedures/ experiments, or technical processes. A) Introduce a topic and organize complex ideas, concepts, and information so that each new element builds on that which precedes it to create a unified whole; include formatting (e.g., headings), graphics (e.g., figures, tables), and multimedia when useful to aiding comprehension.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.WHST.2a", 
+        "name": "11-12.WHST.2a", 
+        "shortName": "NA|NA-11|11-12.WHST.2a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write routinely over extended time frames (time for research, reflection, and revision) and shorter time frames (a single sitting or a day or two) for a range of tasks, purposes, and audiences.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.W.10", 
+        "name": "11-12.W.10", 
+        "shortName": "NA|NA-11|11-12.W.10", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "By the end of grade 12, read and comprehend science/technical texts in the grades 11\u009612 text complexity band independently and proficiently.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.RST.10", 
+        "name": "11-12.RST.10", 
+        "shortName": "NA|NA-11|11-12.RST.10", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "By the end of grade 11, read and comprehend literature, including stories, dramas, and poems, in the grades 11\u0096CCR text complexity band proficiently, with scaffolding as needed at the high end of the range. By the end of grade 12, read and comprehend literature, including stories, dramas, and poems, at the high end of the grades 11\u0096CCR text complexity band independently and proficiently.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.RL.10", 
+        "name": "11-12.RL.10", 
+        "shortName": "NA|NA-11|11-12.RL.10", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "By the end of grade 11, read and comprehend literary nonfiction in the grades 11\u0096CCR text complexity band proficiently, with scaffolding as needed at the high end of the range. By the end of grade 12, read and comprehend literary nonfiction at the high end of the grades 11\u0096CCR text complexity band independently and proficiently.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.RI.10", 
+        "name": "11-12.RI.10", 
+        "shortName": "NA|NA-11|11-12.RI.10", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "By the end of grade 12, read and comprehend history/social studies texts in the grades 11\u009612 text complexity band independently and proficiently.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:NA|NA-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA|NA-11|11-12.RH.10", 
+        "name": "11-12.RH.10", 
+        "shortName": "NA|NA-11|11-12.RH.10", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Cite specific textual evidence to support analysis of primary and secondary sources, connecting insights gained from specific details to an understanding of the text as a whole.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RH.1", 
+        "name": "11-12.RH.1", 
+        "shortName": "4-CR|4-11|11-12.RH.1", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the specific task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|3-11|11-12.WHST.8", 
+        "name": "11-12.WHST.8", 
+        "shortName": "4-CR|3-11|11-12.WHST.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|3-11|11-12.W.8", 
+        "name": "11-12.W.8", 
+        "shortName": "4-CR|3-11|11-12.W.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. B) Apply grades 11\u009612 Reading standards to literary nonfiction (e.g., \u0093Delineate and evaluate the reasoning in seminal U.S. texts, including the application of constitutional principles and use of legal reasoning [e.g., in U.S. Supreme Court Case majority opinions and dissents) and the premises, purposes, and arguments in works of public advocacy (e.g., The Federalist, presidential addresses]\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.W.9b", 
+        "name": "11-12.W.9b", 
+        "shortName": "4-CR|2-11|11-12.W.9b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. A) Apply grades 11\u009612 Reading standards to literature (e.g., \u0093Demonstrate knowledge of eighteenth-, nineteenth- and early-twentieth-century foundational works of American literature, including how two or more texts from the same period treat similar themes or topics\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.W.9a", 
+        "name": "11-12.W.9a", 
+        "shortName": "4-CR|2-11|11-12.W.9a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.W.8", 
+        "name": "11-12.W.8", 
+        "shortName": "4-CR|2-11|11-12.W.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate multiple sources of information presented in diverse formats and media (e.g., visually, quantitatively, orally) in order to make informed decisions and solve problems, evaluating the credibility and accuracy of each source and noting any discrepancies among the data.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.SL.2", 
+        "name": "11-12.SL.2", 
+        "shortName": "4-CR|2-11|11-12.SL.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the specific task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.WHST.8", 
+        "name": "11-12.WHST.8", 
+        "shortName": "4-CR|2-11|11-12.WHST.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence from informational texts to support analysis, reflection, and research.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.WHST.9", 
+        "name": "11-12.WHST.9", 
+        "shortName": "4-CR|2-11|11-12.WHST.9", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Synthesize information from a range of sources (e.g., texts, experiments, simulations) into a coherent understanding of a process, phenomenon, or concept, resolving conflicting information when possible.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RST.9", 
+        "name": "11-12.RST.9", 
+        "shortName": "4-CR|2-11|11-12.RST.9", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate the hypotheses, data, analysis, and conclusions in a science or technical text, verifying the data when possible and corroborating or challenging conclusions with other sources of information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RST.8", 
+        "name": "11-12.RST.8", 
+        "shortName": "4-CR|2-11|11-12.RST.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate an author\u0092s premises, claims, and evidence by corroborating or challenging them with other information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RH.8", 
+        "name": "11-12.RH.8", 
+        "shortName": "4-CR|2-11|11-12.RH.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate and evaluate multiple sources of information presented in diverse formats and media (e.g., visually, quantitatively, as well as in words) in order to address a question or solve a problem.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RH.7", 
+        "name": "11-12.RH.7", 
+        "shortName": "4-CR|2-11|11-12.RH.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate various explanations for actions or events and determine which explanation best accords with textual evidence, acknowledging where the text leaves matters uncertain.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RH.3", 
+        "name": "11-12.RH.3", 
+        "shortName": "4-CR|2-11|11-12.RH.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the central ideas or information of a primary or secondary source; provide an accurate summary that makes clear the relationships among the key details and ideas.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RH.2", 
+        "name": "11-12.RH.2", 
+        "shortName": "4-CR|2-11|11-12.RH.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate information from diverse sources, both primary and secondary, into a coherent understanding of an idea or event, noting discrepancies among sources.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RH.9", 
+        "name": "11-12.RH.9", 
+        "shortName": "4-CR|2-11|11-12.RH.9", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Cite specific textual evidence to support analysis of science and technical texts, attending to important distinctions the author makes and to any gaps or inconsistencies in the account.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RST.1", 
+        "name": "11-12.RST.1", 
+        "shortName": "4-CR|2-11|11-12.RST.1", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate and evaluate multiple sources of information presented in diverse formats and media (e.g., quantitative data, video, multimedia) in order to address a question or solve a problem.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RST.7", 
+        "name": "11-12.RST.7", 
+        "shortName": "4-CR|2-11|11-12.RST.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Follow precisely a complex multistep procedure when carrying out experiments, taking measurements, or performing technical tasks; analyze the specific results based on explanations in the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RST.3", 
+        "name": "11-12.RST.3", 
+        "shortName": "4-CR|2-11|11-12.RST.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the central ideas or conclusions of a text; summarize complex concepts, processes, or information presented in a text by paraphrasing them in simpler but still accurate terms.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RST.2", 
+        "name": "11-12.RST.2", 
+        "shortName": "4-CR|2-11|11-12.RST.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the central ideas or information of a primary or secondary source; provide an accurate summary that makes clear the relationships among the key details and ideas.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RH.2", 
+        "name": "11-12.RH.2", 
+        "shortName": "4-CR|4-11|11-12.RH.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate various explanations for actions or events and determine which explanation best accords with textual evidence, acknowledging where the text leaves matters uncertain.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RH.3", 
+        "name": "11-12.RH.3", 
+        "shortName": "4-CR|4-11|11-12.RH.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence from informational texts to support analysis, reflection, and research.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.WHST.9", 
+        "name": "11-12.WHST.9", 
+        "shortName": "4-CR|4-11|11-12.WHST.9", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the specific task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.WHST.8", 
+        "name": "11-12.WHST.8", 
+        "shortName": "4-CR|4-11|11-12.WHST.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. B) Apply grades 11\u009612 Reading standards to literary nonfiction (e.g., \u0093Delineate and evaluate the reasoning in seminal U.S. texts, including the application of constitutional principles and use of legal reasoning [e.g., in U.S. Supreme Court Case majority opinions and dissents) and the premises, purposes, and arguments in works of public advocacy (e.g., The Federalist, presidential addresses]\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.W.9b", 
+        "name": "11-12.W.9b", 
+        "shortName": "4-CR|4-11|11-12.W.9b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. A) Apply grades 11\u009612 Reading standards to literature (e.g., \u0093Demonstrate knowledge of eighteenth-, nineteenth- and early-twentieth-century foundational works of American literature, including how two or more texts from the same period treat similar themes or topics\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.W.9a", 
+        "name": "11-12.W.9a", 
+        "shortName": "4-CR|4-11|11-12.W.9a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.W.8", 
+        "name": "11-12.W.8", 
+        "shortName": "4-CR|4-11|11-12.W.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Cite specific textual evidence to support analysis of science and technical texts, attending to important distinctions the author makes and to any gaps or inconsistencies in the account.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RST.1", 
+        "name": "11-12.RST.1", 
+        "shortName": "4-CR|4-11|11-12.RST.1", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate information from diverse sources, both primary and secondary, into a coherent understanding of an idea or event, noting discrepancies among sources.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RH.9", 
+        "name": "11-12.RH.9", 
+        "shortName": "4-CR|4-11|11-12.RH.9", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate and evaluate multiple sources of information presented in diverse formats and media (e.g., visually, quantitatively, as well as in words) in order to address a question or solve a problem.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RH.7", 
+        "name": "11-12.RH.7", 
+        "shortName": "4-CR|4-11|11-12.RH.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the central ideas or conclusions of a text; summarize complex concepts, processes, or information presented in a text by paraphrasing them in simpler but still accurate terms.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RST.2", 
+        "name": "11-12.RST.2", 
+        "shortName": "4-CR|4-11|11-12.RST.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Follow precisely a complex multistep procedure when carrying out experiments, taking measurements, or performing technical tasks; analyze the specific results based on explanations in the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RST.3", 
+        "name": "11-12.RST.3", 
+        "shortName": "4-CR|4-11|11-12.RST.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Synthesize information from a range of sources (e.g., texts, experiments, simulations) into a coherent understanding of a process, phenomenon, or concept, resolving conflicting information when possible.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RST.9", 
+        "name": "11-12.RST.9", 
+        "shortName": "4-CR|4-11|11-12.RST.9", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate the hypotheses, data, analysis, and conclusions in a science or technical text, verifying the data when possible and corroborating or challenging conclusions with other sources of information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RST.8", 
+        "name": "11-12.RST.8", 
+        "shortName": "4-CR|4-11|11-12.RST.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate and evaluate multiple sources of information presented in diverse formats and media (e.g., quantitative data, video, multimedia) in order to address a question or solve a problem.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|4-11|11-12.RST.7", 
+        "name": "11-12.RST.7", 
+        "shortName": "4-CR|4-11|11-12.RST.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Cite specific textual evidence to support analysis of primary and secondary sources, connecting insights gained from specific details to an understanding of the text as a whole.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:4-CR|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:4-CR|2-11|11-12.RH.1", 
+        "name": "11-12.RH.1", 
+        "shortName": "4-CR|2-11|11-12.RH.1", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. A) Apply grades 11\u009612 Reading standards to literature (e.g., \u0093Demonstrate knowledge of eighteenth-, nineteenth- and early-twentieth-century foundational works of American literature, including how two or more texts from the same period treat similar themes or topics\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.9a", 
+        "name": "11-12.W.9a", 
+        "shortName": "2-W|7-11|11-12.W.9a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze a case in which grasping point of view requires distinguishing what is directly stated in a text from what is really meant (e.g., satire, sarcasm, irony, or understatement).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|4-11|11-12.RL.6", 
+        "name": "11-12.RL.6", 
+        "shortName": "1-LT|4-11|11-12.RL.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze the impact of the author\u0092s choices regarding how to develop and relate elements of a story or drama (e.g., where a story is set, how the action is ordered, how the characters are introduced and developed).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|4-11|11-12.RL.3", 
+        "name": "11-12.RL.3", 
+        "shortName": "1-LT|4-11|11-12.RL.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine two or more themes or central ideas of a text and analyze their development over the course of the text, including how they interact and build on one another to produce a complex account; provide an objective summary of the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|4-11|11-12.RL.2", 
+        "name": "11-12.RL.2", 
+        "shortName": "1-LT|4-11|11-12.RL.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze the impact of the author\u0092s choices regarding how to develop and relate elements of a story or drama (e.g., where a story is set, how the action is ordered, how the characters are introduced and developed).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|1-11|11-12.RL.3", 
+        "name": "11-12.RL.3", 
+        "shortName": "1-LT|1-11|11-12.RL.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Cite strong and thorough textual evidence to support analysis of what the text says explicitly as well as inferences drawn from the text, including determining where the text leaves matters uncertain.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|1-11|11-12.RL.1", 
+        "name": "11-12.RL.1", 
+        "shortName": "1-LT|1-11|11-12.RL.1", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine two or more themes or central ideas of a text and analyze their development over the course of the text, including how they interact and build on one another to produce a complex account; provide an objective summary of the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|2-11|11-12.RL.2", 
+        "name": "11-12.RL.2", 
+        "shortName": "1-LT|2-11|11-12.RL.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the meaning of words and phrases as they are used in the text, including figurative and connotative meanings; analyze the impact of specific word choices on meaning and tone, including words with multiple meanings or language that is particularly fresh, engaging, or beautiful. (Include Shakespeare as well as other authors.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|3-11|11-12.RL.4", 
+        "name": "11-12.RL.4", 
+        "shortName": "1-LT|3-11|11-12.RL.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Acquire and use accurately general academic and domain-specific words and phrases, sufficient for reading, writing, speaking, and listening at the college and career readiness level; demonstrate independence in gathering vocabulary knowledge when considering a word or phrase important to comprehension or expression.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|3-11|11-12.L.6", 
+        "name": "11-12.L.6", 
+        "shortName": "1-LT|3-11|11-12.L.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate understanding of figurative language, word relationships, and nuances in word meanings. B) Analyze nuances in the meaning of words with similar denotations.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|3-11|11-12.L.5b", 
+        "name": "11-12.L.5b", 
+        "shortName": "1-LT|3-11|11-12.L.5b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11\u009612 reading and content, choosing flexibly from a range of strategies. D) Verify the preliminary determination of the meaning of a word or phrase (e.g., by checking the inferred meaning in context or in a dictionary).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|3-11|11-12.L.4d", 
+        "name": "11-12.L.4d", 
+        "shortName": "1-LT|3-11|11-12.L.4d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11\u009612 reading and content, choosing flexibly from a range of strategies. C) Consult general and specialized reference materials (e.g., dictionaries, glossaries, thesauruses), both print and digital, to find the pronunciation of a word or determine or clarify its precise meaning, its part of speech, its etymology, or its standard usage.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|3-11|11-12.L.4c", 
+        "name": "11-12.L.4c", 
+        "shortName": "1-LT|3-11|11-12.L.4c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11\u009612 reading and content, choosing flexibly from a range of strategies. B) Identify and correctly use patterns of word changes that indicate different meanings or parts of speech (e.g., conceive, conception, conceivable).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|3-11|11-12.L.4b", 
+        "name": "11-12.L.4b", 
+        "shortName": "1-LT|3-11|11-12.L.4b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11\u009612 reading and content, choosing flexibly from a range of strategies. A) Use context (e.g., the overall meaning of a sentence, paragraph, or text; a word\u0092s position or function in a sentence) as a clue to the meaning of a word or phrase.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|3-11|11-12.L.4a", 
+        "name": "11-12.L.4a", 
+        "shortName": "1-LT|3-11|11-12.L.4a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. E) Provide a conclusion that follows from and reflects on what is experienced, observed, or resolved over the course of the narrative.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|1-11|11-12.W.3e", 
+        "name": "11-12.W.3e", 
+        "shortName": "2-W|1-11|11-12.W.3e", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. D) Use precise words and phrases, telling details, and sensory language to convey a vivid picture of the experiences, events, setting, and/or characters.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|1-11|11-12.W.3d", 
+        "name": "11-12.W.3d", 
+        "shortName": "2-W|1-11|11-12.W.3d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. C) Use a variety of techniques to sequence events so that they build on one another to create a coherent whole and build toward a particular tone and outcome (e.g., a sense of mystery, suspense, growth, or resolution).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|1-11|11-12.W.3c", 
+        "name": "11-12.W.3c", 
+        "shortName": "2-W|1-11|11-12.W.3c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. B) Use narrative techniques, such as dialogue, pacing, description, reflection, and multiple plot lines, to develop experiences, events, and/or characters.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|1-11|11-12.W.3b", 
+        "name": "11-12.W.3b", 
+        "shortName": "2-W|1-11|11-12.W.3b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. A) Engage and orient the reader by setting out a problem, situation, or observation and its significance, establishing one or multiple point(s) of view, and introducing a narrator and/or characters; create a smooth progression of experiences or events.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|1-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|1-11|11-12.W.3a", 
+        "name": "11-12.W.3a", 
+        "shortName": "2-W|1-11|11-12.W.3a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Use technology, including the Internet, to produce, publish, and update individual or shared writing products in response to ongoing feedback, including new arguments or information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|10-11|11-12.W.6", 
+        "name": "11-12.W.6", 
+        "shortName": "2-W|10-11|11-12.W.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze the impact of the author\u0092s choices regarding how to develop and relate elements of a story or drama (e.g., where a story is set, how the action is ordered, how the characters are introduced and developed).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|5-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|5-11|11-12.RL.3", 
+        "name": "11-12.RL.3", 
+        "shortName": "1-LT|5-11|11-12.RL.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate knowledge of eighteenth-, nineteenth- and early-twentieth-century foundational works of American literature, including how two or more texts from the same period treat similar themes or topics.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|5-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|5-11|11-12.RL.9", 
+        "name": "11-12.RL.9", 
+        "shortName": "1-LT|5-11|11-12.RL.9", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze multiple interpretations of a story, drama, or poem (e.g., recorded or live production of a play or recorded novel or poetry), evaluating how each version interprets the source text. (Include at least one play by Shakespeare and one play by an American dramatist.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|5-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|5-11|11-12.RL.7", 
+        "name": "11-12.RL.7", 
+        "shortName": "1-LT|5-11|11-12.RL.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze how an author\u0092s choices concerning how to structure specific parts of a text (e.g., the choice of where to begin or end a story, the choice to provide a comedic or tragic resolution) contribute to its overall structure and meaning as well as its aesthetic impact.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|6-11|11-12.RL.5", 
+        "name": "11-12.RL.5", 
+        "shortName": "1-LT|6-11|11-12.RL.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze multiple interpretations of a story, drama, or poem (e.g., recorded or live production of a play or recorded novel or poetry), evaluating how each version interprets the source text. (Include at least one play by Shakespeare and one play by an American dramatist.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|6-11|11-12.RL.7", 
+        "name": "11-12.RL.7", 
+        "shortName": "1-LT|6-11|11-12.RL.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate understanding of figurative language, word relationships, and nuances in word meanings. A) Interpret figures of speech (e.g., euphemism, oxymoron) in context and analyze their role in the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|7-11|9-10.L.5a", 
+        "name": "9-10.L.5a", 
+        "shortName": "1-LT|7-11|9-10.L.5a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the meaning of words and phrases as they are used in the text, including figurative and connotative meanings; analyze the impact of specific word choices on meaning and tone, including words with multiple meanings or language that is particularly fresh, engaging, or beautiful. (Include Shakespeare as well as other authors.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|7-11|11-12.RL.4", 
+        "name": "11-12.RL.4", 
+        "shortName": "1-LT|7-11|11-12.RL.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate understanding of figurative language, word relationships, and nuances in word meanings. A) Interpret figures of speech (e.g., hyperbole, paradox) in context and analyze their role in the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-LT|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-LT|7-11|11-12.L.5a", 
+        "name": "11-12.L.5a", 
+        "shortName": "1-LT|7-11|11-12.L.5a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate the hypotheses, data, analysis, and conclusions in a science or technical text, verifying the data when possible and corroborating or challenging conclusions with other sources of information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|11-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|11-11|11-12.RST.8", 
+        "name": "11-12.RST.8", 
+        "shortName": "1-IT|11-11|11-12.RST.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze the author\u0092s purpose in providing an explanation, describing a procedure, or discussing an experiment in a text, identifying important issues that remain unresolved.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|11-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|11-11|11-12.RST.6", 
+        "name": "11-12.RST.6", 
+        "shortName": "1-IT|11-11|11-12.RST.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Delineate and evaluate the reasoning in seminal U.S. texts, including the application of constitutional principles and use of legal reasoning (e.g., in U.S. Supreme Court majority opinions and dissents) and the premises, purposes, and arguments in works of public advocacy (e.g., The Federalist, presidential addresses).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|11-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|11-11|11-12.RI.8", 
+        "name": "11-12.RI.8", 
+        "shortName": "1-IT|11-11|11-12.RI.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine an author\u0092s point of view or purpose in a text in which the rhetoric is particularly effective, analyzing how style and content contribute to the power, persuasiveness, or beauty of the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|11-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|11-11|11-12.RI.6", 
+        "name": "11-12.RI.6", 
+        "shortName": "1-IT|11-11|11-12.RI.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate an author\u0092s premises, claims, and evidence by corroborating or challenging them with other information.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|11-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|11-11|11-12.RH.8", 
+        "name": "11-12.RH.8", 
+        "shortName": "1-IT|11-11|11-12.RH.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate authors\u0092 differing points of view on the same historical event or issue by assessing the authors\u0092 claims, reasoning, and evidence.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|11-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|11-11|11-12.RH.6", 
+        "name": "11-12.RH.6", 
+        "shortName": "1-IT|11-11|11-12.RH.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11\u009612 reading and content, choosing flexibly from a range of strategies. D) Verify the preliminary determination of the meaning of a word or phrase (e.g., by checking the inferred meaning in context or in a dictionary).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.L.4d", 
+        "name": "11-12.L.4d", 
+        "shortName": "1-IT|10-11|11-12.L.4d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11\u009612 reading and content, choosing flexibly from a range of strategies. C) Consult general and specialized reference materials (e.g., dictionaries, glossaries, thesauruses), both print and digital, to find the pronunciation of a word or determine or clarify its precise meaning, its part of speech, its etymology, or its standard usage.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.L.4c", 
+        "name": "11-12.L.4c", 
+        "shortName": "1-IT|10-11|11-12.L.4c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11\u009612 reading and content, choosing flexibly from a range of strategies. B) Identify and correctly use patterns of word changes that indicate different meanings or parts of speech (e.g., conceive, conception, conceivable).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.L.4b", 
+        "name": "11-12.L.4b", 
+        "shortName": "1-IT|10-11|11-12.L.4b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine or clarify the meaning of unknown and multiple-meaning words and phrases based on grades 11\u009612 reading and content, choosing flexibly from a range of strategies. A) Use context (e.g., the overall meaning of a sentence, paragraph, or text; a word\u0092s position or function in a sentence) as a clue to the meaning of a word or phrase.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.L.4a", 
+        "name": "11-12.L.4a", 
+        "shortName": "1-IT|10-11|11-12.L.4a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate understanding of figurative language, word relationships, and nuances in word meanings. B) Analyze nuances in the meaning of words with similar denotations.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.L.5b", 
+        "name": "11-12.L.5b", 
+        "shortName": "1-IT|10-11|11-12.L.5b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Acquire and use accurately general academic and domain-specific words and phrases, sufficient for reading, writing, speaking, and listening at the college and career readiness level; demonstrate independence in gathering vocabulary knowledge when considering a word or phrase important to comprehension or expression.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.L.6", 
+        "name": "11-12.L.6", 
+        "shortName": "1-IT|10-11|11-12.L.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the meaning of symbols, key terms, and other domain-specific words and phrases as they are used in a specific scientific or technical context relevant to grades 11\u009612 texts and topics.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.RST.4", 
+        "name": "11-12.RST.4", 
+        "shortName": "1-IT|10-11|11-12.RST.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the meaning of words and phrases as they are used in a text, including figurative, connotative, and technical meanings; analyze how an author uses and refines the meaning of a key term or terms over the course of a text (e.g., how Madison defines faction in Federalist No. 10).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.RI.4", 
+        "name": "11-12.RI.4", 
+        "shortName": "1-IT|10-11|11-12.RI.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the meaning of words and phrases as they are used in a text, including analyzing how an author uses and refines the meaning of a key term over the course of a text (e.g., how Madison defines faction in Federalist No. 10).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|10-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|10-11|11-12.RH.4", 
+        "name": "11-12.RH.4", 
+        "shortName": "1-IT|10-11|11-12.RH.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze a complex set of ideas or sequence of events and explain how specific individuals, ideas, or events interact and develop over the course of the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|12-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|12-11|11-12.RI.3", 
+        "name": "11-12.RI.3", 
+        "shortName": "1-IT|12-11|11-12.RI.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze seventeenth-, eighteenth-, and nineteenth-century foundational U.S. documents of historical and literary significance (including The Declaration of Independence, the Preamble to the Constitution, the Bill of Rights, and Lincoln\u0092s Second Inaugural Address) for their themes, purposes, and rhetorical features.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|12-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|12-11|11-12.RI.9", 
+        "name": "11-12.RI.9", 
+        "shortName": "1-IT|12-11|11-12.RI.9", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Cite specific textual evidence to support analysis of primary and secondary sources, connecting insights gained from specific details to an understanding of the text as a whole.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|8-11|11-12.RH.1", 
+        "name": "11-12.RH.1", 
+        "shortName": "1-IT|8-11|11-12.RH.1", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Evaluate various explanations for actions or events and determine which explanation best accords with textual evidence, acknowledging where the text leaves matters uncertain.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|8-11|11-12.RH.3", 
+        "name": "11-12.RH.3", 
+        "shortName": "1-IT|8-11|11-12.RH.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Cite strong and thorough textual evidence to support analysis of what the text says explicitly as well as inferences drawn from the text, including determining where the text leaves matters uncertain.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|8-11|11-12.RI.1", 
+        "name": "11-12.RI.1", 
+        "shortName": "1-IT|8-11|11-12.RI.1", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Cite specific textual evidence to support analysis of science and technical texts, attending to important distinctions the author makes and to any gaps or inconsistencies in the account.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|8-11|11-12.RST.1", 
+        "name": "11-12.RST.1", 
+        "shortName": "1-IT|8-11|11-12.RST.1", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze a complex set of ideas or sequence of events and explain how specific individuals, ideas, or events interact and develop over the course of the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|8-11|11-12.RI.3", 
+        "name": "11-12.RI.3", 
+        "shortName": "1-IT|8-11|11-12.RI.3", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the central ideas or information of a primary or secondary source; provide an accurate summary that makes clear the relationships among the key details and ideas.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|9-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|9-11|11-12.RH.2", 
+        "name": "11-12.RH.2", 
+        "shortName": "1-IT|9-11|11-12.RH.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the central ideas or conclusions of a text; summarize complex concepts, processes, or information presented in a text by paraphrasing them in simpler but still accurate terms.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|9-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|9-11|11-12.RST.2", 
+        "name": "11-12.RST.2", 
+        "shortName": "1-IT|9-11|11-12.RST.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine two or more central ideas of a text and analyze their development over the course of the text, including how they interact and build on one another to provide a complex analysis; provide an objective summary of the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|9-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|9-11|11-12.RI.2", 
+        "name": "11-12.RI.2", 
+        "shortName": "1-IT|9-11|11-12.RI.2", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate and evaluate multiple sources of information presented in diverse formats and media (e.g., visually, quantitatively, as well as in words) in order to address a question or solve a problem.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|13-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|13-11|11-12.RH.7", 
+        "name": "11-12.RH.7", 
+        "shortName": "1-IT|13-11|11-12.RH.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze in detail how a complex primary source is structured, including how key sentences, paragraphs, and larger portions of the text contribute to the whole.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|13-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|13-11|11-12.RH.5", 
+        "name": "11-12.RH.5", 
+        "shortName": "1-IT|13-11|11-12.RH.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze and evaluate the effectiveness of the structure an author uses in his or her exposition or argument, including whether the structure makes points clear, convincing, and engaging.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|13-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|13-11|11-12.RI.5", 
+        "name": "11-12.RI.5", 
+        "shortName": "1-IT|13-11|11-12.RI.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate and evaluate multiple sources of information presented in different media or formats (e.g., visually, uantitatively) as well as in words in order to address a question or solve a problem.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|13-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|13-11|11-12.RI.7", 
+        "name": "11-12.RI.7", 
+        "shortName": "1-IT|13-11|11-12.RI.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Integrate and evaluate multiple sources of information presented in diverse formats and media (e.g., quantitative data, video, multimedia) in order to address a question or solve a problem.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|13-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|13-11|11-12.RST.7", 
+        "name": "11-12.RST.7", 
+        "shortName": "1-IT|13-11|11-12.RST.7", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Analyze how the text structures information or ideas into categories or hierarchies, demonstrating understanding of the information or ideas.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|13-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|13-11|11-12.RST.5", 
+        "name": "11-12.RST.5", 
+        "shortName": "1-IT|13-11|11-12.RST.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the meaning of words and phrases as they are used in a text, including figurative, connotative, and technical meanings; analyze how an author uses and refines the meaning of a key term or terms over the course of a text (e.g., how Madison defines faction in Federalist No. 10).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|14-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|14-11|11-12.RI.4", 
+        "name": "11-12.RI.4", 
+        "shortName": "1-IT|14-11|11-12.RI.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Determine the meaning of words and phrases as they are used in a text, including analyzing how an author uses and refines the meaning of a key term over the course of a text (e.g., how Madison defines faction in Federalist No. 10).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|14-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|14-11|11-12.RH.4", 
+        "name": "11-12.RH.4", 
+        "shortName": "1-IT|14-11|11-12.RH.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate understanding of figurative language, word relationships, and nuances in word meanings. A) Interpret figures of speech (e.g., hyperbole, paradox) in context and analyze their role in the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|14-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|14-11|11-12.L.5a", 
+        "name": "11-12.L.5a", 
+        "shortName": "1-IT|14-11|11-12.L.5a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate understanding of figurative language, word relationships, and nuances in word meanings. A) Interpret figures of speech (e.g., euphemism, oxymoron) in context and analyze their role in the text.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:1-IT|14-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-IT|14-11|9-10.L.5a", 
+        "name": "9-10.L.5a", 
+        "shortName": "1-IT|14-11|9-10.L.5a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. E) Provide a concluding statement or section that follows from and supports the argument presented.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|6-11|11-12.W.1e", 
+        "name": "11-12.W.1e", 
+        "shortName": "2-W|6-11|11-12.W.1e", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. E) Provide a concluding statement or section that follows from and supports the argument presented.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.1e", 
+        "name": "11-12.W.1e", 
+        "shortName": "2-W|7-11|11-12.W.1e", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. D) Establish and maintain a formal style and objective tone while attending to the norms and conventions of the discipline in which they are writing.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.1d", 
+        "name": "11-12.W.1d", 
+        "shortName": "2-W|7-11|11-12.W.1d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. C) Use words, phrases, and clauses as well as varied syntax to link the major sections of the text, create cohesion, and clarify the relationships between claim(s) and reasons, between reasons and evidence, and between claim(s) and counterclaims.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.1c", 
+        "name": "11-12.W.1c", 
+        "shortName": "2-W|7-11|11-12.W.1c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. B) Develop claim(s) and counterclaims fairly and thoroughly, supplying the most relevant evidence for each while pointing out the strengths and limitations of both in a manner that anticipates the audience\u0092s knowledge level, concerns, values, and possible biases.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.1b", 
+        "name": "11-12.W.1b", 
+        "shortName": "2-W|7-11|11-12.W.1b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Produce clear and coherent writing in which the development, organization, and style are appropriate to task, purpose, and audience. (Grade-specific expectations for writing types are defined in standards 1\u00963 above.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.4", 
+        "name": "11-12.W.4", 
+        "shortName": "2-W|7-11|11-12.W.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Develop and strengthen writing as needed by planning, revising, editing, rewriting, or trying a new approach, focusing on addressing what is most significant for a specific purpose and audience. (Editing for conventions should demonstrate command of Language standards 1\u00963 up to and including grades 11\u009612 on page 54.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.5", 
+        "name": "11-12.W.5", 
+        "shortName": "2-W|7-11|11-12.W.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. B) Apply grades 11\u009612 Reading standards to literary nonfiction (e.g., \u0093Delineate and evaluate the reasoning in seminal U.S. texts, including the application of constitutional principles and use of legal reasoning [e.g., in U.S. Supreme Court Case majority opinions and dissents) and the premises, purposes, and arguments in works of public advocacy (e.g., The Federalist, presidential addresses]\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.9b", 
+        "name": "11-12.W.9b", 
+        "shortName": "2-W|7-11|11-12.W.9b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.8", 
+        "name": "11-12.W.8", 
+        "shortName": "2-W|7-11|11-12.W.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. A) Introduce precise, knowledgeable claim(s), establish the significance of the claim(s), distinguish the claim(s) from alternate or opposing claims, and create an organization that logically sequences claim(s), counterclaims, reasons, and evidence.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|7-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|7-11|11-12.W.1a", 
+        "name": "11-12.W.1a", 
+        "shortName": "2-W|7-11|11-12.W.1a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Acquire and use accurately general academic and domain-specific words and phrases, sufficient for reading, writing, speaking, and listening at the college and career readiness level; demonstrate independence in gathering vocabulary knowledge when considering a word or phrase important to comprehension or expression.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|8-11|11-12.L.6", 
+        "name": "11-12.L.6", 
+        "shortName": "2-W|8-11|11-12.L.6", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Apply knowledge of language to understand how language functions in different contexts, to make effective choices for meaning or style, and to comprehend more fully when reading or listening. A) Vary syntax for effect, consulting references (e.g., Tufte\u0092s Artful Sentences) for guidance as needed; apply an understanding of syntax to the study of complex texts when reading.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|8-11|11-12.L.3a", 
+        "name": "11-12.L.3a", 
+        "shortName": "2-W|8-11|11-12.L.3a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. D) Use precise language, domain-specific vocabulary, and techniques such as metaphor, simile, and analogy to manage the complexity of the topic.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|8-11|11-12.W.2d", 
+        "name": "11-12.W.2d", 
+        "shortName": "2-W|8-11|11-12.W.2d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. D) Use precise words and phrases, telling details, and sensory language to convey a vivid picture of the experiences, events, setting, and/or characters.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|8-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|8-11|11-12.W.3d", 
+        "name": "11-12.W.3d", 
+        "shortName": "2-W|8-11|11-12.W.3d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. B) Spell correctly.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|9-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|9-11|11-12.L.2b", 
+        "name": "11-12.L.2b", 
+        "shortName": "2-W|9-11|11-12.L.2b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English capitalization, punctuation, and spelling when writing. A) Observe hyphenation conventions.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|9-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|9-11|11-12.L.2a", 
+        "name": "11-12.L.2a", 
+        "shortName": "2-W|9-11|11-12.L.2a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. B) Resolve issues of complex or contested usage, consulting references (e.g., Merriam-Webster\u0092s Dictionary of English Usage, Garner\u0092s Modern American Usage) as needed.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|9-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|9-11|11-12.L.1b", 
+        "name": "11-12.L.1b", 
+        "shortName": "2-W|9-11|11-12.L.1b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Demonstrate command of the conventions of standard English grammar and usage when writing or speaking. A) Apply the understanding that usage is a matter of convention, can change over time, and is sometimes contested.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|9-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|9-11|11-12.L.1a", 
+        "name": "11-12.L.1a", 
+        "shortName": "2-W|9-11|11-12.L.1a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. D) Establish and maintain a formal style and objective tone while attending to the norms and conventions of the discipline in which they are writing.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|6-11|11-12.W.1d", 
+        "name": "11-12.W.1d", 
+        "shortName": "2-W|6-11|11-12.W.1d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. C) Use words, phrases, and clauses as well as varied syntax to link the major sections of the text, create cohesion, and clarify the relationships between claim(s) and reasons, between reasons and evidence, and between claim(s) and counterclaims.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|6-11|11-12.W.1c", 
+        "name": "11-12.W.1c", 
+        "shortName": "2-W|6-11|11-12.W.1c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. A) Introduce a topic; organize complex ideas, concepts, and information so that each new element builds on that which precedes it to create a unified whole; include formatting (e.g., headings), graphics (e.g., figures, tables), and multimedia when useful to aiding comprehension.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|3-11|11-12.W.2a", 
+        "name": "11-12.W.2a", 
+        "shortName": "2-W|3-11|11-12.W.2a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. B) Develop the topic thoroughly by selecting the most significant and relevant facts, extended definitions, concrete details, quotations, or other information and examples appropriate to the audience\u0092s knowledge of the topic.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|3-11|11-12.W.2b", 
+        "name": "11-12.W.2b", 
+        "shortName": "2-W|3-11|11-12.W.2b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. C) Use appropriate and varied transitions and syntax to link the major sections of the text, create cohesion, and clarify the relationships among complex ideas and concepts.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|3-11|11-12.W.2c", 
+        "name": "11-12.W.2c", 
+        "shortName": "2-W|3-11|11-12.W.2c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. F) Provide a concluding statement or section that follows from and supports the information or explanation presented (e.g., articulating implications or the significance of the topic).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|3-11|11-12.W.2f", 
+        "name": "11-12.W.2f", 
+        "shortName": "2-W|3-11|11-12.W.2f", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. E) Establish and maintain a formal style and objective tone while attending to the norms and conventions of the discipline in which they are writing.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|3-11|11-12.W.2e", 
+        "name": "11-12.W.2e", 
+        "shortName": "2-W|3-11|11-12.W.2e", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. D) Use precise language, domain-specific vocabulary, and techniques such as metaphor, simile, and analogy to manage the complexity of the topic.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|3-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|3-11|11-12.W.2d", 
+        "name": "11-12.W.2d", 
+        "shortName": "2-W|3-11|11-12.W.2d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. C) Use a variety of techniques to sequence events so that they build on one another to create a coherent whole and build toward a particular tone and outcome (e.g., a sense of mystery, suspense, growth, or resolution).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11|11-12.W.3c", 
+        "name": "11-12.W.3c", 
+        "shortName": "2-W|2-11|11-12.W.3c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. B) Use narrative techniques, such as dialogue, pacing, description, reflection, and multiple plot lines, to develop experiences, events, and/or characters.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11|11-12.W.3b", 
+        "name": "11-12.W.3b", 
+        "shortName": "2-W|2-11|11-12.W.3b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. A) Engage and orient the reader by setting out a problem, situation, or observation and its significance, establishing one or multiple point(s) of view, and introducing a narrator and/or characters; create a smooth progression of experiences or events.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11|11-12.W.3a", 
+        "name": "11-12.W.3a", 
+        "shortName": "2-W|2-11|11-12.W.3a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write narratives to develop real or imagined experiences or events using effective technique, well-chosen details, and well-structured event sequences. D) Use precise words and phrases, telling details, and sensory language to convey a vivid picture of the experiences, events, setting, and/or characters.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11|11-12.W.3d", 
+        "name": "11-12.W.3d", 
+        "shortName": "2-W|2-11|11-12.W.3d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Produce clear and coherent writing in which the development, organization, and style are appropriate to task, purpose, and audience. (Grade-specific expectations for writing types are defined in standards 1\u00963 above.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11|11-12.W.4", 
+        "name": "11-12.W.4", 
+        "shortName": "2-W|2-11|11-12.W.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. B) Apply grades 11\u009612 Reading standards to literary nonfiction (e.g., \u0093Delineate and evaluate the reasoning in seminal U.S. texts, including the application of constitutional principles and use of legal reasoning [e.g., in U.S. Supreme Court Case majority opinions and dissents) and the premises, purposes, and arguments in works of public advocacy (e.g., The Federalist, presidential addresses]\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11|11-12.W.9b", 
+        "name": "11-12.W.9b", 
+        "shortName": "2-W|2-11|11-12.W.9b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. A) Apply grades 11\u009612 Reading standards to literature (e.g., \u0093Demonstrate knowledge of eighteenth-, nineteenth- and early-twentieth-century foundational works of American literature, including how two or more texts from the same period treat similar themes or topics\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11|11-12.W.9a", 
+        "name": "11-12.W.9a", 
+        "shortName": "2-W|2-11|11-12.W.9a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Develop and strengthen writing as needed by planning, revising, editing, rewriting, or trying a new approach, focusing on addressing what is most significant for a specific purpose and audience. (Editing for conventions should demonstrate command of Language standards 1\u00963 up to and including grades 11\u009612 on page 54.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|2-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|2-11|11-12.W.5", 
+        "name": "11-12.W.5", 
+        "shortName": "2-W|2-11|11-12.W.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. B) Develop claim(s) and counterclaims fairly and thoroughly, supplying the most relevant evidence for each while pointing out the strengths and limitations of both in a manner that anticipates the audience\u0092s knowledge level, concerns, values, and possible biases.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|6-11|11-12.W.1b", 
+        "name": "11-12.W.1b", 
+        "shortName": "2-W|6-11|11-12.W.1b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write arguments to support claims in an analysis of substantive topics or texts, using valid reasoning and relevant and sufficient evidence. A) Introduce precise, knowledgeable claim(s), establish the significance of the claim(s), distinguish the claim(s) from alternate or opposing claims, and create an organization that logically sequences claim(s), counterclaims, reasons, and evidence.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|6-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|6-11|11-12.W.1a", 
+        "name": "11-12.W.1a", 
+        "shortName": "2-W|6-11|11-12.W.1a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. A) Introduce a topic; organize complex ideas, concepts, and information so that each new element builds on that which precedes it to create a unified whole; include formatting (e.g., headings), graphics (e.g., figures, tables), and multimedia when useful to aiding comprehension.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|5-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|5-11|11-12.W.2a", 
+        "name": "11-12.W.2a", 
+        "shortName": "2-W|5-11|11-12.W.2a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. E) Establish and maintain a formal style and objective tone while attending to the norms and conventions of the discipline in which they are writing.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.2e", 
+        "name": "11-12.W.2e", 
+        "shortName": "2-W|4-11|11-12.W.2e", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. D) Use precise language, domain-specific vocabulary, and techniques such as metaphor, simile, and analogy to manage the complexity of the topic.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.2d", 
+        "name": "11-12.W.2d", 
+        "shortName": "2-W|4-11|11-12.W.2d", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. C) Use appropriate and varied transitions and syntax to link the major sections of the text, create cohesion, and clarify the relationships among complex ideas and concepts.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.2c", 
+        "name": "11-12.W.2c", 
+        "shortName": "2-W|4-11|11-12.W.2c", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. B) Develop the topic thoroughly by selecting the most significant and relevant facts, extended definitions, concrete details, quotations, or other information and examples appropriate to the audience\u0092s knowledge of the topic.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.2b", 
+        "name": "11-12.W.2b", 
+        "shortName": "2-W|4-11|11-12.W.2b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. F) Provide a concluding statement or section that follows from and supports the information or explanation presented (e.g., articulating implications or the significance of the topic).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.2f", 
+        "name": "11-12.W.2f", 
+        "shortName": "2-W|4-11|11-12.W.2f", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Produce clear and coherent writing in which the development, organization, and style are appropriate to task, purpose, and audience. (Grade-specific expectations for writing types are defined in standards 1\u00963 above.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.4", 
+        "name": "11-12.W.4", 
+        "shortName": "2-W|4-11|11-12.W.4", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. B) Apply grades 11\u009612 Reading standards to literary nonfiction (e.g., \u0093Delineate and evaluate the reasoning in seminal U.S. texts, including the application of constitutional principles and use of legal reasoning [e.g., in U.S. Supreme Court Case majority opinions and dissents) and the premises, purposes, and arguments in works of public advocacy (e.g., The Federalist, presidential addresses]\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.9b", 
+        "name": "11-12.W.9b", 
+        "shortName": "2-W|4-11|11-12.W.9b", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Draw evidence form literary or informational texts to support analysis, reflection, and research. A) Apply grades 11\u009612 Reading standards to literature (e.g., \u0093Demonstrate knowledge of eighteenth-, nineteenth- and early-twentieth-century foundational works of American literature, including how two or more texts from the same period treat similar themes or topics\u0094).", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.9a", 
+        "name": "11-12.W.9a", 
+        "shortName": "2-W|4-11|11-12.W.9a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Gather relevant information from multiple authoritative print and digital sources, using advanced searches effectively; assess the strengths and limitations of each source in terms of the task, purpose, and audience; integrate information into the text selectively to maintain the flow of ideas, avoiding plagiarism and overreliance on any one source and following a standard format for citation.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.8", 
+        "name": "11-12.W.8", 
+        "shortName": "2-W|4-11|11-12.W.8", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Develop and strengthen writing as needed by planning, revising, editing, rewriting, or trying a new approach, focusing on addressing what is most significant for a specific purpose and audience. (Editing for conventions should demonstrate command of Language standards 1\u00963 up to and including grades 11\u009612 on page 54.)", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.5", 
+        "name": "11-12.W.5", 
+        "shortName": "2-W|4-11|11-12.W.5", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Write informative/explanatory texts to examine and convey complex ideas, concepts, and information clearly and accurately through the effective selection, organization, and analysis of content. A) Introduce a topic; organize complex ideas, concepts, and information so that each new element builds on that which precedes it to create a unified whole; include formatting (e.g., headings), graphics (e.g., figures, tables), and multimedia when useful to aiding comprehension.", 
+        "fkGradeLevel": "11", 
+        "fkParent": "SBAC-ELA-v1:2-W|4-11", 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:2-W|4-11|11-12.W.2a", 
+        "name": "11-12.W.2a", 
+        "shortName": "2-W|4-11|11-12.W.2a", 
+        "treeLevel": 3
+    }, 
+    {
+        "description": "Read Analytically: Informational Text - Students can read closely and analytically to comprehend a range of increasingly complex literary and informational texts.", 
+        "fkGradeLevel": "11", 
+        "fkParent": null, 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:NA", 
+        "name": "NA", 
+        "shortName": "Read Analytically: Informational Text", 
+        "treeLevel": 1
+    }, 
+    {
+        "description": "Read Analytically: Informational Text - Students can read closely and analytically to comprehend a range of increasingly complex literary and informational texts.", 
+        "fkGradeLevel": "11", 
+        "fkParent": null, 
+        "fkPublication": "SBAC-ELA-v1", 
+        "key": "SBAC-ELA-v1:1-RL", 
+        "name": "1-RL", 
+        "shortName": "Read Analytically: Informational Text", 
+        "treeLevel": 1
+    }
+]

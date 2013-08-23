@@ -17,7 +17,7 @@
 :: Digital Library Resources (DLR)
 :: Create
    - Resource
-:: Legal
+:: Legal 
 :: Admin theme fixes
 
 */
@@ -173,7 +173,7 @@ button, .button, .form-submit, #edit-submit, #edit-submit--2, #edit-submit--5, #
 
 button.secondary, .button.secondary, #edit-cancel, #sbac-search-close-button,
 .devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay,
-div.ctools-modal-content a.close {
+div.ctools-modal-content a.close, a.remove, a.fake-cancel {
   @include global-button-negative;
 }
 
@@ -1047,6 +1047,12 @@ a.tabledrag-handle .handle {
       font-size: emCalc(16px);
     }
   }
+
+  .field-name-field-alignment-term {
+    li {
+      line-height: 0.8em;
+    }
+  }
 }
 
 /* -----------------------------------------
@@ -1097,6 +1103,9 @@ a.tabledrag-handle .handle {
   margin: 0;
 }
 
+.sticky-header {
+  z-index: 99;
+}
 
 #field-file-values {
   width: 100%;
@@ -1108,6 +1117,158 @@ a.tabledrag-handle .handle {
   .button {
     margin-left: 10px;
     margin-top: 10px;
+  }
+  thead th:first-child {
+    background-color: #fff;
+    padding:5px 5px 25px;
+
+    &:after {
+      display:block;
+      content: 'Primary material. This is the main material with which you want users to interact.';
+      font-weight: normal;
+      font-size: emCalc(12px);
+      width: 93%;
+      position: absolute;
+      border-top: 1px solid #eee;
+      padding: 5px 0;
+      margin-top: 0px;
+    }
+  }
+  tr:nth-child(2) {
+    td:nth-child(2) {
+      padding-top: 30px;
+      .media-widget{
+      position: relative;
+      &:before {
+          display: block;
+          content: 'Secondary material(s). These will be shown adjacent to the primary material.';
+          position: absolute;
+          top: 20px;
+          left: -35px;
+          right: 0;
+          margin: -43px 0 0 -10px;
+          padding: 0 0 5px 10px;
+          font-size: emCalc(14px);
+          border-bottom: 1px solid #ccc;
+      }
+      }
+    }
+  }
+}
+
+
+.ui-dialog {
+  padding: 0;
+  @include box-shadow(1px, 1px, 1px,rgba(black,0.5));
+}
+
+.ui-widget-overlay  {
+  background: url('../images/colorbox/overlay.png') top left repeat;
+  @include opacity(0.9);
+}
+.page-media-browser {
+  background: white;
+
+  //tabs
+  .button-group {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  form {
+    margin: 0;
+  }
+
+  .ui-tabs{
+    .ui-tabs-nav{
+      li {
+        margin: 0;
+        @include border-radius(0);
+        border:none;
+
+        &:last-child{
+          border-right: 1px solid #ccc;
+        }
+
+        a{
+          @include border-radius(0);
+          border: none;
+          background: white;
+        }
+
+        &.ui-tabs-selected {
+          a {
+            color: white;
+            background-color: #0085ad;
+          }
+        }
+      }
+    }
+
+    .media-browser-tab.ui-tabs-panel {
+      border-width: 1px 0 0;
+      padding: 10px;
+    }
+  }
+
+  label {
+    float: left;
+    margin-bottom: 10px;
+  }
+  #edit-upload-upload {
+    float: left;
+    width: 50%;
+    clear:left;
+  }
+
+  #edit-upload-upload-button {
+    float:right;
+  }
+
+  .form-item .description {
+    clear: both;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 14px;
+    width: 80%;
+  }
+
+  .media-internet-providers {
+
+    font-size: 12px;
+
+    li {
+      margin: 0 0 2px 10px;
+      &:after {
+        content:',';
+      }
+
+      &:last-child{
+        &:after{
+          content:'.';
+        }
+      }
+    }
+  }
+
+  #media-tab-media_internet {
+    .form-item {
+      margin: 5px 0;
+    }
+
+    li {
+      display: inline;
+      margin: 0;
+    }
+
+    ul {
+      margin: 0 0 5px;
+    }
+  }
+
+  .button {
+    margin-bottom: 0;
   }
 }
 
@@ -1233,7 +1394,7 @@ a.tabledrag-handle .handle {
   #edit-group_materials {
   .field-name-field-file {
     .fieldset-wrapper {
-      table {
+      #field-file-values {
         width: 100%;
         border: none;
         thead {
@@ -2003,3 +2164,75 @@ a.tabledrag-handle .handle {
   }
 
  }
+
+ /* ----------------------------------------
+    Taxonomy tool tips
+  _________________________________________ */
+
+  .view-mode-tooltip {
+    display: inline-block;
+    position: relative;
+
+    &:hover {
+      .taxonomy-term-description {
+        background: #DFE5CC;
+        border: 1px solid #3C7646;
+        border-radius: 6px;
+        color: #3C7646;
+        display: block;
+        font-size: 12px;
+        left: 20px;
+        opacity: 1;
+        padding: 20px;
+        position: absolute;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        top: 30px;
+        transition-property: opacity;
+        transition-duration: 500ms;
+        -webkit-transition-property: opacity;
+        -webkit-transition-duration: 500ms;
+        width: 272px;
+        z-index: 999;
+      }
+    }
+
+    .taxonomy-term-description {
+      display: none;
+      opacity: 0;
+      
+      p {
+        font-size: inherit;
+        margin: 0;
+      }
+
+      &:after {
+        content: ' ';
+        position: absolute;
+        top: -28px;
+        left: 16px;
+        border-color: transparent transparent #DFE5CC transparent;
+        border-style: solid;
+        border-width: 14px;
+        width: 0;
+        height: 0;
+        z-index: 99;
+      }
+      
+      &:before {
+        content: ' ';
+        position: absolute;
+        top: -30px;
+        left: 15px;
+        border-color: transparent transparent #3C7646 transparent;
+        border-style: solid;
+        border-width: 15px;
+        width: 0;
+        height: 0;
+        z-index: 97;
+      }
+    }
+  }
+
+
+
+

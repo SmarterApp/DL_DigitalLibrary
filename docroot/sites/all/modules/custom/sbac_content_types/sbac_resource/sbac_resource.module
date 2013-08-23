@@ -67,15 +67,6 @@ function sbac_resource_menu() {
     'weight' => -50,
   );
 
-  $items['digital-library-resources/no-results'] = array(
-    'title' => 'Digital Library Resources',
-    'page callback' => 'sbac_resource_digital_library_no_results_page',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'menu_name' => 'main-menu',
-    'weight' => -50,
-  );
-
   $items['admin/structure/types/manage/%node_type/messages'] = array(
     'title' => 'Messages',
     'page callback' => 'drupal_get_form',
@@ -600,40 +591,11 @@ function sbac_resource_digital_library_page() {
   $_SESSION['sbac_search_count'] = $view->total_rows;
 
   if ($view->total_rows == 0) {
-    drupal_goto('digital-library-resources/no-results');
+    //drupal_goto('digital-library-resources/no-results');
   }
 
   menu_set_active_item('digital-library-resources');
   return theme('digital_library', array('resource_layout_view' => $resource_layout_view));
-}
-
-/**
- * Menu Callback for digital library no results.
- *
- * @return string
- */
-function sbac_resource_digital_library_no_results_page() {
-  $display = sbac_resource_determine_grid_or_list();
-  // hide category drawer
-  sbac_search_hide_category();
-  // Add appropriate JS.
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
-
-  // render resource view
-  $view = views_get_view('resources');
-  $view->set_display($display);
-  $view->pre_execute();
-  $view->execute();
-  $view->_post_execute();
-  $resource_layout_view = $view->preview();
-  $_SESSION['sbac_search_count'] = 0;
-
-  menu_set_active_item('digital-library-resources');
-  $output = theme('digital_library', array('resource_layout_view' => $resource_layout_view));
-
-  // remove keyword search variables
-  unset($_SESSION['sbac-search-keywords']);
-  return $output;
 }
 
 /**
@@ -643,13 +605,24 @@ function sbac_resource_digital_library_no_results_page() {
  * ie. Resource CT creates a node
  */
 function sbac_resource_cron() {
-  $secsback = 60 * 60 * 2; // 2h
-  $sql = "SELECT n.nid AS nid FROM {node} n JOIN {field_data_field_temp} t ON n.nid = t.entity_id ";
-  $sql .= "WHERE n.type = :resource AND t.field_temp_value = :temp AND (UNIX_TIMESTAMP() - n.created) > :secsback";
-  $result = db_query($sql, array(':resource' => 'resource', ':temp' => 1, ':secsback' => $secsback));
-  foreach ($result as $record) {
-    node_delete($record->nid);
-  }
+// @TODO Meet criteria to delete nodes that are just hanging in creation state after a certain amount of time.
+//  $secsback = 60 * 60 * 2; // 2h
+//  $sql = "SELECT n.nid AS nid FROM {node} n JOIN {field_data_field_temp} t ON n.nid = t.entity_id ";
+//  $sql .= "WHERE n.type = :resource AND t.field_temp_value = :temp AND (UNIX_TIMESTAMP() - n.created) > :secsback";
+//  $result = db_query($sql, array(':resource' => 'resource', ':temp' => 1, ':secsback' => $secsback));
+//  foreach ($result as $record) {
+//    node_delete($record->nid);
+//  }
+}
+
+/**
+ * Implements hook_node_update();
+ *
+ * @param $node
+ */
+function sbac_resource_node_update($node) {
+  // Always publish on update.
+  $node->status = 1;
 }
 
 /**
@@ -658,6 +631,10 @@ function sbac_resource_cron() {
  * @param $node
  */
 function sbac_resource_node_presave($node) {
+  if ($node->title) {
+    $node->status = 1;
+  }
+
   if (isset($node->nid) && $node->nid) { //update node
     if (isset($node->field_file['und'][0]['fid'])) {
       try {
@@ -748,21 +725,12 @@ function sbac_resource_delete_file_from_cmis(&$node) {
  *
  * @param $node
  */
-function sbac_resource_create_node(&$node) {
-  global $user;
-
-  $node->title = '';
-  $node->type = "resource";
-  node_object_prepare($node);
-  $node->language = LANGUAGE_NONE;
-  $node->uid = $user->uid;
-  $node->status = 0;
-  $node->promote = 0;
-  $node->comment = 1;
-  $node->field_temp['und'][0]['value'] = 1;
-
-  $node = node_submit($node);
-  node_save($node);
+function sbac_resource_create_node(&$form, &$form_state) {
+  $form['#limit_validation_errors'] = array();
+  $form_state['values'] = array();
+  $form_state['values']['workbench_moderation_state_new'] = 'creation';
+  node_form_submit($form, $form_state);
+  drupal_get_messages(NULL, TRUE);
 }
 
 /**
@@ -943,33 +911,6 @@ function sbac_resource_block_view($delta = '') {
 function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
   $blocks['system']['navigation']['status'] = FALSE;
   $blocks['workbench']['block']['status'] = FALSE;
-
-  // If I do not do this, the blocks do not propogate correctly. I'm not sure why.
-//  $blocks['sbac_resource']['sbac_resource_results_count']['visibility'] = BLOCK_VISIBILITY_LISTED;
-//  $blocks['sbac_resource']['sbac_resource_results_count']['pages'] = 'digital-library-resources*';
-//  $blocks['sbac_resource']['sbac_resource_results_count']['region'] = 'sub-header';
-//  $blocks['sbac_resource']['sbac_resource_results_count']['theme'] = 'SBAC';
-//  $blocks['sbac_resource']['sbac_resource_results_count']['status'] = TRUE;
-//  $blocks['sbac_resource']['sbac_resource_results_count']['weight'] = -23;
-//
-//  $blocks['sbac_resource']['sbac_resource_create_button']['visibility'] = BLOCK_VISIBILITY_LISTED;
-//  $blocks['sbac_resource']['sbac_resource_create_button']['pages'] = 'digital-library-resources*';
-//  $blocks['sbac_resource']['sbac_resource_create_button']['region'] = 'sub-header';
-//  $blocks['sbac_resource']['sbac_resource_create_button']['theme'] = 'SBAC';
-//  $blocks['sbac_resource']['sbac_resource_create_button']['status'] = TRUE;
-//  $blocks['sbac_resource']['sbac_resource_create_button']['weight'] = -22;
-//
-//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['visibility'] = BLOCK_VISIBILITY_LISTED;
-//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['pages'] = 'digital-library-resources*';
-//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['region'] = 'search';
-//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['theme'] = 'SBAC';
-//  $blocks['sbac_resource']['sbac_resource_grid_list_button']['status'] = TRUE;
-//
-// $blocks['sbac_resource']['sbac_resource_back_button']['visibility'] = BLOCK_VISIBILITY_LISTED;
-// $blocks['sbac_resource']['sbac_resource_back_button']['pages'] = "content/*\nterms-of-service";
-// $blocks['sbac_resource']['sbac_resource_back_button']['region'] = 'sub-header';
-// $blocks['sbac_resource']['sbac_resource_back_button']['theme'] = 'SBAC';
-// $blocks['sbac_resource']['sbac_resource_back_button']['status'] = TRUE;
 }
 
 /**
@@ -1016,4 +957,29 @@ function sbac_resource_determine_grid_or_list() {
     $_SESSION['dlp-view-mode'] = $display;
   }
   return $display;
+}
+
+/**
+ * Implements hook_apachesolr_ENTITY_TYPE_exclude();
+ *
+ * This is invoked for each entity from the type of ENTITY_TYPE that is being
+ * inspected to be added to the index. if any module returns TRUE, 
+ * the entity is skipped for indexing.
+ *
+ * @param string $entity_id
+ * @param object $row
+ *   A complete set of data from the indexing table.
+ * @param string $env_id
+ *   The machine name of the environment.
+ * @return boolean
+ */
+function sbac_resource_apachesolr_node_exclude($entity_id, $row, $env_id) {
+  // Never index a node if it has no title. Yes, this can happen...
+  if ($row->entity_type == 'node' && $row->bundle == 'resource') {
+    $node = node_load($row->entity_id);
+    if ($node && $node->title == NULL) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }

@@ -63,6 +63,11 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'resource' => 'resource',
   );
+  /* Filter criterion: Workbench Moderation: Current */
+  $handler->display->display_options['filters']['current']['id'] = 'current';
+  $handler->display->display_options['filters']['current']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['filters']['current']['field'] = 'current';
+  $handler->display->display_options['filters']['current']['value'] = '1';
 
   /* Display: Resources Summary */
   $handler = $view->new_display('block', 'Resources Summary', 'resources_summary');
@@ -77,14 +82,14 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['nid']['group_type'] = 'count';
   $handler->display->display_options['fields']['nid']['label'] = 'Resources Contributed';
   $handler->display->display_options['fields']['nid']['empty'] = '0';
-  /* Field: SUM(Content: Published) */
-  $handler->display->display_options['fields']['status']['id'] = 'status';
-  $handler->display->display_options['fields']['status']['table'] = 'node';
-  $handler->display->display_options['fields']['status']['field'] = 'status';
-  $handler->display->display_options['fields']['status']['group_type'] = 'sum';
-  $handler->display->display_options['fields']['status']['label'] = 'Contributed Resources Posted';
-  $handler->display->display_options['fields']['status']['type'] = 'boolean';
-  $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Field: SUM(Workbench Moderation: Published) */
+  $handler->display->display_options['fields']['published']['id'] = 'published';
+  $handler->display->display_options['fields']['published']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['fields']['published']['field'] = 'published';
+  $handler->display->display_options['fields']['published']['group_type'] = 'sum';
+  $handler->display->display_options['fields']['published']['label'] = 'Contributed Resources Posted';
+  $handler->display->display_options['fields']['published']['type'] = 'boolean';
+  $handler->display->display_options['fields']['published']['not'] = 0;
   /* Field: SUM(Content: Sticky) */
   $handler->display->display_options['fields']['sticky']['id'] = 'sticky';
   $handler->display->display_options['fields']['sticky']['table'] = 'node';
@@ -345,9 +350,18 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['field_state']['table'] = 'field_data_field_state';
   $handler->display->display_options['fields']['field_state']['field'] = 'field_state';
   $handler->display->display_options['fields']['field_state']['label'] = '';
-  $handler->display->display_options['fields']['field_state']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_state']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_state']['alter']['text'] = 'SNE from [field_state]';
   $handler->display->display_options['fields']['field_state']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_state']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_state']['delta_offset'] = '0';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_3']['id'] = 'nothing_3';
+  $handler->display->display_options['fields']['nothing_3']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_3']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_3']['label'] = '';
+  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = 'SNE from [field_state]';
+  $handler->display->display_options['fields']['nothing_3']['element_label_colon'] = FALSE;
   /* Field: User: District Name */
   $handler->display->display_options['fields']['field_district_name']['id'] = 'field_district_name';
   $handler->display->display_options['fields']['field_district_name']['table'] = 'field_data_field_district_name';
@@ -434,15 +448,14 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
   /* Contextual filter: User: State (field_state) */
-  $handler->display->display_options['arguments']['field_state_value']['id'] = 'field_state_value';
-  $handler->display->display_options['arguments']['field_state_value']['table'] = 'field_data_field_state';
-  $handler->display->display_options['arguments']['field_state_value']['field'] = 'field_state_value';
-  $handler->display->display_options['arguments']['field_state_value']['default_action'] = 'empty';
-  $handler->display->display_options['arguments']['field_state_value']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_state_value']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_state_value']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_state_value']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_state_value']['limit'] = '0';
+  $handler->display->display_options['arguments']['field_state_tid']['id'] = 'field_state_tid';
+  $handler->display->display_options['arguments']['field_state_tid']['table'] = 'field_data_field_state';
+  $handler->display->display_options['arguments']['field_state_tid']['field'] = 'field_state_tid';
+  $handler->display->display_options['arguments']['field_state_tid']['default_action'] = 'empty';
+  $handler->display->display_options['arguments']['field_state_tid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_state_tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_state_tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_state_tid']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: User: Roles */
   $handler->display->display_options['filters']['rid']['id'] = 'rid';
   $handler->display->display_options['filters']['rid']['table'] = 'users_roles';
