@@ -56,6 +56,13 @@ function sbac_alignment_menu(){
     'type'            => MENU_CALLBACK,
   );
 
+  $items['ajax-alignment-crud'] = array(
+    'title'           => 'AJAX',
+    'page callback'   => 'sbac_alignment_ajax_alignment_crud_callback',
+    'access arguments'=> array('access content'),
+    'type'            => MENU_CALLBACK,
+  );
+  
   $items['alignment-form'] = array(
     'title'           => 'AJAX',
     'page callback'   => 'drupal_get_form',
@@ -119,6 +126,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = null) {
 
   $output .= '<div id="alignment-page"><input id="ref_node" style="display:none" value="' . $ref_node . '"> ';
   $output .= '<div class="alignment-breadcrumb"></div>';
+  $output .= '<div id="alignment-msg"></div>';
   $output .= '<div class="alignment-filter">';
   $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject Area'));
   $output .= '</div><div class="alignment-form"></div>';
@@ -193,6 +201,18 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
       )
     )
   );
+  
+  $form['ccss-submit'] = array(
+    '#markup' => l(t('submiting'), '#',
+       array(
+         'attributes' => array(
+           'class' => 'button ctools-close-modal close',
+           'id' => 'ccss-submit',
+          ),
+         'external' =>  TRUE,
+      )
+    )
+  );
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -208,6 +228,9 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $form['#attached'] = array(
       'css' => array(
         SBAC_ALIGNMENT_MOD_PATH . '/css/alignment.css',
+      ),
+      'js' => array(
+        drupal_get_path('theme', 'sbac') . '/js/custom.js',
       ),
     );
 

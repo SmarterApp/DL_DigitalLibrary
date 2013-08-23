@@ -17,7 +17,7 @@
 :: Digital Library Resources (DLR)
 :: Create
    - Resource
-:: Legal
+:: Legal 
 :: Admin theme fixes
 
 */
@@ -173,7 +173,7 @@ button, .button, .form-submit, #edit-submit, #edit-submit--2, #edit-submit--5, #
 
 button.secondary, .button.secondary, #edit-cancel, #sbac-search-close-button,
 .devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay,
-div.ctools-modal-content a.close {
+div.ctools-modal-content a.close, a.remove, a.fake-cancel {
   @include global-button-negative;
 }
 
@@ -1103,6 +1103,9 @@ a.tabledrag-handle .handle {
   margin: 0;
 }
 
+.sticky-header {
+  z-index: 99;
+}
 
 #field-file-values {
   width: 100%;
@@ -1150,6 +1153,122 @@ a.tabledrag-handle .handle {
       }
       }
     }
+  }
+}
+
+
+.ui-dialog {
+  padding: 0;
+  @include box-shadow(1px, 1px, 1px,rgba(black,0.5));
+}
+
+.ui-widget-overlay  {
+  background: url('../images/colorbox/overlay.png') top left repeat;
+  @include opacity(0.9);
+}
+.page-media-browser {
+  background: white;
+
+  //tabs
+  .button-group {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  form {
+    margin: 0;
+  }
+
+  .ui-tabs{
+    .ui-tabs-nav{
+      li {
+        margin: 0;
+        @include border-radius(0);
+        border:none;
+
+        &:last-child{
+          border-right: 1px solid #ccc;
+        }
+
+        a{
+          @include border-radius(0);
+          border: none;
+          background: white;
+        }
+
+        &.ui-tabs-selected {
+          a {
+            color: white;
+            background-color: #0085ad;
+          }
+        }
+      }
+    }
+
+    .media-browser-tab.ui-tabs-panel {
+      border-width: 1px 0 0;
+      padding: 10px;
+    }
+  }
+
+  label {
+    float: left;
+    margin-bottom: 10px;
+  }
+  #edit-upload-upload {
+    float: left;
+    width: 50%;
+    clear:left;
+  }
+
+  #edit-upload-upload-button {
+    float:right;
+  }
+
+  .form-item .description {
+    clear: both;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 14px;
+    width: 80%;
+  }
+
+  .media-internet-providers {
+
+    font-size: 12px;
+
+    li {
+      margin: 0 0 2px 10px;
+      &:after {
+        content:',';
+      }
+
+      &:last-child{
+        &:after{
+          content:'.';
+        }
+      }
+    }
+  }
+
+  #media-tab-media_internet {
+    .form-item {
+      margin: 5px 0;
+    }
+
+    li {
+      display: inline;
+      margin: 0;
+    }
+
+    ul {
+      margin: 0 0 5px;
+    }
+  }
+
+  .button {
+    margin-bottom: 0;
   }
 }
 
