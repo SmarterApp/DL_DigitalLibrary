@@ -229,8 +229,7 @@ function _sbac_resource_preview_materials(&$vars) {
   if (isset($vars['field_file'][0]['uri'])) {
     foreach ($vars['field_file'] as $key => $material) {
       $url = file_create_url($material['uri']);
-      $media = _sbac_resource_media(&$url, $material);
-
+      $media = _sbac_resource_media($url, $material);
       if ($media == 'none') {
         $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       }
