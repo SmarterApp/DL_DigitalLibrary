@@ -27,6 +27,14 @@ function sbac_report_individual() {
     if (!empty($sne_details)) {
       $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
       $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
+
+      /* Uncomment for Phase 2 of the report
+      // Gate-Keeping Reviews.
+      $name = sbac_report_get_session_value('sne', 'name');
+      $gk_indv_rate = sbac_report_gate_keeping_reviews_rate($uid, $date_range);
+      $gk_all_rate = sbac_report_gate_keeping_reviews_rate('all', $date_range);
+      $gate_keeping = sbac_report_build_gk_table($name, $gk_indv_rate, $gk_all_rate);
+      */
     }
   }
 
@@ -35,6 +43,7 @@ function sbac_report_individual() {
       'sne_details' => $sne_details,
       'contributed_summary' => $contributed_summary,
       'contributed_details' => $contributed_details,
+      // 'gate_keeping' => $gate_keeping,
     )
   );
 }
@@ -121,4 +130,58 @@ SQL;
     }
   }
   print drupal_json_encode($matches);
+}
+
+
+/**
+ * Helper function to build the Gate Keeping Reviews table.
+ *
+ * @param string $name
+ *   The SNE name.
+ * @param array $indv_rate
+ *   The rate for the SNE returned by function sbac_report_gate_keeping_reviews_rate().
+ * @param array $all_rate
+ *   The rate for all SNEs returned by function sbac_report_gate_keeping_reviews_rate().
+ *
+ * @return string
+ *   HTML.
+ */
+function sbac_report_build_gk_table($name, $indv_rate, $all_rate) {
+  $header = array(
+    '',
+    t('Number of Gate-Keeping Reviews'),
+    t('Acceptance Rate'),
+    t('Return Rate'),
+  );
+
+  $rows = array();
+
+  // First row.
+  $indv_acceptance = ($indv_rate['acceptance'] / $indv_rate['total']) * 100;
+  $indv_return = ($indv_rate['return'] / $indv_rate['total']) * 100;
+  $rows[] = array(
+    array('data' => $name),
+    array('data' => $indv_rate['total']),
+    array('data' => $indv_rate['acceptance'] . ' (' . round($indv_acceptance, 0) . '%)'),
+    array('data' => $indv_rate['return'] . ' (' . round($indv_return, 0) . '%)'),
+  );
+
+  // Second row.
+  $all_acceptance = ($all_rate['acceptance'] / $all_rate['total']) * 100;
+  $all_return = ($all_rate['return'] / $all_rate['total']) * 100;
+  $rows[] = array(
+    array('data' => t('All SNEs')),
+    array('data' => $all_rate['total']),
+    array('data' => $all_rate['acceptance'] . ' (' . round($all_acceptance, 0) . '%)'),
+    array('data' => $all_rate['return'] . ' (' . round($all_return, 0) . '%)'),
+  );
+
+  return theme('table', array(
+      'header' => $header,
+      'rows' => $rows,
+      'attributes' => array(
+        'class' => array('large-12')
+      ),
+    )
+  );
 }
