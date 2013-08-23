@@ -110,6 +110,7 @@ function sbac_user_init() {
         position: absolute;
         top: 50px !important;
         left: 946px;
+        display: block;
       }
       .f-dropdown:before {
         right: 9px !important;

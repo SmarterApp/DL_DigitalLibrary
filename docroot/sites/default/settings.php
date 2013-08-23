@@ -557,7 +557,7 @@ if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/willappnovationcom/willappnovationcom-settings.inc');
 }
 
-// CMIS / Alfresco Integration
+// Alfresco / CMIS repo.
 $conf['cmis_repositories'] = array(
   'default' => array(
     'user' => 'admin',
