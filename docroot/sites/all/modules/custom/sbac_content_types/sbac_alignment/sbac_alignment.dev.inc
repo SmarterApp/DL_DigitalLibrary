@@ -153,7 +153,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
       }
       elseif(($tree_level = $term['treeLevel']) >= 2) {
         $parent_key = $grade . '|' . $term['fkParent'];
-        if(isset($parents[$parent_key])) {
+        if(isset($context['sandbox']['parents'][$parent_key])) {
           $parent_tid = $context['sandbox']['parents'][$parent_key];
           if (empty($parent_tid)) {
             $context['sandbox']['noparents'][] = $term['key'];
