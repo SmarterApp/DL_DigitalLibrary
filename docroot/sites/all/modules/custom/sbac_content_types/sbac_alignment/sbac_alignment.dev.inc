@@ -3,7 +3,7 @@
 /**
  * Set server 
  */
-ini_set('max_execution_time', '999');
+ini_set('max_execution_time', 999);
 ini_set('memory_limit', '1024M');
 /**
  * Global Variables
@@ -11,6 +11,7 @@ ini_set('memory_limit', '1024M');
 define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/');
 //variable_set('sbac_alignment_import_counter', 0);
 //variable_set('sbac_alignment_import_data', array());
+//variable_set('sbac_alignment_import_bad_terms', '');
 /**
  *
  */
@@ -20,6 +21,12 @@ function sbac_alignment_devtest() {
   }
   else {
     $edu_alignment_vocab_name = "education_alignment2";
+  }
+  
+  if(isset($_GET['reset'])) {
+    variable_set('sbac_alignment_import_counter', 0);
+    variable_set('sbac_alignment_import_data', array());
+    variable_set('sbac_alignment_import_bad_terms', '');
   }
 
   if(isset($_GET['file'])) {
@@ -141,6 +148,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
   
   $counter = variable_get('sbac_alignment_import_counter', 0);
   $parents = variable_get('sbac_alignment_import_data', array());
+  $bad_terms = variable_get('sbac_alignment_import_bad_terms', array());
   
   $parent_tid = 0;
   $json_count = count($json);
@@ -181,7 +189,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
         $parents[$key] = $new_term->tid;
       }
       else {
-        $context['sandbox']['noparents'][] = $term['key'];
+        $bad_terms[] = $term['key'];
       }
     }
     
@@ -192,6 +200,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     if($i % 100 == 0) {
       variable_set('sbac_alignment_import_counter', $i);
       variable_set('sbac_alignment_import_data', $parents);
+      variable_set('sbac_alignment_import_bad_terms', $bad_terms);
     }
   }
   

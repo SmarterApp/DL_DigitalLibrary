@@ -220,4 +220,5 @@ function sbac_alignment_update_7005() {
 function sbac_alignment_update_7006() {
   variable_set('sbac_alignment_import_counter', 0);
   variable_set('sbac_alignment_import_data', array());
+  variable_set('sbac_alignment_import_bad_terms', '');
 }
