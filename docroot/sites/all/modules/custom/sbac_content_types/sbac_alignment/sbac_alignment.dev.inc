@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Set server 
  */
@@ -8,6 +9,11 @@ ini_set('memory_limit', '1024M');
  * Global Variables
  */
 define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/');
+//variable_set('sbac_alignment_import_counter', 0);
+//variable_set('sbac_alignment_import_data', array());
+/**
+ *
+ */
 function sbac_alignment_devtest() {
   if(isset($_GET['vocab'])) {
     $edu_alignment_vocab_name = $_GET['vocab'];
@@ -45,11 +51,11 @@ function sbac_alignment_devtest() {
           '5 - Fifth Grade' =>  array(),
           '6 - Sixth Grade' =>  array(),
           '7 - Seventh Grade' =>  array(),
-          '8 - Eight Grade' =>  array(),
+          '8 - Eighth Grade' =>  array(),
           '9 - Ninth Grade' =>  array(),
           '10 - Tenth Grade' =>  array(),
           '11 - Eleventh Grade' =>  array(),
-          '12 - Twelveth Grade' =>  array(),
+          '12 - Twelfth Grade' =>  array(),
         ),
       ),
       'Math' => array(
@@ -62,11 +68,11 @@ function sbac_alignment_devtest() {
         '5 - Fifth Grade' =>  array(),
         '6 - Sixth Grade' =>  array(),
         '7 - Seventh Grade' =>  array(),
-        '8 - Eight Grade' =>  array(),
+        '8 - Eighth Grade' =>  array(),
         '9 - Ninth Grade' =>  array(),
         '10 - Tenth Grade' =>  array(),
         '11 - Eleventh Grade' =>  array(),
-        '12 - Twelveth Grade' =>  array(),
+        '12 - Twelfth Grade' =>  array(),
         ),
       ),
     );
@@ -118,10 +124,13 @@ function sbac_alignment_devtest() {
   }
 }
 
-
+/**
+ * Batch Callback
+ */
 function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
-  ini_set('max_execution_time', '9999');
+  ini_set('max_execution_time', 9999);
   ini_set('memory_limit', '1024M');
+  
   if (empty($context['sandbox'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($json);
@@ -129,53 +138,61 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     $context['sandbox']['parents'] = array();
     $context['sandbox']['noparents'] = array();
   }
-  $output = '';
+  
+  $counter = variable_get('sbac_alignment_import_counter', 0);
+  $parents = variable_get('sbac_alignment_import_data', array());
+  
   $parent_tid = 0;
-  $parents = array();
   $json_count = count($json);
   
   $msg = "
-    count " . $context['sandbox']['counter'] . "
+    count " . $counter . "
+    parents " . drupal_json_encode($parents) . "
 ";
 
   watchdog('sbac_alignment', $msg);
   
-  for ($i = $context['sandbox']['counter']; $i < $json_count; $context['sandbox']['counter']++, $i++) {
+  for ($i = $counter; $i < $json_count; $i++) {
     $term = $json[$i];
     $grade = trim($term['fkGradeLevel']);
+    $key = $grade . '|' . $term['key'];
+    
+    if($i % 100 == 0) {
+      variable_set('sbac_alignment_import_counter', $i);
+      variable_set('sbac_alignment_import_data', $parents);
+    }
+    
+    if (isset($parents[$key])) {
+      continue;
+    }
 
-      // Root term. first set after the grade
-      if ($term['treeLevel'] < 2) {
-        $parent_tid = $grade_terms[$grade]->tid;
-        $key = $grade . '|' . $term['key'];
+    // Root term. first set after the grade
+    if ($term['treeLevel'] < 2) {
+      $parent_tid = $grade_terms[$grade]->tid;
+      $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
+      $parents[$key] = $new_term->tid;
+    }
+    else { // treeLevel >= 2
+      $parent_key = $grade . '|' . $term['fkParent'];
+      if(isset($parents[$parent_key])) {
+        $parent_tid = $parents[$parent_key];
+        
         $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
-        $context['sandbox']['parents'][$key] = $new_term->tid;
+        $parents[$key] = $new_term->tid;
       }
-      elseif(($tree_level = $term['treeLevel']) >= 2) {
-        $parent_key = $grade . '|' . $term['fkParent'];
-        if(isset($context['sandbox']['parents'][$parent_key])) {
-          $parent_tid = $context['sandbox']['parents'][$parent_key];
-          if (empty($parent_tid)) {
-            $context['sandbox']['noparents'][] = $term['key'];
-          }
-          else {
-            $key = $grade . '|' . $term['key'];
-            $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
-            $context['sandbox']['parents'][$key] = $new_term->tid;
-          }
-        }
-        else {
-          $context['sandbox']['noparents'][] = $term['key'];
-        }
-      }
-      else{
+      else {
         $context['sandbox']['noparents'][] = $term['key'];
       }
-    
+    }
     
     $context['sandbox']['progress']++;
     $context['message'] = $term['key'];
     $context['results'][] = $term['key'];
+    
+    if($i % 100 == 0) {
+      variable_set('sbac_alignment_import_counter', $i);
+      variable_set('sbac_alignment_import_data', $parents);
+    }
   }
   
   
