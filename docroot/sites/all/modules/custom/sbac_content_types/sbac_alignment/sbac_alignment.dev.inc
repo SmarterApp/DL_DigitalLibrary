@@ -120,6 +120,8 @@ function sbac_alignment_devtest() {
 
 
 function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
+  ini_set('max_execution_time', '9999');
+  ini_set('memory_limit', '1024M');
   if (empty($context['sandbox'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($json);
