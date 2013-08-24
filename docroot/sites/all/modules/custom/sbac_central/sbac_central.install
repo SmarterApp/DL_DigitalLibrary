@@ -526,3 +526,12 @@ function sbac_central_update_7046() {
   );
   module_enable($modules);
 }
+
+/**
+ * Sets the module weight. Revert!
+ */
+function sbac_central_update_7046() {
+  $ret = array();
+  db_query("UPDATE system SET weight = 0 WHERE name = 'sbac_resource'");
+  return $ret;
+}
