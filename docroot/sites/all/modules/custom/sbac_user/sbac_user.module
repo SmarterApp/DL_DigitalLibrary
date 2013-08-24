@@ -1056,8 +1056,10 @@ function sbac_user_format_username($user) {
  */
 function sbac_user_disable_feedback() {
   global $user;
+  $data =  $account->field_feedback_flag['und'][0]['value'];
   $account = user_load($user->uid);
   $account->field_feedback_flag['und'][0]['value'] = (int) 1;
   user_save($account);
-  return drupal_json_output($data);
+
+  return $data;
 }
