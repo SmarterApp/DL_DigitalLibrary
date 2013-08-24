@@ -126,58 +126,60 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($json);
     $context['sandbox']['counter'] = 0;
+    $context['sandbox']['parents'] = array();
+    $context['sandbox']['noparents'] = array();
   }
   $output = '';
   $parent_tid = 0;
   $parents = array();
   $json_count = count($json);
   
-  for ($i=$context['sandbox']['counter']; $i < $json_count; $i++) {
+  $msg = "
+    count " . $context['sandbox']['counter'] . "
+";
+
+  watchdog('sbac_alignment', $msg);
+  
+  for ($i = $context['sandbox']['counter']; $i < $json_count; $context['sandbox']['counter']++, $i++) {
     $term = $json[$i];
-  //foreach ($json as $term) {
-    //dsm($term);
-      $grade = trim($term['fkGradeLevel']);
+    $grade = trim($term['fkGradeLevel']);
 
       // Root term. first set after the grade
       if ($term['treeLevel'] < 2) {
         $parent_tid = $grade_terms[$grade]->tid;
         $key = $grade . '|' . $term['key'];
-        $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
+        $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
+        $context['sandbox']['parents'][$key] = $new_term->tid;
       }
       elseif(($tree_level = $term['treeLevel']) >= 2) {
         $parent_key = $grade . '|' . $term['fkParent'];
         if(isset($parents[$parent_key])) {
-          $parent_tid = $parents[$parent_key]->tid;
+          $parent_tid = $context['sandbox']['parents'][$parent_key];
           if (empty($parent_tid)) {
-            //cannot find parent save to grade
-            $parent_tid = $grade_terms[$grade]->tid;
-            $broken_terms[] = $term;
+            $context['sandbox']['noparents'][] = $term['key'];
           }
           else {
-          $key = $grade . '|' . $term['key'];
-          $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
+            $key = $grade . '|' . $term['key'];
+            $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
+            $context['sandbox']['parents'][$key] = $new_term->tid;
           }
         }
         else {
-          $broken_terms[] = $term;
+          $context['sandbox']['noparents'][] = $term['key'];
         }
       }
       else{
-        //dsm('BAD TERM');dsm($term);
-        //@TODO KS - need to output in case of error
+        $context['sandbox']['noparents'][] = $term['key'];
       }
     
     
     $context['sandbox']['progress']++;
     $context['message'] = $term['key'];
     $context['results'][] = $term['key'];
-    //if ($context['sandbox']['progress'] == 1000) {
-    //  $context['results'][] = 'BREAK';
-    //  $context['sandbox']['counter'] = $i;
-    //  $context['sandbox']['broken'] = $broken_terms;
-    //  break;
-    //}
   }
+  
+  
+  //finish
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
   }
