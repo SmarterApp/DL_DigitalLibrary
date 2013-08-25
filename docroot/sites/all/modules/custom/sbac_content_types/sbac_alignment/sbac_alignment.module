@@ -139,7 +139,7 @@ function sbac_alignment_ajax_alignment_crud_callback() {
         $node->field_alignment_term['und'][]['tid'] = $tid;
         node_save($node);
       }
-      print drupal_json_encode(array('html' => 'asd' .  views_embed_view('alignment', 'resource_admin_view', $alignment_ref)));
+      print drupal_json_encode(array('html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref)));
       exit;
       break;
   }
@@ -576,50 +576,3 @@ function sbac_alignment_form_submit_handler(&$form, &$form_state) {
     $form_state['values']['field_resource_reference']['und'][0]['target_id'] = $_GET['nid'];
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
