@@ -1385,7 +1385,7 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_cancel_button(&$form, &$form_state) {
-  if ($form_state['node']->status == 1) {
+  if ($form_state['values']['workbench_moderation_state_new']== 'draft') {
     return;
   }
 
