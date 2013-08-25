@@ -31,23 +31,17 @@ h2.name {
 }
 
 .field-name-field-state {
-  clear: left;
-  display: block !important;
 
   .field-label {
-    display: inline-block;
-    color: inherit;;
-    font-weight: normal;
-    margin: 0 5px 0 0;
-    padding: 0;
-    line-height: normal;
-    font-size: inherit;
+    display: none;
   }
 
   ul {
     margin: 0;
     padding: 0;
     display: inline-block;
+    line-height: 14px;
+    float: left;
 
     li {
       display: inline-block;
