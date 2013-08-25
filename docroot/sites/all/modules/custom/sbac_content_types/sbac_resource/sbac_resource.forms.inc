@@ -1494,7 +1494,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_asset_downloads']['#access'] = FALSE;
   $form['field_total_views']['#access'] = FALSE;
   $form['field_unique_views']['#access'] = FALSE;
-  $form['field_alignment_terms']['#access'] = FALSE;
+  $form['field_alignment_term']['#access'] = FALSE;
 }
 
 /**
