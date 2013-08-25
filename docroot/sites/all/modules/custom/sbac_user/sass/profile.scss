@@ -30,6 +30,41 @@ h2.name {
   }
 }
 
+.field-name-field-state {
+  clear: left;
+  display: block !important;
+
+  .field-label {
+    display: inline-block;
+    color: inherit;;
+    font-weight: normal;
+    margin: 0 5px 0 0;
+    padding: 0;
+    line-height: normal;
+    font-size: inherit;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+
+    li {
+      display: inline-block;
+      margin: 0 5px 0 0;
+      padding: 0;
+      &:after{
+        content:', ';
+      }
+      &:last-child{
+        &:after{
+          content:'.';
+        }
+      }
+    }
+  }
+}
+
 .profile-pic img {
   @include border-radius(6px);
 }
