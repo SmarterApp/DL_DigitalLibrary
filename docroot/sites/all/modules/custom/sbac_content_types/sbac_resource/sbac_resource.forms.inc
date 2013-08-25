@@ -1109,7 +1109,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
   // Materials
   $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
-
   // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);

@@ -16,6 +16,7 @@ dependencies[] = image
 dependencies[] = ldap_user
 dependencies[] = link
 dependencies[] = list
+dependencies[] = media
 dependencies[] = node
 dependencies[] = options
 dependencies[] = sbac_alignment
