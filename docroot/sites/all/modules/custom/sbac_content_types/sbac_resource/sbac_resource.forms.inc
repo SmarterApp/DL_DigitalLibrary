@@ -1353,6 +1353,7 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
   $form['actions']['submit']['#prefix'] = '<div id="sbac-resource-save-continue">';
   $form['actions']['submit']['#suffix'] = '</div>';
   $form['actions']['submit']['#weight'] = 1;
+  $form['actions']['submit']['#attributes'] = array('id' => 'edit-submit');
 }
 
 /**
