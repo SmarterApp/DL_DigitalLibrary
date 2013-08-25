@@ -144,7 +144,6 @@ function sbac_ldap_user_import_data($settings, $update_setting, $column_settings
  * Implementation of hook_user_import_after_save().
  */
 function sbac_ldap_user_import_after_save($settings, $account, $password, $fields, $updated, $update_setting_per_module) {
- dsm(array($settings, $account, $password, $fields, $updated, $update_setting_per_module));
   $fields_data = isset($fields['field']) ? $fields['field'] : array();
 
   if (empty($fields_data)) return;
@@ -236,8 +235,6 @@ function sbac_ldap_user_import_after_save($settings, $account, $password, $field
       // Use callback function to process info for field before saving.
       $processed_fields[$field_name] = $processor_function($user_fields, $field_name, $values);
     }
-    
-    dsm($processed_fields);
   }
 
   if (!empty($processed_fields)) {
