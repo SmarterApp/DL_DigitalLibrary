@@ -85,7 +85,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     }
     else {
       // The node is always published... except for when the node is not created.
-      $form['options']['status']['#default_value'] = 1;
+      // $form['options']['status']['#default_value'] = 1;
     }
   }
 }
@@ -123,20 +123,16 @@ function sbac_resource_form_license_after_build($element) {
  * @param $form_state
  */
 function sbac_resource_save_and_close(&$form, &$form_state) {
+  sbac_resource_clean_text($form_state);
   // If there's a title, lets push this to the new state.
-  if ($form_state['values']['workbench_moderation_state_new'] == 'creation') {
-    $form_state['values']['workbench_moderation_state_new'] = 'draft';
-  }
+  $form_state['values']['workbench_moderation_state_new'] = 'draft';
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
-  //$form_state['values']['status'] = 1;
-
   // If the nid is not set, set it to prevent blank nodes.
   if ($form_state['values']['nid'] == NULL) {
     $form_state['values']['nid'] = $form_state['node']->nid;
     $form_state['values']['vid'] = $form_state['node']->vid;
   }
-  sbac_resource_clean_text($form_state);
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
@@ -1099,6 +1095,10 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   $form['field_principles']['und'][0]['value']['#title'] = t('Principles, Literature, or Research') . ' ' . theme('form_required_marker');
 }
 
+//function sbac_resource_form_file_after_build($element) {
+//  $var = '';
+//}
+
 /**
  * Creates the materials form field.
  *
@@ -1107,6 +1107,8 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
+  //$form['field_file'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_file_after_build';
+
   // Materials
   $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
   // License Informations

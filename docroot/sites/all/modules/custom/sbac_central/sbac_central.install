@@ -540,7 +540,16 @@ function sbac_central_update_7047() {
  * Sets the module weight. Revert!
  */
 function sbac_central_update_7048() {
+//  $ret = array();
+//  db_query("UPDATE system SET weight = 6 WHERE name = 'sbac_resource'");
+//  return $ret;
+}
+
+/**
+ * Sets the module weight. Revert!
+ */
+function sbac_central_update_7049() {
   $ret = array();
-  db_query("UPDATE system SET weight = 6 WHERE name = 'sbac_resource'");
+  db_query("UPDATE system SET weight = 0 WHERE name = 'sbac_resource'");
   return $ret;
 }
