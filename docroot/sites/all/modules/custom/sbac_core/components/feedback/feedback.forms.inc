@@ -82,8 +82,12 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
           $delta = $key_parts[2];
 
           $set_title = trim(check_plain(strip_tags($values[$container][$lang][$delta]['set_title'])));
-
+        if ($values['entity']->type == 'gate_keeper') {
+          $new_text= t('Please remove inappropriate language from the comment to Gate-Keeping Criteria to continue');
+        }
+        else {
           $new_text = t('Please remove inappropriate language from the comment in Quality Criterion below to continue');
+        }
 
           // ugly, but works
           $location = array_search($text, $_SESSION['messages']['error']);
@@ -98,7 +102,6 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
   switch ($values['entity']->type) {
     case 'gate_keeper':
       $container = 'field_quality_set';
-
       $clean_check($container, array('field_comments', 'field_meets_criterion'));
 
       switch ($values['action']) {

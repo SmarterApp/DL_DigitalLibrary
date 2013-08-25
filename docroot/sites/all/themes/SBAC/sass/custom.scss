@@ -1878,6 +1878,15 @@ a.tabledrag-handle .handle {
     left: auto !important;
     display:block;
   }
+  &:before{
+    right:15px;
+    left: auto!important; 
+  }
+  &:after {
+    right: 14px;
+    left: auto !important;
+
+  }
   color: #333;
 
   a {
