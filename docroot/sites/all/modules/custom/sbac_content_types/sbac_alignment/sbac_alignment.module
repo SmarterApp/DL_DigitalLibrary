@@ -226,7 +226,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   //@TODO KS- change to terms
   $form['alignment_type'] = array(
     '#type' => 'select',
-    '#title' => 'Alignment Type',
+    '#title' => 'Choose Alignment Type',
     '#required' => TRUE,
     '#options' => array(
       'Assesses' => 'Assesses',
