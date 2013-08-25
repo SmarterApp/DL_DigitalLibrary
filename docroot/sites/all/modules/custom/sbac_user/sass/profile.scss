@@ -47,6 +47,12 @@ h2.name {
       display: inline-block;
       margin: 0 5px 0 0;
       padding: 0;
+
+      a {
+        cursor: default;
+        color: inherit;
+      }
+      
       &:after{
         content:', ';
       }
