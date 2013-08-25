@@ -535,6 +535,7 @@ function sbac_resource_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_document_id',
     'label' => 'Document ID',
+    'profanity' => 0,
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -542,9 +543,14 @@ function sbac_resource_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'ldap_user',
-      'settings' => array(),
-      'type' => 'ldap_user_hidden',
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
       'weight' => 5,
     ),
   );
