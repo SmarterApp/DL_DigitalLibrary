@@ -40,7 +40,7 @@ function media_internet_add($form, &$form_state = array(), $types = NULL) {
   if ($providers) {
     // If any providers are enabled it is assumed that some kind of embed is supported.
     $form['embed_code']['#title'] = t('Enter an image URL or an embed code');
-    $form['embed_code']['#description'] = t('Enter a URL or the embed code from a media provider.');
+    $form['embed_code']['#description'] = t('Enter a URL from a media provider.');
 
     // Providers are displayed in an unordered list below the embed input.
     // Providers can easily style their own listing by targeting the unique
