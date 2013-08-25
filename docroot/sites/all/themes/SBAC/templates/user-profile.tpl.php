@@ -61,7 +61,8 @@
 			<?php
 				$school = drupal_render($user_profile['field_school_name']);
 				$district = drupal_render($user_profile['field_district_name']);
-				$state = drupal_render($user_profile['field_state']);
+				//$state = drupal_render($user_profile['field_state']);
+        $state = $user_profile['field_state'][0]['#title'];
 
 				if ($school && $district && $state) {
 					echo t('!school in !district, !state', array(
