@@ -95,11 +95,11 @@
         var filter_container = $('.sbac-filter-cat-area');
         if (filter_container.is(':visible')) {
           filter_container.slideUp('slow');
-          $(this).removeClass("active");
+          $('.sbac-filter-cat-area').removeClass("active");
         }
         else{
           filter_container.slideDown('fast');
-          $(this).addClass("active");
+          $('.sbac-filter-cat-area').addClass("active");
         }
       }
     }
