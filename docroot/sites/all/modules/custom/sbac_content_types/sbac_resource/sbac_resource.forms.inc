@@ -129,7 +129,7 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   }
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
-  $form_state['values']['status'] = 1;
+  //$form_state['values']['status'] = 1;
 
   // If the nid is not set, set it to prevent blank nodes.
   if ($form_state['values']['nid'] == NULL) {
@@ -1495,7 +1495,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_unique_views']['#access'] = FALSE;
   $form['field_alignment_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
-  //$form['field_file']['und']['add_more']['#access'] = FALSE;
+  // $form['field_file']['und']['add_more']['#access'] = FALSE;
 }
 
 /**
