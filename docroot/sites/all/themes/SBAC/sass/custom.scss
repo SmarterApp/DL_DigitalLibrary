@@ -1128,7 +1128,10 @@ a.tabledrag-handle .handle {
 .tabledrag-toggle-weight {
   display: none;
 }
-#field-file-values {
+
+// media module
+#field-file-values,
+#field-file-values--2 {
   width: 100%;
 
   .preview {
@@ -1412,6 +1415,7 @@ a.tabledrag-handle .handle {
   }
 
   // materials tab
+  // media module
   #edit-group_materials {
   .field-name-field-file {
 
@@ -1419,15 +1423,15 @@ a.tabledrag-handle .handle {
       font-size: 12px;
       line-height: 14px;
     }
-    .fieldset-wrapper {
-      #field-file-values {
+    .form-item {
+      #field-file-values, #field-file-values--2 {
         width: 100%;
         border: none;
         thead {
           background-color: #fff;
           &:after {
             display: inline-block;
-            content: 'Primary material. This is the main material with which you want users to interact.';
+            //content: 'Primary material. This is the main material with which you want users to interact.';
             margin: 5px 10px;
             font-weight: normal;
             font-size: emCalc(12px);
