@@ -1383,7 +1383,7 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_cancel_button(&$form, &$form_state) {
-  if ($form['#node']->workbench_moderation['current']->state != 'creation') {
+  if ($form_state['node']->status == 1) {
     return;
   }
 
@@ -1495,6 +1495,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_unique_views']['#access'] = FALSE;
   $form['field_alignment_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
+  $form['field_file']['und']['add_more']['#access'] = FALSE;
 }
 
 /**
