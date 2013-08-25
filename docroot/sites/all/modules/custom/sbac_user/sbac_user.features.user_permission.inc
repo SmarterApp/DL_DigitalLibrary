@@ -511,6 +511,17 @@ function sbac_user_user_default_permissions() {
     'module' => 'sbac_help',
   );
 
+  // Exported permission: use text format full_html.
+  $permissions['use text format full_html'] = array(
+    'name' => 'use text format full_html',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'filter',
+  );
+
   // Exported permission: use workbench_moderation my drafts tab.
   $permissions['use workbench_moderation my drafts tab'] = array(
     'name' => 'use workbench_moderation my drafts tab',
