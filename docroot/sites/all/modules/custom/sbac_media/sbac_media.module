@@ -115,7 +115,7 @@ function sbac_media_create_embed_url($file) {
       $url = 'http://www.teachertube.com/embed.php?pg=video_' . $id;
       break;
     case 'video/vimeo':
-      $url = 'http://player.vimeo.com/video/' . $id . '?title=0&amp;byline=0&amp;portrait=0';
+      $url = '//player.vimeo.com/video/' . $id . '?title=0&amp;byline=0&amp;portrait=0';
       break;
     case 'video/youtube':
       $url = '//www.youtube.com/embed/' . $id;
