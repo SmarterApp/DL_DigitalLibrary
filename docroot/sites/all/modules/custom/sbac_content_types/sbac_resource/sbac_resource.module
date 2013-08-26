@@ -207,8 +207,8 @@ function _sbac_resource_preview_content(&$vars) {
       $viewer['viewer'] = '<iframe src="http://docs.google.com/viewer?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
     }
     else if ($media == 'video') {
-      $jwplayer = 'jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 850 });';
-      drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 20));
+      $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 850});});';
+      drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999));
       $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
     }
     else if ($media == 'image') {
