@@ -9,13 +9,15 @@ ini_set('memory_limit', '1024M');
  * Global Variables
  */
 define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/');
-//variable_set('sbac_alignment_import_counter', 0);
-//variable_set('sbac_alignment_import_data', array());
-//variable_set('sbac_alignment_import_bad_terms', '');
 /**
- *
+ * Batch Callback
+ * Imports the ccss tags using BATCH API.
  */
-function sbac_alignment_devtest() {
+function sbac_alignment_batch_importer_page() {
+  if (!(isset($_GET['op']) && $_GET['op'] == 'import')) {
+    return '';
+  }
+  
   if(isset($_GET['vocab'])) {
     $edu_alignment_vocab_name = $_GET['vocab'];
   }
@@ -35,7 +37,6 @@ function sbac_alignment_devtest() {
   else {
     $filename = "ela.json";
   }
-
 
   $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
   $grade_terms = array();
@@ -86,8 +87,6 @@ function sbac_alignment_devtest() {
     
     sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
   }
-
-  
   
   if(isset($_GET['type'])) {
     $subject = array_pop(taxonomy_get_term_by_name($_GET['type']));
@@ -100,13 +99,10 @@ function sbac_alignment_devtest() {
   if ($create) {
     // get grades tids
     $terms = taxonomy_get_tree($edu_alignment_vocab->vid, $subject->tid, 1, TRUE);
-    //dsm($terms);
     foreach ($terms as $term) {
       if($term->depth == 0) {
         $name = explode('-', $term->name);
-        //dsm(array($term->name, truncate($name[0])));
         $grade_terms[trim($name[0])] = $term;
-
       }
     }
     
@@ -114,7 +110,7 @@ function sbac_alignment_devtest() {
     $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
     $contents = $data->data;
     $json = drupal_json_decode($contents);
-    uasort($json, 'cmp');
+    uasort($json, 'sbac_alignment_sort_tree');
   
     $batch = array(
       'title' => t('Exporting'),
@@ -130,9 +126,9 @@ function sbac_alignment_devtest() {
     batch_process('foo');
   }
 }
-
 /**
  * Batch Callback
+ * BATCH API. Imports the ccss tags.
  */
 function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
   ini_set('max_execution_time', 9999);
@@ -204,13 +200,15 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     }
   }
   
-  
   //finish
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
   }
 }
-
+/**
+ * BATCH FINISHED CALLBACK
+ * BATCH API. Called when batch finishes.
+ */
 function sbac_alignment_batch_test_finished($success, $results, $operations) {
   // The 'success' parameter means no fatal PHP errors were detected. All
   // other error management should be handled using 'results'.
@@ -227,8 +225,15 @@ function sbac_alignment_batch_test_finished($success, $results, $operations) {
   }
   $_SESSION['my_batch_results'] = $items;
 }
-
-function sbac_alignment_devfix() {
+/**
+ * Function Callback.
+ * Used to import sample data set for testing.
+ */
+function sbac_alignment_test_import() {
+  if (!(isset($_GET['op']) && $_GET['op'] == 'test')) {
+    return '';
+  }
+  
   $edu_alignment_vocab_name = "education_alignment";
   $filename = 'ela.sample.json';
 
@@ -281,7 +286,7 @@ function sbac_alignment_devfix() {
   $contents = $data->data;
   $json = drupal_json_decode($contents);
 
-  uasort($json, 'cmp');
+  uasort($json, 'sbac_alignment_sort_tree');
   
   foreach ($json as $term) {
     $grade = trim($term['fkGradeLevel']);
@@ -312,112 +317,30 @@ function sbac_alignment_devfix() {
     }
   }
 }
-
 /**
- *
+ * Helper Function
+ * Sorts the tree.
  */
-function sbac_alignment_devfix3(){
-  $shortnames = get_shortnames();
-  
-  $filename = 'ma.json';
-  
-  //get data
-  $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
-  $contents = $data->data;
-
-  $json = drupal_json_decode($contents);
-  //dsm($json);
-
-  usort($json, 'cmp');
-  $count = 0;
-  foreach($json as &$term) {
-    dsm($term);
-    $temp = explode(':', $term['key']);
-    $key = $temp[1];
-    
-    if(empty($term['shortname'])) {
-      $term['shortName'] = $shortnames[$key];  
-    }
-    
-    if($count++ >10){
-      //break;
-    }
+function sbac_alignment_sort_tree($a, $b) {
+  if ($a['treeLevel'] == $b['treeLevel']) {
+    return 0;
   }
-  print drupal_json_encode($json);
-  
-  exit;
+  return ($a['treeLevel'] < $b['treeLevel']) ? -1 : 1;
 }
-/**
- *
- */
-function sbac_alignment_devfix2(){
-  $shortnames = get_shortnames();
-  //dsm($shortnames);
-  
-  $publication = 'SBAC-ELA-v1';
-  
-  foreach ($shortnames as $key => $shortname) {
-    //dsm(array($key, $shortname));
-    //select fdfak.field_alignment_key_value, fdfas.field_alignment_shortname_value from field_data_field_alignment_key fdfak left join field_data_field_alignment_shortname fdfas on fdfak.entity_id = fdfas.entity_id order by fdfak.field_alignment_key_value;
-
-    $sql = "
-      UPDATE {field_data_field_alignment_shortname} fdfas
-      LEFT JOIN {field_data_field_alignment_key} fdfak
-      ON fdfak.entity_id = fdfas.entity_id
-      SET fdfas.field_alignment_shortname_value= '$shortname'
-      WHERE fdfak.field_alignment_key_value LIKE '%|$publication:$key'";
-      db_query($sql);
-  }
-  
-  return '';
-}
-
-function cmp2($a, $b) {
-    if ($a->depth == $b->depth) {
-        return 0;
-    }
-    return ($a->depth > $b->depth) ? -1 : 1;
-}
-
-
-function cmp($a, $b) {
-    if ($a['treeLevel'] == $b['treeLevel']) {
-        return 0;
-    }
-    return ($a['treeLevel'] < $b['treeLevel']) ? -1 : 1;
-}
-
 /**
  * Helper Function
  * Gets the file name via http.
  */
-function get_file($filename) {
+function sbac_alignment_get_file($filename) {
    //@TODO KS - add error handler
    $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
    return $data->data;
 }
 /**
- * Helper Function
- * Gets the shortnames from file.
+ * Page Callback
+ * Imports ccss tagger based on GET params
  */
-function get_shortnames() {
-  $shortnames = array();
-  $data = explode("\n", get_file('ma.shortname.csv'));
-  array_shift($data);
-  
-  foreach ($data as $row) {
-    $temp = explode(',', $row);
-    //$shortnames[trim($temp[0])] = array(
-    //  'key' => $temp[0],
-    //  'shortname' => $temp[1],
-    //);
-    $shortnames[trim($temp[0])] = $temp[1];
-  }
-  
-  return $shortnames;
-}
-
-function sbac_alignment_devtest2() {
+function sbac_alignment_import_ccss() {
   ini_set('max_execution_time', '9999');
   ini_set('memory_limit', '2048M');
   
@@ -435,13 +358,11 @@ function sbac_alignment_devtest2() {
     $filename = "ela.json";
   }
 
-
   $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
   $grade_terms = array();
 
   $create_base = TRUE;
   $create = TRUE;
-  $print = FALSE;
 
   // create base terms
   if ($create_base) {
@@ -457,11 +378,11 @@ function sbac_alignment_devtest2() {
           '5 - Fifth Grade' =>  array(),
           '6 - Sixth Grade' =>  array(),
           '7 - Seventh Grade' =>  array(),
-          '8 - Eight Grade' =>  array(),
+          '8 - Eightf Grade' =>  array(),
           '9 - Ninth Grade' =>  array(),
           '10 - Tenth Grade' =>  array(),
           '11 - Eleventh Grade' =>  array(),
-          '12 - Twelveth Grade' =>  array(),
+          '12 - Twelfth Grade' =>  array(),
         ),
       ),
       'Math' => array(
@@ -474,11 +395,11 @@ function sbac_alignment_devtest2() {
         '5 - Fifth Grade' =>  array(),
         '6 - Sixth Grade' =>  array(),
         '7 - Seventh Grade' =>  array(),
-        '8 - Eight Grade' =>  array(),
+        '8 - Eighth Grade' =>  array(),
         '9 - Ninth Grade' =>  array(),
         '10 - Tenth Grade' =>  array(),
         '11 - Eleventh Grade' =>  array(),
-        '12 - Twelveth Grade' =>  array(),
+        '12 - Twelfth Grade' =>  array(),
         ),
       ),
     );
@@ -486,17 +407,12 @@ function sbac_alignment_devtest2() {
     sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
   }
 
-  
-  
   if(isset($_GET['type'])) {
     $subject = array_pop(taxonomy_get_term_by_name($_GET['type']));
   }
   else {
     $subject = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
   }
-  
-  
-  dsm($subject);
   
   //create terms
   if ($create) {
@@ -511,21 +427,12 @@ function sbac_alignment_devtest2() {
 
       }
     }
-    //dsm($grade_terms);
-    
-    //return '';
     //get data
     $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
     $contents = $data->data;
 
     $json = drupal_json_decode($contents);
-    //dsm($json);
-
-    //uasort($json, 'cmp');
-    //dsm($json);
-
-
-
+  
     // build tree
     $parent_tid = 0;
     $clean_parent = TRUE;
@@ -545,9 +452,7 @@ function sbac_alignment_devtest2() {
       }
       elseif(($tree_level = $term['treeLevel']) >=2) {
         $parent_key = $grade . '|' . $term['fkParent'];
-        //$parent_tid = sbac_alignment_get_parent($parent_key);
         $parent_tid = $parents[$parent_key]->tid;
-        //dsm(array($parent_key, $parent_tid));
         if (empty($parent_tid)) {
           //cannot find parent save to grade
           $parent_tid = $grade_terms[$grade]->tid;
@@ -560,25 +465,18 @@ function sbac_alignment_devtest2() {
       }
       else{
         //dsm('BAD TERM');dsm($term);
-        //@TODO KS - need to output in case of error
       }
     }
     
-    //dsm($broken_terms);
-    //print drupal_json_encode($broken_terms);
     print drupal_json_encode($parents);
     exit;
-  }
-
-  if($print) {
-    $terms = taxonomy_get_tree($edu_alignment_vocab->vid, 0, NULL, TRUE);
-    dsm($terms);
   }
 
   return '';
 }
 /**
- *
+ * Helper Function
+ * Get parent based on a key.
  */
 function sbac_alignment_get_parent($key) {
   $result = db_query('SELECT frfak.entity_id
@@ -588,61 +486,38 @@ function sbac_alignment_get_parent($key) {
   return $result->fetchObject()->entity_id;
 }
 /**
- *
+ * Callback function
+ * Deletes vocabulary.
  */
-function sbac_alignment_devdelete() {
-  if (isset($_GET['tid'])) {
+function sbac_alignment_delete_vocab() {
+  if (isset($_GET['op'])) {
+    if(isset($_GET['vocab'])) {
+      $edu_alignment_vocab_name = $_GET['vocab'];
+    }
+    else {
+      $edu_alignment_vocab_name = "education_alignment2";
+    }
+    $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
+    $grade_terms = array();
   
-  }
-   
-   
-   
-  if(isset($_GET['vocab'])) {
-    $edu_alignment_vocab_name = $_GET['vocab'];
-  }
-  else {
-    $edu_alignment_vocab_name = "education_alignment2";
-  }
-  $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
-  $grade_terms = array();
-
-  $delete = TRUE;
-  $print = FALSE;
-
-  //delete terms
-  if ($delete) {
-    $terms = taxonomy_get_tree($edu_alignment_vocab->vid);
-    foreach ($terms as $term) {
-      //if($term->depth > 1){
-        taxonomy_term_delete($term->tid);
-      //}
+    $delete = TRUE;
+    $print = FALSE;
+  
+    //delete terms
+    if ($delete) {
+      $terms = taxonomy_get_tree($edu_alignment_vocab->vid);
+      foreach ($terms as $term) {
+        //if($term->depth > 1){
+          taxonomy_term_delete($term->tid);
+        //}
+      }
+    }
+  
+    if($print) {
+      $terms = taxonomy_get_tree($edu_alignment_vocab->vid, 0, NULL, TRUE);
+      dsm($terms);
     }
   }
 
-  if($print) {
-    $terms = taxonomy_get_tree($edu_alignment_vocab->vid, 0, NULL, TRUE);
-    dsm($terms);
-  }
-
   return '';
-
-  
-  if (!isset($_GET['tid'])) {
-      return '';
-   }
-   
-   $tid = $_GET['tid'];
-   
-   $terms = taxonomy_get_tree('2', $tid);
-   dsm($terms);
-   
-   uasort($terms, 'cmp2');
-   
-   dsm($terms);
-   foreach($terms as $term) {
-      taxonomy_term_delete($term->tid);
-   }
-   
-   
-   return '';
 }
