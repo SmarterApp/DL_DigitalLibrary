@@ -27,7 +27,7 @@ function sbac_central_init() {
         }
         break;
       case 'test':
-        
+        //@TODO KS - set maillog to test as well.
         break;
       case 'prod':
         //do something if its prod
