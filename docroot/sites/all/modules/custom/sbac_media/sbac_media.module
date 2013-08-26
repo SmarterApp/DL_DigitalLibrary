@@ -112,7 +112,7 @@ function sbac_media_create_embed_url($file) {
       $url = 'http://www.slideshare.net/slideshow/embed_code/' . $id . '?rel=0';
       break;
     case 'video/teachertube':
-      $url = '//www.teachertube.com/embed.php?pg=video_' . $id;
+      $url = 'http://www.teachertube.com/embed.php?pg=video_' . $id;
       break;
     case 'video/vimeo':
       $url = 'http://player.vimeo.com/video/' . $id . '?title=0&amp;byline=0&amp;portrait=0';
