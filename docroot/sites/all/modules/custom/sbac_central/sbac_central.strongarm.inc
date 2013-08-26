@@ -220,6 +220,14 @@ function sbac_central_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'maintenance_mode_message';
+  $strongarm->value = '<h2>We will be back soon</h2>
+<p>We are upgrading this Digital Library with technology and features to serve you better. We apologize for the inconvenience and appreciate your patience.</p>';
+  $export['maintenance_mode_message'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'site_403';
   $strongarm->value = 'm4032404';
   $export['site_403'] = $strongarm;
