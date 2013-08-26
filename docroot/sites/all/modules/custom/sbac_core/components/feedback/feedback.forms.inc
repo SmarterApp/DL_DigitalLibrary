@@ -25,7 +25,7 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       foreach ($form_state['complete form'][$container][$lang] as &$item) {
         if (is_array($item) && isset($item[$field_name][$lang])) {
           foreach ($item[$field_name][$lang] as &$child) {
-            if (is_array($child)) {
+            if (is_array($child) && isset($child['value']['#value'])) {
               $child['value']['#value'] = filter_xss($child['value']['#value']);
             }
           }
