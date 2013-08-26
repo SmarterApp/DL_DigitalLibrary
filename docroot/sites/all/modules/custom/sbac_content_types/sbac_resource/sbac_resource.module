@@ -87,7 +87,8 @@ function sbac_resource_menu() {
  */
 function sbac_resource_download_contents($node) {
   if ($node) {
-    if ($node->field_file['und'][0]) {
+    // check to make sure there is public:// resources to download
+    if (sbac_resource_downloadable_scheme($node->field_file['und'])) {
       $destination = variable_get('file_public_path', conf_path() . '/files') . '/resource_zips/';
       if (!file_exists($destination)) {
         mkdir($destination);
@@ -101,13 +102,15 @@ function sbac_resource_download_contents($node) {
       $open = $zip->open($real_path, ZipArchive::CREATE);
       if ($open === TRUE) {
         foreach ($node->field_file['und'] as $key => $file) {
-          $zip->addFile(drupal_realpath($file['uri']), $file['filename']);
+          // make sure the item uses public scheme
+          if (file_uri_scheme($file['uri']) == 'public') {
+            $zip->addFile(drupal_realpath($file['uri']), $file['filename']);
+          }
         }
         $zip->close();
       }
 
       if (file_exists($real_path)) {
-
         header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
         header("Cache-Control: public"); // needed for i.e.
         header("Content-Type: application/zip");
@@ -117,10 +120,27 @@ function sbac_resource_download_contents($node) {
         if (readfile($real_path) !== false) {
 				$node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
 				entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
-			}
+			  }
       }
+    } else {
+      return "There are no files to download."; // no downloadable file schemes (public://)
     }
   }
+}
+
+/**
+ * Function to check if there are any downloadable files (public scheme)
+ *
+ * @param $files (array of files without language);
+ * @return bool
+ */
+function sbac_resource_downloadable_scheme($file) {
+  foreach ($file as $item) {
+    if (file_uri_scheme($item['uri']) == 'public') {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }
 
 /**
@@ -159,7 +179,9 @@ function sbac_resource_preprocess_node(&$vars) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
       $viewer = _sbac_resource_preview_content($vars);
       $materials = _sbac_resource_preview_materials($vars);
-      $vars['download'] = l('Download', 'sbac-resource/download/' . $vars['nid'], array('attributes' => array('class' => 'button small right')));
+      if (isset($vars['field_file']) && sbac_resource_downloadable_scheme($vars['field_file'])) {
+        $vars['download'] = l('Download', 'sbac-resource/download/' . $vars['nid'], array('attributes' => array('class' => 'button small right')));
+      }
       $vars['viewer'] = $viewer['viewer'];
       $vars['viewer_filename'] = $viewer['viewer_filename'];
       $vars['viewer_type'] = $viewer['viewer_type'];
@@ -681,8 +703,6 @@ function sbac_resource_cron() {
  * @param $node
  */
 function sbac_resource_node_update($node) {
-  // Always publish on update.
-  //$node->status = 1;
 }
 
 /**
@@ -691,10 +711,6 @@ function sbac_resource_node_update($node) {
  * @param $node
  */
 function sbac_resource_node_presave($node) {
-//  if ($node->title) {
-//    $node->status = 1;
-//  }
-
   if (isset($node->nid) && $node->nid) {
     $node->field_document_id['und'] = array(); //use this to clean up the node during test
     $i = 0;
