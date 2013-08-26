@@ -562,6 +562,7 @@ $conf['cmis_repositories'] = array(
   'default' => array(
     'user' => 'admin',
     'password' => 'm3rcury',
+	'update_url' => 'ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
     'label' => 'local cmis repo',
     'url' => 'http://ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/s/cmis',
     'transport' => 'cmis_headerswing',
