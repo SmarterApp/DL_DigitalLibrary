@@ -75,7 +75,7 @@
 				} else {
 					echo $school;
 					echo $district;
-					echo ($school || $district ? ', ' : '');
+					echo (($school || $district) && $state)? ', ' : '';
 					echo $state;
 				}
 			?>
