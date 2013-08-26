@@ -193,14 +193,11 @@ function sbac_search_block_view($delta = '') {
 /*
  * Hides category filter if called
  */
-function sbac_search_hide_category() {
-  static $hidden;
-  if (!$hidden) {
-    drupal_add_css('.sbac-filter-cat-area {display:none;}', 'inline');
-    $hidden = TRUE;
+function sbac_search_hide_category_style() {
+  if (isset($_COOKIE['sbac_search_categories_closed']) && $_COOKIE['sbac_search_categories_closed']) {
+    return ' style="display:none;"';
   }
 }
-
 
 /**
  * Form for submitting the category filters.
