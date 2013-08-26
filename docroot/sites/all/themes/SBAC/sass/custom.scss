@@ -583,7 +583,12 @@ nav.main-nav {
 }
 
 #drop3{
-  margin-top: -10px;
+  top: 50px !important;
+  display: none;
+
+  &.open {
+    display: block;
+  }
 }
 .help-dropdown {
   float: right;
@@ -1128,54 +1133,6 @@ a.tabledrag-handle .handle {
 .tabledrag-toggle-weight {
   display: none;
 }
-#field-file-values {
-  width: 100%;
-
-  .preview {
-    height: auto;
-  }
-
-  .button {
-    margin-left: 10px;
-    margin-top: 10px;
-  }
-  thead th:first-child {
-    background-color: #fff;
-    padding:5px 5px 25px;
-
-    &:after {
-      display:block;
-      content: 'Primary material. This is the main material with which you want users to interact.';
-      font-weight: normal;
-      font-size: emCalc(12px);
-      width: 93%;
-      position: absolute;
-      border-top: 1px solid #eee;
-      padding: 5px 0;
-      margin-top: 0px;
-    }
-  }
-  tr:nth-child(2) {
-    td:nth-child(2) {
-      padding-top: 30px;
-      .media-widget{
-      position: relative;
-      &:before {
-          display: block;
-          content: 'Secondary material(s). These will be shown adjacent to the primary material.';
-          position: absolute;
-          top: 20px;
-          left: -35px;
-          right: 0;
-          margin: -43px 0 0 -10px;
-          padding: 0 0 5px 10px;
-          font-size: emCalc(14px);
-          border-bottom: 1px solid #ccc;
-      }
-      }
-    }
-  }
-}
 
 
 .ui-dialog {
@@ -1411,7 +1368,60 @@ a.tabledrag-handle .handle {
     }
   }
 
+  // media module
+  //#field-file-values,
+  //#field-file-values--2,
+  .field-multiple-table {
+    width: 100%;
+
+    .preview {
+      height: auto;
+    }
+
+    .button {
+      margin-left: 10px;
+      margin-top: 10px;
+    }
+    thead th:first-child {
+      background-color: #fff;
+      padding:5px 5px 25px;
+
+      &:after {
+        display:block;
+        content: 'Primary material. This is the main material with which you want users to interact.';
+        font-weight: normal;
+        font-size: emCalc(12px);
+        width: 93%;
+        position: absolute;
+        border-top: 1px solid #eee;
+        padding: 5px 0;
+        margin-top: 0px;
+      }
+    }
+    tr:nth-child(2) {
+      td:nth-child(2) {
+        padding-top: 30px;
+        .media-widget{
+        position: relative;
+        &:before {
+            display: block;
+            content: 'Secondary material(s). These will be shown adjacent to the primary material.';
+            position: absolute;
+            top: 20px;
+            left: -35px;
+            right: 0;
+            margin: -43px 0 0 -10px;
+            padding: 0 0 5px 10px;
+            font-size: emCalc(14px);
+            border-bottom: 1px solid #ccc;
+        }
+        }
+      }
+    }
+  }
+
   // materials tab
+  // media module
   #edit-group_materials {
   .field-name-field-file {
 
@@ -1419,52 +1429,7 @@ a.tabledrag-handle .handle {
       font-size: 12px;
       line-height: 14px;
     }
-    .fieldset-wrapper {
-      #field-file-values {
-        width: 100%;
-        border: none;
-        thead {
-          background-color: #fff;
-          &:after {
-            display: inline-block;
-            content: 'Primary material. This is the main material with which you want users to interact.';
-            margin: 5px 10px;
-            font-weight: normal;
-            font-size: emCalc(12px);
-          }
-        }
-        tr:nth-child(2) {
-          td:nth-child(1) {
-            padding-top: 20px;
-            .file-widget {
-              position: relative;
-              &:before {
-                display: block;
-                content: 'Secondary material(s). These will be shown adjacent to the primary material.';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: calc(132%);
-                width: -webkit-calc(130.2%); // ** semi-hackish **
-                margin: -43px 0 0 -10px;
-                padding: 0 0 5px 10px;
-                font-size: emCalc(14px);
-                border-bottom: 1px solid #ccc;
-              }
-            }
-          }
-          td {
-            button {
-              margin-top: 38px;
-            }
-          }
-        }
-      }
-      .tabledrag-toggle-weight-wrapper a,
-      .tabledrag-changed {
-        display: none;
-      }
-    }
+
     // no license info
     #no-license-text {
       margin: 0 0 0 emCalc(30px);
@@ -1872,6 +1837,8 @@ a.tabledrag-handle .handle {
 
 #feedback-dropdown{
   display:none;
+  right: 100px;
+  left: auto !important;
   &.open {
     top: 50px !important;
     right: 100px;
@@ -2176,66 +2143,96 @@ a.tabledrag-handle .handle {
     Taxonomy tool tips
   _________________________________________ */
 
-  .view-mode-tooltip {
-    display: inline-block;
-    position: relative;
+.view-mode-tooltip {
+  display: inline-block;
+  position: relative;
 
-    &:hover {
-      .taxonomy-term-description {
-        background: #DFE5CC;
-        border: 1px solid #3C7646;
-        border-radius: 6px;
-        color: #3C7646;
-        display: block;
-        font-size: 12px;
-        left: 20px;
-        opacity: 1;
-        padding: 20px;
-        position: absolute;
-        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-        top: 30px;
-        transition-property: opacity;
-        transition-duration: 500ms;
-        -webkit-transition-property: opacity;
-        -webkit-transition-duration: 500ms;
-        width: 272px;
-        z-index: 999;
-      }
-    }
-
+  &:hover {
     .taxonomy-term-description {
-      display: none;
-      opacity: 0;
-
-      p {
-        font-size: inherit;
-        margin: 0;
-      }
-
-      &:after {
-        content: ' ';
-        position: absolute;
-        top: -28px;
-        left: 16px;
-        border-color: transparent transparent #DFE5CC transparent;
-        border-style: solid;
-        border-width: 14px;
-        width: 0;
-        height: 0;
-        z-index: 99;
-      }
-
-      &:before {
-        content: ' ';
-        position: absolute;
-        top: -30px;
-        left: 15px;
-        border-color: transparent transparent #3C7646 transparent;
-        border-style: solid;
-        border-width: 15px;
-        width: 0;
-        height: 0;
-        z-index: 97;
-      }
+      background: #DFE5CC;
+      border: 1px solid #3C7646;
+      border-radius: 6px;
+      color: #3C7646;
+      display: block;
+      font-size: 12px;
+      left: 20px;
+      opacity: 1;
+      padding: 20px;
+      position: absolute;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+      top: 30px;
+      transition-property: opacity;
+      transition-duration: 500ms;
+      -webkit-transition-property: opacity;
+      -webkit-transition-duration: 500ms;
+      width: 272px;
+      z-index: 999;
     }
   }
+
+  .taxonomy-term-description {
+    display: none;
+    opacity: 0;
+
+    p {
+      font-size: inherit;
+      margin: 0;
+    }
+
+    &:after {
+      content: ' ';
+      position: absolute;
+      top: -28px;
+      left: 16px;
+      border-color: transparent transparent #DFE5CC transparent;
+      border-style: solid;
+      border-width: 14px;
+      width: 0;
+      height: 0;
+      z-index: 99;
+    }
+
+    &:before {
+      content: ' ';
+      position: absolute;
+      top: -30px;
+      left: 15px;
+      border-color: transparent transparent #3C7646 transparent;
+      border-style: solid;
+      border-width: 15px;
+      width: 0;
+      height: 0;
+      z-index: 97;
+    }
+  }
+}
+
+/* ----------------------------------------
+    Taxonomy tool tips
+  _________________________________________ */
+
+.maintenance-page {
+  #header {
+    display: none;
+  }
+
+  #content{
+    font-size: 1.2em;
+    max-width: 660px;
+    margin: 30px auto 0;
+    padding: 100px 40px 40px;
+    color: rgba(99, 102, 106, 1);
+    background: white url('../images/sbac-logo-not-found.png') 40px 40px no-repeat;
+    @include border-radius(6px);
+    border: 1px solid rgba(99, 102, 106, 1);
+    @include box-shadow(2px 3px 7px rgba(000, 000, 000, 0.4), inset 2px 0px 1px rgba(255, 255, 255, 0));
+
+    h2 {
+      color: inherit;
+    }
+  }
+
+  #page-title {
+    display: none;
+  }
+}
