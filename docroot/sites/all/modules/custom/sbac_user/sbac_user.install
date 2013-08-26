@@ -215,3 +215,24 @@ function sbac_user_update_7007() {
 
   return $ret;
 }
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_phone_number, field_swd_ell and field_university_name
+ */
+function sbac_user_update_7008() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  $field = field_info_instance('user', 'field_phone_number', 'user');
+  field_delete_instance($field);
+
+  $field = field_info_instance('user', 'field_swd_ell', 'user');
+  field_delete_instance($field);
+  
+  $field = field_info_instance('user', 'field_university_name', 'user');
+  field_delete_instance($field);
+  
+  return $ret;
+}
