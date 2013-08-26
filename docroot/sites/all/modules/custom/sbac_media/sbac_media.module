@@ -10,12 +10,12 @@ function sbac_media_media_internet_providers() {
   $info['MediaInternetSchoolTubeHandler'] = array(
     'title' => t('SchoolTube'),
   );
-  $info['MediaInternetTeacherTubeHandler'] = array(
-    'title' => t('TeacherTube'),
-  );
-  $info['MediaInternetSlideShareHandler'] = array(
-    'title' => t('SlideShare'),
-  );  
+//  $info['MediaInternetTeacherTubeHandler'] = array(
+//    'title' => t('TeacherTube'),
+//  );
+//  $info['MediaInternetSlideShareHandler'] = array(
+//    'title' => t('SlideShare'),
+//  );
   return $info;
 }
 
@@ -189,9 +189,9 @@ $count = 0;
 }
 
 function sbac_media_field_attach_load($entity_type, $entities, $age, $options) {
-  $var = '';
-  $fake_files = sbac_media_create_fake_files(array(1,2));
-  $entities = array_merge($entities, $fake_files);
+//  $var = '';
+//  $fake_files = sbac_media_create_fake_files(array(1,2));
+//  $entities = array_merge($entities, $fake_files);
 }
 
 function sbac_media_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {

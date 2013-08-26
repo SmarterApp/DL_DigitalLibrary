@@ -64,6 +64,7 @@ DirectoryIndex index.php index.html index.htm
   RewriteRule ^ - [E=protossl:s]
 
   # Redirect to HTTPS
+  RewriteCond %{HTTP_HOST} ^smarterbalancedlibrary\.org$ [NC]
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

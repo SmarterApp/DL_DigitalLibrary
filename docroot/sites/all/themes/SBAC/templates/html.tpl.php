@@ -61,6 +61,7 @@
 
   <!-- @todo convert fallback into head alter function -->
   <!-- Check for Zepto support, load jQuery if necessary -->
+  <meta name="google-site-verification" content="xei4v99wq11JW29kQC1fIk8YLIQeCrp7ckduBZOKgEg" />
 </head>
 <body class="<?php print $classes; ?>" <?php print $attributes;?>>
   <div class="skip-link">

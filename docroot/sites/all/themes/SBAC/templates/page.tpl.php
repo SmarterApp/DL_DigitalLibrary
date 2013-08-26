@@ -96,7 +96,7 @@
   </div>
   <div><?php print render($page['sub-header']); ?></div>
 </div>
-<div class="filters sbac-filter-cat-area">
+<div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie */ print sbac_search_hide_category_style(); ?>>
       <?php print render($page['filter']); ?>
 </div>
 
