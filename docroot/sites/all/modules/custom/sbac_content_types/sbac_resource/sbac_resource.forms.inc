@@ -672,18 +672,20 @@ function sbac_resource_modal_callback($js = FALSE) {
     ctools_include('modal');
 
     drupal_add_js(array(
-    'ctools-ccss-style' => array(
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 800,
-        'height' => 580,
+      'ctools-ccss-style' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 800,
+          'height' => 580,
+        ),
       ),
-    ),
-  ), 'setting');
+    ), 'setting');
     $output = array();
     $output[] = ctools_modal_command_dismiss();
     $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
     $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
+    
+    module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
     $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
 
     print ajax_render($output);
