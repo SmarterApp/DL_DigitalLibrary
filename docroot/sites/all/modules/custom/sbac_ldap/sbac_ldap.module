@@ -106,3 +106,144 @@ function sbac_ldap_frontpage_view() {
   }
 
 }
+
+
+
+/**
+ * Implementation of hook_user_import_data().
+ */
+function sbac_ldap_user_import_data($settings, $update_setting, $column_settings, $module, $field_id, $data, $column_id) {
+  //
+  //if ($module != 'field') return;
+  //
+  //
+  //dsm('blah');
+  ////dsm(array($settings, $update_setting, $column_settings, $module, $field_id, $data, $column_id));
+  //// STATE
+  //if($field_id == 'field_state') {
+  //  return '304';
+  //  
+  //  
+  //  $tid = 0;
+  //  $states_vocab = taxonomy_vocabulary_machine_name_load('states');
+  //  $terms = taxonomy_get_term_by_name('Washington');
+  //  
+  //  foreach ($terms as $term) {
+  //    if($term->vid == $states_vocab->vid){
+  //      $tid = $term->tid;
+  //      break;
+  //    }
+  //  }
+  //  return $tid;
+  //}
+  //
+  //return $value;
+}
+
+/**
+ * Implementation of hook_user_import_after_save().
+ */
+function sbac_ldap_user_import_after_save($settings, $account, $password, $fields, $updated, $update_setting_per_module) {
+  $fields_data = isset($fields['field']) ? $fields['field'] : array();
+
+  if (empty($fields_data)) return;
+
+  $processors       = field_user_import_supported_fields();
+  $delimiter        =  $settings['multi_value_delimiter'];
+  $user_fields      = user_load($account->uid);
+  $processed_fields = array();
+
+  foreach ($fields_data as $field_name => $data) {
+    $field_info         = field_info_field($field_name);
+    $field_type         = $field_info['type'];
+    $processor_function = $processors[$field_type]['save'];
+
+    // Deal with multiple values.
+    $values = explode($delimiter, $data[0]);
+    
+    if ($field_name == 'field_state'){
+      $field_state = $processor_function($user_fields, $field_name, $values);
+      $states_vocab = taxonomy_vocabulary_machine_name_load('states');
+      foreach ($field_state['und'] as &$state) {
+        $terms = taxonomy_get_term_by_name($state['value']);
+        foreach ($terms as $term) {
+          if($term->vid == $states_vocab->vid){
+            $state['tid'] = $term->tid;
+            break;
+          }
+        }  
+      }
+      $processed_fields[$field_name] = $field_state;
+    }
+    elseif ($field_name == 'field_position'){
+      $field_state = $processor_function($user_fields, $field_name, $values);
+      $states_vocab = taxonomy_vocabulary_machine_name_load('title');
+      foreach ($field_state['und'] as &$state) {
+        $terms = taxonomy_get_term_by_name($state['value']);
+        foreach ($terms as $term) {
+          if($term->vid == $states_vocab->vid){
+            $state['tid'] = $term->tid;
+            break;
+          }
+        }  
+      }
+      $processed_fields[$field_name] = $field_state;
+    }
+    elseif ($field_name == 'field_special_populations'){
+      $field_state = $processor_function($user_fields, $field_name, $values);
+      $states_vocab = taxonomy_vocabulary_machine_name_load('intended_student_populations');
+      foreach ($field_state['und'] as &$state) {
+        $terms = taxonomy_get_term_by_name($state['value']);
+        foreach ($terms as $term) {
+          if($term->vid == $states_vocab->vid){
+            $state['tid'] = $term->tid;
+            break;
+          }
+        }  
+      }
+      $processed_fields[$field_name] = $field_state;
+    }
+    elseif ($field_name == 'field_subject_s_'){
+      $field_state = $processor_function($user_fields, $field_name, $values);
+      $states_vocab = taxonomy_vocabulary_machine_name_load('subject');
+      foreach ($field_state['und'] as &$state) {
+        $terms = taxonomy_get_term_by_name($state['value']);
+        foreach ($terms as $term) {
+          if($term->vid == $states_vocab->vid){
+            $state['tid'] = $term->tid;
+            break;
+          }
+        }  
+      }
+      $processed_fields[$field_name] = $field_state;
+    }
+    elseif ($field_name == 'field_grade_level_s_'){
+      $field_state = $processor_function($user_fields, $field_name, $values);
+      $states_vocab = taxonomy_vocabulary_machine_name_load('grades');
+      foreach ($field_state['und'] as &$state) {
+        $terms = taxonomy_get_term_by_name($state['value']);
+        foreach ($terms as $term) {
+          if($term->vid == $states_vocab->vid){
+            $state['tid'] = $term->tid;
+            break;
+          }
+        }  
+      }
+      $processed_fields[$field_name] = $field_state;
+    }
+    else {
+      // Use callback function to process info for field before saving.
+      $processed_fields[$field_name] = $processor_function($user_fields, $field_name, $values);
+    }
+  }
+
+  if (!empty($processed_fields)) {
+    user_save($account, $processed_fields);
+  }
+
+  return;
+}
+
+
+
+

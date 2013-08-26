@@ -104,18 +104,14 @@ function sbac_user_init() {
       }
     }
   }
-  if (user_is_logged_in() && (variable_get('enable_feedback') == 1) && ($user->data['disable_feedback'] == 0)) {
+  $account = user_load($user->uid);
+  if (user_is_logged_in() && (variable_get('enable_feedback') == 1) && ($account->field_feedback_flag['und'][0]['value']== 0)) {
     $feedback_dropdown =
       "#feedback-dropdown {
         position: absolute;
         top: 50px !important;
         left: 946px;
-      }
-      .f-dropdown:before {
-        right: 9px !important;
-      }
-      .f-dropdown:after {
-        right: 9px !important;
+        display: block !important;
       }";
     drupal_add_css($feedback_dropdown, 'inline');
   }
@@ -754,12 +750,9 @@ function sbac_user_user_login(&$edit, $account) {
   if (!isset($account->data['first_login'])) {
     $account->data['first_login'] = time();
   }
-  if(!isset($user->data['disable_feedback'])) {
-    user_save($user, array(
-    'data' => array(
-      'disable_feedback' => 0,
-    )
-  ));
+  if(!isset($account->field_feedback_flag['und'][0])) {
+    $account->field_feedback_flag['und'][0]['value'] = (int) 0;
+    user_save($account);
   }
   user_save($account, array());
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
@@ -1063,10 +1056,10 @@ function sbac_user_format_username($user) {
  */
 function sbac_user_disable_feedback() {
   global $user;
+  $data =  $account->field_feedback_flag['und'][0]['value'];
+  $account = user_load($user->uid);
+  $account->field_feedback_flag['und'][0]['value'] = (int) 1;
+  user_save($account);
 
-  user_save($user, array(
-    'data' => array(
-      'disable_feedback' => 1,
-    )
-  ));
+  return $data;
 }

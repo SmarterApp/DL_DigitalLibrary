@@ -30,6 +30,41 @@ h2.name {
   }
 }
 
+.field-name-field-state {
+
+  .field-label {
+    display: none;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    line-height: 14px;
+    float: left;
+
+    li {
+      display: inline-block;
+      margin: 0 5px 0 0;
+      padding: 0;
+
+      a {
+        cursor: default;
+        color: inherit;
+      }
+      
+      &:after{
+        content:', ';
+      }
+      &:last-child{
+        &:after{
+          content:'.';
+        }
+      }
+    }
+  }
+}
+
 .profile-pic img {
   @include border-radius(6px);
 }
@@ -494,6 +529,9 @@ h2.name {
           outline: none;
         }
       }
+    }
+    #edit-field-feedback-flag-und {
+      display:none;
     }
   }
   .chzn-container-multi .chzn-choices .search-field input {

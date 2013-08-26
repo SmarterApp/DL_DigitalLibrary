@@ -350,7 +350,8 @@ function sbac_report_is_slt($account) {
       ->condition('entity_id', $account->uid)
       ->condition('field_slt_member_value', '1')
       ->execute();
-    return !empty($result);
+    $count = $result->rowCount();
+    return $result->rowCount();
   }
   return FALSE;
 }
@@ -511,4 +512,32 @@ function sbac_report_form_views_exposed_form_alter(&$form, &$form_state) {
       }  
       break;
   }
+}
+
+
+/**
+ * Calculate the Gate Keeping reviews rate.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @param array
+ *   An associative array of the reviews rate.
+ */
+function sbac_report_gate_keeping_reviews_rate($uid, $date_range) {
+  $rate = array(
+    'total' => 0,
+    'acceptance' => 0,
+    'return' => 0,
+  );
+
+  $result = views_get_view_result('gate_keeping_reviews', 'gk_reviews', $uid, $date_range);
+  if (!empty($result)) {
+    $rate['total'] = $result[0]->id ? $result[0]->id : 0;
+    $rate['acceptance'] = $result[0]->eck_feedback_met_criteria ? $result[0]->eck_feedback_met_criteria : 0;
+    $rate['return'] = $rate['total'] - $rate['acceptance'];
+  }
+  return $rate;
 }

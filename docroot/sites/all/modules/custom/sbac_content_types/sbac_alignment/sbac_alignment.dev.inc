@@ -1,19 +1,32 @@
 <?php
+
 /**
  * Set server 
  */
-ini_set('max_execution_time', '999');
+ini_set('max_execution_time', 999);
 ini_set('memory_limit', '1024M');
 /**
  * Global Variables
  */
 define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/');
+//variable_set('sbac_alignment_import_counter', 0);
+//variable_set('sbac_alignment_import_data', array());
+//variable_set('sbac_alignment_import_bad_terms', '');
+/**
+ *
+ */
 function sbac_alignment_devtest() {
   if(isset($_GET['vocab'])) {
     $edu_alignment_vocab_name = $_GET['vocab'];
   }
   else {
     $edu_alignment_vocab_name = "education_alignment2";
+  }
+  
+  if(isset($_GET['reset'])) {
+    variable_set('sbac_alignment_import_counter', 0);
+    variable_set('sbac_alignment_import_data', array());
+    variable_set('sbac_alignment_import_bad_terms', '');
   }
 
   if(isset($_GET['file'])) {
@@ -45,11 +58,11 @@ function sbac_alignment_devtest() {
           '5 - Fifth Grade' =>  array(),
           '6 - Sixth Grade' =>  array(),
           '7 - Seventh Grade' =>  array(),
-          '8 - Eight Grade' =>  array(),
+          '8 - Eighth Grade' =>  array(),
           '9 - Ninth Grade' =>  array(),
           '10 - Tenth Grade' =>  array(),
           '11 - Eleventh Grade' =>  array(),
-          '12 - Twelveth Grade' =>  array(),
+          '12 - Twelfth Grade' =>  array(),
         ),
       ),
       'Math' => array(
@@ -62,11 +75,11 @@ function sbac_alignment_devtest() {
         '5 - Fifth Grade' =>  array(),
         '6 - Sixth Grade' =>  array(),
         '7 - Seventh Grade' =>  array(),
-        '8 - Eight Grade' =>  array(),
+        '8 - Eighth Grade' =>  array(),
         '9 - Ninth Grade' =>  array(),
         '10 - Tenth Grade' =>  array(),
         '11 - Eleventh Grade' =>  array(),
-        '12 - Twelveth Grade' =>  array(),
+        '12 - Twelfth Grade' =>  array(),
         ),
       ),
     );
@@ -83,9 +96,6 @@ function sbac_alignment_devtest() {
     $subject = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
   }
   
-  
-  dsm($subject);
-  
   //create terms
   if ($create) {
     // get grades tids
@@ -99,17 +109,12 @@ function sbac_alignment_devtest() {
 
       }
     }
-    //dsm($grade_terms);
     
-    //return '';
     //get data
     $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
     $contents = $data->data;
-
     $json = drupal_json_decode($contents);
-
-dsm($json);
-dsm(count($json));  
+    uasort($json, 'cmp');
   
     $batch = array(
       'title' => t('Exporting'),
@@ -126,57 +131,81 @@ dsm(count($json));
   }
 }
 
-
+/**
+ * Batch Callback
+ */
 function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
+  ini_set('max_execution_time', 9999);
+  ini_set('memory_limit', '1024M');
+  
   if (empty($context['sandbox'])) {
     $context['sandbox']['progress'] = 0;
-    $context['sandbox']['max'] = 2000;//count($json);
+    $context['sandbox']['max'] = count($json);
     $context['sandbox']['counter'] = 0;
+    $context['sandbox']['parents'] = array();
+    $context['sandbox']['noparents'] = array();
   }
-  $output = '';
+  
+  $counter = variable_get('sbac_alignment_import_counter', 0);
+  $parents = variable_get('sbac_alignment_import_data', array());
+  $bad_terms = variable_get('sbac_alignment_import_bad_terms', array());
+  
   $parent_tid = 0;
-  $parents = array();
   $json_count = count($json);
   
-  for ($i=$context['sandbox']['counter']; $i < $json_count; $i++) {
-    $term = $json[$i];
-  //foreach ($json as $term) {
-    //dsm($term);
-      $grade = trim($term['fkGradeLevel']);
+  $msg = "
+    count " . $counter . "
+    parents " . drupal_json_encode($parents) . "
+";
 
-      // Root term. first set after the grade
-      if ($term['treeLevel'] < 2) {
-        $parent_tid = $grade_terms[$grade]->tid;
-        $key = $grade . '|' . $term['key'];
-        $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
-      }
-      elseif(($tree_level = $term['treeLevel']) >= 2) {
-        $parent_key = $grade . '|' . $term['fkParent'];
-        $parent_tid = $parents[$parent_key]->tid;
-        if (empty($parent_tid)) {
-          //cannot find parent save to grade
-          $parent_tid = $grade_terms[$grade]->tid;
-          $broken_terms[] = $term;
-        }
-        else {
-        $key = $grade . '|' . $term['key'];
-        $parents[$key] = sbac_alignment_add_term($vid, $term, $parent_tid);
-        }
-      }
-      else{
-        //dsm('BAD TERM');dsm($term);
-        //@TODO KS - need to output in case of error
-      }
+  watchdog('sbac_alignment', $msg);
+  
+  for ($i = $counter; $i < $json_count; $i++) {
+    $term = $json[$i];
+    $grade = trim($term['fkGradeLevel']);
+    $key = $grade . '|' . $term['key'];
     
+    if($i % 100 == 0) {
+      variable_set('sbac_alignment_import_counter', $i);
+      variable_set('sbac_alignment_import_data', $parents);
+    }
+    
+    if (isset($parents[$key])) {
+      continue;
+    }
+
+    // Root term. first set after the grade
+    if ($term['treeLevel'] < 2) {
+      $parent_tid = $grade_terms[$grade]->tid;
+      $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
+      $parents[$key] = $new_term->tid;
+    }
+    else { // treeLevel >= 2
+      $parent_key = $grade . '|' . $term['fkParent'];
+      if(isset($parents[$parent_key])) {
+        $parent_tid = $parents[$parent_key];
+        
+        $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
+        $parents[$key] = $new_term->tid;
+      }
+      else {
+        $bad_terms[] = $term['key'];
+      }
+    }
     
     $context['sandbox']['progress']++;
     $context['message'] = $term['key'];
     $context['results'][] = $term['key'];
-    if ($context['sandbox']['progress'] == 1000) {
-      $context['sandbox']['counter'] = $i;
-      break;
+    
+    if($i % 100 == 0) {
+      variable_set('sbac_alignment_import_counter', $i);
+      variable_set('sbac_alignment_import_data', $parents);
+      variable_set('sbac_alignment_import_bad_terms', $bad_terms);
     }
   }
+  
+  
+  //finish
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
   }
@@ -197,7 +226,6 @@ function sbac_alignment_batch_test_finished($success, $results, $operations) {
     $items[] = t('Loaded node %title.', array('%title' => $result));
   }
   $_SESSION['my_batch_results'] = $items;
-  dsm($items);
 }
 
 function sbac_alignment_devfix() {

@@ -85,7 +85,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     }
     else {
       // The node is always published... except for when the node is not created.
-      $form['options']['status']['#default_value'] = 1;
+      // $form['options']['status']['#default_value'] = 1;
     }
   }
 }
@@ -123,21 +123,16 @@ function sbac_resource_form_license_after_build($element) {
  * @param $form_state
  */
 function sbac_resource_save_and_close(&$form, &$form_state) {
+  sbac_resource_clean_text($form_state);
   // If there's a title, lets push this to the new state.
-  if ($form_state['values']['workbench_moderation_state_new'] == 'creation') {
-    $form_state['values']['workbench_moderation_state_new'] = 'draft';
-  }
+  $form_state['values']['workbench_moderation_state_new'] = 'draft';
   // If there's a title, lets create a URL for the node.
-  if ($form_state['values']['title']) {
-    $form_state['values']['path']['pathauto'] = TRUE;
-    $form_state['values']['status'] = 1;
-  }
+  $form_state['values']['path']['pathauto'] = TRUE;
   // If the nid is not set, set it to prevent blank nodes.
   if ($form_state['values']['nid'] == NULL) {
     $form_state['values']['nid'] = $form_state['node']->nid;
     $form_state['values']['vid'] = $form_state['node']->vid;
   }
-  sbac_resource_clean_text($form_state);
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
@@ -288,6 +283,33 @@ function sbac_resource_validate_form(&$form, &$form_state) {
 }
 
 /**
+ * Validation function for the title on save and close click.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_validate_title(&$form, &$form_state) {
+  if (!$form_state['values']['title']) {
+    $error = 'Please add a title to save and close.';
+    form_set_error('title', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
+  }
+  else {
+    $title = $form_state['values']['title'];
+    $bad_words = profanity_validate_text($title);
+    if ($bad_words) {
+      $error = 'Please remove any inappropriate language to save and close.';
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
+    }
+  }
+}
+
+/**
  * Validation function for general section.
  *
  * @param $form
@@ -374,11 +396,11 @@ function sbac_resource_validate_summary(&$form, $form_state) {
     }
   }
   if (!$form_state['values']['field_contexts']['und'][0]['value']) {
-    $error = 'Please add context(s) within which the resource could be used to continue';
+    $error = 'Add the context(s) in which the resource could be used';
     form_set_error('field_contexts', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_contexts:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_contexts:group:Please add context(s) within which the resource could be used to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_contexts:group:Add the context(s) in which the resource could be used', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_contexts']['und'][0]['value'];
@@ -1073,6 +1095,10 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   $form['field_principles']['und'][0]['value']['#title'] = t('Principles, Literature, or Research') . ' ' . theme('form_required_marker');
 }
 
+//function sbac_resource_form_file_after_build($element) {
+//  $var = '';
+//}
+
 /**
  * Creates the materials form field.
  *
@@ -1081,9 +1107,10 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
+  //$form['field_file'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_file_after_build';
+
   // Materials
   $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
-
   // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);
@@ -1319,12 +1346,14 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
   unset($form['#submit']);
   unset($form['#validate']);
   unset($form['actions']['submit']['#submit']);
-  unset($form['actions']['submit']['#validation']);
+  //unset($form['actions']['submit']['#validation']);
+  $form['actions']['submit']['#validate'][] = 'sbac_resource_validate_title';
   $form['actions']['submit']['#value'] = t('Save and Close');
   $form['actions']['submit']['#submit'] = array('sbac_resource_save_and_close');
   $form['actions']['submit']['#prefix'] = '<div id="sbac-resource-save-continue">';
   $form['actions']['submit']['#suffix'] = '</div>';
   $form['actions']['submit']['#weight'] = 1;
+  $form['actions']['submit']['#attributes'] = array('id' => 'edit-submit');
 }
 
 /**
@@ -1357,7 +1386,7 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_cancel_button(&$form, &$form_state) {
-  if ($form['#node']->workbench_moderation['current']->state != 'creation') {
+  if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'draft') {
     return;
   }
 
@@ -1460,13 +1489,16 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
     $form['revision_information']['#access'] = FALSE;
     $form['author']['#access'] = FALSE;
     $form['options']['#access'] = FALSE;
-    $form['field_alignment_terms']['#access'] = FALSE;
+    
   }
   $form['field_alignment_tags']['#access'] = FALSE;
   $form['field_temp']['#access'] = FALSE;
   $form['field_asset_downloads']['#access'] = FALSE;
   $form['field_total_views']['#access'] = FALSE;
   $form['field_unique_views']['#access'] = FALSE;
+  $form['field_alignment_term']['#access'] = FALSE;
+  $form['field_document_id']['#access'] = FALSE;
+  // $form['field_file']['und']['add_more']['#access'] = FALSE;
 }
 
 /**

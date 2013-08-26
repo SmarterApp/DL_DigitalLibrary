@@ -368,6 +368,8 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['field_district_name']['field'] = 'field_district_name';
   $handler->display->display_options['fields']['field_district_name']['label'] = '';
   $handler->display->display_options['fields']['field_district_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_district_name']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_district_name']['alter']['text'] = 'in [field_district_name]';
   $handler->display->display_options['fields']['field_district_name']['element_label_colon'] = FALSE;
   /* Field: User: School Name */
   $handler->display->display_options['fields']['field_school_name']['id'] = 'field_school_name';
@@ -375,7 +377,7 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['field_school_name']['field'] = 'field_school_name';
   $handler->display->display_options['fields']['field_school_name']['label'] = '';
   $handler->display->display_options['fields']['field_school_name']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_school_name']['alter']['text'] = '[field_school_name] in [field_district_name]';
+  $handler->display->display_options['fields']['field_school_name']['alter']['text'] = '[field_school_name] [field_district_name]';
   $handler->display->display_options['fields']['field_school_name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_school_name']['element_wrapper_type'] = 'div';
   $handler->display->display_options['fields']['field_school_name']['element_wrapper_class'] = 'profile-school';

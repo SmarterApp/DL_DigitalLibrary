@@ -138,6 +138,7 @@ a.sbac-grid-layout {
     .filter {
       border-top: 1px solid #eee;
       padding: 20px 0 0;
+
       .heading {
         font-weight: bold;
       }
@@ -427,6 +428,10 @@ a.sbac-grid-layout {
   padding: 20px 0;
   border-top: 2px solid #575656;
   position: relative;
+
+  &.active{
+    overflow:visible !important;
+  }
 
   .column {
     &:first-child {

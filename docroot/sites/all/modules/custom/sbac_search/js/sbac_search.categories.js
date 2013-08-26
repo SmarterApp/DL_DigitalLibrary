@@ -77,16 +77,9 @@
 
       // Open / Close the filter list.
       $('#sbac-search-cat-button').click( function () {
-        // first check if on the no-results page because 
-        // category link is disabled
-        var a = location.pathname.split("/");
-        if (a.length > 2 && a[2] == "no-results") {
-          // insert logic here if we want 
-        } else {
-          // allow open/close category if not on no results page
-          close_categories_list();
-          $('.selectedDiv').hide();
-        }
+        // allow open/close category if not on no results page
+        close_categories_list();
+        $('.selectedDiv').hide();
         return false;
       });
 
@@ -101,12 +94,14 @@
       close_categories_list = function () {
         var filter_container = $('.sbac-filter-cat-area');
         if (filter_container.is(':visible')) {
-          filter_container.hide();
-          $(this).removeClass("active");
+          $.cookie("sbac_search_categories_closed", 1);
+          filter_container.slideUp('slow');
+          $('.sbac-filter-cat-area').removeClass("active");
         }
         else{
-          filter_container.show();
-          $(this).addClass("active");
+          $.cookie("sbac_search_categories_closed", 0);
+          filter_container.slideDown('fast');
+          $('.sbac-filter-cat-area').addClass("active");
         }
       }
     }

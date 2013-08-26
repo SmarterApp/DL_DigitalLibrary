@@ -136,6 +136,22 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench',
   );
 
+  // Exported permission: add media from remote sources.
+  $permissions['add media from remote sources'] = array(
+    'name' => 'add media from remote sources',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'help desk' => 'help desk',
+      'resource contributor' => 'resource contributor',
+      'resource publisher' => 'resource publisher',
+      'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
+    ),
+    'module' => 'media_internet',
+  );
+
   // Exported permission: administer actions.
   $permissions['administer actions'] = array(
     'name' => 'administer actions',
@@ -509,6 +525,17 @@ function sbac_user_user_default_permissions() {
       'help desk' => 'help desk',
     ),
     'module' => 'sbac_help',
+  );
+
+  // Exported permission: use text format full_html.
+  $permissions['use text format full_html'] = array(
+    'name' => 'use text format full_html',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'help desk' => 'help desk',
+    ),
+    'module' => 'filter',
   );
 
   // Exported permission: use workbench_moderation my drafts tab.

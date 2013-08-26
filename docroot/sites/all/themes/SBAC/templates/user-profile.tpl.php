@@ -59,9 +59,12 @@
 
 		<div class="profile-school">
 			<?php
-				$school = drupal_render($user_profile['field_school_name']);
-				$district = drupal_render($user_profile['field_district_name']);
-				$state = drupal_render($user_profile['field_state']);
+				//$school = drupal_render($user_profile['field_school_name']);
+				//$district = drupal_render($user_profile['field_district_name']);
+				//$state = drupal_render($user_profile['field_state']);
+        $school = $user_profile['field_school_name']['#items'][0]['value'];
+        $district = $user_profile['field_district_name']['#items'][0]['value'];
+        $state = $user_profile['field_state'][0]['#title'];
 
 				if ($school && $district && $state) {
 					echo t('!school in !district, !state', array(

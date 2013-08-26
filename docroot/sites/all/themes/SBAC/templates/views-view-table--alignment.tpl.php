@@ -24,11 +24,11 @@
 
         $subject = array_pop($parents);
 
-        if ($is_ela = ($subject->name == 'English Language Arts')) {
+        if ($is_ela = ($subject->name == 'English / Language Arts')) {
            $grade = array_pop($parents);
            $claim = array_pop($parents);
         }
-        elseif ($is_ma = ($subject->name == 'Mathematics')) {
+        elseif ($is_ma = ($subject->name == 'Math')) {
            $grade = array_pop($parents);
            $claim = array_pop($parents);
            $domain = array_pop($parents);

@@ -46,7 +46,7 @@
         ));
       ?>
     </li>
-    <li><a data-dropdown="feedback-dropdown" href="#">Feedback</a>
+    <li><a id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
       <div id="feedback-dropdown" class="f-dropdown content small">
         <a id="disable-feedback" class="small right"> x </a>
       <?php
@@ -96,7 +96,7 @@
   </div>
   <div><?php print render($page['sub-header']); ?></div>
 </div>
-<div class="filters sbac-filter-cat-area">
+<div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie */ print sbac_search_hide_category_style(); ?>>
       <?php print render($page['filter']); ?>
 </div>
 
@@ -194,7 +194,6 @@
       ?>
       <ul class="footer-links inline-list right">
         <li><a class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
-        <li><a class="feedback" href="#">Feedback</a></li>
         <li>
           <div class="footer-help">
             <a class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
