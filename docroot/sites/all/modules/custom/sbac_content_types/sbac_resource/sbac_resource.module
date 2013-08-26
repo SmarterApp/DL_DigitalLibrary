@@ -703,8 +703,6 @@ function sbac_resource_cron() {
  * @param $node
  */
 function sbac_resource_node_update($node) {
-  // Always publish on update.
-  //$node->status = 1;
 }
 
 /**
@@ -713,10 +711,6 @@ function sbac_resource_node_update($node) {
  * @param $node
  */
 function sbac_resource_node_presave($node) {
-//  if ($node->title) {
-//    $node->status = 1;
-//  }
-
   if (isset($node->nid) && $node->nid) {
     $node->field_document_id['und'] = array(); //use this to clean up the node during test
     $i = 0;

@@ -55,10 +55,6 @@ function sbac_report_sne_autocomplete($string = '') {
   // Get the selected state if there's any.
   $matches = array();
 
-  $rc_role = user_role_load_by_name('resource contributor');
-  $rv_role = user_role_load_by_name('resource reviewer');
-  $rids = array($rv_role->rid, $rc_role->rid);
-
   $state_tid = sbac_report_get_default_state_tid();
   if ($state_tid == 'all') {
     $state_condition = '';
@@ -79,8 +75,6 @@ function sbac_report_sne_autocomplete($string = '') {
     field_first_name.field_first_name_value AS 'first_name'
   FROM {users} users
 
-  INNER JOIN {users_roles} users_roles ON users.uid = users_roles.uid
-
   LEFT JOIN {field_data_field_last_name} AS field_last_name
     ON users.uid = field_last_name.entity_id AND (field_last_name.entity_type = 'user' AND field_last_name.deleted = '0')
 
@@ -100,7 +94,6 @@ function sbac_report_sne_autocomplete($string = '') {
       OR (CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str)
     )
     AND (users.status <> '0')
-    AND (users_roles.rid IN (:rids))
     AND (field_sne_member.field_sne_member_value = 1)
     $state_condition
   )
@@ -110,7 +103,6 @@ SQL;
 
   $result = db_query($sql,
     array(
-      ':rids' => $rids,
       ':str' => '%' . $string . '%',
     )
   );
