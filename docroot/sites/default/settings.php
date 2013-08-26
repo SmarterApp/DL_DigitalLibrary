@@ -552,6 +552,11 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
  */
 # $conf['allow_authorize_operations'] = FALSE;
 
+// Memcache
+$conf['cache_backends'][] = './sites/all/modules/contrib/memcache/memcache.inc';
+$conf['cache_default_class'] = 'MemCacheDrupal';
+$conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
+
 // Acquia DB String
 if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/willappnovationcom/willappnovationcom-settings.inc');
@@ -562,6 +567,7 @@ $conf['cmis_repositories'] = array(
   'default' => array(
     'user' => 'admin',
     'password' => 'm3rcury',
+	  'update_url' => 'ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
     'label' => 'local cmis repo',
     'url' => 'http://ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/s/cmis',
     'transport' => 'cmis_headerswing',

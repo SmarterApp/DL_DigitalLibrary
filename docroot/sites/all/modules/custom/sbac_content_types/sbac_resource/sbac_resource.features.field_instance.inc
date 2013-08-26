@@ -647,6 +647,8 @@ function sbac_resource_field_default_field_instances() {
         'allowed_schemes' => array(
           'public' => 'public',
           'schooltube' => 'schooltube',
+          'slideshare' => 'slideshare',
+          'teachertube' => 'teachertube',
           'vimeo' => 'vimeo',
           'youtube' => 'youtube',
         ),

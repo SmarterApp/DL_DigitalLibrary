@@ -34,6 +34,7 @@ features[variable][] = imce_settings_disable_private
 features[variable][] = imce_settings_replace
 features[variable][] = imce_settings_textarea
 features[variable][] = imce_settings_thumb_method
+features[variable][] = maintenance_mode_message
 features[variable][] = site_403
 features[variable][] = site_404
 features[variable][] = site_default_country

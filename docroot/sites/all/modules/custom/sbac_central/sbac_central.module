@@ -1,7 +1,6 @@
 <?php
 
 include_once 'sbac_central.features.inc';
-
 /**
  * Implements hook_update_projects_alter().
  *
@@ -10,23 +9,39 @@ include_once 'sbac_central.features.inc';
 function sbac_central_update_projects_alter(&$projects) {
   unset($projects['sbac_central']);
 }
-
 /**
  * Implements hook_init().
- *
- * Forces the user to login.
- *
+ * Enables/disables maillog per environment.
  */
 function sbac_central_init() {
-//  global $user, $base_path;
-//  if (request_uri() != $base_path . 'cron.php' && !$user->uid && !(arg(0) == 'user' && (!arg(1) || arg(1) == 'password' || arg(1) == 'register'))) {
-//    if (!drupal_is_cli()) {
-//      // drupal_set_message(t('You must login to use this site.'));
-//      drupal_goto('user', array('query' => array('destination' => $_GET['q'])));
-//    }
-//  }
+  global $user;
+  if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+      case 'dev':
+        if(!module_exists('maillog')) {
+          module_enable(array('maillog'));
+          watchdog('SBAC', 'Enabling maillog. See sbac_central_init for details.');
+          if ($user->uid == 1) {
+            drupal_set_message('Enabling maillog. See sbac_central_init for details.');
+          }
+        }
+        break;
+      case 'test':
+        
+        break;
+      case 'prod':
+        //do something if its prod
+        if(module_exists('maillog')) {
+          module_disable(array('maillog'));
+          watchdog('SBAC', 'Disabling maillog. See sbac_central_init for details.');
+          if ($user->uid == 1) {
+            drupal_set_message('Disabling maillog. See sbac_central_init for details.');
+          }
+        }
+        break;
+    }
+  }
 }
-
 /**
  * Determines the users most priveleged role.
  *
@@ -249,7 +264,6 @@ function sbac_central_block_configure($delta = '') {
 
   return $form;
 }
-
 /**
  * Implements hook_block_save().
  */
