@@ -10,12 +10,12 @@ function sbac_media_media_internet_providers() {
   $info['MediaInternetSchoolTubeHandler'] = array(
     'title' => t('SchoolTube'),
   );
-//  $info['MediaInternetTeacherTubeHandler'] = array(
-//    'title' => t('TeacherTube'),
-//  );
-//  $info['MediaInternetSlideShareHandler'] = array(
-//    'title' => t('SlideShare'),
-//  );
+  $info['MediaInternetTeacherTubeHandler'] = array(
+    'title' => t('TeacherTube'),
+  );
+  $info['MediaInternetSlideShareHandler'] = array(
+    'title' => t('SlideShare'),
+  );
   return $info;
 }
 
@@ -201,90 +201,3 @@ function sbac_media_field_load($entity_type, $entities, $field, $instances, $lan
 function sbac_media_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
   $var = '';
 }
-
-
-/**
- * Allow stream wrappers to have their chance at validation.
- *
- * Any module that implements hook_media_parse will have an
- * opportunity to validate this.
- *
- * @see media_parse_to_uri()
- */
-// function sbac_media_add_validate($form, &$form_state) {
-//   if ($form_state['values']['op'] == t('Apply')) {
-//     return;
-//   }
-//   $uri = $form_state['values']['sumitted-video'];
-//   try {
-//     $file = file_uri_to_object($uri, TRUE);
-//   }
-//   catch (Exception $e) {
-//     form_set_error('url', $e->getMessage());
-//     return;
-//   }
-
-//   if (!$file->uri) {
-//     form_set_error('url', t('Please select a video.'));
-//     return;
-//   }
-
-//   $validators = $form['#validators'];
-//   if ($validators) {
-//     // Check for errors. @see media_add_upload_validate calls file_save_upload().
-//     // this code is ripped from file_save_upload because we just want the validation part.
-//     // Call the validation functions specified by this function's caller.
-//     $errors = file_validate($file, $validators);
-
-//     if (!empty($errors)) {
-//       $message = t('%uri could not be added.', array('%uri' => $uri));
-//       if (count($errors) > 1) {
-//         $message .= theme('item_list', array('items' => $errors));
-//       }
-//       else {
-//         $message .= ' ' . array_pop($errors);
-//       }
-//       form_set_error('url', $message);
-//       return FALSE;
-//     }
-//   }
-// }
-
-// *
-//  * @TODO: Document this function.
-
-// function sbac_media_add_submit($form, &$form_state) {
-//   $uri = $form_state['values']['sumitted-video'];
-//   try {
-//     // Save the remote file
-//     $file = file_uri_to_object($uri, TRUE);
-//     file_save($file);
-//   }
-//   catch (Exception $e) {
-//     form_set_error('url', $e->getMessage());
-//     return;
-//   }
-
-//   if (!$file->fid) {
-//     form_set_error('url', t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $uri)));
-//     return;
-//   }
-//   else {
-//     $form_state['file'] = $file;
-//   }
-
-//   // Redirect to the file edit page after submission.
-//   // @TODO: media_access() is a wrapper for file_entity_access(). Switch to the
-//   // new function when Media 1.x is deprecated.
-//   if (media_access('update', $file)) {
-//     $destination = array('destination' => 'admin/content/file');
-//     if (isset($_GET['destination'])) {
-//       $destination = drupal_get_destination();
-//       unset($_GET['destination']);
-//     }
-//     $form_state['redirect'] = array('file/' . $file->fid . '/edit', array('query' => $destination));
-//   }
-//   else {
-//     $form_state['redirect'] = 'admin/content/file';
-//   }
-// }
