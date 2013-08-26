@@ -553,3 +553,13 @@ function sbac_central_update_7049() {
   db_query("UPDATE system SET weight = 0 WHERE name = 'sbac_resource'");
   return $ret;
 }
+
+/**
+ * Enables CMIS HeaderSwing Module.
+ */
+function sbac_central_update_7050() {
+  $modules = array(
+    'cmis_headerswing',
+  );
+  module_enable($modules);
+}
