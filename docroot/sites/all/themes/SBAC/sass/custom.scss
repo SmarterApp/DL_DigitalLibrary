@@ -583,7 +583,12 @@ nav.main-nav {
 }
 
 #drop3{
-  margin-top: -23px;
+  top: 50px !important;
+  display: none;
+
+  &.open {
+    display: block;
+  }
 }
 .help-dropdown {
   float: right;
