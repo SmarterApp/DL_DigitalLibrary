@@ -9106,3 +9106,37 @@ a.tabledrag-handle .handle {
   height: 0;
   z-index: 97;
 }
+
+/* ----------------------------------------
+    Taxonomy tool tips
+  _________________________________________ */
+/* line 2208, ../sass/custom.scss */
+.maintenance-page #header {
+  display: none;
+}
+/* line 2212, ../sass/custom.scss */
+.maintenance-page #content {
+  font-size: 1.2em;
+  max-width: 660px;
+  margin: 30px auto 0;
+  padding: 100px 40px 40px;
+  color: #63666a;
+  background: white url("../images/sbac-logo-not-found.png") 40px 40px no-repeat;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  border: 1px solid #63666a;
+  -webkit-box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.4), inset 2px 0px 1px rgba(255, 255, 255, 0);
+  -moz-box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.4), inset 2px 0px 1px rgba(255, 255, 255, 0);
+  box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.4), inset 2px 0px 1px rgba(255, 255, 255, 0);
+}
+/* line 2223, ../sass/custom.scss */
+.maintenance-page #content h2 {
+  color: inherit;
+}
+/* line 2228, ../sass/custom.scss */
+.maintenance-page #page-title {
+  display: none;
+}
