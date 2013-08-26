@@ -458,14 +458,6 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['arguments']['field_state_tid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_state_tid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_state_tid']['summary_options']['items_per_page'] = '25';
-  /* Filter criterion: User: Roles */
-  $handler->display->display_options['filters']['rid']['id'] = 'rid';
-  $handler->display->display_options['filters']['rid']['table'] = 'users_roles';
-  $handler->display->display_options['filters']['rid']['field'] = 'rid';
-  $handler->display->display_options['filters']['rid']['value'] = array(
-    15 => '15',
-    17 => '17',
-  );
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'sne_details');
