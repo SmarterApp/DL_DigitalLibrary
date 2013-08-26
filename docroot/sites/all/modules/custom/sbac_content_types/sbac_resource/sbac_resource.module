@@ -704,7 +704,7 @@ function sbac_resource_node_presave($node) {
         //this file still exists on Drupal so we have to load it...{
         if ($file !== FALSE) {
           sbac_resource_create_file_from_cmis($node, $i); // Create new doc
-          file_delete($file); //delete the file from drupal
+          //file_delete($file); //delete the file from drupal
         }
       }
       catch (CMISException $e) {
@@ -714,7 +714,7 @@ function sbac_resource_node_presave($node) {
       $i++;
     }
     //clean up the file array at the end
-    $node->field_file = array();
+    //$node->field_file = array();
   }
 }
 
