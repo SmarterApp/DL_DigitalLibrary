@@ -1837,6 +1837,8 @@ a.tabledrag-handle .handle {
 
 #feedback-dropdown{
   display:none;
+  right: 100px;
+  left: auto !important;
   &.open {
     top: 50px !important;
     right: 100px;
