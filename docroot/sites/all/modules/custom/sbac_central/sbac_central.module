@@ -18,15 +18,30 @@ function sbac_central_update_projects_alter(&$projects) {
  *
  */
 function sbac_central_init() {
-//  global $user, $base_path;
-//  if (request_uri() != $base_path . 'cron.php' && !$user->uid && !(arg(0) == 'user' && (!arg(1) || arg(1) == 'password' || arg(1) == 'register'))) {
-//    if (!drupal_is_cli()) {
-//      // drupal_set_message(t('You must login to use this site.'));
-//      drupal_goto('user', array('query' => array('destination' => $_GET['q'])));
-//    }
-//  }
+  global $user;
+  if ($user->uid == 1) {
+    dsm($_ENV['AH_SITE_ENVIRONMENT']);  
+  }
+  
+  if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+      case 'dev':
+      case 'test':
+        if(!module_exists('maillog')) {
+          module_enable(array('maillog'));
+          watchdog('SBAC', 'Enabling maillog.');
+        }
+        break;
+      case 'prod':
+        //do something if its prod
+        if(module_exists('maillog')) {
+          module_disable(array('maillog'));
+          watchdog('SBAC', 'Disabling maillog.');
+        }
+        break;
+    }
+  }
 }
-
 /**
  * Determines the users most priveleged role.
  *
