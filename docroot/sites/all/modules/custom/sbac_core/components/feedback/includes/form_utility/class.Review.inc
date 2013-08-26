@@ -58,6 +58,19 @@ class Review extends Base {
   public function process() {
     parent::process();
 
+    // remove the N/A option from 
+    unset($this->_form['field_rec_options'][$this->_lang]['#options']['_none']);
+
+    // add 'required field' asterisks
+    $this->_form['field_rec_options'][$this->_lang]['#title'] .= $this->_required_marker;
+    $this->_form['field_rec_rationale'][$this->_lang]['#title'] .= $this->_required_marker;
+
+    $children = element_num_children($this->_form['field_rec_rationale'][$this->_lang]);
+    foreach ($children as &$child) {
+      $child['#title'] .= $this->_required_marker;
+      $child['value']['#title'] .= $this->_required_marker;
+    }
+
     // log radio button descriptions
     $this->_js_settings['feedback']['level_desc'] = array();
     foreach (field_allowed_values('field_level') as $value => $label) {
