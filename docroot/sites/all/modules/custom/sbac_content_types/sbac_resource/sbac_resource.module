@@ -1130,79 +1130,68 @@ function sbac_resource_apachesolr_node_exclude($entity_id, $row, $env_id) {
   }
   return FALSE;
 }	
-function sbac_resource_truncate($maxLength, $html, $isUtf8=true) {
-  $output = '';
+function sbac_resource_truncate($html, $maxLength=100){
+    mb_internal_encoding("UTF-8");
     $printedLength = 0;
     $position = 0;
     $tags = array();
+    $newContent = '';
 
-    // For UTF-8, we need to count multibyte sequences as one character.
-    $re = $isUtf8
-        ? '{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;|[\x80-\xFF][\x80-\xBF]*}'
-        : '{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}';
+    $html = $content = preg_replace("/<img[^>]+\>/i", "", $html);
 
-    while ($printedLength < $maxLength && preg_match($re, $html, $match, PREG_OFFSET_CAPTURE, $position))
+    while ($printedLength < $maxLength && preg_match('{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}', $html, $match, PREG_OFFSET_CAPTURE, $position))
     {
         list($tag, $tagPosition) = $match[0];
-
         // Print text leading up to the tag.
-        $str = substr($html, $position, $tagPosition - $position);
-        if ($printedLength + strlen($str) > $maxLength)
-        {
-            print(substr($str, 0, $maxLength - $printedLength));
+        $str = mb_strcut($html, $position, $tagPosition - $position);
+        if ($printedLength + mb_strlen($str) > $maxLength){
+            $newstr = mb_strcut($str, 0, $maxLength - $printedLength);
+            $newstr = preg_replace('~\s+\S+$~', '', $newstr);  
+            $newContent .= $newstr;
             $printedLength = $maxLength;
             break;
         }
-
-        print($str);
-        $printedLength += strlen($str);
-        if ($printedLength >= $maxLength) break;
-
-        if ($tag[0] == '&' || ord($tag) >= 0x80)
-        {
-            // Pass the entity or UTF-8 multibyte sequence through unchanged.
-            print($tag);
+        $newContent .= $str;
+        $printedLength += mb_strlen($str);
+        if ($tag[0] == '&') {
+            // Handle the entity.
+            $newContent .= $tag;
             $printedLength++;
-        }
-        else
-        {
+        } else {
             // Handle the tag.
             $tagName = $match[1][0];
-            if ($tag[1] == '/')
-            {
-                // This is a closing tag.
-
-                $openingTag = array_pop($tags);
-                assert($openingTag == $tagName); // check that tags are properly nested.
-
-                print($tag);
-            }
-            else if ($tag[strlen($tag) - 2] == '/')
-            {
-                // Self-closing tag.
-                print($tag);
-            }
-            else
-            {
-                // Opening tag.
-                print($tag);
-                $tags[] = $tagName;
-            }
+            if ($tag[1] == '/') {
+              // This is a closing tag.
+              $openingTag = array_pop($tags);
+              assert($openingTag == $tagName); // check that tags are properly nested.
+              $newContent .= $tag;
+            } else if ($tag[mb_strlen($tag) - 2] == '/'){
+          // Self-closing tag.
+            $newContent .= $tag;
+        } else {
+          // Opening tag.
+          $newContent .= $tag;
+          $tags[] = $tagName;
         }
+      }
 
-        // Continue after the tag.
-        $position = $tagPosition + strlen($tag);
+      // Continue after the tag.
+      $position = $tagPosition + mb_strlen($tag);
     }
 
     // Print any remaining text.
-    if ($printedLength < $maxLength && $position < strlen($html)) {
-      $output .= substr($html, $position, $maxLength - $printedLength);
-    }
+    if ($printedLength < $maxLength && $position < mb_strlen($html))
+      {
+        $newstr = mb_strcut($html, $position, $maxLength - $printedLength);
+        $newstr = preg_replace('~\s+\S+$~', '', $newstr);
+        $newContent .= $newstr;
+      }
 
     // Close any open tags.
-    while (!empty($tags)){
-      $tag = array_pop($tags);
-      $output .= "</$tag>";
-    }
-  return $output;
+    while (!empty($tags))
+      {
+        $newContent .= sprintf('</%s>', array_pop($tags));
+      }
+
+    return $newContent;
 }
