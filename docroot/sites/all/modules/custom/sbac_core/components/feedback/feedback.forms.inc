@@ -11,39 +11,6 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
   $values = &$form_state['values'];
   $lang = $values['entity']->language;
 
-  // checks that $fields are filled in within the given $container
-  // field_collection
-  $required_check = function($container, $fields) use ($values, $lang) {
-    foreach ($values[$container][$lang] as $key => $item) {
-      foreach ($fields as $field_name => $field_message) {
-        $value = trim(field_get_value($item, $field_name));
-        if (is_null($value) || $value == '') {
-          $error_key = implode('][', array(
-            $container,
-            $lang,
-            $key,
-            $field_name,
-          ));
-
-          // default "empty field" message
-          if ($field_name == $field_message) {
-            $error_text = t('Field is required.');
-          }
-          // customized message
-          else {
-            $error_text = t($field_message, array(
-              '!delta'      => $key,
-              '!delta+1'    => $key + 1,
-              '!field_name' => $field_name,
-            ));
-          }
-
-          form_set_error($error_key, $error_text);
-        }
-      }
-    }
-  };
-
   // determines the error message for given field
   $error_message = function($field_name, $field_message, $delta) {
     // default "empty field" message
