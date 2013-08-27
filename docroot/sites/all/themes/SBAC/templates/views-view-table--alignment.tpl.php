@@ -14,6 +14,7 @@
   <tbody>
     <?php foreach ($rows as $row_count => $row): ?>
       <?php
+        $is_ela = $is_ma = FALSE;
         $alignment_node = node_load($row['nid']);
         $tid = $alignment_node->field_education_alignment['und'][0]['tid'];
         //dsm($tid);
