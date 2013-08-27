@@ -196,6 +196,9 @@ function sbac_core_devtools_components() {
         'feedback.forms.inc',
       ),
     ),
+    'field_profanity' => array(),
+    // 'field_required' => array(),
+    'field_xss' => array(),
     'input_format' => array(),
     // 'maxlength_above' => array(),
     'memory' => array(),
@@ -210,6 +213,7 @@ function sbac_core_devtools_components() {
     'taskit' => array(),
     'user' => array(),
     'user_profile' => array(),
+
   );
 
   return $components;

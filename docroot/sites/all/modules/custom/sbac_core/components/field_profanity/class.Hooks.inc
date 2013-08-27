@@ -1,5 +1,5 @@
 <?php
-namespace sbac_core\components\profanity;
+namespace sbac_core\components\field_profanity;
 
 class Hooks extends \devtools\Hooks {
 
