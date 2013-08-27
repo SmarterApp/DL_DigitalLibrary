@@ -34,13 +34,16 @@
 		//				'right',
 		//			)
 		//		)
-		//	));
+		//	)); 
 		?>
 
 		<h2 class="name clearfix">
 			<?php
 				echo drupal_render($user_profile['field_first_name']) . ' ';
-				echo drupal_render($user_profile['field_last_name']);
+        echo drupal_render($user_profile['field_last_name']);
+        if (sbac_user_privacy_check('field_last_name', $user_profile['field_last_name']['#object'])) {
+          echo drupal_render($user_profile['field_last_name']);
+        }
 			?>
 		</h2>
 
@@ -62,9 +65,9 @@
 				//$school = drupal_render($user_profile['field_school_name']);
 				//$district = drupal_render($user_profile['field_district_name']);
 				//$state = drupal_render($user_profile['field_state']);
-        $school = isset($user_profile['field_school_name']['#items'][0]['value']) ? $user_profile['field_school_name']['#items'][0]['value'] : NULL;
-        $district = isset($user_profile['field_district_name']['#items'][0]['value']) ? $user_profile['field_district_name']['#items'][0]['value'] : NULL;
-        $state = isset($user_profile['field_state'][0]['#title']) ? $user_profile['field_state'][0]['#title'] : NULL;
+        $school = $user_profile['field_school_name']['#items'][0]['value'];
+        $district = $user_profile['field_district_name']['#items'][0]['value'];
+        $state = $user_profile['field_state'][0]['#title'];
 
 				if ($school && $district && $state) {
 					echo t('!school in !district, !state', array(
@@ -134,3 +137,5 @@
 	</div>
 
 </div>
+<?php //drupal_render($form['field_feedback_flag']); ?>
+<?php print drupal_render($form); ?>
