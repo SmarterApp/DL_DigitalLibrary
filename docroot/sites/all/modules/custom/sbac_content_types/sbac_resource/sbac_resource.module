@@ -216,19 +216,19 @@ function _sbac_resource_preview_content(&$vars) {
     }
     // replace with theming functions, preprocess theme functions haven't been implemented (except for schooltube), although templates have been
     else if ($media == 'schooltube') {
-      $viewer['viewer'] = '<iframe width="850" height="400" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>';
     }
     else if ($media == 'teachertube') {
-      $viewer['viewer'] = '<iframe width="850" height="400" src="' . $url . '" frameborder="0" allowfullscreen/></iframe>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/></iframe></div>';
     }
     else if ($media == 'slideshare') {
-      $viewer['viewer'] = '<iframe src="' . $url . '" width="850" height="400" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>';
     }
     else if ($media == 'vimeo') {
-      $viewer['viewer'] = '<iframe src="' . $url . '" width="850" height="400" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>';
     }
     else if ($media == 'youtube') {
-      $viewer['viewer'] = '<iframe width="850" height="400" src="' . $url . '" frameborder="0" allowfullscreen></iframe>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen></iframe></div>';
     }      
     else {
       $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';

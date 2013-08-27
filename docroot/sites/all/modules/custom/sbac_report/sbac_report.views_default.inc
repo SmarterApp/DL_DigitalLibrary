@@ -174,7 +174,7 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = 'Contribution Date';
   $handler->display->display_options['fields']['created']['date_format'] = 'custom';
-  $handler->display->display_options['fields']['created']['custom_date_format'] = 'm/d/y h:m a';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'm/d/y h:i a';
   /* Field: Workbench Moderation: State */
   $handler->display->display_options['fields']['state']['id'] = 'state';
   $handler->display->display_options['fields']['state']['table'] = 'workbench_moderation_node_history';

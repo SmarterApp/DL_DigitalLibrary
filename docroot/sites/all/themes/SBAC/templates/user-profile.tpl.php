@@ -34,13 +34,16 @@
 		//				'right',
 		//			)
 		//		)
-		//	));
+		//	)); 
 		?>
 
 		<h2 class="name clearfix">
 			<?php
 				echo drupal_render($user_profile['field_first_name']) . ' ';
-				echo drupal_render($user_profile['field_last_name']);
+        echo drupal_render($user_profile['field_last_name']);
+        if (sbac_user_privacy_check('field_last_name', $user_profile['field_last_name']['#object'])) {
+          echo drupal_render($user_profile['field_last_name']);
+        }
 			?>
 		</h2>
 
@@ -75,7 +78,7 @@
 				} else {
 					echo $school;
 					echo $district;
-					echo ($school || $district ? ', ' : '');
+					echo (($school || $district) && $state)? ', ' : '';
 					echo $state;
 				}
 			?>
@@ -134,3 +137,5 @@
 	</div>
 
 </div>
+<?php //drupal_render($form['field_feedback_flag']); ?>
+<?php print drupal_render($form); ?>

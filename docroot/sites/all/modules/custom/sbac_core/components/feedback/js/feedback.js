@@ -8,7 +8,7 @@ if (typeof Feedback == 'undefined') {
 Feedback.wrapper =            '.review-wrap';
 Feedback.messages =           '.alert-box';
 Feedback.messages_error =     '.alert-box.alert';
-Feedback.messages_existing =  '.row > .main-container > .alert-box';
+Feedback.messages_existing =  '.row > .main-container #main > .alert-box';
 Feedback.messages_container = '#main';
 Feedback.action_select =      'select[name=action]';
 Feedback.submit_button =      '.button.secondary';
@@ -72,7 +72,7 @@ Feedback.utilities = {
 
     var messages = $(Feedback.wrapper + ' ' + Feedback.messages);
     if (messages.length) {
-      messages.insertBefore(Feedback.messages_container);
+      messages.prependTo(Feedback.messages_container);
 
       // if there are errors, scroll to the top
       if ($(Feedback.messages_error).length) {

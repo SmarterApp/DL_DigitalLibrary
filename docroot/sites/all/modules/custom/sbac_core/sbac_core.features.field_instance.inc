@@ -140,6 +140,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 0,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'feedback-post-field_to_reviewer_1'
@@ -186,6 +187,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 1,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'feedback-post-field_to_reviewer_2'
@@ -232,6 +234,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 2,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'feedback-post-field_to_reviewer_3'
@@ -278,6 +281,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 3,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'feedback-review-field_rec_options'
@@ -305,7 +309,7 @@ function sbac_core_field_default_field_instances() {
     'entity_type' => 'feedback',
     'field_name' => 'field_rec_options',
     'label' => 'Recommendation Options',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -347,7 +351,7 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_rec_rationale',
     'label' => 'Rationale for Recommendation',
     'profanity' => 1,
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -366,6 +370,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 5,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'feedback-review-field_review_set'
@@ -459,6 +464,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 1,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'field_collection_item-field_quality_set-field_meets_criterion'
@@ -533,6 +539,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 2,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'field_collection_item-field_review_set-field_level'
