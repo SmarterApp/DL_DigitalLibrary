@@ -11,67 +11,39 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
   $values = &$form_state['values'];
   $lang = $values['entity']->language;
 
-  // checks that $fields are filled in within the given $container
-  // field_collection
-  $required_check = function($container, $fields) use ($values, $lang) {
-    foreach ($values[$container][$lang] as $key => $item) {
-      foreach ($fields as $field_name => $field_message) {
-        $value = trim(field_get_value($item, $field_name));
-        if (is_null($value) || $value == '') {
-          $error_key = implode('][', array(
-            $container,
-            $lang,
-            $key,
-            $field_name,
-          ));
-
-          // default "empty field" message
-          if ($field_name == $field_message) {
-            $error_text = t('Field is required.');
-          }
-          // customized message
-          else {
-            $error_text = t($field_message, array(
-              '!delta'      => $key,
-              '!delta+1'    => $key + 1,
-              '!field_name' => $field_name,
-            ));
-          }
-
-          form_set_error($error_key, $error_text);
-        }
-      }
+  // determines the error message for given field
+  $error_message = function($field_name, $field_message, $delta) {
+    // default "empty field" message
+    if ($field_name == $field_message) {
+      $error_text = t('Field is required.');
     }
+    // customized message
+    else {
+      $error_text = t($field_message, array(
+        '!delta'      => $delta,
+        '!delta+1'    => $delta + 1,
+        '!field_name' => $field_name,
+      ));
+    }
+
+    return $error_text;
   };
 
-  // TODO: finish required check
-
   // checks that $fields are filled in within the given $container
   // field_collection
-  $required_check = function($container, $fields) use ($values, $lang) {
-    foreach ($values[$container][$lang] as $key => $item) {
+  $required_check = function($container, $fields) use ($values, $lang, $error_message) {
+    foreach ($values[$container][$lang] as $delta => $item) {
       foreach ($fields as $field_name => $field_message) {
         $value = trim(field_get_value($item, $field_name));
         if (is_null($value) || $value == '') {
           $error_key = implode('][', array(
             $container,
             $lang,
-            $key,
+            $delta,
             $field_name,
           ));
 
-          // default "empty field" message
-          if ($field_name == $field_message) {
-            $error_text = t('Field is required.');
-          }
-          // customized message
-          else {
-            $error_text = t($field_message, array(
-              '!delta'      => $key,
-              '!delta+1'    => $key + 1,
-              '!field_name' => $field_name,
-            ));
-          }
+          $error_text = $error_message($field_name, $field_message, $delta);
 
           form_set_error($error_key, $error_text);
         }
@@ -152,10 +124,25 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
             'field_level' => 'You must make a decision in Criteria !delta+1 to continue',
           ));
 
-          dsmm($values['field_rec_options']);
-          dsmm($values['field_rec_rationale']);
-          // field_rec_options
-          // field_rec_rationale
+          $fields = array(
+            'field_rec_options' => 'You must select a Recommendation Option to continue',
+            'field_rec_rationale' => 'You must enter Rationale for Recommendation to continue',
+          );
+
+          foreach ($fields as $field_name => $field_message) {
+            foreach ($values[$field_name][$lang] as $delta => $item) {
+              $val = trim($item['value']);
+              if (empty($val)) {
+                $error_key = implode('][', array(
+                  $field_name,
+                ));
+
+                $error_text = $error_message($field_name, $field_message, $delta);
+
+                form_set_error($error_key, $error_text);
+              }
+            }
+          }
 
           break;
       }

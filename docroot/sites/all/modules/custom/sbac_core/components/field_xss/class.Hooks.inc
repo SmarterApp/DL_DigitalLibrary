@@ -15,7 +15,7 @@ class Hooks extends \devtools\Hooks {
       $form['instance']['xss'] = array(
         '#type' => 'checkbox',
         '#default_value' => isset($form['#instance']['xss']) ? $form['#instance']['xss'] : 0,
-        '#title' => t('Perform XSS cleanup'),
+        '#title' => t('Perform XSS validation'),
       );
     }
   }
