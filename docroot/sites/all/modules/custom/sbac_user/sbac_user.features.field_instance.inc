@@ -276,44 +276,6 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_phone_number'
-  $field_instances['user-user-field_phone_number'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 5,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_phone_number',
-    'label' => 'Phone number',
-    'profanity' => 1,
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'label_help_description' => '',
-        'maxlength_js' => 0,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 7,
-    ),
-  );
-
   // Exported field_instance: 'user-user-field_position'
   $field_instances['user-user-field_position'] = array(
     'bundle' => 'user',
@@ -639,81 +601,6 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_swd_ell'
-  $field_instances['user-user-field_swd_ell'] = array(
-    'bundle' => 'user',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 9,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_swd_ell',
-    'label' => 'SWD/ELL',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'display_label' => 1,
-      ),
-      'type' => 'options_onoff',
-      'weight' => 6,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_university_name'
-  $field_instances['user-user-field_university_name'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 8,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_university_name',
-    'label' => 'University Name',
-    'profanity' => 1,
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'label_help_description' => '',
-        'maxlength_js' => 0,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 12,
-    ),
-  );
-
   // Translatables
   // Included for use with string extractors like potx.
   t('About me');
@@ -723,19 +610,16 @@ function sbac_user_field_default_field_instances() {
   t('Grade(s)');
   t('Last name');
   t('Name');
-  t('Phone number');
   t('Privacy');
   t('Retired');
   t('SLT Member');
   t('SNE Member');
-  t('SWD/ELL');
   t('School Name');
   t('Select the personal information and expertise you’d like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown at the top of this page. Note that no educators can access your full account and no information will be displayed publicly.');
   t('State');
   t('Student Population(s)');
   t('Subject(s)');
   t('Title');
-  t('University Name');
 
   return $field_instances;
 }
