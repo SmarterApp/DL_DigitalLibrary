@@ -44,6 +44,41 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
     }
   };
 
+  // TODO: finish required check
+
+  // checks that $fields are filled in within the given $container
+  // field_collection
+  $required_check = function($container, $fields) use ($values, $lang) {
+    foreach ($values[$container][$lang] as $key => $item) {
+      foreach ($fields as $field_name => $field_message) {
+        $value = trim(field_get_value($item, $field_name));
+        if (is_null($value) || $value == '') {
+          $error_key = implode('][', array(
+            $container,
+            $lang,
+            $key,
+            $field_name,
+          ));
+
+          // default "empty field" message
+          if ($field_name == $field_message) {
+            $error_text = t('Field is required.');
+          }
+          // customized message
+          else {
+            $error_text = t($field_message, array(
+              '!delta'      => $key,
+              '!delta+1'    => $key + 1,
+              '!field_name' => $field_name,
+            ));
+          }
+
+          form_set_error($error_key, $error_text);
+        }
+      }
+    }
+  };
+
   // checks for profanity messages and updates the error text
   $profanity_check = function($container) use ($values) {
     if ($errors = form_get_errors()) {
@@ -109,6 +144,21 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       }
 
       $container = 'field_review_set';
+
+      switch ($values['action']) {
+        case 'validate':
+          $required_check($container, array(
+            'field_comments' => 'Please add a comment to Criteria !delta+1 to continue',
+            'field_level' => 'You must make a decision in Criteria !delta+1 to continue',
+          ));
+
+          dsmm($values['field_rec_options']);
+          dsmm($values['field_rec_rationale']);
+          // field_rec_options
+          // field_rec_rationale
+
+          break;
+      }
 
       $profanity_check($container);
 

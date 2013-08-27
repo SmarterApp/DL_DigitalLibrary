@@ -13,9 +13,6 @@ Feedback.gk = {
     total: 0, // total number of Criteria Sets
     score: 0  // total number of 'yes' selections
   },
-
-  // the default form action
-  default_action: 'save_close',
   
   // modal button data
   buttons: {

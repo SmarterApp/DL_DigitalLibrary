@@ -30,16 +30,6 @@ Feedback.utilities = {
    * @return {[type]}                 [description]
    */
   watch_value: function(default_value, value_callback, change_callback) {
-    // current_value = value_callback();
-    // while (current_value == default_value) {
-    //   setTimeout(function() {
-    //    current_value = value_callback();
-    //   }, 200);
-    // }
-
-    // change_callback(current_value);
-    // value_callback(default_value);
-
     setTimeout(function() {
       var current_value = value_callback();
       // target value is still set to the default, so call self again
