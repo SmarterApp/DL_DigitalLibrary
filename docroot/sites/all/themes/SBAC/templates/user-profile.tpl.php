@@ -25,23 +25,9 @@
 	<?php endif; ?>
 
 	<div class="column large-9 user-profile">
-		<?php
-		//	echo l(t('Edit Profile'), 'user/' . $user->uid . '/edit', array(
-		//		'attributes' => array(
-		//			'class' => array(
-		//				'small',
-		//				'button',
-		//				'right',
-		//			)
-		//		)
-		//	));
-		?>
-
 		<h2 class="name clearfix">
-			<?php
-				echo drupal_render($user_profile['field_first_name']) . ' ';
-				echo drupal_render($user_profile['field_last_name']);
-			?>
+			<?php echo drupal_render($user_profile['field_first_name']) . ' '; ?>
+      <?php echo drupal_render($user_profile['field_last_name']); ?>
 		</h2>
 
 		<div class="profile-title">
@@ -62,9 +48,13 @@
 				//$school = drupal_render($user_profile['field_school_name']);
 				//$district = drupal_render($user_profile['field_district_name']);
 				//$state = drupal_render($user_profile['field_state']);
-        $school = isset($user_profile['field_school_name']['#items'][0]['value']) ? $user_profile['field_school_name']['#items'][0]['value'] : NULL;
-        $district = isset($user_profile['field_district_name']['#items'][0]['value']) ? $user_profile['field_district_name']['#items'][0]['value'] : NULL;
-        $state = isset($user_profile['field_state'][0]['#title']) ? $user_profile['field_state'][0]['#title'] : NULL;
+        if (sbac_user_privacy_check('field_school_name', $user_profile['field_school_name']['#object'])) {
+          $school = $user_profile['field_school_name']['#items'][0]['value'];
+        }
+        if (sbac_user_privacy_check('field_district_name', $user_profile['field_district_name']['#object'])) {
+          $district = $user_profile['field_district_name']['#items'][0]['value'];
+        }
+        $state = $user_profile['field_state'][0]['#title'];// always shown
 
 				if ($school && $district && $state) {
 					echo t('!school in !district, !state', array(
@@ -74,21 +64,18 @@
 					));
 				} else {
 					echo $school;
+          echo ($district)? ' ' : '';
 					echo $district;
-					echo ($school || $district ? ', ' : '');
+					echo (($school || $district) && $state)? ', ' : '';
 					echo $state;
 				}
 			?>
 		</div>
 
 		<div class="introduction">
-			<?php
-				echo drupal_render($user_profile['field_introduction']);
-			?>
+			<?php echo drupal_render($user_profile['field_introduction']); ?>
 		</div>
-
 		<div class="profile-details">
-
 			<?php
         $grade = $subject = $sp = '';
         if(isset($user_profile['field_grade_level_s_']['#items']) && $user_profile['field_grade_level_s_']['#items']) {
@@ -134,3 +121,5 @@
 	</div>
 
 </div>
+<?php //drupal_render($form['field_feedback_flag']); ?>
+<?php print drupal_render($form); ?>

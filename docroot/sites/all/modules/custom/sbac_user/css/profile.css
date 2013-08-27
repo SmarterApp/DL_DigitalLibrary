@@ -578,15 +578,11 @@ h2.name .field {
 .page-user .row.second #account .vertical-tabs-list li:focus {
   outline: none;
 }
-/* line 533, ../sass/profile.scss */
-.page-user .row.second #account #edit-field-feedback-flag-und {
-  display: none;
-}
-/* line 537, ../sass/profile.scss */
+/* line 534, ../sass/profile.scss */
 .page-user .row.second .chzn-container-multi .chzn-choices .search-field input {
   height: auto;
 }
-/* line 540, ../sass/profile.scss */
+/* line 537, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs ul.vertical-tabs-list li.selected a strong {
   color: #18577e;
 }

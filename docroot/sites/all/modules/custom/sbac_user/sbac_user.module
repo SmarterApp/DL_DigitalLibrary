@@ -226,10 +226,8 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_last_name']['#disabled'] = TRUE;
       $form['account']['mail']['#disabled'] = TRUE; // primary email address
       $form['field_alternate_email_address']['#disabled'] = TRUE;
-      $form['field_phone_number']['#disabled'] = TRUE;
       $form['field_district_name']['#disabled'] = TRUE;
       $form['field_school_name']['#disabled'] = TRUE;
-      $form['field_university_name']['#disabled'] = TRUE;
     } else {
       $form['account']['name']['#type'] = 'hidden';
       $form['account']['pass']['#type'] = 'hidden';
@@ -239,14 +237,12 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
 //      $form['account']['roles']['#type'] = 'hidden';
       $form['account']['notify']['#type'] = 'hidden';
       $form['field_alternate_email_address']['#type'] = 'hidden';
-      $form['field_phone_number']['#type'] = 'hidden';
       $form['field_school_name']['#type'] = 'hidden';
-      $form['field_swd_ell']['#type'] = 'hidden';
-      $form['field_university_name']['#type'] = 'hidden';
       $form['field_district_name']['#type'] = 'hidden';
       $form['field_slt_member']['#type'] = 'hidden';
       $form['field_sne_member']['#type'] = 'hidden';
       $form['field_state']['#type'] = 'hidden';
+      $form['field_feedback_flag']['#type'] = 'hidden';
       $form['legal']['#type'] = 'hidden';
       // add custom text for legal terms and conditions form item
       // $form['legal_accept']['#element_validate'] = 'sbac_user_legal_validate';
@@ -425,7 +421,7 @@ function sbac_user_privacy_check($field, $entity) {
     'field_last_name',
     'mail',
     // 'field_position',
-    // 'field_state',
+    'field_state',
     'field_school_name',
     'field_district_name',
     'field_introduction',
@@ -755,6 +751,7 @@ function sbac_user_user_login(&$edit, $account) {
     user_save($account);
   }
   user_save($account, array());
+  
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
   $edit['redirect'] = 'home';
 }
