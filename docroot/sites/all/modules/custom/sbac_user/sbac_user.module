@@ -234,16 +234,19 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['account']['current_pass']['#type'] = 'hidden';
       $form['account']['current_pass_required_values']['#type'] = 'hidden';
       $form['account']['status']['#type'] = 'hidden';
-//      $form['account']['roles']['#type'] = 'hidden';
+      //$form['account']['roles']['#type'] = 'hidden';
       $form['account']['notify']['#type'] = 'hidden';
-      $form['field_alternate_email_address']['#type'] = 'hidden';
-      $form['field_school_name']['#type'] = 'hidden';
-      $form['field_district_name']['#type'] = 'hidden';
-      $form['field_slt_member']['#type'] = 'hidden';
-      $form['field_sne_member']['#type'] = 'hidden';
-      $form['field_state']['#type'] = 'hidden';
-      $form['field_feedback_flag']['#type'] = 'hidden';
-      $form['legal']['#type'] = 'hidden';
+      
+      //user fields
+      $form['field_alternate_email_address']['#access'] = FALSE;
+      $form['field_school_name']['#access'] = FALSE;
+      $form['field_district_name']['#access'] = FALSE;
+      $form['field_slt_member']['#access'] = FALSE;
+      $form['field_sne_member']['#access'] = FALSE;
+      $form['field_state']['#access'] = FALSE;
+      $form['field_feedback_flag']['#access'] = FALSE;
+      $form['legal']['#access'] = FALSE;
+      
       // add custom text for legal terms and conditions form item
       // $form['legal_accept']['#element_validate'] = 'sbac_user_legal_validate';
 
@@ -252,8 +255,6 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['#submit'][] = 'sbac_user_user_profile_add_values_submit';
       $form['#submit'][] = 'user_profile_form_submit';
       $form['#submit'][] = 'sbac_user_user_profile_default_tab_submit';
-
-
 
       if(isset($form['picture']['picture']['#value'])) {
         $uid = $form_state['user']->entity_id;
@@ -1010,7 +1011,7 @@ function sbac_user_user_profile_add_values_submit($form, &$form_state) {
 function sbac_user_user_profile_default_tab_submit($form, &$form_state) {
   if ($form_state['values']['vertical_tabs_default']) {
     $form_state['redirect'] = array(
-      'user',
+      'user/' . arg(1),
       array('fragment' => $form_state['values']['vertical_tabs_default']),
     );
   }
