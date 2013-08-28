@@ -39,10 +39,10 @@ function sbac_user_menu() {
     'file' => "sbac_user.admin.inc",
   );
 
-  $items['user/%user/edit/remove_picture'] = array(
+  $items['custom/%user/remove_picture'] = array(
     'page callback' => 'sbac_user_remove_picture',
     'page arguments' => array(1),
-    'access callback' => 'user_edit_access',
+    'access callback' => TRUE,
     'access arguments' => array(1),
   );
 
@@ -70,6 +70,9 @@ function sbac_user_menu() {
   );
 
   return $items;
+}
+function sbac_user_access_check() {
+  return TRUE;
 }
 
 /**
@@ -259,7 +262,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       if(isset($form['picture']['picture']['#value'])) {
         $uid = $form_state['user']->entity_id;
         $form['picture']['picture_delete_link'] = array(
-          '#markup' => l(t('Remove Picture'), "user/$uid/edit/remove_picture", array('absolute' => TRUE, 'attributes' => array('class' =>'remove-picture'), 'query' => array('destination' => 'user')))
+          '#markup' => l(t('Remove Picture'), "custom/$uid/remove_picture", array('absolute' => TRUE, 'attributes' => array('class' =>'remove-picture'), 'query' => array('destination' => 'user/' . $uid)))
         );
       }
 
