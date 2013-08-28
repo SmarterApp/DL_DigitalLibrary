@@ -20,12 +20,28 @@
         control_form_buttons();
       });
 
-      $('#submission-general-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      $('#submission-summary-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      $('#submission-materials-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      $('#submission-tags-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
+      //$('#submission-general-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
+      //$('#submission-summary-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
+      //$('#submission-materials-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
+      //$('#submission-tags-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
     }
   };
+
+  Drupal.behaviors.sbac_resource_all = {
+    attach: function (context, settings) {
+      
+      $('.more-less .more').click( function() {
+        $('.more-less.short').removeClass('active');
+        $('.more-less.long').addClass('active');
+      });
+
+      $('.more-less .less').click( function() {
+        $('.more-less.long').removeClass('active');
+        $('.more-less.short').addClass('active');
+      });
+
+    }
+  }
 
   /**
    * Controls the buttons at the bottom of the resource form.
