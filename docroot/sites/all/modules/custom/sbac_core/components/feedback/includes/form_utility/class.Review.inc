@@ -58,7 +58,7 @@ class Review extends Base {
   public function process() {
     parent::process();
 
-    // remove the N/A option from 
+    // remove the N/A option 
     unset($this->_form['field_rec_options'][$this->_lang]['#options']['_none']);
 
     // add 'required field' asterisks

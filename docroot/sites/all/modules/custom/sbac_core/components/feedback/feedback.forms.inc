@@ -31,7 +31,7 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
   // checks that $fields are filled in within the given $container
   // field_collection
-  $required_check = function($container, $fields) use ($values, $lang, $error_message) {
+  $required_set_check = function($container, $fields) use ($values, $lang, $error_message) {
     foreach ($values[$container][$lang] as $delta => $item) {
       foreach ($fields as $field_name => $field_message) {
         $value = trim(field_get_value($item, $field_name));
@@ -40,6 +40,24 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
             $container,
             $lang,
             $delta,
+            $field_name,
+          ));
+
+          $error_text = $error_message($field_name, $field_message, $delta);
+
+          form_set_error($error_key, $error_text);
+        }
+      }
+    }
+  };
+
+  // checks required fields
+  $required_flat_check = function($fields) use($values) {
+    foreach ($fields as $field_name => $field_message) {
+      foreach ($values[$field_name][$lang] as $delta => $item) {
+        $val = trim($item['value']);
+        if (empty($val)) {
+          $error_key = implode('][', array(
             $field_name,
           ));
 
@@ -92,7 +110,7 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
       switch ($values['action']) {
         case 'validate':
-          $required_check($container, array(
+          $required_set_check($container, array(
             'field_comments' => 'Please add a comment to Gate-Keeping Criteria !delta+1 to continue',
             'field_meets_criterion' => 'You must make a decision in Quality Criteria !delta+1 to continue',
           ));
@@ -119,30 +137,15 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
       switch ($values['action']) {
         case 'validate':
-          $required_check($container, array(
+          $required_set_check($container, array(
             'field_comments' => 'Please add a comment to Criteria !delta+1 to continue',
             'field_level' => 'You must make a decision in Criteria !delta+1 to continue',
           ));
 
-          $fields = array(
+          $required_flat_check(array(
             'field_rec_options' => 'You must select a Recommendation Option to continue',
             'field_rec_rationale' => 'You must enter Rationale for Recommendation to continue',
-          );
-
-          foreach ($fields as $field_name => $field_message) {
-            foreach ($values[$field_name][$lang] as $delta => $item) {
-              $val = trim($item['value']);
-              if (empty($val)) {
-                $error_key = implode('][', array(
-                  $field_name,
-                ));
-
-                $error_text = $error_message($field_name, $field_message, $delta);
-
-                form_set_error($error_key, $error_text);
-              }
-            }
-          }
+          ));
 
           break;
       }
@@ -152,6 +155,20 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       break;
 
     case 'post':
+
+      switch ($values['action']) {
+        case 'validate':
+
+          $required_flat_check(array(
+            'field_to_contributor' => 'You must enter a comment for the Contributor to continue',
+            'field_to_reviewer_1' => 'You must enter a comment for Reviewer 1 to continue',
+            'field_to_reviewer_2' => 'You must enter a comment for Reviewer 2 to continue',
+            'field_to_reviewer_3' => 'You must enter a comment for Reviewer 3 to continue',
+            'field_post_options' => 'You must select a Post Option to continue',
+          ));
+
+          break;
+      }
 
       break;
   }

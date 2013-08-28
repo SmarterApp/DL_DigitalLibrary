@@ -21,6 +21,29 @@ class Post extends Base {
    * @return [type] [description]
    */
   public function process() {
+    // add 'required field' asterisks
+    $required_fields = array(
+      'field_to_contributor',
+      'field_to_reviewer_1',
+      'field_to_reviewer_2',
+      'field_to_reviewer_3',
+    );
+
+    foreach ($required_fields as $field_name) {
+      $this->_form[$field_name][$this->_lang]['#title'] .= $this->_required_marker;
+
+      $children = element_num_children($this->_form[$field_name][$this->_lang]);
+      foreach ($children as &$child) {
+        $child['#title'] .= $this->_required_marker;
+        $child['value']['#title'] .= $this->_required_marker;
+      }
+    }
+
+    // remove the N/A option & add asterisk to post options
+    unset($this->_form['field_post_options'][$this->_lang]['#options']['_none']);
+    $this->_form['field_post_options'][$this->_lang]['#title'] .= $this->_required_marker;
+
+    // prep review sets
     module_load_include('inc', 'sbac_core', 'components/feedback/includes/form_utility/class.Review');
 
     $reviewUtil = new Review($this->_form, $this->_form_state, $this->_bundle_info);
