@@ -624,6 +624,18 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: view private files.
+  $permissions['view private files'] = array(
+    'name' => 'view private files',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'resource contributor' => 'resource contributor',
+      'resource publisher' => 'resource publisher',
+      'resource reviewer' => 'resource reviewer',
+    ),
+    'module' => 'file_entity',
+  );
+
   // Exported permission: view revisions.
   $permissions['view revisions'] = array(
     'name' => 'view revisions',
