@@ -255,7 +255,14 @@ function _sbac_resource_preview_materials(&$vars) {
       if ($media == 'none') {
         $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       }
-      $material_urls[] = l(ucwords($material['filename']), $url, array('attributes' => array('sbac-type' => $media)));
+      // check to see whether its public scheme or not, if so not external
+      if (sbac_resource_downloadable_scheme($node->field_file['und'])) {
+        $external = FALSE;
+      }
+      else {
+        $external = TRUE;
+      }
+      $material_urls[] = l(ucwords($material['filename']), $url, array('attributes' => array('sbac-type' => $media), 'external' => $external));
     }
   }
 
