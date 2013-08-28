@@ -98,6 +98,9 @@ function sbac_report_sne_autocomplete($string = '') {
     AND (field_sne_member.field_sne_member_value = 1)
     $state_condition
   )
+
+  GROUP BY uid
+
   LIMIT 10 OFFSET 0
 
 SQL;
