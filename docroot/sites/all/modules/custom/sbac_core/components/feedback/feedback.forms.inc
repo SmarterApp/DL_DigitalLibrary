@@ -57,13 +57,9 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       foreach ($values[$field_name][$lang] as $delta => $item) {
         $val = trim($item['value']);
         if (empty($val)) {
-          $error_key = implode('][', array(
-            $field_name,
-          ));
-
           $error_text = $error_message($field_name, $field_message, $delta);
 
-          form_set_error($error_key, $error_text);
+          form_set_error($field_name, $error_text);
         }
       }
     }
@@ -155,6 +151,8 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       break;
 
     case 'post':
+
+    dsmm('here: ' . $values['action']);
 
       switch ($values['action']) {
         case 'validate':

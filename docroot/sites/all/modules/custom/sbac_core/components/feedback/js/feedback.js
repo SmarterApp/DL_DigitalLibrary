@@ -229,6 +229,8 @@ Drupal.behaviors.feedback = {
               // Close button
               $(Feedback.wrapper + ' ' + Feedback[name].form + ' ' + Feedback.submit_button).trigger('mousedown', data.anchor);
 
+              console.log(Feedback.wrapper + ' ' + Feedback[name].form + ' ' + Feedback.submit_button);
+
               return false;
             });
           });
