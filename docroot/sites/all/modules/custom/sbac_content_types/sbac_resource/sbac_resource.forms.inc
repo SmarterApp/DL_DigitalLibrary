@@ -969,7 +969,7 @@ function _sbac_resource_content_type_description(&$form, &$form_state) {
   $submission_advanced_guidelines = variable_get('sbac_resource_advanced_guide');
 
   $form['submisison_general_guidelines'] = array (
-    '#markup'   => sbac_resource_truncate($submission_general_guidelines, 300),
+    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_general_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_general_guidelines .'<a href="#" class="less">Read Less</a></div>',
     '#prefix'   => '<div id="submission-general-guidelines">',
     '#suffix'   => '</div>'
   );

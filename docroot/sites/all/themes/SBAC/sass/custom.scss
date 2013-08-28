@@ -1839,6 +1839,7 @@ a.tabledrag-handle .handle {
   display:none;
   right: 100px;
   left: auto !important;
+
   &.open {
     top: 50px !important;
     right: 100px;
@@ -2234,5 +2235,16 @@ a.tabledrag-handle .handle {
 
   #page-title {
     display: none;
+  }
+}
+
+/* ----------------------------------------
+    Read More - custom
+  _________________________________________ */
+.more-less{
+  display: none;
+
+  &.active {
+    display: block;
   }
 }
