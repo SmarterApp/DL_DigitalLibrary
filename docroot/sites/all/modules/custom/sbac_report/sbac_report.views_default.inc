@@ -133,7 +133,7 @@ function sbac_report_views_default_views() {
     'created' => 'created',
     'state' => 'state',
   );
-  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['default'] = 'created';
   $handler->display->display_options['style_options']['info'] = array(
     'title' => array(
       'sortable' => 0,
@@ -144,7 +144,7 @@ function sbac_report_views_default_views() {
     ),
     'created' => array(
       'sortable' => 1,
-      'default_sort_order' => 'asc',
+      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
