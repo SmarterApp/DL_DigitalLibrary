@@ -725,7 +725,7 @@ function sbac_resource_node_presave($node) {
       }
       catch (CMISException $e) {
         drupal_set_message($e);
-        cmis_error_handler('sbac_documents_update_document', $e);
+        // cmis_error_handler('sbac_documents_update_document', $e);
       }
       $i++;
     }
@@ -776,7 +776,7 @@ function sbac_resource_node_delete(&$node, $i) {
         $parent_folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000));
       }
       catch (CMISException $e) {
-        cmis_error_handler('sbac_documents_presave_document', $e);
+        //cmis_error_handler('sbac_documents_presave_document', $e);
       }
 
       //ok, the parent folder is there, now try to create the child folder
@@ -785,7 +785,7 @@ function sbac_resource_node_delete(&$node, $i) {
           $folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
         }
         catch (CMISException $e) {
-          cmis_error_handler('sbac_documents_presave_document', $e);
+          //cmis_error_handler('sbac_documents_presave_document', $e);
         }
       }
       else {
@@ -795,7 +795,7 @@ function sbac_resource_node_delete(&$node, $i) {
           $folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
         }
         catch (CMISException $e) {
-          cmis_error_handler('sbac_documents_presave_document', $e);
+          //cmis_error_handler('sbac_documents_presave_document', $e);
         }
       }
     }
@@ -826,7 +826,7 @@ function sbac_resource_node_delete(&$node, $i) {
     //die();
   }
   catch (CMISException $e) {
-    cmis_error_handler('sbac_documents_presave_document', $e);
+   // cmis_error_handler('sbac_documents_presave_document', $e);
   }
 }
 
@@ -846,7 +846,7 @@ function sbac_resource_delete_file_from_cmis(&$node, $i)
     $node->field_document_id['und'][$i]['value'] = NULL;
   } 
   catch (CMISException $e) {
-    cmis_error_handler('sbac_documents_delete_document', $e);
+    // cmis_error_handler('sbac_documents_delete_document', $e);
   }
 }
 
