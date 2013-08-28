@@ -1,0 +1,99 @@
+<?php
+/**
+ * AIR API CLIENT
+ */
+class AIRAPIClient {
+  var $URL = "http://web-dev.opentestsystem.org:8080/corestandards/api/"; //should end with a /
+  var $curl = null;
+  var $HEADERS = array("Accept: application/json", "Content-Type: application/json", "Connection: TE, close");
+
+  /**
+   * Constructor
+   */
+  function __construct() {
+    $this->curl = curl_init();
+    curl_setopt($this->curl, CURLOPT_URL, $this->URL);
+    curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
+    #curl_setopt($this->curl, CURLOPT_POST, 1);
+    curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, False);
+    curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->HEADERS);
+  }
+  /** Look at the data received and make sure the expected sections are there.
+   *  If not, throw exceptions.
+   *  Falling through indicates success.
+   *
+   *  @param $dataarr API output as a hash.
+   */
+  private function _verify($dataarr = array()) {
+    if (count($dataarr) == 0) {
+      throw new Exception("No data received");
+    }
+    if (!isset($dataarr["status"]) ||
+      (strtolower($dataarr["status"]) != "success")) {
+        throw new Exception("No status OR status != success.");
+      }
+    if (!isset($dataarr["payload"])) {
+      throw new Exception("No payload section.");
+    }
+  }
+  /**
+   * Returns the payload section of the API ouput (array).
+   */
+  public function getSubjectsSBAC($publisher = 'SBAC') {
+    $full_url = $this->URL ."subject?publisher=$publisher";
+    curl_setopt($this->curl, CURLOPT_URL, $full_url);
+    $output = curl_exec($this->curl);
+    $data = json_decode($output, true); 
+    $this->_verify($data);
+    return $data["payload"];
+  }
+  /**
+   * Get all the publications from a publisher for a subject_key.
+   * Throw an exception on any error.
+   * Returns data payload array.
+   * @returns array
+   */
+  public function getPublications($publisher = '', $subject_key = '') {
+    if (!$publisher || !$subject_key) {
+      throw new Exception("Must provide publisher (ex: SBAC) and subject key (ex: ELA)");
+    }
+    $full_url = $this->URL ."publication?publisher=$publisher&subject=$subject_key";
+    curl_setopt($this->curl, CURLOPT_URL, $full_url);
+    $output = curl_exec($this->curl);
+    $data = json_decode($output, true);
+    $this->_verify($data);
+    return $data["payload"];
+  }
+  /**
+   * Retrieves the tags,keys and descriptions for standard_key given.
+   * Optionally, filters out all entries except tree_level. 0=no filtering
+   */
+  public function getStandards($standard_key = '', $tree_level = 0) {
+    if (!$standard_key) {
+      throw new Exception("Must pass standard_key to retrieve standards.");
+    }
+
+    $retarr = array();
+    $full_url = $this->URL ."publication/$standard_key/standard";
+    curl_setopt($this->curl, CURLOPT_URL, $full_url);
+    $output = curl_exec($this->curl);
+    $data = json_decode($output, true);
+    $this->_verify($data);
+
+    // if nothing to filter return it all
+    if (!$tree_level) {
+      return $data["payload"];
+    }
+
+    // still here? filter it
+    for ($a=0; $a<count($data["payload"]); $a++) {
+      $d = $data["payload"][$a];
+      // TODO: filter out if name=='NA' ?
+      if (intval($tree_level) == intval($d["treeLevel"])) {
+        $retarr[] = $d;
+      }
+    }
+    return $retarr; // return filtered subset of data
+  }
+} // end class
