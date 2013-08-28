@@ -42,7 +42,7 @@ function sbac_user_menu() {
   $items['custom/%user/remove_picture'] = array(
     'page callback' => 'sbac_user_remove_picture',
     'page arguments' => array(1),
-    'access callback' => TRUE,
+    'access callback' => 'user_edit_access',
     'access arguments' => array(1),
   );
 
