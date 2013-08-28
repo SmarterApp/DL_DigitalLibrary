@@ -541,3 +541,17 @@ function sbac_report_gate_keeping_reviews_rate($uid, $date_range) {
   }
   return $rate;
 }
+
+/**
+ * Implements hook_workbench_moderation_transition().
+ */
+function sbac_report_workbench_moderation_transition($node, $previous_state, $new_state) {
+  // Update "created" timestamp when resource is submitted for review.
+  // This is to help the views display the contributed time correctly as well as filtering on the right the date range.
+  if ($new_state == 'needs_review') {
+    db_update('node')
+      ->fields(array('created' => REQUEST_TIME))
+      ->condition('nid', $node->nid)
+      ->execute();
+  }
+}
