@@ -208,7 +208,7 @@
             //   document.getElementById('feedback-click').click();
             // }
             document.getElementById('feedback-click').click();
-
+            $('#feedback-dropdown').removeClass('open');
            }
         });
        });
