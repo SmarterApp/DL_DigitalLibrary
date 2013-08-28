@@ -489,6 +489,10 @@ function sbac_report_embed_view($name, $display_id = 'default') {
  *
  * Fix the broken contextual filter for eck "created" date field.
  * Current ECK version: 7.x-2.0-rc2
+ *
+ * TODO: !! need to sync the feedback entity's date record with the resource's submission date
+ * (i.e: the "created" timestamp, @see sbac_report_workbench_moderation_transition),
+ * since the submission date should always be the base for the date range filter.
  */
 function sbac_report_views_query_alter(&$view, &$query) {
   if ($view->name == 'gate_keeping_reviews') {

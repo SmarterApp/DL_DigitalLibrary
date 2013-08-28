@@ -1290,6 +1290,21 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   if (isset($form['field_intended_end_user']['und']['#options']['_none'])) {
     unset($form['field_intended_end_user']['und']['#options']['_none']);
   }
+  if (isset($form['field_intended_student']['und']['#options']['_none'])) {
+    unset($form['field_intended_student']['und']['#options']['_none']);
+  }
+  if (isset($form['field_geographical_settings']['und']['#options']['_none'])) {
+    unset($form['field_geographical_settings']['und']['#options']['_none']);
+  }
+  if (isset($form['field_smarter_balanced_keyword']['und']['#options']['_none'])) {
+    unset($form['field_smarter_balanced_keyword']['und']['#options']['_none']);
+  }
+  if (isset($form['field_educational_use']['und']['#options']['_none'])) {
+    unset($form['field_educational_use']['und']['#options']['_none']);
+  }
+  if (isset($form['field_classroom_technologies']['und']['#options']['_none'])) {
+    unset($form['field_classroom_technologies']['und']['#options']['_none']);
+  }
   $form['field_digital_media_type']['und']['#title'] = t('Media Type(s)') . ' ' . theme('form_required_marker');
   if (isset($form['field_digital_media_type']['und']['#options']['_none'])) {
     unset($form['field_digital_media_type']['und']['#options']['_none']);

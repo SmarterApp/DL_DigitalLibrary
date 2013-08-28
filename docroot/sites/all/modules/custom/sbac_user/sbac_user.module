@@ -107,18 +107,6 @@ function sbac_user_init() {
       }
     }
   }
-  $account = user_load($user->uid);
-  if (user_is_logged_in() && (variable_get('enable_feedback') == 1) && ($account->field_feedback_flag['und'][0]['value']== 0)) {
-    $feedback_dropdown =
-      "#feedback-dropdown {
-        position: absolute;
-        top: 50px !important;
-        left: 946px;
-        display: block !important;
-      }";
-    drupal_add_css($feedback_dropdown, 'inline');
-  }
-
 }
 
 /*
@@ -1057,10 +1045,9 @@ function sbac_user_format_username($user) {
  */
 function sbac_user_disable_feedback() {
   global $user;
-  $data =  $account->field_feedback_flag['und'][0]['value'];
+  //$data =  $account->field_feedback_flag['und'][0]['value'];
   $account = user_load($user->uid);
   $account->field_feedback_flag['und'][0]['value'] = (int) 1;
   user_save($account);
-
-  return $data;
+  // return $data;
 }
