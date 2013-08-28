@@ -19,7 +19,6 @@ Feedback.post = {
   }
 };
 
-
 Drupal.behaviors.feedback_post = {
   attach: function (context, settings) {
     // settings data

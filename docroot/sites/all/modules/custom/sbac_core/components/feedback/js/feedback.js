@@ -218,7 +218,7 @@ Drupal.behaviors.feedback = {
       $.each(['gk', 'qc', 'post'], function (key, name) {
         if (Feedback[name] && Feedback[name].buttons) {
           $.each(Feedback[name].buttons, function(button_key, data) {
-            $(data.button).once('mousedown-event').click(function(e) {
+            $(Feedback[name].form + ' ' + data.button).once('mousedown-event').click(function(e) {
               e.preventDefault();
 
               // update action
@@ -228,8 +228,6 @@ Drupal.behaviors.feedback = {
               // is ajax-submit the form to validate it, and we do this by clicking the Save &
               // Close button
               $(Feedback.wrapper + ' ' + Feedback[name].form + ' ' + Feedback.submit_button).trigger('mousedown', data.anchor);
-
-              console.log(Feedback.wrapper + ' ' + Feedback[name].form + ' ' + Feedback.submit_button);
 
               return false;
             });

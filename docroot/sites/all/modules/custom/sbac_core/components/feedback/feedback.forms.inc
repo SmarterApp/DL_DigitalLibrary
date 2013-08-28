@@ -52,10 +52,11 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
   };
 
   // checks required fields
-  $required_flat_check = function($fields) use($values) {
+  $required_flat_check = function($fields) use ($values, $lang, $error_message) {
     foreach ($fields as $field_name => $field_message) {
       foreach ($values[$field_name][$lang] as $delta => $item) {
         $val = trim($item['value']);
+
         if (empty($val)) {
           $error_text = $error_message($field_name, $field_message, $delta);
 
@@ -151,8 +152,6 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       break;
 
     case 'post':
-
-    dsmm('here: ' . $values['action']);
 
       switch ($values['action']) {
         case 'validate':
