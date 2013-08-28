@@ -48,7 +48,10 @@ Drupal.behaviors.sections = {
         $('section', section_container).removeClass('active').css('padding-top', 0);
 
         // enable the one we're interested in
-        section.addClass('active').css('padding-top', '37px');
+        section.addClass('active').css('padding-top', '45px');
+
+        // simulate a click on the tab
+        tab.click();
       }
     }
   }

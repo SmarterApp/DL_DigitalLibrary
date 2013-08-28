@@ -200,12 +200,16 @@ Drupal.behaviors.feedback = {
               var hash = 'review-about';
               // update hash value in browser for bookmarking purposes and general consistency
               window.location.hash = hash;
+
               // switch to the new tab
               Drupal.behaviors.sections.switch_tab('#' + hash);
 
               // we might as well scroll the user to the top of the page to show any
               // confirmation/status messages
               Feedback.utilities.scroll_to_top();
+
+              console.log('about to run init:');
+              Feedback.about.init_flexslider();
             }
           }
         };

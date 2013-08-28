@@ -13,6 +13,7 @@ Feedback.about = {
   init_flexslider : function() {
     // set up flexslider on the about page's resource slideshow
     if ((slider = $(Feedback.about.slider)).length) {
+      console.log('initing');
       slider.flexslider({
         animation: "slide",
         animationLoop: false,
@@ -39,6 +40,12 @@ Drupal.behaviors.feedback_about = {
         }
       });
     }
+
+    // we also need to re-init the slder when a user leaves the browser window and
+    // comes back to it, because the slider occasionally chooses to go on vacation
+    $(window).focus(function() {
+      Feedback.about.init_flexslider();
+    });
   }
 };
 
