@@ -483,6 +483,7 @@ function sbac_report_embed_view($name, $display_id = 'default') {
  * Implements hook_views_query_alter().
  *
  * Fix the broken contextual filter for eck "created" date field.
+ * Current ECK version: 7.x-2.0-rc2
  */
 function sbac_report_views_query_alter(&$view, &$query) {
   if ($view->name == 'gate_keeping_reviews') {
