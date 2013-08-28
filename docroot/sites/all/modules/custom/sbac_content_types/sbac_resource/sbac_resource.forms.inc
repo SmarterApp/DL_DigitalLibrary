@@ -976,28 +976,28 @@ function _sbac_resource_content_type_description(&$form, &$form_state) {
   $form['#group_children']['submisison_general_guidelines'] = "group_basic";
 
   $form['submisison_material_guidelines'] = array (
-    '#markup'   => $submission_material_guidelines,
+    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_material_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_material_guidelines .'<a href="#" class="less">Read Less</a></div>',
     '#prefix'   => '<div id="submission-materials-guidelines">',
     '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_material_guidelines'] = "group_materials";
 
   $form['submisison_tags_guidelines'] = array (
-    '#markup'   => $submission_tags_guidelines,
+    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_tags_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_tags_guidelines .'<a href="#" class="less">Read Less</a></div>',
     '#prefix'   => '<div id="submission-tags-guidelines">',
     '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_tags_guidelines'] = "group_tags";
 
   $form['submisison_summary_guidelines'] = array (
-    '#markup'   => $submission_summary_guidelines,
+    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_summary_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_summary_guidelines .'<a href="#" class="less">Read Less</a></div>',
     '#prefix'   => '<div id="submission-summary-guidelines">',
     '#suffix'   => '</div>'
   );
   $form['#group_children']['submisison_summary_guidelines'] = "group_summary";
 
   $form['submisison_advanced_guidelines'] = array (
-    '#markup'   => $submission_advanced_guidelines,
+    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_advanced_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_advanced_guidelines .'<a href="#" class="less">Read Less</a></div>',
     '#prefix'   => '<div id="submission-advanced-guidelines">',
     '#suffix'   => '</div>'
   );
