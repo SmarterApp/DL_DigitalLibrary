@@ -106,10 +106,10 @@ function sbac_media_create_embed_url($file) {
 
   switch($file['filemime']) {
     case 'video/schooltube': 
-      $url = 'http://www.schooltube.com/embed_force/' . $id;
+      $url = '//www.schooltube.com/embed_force/' . $id;
       break;
     case 'video/slideshare':
-      $url = 'http://www.slideshare.net/slideshow/embed_code/' . $id . '?rel=0';
+      $url = '//www.slideshare.net/slideshow/embed_code/' . $id . '?rel=0';
       break;
     case 'video/teachertube':
       $url = 'http://www.teachertube.com/embed.php?pg=video_' . $id;
