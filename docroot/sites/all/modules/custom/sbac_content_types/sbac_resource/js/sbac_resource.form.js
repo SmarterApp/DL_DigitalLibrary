@@ -27,9 +27,8 @@
     }
   };
 
-  Drupal.behaviors.sbac_resource_all = {
+  Drupal.behaviors.sbac_resource_more_less = {
     attach: function (context, settings) {
-      
       $('.more-less .more').click( function() {
         $('.more-less.short').removeClass('active');
         $('.more-less.long').addClass('active');
@@ -41,7 +40,7 @@
       });
 
     }
-  }
+  };
 
   /**
    * Controls the buttons at the bottom of the resource form.
@@ -121,7 +120,7 @@
         }
       });
 
-      $('#edit-submit').click(function () {
+      $('.form-submit').click(function () {
         isDirty = false;
       });
 
