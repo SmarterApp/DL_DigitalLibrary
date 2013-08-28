@@ -103,7 +103,12 @@ function sbac_report_theme($existing, $type, $theme, $path) {
 function sbac_report_individual_form($form, &$form_state) {
   $form = array();
 
-  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_report') . '/js/sbac_report.individual.js';
+  // Make sure to load this after autocomplete.js
+  // @see sbac_report.individual.js
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_report') .
+      '/js/sbac_report.individual.js' => array('weight' => 99),
+  );
 
   $form['state'] = array(
     '#type' => 'select',

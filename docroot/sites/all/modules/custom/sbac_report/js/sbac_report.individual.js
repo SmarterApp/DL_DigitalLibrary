@@ -13,15 +13,29 @@
       $uidField.val(uid);
     });
 
-    $('#autocomplete li').keypress( function(event) {
-      var keypressed = event.which;
-      if(keypressed == 13){
-//        var uid = $(this).find('.autocomplete-suggestion').data('uid');
-//        $uidField.text(uid);
-//        $uidField.val(uid);
-        $(this).click();
-      }
-    });
+    if (Drupal.jsAC.prototype.onkeydown) {
+      /**
+       * Override the autocomplete handler for the "keydown" event.
+       */
+      Drupal.jsAC.prototype.onkeydown = function (input, e) {
+        if (!e) {
+          e = window.event;
+        }
+        switch (e.keyCode) {
+          case 40: // down arrow.
+            this.selectDown();
+            return false;
+          case 38: // up arrow.
+            this.selectUp();
+            return false;
+          case 13: // enter.
+            $(this.selected).trigger('click');
+            return true;
+          default: // All other keys.
+            return true;
+        }
+      };
+    }
 
     // Individual Report: clear the id on event "input".
     $('#edit-sne').bind('input', function(e) {
