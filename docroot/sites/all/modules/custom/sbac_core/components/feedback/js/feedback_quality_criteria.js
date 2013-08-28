@@ -4,6 +4,7 @@ if (typeof Feedback == 'undefined') {
   Feedback = {};
 }
 
+// Quality Criteria data
 Feedback.qc = {
   form: '#eck-review-form form',
 

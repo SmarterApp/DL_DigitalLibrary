@@ -218,7 +218,7 @@ Drupal.behaviors.feedback = {
       $.each(['gk', 'qc', 'post'], function (key, name) {
         if (Feedback[name] && Feedback[name].buttons) {
           $.each(Feedback[name].buttons, function(button_key, data) {
-            $(data.button).once('mousedown-event').click(function(e) {
+            $(Feedback[name].form + ' ' + data.button).once('mousedown-event').click(function(e) {
               e.preventDefault();
 
               // update action
