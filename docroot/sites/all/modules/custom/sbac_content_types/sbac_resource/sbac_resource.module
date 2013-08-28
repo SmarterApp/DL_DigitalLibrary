@@ -743,14 +743,13 @@ function sbac_resource_node_presave($node) {
 /**
  * Implements hook_node_delete().
  *
- * @param $node, $i = file index
+ * @param $node
  */
-function sbac_resource_node_delete(&$node, $i) {
+function sbac_resource_node_delete($node) {
   $i=0;
   while ($i < count($node->field_file['und'])) {
 	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
 		  sbac_resource_delete_file_from_cmis($node, $i);
-		  unset($node->field_document_id['und'][$i]);
 	  }
 	  $i++;
   }
