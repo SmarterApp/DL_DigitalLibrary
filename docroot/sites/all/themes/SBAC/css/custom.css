@@ -9159,3 +9159,17 @@ a.tabledrag-handle .handle {
 .more-less.active {
   display: block;
 }
+/* line 2251, ../sass/custom.scss */
+.more-less .more, .more-less .less {
+  padding: 1px 10px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  background: #eee;
+  color: #333;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  color: inherit;
+}

@@ -2247,4 +2247,15 @@ a.tabledrag-handle .handle {
   &.active {
     display: block;
   }
+
+  .more, .less {
+    padding: 1px 10px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    background: #eee;
+    color: #333;
+    @include border-radius(6px); 
+
+    color: inherit;
+  } 
 }
