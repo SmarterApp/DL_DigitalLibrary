@@ -567,7 +567,10 @@ function sbac_report_preprocess_views_view_field(&$vars) {
   if ($vars['view']->current_display == 'resources_summary' && $vars['field']->field_alias == 'workbench_moderation_node_history_published') {
     $vars['output'] = $vars['row']->workbench_moderation_node_history_published;
   }
-  // Alter the output for the Resource state: "Needs Review" to "Submitted", "Being Reviewed" to "In Review".
+  // Alter the output for the Resource state
+  // e.g: "Needs Review" to "Submitted",
+  //      "Being Reviewed" to "In Review",
+  //      "Published" to "Posted" or "Posted with Distinction".
   elseif ($vars['view']->current_display == 'resources_details') {
     if ($vars['field']->field_alias == 'workbench_moderation_node_history_state') {
       $state = $vars['row']->workbench_moderation_node_history_state;
@@ -576,6 +579,12 @@ function sbac_report_preprocess_views_view_field(&$vars) {
       }
       elseif ($state == 'being_reviewed') {
         $vars['output'] = t('In Review');
+      }
+      elseif ($state == 'published') {
+        $vars['output'] = t('Posted');
+        if ($vars['row']->node_sticky == 1) {
+          $vars['output'] = t('Posted with Distinction');
+        }
       }
     }
   }
