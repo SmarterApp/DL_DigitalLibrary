@@ -47,7 +47,11 @@
       ?>
     </li>
     <li><a id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
-      <div id="feedback-dropdown" class="f-dropdown content small">
+      <?php
+      // set $class_feedback open if variable enable_feedback is on and the user hasn't disabled feedback flag on their profile yet, otherwise empty
+      $class_feedback = (variable_get('enable_feedback') == 1 && !$user_item->field_feedback_flag['und'][0]['value'] ? ' open' : ''); 
+      ?>
+      <div id="feedback-dropdown" class="f-dropdown content small<?php print $class_feedback; ?>">
         <a id="disable-feedback" class="small right"> x </a>
       <?php
         $feedback_block = block_load('sbac_central','feedback-box');
@@ -212,7 +216,6 @@
 <div style='display:none;'>
   <div id="helpmodal">
     <?php
-      global $user;
       if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
       <div class="sort-link"><a href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>
     <?php endif; ?>
