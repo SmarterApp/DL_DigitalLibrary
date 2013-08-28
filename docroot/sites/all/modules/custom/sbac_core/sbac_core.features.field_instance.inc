@@ -80,7 +80,7 @@ function sbac_core_field_default_field_instances() {
     'entity_type' => 'feedback',
     'field_name' => 'field_post_options',
     'label' => 'Posting Options',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -121,7 +121,7 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_to_contributor',
     'label' => 'To Contributor',
     'profanity' => 1,
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -168,7 +168,7 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_to_reviewer_1',
     'label' => 'To Reviewer 1',
     'profanity' => 1,
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -215,7 +215,7 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_to_reviewer_2',
     'label' => 'To Reviewer 2',
     'profanity' => 1,
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -262,7 +262,7 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_to_reviewer_3',
     'label' => 'To Reviewer 3',
     'profanity' => 1,
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
