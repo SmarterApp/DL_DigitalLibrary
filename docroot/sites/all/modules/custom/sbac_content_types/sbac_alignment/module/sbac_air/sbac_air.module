@@ -21,9 +21,9 @@ function sbac_air_devtest() {
   module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
   $airclient = new AIRAPIClient();
   
-  dsm($airclient->getSubjectsSBAC());
+  //dsm($airclient->getSubjectsSBAC());
   dsm($airclient->getStandards('SBAC-ELA-v1'));
-  
+  dsm($airclient->test_data('SBAC-ELA-v1'));
   
   return '';
 }

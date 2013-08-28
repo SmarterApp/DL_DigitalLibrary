@@ -96,4 +96,114 @@ class AIRAPIClient {
     }
     return $retarr; // return filtered subset of data
   }
+  
+  /***
+   * TEST FUNCTIONS
+   */
+  
+  /**
+   * Main test function
+   */
+  public function test_data($standard_key = '') {
+    if (!$standard_key) {
+      throw new Exception("Must pass standard_key to retrieve standards.");
+    }
+    
+    $standards = $this->getStandards($standard_key);
+    
+    //test functions
+    $results['empty_parents'] = $this->_sbac_air_check_empty_parents($standards);
+    $results['empty_grades'] = $this->_sbac_air_check_empty_grades($standards);
+    
+    return $results;
+  }
+  /**
+   * Private Function
+   * Checks for empty parents that are not in tree level 1.
+   */
+  private function _sbac_air_check_empty_parents($items) {
+    $is_clean = TRUE;
+    $bad_items = array();
+    
+    foreach ($items as $item) {
+      if (empty($item['fkParent']) && $item['treeLevel'] != 1) {
+        $is_clean = FALSE;
+        $bad_items[] = $item;
+      }
+    }
+    
+    if (!empty($bad_items)) {
+      $bad_items['json'] = drupal_json_encode($bad_items);
+    }
+    
+    return array('is_clean' => $is_clean, 'bad_items' => $bad_items);
+  }
+  /**
+   * Private Function
+   * Checks for null grades.
+   */
+  private function _sbac_air_check_empty_grades($items) {
+    $is_clean = TRUE;
+    $bad_items = array();
+    
+    foreach ($items as $item) {
+      if (empty($item['fkGradeLevel'])) {
+        $is_clean = FALSE;
+        $bad_items[] = $item;
+      }
+    }
+    
+    if (!empty($bad_items)) {
+      $bad_items['json'] = drupal_json_encode($bad_items);
+    }
+    
+    return array('is_clean' => $is_clean, 'bad_items' => $bad_items);
+  }
+  /**
+   * Private Function
+   * Checks for null grades.
+   */
+  private function _sbac_air_check_parents_exist($items) {
+    $is_clean = TRUE;
+    $bad_items = array();
+    
+    
+    
+    foreach ($items as $item) {
+      if (empty($item['fkGradeLevel'])) {
+        $is_clean = FALSE;
+        $bad_items[] = $item;
+      }
+    }
+    
+    if (!empty($bad_items)) {
+      $bad_items['json'] = drupal_json_encode($bad_items);
+    }
+    
+    return array('is_clean' => $is_clean, 'bad_items' => $bad_items);
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 } // end class
