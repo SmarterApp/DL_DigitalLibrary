@@ -483,6 +483,7 @@ function sbac_report_embed_view($name, $display_id = 'default') {
  * Implements hook_views_query_alter().
  *
  * Fix the broken contextual filter for eck "created" date field.
+ * Current ECK version: 7.x-2.0-rc2
  */
 function sbac_report_views_query_alter(&$view, &$query) {
   if ($view->name == 'gate_keeping_reviews') {
@@ -540,4 +541,30 @@ function sbac_report_gate_keeping_reviews_rate($uid, $date_range) {
     $rate['return'] = $rate['total'] - $rate['acceptance'];
   }
   return $rate;
+}
+
+/**
+ * Implements hook_workbench_moderation_transition().
+ */
+function sbac_report_workbench_moderation_transition($node, $previous_state, $new_state) {
+  // Update "created" timestamp when resource is submitted for review.
+  // This is to help the views display the contributed time correctly as well as filtering on the right the date range.
+  if ($new_state == 'needs_review') {
+    db_update('node')
+      ->fields(array('created' => REQUEST_TIME))
+      ->condition('nid', $node->nid)
+      ->execute();
+  }
+}
+
+/**
+ * Preprocess for views_view_field.
+ */
+function sbac_report_preprocess_views_view_field(&$vars) {
+  // Output for number of "contributed resources posted" using SUM(workbench_moderation_node_history_published) in view is incorrect.
+  // (it's always either 1 or 0 even after setting the format to boolean).
+  // Current workbench_moderation version: 7.x-1.3
+  if ($vars['view']->current_display == 'resources_summary' && $vars['field']->field_alias == 'workbench_moderation_node_history_published') {
+    $vars['output'] = $vars['row']->workbench_moderation_node_history_published;
+  }
 }

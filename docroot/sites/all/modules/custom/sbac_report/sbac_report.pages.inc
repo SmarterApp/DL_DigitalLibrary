@@ -71,6 +71,7 @@ function sbac_report_sne_autocomplete($string = '') {
   $sql = <<<SQL
 
   SELECT users.uid AS uid,
+    users.name AS name,
     field_last_name.field_last_name_value AS 'last_name',
     field_first_name.field_first_name_value AS 'first_name'
   FROM {users} users
@@ -117,8 +118,8 @@ SQL;
     }
     // Prevent overriding, if some matches have the same full name.
     else {
-      $id = ' [id:' . $uid . ']';
-      $matches[$full_name . $id] = '<span class="autocomplete-suggestion" data-uid="' . $uid . '">' . check_plain($full_name) . $id . '</span>';
+      $user_name = ' (' . $record->name . ')';
+      $matches[$full_name . $user_name] = '<span class="autocomplete-suggestion" data-uid="' . $uid . '">' . check_plain($full_name) . $user_name . '</span>';
     }
   }
   print drupal_json_encode($matches);
