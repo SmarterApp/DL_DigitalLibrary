@@ -9,37 +9,14 @@ class SectionTags extends Base {
   public function getContent() {
     // pull up the existing node form
       module_load_include('inc', 'node', 'node.pages');
-      $form_state = array();
-      $form_state['build_info']['args'][] = $this->_node;
-      $form_state += form_state_defaults();
+      
+    // bring in the node form; the last argument ensures it gets modified in hook_form_alter()
+    // for this page's needs
+      $form = drupal_get_form('resource_node_form', $this->_node, 'edit_tags');
 
-      $node_form = drupal_retrieve_form('resource_node_form', $form_state);
-
-    // move all elements from the Tags group into our new form
-      $form = array();
-      $fields = array();
-      foreach ($node_form['#group_children'] as $field_name => $tab) {
-        if ($tab == 'group_tags') {
-          $form[$field_name] = $node_form[$field_name];
-        }
-      }
-
-      /*
-      if (isset($form['field_alignment_term']) && !isset($form['field_alignment_term']['#attributes']['id'])) {
-        $form['field_alignment_term']['#id'] = 'field-alignment-term';
-        $form['field_alignment_term']['#attributes']['id'] = 'field-alignment-term';
-      }
-      */
-
-    // add buttons
-      $form['submit'] = array(
-        '#type' => 'submit',
-        '#value' => t('Save'),
-        '#weight' => 99,
-      );
-
-    $output = drupal_render($form);
-
+    // wrap output
+      $output = '<div id="edit-tags">' . drupal_render($form) . '</div>';
+  
     return $output;
   }
 }

@@ -440,6 +440,53 @@
   }
 }
 
+#edit-tags {
+  .vertical-tabs {
+    border: 0;
+    margin: 2em;
+    padding: 0;
+
+    .vertical-tabs-list {
+      display: none;
+    }
+
+    .vertical-tabs-panes {
+      .vertical-tabs-pane {
+        padding: 0;
+
+        .field-widget-options-select {
+          float: left;
+          margin: 0 0 1em 0;
+          width: 47%;
+
+          &:nth-child(even) {
+            clear: left;
+            margin-right: 5%;
+          }
+
+          .chzn-container {
+            width: auto !important;
+          }
+
+          .description:last-child {
+            display: none;
+          }
+        }
+
+        .alignment-tag-title {
+          clear: both;
+          float: none;
+        }
+
+        #sbac-resource-alignment-tag-view {
+          table {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
 
 @import "compass/css3";
 
