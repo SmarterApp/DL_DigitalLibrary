@@ -878,8 +878,6 @@ function sbac_resource_delete_folder_from_cmis(&$node)
   }
 }
 
-
-
 /**
  * Implemenets hook_node_load().
  *

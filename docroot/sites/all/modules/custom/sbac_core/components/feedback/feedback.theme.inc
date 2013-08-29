@@ -117,6 +117,7 @@ function theme_resource_slideshow($variables) {
 function resource_slider_taxonomy($node, $field_name) {
   $body = '';
 
+  $label = '';
   if ($terms = field_entity_value($node, $field_name)) {
     $label = resource_field_label($field_name);
 

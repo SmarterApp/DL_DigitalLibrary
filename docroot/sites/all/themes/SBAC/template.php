@@ -387,7 +387,7 @@ function sbac_form_element_label($variables) {
   }
 
   //Alignment Tags Custom
-  if (arg(2) != 'edit' && $element['#parents'][0] == 'field_education_alignment'){
+  if (arg(2) != 'edit' && isset($element['#parents'][0]) && $element['#parents'][0] == 'field_education_alignment'){
     return '';
   }
 
