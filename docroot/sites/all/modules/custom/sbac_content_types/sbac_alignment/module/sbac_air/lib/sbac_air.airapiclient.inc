@@ -19,11 +19,12 @@ class AIRAPIClient {
     curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, False);
     curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->HEADERS);
   }
-  /** Look at the data received and make sure the expected sections are there.
-   *  If not, throw exceptions.
-   *  Falling through indicates success.
+  /**
+   * Look at the data received and make sure the expected sections are there.
+   * If not, throw exceptions.
+   * Falling through indicates success.
    *
-   *  @param $dataarr API output as a hash.
+   * @param $dataarr API output as a hash.
    */
   private function _verify($dataarr = array()) {
     if (count($dataarr) == 0) {
@@ -96,6 +97,25 @@ class AIRAPIClient {
     }
     return $retarr; // return filtered subset of data
   }
+  /**
+   * Validate Function
+   *
+   * @return bool Returns TRUE if all checks are valid, FALSE otherwise.
+   */
+  public function validate($standard_key) {
+    if (empty($standard_key)) {
+      throw new Exception("Must pass standard_key to retrieve standards.");
+    }
+    
+    $results = $this->test_data($standard_key);
+    foreach ($results as $result) {
+      if ($result['is_clean'] == FALSE) {
+        return FALSE;
+      }
+    }
+    
+    return TRUE;
+  }
   
   /***
    * TEST FUNCTIONS
@@ -104,8 +124,8 @@ class AIRAPIClient {
   /**
    * Main test function
    */
-  public function test_data($standard_key = '') {
-    if (!$standard_key) {
+  public function test_data($standard_key) {
+    if (empty($standard_key)) {
       throw new Exception("Must pass standard_key to retrieve standards.");
     }
     
@@ -113,7 +133,8 @@ class AIRAPIClient {
     
     //test functions
     $results['empty_parents'] = $this->_sbac_air_check_empty_parents($standards);
-    $results['empty_grades'] = $this->_sbac_air_check_empty_grades($standards);
+    //$results['empty_grades'] = $this->_sbac_air_check_empty_grades($standards);
+    $results['parent_exists'] = $this->_sbac_air_check_parents_exist($standards);
     
     return $results;
   }
@@ -166,11 +187,15 @@ class AIRAPIClient {
   private function _sbac_air_check_parents_exist($items) {
     $is_clean = TRUE;
     $bad_items = array();
-    
-    
+    $item_keys = $this->_sbac_air_get_keys($items);
     
     foreach ($items as $item) {
-      if (empty($item['fkGradeLevel'])) {
+      if (empty($item['fkGradeLevel']) || $item['treeLevel'] < 2) {
+        continue; //gradelevel empty is handled in _sbac_air_check_empty_grades
+      }
+      
+      $parent_key = implode('|', array($item['fkGradeLevel'], $item['fkParent']));
+      if (!in_array($parent_key, $item_keys)) {
         $is_clean = FALSE;
         $bad_items[] = $item;
       }
@@ -181,6 +206,23 @@ class AIRAPIClient {
     }
     
     return array('is_clean' => $is_clean, 'bad_items' => $bad_items);
+  }
+  /**
+   * Private Function - Helper
+   * Re-key the array with the term['key']
+   */
+  function _sbac_air_get_keys($items) {
+    $keyed_array = array();
+    
+    if (is_array($items)) {
+      foreach ($items as $item) {
+        //@TODO KS - should check if isset items. check if null?
+        $key = implode('|', array($item['fkGradeLevel'], $item['key']));
+        $keyed_array[] = $key;
+      }
+    }
+    
+    return $keyed_array;
   }
   
   

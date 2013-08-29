@@ -21,9 +21,16 @@ function sbac_air_devtest() {
   module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
   $airclient = new AIRAPIClient();
   
+  //@TODO KS - get list of subjects 
   //dsm($airclient->getSubjectsSBAC());
-  dsm($airclient->getStandards('SBAC-ELA-v1'));
-  dsm($airclient->test_data('SBAC-ELA-v1'));
+  
+  //dsm($airclient->getStandards('SBAC-ELA-v1'));
+  //dsm($airclient->test_data('SBAC-ELA-v1'));
+  //dsm($airclient->test_data('SBAC-MA-v1'));
+  dsm($status = $airclient->validate('SBAC-ELA-v1'));
+  //dsm($airclient->validate('SBAC-MA-v1'));
+  
+  
   
   return '';
 }
