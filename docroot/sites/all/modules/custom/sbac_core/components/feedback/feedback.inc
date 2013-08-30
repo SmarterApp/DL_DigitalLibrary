@@ -53,6 +53,8 @@ function resource_access($op, $node, $account = NULL) {
       'view post',
       'start post',
       'edit post',
+      'view tags',
+      'edit tags',
     );
 
     // if the user does not have the 'resource reviewer' role, they have no access
@@ -245,8 +247,33 @@ function resource_access($op, $node, $account = NULL) {
         return TRUE;
       }
     }
-    elseif (in_array($op, array('view tags'))) {
-      return TRUE;
+    elseif (in_array($op, array('view tags', 'edit tags'))) {
+      // to access the tags screen the user must have a 'started' post
+      $query = "  SELECT  completed
+                  FROM    eck_feedback
+                  WHERE   type = 'post'
+                  AND     node_id = :node_id
+                  AND     uid = :uid
+                  AND     status = 1
+               ";
+
+      $completed = db_query($query, $args)->fetchField();
+
+      // no result
+      if ($completed === FALSE) {
+        return FALSE;
+      }
+      // completed is 0 or 1
+      else {
+        // trying to edit a completed item -> deny
+        if ($op == 'edit tags' && $completed) {
+          return FALSE;
+        }
+
+        // either viewing the tabs screen and have an active post, or editing and the
+        // post is not completed
+        return TRUE;
+      }
     }
     elseif (in_array($op, array('view post'))) {
       if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
