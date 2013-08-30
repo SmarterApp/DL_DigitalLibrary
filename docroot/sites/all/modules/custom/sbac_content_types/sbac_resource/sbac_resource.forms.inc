@@ -539,7 +539,7 @@ function sbac_resource_validate_materials(&$form, $form_state) {
   if (isset($form_state['values']['field_file']['und'][0])) {
     $file_error = TRUE;
     foreach ($form_state['values']['field_file']['und'] as $index => $file) {
-      if (isset($file['fid']) && $file['fid']) {
+      if (isset($file['fid']) && $file['fid'] > 0) {
         $file_error = FALSE;
       }
     }
