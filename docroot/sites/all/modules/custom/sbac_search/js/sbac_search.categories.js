@@ -196,14 +196,15 @@
       $('#views-exposed-form-resources-grid-view').hide();
       $('#views-exposed-form-resources-list-view').hide();
 
+      $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
       $('.pager-next a').html('Load More Resources').addClass('button');
     }
   };
 
   Drupal.behaviors.sbac_search_clear = {
     attach: function (context, settings) {
-      $('.somediv').click( function() {
-
+      $('.sbac-clear-search').click( function() {
+        window.location.href = Drupal.settings.baseURL + 'digital-library-resources/clear-all';
       });
     }
   };
