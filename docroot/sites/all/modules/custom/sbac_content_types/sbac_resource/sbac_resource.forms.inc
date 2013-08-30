@@ -1113,10 +1113,6 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   $form['field_principles']['und'][0]['value']['#title'] = t('Principles, Literature, or Research') . ' ' . theme('form_required_marker');
 }
 
-//function sbac_resource_form_file_after_build($element) {
-//  $var = '';
-//}
-
 /**
  * Creates the materials form field.
  *
