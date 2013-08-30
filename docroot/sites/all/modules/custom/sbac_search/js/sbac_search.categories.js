@@ -196,7 +196,10 @@
       $('#views-exposed-form-resources-grid-view').hide();
       $('#views-exposed-form-resources-list-view').hide();
 
-      $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
+      if ($('#sbac-search-textbox').val() != '') {
+        $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
+      }
+
       $('.pager-next a').html('Load More Resources').addClass('button');
     }
   };
@@ -204,7 +207,7 @@
   Drupal.behaviors.sbac_search_clear = {
     attach: function (context, settings) {
       $('.sbac-clear-search').click( function() {
-        window.location.href = Drupal.settings.baseURL + 'digital-library-resources/clear-all';
+        window.location.href = 'digital-library-resources/clear-all';
       });
     }
   };
