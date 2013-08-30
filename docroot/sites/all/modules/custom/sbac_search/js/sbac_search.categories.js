@@ -200,4 +200,12 @@
     }
   };
 
+  Drupal.behaviors.sbac_search_clear = {
+    attach: function (context, settings) {
+      $('.somediv').click( function() {
+
+      });
+    }
+  };
+
 })(jQuery);

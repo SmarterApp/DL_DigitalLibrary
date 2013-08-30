@@ -151,6 +151,7 @@ features[variable][] = node_options_resource
 features[variable][] = node_preview_resource
 features[variable][] = node_submitted_resource
 features[variable][] = save_continue_resource
+features[views_view][] = all_resources
 features[views_view][] = resources
 features_exclude[dependencies][sbac_help] = sbac_help
 features_exclude[field][node-resource-field_document_id] = node-resource-field_document_id

@@ -16,6 +16,33 @@ function sbac_search_update_projects_alter(&$projects) {
 }
 
 /**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
+function sbac_search_menu() {
+  $items = array();
+
+  $items['digital-library-resources/clear-all'] = array(
+    'title' => 'Digital Library Resources',
+    'page callback' => 'sbac_resource_clear_library_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Clears the search filters and redirects.
+ */
+function sbac_resource_clear_library_page() {
+  $_SESSION['sbac-current-filters'] = '';
+  $_SESSION['sbac-search-keywords'] = '';
+  drupal_goto('digital-library-resources');
+}
+
+/**
  * Build the documents before sending them to Solr.
  *
  * Supports all types of

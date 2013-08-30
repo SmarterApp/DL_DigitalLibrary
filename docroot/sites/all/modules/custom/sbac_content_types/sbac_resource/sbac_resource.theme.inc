@@ -30,9 +30,12 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'template' => 'digital-library',
     'variables' => array(
       'resource_grid_view' => NULL,
+      'no_results' => NULL,
+      'search_string' => NULL,
     )
   );
 
+  // Resources - Grid View
   $items['views_view_fields__resources__grid_view'] = array(
     'template' => 'templates/resources/grid_view/views-view-fields--resources--grid-view',
     'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
@@ -45,6 +48,7 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_resource')
   );
 
+  // Resources - Grid View
   $items['views_view__resources__grid_view'] = array(
     'template' => 'templates/resources/grid_view/views-view--resources--grid-view',
     'arguments' => array('view' => NULL),
@@ -84,6 +88,69 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
 
   $items['views_view__resources__list_view'] = array(
     'template' => 'templates/resources/list_view/views-view--resources--list-view',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_resource_views_view__resources__list_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  /*************** ALL RESOURCES *************************************/
+
+  $items['views_view_fields__all_resources__grid_view'] = array(
+    'template' => 'templates/all_resources/grid_view/views-view-fields--all-resources--grid-view',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_resource_views_view_fields__resources__grid_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  $items['views_view__all_resources__grid_view'] = array(
+    'template' => 'templates/all_resources/grid_view/views-view--all-resources--grid-view',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_resource_views_view__resources__grid_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+
+  $items['views_view_fields__all_resources__list_view'] = array(
+    'template' => 'templates/all_resources/list_view/views-view-fields--all-resources--list-view',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_resource_views_view_fields__resources__list_view__preprocess'
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+
+  $items['views_view_unformatted__all_resources__list_view'] = array(
+    'template' => 'templates/all_resources/list_view/views-view-unformatted--all-resources--list-view',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
+    'original hook' => 'views_view_unformatted',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_unformatted',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  $items['views_view__all_resources__list_view'] = array(
+    'template' => 'templates/all_resources/list_view/views-view--all-resources--list-view',
     'arguments' => array('view' => NULL),
     'original hook' => 'views_view',
     'preprocess functions' => array(
