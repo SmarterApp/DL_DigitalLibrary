@@ -634,20 +634,30 @@ a.sbac-grid-layout {
 .block-search {
   width: 200px;
   margin-right: 1em;
+  position: relative;
 
   button {
     display: none !important;
   }
 
   .form-text, .form-text:focus {
-    background: url('../images/search.png') 5% center no-repeat, url('../images/icon-validation-fail.png') 95% center no-repeat;
-;
+    background: url('../images/search.png') 5% center no-repeat;
     border-radius: 20px;
     top: 0;
     padding-left: 25px;
   }
 
-
+  .sbac-clear-search {
+    background: url('../images/icon-validation-fail.png') no-repeat center center;
+    height: 15px;
+    width: 15px;
+    display: block;
+    float: right;
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    cursor: pointer;
+  }
 }
 
 .block-sbac-resource-sbac-resource-back-button {
