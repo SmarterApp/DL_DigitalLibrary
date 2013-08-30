@@ -27,6 +27,7 @@ sites/all/themes/SBAC/.sass-cache/
 
 # ignore dev module
 sites/all/modules/contrib/masquerade
+sites/all/modules/contrib/coder
 
 #ignore sample data set
 #sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ela.*.json
