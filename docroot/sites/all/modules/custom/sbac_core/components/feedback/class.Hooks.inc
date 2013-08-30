@@ -301,82 +301,94 @@ class Hooks extends \devtools\Hooks {
     }
     // resource node form on the main resource profile page (ie. edit tags)
     elseif ($form_id == 'resource_node_form' && isset($form_state['build_info']['args'][1]) && $form_state['build_info']['args'][1] == 'edit_tags') {
-      $remove = array(
-        'group_basic',
-        'group_materials',
-        'group_summary',
-        'group_advanced',
-        'group_paradata'
-      );
+      $data = entity_load('feedback', FALSE, array(
+        'type' => 'post',
+        'completed' => 0,
+        'status' => 1,
+      ));
 
-      foreach ($remove as $group) {
-        unset($form['#groups'][$group], $form['#fieldgroups'][$group]);
+      if ($data) {
+        $post = array_shift($data);
+
+        // remove data we're not interested in
+          $remove = array(
+            'group_basic',
+            'group_materials',
+            'group_summary',
+            'group_advanced',
+            'group_paradata'
+          );
+
+          foreach ($remove as $group) {
+            unset($form['#groups'][$group], $form['#fieldgroups'][$group]);
+          }
+
+          foreach (array_keys($form) as $key) {
+            $conditions = implode('|', array(
+              'container_close',
+              'container_open',
+              'completed_flag',
+              '_guidelines',
+              'title_of_resource_',
+            ));
+
+            if (preg_match('#' . $conditions . '#', $key)) {
+              unset($form[$key]);
+            }
+          }
+
+          unset($form['actions']);
+          unset($form['#after_build']);
+          unset($form['#validate']);
+          unset($form['#submit']);
+
+        // build the new submit buttons
+          // cancel
+          $form['actions']['#weight'] = '99';
+
+          $trigger_id = 'edit-tags-cancel';
+
+          $text = t('Cancel review (!hours hrs)', array(
+                    '!hours' => feedback_hours_left($post),
+                  ));
+
+          $url = implode('/', array_merge(array('one', 'two'), array(
+            'cancel',
+            $trigger_id,
+            $post->id,
+          )));
+
+          $options = array(
+            'attributes' => array(
+              'class' => array(
+                'use-ajax',
+                'use-dialog',
+                'button',
+                'radius',
+              ),
+              'id' => $trigger_id,
+            ),
+          );
+
+          $form['actions']['cancel'] = array(
+            '#markup' => l($text, $url, $options),
+          );
+
+        // submit button
+          $form['actions']['submit'] = array(
+            '#type' => 'submit',
+            '#value' => t('Save and Close'),
+            '#ajax' => array(
+              // 'callback' => 'feedback_eck_feedback_form_submit',
+              // 'wrapper' => 'eck-' . $this->_bundle_friendly . '-form',
+            ),
+            '#attributes' => array(
+              'class' => array(
+                'action-save',
+              ),
+            ),
+          );
       }
-
-      foreach (array_keys($form) as $key) {
-        $conditions = implode('|', array(
-          'container_close',
-          'container_open',
-          'completed_flag',
-          '_guidelines',
-          'title_of_resource_',
-        ));
-
-        if (preg_match('#' . $conditions . '#', $key)) {
-          unset($form[$key]);
-        }
-      }
-
-      unset($form['actions']);
-      unset($form['#after_build']);
-      unset($form['#validate']);
-      unset($form['#submit']);
-
-      $form['actions']['#weight'] = '99';
-
-      $trigger_id = 'edit-tags-cancel';
-
-      // $text = t('Cancel review (!hours hrs)', array(
-      //           '!hours' => feedback_hours_left($this->_entity),
-      //         ));
-
-      // // $url = implode('/', array_merge($this->_base_url, array(
-      // //   'cancel',
-      // //   $trigger_id,
-      // //   $this->_entity->id,
-      // // )));
-
-      // $url = '';
-
-      // $options = array(
-      //   'attributes' => array(
-      //     'class' => array(
-      //       'use-ajax',
-      //       'use-dialog',
-      //       'button',
-      //       'radius',
-      //     ),
-      //     'id' => $trigger_id,
-      //   ),
-      // );
-
-      // $form['actions']['cancel'] = array(
-      //   '#markup' => l($text, $url, $options),
-      // );
-
-      $form['actions']['submit'] = array(
-        '#type' => 'submit',
-        '#value' => t('Save and Close'),
-        '#ajax' => array(
-          // 'callback' => 'feedback_eck_feedback_form_submit',
-          // 'wrapper' => 'eck-' . $this->_bundle_friendly . '-form',
-        ),
-        '#attributes' => array(
-          'class' => array(
-            'action-save',
-          ),
-        ),
-      );
     }
   }
 
