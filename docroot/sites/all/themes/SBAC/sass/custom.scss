@@ -1138,14 +1138,39 @@ a.tabledrag-handle .handle {
 .ui-dialog {
   padding: 0;
   @include box-shadow(1px, 1px, 1px,rgba(black,0.5));
+
+  iframe {
+    height: 500px !important;
+  }
 }
 
 .ui-widget-overlay  {
   background: url('../images/colorbox/overlay.png') top left repeat;
   @include opacity(0.9);
 }
+
 .page-media-browser {
   background: white;
+  height: auto;
+
+  //error message 
+  .alert-box.alert {
+    width: 95%;
+    margin: 1em auto;
+    padding: 20px;
+  }
+
+  //file upload error
+  .file-upload-js-error {
+    background-color: #e2c4cd;
+    background-image: none;
+    border-color: #8a1538;
+    color: #8a1538;
+    @include border-radius (12px);
+    padding: 20px;
+    font-size: 14px;
+    margin-bottom: 2em;
+  }
 
   //tabs
   .button-group {
@@ -1191,13 +1216,15 @@ a.tabledrag-handle .handle {
   }
 
   label {
-    float: left;
-    margin-bottom: 10px;
+    margin: 10px 10px 10px 0;
   }
   #edit-upload-upload {
     float: left;
-    width: 50%;
-    clear:left;
+    width: 30%;
+    clear: left;
+    font-size: 14px;
+    padding: 5px 5px 5px 0;
+    margin-bottom: 1em;
   }
 
   #edit-upload-upload-button {
