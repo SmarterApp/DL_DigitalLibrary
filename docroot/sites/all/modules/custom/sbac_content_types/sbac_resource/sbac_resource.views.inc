@@ -13,11 +13,7 @@
 function sbac_resource_views_query_alter(&$view, &$query) {
   if ($view->name == 'resources' || $view->name == 'all_resources') {
     global $user;
-    if (in_array('resource contributor', $user->roles)) {
-      // Can't see "being reviewed" state. Anything less
-      // would be uncivilized. Gilette! The best a man can get.
-      //unset($query->where[1]['conditions'][3]['value'][2]);
-    }
+
     if (in_array('resource reviewer', $user->roles)) {
       // Can see needs review, being reviewed and published.
       unset($query->where[1]['conditions'][3]['value'][0]);
@@ -25,6 +21,7 @@ function sbac_resource_views_query_alter(&$view, &$query) {
       unset($query->where[1]['conditions'][3]['value'][4]);
       unset($query->where[1]['conditions'][4]);
     }
+
     if (in_array('resource publisher', $user->roles)) {
       // Can see approved, published
       unset($query->where[1]['conditions'][3]['value'][0]);
@@ -32,6 +29,66 @@ function sbac_resource_views_query_alter(&$view, &$query) {
       unset($query->where[1]['conditions'][3]['value'][2]);
       unset($query->where[1]['conditions'][3]['value'][3]);
       unset($query->where[1]['conditions'][4]);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_post_execute();
+ *
+ * This hook is implement to combine two view results into one.
+ * When the user searches via keyword, the results are retrieved
+ * from the apache solr view. Those are then jammed into the results
+ * of the resource view and displayed. I chose to do this in order
+ * to make the resource view react on local DB data instead of
+ * getting the data from apache solr.
+ *
+ * @param $view
+ */
+function sbac_resource_views_post_execute(&$view) {
+  if ($view->name == 'resources' && ($view->current_display == 'grid_view' || $view->current_display == 'list_view')) {
+    $search_string = $_SESSION['sbac-search-keywords'];
+    if ($search_string != NULL) {
+      // Search apache solr for keyword.
+      $sr_view = views_get_view('search_resources');
+      $sr_view->set_display('search');
+      $view_filters = $sr_view->display_handler->get_option('filters');
+      $view_filters['keyword']['value'] = $search_string;
+      $sr_view->display_handler->set_option('filters', $view_filters);
+      $sr_view->pre_execute();
+      $sr_view->execute();
+      $sr_results = $sr_view->result;
+      $sr_view->destroy();
+
+      // Collect nids.
+      $nids = array();
+      if ($sr_results) {
+        foreach ($sr_results as $sr_result) {
+          $nids[] = $sr_result->entity_id;
+        }
+
+        // Load up all the local data needed for display. Used a view to query.
+        $data_results = views_get_view_result('resources', 'load_data', implode('+', $nids));
+        if ($data_results) {
+          if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
+            // Filters are set, append the keyword view results into the resource view.
+            foreach ($view->result as $result) {
+              foreach ($data_results as $data_result) {
+                if ($result->nid != $data_result->nid) {
+                  $view->result[] = $data_result;
+                }
+              }
+            }
+            $view->total_rows = count($view->result);
+          }
+          else {
+            // Filters are not set, remove results and only use the keyword view results.
+            $view->result = array();
+            $view->result = $data_results;
+            $view->total_rows = count($data_results);
+          }
+        }
+      }
     }
   }
 }

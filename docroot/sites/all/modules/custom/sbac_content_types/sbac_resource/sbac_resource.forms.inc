@@ -20,20 +20,17 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     ctools_modal_add_js();
     drupal_set_title('');
     $form['#id'] = 'sbac-resource-form';
+
     $form['#attached']['js'] = array(
       drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
       drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
       libraries_get_path('jquery.more') . '/jquery.more.js',
+      drupal_get_path("module", "sbac_help") . "/js/resource.js",
     );
     $form['#attached']['css'] = array(
       drupal_get_path('module','sbac_resource').'/css/sbac_resource.css',
       libraries_get_path('jquery.more') . '/jquery.more.css',
     );
-
-    if (!isset($form['nid']['#value'])) {
-      drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
-      //drupal_add_js("jQuery(document).ready(function () { jQuery.colorbox({inline:true, href:'#resource-help-box',width:'80%',height:'80%'}); });", array('type' => 'inline'));
-    }
 
     // Set the state in JS for later use.
     if (isset($form['#node']->workbench_moderation->current['state'])) {
@@ -77,16 +74,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_submit_resource($form, $form_state);
     _sbac_resource_form_required_fields($form, $form_state);
     _sbac_resource_form_remove_elements($form, $form_state);
-
-    // Create node if doesn't exist, gives us an NID to attached alignment content type to.
-    if (!isset($form['#node']->nid)) {
-      sbac_resource_create_node($form, $form_state);
-      drupal_add_js(array('sbac_resource_nid' => $form['#node']->nid), 'setting');
-    }
-    else {
-      // The node is always published... except for when the node is not created.
-      // $form['options']['status']['#default_value'] = 1;
-    }
+    _sbac_resource_clean_workbench_moderation($form, $form_state);
   }
 }
 
@@ -117,6 +105,40 @@ function sbac_resource_form_license_after_build($element) {
 }
 
 /**
+ * Cleans the moderation object, so it does what i say.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_clean_workbench_moderation($form, $form_state) {
+  if (isset($form_state['node']->workbench_moderation) && isset($form_state['node']->workbench_moderation['published'])) {
+    if ($form_state['node']->workbench_moderation['current']->state == 'published') {
+      unset($form_state['node']->workbench_moderation['published']);
+    }
+  }
+  // Current clean up.
+  if (isset($form_state['node']->workbench_moderation['current']->from_state)) {
+    $form_state['node']->workbench_moderation['current']->from_state = 'draft';
+  }
+  if (isset($form_state['node']->workbench_moderation['current']->state)) {
+    $form_state['node']->workbench_moderation['current']->state = 'draft';
+  }
+  if (isset($form_state['node']->workbench_moderation['current']->published)) {
+    $form_state['node']->workbench_moderation['current']->published = FALSE;
+  }
+  // My Revision clean up.
+  if (isset($form_state['node']->workbench_moderation['my_revision']->from_state)) {
+    $form_state['node']->workbench_moderation['my_revision']->from_state = 'draft';
+  }
+  if (isset($form_state['node']->workbench_moderation['my_revision']->state)) {
+    $form_state['node']->workbench_moderation['my_revision']->state = 'draft';
+  }
+  if (isset($form_state['node']->workbench_moderation['my_revision']->published)) {
+    $form_state['node']->workbench_moderation['my_revision']->published = FALSE;
+  }
+}
+
+/**
  * Submit handler for resource node form
  *
  * @param $form
@@ -125,14 +147,10 @@ function sbac_resource_form_license_after_build($element) {
 function sbac_resource_save_and_close(&$form, &$form_state) {
   sbac_resource_clean_text($form_state);
   // If there's a title, lets push this to the new state.
+  $form_state['values']['workbench_moderation_state_current'] = 'draft';
   $form_state['values']['workbench_moderation_state_new'] = 'draft';
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
-  // If the nid is not set, set it to prevent blank nodes.
-  if ($form_state['values']['nid'] == NULL) {
-    $form_state['values']['nid'] = $form_state['node']->nid;
-    $form_state['values']['vid'] = $form_state['node']->vid;
-  }
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
@@ -217,17 +235,14 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         break;
     }
 
+    // Set coming from state to Draft.
+    $form_state['values']['workbench_moderation_state_current'] = 'draft';
     // Set state to Draft.
     $form_state['values']['workbench_moderation_state_new'] = 'draft';
     // Cleans the text
     sbac_resource_clean_text($form_state);
     // Set path alias
     $form_state['values']['path']['pathauto'] = TRUE;
-    // If the nid is not set, set it to prevent blank nodes.
-    if ($form_state['values']['nid'] == NULL) {
-      $form_state['values']['nid'] = $form_state['node']->nid;
-      $form_state['values']['vid'] = $form_state['node']->vid;
-    }
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
     $form = drupal_rebuild_form('resource_node_form', $form_state, $form);

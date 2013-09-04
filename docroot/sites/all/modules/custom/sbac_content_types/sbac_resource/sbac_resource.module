@@ -594,7 +594,7 @@ function _sbac_resource_apply_filters(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
 
   // Current filter session - create the args where needed.
-  if (isset($_SESSION['sbac-current-filters'])) {
+  if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
     $current_filters = $_SESSION['sbac-current-filters'];
     $filters = explode('::', $current_filters);
     if ($filters) {
@@ -650,12 +650,6 @@ function _sbac_resource_apply_filters(&$view) {
     }
     $view->display_handler->set_option('filters', $view_filters);
   }
-
-  if (isset($_SESSION['sbac-search-keywords'])) {
-    $keywords = $_SESSION['sbac-search-keywords'];
-    $view_filters['keys']['value'] = $keywords;
-    $view->display_handler->set_option('filters', $view_filters);
-  }
 }
 
 /**
@@ -664,39 +658,51 @@ function _sbac_resource_apply_filters(&$view) {
  * @return string
  */
 function sbac_resource_digital_library_page() {
-  $no_results = FALSE;
+  $no_results = NULL;
   $search_string = $_SESSION['sbac-search-keywords'];
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
 
+  // Load up the view.
   $view = views_get_view('resources');
   $view->set_display($display);
   _sbac_resource_apply_filters($view);
-  $view->live_preview = TRUE;
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
   $resource_layout_view = $view->preview();
   $_SESSION['sbac_search_count'] = $view->total_rows;
-  $view->destroy();
+  // dpq($view->build_info['query']);
 
-  if ($view->total_rows == 0 &&
-    ((isset($_SESSION['sbac-search-keywords']) && $_SESSION['sbac-search-keywords'] != '')) ||
-    ((isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != ''))) {
-    $no_results = TRUE;
+  // if there is 0 rows.
+  $count = count($view->result);
+  if (!$count) {
+    // Get all results
     $resource_layout_view = views_embed_view('all_resources', $display);
+
+    // Reset variables
     $_SESSION['sbac-current-filters'] = '';
     $_SESSION['sbac-search-keywords'] = '';
     $_COOKIE['sbac_search_categories_closed'] = TRUE;
+
+    // Set error message
+    if ($search_string && strlen($search_string) > 2) {
+      $no_results = '<h3>Your search for "' . $search_string . '" returned no results.</h3>';
+      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
+      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
+    }
+    else {
+      drupal_get_messages();
+      $no_results = '<h3>You must enter 3 characters or more.</h3>';
+      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
+      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
+    }
   }
 
+  $view->destroy();
   menu_set_active_item('digital-library-resources');
-  return theme('digital_library', array(
-    'resource_layout_view' => $resource_layout_view,
-    'no_results' => $no_results,
-    'search_string' => $search_string,
-  ));
+  return theme('digital_library', array('resource_layout_view' => $resource_layout_view, 'no_results' => $no_results));
 }
 
 /**
@@ -714,14 +720,6 @@ function sbac_resource_cron() {
 //  foreach ($result as $record) {
 //    node_delete($record->nid);
 //  }
-}
-
-/**
- * Implements hook_node_update();
- *
- * @param $node
- */
-function sbac_resource_node_update($node) {
 }
 
 /**
@@ -858,8 +856,7 @@ function sbac_resource_node_delete($node) {
  *
  * @param $node, $i = file index
  */
-function sbac_resource_delete_file_from_cmis(&$node, $i) 
-{
+function sbac_resource_delete_file_from_cmis(&$node, $i) {
   module_load_include('api.inc', 'cmis');
   try {
     $repository = cmis_get_repository();
@@ -877,14 +874,13 @@ function sbac_resource_delete_file_from_cmis(&$node, $i)
  *
  * @param $node, $i = file index
  */
-function sbac_resource_delete_folder_from_cmis(&$node) 
-{
+function sbac_resource_delete_folder_from_cmis(&$node) {
   module_load_include('api.inc', 'cmis');
   try {
     $repository = cmis_get_repository();
-	$folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
+	  $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
     //hack commented out until we separate the alfresco environments
-	//cmisapi_deleteObject($repository->repositoryId, $folder->id);
+	  //cmisapi_deleteObject($repository->repositoryId, $folder->id);
   } 
   catch (CMISException $e) {
     // cmis_error_handler('sbac_documents_delete_document', $e);
@@ -892,18 +888,24 @@ function sbac_resource_delete_folder_from_cmis(&$node)
 }
 
 /**
- * Implemenets hook_node_load().
+ * Allows modules to respond to state transitions.
  *
- * @param $nodes
- * @param $types
+ * @param $node
+ *  The node that is being transitioned.
+ *
+ * @param $previous_state
+ *  The state of the revision before the transition occurred.
+ *
+ * @param $new_state
+ *  The new state of the revision.
  */
-function sbac_resource_node_load($nodes, $types) {
-	foreach ($nodes as $node) {
-		//echo "<pre>";
-		//print_r($node);
-	}
+function sbac_resource_workbench_moderation_transition($node, $previous_state, $new_state) {
+  if ($node->type == 'resource') {
+    db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+    db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+    db_query('UPDATE {workbench_moderation_node_history} SET published = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+  }
 }
-
 
 /**
  * Helper function for Resource form magic.
