@@ -31,7 +31,6 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'variables' => array(
       'resource_grid_view' => NULL,
       'no_results' => NULL,
-      'search_string' => NULL,
     )
   );
 

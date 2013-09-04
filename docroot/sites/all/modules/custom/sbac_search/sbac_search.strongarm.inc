@@ -145,9 +145,11 @@ function sbac_search_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'search_active_modules';
   $strongarm->value = array(
-    0 => 'node',
-    1 => 'user',
-    2 => 'apachesolr_search',
+    'apachesolr_search' => 'apachesolr_search',
+    'ds_search' => 'ds_search',
+    'file_entity' => 'file_entity',
+    'node' => 'node',
+    'user' => 'user',
   );
   $export['search_active_modules'] = $strongarm;
 

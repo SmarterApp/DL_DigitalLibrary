@@ -563,3 +563,13 @@ function sbac_central_update_7050() {
   );
   module_enable($modules);
 }
+
+/**
+ * Disables workbench email module.
+ */
+function sbac_central_update_7051() {
+  $modules = array(
+    'workbench_email',
+  );
+  module_disable($modules);
+}

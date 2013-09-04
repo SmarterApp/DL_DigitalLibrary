@@ -273,15 +273,6 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench',
   );
 
-  // Exported permission: administer workbench emails.
-  $permissions['administer workbench emails'] = array(
-    'name' => 'administer workbench emails',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'workbench_email',
-  );
-
   // Exported permission: administer workbench moderation.
   $permissions['administer workbench moderation'] = array(
     'name' => 'administer workbench moderation',

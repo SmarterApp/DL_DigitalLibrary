@@ -24,6 +24,13 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 4,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'module' => 'text',
@@ -71,6 +78,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 42,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 42,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'module' => 'ds',
@@ -116,6 +132,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 6,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -174,6 +197,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 21,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 21,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -214,6 +246,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'The name(s) of the person/people who wrote or developed the resource:',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 10,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -270,6 +309,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 35,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 35,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'module' => 'taxonomy',
@@ -312,6 +360,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'Identify how this resource addresses the Common Core State Standards (e.g., how it addresses particular claims, clusters, targets, and/or “standards”). Pay special attention to the interconnectedness of claims.',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 25,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -370,6 +425,13 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 26,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 26,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -415,6 +477,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'Describe the likely context(s) in which the resource could be used (e.g. PLCs, individual, ongoing learning, small group, whole class).',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 24,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -472,6 +541,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 7,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 7,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'module' => 'taxonomy',
@@ -514,6 +592,12 @@ function sbac_resource_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 2,
+      ),
+      'search_index' => array(
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
@@ -569,6 +653,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 8,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 8,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'module' => 'taxonomy',
@@ -610,6 +703,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 1,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'file',
         'settings' => array(),
@@ -688,6 +788,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 23,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 23,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -732,6 +841,15 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
+        'weight' => 34,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
         'weight' => 34,
       ),
       'secondary_teaser' => array(
@@ -782,6 +900,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 32,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 32,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'module' => 'taxonomy',
@@ -828,6 +955,15 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
+        'weight' => 6,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
         'weight' => 6,
       ),
       'secondary_teaser' => array(
@@ -878,6 +1014,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 33,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 33,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'module' => 'taxonomy',
@@ -920,6 +1065,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'Identify the learning targets associated with this resource. Learning targets can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 28,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -978,6 +1130,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 20,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 20,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1029,6 +1190,13 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'list_default',
         'weight' => 9,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 9,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1069,6 +1237,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 36,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'list',
         'settings' => array(),
@@ -1124,6 +1299,13 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 31,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 31,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1172,6 +1354,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'The name(s) of the person/people/entities/publishers who own the copyright for the resource:',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 11,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -1238,6 +1427,12 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'list_default',
         'weight' => 5,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1279,6 +1474,15 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
+        'weight' => 11,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
         'weight' => 11,
       ),
       'secondary_teaser' => array(
@@ -1323,6 +1527,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'Describe how this resource enables students to actively engage in the formative assessment process, if applicable.',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 22,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -1381,6 +1592,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 9,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 9,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'module' => 'taxonomy',
@@ -1423,6 +1643,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 29,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -1474,6 +1701,13 @@ function sbac_resource_field_default_field_instances() {
     'description' => 'Include evidence that the resource has been tried successfully with educators (or students) and has resulted in a positive impact on educator practices (or student outcomes)',
     'display' => array(
       'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 30,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
@@ -1535,6 +1769,13 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'list_default',
         'weight' => 18,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 18,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1580,6 +1821,12 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
+        'weight' => 41,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 41,
       ),
       'secondary_teaser' => array(
@@ -1637,6 +1884,13 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'list_default',
         'weight' => 16,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 16,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1680,6 +1934,15 @@ function sbac_resource_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 17,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'ds',
+        'settings' => array(
+          'taxonomy_term_reference_view_mode' => 'full',
+        ),
+        'type' => 'ds_taxonomy_view_mode',
+        'weight' => 17,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -1717,7 +1980,6 @@ function sbac_resource_field_default_field_instances() {
   t('Attributes');
   t('Author');
   t('Body');
-  t('Classroom Technologies');
   t('Common Core Standard(s)');
   t('Connection to CCSS');
   t('Connection to FAP');
@@ -1762,6 +2024,7 @@ function sbac_resource_field_default_field_instances() {
   t('Subjects and Domains');
   t('Success Criteria');
   t('Supporting Evidence');
+  t('Technologies Required for Use in Classroom');
   t('Temp');
   t('The Grade(s) in which the resource might be used, regardless of curriculum alignment. Select all that apply.');
   t('The Subject area(s) and domain(s) to which the learning resource applies. Select all that apply.');

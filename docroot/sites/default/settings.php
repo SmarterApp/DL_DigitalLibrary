@@ -562,24 +562,71 @@ if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/willappnovationcom/willappnovationcom-settings.inc');
 }
 
-// Alfresco / CMIS repo.
-$conf['cmis_repositories'] = array(
-  'default' => array(
-    'user' => 'admin',
-    'password' => 'm3rcury',
-	  'update_url' => 'ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
-    'label' => 'local cmis repo',
-    'url' => 'http://ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/s/cmis',
-    'transport' => 'cmis_headerswing',
-    'headerswing_headers' => array(
-      'HTTP_HOST' => 'FRONTEND_HOST',
-      'HTTP_HOST' => 'FRONTEND_HOST_AGAIN',
-      'HTTP_USER' => 'FRONTEND_USER',
-      'PHP_AUTH_USER' => 'FRONTEND_USER',
-      'PHP_AUTH_DIGEST' => 'FRONTEND_AUTH'
-    )
-  )
-);
+// Sets the Apache Solr Environment
+if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+    case 'dev':
+      // Alfresco / CMIS repo.
+      $conf['cmis_repositories'] = array(
+        'default' => array(
+          'user' => 'admin',
+          'password' => 'm3rcury',
+          'update_url' => 'http://ec2-54-221-242-182.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
+          'label' => 'local cmis repo',
+          'url' => 'http://ec2-54-221-242-182.compute-1.amazonaws.com:8080/alfresco/s/cmis',
+          'transport' => 'cmis_headerswing',
+          'headerswing_headers' => array(
+            'HTTP_HOST' => 'FRONTEND_HOST',
+            'HTTP_HOST' => 'FRONTEND_HOST_AGAIN',
+            'HTTP_USER' => 'FRONTEND_USER',
+            'PHP_AUTH_USER' => 'FRONTEND_USER',
+            'PHP_AUTH_DIGEST' => 'FRONTEND_AUTH'
+          )
+        )
+      );
+    break;
+    case 'test':
+      // Alfresco / CMIS repo.
+      $conf['cmis_repositories'] = array(
+        'default' => array(
+          'user' => 'admin',
+          'password' => 'm3rcury',
+          'update_url' => 'http://ec2-54-211-187-76.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
+          'label' => 'local cmis repo',
+          'url' => 'http://ec2-54-211-187-76.compute-1.amazonaws.com:8080/alfresco/s/cmis',
+          'transport' => 'cmis_headerswing',
+          'headerswing_headers' => array(
+            'HTTP_HOST' => 'FRONTEND_HOST',
+            'HTTP_HOST' => 'FRONTEND_HOST_AGAIN',
+            'HTTP_USER' => 'FRONTEND_USER',
+            'PHP_AUTH_USER' => 'FRONTEND_USER',
+            'PHP_AUTH_DIGEST' => 'FRONTEND_AUTH'
+          )
+        )
+      );
+    break;
+    case 'prod':
+      // Alfresco / CMIS repo.
+      $conf['cmis_repositories'] = array(
+        'default' => array(
+          'user' => 'admin',
+          'password' => 'm3rcury',
+          'update_url' => 'ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
+          'label' => 'local cmis repo',
+          'url' => 'http://ec2-54-234-49-110.compute-1.amazonaws.com:8080/alfresco/s/cmis',
+          'transport' => 'cmis_headerswing',
+          'headerswing_headers' => array(
+            'HTTP_HOST' => 'FRONTEND_HOST',
+            'HTTP_HOST' => 'FRONTEND_HOST_AGAIN',
+            'HTTP_USER' => 'FRONTEND_USER',
+            'PHP_AUTH_USER' => 'FRONTEND_USER',
+            'PHP_AUTH_DIGEST' => 'FRONTEND_AUTH'
+          )
+        )
+      );
+    break;
+  }
+}
 
 // Sets the Apache Solr Environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
@@ -599,4 +646,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $conf['apachesolr_default_environment'] = 'amazon_apache_solr_prod';
       break;
   }
+}
+else {
+  $conf['apachesolr_default_environment'] = 'amazon_apache_solr_environment_local';
 }
