@@ -835,6 +835,12 @@ a.sbac-grid-layout {
 
 /* Modal */
 
+.ui-dialog {
+  .ajax-progress .throbber {
+    background-position: 0px -24px;
+  }
+}
+
 #dialog-resource_gate_keeper_form-wrapper {
 
   .gate-keeper-modal-intro {
@@ -849,6 +855,13 @@ a.sbac-grid-layout {
     margin-bottom: 0;
   }
 
+  .close-dialog {
+    text-align: right;
+
+    .button {
+      margin-right: 10px;
+    }
+  }
 }
 
 .view-resource-tutorial {

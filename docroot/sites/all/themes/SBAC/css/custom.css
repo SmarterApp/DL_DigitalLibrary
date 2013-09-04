@@ -7453,11 +7453,15 @@ a.tabledrag-handle .handle {
   -o-border-radius: 0;
   border-radius: 0;
 }
-/* line 693, ../sass/custom.scss */
-.ui-dialog .button,
-.ui-dialog button {
-  font-size: 0.8em;
-  padding: 0.8em;
+/* line 692, ../sass/custom.scss */
+.ui-dialog .button, .ui-dialog button, .ui-dialog .button.radius {
+  font-size: 16px;
+  padding: 8px 18px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
 }
 /* line 698, ../sass/custom.scss */
 .ui-dialog .ui-resizable-handle {
