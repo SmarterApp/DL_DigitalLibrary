@@ -29,6 +29,12 @@ function sbac_paradata_field_default_field_instances() {
         'type' => 'number_integer',
         'weight' => 40,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -89,6 +95,12 @@ function sbac_paradata_field_default_field_instances() {
         'type' => 'number_integer',
         'weight' => 39,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -148,6 +160,12 @@ function sbac_paradata_field_default_field_instances() {
         ),
         'type' => 'number_integer',
         'weight' => 38,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'secondary_teaser' => array(
         'label' => 'above',
