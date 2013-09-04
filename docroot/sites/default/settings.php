@@ -584,7 +584,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
           )
         )
       );
-      break;
+    break;
     case 'test':
       // Alfresco / CMIS repo.
       $conf['cmis_repositories'] = array(
@@ -604,7 +604,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
           )
         )
       );
-      break;
+    break;
     case 'prod':
       // Alfresco / CMIS repo.
       $conf['cmis_repositories'] = array(
@@ -624,7 +624,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
           )
         )
       );
-      break;
+    break;
   }
 }
 

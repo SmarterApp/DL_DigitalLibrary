@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_search.ds.inc
+ * sbac_resource.ds.inc
  */
 
 /**
  * Implements hook_ds_layout_settings_info().
  */
-function sbac_search_ds_layout_settings_info() {
+function sbac_resource_ds_layout_settings_info() {
   $export = array();
 
   $ds_layout = new stdClass();
