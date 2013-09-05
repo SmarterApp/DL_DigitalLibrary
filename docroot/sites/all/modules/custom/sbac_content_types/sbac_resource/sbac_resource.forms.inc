@@ -25,7 +25,6 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
       drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
       drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
       libraries_get_path('jquery.more') . '/jquery.more.js',
-      drupal_get_path("module", "sbac_help") . "/js/resource.js",
     );
     $form['#attached']['css'] = array(
       drupal_get_path('module','sbac_resource').'/css/sbac_resource.css',
@@ -38,6 +37,10 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     }
     else {
       drupal_add_js(array('resource_workbench_current_state' => 'creation'), 'setting');
+    }
+
+    if (!isset($form['#node']->nid)) {
+      drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
     }
 
     // Hide the Advanced fieldset if not DLRB member.
