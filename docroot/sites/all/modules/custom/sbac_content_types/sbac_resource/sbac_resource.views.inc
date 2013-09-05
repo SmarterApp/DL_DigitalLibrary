@@ -60,12 +60,10 @@ function sbac_resource_views_post_execute(&$view) {
       $sr_view->destroy();
 
       // Collect nids.
-      $nids = array();
       if ($sr_results) {
         foreach ($sr_results as $sr_result) {
           $nids[] = $sr_result->entity_id;
         }
-
         // Load up all the local data needed for display since all i have is a nid. used views again.
         $data_results = views_get_view_result('resources', 'load_data', implode('+', $nids));
         if ($data_results) {
@@ -89,8 +87,13 @@ function sbac_resource_views_post_execute(&$view) {
         }
       }
       else {
-        //@TODO: If no results return the no results error. But something...haha.
-        $view->result = array();
+        if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
+          // if there are filters, return whatever the view found.
+        }
+        else {
+          // if no filters, just a keyword, return 0 results.
+          $view->result = array();
+        }
       }
     }
   }

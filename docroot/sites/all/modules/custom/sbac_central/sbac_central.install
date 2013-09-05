@@ -608,3 +608,21 @@ function _sbac_central_delete_no_title_nodes() {
     }
   }
 }
+
+/**
+ * Publishes all alignments.
+ */
+function sbac_central_update_7054() {
+  _sbac_central_publish_all_alignments();
+}
+
+/**
+ * Publishes all alignments.
+ */
+function _sbac_central_publish_all_alignments() {
+  $result = db_query("SELECT nid, vid FROM {node} WHERE type = :alignment", array(':alignment' => 'alignment'));
+  foreach ($result as $row) {
+    db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
+    db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
+  }
+}
