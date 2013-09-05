@@ -688,14 +688,19 @@ function sbac_resource_digital_library_page() {
     $_COOKIE['sbac_search_categories_closed'] = TRUE;
 
     // Set error message
-    if ($search_string && strlen($search_string) > 2) {
+    if ($search_string && strlen($search_string) < 3) {
+      drupal_get_messages();
+      $no_results = '<h3>You must enter 3 characters or more.</h3>';
+      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
+      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
+    }
+    else if ($search_string) {
       $no_results = '<h3>Your search for "' . $search_string . '" returned no results.</h3>';
       $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
       $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
     }
     else {
-      drupal_get_messages();
-      $no_results = '<h3>You must enter 3 characters or more.</h3>';
+      $no_results = '<h3>Your search returned no results.</h3>';
       $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
       $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
     }
@@ -939,7 +944,7 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
   if ($node->type == 'resource') {
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
-    db_query('UPDATE {workbench_moderation_node_history} SET published = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+    //db_query('UPDATE {workbench_moderation_node_history} SET published = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
   }
 }
 
