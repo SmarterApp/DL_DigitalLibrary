@@ -45,12 +45,13 @@ function sbac_search_apachesolr_search_default_searchers() {
   $searcher->settings = array(
     'fq' => array(
       0 => 'entity_type:node',
+      1 => 'bundle:resource',
     ),
     'apachesolr_search_custom_enable' => 1,
     'apachesolr_search_search_type' => 'custom',
     'apachesolr_search_per_page' => 10,
     'apachesolr_search_spellcheck' => 1,
-    'apachesolr_search_search_box' => TRUE,
+    'apachesolr_search_search_box' => 1,
     'apachesolr_search_allow_user_input' => 0,
     'apachesolr_search_browse' => 'blocks',
   );
