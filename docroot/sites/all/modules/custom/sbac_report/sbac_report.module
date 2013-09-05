@@ -7,6 +7,15 @@
 include_once 'sbac_report.features.inc';
 
 /**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_report_update_projects_alter(&$projects) {
+  unset($projects['sbac_report']);
+}
+
+/**
  * Implements hook_menu().
  */
 function sbac_report_menu() {
