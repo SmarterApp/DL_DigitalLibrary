@@ -688,14 +688,19 @@ function sbac_resource_digital_library_page() {
     $_COOKIE['sbac_search_categories_closed'] = TRUE;
 
     // Set error message
-    if ($search_string && strlen($search_string) > 2) {
+    if ($search_string && strlen($search_string) < 3) {
+      drupal_get_messages();
+      $no_results = '<h3>You must enter 3 characters or more.</h3>';
+      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
+      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
+    }
+    else if ($search_string) {
       $no_results = '<h3>Your search for "' . $search_string . '" returned no results.</h3>';
       $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
       $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
     }
     else {
-      drupal_get_messages();
-      $no_results = '<h3>You must enter 3 characters or more.</h3>';
+      $no_results = '<h3>Your search returned no results.</h3>';
       $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
       $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
     }
