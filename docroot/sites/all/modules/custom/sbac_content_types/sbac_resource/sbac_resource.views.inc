@@ -61,16 +61,11 @@ function sbac_resource_views_post_execute(&$view) {
 
       // Collect nids.
       if ($sr_results) {
-        $data_results = array();
         foreach ($sr_results as $sr_result) {
-          $ld_result = views_get_view_result('resources', 'load_data', $sr_result->entity_id);
-          if ($ld_result) {
-            $data_results[] = array_shift($ld_result);
-          }
+          $nids[] = $sr_result->entity_id;
         }
-
         // Load up all the local data needed for display since all i have is a nid. used views again.
-        //$data_results = views_get_view_result('resources', 'load_data', implode('+', $nids));
+        $data_results = views_get_view_result('resources', 'load_data', implode('+', $nids));
         if ($data_results) {
           if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
             // Category filters are set, append the keyword view results into the resource view.
