@@ -15,30 +15,17 @@
     <?php print $header; ?>
   </<?php print $header_wrapper ?>>
 
-  <?php if (isset($left) || (isset($middle)) || (isset($right))) : ?>
-
-  <div class="resource-info">
-    <div class="row">
-      <div class="large-4 columns">
   <<?php print $left_wrapper ?> class="group-left<?php print $left_classes; ?>">
     <?php print $left; ?>
   </<?php print $left_wrapper ?>>
-</div>
 
-  <div class="large-4 columns">
   <<?php print $middle_wrapper ?> class="group-middle<?php print $middle_classes; ?>">
     <?php print $middle; ?>
   </<?php print $middle_wrapper ?>>
-</div>
-  <div class="large-4 columns">
+
   <<?php print $right_wrapper ?> class="group-right<?php print $right_classes; ?>">
     <?php print $right; ?>
   </<?php print $right_wrapper ?>>
-</div>
-</div>
-</div>
-
-<?php endif; ?>
 
   <<?php print $footer_wrapper ?> class="group-footer<?php print $footer_classes; ?>">
     <?php print $footer; ?>

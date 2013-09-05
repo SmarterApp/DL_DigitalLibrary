@@ -9,6 +9,33 @@ class AcquiaSPITestCase extends DrupalWebTestCase {
   protected $credentials_path;
   protected $settings_path;
   protected $status_report_url;
+  // Platform array keys.
+  protected $platformKeys = array('php', 'webserver_type', 'webserver_version', 'apache_modules', 'php_extensions', 'php_quantum', 'database_type', 'database_version', 'system_type', 'system_version', 'mysql');
+  protected $spiDataKeys = array(
+    'spi_data_version',
+    'site_key',
+    'modules',
+    'platform',
+    'quantum',
+    'system_status',
+    'failed_logins',
+    '404s',
+    'watchdog_size',
+    'watchdog_data',
+    'last_nodes',
+    'last_users',
+    'extra_files',
+    'ssl_login',
+    'file_hashes',
+    'hashes_md5',
+    'hashes_sha1',
+    'fileinfo',
+    'distribution',
+    'base_version',
+    'build_data',
+    'roles',
+    'uid_0_present',
+  );
 
   public static function getInfo() {
     // Note: getInfo() strings are not translated with t().
@@ -72,7 +99,6 @@ class AcquiaSPITestCase extends DrupalWebTestCase {
     // Send SPI data.
     $this->drupalGet($this->status_report_url);
     $this->assertText($this->acquiaSPIStrings('spi-status-text'), 'SPI explanation text exists');
-    $this->assertText($this->acquiaSPIStrings('spi-not-sent'), 'SPI data has not been sent');
     $this->clickLink($this->acquiaSPIStrings('spi-send-text'));
     $this->assertNoText($this->acquiaSPIStrings('spi-data-sent'), 'SPI data was not sent');
     $this->assertText($this->acquiaSPIStrings('spi-data-sent-error'), 'Page says there was an error sending data');
@@ -91,38 +117,30 @@ class AcquiaSPITestCase extends DrupalWebTestCase {
     $this->assertNoText($this->acquiaSPIStrings('spi-not-sent'), 'SPI does not say "data has not been sent"');
   }
 
-  public function testAcquiaSPIGet() {
-    $spi_default_keys = array(
-      'spi_data_version',
-      'site_key',
-      'modules',
-      'platform',
-      'quantum',
-      'system_status',
-      'failed_logins',
-      '404s',
-      'watchdog_size',
-      'watchdog_data',
-      'last_nodes',
-      'last_users',
-      'extra_files',
-      'ssl_login',
-      'file_hashes',
-      'hashes_md5',
-      'hashes_sha1',
-      'fileinfo',
-      'distribution',
-      'base_version',
-      'build_data',
-      'roles',
-      'uid_0_present',
+  public function testAcquiaSPIDataStore() {
+    $data = array(
+      'foo' => 'bar',
     );
+    acquia_spi_data_store_set(array('testdata' => $data));
+    $stored_data = acquia_spi_data_store_get(array('testdata'));
+    $diff = array_diff($stored_data['testdata'], $data);
+    $this->assertTrue(empty($diff), 'Storage can store simple array');
+
+    $this->drupalGet('/node');
+    // Platform data should have been written.
+    $stored = acquia_spi_data_store_get(array('platform'));
+    $this->pass(var_export($stored, TRUE));
+    $diff = array_diff(array_keys($stored['platform']), $this->platformKeys);
+    $this->assertTrue(empty($diff), 'Platform element contains expected keys');
+  }
+
+  public function testAcquiaSPIGet() {
     // Test acquia_spi_get().
     $spi_data = acquia_spi_get();
     $valid = is_array($spi_data);
     $this->assertTrue($valid, 'acquia_spi_get() returns an array');
     if ($valid) {
-      foreach ($spi_default_keys as $key) {
+      foreach ($this->spiDataKeys as $key) {
         if (!array_key_exists($key, $spi_data)) {
           $valid = FALSE;
           break;
@@ -133,8 +151,22 @@ class AcquiaSPITestCase extends DrupalWebTestCase {
       $this->assertTrue(!empty($spi_data['spi_data_version']), 'SPI data version is set');
       $vars = drupal_json_decode($spi_data['system_vars']);
       $this->assertTrue(is_array($vars), 'SPI data system_vars is a JSON-encoded array');
-      $this->pass(var_export($vars, TRUE));
       $this->assertTrue(isset($vars['user_admin_role']), 'user_admin_role included in SPI data');
+      $this->assertTrue(!empty($spi_data['modules']), 'Modules is not empty');
+      $modules = array('status', 'name', 'version', 'package', 'core', 'project', 'filename', 'module_data');
+      $diff = array_diff(array_keys($spi_data['modules'][0]), $modules);
+      $this->assertTrue(empty($diff), 'Module elements have expected keys');
+      $diff = array_diff(array_keys($spi_data['platform']), $this->platformKeys);
+      $this->assertTrue(empty($diff), 'Platform contains expected keys');
+      $this->assertTrue(isset($spi_data['platform']['php_quantum']['SERVER']), 'Global server data included in SPI data');
+      $this->assertTrue(isset($spi_data['platform']['php_quantum']['SERVER']['SERVER_SOFTWARE']), 'Server software data set within global server info');
+      $this->assertTrue(isset($spi_data['platform']['mysql']['Select_scan']), 'Mysql info in platform contains an expected key');
+      $this->assertTrue(isset($spi_data['file_hashes']['includes/database']), 'File hashes array contains an expected key');
+      $roles = drupal_json_decode($spi_data['roles']);
+      $this->assertTrue(is_array($roles), 'Roles is an array');
+      $this->assertTrue(isset($roles[1]) && $roles[1] === 'anonymous user', 'Roles array contains anonymous user');
+      $this->assertTrue(isset($spi_data['fileinfo']['scripts/drupal.sh']), 'Fileinfo contains an expected key');
+      $this->assertTrue(strpos($spi_data['fileinfo']['scripts/drupal.sh'], 'mt') === 0, 'Fileinfo element begins with expected value');
     }
   }
 

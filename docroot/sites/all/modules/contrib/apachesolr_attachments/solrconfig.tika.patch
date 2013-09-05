@@ -1,21 +1,9 @@
-Index: solrconfig.xml
-===================================================================
-RCS file: /cvs/drupal-contrib/contributions/modules/apachesolr/solrconfig.xml,v
-retrieving revision 1.1.2.20
-diff -u -p -r1.1.2.20 solrconfig.xml
---- solrconfig.xml	14 Oct 2009 13:28:40 -0000	1.1.2.20
-+++ solrconfig.xml	26 Oct 2009 00:12:24 -0000
-@@ -357,7 +357,7 @@
-     -->
-   <requestDispatcher handleSelect="true" >
-     <!--Make sure your system has some authentication before enabling remote streaming!  -->
--    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048" />
-+    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="8192" />
- 
-     <!-- Set HTTP caching related parameters (for proxy caches and clients).
-           
-@@ -515,6 +515,16 @@
-     </lst>
+diff --git a/solrconfig.xml b/solrconfig.xml
+index 2525202..fecb944 100644
+--- a/solrconfig.xml
++++ b/solrconfig.xml
+@@ -1340,6 +1340,17 @@
+     </arr>
    </requestHandler>
  
 +  <!-- An extract-only path for accessing the tika utility -->
@@ -28,6 +16,7 @@ diff -u -p -r1.1.2.20 solrconfig.xml
 +      <bool name="extractOnly">true</bool>
 +    </lst>
 +  </requestHandler>
++
+   <!-- Highlighting Component
  
-   <!--
-    Search components are registered to SolrCore and used by Search Handlers
+        http://wiki.apache.org/solr/HighlightingParameters

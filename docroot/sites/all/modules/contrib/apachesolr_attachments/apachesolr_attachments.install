@@ -20,6 +20,10 @@ function apachesolr_attachments_uninstall() {
   variable_del('apachesolr_attachments_excluded_extensions');
   variable_del('apachesolr_attachments_extract_using');
   variable_del('apachesolr_attachments_excluded_mime');
+
+ db_delete('variable')
+   ->condition('name', db_like('apachesolr_attachments_enity_bundle_indexing_') , '%', 'LIKE')
+   ->execute();
 }
 
 /**

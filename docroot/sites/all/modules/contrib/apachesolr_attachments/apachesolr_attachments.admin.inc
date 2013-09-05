@@ -95,6 +95,39 @@ function apachesolr_attachments_settings_submit($form, &$form_state) {
 }
 
 /**
+ * Form callback for content type settings.
+*/
+function apachesolr_attachments_entity_bundle_settings() {
+  $env_id = apachesolr_default_environment();
+
+  foreach (entity_get_info() as $entity_type => $entity_info) {
+    if (!empty($entity_info['apachesolr']['indexable'])) {
+      $indexed_bundles = apachesolr_get_index_bundles($env_id, $entity_type);
+
+      foreach ($indexed_bundles as $bundle) {
+        if ($bundle != 'file') {
+          $form['apachesolr_attachments_entity_bundle_indexing_' . $bundle] = array(
+            '#type' => 'select',
+            /* NOTE: If http://drupal.org/node/969180 ever gets committed we could use that function instead
+            and remove apachesolr_attachments_entity_bundle_label from the bottom of this file.
+            */
+            '#title' => apachesolr_attachments_entity_bundle_label($entity_type, $bundle),
+            '#default_value' => variable_get('apachesolr_attachments_entity_bundle_indexing_' . $bundle, 'seperate'),
+            '#options' => array(
+              'seperate' => t('Attachments as separate entities'),
+              'parent' => t('Attachments as part of parent entity'),
+              'none' => t("Don't index attachments"),
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  return system_settings_form($form);
+}
+
+/**
  * Form builder for the Apachesolr Attachments actions form.
  *
  */
@@ -266,4 +299,32 @@ function apachesolr_attachments_delete_index() {
     watchdog('Apache Solr Attachments', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
   }
   return FALSE;
+}
+
+
+/**
+ * NOTE: IF http://drupal.org/node/969180 ever gets committed we could do away with this function
+ *
+ * Returns the label of a bundle.
+ *
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity for which we want the human-readable label of its bundle.
+ *
+ * @return
+ *   A string with the human-readable name of the bundle, or FALSE if not specified.
+ */
+function apachesolr_attachments_entity_bundle_label($entity_type, $bundle) {
+  $labels = &drupal_static(__FUNCTION__, array());
+
+  if (empty($labels)) {
+    foreach (entity_get_info() as $entity_t => $entity_info) {
+      foreach ($entity_info['bundles'] as $b => $bundle_info) {
+        $labels[$entity_t][$b] = !empty($bundle_info['label']) ? $bundle_info['label'] : $b;
+      }
+    }
+  }
+
+  return isset($labels[$entity_type][$bundle]) ? $labels[$entity_type][$bundle] : $bundle;
 }

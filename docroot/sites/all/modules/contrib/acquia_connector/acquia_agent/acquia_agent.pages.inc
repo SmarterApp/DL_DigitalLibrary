@@ -114,21 +114,18 @@ function acquia_agent_migrate_form($form, &$form_state) {
       '#markup' => t('Available environment for migration: %env', array('%env' => array_pop($envs))),
     );
   }
-  $last_migration = variable_get('acquia_agent_cloud_migration', array());
-  if (!empty($last_migration)) {
-    $form['migrate_files'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Migrate files directory'),
-      '#description' => t('Include files directory and all files in migration. If you are experiencing migration errors it is recommended you do not send the files directory.'),
-      '#default_value' => variable_get('acquia_migrate_files', 1),
-    );
-    $form['reduce_db_size'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Reduce database export size'),
-      '#description' => t('Reduce the database export size by excluding the data from cache, session, and watchdog tables. If you are experiencing migration errors this is recommended. Table structure will still be exported.'),
-      '#default_value' => 0,
-    );
-  }
+  $form['migrate_files'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Migrate files directory'),
+    '#description' => t('Include files directory and all files in migration. If you are experiencing migration errors it is recommended you do not send the files directory.'),
+    '#default_value' => variable_get('acquia_migrate_files', 1),
+  );
+  $form['reduce_db_size'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Reduce database export size'),
+    '#description' => t('Reduce the database export size by excluding the data from cache, session, and watchdog tables. If you are experiencing migration errors this is recommended. Table structure will still be exported.'),
+    '#default_value' => 0,
+  );
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -287,7 +284,7 @@ function acquia_agent_automatic_setup_form_validate($form, &$form_state) {
       form_set_error('email', t('Account not found on the Acquia Network.'));
     }
     else {
-      // Build hashed password from account password settings for further 
+      // Build hashed password from account password settings for further
       // XML-RPC communications with acquia.com.
       $pass = _acquia_agent_hash_password_crypt($result['algorithm'], $form_state['values']['pass'], $result['hash_setting'], $result['extra_md5']);
       $form_state['pass'] = $pass;
@@ -703,4 +700,23 @@ function acquia_agent_an_info_header() {
   $output .=  '</div>';
   $output .= '</div>';
   return $output;
+}
+
+/**
+ * Returns basic site information in JSON.
+ */
+function acquia_agent_site_status() {
+  // We don't want this page cached.
+  drupal_page_is_cacheable(FALSE);
+  $data = array(
+    'version' => '1.0',
+    'data' => array(
+      'maintenance_mode' => (bool) variable_get('maintenance_mode', 0),
+      'cache' => (bool) variable_get('cache', 0),
+      'block_cache' => (bool) variable_get('block_cache', 0),
+    ),
+  );
+
+  drupal_json_output($data);
+  drupal_exit();
 }

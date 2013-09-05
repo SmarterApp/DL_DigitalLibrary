@@ -23,6 +23,10 @@ define('ACQTEST_ID', 'TEST_AcquiaConnectorTestID');
 define('ACQTEST_KEY', 'TEST_AcquiaConnectorTestKey');
 define('ACQTEST_ERROR_ID', 'TEST_AcquiaConnectorTestIDErr');
 define('ACQTEST_ERROR_KEY', 'TEST_AcquiaConnectorTestKeyErr');
+define('ACQTEST_EXPIRED_ID', 'TEST_AcquiaConnectorTestIDExp');
+define('ACQTEST_EXPIRED_KEY', 'TEST_AcquiaConnectorTestKeyExp');
+define('ACQTEST_503_ID', 'TEST_AcquiaConnectorTestID503');
+define('ACQTEST_503_KEY', 'TEST_AcquiaConnectorTestKey503');
 if (!defined('ACQUIA_DEVELOPMENT_NOSSL')) {
   define('ACQUIA_DEVELOPMENT_NOSSL', TRUE);
 }
@@ -107,7 +111,7 @@ function acquia_connector_test_spi_definition($arg_version) {
 }
 
 function acquia_connector_test_upload() {
-  
+
 }
 
 function acquia_connector_test_validate($data) {
@@ -218,7 +222,7 @@ function acquia_connector_test_subscription_name($data) {
     return $result;
   }
   if (!empty($data['body']['identifier'])) {
-    if ($data['body']['identifier'] != ACQTEST_ID && $data['body']['identifier'] != ACQTEST_ERROR_ID) {
+    if (strpos($data['body']['identifier'], 'TEST_') !== 0) {
       return xmlrpc_error(ACQTEST_SUBSCRIPTION_VALIDATION_ERROR, t('Subscription not found'));
     }
     $result = array();
@@ -244,7 +248,7 @@ function acquia_connector_test_cloud_migration_environments($data) {
     return $result;
   }
   if (!empty($data['body']['identifier'])) {
-    if ($data['body']['identifier'] != ACQTEST_ID && $data['body']['identifier'] != ACQTEST_ERROR_ID) {
+    if (strpos($data['body']['identifier'], 'TEST_') !== 0) {
       return xmlrpc_error(ACQTEST_SUBSCRIPTION_VALIDATION_ERROR, t('Subscription not found'));
     }
   }
@@ -357,22 +361,52 @@ function acquia_connector_test_validate_authenticator($data) {
     return $result;
   }
 
-  $key = $data['authenticator']['identifier'] == ACQTEST_ID ? ACQTEST_KEY : ACQTEST_ERROR_KEY;
+  switch ($data['authenticator']['identifier']) {
+    case ACQTEST_ID:
+      $key = ACQTEST_KEY;
+      break;
+    case ACQTEST_EXPIRED_ID:
+      $key = ACQTEST_EXPIRED_KEY;
+      break;
+    case ACQTEST_503_ID:
+      $key = ACQTEST_503_KEY;
+      break;
+    default:
+      $key = ACQTEST_ERROR_KEY;
+      break;
+  }
   $hash = _acquia_agent_hmac($key, $data['authenticator']['time'], $data['authenticator']['nonce'], $data['body']);
   $hash_simple = _acquia_agent_hmac($key, $data['authenticator']['time'], $data['authenticator']['nonce'], array());
 
-  if (($hash != $data['authenticator']['hash']) && ($hash_simple != $data['authenticator']['hash'])) {
+  if (($hash !== $data['authenticator']['hash']) && ($hash_simple != $data['authenticator']['hash'])) {
     $result->code = ACQSUBSCRIPTION_VALIDATION_ERROR;
     $result->message = t('HMAC validation error: ')."{$hash} != {$data['authenticator']['hash']}";
     $result->is_error = TRUE;
     return $result;
   }
-  
+  if ($key === ACQTEST_EXPIRED_KEY) {
+    $result->code = ACQTEST_SUBSCRIPTION_EXPIRED;
+    $result->message = t('Subscription expired.');
+    $result->is_error = TRUE;
+    return $result;
+  }
+
+  // Record connections.
+  $connections = variable_get('acquia_connector_test_connections' . $data['authenticator']['identifier'], 0);
+  $connections++;
+  variable_set('acquia_connector_test_connections' . $data['authenticator']['identifier'], $connections);
+  if ($connections == 3 && $data['authenticator']['identifier'] == ACQTEST_503_ID) {
+    // Trigger a 503 response on 3rd call to this (1st is
+    // acquia.agent.subscription and 2nd is acquia.agent.validate)
+    drupal_add_http_header('Status', '503 Server Error');
+    print '';
+    exit;
+  }
   $result->is_error = FALSE;
   $result->body['active'] = 1;
   $result->body['href'] = 'TEST';
   $result->body['expiration_date']['value'] = '2023-10-08T06:30:00';
-  $result->body['product'] = ACQTEST_ID;
+  $result->body['product'] = '91990';
   $result->body['derived_key_salt'] = $data['authenticator']['identifier'] . '_KEY_SALT';
   $result->body['update_service'] = 1;
   $result->body['search_service_enabled'] = 1;
@@ -388,4 +422,20 @@ function acquia_connector_test_validate_authenticator($data) {
   $result->authenticator['time'] += 1;
 
   return $result;
+}
+
+function _acquia_connector_test_increment_requests() {
+  $requests = variable_get('acquia_connector_test-requests', 0);
+  $requests++;
+  variable_set('acquia_connector_test-requests', $requests);
+}
+
+function _acquia_connector_test_http_request_wrapper($url, $options) {
+  _acquia_connector_test_increment_requests();
+  // Unset wrapper so actual request can occur.
+  variable_set('drupal_http_request_function', FALSE);
+  $response = drupal_http_request($url, $options);
+  // Reset this wrapper.
+  variable_set('drupal_http_request_function', '_acquia_connector_test_http_request_wrapper');
+  return $response;
 }

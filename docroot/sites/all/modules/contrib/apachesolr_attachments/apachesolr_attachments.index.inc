@@ -88,7 +88,7 @@ function apachesolr_attachments_get_attachment_text($file) {
     }
     catch (Exception $e) {
       // Exceptions from Solr may be transient, or indicate a problem with a specific file.
-      watchdog('Apache Solr Attachments', "Exception occurred sending %filepath to Solr\n!message", array('%filepath' => $file->uri, '!message' => nl2br(check_plain($e->getMessage()))), WATCHDOG_ERROR);
+      watchdog('Apache Solr Attachments', "Exception occurred sending %filepath to Solr\n!message", array('%filepath' => $filepath, '!message' => nl2br(check_plain($e->getMessage()))), WATCHDOG_ERROR);
       return FALSE;
     }
   }
@@ -194,6 +194,11 @@ function apachesolr_attachments_add_file_usage(stdClass $stub_file, $parent_enti
     // We do have to load the file, because there is no way to get the
     // bundle type, and media adds many bundles, so fixing this here
     $file = file_load($stub_file->fid);
+
+    // Test if file is correctly loaded. Otherwise, return immediately.
+    if (!$file) {
+      return;
+    }
     $indexer_table = apachesolr_get_indexer_table('file');
     // For non-media files there is no such thing as a defined type/bundle
     // Define it here, so we can have a seamless integration between media and
