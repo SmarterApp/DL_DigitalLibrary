@@ -615,7 +615,7 @@ class Hooks extends \devtools\Hooks {
   protected function _check_resource_review_state($review) {
     if ($node = node_load($review->node_id)) {
       // if the node isn't in review yet, set it to being_reviewed
-      if (isset($node->workbench_moderation['my_revision']->state) && $node->workbench_moderation['my_revision']->state == 'needs_review') {
+      if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
         workbench_moderation_moderate($node, 'being_reviewed');
       }
     }
