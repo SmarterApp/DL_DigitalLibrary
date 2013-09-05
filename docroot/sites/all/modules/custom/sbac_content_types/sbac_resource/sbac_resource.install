@@ -1,5 +1,64 @@
 <?php
 
+/**
+ * Implementation of hook_install()
+ */
+
+function sbac_resource_install() {
+  if (db_table_exists('node_user_paradata') == FALSE) {
+    drupal_install_schema('node_user_paradata');
+  }
+}
+
+/**
+ * Implementation of hook_uninstall()
+ */
+
+function sbac_resource_uninstall() {
+  $delete = db_query("drop table if exists `node_user_paradata`");
+}
+
+/**
+ * Implementation of hook_schema()
+ */
+
+function node_user_paradata_schema() {
+  $schema['node_user_paradata'] = array(
+    'description' => t('Stores data for resource hits by uid.'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the resource'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who viewed the resource'),
+      ),
+      'hits' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('A counter by uid/nid for views of this nid'),
+      ),
+    ),
+    'primary key' => array('nid', uid),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+    ),
+  );
+  return $schema;
+}
 
 /**
  * Implements of hook_update_N().
