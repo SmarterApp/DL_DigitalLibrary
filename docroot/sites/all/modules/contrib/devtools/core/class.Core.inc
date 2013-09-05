@@ -52,6 +52,7 @@ class Core extends \devtools\Base {
             $hooksObj->setPath($module_path . '/components/' . $component);
             $hooksObj->setComponentsPath($module_path . '/components');
             $hooksObj->setModulePath($module_path);
+            $hooksObj->postInit();
 
             $return_value = $hooksObj->{$method}($a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10);
 

@@ -32,4 +32,12 @@ class Hooks extends \devtools\Base {
   function setModulePath($path) {
     $this->_module_path = $path;
   }
+
+  /**
+   * Placeholder for post-initialization operations.
+   * @return [type] [description]
+   */
+  function postInit() {
+    
+  }
 }

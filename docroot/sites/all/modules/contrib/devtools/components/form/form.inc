@@ -35,3 +35,19 @@ function form_get_op($form_state) {
 
   return $operation;
 }
+
+/**
+ * Returns the 'numerical' children elements.
+ * @param  [type] $element [description]
+ * @return [type]          [description]
+ */
+function element_num_children(&$element) {
+  $children = array();
+  foreach ($element as $key => &$value) {
+    if ($key{0} !== '#' && is_numeric($key) && (is_array($value) || is_object($value))) {
+      $children[$key] = &$value;
+    }
+  }
+
+  return $children;
+}
