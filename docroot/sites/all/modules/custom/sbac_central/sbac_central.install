@@ -575,7 +575,7 @@ function sbac_central_update_7051() {
 }
 
 /**
- * Disables workbench email module.
+ * Disables sbac paradata module.
  */
 function sbac_central_update_7052() {
   $modules = array(
