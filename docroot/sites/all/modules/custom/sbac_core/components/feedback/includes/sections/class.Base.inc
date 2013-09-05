@@ -85,6 +85,8 @@ class Base {
           'use-ajax',
           'use-dialog',
           'dialog-trigger-' . $this->_machine_name,
+          'button',
+          'medium',
         ),
         'id' => $trigger_id,
       ),
