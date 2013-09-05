@@ -567,19 +567,34 @@ function _sbac_resource_publisher_links($fields) {
         global $user;
         $feedback = _sbac_resource_determine_feedback($nid, 'post', $user->uid, 1, 0, 1, 'single');
         if ($feedback) {
-          $url = url('node/' . $nid, array('absolute' => TRUE));
+          $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post'));
+          $link = l('Continue Review', $url);
+          $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
+          $variables['links'][] = $link;
+          $variables['text'] = t('Needs Posting');
+        }
+        else {
           $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
           $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
           $variables['text'] = t('Being Reviewed');
         }
-        else {
-          $url = url('node/' . $nid, array('absolute' => TRUE));
-          $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
-          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
-          $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
-          $variables['text'] = t('Needs Posting');
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         break;
       case 'published':
         $variables['sticky'] = FALSE;
@@ -709,7 +724,8 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
   $trigger_id = $stub . '-trigger-' . $count;
 
   drupal_add_library('dialog', 'dialog');
-  $link_text = t('Start Review', array('!hours' => FEEDBACK_REVIEW_TIMEOUT));
+
+  $link_text = t('Start Review');
   if ($style == 'button') {
     $content = l($link_text, 'node/' . $node->nid . '/review/' . $stub . '/start/' . $trigger_id, array(
       'attributes' => array(
