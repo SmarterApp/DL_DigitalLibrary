@@ -63,16 +63,16 @@
   <!-- Check for Zepto support, load jQuery if necessary -->
   <meta name="google-site-verification" content="xei4v99wq11JW29kQC1fIk8YLIQeCrp7ckduBZOKgEg" />
   <!-- hide the page at the outset.  This is designed to prevent the site from being loaded into a frame -->
-  <style>
-	html {display: none;}
-  </style>
-  <script type='text/javascript'>
-	if (self == top) {
-		document.documentElement.style.display='block';
-	} else {
-		top.location=self.location;
-	}
-  </script>
+<!--  <style>-->
+<!--	html {display: none;}-->
+<!--  </style>-->
+<!--  <script type='text/javascript'>-->
+<!--	if (self == top) {-->
+<!--		document.documentElement.style.display='block';-->
+<!--	} else {-->
+<!--		top.location=self.location;-->
+<!--	}-->
+<!--  </script>-->
 </head>
 <body class="<?php print $classes; ?>" <?php print $attributes;?>>
   <div class="skip-link">
