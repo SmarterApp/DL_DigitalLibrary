@@ -59,9 +59,24 @@ class views_pdf_plugin_display extends views_plugin_display_page {
 
   /**
    * This function executes the PDF display.
-   *
    */
   function execute($path_to_store_pdf = '', $destination = 'I') {
+
+    // Defines external configuration for TCPDF library
+    $tcpdf_path = drupal_realpath(views_pdf_get_library('tcpdf'));
+    $cache_path = 'public://views_pdf_cache/';
+    if(file_prepare_directory($cache_path, FILE_CREATE_DIRECTORY) == TRUE){
+      global $base_url;
+      define('K_TCPDF_EXTERNAL_CONFIG', TRUE);
+      define('K_PATH_MAIN', dirname($_SERVER['SCRIPT_FILENAME']));
+      define('K_PATH_URL', $base_url);
+      define('K_PATH_FONTS', $tcpdf_path . '/fonts/');
+      define('K_PATH_CACHE', drupal_realpath($cache_path));
+      define('K_PATH_IMAGES', '');
+      define('K_BLANK_IMAGE', $tcpdf_path . '/images/_blank.png');
+      define('K_CELL_HEIGHT_RATIO', 1.25);
+      define('K_SMALL_RATIO', 2/3);
+    }
 
     if ($this->get_option('default_page_format') == 'custom') {
       if (preg_match('/([0-9]+)x([0-9]+)/', $this->get_option('default_page_format_custom'), $result)) {
@@ -93,6 +108,9 @@ class views_pdf_plugin_display extends views_plugin_display_page {
     $this->view->pdf->setDefaultTextAlign($this->get_option('default_text_align'));
     $this->view->pdf->setDefaultFontColor($this->get_option('default_font_color'));
 
+    $this->view->pdf->setViewsHeader($this->view->display_handler->render_header());
+    $this->view->pdf->setViewsFooter($this->view->display_handler->render_footer());
+
     $html = $this->view->render($this->display->id);
 
     if (!empty($html)) {
@@ -107,6 +125,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
       $path_to_store_pdf .= '.pdf';
     }
 
+    ob_clean();
     if ($destination == 'I') {
       echo $this->view->pdf->Output($path_to_store_pdf, $destination);
       exit();

@@ -39,7 +39,9 @@ class PdfTemplate extends FPDI {
   protected $addNewPageBeforeNextContent = FALSE;
   protected $elements = array();
   protected $headerFooterData = array();
+  protected $views_header = '';
   protected $view = NULL;
+  protected $views_footer = '';
   protected $headerFooterOptions = array();
   protected $lastWritingPage = 1;
   protected $lastWritingPositions;
@@ -138,20 +140,32 @@ class PdfTemplate extends FPDI {
     );
   }
 
+  public function setViewsHeader($header) {
+    $this->views_header = $header;
+  }
   /**
    * This method must be overriden, in the other case, some
    * output is printed to the header.
    */
   function Header() {
-
+    if (!empty($this->views_header)) {
+      $this->writeHTML($this->views_header);
+    }
   }
+
+  public function setViewsFooter($footer) {
+    $this->views_footer = $footer;
+   }
 
   /**
    * This method must be overriden, in the other case, some
    * output is printed to the footer.
    */
   function Footer() {
-
+    $this->SetY(-$this->bMargin);
+    if (!empty($this->views_footer)) {
+      $this->writeHTML($this->views_footer);
+    }
   }
 
   /**
@@ -218,7 +232,7 @@ class PdfTemplate extends FPDI {
       'corner' => 'top_left',
       'x' => 0,
       'y' => 0,
-      'object' => '',
+      'object' => 'last_position',
       'width' => 0,
       'height' => 0,
     );
@@ -372,10 +386,11 @@ class PdfTemplate extends FPDI {
 
     }
 
-    $this->SetX($x);
-    $this->SetY($y);
-
-    $this->renderRow($x, $y, $row, $options, $view, $key, $printLabels);
+    if ($key !== NULL && $view->field[$key]->theme($row)) {
+      $this->SetX($x);
+      $this->SetY($y);
+      $this->renderRow($x, $y, $row, $options, $view, $key, $printLabels);
+    }
   }
 
   protected function renderRow($x, $y, $row, $options, &$view = NULL, $key = NULL, $printLabels = TRUE) {
@@ -394,7 +409,7 @@ class PdfTemplate extends FPDI {
       return;
     }
 
-    if (!empty($view->field[$key]->options['exclude'])) {
+    if (!empty($view->field[$key]->options['exclude']) || (empty($content) && $view->field[$key]->options['hide_empty'])) {
       return '';
     }
 
@@ -425,7 +440,12 @@ class PdfTemplate extends FPDI {
       $patternFile = views_pdf_get_library('tcpdf') . '/hyphenate_patterns/' . $patternFile;
 
       if (file_exists($patternFile)) {
-        $hyphen_patterns = $this->getHyphenPatternsFromTEX($patternFile);
+        if (method_exists('TCPDF_STATIC', 'getHyphenPatternsFromTEX')) {
+          $hyphen_patterns = TCPDF_STATIC::getHyphenPatternsFromTEX($patternFile);
+        }
+        else {
+          $hyphen_patterns = $this->getHyphenPatternsFromTEX($patternFile);
+        }
 
         // Bugfix if you like to print some html code to the PDF, we
         // need to prevent the replacement of this tags.
@@ -451,10 +471,10 @@ class PdfTemplate extends FPDI {
       $prefix .= ' ';
     }
 
-    $font_size = !isset($options['text']['font_size']) ? $this->defaultFontSize : $options['text']['font_size'] ;
+    $font_size = empty($options['text']['font_size']) ? $this->defaultFontSize : $options['text']['font_size'] ;
     $font_family = ($options['text']['font_family'] == 'default' || empty($options['text']['font_family'])) ? $this->defaultFontFamily : $options['text']['font_family'];
     $font_style = is_array($options['text']['font_style']) ? $options['text']['font_style'] : $this->defaultFontStyle;
-    $textColor = isset($options['text']['color']) ? $this->parseColor($options['text']['color']) : $this->parseColor($this->defaultFontColor);
+    $textColor = !empty($options['text']['color']) ? $this->parseColor($options['text']['color']) : $this->parseColor($this->defaultFontColor);
 
 
     $w = $options['position']['width'];
@@ -472,22 +492,23 @@ class PdfTemplate extends FPDI {
     $valign = 'T';
     $fitcell = FALSE;
 
-    // Run eval before
-    if (!empty($options['render']['eval_before']) && module_exists("php")) {
-      php_eval($options['render']['eval_before']);
+    // Run eval before.
+    if ($options['render']['bypass_eval_before'] && !empty($options['render']['eval_before'])) {
+      eval($options['render']['eval_before']);
     }
- 
+    elseif (!empty($options['render']['eval_before']))  {
+      $content = php_eval($options['render']['eval_before']);
+    }
 
-    // Add css if there is a css file set and stripHTML is not
-    // active
+    // Add css if there is a css file set and stripHTML is not active.
     if (!empty($css_file) && is_string($css_file) && !$stripHTML && $ishtml && !empty($content)) {
-      $content = '<link type="text/css" rel="stylesheet" media="all" href="' . $css_file . '" />' . "\n" . $content;
+      $content = '<link type="text/css" rel="stylesheet" media="all" href="' . $css_file . '" />' . PHP_EOL . $content;
     }
 
-    // Set Text Color
+    // Set Text Color.
     $this->SetTextColorArray($textColor);
 
-    // Set font
+    // Set font.
     $this->SetFont($font_family, implode('', $font_style), $font_size);
 
     // Save the last page before starting writing, this
@@ -502,15 +523,18 @@ class PdfTemplate extends FPDI {
     // Write the content of a field to the pdf file:
     $this->MultiCell($w, $h, $prefix . $content, $border, $align, $fill, $ln, $x, $y, $reseth, $stretch, $ishtml, $autopadding, $maxh, $valign, $fitcell);
 
-    // Reset font to default
+    // Reset font to default.
     $this->SetFont($this->defaultFontFamily, implode('', $this->defaultFontStyle), $this->defaultFontSize);
 
-    // Run eval after
-    if (!empty($options['render']['eval_after']) && module_exists("php")) {
-      php_eval($options['render']['eval_after']);
+    // Run eval after.
+    if ($options['render']['bypass_eval_after'] && !empty($options['render']['eval_alter'])) {
+      eval($options['render']['eval_after']);
+    }
+    elseif (!empty($options['render']['eval_alter'])) {
+      $content = php_eval($options['render']['eval_after']);
     }
 
-    // Write Coordinates of element
+    // Write Coordinates of element.
     $this->elements[$key] = array(
       'x' => $x,
       'y' => $y,

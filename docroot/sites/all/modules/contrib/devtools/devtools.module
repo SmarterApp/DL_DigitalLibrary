@@ -73,13 +73,6 @@ function devtools_library_alter(&$libraries, $module) {
   \devtools\Core::hook('library_alter', NULL, $libraries, $module);
 }
 
-/**
- * Implements hook_js_alter().
- */
-function devtools_js_alter(&$javascript) {
-  \devtools\Core::hook('js_alter', NULL, $javascript);
-}
-
 /*----------------------------------------------------------------------------
       MODULE HOOKS
 ----------------------------------------------------------------------------*/
@@ -145,9 +138,7 @@ function devtools_devtools_components() {
     'field' => array(),
     'form' => array(),
     'http' => array(),
-    'jquery' => array(),
     'js_suppress_alert' => array(),
-    'state_required' => array(),
     'string' => array(),
     'taxonomy' => array(),
     'ui' => array(),

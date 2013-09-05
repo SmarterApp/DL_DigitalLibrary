@@ -152,36 +152,6 @@ function field_entity_value($entity, $field) {
 }
 
 /**
- * Sets value for specified field.
- * 
- * @param  [type]  $entity [description]
- * @param  [type]  $field  [description]
- * @param  [type]  $value  [description]
- * @param  integer $index  [description]
- * @param  string  $source [description]
- * @return [type]          [description]
- */
-function field_set_value($entity, $field, $value, $index = 0, $source = 'value') {
-  list($handler, $handler_data) = devtools_func_handler(__FUNCTION__, func_get_args());
-
-  if ($handler) {
-    return $handler_data;
-  }
-  else {
-    $entity = (array) $entity;
-
-    $lang = LANGUAGE_NONE;
-    if (isset($entity['language'])) {
-      $lang = $entity['language'];
-    }
-
-    $entity[$field][$lang][$index][$source] = $value;
-
-    return $entity;
-  }
-}
-
-/**
  * Returns the allowed values for specified field.
  * @param  [type] $field [description]
  * @return [type]        [description]
