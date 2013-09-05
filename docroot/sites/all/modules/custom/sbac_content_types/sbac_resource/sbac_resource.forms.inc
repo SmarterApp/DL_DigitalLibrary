@@ -77,7 +77,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_submit_resource($form, $form_state);
     _sbac_resource_form_required_fields($form, $form_state);
     _sbac_resource_form_remove_elements($form, $form_state);
-    _sbac_resource_clean_workbench_moderation($form, $form_state);
+    // _sbac_resource_clean_workbench_moderation($form, $form_state);
   }
 }
 

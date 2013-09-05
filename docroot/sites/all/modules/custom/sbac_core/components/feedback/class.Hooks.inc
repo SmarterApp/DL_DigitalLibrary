@@ -587,6 +587,9 @@ class Hooks extends \devtools\Hooks {
         '#access' => user_access('administer nodes'),
       );
     }
+    elseif (in_array($moderation_state, array('creation', workbench_moderation_state_none()))) {
+      _sbac_resource_clean_workbench_moderation($form, $form_state);
+    }
   }
 
   /*----------------------------------------------------------------------------

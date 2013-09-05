@@ -276,9 +276,6 @@ function resource_access($op, $node, $account = NULL) {
       }
     }
     elseif (in_array($op, array('view post'))) {
-      // dsmm($node->workbench_moderation['current']->state);
-      // dsmm($node->workbench_moderation);
-
       if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
         return TRUE;
       }
