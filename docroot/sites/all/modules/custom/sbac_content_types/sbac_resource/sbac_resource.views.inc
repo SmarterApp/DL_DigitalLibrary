@@ -90,6 +90,7 @@ function sbac_resource_views_post_execute(&$view) {
       }
       else {
         //@TODO: If no results return the no results error. But something...haha.
+        $view->result = array();
       }
     }
   }
