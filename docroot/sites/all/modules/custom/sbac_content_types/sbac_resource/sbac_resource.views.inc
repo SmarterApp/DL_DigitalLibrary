@@ -47,13 +47,12 @@ function sbac_resource_views_query_alter(&$view, &$query) {
  */
 function sbac_resource_views_post_execute(&$view) {
   if ($view->name == 'resources' && ($view->current_display == 'grid_view' || $view->current_display == 'list_view')) {
-    $search_string = $_SESSION['sbac-search-keywords'];
-    if ($search_string != NULL) {
+    if (isset($_SESSION['sbac-search-keywords']) && $_SESSION['sbac-search-keywords'] != '') {
       // Search apache solr for keyword.
       $sr_view = views_get_view('search_resources');
       $sr_view->set_display('search');
       $view_filters = $sr_view->display_handler->get_option('filters');
-      $view_filters['keyword']['value'] = $search_string;
+      $view_filters['keyword']['value'] = apachesolr_clean_text($_SESSION['sbac-search-keywords']);
       $sr_view->display_handler->set_option('filters', $view_filters);
       $sr_view->pre_execute();
       $sr_view->execute();
@@ -67,11 +66,11 @@ function sbac_resource_views_post_execute(&$view) {
           $nids[] = $sr_result->entity_id;
         }
 
-        // Load up all the local data needed for display. Used a view to query.
+        // Load up all the local data needed for display since all i have is a nid. used views again.
         $data_results = views_get_view_result('resources', 'load_data', implode('+', $nids));
         if ($data_results) {
           if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
-            // Filters are set, append the keyword view results into the resource view.
+            // Category filters are set, append the keyword view results into the resource view.
             foreach ($view->result as $result) {
               foreach ($data_results as $data_result) {
                 if ($result->nid != $data_result->nid) {
@@ -82,12 +81,15 @@ function sbac_resource_views_post_execute(&$view) {
             $view->total_rows = count($view->result);
           }
           else {
-            // Filters are not set, remove results and only use the keyword view results.
+            // Category filters are not set, remove results and only use the keyword view results.
             $view->result = array();
             $view->result = $data_results;
             $view->total_rows = count($data_results);
           }
         }
+      }
+      else {
+        //@TODO: If no results return the no results error. But something...haha.
       }
     }
   }

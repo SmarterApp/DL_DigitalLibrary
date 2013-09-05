@@ -1593,7 +1593,7 @@ function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance,
           );
         }
         else {
-          $term = $item['taxonomy_term'];
+          $term = taxonomy_term_load($item['tid']);
           $uri = entity_uri('taxonomy_term', $term);
           $element[$delta] = array(
             '#type' => 'link',
