@@ -4,6 +4,15 @@
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/includes/sbac_media.formatters.inc';
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function sbac_media_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "file_entity" && $api == "file_default_displays") {
+    return array("version" => "1");
+  }
+}
+
+/**
  * Implements hook_media_internet_providers().
  */
 function sbac_media_media_internet_providers() {
@@ -82,20 +91,6 @@ function sbac_media_file_mimetype_mapping_alter(&$mapping) {
   $mapping['mimetypes'][] = 'video/slideshare';
 }
 
-/**
- * Implements hook_ctools_plugin_api().
- */
-function sbac_media_ctools_plugin_api($owner, $api) {
-  static $api_versions = array(
-    'file_entity' => array(
-      'file_default_displays' => 1,
-    ),
-  );
-  if (isset($api_versions[$owner][$api])) {
-    return array('version' => $api_versions[$owner][$api]);
-  }
-}
-
 /*
  * Helper function to create embed URLs because of different implmenetation
  */
@@ -125,79 +120,16 @@ function sbac_media_create_embed_url($file) {
 }
 
 /**
- * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ * Perform alterations on file formatters.
  *
- * @param $element
- * @param $form_state
- * @param $context
+ * Set related videos to false for youtube.
+ *
+ * @param $info
+ *   Array of information on file formatters exposed by
+ *   hook_file_formatter_info() implementations.
  */
-function sbac_media_field_widget_media_generic_form_alter(&$element, &$form_state, $context) {
-  if ($element['#bundle'] == 'resource' && $element['#field_name'] == 'field_file') {
-    if (isset($form_state['node']->field_document_id['und'][0])) { // if at least one file.
-//      $fake_files = sbac_media_create_fake_files($form_state['node']->field_document_id['und']);
-//      $context['items'] = array_merge($context['items'], $fake_files);
-    }
+function sbac_media_file_formatter_info_alter(&$info) {
+  if (isset($info['media_youtube_video'])) {
+    $info['media_youtube_video']['default_settings']['rel'] = FALSE;
   }
-}
-
-/**
- * Creates fake files for each document id in alfresco.
- *
- * @param $document_ids
- * @return array
- */
-function sbac_media_create_fake_files($document_ids) {
-  $fake_files = array();
-$count = 0;
-//    $fake_files[$count]['fid'] = 519; //514
-//    $fake_files[$count]['display'] = 1; //1
-//    $fake_files[$count]['description'] = NULL; //null
-//    $fake_files[$count]['uid'] = 103; //103
-//    $fake_files[$count]['filename'] = 'Sample.docx'; //Sample.docx
-//    $fake_files[$count]['uri'] = 'private://resource/nowhere.docx'; //public://resource/Sample_0.docx
-//    $fake_files[$count]['filemime'] = 'txt'; //video/mp4
-//    $fake_files[$count]['filesize'] = 123456; //28485
-//    $fake_files[$count]['status'] = 1; //1
-//    $fake_files[$count]['timestamp'] = 192383838; //2293939
-//    $fake_files[$count]['type'] = 'document'; //document (document, image, video, audio)
-//    $fake_files[$count]['entity_type'] = 'file'; //file
-//    $fake_files[$count]['entity_id'] = 519; //514
-//    $fake_files[$count]['rdf_mapping'] = array(); //array()
-//    $fake_files[$count]['metadata'] = array(); //array()
-//    $fake_files[$count]['alt'] = ''; //""
-//    $fake_files[$count]['title'] = ''; //""
-
-//  $fake_files['fid'] = 519; //514
-//  $fake_files['display'] = 1; //1
-//  $fake_files['description'] = NULL; //null
-//  $fake_files['uid'] = 103; //103
-//  $fake_files['filename'] = 'Sample.docx'; //Sample.docx
-//  $fake_files['uri'] = 'private://resource/nowhere.docx'; //public://resource/Sample_0.docx
-//  $fake_files['filemime'] = 'txt'; //video/mp4
-//  $fake_files['filesize'] = 123456; //28485
-//  $fake_files['status'] = 1; //1
-//  $fake_files['timestamp'] = 192383838; //2293939
-//  $fake_files['type'] = 'document'; //document (document, image, video, audio)
-//  $fake_files['entity_type'] = 'file'; //file
-//  $fake_files['entity_id'] = 519; //514
-//  $fake_files[$count]['rdf_mapping'] = array(); //array()
-//  $fake_files['metadata'] = array(); //array()
-//  $fake_files['alt'] = ''; //""
-//  $fake_files['title'] = ''; //""
-
-  return $fake_files;
-}
-
-function sbac_media_field_attach_load($entity_type, $entities, $age, $options) {
-//  $var = '';
-//  $fake_files = sbac_media_create_fake_files(array(1,2));
-//  $entities = array_merge($entities, $fake_files);
-}
-
-function sbac_media_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
-  $var = '';
-}
-
-function sbac_media_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  $var = '';
 }

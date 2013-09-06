@@ -212,13 +212,10 @@
   Drupal.behaviors.sbac_resource_license = {
     attach: function (context, settings) {
       // ye who useth field ID selectors to target Drupal's form elements shall
-      // be banished to the deepest, darkest room of shame and IE6
+      // be banished to the deepest, darkest pits of shame, and forced to use IE6
+      // for a month
 
-
-      // TODO: license theming - URL field on AJAX refresh is not populated
-
-
-      // prepare selectors
+      // prepare elements
       var specific_license_text = $('#field_static_license_text');
       var no_license_text = $('#no-license-text');
       var license_url = $('#sbac-resource-license-url');
@@ -226,11 +223,17 @@
       var user_name = $('#sbac-resource-user-name').children().val();
       var save_continue = $('#edit-save-continue');
 
-      // license change callback
+      /**
+       * Callback to trigger on license option set/change.
+       * @param  {[type]} val       Numerical value of chosen option.
+       * @param  {[type]} switching Boolena flag to specify whether we're switching 
+       *                            an option (true), or setting default (false).
+       * @return {[type]}           None.
+       */
       var change_option = function(val, switching) {
         if (typeof(switching) == 'undefined') {
-            switching = false;
-          }
+          switching = false;
+        }
 
         // start by hiding everything
         specific_license_text.hide();
@@ -262,6 +265,9 @@
           });
         }
 
+        // clear name fields
+        set_name_fields('');
+
         switch (val) {
           case 0:
             // set user's name
@@ -273,21 +279,16 @@
             break;
 
           case 1:
-            // clear name fields
-            set_name_fields('');
-
             // show license URL div
             license_url.show();
 
             break;
 
           case 2:
-            // clear name fields
-            set_name_fields('');
-
             // show no license text
             no_license_text.show();
 
+            // disable button
             save_continue.attr('disabled', 'disabled');
             save_continue.unbind('click');
 

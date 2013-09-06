@@ -82,7 +82,8 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Loops through the elements and picks the correct one.
+ * Adds option-specific classes to each child option for jQuery selection purposes.
+ * @see Drupal.behaviors.sbac_resource_license in sbac_resource.form.js
  *
  * @param array $element
  *   The element.
@@ -92,11 +93,6 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 function sbac_resource_form_license_after_build($element) {
   if ($children = element_num_children($element)) {
     foreach ($children as $key => &$child) {
-      $suffix = '';
-      if (isset($child['#suffix'])) {
-        $suffix = $child['#suffix'];
-      }
-
       $child['#attributes']['class'][] = 'license-option-' . $key;
     }
   }
@@ -1207,6 +1203,8 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     '#weight' => 40,
   );
 
+  sbac_resource_license_url($form, $form_state);
+
   global $user;
   $form['user_name'] = array(
     '#type' => 'hidden',
@@ -1246,12 +1244,11 @@ function _sbac_resource_form_materials(&$form, $form_state) {
  */
 function sbac_resource_license_url(&$form, &$form_state) {
   if (isset($form_state['values']['field_license']['und'][0]['tid'])) {
-    $term = taxonomy_term_load($form_state['values']['field_license']['und'][0]['tid']);
-    if ($term) {
-      $license_url = '';
+    if ($term = taxonomy_term_load($form_state['values']['field_license']['und'][0]['tid'])) {
+      $content = '';
 
       if ($term->description) {
-        $license_url = '
+        $content = '
           <div id="edit-field-license-url" class="form-item form-type-item">
             <label for="edit-field-license-url">' . t('License URL') . '</label>
           ' . l($term->description, $term->description) . '
@@ -1259,11 +1256,11 @@ function sbac_resource_license_url(&$form, &$form_state) {
         ';
       }
 
-      $prefix = '<div id="sbac-resource-license-url">' . $license_url . '</div>';
-      $form['group_license_information']['field_license_url']['#prefix'] = $prefix;
-      $form['group_license_information']['field_license_url']['#weight'] = 40;
+      $content = '<div id="sbac-resource-license-url">' . $content . '</div>';
+      $form['group_license_information']['field_license_url']['#markup'] = $content;
     }
   }
+
   return $form['group_license_information']['field_license_url'];
 }
 
