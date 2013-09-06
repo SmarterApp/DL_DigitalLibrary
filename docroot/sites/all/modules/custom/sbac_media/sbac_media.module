@@ -3,7 +3,14 @@
 // Hooks and callbacks for integrating with File Entity module for display.
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/includes/sbac_media.formatters.inc';
 
-include_once 'sbac_media.features.inc';
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function sbac_media_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "file_entity" && $api == "file_default_displays") {
+    return array("version" => "1");
+  }
+}
 
 /**
  * Implements hook_media_internet_providers().
@@ -110,4 +117,19 @@ function sbac_media_create_embed_url($file) {
       break;
   }
   return url($url, array('external' => TRUE));
+}
+
+/**
+ * Perform alterations on file formatters.
+ *
+ * Set related videos to false for youtube.
+ *
+ * @param $info
+ *   Array of information on file formatters exposed by
+ *   hook_file_formatter_info() implementations.
+ */
+function sbac_media_file_formatter_info_alter(&$info) {
+  if (isset($info['media_youtube_video'])) {
+    $info['media_youtube_video']['default_settings']['rel'] = FALSE;
+  }
 }

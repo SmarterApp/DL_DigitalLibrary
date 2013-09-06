@@ -153,6 +153,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 
   &:focus {
     background: rgba(191, 216, 229, 1);
+    color: rgba(0, 98, 152, 1);
   }
 }
 
@@ -1218,7 +1219,7 @@ a.tabledrag-handle .handle {
   label {
     margin: 10px 10px 10px 0;
   }
-  #edit-upload-upload {
+  #edit-upload-upload, #edit-upload-upload--2 {
     float: left;
     width: 30%;
     clear: left;
@@ -1227,7 +1228,7 @@ a.tabledrag-handle .handle {
     margin-bottom: 1em;
   }
 
-  #edit-upload-upload-button {
+  #edit-upload-upload-button, #edit-upload-upload-button--2 {
     float:right;
   }
 
