@@ -111,3 +111,18 @@ function sbac_media_create_embed_url($file) {
   }
   return url($url, array('external' => TRUE));
 }
+
+/**
+ * Perform alterations on file formatters.
+ *
+ * Set related videos to false for youtube.
+ *
+ * @param $info
+ *   Array of information on file formatters exposed by
+ *   hook_file_formatter_info() implementations.
+ */
+function sbac_media_file_formatter_info_alter(&$info) {
+  if (isset($info['media_youtube_video'])) {
+    $info['media_youtube_video']['default_settings']['rel'] = FALSE;
+  }
+}
