@@ -370,3 +370,28 @@ function resource_field_label($field_name) {
   return '';
 }
 
+/**
+ * Sets taskit notifications for resource author and reviewers.
+ * @param  [type] $task    [description]
+ * @param  [type] $node    [description]
+ * @param  [type] $reviews [description]
+ * @return [type]          [description]
+ */
+function send_review_notifications($task, $node, $reviews) {
+  if ($task) {
+    global $user;
+
+    $task->addVisibility($task::VISIBILITY_USER);
+    $task->addEntity('node', $node->nid);
+
+    // resource contributor
+    $task->addOwningUser($node->uid);
+    // resource reviewers
+    foreach ($reviews as $entity) {
+      $task->addOwningUser($entity->uid);
+    }
+
+    $task->addTriggeringUser(1);
+    $task->save();
+  }
+}

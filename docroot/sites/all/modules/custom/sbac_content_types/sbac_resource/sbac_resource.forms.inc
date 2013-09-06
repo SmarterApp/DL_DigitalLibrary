@@ -107,22 +107,23 @@ function sbac_resource_form_license_after_build($element) {
  * @param $form_state
  */
 function _sbac_resource_clean_workbench_moderation($form, $form_state) {
+  return;
   // Current clean up.
   if (isset($form_state['node']->workbench_moderation['current']->from_state)) {
-    $form_state['node']->workbench_moderation['current']->from_state = 'draft';
+    $form_state['node']->workbench_moderation['current']->from_state = workbench_moderation_state_none();
   }
   if (isset($form_state['node']->workbench_moderation['current']->state)) {
-    $form_state['node']->workbench_moderation['current']->state = 'draft';
+    $form_state['node']->workbench_moderation['current']->state = workbench_moderation_state_none();
   }
   if (isset($form_state['node']->workbench_moderation['current']->published)) {
     $form_state['node']->workbench_moderation['current']->published = FALSE;
   }
   // My Revision clean up.
   if (isset($form_state['node']->workbench_moderation['my_revision']->from_state)) {
-    $form_state['node']->workbench_moderation['my_revision']->from_state = 'draft';
+    $form_state['node']->workbench_moderation['my_revision']->from_state = workbench_moderation_state_none();
   }
   if (isset($form_state['node']->workbench_moderation['my_revision']->state)) {
-    $form_state['node']->workbench_moderation['my_revision']->state = 'draft';
+    $form_state['node']->workbench_moderation['my_revision']->state = workbench_moderation_state_none();
   }
   if (isset($form_state['node']->workbench_moderation['my_revision']->published)) {
     $form_state['node']->workbench_moderation['my_revision']->published = FALSE;

@@ -337,14 +337,21 @@ class Hooks extends \devtools\Hooks {
             }
           }
 
+          foreach ($form['#group_children'] as $field => $group) {
+            if (in_array($group, $remove)) {
+              unset($form['#group_children'][$field]);
+              unset($form[$field]);
+            }
+          }
+
           unset($form['actions']);
           unset($form['#after_build']);
           unset($form['#validate']);
           unset($form['#submit']);
 
         // build the new submit buttons
-          // cancel
-          $form['actions']['#weight'] = '99';
+          // cancel button
+          $form['actions']['#weight'] = 999;
 
           $trigger_id = 'edit-tags-cancel';
 
@@ -352,11 +359,15 @@ class Hooks extends \devtools\Hooks {
                     '!hours' => feedback_hours_left($post),
                   ));
 
-          $url = implode('/', array_merge(array('one', 'two'), array(
+          $url = implode('/', array(
+            'node',
+            $post->node_id,
+            'review',
+            'post',
             'cancel',
             $trigger_id,
             $post->id,
-          )));
+          ));
 
           $options = array(
             'attributes' => array(
@@ -387,7 +398,42 @@ class Hooks extends \devtools\Hooks {
                 'action-save',
               ),
             ),
+            '#validate' => array(
+              // 'sbac_resource_validate_form',
+            ),
+            '#submit' => array(
+              'feedback_edit_tags_form_submit',
+            ),
           );
+
+        // continue button
+          $form['actions']['continue'] = array(
+            '#type' => 'submit',
+            '#value' => t('Save & Continue'),
+            '#ajax' => array(
+              // 'callback' => 'feedback_eck_feedback_form_submit',
+              // 'wrapper' => 'eck-' . $this->_bundle_friendly . '-form',
+            ),
+            '#attributes' => array(
+              'class' => array(
+                'action-continue',
+              ),
+            ),
+          );
+
+          // $form['options']['workbench_moderation_state_new']['#default_value'] = 'approved';
+          // $form['options']['workbench_moderation_state_new']['#default_value'] = 'approved';
+          // $form['options']['workbench_moderation_state_new']['#value'] = 'approved';
+            
+          $form['workbench_moderation_state_new'] = array(
+            '#type' => 'value',
+            '#value' => 'approved',
+          );
+
+            // unset($form['#node']);
+
+            // print_rr($form);
+            // exit();
       }
     }
   }
@@ -575,6 +621,8 @@ class Hooks extends \devtools\Hooks {
     // the form's default value to Draft, in order to force the creation of a new
     // revision. We don't need/want this workflow, so we change the form's state back
     // to published.
+    // dsmm($moderation_state);
+
     if ($moderation_state == workbench_moderation_state_published()) {
       $form['options']['workbench_moderation_state_new']['#default_value'] = $moderation_state;
 

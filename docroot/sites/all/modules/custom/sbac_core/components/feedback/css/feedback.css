@@ -447,45 +447,45 @@
 }
 
 /* line 444, ../sass/feedback.scss */
-#edit-tags .vertical-tabs {
+#review-wrap-edit-tags .vertical-tabs {
   border: 0;
   margin: 2em;
   padding: 0;
 }
 /* line 449, ../sass/feedback.scss */
-#edit-tags .vertical-tabs .vertical-tabs-list {
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-list {
   display: none;
 }
 /* line 454, ../sass/feedback.scss */
-#edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane {
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane {
   padding: 0;
 }
 /* line 457, ../sass/feedback.scss */
-#edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select {
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select {
   float: left;
   margin: 0 0 1em 0;
   width: 47%;
 }
 /* line 462, ../sass/feedback.scss */
-#edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select:nth-child(even) {
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select:nth-child(even) {
   clear: left;
   margin-right: 5%;
 }
 /* line 467, ../sass/feedback.scss */
-#edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .chzn-container {
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .chzn-container {
   width: auto !important;
 }
 /* line 471, ../sass/feedback.scss */
-#edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description:last-child {
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description:last-child {
   display: none;
 }
 /* line 476, ../sass/feedback.scss */
-#edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title {
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title {
   clear: both;
   float: none;
 }
 /* line 482, ../sass/feedback.scss */
-#edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-alignment-tag-view table {
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-alignment-tag-view table {
   width: 100%;
 }
 

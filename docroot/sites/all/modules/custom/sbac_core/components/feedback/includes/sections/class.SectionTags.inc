@@ -15,7 +15,7 @@ class SectionTags extends Base {
       $form = drupal_get_form('resource_node_form', $this->_node, 'edit_tags');
 
     // wrap output
-      $output = '<div id="edit-tags">' . drupal_render($form) . '</div>';
+      $output = '<div class="review-wrap" id="review-wrap-edit-tags">' . drupal_render($form) . '</div>';
   
     return $output;
   }

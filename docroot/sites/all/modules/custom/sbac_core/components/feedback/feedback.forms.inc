@@ -545,28 +545,21 @@ function feedback_eck_post_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'node/' . $node->nid;
 }
 
+/*----------------------------------------------------------------------------
+      MISC FORMS
+----------------------------------------------------------------------------*/
+
 /**
- * Sets taskit notifications for resource author and reviewers.
- * @param  [type] $task    [description]
- * @param  [type] $node    [description]
- * @param  [type] $reviews [description]
- * @return [type]          [description]
+ * Submit handler for the node form on the 'Edit Resource Tags' form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
  */
-function send_review_notifications($task, $node, $reviews) {
-  if ($task) {
-    global $user;
-
-    $task->addVisibility($task::VISIBILITY_USER);
-    $task->addEntity('node', $node->nid);
-
-    // resource contributor
-    $task->addOwningUser($node->uid);
-    // resource reviewers
-    foreach ($reviews as $entity) {
-      $task->addOwningUser($entity->uid);
-    }
-
-    $task->addTriggeringUser(1);
-    $task->save();
-  }
+function feedback_edit_tags_form_submit($form, &$form_state) {
+  sbac_resource_clean_text($form_state);
+  $form_state['values']['path']['pathauto'] = TRUE;
+  node_form_submit($form, $form_state);
 }
+
+
+

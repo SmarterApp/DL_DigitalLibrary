@@ -48,7 +48,8 @@ class Core extends \devtools\Base {
           $method = 'hook_' . $name;
 
           if (method_exists($class, $method)) {
-            $hooksObj = new $class();
+            $hooksObj = new $class(); // TODO: every hook instantiates a new component object - think
+            // this through; can we make do with a singleton?
             $hooksObj->setPath($module_path . '/components/' . $component);
             $hooksObj->setComponentsPath($module_path . '/components');
             $hooksObj->setModulePath($module_path);
@@ -78,10 +79,6 @@ class Core extends \devtools\Base {
             }
           }
         }
-      }
-
-      if ($name == 'menu') {
-        // dsmm($return_data);
       }
 
       return $return_data;
