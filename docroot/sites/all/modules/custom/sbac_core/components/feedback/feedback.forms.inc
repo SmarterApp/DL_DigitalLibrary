@@ -550,6 +550,16 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 ----------------------------------------------------------------------------*/
 
 /**
+ * Validation handler for the node form on the 'Edit Resource Tags' form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function feedback_edit_tags_form_validate($form, &$form_state) {
+  sbac_resource_validate_tags($form, $form_state);
+}
+
+/**
  * Submit handler for the node form on the 'Edit Resource Tags' form.
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]

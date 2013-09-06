@@ -68,6 +68,12 @@
    */
   Drupal.behaviors.sbac_resource_error_message = {
     attach: function (context, settings) {
+      // exception to not run this on the main resource pages, as it'll 
+      // hide the error messages
+      if ($('body').hasClass('node-type-resource')) {
+        return;
+      }
+
       var alert_box = $('.sbac-resource-alert-box');
       if (alert_box.length) {
         var content = alert_box.html();

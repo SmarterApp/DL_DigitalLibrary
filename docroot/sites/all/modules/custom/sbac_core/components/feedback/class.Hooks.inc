@@ -399,7 +399,7 @@ class Hooks extends \devtools\Hooks {
               ),
             ),
             '#validate' => array(
-              // 'sbac_resource_validate_form',
+              'feedback_edit_tags_form_validate',
             ),
             '#submit' => array(
               'feedback_edit_tags_form_submit',
