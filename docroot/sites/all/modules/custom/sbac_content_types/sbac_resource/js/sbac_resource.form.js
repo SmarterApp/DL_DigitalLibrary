@@ -212,7 +212,8 @@
   Drupal.behaviors.sbac_resource_license = {
     attach: function (context, settings) {
       // ye who useth field ID selectors to target Drupal's form elements shall
-      // be banished to the deepest, darkest room of shame and IE6
+      // be banished to the deepest, darkest pits of shame, and forced to use IE6
+      // for a month
 
       // prepare elements
       var specific_license_text = $('#field_static_license_text');
@@ -225,7 +226,8 @@
       /**
        * Callback to trigger on license option set/change.
        * @param  {[type]} val       Numerical value of chosen option.
-       * @param  {[type]} switching Boolena flag to specify whether we're switching an option (true), or setting default (false).
+       * @param  {[type]} switching Boolena flag to specify whether we're switching 
+       *                            an option (true), or setting default (false).
        * @return {[type]}           None.
        */
       var change_option = function(val, switching) {

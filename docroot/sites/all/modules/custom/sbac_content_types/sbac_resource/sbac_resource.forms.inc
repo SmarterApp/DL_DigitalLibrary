@@ -82,7 +82,8 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Loops through the elements and picks the correct one.
+ * Adds option-specific classes to each child option for jQuery selection purposes.
+ * @see Drupal.behaviors.sbac_resource_license in sbac_resource.form.js
  *
  * @param array $element
  *   The element.
