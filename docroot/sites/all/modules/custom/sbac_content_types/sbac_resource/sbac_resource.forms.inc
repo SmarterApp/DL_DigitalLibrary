@@ -92,11 +92,6 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 function sbac_resource_form_license_after_build($element) {
   if ($children = element_num_children($element)) {
     foreach ($children as $key => &$child) {
-      $suffix = '';
-      if (isset($child['#suffix'])) {
-        $suffix = $child['#suffix'];
-      }
-
       $child['#attributes']['class'][] = 'license-option-' . $key;
     }
   }
