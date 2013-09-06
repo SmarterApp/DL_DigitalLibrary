@@ -49,7 +49,25 @@ function sbac_resource_views_post_execute(&$view) {
   if ($view->name == 'resources' && ($view->current_display == 'grid_view' || $view->current_display == 'list_view')) {
     if (isset($_SESSION['sbac-search-keywords']) && $_SESSION['sbac-search-keywords'] != '') {
       // Search apache solr for keyword.
-      $sr_view = views_get_view('search_resources', TRUE);
+      if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+        switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+          case 'dev':
+            $sr_view = views_get_view('search_resources_dev', TRUE);
+            break;
+
+          case 'test':
+            $sr_view = views_get_view('search_resources_test', TRUE);
+            break;
+
+          case 'prod':
+            $sr_view = views_get_view('search_resources_prod', TRUE);
+            break;
+        }
+      }
+      else {
+        $sr_view = views_get_view('search_resources', TRUE);
+      }
+
       $sr_view->set_display('search');
       $view_filters = $sr_view->display_handler->get_option('filters');
       $view_filters['keyword']['value'] = apachesolr_clean_text($_SESSION['sbac-search-keywords']);
