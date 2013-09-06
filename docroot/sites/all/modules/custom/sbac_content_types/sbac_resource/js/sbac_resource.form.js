@@ -211,76 +211,103 @@
    */
   Drupal.behaviors.sbac_resource_license = {
     attach: function (context, settings) {
-      var checked = $('#sbac-license-information-field :checked');
-      $("#no-license-text").hide();
-      $('#field_static_license_text').hide();
-      $("#no-license-text").appendTo($('#sbac-2-appender'));
-      if (checked.length) {
-        if ($(checked).attr('id') == 'edit-field-license-information-und-0') {
-         
-          var name = $('#sbac-resource-user-name').children().val();
-          if ($('#edit-field-author-und-0-value').val() == '') {
-            $('#edit-field-author-und-0-value').val(name);
+      // ye who useth field ID selectors to target Drupal's form elements shall
+      // be banished to the deepest, darkest room of shame and IE6
+
+
+      // TODO: license theming - URL field on AJAX refresh is not populated
+
+
+      // prepare selectors
+      var specific_license_text = $('#field_static_license_text');
+      var no_license_text = $('#no-license-text');
+      var license_url = $('#sbac-resource-license-url');
+      var group = $('#license-information-group');
+      var user_name = $('#sbac-resource-user-name').children().val();
+      var save_continue = $('#edit-save-continue');
+
+      // license change callback
+      var change_option = function(val, switching) {
+        if (typeof(switching) == 'undefined') {
+            switching = false;
           }
 
-          if ($('#edit-field-publisher-und-0-value').val() == '') {
-            $('#edit-field-publisher-und-0-value').val(name);
-          }
+        // start by hiding everything
+        specific_license_text.hide();
+        no_license_text.hide();
+        license_url.hide();
+        group.hide();
 
-          $('#license-information-group').appendTo($('#sbac-0-appender'));
-          $('#field_static_license_text').show();
-        }
-        else if ($(checked).attr('id') == 'edit-field-license-information-und-1') {
-          $('#license-information-group').appendTo($('#sbac-1-appender'));
-        }
-        else {
-          $('#license-information-group').appendTo($('#sbac-2-appender'));
+        // make sure we're not looking at a numerical string
+        var val = parseInt(val);
+
+        // move the license group to the correct radio option
+        group.appendTo($('.license-option-' + val).parent());
+        group.show();
+
+        // enable button
+        save_continue.removeAttr('disabled');
+        save_continue.bind('click');
+
+        // populate the author & publisher fields
+        var set_name_fields = function(value) {
+          var name_fields = ['.field-name-field-author', '.field-name-field-publisher'];
+
+          $(name_fields).each(function (i, wrapper) {
+            var selector = wrapper + ' input[type=text]';
+
+            if ($(selector).val() == '' || switching) {
+              $(selector).val(value);
+            }
+          });
         }
 
-        if ($(checked).attr('id') == 'edit-field-license-information-und-2') {
-          $("#no-license-text").show();
+        switch (val) {
+          case 0:
+            // set user's name
+            set_name_fields(user_name);
+
+            // show specific license text
+            specific_license_text.show();
+
+            break;
+
+          case 1:
+            // clear name fields
+            set_name_fields('');
+
+            // show license URL div
+            license_url.show();
+
+            break;
+
+          case 2:
+            // clear name fields
+            set_name_fields('');
+
+            // show no license text
+            no_license_text.show();
+
+            save_continue.attr('disabled', 'disabled');
+            save_continue.unbind('click');
+
+            break;
         }
+      };
+
+      // an option is already selected
+      var selected_option = $('#sbac-license-information-field :checked');
+      if (selected_option.length) {
+        change_option(selected_option.val());
       }
 
-      var save_continue = $('#edit-save-continue');
-      $('#edit-field-license-information-und-0').click(function () {
-        $('#field_static_license_text').show();
-        $('#license-information-group').show();
-        $('#sbac-resource-license-url').hide();
-        $('#license-information-group').appendTo($('#sbac-0-appender'));
-        $("#no-license-text").hide();
+      // option is changed
+      $('.field-name-field-license-information .form-item input[type=radio]').each(function(i, el) {
+        var el = $(el);
 
-        var name = $('#sbac-resource-user-name').children().val();
-        if ($('#edit-field-author-und-0-value').val() == '') {
-          $('#edit-field-author-und-0-value').val(name);
-        }
-
-        if ($('#edit-field-publisher-und-0-value').val() == '') {
-          $('#edit-field-publisher-und-0-value').val(name);
-        }
-        
-        save_continue.removeAttr('disabled');
-        save_continue.bind('click');
-      });
-      $('#edit-field-license-information-und-1').click(function () {
-        $('#field_static_license_text').hide();
-        $('#license-information-group').show();
-        $('#sbac-resource-license-url').show();
-        $('#license-information-group').appendTo($('#sbac-1-appender'));
-        $("#no-license-text").hide();
-        $('#edit-field-author-und-0-value').val('');
-        $('#edit-field-publisher-und-0-value').val('');
-        save_continue.removeAttr('disabled');
-        save_continue.bind('click');
-      });
-      $('#edit-field-license-information-und-2').click(function () {
-        $('#field_static_license_text').hide();
-        $('#license-information-group').hide();
-        $("#no-license-text").show();
-        $('#edit-field-author-und-0-value').val();
-        $('#edit-field-publisher-und-0-value').val('');
-        save_continue.attr('disabled', 'disabled');
-        save_continue.unbind('click');
+        el.click(function(e) {
+          change_option(el.val(), true);
+        });
       });
     }
   };

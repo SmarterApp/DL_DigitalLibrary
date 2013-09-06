@@ -90,17 +90,14 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
  *   The array.
  */
 function sbac_resource_form_license_after_build($element) {
-  // We'll not loop through all the attributes inside the element
-  // since there are just 3 options to choose from. Let's just pick them out.
-  for ($i = 0; $i < 3; $i++) {
-    if ($element[$i]['#id'] == 'edit-field-license-information-und-0') {
-      $element[$i]['#suffix'] = '<div id="sbac-0-appender"></div>';
-    }
-    else if ($element[$i]['#id'] == 'edit-field-license-information-und-1') {
-      $element[$i]['#suffix'] = '<div id="sbac-1-appender"></div>';
-    }
-    else {
-      $element[$i]['#suffix'] = '<div id="sbac-2-appender"></div>';
+  if ($children = element_num_children($element)) {
+    foreach ($children as $key => &$child) {
+      $suffix = '';
+      if (isset($child['#suffix'])) {
+        $suffix = $child['#suffix'];
+      }
+
+      $child['#attributes']['class'][] = 'license-option-' . $key;
     }
   }
 

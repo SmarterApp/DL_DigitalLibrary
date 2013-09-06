@@ -6,7 +6,7 @@ namespace devtools\components;
  *
  * Use:
  *   $batch = new MyClass('table_name', 'flag_column_name');
- *    $batch->init();
+ *   $batch->init();
  *    
  *  ... and see the process() method's comments blow.
  */

@@ -580,21 +580,6 @@ function _sbac_resource_publisher_links($fields) {
           $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
           $variables['text'] = t('Being Reviewed');
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         break;
       case 'published':
         $variables['sticky'] = FALSE;
