@@ -712,6 +712,30 @@ function sbac_resource_digital_library_page() {
 }
 
 /**
+ * Alter the query after it's prepared and cached.
+ *
+ * Any module performing a search should call
+ * drupal_alter('apachesolr_query', $query). That function then invokes this
+ * hook. It allows modules to modify the query object and its parameters.
+ *
+ * A module implementing HOOK_apachesolr_query_alter() may set
+ * $query->abort_search to TRUE to flag the query to be aborted.
+ *
+ * @param DrupalSolrQueryInterface $query
+ *   An object implementing DrupalSolrQueryInterface. No need for &.
+ */
+function sbac_resource_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
+  // I only want to see articles by the admin.
+  //
+  // NOTE: this "is_uid" filter does NOT refer to the English word "is"
+  // It is a combination of flags representing Integer-Single, which is
+  // abbreviated with the letters i and s.
+  //
+  // @see the <dynamicField> definitions in schema.xml or schema-solr3.xml
+  $var = '';
+}
+
+/**
  * Implements hook_cron().
  *
  * Cleanup routine for temporary nodes that may have been abandoned during Resource creation.
@@ -942,9 +966,24 @@ function sbac_resource_delete_folder_from_cmis(&$node) {
  */
 function sbac_resource_workbench_moderation_transition($node, $previous_state, $new_state) {
   if ($node->type == 'resource') {
-    db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+    // Necassary to override workbench email into publishing the node. Line 1602, function
+    // workbench_moderation_node_data(), they query the DB directly to find out if there is a
+    // published node. I bruce lee the publish status here.
+    db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
-    // db_query('UPDATE {workbench_moderation_node_history} SET published = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+  }
+}
+
+/**
+ * Implements hook_node_update();
+ *
+ * @param $node
+ */
+function sbac_resource_node_update($node) {
+  if ($node->type == 'resource') {
+    if (isset($node->workbench_moderation['published'])) {
+      $node->workbench_moderation['published']->vid = $node->vid;
+    }
   }
 }
 
