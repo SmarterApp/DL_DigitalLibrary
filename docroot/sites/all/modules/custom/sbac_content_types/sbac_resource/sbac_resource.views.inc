@@ -53,6 +53,7 @@ function sbac_resource_views_post_execute(&$view) {
       $sr_view->set_display('search');
       $view_filters = $sr_view->display_handler->get_option('filters');
       $view_filters['keyword']['value'] = apachesolr_clean_text($_SESSION['sbac-search-keywords']);
+      $view_filters['keyword']['operator'] = 'LIKE';
       $sr_view->display_handler->set_option('filters', $view_filters);
       $sr_view->pre_execute();
       $sr_view->execute();
