@@ -214,7 +214,7 @@
       // ye who useth field ID selectors to target Drupal's form elements shall
       // be banished to the deepest, darkest room of shame and IE6
 
-      // prepare selectors
+      // prepare elements
       var specific_license_text = $('#field_static_license_text');
       var no_license_text = $('#no-license-text');
       var license_url = $('#sbac-resource-license-url');
