@@ -232,8 +232,8 @@
        */
       var change_option = function(val, switching) {
         if (typeof(switching) == 'undefined') {
-            switching = false;
-          }
+          switching = false;
+        }
 
         // start by hiding everything
         specific_license_text.hide();
