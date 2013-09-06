@@ -929,22 +929,15 @@ function sbac_resource_delete_folder_from_cmis(&$node) {
 }
 
 /**
- * Allows modules to respond to state transitions.
+ * Implements hook_node_update().
  *
  * @param $node
- *  The node that is being transitioned.
- *
- * @param $previous_state
- *  The state of the revision before the transition occurred.
- *
- * @param $new_state
- *  The new state of the revision.
  */
-function sbac_resource_workbench_moderation_transition($node, $previous_state, $new_state) {
+function sbac_resource_node_update($node) {
   if ($node->type == 'resource') {
-    db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
-    db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
-    // db_query('UPDATE {workbench_moderation_node_history} SET published = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+    if (isset($node->workbench_moderation['published'])) {
+      $node->workbench_moderation['published']->vid = $node->vid;
+    }
   }
 }
 
