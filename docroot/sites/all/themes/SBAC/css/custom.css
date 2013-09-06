@@ -8050,7 +8050,7 @@ a.tabledrag-handle .handle {
   margin: 10px 10px 10px 0;
 }
 /* line 1221, ../sass/custom.scss */
-.page-media-browser #edit-upload-upload {
+.page-media-browser #edit-upload-upload, .page-media-browser #edit-upload-upload--2 {
   float: left;
   width: 30%;
   clear: left;
@@ -8059,7 +8059,7 @@ a.tabledrag-handle .handle {
   margin-bottom: 1em;
 }
 /* line 1230, ../sass/custom.scss */
-.page-media-browser #edit-upload-upload-button {
+.page-media-browser #edit-upload-upload-button, .page-media-browser #edit-upload-upload-button--2 {
   float: right;
 }
 /* line 1234, ../sass/custom.scss */
