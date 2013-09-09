@@ -14,6 +14,10 @@
     p {
     font-size: 1em;
   }
+
+  textarea {
+    resize: none;
+  }
   /* intro form elements */
     .gate-keeper-intro {
       @include bottom-border;
@@ -274,6 +278,11 @@
 
   /* review items content on post tab */
     .feedback-items {
+
+      ul {
+        margin-left: 30px;
+      }
+      
       .feedback-item {
 
         border-bottom: 1px #ccc solid;

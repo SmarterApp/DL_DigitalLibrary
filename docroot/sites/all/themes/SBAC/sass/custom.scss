@@ -163,6 +163,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   color: rgba(100, 100, 100, 1);
   padding: 8px 18px;
   @include border-radius (6px);
+  font-family: $body-font-family;
 
   &:hover, &:focus  {
     background: rgba(138, 21, 56, 1);
