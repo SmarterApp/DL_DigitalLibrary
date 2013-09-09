@@ -1154,6 +1154,13 @@ a.tabledrag-handle .handle {
   background: white;
   height: auto;
 
+  //over ride plugin styles
+  .ui-widget {
+    button {
+      font-family: $body-font-family;
+      font-size: 16px;
+    }
+  }
   //error message 
   .alert-box.alert {
     width: 95%;
@@ -1219,7 +1226,8 @@ a.tabledrag-handle .handle {
   label {
     margin: 10px 10px 10px 0;
   }
-  #edit-upload-upload, #edit-upload-upload--2 {
+
+  .form-file {
     float: left;
     width: 30%;
     clear: left;
@@ -1228,8 +1236,12 @@ a.tabledrag-handle .handle {
     margin-bottom: 1em;
   }
 
-  #edit-upload-upload-button, #edit-upload-upload-button--2 {
+ .form-submit {
     float:right;
+  }
+
+  #edit-next, #edit-submit {
+    float: none;
   }
 
   .form-item .description {
