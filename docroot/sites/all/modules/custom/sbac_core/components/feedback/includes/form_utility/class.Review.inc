@@ -162,14 +162,14 @@ class Review extends Base {
 
       $created = format_date($entity->created, 'full');
 
-      list ($headline, $comments) = $content_callback($entity);
+      list($headline, $comments) = $content_callback($entity);
 
       $form['feedback_' . $entity->id]['#markup'] = theme('review_teaser', array(
         'id'          => $entity->id,
         'author'      => $author,
         'created'     => $created,
         'headline'    => $headline,
-        'comments'    => more_less_text($comments),
+        'comments'    => more_less_text($comments, 140),
       ));
 
       if (++$i == 3) { // 3 = total number of reviews
