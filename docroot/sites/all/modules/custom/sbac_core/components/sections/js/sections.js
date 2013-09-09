@@ -52,6 +52,9 @@ Drupal.behaviors.sections = {
 
         // simulate a click on the tab
         tab.click();
+
+        // update hash value in browser for bookmarking purposes and general consistency
+        window.location.hash = hash;
       }
     }
   }

@@ -73,7 +73,7 @@
       if ($('body').hasClass('node-type-resource')) {
         return;
       }
-
+      
       var alert_box = $('.sbac-resource-alert-box');
       if (alert_box.length) {
         var content = alert_box.html();

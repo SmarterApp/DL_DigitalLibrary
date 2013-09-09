@@ -390,8 +390,8 @@ class Hooks extends \devtools\Hooks {
             '#type' => 'submit',
             '#value' => t('Save and Close'),
             '#ajax' => array(
-              // 'callback' => 'feedback_eck_feedback_form_submit',
-              // 'wrapper' => 'eck-' . $this->_bundle_friendly . '-form',
+              'callback' => 'feedback_edit_tags_ajax_save',
+              'wrapper' => 'sbac-resource-form',
             ),
             '#attributes' => array(
               'class' => array(
@@ -411,29 +411,28 @@ class Hooks extends \devtools\Hooks {
             '#type' => 'submit',
             '#value' => t('Save & Continue'),
             '#ajax' => array(
-              // 'callback' => 'feedback_eck_feedback_form_submit',
-              // 'wrapper' => 'eck-' . $this->_bundle_friendly . '-form',
+              'callback' => 'feedback_edit_tags_ajax_continue',
+              'wrapper' => 'sbac-resource-form',
             ),
             '#attributes' => array(
               'class' => array(
                 'action-continue',
+                'secondary',
+                'button',
               ),
             ),
+            '#validate' => array(
+              'feedback_edit_tags_form_validate',
+            ),
+            '#submit' => array(
+              'feedback_edit_tags_form_submit',
+            ),
           );
-
-          // $form['options']['workbench_moderation_state_new']['#default_value'] = 'approved';
-          // $form['options']['workbench_moderation_state_new']['#default_value'] = 'approved';
-          // $form['options']['workbench_moderation_state_new']['#value'] = 'approved';
             
           $form['workbench_moderation_state_new'] = array(
             '#type' => 'value',
             '#value' => 'approved',
           );
-
-            // unset($form['#node']);
-
-            // print_rr($form);
-            // exit();
       }
     }
   }

@@ -202,9 +202,6 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
       }
     };
 
-    // dsmm($form_state['values']);
-
-
     if ($entity->type == 'review') {
       // we need to rebuild the complete review buttons when the recommendation
       // option changes
@@ -566,10 +563,52 @@ function feedback_edit_tags_form_validate($form, &$form_state) {
  * @return [type]             [description]
  */
 function feedback_edit_tags_form_submit($form, &$form_state) {
+  module_load_include('inc', 'node', 'node.pages');
+
   sbac_resource_clean_text($form_state);
   $form_state['values']['path']['pathauto'] = TRUE;
   node_form_submit($form, $form_state);
 }
 
+/**
+ * AJAX 'Save & Close' callback for the 'Edit Resource Tags' form.
+ */
+function feedback_edit_tags_ajax_save($form, &$form_state) {
+  $errors = form_get_errors();
+  $form_error = (int) !empty($errors);
 
+  if ($form_error) {
+    $js = 'Drupal.settings.feedback.form_error = ' . $form_error . ';';
+  }
+  else {
+    $url = url('digital-library-resources', array('absolute' => TRUE));
+    $js = 'document.location = "' . $url . '";';
+  }
 
+  $form['run_js'] = array(
+    '#markup' => '<script>' . $js . '</script>',
+  );
+
+  return $form;
+}
+
+/**
+ * AJAX 'Save and Continue' callback for the 'Edit Resource Tags' form.
+ */
+function feedback_edit_tags_ajax_continue($form, &$form_state) {
+  $errors = form_get_errors();
+  $form_error = (int) !empty($errors);
+
+  if ($form_error) {
+    $js = 'Drupal.settings.feedback.form_error = ' . $form_error . ';';
+  }
+  else {
+    $js = 'Drupal.behaviors.sections.switch_tab("#review-post");';
+  }
+
+  $form['run_js'] = array(
+    '#markup' => '<script>' . $js . '</script>',
+  );
+
+  return $form;
+}
