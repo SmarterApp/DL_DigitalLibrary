@@ -245,7 +245,6 @@
         specific_license_text.hide();
         no_license_text.hide();
         license_url.hide();
-        group.hide();
 
         // make sure we're not looking at a numerical string
         var val = parseInt(val);
@@ -291,7 +290,11 @@
             break;
 
           case 2:
+            // hide the author/owner group
+            group.hide();
+
             // show no license text
+            no_license_text.appendTo($('.license-option-' + val).parent());
             no_license_text.show();
 
             // disable button

@@ -494,15 +494,17 @@ function _sbac_resource_reviewer_links($fields) {
         $under_review = FALSE;
         // if the current user is performing the gate keeper process
         $gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', $user->uid, 1, 0, 1);
-        if ($gate_keeper) {
-          if (!$gate_keeper['completed'] || !$gate_keeper['status']) {
-            $url = url('node/' . $nid, array('absolute' => TRUE));
-            $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
-            $variables['links'][] = l('Continue Review', 'node/' . $nid, array('absolute' => TRUE));
-            $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
-            $variables['text'] = t('Being Reviewed');
-            $under_review = TRUE;
-          }
+        if ($gate_keeper && is_array($gate_keeper)) {
+          $gate_keeper = array_shift($gate_keeper);
+        }
+
+        if ($gate_keeper && (!$gate_keeper->completed || !$gate_keeper->status)) {
+          $url = url('node/' . $nid, array('absolute' => TRUE));
+          $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
+          $variables['links'][] = l('Continue Review', 'node/' . $nid, array('absolute' => TRUE));
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
+          $variables['text'] = t('Being Reviewed');
+          $under_review = TRUE;
         }
 
         if (!$under_review) {
