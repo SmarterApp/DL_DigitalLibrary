@@ -57,7 +57,7 @@ class Debug extends \devtools\patterns\Singleton {
 
     $output = self::style($data);
 
-    dsmm($output);
+    drupal_set_message(print_r($output, 1));
   }
 
   /**
