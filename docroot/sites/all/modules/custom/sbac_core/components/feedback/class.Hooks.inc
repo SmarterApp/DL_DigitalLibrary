@@ -321,6 +321,8 @@ class Hooks extends \devtools\Hooks {
 
           foreach ($remove as $group) {
             unset($form['#groups'][$group], $form['#fieldgroups'][$group]);
+
+            perm_debug('Unset #groups key:' . $group);
           }
 
           foreach (array_keys($form) as $key) {
@@ -334,6 +336,8 @@ class Hooks extends \devtools\Hooks {
 
             if (preg_match('#' . $conditions . '#', $key)) {
               unset($form[$key]);
+
+              perm_debug('Unset key:' . $key);
             }
           }
 
@@ -341,6 +345,8 @@ class Hooks extends \devtools\Hooks {
             if (in_array($group, $remove)) {
               unset($form['#group_children'][$field]);
               unset($form[$field]);
+
+              perm_debug('Unset key: ' . $group . ' for field:' . $field);
             }
           }
 
@@ -433,6 +439,9 @@ class Hooks extends \devtools\Hooks {
             '#type' => 'value',
             '#value' => 'approved',
           );
+
+          perm_debug('Entire form:');
+          perm_debug($form);
       }
     }
   }

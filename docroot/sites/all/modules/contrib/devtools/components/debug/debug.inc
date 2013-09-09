@@ -14,6 +14,24 @@ function pr() {
  * @param object $data - object to be ran through print_r();
  * @param object $return[optional] - boolean; FALSE to print output, or TRUE to return it;
  */
+function perm_debug($data) {
+  list($handler, $handler_data) = devtools_func_handler(__FUNCTION__, func_get_args());
+
+  if ($handler) {
+    return $handler_data;
+  }
+  else {
+    $debug = \devtools\components\Debug::instance();
+    $debug->permOutput($data);
+  }
+}
+
+/**
+ * Displays or returns formatted print_r() output;
+ * @return - string
+ * @param object $data - object to be ran through print_r();
+ * @param object $return[optional] - boolean; FALSE to print output, or TRUE to return it;
+ */
 function print_rr($data, $return = FALSE) {
   list($handler, $handler_data) = devtools_func_handler(__FUNCTION__, func_get_args());
 

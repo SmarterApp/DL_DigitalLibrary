@@ -12,9 +12,9 @@ class Debug extends \devtools\patterns\Singleton {
 
   /**
    * Prepares and outputs the styled data.
-   * @param  [type] $data   [description]
-   * @param  [type] $return [description]
-   * @return [type]         [description]
+   * @param  [type]  $data        [description]
+   * @param  [type]  $return      [description]
+   * @return [type]               [description]
    */
   public function output($data, $return) {
     // user must be allowed to see debug output
@@ -30,6 +30,34 @@ class Debug extends \devtools\patterns\Singleton {
     else {
       echo $output;
     }
+  }
+
+  /**
+   * Prepares and outputs "permanent" debug output (non-user/ip 
+   * restricted, but rather dependent on a GET key).
+   *
+   * Don't use this for any sensitive data!
+   * 
+   * @param  [type]  $data        [description]
+   * @return [type]               [description]
+   */
+  public function permOutput($data) {
+    $key = 'devtools_debug';
+
+    // key may be changed in settings.php to make it site-specific
+    global $conf;
+    if (isset($conf['devtools_perm_debug_key']) && !empty($conf['devtools_perm_debug_key'])) {
+      $key = $conf['devtools_perm_debug_key'];
+    }
+
+    // user must be allowed to see debug output
+    if (!isset($_GET[$key])) {
+      return FALSE;
+    }
+
+    $output = self::style($data);
+
+    dsmm($output);
   }
 
   /**
