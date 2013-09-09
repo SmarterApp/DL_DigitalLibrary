@@ -209,16 +209,29 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     $form['submit']['#value'] = 'Submit';
     $form['#submit'] = array('sbac_user_user_pass_form_submit');
   }
-
+  
+  //when creating a new user, expose some additional fields that generally come from a csv import
+  if ($form_id == 'user_register_form') {
+	$is_create_page = strpos($_GET['q'], '/create');
+    if ($is_create_page !==FALSE) {
+      $form['field_alternate_email_address']['#access'] = TRUE;
+      $form['field_school_name']['#access'] = TRUE;
+      $form['field_district_name']['#access'] = TRUE;
+      $form['field_slt_member']['#access'] = TRUE;
+      $form['field_sne_member']['#access'] = TRUE;
+      $form['field_state']['#access'] = TRUE;	
+	}
+  } 
+  
   if ($form_id == 'user_profile_form') {
     $is_edit_page = strpos($_GET['q'], '/edit');
-    if ($is_edit_page !== FALSE) {
-      $form['field_first_name']['#disabled'] = TRUE;
+   	if ($is_edit_page !== FALSE) {
+ 	  $form['field_first_name']['#disabled'] = TRUE;
       $form['field_last_name']['#disabled'] = TRUE;
       $form['account']['mail']['#disabled'] = TRUE; // primary email address
       $form['field_alternate_email_address']['#disabled'] = TRUE;
       $form['field_district_name']['#disabled'] = TRUE;
-      $form['field_school_name']['#disabled'] = TRUE;
+      $form['field_school_name']['#disabled'] = TURE;
     } else {
       $form['account']['name']['#type'] = 'hidden';
       $form['account']['pass']['#type'] = 'hidden';
