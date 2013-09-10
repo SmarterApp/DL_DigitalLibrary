@@ -66,3 +66,15 @@ function sbac_core_update_7004() {
 function sbac_core_update_7005() {
   db_query("UPDATE system SET weight = 6 WHERE name = 'sbac_core'");
 }
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Updates taskit visibility mode.
+ */
+function sbac_core_update_7006() {
+  variable_get('taskit_visibility', 'user');
+}
+
+
+
