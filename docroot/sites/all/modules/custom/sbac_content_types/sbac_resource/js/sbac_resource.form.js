@@ -109,7 +109,7 @@
   Drupal.behaviors.sbac_resource_exit_plan = {
     attach: function (context, settings) {
       // don't want to track changes on edit resource tags page
-      if ($('#review-wrap-edit-tags').length) {
+      if ($('#review').length) {
         return;
       }
 
