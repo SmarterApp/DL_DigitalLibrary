@@ -425,7 +425,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
   /* Filter criterion: Content: Intended Student Population(s) (field_intended_student) */
@@ -452,7 +454,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_intended_student_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_intended_student_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_intended_student_tid']['vocabulary'] = 'intended_student_populations';
   /* Filter criterion: Content: Digital Media Type(s) (field_digital_media_type) */
@@ -479,7 +483,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_digital_media_type_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_digital_media_type_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['vocabulary'] = 'digital_media_type';
   /* Filter criterion: Content: Subjects and Domains (field_subject) */
@@ -506,7 +512,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
   /* Filter criterion: Content: Geographical Setting(s) (field_geographical_settings) */
@@ -533,7 +541,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_geographical_settings_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_geographical_settings_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['vocabulary'] = 'geographical_settings';
   /* Filter criterion: Content: Educational Use (field_educational_use) */
@@ -560,7 +570,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_educational_use_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_educational_use_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
   /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
@@ -587,7 +599,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_intended_end_user_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['vocabulary'] = 'intended_end_user';
   /* Filter criterion: Content: Smarter Balanced Keyword(s) (field_smarter_balanced_keyword) */
@@ -614,7 +628,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['vocabulary'] = 'smarter_balanced_keyword';
   /* Filter criterion: Content: Resource Type (field_focus) */
@@ -641,7 +657,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_focus_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
   /* Filter criterion: Content: Attributes (field_attributes) */
@@ -668,7 +686,9 @@ function sbac_resource_views_default_views() {
     22 => 0,
     8 => 0,
     23 => 0,
+    26 => 0,
   );
+  $handler->display->display_options['filters']['field_attributes_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_attributes_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_attributes_tid']['vocabulary'] = 'attributes';
 

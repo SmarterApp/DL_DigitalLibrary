@@ -108,13 +108,18 @@
    */
   Drupal.behaviors.sbac_resource_exit_plan = {
     attach: function (context, settings) {
-      $(":input").change( function () {
+      // don't want to track changes on edit resource tags page
+      if ($('#review-wrap-edit-tags').length) {
+        return;
+      }
+
+      $(':input').change( function () {
         if (!isDirty) {
           isDirty = true;
         }
       });
 
-      $(":input[type=text], textarea").keyup( function () {
+      $(':input[type=text], textarea').keyup( function () {
         if (!isDirty) {
           isDirty = true;
         }

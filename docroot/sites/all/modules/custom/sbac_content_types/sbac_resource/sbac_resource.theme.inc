@@ -568,19 +568,20 @@ function _sbac_resource_publisher_links($fields) {
       case 'approved':
         global $user;
         $feedback = _sbac_resource_determine_feedback($nid, 'post', $user->uid, 1, 0, 1, 'single');
+
         if ($feedback) {
           $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post'));
           $link = l('Continue Review', $url);
           $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
           $variables['links'][] = $link;
-          $variables['text'] = t('Needs Posting');
+          $variables['text'] = t('Being Reviewed');
         }
         else {
           $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
           $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
-          $variables['text'] = t('Being Reviewed');
+          $variables['text'] = t('Needs Posting');
         }
         break;
       case 'published':

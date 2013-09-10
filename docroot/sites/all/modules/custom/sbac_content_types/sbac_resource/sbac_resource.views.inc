@@ -88,13 +88,16 @@ function sbac_resource_views_post_execute(&$view) {
         if ($data_results) {
           if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
             // Category filters are set, append the keyword view results into the resource view.
+            $combined_results = array();
             foreach ($view->result as $result) {
-              foreach ($data_results as $data_result) {
-                if ($result->nid != $data_result->nid) {
-                  $view->result[] = $data_result;
-                }
+              foreach ($data_results as $key => $data_result) {
+                  if ($result->nid == $data_result->nid) {
+                    $combined_results[] = $data_result;
+                  }
               }
             }
+
+            $view->result = $combined_results;
             $view->total_rows = count($view->result);
           }
           else {

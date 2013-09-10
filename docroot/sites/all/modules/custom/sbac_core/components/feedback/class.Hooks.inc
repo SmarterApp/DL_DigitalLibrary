@@ -398,9 +398,6 @@ class Hooks extends \devtools\Hooks {
                 'action-save',
               ),
             ),
-            '#validate' => array(
-              'feedback_edit_tags_form_validate',
-            ),
             '#submit' => array(
               'feedback_edit_tags_form_submit',
             ),
@@ -409,7 +406,7 @@ class Hooks extends \devtools\Hooks {
         // continue button
           $form['actions']['continue'] = array(
             '#type' => 'submit',
-            '#value' => t('Save & Continue'),
+            '#value' => t('Save and Continue'),
             '#ajax' => array(
               'callback' => 'feedback_edit_tags_ajax_continue',
               'wrapper' => 'sbac-resource-form',

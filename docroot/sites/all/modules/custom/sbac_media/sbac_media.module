@@ -13,6 +13,51 @@ function sbac_media_ctools_plugin_api($module = NULL, $api = NULL) {
 }
 
 /**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
+function sbac_media_menu() {
+  $items = array();
+
+  $items['sbac-media/internet-confirm'] = array(
+    'page callback' => 'sbac_media_internet_confirm',
+    'access arguments' => array('access content'),
+    'title' => 'Internet Confirmation',
+  );
+
+//  $items['sbac_resource/%ctools_js/delete-resource'] = array(
+//    'page callback' => 'sbac_resource_delete_resource_modal_callback',
+//    'page arguments' => array(1),
+//    'access arguments' => array('access content'),
+//    'file' => 'sbac_resource.forms.inc',
+//  );
+//
+//  $items['sbac-resource/download/%node'] = array(
+//    'page callback' => 'sbac_resource_download_contents',
+//    'page arguments' => array(2),
+//    'access arguments' => array('access content'),
+//  );
+//
+//  $items['sbac-resource/download/%node'] = array(
+//    'page callback' => 'sbac_resource_download_contents',
+//    'page arguments' => array(2),
+//    'access arguments' => array('access content'),
+//  );
+//
+//  $items['digital-library-resources'] = array(
+//    'title' => 'Digital Library Resources',
+//    'page callback' => 'sbac_resource_digital_library_page',
+//    'access arguments' => array('access content'),
+//    'type' => MENU_NORMAL_ITEM,
+//    'menu_name' => 'main-menu',
+//    'weight' => -50,
+//  );
+
+  return $items;
+}
+
+/**
  * Implements hook_media_internet_providers().
  */
 function sbac_media_media_internet_providers() {
@@ -132,4 +177,84 @@ function sbac_media_file_formatter_info_alter(&$info) {
   if (isset($info['media_youtube_video'])) {
     $info['media_youtube_video']['default_settings']['rel'] = FALSE;
   }
+}
+
+function sbac_media_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'media_internet_add') {
+    $form['#submit'][] = 'sbac_media_internet_add_submit_handler';
+  }
+}
+
+function sbac_media_internet_add_submit_handler(&$form, &$form_state) {
+  if ($form_state['values']['embed_code'] != NULL &&
+    (strpos($form_state['values']['embed_code'], 'youtube') ||
+     strpos($form_state['values']['embed_code'], 'vimeo'))) {
+    $form_state['old_redirect'] = $form_state['redirect'];
+    $form_state['redirect'] = array();
+    $form_state['redirect'][] = 'sbac-media/internet-confirm';
+  }
+}
+
+function sbac_media_internet_confirm() {
+  //originally this was called (media-browser?fid=123), which runs this code
+  // so we might need this.
+  $form = drupal_get_form('sbac_media_internet_confirm_form');
+  return drupal_render($form);
+
+  $output = array();
+  $output['#attached']['library'][] = array('media', 'media_browser_page');
+
+  module_load_include('inc', 'media', 'includes/media.browser');
+  $params = media_set_browser_params();
+
+  // If one or more files have been selected, the browser interaction is now
+  // complete. Return empty page content to the dialog which now needs to close,
+  // but populate Drupal.settings with information about the selected files.
+  if (isset($params['fid'])) {
+    $fids = is_array($params['fid']) ? $params['fid'] : array($params['fid']);
+    if (!is_numeric($fids[0])) {
+      throw new Exception('Error selecting media, fid param is not an fid or an array of fids');
+    }
+    $files = file_load_multiple($fids);
+    foreach ($files as $file) {
+      media_browser_build_media_item($file);
+    }
+    $setting = array('media' => array('selectedMedia' => array_values($files)));
+    drupal_add_js($setting, 'setting');
+    return $output;
+  }
+}
+
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_media_internet_confirm_form() {
+  $form = array();
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => $_SERVER['HTTP_REFERER'],
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t('
+    If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-overlay'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Delete Draft Resource',
+    '#attributes' => array('id' => array('edit-delete-overlay'))
+  );
+
+  return $form;
 }
