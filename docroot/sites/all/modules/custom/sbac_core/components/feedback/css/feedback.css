@@ -316,16 +316,20 @@
   margin: 0 0 1em 0;
 }
 /* line 304, ../sass/feedback.scss */
+.review-wrap .feedback-items .feedback-item .criteria-set-comments-text .more-less-text li {
+  word-break: normal;
+}
+/* line 310, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .reviewer-comments-title {
   /*font-size: 0.8em;*/
 }
-/* line 308, ../sass/feedback.scss */
+/* line 314, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .comments-title {
   font-size: 0.8em;
   font-weight: bold;
   margin: 0 0 1em 0;
 }
-/* line 314, ../sass/feedback.scss */
+/* line 320, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review {
   float: left;
   font-size: 0.8em;
@@ -333,67 +337,67 @@
   width: 32%;
   /* ie fix */
 }
-/* line 315, ../sass/feedback.scss */
+/* line 321, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review:last-child {
   margin-right: 0;
 }
-/* line 324, ../sass/feedback.scss */
+/* line 330, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .author {
   margin: 0 0 0.5em 0;
 }
-/* line 327, ../sass/feedback.scss */
+/* line 333, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .author a {
   font-weight: bold;
   text-decoration: underline;
 }
-/* line 333, ../sass/feedback.scss */
+/* line 339, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .created {
   margin: 0 0 1em 0;
 }
-/* line 337, ../sass/feedback.scss */
+/* line 343, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .headline {
   font-weight: bold;
 }
-/* line 342, ../sass/feedback.scss */
+/* line 348, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .comments {
   word-break: normal;
 }
-/* line 351, ../sass/feedback.scss */
+/* line 357, ../sass/feedback.scss */
 .review-wrap .field-title {
   font-size: 0.8em;
   font-weight: bold;
   margin: 0 0 0.5em 0;
 }
-/* line 357, ../sass/feedback.scss */
+/* line 363, ../sass/feedback.scss */
 .review-wrap .field-description {
   color: #666;
   font-size: 0.8em;
   margin: 0 0 1em 0;
 }
-/* line 364, ../sass/feedback.scss */
+/* line 370, ../sass/feedback.scss */
 .review-wrap .field-name-field-post-options {
   border-bottom: 1px #ccc solid;
   margin: 0 0 1em 0;
   padding: 0 0 1em 0;
 }
-/* line 369, ../sass/feedback.scss */
+/* line 375, ../sass/feedback.scss */
 .review-wrap .field-name-field-post-options label {
   margin: 0 0 0.5em 0;
 }
-/* line 373, ../sass/feedback.scss */
+/* line 379, ../sass/feedback.scss */
 .review-wrap .field-name-field-post-options .description {
   color: #666;
   font-size: 0.8em;
 }
 
 /* description */
-/* line 382, ../sass/feedback.scss */
+/* line 388, ../sass/feedback.scss */
 .form-item .description {
   margin-bottom: .5em;
 }
 
 /* text in gate keeper confirmation modal */
-/* line 388, ../sass/feedback.scss */
+/* line 394, ../sass/feedback.scss */
 #dialog .gate-keeper-modal-intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -401,42 +405,42 @@
   font-size: 0.8em;
   line-height: normal;
 }
-/* line 396, ../sass/feedback.scss */
+/* line 402, ../sass/feedback.scss */
 #dialog .form-submit {
   float: right;
 }
 
 /* modal */
-/* line 402, ../sass/feedback.scss */
+/* line 408, ../sass/feedback.scss */
 .ui-dialog.ui-widget {
   position: fixed !important;
 }
 
 /* misc */
-/* line 407, ../sass/feedback.scss */
+/* line 413, ../sass/feedback.scss */
 .clear {
   clear: both;
   float: none;
 }
 
-/* line 412, ../sass/feedback.scss */
+/* line 418, ../sass/feedback.scss */
 .hidden {
   display: none;
 }
 
 /** Columns on About **/
-/* line 419, ../sass/feedback.scss */
+/* line 425, ../sass/feedback.scss */
 .ds-2col .group-left {
   width: 45% !important;
   margin-right: 3%;
 }
-/* line 424, ../sass/feedback.scss */
+/* line 430, ../sass/feedback.scss */
 .ds-2col .group-right {
   width: 45%;
   margin-right: 0;
   float: right !important;
 }
-/* line 430, ../sass/feedback.scss */
+/* line 436, ../sass/feedback.scss */
 .ds-2col .field-label {
   font-size: 1.1em;
   margin-bottom: 5px;
@@ -444,65 +448,65 @@
   border-bottom: 1px solid silver;
   color: #18577E;
 }
-/* line 438, ../sass/feedback.scss */
+/* line 444, ../sass/feedback.scss */
 .ds-2col .field {
   margin-bottom: 1.5em;
   line-height: normal;
   font-size: 0.9em;
 }
-/* line 443, ../sass/feedback.scss */
+/* line 449, ../sass/feedback.scss */
 .ds-2col .field ul {
   font-size: 0.9em;
 }
 
-/* line 450, ../sass/feedback.scss */
+/* line 456, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs {
   border: 0;
   margin: 2em;
   padding: 0;
 }
-/* line 455, ../sass/feedback.scss */
+/* line 461, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-list {
   display: none;
 }
-/* line 460, ../sass/feedback.scss */
+/* line 466, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane {
   padding: 0;
 }
-/* line 463, ../sass/feedback.scss */
+/* line 469, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select {
   float: left;
   margin: 0 0 1em 0;
   width: 47%;
 }
-/* line 468, ../sass/feedback.scss */
+/* line 474, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select:nth-child(even) {
   clear: left;
   margin-right: 5%;
 }
-/* line 473, ../sass/feedback.scss */
+/* line 479, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .chzn-container {
   width: auto !important;
 }
-/* line 477, ../sass/feedback.scss */
+/* line 483, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description:last-child {
   display: none;
 }
-/* line 482, ../sass/feedback.scss */
+/* line 488, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title {
   clear: both;
   float: none;
 }
-/* line 488, ../sass/feedback.scss */
+/* line 494, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-alignment-tag-view table {
   width: 100%;
 }
 
-/* line 499, ../sass/feedback.scss */
+/* line 505, ../sass/feedback.scss */
 .field-name-resource-slideshow {
   margin: 0 0 70px 0;
 }
-/* line 502, ../sass/feedback.scss */
+/* line 508, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider {
   font-size: 1.4em;
   margin: 0 auto;
@@ -516,40 +520,40 @@
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 510, ../sass/feedback.scss */
+/* line 516, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider ul {
   margin: 0;
 }
-/* line 516, ../sass/feedback.scss */
+/* line 522, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li {
   margin: 0;
   overflow: hidden;
 }
-/* line 520, ../sass/feedback.scss */
+/* line 526, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li label {
   font-size: 1em;
   font-weight: bold;
   cursor: default;
 }
-/* line 526, ../sass/feedback.scss */
+/* line 532, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field {
   margin: 0 0 10px 0;
   padding: 0 10px;
 }
-/* line 527, ../sass/feedback.scss */
+/* line 533, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field:last-child {
   margin-bottom: 0;
 }
 
 @media all and (max-width: 980px) {
-  /* line 545, ../sass/feedback.scss */
+  /* line 551, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 510px;
   }
 }
 @media all and (max-width: 670px) {
-  /* line 552, ../sass/feedback.scss */
+  /* line 558, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 250px;

@@ -299,6 +299,12 @@
 
         .criteria-set-comments-text {
           margin: 0 0 1em 0;
+
+          .more-less-text {
+            li {
+              word-break: normal;
+            }
+          }
         }
 
         .reviewer-comments-title {
