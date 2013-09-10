@@ -282,7 +282,7 @@
       ul {
         margin-left: 30px;
       }
-      
+
       .feedback-item {
 
         border-bottom: 1px #ccc solid;
@@ -338,8 +338,9 @@
             font-weight: bold;
           }
 
+          /* ie fix */
           .comments {
-
+            word-break: normal;
           }
         }
       }
