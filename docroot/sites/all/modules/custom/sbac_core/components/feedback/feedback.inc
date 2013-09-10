@@ -393,7 +393,5 @@ function send_review_notifications($task, $node, $reviews) {
 
     $task->addTriggeringUser(1);
     $task->save();
-
-    dsmm($task);
   }
 }
