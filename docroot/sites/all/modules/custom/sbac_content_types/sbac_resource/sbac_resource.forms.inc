@@ -1380,6 +1380,8 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_submit_button(&$form, &$form_state) {
+  perm_debug(__FUNCTION__);
+  
   unset($form['#submit']);
   unset($form['#validate']);
   unset($form['actions']['submit']['#submit']);
