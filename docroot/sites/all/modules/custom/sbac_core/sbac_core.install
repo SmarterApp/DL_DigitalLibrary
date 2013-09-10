@@ -57,3 +57,12 @@ function sbac_core_update_7004() {
 
   module_enable($modules);
 }
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Sets correct weight for sbac_core.
+ */
+function sbac_core_update_7005() {
+  db_query("UPDATE system SET weight = 6 WHERE name = 'sbac_core'");
+}

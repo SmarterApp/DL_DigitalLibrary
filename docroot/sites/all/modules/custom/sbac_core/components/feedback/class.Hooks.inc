@@ -385,8 +385,6 @@ class Hooks extends \devtools\Hooks {
             '#markup' => l($text, $url, $options),
           );
 
-          perm_debug(__FUNCTION__);
-
         // submit button
           $form['actions']['submit'] = array(
             '#type' => 'submit',
