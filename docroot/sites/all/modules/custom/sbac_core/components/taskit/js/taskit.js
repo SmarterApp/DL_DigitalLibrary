@@ -34,7 +34,6 @@ Drupal.behaviors.sbac_taskit = {
    * @return {[type]} [description]
    */
   mark_notifications_read: function () {
-    console.log('here');
     $('.section-notifications').once('click-notifications-section', function() {
       $.ajax({
         url: Drupal.settings.sbac_taskit.mark_read_url,
