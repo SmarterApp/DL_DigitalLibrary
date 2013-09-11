@@ -181,7 +181,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   }
 }
 
-button, .button, .form-submit, #edit-submit, #edit-submit--2, #edit-submit--5, #edit-meet-button--2, button.disabled, button[disabled], .button.disabled, .button[disabled], #review-trigger-2, #edit-submit--4 {
+button, .button, .form-submit, #edit-submit, #edit-submit--2, #edit-submit--5, #edit-meet-button--2, button.disabled, button[disabled], .button.disabled, .button[disabled], #edit-submit--4 {
   @include global-button;
 }
 
