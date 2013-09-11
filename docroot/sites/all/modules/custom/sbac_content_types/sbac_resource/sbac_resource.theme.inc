@@ -491,37 +491,42 @@ function _sbac_resource_reviewer_links($fields) {
         break;
       case 'being_reviewed':
         global $user;
-        $under_review = FALSE;
-        // if the current user is performing the gate keeper process
-        $gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', $user->uid, 1, 0, 1);
-        if ($gate_keeper && is_array($gate_keeper)) {
-          $gate_keeper = array_shift($gate_keeper);
-        }
 
-        if ($gate_keeper && (!$gate_keeper->completed || !$gate_keeper->status)) {
-          $url = url('node/' . $nid, array('absolute' => TRUE));
-          $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
-          $variables['links'][] = l('Continue Review', 'node/' . $nid, array('absolute' => TRUE));
-          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
-          $variables['text'] = t('Being Reviewed');
-          $under_review = TRUE;
-        }
+        // check for a completed GK by any user and then init the review process
+        if ($completed = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 1, 1, 'single')) {
+          // check for an active Review by the current user to continue review
+          if ($active = _sbac_resource_determine_feedback($nid, 'review', $user->uid, 1, 0, 1, 'single')) {
+            $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc'));
 
-        if (!$under_review) {
-          $feedback = _sbac_resource_determine_feedback($nid, 'review', $user->uid, 1, 0, 1, 'set');
-          if ($feedback) {
-            // if the user is reviewing it, its "being reviewed"
-            $url = url('node/' . $nid, array('absolute' => TRUE));
             $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
+            $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE));
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
-            $variables['links'][] = l('Continue Review', 'node/' . $nid, array('absolute' => TRUE));
             $variables['text'] = t('Being Reviewed');
           }
+          // start review
           else {
-            $url = url('node/' . $nid, array('absolute' => TRUE));
             $variables['buttons'][] = _sbac_resource_start_review_link($node, 'review');
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
             $variables['links'][] = _sbac_resource_start_review_link($node, 'review', 'link');
+            $variables['text'] = t('Needs Review');
+          }
+        }
+        // no completed GK, so start or continue
+        else {
+          // check for an active GK by the current user to continue review
+          if ($active = _sbac_resource_determine_feedback($nid, 'gate_keeper', $user->uid, 1, 0, 1, 'single')) {
+            $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-gk'));
+
+            $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
+            $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE));
+            $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
+            $variables['text'] = t('Being Reviewed');
+          }
+          // start review
+          else {
+            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
+            $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
+            $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
             $variables['text'] = t('Needs Review');
           }
         }
