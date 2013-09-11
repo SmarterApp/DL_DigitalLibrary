@@ -615,37 +615,47 @@ function _sbac_resource_apply_filters(&$view) {
               switch ($vocabulary->machine_name) {
                 case 'attributes':
                   $view_filters['field_attributes_tid']['value'][] = $tid;
+                  $view_filters['field_attributes_tid']['operator'] = 'and';
                   break;
                 case 'focus':
                   $view_filters['field_focus_tid']['value'][] = $tid;
+                  $view_filters['field_focus_tid']['operator'] = 'and';
                   break;
                 case 'grades':
                   $view_filters['field_grades_tid']['value'][] = $tid;
-                  // $view_filters['field_grades_tid']['operator'] = 'and';
+                  $view_filters['field_grades_tid']['operator'] = 'and';
                   break;
                 case 'intended_student_populations':
                   $view_filters['field_intended_student_tid']['value'][] = $tid;
+                  $view_filters['field_intended_student_tid']['operator'] = 'and';
                   break;
                 case 'digital_media_type':
                   $view_filters['field_digital_media_type_tid']['value'][] = $tid;
+                  $view_filters['field_digital_media_type_tid']['operator'] = 'and';
                   break;
                 case 'subject':
                   $view_filters['field_subject_tid']['value'][] = $tid;
+                  $view_filters['field_subject_tid']['operator'] = 'and';
                   break;
                 case 'geographical_settings':
                   $view_filters['field_geographical_settings_tid']['value'][] = $tid;
+                  $view_filters['field_geographical_settings_tid']['operator'] = 'and';
                   break;
                 case 'educational_use':
                   $view_filters['field_educational_use_tid']['value'][] = $tid;
+                  $view_filters['field_educational_use_tid']['operator'] = 'and';
                   break;
                 case 'intended_end_user':
                   $view_filters['field_intended_end_user_tid']['value'][] = $tid;
+                  $view_filters['field_intended_end_user_tid']['operator'] = 'and';
                   break;
                 case 'smarter_balanced_keyword':
                   $view_filters['field_smarter_balanced_keyword_tid']['value'][] = $tid;
+                  $view_filters['field_smarter_balanced_keyword_tid']['operator'] = 'and';
                   break;
                 case 'technologies_for_classroom_use':
                   $view_filters['field_classroom_technologies_tid']['value'][] = $tid;
+                  $view_filters['field_classroom_technologies_tid']['operator'] = 'and';
                   break;
               }
             }
