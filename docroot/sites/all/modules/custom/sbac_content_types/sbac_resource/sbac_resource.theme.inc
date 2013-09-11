@@ -388,7 +388,7 @@ function _sbac_resource_contributor_links($fields) {
         $url = url('node/' . $nid, array('absolute' => TRUE));
         $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'))));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
-        $variables['text'] = t('Approved');
+        $variables['text'] = t('In Review');
         break;
       case 'published':
         $variables['sticky'] = FALSE;
