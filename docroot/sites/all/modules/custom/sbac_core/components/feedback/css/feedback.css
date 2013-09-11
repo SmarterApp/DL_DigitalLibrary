@@ -61,8 +61,8 @@
   margin: 10px 10px 10px 0;
 }
 /* line 57, ../sass/feedback.scss */
-.review-wrap #edit-tags-cancel, .review-wrap #post-cancel {
-  margin-left: 260px;
+.review-wrap #edit-tags-cancel {
+  margin-left: 2em;
 }
 /* line 64, ../sass/feedback.scss */
 .review-wrap .ajax-progress,
@@ -533,18 +533,17 @@
 /* line 526, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-modal-alignment {
   float: right;
-  margin-right: 0;
 }
-/* line 532, ../sass/feedback.scss */
+/* line 531, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-alignment-tag-view table {
   width: 100%;
 }
 
-/* line 543, ../sass/feedback.scss */
+/* line 542, ../sass/feedback.scss */
 .field-name-resource-slideshow {
   margin: 0 0 70px 0;
 }
-/* line 546, ../sass/feedback.scss */
+/* line 545, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider {
   font-size: 1.4em;
   margin: 0 auto;
@@ -558,40 +557,40 @@
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 554, ../sass/feedback.scss */
+/* line 553, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider ul {
   margin: 0;
 }
-/* line 560, ../sass/feedback.scss */
+/* line 559, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li {
   margin: 0;
   overflow: hidden;
 }
-/* line 564, ../sass/feedback.scss */
+/* line 563, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li label {
   font-size: 1em;
   font-weight: bold;
   cursor: default;
 }
-/* line 570, ../sass/feedback.scss */
+/* line 569, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field {
   margin: 0 0 10px 0;
   padding: 0 10px;
 }
-/* line 571, ../sass/feedback.scss */
+/* line 570, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field:last-child {
   margin-bottom: 0;
 }
 
 @media all and (max-width: 980px) {
-  /* line 589, ../sass/feedback.scss */
+  /* line 588, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 510px;
   }
 }
 @media all and (max-width: 670px) {
-  /* line 596, ../sass/feedback.scss */
+  /* line 595, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 250px;

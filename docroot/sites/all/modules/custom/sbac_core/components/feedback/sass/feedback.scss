@@ -54,8 +54,8 @@
       margin: 10px 10px 10px 0;
     }
 
-    #edit-tags-cancel, #post-cancel {
-      margin-left: 260px;
+    #edit-tags-cancel {
+      margin-left: 2em;
     }
 
   /* get rid of the ajax progres div, throbber, etc. */
@@ -525,7 +525,6 @@
 
         #sbac-resource-modal-alignment {
           float: right;
-          margin-right: 0;
         }
 
         #sbac-resource-alignment-tag-view {
