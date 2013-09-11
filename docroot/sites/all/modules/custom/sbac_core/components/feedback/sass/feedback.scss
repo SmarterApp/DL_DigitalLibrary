@@ -54,6 +54,10 @@
       margin: 10px 10px 10px 0;
     }
 
+    #edit-tags-cancel, #post-cancel {
+      margin-left: 260px;
+    }
+
   /* get rid of the ajax progres div, throbber, etc. */
     .ajax-progress,
   /* hide the messages within #gate-keeper, as they'll be moved via JS to the normal spot and displayed there */
@@ -399,8 +403,20 @@
     line-height: normal;
   }
 
+  .devtools-dialog-content {
+    text-align: right;
+
+    .button {
+      margin-right: 10px;
+    }
+  }
+
   .form-submit {
     float: right;
+  }
+
+  .ajax-progress {
+    display: none;
   }
 }
 
@@ -469,7 +485,7 @@
         .field-widget-options-select {
           float: left;
           margin: 0 0 1em 0;
-          width: 47%;
+          width: 40%;
 
           &:nth-child(even) {
             clear: left;
@@ -477,7 +493,20 @@
           }
 
           .chzn-container {
-            width: auto !important;
+            width: 250px !important;
+          }
+
+          .description {
+            color: #a2a2a2;
+            font-size: 0.75em;
+            margin: 0.5em 0;
+            line-height: 1.25em;
+            max-width: 90%;
+          }
+
+          input {
+            padding: 1px !important;
+            height: 1.5em;
           }
 
           .description:last-child {
@@ -488,6 +517,15 @@
         .alignment-tag-title {
           clear: both;
           float: none;
+        }
+
+        .alignment-tag-title-help, .sbac-resource-required {
+          font-size: 0.75em;
+        }
+
+        #sbac-resource-modal-alignment {
+          float: right;
+          margin-right: 0;
         }
 
         #sbac-resource-alignment-tag-view {
