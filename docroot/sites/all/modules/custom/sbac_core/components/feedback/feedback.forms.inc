@@ -8,7 +8,7 @@
  * Validation handler for ECK Feedback forms.
  */
 function feedback_eck_feedback_form_validate($form, &$form_state) {
-  $values = &$form_state['values'];
+  $values = $form_state['values'];
   $lang = $values['entity']->language;
 
   // determines the error message for given field
