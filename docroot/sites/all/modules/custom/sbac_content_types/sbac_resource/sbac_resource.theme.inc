@@ -519,9 +519,9 @@ function _sbac_resource_reviewer_links($fields) {
           }
           else {
             $url = url('node/' . $nid, array('absolute' => TRUE));
-            $variables['buttons'][] = l('Start Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
+            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'review');
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
-            $variables['links'][] = l('Start Review', 'node/' . $nid, array('absolute' => TRUE));
+            $variables['links'][] = _sbac_resource_start_review_link($node, 'review', 'link');
             $variables['text'] = t('Needs Review');
           }
         }
@@ -692,6 +692,12 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
       return '';
     }
   }
+  elseif ($type == 'review') {
+    $stub = 'review';
+    if (!resource_access('edit quality criteria', $node)) {
+      return '';
+    }
+  }
   elseif ($type == 'post') {
     $stub = 'post';
     if (!resource_access('start post', $node)) {
@@ -722,6 +728,7 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
           'use-dialog',
           'medium',
           'button',
+          'start-review-trigger',
         ),
         'id' => $trigger_id,
       ),
@@ -733,6 +740,7 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
         'class' => array(
           'use-ajax',
           'use-dialog',
+          'start-review-trigger',
         ),
         'id' => $trigger_id,
       ),
