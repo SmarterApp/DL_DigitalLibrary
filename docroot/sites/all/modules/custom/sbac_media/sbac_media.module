@@ -161,6 +161,16 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
     '#title' => t('Embed Video URL'),
   );
 
+  $form['field_file_container']['field_embed_button'] = array(
+    '#markup' => l('Embed Video', 'sbac-media/nojs/add-embed-confirmation', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style',
+        'id' => 'sbac-media-modal-embed'
+      ),
+      'query' => array('nid' => $form['#node']->nid)
+    )),
+  );
+
   $form['field_file_container']['field_file_upload'] = array(
     '#type' => 'file',
     '#title' => t('Upload2'),
