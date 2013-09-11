@@ -689,7 +689,7 @@ function sbac_resource_digital_library_page() {
   $view->_post_execute();
   $resource_layout_view = $view->preview();
   $_SESSION['sbac_search_count'] = $view->total_rows;
-  dpq($view->build_info['query']);
+  // dpq($view->build_info['query']);
 
   // if there is 0 rows.
   $count = count($view->result);
