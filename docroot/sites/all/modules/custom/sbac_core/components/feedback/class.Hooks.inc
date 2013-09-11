@@ -294,9 +294,6 @@ class Hooks extends \devtools\Hooks {
           $form_utility->attachHelpfulInfo();
           $form_utility->process();
           $form_utility->postProcess();
-
-          // $form['field_quality_set']['und'][0]['field_comments']['und'][0]['value']['#needs_validation'] = FALSE;
-          // print_rr($form['field_quality_set']['und'][0]['field_comments']);exit();
         }
     }
     // resource node form on the main resource profile page (ie. edit tags)
@@ -617,7 +614,6 @@ class Hooks extends \devtools\Hooks {
     // the form's default value to Draft, in order to force the creation of a new
     // revision. We don't need/want this workflow, so we change the form's state back
     // to published.
-    // dsmm($moderation_state);
 
     if ($moderation_state == workbench_moderation_state_published()) {
       $form['options']['workbench_moderation_state_new']['#default_value'] = $moderation_state;
