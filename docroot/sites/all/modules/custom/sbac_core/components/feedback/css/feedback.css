@@ -511,39 +511,40 @@
   margin: 0.5em 0;
   line-height: 1.25em;
   max-width: 90%;
+  word-break: normal;
 }
-/* line 507, ../sass/feedback.scss */
+/* line 508, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select input {
   padding: 1px !important;
   height: 1.5em;
 }
-/* line 512, ../sass/feedback.scss */
+/* line 513, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description:last-child {
   display: none;
 }
-/* line 517, ../sass/feedback.scss */
+/* line 518, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title {
   clear: both;
   float: none;
 }
-/* line 522, ../sass/feedback.scss */
+/* line 523, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title-help, #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .sbac-resource-required {
   font-size: 0.75em;
 }
-/* line 526, ../sass/feedback.scss */
+/* line 527, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-modal-alignment {
   float: right;
 }
-/* line 531, ../sass/feedback.scss */
+/* line 532, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-alignment-tag-view table {
   width: 100%;
 }
 
-/* line 542, ../sass/feedback.scss */
+/* line 543, ../sass/feedback.scss */
 .field-name-resource-slideshow {
   margin: 0 0 70px 0;
 }
-/* line 545, ../sass/feedback.scss */
+/* line 546, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider {
   font-size: 1.4em;
   margin: 0 auto;
@@ -557,40 +558,40 @@
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 553, ../sass/feedback.scss */
+/* line 554, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider ul {
   margin: 0;
 }
-/* line 559, ../sass/feedback.scss */
+/* line 560, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li {
   margin: 0;
   overflow: hidden;
 }
-/* line 563, ../sass/feedback.scss */
+/* line 564, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li label {
   font-size: 1em;
   font-weight: bold;
   cursor: default;
 }
-/* line 569, ../sass/feedback.scss */
+/* line 570, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field {
   margin: 0 0 10px 0;
   padding: 0 10px;
 }
-/* line 570, ../sass/feedback.scss */
+/* line 571, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field:last-child {
   margin-bottom: 0;
 }
 
 @media all and (max-width: 980px) {
-  /* line 588, ../sass/feedback.scss */
+  /* line 589, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 510px;
   }
 }
 @media all and (max-width: 670px) {
-  /* line 595, ../sass/feedback.scss */
+  /* line 596, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 250px;
