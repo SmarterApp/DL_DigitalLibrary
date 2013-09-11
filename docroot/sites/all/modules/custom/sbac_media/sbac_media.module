@@ -26,34 +26,6 @@ function sbac_media_menu() {
     'title' => 'Internet Confirmation',
   );
 
-//  $items['sbac_resource/%ctools_js/delete-resource'] = array(
-//    'page callback' => 'sbac_resource_delete_resource_modal_callback',
-//    'page arguments' => array(1),
-//    'access arguments' => array('access content'),
-//    'file' => 'sbac_resource.forms.inc',
-//  );
-//
-//  $items['sbac-resource/download/%node'] = array(
-//    'page callback' => 'sbac_resource_download_contents',
-//    'page arguments' => array(2),
-//    'access arguments' => array('access content'),
-//  );
-//
-//  $items['sbac-resource/download/%node'] = array(
-//    'page callback' => 'sbac_resource_download_contents',
-//    'page arguments' => array(2),
-//    'access arguments' => array('access content'),
-//  );
-//
-//  $items['digital-library-resources'] = array(
-//    'title' => 'Digital Library Resources',
-//    'page callback' => 'sbac_resource_digital_library_page',
-//    'access arguments' => array('access content'),
-//    'type' => MENU_NORMAL_ITEM,
-//    'menu_name' => 'main-menu',
-//    'weight' => -50,
-//  );
-
   return $items;
 }
 
@@ -165,96 +137,76 @@ function sbac_media_create_embed_url($file) {
 }
 
 /**
- * Perform alterations on file formatters.
+ * Creates a form file upload element custom to SBAC.
  *
- * Set related videos to false for youtube.
+ * // embed url ability -> confirmation dialogs after, custom form.
+ * // choose file and upload ability -> custom form
  *
- * @param $info
- *   Array of information on file formatters exposed by
- *   hook_file_formatter_info() implementations.
+ * @param $form
  */
-function sbac_media_file_formatter_info_alter(&$info) {
-  if (isset($info['media_youtube_video'])) {
-    $info['media_youtube_video']['default_settings']['rel'] = FALSE;
-  }
-}
-
-function sbac_media_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'media_internet_add') {
-    $form['#submit'][] = 'sbac_media_internet_add_submit_handler';
-  }
-}
-
-function sbac_media_internet_add_submit_handler(&$form, &$form_state) {
-  if ($form_state['values']['embed_code'] != NULL &&
-    (strpos($form_state['values']['embed_code'], 'youtube') ||
-     strpos($form_state['values']['embed_code'], 'vimeo'))) {
-    $form_state['old_redirect'] = $form_state['redirect'];
-    $form_state['redirect'] = array();
-    $form_state['redirect'][] = 'sbac-media/internet-confirm';
-  }
-}
-
-function sbac_media_internet_confirm() {
-  //originally this was called (media-browser?fid=123), which runs this code
-  // so we might need this.
-  $form = drupal_get_form('sbac_media_internet_confirm_form');
-  return drupal_render($form);
-
-  $output = array();
-  $output['#attached']['library'][] = array('media', 'media_browser_page');
-
-  module_load_include('inc', 'media', 'includes/media.browser');
-  $params = media_set_browser_params();
-
-  // If one or more files have been selected, the browser interaction is now
-  // complete. Return empty page content to the dialog which now needs to close,
-  // but populate Drupal.settings with information about the selected files.
-  if (isset($params['fid'])) {
-    $fids = is_array($params['fid']) ? $params['fid'] : array($params['fid']);
-    if (!is_numeric($fids[0])) {
-      throw new Exception('Error selecting media, fid param is not an fid or an array of fids');
-    }
-    $files = file_load_multiple($fids);
-    foreach ($files as $file) {
-      media_browser_build_media_item($file);
-    }
-    $setting = array('media' => array('selectedMedia' => array_values($files)));
-    drupal_add_js($setting, 'setting');
-    return $output;
-  }
-}
-
-
-/**
- * The cancel / delete form
- *
- * @return array
- */
-function sbac_media_internet_confirm_form() {
-  $form = array();
-
-  $form['hidden_url'] = array(
-    '#type' => 'hidden',
-    '#value' => $_SERVER['HTTP_REFERER'],
+function sbac_resource_media_form_element(&$form, &$form_state) {
+  $form['field_file_container'] = array(
+    '#prefix'=>'<div id="sbac-field-file-container">',
+    '#suffix'=>'</div>',
   );
 
-  $form['submit_description'] = array(
-    '#markup' => '<p>' . t('
-    If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '</p>',
+  if (isset($form['#node']->nid)) {
+    $form['field_file_container']['documents_view'] = array(
+      '#markup' => views_embed_view('resource_documents', 'documents', $form['#node']->nid),
+    );
+  }
+
+  $form['field_file_container']['field_embed_video'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Embed Video URL'),
   );
 
-  $form['cancel'] = array(
+  $form['field_file_container']['field_file_upload'] = array(
+    '#type' => 'file',
+    '#title' => t('Upload2'),
+    //'#title_display' => 'invisible',
+    '#size' => 22,
+    '#theme_wrappers' => array(),
+  );
+
+  $form['field_file_container']['field_file_upload_button'] = array(
     '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('id' => array('edit-cancel-overlay'))
+    '#value' => 'upload',
+    '#validate' => array('sbac_resource_media_form_element_validate'),
+    '#submit' => array('sbac_resource_media_form_element_submit'),
+    '#ajax'=> array(
+      'callback'=>'sbac_resource_media_form_element_submit',
+      'wrapper'=> 'sbac-field-file-container',
+      'method'=> 'replace',
+      'effect'=> 'fade',
+    ),
   );
 
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Delete Draft Resource',
-    '#attributes' => array('id' => array('edit-delete-overlay'))
-  );
+  $form['#group_children']['field_file_container'] = 'group_materials';
+}
 
-  return $form;
+// add validator functions here.
+function sbac_resource_media_form_element_validate($form, $form_state) {
+  if (!isset($_FILE['files'])) {
+    //form_set_error($form['field_file_container']['field_file_upload'], t('You must select a file22'));
+  }
+  //return $form['field_file_container'];
+}
+
+function sbac_resource_media_form_element_submit($form, $form_state) {
+  $file = file_save_upload('field_file_upload', array('file_validate_extensions' => array('png gif jpg jpeg')), "public://", $replace = FILE_EXISTS_REPLACE);
+  if ($file && !$form_state['executed']) {
+    if (isset($form_state['node'])) {
+      $node = $form_state['node'];
+      $document_id_hash = $file->filename . '::' . $file->filesize . '::' . $file->fid;
+      $node->field_document_information[LANGUAGE_NONE][] = array('value' => $document_id_hash);
+      entity_save_field(array('field_document_information'), $node, 'node', $node->nid);
+    }
+    $file->status = FILE_STATUS_PERMANENT;
+    file_save($file);
+  }
+
+  // Update the view
+  $form['field_file_container']['documents_view']['#markup'] = views_embed_view('resource_documents', 'documents', $form['#node']->nid);
+  return $form['field_file_container'];
 }

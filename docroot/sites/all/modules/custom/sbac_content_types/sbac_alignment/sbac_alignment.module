@@ -15,91 +15,92 @@ define('SBAC_ALIGNMENT_MOD_PATH', drupal_get_path('module', 'sbac_alignment'));
 /**
  * Implements hook_menu().
  */
-function sbac_alignment_menu(){
+function sbac_alignment_menu() {
   $items = array();
 
   //AJAX
   $items['ajax-terms'] = array(
-    'title'           => 'AJAX',
-    'page callback'   => 'sbac_alignment_ajax_terms_callback',
-    'access arguments'=> array('access content'),
-    'type'            => MENU_CALLBACK,
-    'file'            => 'sbac_alignment.ajax.inc',
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_terms_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
   );
   $items['ajax-alignment-breadcrumbs'] = array(
-    'title'           => 'AJAX',
-    'page callback'   => 'sbac_alignment_ajax_alignment_breadcrumbs_callback',
-    'access arguments'=> array('access content'),
-    'type'            => MENU_CALLBACK,
-    'file'            => 'sbac_alignment.ajax.inc',
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_alignment_breadcrumbs_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
   );
   $items['ajax-alignment-page'] = array(
-    'title'           => 'AJAX',
-    'page callback'   => 'sbac_alignment_ajax_alignment_page',
-    'access arguments'=> array('access content'),
-    'type'            => MENU_CALLBACK,
-    'file'            => 'sbac_alignment.ajax.inc',
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_alignment_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
   );
   $items['ajax-alignment-form'] = array(
-    'title'           => 'AJAX',
-    'page callback'   => 'sbac_alignment_ajax_alignment_form_callback',
-    'access arguments'=> array('access content'),
-    'type'            => MENU_CALLBACK,
-    'file'            => 'sbac_alignment.ajax.inc',
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_alignment_form_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
   );
   $items['ajax-alignment-crud'] = array(
-    'title'           => 'AJAX',
-    'page callback'   => 'sbac_alignment_ajax_alignment_crud_callback',
-    'access arguments'=> array('access content'),
-    'type'            => MENU_CALLBACK,
-    'file'            => 'sbac_alignment.ajax.inc',
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_alignment_crud_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
   );
-  
+
   //FORMS
   $items['alignment-form'] = array(
-    'title'           => 'AJAX',
-    'page callback'   => 'drupal_get_form',
-    'page arguments'  => array('sbac_alignment_alignment_form'),
-    'access arguments'=> array('access content'),
-    'type'            => MENU_CALLBACK,
+    'title' => 'AJAX',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_alignment_alignment_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
   );
 
   //DEV FUNCTIONS
   $items['test-import'] = array(
-    'title'           => 'DEV',
-    'page callback'   => 'sbac_alignment_test_import',
-    'access arguments'=> array('admin'),
-    'type'            => MENU_CALLBACK,
-    'file'            => 'sbac_alignment.dev.inc',
+    'title' => 'DEV',
+    'page callback' => 'sbac_alignment_test_import',
+    'access arguments' => array('admin'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.dev.inc',
   );
   $items['ccss-import'] = array(
-    'title'           => 'DEV',
-    'page callback'   => 'sbac_alignment_batch_importer_page',
-    'access arguments'=> array('admin'),
-    'type'            => MENU_CALLBACK,
-    'file'            => 'sbac_alignment.dev.inc',
+    'title' => 'DEV',
+    'page callback' => 'sbac_alignment_batch_importer_page',
+    'access arguments' => array('admin'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.dev.inc',
   );
   $items['delete-vocab'] = array(
-    'title'           => 'DEV',
-    'page callback'   => 'sbac_alignment_delete_vocab',
-    'access arguments'=> array('access content'),
-    'type'            => MENU_CALLBACK,
-    'file'            => 'sbac_alignment.dev.inc',
+    'title' => 'DEV',
+    'page callback' => 'sbac_alignment_delete_vocab',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.dev.inc',
   );
 
   return $items;
 }
+
 /**
  * Form Callback
  * Alignment form.
  */
 function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $ref_node = 0;
-  if(isset($_GET['tid'])) {
+  if (isset($_GET['tid'])) {
     $tid = $_GET['tid'];
   }
 
-  if(isset($_POST['ref_node'])) {
+  if (isset($_POST['ref_node'])) {
     $ref_node = $_POST['ref_node'];
   }
 
@@ -107,7 +108,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
     '#type' => 'hidden',
     '#value' => $ref_node,
     '#default_value' => $ref_node,
-    '#attributes' =>  array(
+    '#attributes' => array(
       'id' => 'alignment_ref',
     ),
   );
@@ -115,8 +116,8 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
   $terms = taxonomy_get_tree($vocab->vid, $tid, SBAC_ALIGNMENT_MAX_DEPTH);
 
-  if(!empty($terms)) {
-    foreach($terms as $term) {
+  if (!empty($terms)) {
+    foreach ($terms as $term) {
       $form['term-' . $term->tid] = array(
         '#type' => 'checkbox',
         '#title' => $term->name,
@@ -144,41 +145,42 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
       'Requires' => 'Requires'
     ),
   );
-  
+
   $form['ccss-submit'] = array(
     '#markup' => l(t('Add to Resource'), '#',
-       array(
-         'attributes' => array(
-           'class' => 'form-submit',
-           'id' => 'ccss-submit',
-          ),
-         'external' =>  TRUE,
+      array(
+        'attributes' => array(
+          'class' => 'form-submit',
+          'id' => 'ccss-submit',
+        ),
+        'external' => TRUE,
       )
     )
   );
   $form['ccss-cancel'] = array(
     '#markup' => l(t('Cancel'), '#',
-       array(
-         'attributes' => array(
-           'class' => 'button ctools-close-modal close',
-           'id' => 'ccss-cancel',
-          ),
-         'external' =>  TRUE,
+      array(
+        'attributes' => array(
+          'class' => 'button ctools-close-modal close',
+          'id' => 'ccss-cancel',
+        ),
+        'external' => TRUE,
       )
     )
   );
-  
+
   $form['#attached'] = array(
-      'css' => array(
-        SBAC_ALIGNMENT_MOD_PATH . '/css/alignment.css',
-      ),
-      'js' => array(
-        drupal_get_path('theme', 'sbac') . '/js/custom.js',
-      ),
-    );
+    'css' => array(
+      SBAC_ALIGNMENT_MOD_PATH . '/css/alignment.css',
+    ),
+    'js' => array(
+      drupal_get_path('theme', 'sbac') . '/js/custom.js',
+    ),
+  );
 
   return $form;
 }
+
 /**
  * Custom override
  * Modified drupal_goto to not encode the path
@@ -207,6 +209,7 @@ function drupal_custom_goto($path = '', array $options = array(), $http_response
   // drupal_goto() call gets executed upon redirection.
   drupal_exit($url);
 }
+
 /**
  * Helper Function
  * Adds single terms.
@@ -254,16 +257,17 @@ function sbac_alignment_add_term($vid, $term, $parent_tid) {
   taxonomy_term_save($parent);
   return $parent;
 }
+
 /**
  * Helper function
  * Add terms into the vocab.
  */
-function sbac_alignment_add_terms ($vid, $terms, $parent_tid = 0) {
-  foreach($terms as $term => $data) {
+function sbac_alignment_add_terms($vid, $terms, $parent_tid = 0) {
+  foreach ($terms as $term => $data) {
 
     $parent = (object) array(
       'name' => $term,
-      'description' => (isset($data['desc']))? $data['desc'] : '',
+      'description' => (isset($data['desc'])) ? $data['desc'] : '',
       'weight' => 0,
       'vid' => $vid,
       'parent' => $parent_tid,
@@ -275,19 +279,21 @@ function sbac_alignment_add_terms ($vid, $terms, $parent_tid = 0) {
     }
   }
 }
+
 /**
  * Helper Function
  * Gets the depth of the term.
  */
 function sbac_alignment_term_depth($tid) {
   $parent = db_query("SELECT parent FROM {taxonomy_term_hierarchy} WHERE tid = :tid", array(':tid' => $tid))->fetchField();
-  if($parent == 0) {
+  if ($parent == 0) {
     return 1;
   }
   else {
-    return 1+sbac_alignment_term_depth($parent);
+    return 1 + sbac_alignment_term_depth($parent);
   }
 }
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -296,6 +302,7 @@ function sbac_alignment_term_depth($tid) {
 function sbac_alignment_update_projects_alter(&$projects) {
   unset($projects['sbac_alignment']);
 }
+
 /**
  * Implements hook_form_alter().
  *
@@ -331,6 +338,7 @@ function sbac_alignment_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 }
+
 /**
  * Implements hook_form_submit_handler()
  *

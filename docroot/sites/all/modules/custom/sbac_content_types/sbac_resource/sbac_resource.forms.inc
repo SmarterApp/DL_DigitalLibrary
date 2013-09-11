@@ -1130,7 +1130,15 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
   //$form['field_file'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_file_after_build';
 
+  // NEW STUFF!!!
+  // embed a view here, displays a list of materials (pri/sec), delete option, filename, file size
+  // embed url ability -> confirmation dialogs after, custom form.
+  // choose file and upload ability -> custom form
+  // error messages move inline
+  sbac_resource_media_form_element($form, $form_state);
+
   // Materials
+  $form['field_file']['#access'] = FALSE;
   $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
   // License Informations
   // Let's remove the N/A Option from the license information section
@@ -1535,6 +1543,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_unique_views']['#access'] = FALSE;
   $form['field_alignment_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
+  $form['field_document_information']['#access'] = FALSE;
   // $form['field_file']['und']['add_more']['#access'] = FALSE;
 }
 
