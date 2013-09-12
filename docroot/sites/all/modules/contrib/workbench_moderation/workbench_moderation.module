@@ -1094,10 +1094,11 @@ function workbench_moderation_node_data($node) {
   else {
     // Fetch the most recent published revision.
     $query = db_select('node', 'n');
-    $query->addJoin('INNER', 'node_revision', 'r', 'n.vid = r.vid');
+    $query->addJoin('INNER', 'node_revision', 'r', 'n.nid = r.nid');
     $query->addJoin('LEFT OUTER', 'workbench_moderation_node_history', 'm', 'r.vid = m.vid');
     $query->condition('n.nid', $node->nid)
       ->condition('n.status', 1)
+      ->condition('m.published', 1)
       ->orderBy('m.hid', 'DESC')
       ->fields('r', array('nid', 'vid', 'title', 'timestamp'))
       ->fields('m');
