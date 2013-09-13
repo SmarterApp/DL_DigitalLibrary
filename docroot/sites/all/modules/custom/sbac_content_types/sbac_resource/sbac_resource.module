@@ -712,7 +712,7 @@ function _sbac_resource_apply_filters(&$view) {
 
     if ($grades = field_get_items('user', $account, 'field_grade_level_s_')) {
       $grades = array_map($get_tid, $grades);
-
+      
       // not grade specific - remove filters
       if (in_array($grade_tid_all, $grades)) {
         unset($view_filters['field_grades_tid']);
@@ -722,7 +722,7 @@ function _sbac_resource_apply_filters(&$view) {
         $view_filters['field_grades_tid']['value'] += $grades;
       }
     }
-
+    
     $groups = array(
       'operator' => 'AND',
       'groups' => array(
