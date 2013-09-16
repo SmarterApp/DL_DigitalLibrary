@@ -1,7 +1,23 @@
 <?php
-namespace sbac_core\components\feedback\section;
+namespace sbac_core\components\feedback\sections;
 
-class SectionQc extends Base {
+class Qc extends Base {
+  const name = 'qc';
+  const title = 'Quality Criteria Review';
+  const permission = 'view quality criteria';
+
+  /**
+   * Returns a modal-triggering "start review" link.
+   * @return [type]       [description]
+   */
+  public function getStartLink() {
+    // if (!resource_access('start gate keeper', $this->_node)) {
+    //   return '';
+    // }
+
+    return parent::getStartLink('gate-keeper', 'qc');
+  }
+
   /**
    * Builds and returns the content for current section.
    * @return [type] [description]

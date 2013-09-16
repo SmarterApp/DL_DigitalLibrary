@@ -1,7 +1,23 @@
 <?php
 namespace sbac_core\components\feedback\sections;
 
-class SectionAbout extends Base {
+class About extends Base {
+  const name = 'about';
+  const title = 'About This Resource';
+  const permission = 'view about';
+
+  /**
+   * Returns a modal-triggering "start review" link.
+   * @return [type]       [description]
+   */
+  public function getStartLink() {
+    if (!resource_access('start gate keeper', $this->_node)) {
+      return '';
+    }
+
+    return parent::getStartLink('gate-keeper', 'about');
+  }
+
   /**
    * Builds and returns the content for current section.
    * @return [type] [description]

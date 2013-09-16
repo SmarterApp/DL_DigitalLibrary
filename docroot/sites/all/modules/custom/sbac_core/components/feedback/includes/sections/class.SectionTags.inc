@@ -1,5 +1,5 @@
 <?php
-namespace sbac_core\components\feedback\section;
+namespace sbac_core\components\feedback\sections;
 
 class SectionTags extends Base {
   /**
