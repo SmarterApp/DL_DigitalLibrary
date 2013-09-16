@@ -6,15 +6,15 @@ if (typeof Feedback == 'undefined') {
 
 // Quality Criteria data
 Feedback.qc = {
-  form: '#eck-review-form form',
+  form: '#eck-qc-form form',
 
-  decision_link:     '#review-complete',
+  decision_link:     '#qc-complete',
   decision_options:  '.form-item-field-rec-options-und input',
 
   buttons: {
     complete: {
       button: '.action-complete',
-      anchor: '#review-complete'
+      anchor: '#qc-complete'
     }
   }
 };
@@ -49,7 +49,7 @@ Drupal.behaviors.feedback_quality_criteria = {
           Feedback.qc.decision_link,
           Feedback.qc.decision_options,
           data.qc.decision_radio_states,
-          'review-complete'
+          'ec-complete'
         );
       }
   }

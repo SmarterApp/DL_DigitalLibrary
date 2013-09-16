@@ -20,7 +20,7 @@ class SectionGk extends Base {
       $output .= $this->getStartLink();
     }
 
-    $output = '<div class="review-wrap" id="review-wrap-gk">' . $output . '</div>';
+    $output = '<div class="feedback-wrap" id="feedback-wrap-gk">' . $output . '</div>';
 
     return $output;
   }

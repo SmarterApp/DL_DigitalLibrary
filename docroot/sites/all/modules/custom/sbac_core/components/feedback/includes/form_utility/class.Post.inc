@@ -44,9 +44,9 @@ class Post extends Base {
     $this->_form['field_post_options'][$this->_lang]['#title'] .= $this->_required_marker;
 
     // prep review sets
-    module_load_include('inc', 'sbac_core', 'components/feedback/includes/form_utility/class.Review');
+    module_load_include('inc', 'sbac_core', 'components/feedback/includes/form_utility/class.Qc');
 
-    $reviewUtil = new Review($this->_form, $this->_form_state, $this->_bundle_info);
+    $reviewUtil = new Qc($this->_form, $this->_form_state, $this->_bundle_info);
     if ($focus = field_entity_value($this->_resource, 'field_focus')) {
       $reviewUtil->setPrefix('qc_' . $focus->tid . '_');
       $total = $reviewUtil->getSetTotal();

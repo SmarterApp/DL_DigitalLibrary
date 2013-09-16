@@ -9,9 +9,9 @@ class SectionQc extends Base {
   public function getContent() {
     $output = '';
 
-    drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_quality_criteria.js');
+    drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_qc.js');
 
-    if (!$output = $this->getEntityForm('review', 'quality review readonly')) {
+    if (!$output = $this->getEntityForm('qc', 'quality review readonly')) {
       if ($intro = variable_get('resource_review_intro', '')) {
         $output .= '<div class="gate-keeper-intro">' . filter_text($intro) . '</div>';
       }
@@ -19,7 +19,7 @@ class SectionQc extends Base {
       $output .= $this->getStartLink();
     }
 
-    $output = '<div class="review-wrap" id="review-wrap-qcr">' . $output . '</div>';
+    $output = '<div class="feedback-wrap" id="feedback-wrap-qcr">' . $output . '</div>';
 
     return $output;
   }

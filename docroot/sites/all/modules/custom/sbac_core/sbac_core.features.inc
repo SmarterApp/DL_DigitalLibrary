@@ -23,24 +23,24 @@ function sbac_core_ctools_plugin_api() {
  */
 function sbac_core_eck_bundle_info() {
   $items = array(
-  'feedback_gate_keeper' => array(
-  'machine_name' => 'feedback_gate_keeper',
-  'entity_type' => 'feedback',
-  'name' => 'gate_keeper',
-  'label' => 'Gate Keeper',
-),
-  'feedback_post' => array(
-  'machine_name' => 'feedback_post',
-  'entity_type' => 'feedback',
-  'name' => 'post',
-  'label' => 'Post',
-),
-  'feedback_review' => array(
-  'machine_name' => 'feedback_review',
-  'entity_type' => 'feedback',
-  'name' => 'review',
-  'label' => 'Review',
-),
+    'feedback_gate_keeper' => array(
+      'machine_name' => 'feedback_gate_keeper',
+      'entity_type' => 'feedback',
+      'name' => 'gate_keeper',
+      'label' => 'Gate Keeper',
+    ),
+    'feedback_post' => array(
+      'machine_name' => 'feedback_post',
+      'entity_type' => 'feedback',
+      'name' => 'post',
+      'label' => 'Post',
+    ),
+    'feedback_qc' => array(
+      'machine_name' => 'feedback_qc',
+      'entity_type' => 'feedback',
+      'name' => 'qc',
+      'label' => 'Quality Criteria Review',
+    ),
   );
   return $items;
 }
@@ -50,9 +50,9 @@ function sbac_core_eck_bundle_info() {
  */
 function sbac_core_eck_entity_type_info() {
 $items = array(
-       'feedback' => array(
+  'feedback' => array(
   'name' => 'feedback',
-  'label' => 'feedback',
+  'label' => 'Feedback',
   'properties' => array(
     'uid' => array(
       'label' => 'Author',

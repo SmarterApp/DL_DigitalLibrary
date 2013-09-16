@@ -119,7 +119,7 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
       break;
 
-    case 'review':
+    case 'qc':
       // there is an edge-case where too many users load the Quality Review form
       // at the same time; since we only want a maximum of three of these, we do an
       // extra permission check here (which will fail if the max number of entities
@@ -202,11 +202,11 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
       }
     };
 
-    if ($entity->type == 'review') {
+    if ($entity->type == 'qc') {
       // we need to rebuild the complete review buttons when the recommendation
       // option changes
       try {
-        module_load_include('inc', 'sbac_core', '/components/feedback/includes/form_utility/class.Review');
+        module_load_include('inc', 'sbac_core', '/components/feedback/includes/form_utility/class.Qc');
 
         $option = field_get_value($form_state['values'], 'field_rec_options');
         $states = feedback_recommendation_states();
@@ -214,7 +214,7 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
         $form_copy = $form;
         $state_copy = $form_state;
 
-        $utility = new sbac_core\components\feedback\form_utility\Review($form_copy, $state_copy, array());
+        $utility = new sbac_core\components\feedback\form_utility\Qc($form_copy, $state_copy, array());
         $rebuild_decision_radios($option, $states, $utility, $form);
       }
       catch (\Exception $e) {
@@ -305,10 +305,10 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       entity_save('feedback', $entity);
 
       // now that we have a completed and 'met' gate keeper, the user should start
-      // the Quality Criteria Review flow, so create the review entity
+      // the Quality Criteria Review flow, so create the qc entity
       $qc = new stdClass;
       $qc->title = $node->title .' - Review - ' . $user->uid;
-      $qc->type = 'review';
+      $qc->type = 'qc';
       $qc->uid = $user->uid;
       $qc->created = REQUEST_TIME;
       $qc->changed = REQUEST_TIME;
@@ -338,9 +338,9 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
 }
 
 /**
- * Submit handler for ECK Review form.
+ * Submit handler for ECK Qc form.
  */
-function feedback_eck_review_form_submit($form, &$form_state) {
+function feedback_eck_qc_form_submit($form, &$form_state) {
   if ($form_state['values']['action'] == 'validate') {
     return;
   }
@@ -373,7 +373,7 @@ function feedback_eck_review_form_submit($form, &$form_state) {
 
       $query = "  SELECT  COUNT(id) as count
                   FROM    eck_feedback
-                  WHERE   type = 'review'
+                  WHERE   type = 'qc'
                   AND     node_id = :node_id
                   AND     status = 1
                   AND     completed = 1
@@ -386,7 +386,7 @@ function feedback_eck_review_form_submit($form, &$form_state) {
       if ($count == $max_review_count) {
         $query = "  SELECT  id
                     FROM    eck_feedback
-                    WHERE   type = 'review'
+                    WHERE   type = 'qc'
                     AND     node_id = :node_id
                     AND     status = 1
                     AND     completed = 1
@@ -479,7 +479,7 @@ function feedback_eck_post_form_submit($form, &$form_state) {
   // find the associated reviews
   $query = "  SELECT  id
               FROM    eck_feedback
-              WHERE   type = 'review'
+              WHERE   type = 'qc'
               AND     node_id = :node_id
               AND     status = 1
               AND     completed = 1

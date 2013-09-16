@@ -1,9 +1,9 @@
 <?php
 namespace sbac_core\components\feedback\form_utility;
 
-class Review extends Base {
+class Qc extends Base {
   protected $_prefix = '';
-  protected $_bundle_friendly = 'review';
+  protected $_bundle_friendly = 'qc';
 
   protected $_set_field = 'field_review_set';
   protected $_radio_field = 'field_level';
@@ -129,7 +129,7 @@ class Review extends Base {
     );
 
     // add custom submit handler
-    $this->_form['#submit'][] = 'feedback_eck_review_form_submit';
+    $this->_form['#submit'][] = 'feedback_eck_qc_form_submit';
 
     parent::postProcess();
   }
@@ -144,7 +144,7 @@ class Review extends Base {
 
     $query = "  SELECT    id
                 FROM      eck_feedback
-                WHERE     type = 'review'
+                WHERE     type = 'qc'
                 AND       status = 1
                 AND       completed = 1
                 AND       node_id = :node_id
@@ -164,7 +164,7 @@ class Review extends Base {
 
       list($headline, $comments) = $content_callback($entity);
 
-      $form['feedback_' . $entity->id]['#markup'] = theme('review_teaser', array(
+      $form['feedback_' . $entity->id]['#markup'] = theme('qc_teaser', array(
         'id'          => $entity->id,
         'author'      => $author,
         'created'     => $created,

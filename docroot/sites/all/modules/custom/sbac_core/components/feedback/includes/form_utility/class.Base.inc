@@ -59,7 +59,7 @@ class Base {
       $this->_base_url = array(
         'node',
         $this->_resource->nid,
-        'review',
+        'feedback',
         $this->_bundle_friendly,
       );
 

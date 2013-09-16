@@ -10,7 +10,7 @@
  * @param  [type] $id             [description]
  * @return [type]                 [description]
  */
-function resource_review_form($form, &$form_state, $node, $state, $trigger_id, $id) {
+function resource_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) {
   $form = array();
   global $user;
 
@@ -114,13 +114,13 @@ function resource_review_form($form, &$form_state, $node, $state, $trigger_id, $
           'dialog' => array('title' => t('You are about to start reviewing this Resource')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_start']['submit'])),
           'submit_autoclose' => TRUE,
-          'submit_redirect' => url('node/' . $node->nid . '/review/redirect/review-qc'),
+          'submit_redirect' => url('node/' . $node->nid . '/feedback/redirect/review-qc'),
         ) + $state_common_options,
 
         'cancel' => array(
           'dialog' => array('title' => t('You are about to cancel the review')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_cancel']['submit'])),
-          'submit_redirect' => url('node/' . $node->nid . '/review/redirect/review-qc', array('absolute' => TRUE)),
+          'submit_redirect' => url('node/' . $node->nid . '/feedback/redirect/review-qc', array('absolute' => TRUE)),
         ) + $state_common_options,
 
         'not_recommend' => array(
@@ -168,9 +168,9 @@ function resource_review_form($form, &$form_state, $node, $state, $trigger_id, $
 }
 
 /**
- * Submit handler for resource_review_form().
+ * Submit handler for resource_qc_form().
  */
-function resource_review_form_submit($form, &$form_state) {
+function resource_qc_form_submit($form, &$form_state) {
   $node = $form_state['build_info']['args'][0];
 
   $state = $form_state['dialog_settings']['current_state'];
@@ -183,7 +183,7 @@ function resource_review_form_submit($form, &$form_state) {
 
       $entity = new stdClass;
       $entity->title = $node->title .' - Review - ' . $user->uid;
-      $entity->type = 'review';
+      $entity->type = 'qc';
       $entity->uid = $user->uid;
       $entity->created = REQUEST_TIME;
       $entity->changed = REQUEST_TIME;

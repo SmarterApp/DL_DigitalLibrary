@@ -8,16 +8,17 @@
   }
  
 /* resource review tabs */
-.review-wrap {
+.feedback-wrap {
   padding: 10px 30px;
 
-    p {
+  p {
     font-size: 1em;
   }
 
   textarea {
     resize: none;
   }
+
   /* intro form elements */
     .gate-keeper-intro {
       @include bottom-border;
@@ -468,7 +469,25 @@
   }
 }
 
-#review-wrap-edit-tags {
+#user-review-wrap-enduse {
+  margin: 10px 30px;
+
+  .section-title {
+    float: left;
+  }
+
+  .review-form-trigger {
+    &:after {
+      clear: both;
+    }
+
+    float: right;
+    display: inline;
+    margin: 0;
+  }
+}
+
+#feedback-wrap-edit-tags-edit-tags {
   .vertical-tabs {
     border: 0;
     margin: 2em;
