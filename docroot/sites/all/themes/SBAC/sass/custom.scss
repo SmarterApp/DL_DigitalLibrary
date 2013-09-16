@@ -1,6 +1,5 @@
 @import "app.scss";
 @import "colors.scss";
-
 @import "compass/css3/";
 
 /* ==========================================================================
@@ -19,7 +18,6 @@
    - Resource
 :: Legal
 :: Admin theme fixes
-
 */
 
 /* -----------------------------------------
@@ -38,7 +36,6 @@ $darkgreen: #246a34;
 html, body {
   height: 100%;
 }
-
 
 .flex-video {
   margin-bottom: 0;
@@ -78,7 +75,7 @@ dl {
 
 //fixes issue caused by different compiled versions of custom css
 [data-section='']:not([data-section-resized]):not([data-section-small-style]), [data-section='auto']:not([data-section-resized]):not([data-section-small-style]), .section-container.auto:not([data-section-resized]):not([data-section-small-style]) {
-visibility: visible;
+  visibility: visible;
 }
 
 .field {
@@ -86,6 +83,7 @@ visibility: visible;
   // p fonts are set to 12px this should do the trip for all drupal fields.
   font-size: emCalc(12px);
 }
+
 h1, h2 {
   color: $header;
 }
@@ -100,13 +98,13 @@ h3, h4, h5, h6 {
 
 .top-bar-section {
   li {
-    a:not(.button){
+    a:not(.button) {
       background: transparent;
     }
   }
 }
 
-.button-group > *  {
+.button-group > * {
   margin: 0;
   padding: 0.5em;
 }
@@ -134,21 +132,21 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   }
 
 @mixin global-button {
+    @include text-shadow(0px 1px 0px rgba(255,255,255,.5));
+    @include border-radius(6px);
     display: inline-block;
     font-size: 16px;
     font-weight: bold;
-    @include text-shadow(0px 1px 0px rgba(255,255,255,.5));
     color: rgba(0, 98, 152, 1);
-    @include border-radius(6px);
     background: rgba(191, 216, 229, 1);
     border: 1px rgba(0, 98, 152, .5) solid;
     padding: 8px 18px;
     text-align: center;
 
     &:hover {
+      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
       @include transition(all 500ms ease);
       background: rgba(0, 133, 173, 1);
-      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
       color: white;
   }
 
@@ -158,20 +156,20 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
     outline: none;
 
     &:hover {
+      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
       @include transition(all 500ms ease);
       background: rgba(0, 133, 173, 1);
-      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
       color: white;
     }
   }
 }
 
 @mixin global-button-negative {
+  @include border-radius (6px);
   background: rgba(226, 226, 226, 1);
   border: 1px rgba(100, 100, 100, 1) solid;
   color: rgba(100, 100, 100, 1);
   padding: 8px 18px;
-  @include border-radius (6px);
   font-family: $body-font-family;
 
   &:hover, &:focus  {
@@ -191,11 +189,11 @@ button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-co
 }
 
 .alert-box {
+  @include border-radius (12px);
   padding: 30px;
   color: $darkgreen;
   border-color: $darkgreen;
   background-color: rgba(237, 243, 224, 1);
-  @include border-radius (12px);
   font-weight: normal;
 
   h2 {
@@ -231,6 +229,7 @@ html.js {
     &.form-autocomplete {
       background-position: 100% 10px;
     }
+
     &.throbbing {
       background-position: 100% -15px;
     }
@@ -241,7 +240,6 @@ html.js {
    Colorbox
    ----------------------------------------- */
 #colorbox {
-
   @include box-shadow(rgba(0, 0, 0, 0.8) 1px, 1px, 1px);
 
   #cboxTopLeft,
@@ -259,10 +257,9 @@ html.js {
 /* -----------------------------------------
   Vertical Tabs
   ------------------------------------------ */
-
 .vertical-tabs ul.vertical-tabs-list {
   li {
-    a{
+    a {
       &:hover{
         background:#bfd8e5;
         text-decoration: none !important;
@@ -274,7 +271,10 @@ html.js {
     &.selected {
       a {
         background: #0085ad;
-        strong{color: white;}
+
+        strong { 
+          color: white;
+        }
       }
     }
   }
@@ -283,12 +283,12 @@ html.js {
 /* -----------------------------------------
    Forms
    ----------------------------------------- */
-
 label {
   font-weight: bold;
   font-size: 0.8em;
   cursor: default;
 }
+
 .form-type-checkbox,
 .form-type-radio {
   label {
@@ -296,11 +296,9 @@ label {
   }
 }
 
-
 input[type="file"], input[type="checkbox"], input[type="radio"], select{
   margin: 5px;
 }
-
 
 .form-item-error-holder {
   float:right;
@@ -308,18 +306,18 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
 .vertical-tabs ul.vertical-tabs-list li {
   .sbac-disabled {
+    @include opacity(0.5);
     cursor: default !important;
     color: $lightgrey;
     font-weight: normal;
     background-color: #fff;
-    @include opacity(0.5);
 
     &:hover {
       border: none;
       outline: none;
 
       strong {
-        color:$lightgrey;
+        color: $lightgrey;
         text-decoration: none !important;
       }
     }
@@ -329,7 +327,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 .top-bar {
   margin: 0;
 
-  &.main-top{
+  &.main-top {
     background-color: #313131;
     @include background-image(linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), linear-gradient(top, #a9a9a9 0%, #ebebe5 100%)); // gradient overlay and layer fill content
     background-image: -webkit-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
@@ -337,7 +335,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     background-image: -ms-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#494949', endColorstr='#313131');
   }
-  &.sub-top{
+  &.sub-top {
     background-color: #f9f9f9; // color overlay
     @include box-shadow(1px 2px 2px rgba(204,204,198,.5)); // drop shadow
     @include background-image(linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%)); // layer fill content
@@ -347,10 +345,10 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     background-image: -ms-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebe5', endColorstr='#e4e4dc');
   }
-  &.last-top{
+  &.last-top {
+    @include box-shadow(1px 2px 2px rgba(204,204,198,.5)); // drop shadow
     height: auto;
     background-color: #f9f9f9; // color overlay
-    @include box-shadow(1px 2px 2px rgba(204,204,198,.5)); // drop shadow
   }
 
   h1,title {
@@ -363,6 +361,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   }
 
   .button {
+    @include border-radius (6px);
+    @include transition (all 500ms ease);
     padding: 8px 18px;
     margin-left: 10px;
     background: rgba(191, 216, 229, 1);
@@ -371,8 +371,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     font-weight: bold;
     color: rgba(0, 98, 152, 1);
     text-shadow: 0px -1px 0px rgba(000,000,000,0), 0px 1px 0px rgba(255,255,255,.5);
-    @include border-radius (6px);
-    @include transition (all 500ms ease);
     cursor: pointer;
     line-height: 1em;
     height: auto;
@@ -403,11 +401,12 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
           padding-right: 20px;
           color: black;
         }
+
         border:none;
       }
     }
 
-    a{
+    a {
       color: inherit;
       padding-left: 20px;
       padding-right: 20px;
@@ -415,7 +414,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
 
     .notifications {
-      span{
+      span { 
         display: inline-block;
         width: 27px;
         height: 37px;
@@ -429,11 +428,12 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
         margin: 12px 10px 0 0;
       }
     }
+
     .sbac-question {
-        background: url('../images/icons/help-small.png') center no-repeat;
-        width: 16px;
-        height: 16px;
-        display: inline-block;
+      background: url('../images/icons/help-small.png') center no-repeat;
+      width: 16px;
+      height: 16px;
+      display: inline-block;
     }
   }
 }
@@ -487,6 +487,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
         &.help {
           background-image: url('../images/icons/help-small.png');
         }
+
         &.feedback {
           background-image: url('../images/icons/feedback-small.png');
         }
@@ -498,11 +499,14 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       margin-right: 10px;
     }
   }
+
   .footer-links {
    overflow: visible !important;
   }
+
   .footer-help{
     position: relative;
+
     #drop2 {
       top: -105px !important;
       left: -140px !important;
@@ -518,19 +522,21 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       padding: 0;
       margin: 0;
       border-left: none;
+
         a {
           color: inherit;
           padding: 0;
           margin: 0;
           background: none;
           padding: 5px;
-          &:hover{
+
+          &:hover {
             color:white;
           }
         }
       }
 
-      &:before{
+      &:before {
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
         border-top: 8px solid white;
@@ -538,7 +544,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
         bottom: -8px;
         top: auto;
       }
-      &:after{
+
+      &:after {
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
         border-top: 8px solid #ccc;
@@ -551,11 +558,11 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 }
 
 .main-container {
-  margin: emCalc(25px) auto emCalc(75px);
+  @include box-shadow(1px 2px 2px rgba(0,0,0,.3)); // drop shadow
   @include border-radius(12px); // border radius
   @include background-clip(padding-box); // prevents bg color from leaking outside the border
+  margin: emCalc(25px) auto emCalc(75px);
   background-color: #f9f9f9; // layer fill content + color overlay
-  @include box-shadow(1px 2px 2px rgba(0,0,0,.3)); // drop shadow
   padding: 15px 0;
 }
 
@@ -563,35 +570,39 @@ nav.main-nav {
   ul {
     font-size: 100%;
     margin-left: 20px;
-    li{
+
+    li { 
       display: inline-block;
       margin: 0px;
       padding: 0px;
       border-left: 1px #cdcdcd solid;
+
       &:hover {
         background: #b0e6f4;
       }
-      a{
+
+      a {
+        @include text-shadow(0 1px 0 rgba(255,255,255,.75)); // drop shadow
         display: block;
         padding: 6px 10px 1px;
         font-size: emCalc(11px);
         color: #494949; // text color
-        @include text-shadow(0 1px 0 rgba(255,255,255,.75)); // drop shadow
 
-        &.active{
+        &.active { 
+          @include text-shadow(0 -1px 0 rgba(0,0,0,.5)); // drop shadow
           background-color: #0085ad; // color overlay
           color: #f3f3f3; // text color + color overlay
-          @include text-shadow(0 -1px 0 rgba(0,0,0,.5)); // drop shadow
         }
       }
     }
   }
+
   li.last {
     content: none;
   }
 }
 
-#drop3{
+#drop3 {
   top: 50px !important;
   display: none;
 
@@ -599,6 +610,7 @@ nav.main-nav {
     display: block;
   }
 }
+
 .help-dropdown {
   float: right;
   height: 45px;
@@ -607,14 +619,15 @@ nav.main-nav {
 
   a {
     color: inherit;
+    display: inline-block;
   }
-
 
   .f-dropdown {
     left: auto !important;
     right: 10px !important;
     top:48px !important;
     display: none;
+
     &.open{
       display:block;
     }
@@ -628,19 +641,21 @@ nav.main-nav {
   border-top-color: #ccc;
   padding: 10px !important;
   display: none;
+
     &.open{
       display:block;
     }
 
   li {
-    /* sorry for all the !importants but those are desperate times - footer and grid styles are messign this up */
+    /* sorry for all the !importants but those are desperate times - footer and grid styles are messing this up */
     padding: 0 !important;
     margin: 0 !important;
     float: none !important;
+
     a {
+      @include transition(all 500ms ease);
       padding: 5px !important;
       color:rgba(0, 98, 152, 1) !important;
-      @include transition(all 500ms ease);
       background: white !important;
       font-size: 14px !important;
 
@@ -651,7 +666,7 @@ nav.main-nav {
   }
 }
 
-.textify{
+.textify { 
   *, *:before, *:after {
     @include box-sizing(content-box);
   }
@@ -661,11 +676,10 @@ nav.main-nav {
     position:static;
   }
 
-  font-size:inherit;
+  font-size: inherit;
 }
 
 // fix handle on draggable table views
-
 a.tabledrag-handle .handle {
   width: 22px;
   height: 22px;
@@ -673,13 +687,14 @@ a.tabledrag-handle .handle {
 
 // fix block grid Styles
 
-.item-list{
-  [class*="large-block-grid-"], [class*="large-block-grid-"]{
+.item-list {
+  [class*="large-block-grid-"], [class*="large-block-grid-"] {
     li {
       margin: 0;
     }
   }
 }
+
 /* -----------------------------------------
    Flexslider Overrides
    ----------------------------------------- */
@@ -693,15 +708,17 @@ a.tabledrag-handle .handle {
    ----------------------------------------- */
 .ui-dialog {
   @include border-radius(0);
-  .ui-widget-header{
+
+  .ui-widget-header {
+    @include border-radius(0);
     background: none;
     border: none;
-    @include border-radius(0);
   }
+
   .button, button, .button.radius {
+    @include border-radius (6px);
     font-size: 16px;
     padding: 8px 18px;
-    @include border-radius (6px);
   }
 
   .ui-resizable-handle {
@@ -712,10 +729,9 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    User login
    ----------------------------------------- */
-
 #user-login {
   .small {
-      font-size: emCalc(14px);
+    font-size: emCalc(14px);
   }
 }
 
@@ -792,31 +808,33 @@ a.tabledrag-handle .handle {
     margin-bottom: 1.5em;
   }
 }
+
 /* -----------------------------------------
    Help Sorting
    ----------------------------------------- */
+ .view-sbac-help-sort {
+  #draggableviews-table-sbac_help_sort-page {
+    width: 100%;
 
-   .view-sbac-help-sort {
-    #draggableviews-table-sbac_help_sort-page {
-      width: 100%;
-      .Enabled span {
-        color: green;
-      }
-      .Disabled span {
-        color: red;
-      }
+    .Enabled span {
+      color: green;
     }
-   }
+
+    .Disabled span {
+      color: red;
+    }
+  }
+}
 
 /* -----------------------------------------
    User Profile
    ----------------------------------------- */
-
 .user-profile {
   h2 {
     margin: 0;
     padding-bottom: 0;
   }
+
   .profile-title {
     font-size: 18px;
     color: #494949;
@@ -824,17 +842,21 @@ a.tabledrag-handle .handle {
   .profile-details {
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
+
     .field {
       margin: 0 0 10px;
     }
+
     margin: 15px 0;
     padding: 5px 0;
   }
+
   .name {
     font-size: 38px;
     font-weight: normal;
     color: #0085ad;
   }
+
   .profile-school {
     padding: 0 0 15px;
     font-size: 18px;
@@ -844,10 +866,12 @@ a.tabledrag-handle .handle {
 
 .row.first {
   padding: 40px;
+
   .user-picture {
-    text-align: center;
     @include border-radius(5px);
+    text-align: center;
     overflow: hidden;
+
     img {
       width: 100%;
     }
@@ -858,9 +882,11 @@ a.tabledrag-handle .handle {
     border-top: 1px #ccc solid;
     padding-top: 10px;
   }
+
   .profile-details {
     font-size: 14px;
     padding: 10px 0;
+
     .title {
       font-weight: bold;
       color: #246a34;
@@ -868,7 +894,7 @@ a.tabledrag-handle .handle {
   }
 }
 
-.line{
+.line {
   position: relative;
   width: 930px;
   margin-left: -15px;
@@ -893,6 +919,7 @@ a.tabledrag-handle .handle {
   .form-type-checkbox {
     float: left;
   }
+
   button {
     float: right;
   }
@@ -916,25 +943,26 @@ a.tabledrag-handle .handle {
 }
 
 .flexslider .flex-direction-nav a {
-  display: block;
   @include opacity(1);
+  display: block;
 }
 
 .flexslider:hover{
   .flex-next {
     right: -36px;
-
   }
+
   .flex-prev {
     left: -36px;
   }
 }
 
 @media screen and (max-width: 860px) {
-  .flexslider{
-  .flex-next {
-    right: -36px;
-  }
+  .flexslider {
+    .flex-next {
+      right: -36px;
+    }
+
     .flex-prev {
       left: -36px;
     }
@@ -944,7 +972,6 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Colorbox Modal
    ----------------------------------------- */
-
 #cboxClose {
   position: absolute;
   top: -15px;
@@ -959,10 +986,10 @@ a.tabledrag-handle .handle {
 #cboxLoadedContent {
   margin-bottom: 0;
 }
+
 /* -----------------------------------------
    Home Page Login
    ----------------------------------------- */
-
 .login-text {
   ul {
     list-style: none;
@@ -992,6 +1019,7 @@ a.tabledrag-handle .handle {
   color: #717880;
   border: none;
   border-right: 1px #ccc solid;
+
   &:hover {
     background: #b0e6f4;
   }
@@ -1009,7 +1037,6 @@ a.tabledrag-handle .handle {
   color: $white;
   font-size: emCalc(16px);
 }
-
 
 /* Slider */
 .flex-direction-nav a {
@@ -1039,7 +1066,6 @@ a.tabledrag-handle .handle {
 }
 
 .resource-info {
-
   background: #f2f8e5;
   border-radius: 0 0 12px 12px;
   margin: 0 -40px -51px;
@@ -1090,7 +1116,6 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Create Resource
    ----------------------------------------- */
-
 #modalContent .ctools-modal-content .modal-content{
   overflow:scroll;
 }
@@ -1102,7 +1127,7 @@ a.tabledrag-handle .handle {
 #edit-field-learning-goals,
 #edit-field-success-criteria,
 #edit-field-supporting-evidence,
-#edit-field-principles{
+#edit-field-principles {
   padding:0.2em 0;
   border: 1px dotted $lightgrey;
   border-width: 1px 0 0;
@@ -1143,10 +1168,9 @@ a.tabledrag-handle .handle {
   display: none;
 }
 
-
 .ui-dialog {
-  padding: 0;
   @include box-shadow(1px, 1px, 1px,rgba(black,0.5));
+  padding: 0;
 
   iframe {
     height: 500px !important;
@@ -1154,21 +1178,22 @@ a.tabledrag-handle .handle {
 }
 
 .ui-widget-overlay  {
-  background: url('../images/colorbox/overlay.png') top left repeat;
   @include opacity(0.9);
+  background: url('../images/colorbox/overlay.png') top left repeat;
 }
 
 .page-media-browser {
   background: white;
   height: auto;
 
-  //over ride plugin styles
+  /* over ride plugin styles */
   .ui-widget {
     button {
       font-family: $body-font-family;
       font-size: 16px;
     }
   }
+
   //error message 
   .alert-box.alert {
     width: 95%;
@@ -1199,11 +1224,11 @@ a.tabledrag-handle .handle {
     margin: 0;
   }
 
-  .ui-tabs{
-    .ui-tabs-nav{
+  .ui-tabs {
+    .ui-tabs-nav {
       li {
-        margin: 0;
         @include border-radius(0);
+        margin: 0;
         border:none;
 
         &:last-child{
@@ -1245,7 +1270,7 @@ a.tabledrag-handle .handle {
   }
 
  .form-submit {
-    float:right;
+    float: right;
   }
 
   #edit-next, #edit-submit {
@@ -1261,11 +1286,11 @@ a.tabledrag-handle .handle {
   }
 
   .media-internet-providers {
-
     font-size: 12px;
 
     li {
       margin: 0 0 2px 10px;
+
       &:after {
         content:',';
       }
@@ -1370,6 +1395,7 @@ a.tabledrag-handle .handle {
     padding: 20px;
   }
 }
+
 .page-node-add-resource,
 .section-node-edit {
   .description {
@@ -1387,6 +1413,7 @@ a.tabledrag-handle .handle {
       display: none;
     }
   }
+
   // basic tab
   #edit-group_basic,
   #edit-group_summary,
@@ -1430,6 +1457,7 @@ a.tabledrag-handle .handle {
       margin-left: 10px;
       margin-top: 10px;
     }
+
     thead th:first-child {
       background-color: #fff;
       padding:5px 5px 25px;
@@ -1446,11 +1474,14 @@ a.tabledrag-handle .handle {
         margin-top: 0px;
       }
     }
+
     tr:nth-child(2) {
       td:nth-child(2) {
         padding-top: 30px;
-        .media-widget{
+
+        .media-widget {
         position: relative;
+
         &:before {
             display: block;
             content: 'Secondary material(s). These will be shown adjacent to the primary material.';
@@ -1462,7 +1493,7 @@ a.tabledrag-handle .handle {
             padding: 0 0 5px 10px;
             font-size: emCalc(14px);
             border-bottom: 1px solid #ccc;
-        }
+          }
         }
       }
     }
@@ -1482,6 +1513,7 @@ a.tabledrag-handle .handle {
     #no-license-text {
       margin: 0 0 0 emCalc(30px);
       font-size: emCalc(14px);
+
       ul {
         margin: emCalc(10px) 0 0 0;
         li {
@@ -1489,6 +1521,7 @@ a.tabledrag-handle .handle {
         }
       }
     }
+
     #field_static_license_text {
       .field-content {
         font-size: emCalc(14px);
@@ -1505,7 +1538,6 @@ a.tabledrag-handle .handle {
   }
 
   #edit-field-file-und-ajax-wrapper {
-
     .form-file {
       float: none;
       width: 200px;
@@ -1521,6 +1553,7 @@ a.tabledrag-handle .handle {
       font-size: 1em;
     }
   }
+
   .description {
     max-width: 95%;
   }
@@ -1535,6 +1568,7 @@ a.tabledrag-handle .handle {
     max-width: 95%;
   }
 }
+
   // tags tab
   #edit-group_tags {
     .fieldset-wrapper {
@@ -1543,11 +1577,13 @@ a.tabledrag-handle .handle {
         margin: 15px 0 0;
         width: 100%;
       }
+
       #sbac-resource-modal-alignment {
         display: inline-block;
         float: right;
         margin: 20px 0 10px;
       }
+
       .alignment-tag-title,
       .educational-tag-title {
         display: block;
@@ -1580,18 +1616,15 @@ a.tabledrag-handle .handle {
       .field-name-field-subject label:after {
         content: 'The subject area to which the learning resource applies';
       }
-
       .field-name-field-grade label:after {
         content: 'The grade(s) at which the opject might be used, regardless of curriculum alignment';
       }
       .field-name-field-intended-student label:after {
         content: 'Student population(s) which the resource can be used';
       }
-
       .field-name-field-geographical-settings label:after {
         content: 'Setting(s) for which the resource is provided';
       }
-
       .field-name-field-learning-resource-type label:after {
         content: 'The predominate type or kind characterizing the learning resource.';
       }
@@ -1601,17 +1634,21 @@ a.tabledrag-handle .handle {
       .field-name-field-interactivity-type label:after {
         content: 'The predominate mode of learning supported by the learning resource.';
       }*/
+
       .field-widget-options-select {
         float: left;
         width: 40%;
         margin-right: 5%;
+
         &:nth-child(even) {
           clear: left;
         }
       }
     }
+
     .chzn-container {
       width: 200px !important;
+
       li input {
         padding: 1px !important;
         height: emCalc(24px);
@@ -1650,23 +1687,24 @@ a.tabledrag-handle .handle {
   max-width: 624px;
 }
 
-
 /* -----------------------------------------
    CTools Modal
    ----------------------------------------- */
-
 #modalBackdrop {
   background: url(../images/colorbox/overlay.png) repeat 0 0 !important;
   opacity: 0.9 !important;
 }
+
 // add alignment modal
 #modalContent {
   .ctools-modal-content {
     border-radius: 5px;
     border: 1px solid #ccc;
     overflow: hidden;
+
     .modal-header {
       background: none;
+
       #modal-title {
         display: inline-block;
         color: #000;
@@ -1677,6 +1715,7 @@ a.tabledrag-handle .handle {
         display: none;
       }
     }
+
     .modal-content {
       padding-top: 0;
       overflow: hidden;
@@ -1684,12 +1723,14 @@ a.tabledrag-handle .handle {
 
       .form-item {
         margin-top: 0;
+
         label {
           float: none;
           width: 100%;
           margin: 5px 0;
         }
       }
+
       .field-widget-text-textfield {
         display: inline-block;
         width: 48%;
@@ -1700,12 +1741,15 @@ a.tabledrag-handle .handle {
         float: right;
       }
     }
+
     .field-type-taxonomy-term-reference {
       //width: 48%;
       //margin-right: 15px;
       //display: inline-block;
+
       label {
         width: 100%;
+
         &:after {
           color: $lightgrey;
           font-size: emCalc(14px);
@@ -1714,26 +1758,31 @@ a.tabledrag-handle .handle {
         }
       }
     }
+
     #edit-field-education-alignment {
       label:after {
        // content: 'An alignment to an established educational framework.';
       }
     }
+
     #edit-field-alignment-type {
       margin-right: 0;
       label:after {
         // content: 'A category of alignment between the learning resource and the framework node.';
       }
     }
+
     .field-type-text-with-summary {
       .form-textarea-wrapper {
         margin-left: 0;
         margin-right: emCalc(25px);
       }
     }
+
     .form-actions {
       text-align: right;
       margin: 0 25px 0 0;
+
       #edit-cancel--2 {
         margin-left: 10px;
       }
@@ -1763,7 +1812,6 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
   Textify
   ------------------------------------------  */
-
 .textify_arrows {
   a.arrow {
     border:none;
@@ -1793,11 +1841,11 @@ a.tabledrag-handle .handle {
 
 .textify {
   .textify_nav ul li  {
+    @include border-radius(15px);
     background:rgba(0,0,0,0.9);
     background-image: none;
     width: 11px;
     height: 11px;
-    @include border-radius(15px);
 
     &.selected, &:hover {
       background: rgba(0,0,0,0.5);
@@ -1826,9 +1874,7 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Admin Theme Fixes
    ----------------------------------------- */
-
 // views
-
 .page-admin-structure-views {
   .views-display-top {
     button {
@@ -1882,7 +1928,6 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Feedback block
    ----------------------------------------- */
-
 #feedback-dropdown{
   display:none;
   right: 100px;
@@ -1894,30 +1939,33 @@ a.tabledrag-handle .handle {
     left: auto !important;
     display:block;
   }
+
   &:before{
     right:15px;
     left: auto!important; 
   }
+
   &:after {
     right: 14px;
     left: auto !important;
-
   }
+
   color: #333;
 
   a {
-  color: #0085AD;
-  padding:0;
-  word-wrap:break-word;
+    color: #0085AD;
+    padding:0;
+    word-wrap:break-word;
   }
+
   &#disable-feedback{
     cursor:pointer;
   }
 }
+
 /* -----------------------------------------
    Help topics styles
    ----------------------------------------- */
-
 #views-form-help-topics-page-4 .views-field-nid-1 a {
 /*  background: white;
   padding: 5px;
@@ -1934,6 +1982,7 @@ a.tabledrag-handle .handle {
   text-align: center;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
+
 #views-form-help-topics-page-4 .views-field-nid-1 a:hover {
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
@@ -1943,6 +1992,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
   color: white;
 }
+
 #views-form-help-topics-page-4 .views-field-nid-1 a:focus {
   background: #bfd8e5;
 }
@@ -1970,6 +2020,7 @@ a.tabledrag-handle .handle {
   text-align: center;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
+
 .help-topic-link:hover,
 .welcome-tutorial-topic-link:hover {
   -webkit-transition: all 500ms ease;
@@ -1980,6 +2031,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
   color: white;
 }
+
 .help-topic-link:focus,
 .welcome-tutorial-topic-link:focus {
   background: #bfd8e5;
@@ -1992,18 +2044,21 @@ a.tabledrag-handle .handle {
   position: absolute;
   right: 10px;
 }
+
 .view-id-help_topics .help-topic-link1 {
 
   position: absolute;
   right: 10px;
   top: 10px;
 }
+
 .view-id-help_topics .help-topic-link2,
 .welcome-tutorial-topic-link {
   bottom: 20px;
   position: absolute;
   right: 150px;
 }
+
 .view-id-help_topics #edit-submit,
 .view-id-help_topics #edit-submit--2 {
   position: absolute;
@@ -2025,6 +2080,7 @@ a.tabledrag-handle .handle {
   list-style: none;
   margin-bottom: 20px;
 }
+
 .view-help-topics ul li .views-field-title{
   display: block;
   font-size: 18px;
@@ -2037,6 +2093,7 @@ a.tabledrag-handle .handle {
     font-size: 15px;
   }
 }
+
 .view-help-topics ul li .views-field-field-summary {
   margin-bottom: 20px;
 }
@@ -2046,19 +2103,23 @@ a.tabledrag-handle .handle {
   margin-top: 30px;
   padding-left: 22px;
 }
+
 #admin-welcome-tab-message {
   padding: 10px;
   background: #ddd;
   border: 1px solid #999;
   margin-bottom: 20px;
 }
+
 #draggableviews-table-help_topics-page_4 .views-field-nid-1{
   text-align: center;
   width: 200px;
 }
+
 #draggableviews-table-help_topics-page_2 .views-field-status, #draggableviews-table-help_topics-page_4 .views-field-status, #draggableviews-table-help_topics-page_2 .views-field-fields-combine {
   text-align: center;
 }
+
 /* -----------------------------------------
    Login text styles
    ----------------------------------------- */
@@ -2066,13 +2127,9 @@ a.tabledrag-handle .handle {
   padding-left: 50px;
 }
 
-
-
-
 /* ----------------------------------------
     Read More
   _________________________________________ */
-
 .read-more {
   display: inline-block;
   cursor: pointer;
@@ -2085,7 +2142,6 @@ a.tabledrag-handle .handle {
   }
 
   .description-hover {
-
     .description-content {
       max-height: 200px;
       overflow-y:auto;
@@ -2108,7 +2164,6 @@ a.tabledrag-handle .handle {
     font-size: 12px;
     z-index: 999;
     border: 1px solid #3C7646;
-
 
     p {
       font-size: inherit;
@@ -2148,11 +2203,9 @@ a.tabledrag-handle .handle {
   }
 }
 
-
 /* ----------------------------------------
     Read More - JS
   _________________________________________ */
-
 .more-link {
   padding: 0 3px;
 }
@@ -2185,13 +2238,11 @@ a.tabledrag-handle .handle {
       }
     }
   }
-
  }
 
 /* ----------------------------------------
     Taxonomy tool tips
   _________________________________________ */
-
 .view-mode-tooltip {
   display: inline-block;
   position: relative;
@@ -2259,7 +2310,6 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Taxonomy tool tips
   _________________________________________ */
-
 .maintenance-page {
   #header {
     display: none;
@@ -2289,7 +2339,7 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Read More - custom
   _________________________________________ */
-.more-less{
+.more-less {
   display: none;
 
   &.active {
@@ -2297,13 +2347,12 @@ a.tabledrag-handle .handle {
   }
 
   .more, .less {
+    @include border-radius(6px); 
     padding: 1px 10px;
     display: inline-block;
     border: 1px solid #ccc;
     background: #eee;
     color: #333;
-    @include border-radius(6px); 
-
     color: inherit;
   } 
 }
