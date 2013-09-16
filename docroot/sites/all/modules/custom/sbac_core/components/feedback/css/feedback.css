@@ -60,42 +60,46 @@
 .review-wrap button {
   margin: 10px 10px 10px 0;
 }
-/* line 60, ../sass/feedback.scss */
+/* line 57, ../sass/feedback.scss */
+.review-wrap #edit-tags-cancel {
+  margin-left: 2em;
+}
+/* line 64, ../sass/feedback.scss */
 .review-wrap .ajax-progress,
 .review-wrap .alert-box {
   display: none;
 }
-/* line 68, ../sass/feedback.scss */
+/* line 72, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .sticky-header,
 .review-wrap .field-name-field-review-set .tabledrag-toggle-weight-wrapper,
 .review-wrap .field-name-field-quality-set .sticky-header,
 .review-wrap .field-name-field-quality-set .tabledrag-toggle-weight-wrapper {
   display: none !important;
 }
-/* line 72, ../sass/feedback.scss */
+/* line 76, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table,
 .review-wrap .field-name-field-quality-set .field-multiple-table {
   border: 0;
   width: 100%;
 }
-/* line 76, ../sass/feedback.scss */
+/* line 80, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table thead,
 .review-wrap .field-name-field-quality-set .field-multiple-table thead {
   display: none !important;
 }
-/* line 80, ../sass/feedback.scss */
+/* line 84, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody {
   border: 0;
 }
-/* line 83, ../sass/feedback.scss */
+/* line 87, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr {
   background: none;
   border: 0;
   border-bottom: 1px #ccc solid;
 }
-/* line 88, ../sass/feedback.scss */
+/* line 92, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td {
   padding: 1.5em 0;
@@ -104,7 +108,7 @@
   /* comments field */
   /* radios */
 }
-/* line 91, ../sass/feedback.scss */
+/* line 95, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td.field-multiple-drag, .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td.delta-order,
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .grippie,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td.field-multiple-drag,
@@ -112,14 +116,14 @@
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .grippie {
   display: none;
 }
-/* line 99, ../sass/feedback.scss */
+/* line 103, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-title p,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-title p {
   font-size: 1em;
   font-weight: bold;
   max-width: 800px;
 }
-/* line 112, ../sass/feedback.scss */
+/* line 116, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments {
   float: left;
@@ -127,17 +131,17 @@
   width: 70%;
   max-width: 700px;
 }
-/* line 118, ../sass/feedback.scss */
+/* line 122, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .grippie,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .grippie {
   display: none;
 }
-/* line 122, ../sass/feedback.scss */
+/* line 126, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments label,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments label {
   font-size: 1em;
 }
-/* line 125, ../sass/feedback.scss */
+/* line 129, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .counter,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .counter {
   position: absolute;
@@ -145,7 +149,7 @@
   top: 15px;
   font-size: 12px;
 }
-/* line 131, ../sass/feedback.scss */
+/* line 135, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .counter.messages,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .counter.messages {
   background: #fff;
@@ -153,17 +157,17 @@
   margin: 0;
   padding: 0;
 }
-/* line 139, ../sass/feedback.scss */
+/* line 143, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .form-textarea-wrapper,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .form-textarea-wrapper {
   padding-right: 25px;
 }
-/* line 142, ../sass/feedback.scss */
+/* line 146, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-comments .form-textarea-wrapper textarea,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .form-textarea-wrapper textarea {
   min-height: 75px;
 }
-/* line 149, ../sass/feedback.scss */
+/* line 153, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios {
   float: left;
@@ -172,40 +176,40 @@
   /* the field allows full html, but we don't want paragraphs to mess up layout */
   /* force radio buttons to display inline */
 }
-/* line 154, ../sass/feedback.scss */
+/* line 158, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios label,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios label {
   font-size: 1em;
 }
-/* line 159, ../sass/feedback.scss */
+/* line 163, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios p,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios p {
   font-size: 0.9em;
   margin: 0;
   white-space: normal;
 }
-/* line 165, ../sass/feedback.scss */
+/* line 169, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .field-widget-options-buttons,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .field-widget-options-buttons {
   display: inline-block;
 }
-/* line 168, ../sass/feedback.scss */
+/* line 172, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .field-widget-options-buttons .form-type-radios,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .field-widget-options-buttons .form-type-radios {
   padding-right: 25px;
 }
-/* line 173, ../sass/feedback.scss */
+/* line 177, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .form-type-radios,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .form-type-radios {
   min-height: 50px;
 }
-/* line 178, ../sass/feedback.scss */
+/* line 182, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .form-radios .form-item,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .form-radios .form-item {
   display: inline;
   margin-right: .5em;
 }
-/* line 183, ../sass/feedback.scss */
+/* line 187, ../sass/feedback.scss */
 .review-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .desc,
 .review-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .desc {
   background: #eee;
@@ -213,37 +217,37 @@
   margin-top: 1em;
   padding: 0.5em;
 }
-/* line 199, ../sass/feedback.scss */
+/* line 203, ../sass/feedback.scss */
 .review-wrap .radios-with-desc label span * {
   color: #666;
   display: inline-block;
   font-size: 1em;
 }
-/* line 205, ../sass/feedback.scss */
+/* line 209, ../sass/feedback.scss */
 .review-wrap .radios-with-desc label span p {
   margin: 0;
 }
-/* line 210, ../sass/feedback.scss */
+/* line 214, ../sass/feedback.scss */
 .review-wrap .radios-with-desc .form-item-error-holder.error + .form-type-radios {
   display: inline-block;
   padding-right: 25px;
 }
-/* line 217, ../sass/feedback.scss */
+/* line 221, ../sass/feedback.scss */
 .review-wrap .field-name-field-rec-rationale {
   position: relative;
 }
-/* line 220, ../sass/feedback.scss */
+/* line 224, ../sass/feedback.scss */
 .review-wrap .field-name-field-rec-rationale .counter {
   position: absolute;
   right: 0;
   top: 10px;
   font-size: 12px;
 }
-/* line 227, ../sass/feedback.scss */
+/* line 231, ../sass/feedback.scss */
 .review-wrap .field-name-field-rec-rationale textarea {
   min-height: 75px;
 }
-/* line 236, ../sass/feedback.scss */
+/* line 240, ../sass/feedback.scss */
 .review-wrap .field-name-field-to-contributor,
 .review-wrap .field-name-field-to-reviewer-1,
 .review-wrap .field-name-field-to-reviewer-2,
@@ -252,14 +256,14 @@
   position: relative;
   width: 49%;
 }
-/* line 241, ../sass/feedback.scss */
+/* line 245, ../sass/feedback.scss */
 .review-wrap .field-name-field-to-contributor textarea,
 .review-wrap .field-name-field-to-reviewer-1 textarea,
 .review-wrap .field-name-field-to-reviewer-2 textarea,
 .review-wrap .field-name-field-to-reviewer-3 textarea {
   min-height: 70px;
 }
-/* line 245, ../sass/feedback.scss */
+/* line 249, ../sass/feedback.scss */
 .review-wrap .field-name-field-to-contributor .counter,
 .review-wrap .field-name-field-to-reviewer-1 .counter,
 .review-wrap .field-name-field-to-reviewer-2 .counter,
@@ -269,67 +273,67 @@
   right: 0;
   top: 15px;
 }
-/* line 254, ../sass/feedback.scss */
+/* line 258, ../sass/feedback.scss */
 .review-wrap .field-name-field-to-reviewer-1,
 .review-wrap .field-name-field-to-reviewer-3 {
   float: right;
 }
-/* line 259, ../sass/feedback.scss */
+/* line 263, ../sass/feedback.scss */
 .review-wrap .criteria-set-required-info {
   border-bottom: 1px #ccc solid;
   font-size: 0.9em;
   margin: .5em 0;
   padding-bottom: 0.5em;
 }
-/* line 267, ../sass/feedback.scss */
+/* line 271, ../sass/feedback.scss */
 .review-wrap .form-item-error-holder {
   display: none;
 }
-/* line 270, ../sass/feedback.scss */
+/* line 274, ../sass/feedback.scss */
 .review-wrap .form-item-error-holder.error + .form-item {
   background: white url("/sites/all/themes/SBAC/images/icon-validation-fail.png") right 30px no-repeat;
 }
-/* line 273, ../sass/feedback.scss */
+/* line 277, ../sass/feedback.scss */
 .review-wrap .form-item-error-holder.error + .form-item .form-item {
   background: none;
 }
-/* line 282, ../sass/feedback.scss */
+/* line 286, ../sass/feedback.scss */
 .review-wrap .feedback-items ul {
   margin-left: 30px;
 }
-/* line 286, ../sass/feedback.scss */
+/* line 290, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item {
   border-bottom: 1px #ccc solid;
   margin: 0 0 1em 0;
   padding: 0 0 1em 0;
 }
-/* line 292, ../sass/feedback.scss */
+/* line 296, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .criteria-set-title {
   margin: 0 0 1em 0;
 }
-/* line 293, ../sass/feedback.scss */
+/* line 297, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .criteria-set-title p {
   font-weight: bold;
 }
-/* line 300, ../sass/feedback.scss */
+/* line 304, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .criteria-set-comments-text {
   margin: 0 0 1em 0;
 }
-/* line 304, ../sass/feedback.scss */
+/* line 308, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .criteria-set-comments-text .more-less-text li {
   word-break: normal;
 }
-/* line 310, ../sass/feedback.scss */
+/* line 314, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .reviewer-comments-title {
   /*font-size: 0.8em;*/
 }
-/* line 314, ../sass/feedback.scss */
+/* line 318, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .comments-title {
   font-size: 0.8em;
   font-weight: bold;
   margin: 0 0 1em 0;
 }
-/* line 320, ../sass/feedback.scss */
+/* line 324, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review {
   float: left;
   font-size: 0.8em;
@@ -337,67 +341,67 @@
   width: 32%;
   /* ie fix */
 }
-/* line 321, ../sass/feedback.scss */
+/* line 325, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review:last-child {
   margin-right: 0;
 }
-/* line 330, ../sass/feedback.scss */
+/* line 334, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .author {
   margin: 0 0 0.5em 0;
 }
-/* line 333, ../sass/feedback.scss */
+/* line 337, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .author a {
   font-weight: bold;
   text-decoration: underline;
 }
-/* line 339, ../sass/feedback.scss */
+/* line 343, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .created {
   margin: 0 0 1em 0;
 }
-/* line 343, ../sass/feedback.scss */
+/* line 347, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .headline {
   font-weight: bold;
 }
-/* line 348, ../sass/feedback.scss */
+/* line 352, ../sass/feedback.scss */
 .review-wrap .feedback-items .feedback-item .feedback-review .comments {
   word-break: normal;
 }
-/* line 357, ../sass/feedback.scss */
+/* line 361, ../sass/feedback.scss */
 .review-wrap .field-title {
   font-size: 0.8em;
   font-weight: bold;
   margin: 0 0 0.5em 0;
 }
-/* line 363, ../sass/feedback.scss */
+/* line 367, ../sass/feedback.scss */
 .review-wrap .field-description {
   color: #666;
   font-size: 0.8em;
   margin: 0 0 1em 0;
 }
-/* line 370, ../sass/feedback.scss */
+/* line 374, ../sass/feedback.scss */
 .review-wrap .field-name-field-post-options {
   border-bottom: 1px #ccc solid;
   margin: 0 0 1em 0;
   padding: 0 0 1em 0;
 }
-/* line 375, ../sass/feedback.scss */
+/* line 379, ../sass/feedback.scss */
 .review-wrap .field-name-field-post-options label {
   margin: 0 0 0.5em 0;
 }
-/* line 379, ../sass/feedback.scss */
+/* line 383, ../sass/feedback.scss */
 .review-wrap .field-name-field-post-options .description {
   color: #666;
   font-size: 0.8em;
 }
 
 /* description */
-/* line 388, ../sass/feedback.scss */
+/* line 392, ../sass/feedback.scss */
 .form-item .description {
   margin-bottom: .5em;
 }
 
 /* text in gate keeper confirmation modal */
-/* line 394, ../sass/feedback.scss */
+/* line 398, ../sass/feedback.scss */
 #dialog .gate-keeper-modal-intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -405,42 +409,54 @@
   font-size: 0.8em;
   line-height: normal;
 }
-/* line 402, ../sass/feedback.scss */
+/* line 406, ../sass/feedback.scss */
+#dialog .devtools-dialog-content {
+  text-align: right;
+}
+/* line 409, ../sass/feedback.scss */
+#dialog .devtools-dialog-content .button {
+  margin-right: 10px;
+}
+/* line 414, ../sass/feedback.scss */
 #dialog .form-submit {
   float: right;
 }
+/* line 418, ../sass/feedback.scss */
+#dialog .ajax-progress {
+  display: none;
+}
 
 /* modal */
-/* line 408, ../sass/feedback.scss */
+/* line 424, ../sass/feedback.scss */
 .ui-dialog.ui-widget {
   position: fixed !important;
 }
 
 /* misc */
-/* line 413, ../sass/feedback.scss */
+/* line 429, ../sass/feedback.scss */
 .clear {
   clear: both;
   float: none;
 }
 
-/* line 418, ../sass/feedback.scss */
+/* line 434, ../sass/feedback.scss */
 .hidden {
   display: none;
 }
 
 /** Columns on About **/
-/* line 425, ../sass/feedback.scss */
+/* line 441, ../sass/feedback.scss */
 .ds-2col .group-left {
   width: 45% !important;
   margin-right: 3%;
 }
-/* line 430, ../sass/feedback.scss */
+/* line 446, ../sass/feedback.scss */
 .ds-2col .group-right {
   width: 45%;
   margin-right: 0;
   float: right !important;
 }
-/* line 436, ../sass/feedback.scss */
+/* line 452, ../sass/feedback.scss */
 .ds-2col .field-label {
   font-size: 1.1em;
   margin-bottom: 5px;
@@ -448,65 +464,87 @@
   border-bottom: 1px solid silver;
   color: #18577E;
 }
-/* line 444, ../sass/feedback.scss */
+/* line 460, ../sass/feedback.scss */
 .ds-2col .field {
   margin-bottom: 1.5em;
   line-height: normal;
   font-size: 0.9em;
 }
-/* line 449, ../sass/feedback.scss */
+/* line 465, ../sass/feedback.scss */
 .ds-2col .field ul {
   font-size: 0.9em;
 }
 
-/* line 456, ../sass/feedback.scss */
+/* line 472, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs {
   border: 0;
   margin: 2em;
   padding: 0;
 }
-/* line 461, ../sass/feedback.scss */
+/* line 477, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-list {
   display: none;
 }
-/* line 466, ../sass/feedback.scss */
+/* line 482, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane {
   padding: 0;
 }
-/* line 469, ../sass/feedback.scss */
+/* line 485, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select {
   float: left;
   margin: 0 0 1em 0;
-  width: 47%;
+  width: 40%;
 }
-/* line 474, ../sass/feedback.scss */
+/* line 490, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select:nth-child(even) {
   clear: left;
   margin-right: 5%;
 }
-/* line 479, ../sass/feedback.scss */
+/* line 495, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .chzn-container {
-  width: auto !important;
+  width: 250px !important;
 }
-/* line 483, ../sass/feedback.scss */
+/* line 499, ../sass/feedback.scss */
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description {
+  color: #a2a2a2;
+  font-size: 0.75em;
+  margin: 0.5em 0;
+  line-height: 1.25em;
+  max-width: 90%;
+  word-break: normal;
+}
+/* line 508, ../sass/feedback.scss */
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select input {
+  padding: 1px !important;
+  height: 1.5em;
+}
+/* line 513, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description:last-child {
   display: none;
 }
-/* line 488, ../sass/feedback.scss */
+/* line 518, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title {
   clear: both;
   float: none;
 }
-/* line 494, ../sass/feedback.scss */
+/* line 523, ../sass/feedback.scss */
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title-help, #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .sbac-resource-required {
+  font-size: 0.75em;
+}
+/* line 527, ../sass/feedback.scss */
+#review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-modal-alignment {
+  float: right;
+}
+/* line 532, ../sass/feedback.scss */
 #review-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-alignment-tag-view table {
   width: 100%;
 }
 
-/* line 505, ../sass/feedback.scss */
+/* line 543, ../sass/feedback.scss */
 .field-name-resource-slideshow {
   margin: 0 0 70px 0;
 }
-/* line 508, ../sass/feedback.scss */
+/* line 546, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider {
   font-size: 1.4em;
   margin: 0 auto;
@@ -520,40 +558,40 @@
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 516, ../sass/feedback.scss */
+/* line 554, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider ul {
   margin: 0;
 }
-/* line 522, ../sass/feedback.scss */
+/* line 560, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li {
   margin: 0;
   overflow: hidden;
 }
-/* line 526, ../sass/feedback.scss */
+/* line 564, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li label {
   font-size: 1em;
   font-weight: bold;
   cursor: default;
 }
-/* line 532, ../sass/feedback.scss */
+/* line 570, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field {
   margin: 0 0 10px 0;
   padding: 0 10px;
 }
-/* line 533, ../sass/feedback.scss */
+/* line 571, ../sass/feedback.scss */
 .field-name-resource-slideshow .flexslider .flex-viewport ul li .content-field:last-child {
   margin-bottom: 0;
 }
 
 @media all and (max-width: 980px) {
-  /* line 551, ../sass/feedback.scss */
+  /* line 589, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 510px;
   }
 }
 @media all and (max-width: 670px) {
-  /* line 558, ../sass/feedback.scss */
+  /* line 596, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 250px;

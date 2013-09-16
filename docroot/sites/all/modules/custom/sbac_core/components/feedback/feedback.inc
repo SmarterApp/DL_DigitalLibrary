@@ -309,7 +309,11 @@ function feedback_hours_left($entity, $max_hours = FEEDBACK_REVIEW_TIMEOUT) {
   $now = new \DateTime(date(DATE_ATOM));
   $created = new \DateTime(date(DATE_ATOM, $entity->created));
 
-  return FEEDBACK_REVIEW_TIMEOUT - $created->diff($now)->h;
+  $diff = $created->diff($now);
+
+  // print_rr($entity->id);exit();
+
+  return FEEDBACK_REVIEW_TIMEOUT - ($diff->h + $diff->days * 24);
 }
 
 /**

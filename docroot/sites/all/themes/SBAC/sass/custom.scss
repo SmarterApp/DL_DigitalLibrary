@@ -111,8 +111,9 @@ h3, h4, h5, h6 {
   padding: 0.5em;
 }
 
-button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus {
+button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus, button.disabled.secondary, button[disabled].secondary, .button.disabled.secondary, .button[disabled].secondary {
   background: rgba(191, 216, 229, 0.9);
+  border: 1px rgba(0, 98, 152, .5) solid;
 }
 
   .button {
@@ -181,14 +182,12 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   }
 }
 
-button, .button, .form-submit, #edit-submit, #edit-submit--2, #edit-submit--5, #edit-meet-button--2, button.disabled, button[disabled], .button.disabled, .button[disabled], #review-trigger-2, #edit-submit--4 {
-  @include global-button;
+button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
+  @include global-button-negative;
 }
 
-button.secondary, .button.secondary, #edit-cancel, #sbac-search-close-button,
-.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay,
-div.ctools-modal-content a.close, a.remove, a.fake-cancel {
-  @include global-button-negative;
+button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-continue, button.disabled, button[disabled], .button.disabled, .button[disabled] {
+  @include global-button;
 }
 
 .alert-box {

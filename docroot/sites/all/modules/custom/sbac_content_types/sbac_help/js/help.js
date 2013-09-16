@@ -13,12 +13,14 @@
         });
       }
       helpColorBox = function() {
-        $(".help-modal").colorbox({
-            inline: true,
-            width: "80%",
-            height: "600px",
-            onComplete: initSlider
-        });
+        if ($(".help-modal").length) {
+          $(".help-modal").colorbox({
+              inline: true,
+              width: "80%",
+              height: "600px",
+              onComplete: initSlider
+          });
+        }
       }
       helpColorBox();
     }
