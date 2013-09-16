@@ -58,7 +58,7 @@ class Base {
         break;
 
       case 'qc':
-        $stub  = 'review';
+        $stub  = 'qc';
 
         break;
 
@@ -79,7 +79,7 @@ class Base {
 
     drupal_add_library('dialog', 'dialog');
     $link_text = t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT));
-    $content = l($link_text, 'node/' . $this->_node->nid . '/review/' . $stub . '/start/' . $trigger_id, array(
+    $content = l($link_text, 'node/' . $this->_node->nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
       'attributes' => array(
         'class' => array(
           'use-ajax',
@@ -112,40 +112,24 @@ class Base {
 
   /**
    * Returns a rendered entity-edit form if there is an existing entity.
-   * @param  [type] $type          [description]
+   * @param  [type] $bundle        [description]
    * @param  [type] $readonly_perm [description]
    * @return [type]                [description]
    */
-  public function getEntityForm($type, $bundle, $readonly_perm = NULL) {
+  public function getEntityForm($bundle, $readonly_perm = NULL) {
     $output = '';
 
-    switch ($type) {
-      case 'feedback':
-        $id = db_select('eck_feedback', 'eckf')
-            ->fields('eckf', array('id'))
-            ->condition('type', $bundle)
-            ->condition('node_id', $this->_node->nid)
-            ->condition('status', 1)
-            ->condition('uid', $this->_account->uid)
-            ->execute()
-            ->fetchField();
-
-        break;
-
-      case 'review':
-        $id = db_select('eck_review', 'eckr')
-            ->fields('eckr', array('id'))
-            ->condition('type', $bundle)
-            ->condition('status', 1)
-            ->condition('uid', $this->_account->uid)
-            ->execute()
-            ->fetchField();
-
-        break;
-    }
+    $id = db_select('eck_feedback', 'eckf')
+        ->fields('eckf', array('id'))
+        ->condition('type', $bundle)
+        ->condition('node_id', $this->_node->nid)
+        ->condition('status', 1)
+        ->condition('uid', $this->_account->uid)
+        ->execute()
+        ->fetchField();
 
     if ($id) {
-      $entity = entity_load_single($type, $id);
+      $entity = entity_load_single('feedback', $id);
 
       // we may want to override access with a readonly permission
       if ($entity->completed && !$this->_section->access()) {
@@ -155,7 +139,7 @@ class Base {
         $this->_section->overrideAccess(1);
       }
 
-      $form = eck__entity__edit($type, $bundle, $id);
+      $form = eck__entity__edit('feedback', $bundle, $id);
       $output = drupal_render($form);
     }
 

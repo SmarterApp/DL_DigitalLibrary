@@ -40,9 +40,9 @@ function sbac_core_user_default_permissions() {
     'module' => 'eck',
   );
 
-  // Exported permission: eck add feedback review entities.
-  $permissions['eck add feedback review entities'] = array(
-    'name' => 'eck add feedback review entities',
+  // Exported permission: eck add feedback qc entities.
+  $permissions['eck add feedback qc entities'] = array(
+    'name' => 'eck add feedback qc entities',
     'roles' => array(),
     'module' => 'eck',
   );
@@ -61,9 +61,9 @@ function sbac_core_user_default_permissions() {
     'module' => 'eck',
   );
 
-  // Exported permission: eck administer feedback review entities.
-  $permissions['eck administer feedback review entities'] = array(
-    'name' => 'eck administer feedback review entities',
+  // Exported permission: eck administer feedback qc entities.
+  $permissions['eck administer feedback qc entities'] = array(
+    'name' => 'eck administer feedback qc entities',
     'roles' => array(),
     'module' => 'eck',
   );
@@ -82,9 +82,9 @@ function sbac_core_user_default_permissions() {
     'module' => 'eck',
   );
 
-  // Exported permission: eck delete feedback review entities.
-  $permissions['eck delete feedback review entities'] = array(
-    'name' => 'eck delete feedback review entities',
+  // Exported permission: eck delete feedback qc entities.
+  $permissions['eck delete feedback qc entities'] = array(
+    'name' => 'eck delete feedback qc entities',
     'roles' => array(),
     'module' => 'eck',
   );
@@ -103,9 +103,9 @@ function sbac_core_user_default_permissions() {
     'module' => 'eck',
   );
 
-  // Exported permission: eck edit feedback review entities.
-  $permissions['eck edit feedback review entities'] = array(
-    'name' => 'eck edit feedback review entities',
+  // Exported permission: eck edit feedback qc entities.
+  $permissions['eck edit feedback qc entities'] = array(
+    'name' => 'eck edit feedback qc entities',
     'roles' => array(),
     'module' => 'eck',
   );
@@ -124,9 +124,9 @@ function sbac_core_user_default_permissions() {
     'module' => 'eck',
   );
 
-  // Exported permission: eck list feedback review entities.
-  $permissions['eck list feedback review entities'] = array(
-    'name' => 'eck list feedback review entities',
+  // Exported permission: eck list feedback qc entities.
+  $permissions['eck list feedback qc entities'] = array(
+    'name' => 'eck list feedback qc entities',
     'roles' => array(),
     'module' => 'eck',
   );
@@ -138,9 +138,9 @@ function sbac_core_user_default_permissions() {
     'module' => 'eck',
   );
 
-  // Exported permission: eck view feedback review entities.
-  $permissions['eck view feedback review entities'] = array(
-    'name' => 'eck view feedback review entities',
+  // Exported permission: eck view feedback qc entities.
+  $permissions['eck view feedback qc entities'] = array(
+    'name' => 'eck view feedback qc entities',
     'roles' => array(),
     'module' => 'eck',
   );

@@ -5,7 +5,7 @@ if (typeof Feedback == 'undefined') {
 }
 
 // general elements
-Feedback.wrapper =            '.review-wrap';
+Feedback.wrapper =            '.feedback-wrap';
 Feedback.messages =           '.alert-box';
 Feedback.messages_error =     '.alert-box.alert';
 Feedback.messages_existing =  '.row > .main-container #main > .alert-box';

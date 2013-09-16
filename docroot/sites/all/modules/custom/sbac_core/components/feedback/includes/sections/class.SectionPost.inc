@@ -11,7 +11,7 @@ class SectionPost extends Base {
 
     drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_post.js');
 
-    if (!$output = $this->getEntityForm('feedback', 'post')) {
+    if (!$output = $this->getEntityForm('post')) {
       if ($intro = variable_get('resource_post_help', '')) {
         $output .= '<div class="gate-keeper-intro">' . filter_text($intro) . '</div>';
       }
@@ -19,7 +19,7 @@ class SectionPost extends Base {
       $output .= $this->getStartLink();
     }
 
-    $output = '<div class="review-wrap" id="review-wrap-post">' . $output . '</div>';
+    $output = '<div class="feedback-wrap" id="feedback-wrap-post">' . $output . '</div>';
 
     return $output;
   }

@@ -44,7 +44,7 @@ function resource_access($op, $node, $account = NULL) {
       ':uid' => $account->uid,
     );
 
-    $review_perms = array(
+    $qc_perms = array(
       'view gate keeper',
       'start gate keeper',
       'edit gate keeper',
@@ -63,7 +63,7 @@ function resource_access($op, $node, $account = NULL) {
 
     // if the user does not have the 'resource reviewer' role, they have no access
     // to anything in the review process
-    if (in_array($op, $review_perms)) {
+    if (in_array($op, $qc_perms)) {
       if (!in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
         return FALSE;
       }
@@ -161,7 +161,7 @@ function resource_access($op, $node, $account = NULL) {
       // now, if a user already has a Review entity, we grant them immediate access;
       $query = "  SELECT  status, completed
                   FROM    eck_feedback
-                  WHERE   type = 'review'
+                  WHERE   type = 'qc'
                   AND     node_id = :node_id
                   AND     uid = :uid
                   AND     current = 1
@@ -196,7 +196,7 @@ function resource_access($op, $node, $account = NULL) {
       //
       $query = "  SELECT  COUNT(id)
                   FROM    eck_feedback
-                  WHERE   type = 'review'
+                  WHERE   type = 'qc'
                   AND     node_id = :node_id
                   AND     status = 1
                   AND     current = 1
@@ -214,7 +214,7 @@ function resource_access($op, $node, $account = NULL) {
 
       $query = "  SELECT      COUNT(f.id) AS count
                   FROM        eck_feedback f
-                  WHERE       f.type = 'review'       -- 1. first we find the review:
+                  WHERE       f.type = 'qc'       -- 1. first we find the review:
                   AND         f.node_id = :node_id    --      it must match the resource
                   AND         f.status = 1            --      it must be active
                   AND         f.completed = 1         --      it must be completed
@@ -225,7 +225,7 @@ function resource_access($op, $node, $account = NULL) {
 
       $query = "  SELECT      COUNT(f.id) AS count
                   FROM        eck_feedback f
-                  WHERE       f.type = 'review'       -- 1. first we find the review:
+                  WHERE       f.type = 'qc'       -- 1. first we find the review:
                   AND         f.node_id = :node_id    --      it must match the resource
                   AND         f.status = 1            --      it must be active
                   AND         f.completed = 0         --      must not be completed
@@ -314,8 +314,6 @@ function feedback_hours_left($entity, $max_hours = FEEDBACK_REVIEW_TIMEOUT) {
   $created = new \DateTime(date(DATE_ATOM, $entity->created));
 
   $diff = $created->diff($now);
-
-  // print_rr($entity->id);exit();
 
   return FEEDBACK_REVIEW_TIMEOUT - ($diff->h + $diff->days * 24);
 }

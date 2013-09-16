@@ -284,9 +284,9 @@ function sbac_core_field_default_field_instances() {
     'xss' => 1,
   );
 
-  // Exported field_instance: 'feedback-review-field_rec_options'
-  $field_instances['feedback-review-field_rec_options'] = array(
-    'bundle' => 'review',
+  // Exported field_instance: 'feedback-qc-field_rec_options'
+  $field_instances['feedback-qc-field_rec_options'] = array(
+    'bundle' => 'qc',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -325,9 +325,9 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'feedback-review-field_rec_rationale'
-  $field_instances['feedback-review-field_rec_rationale'] = array(
-    'bundle' => 'review',
+  // Exported field_instance: 'feedback-qc-field_rec_rationale'
+  $field_instances['feedback-qc-field_rec_rationale'] = array(
+    'bundle' => 'qc',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -373,9 +373,9 @@ function sbac_core_field_default_field_instances() {
     'xss' => 1,
   );
 
-  // Exported field_instance: 'feedback-review-field_review_set'
-  $field_instances['feedback-review-field_review_set'] = array(
-    'bundle' => 'review',
+  // Exported field_instance: 'feedback-qc-field_review_set'
+  $field_instances['feedback-qc-field_review_set'] = array(
+    'bundle' => 'qc',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',

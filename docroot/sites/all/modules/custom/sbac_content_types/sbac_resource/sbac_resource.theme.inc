@@ -726,7 +726,7 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
 
   $link_text = t('Start Review');
   if ($style == 'button') {
-    $content = l($link_text, 'node/' . $node->nid . '/review/' . $stub . '/start/' . $trigger_id, array(
+    $content = l($link_text, 'node/' . $node->nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
       'attributes' => array(
         'class' => array(
           'use-ajax',
@@ -740,7 +740,7 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
     ));
   }
   else {
-    $content = l($link_text, 'node/' . $node->nid . '/review/' . $stub . '/start/' . $trigger_id, array(
+    $content = l($link_text, 'node/' . $node->nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
       'attributes' => array(
         'class' => array(
           'use-ajax',

@@ -2,18 +2,12 @@
 namespace sbac_core\components\feedback;
 
 class Hooks extends \devtools\Hooks {
-  protected $_feedback_info = '';
-  protected $_feedback_bundles = array();
-
-  protected $_review_info = '';
-  protected $_review_bundles = array();
+  protected $_info = '';
+  protected $_bundles = array();
 
   function __construct() {
-    $this->_feedback_info = field_info_bundles('feedback');
-    $this->_feedback_bundles = array_keys($this->_feedback_info);
-
-    $this->_review_info = field_info_bundles('review');
-    $this->_review_bundles = array_keys($this->_review_info);
+    $this->_info = field_info_bundles('feedback');
+    $this->_bundles = array_keys($this->_info);
   }
 
   /**
@@ -71,7 +65,7 @@ class Hooks extends \devtools\Hooks {
           'fragment' => 'review-' . $fragment,
         ));
       }
-      elseif ($feedback->type == 'review') {
+      elseif ($feedback->type == 'qc') {
         drupal_goto('node/' . $feedback->node_id, array(
           'fragment' => 'review-qc',
         ));
@@ -162,9 +156,9 @@ class Hooks extends \devtools\Hooks {
       'weight' => 2,
     ) + $base;
 
-    $items['node/%node/review'] = array(
-      'title' => 'Review',
-      'page callback' => 'resource_review_page',
+    $items['node/%node/feedback'] = array(
+      'title' => 'Feedback',
+      'page callback' => 'resource_feedback_page',
       'page arguments' => array(1),
       'access callback' => 'resource_access',
       'access arguments' => array('view about', 1),
@@ -173,7 +167,7 @@ class Hooks extends \devtools\Hooks {
       'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     ) + $base;
 
-    $items['node/%node/review/gate-keeper'] = array(
+    $items['node/%node/feedback/gate-keeper'] = array(
       'title' => 'Gate Keeper',
       'page callback' => 'resource_feedback_ajax_page',
       'page arguments' => array('gate_keeper', 1),
@@ -183,11 +177,11 @@ class Hooks extends \devtools\Hooks {
       'type' => MENU_LOCAL_TASK,
       'context' => MENU_CALLBACK,
     ) + $base;
-
-    $items['node/%node/review/review'] = array(
+    
+    $items['node/%node/feedback/qc'] = array(
       'title' => 'Quality Criteria Review',
       'page callback' => 'resource_feedback_ajax_page',
-      'page arguments' => array('review', 1),
+      'page arguments' => array('qc', 1),
       'access callback' => 'resource_access',
       'access arguments' => array('edit quality criteria', 1),
       'weight' => 2,
@@ -195,7 +189,7 @@ class Hooks extends \devtools\Hooks {
       'context' => MENU_CALLBACK,
     ) + $base;
 
-    $items['node/%node/review/post'] = array(
+    $items['node/%node/feedback/post'] = array(
       'title' => 'Post',
       'page callback' => 'resource_feedback_ajax_page',
       'page arguments' => array('post', 1),
@@ -206,7 +200,7 @@ class Hooks extends \devtools\Hooks {
       'context' => MENU_CALLBACK,
     ) + $base;
 
-    $items['node/%node/review/redirect'] = array(
+    $items['node/%node/feedback/redirect'] = array(
       'title' => 'Gate Keeper',
       'page callback' => 'resource_redirect_page',
       'page arguments' => array(1, 4),
@@ -227,13 +221,13 @@ class Hooks extends \devtools\Hooks {
     );
 
     $items = array(
-      'feedback_helpful_feedback_info' => array(
+      'feedback_helpful_info' => array(
         'variables' => array(
-          'helpful_feedback_info' => NULL,
+          'helpful_info' => NULL,
         ),
-        'template' => 'feedback_helpful_feedback_info',
+        'template' => 'feedback_helpful_info',
       ),
-      'review_teaser' => array(
+      'qc_teaser' => array(
         'variables' => array(
           'id' => NULL,
           'author' => NULL,
@@ -241,7 +235,7 @@ class Hooks extends \devtools\Hooks {
           'headline' => NULL,
           'comments' => NULL,
         ),
-        'template' => 'review_teaser',
+        'template' => 'qc_teaser',
       ),
     );
 
@@ -271,7 +265,7 @@ class Hooks extends \devtools\Hooks {
     $args = func_get_args();
 
     // feedback add/edit form
-    if (preg_match('/^eck__entity__form_(edit|add)_feedback_(' . implode('|', $this->_feedback_bundles) . ')$/', $form_id, $matches)) {
+    if (preg_match('/^eck__entity__form_(edit|add)_feedback_(' . implode('|', $this->_bundles) . ')$/', $form_id, $matches)) {
       // basic form data
         $bundle = $matches[2];
 
@@ -281,8 +275,8 @@ class Hooks extends \devtools\Hooks {
             $class_name = 'GateKeeper';
             break;
 
-          case 'review':
-            $class_name = 'Review';
+          case 'qc':
+            $class_name = 'Qc';
             break;
 
           case 'post':
@@ -295,7 +289,7 @@ class Hooks extends \devtools\Hooks {
           module_load_include('inc', 'sbac_core', 'components/feedback/includes/form_utility/class.' . $class_name);
 
           $full_class_name = 'sbac_core\\components\\feedback\\form_utility\\' . $class_name;
-          $form_utility = new $full_class_name($form, $form_state, $this->_feedback_info[$bundle]);
+          $form_utility = new $full_class_name($form, $form_state, $this->_info[$bundle]);
 
           $form_utility->attachHelpfulInfo();
           $form_utility->process();
@@ -303,7 +297,7 @@ class Hooks extends \devtools\Hooks {
         }
     }
     // resource node form on the main resource profile page (ie. edit tags)
-    elseif ($form_id == 'resource_node_form' && isset($form_state['build_feedback_info']['args'][1]) && $form_state['build_feedback_info']['args'][1] == 'edit_tags') {
+    elseif ($form_id == 'resource_node_form' && isset($form_state['build_info']['args'][1]) && $form_state['build_info']['args'][1] == 'edit_tags') {
       $data = entity_load('feedback', FALSE, array(
         'type' => 'post',
         'completed' => 0,
@@ -365,7 +359,7 @@ class Hooks extends \devtools\Hooks {
           $url = implode('/', array(
             'node',
             $post->node_id,
-            'review',
+            'feedback',
             'post',
             'cancel',
             $trigger_id,
@@ -434,10 +428,6 @@ class Hooks extends \devtools\Hooks {
             '#value' => 'approved',
           );
       }
-    }
-    // feedback add/edit form
-    if (preg_match('/^eck__entity__form_(edit|add)_review_(' . implode('|', $this->_review_bundles) . ')$/', $form_id, $matches)) {
-      print_rr($form);exit();
     }
   }
 
@@ -523,7 +513,7 @@ class Hooks extends \devtools\Hooks {
       module_load_include('inc', 'sbac_core', 'components/feedback/feedback.pages');
 
       $build['review'] = array(
-        '#markup' => resource_review_page($build['#node']),
+        '#markup' => resource_feedback_page($build['#node']),
       );
     }
   }
@@ -566,7 +556,7 @@ class Hooks extends \devtools\Hooks {
     // required to do proper field validation on Field Collection items;
     // see https://drupal.org/node/1289062#comment-7584113 for more info
     if ($entity_type == 'field_collection_item') {
-      $info = entity_get_feedback_info($entity_type);
+      $info = entity_get_info($entity_type);
       $bundle_key = $info['entity keys']['bundle'];
 
       if (in_array($entity->{$bundle_key}, array('field_quality_set', 'field_review_set'))) {
@@ -580,7 +570,7 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_entity_presave($entity, $type) {
     // set active status for new Review entities
-    if ($type == 'feedback' && $entity->type == 'review' && (!isset($entity->id) || !$entity->id)) {
+    if ($type == 'feedback' && $entity->type == 'qc' && (!isset($entity->id) || !$entity->id)) {
       $entity->status = 1;
     }
   }
@@ -630,7 +620,7 @@ class Hooks extends \devtools\Hooks {
 
       // workbench replaces the revision checkbox with a hardcoded value, let's put
       // the original back
-      $form['revision_feedback_information']['revision'] = array(
+      $form['revision_information']['revision'] = array(
         '#type' => 'checkbox',
         '#title' => t('Create new revision'),
         '#default_value' => 1,

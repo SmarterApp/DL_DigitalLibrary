@@ -5,9 +5,9 @@
 ----------------------------------------------------------------------------*/
 
 /**
- * Callback for /node/###/review.
+ * Callback for /node/###/feedback.
  */
-function resource_review_page($node) {
+function resource_feedback_page($node) {
   $output = '';
 
   $path = drupal_get_path('module', 'sbac_core') . '/components/feedback';
@@ -24,7 +24,7 @@ function resource_review_page($node) {
     $control->addSection('about', 'about', t('About this Resource'));
 
     // end-user reviews flow
-    $control->addSection('review', 'reviews', t('Reviews'), TRUE);
+    // $control->addSection('review', 'reviews', t('Reviews'), TRUE);
 
     // quality criteria review flow
     $control->addSection('quality criteria', 'gk', t('Gate-Keeping Criteria Review'));
@@ -55,7 +55,7 @@ function resource_review_page($node) {
 }
 
 /**
- * AJAX callback for /node/###/review/*
+ * AJAX callback for /node/###/feedback/*
  * @param  [type] $node           [description]
  * @param  [type] $state          [description]
  * @param  [type] $trigger_id     [description]
@@ -69,7 +69,7 @@ function resource_feedback_ajax_page($bundle, $node, $state, $trigger_id, $entit
 }
 
 /**
- * Callback for /node/###/review/redirect/ABC
+ * Callback for /node/###/feedback/redirect/ABC
  *
  * Browsers can be a pain when doing JS redirects of  pages pointing to hash fragments, so it's
  * simpler to do a back-end redirect.
@@ -126,7 +126,7 @@ function _feedback_start_review_link($node, $type) {
 
   drupal_add_library('dialog', 'dialog');
   $link_text = t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT));
-  $content = l($link_text, 'node/' . $node->nid . '/review/' . $stub . '/start/' . $trigger_id, array(
+  $content = l($link_text, 'node/' . $node->nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
     'attributes' => array(
       'class' => array(
         'use-ajax',

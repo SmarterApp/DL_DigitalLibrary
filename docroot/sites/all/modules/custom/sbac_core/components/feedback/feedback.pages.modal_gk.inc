@@ -109,7 +109,7 @@ function resource_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
           'dialog' => array('title' => t('You are about to start reviewing this Resource')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_start']['submit'])),
           'submit_autoclose' => TRUE,
-          'submit_redirect' => url('node/' . $node->nid . '/review/redirect/review-gk'),
+          'submit_redirect' => url('node/' . $node->nid . '/feedback/redirect/review-gk'),
         ) + $state_common_options,
 
         'cancel' => array(

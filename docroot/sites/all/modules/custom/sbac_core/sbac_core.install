@@ -98,3 +98,32 @@ function sbac_core_update_7008() {
 
   module_enable($modules);
 }
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Renames Feedback 'Review' bundle to 'Qc'
+ */
+function sbac_core_update_7009() {
+  db_query("UPDATE field_data_field_review_set SET bundle = 'qc' WHERE bundle = 'review'");
+  db_query("UPDATE field_revision_field_review_set SET bundle = 'qc' WHERE bundle = 'review'");
+
+  db_query("UPDATE field_data_field_rec_options SET bundle = 'qc' WHERE bundle = 'review'");
+  db_query("UPDATE field_revision_field_rec_options SET bundle = 'qc' WHERE bundle = 'review'");
+
+  db_query("UPDATE field_data_field_rec_rationale SET bundle = 'qc' WHERE bundle = 'review'");
+  db_query("UPDATE field_revision_field_rec_rationale SET bundle = 'qc' WHERE bundle = 'review'");
+
+  db_query("UPDATE eck_bundle SET machine_name = 'feedback_qc', name = 'qc', label = 'Quality Criteria Review' WHERE id = 2");
+  db_query("UPDATE eck_entity_type SET name = 'qc', label = 'Quality Criteria Review' WHERE id = 2");
+  db_query("UPDATE eck_feedback SET type = 'qc' WHERE type = 'review'");
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Renaming-related fix
+ */
+function sbac_core_update_7010() {
+  db_query("UPDATE eck_entity_type SET name = 'review', label = 'Review' WHERE id = 2");
+}
