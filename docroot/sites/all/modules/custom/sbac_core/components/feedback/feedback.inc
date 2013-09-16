@@ -6,6 +6,7 @@ define('FEEDBACK_REVIEW_REMINDER',      24); // value in hours
 define('FEEDBACK_REVIEW_NOTIFICATION',  FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
 define('FEEDBACK_REVIEWER_RID',         17); // id of the 'resource reviewer' role;
 define('FEEDBACK_PUBLISHER_RID',        16); // id of the 'resource publisher' role;
+define('FEEDBACK_AUTHENTICATED_RID',    2);  // id of the 'authenticated' role;
 
 /**
  * Access callback for custom Resource operations.
@@ -28,11 +29,14 @@ function resource_access($op, $node, $account = NULL) {
       return TRUE;
     }
 
-    if ($op == 'access review process') {
+    if ($op == 'access quality criteria process') {
       return (in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles)));
     }
     elseif ($op == 'access post process') {
       return (in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles)));
+    }
+    elseif ($op == 'access review process') {
+      return (in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles)));
     }
 
     $args = array(

@@ -11,13 +11,14 @@
 .review-wrap {
   padding: 10px 30px;
 
-    p {
+  p {
     font-size: 1em;
   }
 
   textarea {
     resize: none;
   }
+
   /* intro form elements */
     .gate-keeper-intro {
       @include bottom-border;
@@ -465,6 +466,24 @@
     ul {
       font-size: 0.9em;
     }
+  }
+}
+
+#user-review-wrap-enduse {
+  margin: 10px 30px;
+
+  .section-title {
+    float: left;
+  }
+
+  .review-form-trigger {
+    &:after {
+      clear: both;
+    }
+
+    float: right;
+    display: inline;
+    margin: 0;
   }
 }
 

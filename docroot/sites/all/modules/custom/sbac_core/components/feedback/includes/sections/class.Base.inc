@@ -96,25 +96,56 @@ class Base {
   }
 
   /**
+   * Returns a rendered entity-edit form.
+   * @param  [type] $type   [description]
+   * @param  [type] $bundle [description]
+   * @return [type]         [description]
+   */
+  public function getNewEntityForm($type, $bundle) {
+    $output = '';
+
+    $form = eck__entity__add($type, $bundle);
+    $output = drupal_render($form);
+
+    return $output;
+  }
+
+  /**
    * Returns a rendered entity-edit form if there is an existing entity.
    * @param  [type] $type          [description]
    * @param  [type] $readonly_perm [description]
    * @return [type]                [description]
    */
-  public function getEntityForm($type, $readonly_perm = NULL) {
+  public function getEntityForm($type, $bundle, $readonly_perm = NULL) {
     $output = '';
 
-    $id = db_select('eck_feedback', 'eckf')
+    switch ($type) {
+      case 'feedback':
+        $id = db_select('eck_feedback', 'eckf')
             ->fields('eckf', array('id'))
-            ->condition('type', $type)
+            ->condition('type', $bundle)
             ->condition('node_id', $this->_node->nid)
             ->condition('status', 1)
             ->condition('uid', $this->_account->uid)
             ->execute()
             ->fetchField();
 
+        break;
+
+      case 'review':
+        $id = db_select('eck_review', 'eckr')
+            ->fields('eckr', array('id'))
+            ->condition('type', $bundle)
+            ->condition('status', 1)
+            ->condition('uid', $this->_account->uid)
+            ->execute()
+            ->fetchField();
+
+        break;
+    }
+
     if ($id) {
-      $entity = entity_load_single('feedback', $id);
+      $entity = entity_load_single($type, $id);
 
       // we may want to override access with a readonly permission
       if ($entity->completed && !$this->_section->access()) {
@@ -124,7 +155,7 @@ class Base {
         $this->_section->overrideAccess(1);
       }
 
-      $form = eck__entity__edit('feedback', $type, $id);
+      $form = eck__entity__edit($type, $bundle, $id);
       $output = drupal_render($form);
     }
 

@@ -11,7 +11,7 @@ class SectionQc extends Base {
 
     drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_quality_criteria.js');
 
-    if (!$output = $this->getEntityForm('review', 'quality review readonly')) {
+    if (!$output = $this->getEntityForm('feedback', 'review', 'quality review readonly')) {
       if ($intro = variable_get('resource_review_intro', '')) {
         $output .= '<div class="gate-keeper-intro">' . filter_text($intro) . '</div>';
       }

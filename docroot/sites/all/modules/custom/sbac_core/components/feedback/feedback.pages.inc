@@ -20,10 +20,17 @@ function resource_review_page($node) {
   try {
     $control = new \sbac_core\components\feedback\Control($node);
 
+    // about flow
     $control->addSection('about', 'about', t('About this Resource'));
-    $control->addSection('review', 'gk', t('Gate-Keeping Criteria Review'));
-    $control->addSection('review', 'qc', t('Quality Criteria Review'), TRUE);
 
+    // end-user reviews flow
+    $control->addSection('review', 'reviews', t('Reviews'), TRUE);
+
+    // quality criteria review flow
+    $control->addSection('quality criteria', 'gk', t('Gate-Keeping Criteria Review'));
+    $control->addSection('quality criteria', 'qc', t('Quality Criteria Review'), TRUE);
+
+    // publisher flow
     $control->addSection('post', 'tags', t('Edit Resource Tags'), TRUE);
     $control->addSection('post', 'post', t('Quality Criteria Review'));
 

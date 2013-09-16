@@ -50,6 +50,10 @@ class Section {
         $permission = 'view about';
         break;
 
+      case 'reviews':
+        return TRUE;
+        break;
+
       case 'gk':
         $permission = 'view gate keeper';
         break;

@@ -11,7 +11,7 @@ class SectionPost extends Base {
 
     drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_post.js');
 
-    if (!$output = $this->getEntityForm('post')) {
+    if (!$output = $this->getEntityForm('feedback', 'post')) {
       if ($intro = variable_get('resource_post_help', '')) {
         $output .= '<div class="gate-keeper-intro">' . filter_text($intro) . '</div>';
       }

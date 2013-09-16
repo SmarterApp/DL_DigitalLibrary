@@ -12,7 +12,7 @@ class SectionGk extends Base {
     drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_gate_keeper.js');
 
     // TODO: permission 'gate keeper readonly' doesn't exist
-    if (!$output = $this->getEntityForm('gate_keeper', 'gate keeper readonly')) {
+    if (!$output = $this->getEntityForm('feedback', 'gate_keeper', 'gate keeper readonly')) {
       if ($intro = variable_get('resource_gate_keeper_help', '')) {
         $output .= '<div class="gate-keeper-intro">' . filter_text($intro) . '</div>';
       }
