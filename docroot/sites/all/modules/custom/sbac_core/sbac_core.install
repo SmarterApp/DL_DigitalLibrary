@@ -133,12 +133,17 @@ function sbac_core_update_7010() {
  * @return [type] [description]
  */
 function sbac_core_update_7011() {
-  taxonomy_vocabulary_save((object) array(
-    'name' => 'Applied Category',
-    'machine_name' => 'applied_category',
-  ));
-
   $vocab = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'applied_category'")->fetch();
+
+  if (!$vocab) {
+    taxonomy_vocabulary_save((object) array(
+      'name' => 'Applied Category',
+      'machine_name' => 'applied_category',
+    ));
+
+    $vocab = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'applied_category'")->fetch();
+  }
+  
   if ($vocab) {
     $terms = array(
       'Elementary School',
