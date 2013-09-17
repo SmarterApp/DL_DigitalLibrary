@@ -23,13 +23,15 @@ function sbac_media_menu() {
   $items['sbac-media/%ctools_js/internet-confirm'] = array(
     'page callback' => 'sbac_media_internet_confirm',
     'access arguments' => array('access content'),
-    'title' => 'Internet Confirmation',
+    'page arguments' => array(1),
+    'title' => 'You are about to embed a Video',
   );
 
   $items['sbac-media/%ctools_js/delete-media'] = array(
     'page callback' => 'sbac_media_delete_media',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
+    'title' => 'Delete Confirmation',
   );
 
   return $items;
@@ -154,6 +156,7 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
   $form['#attached']['js'][] = 'http://code.jquery.com/ui/1.10.3/jquery-ui.js';
   $form['#attached']['css'][] = 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css';
+  $form['#attached']['css'][] = drupal_get_path('module', 'sbac_media') . '/css/sbac_media.css';
 
   $form['field_file_container']['#tree'] = TRUE;
   $form['field_file_container'] = array(
@@ -178,7 +181,6 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Add Embedded Video',
     '#sbac_embed_video' => TRUE,
-    '#attributes' => array('id' => 'sbac-add-embedded'),
     '#validate' => array('sbac_resource_media_form_element_validate'),
     '#ajax'=> array(
       'callback'=>'sbac_resource_media_form_element_upload',
@@ -200,6 +202,18 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
       )
     )),
   );
+
+  // JS to properly size the modal.
+  $js_settings = array(
+    'sbac-media-internet-confirm' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 600,
+        'height' => 160,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting');
 
   $form['field_file_container']['field_file_upload'] = array(
     '#type' => 'file',
@@ -232,7 +246,7 @@ function _sbac_media_create_list($media_items) {
   $output = '<table id="sbac-media-list" class="sortable">';
   $output .= '<thead><tr><th colspan="3">Machine Name</th><th>Operations</th></tr></thead>';
 
-  foreach ($media_items as $media_item) {
+  foreach ($media_items as $key => $media_item) {
     // Open.
     $output .= '<tr>';
 
@@ -268,6 +282,32 @@ function _sbac_media_create_list($media_items) {
       )
     ));
     $output .= '<td>' . $delete_link . '</td>';
+
+    $select = '
+    <div class="form-item form-type-select form-item-draggableviews-3-weight">
+    <select id="edit-draggableviews-3-weight" class="draggableviews-weight form-select" name="draggableviews[3][weight]">
+    <option selected="selected" value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    </select>
+    </div>';
+
+    $form['field_file_container']['weight'][$key] = array(
+      '#type' => 'select',
+      '#title' => t('Selected'),
+      '#title_display' => 'invisible',
+      '#options' => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+      '#default_value' => $category['selected'],
+    );
+
+    $what = drupal_render($form['field_file_container']['weight'][$key]);
+    $output .= '<td>' . $what . '</td>';
 
     // Close.
     $output .= '</tr>';
@@ -308,6 +348,7 @@ function sbac_resource_media_form_element_upload($form, $form_state) {
   if ($form_state['clicked_button']['#sbac_embed_video']) {
     $embedded_video_source = $form_state['values']['field_embed_video'];
     if (strpos($embedded_video_source, 'youtube') !== FALSE || strpos($embedded_video_source, 'vimeo') !== FALSE) {
+       $_SESSION['field_embed_video'] = $embedded_video_source;
       $form['field_file_container']['run_js'] = array(
         '#markup' => '<script>jQuery("#sbac-media-internet-confirm").click();</script>',
       );
@@ -315,32 +356,7 @@ function sbac_resource_media_form_element_upload($form, $form_state) {
     else {
       if (isset($form_state['node'])) {
         $node = $form_state['node'];
-
-        // API Call to retrieve Titles. (Would like to get length but no API provides it)
-        if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
-          $handler = new MediaInternetSchoolTubeHandler($embedded_video_source);
-          $file = $handler->getFileObject();
-        }
-
-        if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
-          $handler = new MediaInternetTeacherTubeHandler($embedded_video_source);
-          $file = $handler->getFileObject();
-        }
-
-        if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
-          $handler = new MediaInternetSlideShareHandler($embedded_video_source);
-          $file = $handler->getFileObject();
-        }
-
-        if ($file && isset($file->filename) && $file->filename != NULL) {
-          $media = new stdClass;
-          $media->type = 'media';
-          $media->fid = 0;
-          $media->nid = $node->nid;
-          $media->filename = $file->filename;
-          $media->file_size = 0;
-          entity_save('media', $media);
-        }
+        sbac_media_save_embedded_source($embedded_video_source, $node->nid);
       }
     }
   }
@@ -443,7 +459,6 @@ function sbac_media_delete_media($js = FALSE) {
         if ($form_state['values']['id']) {
           sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
         }
-        $what = url($form_state['values']['hidden_url'], array('fragment' => 'edit-group_materials'));
         $output[] = ctools_ajax_command_redirect($form_state['values']['hidden_url'], 0, array('fragment' => 'edit-group_materials'));
         $output[] = ctools_ajax_command_reload();
       }
@@ -508,7 +523,7 @@ function sbac_media_delete_media_form() {
  *
  * @param bool $js
  */
-function sbac_media_internet_confirm($js = TRUE) {
+function sbac_media_internet_confirm($js = FALSE) {
   if ($js) {
     ctools_include('ajax');
     ctools_include('modal');
@@ -516,7 +531,7 @@ function sbac_media_internet_confirm($js = TRUE) {
     ctools_modal_add_js();
 
     $form_state = array(
-      'title' => t('To continue, confirm that you wish to upload a video.'),
+      'title' => t('You are about to embed a Video'),
       'ajax' => $js,
     );
 
@@ -527,11 +542,7 @@ function sbac_media_internet_confirm($js = TRUE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
-        // Delete document reference.
-        if ($form_state['values']['id']) {
-          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
-        }
-        $what = url($form_state['values']['hidden_url'], array('fragment' => 'edit-group_materials'));
+        sbac_media_save_embedded_source($form_state['values']['embed'], $form_state['values']['nid']);
         $output[] = ctools_ajax_command_redirect($form_state['values']['hidden_url'], 0, array('fragment' => 'edit-group_materials'));
         $output[] = ctools_ajax_command_reload();
       }
@@ -564,11 +575,15 @@ function sbac_media_internet_confirm_form() {
 
   $form['embed'] = array(
     '#type' => 'hidden',
-    '#value' => $_GET['embed'],
+    '#value' => $_SESSION['field_embed_video'],
+  );
+
+  $form['description'] = array(
+    '#markup' => '<p>' . t('There are oftentimes issues with the playback of YouTube / Vimeo videos on filtered networks.') . '</p>',
   );
 
   $form['submit_description'] = array(
-    '#markup' => '<p>' . t('If you wish to continue, click continue!') . '</p>',
+    '#markup' => '<p>' . t('Are you sure you want to continue?') . '</p>',
   );
 
   $form['cancel'] = array(
@@ -584,4 +599,51 @@ function sbac_media_internet_confirm_form() {
   );
 
   return $form;
+}
+
+/**
+ * API call to retrieve title and save media.
+ *
+ * @param $embedded_video_source
+ */
+function sbac_media_save_embedded_source($embedded_video_source, $nid) {
+  if ($embedded_video_source == NULL || $nid == NULL) {
+    return;
+  }
+
+  // API Call to retrieve Titles. (Would like to get length but no API provides it)
+  if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
+    $handler = new MediaInternetSchoolTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
+    $handler = new MediaInternetTeacherTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
+    $handler = new MediaInternetSlideShareHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'youtube') !== FALSE) {
+    $handler = new MediaInternetYouTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
+    $handler = new MediaInternetVimeoHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if ($file && isset($file->filename) && $file->filename != NULL) {
+    $media = new stdClass;
+    $media->type = 'media';
+    $media->fid = 0;
+    $media->nid = $nid;
+    $media->filename = $file->filename;
+    $media->file_size = 0;
+    entity_save('media', $media);
+  }
 }

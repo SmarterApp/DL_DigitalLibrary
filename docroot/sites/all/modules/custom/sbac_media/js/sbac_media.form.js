@@ -18,7 +18,7 @@
       }).disableSelection();
 
       // On change, take the input and replace the modal HREF.
-      $('#edit-field-embed-video').change( function () {
+      $('#edit-field-embed-video').on('change blur', function() {
         var embed_code = $(this).val();
         var modal_link = $('#sbac-media-internet-confirm');
         var href = $(modal_link).attr('href');
