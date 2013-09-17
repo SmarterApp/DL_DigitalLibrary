@@ -576,9 +576,260 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'review-end_use-field_appropriate_for'
+  $field_instances['review-end_use-field_appropriate_for'] = array(
+    'bundle' => 'end_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'review',
+    'field_name' => 'field_appropriate_for',
+    'label' => 'Appropriate For',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'review-end_use-field_details'
+  $field_instances['review-end_use-field_details'] = array(
+    'bundle' => 'end_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'review',
+    'field_name' => 'field_details',
+    'label' => 'Details',
+    'profanity' => 1,
+    'required' => 1,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 1000,
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Character count: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 0,
+    ),
+    'xss' => 1,
+  );
+
+  // Exported field_instance: 'review-end_use-field_ease_use'
+  $field_instances['review-end_use-field_ease_use'] = array(
+    'bundle' => 'end_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'fivestar',
+        'settings' => array(
+          'expose' => TRUE,
+          'style' => 'average',
+          'text' => 'average',
+          'widget' => array(
+            'fivestar_widget' => NULL,
+          ),
+        ),
+        'type' => 'fivestar_formatter_default',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'review',
+    'field_name' => 'field_ease_use',
+    'label' => 'Is Easy to Use',
+    'required' => 1,
+    'settings' => array(
+      'allow_clear' => 0,
+      'stars' => 4,
+      'target' => 'none',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'fivestar',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'widget' => array(
+          'fivestar_widget' => 'sites/all/modules/contrib/fivestar/widgets/oxygen/oxygen.css',
+        ),
+      ),
+      'type' => 'stars',
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'review-end_use-field_pro_dev'
+  $field_instances['review-end_use-field_pro_dev'] = array(
+    'bundle' => 'end_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'fivestar',
+        'settings' => array(
+          'expose' => TRUE,
+          'style' => 'average',
+          'text' => 'average',
+          'widget' => array(
+            'fivestar_widget' => NULL,
+          ),
+        ),
+        'type' => 'fivestar_formatter_default',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'review',
+    'field_name' => 'field_pro_dev',
+    'label' => 'Helps My Professional Development',
+    'required' => 1,
+    'settings' => array(
+      'allow_clear' => 0,
+      'stars' => 4,
+      'target' => 'none',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'fivestar',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'widget' => array(
+          'fivestar_widget' => 'sites/all/modules/contrib/fivestar/widgets/oxygen/oxygen.css',
+        ),
+      ),
+      'type' => 'stars',
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'review-end_use-field_student_learning'
+  $field_instances['review-end_use-field_student_learning'] = array(
+    'bundle' => 'end_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'fivestar',
+        'settings' => array(
+          'expose' => TRUE,
+          'style' => 'average',
+          'text' => 'average',
+          'widget' => array(
+            'fivestar_widget' => NULL,
+          ),
+        ),
+        'type' => 'fivestar_formatter_default',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'review',
+    'field_name' => 'field_student_learning',
+    'label' => 'Helps Improve Student Learning',
+    'required' => 1,
+    'settings' => array(
+      'allow_clear' => 0,
+      'stars' => 4,
+      'target' => 'none',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'fivestar',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'widget' => array(
+          'fivestar_widget' => 'sites/all/modules/contrib/fivestar/widgets/oxygen/oxygen.css',
+        ),
+      ),
+      'type' => 'stars',
+      'weight' => 1,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
+  t('Appropriate For');
   t('Comments');
+  t('Details');
+  t('Helps Improve Student Learning');
+  t('Helps My Professional Development');
+  t('Is Easy to Use');
   t('Meets Gate-Keeping Criterion?');
   t('Posting Options');
   t('Quality Criterion Level');

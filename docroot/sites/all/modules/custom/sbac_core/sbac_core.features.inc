@@ -7,12 +7,10 @@
 /**
  * Implements hook_ctools_plugin_api().
  */
-function sbac_core_ctools_plugin_api() {
-  list($module, $api) = func_get_args();
+function sbac_core_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "ds" && $api == "ds") {
     return array("version" => "1");
   }
-  list($module, $api) = func_get_args();
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -23,24 +21,30 @@ function sbac_core_ctools_plugin_api() {
  */
 function sbac_core_eck_bundle_info() {
   $items = array(
-    'feedback_gate_keeper' => array(
-      'machine_name' => 'feedback_gate_keeper',
-      'entity_type' => 'feedback',
-      'name' => 'gate_keeper',
-      'label' => 'Gate Keeper',
-    ),
-    'feedback_post' => array(
-      'machine_name' => 'feedback_post',
-      'entity_type' => 'feedback',
-      'name' => 'post',
-      'label' => 'Post',
-    ),
-    'feedback_qc' => array(
-      'machine_name' => 'feedback_qc',
-      'entity_type' => 'feedback',
-      'name' => 'qc',
-      'label' => 'Quality Criteria Review',
-    ),
+  'feedback_gate_keeper' => array(
+  'machine_name' => 'feedback_gate_keeper',
+  'entity_type' => 'feedback',
+  'name' => 'gate_keeper',
+  'label' => 'Gate Keeper',
+),
+  'feedback_post' => array(
+  'machine_name' => 'feedback_post',
+  'entity_type' => 'feedback',
+  'name' => 'post',
+  'label' => 'Post',
+),
+  'feedback_qc' => array(
+  'machine_name' => 'feedback_qc',
+  'entity_type' => 'feedback',
+  'name' => 'qc',
+  'label' => 'Quality Criteria Review',
+),
+  'review_end_use' => array(
+  'machine_name' => 'review_end_use',
+  'entity_type' => 'review',
+  'name' => 'end_use',
+  'label' => 'End Use',
+),
   );
   return $items;
 }
@@ -50,7 +54,7 @@ function sbac_core_eck_bundle_info() {
  */
 function sbac_core_eck_entity_type_info() {
 $items = array(
-  'feedback' => array(
+       'feedback' => array(
   'name' => 'feedback',
   'label' => 'Feedback',
   'properties' => array(
@@ -108,6 +112,37 @@ $items = array(
       'label' => 'reminder',
       'type' => 'integer',
       'behavior' => 'textfield',
+    ),
+  ),
+),
+       'review' => array(
+  'name' => 'review',
+  'label' => 'Review',
+  'properties' => array(
+    'title' => array(
+      'label' => 'Title',
+      'type' => 'text',
+      'behavior' => 'title',
+    ),
+    'uid' => array(
+      'label' => 'Author',
+      'type' => 'integer',
+      'behavior' => 'author',
+    ),
+    'created' => array(
+      'label' => 'Created',
+      'type' => 'integer',
+      'behavior' => 'created',
+    ),
+    'changed' => array(
+      'label' => 'Changed',
+      'type' => 'integer',
+      'behavior' => 'changed',
+    ),
+    'status' => array(
+      'label' => 'Status',
+      'type' => 'integer',
+      'behavior' => 'checkbox',
     ),
   ),
 ),

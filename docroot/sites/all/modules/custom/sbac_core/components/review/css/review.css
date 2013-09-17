@@ -78,29 +78,31 @@
 /* line 96, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item {
   float: left;
+  margin: 0;
+  padding: 0.4em 0;
   width: 33.3%;
   /* first column */
   /* second column */
   /* third column */
 }
-/* line 101, ../sass/review.scss */
+/* line 103, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n-1) {
   float: left;
   width: 280px;
 }
-/* line 106, ../sass/review.scss */
+/* line 108, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n+1) {
   border-left: 1px #ccc solid;
   float: left;
   width: 280px;
 }
-/* line 111, ../sass/review.scss */
+/* line 113, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n+0) {
   border-left: 1px #ccc solid;
   float: left;
   width: 280px;
 }
-/* line 118, ../sass/review.scss */
+/* line 120, ../sass/review.scss */
 #review-wrap-reviews form .actions {
   clear: both;
   padding: 10px 0 0;
