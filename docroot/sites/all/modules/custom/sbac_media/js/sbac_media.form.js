@@ -8,8 +8,11 @@
    */
   Drupal.behaviors.sbac_media_form_element = {
     attach: function (context, settings) {
-      $("#sortable").sortable();
-      $("#sortable").disableSelection();
+      $('#sbac-media-internet-confirm').hide();
+      var selector = '#sbac-media-list tbody';
+      $(selector).sortable({
+        items: 'tr'
+      }).disableSelection();
     }
   };
 

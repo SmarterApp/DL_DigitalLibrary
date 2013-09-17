@@ -20,7 +20,7 @@ function sbac_media_ctools_plugin_api($module = NULL, $api = NULL) {
 function sbac_media_menu() {
   $items = array();
 
-  $items['sbac-media/internet-confirm'] = array(
+  $items['sbac-media/%ctools_js/internet-confirm'] = array(
     'page callback' => 'sbac_media_internet_confirm',
     'access arguments' => array('access content'),
     'title' => 'Internet Confirmation',
@@ -174,6 +174,32 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
     '#title' => t('Embed Video URL'),
   );
 
+  $form['field_file_container']['field_embed_video_button'] = array(
+    '#type' => 'submit',
+    '#value' => 'Add Embedded Video',
+    '#sbac_embed_video' => TRUE,
+    '#validate' => array('sbac_resource_media_form_element_validate'),
+    '#ajax'=> array(
+      'callback'=>'sbac_resource_media_form_element_upload',
+      'wrapper'=> 'sbac-field-file-container',
+      'method'=> 'replace',
+      'effect'=> 'fade',
+    ),
+  );
+
+  $form['field_file_container']['field_embed_video_modal'] = array(
+    '#markup' => l(t('Modal'), 'sbac-media/nojs/internet-confirm', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-internet-confirm',
+        'id' => 'sbac-media-internet-confirm'
+      ),
+      'query' => array(
+        'nid' => $form['#node']->nid,
+        'embed' => $form['field_file_container']['field_embed_video'],
+      )
+    )),
+  );
+
   $form['field_file_container']['field_file_upload'] = array(
     '#type' => 'file',
     '#title' => t('Upload2'),
@@ -185,6 +211,7 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'upload (25MB Max)',
     '#submit' => array('sbac_resource_media_form_element_upload'),
+    '#sbac_embed_video' => FALSE,
     '#ajax'=> array(
       'callback'=>'sbac_resource_media_form_element_upload',
       'wrapper'=> 'sbac-field-file-container',
@@ -201,12 +228,53 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
  * @return string
  */
 function _sbac_media_create_list($media_items) {
-  $output = '<div class="header">Material Name</div>';
-  $output .= '<div class="header">Operations</div>';
-  $output .= '<ul id="sortable">';
+//  $output = '<div class="header">Material Name</div>';
+//  $output .= '<div class="header">Operations</div>';
+//  $output .= '<ul id="sortable">';
+//  foreach ($media_items as $media_item) {
+//    // Open.
+//    $output .= '<li class="ui-state-default">';
+//
+//    // Image.
+//    $url = 'public://file.png';
+//    $image = theme('image_style', array(
+//      'style_name' => '50x50',
+//      'path' => $url,
+//      'attributes' => array('class' => 'awesome-class')
+//    ));
+//    $output .= '<span>' . $image . '</span>';
+//
+//    // Filename.
+//    $output .= '<span class="ui-icon">' . $media_item['filename'] . '</span>';
+//
+//    // Filesize.
+//    $bytes = number_format($media_item['filesize'] / 1024, 2) . ' KB';
+//    $output .= '<span>' . $bytes . '</span>';
+//
+//    // Delete link.
+//    $delete_link = l(t('Delete'), 'sbac-media/nojs/delete-media', array(
+//      'attributes' => array(
+//        'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media',
+//        'id' => 'sbac-media-modal-delete-media'
+//      ),
+//      'query' => array(
+//        'fid' => $media_item['fid'],
+//        'nid' => $media_item['nid'],
+//        'id' => $media_item['id'],
+//      )
+//    ));
+//    $output .= '<span>' . $delete_link . '</span>';
+//
+//    // Close.
+//    $output .= '</li>';
+//  }
+
+  //$output .= '</ul>';
+  $output = '<table id="sbac-media-list" class="sortable">';
+  $output .= '<thead><tr><th colspan="3">Machine Name</th><th>Operations</th></tr></thead>';
   foreach ($media_items as $media_item) {
     // Open.
-    $output .= '<li class="ui-state-default">';
+    $output .= '<tr>';
 
     // Image.
     $url = 'public://file.png';
@@ -215,14 +283,14 @@ function _sbac_media_create_list($media_items) {
       'path' => $url,
       'attributes' => array('class' => 'awesome-class')
     ));
-    $output .= '<span>' . $image . '</span>';
+    $output .= '<td>' . $image . '</td>';
 
     // Filename.
-    $output .= '<span class="ui-icon">' . $media_item['filename'] . '</span>';
+    $output .= '<td class="ui-icon">' . $media_item['filename'] . '</td>';
 
     // Filesize.
     $bytes = number_format($media_item['filesize'] / 1024, 2) . ' KB';
-    $output .= '<span>' . $bytes . '</span>';
+    $output .= '<td>' . $bytes . '</td>';
 
     // Delete link.
     $delete_link = l(t('Delete'), 'sbac-media/nojs/delete-media', array(
@@ -236,14 +304,30 @@ function _sbac_media_create_list($media_items) {
         'id' => $media_item['id'],
       )
     ));
-    $output .= '<span>' . $delete_link . '</span>';
+    $output .= '<td>' . $delete_link . '</td>';
 
     // Close.
-    $output .= '</li>';
+    $output .= '</tr>';
   }
+  $output .= '</table>';
 
-  $output .= '</ul>';
   return $output;
+}
+
+/**
+ * Validate embedded videos.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_media_form_element_validate($form, $form_state) {
+  $allowed_file_sources = array('youtube', 'teachertube', 'schooltube', 'vimeo', 'slideshare');
+  if ($form_state['values']['field_embed_video']) {
+
+  }
+  else {
+    form_set_error('field_embed_video', t('You must enter a valid embed source'));
+  }
 }
 
 /**
@@ -254,23 +338,42 @@ function _sbac_media_create_list($media_items) {
  * @return mixed
  */
 function sbac_resource_media_form_element_upload($form, $form_state) {
-  $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
-  $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), "private://", $replace = FILE_EXISTS_REPLACE);
-  if ($file && !$form_state['executed']) {
-    if (isset($form_state['node'])) {
-      $node = $form_state['node'];
+  if (form_get_errors()) {
+    return $form['field_file_container'];
+  }
 
-      // Create the media item, duplicates get checked later.
-      $media = new stdClass;
-      $media->type = 'media';
-      $media->fid = $file->fid;
-      $media->nid = $node->nid;
-      $media->filename = $file->filename;
-      $media->file_size = $file->filesize;
-      entity_save('media', $media);
+  if ($form_state['clicked_button']['#sbac_embed_video']) {
+    $allowed_file_sources = array('youtube', 'teachertube', 'schooltube', 'vimeo', 'slideshare');
+    $embedded_video_source = $form_state['values']['field_embed_video'];
+    if (strpos($embedded_video_source, 'youtube') !== FALSE || strpos($embedded_video_source, 'vimeo') !== FALSE) {
+      $output = array();
+      $selector = 'sbac-media-internet-confirm';
+      $output[] = ajax_command_invoke($selector, 'show');
+//      $output[] = ajax_command_invoke($selector, 'click');
+//      $output[] = ajax_command_invoke($selector, 'hide');
+      print ajax_render($output);
+      exit();
     }
-    $file->status = FILE_STATUS_PERMANENT;
-    file_save($file);
+  }
+  else {
+    $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
+    $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), "private://", $replace = FILE_EXISTS_REPLACE);
+    if ($file && !$form_state['executed']) {
+      if (isset($form_state['node'])) {
+        $node = $form_state['node'];
+
+        // Create the media item, duplicates get checked later.
+        $media = new stdClass;
+        $media->type = 'media';
+        $media->fid = $file->fid;
+        $media->nid = $node->nid;
+        $media->filename = $file->filename;
+        $media->file_size = $file->filesize;
+        entity_save('media', $media);
+      }
+      $file->status = FILE_STATUS_PERMANENT;
+      file_save($file);
+    }
   }
 
   // Update the view
@@ -337,7 +440,7 @@ function sbac_media_delete_media($js = FALSE) {
     ctools_modal_add_js();
 
     $form_state = array(
-      'title' => t('To continue, confirm that you wish to delete this media'),
+      'title' => t('To continue, confirm that you wish to delete this media.'),
       'ajax' => $js,
     );
 
@@ -407,6 +510,89 @@ function sbac_media_delete_media_form() {
     '#type' => 'submit',
     '#value' => 'Delete',
     '#attributes' => array('id' => array('edit-delete-media-overlay'))
+  );
+
+  return $form;
+}
+
+/**
+ * Displays the media delete modal.
+ *
+ * @param bool $js
+ */
+function sbac_media_internet_confirm($js = TRUE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $form_state = array(
+      'title' => t('To continue, confirm that you wish to upload a video.'),
+      'ajax' => $js,
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_media_internet_confirm_form', $form_state);
+
+    // This means the form has been executed.
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        // Delete document reference.
+        if ($form_state['values']['id']) {
+          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+        }
+        $what = url($form_state['values']['hidden_url'], array('fragment' => 'edit-group_materials'));
+        $output[] = ctools_ajax_command_redirect($form_state['values']['hidden_url'], 0, array('fragment' => 'edit-group_materials'));
+        $output[] = ctools_ajax_command_reload();
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_media_internet_confirm_form() {
+  $form = array();
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => $_SERVER['HTTP_REFERER'],
+  );
+
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $_GET['nid'],
+  );
+
+  $form['embed'] = array(
+    '#type' => 'hidden',
+    '#value' => $_GET['embed'],
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t('If you wish to continue, click continue!') . '</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-media-embed'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Continue',
+    '#attributes' => array('id' => array('edit-delete-media-embed'))
   );
 
   return $form;
