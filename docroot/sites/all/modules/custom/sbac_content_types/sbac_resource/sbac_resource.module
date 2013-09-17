@@ -839,6 +839,8 @@ function sbac_resource_cron() {
 //  }
 }
 
+
+
 /**
  * Implements hook_node_load().
  *
@@ -870,6 +872,12 @@ function sbac_resource_node_load($nodes, $types) {
       $node->field_total_views[LANGUAGE_NONE] = array(0 => array('value' => $thisrow['hits']));
       $node->field_unique_views[LANGUAGE_NONE] = array(0 => array('value' => $thisrow['unique_hits']));
       entity_save_field(array('field_total_views', 'field_unique_views'), $node, 'node', $node->nid);
+    }
+
+    // Load all media entities and attach them to the resource.
+    if ($node->type == 'resource') {
+      $media_items = sbac_media_load_items($node->nid);
+      $node->document = $media_items;
     }
   }
 }
