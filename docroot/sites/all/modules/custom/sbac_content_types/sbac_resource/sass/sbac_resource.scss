@@ -1,6 +1,5 @@
 @import "compass/css3/";
 
-
 /* -----------------------------------------
     Variables
    ----------------------------------------- */
@@ -22,8 +21,8 @@ $body-font-family: Arial, Helvetica, sans-serif;
 }
 
 .form-item input[type="checkbox"].error, .form-item input[type="radio"].error{
-    outline: 2px solid red;
-    -moz-appearance: none;
+  outline: 2px solid red;
+  -moz-appearance: none;
 }
 
 .form-item textarea.error, .form-item input.error {
@@ -51,8 +50,8 @@ $body-font-family: Arial, Helvetica, sans-serif;
   padding-right: 25px;
 }
 
-.grippie{
-    display:none;
+.grippie {
+  display: none;
 }
 
 /* -----------------------------------------
@@ -83,10 +82,10 @@ a.sbac-grid-layout {
   font-size: emCalc(24px);
 
   h3 {
-      color: #0085ad;
-      margin-top: 9px;
-      font-weight: normal;
-      font-size: 1.5em;
+    color: #0085ad;
+    margin-top: 9px;
+    font-weight: normal;
+    font-size: 1.5em;
   }
 }
 
@@ -95,28 +94,28 @@ a.sbac-grid-layout {
   margin-top: -4px;
 }
 
-.page-digital-library-resources{
-  #page-title{
+.page-digital-library-resources {
+  #page-title {
     display: none;
   } 
 
   .main-container {
-    padding: 0;
-    background: no-repeat;
     @include box-shadow(none);
     @include border-radius(0);
+    padding: 0;
+    background: no-repeat;
   }
 
   table {
     border: none;
-    tr{
+    tr {
       background-color: transparent;
       vertical-align: top;
     }
   }
 }
-.digital-library, .page-digital-library-resources {
 
+.digital-library, .page-digital-library-resources {
   #dialog button {
     float: right;
   }
@@ -134,6 +133,7 @@ a.sbac-grid-layout {
     ul {
       list-style: none;
     }
+
     .filter {
       border-top: 1px solid #eee;
       padding: 20px 0 0;
@@ -152,17 +152,17 @@ a.sbac-grid-layout {
   }
 
   .resource-card {
+    @include border-radius(8px);
     background: $white;
     border: 1px solid #eee;
     position: relative;
     padding: 0px;
-    @include border-radius(8px);
     margin-bottom: 2em;
     
     .resoruce-bottom {
+      @include border-radius(0 0 8px 8px);
     	background-color: #eaeaea;
     	padding: 10px;
-    	@include border-radius(0 0 8px 8px);
     	color: $darkgreen;
       font-size: 12px;
 
@@ -237,7 +237,6 @@ a.sbac-grid-layout {
       }
     }
 
-
     .distinction {
       span {
         a {
@@ -249,14 +248,13 @@ a.sbac-grid-layout {
       }
 
       img {
-        margin: 0;
         @include box-shadow (none);
+        margin: 0;
       }
-
     }
 
     .shield-drop {
-      .f-dropdown.open{
+      .f-dropdown.open {
         top: 35px !important;
         right: 12px !important;
         left: auto !important;
@@ -267,6 +265,7 @@ a.sbac-grid-layout {
           cursor: default;
         }
       }
+
       .f-dropdown:after, .f-dropdown:before {
         left: 175px;
       }
@@ -275,6 +274,7 @@ a.sbac-grid-layout {
     h4 {
       font-size: emCalc(14px);
     }
+
     i {
       position: absolute;
       top: 10px;
@@ -291,10 +291,11 @@ a.sbac-grid-layout {
         cursor: pointer;
       }
     }
+
     img {
-      margin: 10px 0 0;
       @include border-radius(2px);
- 	  @include box-shadow(inset 1px 2px 5px rgba(0,0,0,.4)); // inner shadow
+      @include box-shadow(inset 1px 2px 5px rgba(0,0,0,.4)); // inner shadow
+      margin: 10px 0 0;
     }
 
     .resource-stats {
@@ -307,8 +308,8 @@ a.sbac-grid-layout {
       margin-right: 5px;
     }
 
-    .dropdowns{
-      .f-dropdown.open{
+    .dropdowns {
+      .f-dropdown.open {
         top: 35px !important;
         right: -5px !important;
         left: auto !important;
@@ -318,6 +319,7 @@ a.sbac-grid-layout {
           padding: 5px;
         }
       }
+
       .f-dropdown:after, .f-dropdown:before {
         left: 175px;
       }
@@ -384,8 +386,6 @@ a.sbac-grid-layout {
           margin-bottom: 10px;
         }
       }
-
-
     }
   }
 
@@ -462,12 +462,12 @@ a.sbac-grid-layout {
   }
 
   li {
+    @include border-radius(3px);
     background: #8d9297 url('../images/icon-drop.png') no-repeat 97% center;
     padding: 5px 10px;
     margin:0 0 10px;
     font-size: 12px;
     cursor: pointer;
-    @include border-radius(3px);
 
     &.active {
       background: $teal;
@@ -510,21 +510,20 @@ a.sbac-grid-layout {
   margin: -100px 0 0 0;
   z-index: 9999;
 
-
   .category-filter-list {
+    @include border-radius(6px); // border radius
+    @include box-shadow(1px 1px 1px rgba(0,0,0,.3)); // drop shadow
     height: 300px;
     width: 500px;
     overflow: scroll;
     background: #edf3e0;
     border: 1px solid #fff; // stroke
-    @include border-radius(6px); // border radius
-    @include box-shadow(1px 1px 1px rgba(0,0,0,.3)); // drop shadow
 
-    h2{
+    h2 {
+      @include border-radius(6px 6px 0 0); // border radius
       background-color: white;
       padding: 5px;
       margin: 0;
-      @include border-radius(6px 6px 0 0); // border radius
       cursor: pointer;
       font-weight: normal;
     }
@@ -535,17 +534,17 @@ a.sbac-grid-layout {
     margin: 0;
 
     li {
+      @include border-radius(0); // border radius
       width: 46%;
       float: left;
       display: inline;
       margin: 1% 2%;
       padding: 5px;
-      @include border-radius(0); // border radius
       background:none;
       color: #246a34;
       cursor: pointer;
 
-      .highlight{
+      .highlight {
         display: inline-block;
         float: left;
         width: 14px;
@@ -554,19 +553,17 @@ a.sbac-grid-layout {
         border: 1px solid
       }
 
-      &.current{
+      &.current {
         .highlight {
           background-color: #0085ad;
           border-color: #0085ad;
         }
       }
-
     }
   }
 }
 
-.categories-current-filters{
-
+.categories-current-filters {
     &.noshow {
       display: none;
     }
@@ -582,15 +579,16 @@ a.sbac-grid-layout {
     }
 
     .current-filter {
+      @include border-radius(50px);
       cursor:pointer;
       float: left;
       margin:10px 10px 10px 0;
       font-size: 0.8em;
       padding: 5px 40px 5px 10px;
-      @include border-radius(50px);
       background: #0085ad url('../images/icon-close.png') no-repeat right center;
     }
   }
+
 .block-sbac-search-sbac-search-categories {
   .block-title {
     display: none;
@@ -607,6 +605,7 @@ a.sbac-grid-layout {
   .block{
     display: inline-block;
   }
+
   #sbac-search-cat-button{
     padding: 5px 20px;
     display: inline-block;
@@ -615,9 +614,9 @@ a.sbac-grid-layout {
     border-width: 0 1px;
     
     &.active {
+      @include text-shadow(rgba(0,0,0, 0.5) 1px 1px 0);
       background-color: #0085ad;
       color: #f3f3f3;
-      @include text-shadow(rgba(0,0,0, 0.5) 1px 1px 0);
     }
   }
 }
@@ -625,7 +624,6 @@ a.sbac-grid-layout {
 /* -----------------------------------------
    Node Resource
    ----------------------------------------- */
-
 .node-unpublished {
   background: none;
 }
@@ -677,9 +675,9 @@ a.sbac-grid-layout {
     top: 0 !important;
 
     &:hover, &:focus, &:active {
+      @include box-shadow (none);
       background: transparent;
       color: inherit;
-      @include box-shadow (none);
       text-shadow: none !important;
     }
   }
@@ -709,7 +707,6 @@ a.sbac-grid-layout {
   }
 
   .arrow {
-
     span {
       background: url('../images/icons/icon-arrow-up.png') no-repeat right center;
       padding: 0px 5px 2px 10px;    
@@ -729,7 +726,6 @@ a.sbac-grid-layout {
 }
 
 .node-type-resource {
-
   #page-title {
     font-size: 2.375em;
     font-family: Arial, sans-serif;
@@ -746,8 +742,8 @@ a.sbac-grid-layout {
 }
 
 .node-resource {
-  padding: 0 25px;
   @include hyphenation;
+  padding: 0 25px;
 
   #review {
     background: transparent;
@@ -818,13 +814,11 @@ a.sbac-grid-layout {
 }
 
 .node-resource {
-
   .section-container.auto > section > .title a {
     padding: 10px 20px;
     border-right: 1px solid #ccc;
   }
 }
-
 
 .section-container.auto > section.active > .title a {
   background: $teal;
@@ -841,7 +835,6 @@ a.sbac-grid-layout {
 }
 
 #dialog-resource_gate_keeper_form-wrapper {
-
   .gate-keeper-modal-intro {
     margin-bottom: 15px;
   }
@@ -868,29 +861,25 @@ a.sbac-grid-layout {
     list-style: none;
   }
 }
+
 /* -----------------------------------------
    Node
    ----------------------------------------- */
-
 .dialog-trigger-about, 
 .dialog-trigger-gk  {
-  border: 1px solid #e0e0e0; // stroke
   @include border-radius(6px); // border radius
   @include background-clip(padding-box); // prevents bg color from leaking outside the border
-  background-color: #6fb9d5; // layer fill content
   @include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%)); // gradient overlay
-
+  @include text-shadow(1px, 1px, rgba(white,0.5));
+  border: 1px solid #e0e0e0; // stroke
+  background-color: #6fb9d5; // layer fill content
   padding: 5px 10px;
   color: #494949;
-  @include text-shadow(1px, 1px, rgba(white,0.5));
 }
-
-
 
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
-
 .grid-view {
   .grid-library {
     margin: 0;
@@ -907,7 +896,6 @@ a.sbac-grid-layout {
     }
   }
 }
-
 
 @media all and (min-width: 1271px){
   .grid-view {
@@ -946,6 +934,7 @@ a.sbac-grid-layout {
     .main-row {
       max-width: 656px;
     }
+
     .grid-library{
       li {
         &:nth-child(2n + 1){
@@ -955,4 +944,3 @@ a.sbac-grid-layout {
     } 
   }
 }
-
