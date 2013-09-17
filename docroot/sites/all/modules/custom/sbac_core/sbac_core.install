@@ -127,3 +127,37 @@ function sbac_core_update_7009() {
 function sbac_core_update_7010() {
   db_query("UPDATE eck_entity_type SET name = 'review', label = 'Review' WHERE id = 2");
 }
+
+/**
+ * Creates Applied Category taxonomy & populates it with terms.
+ * @return [type] [description]
+ */
+function sbac_core_update_7011() {
+  taxonomy_vocabulary_save((object) array(
+    'name' => 'Applied Category',
+    'machine_name' => 'applied_category',
+  ));
+
+  $vocab = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'applied_category'")->fetch();
+  if ($vocab) {
+    $terms = array(
+      'Elementary School',
+      'Educators to Use During Instruction',
+      'High Quality Professional Learning',
+      'Middle School',
+      'Students to Use During Learning',
+      'Collaborative Learning',
+      'High School',
+      'Use with Families'
+    );
+
+    $weight = 0;
+    foreach ($terms as $term) {
+      taxonomy_term_save((object) array(
+        'name' => $term,
+        'weight' => $weight++,
+        'vid' => $vocab->vid,
+      ));
+    }
+  }
+}
