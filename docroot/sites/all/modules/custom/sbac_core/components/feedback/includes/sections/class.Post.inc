@@ -1,7 +1,19 @@
 <?php
-namespace sbac_core\components\feedback\section;
+namespace sbac_core\components\feedback\sections;
 
-class SectionPost extends Base {
+class Post extends Base {
+  const name = 'post';
+  const title = 'Quality Criteria Review';
+  const permission = 'view post';
+
+  /**
+   * Returns a modal-triggering "start review" link.
+   * @return [type]       [description]
+   */
+  public function getStartLink() {
+    return parent::getStartLink('post', 'post');
+  }
+
   /**
    * Builds and returns the content for current section.
    * @return [type] [description]

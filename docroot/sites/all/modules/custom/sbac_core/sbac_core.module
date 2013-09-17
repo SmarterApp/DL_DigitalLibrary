@@ -209,6 +209,7 @@ function sbac_core_devtools_components() {
       ),
     ),
     'resource' => array(),
+    'review' => array(),
     'sections' => array(),
     'taskit' => array(),
     'user' => array(),

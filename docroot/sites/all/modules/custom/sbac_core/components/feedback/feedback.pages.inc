@@ -14,27 +14,46 @@ function resource_feedback_page($node) {
   drupal_add_css($path . '/css/feedback.css');
   drupal_add_js($path . '/js/feedback.js');
 
-  module_load_include('inc', 'sbac_core', '/components/feedback/includes/class.Control');
-  module_load_include('inc', 'sbac_core', '/components/feedback/includes/class.Section');
+  module_load_include('inc', 'sbac_core', '/components/sections/includes/class.Factory');
 
   try {
-    $control = new \sbac_core\components\feedback\Control($node);
+    $factory = new \sbac_core\components\sections\Factory($node);
+    $sections = array();
 
-    // about flow
-    $control->addSection('about', 'about', t('About this Resource'));
+    $tabs = array(
+      'access about process' => array(
+        'feedback' => array(
+          'about',  // about tab
+        ),
+      ),
+      'access quality criteria process' => array(
+        'feedback' => array(
+          'gk',     // gate keeper
+          'qc',     // quality criteria review 
+        ),
+      ),
+      'access post process' => array(
+        'feedback' => array(
+          'tags',   // edit resource tags
+          'post',   // quality criteria review (publisher)
+        ),
+      ),
+    );
+    
+    foreach ($tabs as $permission => $sources) {
+      if ($factory->access($permission)) {
+        foreach ($sources as $source => $items) {
+          foreach ($items as $tab) {
+            $section = $factory->get($source, $tab);
+            if ($section && ($section->access() || $section->show_disabled())) {
+              $factory->add($section);
+            }
+          }
+        }
+      }
+    }
 
-    // end-user reviews flow
-    // $control->addSection('review', 'reviews', t('Reviews'), TRUE);
-
-    // quality criteria review flow
-    $control->addSection('quality criteria', 'gk', t('Gate-Keeping Criteria Review'));
-    $control->addSection('quality criteria', 'qc', t('Quality Criteria Review'), TRUE);
-
-    // publisher flow
-    $control->addSection('post', 'tags', t('Edit Resource Tags'), TRUE);
-    $control->addSection('post', 'post', t('Quality Criteria Review'));
-
-    if ($sections = $control->getSections()) {
+    if ($sections = $factory->getSections()) {
       // we don't want to display the Edit Resource Tags section if the
       // Publisher doesn't have access to the Post process
       if (!isset($sections['post']) || $sections['post']['disabled']) {

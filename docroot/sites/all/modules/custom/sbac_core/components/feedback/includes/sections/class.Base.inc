@@ -1,81 +1,31 @@
 <?php
-namespace sbac_core\components\feedback\section;
+namespace sbac_core\components\feedback\sections;
 
-class Base {
-  protected $_section = NULL;
-  protected $_machine_name = NULL;
-  protected $_node = NULL;
-  protected $_account = NULL;
-  protected $_counter = 0;
-
+abstract class Base extends \sbac_core\components\sections\Base {
   /**
-   * Constructor.
-   * @param [type] $node    [description]
-   * @param [type] $account [description]
-   */
-  public function __construct($section) {
-    // sanity checks
-    if (!is_object($section)) {
-      throw new \Exception(t('Section must be a valid object.'));
-    }
-
-    $this->_section      = $section;
-    $this->_machine_name = $section->getMachineName();
-    $this->_node         = $section->getControl()->getNode();
-    $this->_account      = $section->getControl()->getAccount();
-  }
-
-  /**
-   * Sets the counter.
-   * @param [type] $counter [description]
-   */
-  public function setCounter($counter) {
-    $this->_counter = $counter;
-  }
-
-  /**
-   * Builds and returns the content for current section.
+   * Access check for entire Section.
    * @return [type] [description]
    */
-  public function getContent () {
-    return '';
+  public function access() {
+    if (parent::access()) {
+      return TRUE;
+    }
+
+    return resource_access($this::permission, $this->_node, $this->_account);
   }
 
   /**
    * Returns a modal-triggering "start review" link.
    * @return [type]       [description]
    */
-  public function getStartLink() {
-    switch ($this->_machine_name) {
-      case 'about':
-      case 'gk':
-        $stub  = 'gate-keeper';
-        
-        if (!resource_access('start gate keeper', $this->_node)) {
-          return '';
-        }
+  public function getStartLink($stub, $machine_name) {
+    $counter = &drupal_static(__FUNCTION__);
 
-        break;
-
-      case 'qc':
-        $stub  = 'qc';
-
-        break;
-
-      case 'post':
-        $stub  = 'post';
-        
-        if (!resource_access('start post', $this->_node)) {
-          return '';
-        }
-
-        break;
-
-      default:
-        return '';
+    if (is_null($counter)) {
+      $counter = 0;
     }
 
-    $trigger_id = $stub . '-trigger-' . $this->_counter;
+    $trigger_id = $stub . '-trigger-' . $counter++;
 
     drupal_add_library('dialog', 'dialog');
     $link_text = t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT));
@@ -84,39 +34,23 @@ class Base {
         'class' => array(
           'use-ajax',
           'use-dialog',
-          'dialog-trigger-' . $this->_machine_name,
+          'dialog-trigger-' . $machine_name,
           'button',
           'medium',
         ),
         'id' => $trigger_id,
       ),
-     ));
+    ));
 
     return $content;
   }
 
   /**
-   * Returns a rendered entity-edit form.
-   * @param  [type] $type   [description]
-   * @param  [type] $bundle [description]
-   * @return [type]         [description]
-   */
-  public function getNewEntityForm($type, $bundle) {
-    $output = '';
-
-    $form = eck__entity__add($type, $bundle);
-    $output = drupal_render($form);
-
-    return $output;
-  }
-
-  /**
    * Returns a rendered entity-edit form if there is an existing entity.
    * @param  [type] $bundle        [description]
-   * @param  [type] $readonly_perm [description]
    * @return [type]                [description]
    */
-  public function getEntityForm($bundle, $readonly_perm = NULL) {
+  public function getEntityForm($bundle) {
     $output = '';
 
     $id = db_select('eck_feedback', 'eckf')
@@ -132,11 +66,8 @@ class Base {
       $entity = entity_load_single('feedback', $id);
 
       // we may want to override access with a readonly permission
-      if ($entity->completed && !$this->_section->access()) {
-        // $this->_section->overrideAccess(resource_access($readonly_perm, $this->_node, $this->_account));
-        
-        // TODO: check this works as expected, then get rid of $readonly_perm
-        $this->_section->overrideAccess(1);
+      if ($entity->completed && !$this->access()) {
+        $this->_access_override = TRUE;
       }
 
       $form = eck__entity__edit('feedback', $bundle, $id);
