@@ -67,14 +67,6 @@ class Hooks extends \devtools\Hooks {
       );
 
       element_maxlength($form['title'], 100, 'Character count: <strong>@remaining</strong>');
-
-     
-      // $form['title']['und'] += $max;
-
-
-      // print_rr($form['title']);
-      // print_rr($form['field_details']);
-      // exit();
     }
   }
 
