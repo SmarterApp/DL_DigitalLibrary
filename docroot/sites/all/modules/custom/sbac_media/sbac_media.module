@@ -630,7 +630,7 @@ function sbac_media_internet_confirm_form() {
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Continue',
+    '#value' => 'Embed Video',
     '#attributes' => array('id' => array('edit-delete-media-embed'))
   );
 
