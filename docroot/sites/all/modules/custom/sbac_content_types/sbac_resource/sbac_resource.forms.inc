@@ -1135,7 +1135,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   // embed url ability -> confirmation dialogs after, custom form.
   // choose file and upload ability -> custom form
   // error messages move inline
-  sbac_resource_media_form_element($form, $form_state);
+  sbac_media_widget_form_element($form, $form_state);
 
   // Materials
   $form['field_file']['#access'] = FALSE;

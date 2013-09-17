@@ -152,7 +152,7 @@ function sbac_media_create_embed_url($file) {
  *
  * @param $form
  */
-function sbac_resource_media_form_element(&$form, &$form_state) {
+function sbac_media_widget_form_element(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
   $form['#attached']['js'][] = 'http://code.jquery.com/ui/1.10.3/jquery-ui.js';
   $form['#attached']['css'][] = 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css';
@@ -172,6 +172,24 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
     );
   }
 
+  $weight = array();
+  if ($media_items) {
+    foreach ($media_items as $key => $media_item) {
+      if ($media_item['weight']) {
+        $weight[$media_item['id']] = $media_item['weight'];
+      }
+      else {
+        $weight[$media_item['id']] = $key;
+      }
+    }
+  }
+
+  $form['field_file_container']['weights'] = array(
+    '#type' => 'hidden',
+    '#attributes' => array('id' => 'sbac-media-weights'),
+    '#value' => drupal_json_encode($weight),
+  );
+
   $form['field_file_container']['field_embed_video'] = array(
     '#type' => 'textfield',
     '#title' => t('Embed Video URL'),
@@ -181,9 +199,9 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Add Embedded Video',
     '#sbac_embed_video' => TRUE,
-    '#validate' => array('sbac_resource_media_form_element_validate'),
+    '#validate' => array('sbac_media_widget_form_element_validate'),
     '#ajax'=> array(
-      'callback'=>'sbac_resource_media_form_element_upload',
+      'callback'=>'sbac_media_widget_form_element_upload',
       'wrapper'=> 'sbac-field-file-container',
       'method'=> 'replace',
       'effect'=> 'fade',
@@ -225,17 +243,47 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
   $form['field_file_container']['field_file_upload_button'] = array(
     '#type' => 'submit',
     '#value' => 'upload (25MB Max)',
-    '#submit' => array('sbac_resource_media_form_element_upload'),
+    '#submit' => array('sbac_media_widget_form_element_upload'),
     '#sbac_embed_video' => FALSE,
     '#ajax'=> array(
-      'callback'=>'sbac_resource_media_form_element_upload',
+      'callback'=>'sbac_media_widget_form_element_upload',
       'wrapper'=> 'sbac-field-file-container',
       'method'=> 'replace',
       'effect'=> 'fade',
     ),
   );
 
+  $form['#after_build'][] = 'sbac_media_after_build_form';
   $form['#group_children']['field_file_container'] = 'group_materials';
+}
+
+/**
+ * After build function to add the submit handler in.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_media_after_build_form($form, $form_state) {
+  $form['#submit'][] = 'sbac_media_widget_form_element_submit_handler';
+  return $form;
+}
+
+/**
+ * Submit handler to set the weights;
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_widget_form_element_submit_handler($form, $form_state) {
+  if (isset($form_state['input']['weights']) && $form_state['input']['weights']) {
+    $weights = drupal_json_decode($form_state['input']['weights']);
+    if ($weights) {
+      foreach ($weights as $media_id => $weight) {
+        db_query("UPDATE {eck_media} SET weight = :weight WHERE id = :id", array(':weight' => $weight, ':id' => $media_id));
+      }
+    }
+  }
 }
 
 /**
@@ -248,7 +296,7 @@ function _sbac_media_create_list($media_items) {
 
   foreach ($media_items as $key => $media_item) {
     // Open.
-    $output .= '<tr>';
+    $output .= '<tr id="' . $media_item['id'] . '">';
 
     // Image.
     $url = 'public://file.png';
@@ -283,32 +331,6 @@ function _sbac_media_create_list($media_items) {
     ));
     $output .= '<td>' . $delete_link . '</td>';
 
-    $select = '
-    <div class="form-item form-type-select form-item-draggableviews-3-weight">
-    <select id="edit-draggableviews-3-weight" class="draggableviews-weight form-select" name="draggableviews[3][weight]">
-    <option selected="selected" value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    </select>
-    </div>';
-
-    $form['field_file_container']['weight'][$key] = array(
-      '#type' => 'select',
-      '#title' => t('Selected'),
-      '#title_display' => 'invisible',
-      '#options' => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-      '#default_value' => $category['selected'],
-    );
-
-    $what = drupal_render($form['field_file_container']['weight'][$key]);
-    $output .= '<td>' . $what . '</td>';
-
     // Close.
     $output .= '</tr>';
   }
@@ -323,7 +345,7 @@ function _sbac_media_create_list($media_items) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_media_form_element_validate($form, $form_state) {
+function sbac_media_widget_form_element_validate($form, $form_state) {
   $allowed_file_sources = array('youtube', 'teachertube', 'schooltube', 'vimeo', 'slideshare');
   if ($form_state['values']['field_embed_video']) {
 
@@ -340,7 +362,7 @@ function sbac_resource_media_form_element_validate($form, $form_state) {
  * @param $form_state
  * @return mixed
  */
-function sbac_resource_media_form_element_upload($form, $form_state) {
+function sbac_media_widget_form_element_upload($form, $form_state) {
   if (form_get_errors()) {
     return $form['field_file_container'];
   }
@@ -399,7 +421,7 @@ function sbac_resource_media_form_element_upload($form, $form_state) {
 function sbac_media_load_items($nid) {
   $media_items = array();
   if ($nid) {
-    $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid", array(':nid' => $nid));
+    $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid ORDER BY weight", array(':nid' => $nid));
     foreach ($result as $row) {
       $media_item = array();
       $media_item['id'] = $row->id;
