@@ -19,36 +19,6 @@ abstract class Base extends \sbac_core\components\sections\Base {
    * @return [type]       [description]
    */
   public function getStartLink($stub, $machine_name) {
-    /*
-    switch ($this->_machine_name) {
-      case 'gk':
-        $stub  = 'gate-keeper';
-        
-        if (!resource_access('start gate keeper', $this->_node)) {
-          return '';
-        }
-
-        break;
-
-      case 'qc':
-        $stub  = 'qc';
-
-        break;
-
-      case 'post':
-        $stub  = 'post';
-        
-        if (!resource_access('start post', $this->_node)) {
-          return '';
-        }
-
-        break;
-
-      default:
-        return '';
-    }
-    */
-
     $counter = &drupal_static(__FUNCTION__);
 
     if (is_null($counter)) {

@@ -6,16 +6,14 @@ class Qc extends Base {
   const title = 'Quality Criteria Review';
   const permission = 'view quality criteria';
 
+  protected $_show_disabled = TRUE;
+
   /**
    * Returns a modal-triggering "start review" link.
    * @return [type]       [description]
    */
   public function getStartLink() {
-    // if (!resource_access('start gate keeper', $this->_node)) {
-    //   return '';
-    // }
-
-    return parent::getStartLink('gate-keeper', 'qc');
+    return parent::getStartLink('qc', 'qc');
   }
 
   /**

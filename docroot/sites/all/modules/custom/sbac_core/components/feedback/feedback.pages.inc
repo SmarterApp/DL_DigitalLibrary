@@ -20,43 +20,38 @@ function resource_feedback_page($node) {
     $factory = new \sbac_core\components\sections\Factory($node);
     $sections = array();
 
-    if ($factory->access('access about process')) {
-      // about tab
-      if ($section = $factory->get('feedback', 'about')) {
-        if ($section->access() || $section->show_disabled()) {
-          $factory->add($section);
+    $tabs = array(
+      'access about process' => array(
+        'feedback' => array(
+          'about',  // about tab
+        ),
+      ),
+      'access quality criteria process' => array(
+        'feedback' => array(
+          'gk',     // gate keeper
+          'qc',     // quality criteria review 
+        ),
+      ),
+      'access post process' => array(
+        'feedback' => array(
+          'tags',   // edit resource tags
+          'post',   // quality criteria review (publisher)
+        ),
+      ),
+    );
+    
+    foreach ($tabs as $permission => $sources) {
+      if ($factory->access($permission)) {
+        foreach ($sources as $source => $items) {
+          foreach ($items as $tab) {
+            $section = $factory->get($source, $tab);
+            if ($section && ($section->access() || $section->show_disabled())) {
+              $factory->add($section);
+            }
+          }
         }
       }
     }
-
-    if ($factory->access('access quality criteria process')) {
-      // gate keeper tab
-      if ($section = $factory->get('feedback', 'gk')) {
-        if ($section->access() || $section->show_disabled()) {
-          $factory->add($section);
-        }
-      }
-
-      // quality criteria review tab
-      if ($section = $factory->get('feedback', 'qc')) {
-        if ($section->access() || $section->show_disabled()) {
-          $factory->add($section);
-        }
-      }
-
-      
-      // $control->addSection('quality criteria', 'gk', t('Gate-Keeping Criteria Review'));
-      // $control->addSection('quality criteria', 'qc', t('Quality Criteria Review'), TRUE);
-    }
-
-    if ($factory->access('access post process')) {
-      // publisher flow
-      // $control->addSection('post', 'tags', t('Edit Resource Tags'), TRUE);
-      // $control->addSection('post', 'post', t('Quality Criteria Review'));
-    }
-
-
-
 
     if ($sections = $factory->getSections()) {
       // we don't want to display the Edit Resource Tags section if the

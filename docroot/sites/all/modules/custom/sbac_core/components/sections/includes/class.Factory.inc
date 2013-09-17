@@ -82,7 +82,7 @@ class Factory {
       return new $fqp($this->_node, $account);
     }
     catch(\Exception $e) {
-      
+      throw new \Exception($e->getMessage());
     } 
 
     return FALSE;
@@ -92,7 +92,7 @@ class Factory {
    * Logs new section.
    * @param [type] $section [description]
    */
-  public function add($section) {
+  public function add(iSection $section) {
     if ($section->access() || $section->show_disabled()) {
       $this->_sections[$section::name] = array(
         'title'     => t($section::title),

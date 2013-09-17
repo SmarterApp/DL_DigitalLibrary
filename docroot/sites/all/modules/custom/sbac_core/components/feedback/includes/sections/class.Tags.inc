@@ -1,7 +1,13 @@
 <?php
 namespace sbac_core\components\feedback\sections;
 
-class SectionTags extends Base {
+class Tags extends Base {
+  const name = 'tags';
+  const title = 'Edit Resource Tags';
+  const permission = 'view tags';
+
+  protected $_show_disabled = TRUE;
+
   /**
    * Builds and returns the content for current section.
    * @return [type] [description]
