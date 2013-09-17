@@ -3,6 +3,8 @@
 // Hooks and callbacks for integrating with File Entity module for display.
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/includes/sbac_media.formatters.inc';
 
+include_once 'sbac_media.features.inc';
+
 /**
  * Implements hook_ctools_plugin_api().
  */
