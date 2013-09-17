@@ -13,19 +13,21 @@
 
       // Make the table sortable.
       var selector = '#sbac-media-list tbody';
-      $(selector).sortable({
-        items: 'tr',
-        update: function( event, ui ) {
-          // Update the weights.
-          var rows = $("#sbac-media-list tr:gt(0)"); // skip the header row
-          var json = { };
-          rows.each(function(index) {
-            json[$(this).attr('id')] = index;
-          });
-          var string = JSON.stringify(json);
-          $('#sbac-media-weights').val(string);
-        }
-      }).disableSelection();
+      if ((selector).length) {
+        $(selector).sortable({
+          items: 'tr',
+          update: function( event, ui ) {
+            // Update the weights.
+            var rows = $("#sbac-media-list tr:gt(0)"); // skip the header row
+            var json = { };
+            rows.each(function(index) {
+              json[$(this).attr('id')] = index;
+            });
+            var string = JSON.stringify(json);
+            $('#sbac-media-weights').val(string);
+          }
+        }).disableSelection();
+      }
 
       // On change, take the input and replace the modal HREF.
       $('#edit-field-embed-video').on('change blur', function() {
