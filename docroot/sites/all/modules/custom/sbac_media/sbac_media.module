@@ -336,6 +336,18 @@ function _sbac_media_create_list($media_items) {
   }
   $output .= '</table>';
 
+  // JS to properly size the modal.
+  $js_settings = array(
+    'sbac-media-modal-delete-media' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 600,
+        'height' => 160,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting');
+
   return $output;
 }
 
@@ -348,10 +360,12 @@ function _sbac_media_create_list($media_items) {
 function sbac_media_widget_form_element_validate($form, $form_state) {
   $allowed_file_sources = array('youtube', 'teachertube', 'schooltube', 'vimeo', 'slideshare');
   if ($form_state['values']['field_embed_video']) {
-
+    if (!in_array($form_state['values']['field_embed_video'], $allowed_file_sources)) {
+      form_set_error('field_embed_video', t('The following URL: ' . $form_state['values']['field_embed_video'] . ' cannot be embedded. Only videos from the following accepted hosts are allowed: YouTube, Vimeo, SchoolTube, TeacherTube and SlideShare.'));
+    }
   }
   else {
-    form_set_error('field_embed_video', t('You must enter a valid embed source'));
+    form_set_error('field_embed_video', t('You must add at least one material.'));
   }
 }
 
@@ -408,7 +422,7 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   if ($media_items) {
     $output = _sbac_media_create_list($media_items);
     $form['field_file_container']['materials']['#markup'] = $output;
-    $form['field_file_container']['materials']['#weight'] = -10;
+    $form['field_file_container']['materials']['#weight'] = 10;
   }
 
   return $form['field_file_container'];
