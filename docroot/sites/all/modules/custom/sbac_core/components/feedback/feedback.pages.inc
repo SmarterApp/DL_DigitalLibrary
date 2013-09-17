@@ -18,7 +18,6 @@ function resource_feedback_page($node) {
 
   try {
     $factory = new \sbac_core\components\sections\Factory($node);
-    $sections = array();
 
     $tabs = array(
       'access about process' => array(
@@ -26,20 +25,25 @@ function resource_feedback_page($node) {
           'about',  // about tab
         ),
       ),
+      'access review process' => array(
+        'review' => array(
+          'reviews', // reviews tab
+        ),
+      ),
       'access quality criteria process' => array(
         'feedback' => array(
-          'gk',     // gate keeper
-          'qc',     // quality criteria review 
+          'gk',     // gate keeper tab
+          'qc',     // quality criteria review tab
         ),
       ),
       'access post process' => array(
         'feedback' => array(
           'tags',   // edit resource tags
-          'post',   // quality criteria review (publisher)
+          'post',   // quality criteria review (publisher) tab
         ),
       ),
     );
-    
+
     foreach ($tabs as $permission => $sources) {
       if ($factory->access($permission)) {
         foreach ($sources as $source => $items) {

@@ -1,0 +1,107 @@
+/* mixins */
+/* layout */
+/* line 22, ../sass/review.scss */
+#review-wrap-reviews {
+  margin: 10px 30px;
+}
+/* line 25, ../sass/review.scss */
+#review-wrap-reviews .section-title {
+  float: left;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+/* line 31, ../sass/review.scss */
+#review-wrap-reviews .review-form-trigger {
+  float: right;
+  display: inline;
+  margin: 0;
+}
+/* line 37, ../sass/review.scss */
+#review-wrap-reviews form {
+  clear: both;
+}
+/* line 40, ../sass/review.scss */
+#review-wrap-reviews form .intro {
+  padding: 10px 0;
+}
+/* line 49, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-details textarea {
+  max-width: 100%;
+  width: 100%;
+}
+/* line 55, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-student-learning {
+  float: left;
+  width: 280px;
+}
+/* line 58, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-student-learning label {
+  margin-bottom: 10px;
+}
+/* line 62, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-student-learning .fivestar-form-item {
+  padding-right: 10px;
+}
+/* line 67, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-pro-dev {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
+/* line 70, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-pro-dev label {
+  margin-bottom: 10px;
+}
+/* line 74, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-pro-dev .fivestar-form-item {
+  padding: 0 10px;
+}
+/* line 79, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-ease-use {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
+/* line 82, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-ease-use label {
+  margin-bottom: 10px;
+}
+/* line 86, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-ease-use .fivestar-form-item {
+  padding-left: 10px;
+}
+/* line 91, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-appropriate-for {
+  clear: both;
+  padding: 10px 0;
+}
+/* line 96, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item {
+  float: left;
+  width: 33.3%;
+  /* first column */
+  /* second column */
+  /* third column */
+}
+/* line 101, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n-1) {
+  float: left;
+  width: 280px;
+}
+/* line 106, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n+1) {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
+/* line 111, ../sass/review.scss */
+#review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n+0) {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
+/* line 118, ../sass/review.scss */
+#review-wrap-reviews form .actions {
+  clear: both;
+  padding: 10px 0 0;
+}

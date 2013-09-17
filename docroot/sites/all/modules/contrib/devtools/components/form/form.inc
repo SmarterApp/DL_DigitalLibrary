@@ -51,3 +51,23 @@ function element_num_children(&$element) {
 
   return $children;
 }
+
+/**
+ * Attaches Maxlength_JS's functionality to element.
+ * @param  [type] $element [description]
+ * @param  [type] $count   [description]
+ * @param  [type] $label   [description]
+ * @return [type]          [description]
+ */
+function element_maxlength(&$element, $count, $label) {
+  if (module_exists('maxlength')) {
+    $element['#maxlength'] = $count;
+    $element['#maxlength_js'] = TRUE;
+
+    $element['#attributes']['maxlength_js_label'] = array(
+      $label,
+    );
+
+    maxlength_pre_render($element);
+  }
+}

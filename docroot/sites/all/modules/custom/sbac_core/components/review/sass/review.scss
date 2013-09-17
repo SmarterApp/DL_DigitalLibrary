@@ -1,0 +1,123 @@
+/* mixins */
+
+@mixin left_col {
+  float: left;
+  width: 280px;
+}
+
+@mixin mid_col {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
+
+@mixin right_col {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
+
+/* layout */
+
+#review-wrap-reviews {
+  margin: 10px 30px;
+
+  .section-title {
+    float: left;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+
+  .review-form-trigger {
+    float: right;
+    display: inline; 
+    margin: 0;
+  }
+
+  form {
+    clear: both;
+
+    .intro {
+      padding: 10px 0;
+    }
+
+    .form-item-title {
+      
+    }
+
+    .field-name-field-details {
+      textarea {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+
+    .field-name-field-student-learning {
+      @include left_col;
+
+      label {
+        margin-bottom: 10px;
+      }
+
+      .fivestar-form-item {
+        padding-right: 10px;
+      }
+    }
+    
+    .field-name-field-pro-dev {
+      @include mid_col;
+
+      label {
+        margin-bottom: 10px;
+      }
+
+      .fivestar-form-item {
+        padding: 0 10px;
+      }
+    }
+
+    .field-name-field-ease-use {
+      @include right_col;
+
+      label {
+        margin-bottom: 10px;
+      }
+
+      .fivestar-form-item {
+        padding-left: 10px;
+      }
+    }
+
+    .field-name-field-appropriate-for {
+      clear: both;
+      padding: 10px 0;
+
+      .form-checkboxes {
+        .form-item {
+          float: left;
+          width: 33.3%;
+
+          /* first column */
+          &:nth-child(3n-1) {
+            @include left_col;
+          }
+
+          /* second column */
+          &:nth-child(3n+1) {
+            @include mid_col;
+          }
+
+          /* third column */
+          &:nth-child(3n+0) {
+            @include right_col;
+          }
+        }
+      }
+    }
+
+    .actions {
+      clear: both;
+      padding: 10px 0 0;
+    }
+  }
+}
