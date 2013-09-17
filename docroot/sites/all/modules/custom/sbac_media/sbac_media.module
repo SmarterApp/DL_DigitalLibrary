@@ -178,6 +178,7 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Add Embedded Video',
     '#sbac_embed_video' => TRUE,
+    '#attributes' => array('id' => 'sbac-add-embedded'),
     '#validate' => array('sbac_resource_media_form_element_validate'),
     '#ajax'=> array(
       'callback'=>'sbac_resource_media_form_element_upload',
@@ -195,7 +196,7 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
       ),
       'query' => array(
         'nid' => $form['#node']->nid,
-        'embed' => $form['field_file_container']['field_embed_video'],
+        'embed' => 'SBAC-MEDIA-EMBEDDED',
       )
     )),
   );
@@ -228,50 +229,9 @@ function sbac_resource_media_form_element(&$form, &$form_state) {
  * @return string
  */
 function _sbac_media_create_list($media_items) {
-//  $output = '<div class="header">Material Name</div>';
-//  $output .= '<div class="header">Operations</div>';
-//  $output .= '<ul id="sortable">';
-//  foreach ($media_items as $media_item) {
-//    // Open.
-//    $output .= '<li class="ui-state-default">';
-//
-//    // Image.
-//    $url = 'public://file.png';
-//    $image = theme('image_style', array(
-//      'style_name' => '50x50',
-//      'path' => $url,
-//      'attributes' => array('class' => 'awesome-class')
-//    ));
-//    $output .= '<span>' . $image . '</span>';
-//
-//    // Filename.
-//    $output .= '<span class="ui-icon">' . $media_item['filename'] . '</span>';
-//
-//    // Filesize.
-//    $bytes = number_format($media_item['filesize'] / 1024, 2) . ' KB';
-//    $output .= '<span>' . $bytes . '</span>';
-//
-//    // Delete link.
-//    $delete_link = l(t('Delete'), 'sbac-media/nojs/delete-media', array(
-//      'attributes' => array(
-//        'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media',
-//        'id' => 'sbac-media-modal-delete-media'
-//      ),
-//      'query' => array(
-//        'fid' => $media_item['fid'],
-//        'nid' => $media_item['nid'],
-//        'id' => $media_item['id'],
-//      )
-//    ));
-//    $output .= '<span>' . $delete_link . '</span>';
-//
-//    // Close.
-//    $output .= '</li>';
-//  }
-
-  //$output .= '</ul>';
   $output = '<table id="sbac-media-list" class="sortable">';
   $output .= '<thead><tr><th colspan="3">Machine Name</th><th>Operations</th></tr></thead>';
+
   foreach ($media_items as $media_item) {
     // Open.
     $output .= '<tr>';
@@ -289,7 +249,10 @@ function _sbac_media_create_list($media_items) {
     $output .= '<td class="ui-icon">' . $media_item['filename'] . '</td>';
 
     // Filesize.
-    $bytes = number_format($media_item['filesize'] / 1024, 2) . ' KB';
+    $bytes = '0 KB';
+    if ($media_item['filesize']) {
+      $bytes = number_format($media_item['filesize'] / 1024, 2) . ' KB';
+    }
     $output .= '<td>' . $bytes . '</td>';
 
     // Delete link.
@@ -343,16 +306,42 @@ function sbac_resource_media_form_element_upload($form, $form_state) {
   }
 
   if ($form_state['clicked_button']['#sbac_embed_video']) {
-    $allowed_file_sources = array('youtube', 'teachertube', 'schooltube', 'vimeo', 'slideshare');
     $embedded_video_source = $form_state['values']['field_embed_video'];
     if (strpos($embedded_video_source, 'youtube') !== FALSE || strpos($embedded_video_source, 'vimeo') !== FALSE) {
-      $output = array();
-      $selector = 'sbac-media-internet-confirm';
-      $output[] = ajax_command_invoke($selector, 'show');
-//      $output[] = ajax_command_invoke($selector, 'click');
-//      $output[] = ajax_command_invoke($selector, 'hide');
-      print ajax_render($output);
-      exit();
+      $form['field_file_container']['run_js'] = array(
+        '#markup' => '<script>jQuery("#sbac-media-internet-confirm").click();</script>',
+      );
+    }
+    else {
+      if (isset($form_state['node'])) {
+        $node = $form_state['node'];
+
+        // API Call to retrieve Titles. (Would like to get length but no API provides it)
+        if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
+          $handler = new MediaInternetSchoolTubeHandler($embedded_video_source);
+          $file = $handler->getFileObject();
+        }
+
+        if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
+          $handler = new MediaInternetTeacherTubeHandler($embedded_video_source);
+          $file = $handler->getFileObject();
+        }
+
+        if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
+          $handler = new MediaInternetSlideShareHandler($embedded_video_source);
+          $file = $handler->getFileObject();
+        }
+
+        if ($file && isset($file->filename) && $file->filename != NULL) {
+          $media = new stdClass;
+          $media->type = 'media';
+          $media->fid = 0;
+          $media->nid = $node->nid;
+          $media->filename = $file->filename;
+          $media->file_size = 0;
+          entity_save('media', $media);
+        }
+      }
     }
   }
   else {
@@ -425,7 +414,6 @@ function sbac_media_delete_media_record($id, $fid = NULL) {
     // @TODO
   }
 }
-
 
 /**
  * Displays the media delete modal.

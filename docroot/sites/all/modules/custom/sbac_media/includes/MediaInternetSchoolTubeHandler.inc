@@ -62,7 +62,6 @@ class MediaInternetSchoolTubeHandler extends MediaInternetBaseHandler {
     if (!isset($response->error)) {
       // fix malformatted json, only putting in title
       preg_match('#"title":".*?"#i', $response->data, $matches);
-      watchdog('sbac_media4', print_r($matches, TRUE));
       if (isset($matches[0])) {
         $json = "{" . $matches[0] . "}";
         return drupal_json_decode($json);
