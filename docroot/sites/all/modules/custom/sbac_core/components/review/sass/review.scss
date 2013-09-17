@@ -17,10 +17,26 @@
   width: 280px;
 }
 
-/* layout */
+@mixin maxlength {
+  .counter {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-size: 12px;
 
+    &.messages {
+      background: #fff;
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+/* layout */
 #review-wrap-reviews {
   margin: 10px 30px;
+  padding-bottom: 20px;
 
   .section-title {
     float: left;
@@ -36,16 +52,23 @@
 
   form {
     clear: both;
+    display: none;
 
     .intro {
       padding: 10px 0;
     }
 
     .form-item-title {
-      
+      position: relative;
+
+      @include maxlength;
     }
 
     .field-name-field-details {
+      position: relative;
+
+      @include maxlength;
+
       textarea {
         max-width: 100%;
         width: 100%;
