@@ -639,7 +639,7 @@ function sbac_core_field_default_field_instances() {
     ),
     'entity_type' => 'review',
     'field_name' => 'field_details',
-    'label' => 'Details',
+    'label' => 'Add some details',
     'profanity' => 1,
     'required' => 1,
     'settings' => array(
@@ -824,9 +824,9 @@ function sbac_core_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Add some details');
   t('Appropriate For');
   t('Comments');
-  t('Details');
   t('Helps Improve Student Learning');
   t('Helps My Professional Development');
   t('Is Easy to Use');
