@@ -495,36 +495,36 @@
 }
 
 /* line 491, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs {
+#feedback-wrap-edit-tags .vertical-tabs {
   border: 0;
   margin: 2em;
   padding: 0;
 }
 /* line 496, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-list {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-list {
   display: none;
 }
 /* line 501, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane {
   padding: 0;
 }
 /* line 504, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select {
   float: left;
   margin: 0 0 1em 0;
   width: 40%;
 }
 /* line 509, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select:nth-child(even) {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select:nth-child(even) {
   clear: left;
   margin-right: 5%;
 }
 /* line 514, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .chzn-container {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .chzn-container {
   width: 250px !important;
 }
 /* line 518, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description {
   color: #a2a2a2;
   font-size: 0.75em;
   margin: 0.5em 0;
@@ -533,29 +533,29 @@
   word-break: normal;
 }
 /* line 527, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select input {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select input {
   padding: 1px !important;
   height: 1.5em;
 }
 /* line 532, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description:last-child {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .description:last-child {
   display: none;
 }
 /* line 537, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title {
   clear: both;
   float: none;
 }
 /* line 542, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title-help, #feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .sbac-resource-required {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .alignment-tag-title-help, #feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane .sbac-resource-required {
   font-size: 0.75em;
 }
 /* line 546, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-modal-alignment {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-modal-alignment {
   float: right;
 }
 /* line 551, ../sass/feedback.scss */
-#feedback-wrap-edit-tags-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-alignment-tag-view table {
+#feedback-wrap-edit-tags .vertical-tabs .vertical-tabs-panes .vertical-tabs-pane #sbac-resource-alignment-tag-view table {
   width: 100%;
 }
 
