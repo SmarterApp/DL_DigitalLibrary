@@ -469,24 +469,6 @@
   }
 }
 
-#user-review-wrap-enduse {
-  margin: 10px 30px;
-
-  .section-title {
-    float: left;
-  }
-
-  .review-form-trigger {
-    &:after {
-      clear: both;
-    }
-
-    float: right;
-    display: inline;
-    margin: 0;
-  }
-}
-
 #feedback-wrap-edit-tags {
   .vertical-tabs {
     border: 0;
