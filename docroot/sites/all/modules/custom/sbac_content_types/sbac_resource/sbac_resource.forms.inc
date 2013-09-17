@@ -543,27 +543,18 @@ function sbac_resource_validate_summary(&$form, $form_state) {
  * @param $form_state
  */
 function sbac_resource_validate_materials(&$form, $form_state) {
-  if (isset($form_state['values']['field_file']['und'][0])) {
-    $file_error = TRUE;
-    foreach ($form_state['values']['field_file']['und'] as $index => $file) {
-      if (isset($file['fid']) && $file['fid'] > 0) {
-        $file_error = FALSE;
-      }
-    }
-    if ($file_error) {
-      $error = 'You must provide a material for this Resource to continue';
-      form_set_error('field_file', $error);
-      _sbac_resource_remove_error_message($error);
-      drupal_set_message('materials:field_file:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('materials:field_file:group:Provide a material', 'sbac_resource_error');
-    }
-  }
-  else {
+  $media_items = sbac_media_load_items($form['#node']->nid);
+  if (!$media_items) {
     $error = 'You must provide a material for this Resource to continue';
-    form_set_error('field_file', $error);
+    form_set_error('field_embed_video', $error);
     _sbac_resource_remove_error_message($error);
-    drupal_set_message('materials:field_file:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('materials:field_file:group:Provide a material', 'sbac_resource_error');
+    drupal_set_message('materials:field_embed_video:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('materials:field_embed_video:group:Provide a material', 'sbac_resource_error');
+
+    // field_file_upload
+    $error = 'You must provide a material for this Resource to continue';
+    form_set_error('field_file_upload', $error);
+    _sbac_resource_remove_error_message($error);
   }
 
   if ($form_state['values']['field_author']['und'][0]['value'] == NULL) {
@@ -1130,7 +1121,15 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
   //$form['field_file'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_file_after_build';
 
+  // NEW STUFF!!!
+  // embed a view here, displays a list of materials (pri/sec), delete option, filename, file size
+  // embed url ability -> confirmation dialogs after, custom form.
+  // choose file and upload ability -> custom form
+  // error messages move inline
+  sbac_media_widget_form_element($form, $form_state);
+
   // Materials
+  $form['field_file']['#access'] = FALSE;
   $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
   // License Informations
   // Let's remove the N/A Option from the license information section
@@ -1535,6 +1534,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_unique_views']['#access'] = FALSE;
   $form['field_alignment_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
+  $form['field_document_information']['#access'] = FALSE;
   // $form['field_file']['und']['add_more']['#access'] = FALSE;
 }
 

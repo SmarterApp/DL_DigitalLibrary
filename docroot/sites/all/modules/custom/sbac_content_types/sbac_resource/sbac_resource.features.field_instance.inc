@@ -22,7 +22,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 1,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -76,7 +76,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 42,
+        'weight' => 35,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -136,7 +136,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 6,
+        'weight' => 3,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -200,7 +200,7 @@ function sbac_resource_field_default_field_instances() {
           'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
-        'weight' => 40,
+        'weight' => 33,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -257,7 +257,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 21,
+        'weight' => 16,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -312,7 +312,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 10,
+        'weight' => 9,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -369,7 +369,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 35,
+        'weight' => 29,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -426,7 +426,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 25,
+        'weight' => 20,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -485,7 +485,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 26,
+        'weight' => 21,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -543,7 +543,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 24,
+        'weight' => 19,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -601,7 +601,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 7,
+        'weight' => 5,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -657,7 +657,7 @@ function sbac_resource_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 36,
       ),
       'search_index' => array(
         'label' => 'hidden',
@@ -713,7 +713,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 8,
+        'weight' => 6,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -769,7 +769,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
-        'weight' => 1,
+        'weight' => 0,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -848,7 +848,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 23,
+        'weight' => 18,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -903,7 +903,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 34,
+        'weight' => 28,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -960,7 +960,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 32,
+        'weight' => 26,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1017,7 +1017,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 6,
+        'weight' => 4,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1074,7 +1074,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 33,
+        'weight' => 27,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1131,7 +1131,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 28,
+        'weight' => 22,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1190,7 +1190,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 20,
+        'weight' => 15,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1250,7 +1250,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 9,
+        'weight' => 8,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1303,7 +1303,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 36,
+        'weight' => 30,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1359,7 +1359,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 31,
+        'weight' => 25,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1487,7 +1487,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 5,
+        'weight' => 2,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1536,7 +1536,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 11,
+        'weight' => 10,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1593,7 +1593,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 22,
+        'weight' => 17,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1652,7 +1652,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 9,
+        'weight' => 7,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1709,7 +1709,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 29,
+        'weight' => 23,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1767,7 +1767,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 30,
+        'weight' => 24,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1829,7 +1829,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 18,
+        'weight' => 14,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1892,7 +1892,7 @@ function sbac_resource_field_default_field_instances() {
           'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
-        'weight' => 39,
+        'weight' => 32,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -1958,7 +1958,7 @@ function sbac_resource_field_default_field_instances() {
           'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
-        'weight' => 38,
+        'weight' => 31,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -2015,7 +2015,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
-        'weight' => 41,
+        'weight' => 34,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -2076,7 +2076,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 16,
+        'weight' => 12,
       ),
       'search_index' => array(
         'label' => 'above',
@@ -2126,7 +2126,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 17,
+        'weight' => 13,
       ),
       'search_index' => array(
         'label' => 'above',
