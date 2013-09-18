@@ -626,3 +626,14 @@ function _sbac_central_publish_all_alignments() {
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
   }
 }
+
+/**
+ * Disables workbench email module.
+ */
+function sbac_central_update_7055() {
+  $modules = array(
+    'media_vimeo',
+    'media_youtube',
+  );
+  module_disable($modules);
+}
