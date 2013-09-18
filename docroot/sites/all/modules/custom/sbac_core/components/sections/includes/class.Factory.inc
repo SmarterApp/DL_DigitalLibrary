@@ -94,11 +94,17 @@ class Factory {
    */
   public function add(iSection $section) {
     if ($section->access() || $section->show_disabled()) {
-      $this->_sections[$section::name] = array(
+      $add = array(
         'title'     => t($section::title),
-        'content'   => $section->getContent(),
+        'content'   => '',
         'disabled'  => !($section->access()),
       );
+
+      if ($section->access()) {
+        $add['content'] = $section->getContent();
+      }
+
+      $this->_sections[$section::name] = $add;
     }
   }
 

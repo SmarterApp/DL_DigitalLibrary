@@ -53,6 +53,18 @@ class Hooks extends \devtools\Hooks {
         '#suffix' => '</div>',
       );
 
+      $form['actions']['cancel'] = array(
+        '#type' => 'button',
+        '#value' => t('Cancel'),
+      );
+
+      $form['actions']['preview'] = array(
+        '#type' => 'submit',
+        '#value' => t('Preview'),
+      );
+
+
+
       $form['actions']['submit'] = $form['submit'];
       unset($form['submit']);
 
