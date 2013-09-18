@@ -56,18 +56,13 @@ class Hooks extends \devtools\Hooks {
     if (preg_match('/^eck__entity__form_(edit|add)_review_(' . implode('|', $this->_bundles) . ')$/', $form_id, $matches)) {
       $node = current_node();
 
-      $form['intro'] = array(
-        '#type' => 'markup',
-        '#weight' => -15,
-        '#prefix' => '<div class="intro">',
-        '#suffix' => '</div>',
-        '#markup' => t('Have you used this resource? If so, share your feedback in the space provided below. Be sure to
-          give your review a title, enter your feedback and rate the resource. Your feedback is valuable and helps insure
-          that the Digital Library continues to meet your needs.'),
-      );
+      if (!isset($form_state['stage'])) {
+        $form_state['stage'] = 'create';
+      }
 
       $form['title']['#weight'] = -10;
-
+      element_maxlength($form['title'], 100, 'Character count: <strong>@remaining</strong>');
+      
       $form['status']['#access'] = FALSE;
 
       $form['actions'] = array(
@@ -97,30 +92,58 @@ class Hooks extends \devtools\Hooks {
         '#markup' => l(t('Cancel'), $url, $options),
       );
 
-      
+      switch ($form_state['stage']) {
+        case 'create':
+          $intro_text = t('Have you used this resource? If so, share your feedback in the space provided below. Be sure to
+          give your review a title, enter your feedback and rate the resource. Your feedback is valuable and helps insure
+          that the Digital Library continues to meet your needs.');
 
+          $form['actions']['preview'] = array(
+            '#type' => 'submit',
+            '#value' => t('Preview'),
+            '#ajax' => array(
+              'callback' => 'review_form_submit',
+              'wrapper' => 'eck-entity-form-add-review-end-use',
+            ),
+          );
 
-      $form['actions']['preview'] = array(
-        '#type' => 'submit',
-        '#value' => t('Preview'),
-      );
+          break;
 
-      $form['actions']['submit'] = $form['submit'];
+        case 'preview':
+          $intro_text = t('This is your review as it will appear to others. Your profile card will be included adjacent to 
+          your review (accessible by hovering your mouse over the link). You can adjust your !link to control
+          what others see.', array('!link' => l(t('privacy settings'), 'user')));
+
+          $disable = array(
+            'title',
+            'field_details',
+            'field_student_learning',
+            'field_pro_dev',
+            'field_ease_use',
+            'field_appropriate_for',
+          );
+
+          foreach ($disable as $field_name) {
+            $form[$field_name]['#access'] = FALSE;
+          }
+
+          $form['actions']['submit'] = $form['submit'];
+
+          break;
+      }
+
       unset($form['submit']);
-
-      $max = array(
-        '#maxlength' => 100,
-        '#maxlength_js' => 1,
-        '#attributes' => array(
-          'maxlength_js_label' => array(
-            'Character count <strong>@remaining</strong>',
-          ),
-        ),
+  
+      $form['intro'] = array(
+        '#type' => 'markup',
+        '#weight' => -15,
+        '#prefix' => '<div class="intro">',
+        '#suffix' => '</div>',
+        '#markup' => $intro_text,
       );
-
-      element_maxlength($form['title'], 100, 'Character count: <strong>@remaining</strong>');
 
       $form['#validate'][] = 'review_form_validate';
+      $form['#submit'] = array('review_form_submit');
     }
   }
 

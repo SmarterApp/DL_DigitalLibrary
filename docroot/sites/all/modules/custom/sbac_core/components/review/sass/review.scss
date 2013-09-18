@@ -146,3 +146,29 @@
     }
   }
 }
+
+/* modals */
+.dialog_review_end_use_form #dialog {
+  .intro {
+    border-bottom: 1px solid silver;
+    padding-bottom: 1em;
+    border-bottom: 1em;
+    font-size: 0.8em;
+    line-height: normal;
+    text-align: left;
+  }
+
+  form {
+    text-align: right;
+  }
+
+  .form-submit {
+    display: inline;
+    float: none;
+  }
+
+  .close-dialog {
+    display: inline;
+  }
+}
+

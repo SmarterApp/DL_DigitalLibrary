@@ -145,3 +145,27 @@
   clear: both;
   padding: 10px 0 0;
 }
+
+/* modals */
+/* line 152, ../sass/review.scss */
+.dialog_review_end_use_form #dialog .intro {
+  border-bottom: 1px solid silver;
+  padding-bottom: 1em;
+  border-bottom: 1em;
+  font-size: 0.8em;
+  line-height: normal;
+  text-align: left;
+}
+/* line 161, ../sass/review.scss */
+.dialog_review_end_use_form #dialog form {
+  text-align: right;
+}
+/* line 165, ../sass/review.scss */
+.dialog_review_end_use_form #dialog .form-submit {
+  display: inline;
+  float: none;
+}
+/* line 170, ../sass/review.scss */
+.dialog_review_end_use_form #dialog .close-dialog {
+  display: inline;
+}

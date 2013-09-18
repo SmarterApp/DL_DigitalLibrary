@@ -1,5 +1,9 @@
 (function($) {
 
+if (typeof Drupal.settings.review == 'undefined') {
+  Drupal.settings.review = {};
+}
+
 if (typeof Review == 'undefined') {
   Review = {};
 }
@@ -17,7 +21,6 @@ Review.reviews = {
         trigger_element.click(function(e) {
           e.preventDefault();
 
-          target_e
 
 
           return false;
@@ -44,6 +47,10 @@ Drupal.behaviors.review = {
         return false;
       });
     }
+  },
+
+  clear_review: function() {
+    console.log('clearing!');
   }
 };
 

@@ -15,7 +15,7 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
   // cancel state
     $form['state_cancel']['intro'] = array(
       '#markup' => '
-                    <div class="gate-keeper-modal-intro">
+                    <div class="intro">
                       ' . t('Cancelling your review will permanently clear all the information you have entered from the system.') . '
                     </div>
                    ',
@@ -35,16 +35,10 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
   // state configuration
     $state_common_options = array(
       'close_link' => TRUE,
-      'close_link_text' => t('Continue'),
       'close_link_class' => array(
         'button',
         'radius',
       ),
-    );
-
-    $state_redirect_options = array(
-      'submit_autoclose' => TRUE,
-      'submit_redirect' => url('node/' . $node->nid, array('absolute' => TRUE)),
     );
 
     $form_state['dialog_settings'] = array(
@@ -55,7 +49,14 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
         'cancel' => array(
           'dialog' => array('title' => t('You are about to cancel the review')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_cancel']['submit'])),
-        ) + $state_common_options + $state_redirect_options,
+          'submit_autoclose' => TRUE,
+          'submit_redirect' => url('node/' . $node->nid . '/feedback/redirect/review-reviews', array('absolute' => TRUE)),
+          'close_link_text' => t('Continue Review'),
+          'submit_js_callback' => array(
+            'behavior' => 'review',
+            'method' => 'clear_review',
+          )
+        ) + $state_common_options,
 
       ),
     );
