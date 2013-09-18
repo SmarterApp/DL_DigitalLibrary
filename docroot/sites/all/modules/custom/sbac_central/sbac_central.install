@@ -628,7 +628,7 @@ function _sbac_central_publish_all_alignments() {
 }
 
 /**
- * Disables workbench email module.
+ * Disables youtube / vimeo module.
  */
 function sbac_central_update_7055() {
   $modules = array(
