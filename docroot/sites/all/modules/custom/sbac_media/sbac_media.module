@@ -294,7 +294,7 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
  */
 function _sbac_media_create_list($media_items) {
   $output = '<table id="sbac-media-list" class="sortable">';
-  $output .= '<thead><tr><th colspan="3">Machine Name</th><th>Operations</th></tr></thead>';
+  $output .= '<thead><tr><th colspan="3">Machine Name</th><th colspan="3">Operations</th></tr></thead>';
 
   foreach ($media_items as $key => $media_item) {
     // Open.
@@ -310,7 +310,7 @@ function _sbac_media_create_list($media_items) {
     $output .= '<td>' . $image . '</td>';
 
     // Filename.
-    $output .= '<td class="ui-icon">' . $media_item['filename'] . '</td>';
+    $output .= '<td class="ui-icon"><div class="media-widget">' . $media_item['filename'] . '</td>';
 
     // Filesize.
     $bytes = '0 KB';
