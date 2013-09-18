@@ -37,6 +37,20 @@ function dialog_show_form($form_id) {
         $dialog_options = $form_state['dialog_settings']['states'][$form_state['dialog_settings']['current_state']]['dialog'];
       }
 
+    // set dialog class
+      $class = array();
+      if (isset($dialog_options['dialogClass'])) {
+        $class = explode(' ', $dialog_options['dialogClass']);
+      }
+
+      $stem = 'dialog';
+      foreach (array($form_id, $args[1], $args[2]) as $part) {
+        $stem .= '_' . $part;
+        $class[] = $stem;
+      }
+
+      $dialog_options['dialogClass'] = implode(' ', $class);
+
     // return the form
       $commands = array();
       $commands[] = dialog_command_display(drupal_render($form), $dialog_options);

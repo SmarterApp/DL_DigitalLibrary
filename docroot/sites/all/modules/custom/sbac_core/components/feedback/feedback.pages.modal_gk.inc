@@ -10,7 +10,7 @@
  * @param  [type] $ud             [description]
  * @return [type]                 [description]
  */
-function resource_gate_keeper_form($form, &$form_state, $node, $state, $trigger_id, $id) {
+function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_id, $id) {
   $form = array();
   global $user;
 
@@ -146,7 +146,7 @@ function resource_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 /**
  * Submit handler for resource_gate_keeper_form().
  */
-function resource_gate_keeper_form_submit($form, &$form_state) {
+function feedback_gate_keeper_form_submit($form, &$form_state) {
   $node = $form_state['build_info']['args'][0];
 
   $state = $form_state['dialog_settings']['current_state'];

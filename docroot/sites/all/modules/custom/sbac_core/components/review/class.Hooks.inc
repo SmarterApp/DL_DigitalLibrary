@@ -15,10 +15,31 @@ class Hooks extends \devtools\Hooks {
   ----------------------------------------------------------------------------*/
 
   /**
+   * Extends hook_menu().
+   */
+  function hook_menu() {
+    $base = array(
+      'file' => 'review.pages.inc',
+      'file path' => $this->_path,
+    );
+
+    $items['node/%node/review/end_use'] = array(
+      'title' => 'End Use Review',
+      'page callback' => 'resource_review_ajax_page',
+      'page arguments' => array('end_use', 1),
+      'access callback' => 'resource_access',
+      'access arguments' => array('access review process', 1),
+      'type' => MENU_CALLBACK,
+    ) + $base;
+
+    return $items;
+  }
+
+  /**
    * Extends hook_page_build().
    */
   function hook_page_build(&$page) {
-    $node = menu_get_object('node', 1);
+    $node = current_node();
     if ($node && $node->type == 'resource') {
       drupal_add_css($this->_path . '/css/review.css');
       drupal_add_js($this->_path . '/js/review.js');
@@ -33,6 +54,8 @@ class Hooks extends \devtools\Hooks {
 
     // feedback add/edit form
     if (preg_match('/^eck__entity__form_(edit|add)_review_(' . implode('|', $this->_bundles) . ')$/', $form_id, $matches)) {
+      $node = current_node();
+
       $form['intro'] = array(
         '#type' => 'markup',
         '#weight' => -15,
@@ -44,6 +67,7 @@ class Hooks extends \devtools\Hooks {
       );
 
       $form['title']['#weight'] = -10;
+
       $form['status']['#access'] = FALSE;
 
       $form['actions'] = array(
@@ -53,17 +77,33 @@ class Hooks extends \devtools\Hooks {
         '#suffix' => '</div>',
       );
 
-      $form['actions']['cancel'] = array(
-        '#type' => 'button',
-        '#value' => t('Cancel'),
+      // cancel button
+      $trigger_id = 'review-cancel';
+      $url = 'node/' . $node->nid . '/review/end_use/cancel/' . $trigger_id;
+
+      $options = array(
+        'attributes' => array(
+          'class' => array(
+            'use-ajax',
+            'use-dialog',
+            'button',
+            'radius',
+          ),
+          'id' => $trigger_id,
+        ),
       );
+
+      $form['actions']['cancel'] = array(
+        '#markup' => l(t('Cancel'), $url, $options),
+      );
+
+      
+
 
       $form['actions']['preview'] = array(
         '#type' => 'submit',
         '#value' => t('Preview'),
       );
-
-
 
       $form['actions']['submit'] = $form['submit'];
       unset($form['submit']);
@@ -79,6 +119,8 @@ class Hooks extends \devtools\Hooks {
       );
 
       element_maxlength($form['title'], 100, 'Character count: <strong>@remaining</strong>');
+
+      $form['#validate'][] = 'review_form_validate';
     }
   }
 

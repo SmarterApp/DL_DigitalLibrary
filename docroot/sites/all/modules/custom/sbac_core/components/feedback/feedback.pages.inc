@@ -86,7 +86,7 @@ function resource_feedback_page($node) {
  * @return [type]                 [description]
  */
 function resource_feedback_ajax_page($bundle, $node, $state, $trigger_id, $entity_id = NULL) {
-  $commands = dialog_show_form('resource_' . $bundle . '_form', $node, $state, $trigger_id, $entity_id);
+  $commands = dialog_show_form('feedback_' . $bundle . '_form', $node, $state, $trigger_id, $entity_id);
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }

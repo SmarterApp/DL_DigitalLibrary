@@ -4,7 +4,10 @@
  * Checks for the node page, and loads the node
  */
 function current_node() {
-  if (match_uri('node/[0-9]+') && $node = node_load((int) arg(1))) {
+  if ($node = menu_get_object('node', 1)) {
+    return $node;
+  }
+  elseif (match_uri('node/[0-9]+') && $node = node_load((int) arg(1))) {
     return $node;
   }
   

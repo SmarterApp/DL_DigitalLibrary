@@ -9,7 +9,7 @@
  * @param  [type] $id             [description]
  * @return [type]                 [description]
  */
-function resource_post_form($form, &$form_state, $node, $state, $trigger_id, $id) {
+function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id) {
   $form = array();
   global $user;
 
@@ -156,7 +156,7 @@ function resource_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 /**
  * Submit handler for resource_post_form().
  */
-function resource_post_form_submit($form, &$form_state) {
+function feedback_post_form_submit($form, &$form_state) {
   $node = $form_state['build_info']['args'][0];
 
   $state = $form_state['dialog_settings']['current_state'];

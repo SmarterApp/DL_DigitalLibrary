@@ -10,7 +10,7 @@
  * @param  [type] $id             [description]
  * @return [type]                 [description]
  */
-function resource_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) {
+function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) {
   $form = array();
   global $user;
 
@@ -170,7 +170,7 @@ function resource_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 /**
  * Submit handler for resource_qc_form().
  */
-function resource_qc_form_submit($form, &$form_state) {
+function feedback_qc_form_submit($form, &$form_state) {
   $node = $form_state['build_info']['args'][0];
 
   $state = $form_state['dialog_settings']['current_state'];

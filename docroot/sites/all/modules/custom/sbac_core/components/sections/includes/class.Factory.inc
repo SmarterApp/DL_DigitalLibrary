@@ -93,14 +93,15 @@ class Factory {
    * @param [type] $section [description]
    */
   public function add(iSection $section) {
-    if ($section->access() || $section->show_disabled()) {
+    if (($access = $section->access()) || $section->show_disabled()) {
       $add = array(
         'title'     => t($section::title),
         'content'   => '',
-        'disabled'  => !($section->access()),
+        'disabled'  => !$access,
       );
 
-      if ($section->access()) {
+      // don't generate content if the user doesn't have access to the tab
+      if ($access) {
         $add['content'] = $section->getContent();
       }
 
