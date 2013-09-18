@@ -1,0 +1,65 @@
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+#sortable li span { position: absolute; margin-left: -1.3em; }
+
+#sbac-media-list {
+	width: 100%;
+
+	thead {
+		th {
+		  background-color: #fff;
+		  padding:5px 5px 25px;
+		}
+
+		th:first-child {
+		  &:after {
+		    display:block;
+		    content: 'Primary material. This is the main material with which you want users to interact.';
+		    font-weight: normal;
+		    font-size: emCalc(12px);
+		    width: 93%;
+		    position: absolute;
+		    border-top: 1px solid #eee;
+		    padding: 5px 0;
+		    margin-top: 0px;
+		  }
+		}
+
+		th:nth-child(2) {
+			text-align: right;
+		}
+	}
+
+	tbody {
+		tr:nth-child(2) {
+      td {
+        padding-top: 30px;
+
+        .media-widget {
+        position: relative;
+
+        &:before {
+					display: block;
+					content: 'Secondary material(s). These will be shown adjacent to the primary material.';
+					position: absolute;
+					top: 20px;
+					left: -75px;
+					right: 0;
+					margin: -45px 0 0 -10px;
+					padding: 0 0 5px 10px;
+					font-size: emCalc(14px);
+					border-bottom: 1px solid #ccc;
+					width: 650px;
+          }
+        }
+      }
+    }
+  }
+}
+
+#sbac-field-file-container {
+	.form-item-field-embed-video {
+		width: 45%;
+		margin-right: 2%;
+	}
+}
