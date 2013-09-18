@@ -317,7 +317,18 @@ function _sbac_media_create_list($media_items) {
   $output = '<table id="sbac-media-list" class="sortable">';
   $output .= '<thead><tr><th colspan="3">Machine Name</th><th>Operations</th></tr></thead>';
 
+  $count = 0;
   foreach ($media_items as $key => $media_item) {
+    if ($count == 0) {
+      $output .= '<tr class="ui-state-disabled"><td colspan = 5>Primary Material. This is the main material with which you want users to interact.</td></tr>';
+      $count++;
+    }
+
+    if ($count == 2) {
+      $output .= '<tr class="ui-state-disabled"><td colspan = 5>Secondary Material(s). These will be shown adjacent to the primary material.</td></tr>';
+      $count++;
+    }
+
     // Open.
     $output .= '<tr id="' . $media_item['id'] . '">';
 
@@ -356,6 +367,7 @@ function _sbac_media_create_list($media_items) {
 
     // Close.
     $output .= '</tr>';
+    $count++;
   }
   $output .= '</table>';
 

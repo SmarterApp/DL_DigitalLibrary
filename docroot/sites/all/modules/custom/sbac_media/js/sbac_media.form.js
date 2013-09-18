@@ -15,8 +15,9 @@
       var selector = '#sbac-media-list tbody';
       if ($(selector).length) {
         $(selector).sortable({
-          items: 'tr',
-          update: function( event, ui ) {
+        items: "tr:not(.ui-state-disabled)",
+        placeholder: "ui-state-highlight",
+        update: function( event, ui ) {
             // Update the weights.
             var rows = $("#sbac-media-list tr:gt(0)"); // skip the header row
             var json = { };
