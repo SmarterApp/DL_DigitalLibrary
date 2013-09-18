@@ -15,10 +15,18 @@ dependencies[] = text
 
 files[] = includes/MediaInternetSchoolTubeHandler.inc
 files[] = includes/MediaSchoolTubeStreamWrapper.inc
+
 files[] = includes/MediaInternetTeacherTubeHandler.inc
 files[] = includes/MediaTeacherTubeStreamWrapper.inc
+
 files[] = includes/MediaInternetSlideShareHandler.inc
 files[] = includes/MediaSlideShareStreamWrapper.inc
+
+files[] = includes/MediaInternetYouTubeHandler.inc
+files[] = includes/MediaYouTubeStreamWrapper.inc
+
+files[] = includes/MediaInternetVimeoHandler.inc
+files[] = includes/MediaVimeoStreamWrapper.inc
 
 features[eck_bundle][] = media_media
 features[eck_entity_type][] = media

@@ -52,6 +52,12 @@ function sbac_media_media_internet_providers() {
   $info['MediaInternetSlideShareHandler'] = array(
     'title' => t('SlideShare'),
   );
+  $info['MediaInternetYouTubeHandler'] = array(
+    'title' => t('YouTube'),
+  );
+  $info['MediaInternetVimeoHandler'] = array(
+    'title' => t('Vimeo'),
+  );
   return $info;
 }
 
@@ -77,7 +83,19 @@ function sbac_media_stream_wrappers() {
       'class' => 'MediaSlideShareStreamWrapper',
       'description' => t('Presentations provided by SlideShare.'),
       'type' => STREAM_WRAPPERS_READ_VISIBLE,
-    ),       
+    ),
+    'youtube' => array(
+      'name' => t('YouTube videos'),
+      'class' => 'MediaYouTubeStreamWrapper',
+      'description' => t('Videos provided by YouTube.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+    'vimeo' => array(
+      'name' => t('Vimeo videos'),
+      'class' => 'MediaVimeoStreamWrapper',
+      'description' => t('Presentations provided by Vimeo.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
   );
 }
 
@@ -104,9 +122,6 @@ function sbac_media_theme($existing, $type, $theme, $path) {
       'path' => $path . '/includes',
       'template' => 'media-slideshare-presentation',
     ),
-//    'sbac_resource_media_form_element' => array(
-//      'render element' => 'form',
-//    ),
   );
 }
 
@@ -119,6 +134,8 @@ function sbac_media_file_mimetype_mapping_alter(&$mapping) {
   $mapping['mimetypes'][] = 'video/schooltube';
   $mapping['mimetypes'][] = 'video/teachertube';
   $mapping['mimetypes'][] = 'video/slideshare';
+  $mapping['mimetypes'][] = 'video/youtube';
+  $mapping['mimetypes'][] = 'video/vimeo';
 }
 
 /*
@@ -364,9 +381,9 @@ function _sbac_media_create_list($media_items) {
  * @param $form_state
  */
 function sbac_media_widget_form_element_validate($form, $form_state) {
-  $allowed_file_sources = array('youtube', 'teachertube', 'schooltube', 'vimeo', 'slideshare');
   if ($form_state['values']['field_embed_video']) {
-    if (!in_array($form_state['values']['field_embed_video'], $allowed_file_sources)) {
+    $embed_video = strtolower($form_state['values']['field_embed_video']);
+    if (strpos($embed_video, 'youtube') === FALSE && strpos($embed_video, 'teachertube') === FALSE && strpos($embed_video, 'schooltube') === FALSE && strpos($embed_video, 'vimeo') === FALSE && strpos($embed_video, 'slideshare') === FALSE) {
       form_set_error('field_embed_video', t('The following URL: ' . $form_state['values']['field_embed_video'] . ' cannot be embedded. Only videos from the following accepted hosts are allowed: YouTube, Vimeo, SchoolTube, TeacherTube and SlideShare.'));
     }
   }
@@ -686,6 +703,7 @@ function sbac_media_save_embedded_source($embedded_video_source, $nid) {
     $media->nid = $nid;
     $media->filename = $file->filename;
     $media->file_size = 0;
+    $media->weight = 100;
     entity_save('media', $media);
   }
 }
