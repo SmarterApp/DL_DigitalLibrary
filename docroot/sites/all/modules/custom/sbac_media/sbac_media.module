@@ -192,17 +192,18 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     $output = _sbac_media_create_list($media_items);
     $form['field_file_container']['materials'] = array(
       '#markup' => $output,
+      '#weight' => -100,
     );
   }
 
   $weight = array();
   if ($media_items) {
     foreach ($media_items as $key => $media_item) {
-      if ($media_item['weight']) {
-        $weight[$media_item['id']] = $media_item['weight'];
+      if ($media_item->weight) {
+        $weight[$media_item->id] = $media_item->weight;
       }
       else {
-        $weight[$media_item['id']] = $key;
+        $weight[$media_item->id] = $key;
       }
     }
   }
@@ -330,7 +331,7 @@ function _sbac_media_create_list($media_items) {
     }
 
     // Open.
-    $output .= '<tr id="' . $media_item['id'] . '">';
+    $output .= '<tr id="' . $media_item->id . '">';
 
     // Image.
     $url = 'public://file.png';
@@ -342,12 +343,12 @@ function _sbac_media_create_list($media_items) {
     $output .= '<td>' . $image . '</td>';
 
     // Filename.
-    $output .= '<td class="ui-icon"><div class="media-widget">' . $media_item['filename'] . '</td>';
+    $output .= '<td class="ui-icon"><div class="media-widget">' . $media_item->filename . '</td>';
 
     // Filesize.
     $bytes = '0 KB';
-    if ($media_item['filesize']) {
-      $bytes = number_format($media_item['filesize'] / 1024, 2) . ' KB';
+    if ($media_item->filesize) {
+      $bytes = number_format($media_item->filesize / 1024, 2) . ' KB';
     }
     $output .= '<td>' . $bytes . '</td>';
 
@@ -358,9 +359,9 @@ function _sbac_media_create_list($media_items) {
         'id' => 'sbac-media-modal-delete-media'
       ),
       'query' => array(
-        'fid' => $media_item['fid'],
-        'nid' => $media_item['nid'],
-        'id' => $media_item['id'],
+        'fid' => $media_item->fid,
+        'nid' => $media_item->nid,
+        'id' => $media_item->id,
       )
     ));
     $output .= '<td>' . $delete_link . '</td>';
@@ -445,6 +446,7 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
         $media->nid = $node->nid;
         $media->filename = $file->filename;
         $media->file_size = $file->filesize;
+        $media->weight = 100;
         entity_save('media', $media);
       }
       $file->status = FILE_STATUS_PERMANENT;
@@ -457,7 +459,9 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   if ($media_items) {
     $output = _sbac_media_create_list($media_items);
     $form['field_file_container']['materials']['#markup'] = $output;
-    $form['field_file_container']['materials']['#weight'] = 10;
+    $form['field_file_container']['materials']['#weight'] = -100;
+    // re-populate node so node_presave is up to date.
+    $form_state['node']->document = $media_items;
   }
 
   return $form['field_file_container'];
@@ -472,14 +476,16 @@ function sbac_media_load_items($nid) {
   if ($nid) {
     $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid ORDER BY weight", array(':nid' => $nid));
     foreach ($result as $row) {
-      $media_item = array();
-      $media_item['id'] = $row->id;
-      $media_item['fid'] = $row->file_id;
-      $media_item['nid'] = $row->nid;
-      $media_item['filename'] = $row->filename;
-      $media_item['filesize'] = $row->file_size;
-      $media_item['filehash'] = $row->file_hash;
-      $media_item['weight'] = $row->weight;
+      $media_item = new stdClass();
+      $media_item->type = $row->type;
+      $media_item->id = $row->id;
+      $media_item->fid = $row->fid;
+      $media_item->nid = $row->nid;
+      $media_item->filename = $row->filename;
+      $media_item->filesize = $row->file_size;
+      $media_item->filehash = $row->file_hash;
+      $media_item->weight = $row->weight;
+      $media_item->document_id = $row->document_id;
       $media_items[] = $media_item;
     }
   }

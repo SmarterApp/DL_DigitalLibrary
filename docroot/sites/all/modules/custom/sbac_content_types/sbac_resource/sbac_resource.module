@@ -892,25 +892,18 @@ function sbac_resource_node_load($nodes, $types) {
  */
 function sbac_resource_node_presave($node) {
   if (isset($node->nid) && $node->nid) {
-    $node->field_document_id['und'] = array(); //use this to clean up the node during test
-    $i = 0;
-    while ($i < count($node->field_file['und'])) {
-      try {
-        $file = file_load($node->field_file['und'][$i]['fid']);
-        //this file still exists on Drupal so we have to load it...{
-        if ($file !== FALSE) {
-          sbac_resource_create_file_from_cmis($node, $i); // Create new doc
-          //file_delete($file); //delete the file from drupal
+    if (isset($node->document)) {
+      foreach ($node->document as $key => $media) {
+        if ($media->fid != NULL) {
+          $file = file_load($media->fid);
+          //this file still exists on Drupal so we have to load it...{
+          if ($file !== FALSE) {
+            sbac_resource_create_file_from_cmis($node, $file, $media); // Create new doc
+            //file_delete($file); //delete the file from drupal
+          }
         }
       }
-      catch (CMISException $e) {
-        //drupal_set_message($e);
-        // cmis_error_handler('sbac_documents_update_document', $e);
-      }
-      $i++;
     }
-    //clean up the file array at the end
-    //$node->field_file = array();
   }
 }
 
@@ -920,17 +913,17 @@ function sbac_resource_node_presave($node) {
  * @param $node
  */
 function sbac_resource_node_delete($node) {
-  $i=0;
-  //remove the files from alfresco first
-  while ($i < count($node->field_file['und'])) {
-	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
-		  sbac_resource_delete_file_from_cmis($node, $i);
-	  }
-	  $i++;
-  }
-  
-  //now remove the folder from alfresco
-  sbac_resource_delete_folder_from_cmis($node);
+//  $i=0;
+//  //remove the files from alfresco first
+//  while ($i < count($node->field_file['und'])) {
+//	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
+//		  sbac_resource_delete_file_from_cmis($node, $i);
+//	  }
+//	  $i++;
+//  }
+//
+//  //now remove the folder from alfresco
+//  sbac_resource_delete_folder_from_cmis($node);
 }
 
 /**
@@ -938,9 +931,8 @@ function sbac_resource_node_delete($node) {
  *
  * @param $node, $i = file index
  */
- function sbac_resource_create_file_from_cmis(&$node, $i) {
+ function sbac_resource_create_file_from_cmis(&$node, $file, $media) {
   module_load_include('api.inc', 'cmis');
-  $file = file_load($node->field_file['und'][$i]['fid']);
   $folder_path = '/Assets/' . floor($node->nid/32000) . "/" . $node->nid;
   try {
 	  $repository = cmis_get_repository();
@@ -986,10 +978,9 @@ function sbac_resource_node_delete($node) {
     //set the folder object to the /Assets/$cardinal/$node->nid
     $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
 
-    //sbac_resource_delete_file_from_cmis($node, $i);  //try to delete the file first.  likely not needed
     $document = cmisapi_createDocument($repository->repositoryId, $folder->id, $file->filename, array(), file_get_contents($file->uri), $file->filemime);
-    $cnt=count($node->field_document_id['und'])+1; //increment the node->field_document_id array to hold the new alfresco field_document_id
-    $node->field_document_id['und'][$cnt]['value'] = $document->id; //store the document ID
+    $media->document_id = $document->id;
+    entity_save('media', $media);
 
     //update the doc with the drupalId
     $alfresco=variable_get('cmis_repositories');
@@ -1002,14 +993,9 @@ function sbac_resource_node_delete($node) {
     curl_setopt($ch,CURLOPT_USERPWD,$alfresco['default']['user']. ":" . $alfresco['default']['password']);
     $result = curl_exec ($ch);
     curl_close ($ch);
-
-    //uncomment to dump the document and properties after save
-    //echo "<pre>";
-    //print_r($document);
-    //die();
   }
   catch (CMISException $e) {
-   // cmis_error_handler('sbac_documents_presave_document', $e);
+   cmis_error_handler('sbac_documents_presave_document', $e);
   }
 }
 
