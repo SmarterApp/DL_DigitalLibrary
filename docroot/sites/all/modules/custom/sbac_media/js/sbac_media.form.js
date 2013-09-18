@@ -13,7 +13,7 @@
 
       // Make the table sortable.
       var selector = '#sbac-media-list tbody';
-      if ((selector).length) {
+      if ($(selector).length) {
         $(selector).sortable({
           items: 'tr',
           update: function( event, ui ) {
