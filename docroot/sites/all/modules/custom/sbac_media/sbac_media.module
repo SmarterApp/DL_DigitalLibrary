@@ -495,13 +495,22 @@ function sbac_media_load_items($nid) {
  * @param $id
  * @param null $fid
  */
-function sbac_media_delete_media_record($id, $fid = NULL) {
+function sbac_media_delete_media_record($id) {
   if ($id) {
-    db_query('DELETE FROM {eck_media} WHERE id = :id', array(':id' => $id));
-  }
+    $media = db_select('eck_media', 'm')
+    ->fields('m')
+    ->condition('m.id', $id)
+    ->execute()
+    ->fetchObject();
 
-  if ($fid) {
-    // @TODO
+    if ($media && $media->document_id) {
+      // Real file, delete it.
+      sbac_resource_delete_file_from_cmis($node, $media);
+    }
+    else if ($media) {
+      // Embedded video, remove reference.
+      entity_delete('media', $media->id);
+    }
   }
 }
 
@@ -531,7 +540,7 @@ function sbac_media_delete_media($js = FALSE) {
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         // Delete document reference.
         if ($form_state['values']['id']) {
-          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+          sbac_media_delete_media_record($form_state['values']['id']);
         }
         $output[] = ctools_ajax_command_redirect($form_state['values']['hidden_url'], 0, array('fragment' => 'edit-group_materials'));
         $output[] = ctools_ajax_command_reload();

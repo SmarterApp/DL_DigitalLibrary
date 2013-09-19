@@ -88,55 +88,55 @@ function sbac_resource_menu() {
 function sbac_resource_download_contents($node) {
   if ($node) {
     // check to make sure there is public:// resources to download
-    if (sbac_resource_downloadable_scheme($node->field_file['und'])) {
+    if (sbac_resource_downloadable_scheme($node->document)) {
       $destination = variable_get('file_public_path', conf_path() . '/files') . '/resource_zips/';
       if (!file_exists($destination)) {
         mkdir($destination);
       }
 
-      $zip = new ZipArchive;
-      $archive_uri = 'public://resource_zips/';
-      $filename = 'download_' . REQUEST_TIME . '.zip';
-      $archive_uri .= $filename;
-      $real_path = drupal_realpath($archive_uri);
-      $open = $zip->open($real_path, ZipArchive::CREATE);
-      if ($open === TRUE) {
-        foreach ($node->field_file['und'] as $key => $file) {
-          // make sure the item uses public scheme
-          if (file_uri_scheme($file['uri']) == 'public') {
-            $zip->addFile(drupal_realpath($file['uri']), $file['filename']);
-          }
-        }
-        $zip->close();
-      }
+      module_load_include('api.inc', 'cmis');
+      try {
+        $repository = cmis_get_repository();
+        $alfresco=variable_get('cmis_repositories');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $alfresco['default']['zip_url'] . '?nid=' . $node->nid);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_USERPWD, $alfresco['default']['user']. ":" . $alfresco['default']['password']);
+        $result = curl_exec ($ch);
+        curl_close ($ch);
 
-      if (file_exists($real_path)) {
-        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
-        header("Cache-Control: public"); // needed for i.e.
-        header("Content-Type: application/zip");
-        header("Content-Transfer-Encoding: Binary");
-        header("Content-Length:".filesize($real_path));
-        header("Content-Disposition: attachment; filename=" . $filename);
-        if (readfile($real_path) !== false) {
-				$node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
-				entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
-			  }
+//        if (file_exists($real_path)) {
+//          header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+//          header("Cache-Control: public"); // needed for i.e.
+//          header("Content-Type: application/zip");
+//          header("Content-Transfer-Encoding: Binary");
+//          header("Content-Length:".filesize($real_path));
+//          header("Content-Disposition: attachment; filename=" . $filename);
+//          if (readfile($real_path) !== false) {
+//            $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
+//            entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
+//          }
+//        }
+//        else {
+//          return "There are no files to download."; // no downloadable file schemes (public://)
+//        }
       }
-    } else {
-      return "There are no files to download."; // no downloadable file schemes (public://)
+      catch (CMISException $e) {
+        cmis_error_handler('sbac_documents_presave_document', $e);
+      }
     }
   }
 }
 
 /**
- * Function to check if there are any downloadable files (public scheme)
+ * Function to check if there are any downloadable files.
  *
- * @param $files (array of files without language);
+ * @param $files
  * @return bool
  */
-function sbac_resource_downloadable_scheme($file) {
-  foreach ($file as $item) {
-    if (file_uri_scheme($item['uri']) == 'public') {
+function sbac_resource_downloadable_scheme($documents) {
+  foreach ($documents as $media) {
+    if ($media->document_id) {
       return TRUE;
     }
   }
@@ -913,17 +913,16 @@ function sbac_resource_node_presave($node) {
  * @param $node
  */
 function sbac_resource_node_delete($node) {
-//  $i=0;
-//  //remove the files from alfresco first
-//  while ($i < count($node->field_file['und'])) {
-//	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
-//		  sbac_resource_delete_file_from_cmis($node, $i);
-//	  }
-//	  $i++;
-//  }
-//
-//  //now remove the folder from alfresco
-//  sbac_resource_delete_folder_from_cmis($node);
+  if (isset($node->document)) {
+    foreach ($node->document as $key => $media) {
+      if ($media->document_id) {
+        sbac_resource_delete_file_from_cmis($node, $media);
+      }
+    }
+  }
+
+  //now remove the folder from alfresco
+  sbac_resource_delete_folder_from_cmis($node);
 }
 
 /**
@@ -975,10 +974,12 @@ function sbac_resource_node_delete($node) {
       }
     }
 
-    //set the folder object to the /Assets/$cardinal/$node->nid
+    // Set the folder object to the /Assets/$cardinal/$node->nid
     $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
 
     $document = cmisapi_createDocument($repository->repositoryId, $folder->id, $file->filename, array(), file_get_contents($file->uri), $file->filemime);
+
+    // Save the new document id.
     $media->document_id = $document->id;
     entity_save('media', $media);
 
@@ -1005,16 +1006,18 @@ function sbac_resource_node_delete($node) {
  *
  * @param $node, $i = file index
  */
-function sbac_resource_delete_file_from_cmis(&$node, $i) {
+function sbac_resource_delete_file_from_cmis(&$node, &$media) {
   module_load_include('api.inc', 'cmis');
   try {
     $repository = cmis_get_repository();
-    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $node->field_document_id['und'][$i]['value']);
+    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $media->document_id);
     cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
-    $node->field_document_id['und'][$i]['value'] = NULL;
+    entity_delete('media', $media->id);
+    return TRUE;
   } 
   catch (CMISException $e) {
     // cmis_error_handler('sbac_documents_delete_document', $e);
+    return FALSE;
   }
 }
 
