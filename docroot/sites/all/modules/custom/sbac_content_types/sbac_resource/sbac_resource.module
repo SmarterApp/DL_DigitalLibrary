@@ -86,7 +86,7 @@ function sbac_resource_menu() {
  * @param $node
  */
 function sbac_resource_download_contents($node) {
-  if ($node) {
+  if ($node && isset($node->document)) {
     // check to make sure there is public:// resources to download
     if (sbac_resource_downloadable_scheme($node->document)) {
       $destination = variable_get('file_public_path', conf_path() . '/files') . '/resource_zips/';
@@ -96,30 +96,58 @@ function sbac_resource_download_contents($node) {
 
       module_load_include('api.inc', 'cmis');
       try {
+        // See if Alfresco is available.
         $repository = cmis_get_repository();
-        $alfresco=variable_get('cmis_repositories');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $alfresco['default']['zip_url'] . '?nid=' . $node->nid);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_USERPWD, $alfresco['default']['user']. ":" . $alfresco['default']['password']);
-        $result = curl_exec ($ch);
-        curl_close ($ch);
+        $alfresco = variable_get('cmis_repositories');
+        // Authenticate user and receive a ticket.
+        $data = drupal_json_encode(array('username' => $alfresco['default']['user'], 'password' => $alfresco['default']['password']));
+        $options = array(
+          'method' => 'POST',
+          'data' => $data,
+          'headers' => array('Content-Type' => 'application/json'),
+        );
+        $response = drupal_http_request($alfresco['default']['login_url'], $options);
+        if ($response->code == 200 && $response->data) {
+          $ticket = NULL;
+          $data = drupal_json_decode($response->data);
+          if ($data && isset($data['data']['ticket'])) {
+            $ticket = $data['data']['ticket'];
+          }
 
-//        if (file_exists($real_path)) {
-//          header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
-//          header("Cache-Control: public"); // needed for i.e.
-//          header("Content-Type: application/zip");
-//          header("Content-Transfer-Encoding: Binary");
-//          header("Content-Length:".filesize($real_path));
-//          header("Content-Disposition: attachment; filename=" . $filename);
-//          if (readfile($real_path) !== false) {
-//            $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
-//            entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
-//          }
-//        }
-//        else {
-//          return "There are no files to download."; // no downloadable file schemes (public://)
-//        }
+          // If we recieved a ticket, lets get the zip file.
+          if ($ticket) {
+            $comma = '';
+            $document_ids = '';
+            foreach ($node->document as $media) {
+              if ($media->document_id) {
+                $document_ids .= $comma . str_replace('workspace://SpacesStore/', '', $media->document_id);
+                $comma = ',';
+              }
+            }
+
+            // Get the zip contents.
+            $url = $alfresco['default']['zip_url'] . '?nodes=' . $document_ids . '&filename=' . $node->nid . '&noaccent=true&alf_ticket=' . $ticket;
+            $opts = array(
+              CURLOPT_URL =>$url,
+              CURLINFO_CONTENT_TYPE => "text/xml",
+              CURLOPT_BINARYTRANSFER => TRUE,
+              CURLOPT_RETURNTRANSFER => TRUE
+            );
+
+            $ch = curl_init();
+            curl_setopt_array($ch, $opts);
+            $data = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
+
+            if ($info['http_code'] == 200) {
+              $filename = 'download_' . REQUEST_TIME . '.zip';
+              header("Content-Type: application/x-gzip");
+              header("Content-disposition: attachment; filename=" . $filename);
+              echo $data;
+            }
+          }
+        }
       }
       catch (CMISException $e) {
         cmis_error_handler('sbac_documents_presave_document', $e);
@@ -175,11 +203,11 @@ function sbac_resource_preprocess_node(&$vars) {
     if (isset($vars['field_license'][0]['taxonomy_term']->name)) {
       $vars['license'] = $vars['field_license'][0]['taxonomy_term']->name;
     }
-    if (isset($vars['field_file'][0]['uri'])) {
+    if (isset($vars['document'][0])) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
       $viewer = _sbac_resource_preview_content($vars);
       $materials = _sbac_resource_preview_materials($vars);
-      if (isset($vars['field_file']) && sbac_resource_downloadable_scheme($vars['field_file'])) {
+      if (isset($vars['document']) && sbac_resource_downloadable_scheme($vars['document'])) {
         $vars['download'] = l('Download', 'sbac-resource/download/' . $vars['nid'], array('attributes' => array('class' => 'button small right')));
       }
       $vars['viewer'] = $viewer['viewer'];
