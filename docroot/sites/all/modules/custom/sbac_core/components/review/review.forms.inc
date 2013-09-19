@@ -11,9 +11,9 @@ function review_form_validate($form, &$form_state) {
     return;
   }  
 
-  dsmm('validate: ' . $form_state['stage']);
+  watchdog('sbac', 'validate: ' . $form_state['current_state']);
 
-  switch ($form_state['stage']) { 
+  switch ($form_state['current_state']) { 
     case 'create':
       // perform profanity validation on title
       if (profanity_validate_text($form_state['values']['title'])) {
@@ -31,18 +31,18 @@ function review_form_validate($form, &$form_state) {
 function review_form_submit($form, &$form_state) {
   $form_state['multistep_values'][$form_state['stage']] = $form_state['values'];
 
-  dsmm('submit: ' . $form_state['stage']);
+  watchdog('sbac', 'submit: ' . $form_state['current_state']);
 
   switch ($form_state['current_state']) {
     case 'create':
-      $form_state['stage'] = 'preview';
+      $form_state['current_state'] = 'preview';
       $form_state['rebuild'] = TRUE;  
 
       break;
 
     case 'preview':
       if ($form_state['triggering_element']['#value'] == 'Edit') {
-        $form_state['stage'] = 'preview';
+        $form_state['current_state'] = 'create';
         $form_state['rebuild'] = TRUE;  
       }
       else {
@@ -60,15 +60,6 @@ function review_form_submit($form, &$form_state) {
     $form_state['values']['form_build_id'] = $form_state['multistep_values']['form_build_id'];
   }
 
-  // check for form errors and set a JS flag which can be used to prevent
-  // modal from opening
-  $errors = form_get_errors();
-  $form_error = (int) !empty($errors);
-
-  $form['run_js'] = array(
-    '#markup' => '<script>Drupal.settings.review.form_error = ' . $form_error . ';</script>',
-  );
-
   return $form;
 }
 
@@ -79,14 +70,16 @@ function review_form_submit($form, &$form_state) {
  * @return [type]             [description]
  */
 function review_form_rebuild($form, &$form_state) {
-  // $trigger = strtolower($form_state['triggering_element']['#value']);
+  if (isset($form_state['current_state']) && $form_state['current_state'] == 'Edit') {
+    $form_state['current_state'] = 'create';
+  }
 
   foreach ($form as $key => $item) {
     if (  $key{0} != '#' && 
           strpos($key, 'state_') === 0 && 
           $key != 'state_' . $form_state['current_state'] &&
           $key != 'actions') {
-      unset($form[$key]);
+      $form[$key]['#access'] = FALSE;
     }
   }
 

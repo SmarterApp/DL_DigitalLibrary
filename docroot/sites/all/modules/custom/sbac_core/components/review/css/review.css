@@ -141,14 +141,14 @@
   width: 280px;
 }
 /* line 143, ../sass/review.scss */
-#review-wrap-reviews form #edit-actions {
+#review-wrap-reviews form .actions-wrapper {
   clear: both;
   padding: 10px 0 0;
   text-align: right;
 }
 /* line 149, ../sass/review.scss */
-#review-wrap-reviews form #edit-actions .button,
-#review-wrap-reviews form #edit-actions button {
+#review-wrap-reviews form .actions-wrapper .button,
+#review-wrap-reviews form .actions-wrapper button {
   margin-left: 10px;
 }
 

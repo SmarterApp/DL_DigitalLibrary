@@ -62,6 +62,9 @@ class Hooks extends \devtools\Hooks {
         $form_state['current_state'] = 'create';
       }
 
+      $form['#prefix'] = '<div id="review-end-use-wrap">';
+      $form['#suffix'] = '</div>';
+
       // common  elements
         $intro = array(
           '#type' => 'markup',
@@ -73,12 +76,17 @@ class Hooks extends \devtools\Hooks {
         $actions = array(
           '#type' => 'container',
           '#weight' => 10,
+          '#attributes' => array(
+            'class' => array(
+              'actions-wrapper'
+            ),
+          ),
           'submit' => array(
             '#type' => 'submit',
             '#value' => t('Submit'),
             '#ajax' => array(
               'callback' => 'review_form_rebuild',
-              'wrapper' => 'eck-entity-form-add-review-end-use',
+              'wrapper' => 'review-end-use-wrap',
             ),
           ),
         );
@@ -105,6 +113,17 @@ class Hooks extends \devtools\Hooks {
         $this->hook_form_alter_review_preview($form, $form_state, $node);
 
       // handle state
+        watchdog('sbac', 'alter: ' . $form_state['current_state']);
+
+        // check for form errors and set a JS flag which can be used to prevent
+        // modal from opening
+        $errors = form_get_errors();
+        $form_error = (int) !empty($errors);
+
+        $form['run_js'] = array(
+          '#markup' => '<script>Drupal.settings.review.form_error = ' . $form_error . ';</script>',
+        );
+
         $form = review_form_rebuild($form, $form_state);
     }
   }
@@ -193,6 +212,26 @@ class Hooks extends \devtools\Hooks {
       what others see.', array(
         '!link' => l(t('privacy settings'), 'user')
     ));
+
+    //edit button
+    $form['state_preview']['actions']['edit'] = $form['state_preview']['actions']['submit'];
+    $form['state_preview']['actions']['edit']['#value'] = t('Edit');
+    $form['state_preview']['actions']['edit']['#weight'] = -10;
+    $form['state_preview']['actions']['edit']['#limit_validation_errors'] = array();
+
+    
+    // dsmm($form['state_preview']['actions']['edit']);
+
+    /*
+    '#ajax' => array(
+      'callback' => 'review_form_rebuild',
+      'wrapper' => 'eck-entity-form-add-review-end-use',
+    ),
+    */
+
+    // $form['state_preview']['actions']['submit']['#weight'] = -5;
+
+    // dsmm($form['state_preview']['actions']);
   }
 }
 
