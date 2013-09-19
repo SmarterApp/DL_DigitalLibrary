@@ -11,6 +11,8 @@ function review_form_validate($form, &$form_state) {
     return;
   }  
 
+  dsmm('validate: ' . $form_state['stage']);
+
   switch ($form_state['stage']) { 
     case 'create':
       // perform profanity validation on title
@@ -29,7 +31,9 @@ function review_form_validate($form, &$form_state) {
 function review_form_submit($form, &$form_state) {
   $form_state['multistep_values'][$form_state['stage']] = $form_state['values'];
 
-  switch ($form_state['stage']) {
+  dsmm('submit: ' . $form_state['stage']);
+
+  switch ($form_state['current_state']) {
     case 'create':
       $form_state['stage'] = 'preview';
       $form_state['rebuild'] = TRUE;  
@@ -64,6 +68,27 @@ function review_form_submit($form, &$form_state) {
   $form['run_js'] = array(
     '#markup' => '<script>Drupal.settings.review.form_error = ' . $form_error . ';</script>',
   );
+
+  return $form;
+}
+
+/**
+ * AJAX submit handler.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function review_form_rebuild($form, &$form_state) {
+  // $trigger = strtolower($form_state['triggering_element']['#value']);
+
+  foreach ($form as $key => $item) {
+    if (  $key{0} != '#' && 
+          strpos($key, 'state_') === 0 && 
+          $key != 'state_' . $form_state['current_state'] &&
+          $key != 'actions') {
+      unset($form[$key]);
+    }
+  }
 
   return $form;
 }
