@@ -604,7 +604,6 @@ function _sbac_central_delete_no_title_nodes() {
     else {
       db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
       db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
-      //db_query('UPDATE {workbench_moderation_node_history} SET published = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
     }
   }
 }
@@ -625,4 +624,15 @@ function _sbac_central_publish_all_alignments() {
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
   }
+}
+
+/**
+ * Disables youtube / vimeo module.
+ */
+function sbac_central_update_7055() {
+  $modules = array(
+    'media_vimeo',
+    'media_youtube',
+  );
+  module_disable($modules);
 }

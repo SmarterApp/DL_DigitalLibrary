@@ -52,6 +52,12 @@ function sbac_media_media_internet_providers() {
   $info['MediaInternetSlideShareHandler'] = array(
     'title' => t('SlideShare'),
   );
+  $info['MediaInternetYouTubeHandler'] = array(
+    'title' => t('YouTube'),
+  );
+  $info['MediaInternetVimeoHandler'] = array(
+    'title' => t('Vimeo'),
+  );
   return $info;
 }
 
@@ -77,7 +83,19 @@ function sbac_media_stream_wrappers() {
       'class' => 'MediaSlideShareStreamWrapper',
       'description' => t('Presentations provided by SlideShare.'),
       'type' => STREAM_WRAPPERS_READ_VISIBLE,
-    ),       
+    ),
+    'youtube' => array(
+      'name' => t('YouTube videos'),
+      'class' => 'MediaYouTubeStreamWrapper',
+      'description' => t('Videos provided by YouTube.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+    'vimeo' => array(
+      'name' => t('Vimeo videos'),
+      'class' => 'MediaVimeoStreamWrapper',
+      'description' => t('Presentations provided by Vimeo.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
   );
 }
 
@@ -104,9 +122,6 @@ function sbac_media_theme($existing, $type, $theme, $path) {
       'path' => $path . '/includes',
       'template' => 'media-slideshare-presentation',
     ),
-//    'sbac_resource_media_form_element' => array(
-//      'render element' => 'form',
-//    ),
   );
 }
 
@@ -119,6 +134,8 @@ function sbac_media_file_mimetype_mapping_alter(&$mapping) {
   $mapping['mimetypes'][] = 'video/schooltube';
   $mapping['mimetypes'][] = 'video/teachertube';
   $mapping['mimetypes'][] = 'video/slideshare';
+  $mapping['mimetypes'][] = 'video/youtube';
+  $mapping['mimetypes'][] = 'video/vimeo';
 }
 
 /*
@@ -175,17 +192,18 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     $output = _sbac_media_create_list($media_items);
     $form['field_file_container']['materials'] = array(
       '#markup' => $output,
+      '#weight' => -100,
     );
   }
 
   $weight = array();
   if ($media_items) {
     foreach ($media_items as $key => $media_item) {
-      if ($media_item['weight']) {
-        $weight[$media_item['id']] = $media_item['weight'];
+      if ($media_item->weight) {
+        $weight[$media_item->id] = $media_item->weight;
       }
       else {
-        $weight[$media_item['id']] = $key;
+        $weight[$media_item->id] = $key;
       }
     }
   }
@@ -298,11 +316,22 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
  */
 function _sbac_media_create_list($media_items) {
   $output = '<table id="sbac-media-list" class="sortable">';
-  $output .= '<thead><tr><th colspan="3">Machine Name</th><th>Operations</th></tr></thead>';
+  $output .= '<thead><tr><th colspan="3">Machine Name</th><th colspan="3">Operations</th></tr></thead>';
 
+  $count = 0;
   foreach ($media_items as $key => $media_item) {
+    if ($count == 0) {
+      $output .= '<tr class="ui-state-disabled"><td colspan = 5>Primary Material. This is the main material with which you want users to interact.</td></tr>';
+      $count++;
+    }
+
+    if ($count == 2) {
+      $output .= '<tr class="ui-state-disabled"><td colspan = 5>Secondary Material(s). These will be shown adjacent to the primary material.</td></tr>';
+      $count++;
+    }
+
     // Open.
-    $output .= '<tr id="' . $media_item['id'] . '">';
+    $output .= '<tr id="' . $media_item->id . '">';
 
     // Image.
     $url = 'public://file.png';
@@ -314,12 +343,12 @@ function _sbac_media_create_list($media_items) {
     $output .= '<td>' . $image . '</td>';
 
     // Filename.
-    $output .= '<td class="ui-icon">' . $media_item['filename'] . '</td>';
+    $output .= '<td class="ui-icon"><div class="media-widget">' . $media_item->filename . '</td>';
 
     // Filesize.
     $bytes = '0 KB';
-    if ($media_item['filesize']) {
-      $bytes = number_format($media_item['filesize'] / 1024, 2) . ' KB';
+    if ($media_item->filesize) {
+      $bytes = number_format($media_item->filesize / 1024, 2) . ' KB';
     }
     $output .= '<td>' . $bytes . '</td>';
 
@@ -330,15 +359,16 @@ function _sbac_media_create_list($media_items) {
         'id' => 'sbac-media-modal-delete-media'
       ),
       'query' => array(
-        'fid' => $media_item['fid'],
-        'nid' => $media_item['nid'],
-        'id' => $media_item['id'],
+        'fid' => $media_item->fid,
+        'nid' => $media_item->nid,
+        'id' => $media_item->id,
       )
     ));
     $output .= '<td>' . $delete_link . '</td>';
 
     // Close.
     $output .= '</tr>';
+    $count++;
   }
   $output .= '</table>';
 
@@ -364,9 +394,9 @@ function _sbac_media_create_list($media_items) {
  * @param $form_state
  */
 function sbac_media_widget_form_element_validate($form, $form_state) {
-  $allowed_file_sources = array('youtube', 'teachertube', 'schooltube', 'vimeo', 'slideshare');
   if ($form_state['values']['field_embed_video']) {
-    if (!in_array($form_state['values']['field_embed_video'], $allowed_file_sources)) {
+    $embed_video = strtolower($form_state['values']['field_embed_video']);
+    if (strpos($embed_video, 'youtube') === FALSE && strpos($embed_video, 'teachertube') === FALSE && strpos($embed_video, 'schooltube') === FALSE && strpos($embed_video, 'vimeo') === FALSE && strpos($embed_video, 'slideshare') === FALSE) {
       form_set_error('field_embed_video', t('The following URL: ' . $form_state['values']['field_embed_video'] . ' cannot be embedded. Only videos from the following accepted hosts are allowed: YouTube, Vimeo, SchoolTube, TeacherTube and SlideShare.'));
     }
   }
@@ -416,6 +446,7 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
         $media->nid = $node->nid;
         $media->filename = $file->filename;
         $media->file_size = $file->filesize;
+        $media->weight = 100;
         entity_save('media', $media);
       }
       $file->status = FILE_STATUS_PERMANENT;
@@ -428,7 +459,9 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   if ($media_items) {
     $output = _sbac_media_create_list($media_items);
     $form['field_file_container']['materials']['#markup'] = $output;
-    $form['field_file_container']['materials']['#weight'] = 10;
+    $form['field_file_container']['materials']['#weight'] = -100;
+    // re-populate node so node_presave is up to date.
+    $form_state['node']->document = $media_items;
   }
 
   return $form['field_file_container'];
@@ -443,14 +476,16 @@ function sbac_media_load_items($nid) {
   if ($nid) {
     $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid ORDER BY weight", array(':nid' => $nid));
     foreach ($result as $row) {
-      $media_item = array();
-      $media_item['id'] = $row->id;
-      $media_item['fid'] = $row->file_id;
-      $media_item['nid'] = $row->nid;
-      $media_item['filename'] = $row->filename;
-      $media_item['filesize'] = $row->file_size;
-      $media_item['filehash'] = $row->file_hash;
-      $media_item['weight'] = $row->weight;
+      $media_item = new stdClass();
+      $media_item->type = $row->type;
+      $media_item->id = $row->id;
+      $media_item->fid = $row->fid;
+      $media_item->nid = $row->nid;
+      $media_item->filename = $row->filename;
+      $media_item->filesize = $row->file_size;
+      $media_item->filehash = $row->file_hash;
+      $media_item->weight = $row->weight;
+      $media_item->document_id = $row->document_id;
       $media_items[] = $media_item;
     }
   }
@@ -686,6 +721,7 @@ function sbac_media_save_embedded_source($embedded_video_source, $nid) {
     $media->nid = $nid;
     $media->filename = $file->filename;
     $media->file_size = 0;
+    $media->weight = 100;
     entity_save('media', $media);
   }
 }
