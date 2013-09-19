@@ -1,74 +1,93 @@
-/* line 2, ../sass/sbac_media.scss */
+/* line 1, ../sass/sbac_media.scss */
+#sbac-field-file-container {
+  position: relative;
+}
+/* line 4, ../sass/sbac_media.scss */
+#sbac-field-file-container .secondary-items-info {
+  position: absolute;
+  top: 101px;
+  left: 1px;
+  font-size: 11px;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  padding: 10px 0 10px 10px;
+}
+
+/* line 15, ../sass/sbac_media.scss */
 #sbac-media-list {
   width: 100%;
 }
-/* line 6, ../sass/sbac_media.scss */
+/* line 19, ../sass/sbac_media.scss */
 #sbac-media-list thead th {
   background-color: #fff;
   padding: 5px 5px;
 }
-/* line 11, ../sass/sbac_media.scss */
+/* line 24, ../sass/sbac_media.scss */
 #sbac-media-list thead td {
   font-weight: normal;
   font-size: 11px;
 }
-/* line 16, ../sass/sbac_media.scss */
+/* line 29, ../sass/sbac_media.scss */
 #sbac-media-list thead th:nth-child(2) {
   text-align: right;
 }
-/* line 22, ../sass/sbac_media.scss */
+/* line 35, ../sass/sbac_media.scss */
 #sbac-media-list tbody .ui-state-disabled {
   font-size: 12px;
 }
-/* line 26, ../sass/sbac_media.scss */
+/* line 39, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr {
   border-bottom: 1px solid #ccc;
 }
-/* line 29, ../sass/sbac_media.scss */
+/* line 42, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td {
   padding-top: 1em;
   padding-bottom: 1em;
 }
-/* line 33, ../sass/sbac_media.scss */
+/* line 46, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media {
   text-align: right;
 }
-/* line 36, ../sass/sbac_media.scss */
+/* line 49, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media .foundicon-trash {
   color: #aaa;
   font-size: 1em;
   margin-right: -30px;
 }
-/* line 42, ../sass/sbac_media.scss */
+/* line 55, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media .ctools-modal-sbac-media-modal-delete-media {
   opacity: 0;
   width: 20px;
   height: 20px;
 }
+/* line 64, ../sass/sbac_media.scss */
+#sbac-media-list tbody tr:nth-child(2) td {
+  padding-top: 40px;
+}
 
-/* line 54, ../sass/sbac_media.scss */
+/* line 71, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video {
   width: 45%;
   margin-right: 2%;
   float: left;
 }
-/* line 60, ../sass/sbac_media.scss */
+/* line 77, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-file {
   width: 50%;
   float: left;
   clear: both;
 }
-/* line 66, ../sass/sbac_media.scss */
+/* line 83, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-submit {
   float: right;
 }
-/* line 70, ../sass/sbac_media.scss */
+/* line 87, ../sass/sbac_media.scss */
 #sbac-field-file-container .video-embed-button {
   margin-top: 3em;
 }
 
 /* overlay cancel button */
-/* line 76, ../sass/sbac_media.scss */
+/* line 93, ../sass/sbac_media.scss */
 #edit-cancel-media-overlay {
   margin-right: 10px;
 }

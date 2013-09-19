@@ -1,3 +1,16 @@
+#sbac-field-file-container {
+	position: relative;
+
+	.secondary-items-info {
+		position: absolute;
+		top: 101px;
+		left: 1px;
+		font-size: 11px;
+		border-bottom: 1px solid #ccc;
+		width: 100%;
+		padding: 10px 0 10px 10px;
+	}
+}
 
 #sbac-media-list {
 	width: 100%;
@@ -47,6 +60,10 @@
 	    	}
     	}
     }
+
+    tr:nth-child(2) td {
+    	padding-top: 40px;
+    }
   }
 }
 
@@ -67,7 +84,7 @@
 		float: right;
 	}
 
-	 .video-embed-button{
+	 .video-embed-button {
 		margin-top: 3em;
 	}
 }
