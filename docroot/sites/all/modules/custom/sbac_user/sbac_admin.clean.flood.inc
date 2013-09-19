@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Page Callback
- */
 function sbac_admin_clean_flood() { 
   if (!$_GET['ip']) {
 	$server = strtolower(array_shift(explode("/",$_SERVER['SERVER_PROTOCOL'])))."://".$_SERVER['SERVER_NAME'];
@@ -12,11 +9,11 @@ function sbac_admin_clean_flood() {
 		$where='';
 		$message="All IP addresses have been cleaned from the flood table";
 	} else {
-		$where = " where identifier like '%" . $_GET['ip'] . "%'";
-		$message ='IP address ' . $_GET['ip'] . ' has been cleaned from the flood table';
+		$where = " where identifier like :ip";
+		$message ='IP address ' . check_plain($_GET['ip']) . ' has been cleaned from the flood table';
 	}
 	$query="delete from flood " . $where;
-	$result=db_query($query);
+	$result=db_query($query, array(':ip' => '%' . $_GET['ip'] . '%'));
   }
   return t($message);
 }
