@@ -74,6 +74,7 @@ function sbac_user_menu() {
     'description' => 'Select an IP address to clean out of the flood table',
     'page callback' => array('sbac_admin_clean_flood'), 
     'access arguments' => array('administer site configuration'),
+	'type' => MENU_CALLBACK,
     'file' => "sbac_admin.clean.flood.inc",
   );
 
