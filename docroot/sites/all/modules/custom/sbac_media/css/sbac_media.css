@@ -1,76 +1,74 @@
-/* line 1, ../sass/sbac_media.scss */
-#sortable {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  width: 60%;
-}
-
 /* line 2, ../sass/sbac_media.scss */
-#sortable li {
-  margin: 0 3px 3px 3px;
-  padding: 0.4em;
-  padding-left: 1.5em;
-  font-size: 1.4em;
-  height: 18px;
-}
-
-/* line 3, ../sass/sbac_media.scss */
-#sortable li span {
-  position: absolute;
-  margin-left: -1.3em;
-}
-
-/* line 5, ../sass/sbac_media.scss */
 #sbac-media-list {
   width: 100%;
 }
-/* line 9, ../sass/sbac_media.scss */
+/* line 6, ../sass/sbac_media.scss */
 #sbac-media-list thead th {
   background-color: #fff;
-  padding: 5px 5px 25px;
+  padding: 5px 5px;
 }
-/* line 15, ../sass/sbac_media.scss */
-#sbac-media-list thead th:first-child:after {
-  display: block;
-  content: 'Primary material. This is the main material with which you want users to interact.';
+/* line 11, ../sass/sbac_media.scss */
+#sbac-media-list thead td {
   font-weight: normal;
-  font-size: emCalc(12px);
-  width: 93%;
-  position: absolute;
-  border-top: 1px solid #eee;
-  padding: 5px 0;
-  margin-top: 0px;
+  font-size: 11px;
 }
-/* line 28, ../sass/sbac_media.scss */
+/* line 16, ../sass/sbac_media.scss */
 #sbac-media-list thead th:nth-child(2) {
   text-align: right;
 }
-/* line 35, ../sass/sbac_media.scss */
-#sbac-media-list tbody tr:nth-child(2) td {
-  padding-top: 30px;
+/* line 22, ../sass/sbac_media.scss */
+#sbac-media-list tbody .ui-state-disabled {
+  font-size: 12px;
 }
-/* line 38, ../sass/sbac_media.scss */
-#sbac-media-list tbody tr:nth-child(2) td .media-widget {
-  position: relative;
-}
-/* line 41, ../sass/sbac_media.scss */
-#sbac-media-list tbody tr:nth-child(2) td .media-widget:before {
-  display: block;
-  content: 'Secondary material(s). These will be shown adjacent to the primary material.';
-  position: absolute;
-  top: 20px;
-  left: -75px;
-  right: 0;
-  margin: -45px 0 0 -10px;
-  padding: 0 0 5px 10px;
-  font-size: emCalc(14px);
+/* line 26, ../sass/sbac_media.scss */
+#sbac-media-list tbody tr {
   border-bottom: 1px solid #ccc;
-  width: 650px;
+}
+/* line 29, ../sass/sbac_media.scss */
+#sbac-media-list tbody tr td {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+/* line 33, ../sass/sbac_media.scss */
+#sbac-media-list tbody tr td.delete-media {
+  text-align: right;
+}
+/* line 36, ../sass/sbac_media.scss */
+#sbac-media-list tbody tr td.delete-media .foundicon-trash {
+  color: #aaa;
+  font-size: 1em;
+  margin-right: -30px;
+}
+/* line 42, ../sass/sbac_media.scss */
+#sbac-media-list tbody tr td.delete-media .ctools-modal-sbac-media-modal-delete-media {
+  opacity: 0;
+  width: 20px;
+  height: 20px;
 }
 
-/* line 61, ../sass/sbac_media.scss */
+/* line 54, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video {
   width: 45%;
   margin-right: 2%;
+  float: left;
+}
+/* line 60, ../sass/sbac_media.scss */
+#sbac-field-file-container .form-file {
+  width: 50%;
+  float: left;
+  clear: both;
+}
+/* line 66, ../sass/sbac_media.scss */
+#sbac-field-file-container .form-submit {
+  float: right;
+}
+/* line 70, ../sass/sbac_media.scss */
+#sbac-field-file-container .video-embed-button {
+  margin-top: 3em;
+}
+
+/* overlay cancel button */
+/* line 76, ../sass/sbac_media.scss */
+#edit-cancel-media-overlay {
+  margin-right: 10px;
 }
