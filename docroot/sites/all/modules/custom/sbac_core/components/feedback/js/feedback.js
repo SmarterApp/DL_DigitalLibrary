@@ -140,7 +140,7 @@ Feedback.utilities = {
 
       $(el).change(function() {
         var val = $(this).val();
-
+        
         // update new state
         var parts = link.attr('href').split('/');
         parts[5] = states[val];

@@ -97,6 +97,7 @@ class Qc extends Base {
     // figure out current state
     $states = feedback_recommendation_states();
     $this->_js_settings['feedback']['qc']['decision_radio_states'] = $states;
+    $this->_js_settings['feedback']['qc']['is_disabled'] = FALSE;
 
     $state_key = 0;
     if (isset($this->_form['field_rec_options'][$this->_lang]['#default_value'])) {
@@ -112,6 +113,8 @@ class Qc extends Base {
     if ($this->_entity->completed || !resource_access($this->_edit_permission, $this->_resource)) {
       $this->_form['field_rec_options']['#disabled'] = TRUE;
       $this->_form['field_rec_rationale']['#disabled'] = TRUE;
+
+      $this->_js_settings['feedback']['qc']['is_disabled'] = TRUE;
 
       $this->_form['actions'] = array();
     }

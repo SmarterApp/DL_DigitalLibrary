@@ -135,6 +135,7 @@ class Post extends Base {
     // figure out current state
     $states = feedback_post_states();
     $this->_js_settings['feedback']['post']['decision_radio_states'] = $states;
+    $this->_js_settings['feedback']['post']['is_disabled'] = FALSE;
 
     $state_key = 0;
     if (isset($this->_form['field_rec_options'][$this->_lang]['#default_value'])) {
@@ -153,6 +154,8 @@ class Post extends Base {
       $this->_form['field_to_reviewer_2']['#disabled'] = TRUE;
       $this->_form['field_to_reviewer_3']['#disabled'] = TRUE;
       $this->_form['field_post_options']['#disabled'] = TRUE;
+
+      $this->_js_settings['feedback']['post']['is_disabled'] = TRUE;
 
       $this->_form['actions'] = array();
     }

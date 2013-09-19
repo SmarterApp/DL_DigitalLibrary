@@ -20,7 +20,7 @@
 /* line 53, ../sass/review.scss */
 #review-wrap-reviews form {
   clear: both;
-  display: none;
+  /*display: none;*/
 }
 /* line 57, ../sass/review.scss */
 #review-wrap-reviews form .intro {
@@ -144,10 +144,15 @@
 #review-wrap-reviews form .actions {
   clear: both;
   padding: 10px 0 0;
+  text-align: right;
+}
+/* line 148, ../sass/review.scss */
+#review-wrap-reviews form .actions .button {
+  margin-left: 10px;
 }
 
 /* modals */
-/* line 152, ../sass/review.scss */
+/* line 157, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -156,16 +161,16 @@
   line-height: normal;
   text-align: left;
 }
-/* line 161, ../sass/review.scss */
+/* line 166, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 165, ../sass/review.scss */
+/* line 170, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-/* line 170, ../sass/review.scss */
+/* line 175, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }

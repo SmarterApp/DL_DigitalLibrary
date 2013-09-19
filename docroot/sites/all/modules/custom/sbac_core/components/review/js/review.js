@@ -11,25 +11,7 @@ if (typeof Review == 'undefined') {
 Review.reviews = {
   form_trigger: '.review-form-trigger',
   form: '#eck-entity-form-add-review-end-use',
-
-  utilities: {
-    toggle: function(trigger, target) {
-      var trigger_element = $(trigger);
-      var target_element = $(target);
-
-      if (trigger_element.length && target_element.length) {
-        trigger_element.click(function(e) {
-          e.preventDefault();
-
-
-
-          return false;
-        });
-      }
-    }
-  },
 };
-
 
 Drupal.behaviors.review = {
   attach: function (context, settings) {

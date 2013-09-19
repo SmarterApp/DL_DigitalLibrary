@@ -42,7 +42,7 @@ class GateKeeper extends Base {
     $this->saveButton();
     $this->notMeetButton();
     $this->meetButton();
-
+    
     // default states for meet/not meet buttons
     // if all of the meets criterion radios are set to 'yes', then we need to disable 
     // the 'does not meet all' button, otherwise we disable the 'meets all' button

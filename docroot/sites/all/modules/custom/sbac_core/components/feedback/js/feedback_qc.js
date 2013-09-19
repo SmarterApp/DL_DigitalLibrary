@@ -26,7 +26,7 @@ Drupal.behaviors.feedback_quality_criteria = {
         return;
       }
 
-      if (!data.qc) {
+      if (!data.qc || data.qc.is_disabled) {
         return;
       }
 
@@ -49,7 +49,7 @@ Drupal.behaviors.feedback_quality_criteria = {
           Feedback.qc.decision_link,
           Feedback.qc.decision_options,
           data.qc.decision_radio_states,
-          'ec-complete'
+          'qc-complete'
         );
       }
   }

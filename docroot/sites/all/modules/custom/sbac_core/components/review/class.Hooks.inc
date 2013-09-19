@@ -1,6 +1,8 @@
 <?php
 namespace sbac_core\components\review;
 
+
+
 class Hooks extends \devtools\Hooks {
   protected $_info = '';
   protected $_bundles = array();
@@ -65,6 +67,10 @@ class Hooks extends \devtools\Hooks {
       
       $form['status']['#access'] = FALSE;
 
+      unset($form['submit']);
+      $form['#validate'][] = 'review_form_validate';
+      $form['#submit'] = array('review_form_submit');
+
       $form['actions'] = array(
         '#type' => 'container',
         '#weight' => 10,
@@ -72,24 +78,13 @@ class Hooks extends \devtools\Hooks {
         '#suffix' => '</div>',
       );
 
-      // cancel button
-      $trigger_id = 'review-cancel';
-      $url = 'node/' . $node->nid . '/review/end_use/cancel/' . $trigger_id;
-
-      $options = array(
-        'attributes' => array(
-          'class' => array(
-            'use-ajax',
-            'use-dialog',
-            'button',
-            'radius',
-          ),
-          'id' => $trigger_id,
+      $form['actions']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Submit'),
+        '#ajax' => array(
+          'callback' => 'review_form_submit',
+          'wrapper' => 'eck-entity-form-add-review-end-use',
         ),
-      );
-
-      $form['actions']['cancel'] = array(
-        '#markup' => l(t('Cancel'), $url, $options),
       );
 
       switch ($form_state['stage']) {
@@ -98,14 +93,29 @@ class Hooks extends \devtools\Hooks {
           give your review a title, enter your feedback and rate the resource. Your feedback is valuable and helps insure
           that the Digital Library continues to meet your needs.');
 
-          $form['actions']['preview'] = array(
-            '#type' => 'submit',
-            '#value' => t('Preview'),
-            '#ajax' => array(
-              'callback' => 'review_form_submit',
-              'wrapper' => 'eck-entity-form-add-review-end-use',
+          // cancel button
+          $trigger_id = 'review-cancel';
+          $url = 'node/' . $node->nid . '/review/end_use/cancel/' . $trigger_id;
+
+          $options = array(
+            'attributes' => array(
+              'class' => array(
+                'use-ajax',
+                'use-dialog',
+                'button',
+                'radius',
+              ),
+              'id' => $trigger_id,
             ),
           );
+
+          $form['actions']['cancel'] = array(
+            '#markup' => l(t('Cancel'), $url, $options),
+            '#weight' => -10,
+          );
+
+          // preview button
+          $form['actions']['submit']['#value'] = t('Preview');
 
           break;
 
@@ -114,6 +124,7 @@ class Hooks extends \devtools\Hooks {
           your review (accessible by hovering your mouse over the link). You can adjust your !link to control
           what others see.', array('!link' => l(t('privacy settings'), 'user')));
 
+          // hide all fields
           $disable = array(
             'title',
             'field_details',
@@ -127,12 +138,27 @@ class Hooks extends \devtools\Hooks {
             $form[$field_name]['#access'] = FALSE;
           }
 
-          $form['actions']['submit'] = $form['submit'];
+          $form['rendered'] = array(
+            // '#markup' => entity_view('review', array($entity), 'full'),
+          );
+
+          // edit button
+          $form['actions']['edit'] = array(
+            '#type' => 'submit',
+            '#value' => t('Edit'),
+            '#weight' => -20,
+            '#ajax' => array(
+              'callback' => 'review_form_submit',
+              'wrapper' => 'eck-entity-form-add-review-end-use',
+            ),
+          );
+
+
 
           break;
       }
 
-      unset($form['submit']);
+      
   
       $form['intro'] = array(
         '#type' => 'markup',
@@ -141,9 +167,6 @@ class Hooks extends \devtools\Hooks {
         '#suffix' => '</div>',
         '#markup' => $intro_text,
       );
-
-      $form['#validate'][] = 'review_form_validate';
-      $form['#submit'] = array('review_form_submit');
     }
   }
 

@@ -21,7 +21,7 @@ function review_form_validate($form, &$form_state) {
       break;  
   
     case 'preview': 
-      return customer_survey_rate_the_service_validate($form, $form_state);  
+      
       break;
   }
 }
@@ -37,7 +37,11 @@ function review_form_submit($form, &$form_state) {
       break;
 
     case 'preview':
-      if ($form_state['triggering_element']['#value'] != 'Edit') {
+      if ($form_state['triggering_element']['#value'] == 'Edit') {
+        $form_state['stage'] = 'preview';
+        $form_state['rebuild'] = TRUE;  
+      }
+      else {
         $form_state['complete'] = TRUE;
       }
 
@@ -47,7 +51,7 @@ function review_form_submit($form, &$form_state) {
   if (isset($form_state['complete'])) {
     // do something
   }
-  
+
   if (isset($form_state['multistep_values']['form_build_id'])) {
     $form_state['values']['form_build_id'] = $form_state['multistep_values']['form_build_id'];
   }

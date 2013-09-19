@@ -26,7 +26,7 @@ Drupal.behaviors.feedback_post = {
         return;
       }
 
-      if (!data.post) {
+      if (!data.post || data.post.is_disabled) {
         return;
       }
 
