@@ -140,12 +140,13 @@
       }
     }
 
-    .actions {
+    #edit-actions {
       clear: both;
       padding: 10px 0 0;
       text-align: right;
 
-      .button {
+      .button,
+      button {
         margin-left: 10px;
       }
     }
