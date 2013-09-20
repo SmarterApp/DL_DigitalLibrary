@@ -34,13 +34,20 @@ function flatten_tree($data, &$tree, $path = '') {
  * @return [type]        [description]
  */
 function array_flat_divergence($tree1, $tree2) {
-  $size = sizeof($tree1);
-  for ($i = 0; $i < $size; $i++) {
-    if ($tree1[$i] !== $tree2[$i]) {
-      return $tree1[$i - 1];
-    }
-  }
+  list($handler, $handler_data) = devtools_func_handler(__FUNCTION__, func_get_args());
 
-  return FALSE;
+  if ($handler) {
+    return $handler_data;
+  }
+  else {
+    $size = sizeof($tree1);
+    for ($i = 0; $i < $size; $i++) {
+      if ($tree1[$i] !== $tree2[$i]) {
+        return $tree1[$i - 1];
+      }
+    }
+
+    return FALSE;
+  }
 }
 

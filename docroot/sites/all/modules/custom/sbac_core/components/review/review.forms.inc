@@ -23,6 +23,12 @@ function review_form_validate($form, &$form_state) {
   }
 }
 
+/**
+ * "Previous" state transition.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function review_form_previous($form, &$form_state) {
   $form_state['previous_state'] = $form_state['current_state'];
 
@@ -38,10 +44,14 @@ function review_form_previous($form, &$form_state) {
 
       break;
   }
-
-  watchdog('sbac', 'previous: ' . $form_state['current_state']);
 }
 
+/**
+ * "Next" state transition.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function review_form_next($form, &$form_state) {
   $form_state['previous_state'] = $form_state['current_state'];
 
@@ -57,18 +67,16 @@ function review_form_next($form, &$form_state) {
 
       break;
   }
-
-  watchdog('sbac', 'next: ' . $form_state['current_state']);
 }
 
+/**
+ * Submission handler for Review form
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function review_form_submit($form, &$form_state) {
   $form_state[$form_state['current_state'] . '_values'] = $form_state['values'];
-
-  watchdog('sbac', 'submit: ' . $form_state['current_state']);
-
-  // if (isset($form_state['multistep_values']['form_build_id'])) {
-  //   $form_state['values']['form_build_id'] = $form_state['multistep_values']['form_build_id'];
-  // }
 }
 
 /**
@@ -80,8 +88,5 @@ function review_form_submit($form, &$form_state) {
 function review_form_ajax($form, &$form_state) {
   // the form will have been rebuilt for the current state in hook_form_alter(), so this
   // is mostly a formality
-
-  watchdog('sbac', 'rebuild: ' . $form_state['current_state']);
-
   return $form;
 }

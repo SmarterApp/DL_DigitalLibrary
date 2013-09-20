@@ -8,6 +8,15 @@ class Hooks extends \devtools\Hooks {
   protected $_info = '';
   protected $_bundles = array();
 
+  protected $_fields = array(
+    'title',
+    'field_details',
+    'field_student_learning',
+    'field_pro_dev',
+    'field_ease_use',
+    'field_appropriate_for',
+  );
+
   function __construct() {
     $this->_info = field_info_bundles('review');
     $this->_bundles = array_keys($this->_info);
@@ -127,8 +136,6 @@ class Hooks extends \devtools\Hooks {
             $form[$key]['#access'] = FALSE;
           }
         }
-
-      watchdog('sbac', 'build: ' . $form_state['current_state']);
     }
   }
 
@@ -157,24 +164,15 @@ class Hooks extends \devtools\Hooks {
 
     // when a form step is submitted, review_form_submit() stores the form values in form state, and we must pull
     // those values back so they can be used to re-populate the form
-    $fields = array(
-      'title',
-      'field_details',
-      'field_student_learning',
-      'field_pro_dev',
-      'field_ease_use',
-      'field_appropriate_for',
-    );
-
     $values = array();
     if (isset($form_state[$form_state['current_state'] . '_values'])) {
       $values = $form_state[$form_state['current_state'] . '_values'];
     
-      form_set_defaults($fields, $values, $form);
+      form_set_defaults($this->_fields, $values, $form);
     }
 
     // move 'regular' fields into state
-    foreach ($fields as $field_key) {
+    foreach ($this->_fields as $field_key) {
       $form['state_create'][$field_key] = $form[$field_key];
       unset($form[$field_key]);
     }
@@ -186,6 +184,7 @@ class Hooks extends \devtools\Hooks {
 
     // disable access to properties
     $form['status']['#access'] = FALSE;
+    $form['node_id']['#access'] = FALSE;
 
     // cancel button
     $trigger_id = 'review-cancel';
@@ -220,12 +219,78 @@ class Hooks extends \devtools\Hooks {
    * @return [type]             [description]
    */
   function hook_form_alter_review_preview(&$form, &$form_state, $node) {
+    if (!isset($form_state['create_values'])) {
+      return;
+    }
+
     $form['state_preview']['intro']['#markup'] = t('
       This is your review as it will appear to others. Your profile card will be included adjacent to 
       your review (accessible by hovering your mouse over the link). You can adjust your !link to control
       what others see.', array(
         '!link' => l(t('privacy settings'), 'user')
     ));
+
+    global $user;
+
+    $entity = new \stdClass();
+    $entity->status = 1;
+    $entity->type = 'end_use';
+    $entity->is_new = 1;
+    $entity->uid = $user->uid;
+    $entity->node_id = $node->nid;
+
+    $values = $form_state['create_values'];
+    foreach ($this->_fields as $field_key) {
+      if (isset($values[$field_key])) {
+        $entity->{$field_key} = $values[$field_key];
+      }
+    }
+
+    entity_save('review', $entity);
+
+    /*
+    foreach ($this->_fields as $field_key) {
+      if (in_array($field_key, array(
+        'field_student_learning',
+        'field_pro_dev',
+        'field_ease_use',
+        // 'field_appropriate_for',
+      ))) {
+        continue;
+      }
+
+      $tree = array();
+      flatten_tree($values[$field_key], $tree);
+
+      if (sizeof($tree) > 1) {
+        $val = array();
+
+        foreach ($tree as $path_tree) {
+          $val[] = array_pop($path_tree);
+        }
+      }
+      else {
+        $val = array_pop($tree[0]);
+      }
+
+      // dsmm($field_key);
+      // dsmm($val);
+      $wrapper->{$field_key}->set($val);
+      dsmm('set: ' . $field_key);
+    }
+
+    */
+    // dsmm($new);
+
+    // $entity = entity_load_single('review', 1);
+    // dsmm($entity);
+
+    // $entity_render = entity_view('review', array(1 => $entity));
+
+    $form['state_preview']['view'] = array(
+      '#type' => 'markup',
+      '#markup' => 'test',//render($entity_render),
+    );
 
     //edit button
     $form['state_preview']['actions']['edit'] = array(
