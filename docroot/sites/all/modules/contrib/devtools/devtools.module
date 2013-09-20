@@ -103,6 +103,7 @@ function devtools_ctools_plugin_api($module, $api) {
 function devtools_devtools_components() {
   $components = array(
     'ajax' => array(),
+    'array' => array(),
     'batch' => array(
       'files' => array(
         'class.Batch.inc',

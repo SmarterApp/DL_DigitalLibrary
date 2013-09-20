@@ -13,8 +13,13 @@ class Reviews extends Base {
   public function getContent() {
     $output = '';
 
-    $output .= '<div class="section-title">' . t('Tell us what you think of this resource') . '</div>';
-    $output .= '<a href="#" class="review-form-trigger button medium">' . t('Write your review') . '</a>';
+    $output .= '
+                  <div class="review-form-header">
+                    <div class="section-title">' . t('Tell us what you think of this resource') . '</div>
+                    <a href="#" class="review-form-trigger button medium">' . t('Write your review') . '</a>
+                    <div class="clear"></div>
+                  </div>
+               ';
 
     $output .= $this->getNewEntityForm('review', 'end_use');
 

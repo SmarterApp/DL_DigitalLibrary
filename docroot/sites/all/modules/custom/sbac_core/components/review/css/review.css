@@ -1,32 +1,37 @@
 /* mixins */
 /* layout */
 /* line 37, ../sass/review.scss */
+.review-form-header {
+  margin-bottom: 10px;
+}
+
+/* line 41, ../sass/review.scss */
 #review-wrap-reviews {
-  margin: 10px 30px;
+  margin: 0 30px;
   padding-bottom: 20px;
 }
-/* line 41, ../sass/review.scss */
+/* line 45, ../sass/review.scss */
 #review-wrap-reviews .section-title {
   float: left;
   font-size: 1.2em;
   font-weight: bold;
 }
-/* line 47, ../sass/review.scss */
+/* line 51, ../sass/review.scss */
 #review-wrap-reviews .review-form-trigger {
   float: right;
   display: inline;
   margin: 0;
 }
-/* line 53, ../sass/review.scss */
+/* line 57, ../sass/review.scss */
 #review-wrap-reviews form {
   clear: both;
   /*display: none;*/
 }
-/* line 57, ../sass/review.scss */
+/* line 61, ../sass/review.scss */
 #review-wrap-reviews form .intro {
   padding: 10px 0;
 }
-/* line 61, ../sass/review.scss */
+/* line 65, ../sass/review.scss */
 #review-wrap-reviews form .form-item-title {
   position: relative;
 }
@@ -44,7 +49,7 @@
   margin: 0;
   padding: 0;
 }
-/* line 67, ../sass/review.scss */
+/* line 71, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-details {
   position: relative;
 }
@@ -62,58 +67,58 @@
   margin: 0;
   padding: 0;
 }
-/* line 72, ../sass/review.scss */
+/* line 76, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-details textarea {
   max-width: 100%;
   width: 100%;
 }
-/* line 78, ../sass/review.scss */
+/* line 82, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-student-learning {
   float: left;
   width: 280px;
 }
-/* line 81, ../sass/review.scss */
+/* line 85, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-student-learning label {
   margin-bottom: 10px;
 }
-/* line 85, ../sass/review.scss */
+/* line 89, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-student-learning .fivestar-form-item {
   padding-right: 10px;
 }
-/* line 90, ../sass/review.scss */
+/* line 94, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-pro-dev {
   border-left: 1px #ccc solid;
   float: left;
   width: 280px;
 }
-/* line 93, ../sass/review.scss */
+/* line 97, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-pro-dev label {
   margin-bottom: 10px;
 }
-/* line 97, ../sass/review.scss */
+/* line 101, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-pro-dev .fivestar-form-item {
   padding: 0 10px;
 }
-/* line 102, ../sass/review.scss */
+/* line 106, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-ease-use {
   border-left: 1px #ccc solid;
   float: left;
   width: 280px;
 }
-/* line 105, ../sass/review.scss */
+/* line 109, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-ease-use label {
   margin-bottom: 10px;
 }
-/* line 109, ../sass/review.scss */
+/* line 113, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-ease-use .fivestar-form-item {
   padding-left: 10px;
 }
-/* line 114, ../sass/review.scss */
+/* line 118, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for {
   clear: both;
   padding: 10px 0;
 }
-/* line 119, ../sass/review.scss */
+/* line 123, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item {
   float: left;
   margin: 0;
@@ -123,37 +128,37 @@
   /* second column */
   /* third column */
 }
-/* line 126, ../sass/review.scss */
+/* line 130, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n-1) {
   float: left;
   width: 280px;
 }
-/* line 131, ../sass/review.scss */
+/* line 135, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n+1) {
   border-left: 1px #ccc solid;
   float: left;
   width: 280px;
 }
-/* line 136, ../sass/review.scss */
+/* line 140, ../sass/review.scss */
 #review-wrap-reviews form .field-name-field-appropriate-for .form-checkboxes .form-item:nth-child(3n+0) {
   border-left: 1px #ccc solid;
   float: left;
   width: 280px;
 }
-/* line 143, ../sass/review.scss */
+/* line 147, ../sass/review.scss */
 #review-wrap-reviews form .actions-wrapper {
   clear: both;
   padding: 10px 0 0;
   text-align: right;
 }
-/* line 149, ../sass/review.scss */
+/* line 153, ../sass/review.scss */
 #review-wrap-reviews form .actions-wrapper .button,
 #review-wrap-reviews form .actions-wrapper button {
   margin-left: 10px;
 }
 
 /* modals */
-/* line 158, ../sass/review.scss */
+/* line 162, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -162,16 +167,16 @@
   line-height: normal;
   text-align: left;
 }
-/* line 167, ../sass/review.scss */
+/* line 171, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 171, ../sass/review.scss */
+/* line 175, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-/* line 176, ../sass/review.scss */
+/* line 180, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }

@@ -13,7 +13,6 @@ class Tags extends Base {
    * @return [type] [description]
    */
   public function getContent() {
-    dsmm('called');
     module_load_include('inc', 'node', 'node.pages');
     
     // bring in the node form; the last argument ensures it gets modified in hook_form_alter()

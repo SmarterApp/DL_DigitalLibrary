@@ -71,3 +71,80 @@ function element_maxlength(&$element, $count, $label) {
     maxlength_pre_render($element);
   }
 }
+
+/**
+ * Populates the specified $fields in $form with the default $values,
+ * which should come directly from $form_state['values']. Used in
+ * multi-step forms, when form values must be manually pre-populated
+ * with previously submitted data from the last time the user went
+ * through this particular step.
+ * 
+ * @param  [type] $fields [description]
+ * @param  [type] $values [description]
+ * @param  [type] $form   [description]
+ * @return [type]         [description]
+ */
+function form_set_defaults($fields, $values, &$form) {
+  if (!is_array($fields)) {
+    $fields = array(
+      $fields
+    );
+  }
+
+  foreach ($fields as $field_key) {
+    if (isset($values[$field_key])) {
+      $default_value = '';
+
+      $tree = array();
+      flatten_tree($values[$field_key], $tree);
+      
+      // multi-value field
+      if (sizeof($tree) > 1) {
+        // aggregate the separate values into a single array
+        $default_value = array();
+        foreach ($tree as $key_tree) {
+          $default_value[] = array_pop($key_tree);
+        }
+        
+        // for multi-value fields, the #default_value is set on the element immediately above
+        // the separate field values. In other words, we need to set the value at the point of
+        // divergence in our trees, so let's compare the first two and find that point:
+        $divergence = array_flat_divergence($tree[0], $tree[1]);
+        
+        // navigate down the tree to the point of divergence to find the element we want to set
+        // defaults on
+        $element = &$form[$field_key];
+        foreach ($key_tree as $path_child) {
+          $element = &$element[$path_child];
+
+          if ($path_child === $divergence) {
+            break;
+          }
+        }
+        
+        $element['#default_value'] = $default_value;
+      }
+      else {
+        foreach ($tree as $key_tree) {
+          // $key_tree will be an array of keys used to access the final value, plus the value itself
+          // ex.
+          //  for $data['und'][0]['value'] = 'test';,
+          //  the $key_tree will be:
+          //    array('und', '0', 'value', 'tree')
+
+          // get the submitted field value
+          $field_val = array_pop($key_tree);
+
+          // navigate down the tree to the deepest child element
+          $element = &$form[$field_key];
+          foreach ($key_tree as $path_child) {
+            $element = &$element[$path_child];
+          }
+
+          // set the submitted value as the default value on the deepest child
+          $element['#default_value'] = $field_val;
+        }
+      }
+    }
+  }
+}

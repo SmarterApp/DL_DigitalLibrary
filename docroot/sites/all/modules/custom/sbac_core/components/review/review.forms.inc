@@ -7,12 +7,6 @@
  * @return [type]             [description]
  */
 function review_form_validate($form, &$form_state) {
-  if ($form_state['triggering_element']['#value'] == 'Edit') {
-    return;
-  }  
-
-  watchdog('sbac', 'validate: ' . $form_state['current_state']);
-
   switch ($form_state['current_state']) { 
     case 'create':
       // perform profanity validation on title
@@ -23,44 +17,58 @@ function review_form_validate($form, &$form_state) {
       break;  
   
     case 'preview': 
-      
+    default:
+      // no validation necessary
       break;
   }
 }
 
-function review_form_submit($form, &$form_state) {
-  $form_state['multistep_values'][$form_state['stage']] = $form_state['values'];
-
-  watchdog('sbac', 'submit: ' . $form_state['current_state']);
+function review_form_previous($form, &$form_state) {
+  $form_state['previous_state'] = $form_state['current_state'];
 
   switch ($form_state['current_state']) {
     case 'create':
-      $form_state['current_state'] = 'preview';
-      $form_state['rebuild'] = TRUE;  
+      $form_state['rebuild'] = FALSE;
 
       break;
 
     case 'preview':
-      if ($form_state['triggering_element']['#value'] == 'Edit') {
-        $form_state['current_state'] = 'create';
-        $form_state['rebuild'] = TRUE;  
-      }
-      else {
-        $form_state['complete'] = TRUE;
-      }
+      $form_state['current_state'] = 'create';
+      $form_state['rebuild'] = TRUE;
 
       break;
-  } 
-   
-  if (isset($form_state['complete'])) {
-    // do something
   }
 
-  if (isset($form_state['multistep_values']['form_build_id'])) {
-    $form_state['values']['form_build_id'] = $form_state['multistep_values']['form_build_id'];
+  watchdog('sbac', 'previous: ' . $form_state['current_state']);
+}
+
+function review_form_next($form, &$form_state) {
+  $form_state['previous_state'] = $form_state['current_state'];
+
+  switch ($form_state['current_state']) {
+    case 'create':
+      $form_state['current_state'] = 'preview';
+      $form_state['rebuild'] = TRUE;
+
+      break;
+
+    case 'preview':
+      $form_state['rebuild'] = FALSE;
+
+      break;
   }
 
-  return $form;
+  watchdog('sbac', 'next: ' . $form_state['current_state']);
+}
+
+function review_form_submit($form, &$form_state) {
+  $form_state[$form_state['current_state'] . '_values'] = $form_state['values'];
+
+  watchdog('sbac', 'submit: ' . $form_state['current_state']);
+
+  // if (isset($form_state['multistep_values']['form_build_id'])) {
+  //   $form_state['values']['form_build_id'] = $form_state['multistep_values']['form_build_id'];
+  // }
 }
 
 /**
@@ -69,19 +77,11 @@ function review_form_submit($form, &$form_state) {
  * @param  [type] $form_state [description]
  * @return [type]             [description]
  */
-function review_form_rebuild($form, &$form_state) {
-  if (isset($form_state['current_state']) && $form_state['current_state'] == 'Edit') {
-    $form_state['current_state'] = 'create';
-  }
+function review_form_ajax($form, &$form_state) {
+  // the form will have been rebuilt for the current state in hook_form_alter(), so this
+  // is mostly a formality
 
-  foreach ($form as $key => $item) {
-    if (  $key{0} != '#' && 
-          strpos($key, 'state_') === 0 && 
-          $key != 'state_' . $form_state['current_state'] &&
-          $key != 'actions') {
-      $form[$key]['#access'] = FALSE;
-    }
-  }
+  watchdog('sbac', 'rebuild: ' . $form_state['current_state']);
 
   return $form;
 }

@@ -1,9 +1,10 @@
 <?php
 namespace sbac_core\components\review;
 
-
-
 class Hooks extends \devtools\Hooks {
+  const AJAX_CALLBACK = 'review_form_ajax';
+  const FORM_WRAPPER = 'review-end-use-wrap';
+
   protected $_info = '';
   protected $_bundles = array();
 
@@ -56,16 +57,23 @@ class Hooks extends \devtools\Hooks {
 
     // feedback add/edit form
     if (preg_match('/^eck__entity__form_(edit|add)_review_(' . implode('|', $this->_bundles) . ')$/', $form_id, $matches)) {
-      $node = current_node();
+      // wrap in a selector that'll be targeted for AJAX replacement on form submissions
+        $form['#prefix'] = '<div id="' . $this::FORM_WRAPPER . '">';
+        $form['#suffix'] = '</div>';
 
-      if (!isset($form_state['current_state'])) {
-        $form_state['current_state'] = 'create';
-      }
+      // we store the node in state because it won't always be available for grabs (ex. ajax requests, which have
+      // a non-node URI)
+        if (!isset($form_state['node_object'])) {
+          $node = current_node();
+          $form_state['node_object'] = $node;
+        }
 
-      $form['#prefix'] = '<div id="review-end-use-wrap">';
-      $form['#suffix'] = '</div>';
+      // prep structure for multi-step functionality
+        if (!isset($form_state['current_state'])) {
+          $form_state['current_state'] = 'create';
+        }
 
-      // common  elements
+      // common elements
         $intro = array(
           '#type' => 'markup',
           '#weight' => -15,
@@ -84,9 +92,13 @@ class Hooks extends \devtools\Hooks {
           'submit' => array(
             '#type' => 'submit',
             '#value' => t('Submit'),
+            '#submit' => array(
+              'review_form_submit',
+              'review_form_next',
+            ),
             '#ajax' => array(
-              'callback' => 'review_form_rebuild',
-              'wrapper' => 'review-end-use-wrap',
+              'callback' => $this::AJAX_CALLBACK,
+              'wrapper' => $this::FORM_WRAPPER,
             ),
           ),
         );
@@ -96,35 +108,27 @@ class Hooks extends \devtools\Hooks {
         
         // add our validation handler in addition to existing ECK one
         $form['#validate'][] = 'review_form_validate';
-        
-        // overwrite existing validation handler with our own
-        $form['#submit'] = array(
-          'review_form_submit'
-        );
 
       // set up the 'create' state
         $form['state_create']['intro'] = $intro;
         $form['state_create']['actions'] = $actions;
-        $this->hook_form_alter_review_create($form, $form_state, $node);
+        $this->hook_form_alter_review_create($form, $form_state, $form_state['node_object']);
 
       // set up the 'preview' state
         $form['state_preview']['intro'] = $intro;
         $form['state_preview']['actions'] = $actions;
-        $this->hook_form_alter_review_preview($form, $form_state, $node);
+        $this->hook_form_alter_review_preview($form, $form_state, $form_state['node_object']);
 
       // handle state
-        watchdog('sbac', 'alter: ' . $form_state['current_state']);
+        foreach ($form as $key => $item) {
+          if (  $key{0} != '#' && 
+                strpos($key, 'state_') === 0 && 
+                $key != 'state_' . $form_state['current_state']) {
+            $form[$key]['#access'] = FALSE;
+          }
+        }
 
-        // check for form errors and set a JS flag which can be used to prevent
-        // modal from opening
-        $errors = form_get_errors();
-        $form_error = (int) !empty($errors);
-
-        $form['run_js'] = array(
-          '#markup' => '<script>Drupal.settings.review.form_error = ' . $form_error . ';</script>',
-        );
-
-        $form = review_form_rebuild($form, $form_state);
+      watchdog('sbac', 'build: ' . $form_state['current_state']);
     }
   }
 
@@ -144,13 +148,15 @@ class Hooks extends \devtools\Hooks {
    * @return [type]             [description]
    */
   function hook_form_alter_review_create(&$form, &$form_state, $node) {
+    // add intro text
     $form['state_create']['intro']['#markup'] = t('
       Have you used this resource? If so, share your feedback in the space provided below. Be sure to
       give your review a title, enter your feedback and rate the resource. Your feedback is valuable and helps insure
       that the Digital Library continues to meet your needs.
     ');
 
-    // move 'regular' fields into state
+    // when a form step is submitted, review_form_submit() stores the form values in form state, and we must pull
+    // those values back so they can be used to re-populate the form
     $fields = array(
       'title',
       'field_details',
@@ -160,9 +166,17 @@ class Hooks extends \devtools\Hooks {
       'field_appropriate_for',
     );
 
-    foreach ($fields as $field) {
-      $form['state_create'][$field] = $form[$field];
-      unset($form[$field]);
+    $values = array();
+    if (isset($form_state[$form_state['current_state'] . '_values'])) {
+      $values = $form_state[$form_state['current_state'] . '_values'];
+    
+      form_set_defaults($fields, $values, $form);
+    }
+
+    // move 'regular' fields into state
+    foreach ($fields as $field_key) {
+      $form['state_create'][$field_key] = $form[$field_key];
+      unset($form[$field_key]);
     }
 
     // move title field to the top of the form and enable max
@@ -214,24 +228,20 @@ class Hooks extends \devtools\Hooks {
     ));
 
     //edit button
-    $form['state_preview']['actions']['edit'] = $form['state_preview']['actions']['submit'];
-    $form['state_preview']['actions']['edit']['#value'] = t('Edit');
-    $form['state_preview']['actions']['edit']['#weight'] = -10;
-    $form['state_preview']['actions']['edit']['#limit_validation_errors'] = array();
-
-    
-    // dsmm($form['state_preview']['actions']['edit']);
-
-    /*
-    '#ajax' => array(
-      'callback' => 'review_form_rebuild',
-      'wrapper' => 'eck-entity-form-add-review-end-use',
-    ),
-    */
-
-    // $form['state_preview']['actions']['submit']['#weight'] = -5;
-
-    // dsmm($form['state_preview']['actions']);
+    $form['state_preview']['actions']['edit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Edit'),
+      '#weight' => -10,
+      '#limit_validation_errors' => array(),
+      '#submit' => array(
+        'review_form_submit',
+        'review_form_previous',
+      ),
+      '#ajax' => array(
+        'callback' => $this::AJAX_CALLBACK,
+        'wrapper' => $this::FORM_WRAPPER,
+      ),
+    );
   }
 }
 
