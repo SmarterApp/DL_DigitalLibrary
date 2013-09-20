@@ -144,6 +144,11 @@ $items = array(
       'type' => 'integer',
       'behavior' => 'checkbox',
     ),
+    'node_id' => array(
+      'label' => 'Node id',
+      'type' => 'integer',
+      'behavior' => 'textfield',
+    ),
   ),
 ),
   );
