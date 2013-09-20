@@ -2,7 +2,7 @@
 <div class="page-wrap">
 <nav class="top-bar main-top clearfix">
   <ul class="title-area">
-    <li class="name"><h1><a href="<?php echo url(''); ?>"><img src="<?php echo $logo; ?>" /></a></h1></li>
+    <li class="name"><h1><a href="<?php echo url(''); ?>"><img src="<?php echo $logo; ?>" alt="Smarter Balanced ASsessment Consortium Logo" /></a></h1></li>
     <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
   </ul>
   <h1 class="title left">Digital Library Beta</h1>

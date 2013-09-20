@@ -1138,9 +1138,10 @@ a.tabledrag-handle .handle {
 }
 
 .sbac-resource-container {
-  padding: 5px 10px;
+  padding: 5px 10px 10px;
   background-color: #F6F6F6;
   border: 1px solid #ddd;
+  margin-bottom: 20px;
 
   .title-of-resource {
     @include hyphenation;
