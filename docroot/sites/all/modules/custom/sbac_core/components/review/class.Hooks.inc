@@ -73,8 +73,15 @@ class Hooks extends \devtools\Hooks {
       // we store the node in state because it won't always be available for grabs (ex. ajax requests, which have
       // a non-node URI)
         if (!isset($form_state['node_object'])) {
-          $node = current_node();
-          $form_state['node_object'] = $node;
+          if ($node = current_node()) {
+            $form_state['node_object'] = $node;
+          }
+          elseif ($node = node_load($form['#entity']->node_id)) {
+            $form_state['node_object'] = $node;
+          } 
+          else {
+            drupal_set_message(t('Could not find resource associated with this review.'), 'error');
+          }
         }
 
       // prep structure for multi-step functionality
@@ -186,6 +193,9 @@ class Hooks extends \devtools\Hooks {
     $form['status']['#access'] = FALSE;
     $form['node_id']['#access'] = FALSE;
 
+    // ensure node_id property is always populated
+    $form['node_id']['#default_value'] = $form_state['node_object']->nid;
+
     // cancel button
     $trigger_id = 'review-cancel';
     $url = 'node/' . $node->nid . '/review/end_use/cancel/' . $trigger_id;
@@ -246,46 +256,7 @@ class Hooks extends \devtools\Hooks {
       }
     }
 
-    entity_save('review', $entity);
-
-    /*
-    foreach ($this->_fields as $field_key) {
-      if (in_array($field_key, array(
-        'field_student_learning',
-        'field_pro_dev',
-        'field_ease_use',
-        // 'field_appropriate_for',
-      ))) {
-        continue;
-      }
-
-      $tree = array();
-      flatten_tree($values[$field_key], $tree);
-
-      if (sizeof($tree) > 1) {
-        $val = array();
-
-        foreach ($tree as $path_tree) {
-          $val[] = array_pop($path_tree);
-        }
-      }
-      else {
-        $val = array_pop($tree[0]);
-      }
-
-      // dsmm($field_key);
-      // dsmm($val);
-      $wrapper->{$field_key}->set($val);
-      dsmm('set: ' . $field_key);
-    }
-
-    */
-    // dsmm($new);
-
-    // $entity = entity_load_single('review', 1);
-    // dsmm($entity);
-
-    // $entity_render = entity_view('review', array(1 => $entity));
+    $entity_render = entity_view('review', array($entity));
 
     $form['state_preview']['view'] = array(
       '#type' => 'markup',
