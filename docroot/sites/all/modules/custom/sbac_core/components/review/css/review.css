@@ -157,8 +157,16 @@
   margin-left: 10px;
 }
 
+/* line 160, ../sass/review.scss */
+.entity-review.view-mode-full {
+  background: #eee;
+  border: 1px #ccc solid;
+  margin: 10px 0;
+  padding: 10px;
+}
+
 /* modals */
-/* line 162, ../sass/review.scss */
+/* line 189, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -167,16 +175,16 @@
   line-height: normal;
   text-align: left;
 }
-/* line 171, ../sass/review.scss */
+/* line 198, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 175, ../sass/review.scss */
+/* line 202, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-/* line 180, ../sass/review.scss */
+/* line 207, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }

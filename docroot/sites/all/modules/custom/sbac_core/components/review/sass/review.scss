@@ -157,6 +157,33 @@
   }
 }
 
+.entity-review.view-mode-full {
+  background: #eee;
+  border: 1px #ccc solid;
+  margin: 10px 0;
+  padding: 10px;
+
+  .group-header {
+
+  }
+
+  .group-left {
+    
+  }
+
+  .group-middle {
+    
+  }
+
+  .group-right {
+    
+  }
+
+  .group-footer {
+
+  }
+}
+
 /* modals */
 .dialog_review_end_use_form #dialog {
   .intro {
@@ -165,7 +192,7 @@
     border-bottom: 1em;
     font-size: 0.8em;
     line-height: normal;
-    text-align: left;
+    text-align: left; 
   }
 
   form {

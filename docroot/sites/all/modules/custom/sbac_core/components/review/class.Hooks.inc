@@ -242,13 +242,15 @@ class Hooks extends \devtools\Hooks {
 
     global $user;
 
-    $entity = new \stdClass();
-    $entity->status = 1;
-    $entity->type = 'end_use';
-    $entity->is_new = 1;
-    $entity->uid = $user->uid;
-    $entity->node_id = $node->nid;
+    // create the entity data structure for preview rendering purposes
+    $entity = entity_create('review', array(
+      'type' => 'end_use',
+      'status' => 1,
+      'uid' => $user->uid,
+      'node_id' => $node->nid,
+    ));
 
+    // set submitted form values on the entity
     $values = $form_state['create_values'];
     foreach ($this->_fields as $field_key) {
       if (isset($values[$field_key])) {
@@ -256,13 +258,17 @@ class Hooks extends \devtools\Hooks {
       }
     }
 
-    $entity_render = entity_view('review', array($entity));
+    // create renderable array
+    $entity_render = entity_view('review', array(
+      $entity,
+    ));
 
+    // render & add entity to the form data
     $form['state_preview']['view'] = array(
       '#type' => 'markup',
-      '#markup' => 'test',//render($entity_render),
+      '#markup' => render($entity_render),
     );
-
+    
     //edit button
     $form['state_preview']['actions']['edit'] = array(
       '#type' => 'submit',
