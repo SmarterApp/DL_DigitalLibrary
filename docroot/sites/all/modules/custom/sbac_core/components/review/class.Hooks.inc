@@ -22,9 +22,41 @@ class Hooks extends \devtools\Hooks {
     $this->_bundles = array_keys($this->_info);
   }
 
+  /**
+   * Post-initialization operations.
+   * @return [type] [description]
+   */
+  function postInit() {
+    // add custom Display Suite fields
+    $ds_args = array(
+      'path' => $this->_path,
+      'file' => 'review.theme.inc',
+      'variables' => array(),
+    );
+
+    add_ds_field('review',  array(
+      'key' => 'review_author',
+      'name' => t('Review Author'),
+    ) + $ds_args);
+  }
+
   /*----------------------------------------------------------------------------
       DRUPAL HOOKS
   ----------------------------------------------------------------------------*/
+
+  /**
+   * Extends hook_init().
+   * 
+   * Don't remove this empty method!! We must have this in order for this class 
+   * to get instantiated (and thus the postInit() method called) before Display
+   * Suite's hooks fire and collect field data, otherwise the DS fields from
+   * the postInit() method will be added *after* DS collects field data, neve
+   * actually make their way into the site, and you'll be banging your head on
+   * the desk for hours wondering why. Source: dent in desk.
+   */
+  function hook_init() {
+
+  }
 
   /**
    * Extends hook_menu().
@@ -268,7 +300,22 @@ class Hooks extends \devtools\Hooks {
       '#type' => 'markup',
       '#markup' => render($entity_render),
     );
-    
+
+    // footer text
+    $form['state_preview']['footer_title'] = array(
+      '#markup' => '<div class="footer-title">' . t('Are you happy with your review?') . '</div>',
+    );
+
+    $form['state_preview']['footer_body'] = array(
+      '#markup' => '  
+                      <div class="footer-body">
+                      ' . t('If so, submit it for everyone to see. If not, click edit to make changes.') . '
+                      ' . t('Note: Smarter Balanced reserves the right to remove reviews that do not adhere to the
+                        Terms of Service'). '
+                      </div>
+                   ',
+    );
+
     //edit button
     $form['state_preview']['actions']['edit'] = array(
       '#type' => 'submit',

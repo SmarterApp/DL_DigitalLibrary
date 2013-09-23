@@ -16,3 +16,23 @@ function theme_review_title($variables) {
 
   return $output;
 }
+
+/**
+ * Output for Display Suite field "Review Author"
+ * @param  [type] $variables [description]
+ * @return [type]            [description]
+ */
+function theme_review_author($variables) {
+  $output = '';
+
+  $entity = $variables['entity'];
+
+  $created = isset($entity->created) ? $entity->created : time();
+
+  $output .= t('By !name on !date', array(
+    // '!name' => l(),
+    '!date' => format_date($created, 'medium'),
+  ));
+
+  return $output;
+}

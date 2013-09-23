@@ -59,6 +59,7 @@ class Hooks extends \devtools\Hooks {
         }
       }
     }
+
     return $data;
   }
 }
