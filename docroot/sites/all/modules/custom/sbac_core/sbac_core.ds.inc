@@ -25,6 +25,26 @@ function sbac_core_ds_field_settings_info() {
   );
   $export['node|resource|secondary_teaser'] = $ds_fieldsetting;
 
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'review|end_use|default';
+  $ds_fieldsetting->entity_type = 'review';
+  $ds_fieldsetting->bundle = 'end_use';
+  $ds_fieldsetting->view_mode = 'default';
+  $ds_fieldsetting->settings = array(
+    'title' => array(
+      'weight' => '5',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'review_author' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'review_author',
+    ),
+  );
+  $export['review|end_use|default'] = $ds_fieldsetting;
+
   return $export;
 }
 
@@ -91,6 +111,58 @@ function sbac_core_ds_layout_settings_info() {
     'layout_attributes_merge' => 1,
   );
   $export['node|resource|secondary_teaser'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
+  $ds_layout->id = 'review|end_use|default';
+  $ds_layout->entity_type = 'review';
+  $ds_layout->bundle = 'end_use';
+  $ds_layout->view_mode = 'default';
+  $ds_layout->layout = 'ds_3col_stacked';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'header' => array(
+        0 => 'review_author',
+      ),
+      'left' => array(
+        1 => 'field_student_learning',
+      ),
+      'middle' => array(
+        2 => 'field_pro_dev',
+      ),
+      'right' => array(
+        3 => 'field_ease_use',
+      ),
+      'footer' => array(
+        4 => 'field_appropriate_for',
+        5 => 'title',
+        6 => 'field_details',
+      ),
+    ),
+    'fields' => array(
+      'review_author' => 'header',
+      'field_student_learning' => 'left',
+      'field_pro_dev' => 'middle',
+      'field_ease_use' => 'right',
+      'field_appropriate_for' => 'footer',
+      'title' => 'footer',
+      'field_details' => 'footer',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'header' => 'div',
+      'left' => 'div',
+      'middle' => 'div',
+      'right' => 'div',
+      'footer' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+  );
+  $export['review|end_use|default'] = $ds_layout;
 
   return $export;
 }

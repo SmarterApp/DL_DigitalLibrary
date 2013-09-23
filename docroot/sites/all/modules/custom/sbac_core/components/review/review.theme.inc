@@ -10,7 +10,7 @@ function theme_review_title($variables) {
 
   if (isset($variables['entity'])) {
     $review = $variables['entity'];
-
+    
     $output = $review->title;
   }
 
@@ -27,11 +27,14 @@ function theme_review_author($variables) {
 
   $entity = $variables['entity'];
 
+  $account = user_load($entity->uid);
+  $account_output = user_view($account, 'tooltip');
+
   $created = isset($entity->created) ? $entity->created : time();
 
   $output .= t('By !name on !date', array(
-    // '!name' => l(),
-    '!date' => format_date($created, 'medium'),
+    '!name' => '<a href="#">' . $account_output . '</a>',
+    '!date' => format_date($created, 'simple'),
   ));
 
   return $output;
