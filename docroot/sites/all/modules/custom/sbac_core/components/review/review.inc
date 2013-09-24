@@ -2,6 +2,7 @@
 
 /**
  * Checks whether the  user has a review for the node.
+ * 
  * @return [type] [description]
  */
 function user_has_review($nid, $uid) {
@@ -15,6 +16,23 @@ function user_has_review($nid, $uid) {
         ->fetch();
 
   return (bool) $id;
+}
+
+/**
+ * Returns the total number of reviews on given node id;
+ * 
+ * @param  [type] $nid [description]
+ * @return [type]      [description]
+ */
+function total_reviews($nid) {
+  $count_query = "  SELECT    COUNT(id)
+                    FROM      eck_review
+                    WHERE     type = 'end_use'
+                    AND       node_id = :node_id
+                    AND       status = 1
+                 ";
+
+  return db_query($count_query, array(':node_id' => $nid))->fetchField();
 }
 
 /**
@@ -53,17 +71,7 @@ function review_load_more($node, $sortby, $page) {
   }
 
   // do we show the 'load more reviews' button?
-  $count_query = "
-                    SELECT    COUNT(id)
-                    FROM      eck_review
-                    WHERE     type = 'end_use'
-                    AND       node_id = :node_id
-                    AND       status = 1
-                 ";
-
-  $total = db_query($count_query, array(':node_id' => $node->nid))->fetchField();
-
-  if ($offset + $page_size < $total) {
+  if ($offset + $page_size < total_reviews($node->nid)) {
     $url = 'load_more/review/' . $node->nid . '/' . $sortby . '/' . ++$page;
 
     $options = array(

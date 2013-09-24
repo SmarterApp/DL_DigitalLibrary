@@ -187,6 +187,15 @@ class Hooks extends \devtools\Hooks {
     }
   }
 
+  /**
+   * Extends hook_entity_view_alter().
+   */
+  function hook_entity_view_alter(&$build, $type) {
+    // make sure a review's details text is limited to 140 chars on display
+    if ($type == 'review' && $build['#view_mode'] == 'full') {
+      $build['field_details'][0]['#markup'] = more_less_text($build['field_details'][0]['#markup'], 140);
+    }
+  }
   /*----------------------------------------------------------------------------
       MODULE HOOKS
   ----------------------------------------------------------------------------*/

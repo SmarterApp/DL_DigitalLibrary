@@ -15,6 +15,7 @@ class Reviews extends Base {
       $output = '';
 
       $has_review = user_has_review($this->_node->nid, $this->_account->uid);
+      $has_review = FALSE;
 
       $button = '';
       if (!$has_review) { 
@@ -34,12 +35,16 @@ class Reviews extends Base {
       }
 
     // reviews summary
+      $based_text = t('(Based on !count)', array(
+        '!count' => format_plural(total_reviews($this->_node->nid), '1 review', '@count reviews'),
+      ));
+
       $output .= '
                   <div id="summary">
                     <div class="review-section-header">
                       <div class="section-title">
                         ' . t('Summary of All Reviews') . '
-                        <span class="secondary">' . t('(Based on 300 reviews)') . '</span>
+                        <span class="secondary">' . $based_text . '</span>
                       </div>
                       <div class="clear"></div>
                     </div>
