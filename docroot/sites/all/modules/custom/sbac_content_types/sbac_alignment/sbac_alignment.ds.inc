@@ -123,6 +123,7 @@ function sbac_alignment_ds_view_modes_info() {
   $ds_view_mode->label = 'Tooltip';
   $ds_view_mode->entities = array(
     'taxonomy_term' => 'taxonomy_term',
+    'user' => 'user',
   );
   $export['tooltip'] = $ds_view_mode;
 

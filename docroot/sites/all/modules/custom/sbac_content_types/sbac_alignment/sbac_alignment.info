@@ -2,7 +2,6 @@ name = SBAC Alignment
 description = Provides related functionality of Alignment Content Type.
 core = 7.x
 package = ~SBAC
-php = 5.2.4
 version = 7.x-1.0
 project = sbac_alignment
 dependencies[] = ctools
