@@ -167,7 +167,7 @@
 }
 /* line 167, ../sass/review.scss */
 .entity-review.view-mode-full .field-label {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 /* line 171, ../sass/review.scss */
 .entity-review.view-mode-full .group-header {
@@ -193,9 +193,19 @@
 .entity-review.view-mode-full .group-right .field-name-field-ease-use {
   padding-left: 10px;
 }
+/* line 193, ../sass/review.scss */
+.entity-review.view-mode-full .average-rating {
+  margin-top: 10px;
+}
+
+/* line 203, ../sass/review.scss */
+.footer-title {
+  font-weight: bold;
+  margin: 10px 0;
+}
 
 /* modals */
-/* line 200, ../sass/review.scss */
+/* line 210, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -204,26 +214,26 @@
   line-height: normal;
   text-align: left;
 }
-/* line 209, ../sass/review.scss */
+/* line 219, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 213, ../sass/review.scss */
+/* line 223, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-/* line 218, ../sass/review.scss */
+/* line 228, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
 /* user tooltips */
-/* line 224, ../sass/review.scss */
+/* line 234, ../sass/review.scss */
 .account-tooltip {
   position: relative;
 }
-/* line 227, ../sass/review.scss */
+/* line 237, ../sass/review.scss */
 .account-tooltip .account-tooltip-body {
   background: #eee;
   border: 1px #ccc solid;
@@ -235,7 +245,7 @@
   width: 500px;
   z-index: 50;
 }
-/* line 239, ../sass/review.scss */
+/* line 249, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }

@@ -165,7 +165,7 @@
   font-size: 18px;
 
   .field-label {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .group-header {
@@ -190,9 +190,19 @@
     }
   }
 
+  .average-rating {
+    margin-top: 10px;
+  }
+
   .group-footer {
 
   }
+}
+
+
+.footer-title {
+  font-weight: bold;
+  margin: 10px 0;
 }
 
 /* modals */
