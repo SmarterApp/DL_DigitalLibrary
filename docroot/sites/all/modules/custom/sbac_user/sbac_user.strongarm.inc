@@ -25,9 +25,6 @@ function sbac_user_strongarm() {
       'token' => array(
         'custom_settings' => FALSE,
       ),
-      'tooltip' => array(
-        'custom_settings' => TRUE,
-      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -52,10 +49,6 @@ function sbac_user_strongarm() {
           'default' => array(
             'weight' => '5',
             'visible' => TRUE,
-          ),
-          'tooltip' => array(
-            'weight' => '16',
-            'visible' => FALSE,
           ),
         ),
       ),
