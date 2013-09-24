@@ -45,21 +45,6 @@ function sbac_core_ds_field_settings_info() {
   );
   $export['review|end_use|default'] = $ds_fieldsetting;
 
-  $ds_fieldsetting = new stdClass();
-  $ds_fieldsetting->api_version = 1;
-  $ds_fieldsetting->id = 'user|user|tooltip';
-  $ds_fieldsetting->entity_type = 'user';
-  $ds_fieldsetting->bundle = 'user';
-  $ds_fieldsetting->view_mode = 'tooltip';
-  $ds_fieldsetting->settings = array(
-    'ds_user_picture' => array(
-      'weight' => '0',
-      'label' => 'hidden',
-      'format' => 'ds_picture_small',
-    ),
-  );
-  $export['user|user|tooltip'] = $ds_fieldsetting;
-
   return $export;
 }
 

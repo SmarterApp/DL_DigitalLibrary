@@ -22,7 +22,6 @@ features[ctools][] = ds:ds:1
 features[ctools][] = strongarm:strongarm:1
 features[ds_field_settings][] = node|resource|secondary_teaser
 features[ds_field_settings][] = review|end_use|default
-features[ds_field_settings][] = user|user|tooltip
 features[ds_layout_settings][] = node|resource|secondary_teaser
 features[ds_layout_settings][] = review|end_use|default
 features[ds_view_modes][] = secondary_teaser
