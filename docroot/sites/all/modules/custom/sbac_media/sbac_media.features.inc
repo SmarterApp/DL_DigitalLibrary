@@ -63,6 +63,11 @@ $items = array(
       'type' => 'text',
       'behavior' => 'textfield',
     ),
+    'embed_url' => array(
+      'label' => 'Embed URL',
+      'type' => 'text',
+      'behavior' => 'textfield',
+    ),
   ),
 ),
   );
