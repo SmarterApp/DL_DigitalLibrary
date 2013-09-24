@@ -27,24 +27,6 @@ function sbac_core_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'default_ds_field_settings';
-  $strongarm->value = array(
-    'user|user|tooltip' => TRUE,
-  );
-  $export['default_ds_field_settings'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'default_ds_layout_settings';
-  $strongarm->value = array(
-    'user|user|tooltip' => TRUE,
-  );
-  $export['default_ds_layout_settings'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_feedback__gate_keeper';
   $strongarm->value = array(
     'view_modes' => array(),
@@ -145,9 +127,6 @@ function sbac_core_strongarm() {
       'token' => array(
         'custom_settings' => FALSE,
       ),
-      'tooltip' => array(
-        'custom_settings' => TRUE,
-      ),
     ),
     'extra_fields' => array(
       'form' => array(),
@@ -156,10 +135,6 @@ function sbac_core_strongarm() {
           'default' => array(
             'weight' => '1',
             'visible' => FALSE,
-          ),
-          'tooltip' => array(
-            'weight' => '1',
-            'visible' => TRUE,
           ),
         ),
       ),

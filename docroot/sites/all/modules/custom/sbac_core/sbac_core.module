@@ -222,7 +222,6 @@ function sbac_core_devtools_components() {
     'taskit' => array(),
     'user' => array(),
     'user_profile' => array(),
-
   );
 
   return $components;
