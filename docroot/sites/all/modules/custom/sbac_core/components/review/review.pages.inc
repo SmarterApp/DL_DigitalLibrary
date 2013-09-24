@@ -13,3 +13,4 @@ function resource_review_ajax_page($bundle, $node, $state, $trigger_id) {
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
+
