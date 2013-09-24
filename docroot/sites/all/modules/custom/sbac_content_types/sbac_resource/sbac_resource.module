@@ -212,7 +212,6 @@ function sbac_resource_preprocess_node(&$vars) {
       }
       $vars['viewer'] = $viewer['viewer'];
       $vars['viewer_filename'] = $viewer['viewer_filename'];
-      $vars['viewer_type'] = $viewer['viewer_type'];
       $vars['materials'] = $materials;
     }
   }
@@ -226,36 +225,38 @@ function sbac_resource_preprocess_node(&$vars) {
  */
 function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
-  if ($vars['field_file'][0]['uri']) {
-    $url = file_create_url($vars['field_file'][0]['uri']);
-    $media = _sbac_resource_media($url, $vars['field_file'][0]);
-    $viewer['viewer_filename'] = $vars['field_file'][0]['filename'];
-    $viewer['viewer_type'] = $media;
-    if ($media == 'document') {
+  if ($vars['document'][0]) {
+    $media = $vars['document'][0];
+    $type = _sbac_resource_determine_type($media);
+    $viewer['viewer_filename'] = $media->filename;
+    // @TODO: Need to build URL;
+    $url = 'http://haha.com';
+
+    if ($type == 'document') {
       $viewer['viewer'] = '<iframe src="http://docs.google.com/viewer?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
     }
-    else if ($media == 'video') {
+    else if ($type == 'video') {
       $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 850});});';
       drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999));
       $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
     }
-    else if ($media == 'image') {
+    else if ($type == 'image') {
       $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400));
     }
     // replace with theming functions, preprocess theme functions haven't been implemented (except for schooltube), although templates have been
-    else if ($media == 'schooltube') {
+    else if ($type == 'schooltube') {
       $viewer['viewer'] = '<div class="flex-video"><iframe width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>';
     }
-    else if ($media == 'teachertube') {
+    else if ($type == 'teachertube') {
       $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/></iframe></div>';
     }
-    else if ($media == 'slideshare') {
+    else if ($type == 'slideshare') {
       $viewer['viewer'] = '<div class="flex-video"><iframe src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>';
     }
-    else if ($media == 'vimeo') {
+    else if ($type == 'vimeo') {
       $viewer['viewer'] = '<div class="flex-video"><iframe src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>';
     }
-    else if ($media == 'youtube') {
+    else if ($type == 'youtube') {
       $url .= '?rel=0'; // Disable related videos.
       $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen></iframe></div>';
     }      
@@ -277,30 +278,25 @@ function _sbac_resource_preview_materials(&$vars) {
   $materials = '';
   $material_urls = array();
 
-  if (isset($vars['field_file'][0]['uri'])) {
-    foreach ($vars['field_file'] as $key => $material) {
-      $url = file_create_url($material['uri']);
-      $media = _sbac_resource_media($url, $material);
-      if ($media == 'none') {
+  if (isset($vars['document'][0])) {
+    foreach ($vars['document'] as $key => $media) {
+      $type = _sbac_resource_determine_type($media);
+      // @TODO: create the url for the media items.
+      $url = 'http://hahah.com';
+      if ($type == 'none') {
         $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       }
 
       // check to see whether its public scheme or not, if so not external
-      if (file_uri_scheme($material['uri']) == 'public') {
-        $material_urls[] = l(ucwords($material['filename']), $url, array('attributes' => array('sbac-type' => $media))); 
+      if ($media->document_id) {
+        $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type)));
       }
       else { // embedded media
-        if (strpos($material['filemime'], 'youtube')) {
+        if (strpos($media->embed_url, 'youtube')) {
           $url .= '?rel=0';
         }
-        $material_urls[] = l(ucwords($material['filename']), $url, array('attributes' => array('sbac-type' => $media), 'absolute' => TRUE, 'external' => TRUE));        
+        $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type), 'absolute' => TRUE, 'external' => TRUE));
       }
-    }
-  }
-
-  if (isset($vars['field_video'][0]['fid'])) {
-    foreach ($vars['field_video'] as $video) {
-      $material_urls[] = l($video['filename'], file_create_url($video['uri']), array('attributes' => array('sbac-type' => 'video')));
     }
   }
 
@@ -325,23 +321,18 @@ function _sbac_resource_preview_materials(&$vars) {
  * @param $file
  * @return string
  */
-function _sbac_resource_media(&$url, $file) {
-  $media = 'document';
+function _sbac_resource_determine_type($media) {
+  $type = 'document';
 
-  $ext = pathinfo($url, PATHINFO_EXTENSION);
-  // the _sbac_resource_determine_media should take over because 
-  // extension is no longer good enough to determine media type
-  if ($ext) {
-    $media = _sbac_resource_determine_extension($ext);
-  } elseif (module_exists('sbac_media')) { // don't want to create dependancy   
-    // this is for embed code
-    $media = _sbac_resource_determine_media($file);
-    if ($media) { //override url with embed code
-      $url = sbac_media_create_embed_url($file);
-    }
+  if (!$media->document_id && !$media->fid) {
+    $type = _sbac_resource_determine_media($media);
+  }
+  else {
+    $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
+    $type = _sbac_resource_determine_extension($ext);
   }
 
-  return $media;
+  return $type;
 }
 
 /**
@@ -350,13 +341,14 @@ function _sbac_resource_media(&$url, $file) {
  * @param $file object
  * @return string
  */
-function _sbac_resource_determine_media($file) {
-  $media = 'document';
-  preg_match('#video/(.*)#i', $file['filemime'], $matches);
+function _sbac_resource_determine_media($media) {
+  $type = 'embed';
+  $mimetype = file_get_mimetype($media->filename);
+  preg_match('#video/(.*)#i', $mimetype, $matches);
   if (isset($matches[1]) && $matches[1]) {
     return $matches[1];
   } 
-  return $media;
+  return $type;
 }
 
 /**
@@ -1004,7 +996,6 @@ function sbac_resource_node_delete($node) {
 
     // Set the folder object to the /Assets/$cardinal/$node->nid
     $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
-
     $document = cmisapi_createDocument($repository->repositoryId, $folder->id, $file->filename, array(), file_get_contents($file->uri), $file->filemime);
 
     // Save the new document id.
@@ -1014,7 +1005,7 @@ function sbac_resource_node_delete($node) {
     //update the doc with the drupalId
     $alfresco=variable_get('cmis_repositories');
     $ch = curl_init();
-    //set the url, number of POST vars, POST data and login details
+    // Set the url, number of POST vars, POST data and login details
     curl_setopt($ch,CURLOPT_URL, $alfresco['default']['update_url']);
     curl_setopt($ch,CURLOPT_POST, 1);
     curl_setopt($ch,CURLOPT_POSTFIELDS, 'data=' . json_encode(array('nodeRef'=>$document->id, 'drupalId'=>$node->nid)));

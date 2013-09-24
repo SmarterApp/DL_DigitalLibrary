@@ -54,104 +54,114 @@
     margin: 0;
   }
 
-  form {
-    clear: both;
-    /*display: none;*/
-
-    .intro {
-      padding: 10px 0;
-    }
-
-    .form-item-title {
-      position: relative;
-
-      @include maxlength;
-    }
-
-    .field-name-field-details {
-      position: relative;
-
-      @include maxlength;
-
-      textarea {
-        max-width: 100%;
-        width: 100%;
-      }
-    }
-
-    .field-name-field-student-learning {
-      @include left_col;
-
-      label {
-        margin-bottom: 10px;
-      }
-
-      .fivestar-form-item {
-        padding-right: 10px;
-      }
-    }
-    
-    .field-name-field-pro-dev {
-      @include mid_col;
-
-      label {
-        margin-bottom: 10px;
-      }
-
-      .fivestar-form-item {
-        padding: 0 10px;
-      }
-    }
-
-    .field-name-field-ease-use {
-      @include right_col;
-
-      label {
-        margin-bottom: 10px;
-      }
-
-      .fivestar-form-item {
-        padding-left: 10px;
-      }
-    }
-
-    .field-name-field-appropriate-for {
+  #review-end-use-wrap {
+    form {
       clear: both;
-      padding: 10px 0;
 
-      .form-checkboxes {
-        .form-item {
-          float: left;
-          margin: 0;
-          padding: 0.4em 0;
-          width: 33.3%;
+      /* this will only hide the initial form, while still showing it upon form submissions/state changes */
+      &#eck-entity-form-add-review-end-use {
+        display: none;
+      }
 
-          /* first column */
-          &:nth-child(3n-1) {
-            @include left_col;
-          }
+      .intro {
+        padding: 10px 0;
+      }
 
-          /* second column */
-          &:nth-child(3n+1) {
-            @include mid_col;
-          }
+      .form-item-title {
+        position: relative;
 
-          /* third column */
-          &:nth-child(3n+0) {
-            @include right_col;
+        @include maxlength;
+      }
+
+      .field-name-field-details {
+        position: relative;
+
+        @include maxlength;
+
+        textarea {
+          max-width: 100%;
+          width: 100%;
+        }
+      }
+
+      .field-name-field-student-learning {
+        @include left_col;
+
+        label {
+          margin-bottom: 10px;
+        }
+
+        .fivestar-form-item {
+          padding-right: 10px;
+        }
+      }
+      
+      .field-name-field-pro-dev {
+        @include mid_col;
+
+        label {
+          margin-bottom: 10px;
+        }
+
+        .fivestar-form-item {
+          padding: 0 10px;
+        }
+      }
+
+      .field-name-field-ease-use {
+        @include right_col;
+
+        label {
+          margin-bottom: 10px;
+        }
+
+        .fivestar-form-item {
+          padding-left: 10px;
+        }
+      }
+
+      .field-name-field-appropriate-for {
+        clear: both;
+        padding: 10px 0;
+
+        .form-checkboxes {
+          .form-item {
+            float: left;
+            margin: 0;
+            padding: 0.4em 0;
+            width: 33.3%;
+
+            /* first column */
+            &:nth-child(3n-1) {
+              @include left_col;
+            }
+
+            /* second column */
+            &:nth-child(3n+1) {
+              @include mid_col;
+            }
+
+            /* third column */
+            &:nth-child(3n+0) {
+              @include right_col;
+            }
           }
         }
       }
-    }
 
-    .actions-wrapper  {
-      clear: both;
-      padding: 10px 0 0;
-      text-align: right;
+      .actions-wrapper  {
+        clear: both;
+        padding: 10px 0 0;
+        text-align: right;
 
-      .button,
-      button {
-        margin-left: 10px;
+        .button,
+        button {
+          margin-left: 10px;
+        }
+
+        .final-submit {
+          display: none;
+        }
       }
     }
   }

@@ -25,6 +25,7 @@ Drupal.behaviors.review = {
 
         trigger_element.hide();
         target_element.show();
+        target_element.attr('style', 'display: block !important;');
 
         return false;
       });
@@ -46,12 +47,8 @@ Drupal.behaviors.review = {
     }
   },
 
-  clear_review: function() {
-    // console.log('clearing!');
-  },
-
   submit: function () {
-    $(Review.reviews.form).submit();
+    $(Review.reviews.form + ' .final-submit').click();
   }
 };
 
