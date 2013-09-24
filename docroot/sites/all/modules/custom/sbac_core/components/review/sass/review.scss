@@ -162,21 +162,32 @@
   border: 1px #ccc solid;
   margin: 10px 0;
   padding: 10px;
+  font-size: 18px;
+
+  .field-label {
+    margin-bottom: 10px;
+  }
 
   .group-header {
-
+    margin-bottom: 10px;
   }
 
   .group-left {
-    
+    width:33%;
   }
 
   .group-middle {
-    
+    width:33%;
+    .field-name-field-pro-dev {
+      padding-left: 10px;
+    }
   }
 
   .group-right {
-    
+    width:33%;
+    .field-name-field-ease-use {
+      padding-left: 10px;
+    }
   }
 
   .group-footer {
@@ -222,6 +233,11 @@
     position: absolute;
     top: 20px;
     width: 500px;
+    z-index: 50;
+  }
+
+  .row.first {
+    padding: 10px;
   }
 }
 
