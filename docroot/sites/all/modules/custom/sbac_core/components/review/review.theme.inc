@@ -29,7 +29,7 @@ function theme_review_author($variables) {
 
   $account = user_load($entity->uid);
   $account_renderable = user_view($account, 'tooltip');
-  
+
   $tooltip = '
               <span class="account-tooltip">
                 <a href="#" class="account-tooltip-trigger">' . format_username($account) . '</a>

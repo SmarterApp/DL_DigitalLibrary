@@ -76,7 +76,7 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
           'submit_js_callback' => array(
             'behavior' => 'review',
             'method' => 'submit',
-          )
+          ),
         ) + $state_common_options,
 
       ),

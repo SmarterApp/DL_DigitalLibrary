@@ -107,6 +107,11 @@ class Hooks extends \devtools\Hooks {
         $form['#prefix'] = '<div id="' . $this::FORM_WRAPPER . '">';
         $form['#suffix'] = '</div>';
 
+      // prep structure for multi-step functionality
+        if (!isset($form_state['current_state'])) {
+          $form_state['current_state'] = 'create';
+        }
+
       // we store the node in state because it won't always be available for grabs (ex. ajax requests, which have
       // a non-node URI)
         if (!isset($form_state['node_object'])) {
@@ -119,11 +124,6 @@ class Hooks extends \devtools\Hooks {
           else {
             drupal_set_message(t('Could not find resource associated with this review.'), 'error');
           }
-        }
-
-      // prep structure for multi-step functionality
-        if (!isset($form_state['current_state'])) {
-          $form_state['current_state'] = 'create';
         }
 
       // common elements
@@ -338,7 +338,13 @@ class Hooks extends \devtools\Hooks {
       ),
     );
 
-    // submit button
+    // submit button (hidden)
+    $form['state_preview']['actions']['submit']['#limit_validation_errors'] = array();
+    $form['state_preview']['actions']['submit']['#attributes']['class'][] = 'final-submit';
+    $form['state_preview']['actions']['submit']['#attributes']['class'][] = 'hidden';
+    unset($form['state_preview']['actions']['submit']['#ajax']);
+
+    // submit button (modal)
     $trigger_id = 'review-submit';
     $url = 'node/' . $node->nid . '/review/end_use/submit/' . $trigger_id;
 
@@ -355,7 +361,7 @@ class Hooks extends \devtools\Hooks {
     );
 
     $form['state_preview']['actions']['submit_link'] = array(
-      '#markup' => l(t('Submit Modal'), $url, $options),
+      '#markup' => l(t('Submit'), $url, $options),
       '#weight' =>  10,
     );
   }
