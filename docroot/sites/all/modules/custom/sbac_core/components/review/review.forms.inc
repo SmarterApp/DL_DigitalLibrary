@@ -78,7 +78,42 @@ function review_form_next($form, &$form_state) {
 function review_form_submit($form, &$form_state) {
   $form_state[$form_state['current_state'] . '_values'] = $form_state['values'];
 
-  // dsmm('submitted');
+  // final submission from Preview state
+  if ($form_state['triggering_element']['#value'] == 'Submit') {
+    // watchdog('sbac', 'title is: ' . $form_state['create_values']['title']);
+    global $user;
+    $node = $form_state['node_object'];
+
+    $entity = entity_create('review', array(
+      'type' => 'end_use',
+      'uid' => $user->uid,
+      'status' => 1,
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
+      'node_id' => $node->nid,
+    ));
+
+    $fields = array(
+      'title',
+      'field_details',
+      'field_student_learning',
+      'field_pro_dev',
+      'field_ease_use',
+      'field_appropriate_for',
+    );
+
+    foreach ($fields as $field_key) {
+      if (isset($form_state['create_values'][$field_key])) {
+        $entity->{$field_key} = $form_state['create_values'][$field_key];
+      }
+    }
+
+    entity_save('review', $entity);
+
+    drupal_set_message(t('Your review posted successfully.'));
+
+    $form_state['redirect'] = url('node/' . $node->nid . '/feedback/redirect/review-reviews', array('absolute' => TRUE));
+  }
 }
 
 /**
