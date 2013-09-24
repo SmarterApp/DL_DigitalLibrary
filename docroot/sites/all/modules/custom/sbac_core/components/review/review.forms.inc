@@ -77,6 +77,8 @@ function review_form_next($form, &$form_state) {
  */
 function review_form_submit($form, &$form_state) {
   $form_state[$form_state['current_state'] . '_values'] = $form_state['values'];
+
+  dsmm('submitted');
 }
 
 /**

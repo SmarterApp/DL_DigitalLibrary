@@ -19,10 +19,11 @@ function flatten_tree($data, &$tree, $path = '') {
 
       $tree[] = explode('|', $path);
     }
-
-    foreach ($data as $key => $value) {
-      $path_tree = $path . $key . '|';
-      flatten_tree($value, $tree, $path_tree);
+    else {
+      foreach ($data as $key => $value) {
+        $path_tree = $path . $key . '|';
+        flatten_tree($value, $tree, $path_tree);
+      }
     }
   }
 }

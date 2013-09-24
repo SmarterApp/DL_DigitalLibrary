@@ -10,7 +10,7 @@ if (typeof Review == 'undefined') {
 
 Review.reviews = {
   form_trigger: '.review-form-trigger',
-  form: '#eck-entity-form-add-review-end-use',
+  form: '#review-end-use-wrap form',
 };
 
 Drupal.behaviors.review = {
@@ -29,10 +29,29 @@ Drupal.behaviors.review = {
         return false;
       });
     }
+
+    var tooltip = $('.account-tooltip');
+    if (tooltip.length) {
+      $(tooltip).each(function(i, el) {
+        var wrapper = $(el);
+
+        $('.account-tooltip-trigger', wrapper).once('tooltip-trigger').mouseover(function () {
+          $('.account-tooltip-body', wrapper).show();
+        });
+
+        $(wrapper).once('tooltip-trigger').mouseout(function () {
+          $('.account-tooltip-body', wrapper).hide();
+        });
+      }); 
+    }
   },
 
   clear_review: function() {
-    console.log('clearing!');
+    // console.log('clearing!');
+  },
+
+  submit: function () {
+    $(Review.reviews.form).submit();
   }
 };
 

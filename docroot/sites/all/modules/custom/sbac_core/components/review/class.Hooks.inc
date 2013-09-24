@@ -55,6 +55,11 @@ class Hooks extends \devtools\Hooks {
    * the desk for hours wondering why. Source: dent in desk.
    */
   function hook_init() {
+    // $account = user_load(1);
+    // $account_output = user_view($account, 'tooltip');
+    // print render($account_output);
+
+    // exit();
 
   }
 
@@ -280,6 +285,7 @@ class Hooks extends \devtools\Hooks {
       'status' => 1,
       'uid' => $user->uid,
       'node_id' => $node->nid,
+      'id' => NULL,
     ));
 
     // set submitted form values on the entity
@@ -330,6 +336,27 @@ class Hooks extends \devtools\Hooks {
         'callback' => $this::AJAX_CALLBACK,
         'wrapper' => $this::FORM_WRAPPER,
       ),
+    );
+
+    // submit button
+    $trigger_id = 'review-submit';
+    $url = 'node/' . $node->nid . '/review/end_use/submit/' . $trigger_id;
+
+    $options = array(
+      'attributes' => array(
+        'class' => array(
+          'use-ajax',
+          'use-dialog',
+          'button',
+          'radius',
+        ),
+        'id' => $trigger_id,
+      ),
+    );
+
+    $form['state_preview']['actions']['submit_link'] = array(
+      '#markup' => l(t('Submit Modal'), $url, $options),
+      '#weight' =>  10,
     );
   }
 }

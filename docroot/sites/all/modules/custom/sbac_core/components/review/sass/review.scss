@@ -209,3 +209,19 @@
   }
 }
 
+/* user tooltips */
+.account-tooltip {
+  position: relative;
+
+  .account-tooltip-body {
+    background: #eee;
+    border: 1px #ccc solid;
+    display: none;
+    left: 20px;
+    padding: 10px;
+    position: absolute;
+    top: 20px;
+    width: 500px;
+  }
+}
+

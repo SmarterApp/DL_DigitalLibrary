@@ -26,6 +26,20 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
       '#value' => t('Cancel Review'),
     );
 
+  // submit state
+    $form['state_submit']['intro'] = array(
+      '#markup' => '
+                    <div class="intro">
+                      ' . t('Submitting your review will make it available to all the Digital Library members.') . '
+                    </div>
+                   ',
+    );
+
+    $form['state_submit']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Submit'),
+    );
+
   // dialog configuration
     $dialog_common_options = array(
       'width' => '700px',
@@ -52,9 +66,16 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
           'submit_autoclose' => TRUE,
           'submit_redirect' => url('node/' . $node->nid . '/feedback/redirect/review-reviews', array('absolute' => TRUE)),
           'close_link_text' => t('Continue Review'),
+        ) + $state_common_options,
+
+        'submit' => array(
+          'dialog' => array('title' => t('You are about to submit your review')) + $dialog_common_options,
+          'submit' => array('submit' => array('element' => &$form['state_submit']['submit'])),
+          'submit_autoclose' => TRUE,
+          'close_link_text' => t('Cancel'),
           'submit_js_callback' => array(
             'behavior' => 'review',
-            'method' => 'clear_review',
+            'method' => 'submit',
           )
         ) + $state_common_options,
 
