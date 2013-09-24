@@ -25,7 +25,7 @@ function user_has_review($nid, $uid) {
  * @return [type]         [description]
  */
 function review_load_more($node, $sortby, $page) {
-  $page_size = 10;
+  $page_size = 1;
   $offset = $page * $page_size;
 
   $result = FALSE;
@@ -52,5 +52,50 @@ function review_load_more($node, $sortby, $page) {
     }
   }
 
+  // do we show the 'load more reviews' button?
+  $count_query = "
+                    SELECT    COUNT(id)
+                    FROM      eck_review
+                    WHERE     type = 'end_use'
+                    AND       node_id = :node_id
+                    AND       status = 1
+                 ";
+
+  $total = db_query($count_query, array(':node_id' => $node->nid))->fetchField();
+
+  if ($offset + $page_size < $total) {
+    $url = 'load_more/review/' . $node->nid . '/' . $sortby . '/' . ++$page;
+
+    $options = array(
+      'attributes' => array(
+        'class' => array(
+          'use-ajax',
+          'button',
+          'radius',
+        ),
+        'id' => 'reviews-load-more',
+      ),
+    );
+
+    $output .= l('Load More Reviews', $url, $options);
+  }
+
   return $output;
+}
+
+/**
+ * Loads more reviews through an AJAX call.
+ * 
+ * @param  [type] $node   [description]
+ * @param  [type] $sortby [description]
+ * @param  [type] $page   [description]
+ * @return [type]         [description]
+ */
+function review_load_more_ajax($node, $sortby, $page) {
+  $output = review_load_more($node, $sortby, $page);
+
+  $commands = array();
+  $commands[] = ajax_command_replace('#reviews-load-more', $output);
+
+  ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
