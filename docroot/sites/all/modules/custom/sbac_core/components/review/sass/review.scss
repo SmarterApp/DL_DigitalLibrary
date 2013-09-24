@@ -34,18 +34,18 @@
 }
 
 /* layout */
-.review-form-header {
-  margin-bottom: 10px;
-}
-
 #review-wrap-reviews {
   margin: 0 30px;
   padding-bottom: 20px;
 
-  .section-title {
-    float: left;
-    font-size: 1.2em;
-    font-weight: bold;
+  .review-form-header {
+    margin-bottom: 10px;
+
+    .section-title {
+      float: left;
+      font-size: 1.3em;
+      font-weight: bold;
+    }
   }
 
   .review-form-trigger {
@@ -164,6 +164,34 @@
         }
       }
     }
+  }
+
+  .review-section-header {
+    border-bottom: 1px #000 solid;
+    border-top: 1px #000 solid;
+    font-size: 1em;
+    margin: 10px 0;
+    padding: 10px 0;
+
+    .section-title {
+      font-weight: bold;
+
+      .secondary {
+        font-weight: normal;
+      }
+    }
+
+    .sorting-order {
+      float: right;
+    }
+  }
+
+  #summary {
+
+  }
+
+  #individual-reviews {
+
   }
 }
 

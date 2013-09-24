@@ -39,12 +39,12 @@ class Reviews extends Base {
                     <div class="review-section-header">
                       <div class="section-title">
                         ' . t('Summary of All Reviews') . '
-                        <span class="secondary">' . t('Based on 300 reviews') . '</span>
+                        <span class="secondary">' . t('(Based on 300 reviews)') . '</span>
                       </div>
                       <div class="clear"></div>
                     </div>
                     <div class="summary-content">
-                    test 123
+                      <br /><br /><br /><br /><br /><br /><br /><br />
                     </div>
                   </div>
                  ';
@@ -52,8 +52,15 @@ class Reviews extends Base {
     // existing reviews
       module_load_include('inc', 'sbac_core', 'components/review/review.pages');
 
+      if (!isset($_GET['sort'])) {
+        $sort = 'newest';
+      }
+      else {
+        $sort = $_GET['sort'];
+      }
+
       $page = 0;
-      if ($reviews = review_load_more($this->_node, 'newest', $page)) {
+      if ($reviews = review_load_more($this->_node, $sort, $page)) {
         $sort_links = array();
 
         $sort_links[] = l('Newest', 'node/' . $this->_node->nid, array(
