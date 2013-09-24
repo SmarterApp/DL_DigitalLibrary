@@ -53,6 +53,10 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_user_view().
    */
   function hook_user_view($account, $view_mode, $langcode) {
+    if ($view_mode !== 'full') {
+      return;
+    }
+
     // add profile edit form
       if (user_access('view and edit account information')) {
         drupal_add_js(drupal_get_path('module', 'sbac_user') . '/js/sbac_user.js');
@@ -79,22 +83,24 @@ class Hooks extends \devtools\Hooks {
         );
       }
 
-    // // add activity tab
-    //   $activity_content = '';
-    //   $help_content = variable_get('user_activity_help', input_default_full_html());
-    //   $activity_content .= '<div id="activity">';
-    //   $activity_content .= '<div class="helpful-info">';
-    //   $activity_content .= '<h2>' . t('Helpful Information') . '</h2>';
-    //   $activity_content .= more_less_text(filter_text($help_content));
-    //   $activity_content .= '</div>';
-    //   $activity_content .= '</div>';
+    /*
+    // add activity tab
+      $activity_content = '';
+      $help_content = variable_get('user_activity_help', input_default_full_html());
+      $activity_content .= '<div id="activity">';
+      $activity_content .= '<div class="helpful-info">';
+      $activity_content .= '<h2>' . t('Helpful Information') . '</h2>';
+      $activity_content .= more_less_text(filter_text($help_content));
+      $activity_content .= '</div>';
+      $activity_content .= '</div>';
 
-    //   $account->content['sections']['activity'] = array(
-    //     'title' => t('Activity'),
-    //     'content' => $activity_content,
-    //     'disabled' => FALSE,
-    //   );
-
+      $account->content['sections']['activity'] = array(
+        'title' => t('Activity'),
+        'content' => $activity_content,
+        'disabled' => FALSE,
+      );
+    */
+   
     // add notificatons tab (pulled in via taskit module)
       if (taskit_task_access($account)) {
         drupal_add_js($this->_components_path . '/taskit/js/taskit.js');
