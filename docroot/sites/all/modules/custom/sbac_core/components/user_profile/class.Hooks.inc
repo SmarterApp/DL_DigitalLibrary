@@ -53,9 +53,10 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_user_view().
    */
   function hook_user_view($account, $view_mode, $langcode) {
-    if ($view_mode !== 'full') {
-      return;
-    }
+    // we don't want to add tabs on any other view modes
+      if ($view_mode !== 'full') {
+        return;
+      }
 
     // add profile edit form
       if (user_access('view and edit account information')) {

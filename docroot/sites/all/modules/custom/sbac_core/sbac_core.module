@@ -20,6 +20,9 @@ if (module_exists('devtools')) {
   // this must happen as early as possible in order to load any files that
   // may have menu access callbacks
   devtools_load('sbac_core');
+
+  module_load_include('inc', 'sbac_core', 'components/feedback/feedback.theme');
+  module_load_include('inc', 'sbac_core', 'components/review/review.theme');
 }
 
 /*----------------------------------------------------------------------------
@@ -213,7 +216,6 @@ function sbac_core_devtools_components() {
       'files' => array(
         'review.forms.inc',
         'review.pages.modal_eu.inc',
-        'review.theme.inc',
       ),
     ),
     'sections' => array(),

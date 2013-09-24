@@ -10,7 +10,7 @@
 function sbac_user_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: access PDF version.
+  // Exported permission: 'access PDF version'.
   $permissions['access PDF version'] = array(
     'name' => 'access PDF version',
     'roles' => array(
@@ -20,7 +20,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'print_pdf',
   );
 
-  // Exported permission: access administration menu.
+  // Exported permission: 'access administration menu'.
   $permissions['access administration menu'] = array(
     'name' => 'access administration menu',
     'roles' => array(
@@ -37,7 +37,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'admin_menu',
   );
 
-  // Exported permission: access administration pages.
+  // Exported permission: 'access administration pages'.
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
@@ -57,7 +57,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: access content.
+  // Exported permission: 'access content'.
   $permissions['access content'] = array(
     'name' => 'access content',
     'roles' => array(
@@ -77,7 +77,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: access content overview.
+  // Exported permission: 'access content overview'.
   $permissions['access content overview'] = array(
     'name' => 'access content overview',
     'roles' => array(
@@ -86,7 +86,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: access draggableviews.
+  // Exported permission: 'access draggableviews'.
   $permissions['access draggableviews'] = array(
     'name' => 'access draggableviews',
     'roles' => array(
@@ -97,7 +97,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'draggableviews',
   );
 
-  // Exported permission: access site in maintenance mode.
+  // Exported permission: 'access site in maintenance mode'.
   $permissions['access site in maintenance mode'] = array(
     'name' => 'access site in maintenance mode',
     'roles' => array(
@@ -106,7 +106,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: access site reports.
+  // Exported permission: 'access site reports'.
   $permissions['access site reports'] = array(
     'name' => 'access site reports',
     'roles' => array(
@@ -115,7 +115,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: access user profiles.
+  // Exported permission: 'access user profiles'.
   $permissions['access user profiles'] = array(
     'name' => 'access user profiles',
     'roles' => array(
@@ -124,7 +124,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
-  // Exported permission: access workbench.
+  // Exported permission: 'access workbench'.
   $permissions['access workbench'] = array(
     'name' => 'access workbench',
     'roles' => array(
@@ -136,7 +136,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench',
   );
 
-  // Exported permission: add media from remote sources.
+  // Exported permission: 'add media from remote sources'.
   $permissions['add media from remote sources'] = array(
     'name' => 'add media from remote sources',
     'roles' => array(
@@ -152,7 +152,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'media_internet',
   );
 
-  // Exported permission: administer actions.
+  // Exported permission: 'administer actions'.
   $permissions['administer actions'] = array(
     'name' => 'administer actions',
     'roles' => array(
@@ -161,7 +161,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: administer content types.
+  // Exported permission: 'administer content types'.
   $permissions['administer content types'] = array(
     'name' => 'administer content types',
     'roles' => array(
@@ -170,7 +170,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: administer menu.
+  // Exported permission: 'administer menu'.
   $permissions['administer menu'] = array(
     'name' => 'administer menu',
     'roles' => array(
@@ -179,7 +179,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'menu',
   );
 
-  // Exported permission: administer modules.
+  // Exported permission: 'administer modules'.
   $permissions['administer modules'] = array(
     'name' => 'administer modules',
     'roles' => array(
@@ -188,7 +188,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: administer nodes.
+  // Exported permission: 'administer nodes'.
   $permissions['administer nodes'] = array(
     'name' => 'administer nodes',
     'roles' => array(
@@ -198,7 +198,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: administer permissions.
+  // Exported permission: 'administer permissions'.
   $permissions['administer permissions'] = array(
     'name' => 'administer permissions',
     'roles' => array(
@@ -207,7 +207,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
-  // Exported permission: administer site configuration.
+  // Exported permission: 'administer site configuration'.
   $permissions['administer site configuration'] = array(
     'name' => 'administer site configuration',
     'roles' => array(
@@ -216,7 +216,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: administer software updates.
+  // Exported permission: 'administer software updates'.
   $permissions['administer software updates'] = array(
     'name' => 'administer software updates',
     'roles' => array(
@@ -225,7 +225,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: administer taxonomy.
+  // Exported permission: 'administer taxonomy'.
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
@@ -237,7 +237,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: administer themes.
+  // Exported permission: 'administer themes'.
   $permissions['administer themes'] = array(
     'name' => 'administer themes',
     'roles' => array(
@@ -246,7 +246,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: administer url aliases.
+  // Exported permission: 'administer url aliases'.
   $permissions['administer url aliases'] = array(
     'name' => 'administer url aliases',
     'roles' => array(
@@ -255,7 +255,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'path',
   );
 
-  // Exported permission: administer users.
+  // Exported permission: 'administer users'.
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
@@ -264,7 +264,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
-  // Exported permission: administer workbench.
+  // Exported permission: 'administer workbench'.
   $permissions['administer workbench'] = array(
     'name' => 'administer workbench',
     'roles' => array(
@@ -273,7 +273,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench',
   );
 
-  // Exported permission: administer workbench moderation.
+  // Exported permission: 'administer workbench moderation'.
   $permissions['administer workbench moderation'] = array(
     'name' => 'administer workbench moderation',
     'roles' => array(
@@ -282,7 +282,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: block IP addresses.
+  // Exported permission: 'block IP addresses'.
   $permissions['block IP addresses'] = array(
     'name' => 'block IP addresses',
     'roles' => array(
@@ -291,7 +291,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: bypass node access.
+  // Exported permission: 'bypass node access'.
   $permissions['bypass node access'] = array(
     'name' => 'bypass node access',
     'roles' => array(
@@ -300,7 +300,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: bypass workbench moderation.
+  // Exported permission: 'bypass workbench moderation'.
   $permissions['bypass workbench moderation'] = array(
     'name' => 'bypass workbench moderation',
     'roles' => array(
@@ -309,7 +309,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: cancel account.
+  // Exported permission: 'cancel account'.
   $permissions['cancel account'] = array(
     'name' => 'cancel account',
     'roles' => array(
@@ -318,7 +318,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
-  // Exported permission: change own username.
+  // Exported permission: 'change own username'.
   $permissions['change own username'] = array(
     'name' => 'change own username',
     'roles' => array(
@@ -327,7 +327,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
-  // Exported permission: create help_page content.
+  // Exported permission: 'create help_page content'.
   $permissions['create help_page content'] = array(
     'name' => 'create help_page content',
     'roles' => array(
@@ -338,7 +338,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: delete any help_page content.
+  // Exported permission: 'delete any help_page content'.
   $permissions['delete any help_page content'] = array(
     'name' => 'delete any help_page content',
     'roles' => array(
@@ -349,7 +349,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: delete own help_page content.
+  // Exported permission: 'delete own help_page content'.
   $permissions['delete own help_page content'] = array(
     'name' => 'delete own help_page content',
     'roles' => array(
@@ -360,7 +360,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: delete revisions.
+  // Exported permission: 'delete revisions'.
   $permissions['delete revisions'] = array(
     'name' => 'delete revisions',
     'roles' => array(
@@ -370,7 +370,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: download terms and conditions pdf.
+  // Exported permission: 'download terms and conditions pdf'.
   $permissions['download terms and conditions pdf'] = array(
     'name' => 'download terms and conditions pdf',
     'roles' => array(
@@ -380,7 +380,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'sbac_user',
   );
 
-  // Exported permission: edit any help_page content.
+  // Exported permission: 'edit any help_page content'.
   $permissions['edit any help_page content'] = array(
     'name' => 'edit any help_page content',
     'roles' => array(
@@ -391,7 +391,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: edit own help_page content.
+  // Exported permission: 'edit own help_page content'.
   $permissions['edit own help_page content'] = array(
     'name' => 'edit own help_page content',
     'roles' => array(
@@ -402,7 +402,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: moderate content from approved to needs_review.
+  // Exported permission: 'moderate content from approved to needs_review'.
   $permissions['moderate content from approved to needs_review'] = array(
     'name' => 'moderate content from approved to needs_review',
     'roles' => array(
@@ -411,7 +411,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: moderate content from approved to published.
+  // Exported permission: 'moderate content from approved to published'.
   $permissions['moderate content from approved to published'] = array(
     'name' => 'moderate content from approved to published',
     'roles' => array(
@@ -420,7 +420,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: moderate content from being_reviewed to approved.
+  // Exported permission: 'moderate content from being_reviewed to approved'.
   $permissions['moderate content from being_reviewed to approved'] = array(
     'name' => 'moderate content from being_reviewed to approved',
     'roles' => array(
@@ -429,7 +429,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: moderate content from being_reviewed to needs_review.
+  // Exported permission: 'moderate content from being_reviewed to needs_review'.
   $permissions['moderate content from being_reviewed to needs_review'] = array(
     'name' => 'moderate content from being_reviewed to needs_review',
     'roles' => array(
@@ -438,7 +438,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: moderate content from being_reviewed to rejected.
+  // Exported permission: 'moderate content from being_reviewed to rejected'.
   $permissions['moderate content from being_reviewed to rejected'] = array(
     'name' => 'moderate content from being_reviewed to rejected',
     'roles' => array(
@@ -447,7 +447,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: moderate content from creation to draft.
+  // Exported permission: 'moderate content from creation to draft'.
   $permissions['moderate content from creation to draft'] = array(
     'name' => 'moderate content from creation to draft',
     'roles' => array(
@@ -457,7 +457,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: moderate content from draft to needs_review.
+  // Exported permission: 'moderate content from draft to needs_review'.
   $permissions['moderate content from draft to needs_review'] = array(
     'name' => 'moderate content from draft to needs_review',
     'roles' => array(
@@ -468,7 +468,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: moderate content from needs_review to being_reviewed.
+  // Exported permission: 'moderate content from needs_review to being_reviewed'.
   $permissions['moderate content from needs_review to being_reviewed'] = array(
     'name' => 'moderate content from needs_review to being_reviewed',
     'roles' => array(
@@ -477,7 +477,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: moderate content from rejected to needs_review.
+  // Exported permission: 'moderate content from rejected to needs_review'.
   $permissions['moderate content from rejected to needs_review'] = array(
     'name' => 'moderate content from rejected to needs_review',
     'roles' => array(
@@ -487,7 +487,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: revert revisions.
+  // Exported permission: 'revert revisions'.
   $permissions['revert revisions'] = array(
     'name' => 'revert revisions',
     'roles' => array(
@@ -498,7 +498,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: select account cancellation method.
+  // Exported permission: 'select account cancellation method'.
   $permissions['select account cancellation method'] = array(
     'name' => 'select account cancellation method',
     'roles' => array(
@@ -507,7 +507,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
-  // Exported permission: send approval emails.
+  // Exported permission: 'send approval emails'.
   $permissions['send approval emails'] = array(
     'name' => 'send approval emails',
     'roles' => array(
@@ -518,7 +518,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'sbac_help',
   );
 
-  // Exported permission: use text format full_html.
+  // Exported permission: 'use text format full_html'.
   $permissions['use text format full_html'] = array(
     'name' => 'use text format full_html',
     'roles' => array(
@@ -529,7 +529,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'filter',
   );
 
-  // Exported permission: use workbench_moderation my drafts tab.
+  // Exported permission: 'use workbench_moderation my drafts tab'.
   $permissions['use workbench_moderation my drafts tab'] = array(
     'name' => 'use workbench_moderation my drafts tab',
     'roles' => array(
@@ -539,7 +539,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: use workbench_moderation needs review tab.
+  // Exported permission: 'use workbench_moderation needs review tab'.
   $permissions['use workbench_moderation needs review tab'] = array(
     'name' => 'use workbench_moderation needs review tab',
     'roles' => array(
@@ -550,7 +550,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: view all unpublished content.
+  // Exported permission: 'view all unpublished content'.
   $permissions['view all unpublished content'] = array(
     'name' => 'view all unpublished content',
     'roles' => array(
@@ -562,7 +562,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: view and edit account information.
+  // Exported permission: 'view and edit account information'.
   $permissions['view and edit account information'] = array(
     'name' => 'view and edit account information',
     'roles' => array(
@@ -571,7 +571,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'sbac_user',
   );
 
-  // Exported permission: view moderation history.
+  // Exported permission: 'view moderation history'.
   $permissions['view moderation history'] = array(
     'name' => 'view moderation history',
     'roles' => array(
@@ -583,7 +583,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: view moderation messages.
+  // Exported permission: 'view moderation messages'.
   $permissions['view moderation messages'] = array(
     'name' => 'view moderation messages',
     'roles' => array(
@@ -595,7 +595,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
-  // Exported permission: view own unpublished content.
+  // Exported permission: 'view own unpublished content'.
   $permissions['view own unpublished content'] = array(
     'name' => 'view own unpublished content',
     'roles' => array(
@@ -615,7 +615,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: view private files.
+  // Exported permission: 'view private files'.
   $permissions['view private files'] = array(
     'name' => 'view private files',
     'roles' => array(
@@ -627,7 +627,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'file_entity',
   );
 
-  // Exported permission: view revisions.
+  // Exported permission: 'view revisions'.
   $permissions['view revisions'] = array(
     'name' => 'view revisions',
     'roles' => array(
@@ -639,7 +639,7 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: view the administration theme.
+  // Exported permission: 'view the administration theme'.
   $permissions['view the administration theme'] = array(
     'name' => 'view the administration theme',
     'roles' => array(
