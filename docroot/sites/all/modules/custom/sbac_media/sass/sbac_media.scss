@@ -91,9 +91,13 @@
 
 #sbac-field-file-container {
 	.form-item-field-embed-video {
-		width: 45%;
+		width: 55%;
 		margin-right: 2%;
 		float: left;
+
+		.description {
+			display: block;
+		}
 	}
 
 	.form-file {

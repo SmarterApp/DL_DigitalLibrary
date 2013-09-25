@@ -89,27 +89,31 @@
 
 /* line 93, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video {
-  width: 45%;
+  width: 55%;
   margin-right: 2%;
   float: left;
 }
-/* line 99, ../sass/sbac_media.scss */
+/* line 98, ../sass/sbac_media.scss */
+#sbac-field-file-container .form-item-field-embed-video .description {
+  display: block;
+}
+/* line 103, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-file {
   width: 50%;
   float: left;
   clear: both;
 }
-/* line 105, ../sass/sbac_media.scss */
+/* line 109, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-submit {
   float: right;
 }
-/* line 109, ../sass/sbac_media.scss */
+/* line 113, ../sass/sbac_media.scss */
 #sbac-field-file-container .video-embed-button {
   margin-top: 3em;
 }
 
 /* overlay cancel button */
-/* line 115, ../sass/sbac_media.scss */
+/* line 119, ../sass/sbac_media.scss */
 #edit-cancel-media-overlay {
   margin-right: 10px;
 }
