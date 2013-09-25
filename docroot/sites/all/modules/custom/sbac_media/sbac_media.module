@@ -222,6 +222,11 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     '#suffix'=>'</div>',
   );
 
+  $form['field_file_container']['materials'] = array(
+    '#markup' => '<div id="sbac-media-list"></div>',
+    '#weight' => -100,
+  );
+
   $media_items = array();
   if (isset($form['#node']->nid) && $form['#node']->nid) {
     $media_items = sbac_media_load_items($form['#node']->nid);
