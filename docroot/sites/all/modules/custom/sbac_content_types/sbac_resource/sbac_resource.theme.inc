@@ -495,9 +495,8 @@ function _sbac_resource_reviewer_links($fields) {
         // check for a completed GK by any user and then init the review process
         if ($completed = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 1, 1, 'single')) {
           // check for an active Review by the current user to continue review
-          if ($active = _sbac_resource_determine_feedback($nid, 'review', $user->uid, 1, 0, 1, 'single')) {
+          if ($active = _sbac_resource_determine_feedback($nid, 'qc', $user->uid, 1, 0, 1, 'single')) {
             $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc'));
-
             $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
             $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE));
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));

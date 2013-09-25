@@ -701,7 +701,7 @@ function _sbac_resource_apply_filters(&$view) {
       }
 
       $subject_tid_all = 153;
-      $grade_tid_all = 122;
+      $grade_tid_all = 122; 
 
       // subject
       if (!isset($view_filters['field_subject_tid']['value'])) {

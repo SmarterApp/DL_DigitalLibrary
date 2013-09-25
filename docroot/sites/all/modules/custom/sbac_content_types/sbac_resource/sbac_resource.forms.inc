@@ -205,34 +205,35 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     return $form;
   }
 
+  $duplicates = FALSE;
   if (isset($form_state['sbac_media_duplicates']) && $form_state['sbac_media_duplicates']) {
-    $form['field_file_container']['run_js'] = array(
-      '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
-    );
-    return $form;
+    $duplicates = TRUE;
+    unset($form['sbac_media_duplicates']);
   }
 
   ctools_include('ajax');
   $selector = NULL;
   $valid = FALSE;
-  $active_tab = $form_state['values']['additional_settings__active_tab'];
-  switch ($active_tab) {
-    case 'edit-group_materials':
-      $selector = ".vertical-tabs-list li:nth-child(3) a";
-      $valid = FALSE;
-      break;
-    case 'edit-group_basic':
-      $selector = ".vertical-tabs-list li:nth-child(2) a";
-      $valid = FALSE;
-      break;
-    case 'edit-group_tags':
-      $selector = NULL;
-      $valid = TRUE;
-      break;
-    case 'edit-group_summary':
-      $valid = FALSE;
-      $selector = ".vertical-tabs-list li:nth-child(4) a";
-      break;
+  if (!$duplicates) {
+    $active_tab = $form_state['values']['additional_settings__active_tab'];
+    switch ($active_tab) {
+      case 'edit-group_materials':
+        $selector = ".vertical-tabs-list li:nth-child(3) a";
+        $valid = FALSE;
+        break;
+      case 'edit-group_basic':
+        $selector = ".vertical-tabs-list li:nth-child(2) a";
+        $valid = FALSE;
+        break;
+      case 'edit-group_tags':
+        $selector = NULL;
+        $valid = TRUE;
+        break;
+      case 'edit-group_summary':
+        $valid = FALSE;
+        $selector = ".vertical-tabs-list li:nth-child(4) a";
+        break;
+    }
   }
 
   // Set coming from state to Draft.
@@ -248,11 +249,20 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
   // Clear drupal messages.
   drupal_get_messages();
-  // Add appropriate JS.
-  drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
-  if ($selector) {
-    drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
+
+  if (!$duplicates) {
+    // Add appropriate JS.
+    drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
+    if ($selector) {
+      drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
+    }
   }
+  else {
+    $form['run_js'] = array(
+      '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
+    );
+  }
+
   return $form;
 }
 
@@ -564,22 +574,23 @@ function sbac_resource_validate_materials(&$form, &$form_state) {
     _sbac_resource_remove_error_message($error);
   }
   else {
-    $duplicates = sbac_media_check_duplicates($media_items);
-    if ($duplicates) {
-      $form_state['sbac_media_duplicates'] = TRUE;
-      // set a form_state variable that says there is duplicates.
-      // no need to loop around all, just need to find first dup.
-      // (will need to update the function or create a new one)
-      // in the submit handler, create a condition to check for the form state variable
-      // then return js that pops up the modal like in sbac_media
-      // hopefully this works (above)
-      // inside the modal, send in this nid,
-      // which loads up a form, with cancel and save continue
-      // the form will load up the media items from the nid
-      // loop around and create output for the user to see.
-      // on save / continue closes the modal, saves the node (submits to alfresco)
-      // and returns the form to the next tab
-      // cancel keeps the user on the materials tab
+    $active_tab = $form_state['values']['additional_settings__active_tab'];
+    if ($active_tab == 'edit-group_materials') {
+      $duplicates = sbac_media_check_duplicates($media_items);
+      if ($duplicates) {
+        $form_state['sbac_media_duplicates'] = TRUE;
+        // set a form_state variable that says there is duplicates.
+        // no need to loop around all, just need to find first dup.
+        // in the submit handler, create a condition to check for the form state variable
+        // then return js that pops up the modal like in sbac_media
+        // inside the modal, send in this nid,
+        // which loads up a form, with cancel and save continue
+        // the form will load up the media items from the nid
+        // loop around and create output for the user to see.
+        // data is already saved at this point.
+        // on save / continue closes the modal, sends to next tab
+        // cancel keeps the user on the materials tab
+      }
     }
   }
 
