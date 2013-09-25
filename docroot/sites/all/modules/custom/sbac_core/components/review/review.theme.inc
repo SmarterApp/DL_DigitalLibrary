@@ -96,7 +96,6 @@ function theme_review_vote($variables) {
       continue;
     }
 
-    $output .= t('Was this review helpful?');
     $output .= rate_generate_widget($widget_id, 'review', $entity->id);
   }
 

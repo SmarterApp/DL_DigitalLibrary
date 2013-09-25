@@ -257,6 +257,13 @@ function sbac_core_workbench_moderation_transition($node, $previous_state, $new_
   \sbac_core\Core::hook('workbench_moderation_transition', NULL, $node, $previous_state, $new_state);
 }
 
+/**
+ * Implements hook_rate_widget_alter().
+ */
+function sbac_core_rate_widget_alter(&$widget, $context) {
+  \sbac_core\Core::hook('rate_widget_alter', NULL, $widget, $context);
+}
+
 /*----------------------------------------------------------------------------
       DEVTOOLS HANDLERS
 ----------------------------------------------------------------------------*/

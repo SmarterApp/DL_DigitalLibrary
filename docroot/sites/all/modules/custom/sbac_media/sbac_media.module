@@ -36,6 +36,13 @@ function sbac_media_menu() {
     'title' => 'Delete Confirmation',
   );
 
+  $items['sbac-media/%ctools_js/duplicates'] = array(
+    'page callback' => 'sbac_media_duplicates',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'title' => 'Duplicates',
+  );
+
   return $items;
 }
 
@@ -499,20 +506,42 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
  * @param $form_state
  */
 function sbac_media_check_duplicates($media_items) {
-  $duplicates = array();
+  $duplicates = FALSE;
 
   foreach ($media_items as $media_item) {
     // && $media_item->document_id
     if ($media_item->fid) {
       $matches = db_query("SELECT * FROM {eck_media} WHERE file_hash = :file_hash AND nid <> :nid", array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid));
-      foreach ($matches as $match) {
-        // Create an array of current media item -> all matches.
-        $duplicates[$media_item->nid][$match->nid][] = $match;
+      if ($matches->rowCount()) {
+        $duplicates = TRUE;
+        break;
       }
     }
   }
 
   return $duplicates;
+}
+
+/**
+ * Counts the media items that are duplicated.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_count_duplicates($media_items) {
+  $count = 0;
+
+  foreach ($media_items as $media_item) {
+    // && $media_item->document_id
+    if ($media_item->fid) {
+      $matches = db_query("SELECT * FROM {eck_media} WHERE file_hash = :file_hash AND nid <> :nid", array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid));
+      if ($matches->rowCount()) {
+        $count +=$matches->rowCount();
+      }
+    }
+  }
+
+  return $count;
 }
 
 /**
@@ -541,6 +570,20 @@ function sbac_media_load_items($nid) {
     }
   }
   return $media_items;
+}
+
+/**
+ * Load the single item.
+ *
+ * @param $id
+ */
+function sbac_media_load_item($id) {
+  $query = db_select('eck_media', 'm');
+  $query->fields('m', array('*'));
+  $query->condition('m.id', $id);
+  $query->execute();
+  $record = $query->execute();
+  return $record;
 }
 
 /**
@@ -777,4 +820,123 @@ function sbac_media_save_embedded_source($embedded_video_source, $nid) {
     $media->embed_url = $embedded_video_source;
     entity_save('media', $media);
   }
+}
+
+/**
+ * Displays the duplicates form in a modal.
+ *
+ * @param bool $js
+ */
+function sbac_media_duplicates($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $nid = $_GET['nid'];
+    if ($nid) {
+      $media_items = sbac_media_load_items($nid);
+      $count = sbac_media_count_duplicates($media_items);
+      $title = 'There are :count published resources in the Smarter Balanced Digital Library with similar combination of materials';
+      $form_state = array(
+        'title' => t($title, array(':count' => $count)),
+        'ajax' => $js,
+        'sbac-media-items' => $media_items,
+      );
+
+      $output = ctools_modal_form_wrapper('sbac_media_duplicates_form', $form_state);
+      if (!empty($form_state['executed'])) {
+        $output = array();
+        $output[] = ctools_modal_command_dismiss();
+        if ($form_state['triggering_element']['#value'] != 'Cancel') {
+
+        }
+      }
+      print ajax_render($output);
+      exit();
+    }
+    else {
+      return;
+    }
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_media_duplicates_form($form, &$form_state) {
+  $duplicates = array();
+  foreach ($form_state['sbac-media-items'] as $media_item) {
+    // && $media_item->document_id
+    if ($media_item->fid) {
+      $matches = db_query("SELECT * FROM {eck_media} WHERE file_hash = :file_hash AND nid <> :nid", array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid));
+      foreach ($matches as $match) {
+        $duplicates[$match->nid][$match->id] = $match;
+      }
+    }
+  }
+
+  if ($duplicates) {
+    $output = '<div class="sbac-media-duplicates-container">';
+    foreach ($duplicates as $resource_nid => $media_items) {
+      $node = node_load($resource_nid);
+      $url = 'node/' . $node->nid;
+      if (isset($node->path['alias'])) {
+        $url = $node->path['alias'];
+      }
+
+      $output .= '<p>' . l($node->title, $url, array('attributes' => array('class' => array('sbac-dup')), 'absolute' => TRUE, 'external' => TRUE)) . '</p>';
+      $output .= '<ul>';
+      foreach ($media_items as $media) {
+        $output .= '<li>' . $media->filename . '</li>';
+      }
+      $output .= '</ul>';
+      $output .= '<span class="duplicate-line"></span>';
+    }
+    $output .= '</div>';
+  }
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => $_SERVER['HTTP_REFERER'],
+  );
+
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $_GET['nid'],
+  );
+
+  $form['description'] = array(
+    '#markup' => '<p>' . t('Please help us maintain the quality of the Digital Library by creating original resources.') . '</p>',
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t('The following resources contain materials very similar to those you have uploaded.
+                            Click a resource title to view it in a new tab/window. You can cancel and adjust
+                            your resource materials or move forward to the next tab.') . '</p>',
+  );
+
+  $form['duplicates'] = array(
+    '#markup' => $output,
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-media-duplicates'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save and Continue',
+    '#attributes' => array('id' => array('edit-save-media-duplicates'))
+  );
+
+  return $form;
 }

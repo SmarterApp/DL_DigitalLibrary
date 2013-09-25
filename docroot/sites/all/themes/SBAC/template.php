@@ -525,3 +525,33 @@ function sbac_form_element($variables) {
 
   return $output;
 }
+
+/**
+ * Preprocess function for the yesno template.
+ */
+function sbac_preprocess_rate_template_yesno(&$variables) {
+  extract($variables);
+
+  $buttons = array();
+  foreach ($links as $link) {
+    $button = theme('rate_button', array('text' => $link['text'], 'href' => $link['href'], 'class' => 'rate-yesno-btn'));
+    $buttons[] = $button;
+  }
+  $variables['buttons'] = $buttons;
+
+  $info = array();
+  if ($mode == RATE_CLOSED) {
+    $info[] = t('Voting is closed.');
+  }
+  if ($mode != RATE_COMPACT && $mode != RATE_COMPACT_DISABLED) {
+    if (isset($results['user_vote'])) {
+      if ($results['user_vote'] == 'yes') {
+        $info[] = t('You found this review helpful. Thank you for your feedback.');
+      }
+      else {
+        $info[] = t('You <strong>did not</strong> find this review helpful. Thank you for your feedback.');
+      }
+    }
+  }
+  $variables['info'] = implode(' ', $info);
+}
