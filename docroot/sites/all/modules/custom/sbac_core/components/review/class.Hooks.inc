@@ -40,6 +40,11 @@ class Hooks extends \devtools\Hooks {
     ) + $ds_args);
 
     add_ds_field('review',  array(
+      'key' => 'review_vote',
+      'name' => t('Helpful Vote Widget'),
+    ) + $ds_args);
+
+    add_ds_field('review',  array(
       'key' => 'review_delete',
       'name' => t('Delete Button'),
     ) + $ds_args);

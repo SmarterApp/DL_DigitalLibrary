@@ -78,3 +78,27 @@ function theme_review_delete($variables) {
   }
   return $output;
 }
+
+/**
+ * Helpful Vote Widget
+ * @param  [type] $variables [description]
+ * @return [type]            [description]
+ */
+function theme_review_vote($variables) {
+  $output = '';
+
+  $entity = $variables['entity'];
+
+  $machine_name = 'review_helpful';
+  $widgets = variable_get(RATE_VAR_WIDGETS, array());
+  foreach ($widgets as $widget_id => $widget) {
+    if ($widget->name != $machine_name) {
+      continue;
+    }
+
+    $output .= t('Was this review helpful?');
+    $output .= rate_generate_widget($widget_id, 'review', $entity->id);
+  }
+
+  return $output;
+}
