@@ -356,7 +356,7 @@ class Hooks extends \devtools\Hooks {
     // render & add entity to the form data
     $form['state_preview']['view'] = array(
       '#type' => 'markup',
-      '#markup' => render($entity_render),
+      '#markup' => '<div class="preview">' . render($entity_render) . '</div>',
     );
 
     // footer text
