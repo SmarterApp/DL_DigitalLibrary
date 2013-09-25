@@ -10,6 +10,7 @@
     attach: function (context, settings) {
       // Hide the modal button.
       $('#sbac-media-internet-confirm').hide();
+      $('#sbac-media-modal-duplicates').hide();
 
       // Make the table sortable.
       var selector = '#sbac-media-list tbody';
