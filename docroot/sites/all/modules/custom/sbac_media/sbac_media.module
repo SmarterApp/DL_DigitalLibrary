@@ -361,10 +361,10 @@ function _sbac_media_create_list($media_items) {
 
     // Image.
     $type = _sbac_resource_determine_type($media_item);
-    $output .= '<td class="' . $type . '"></td>';
+    $output .= '<td class="' . $type . ' ui-icon"></td>';
 
     // Filename.
-    $output .= '<td class="ui-icon">' . $media_item->filename . '</td>';
+    $output .= '<td>' . $media_item->filename . '</td>';
 
     // Filesize.
     $bytes = 'Embedded Video';
