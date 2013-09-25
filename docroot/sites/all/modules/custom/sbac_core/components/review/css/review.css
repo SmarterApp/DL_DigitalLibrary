@@ -1,19 +1,18 @@
 /* mixins */
 /* layout */
 /* line 37, ../sass/review.scss */
-.review-form-header {
-  margin-bottom: 10px;
-}
-
-/* line 41, ../sass/review.scss */
 #review-wrap-reviews {
   margin: 0 30px;
   padding-bottom: 20px;
 }
-/* line 45, ../sass/review.scss */
-#review-wrap-reviews .section-title {
+/* line 41, ../sass/review.scss */
+#review-wrap-reviews .review-form-header {
+  margin-bottom: 10px;
+}
+/* line 44, ../sass/review.scss */
+#review-wrap-reviews .review-form-header .section-title {
   float: left;
-  font-size: 1.2em;
+  font-size: 1.3em;
   font-weight: bold;
 }
 /* line 51, ../sass/review.scss */
@@ -164,8 +163,60 @@
 #review-wrap-reviews #review-end-use-wrap form .actions-wrapper .final-submit {
   display: none;
 }
+/* line 169, ../sass/review.scss */
+#review-wrap-reviews .review-section-header {
+  border-bottom: 1px #000 solid;
+  border-top: 10px #000 solid;
+  font-size: 1em;
+  margin: 10px 0;
+  padding: 10px 0;
+}
+/* line 176, ../sass/review.scss */
+#review-wrap-reviews .review-section-header .section-title {
+  font-weight: bold;
+}
+/* line 179, ../sass/review.scss */
+#review-wrap-reviews .review-section-header .section-title .secondary {
+  font-weight: normal;
+}
+/* line 184, ../sass/review.scss */
+#review-wrap-reviews .review-section-header .sorting-order {
+  float: right;
+}
+/* line 195, ../sass/review.scss */
+#review-wrap-reviews #summary .appropriate-for .term {
+  font-size: 0.8em;
+  margin-bottom: 10px;
+}
+/* line 199, ../sass/review.scss */
+#review-wrap-reviews #summary .appropriate-for .term.highlight {
+  font-weight: bold;
+}
+/* line 205, ../sass/review.scss */
+#review-wrap-reviews #summary .item-title {
+  font-size: 0.9em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+/* line 211, ../sass/review.scss */
+#review-wrap-reviews #summary .left-col {
+  float: left;
+  width: 280px;
+}
+/* line 215, ../sass/review.scss */
+#review-wrap-reviews #summary .mid-col {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
+/* line 219, ../sass/review.scss */
+#review-wrap-reviews #summary .right-col {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
 
-/* line 170, ../sass/review.scss */
+/* line 229, ../sass/review.scss */
 .entity-review.view-mode-full {
   background: #eee;
   border: 1px #ccc solid;
@@ -173,47 +224,47 @@
   padding: 10px;
   font-size: 18px;
 }
-/* line 177, ../sass/review.scss */
+/* line 236, ../sass/review.scss */
 .entity-review.view-mode-full .field-label {
   margin-bottom: 5px;
 }
-/* line 181, ../sass/review.scss */
+/* line 240, ../sass/review.scss */
 .entity-review.view-mode-full .group-header {
   margin-bottom: 10px;
 }
-/* line 185, ../sass/review.scss */
+/* line 244, ../sass/review.scss */
 .entity-review.view-mode-full .group-left {
   width: 33%;
 }
-/* line 189, ../sass/review.scss */
+/* line 248, ../sass/review.scss */
 .entity-review.view-mode-full .group-middle {
   width: 33%;
 }
-/* line 191, ../sass/review.scss */
+/* line 250, ../sass/review.scss */
 .entity-review.view-mode-full .group-middle .field-name-field-pro-dev {
   padding-left: 10px;
 }
-/* line 196, ../sass/review.scss */
+/* line 255, ../sass/review.scss */
 .entity-review.view-mode-full .group-right {
   width: 33%;
 }
-/* line 198, ../sass/review.scss */
+/* line 257, ../sass/review.scss */
 .entity-review.view-mode-full .group-right .field-name-field-ease-use {
   padding-left: 10px;
 }
-/* line 203, ../sass/review.scss */
+/* line 262, ../sass/review.scss */
 .entity-review.view-mode-full .average-rating {
   margin-top: 10px;
 }
 
-/* line 213, ../sass/review.scss */
+/* line 272, ../sass/review.scss */
 .footer-title {
   font-weight: bold;
   margin: 10px 0;
 }
 
 /* modals */
-/* line 220, ../sass/review.scss */
+/* line 279, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -222,26 +273,31 @@
   line-height: normal;
   text-align: left;
 }
-/* line 229, ../sass/review.scss */
+/* line 288, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 233, ../sass/review.scss */
+/* line 292, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-/* line 238, ../sass/review.scss */
+/* line 297, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
+/* line 303, ../sass/review.scss */
+.dialog_review_end_use_form_delete #dialog .form-submit {
+  float: right;
+}
+
 /* user tooltips */
-/* line 244, ../sass/review.scss */
+/* line 309, ../sass/review.scss */
 .account-tooltip {
   position: relative;
 }
-/* line 247, ../sass/review.scss */
+/* line 312, ../sass/review.scss */
 .account-tooltip .account-tooltip-body {
   background: #eee;
   border: 1px #ccc solid;
@@ -253,7 +309,7 @@
   width: 500px;
   z-index: 50;
 }
-/* line 259, ../sass/review.scss */
+/* line 324, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }

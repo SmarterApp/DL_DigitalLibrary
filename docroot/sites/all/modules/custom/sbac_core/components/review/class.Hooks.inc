@@ -38,6 +38,16 @@ class Hooks extends \devtools\Hooks {
       'key' => 'review_author',
       'name' => t('Review Author'),
     ) + $ds_args);
+
+    add_ds_field('review',  array(
+      'key' => 'review_vote',
+      'name' => t('Helpful Vote Widget'),
+    ) + $ds_args);
+
+    add_ds_field('review',  array(
+      'key' => 'review_delete',
+      'name' => t('Delete Button'),
+    ) + $ds_args);
   }
 
   /*----------------------------------------------------------------------------
@@ -55,11 +65,6 @@ class Hooks extends \devtools\Hooks {
    * the desk for hours wondering why. Source: dent in desk.
    */
   function hook_init() {
-    // $account = user_load(1);
-    // $account_output = user_view($account, 'tooltip');
-    // print render($account_output);
-
-    // exit();
 
   }
 
@@ -78,6 +83,15 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('end_use', 1),
       'access callback' => 'resource_access',
       'access arguments' => array('access review process', 1),
+      'type' => MENU_CALLBACK,
+    ) + $base;
+
+    $items['load_more/review/%node/%/%'] = array(
+      'title' => 'Load More Reviews',
+      'page callback' => 'review_load_more_ajax',
+      'page arguments' => array(2, 3, 4),
+      'access callback' => 'resource_access',
+      'access arguments' => array('access review process', 2),
       'type' => MENU_CALLBACK,
     ) + $base;
 
@@ -183,6 +197,15 @@ class Hooks extends \devtools\Hooks {
     }
   }
 
+  /**
+   * Extends hook_entity_view_alter().
+   */
+  function hook_entity_view_alter(&$build, $type) {
+    // make sure a review's details text is limited to 140 chars on display
+    if ($type == 'review' && $build['#view_mode'] == 'full') {
+      $build['field_details'][0]['#markup'] = more_less_text($build['field_details'][0]['#markup'], 140);
+    }
+  }
   /*----------------------------------------------------------------------------
       MODULE HOOKS
   ----------------------------------------------------------------------------*/

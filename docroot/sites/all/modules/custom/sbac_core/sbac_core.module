@@ -133,6 +133,13 @@ function sbac_core_entity_presave($entity, $type) {
 }
 
 /**
+ * Implements hook_entity_view_alter().
+ */
+function sbac_core_entity_view_alter(&$build, $type) {
+  \sbac_core\Core::hook('entity_view_alter', NULL, $build, $type);
+}
+
+/**
  * Implements hook_node_view_alter().
  */
 function sbac_core_node_view_alter(&$build) {

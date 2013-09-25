@@ -42,6 +42,16 @@ function sbac_core_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'review_author',
     ),
+    'review_vote' => array(
+      'weight' => '7',
+      'label' => 'hidden',
+      'format' => 'review_vote',
+    ),
+    'review_delete' => array(
+      'weight' => '8',
+      'label' => 'hidden',
+      'format' => 'review_delete',
+    ),
   );
   $export['review|end_use|default'] = $ds_fieldsetting;
 
@@ -152,6 +162,8 @@ function sbac_core_ds_layout_settings_info() {
         4 => 'field_appropriate_for',
         5 => 'title',
         6 => 'field_details',
+        7 => 'review_vote',
+        8 => 'review_delete',
       ),
     ),
     'fields' => array(
@@ -162,6 +174,8 @@ function sbac_core_ds_layout_settings_info() {
       'field_appropriate_for' => 'footer',
       'title' => 'footer',
       'field_details' => 'footer',
+      'review_vote' => 'footer',
+      'review_delete' => 'footer',
     ),
     'classes' => array(),
     'wrappers' => array(

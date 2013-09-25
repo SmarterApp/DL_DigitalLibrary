@@ -493,6 +493,31 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
 }
 
 /**
+ * Checks if the media item is duplicated elsewhere.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_check_duplicates($media_items) {
+  $duplicates = array();
+
+  foreach ($media_items as $media_item) {
+    // && $media_item->document_id
+    if ($media_item->fid) {
+      $matches = db_query("SELECT * FROM {eck_media} WHERE file_hash = :file_hash AND nid <> :nid", array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid));
+      foreach ($matches as $match) {
+        // Create an array of current media item -> all matches.
+        $duplicates[$media_item->nid][$match->nid][] = $match;
+      }
+    }
+  }
+
+  return $duplicates;
+}
+
+/**
+ * Load the media items for the resource.
+ *
  * @param $nid
  * @return array
  */
@@ -511,6 +536,7 @@ function sbac_media_load_items($nid) {
       $media_item->filehash = $row->file_hash;
       $media_item->weight = $row->weight;
       $media_item->document_id = $row->document_id;
+      $media_item->embed_url = $row->embed_url;
       $media_items[] = $media_item;
     }
   }

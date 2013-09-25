@@ -114,7 +114,7 @@ function form_set_defaults($fields, $values, &$form) {
   else {
     if (!is_array($fields)) {
       $fields = array(
-        $fields
+        $fields,
       );
     }
 
@@ -157,7 +157,7 @@ function form_set_defaults($fields, $values, &$form) {
             // ex.
             //  for $data['und'][0]['value'] = 'test';,
             //  the $key_tree will be:
-            //    array('und', '0', 'value', 'tree')
+            //    array('und', '0', 'value', 'test')
 
             // get the submitted field value
             $field_val = array_pop($key_tree);

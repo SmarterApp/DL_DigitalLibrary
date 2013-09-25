@@ -2,15 +2,24 @@
 
 /**
  * The form to initialize End Use modal
- * @param  [type] $form           [description]
- * @param  [type] $form_state     [description]
- * @param  [type] $node           [description]
- * @param  [type] $state          [description]
- * @param  [type] $trigger_id     [description]
- * @return [type]                 [description]
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @param  [type] $node       [description]
+ * @param  [type] $state      [description]
+ * @param  [type] $trigger_id [description]
+ * @param  [type] $id         [description]
+ * @return [type]             [description]
  */
-function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
+function review_end_use_form($form, &$form_state, $node, $state, $trigger_id, $id = NULL) {
   $form = array();
+
+  // save entity id
+    if ($id) {
+      $form['entity_id'] = array(
+        '#type' => 'hidden',
+        '#value' => $id,
+      );
+    }
 
   // cancel state
     $form['state_cancel']['intro'] = array(
@@ -38,6 +47,21 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
     $form['state_submit']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
+    );
+
+  // delete state
+    $form['state_delete']['intro'] = array(
+      '#markup' => '
+                    <div class="intro">
+                      ' . t('Deleting this review will remove it permanently from the system. All votes and flags
+                        will also be deleted.') . '
+                    </div>
+                   ',
+    );
+
+    $form['state_delete']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete Review'),
     );
 
   // dialog configuration
@@ -79,6 +103,14 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id) {
           ),
         ) + $state_common_options,
 
+        'delete' => array(
+          'dialog' => array('title' => t('You are about to delete this review')) + $dialog_common_options,
+          'submit' => array('submit' => array('element' => &$form['state_delete']['submit'])),
+          'submit_autoclose' => TRUE,
+          'close_link_text' => t('Cancel'),
+          'submit_redirect' => url('node/' . $node->nid . '/feedback/redirect/review-reviews', array('absolute' => TRUE)),
+        ) + $state_common_options,
+
       ),
     );
 
@@ -95,6 +127,20 @@ function review_end_use_form_submit($form, &$form_state) {
 
   switch ($state) {
     case 'cancel':
+
+      break;
+
+    case 'submit':
+
+      break;
+
+    case 'delete':
+
+      if (isset($form_state['values']['entity_id'])) {
+        entity_delete('review', $form_state['values']['entity_id']);
+
+        drupal_set_message(t('Your review has been deleted.'));
+      }
 
       break;
   }
