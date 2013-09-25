@@ -166,9 +166,9 @@
 /* line 169, ../sass/review.scss */
 #review-wrap-reviews .review-section-header {
   border-bottom: 1px #000 solid;
-  border-top: 10px #000 solid;
+  border-top: 1px #000 solid;
   font-size: 1em;
-  margin: 10px 0;
+  margin: 1px 0;
   padding: 10px 0;
 }
 /* line 176, ../sass/review.scss */
@@ -256,27 +256,23 @@
 .entity-review.view-mode-full .average-rating {
   margin-top: 10px;
 }
-
-/* line 272, ../sass/review.scss */
-.footer-title {
-  font-weight: bold;
-  margin: 10px 0;
-}
-/* line 252, ../sass/review.scss */
+/* line 267, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .rate-widget {
   padding: 15px 0;
 }
-/* line 255, ../sass/review.scss */
+/* line 270, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .rate-widget .vote {
   padding: 0 10px;
 }
 
+/* line 278, ../sass/review.scss */
+.footer-title {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
 /* modals */
-<<<<<<< HEAD
-/* line 279, ../sass/review.scss */
-=======
-/* line 264, ../sass/review.scss */
->>>>>>> 01384223c9f88fde57572144dc910db3a3f49c32
+/* line 285, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -285,55 +281,31 @@
   line-height: normal;
   text-align: left;
 }
-<<<<<<< HEAD
-/* line 288, ../sass/review.scss */
+/* line 294, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 292, ../sass/review.scss */
-=======
-/* line 273, ../sass/review.scss */
-.dialog_review_end_use_form #dialog form {
-  text-align: right;
-}
-/* line 277, ../sass/review.scss */
->>>>>>> 01384223c9f88fde57572144dc910db3a3f49c32
+/* line 298, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-<<<<<<< HEAD
-/* line 297, ../sass/review.scss */
-=======
-/* line 282, ../sass/review.scss */
->>>>>>> 01384223c9f88fde57572144dc910db3a3f49c32
+/* line 303, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
-<<<<<<< HEAD
-/* line 303, ../sass/review.scss */
-=======
-/* line 288, ../sass/review.scss */
->>>>>>> 01384223c9f88fde57572144dc910db3a3f49c32
+/* line 309, ../sass/review.scss */
 .dialog_review_end_use_form_delete #dialog .form-submit {
   float: right;
 }
 
 /* user tooltips */
-<<<<<<< HEAD
-/* line 309, ../sass/review.scss */
+/* line 315, ../sass/review.scss */
 .account-tooltip {
   position: relative;
 }
-/* line 312, ../sass/review.scss */
-=======
-/* line 294, ../sass/review.scss */
-.account-tooltip {
-  position: relative;
-}
-/* line 297, ../sass/review.scss */
->>>>>>> 01384223c9f88fde57572144dc910db3a3f49c32
+/* line 318, ../sass/review.scss */
 .account-tooltip .account-tooltip-body {
   background: #eee;
   border: 1px #ccc solid;
@@ -345,7 +317,7 @@
   width: 500px;
   z-index: 50;
 }
-/* line 324, ../sass/review.scss */
+/* line 330, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }
