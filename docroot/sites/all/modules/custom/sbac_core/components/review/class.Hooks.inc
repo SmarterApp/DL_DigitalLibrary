@@ -206,9 +206,38 @@ class Hooks extends \devtools\Hooks {
       $build['field_details'][0]['#markup'] = more_less_text($build['field_details'][0]['#markup'], 140);
     }
   }
+
+  /**
+   * Extends hook_theme_registry_alter().
+   */
+  function hook_theme_registry_alter(&$theme_registry) {
+    if (isset($theme_registry['rate_template_yesno'])) {
+      // change the widget's template
+      $theme_registry['rate_template_yesno']['path'] = drupal_get_path('theme', 'SBAC') . '/templates';
+
+      // remove the junk that is the original preprocessor function
+      if ($index = array_search('rate_preprocess_rate_template_yesno', $theme_registry['rate_template_yesno']['preprocess functions'])) {
+        unset($theme_registry['rate_template_yesno']['preprocess functions'][$index]);
+
+        // fix keys
+        $theme_registry['rate_template_yesno']['preprocess functions'] = array_merge($theme_registry['rate_template_yesno']['preprocess functions']);
+      }
+    }
+  }
+
+
   /*----------------------------------------------------------------------------
       MODULE HOOKS
   ----------------------------------------------------------------------------*/
+
+  /**
+   * Extends hook_rate_widget_alter().
+   */
+  function hook_rate_widget_alter(&$widget, $context) {
+    if ($context['content_type'] == 'review' && $widget->name == 'review_helpful') {
+      unset($widget->css);
+    }
+  }
 
   /*----------------------------------------------------------------------------
       INTERNAL / HELPERS
@@ -327,7 +356,7 @@ class Hooks extends \devtools\Hooks {
     // render & add entity to the form data
     $form['state_preview']['view'] = array(
       '#type' => 'markup',
-      '#markup' => render($entity_render),
+      '#markup' => '<div class="preview">' . render($entity_render) . '</div>',
     );
 
     // footer text

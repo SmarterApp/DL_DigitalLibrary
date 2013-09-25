@@ -36,58 +36,84 @@
   font-size: 12px;
 }
 /* line 39, ../sass/sbac_media.scss */
+#sbac-media-list tbody .ui-icon {
+  width: 8%;
+  font-family: "GeneralFoundicons";
+  font-size: 1em;
+}
+/* line 44, ../sass/sbac_media.scss */
+#sbac-media-list tbody .ui-icon.document:before {
+  content: "\f009";
+}
+/* line 48, ../sass/sbac_media.scss */
+#sbac-media-list tbody .ui-icon.video:before {
+  content: "\f01f";
+}
+/* line 52, ../sass/sbac_media.scss */
+#sbac-media-list tbody .ui-icon.embed:before {
+  content: "\f01f";
+}
+/* line 56, ../sass/sbac_media.scss */
+#sbac-media-list tbody .ui-icon.image:before {
+  content: "\f020";
+}
+/* line 61, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr {
   border-bottom: 1px solid #ccc;
 }
-/* line 42, ../sass/sbac_media.scss */
+/* line 64, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td {
   padding-top: 1em;
   padding-bottom: 1em;
 }
-/* line 46, ../sass/sbac_media.scss */
+/* line 68, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media {
   text-align: right;
 }
-/* line 49, ../sass/sbac_media.scss */
+/* line 71, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media .foundicon-trash {
   color: #aaa;
   font-size: 1em;
   margin-right: -30px;
 }
-/* line 55, ../sass/sbac_media.scss */
+/* line 77, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media .ctools-modal-sbac-media-modal-delete-media {
   opacity: 0;
   width: 20px;
   height: 20px;
 }
-/* line 64, ../sass/sbac_media.scss */
+/* line 86, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr:nth-child(2) td {
-  padding-top: 40px;
+  padding-top: 45px;
 }
 
-/* line 71, ../sass/sbac_media.scss */
+/* line 93, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video {
-  width: 45%;
+  width: 55%;
   margin-right: 2%;
   float: left;
 }
-/* line 77, ../sass/sbac_media.scss */
+/* line 98, ../sass/sbac_media.scss */
+#sbac-field-file-container .form-item-field-embed-video .description {
+  display: block;
+}
+/* line 103, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-file {
   width: 50%;
   float: left;
   clear: both;
 }
-/* line 83, ../sass/sbac_media.scss */
+/* line 109, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-submit {
   float: right;
 }
-/* line 87, ../sass/sbac_media.scss */
+/* line 113, ../sass/sbac_media.scss */
 #sbac-field-file-container .video-embed-button {
   margin-top: 3em;
 }
 
 /* overlay cancel button */
-/* line 93, ../sass/sbac_media.scss */
+/* line 119, ../sass/sbac_media.scss */
 #edit-cancel-media-overlay {
   margin-right: 10px;
 }

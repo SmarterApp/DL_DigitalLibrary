@@ -204,9 +204,17 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     drupal_add_js(array('sbac_resource_valid_state' => FALSE), 'setting');
     return $form;
   }
-  else{
-    ctools_include('ajax');
-    $selector = NULL; $valid = FALSE;
+
+  $duplicates = FALSE;
+  if (isset($form_state['sbac_media_duplicates']) && $form_state['sbac_media_duplicates']) {
+    $duplicates = TRUE;
+    unset($form['sbac_media_duplicates']);
+  }
+
+  ctools_include('ajax');
+  $selector = NULL;
+  $valid = FALSE;
+  if (!$duplicates) {
     $active_tab = $form_state['values']['additional_settings__active_tab'];
     switch ($active_tab) {
       case 'edit-group_materials':
@@ -226,27 +234,36 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $selector = ".vertical-tabs-list li:nth-child(4) a";
         break;
     }
+  }
 
-    // Set coming from state to Draft.
-    $form_state['values']['workbench_moderation_state_current'] = 'draft';
-    // Set state to Draft.
-    $form_state['values']['workbench_moderation_state_new'] = 'draft';
-    // Cleans the text
-    sbac_resource_clean_text($form_state);
-    // Set path alias
-    $form_state['values']['path']['pathauto'] = TRUE;
-    // Save node and rebuild form.
-    node_form_submit($form, $form_state);
-    $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
-    // Clear drupal messages.
-    drupal_get_messages();
+  // Set coming from state to Draft.
+  $form_state['values']['workbench_moderation_state_current'] = 'draft';
+  // Set state to Draft.
+  $form_state['values']['workbench_moderation_state_new'] = 'draft';
+  // Cleans the text
+  sbac_resource_clean_text($form_state);
+  // Set path alias
+  $form_state['values']['path']['pathauto'] = TRUE;
+  // Save node and rebuild form.
+  node_form_submit($form, $form_state);
+  $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
+  // Clear drupal messages.
+  drupal_get_messages();
+
+  if (!$duplicates) {
     // Add appropriate JS.
     drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
     if ($selector) {
       drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
     }
-    return $form;
   }
+  else {
+    $form['run_js'] = array(
+      '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
+    );
+  }
+
+  return $form;
 }
 
 /**
@@ -322,7 +339,7 @@ function sbac_resource_validate_title(&$form, &$form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_general(&$form, $form_state) {
+function sbac_resource_validate_general(&$form, &$form_state) {
   if (!$form_state['values']['title']) {
     $error = 'Please add a title to continue.';
     form_set_error('title', $error);
@@ -383,7 +400,7 @@ function sbac_resource_validate_general(&$form, $form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_summary(&$form, $form_state) {
+function sbac_resource_validate_summary(&$form, &$form_state) {
   if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
     $error = 'Please add a resource summary to continue';
     form_set_error('field_alt_body', $error);
@@ -542,7 +559,7 @@ function sbac_resource_validate_summary(&$form, $form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_materials(&$form, $form_state) {
+function sbac_resource_validate_materials(&$form, &$form_state) {
   $media_items = sbac_media_load_items($form['#node']->nid);
   if (!$media_items) {
     $error = 'You must provide a material for this Resource to continue';
@@ -557,21 +574,23 @@ function sbac_resource_validate_materials(&$form, $form_state) {
     _sbac_resource_remove_error_message($error);
   }
   else {
-    $duplicates = sbac_media_check_duplicates($media_items);
-    if ($duplicates) {
-      // set a form_state variable that says there is duplicates.
-      // no need to loop around all, just need to find first dup.
-      // (will need to update the function or create a new one)
-      // in the submit handler, create a condition to check for the form state variable
-      // then return js that pops up the modal like in sbac_media
-      // hopefully this works (above)
-      // inside the modal, send in this nid,
-      // which loads up a form, with cancel and save continue
-      // the form will load up the media items from the nid
-      // loop around and create output for the user to see.
-      // on save / continue closes the modal, saves the node (submits to alfresco)
-      // and returns the form to the next tab
-      // cancel keeps the user on the materials tab
+    $active_tab = $form_state['values']['additional_settings__active_tab'];
+    if ($active_tab == 'edit-group_materials') {
+      $duplicates = sbac_media_check_duplicates($media_items);
+      if ($duplicates) {
+        $form_state['sbac_media_duplicates'] = TRUE;
+        // set a form_state variable that says there is duplicates.
+        // no need to loop around all, just need to find first dup.
+        // in the submit handler, create a condition to check for the form state variable
+        // then return js that pops up the modal like in sbac_media
+        // inside the modal, send in this nid,
+        // which loads up a form, with cancel and save continue
+        // the form will load up the media items from the nid
+        // loop around and create output for the user to see.
+        // data is already saved at this point.
+        // on save / continue closes the modal, sends to next tab
+        // cancel keeps the user on the materials tab
+      }
     }
   }
 
@@ -644,7 +663,7 @@ function sbac_resource_validate_materials(&$form, $form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_tags(&$form, $form_state) {
+function sbac_resource_validate_tags(&$form, &$form_state) {
   // Select all alignments with this nid
   if (!$form_state['values']['field_subject']['und'][0]['tid']) {
     $error = 'Please select a subject and domain tag to continue';
@@ -1137,13 +1156,6 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
-  //$form['field_file'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_file_after_build';
-
-  // NEW STUFF!!!
-  // embed a view here, displays a list of materials (pri/sec), delete option, filename, file size
-  // embed url ability -> confirmation dialogs after, custom form.
-  // choose file and upload ability -> custom form
-  // error messages move inline
   sbac_media_widget_form_element($form, $form_state);
 
   // Materials
@@ -1252,6 +1264,31 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   
   // $form['field_use_of_student_images']['und']['#title'] .= ' ' . theme('form_required_marker');
   // unset($form['field_use_of_student_images']['und']['#options'][0]);
+
+  $form['actions']['duplicates_button'] = array(
+    '#markup' => l(t('Duplicates'), 'sbac-media/nojs/duplicates', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-modal-duplicates',
+        'id' => 'sbac-media-modal-duplicates'
+      ),
+      'query' => array(
+        'nid' => $form['#node']->nid
+      )
+    )),
+    '#weight' => 3,
+  );
+
+  // JS to properly size the modal when submit resource is clicked.
+  $js_settings = array(
+    'sbac-media-modal-duplicates' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 600,
+        'height' => 160,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting');
 }
 
 /**

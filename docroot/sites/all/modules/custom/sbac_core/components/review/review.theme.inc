@@ -58,7 +58,7 @@ function theme_review_delete($variables) {
   $entity = $variables['entity'];
 
   global $user;
-  if ($entity->uid == $user->uid || in_array('administrator', $user->roles)) {
+  if ($entity->id && ($entity->uid == $user->uid || in_array('administrator', $user->roles))) {
     $trigger_id = 'review-delete';
     $url = 'node/' . $entity->node_id . '/review/end_use/delete/' . $trigger_id . '/' . $entity->id;
 
@@ -96,7 +96,6 @@ function theme_review_vote($variables) {
       continue;
     }
 
-    $output .= t('Was this review helpful?');
     $output .= rate_generate_widget($widget_id, 'review', $entity->id);
   }
 

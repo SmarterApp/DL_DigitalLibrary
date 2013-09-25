@@ -264,7 +264,13 @@
   }
 
   .group-footer {
+    .rate-widget {
+      padding: 15px 0;
 
+      .vote {
+        padding: 0 10px;
+      }
+    }
   }
 }
 
