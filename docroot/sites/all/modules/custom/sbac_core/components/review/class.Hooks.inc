@@ -38,6 +38,11 @@ class Hooks extends \devtools\Hooks {
       'key' => 'review_author',
       'name' => t('Review Author'),
     ) + $ds_args);
+
+    add_ds_field('review',  array(
+      'key' => 'review_delete',
+      'name' => t('Delete Button'),
+    ) + $ds_args);
   }
 
   /*----------------------------------------------------------------------------

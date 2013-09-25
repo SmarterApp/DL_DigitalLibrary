@@ -187,7 +187,38 @@
   }
 
   #summary {
+    .summary-widgets {
 
+    }
+
+    .appropriate-for {
+      .term {
+        font-size: 0.8em;
+        margin-bottom: 10px;
+
+        &.highlight {
+          font-weight: bold;
+        }
+      }
+    }
+
+    .item-title {
+      font-size: 0.9em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .left-col {
+      @include left_col;
+    } 
+
+    .mid-col {
+      @include mid_col;
+    } 
+
+    .right-col {
+      @include right_col;
+    } 
   }
 
   #individual-reviews {
@@ -244,6 +275,12 @@
 
   .close-dialog {
     display: inline;
+  }
+}
+
+.dialog_review_end_use_form_delete #dialog {
+  .form-submit {
+    float: right;
   }
 }
 

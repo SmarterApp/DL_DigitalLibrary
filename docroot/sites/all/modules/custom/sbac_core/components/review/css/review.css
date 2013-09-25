@@ -183,8 +183,40 @@
 #review-wrap-reviews .review-section-header .sorting-order {
   float: right;
 }
+/* line 195, ../sass/review.scss */
+#review-wrap-reviews #summary .appropriate-for .term {
+  font-size: 0.8em;
+  margin-bottom: 10px;
+}
+/* line 199, ../sass/review.scss */
+#review-wrap-reviews #summary .appropriate-for .term.highlight {
+  font-weight: bold;
+}
+/* line 205, ../sass/review.scss */
+#review-wrap-reviews #summary .item-title {
+  font-size: 0.9em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+/* line 211, ../sass/review.scss */
+#review-wrap-reviews #summary .left-col {
+  float: left;
+  width: 280px;
+}
+/* line 215, ../sass/review.scss */
+#review-wrap-reviews #summary .mid-col {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
+/* line 219, ../sass/review.scss */
+#review-wrap-reviews #summary .right-col {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 280px;
+}
 
-/* line 198, ../sass/review.scss */
+/* line 229, ../sass/review.scss */
 .entity-review.view-mode-full {
   background: #eee;
   border: 1px #ccc solid;
@@ -193,7 +225,7 @@
 }
 
 /* modals */
-/* line 227, ../sass/review.scss */
+/* line 258, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -202,26 +234,31 @@
   line-height: normal;
   text-align: left;
 }
-/* line 236, ../sass/review.scss */
+/* line 267, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 240, ../sass/review.scss */
+/* line 271, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-/* line 245, ../sass/review.scss */
+/* line 276, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
+/* line 282, ../sass/review.scss */
+.dialog_review_end_use_form_delete #dialog .form-submit {
+  float: right;
+}
+
 /* user tooltips */
-/* line 251, ../sass/review.scss */
+/* line 288, ../sass/review.scss */
 .account-tooltip {
   position: relative;
 }
-/* line 254, ../sass/review.scss */
+/* line 291, ../sass/review.scss */
 .account-tooltip .account-tooltip-body {
   background: #eee;
   border: 1px #ccc solid;

@@ -46,3 +46,35 @@ function theme_review_author($variables) {
 
   return $output;
 }
+
+/**
+ * Output for Display Suite field "Delete Button"
+ * @param  [type] $variables [description]
+ * @return [type]            [description]
+ */
+function theme_review_delete($variables) {
+  $output = '';
+
+  $entity = $variables['entity'];
+
+  global $user;
+  if ($entity->uid == $user->uid || in_array('administrator', $user->roles)) {
+    $trigger_id = 'review-delete';
+    $url = 'node/' . $entity->node_id . '/review/end_use/delete/' . $trigger_id . '/' . $entity->id;
+
+    $options = array(
+      'attributes' => array(
+        'class' => array(
+          'use-ajax',
+          'use-dialog',
+          'button',
+          'radius',
+        ),
+        'id' => $trigger_id,
+      ),
+    );
+
+    $output = l(t('Delete'), $url, $options);
+  }
+  return $output;
+}

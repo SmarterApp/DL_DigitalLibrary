@@ -43,7 +43,7 @@ function total_reviews($nid) {
  * @return [type]         [description]
  */
 function review_load_more($node, $sortby, $page) {
-  $page_size = 1;
+  $page_size = 2;
   $offset = $page * $page_size;
 
   $result = FALSE;
