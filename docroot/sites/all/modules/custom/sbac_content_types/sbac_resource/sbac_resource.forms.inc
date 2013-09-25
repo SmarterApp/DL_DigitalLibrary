@@ -174,6 +174,7 @@ function sbac_resource_after_build_resource_form(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_save_and_continue(&$form, &$form_state) {
+  // Check for errors.
   $errors = form_get_errors();
   if ($errors) {
     $selector = NULL;
@@ -205,12 +206,14 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     return $form;
   }
 
+  // Check for duplicates
   $duplicates = FALSE;
   if (isset($form_state['sbac_media_duplicates']) && $form_state['sbac_media_duplicates']) {
     $duplicates = TRUE;
     unset($form['sbac_media_duplicates']);
   }
 
+  // Submit node, everything is good to go.
   ctools_include('ajax');
   $selector = NULL;
   $valid = FALSE;
@@ -258,6 +261,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     }
   }
   else {
+    // If duplicates, display the modal.
     $form['run_js'] = array(
       '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
     );
@@ -1261,34 +1265,33 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   $form['field_pii']['und']['#title'] .= ' ' . theme('form_required_marker');
   unset($form['field_pii']['und']['#options'][0]);
-  
-  // $form['field_use_of_student_images']['und']['#title'] .= ' ' . theme('form_required_marker');
-  // unset($form['field_use_of_student_images']['und']['#options'][0]);
 
-  $form['actions']['duplicates_button'] = array(
-    '#markup' => l(t('Duplicates'), 'sbac-media/nojs/duplicates', array(
-      'attributes' => array(
-        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-modal-duplicates',
-        'id' => 'sbac-media-modal-duplicates'
-      ),
-      'query' => array(
-        'nid' => $form['#node']->nid
-      )
-    )),
-    '#weight' => 3,
-  );
+  if (isset($form['#node']->nid) && $form['#node']->nid) {
+    $form['actions']['duplicates_button'] = array(
+      '#markup' => l(t('Duplicates'), 'sbac-media/nojs/duplicates', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-modal-duplicates',
+          'id' => 'sbac-media-modal-duplicates'
+        ),
+        'query' => array(
+          'nid' => $form['#node']->nid
+        )
+      )),
+      '#weight' => 3,
+    );
 
-  // JS to properly size the modal when submit resource is clicked.
-  $js_settings = array(
-    'sbac-media-modal-duplicates' => array(
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 600,
-        'height' => 160,
+    // JS to properly size the modal when submit resource is clicked.
+    $js_settings = array(
+      'sbac-media-modal-duplicates' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 160,
+        ),
       ),
-    ),
-  );
-  drupal_add_js($js_settings, 'setting');
+    );
+    drupal_add_js($js_settings, 'setting');
+  }
 }
 
 /**

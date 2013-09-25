@@ -222,13 +222,16 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     '#suffix'=>'</div>',
   );
 
-  $media_items = sbac_media_load_items($form['#node']->nid);
-  if ($media_items) {
-    $output = _sbac_media_create_list($media_items);
-    $form['field_file_container']['materials'] = array(
-      '#markup' => $output,
-      '#weight' => -100,
-    );
+  $media_items = array();
+  if (isset($form['#node']->nid) && $form['#node']->nid) {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    if ($media_items) {
+      $output = _sbac_media_create_list($media_items);
+      $form['field_file_container']['materials'] = array(
+        '#markup' => $output,
+        '#weight' => -100,
+      );
+    }
   }
 
   $weight = array();
@@ -269,18 +272,20 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     ),
   );
 
-  $form['field_file_container']['field_embed_video_modal'] = array(
-    '#markup' => l(t('Modal'), 'sbac-media/nojs/internet-confirm', array(
-      'attributes' => array(
-        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-internet-confirm',
-        'id' => 'sbac-media-internet-confirm'
-      ),
-      'query' => array(
-        'nid' => $form['#node']->nid,
-        'embed' => 'SBAC-MEDIA-EMBEDDED',
-      )
-    )),
-  );
+  if (isset($form['#node']->nid) && $form['#node']->nid) {
+    $form['field_file_container']['field_embed_video_modal'] = array(
+      '#markup' => l(t('Modal'), 'sbac-media/nojs/internet-confirm', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-internet-confirm',
+          'id' => 'sbac-media-internet-confirm'
+        ),
+        'query' => array(
+          'nid' => $form['#node']->nid,
+          'embed' => 'SBAC-MEDIA-EMBEDDED',
+        )
+      )),
+    );
+  }
 
   // JS to properly size the modal.
   $js_settings = array(
@@ -700,8 +705,11 @@ function sbac_media_internet_confirm($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         sbac_media_save_embedded_source($form_state['values']['embed'], $form_state['values']['nid']);
-        $output[] = ctools_ajax_command_redirect($form_state['values']['hidden_url'], 0, array('fragment' => 'edit-group_materials'));
-        $output[] = ctools_ajax_command_reload();
+        $media_items = sbac_media_load_items($form_state['values']['nid']);
+        if ($media_items) {
+          $media_list = _sbac_media_create_list($media_items);
+          $output[] = ajax_command_html('#sbac-media-list', $media_list);
+        }
       }
     }
     print ajax_render($output);
@@ -836,11 +844,8 @@ function sbac_media_duplicates($js = FALSE) {
         $output = array();
         $output[] = ctools_modal_command_dismiss();
         if ($form_state['triggering_element']['#value'] != 'Cancel') {
-          // $output[] = ctools_ajax_command_redirect($form_state['values']['hidden_url'], 0, array('fragment' => 'edit-group_summary'));
           $selector = ".vertical-tabs-list li:nth-child(3) a";
-          drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
-          //$output[] = ctools_ajax_command_submit('#sbac-resource-form');
-
+          $output[] = ajax_command_invoke($selector, 'click');
         }
       }
       print ajax_render($output);
