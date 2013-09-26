@@ -176,7 +176,7 @@ function field_set_value($entity, $field, $value, $index = 0, $source = 'value')
     }
 
     $entity[$field][$lang][$index][$source] = $value;
-
+    
     return $entity;
   }
 }

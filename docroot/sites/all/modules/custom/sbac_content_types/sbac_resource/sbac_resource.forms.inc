@@ -143,6 +143,15 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   $form_state['values']['workbench_moderation_state_new'] = 'draft';
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
+
+  // $node = node_load($form_state['build_info']['args'][0]->nid, NULL, TRUE);
+  // if (isset($node->field_alignment_term[LANGUAGE_NONE][0]['tid'])) {
+  //   foreach ($node->field_alignment_term[LANGUAGE_NONE] as $key => $item) {
+  //     $term = taxonomy_term_load($item['tid']);
+  //     $form_state['values']['field_alignment_term'][LANGUAGE_NONE][$key] = $term;
+  //   }
+  // }
+  
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
@@ -1547,7 +1556,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_asset_downloads']['#access'] = FALSE;
   $form['field_total_views']['#access'] = FALSE;
   $form['field_unique_views']['#access'] = FALSE;
-  $form['field_alignment_term']['#access'] = FALSE;
+  // $form['field_alignment_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
   $form['field_document_information']['#access'] = FALSE;
   // $form['field_file']['und']['add_more']['#access'] = FALSE;

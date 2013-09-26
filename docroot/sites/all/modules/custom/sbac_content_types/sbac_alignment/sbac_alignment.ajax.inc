@@ -118,9 +118,44 @@ function sbac_alignment_ajax_alignment_crud_callback() {
         $nid = $_POST['nid'];
       }
 
+      // identify the term associated with this alignment node
+      $node = node_load($nid);
+
+      $term_data = field_entity_value($node, 'field_education_alignment');
+      $tid = $term_data[0]->tid;
+      $name = $term_data[0]->name;
+
+      $resource = field_entity_value($node, 'field_resource_reference');
+
+      // delete the node
       node_delete($nid);
-      print drupal_json_encode('deleted: ' . $nid);
+
+      // prep JSON response
+      $data = array(
+        'deleted_nid' => $nid,
+        'term_tid' => $tid,
+        'term_name' => trim($name),
+        'remove_term' => 0,
+      );
+
+      // because the same term can be associated with multiple alignment nodes, we must make sure
+      // it's not used on the resource more than once before we remove it from there
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'alignment')
+        ->fieldCondition('field_education_alignment', 'tid', $tid)
+        ->fieldCondition('field_resource_reference', 'target_id', $resource->nid);
+
+      $result = $query->execute();
+
+      if (!isset($result['node'])) {
+        $data['remove_term'] = 1;
+      }
+
+      print drupal_json_encode($data);
+
       break;
+
     case 'create':
       if (isset($_POST['alignment_standards'])) {
         $standards = explode('|', $_POST['alignment_standards']);
@@ -144,26 +179,36 @@ function sbac_alignment_ajax_alignment_crud_callback() {
         $types[$term->name] = $term->tid;
       }
 
+      $standards_terms = array();
       foreach ($standards as $tid) {
         //create alignment
         $node = new stdClass();
         $node->title = "resource-$alignment_ref-alignment-$tid";
         $node->type = 'alignment';
         $node->uid = $user->uid;
-        $entity->node_type = 'comment_node_alignment';
         node_object_prepare($node);
-
 
         $node->field_education_alignment['und'][]['tid'] = $tid;
         $node->field_alignment_type['und'][]['tid'] = $types[$alignment_type];
         $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
         node_save($node);
 
-        $node = node_load($alignment_ref);
-        $node->field_alignment_term['und'][]['tid'] = $tid;
-        node_save($node);
+        $term = taxonomy_term_load($tid);
+        $standards_terms[] = $term->name;
+
+        // $resource_node = node_load($alignment_ref, NULL, FALSE);
+        // $resource_node = node_load($alignment_ref);
+        // $resource_node->field_alignment_term['und'][]['tid'] = $tid;
+        // entity_save_field('field_alignment_term', $resource_node, 'node', $resource_node->nid);
       }
-      print drupal_json_encode(array('html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref)));
+
+      $data = array(
+        'html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref),
+        'terms' => $standards_terms,
+      );
+
+      print drupal_json_encode($data);
+
       exit;
       break;
   }
