@@ -236,7 +236,8 @@ function _sbac_resource_preview_content(&$vars) {
     }
     else {
       // @TODO: Need to build URL;
-      $url = 'http://haha.com';
+      // http://ec2-54-221-242-182.compute-1.amazonaws.com:8080/alfresco/service/simflofy/workspace/SpacesStore/093106d3-89aa-4249-b3ae-f368a83786b7/googleurl.json
+      $url = sbac_media_get_media_url($media);
     }
 
     if ($type == 'document') {
@@ -295,7 +296,7 @@ function _sbac_resource_preview_materials(&$vars) {
       }
       else {
         // @TODO: Need to build URL;
-        $url = 'http://haha.com';
+        $url = sbac_media_get_media_url($media);
       }
 
       if ($type == 'none') {
