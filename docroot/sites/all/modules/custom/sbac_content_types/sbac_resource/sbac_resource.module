@@ -150,7 +150,7 @@ function sbac_resource_download_contents($node) {
         }
       }
       catch (CMISException $e) {
-        cmis_error_handler('sbac_documents_presave_document', $e);
+        // cmis_error_handler('sbac_documents_presave_document', $e);
       }
     }
   }
@@ -229,8 +229,15 @@ function _sbac_resource_preview_content(&$vars) {
     $media = $vars['document'][0];
     $type = _sbac_resource_determine_type($media);
     $viewer['viewer_filename'] = $media->filename;
-    // @TODO: Need to build URL;
-    $url = 'http://haha.com';
+
+    // Determine URL path.
+    if ($type == 'schooltube' || $type == 'teachertube' || $type == 'slideshare' || $type == 'vimeo' || $type == 'youtube') {
+      $url = sbac_media_create_embed_url($media);
+    }
+    else {
+      // @TODO: Need to build URL;
+      $url = 'http://haha.com';
+    }
 
     if ($type == 'document') {
       $viewer['viewer'] = '<iframe src="http://docs.google.com/viewer?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
@@ -321,11 +328,9 @@ function _sbac_resource_preview_materials(&$vars) {
  * @param $file
  * @return string
  */
-function _sbac_resource_determine_type($media) {
-  $type = 'document';
-
+function _sbac_resource_determine_type($media, $return_embed = FALSE) {
   if (!$media->document_id && !$media->fid) {
-    $type = _sbac_resource_determine_media($media);
+    $type = _sbac_resource_determine_media($media, $return_embed);
   }
   else {
     $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
@@ -341,13 +346,34 @@ function _sbac_resource_determine_type($media) {
  * @param $file object
  * @return string
  */
-function _sbac_resource_determine_media($media) {
+function _sbac_resource_determine_media($media, $return_embed = FALSE) {
   $type = 'embed';
-  $mimetype = file_get_mimetype($media->filename);
-  preg_match('#video/(.*)#i', $mimetype, $matches);
-  if (isset($matches[1]) && $matches[1]) {
-    return $matches[1];
-  } 
+
+  if ($return_embed) {
+    return $type;
+  }
+
+  $embedded_video_source = $media->embed_url;
+  if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
+    $type = 'schooltube';
+  }
+
+  if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
+    $type = 'teachertube';
+  }
+
+  if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
+    $type = 'slideshare';
+  }
+
+  if (strpos($embedded_video_source, 'youtube') !== FALSE) {
+    $type = 'youtube';
+  }
+
+  if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
+    $type = 'vimeo';
+  }
+
   return $type;
 }
 
@@ -701,7 +727,7 @@ function _sbac_resource_apply_filters(&$view) {
       }
 
       $subject_tid_all = 153;
-      $grade_tid_all = 122;
+      $grade_tid_all = 122; 
 
       // subject
       if (!isset($view_filters['field_subject_tid']['value'])) {
@@ -1015,7 +1041,7 @@ function sbac_resource_node_delete($node) {
     curl_close ($ch);
   }
   catch (CMISException $e) {
-   cmis_error_handler('sbac_documents_presave_document', $e);
+    // cmis_error_handler('sbac_documents_presave_document', $e);
   }
 }
 
