@@ -554,11 +554,13 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
  */
 function sbac_media_check_duplicates($media_items) {
   $duplicates = FALSE;
+  global $user;
 
   foreach ($media_items as $media_item) {
     // && $media_item->document_id
     if ($media_item->fid) {
-      $matches = db_query("SELECT * FROM {eck_media} WHERE file_hash = :file_hash AND nid <> :nid", array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid));
+      $query = 'SELECT e.* from {eck_media} AS e JOIN {node} AS n ON e.nid = n.nid WHERE e.file_hash = :file_hash AND n.nid <> :nid and n.uid = :uid';
+      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid));
       if ($matches->rowCount()) {
         $duplicates = TRUE;
         break;
