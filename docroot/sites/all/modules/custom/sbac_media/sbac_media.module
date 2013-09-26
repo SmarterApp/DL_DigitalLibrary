@@ -151,6 +151,7 @@ function sbac_media_file_mimetype_mapping_alter(&$mapping) {
 function sbac_media_create_embed_url($media) {
   $embedded_video_source = $media->embed_url;
 
+  $file = new stdClass();
   if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
     $handler = new MediaInternetSchoolTubeHandler($embedded_video_source);
     $file = $handler->getFileObject();
@@ -176,11 +177,11 @@ function sbac_media_create_embed_url($media) {
     $file = $handler->getFileObject();
   }
 
-  $wrapper = file_stream_wrapper_get_instance_by_uri($file['uri']);
+  $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
   $parts = $wrapper->get_parameters();
   $id = check_plain($parts['v']);
 
-  switch($file['filemime']) {
+  switch($file->filemime) {
     case 'video/schooltube': 
       $url = '//www.schooltube.com/embed_force/' . $id;
       break;
@@ -407,7 +408,7 @@ function _sbac_media_create_list($media_items) {
     $output .= '<tr id="' . $media_item->id . '">';
 
     // Image.
-    $type = _sbac_resource_determine_type($media_item);
+    $type = _sbac_resource_determine_type($media_item, TRUE);
     $output .= '<td class="' . $type . ' ui-icon"></td>';
 
     // Filename.
