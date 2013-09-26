@@ -150,7 +150,7 @@ function sbac_resource_download_contents($node) {
         }
       }
       catch (CMISException $e) {
-        cmis_error_handler('sbac_documents_presave_document', $e);
+        // cmis_error_handler('sbac_documents_presave_document', $e);
       }
     }
   }
@@ -1015,7 +1015,7 @@ function sbac_resource_node_delete($node) {
     curl_close ($ch);
   }
   catch (CMISException $e) {
-   cmis_error_handler('sbac_documents_presave_document', $e);
+    // cmis_error_handler('sbac_documents_presave_document', $e);
   }
 }
 
