@@ -203,40 +203,46 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
     }
     drupal_add_js(array('sbac_resource_valid_state' => FALSE), 'setting');
+
+    $active_tab = $form_state['values']['additional_settings__active_tab'];
+    if ($active_tab == 'edit-group_materials') {
+      $media_items = sbac_media_load_items($form['#node']->nid);
+      $output = _sbac_media_create_list($media_items);
+      $form['field_file_container']['materials']['#markup'] = $output;
+      $form['field_file_container']['materials']['#weight'] = -100;
+    }
     return $form;
   }
 
-  // Check for duplicates
   $duplicates = FALSE;
-  if (isset($form_state['sbac_media_duplicates']) && $form_state['sbac_media_duplicates']) {
-    $duplicates = TRUE;
-    unset($form['sbac_media_duplicates']);
+  $active_tab = $form_state['values']['additional_settings__active_tab'];
+  if ($active_tab == 'edit-group_materials') {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    $duplicates = sbac_media_check_duplicates($media_items);
   }
 
   // Submit node, everything is good to go.
   ctools_include('ajax');
   $selector = NULL;
   $valid = FALSE;
-  if (!$duplicates) {
-    $active_tab = $form_state['values']['additional_settings__active_tab'];
-    switch ($active_tab) {
-      case 'edit-group_materials':
-        $selector = ".vertical-tabs-list li:nth-child(3) a";
-        $valid = FALSE;
-        break;
-      case 'edit-group_basic':
-        $selector = ".vertical-tabs-list li:nth-child(2) a";
-        $valid = FALSE;
-        break;
-      case 'edit-group_tags':
-        $selector = NULL;
-        $valid = TRUE;
-        break;
-      case 'edit-group_summary':
-        $valid = FALSE;
-        $selector = ".vertical-tabs-list li:nth-child(4) a";
-        break;
-    }
+  $active_tab = $form_state['values']['additional_settings__active_tab'];
+  switch ($active_tab) {
+    case 'edit-group_materials':
+      $selector = ".vertical-tabs-list li:nth-child(3) a";
+      $valid = FALSE;
+      break;
+    case 'edit-group_basic':
+      $selector = ".vertical-tabs-list li:nth-child(2) a";
+      $valid = FALSE;
+      break;
+    case 'edit-group_tags':
+      $selector = NULL;
+      $valid = TRUE;
+      break;
+    case 'edit-group_summary':
+      $valid = FALSE;
+      $selector = ".vertical-tabs-list li:nth-child(4) a";
+      break;
   }
 
   // Set coming from state to Draft.
@@ -253,18 +259,17 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   // Clear drupal messages.
   drupal_get_messages();
 
-  if (!$duplicates) {
+  if ($duplicates) {
+    $form['run_js'] = array(
+      '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
+    );
+  }
+  else {
     // Add appropriate JS.
     drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
     if ($selector) {
       drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
     }
-  }
-  else {
-    // If duplicates, display the modal.
-    $form['run_js'] = array(
-      '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
-    );
   }
 
   return $form;
@@ -576,26 +581,6 @@ function sbac_resource_validate_materials(&$form, &$form_state) {
     $error = 'You must provide a material for this Resource to continue';
     form_set_error('field_file_upload', $error);
     _sbac_resource_remove_error_message($error);
-  }
-  else {
-    $active_tab = $form_state['values']['additional_settings__active_tab'];
-    if ($active_tab == 'edit-group_materials') {
-      $duplicates = sbac_media_check_duplicates($media_items);
-      if ($duplicates) {
-        $form_state['sbac_media_duplicates'] = TRUE;
-        // set a form_state variable that says there is duplicates.
-        // no need to loop around all, just need to find first dup.
-        // in the submit handler, create a condition to check for the form state variable
-        // then return js that pops up the modal like in sbac_media
-        // inside the modal, send in this nid,
-        // which loads up a form, with cancel and save continue
-        // the form will load up the media items from the nid
-        // loop around and create output for the user to see.
-        // data is already saved at this point.
-        // on save / continue closes the modal, sends to next tab
-        // cancel keeps the user on the materials tab
-      }
-    }
   }
 
   if ($form_state['values']['field_author']['und'][0]['value'] == NULL) {
@@ -1265,33 +1250,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   $form['field_pii']['und']['#title'] .= ' ' . theme('form_required_marker');
   unset($form['field_pii']['und']['#options'][0]);
-
-  if (isset($form['#node']->nid) && $form['#node']->nid) {
-    $form['actions']['duplicates_button'] = array(
-      '#markup' => l(t('Duplicates'), 'sbac-media/nojs/duplicates', array(
-        'attributes' => array(
-          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-modal-duplicates',
-          'id' => 'sbac-media-modal-duplicates'
-        ),
-        'query' => array(
-          'nid' => $form['#node']->nid
-        )
-      )),
-      '#weight' => 3,
-    );
-
-    // JS to properly size the modal when submit resource is clicked.
-    $js_settings = array(
-      'sbac-media-modal-duplicates' => array(
-        'modalSize' => array(
-          'type' => 'fixed',
-          'width' => 600,
-          'height' => 160,
-        ),
-      ),
-    );
-    drupal_add_js($js_settings, 'setting');
-  }
 }
 
 /**
@@ -1606,11 +1564,6 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
 function sbac_resource_check_general($form, $form_state) {
   $valid = TRUE;
 
-  // Return if 'remove' was clicked.
-  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
-    return $valid;
-  }
-
   // Submitted via ajax.
   if (isset($form_state['values'])) {
     if (!$form_state['values']['title']) {
@@ -1651,11 +1604,6 @@ function sbac_resource_check_general($form, $form_state) {
  */
 function sbac_resource_check_summary($form, $form_state) {
   $valid = TRUE;
-
-  // Return if 'remove' was clicked.
-  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
-    return $valid;
-  }
 
   if(isset($form_state['values'])) {
     if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
@@ -1721,14 +1669,12 @@ function sbac_resource_check_summary($form, $form_state) {
 function sbac_resource_check_materials($form, $form_state) {
   $valid = TRUE;
 
-  // Return if 'remove' was clicked.
-  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
-    return $valid;
-  }
-
   if (isset($form_state['values'])) {
-    if (!$form_state['values']['field_file']['und'][0]['fid']) {
-      $valid = FALSE;
+    if (isset($form_state['node']->nid)) {
+      $media_items = sbac_media_load_items($form_state['node']->nid);
+      if (!$media_items) {
+        $valid = FALSE;
+      }
     }
     if (!$form_state['values']['field_author']['und'][0]['value']) {
       $valid = FALSE;
@@ -1749,8 +1695,11 @@ function sbac_resource_check_materials($form, $form_state) {
     // }
   }
   else {
-    if (!isset($form['field_file']['und'][0]['#default_value']['fid'])) {
-      $valid = FALSE;
+    if (isset($form['#node']->nid)) {
+      $media_items = sbac_media_load_items($form['#node']->nid);
+      if (!$media_items) {
+        $valid = FALSE;
+      }
     }
     if (!$form['field_author']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
@@ -1781,11 +1730,6 @@ function sbac_resource_check_materials($form, $form_state) {
  */
 function sbac_resource_check_tags($form, $form_state) {
   $valid = TRUE;
-
-  // Return if 'remove' was clicked.
-  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
-    return $valid;
-  }
 
   if (isset($form_state['values'])) {
     if (!$form_state['values']['field_subject']['und'][0]['tid']) {
