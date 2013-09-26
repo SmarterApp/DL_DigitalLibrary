@@ -571,14 +571,13 @@ function sbac_resource_validate_summary(&$form, &$form_state) {
 function sbac_resource_validate_materials(&$form, &$form_state) {
   $media_items = sbac_media_load_items($form['#node']->nid);
   if (!$media_items) {
-    $error = 'You must provide a material for this Resource to continue';
+    $error = 'You must add at least one material to continue';
     form_set_error('field_embed_video', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('materials:field_embed_video:single:' . $error, 'sbac_resource_error');
     drupal_set_message('materials:field_embed_video:group:Provide a material', 'sbac_resource_error');
 
     // field_file_upload
-    $error = 'You must provide a material for this Resource to continue';
     form_set_error('field_file_upload', $error);
     _sbac_resource_remove_error_message($error);
   }

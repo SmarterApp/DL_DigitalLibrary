@@ -19,11 +19,6 @@
       $('.vertical-tabs-list li:nth-child(4) a').click(function () {
         control_form_buttons();
       });
-
-      //$('#submission-general-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      //$('#submission-summary-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      //$('#submission-materials-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      //$('#submission-tags-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
     }
   };
 
