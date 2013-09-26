@@ -288,8 +288,16 @@ function _sbac_resource_preview_materials(&$vars) {
   if (isset($vars['document'][0])) {
     foreach ($vars['document'] as $key => $media) {
       $type = _sbac_resource_determine_type($media);
-      // @TODO: create the url for the media items.
-      $url = 'http://hahah.com';
+
+      // Determine URL path.
+      if ($type == 'schooltube' || $type == 'teachertube' || $type == 'slideshare' || $type == 'vimeo' || $type == 'youtube') {
+        $url = sbac_media_create_embed_url($media);
+      }
+      else {
+        // @TODO: Need to build URL;
+        $url = 'http://haha.com';
+      }
+
       if ($type == 'none') {
         $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       }
