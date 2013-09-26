@@ -508,6 +508,8 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   }
   else {
     $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
+    $directory = "private://resources/";
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), "private://resources/", $replace = FILE_EXISTS_REPLACE);
     if ($file && !$form_state['executed']) {
       $file->status = FILE_STATUS_PERMANENT;
