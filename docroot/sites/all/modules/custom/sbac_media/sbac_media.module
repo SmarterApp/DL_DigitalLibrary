@@ -763,6 +763,54 @@ function sbac_media_create_file_from_cmis(&$node, $file_path) {
   }
 }
 
+/**
+ * Deletes the file from Alfresco.
+ *
+ * @param $node, $i = file index
+ */
+function sbac_media_delete_file_from_cmis(&$node, &$media) {
+  module_load_include('api.inc', 'cmis');
+  try {
+    $repository = cmis_get_repository();
+    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $media->document_id);
+    // Delete from Alfresco.
+    cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
+
+    // Delete the file from Drupal.
+    if ($media->fid) {
+      $file = file_load($media->fid);
+      if ($file) {
+        file_delete($file);
+      }
+    }
+
+    // Delete the eck_media record.
+    entity_delete('media', $media->id);
+    return TRUE;
+  }
+  catch (CMISException $e) {
+    // cmis_error_handler('sbac_documents_delete_document', $e);
+    return FALSE;
+  }
+}
+
+/**
+ * Deletes the file from Alfresco.
+ *
+ * @param $node, $i = file index
+ */
+function sbac_media_delete_folder_from_cmis(&$node) {
+  module_load_include('api.inc', 'cmis');
+  try {
+    $repository = cmis_get_repository();
+    $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
+    //hack commented out until we separate the alfresco environments
+    cmisapi_deleteObject($repository->repositoryId, $folder->id);
+  }
+  catch (CMISException $e) {
+    // cmis_error_handler('sbac_documents_delete_document', $e);
+  }
+}
 
 /**
  * Checks if the media item is duplicated elsewhere.
