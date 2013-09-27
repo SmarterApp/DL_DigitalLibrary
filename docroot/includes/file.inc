@@ -1955,6 +1955,7 @@ function file_download() {
   $scheme = array_shift($args);
   $target = implode('/', $args);
   $uri = $scheme . '://' . $target;
+  error_log('what1');
   if (file_stream_wrapper_valid_scheme($scheme) && file_exists($uri)) {
     // Let other modules provide headers and controls access to the file.
     // module_invoke_all() uses array_merge_recursive() which merges header
@@ -1976,11 +1977,14 @@ function file_download() {
     if (count($headers)) {
       file_transfer($uri, $headers);
     }
+    error_log('what4');
     drupal_access_denied();
   }
   else {
+    error_log('what2');
     drupal_not_found();
   }
+  error_log('what3');
   drupal_exit();
 }
 
