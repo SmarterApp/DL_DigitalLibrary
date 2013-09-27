@@ -145,6 +145,23 @@ function sbac_media_file_mimetype_mapping_alter(&$mapping) {
   $mapping['mimetypes'][] = 'video/vimeo';
 }
 
+/**
+ * Implements hook_file_download;
+ *
+ * @param $uri
+ * @return array
+ */
+function sbac_media_file_download($uri) {
+  $files = file_load_multiple(array(), array('uri' => $uri));
+  if (count($files)) {
+    $file = reset($files);
+    if ($file->status) {
+      $headers = file_get_content_headers($file);
+      return $headers;
+    }
+  }
+}
+
 /*
  * Helper function to create embed URLs because of different implementation
  */
