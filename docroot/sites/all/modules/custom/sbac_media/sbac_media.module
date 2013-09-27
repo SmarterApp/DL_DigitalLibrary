@@ -43,7 +43,28 @@ function sbac_media_menu() {
     'title' => 'Duplicates',
   );
 
+  $items['sbac-media/download/%node'] = array(
+    'page callback' => 'sbac_media_download_contents',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+  );
+
   return $items;
+}
+
+/**
+ * Function to check if there are any downloadable files.
+ *
+ * @param $files
+ * @return bool
+ */
+function sbac_media_downloadable_scheme($documents) {
+  foreach ($documents as $media) {
+    if ($media->fid) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }
 
 /**
@@ -146,7 +167,58 @@ function sbac_media_file_mimetype_mapping_alter(&$mapping) {
 }
 
 /**
- * Implements hook_file_download;
+ * Packages and downloads all materials into a zip.
+ *
+ * @param $node
+ */
+function sbac_media_download_contents($node) {
+  if ($node) {
+    // check to make sure there is public:// resources to download
+    if (sbac_media_downloadable_scheme($node->document)) {
+      $destination = variable_get('file_public_path', conf_path() . '/files') . '/resource_zips/';
+      if (!file_exists($destination)) {
+        mkdir($destination);
+      }
+
+      $zip = new ZipArchive;
+      $archive_uri = 'public://resource_zips/';
+      $filename = 'download_' . REQUEST_TIME . '.zip';
+      $archive_uri .= $filename;
+      $real_path = drupal_realpath($archive_uri);
+      $open = $zip->open($real_path, ZipArchive::CREATE);
+      if ($open === TRUE) {
+        foreach ($node->document as $media) {
+          if ($media->fid) {
+            $file = file_load($media->fid);
+            if ($file) {
+              $zip->addFile(drupal_realpath($file->uri), $file->filename);
+            }
+          }
+        }
+        $zip->close();
+      }
+
+      if (file_exists($real_path)) {
+        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+        header("Cache-Control: public"); // needed for i.e.
+        header("Content-Type: application/zip");
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-Length:".filesize($real_path));
+        header("Content-Disposition: attachment; filename=" . $filename);
+        if (readfile($real_path) !== false) {
+          $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
+          entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
+          unlink($real_path); // delete the temp zip.
+        }
+      }
+    } else {
+      return "There are no files to download."; // no downloadable file schemes (public://)
+    }
+  }
+}
+
+/**
+ * Implements hook_file_download().
  *
  * @param $uri
  * @return array
@@ -525,28 +597,30 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   }
   else {
     $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
-    $directory = "private://resources/";
-    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-    $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), "private://resources/", $replace = FILE_EXISTS_REPLACE);
-    if ($file && !$form_state['executed']) {
-      $file->status = FILE_STATUS_PERMANENT;
-      file_save($file);
+    $directory = "private://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
+    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    if ($writable) {
+      $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), $directory, $replace = FILE_EXISTS_REPLACE);
+      if ($file && !$form_state['executed']) {
+        $file->status = FILE_STATUS_PERMANENT;
+        file_save($file);
 
-      if (isset($form_state['node'])) {
-        $node = $form_state['node'];
-        $file_url = drupal_realpath($file->uri);
-        $file_hash = md5_file($file_url);
+        if (isset($form_state['node'])) {
+          $node = $form_state['node'];
+          $file_url = drupal_realpath($file->uri);
+          $file_hash = md5_file($file_url);
 
-        // Create the media item, duplicates get checked later.
-        $media = new stdClass;
-        $media->type = 'media';
-        $media->fid = $file->fid;
-        $media->nid = $node->nid;
-        $media->filename = $file->filename;
-        $media->file_size = $file->filesize;
-        $media->file_hash = $file_hash;
-        $media->weight = 100;
-        entity_save('media', $media);
+          // Create the media item, duplicates get checked later.
+          $media = new stdClass;
+          $media->type = 'media';
+          $media->fid = $file->fid;
+          $media->nid = $node->nid;
+          $media->filename = $file->filename;
+          $media->file_size = $file->filesize;
+          $media->file_hash = $file_hash;
+          $media->weight = 100;
+          entity_save('media', $media);
+        }
       }
     }
   }
@@ -563,6 +637,132 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
 
   return $form['field_file_container'];
 }
+
+/**
+ * Allows modules to respond to state transitions.
+ *
+ * @param $node
+ *  The node that is being transitioned.
+ *
+ * @param $previous_state
+ *  The state of the revision before the transition occurred.
+ *
+ * @param $new_state
+ *  The new state of the revision.
+ */
+function sbac_media_workbench_moderation_transition($node, $previous_state, $new_state) {
+  if ($node->type == 'resource' && $new_state == 'published') {
+    $destination = variable_get('file_public_path', conf_path() . '/files') . '/resources/';
+    if (!file_exists($destination)) {
+      mkdir($destination);
+    }
+
+    // Create a zip file of all the contents.
+    $zip = new ZipArchive;
+    $archive_uri = 'public://resources/';
+    $filename = 'resource_' . $node->nid . '.zip';
+    $archive_uri .= $filename;
+    $real_path = drupal_realpath($archive_uri);
+    $open = $zip->open($real_path, ZipArchive::CREATE);
+    if ($open === TRUE) {
+      foreach ($node->document as $media) {
+        if ($media->fid) {
+          $file = file_load($media->fid);
+          if ($file) {
+            $zip->addFile(drupal_realpath($file->uri), $file->filename);
+          }
+        }
+      }
+
+      // Add a json file of the entire node object.
+      $json_node = drupal_json_encode($node);
+      if ($json_node) {
+        $zip->addFromString($node->nid . '.json', $json_node);
+      }
+      $zip->close();
+    }
+
+    if (file_exists($real_path)) {
+      sbac_media_create_file_from_cmis($node, $real_path);
+      unlink($real_path); // delete the temp zip.
+    }
+  }
+  else {
+    return "There are no files to download."; // no downloadable file schemes (public://)
+  }
+}
+
+/**
+ * Adds the file to Alfresco.
+ *
+ * @param $node, $i = file index
+ */
+function sbac_media_create_file_from_cmis(&$node, $file_path) {
+  module_load_include('api.inc', 'cmis');
+  $folder_path = '/Assets/' . floor($node->nid/32000) . "/" . $node->nid;
+  try {
+    $repository = cmis_get_repository();
+    //test to see of the folder is there
+    $root_folder=cmisapi_getObjectByPath($repository->repositoryId, '/Assets');
+    $folder = NULL;
+    try {
+      $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
+    }
+    catch (CMISException $e) {
+      //cmis_error_handler('sbac_documents_presave_document', $e);
+    }
+
+    if (!is_object($folder)) { //no resource folder
+      //is the parent folder there?
+      try {
+        $parent_folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000));
+      }
+      catch (CMISException $e) {
+        //cmis_error_handler('sbac_documents_presave_document', $e);
+      }
+
+      //ok, the parent folder is there, now try to create the child folder
+      if (is_object($parent_folder)) {
+        try {
+          $folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
+        }
+        catch (CMISException $e) {
+          //cmis_error_handler('sbac_documents_presave_document', $e);
+        }
+      }
+      else {
+        try {
+          //neither folder is there, so we have to create both the parent and the child (resource node) folders
+          $parent_folder=cmisapi_createFolder($repository->repositoryId, $root_folder->id, floor($node->nid/32000));
+          $folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
+        }
+        catch (CMISException $e) {
+          //cmis_error_handler('sbac_documents_presave_document', $e);
+        }
+      }
+    }
+
+    // Set the folder object to the /Assets/$cardinal/$node->nid
+    $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
+    $document = cmisapi_createDocument($repository->repositoryId, $folder->id, $node->nid . '.zip', array(), file_get_contents($file_path));
+
+    //update the doc with the drupalId
+    $alfresco=variable_get('cmis_repositories');
+    $ch = curl_init();
+    // Set the url, number of POST vars, POST data and login details
+    curl_setopt($ch,CURLOPT_URL, $alfresco['default']['update_url']);
+    curl_setopt($ch,CURLOPT_POST, 1);
+    curl_setopt($ch,CURLOPT_POSTFIELDS, 'data=' . json_encode(array('nodeRef'=>$document->id, 'drupalId'=>$node->nid)));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_USERPWD,$alfresco['default']['user']. ":" . $alfresco['default']['password']);
+    $result = curl_exec ($ch);
+    curl_close ($ch);
+  }
+  catch (CMISException $e) {
+    // cmis_error_handler('sbac_documents_presave_document', $e);
+  }
+}
+
 
 /**
  * Checks if the media item is duplicated elsewhere.
@@ -642,12 +842,17 @@ function sbac_media_load_items($nid) {
  * @param null $fid
  */
 function sbac_media_delete_media_record($id, $fid = NULL) {
+  // Delete the eck_media record.
   if ($id) {
     db_query('DELETE FROM {eck_media} WHERE id = :id', array(':id' => $id));
   }
 
+  // Delete the local file record.
   if ($fid) {
-    // @TODO
+    $file = file_load($fid);
+    if ($file) {
+      file_delete($file);
+    }
   }
 }
 
