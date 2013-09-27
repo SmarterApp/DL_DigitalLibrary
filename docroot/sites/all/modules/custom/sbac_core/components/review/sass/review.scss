@@ -35,6 +35,18 @@
   }
 }
 
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
 /* layout */
 #review-wrap-reviews {
   margin: 0 30px;
@@ -246,22 +258,36 @@
   }
 
   .group-header {
+    @include clearfix;
+    
     margin-bottom: 10px;
+    text-align: right;
+
+    .field-name-review-author {
+      float: left;
+    }
+
+    .field-name-review-helpfulness {
+      float: right;
+    }
   }
 
   .group-left {
-    width:33%;
+    clear: both;
+    width: 33%;
   }
 
   .group-middle {
-    width:33%;
+    width: 33%;
+
     .field-name-field-pro-dev {
       padding-left: 10px;
     }
   }
 
   .group-right {
-    width:33%;
+    width: 33%;
+
     .field-name-field-ease-use {
       padding-left: 10px;
     }

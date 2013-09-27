@@ -48,6 +48,28 @@ function theme_review_author($variables) {
 }
 
 /**
+ * Output for Display Suite field "Review Helpfulness"
+ * @param  [type] $variables [description]
+ * @return [type]            [description]
+ */
+function theme_review_helpfulness($variables) {
+  $output = '';
+
+  $entity = $variables['entity'];
+
+  $count = 20;
+  $total = 50;
+
+  $output .= t('!count of !total people (!percent%) found this review useful', array(
+    '!count' => $count,
+    '!total' => $total,
+    '!percent' => ($count / $total * 100),
+  ));
+
+  return $output;
+}
+
+/**
  * Output for Display Suite field "Delete Button"
  * @param  [type] $variables [description]
  * @return [type]            [description]
