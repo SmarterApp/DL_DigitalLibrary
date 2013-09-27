@@ -173,7 +173,7 @@ function sbac_core_strongarm() {
           1 => 'yes',
         ),
         1 => array(
-          0 => '2',
+          0 => '0',
           1 => 'no',
         ),
       ),
