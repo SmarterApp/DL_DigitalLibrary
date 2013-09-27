@@ -14,6 +14,25 @@ function review_form_validate($form, &$form_state) {
         form_set_error('title', profanity_error_message_text());
       }
 
+      // create a fake entity object so we can use field_get_items to grab the field
+      // value
+      $entity = new stdClass;
+      $entity->type = 'end_use';
+      $entity->field_appropriate_for = $form_state['values']['field_appropriate_for'];
+      $values = field_get_items('review', $entity, 'field_appropriate_for');
+
+      // check for empty value and remove the field if so
+      $remove = TRUE;
+      foreach ($values as $value) {
+        if (isset($value['tid']) && !empty($value['tid'])) {
+          $remove = FALSE;
+        }
+      }
+
+      if ($remove) {
+        unset($form_state['values']['field_appropriate_for']);
+      }
+
       break;  
   
     case 'preview': 
@@ -80,7 +99,6 @@ function review_form_submit($form, &$form_state) {
 
   // final submission from Preview state
   if ($form_state['triggering_element']['#value'] == 'Submit') {
-    // watchdog('sbac', 'title is: ' . $form_state['create_values']['title']);
     global $user;
     $node = $form_state['node_object'];
 
@@ -91,6 +109,7 @@ function review_form_submit($form, &$form_state) {
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
       'node_id' => $node->nid,
+      'entity_type' => 'review',
     ));
 
     $fields = array(
