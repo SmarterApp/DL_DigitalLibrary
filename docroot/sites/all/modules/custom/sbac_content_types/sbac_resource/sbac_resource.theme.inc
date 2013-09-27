@@ -504,9 +504,9 @@ function _sbac_resource_reviewer_links($fields) {
           }
           // start review
           else {
-            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'review');
+            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'qc');
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
-            $variables['links'][] = _sbac_resource_start_review_link($node, 'review', 'link');
+            $variables['links'][] = _sbac_resource_start_review_link($node, 'qc', 'link');
             $variables['text'] = t('Needs Review');
           }
         }
@@ -618,7 +618,7 @@ function _sbac_resource_publisher_links($fields) {
  * @param $uid
  * @param $nid
  */
-function _sbac_resource_determine_feedback($nid, $type = 'review', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE) {
+function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE) {
   $feedback = array();
   if ($nid) {
     $query = db_select('eck_feedback', 'f');
@@ -696,8 +696,8 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
       return '';
     }
   }
-  elseif ($type == 'review') {
-    $stub = 'review';
+  elseif ($type == 'qc') {
+    $stub = 'qc';
     if (!resource_access('edit quality criteria', $node)) {
       return '';
     }

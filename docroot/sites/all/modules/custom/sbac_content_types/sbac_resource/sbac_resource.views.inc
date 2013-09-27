@@ -138,12 +138,12 @@ function sbac_resource_views_pre_render(&$view) {
             unset($view->result[$key]);
           }
           // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
-          $feedback = _sbac_resource_determine_feedback($result->nid, 'review', $user->uid, 1, FALSE, 1, 'set', TRUE);
+          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
           if (count($feedback) == 3) {
             unset($view->result[$key]);
           }
           // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
-          $feedback = _sbac_resource_determine_feedback($result->nid, 'review', $user->uid, 1, 1, FALSE, 'single');
+          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
           if ($feedback) {
             unset($view->result[$key]);
           }
