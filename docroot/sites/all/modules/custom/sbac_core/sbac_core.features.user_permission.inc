@@ -152,6 +152,16 @@ function sbac_core_user_default_permissions() {
     'module' => 'eck',
   );
 
+  // Exported permission: 'rate content'.
+  $permissions['rate content'] = array(
+    'name' => 'rate content',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'fivestar',
+  );
+
   // Exported permission: 'view any taskit tasks'.
   $permissions['view any taskit tasks'] = array(
     'name' => 'view any taskit tasks',
@@ -169,6 +179,16 @@ function sbac_core_user_default_permissions() {
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'taskit',
+  );
+
+  // Exported permission: 'view rate results page'.
+  $permissions['view rate results page'] = array(
+    'name' => 'view rate results page',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'rate',
   );
 
   return $permissions;
