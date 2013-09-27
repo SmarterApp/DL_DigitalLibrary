@@ -980,6 +980,12 @@ function sbac_media_duplicates_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Gets the media url from alfresco.
+ *
+ * @param $media
+ * @return mixed|null|string
+ */
 function sbac_media_get_media_url($media) {
   $url = NULL;
   module_load_include('api.inc', 'cmis');
