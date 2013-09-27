@@ -106,7 +106,11 @@
         <p><span id="sbac-filename"><?php print $viewer_filename; ?></span></p>
       </div>
       <div class="column large-2">
-        <?php print $download; ?>
+        <?php
+          if (isset($download)) {
+            print $download;
+          }
+        ?>
       </div>
     </div>
   </div>
