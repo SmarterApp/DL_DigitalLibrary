@@ -119,27 +119,29 @@ function sbac_alignment_ajax_alignment_crud_callback() {
       }
 
       // identify the term associated with this alignment node
+      /*
       $node = node_load($nid);
 
       $term_data = field_entity_value($node, 'field_education_alignment');
       $tid = $term_data[0]->tid;
       $name = $term_data[0]->name;
 
-      $resource = field_entity_value($node, 'field_resource_reference');
-
       // delete the node
       node_delete($nid);
-
+      */
+     
       // prep JSON response
       $data = array(
         'deleted_nid' => $nid,
-        'term_tid' => $tid,
-        'term_name' => trim($name),
-        'remove_term' => 0,
+        // 'term_tid' => $tid,
+        // 'term_name' => trim($name),
+        // 'remove_term' => 0,
       );
 
       // because the same term can be associated with multiple alignment nodes, we must make sure
       // it's not used on the resource more than once before we remove it from there
+      /*
+      $resource = field_entity_value($node, 'field_resource_reference');
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', 'alignment')
@@ -151,6 +153,7 @@ function sbac_alignment_ajax_alignment_crud_callback() {
       if (!isset($result['node'])) {
         $data['remove_term'] = 1;
       }
+      */
 
       print drupal_json_encode($data);
 

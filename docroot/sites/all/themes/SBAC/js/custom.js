@@ -11,34 +11,23 @@
         var update_form = function(data) {
           $('tr#term-' + nid).hide();
 
-          var obj = jQuery.parseJSON(data);
+          // var obj = jQuery.parseJSON(data);
           
-          if (obj.remove_term) {
-            var field = $('.node-resource-form .field-name-field-alignment-term input[type=text]');
-            var vals = field.val().split(',');
+          // if (obj.remove_term) {
+          //   var field = $('.node-resource-form .field-name-field-alignment-term input[type=text]');
+          //   var vals = field.val().split(',');
             
-            console.log('removing');
-            console.log(obj);
-            
-            console.log('pre');
-            console.log(vals);
-            
-            for (var i = 0; i < vals.length; i++) {
-              // trim whitespace
-              vals[i] = vals[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-              if (vals[i] == obj.term_name) {
-                vals.splice(i, 1);
-              }
-            }
-            
-            console.log('post');
-            console.log(vals);
+          //   for (var i = 0; i < vals.length; i++) {
+          //     // trim whitespace
+          //     vals[i] = vals[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+          //     if (vals[i] == obj.term_name) {
+          //       vals.splice(i, 1);
+          //     }
+          //   }
 
-            field.val(vals.join(','));
-          }
+          //   field.val(vals.join(','));
+          // }
         }
-
-        console.log('firing event');
 
         $.ajax({
           type: "POST",
