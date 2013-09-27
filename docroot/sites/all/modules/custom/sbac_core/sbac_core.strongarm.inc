@@ -127,6 +127,9 @@ function sbac_core_strongarm() {
       'token' => array(
         'custom_settings' => FALSE,
       ),
+      'tooltip' => array(
+        'custom_settings' => TRUE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(),
@@ -135,6 +138,10 @@ function sbac_core_strongarm() {
           'default' => array(
             'weight' => '1',
             'visible' => FALSE,
+          ),
+          'tooltip' => array(
+            'weight' => '1',
+            'visible' => TRUE,
           ),
         ),
       ),

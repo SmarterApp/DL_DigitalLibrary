@@ -1,8 +1,6 @@
 (function ($) {
   Drupal.behaviors.sbac_custom = {
     attach: function (context, settings) {
-
-
       $('.disabled').click(function(e) {
           e.preventDefault();
           //do other stuff when a click happens
@@ -12,6 +10,23 @@
         var nid = $(this).attr('nid');
         var update_form = function(data) {
           $('tr#term-' + nid).hide();
+
+          // var obj = jQuery.parseJSON(data);
+          
+          // if (obj.remove_term) {
+          //   var field = $('.node-resource-form .field-name-field-alignment-term input[type=text]');
+          //   var vals = field.val().split(',');
+            
+          //   for (var i = 0; i < vals.length; i++) {
+          //     // trim whitespace
+          //     vals[i] = vals[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+          //     if (vals[i] == obj.term_name) {
+          //       vals.splice(i, 1);
+          //     }
+          //   }
+
+          //   field.val(vals.join(','));
+          // }
         }
 
         $.ajax({
@@ -123,6 +138,17 @@
                     $('#modalBackdrop').hide();
                     $('#modalContent').hide();
                     Drupal.attachBehaviors('.ccss-term-delete');
+
+                    var field = $('.node-resource-form .field-name-field-alignment-term input[type=text]');
+
+                    var vals = [];
+                    if (field.val() != '') {
+                      vals.push(field.val());
+                    }
+
+                    vals = $.merge(vals, obj.terms);
+
+                    field.val(vals.join());
                   }
 
                   $.ajax({
@@ -143,10 +169,6 @@
                   }
                 }
               });
-
-
-
-
             }
 
             var refNode = $('input#ref_node').val();
