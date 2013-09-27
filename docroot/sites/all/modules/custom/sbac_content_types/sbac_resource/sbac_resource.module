@@ -67,6 +67,24 @@ function sbac_resource_menu() {
     'weight' => -50,
   );
 
+  $items['my-resources'] = array(
+    'title' => 'My Resources',
+    'page callback' => 'sbac_resource_my_resources_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -48,
+  );
+
+  $items['resource-review'] = array(
+    'title' => 'Resource Review',
+    'page callback' => 'sbac_resource_resource_review_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -49,
+  );
+
   $items['admin/structure/types/manage/%node_type/messages'] = array(
     'title' => 'Messages',
     'page callback' => 'drupal_get_form',
