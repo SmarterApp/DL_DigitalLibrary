@@ -8,13 +8,15 @@
 @mixin mid_col {
   border-left: 1px #ccc solid;
   float: left;
-  width: 280px;
+  width: 270px;
+  padding-left: 10px;
 }
 
 @mixin right_col {
   border-left: 1px #ccc solid;
   float: left;
-  width: 280px;
+  width: 270px;
+  padding-left: 10px;
 }
 
 @mixin maxlength {
@@ -184,6 +186,10 @@
     .sorting-order {
       float: right;
     }
+
+    .summary-content {
+      margin-top: 10px;
+    }
   }
 
   #summary {
@@ -191,7 +197,9 @@
 
     }
 
-    .appropriate-for { 
+    .appropriate-for {
+      margin-top: 10px;
+
       .term {
         font-size: 0.8em;
         margin-bottom: 10px;
