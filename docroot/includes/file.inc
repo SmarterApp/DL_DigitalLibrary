@@ -1964,8 +1964,6 @@ function file_download() {
     foreach (module_implements('file_download') as $module) {
       $function = $module . '_file_download';
       $result = $function($uri);
-      error_log($function);
-      error_log("result " . $result);
       if ($result == -1) {
         // Throw away the headers received so far.
         $headers = array();
