@@ -77,6 +77,8 @@ function sbac_alignment_ds_layout_settings_info() {
     'layout_wrapper' => 'div',
     'layout_attributes' => '',
     'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
   );
   $export['taxonomy_term|education_alignment|default'] = $ds_layout;
 
@@ -105,6 +107,8 @@ function sbac_alignment_ds_layout_settings_info() {
     'layout_wrapper' => 'span',
     'layout_attributes' => '',
     'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
   );
   $export['taxonomy_term|education_alignment|tooltip'] = $ds_layout;
 
