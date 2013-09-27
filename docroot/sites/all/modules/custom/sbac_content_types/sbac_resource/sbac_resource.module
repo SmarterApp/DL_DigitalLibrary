@@ -86,72 +86,44 @@ function sbac_resource_menu() {
  * @param $node
  */
 function sbac_resource_download_contents($node) {
-  if ($node && isset($node->document)) {
+  if ($node) {
     // check to make sure there is public:// resources to download
-    if (sbac_resource_downloadable_scheme($node->document)) {
+    if (sbac_resource_downloadable_scheme($node->field_file['und'])) {
       $destination = variable_get('file_public_path', conf_path() . '/files') . '/resource_zips/';
       if (!file_exists($destination)) {
         mkdir($destination);
       }
 
-      module_load_include('api.inc', 'cmis');
-      try {
-        // See if Alfresco is available.
-        $repository = cmis_get_repository();
-        $alfresco = variable_get('cmis_repositories');
-        // Authenticate user and receive a ticket.
-        $data = drupal_json_encode(array('username' => $alfresco['default']['user'], 'password' => $alfresco['default']['password']));
-        $options = array(
-          'method' => 'POST',
-          'data' => $data,
-          'headers' => array('Content-Type' => 'application/json'),
-        );
-        $response = drupal_http_request($alfresco['default']['login_url'], $options);
-        if ($response->code == 200 && $response->data) {
-          $ticket = NULL;
-          $data = drupal_json_decode($response->data);
-          if ($data && isset($data['data']['ticket'])) {
-            $ticket = $data['data']['ticket'];
-          }
-
-          // If we recieved a ticket, lets get the zip file.
-          if ($ticket) {
-            $comma = '';
-            $document_ids = '';
-            foreach ($node->document as $media) {
-              if ($media->document_id) {
-                $document_ids .= $comma . str_replace('workspace://SpacesStore/', '', $media->document_id);
-                $comma = ',';
-              }
-            }
-
-            // Get the zip contents.
-            $url = $alfresco['default']['zip_url'] . '?nodes=' . $document_ids . '&filename=' . $node->nid . '&noaccent=true&alf_ticket=' . $ticket;
-            $opts = array(
-              CURLOPT_URL =>$url,
-              CURLINFO_CONTENT_TYPE => "text/xml",
-              CURLOPT_BINARYTRANSFER => TRUE,
-              CURLOPT_RETURNTRANSFER => TRUE
-            );
-
-            $ch = curl_init();
-            curl_setopt_array($ch, $opts);
-            $data = curl_exec($ch);
-            $info = curl_getinfo($ch);
-            curl_close($ch);
-
-            if ($info['http_code'] == 200) {
-              $filename = 'download_' . REQUEST_TIME . '.zip';
-              header("Content-Type: application/x-gzip");
-              header("Content-disposition: attachment; filename=" . $filename);
-              echo $data;
-            }
+      $zip = new ZipArchive;
+      $archive_uri = 'public://resource_zips/';
+      $filename = 'download_' . REQUEST_TIME . '.zip';
+      $archive_uri .= $filename;
+      $real_path = drupal_realpath($archive_uri);
+      $open = $zip->open($real_path, ZipArchive::CREATE);
+      if ($open === TRUE) {
+        foreach ($node->field_file['und'] as $key => $file) {
+          // make sure the item uses public scheme
+          if (file_uri_scheme($file['uri']) == 'public') {
+            $zip->addFile(drupal_realpath($file['uri']), $file['filename']);
           }
         }
+        $zip->close();
       }
-      catch (CMISException $e) {
-        // cmis_error_handler('sbac_documents_presave_document', $e);
+
+      if (file_exists($real_path)) {
+        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+        header("Cache-Control: public"); // needed for i.e.
+        header("Content-Type: application/zip");
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-Length:".filesize($real_path));
+        header("Content-Disposition: attachment; filename=" . $filename);
+        if (readfile($real_path) !== false) {
+          $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
+          entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
+        }
       }
+    } else {
+      return "There are no files to download."; // no downloadable file schemes (public://)
     }
   }
 }
