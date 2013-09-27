@@ -46,18 +46,6 @@ function sbac_resource_menu() {
     'file' => 'sbac_resource.forms.inc',
   );
 
-  $items['sbac-resource/download/%node'] = array(
-    'page callback' => 'sbac_resource_download_contents',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
-  );
-
-  $items['sbac-resource/download/%node'] = array(
-    'page callback' => 'sbac_resource_download_contents',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
-  );
-
   $items['digital-library-resources'] = array(
     'title' => 'Digital Library Resources',
     'page callback' => 'sbac_resource_digital_library_page',
@@ -78,69 +66,6 @@ function sbac_resource_menu() {
   );
 
   return $items;
-}
-
-/**
- * Packages and downloads all materials into a zip.
- *
- * @param $node
- */
-function sbac_resource_download_contents($node) {
-  if ($node) {
-    // check to make sure there is public:// resources to download
-    if (sbac_resource_downloadable_scheme($node->field_file['und'])) {
-      $destination = variable_get('file_public_path', conf_path() . '/files') . '/resource_zips/';
-      if (!file_exists($destination)) {
-        mkdir($destination);
-      }
-
-      $zip = new ZipArchive;
-      $archive_uri = 'public://resource_zips/';
-      $filename = 'download_' . REQUEST_TIME . '.zip';
-      $archive_uri .= $filename;
-      $real_path = drupal_realpath($archive_uri);
-      $open = $zip->open($real_path, ZipArchive::CREATE);
-      if ($open === TRUE) {
-        foreach ($node->field_file['und'] as $key => $file) {
-          // make sure the item uses public scheme
-          if (file_uri_scheme($file['uri']) == 'public') {
-            $zip->addFile(drupal_realpath($file['uri']), $file['filename']);
-          }
-        }
-        $zip->close();
-      }
-
-      if (file_exists($real_path)) {
-        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
-        header("Cache-Control: public"); // needed for i.e.
-        header("Content-Type: application/zip");
-        header("Content-Transfer-Encoding: Binary");
-        header("Content-Length:".filesize($real_path));
-        header("Content-Disposition: attachment; filename=" . $filename);
-        if (readfile($real_path) !== false) {
-          $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
-          entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
-        }
-      }
-    } else {
-      return "There are no files to download."; // no downloadable file schemes (public://)
-    }
-  }
-}
-
-/**
- * Function to check if there are any downloadable files.
- *
- * @param $files
- * @return bool
- */
-function sbac_resource_downloadable_scheme($documents) {
-  foreach ($documents as $media) {
-    if ($media->document_id) {
-      return TRUE;
-    }
-  }
-  return FALSE;
 }
 
 /**
@@ -179,8 +104,8 @@ function sbac_resource_preprocess_node(&$vars) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
       $viewer = _sbac_resource_preview_content($vars);
       $materials = _sbac_resource_preview_materials($vars);
-      if (isset($vars['document']) && sbac_resource_downloadable_scheme($vars['document'])) {
-        $vars['download'] = l('Download', 'sbac-resource/download/' . $vars['nid'], array('attributes' => array('class' => 'button small right')));
+      if (isset($vars['document']) && sbac_media_downloadable_scheme($vars['document'])) {
+        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('class' => 'button small right')));
       }
       $vars['viewer'] = $viewer['viewer'];
       $vars['viewer_filename'] = $viewer['viewer_filename'];
@@ -910,28 +835,6 @@ function sbac_resource_node_load($nodes, $types) {
 }
 
 /**
- * Implements hook_node_insert().
- *
- * @param $node
- */
-function sbac_resource_node_presave($node) {
-  if (isset($node->nid) && $node->nid) {
-    if (isset($node->document)) {
-      foreach ($node->document as $key => $media) {
-        if ($media->fid != NULL) {
-          $file = file_load($media->fid);
-          //this file still exists on Drupal so we have to load it...{
-          if ($file !== FALSE) {
-            sbac_resource_create_file_from_cmis($node, $file, $media); // Create new doc
-            //file_delete($file); //delete the file from drupal
-          }
-        }
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_node_delete().
  *
  * @param $node
@@ -940,126 +843,13 @@ function sbac_resource_node_delete($node) {
   if (isset($node->document)) {
     foreach ($node->document as $key => $media) {
       if ($media->document_id) {
-        sbac_resource_delete_file_from_cmis($node, $media);
+        sbac_media_delete_file_from_cmis($node, $media);
       }
     }
   }
 
   //now remove the folder from alfresco
-  sbac_resource_delete_folder_from_cmis($node);
-}
-
-/**
- * Adds the file to Alfresco.
- *
- * @param $node, $i = file index
- */
- function sbac_resource_create_file_from_cmis(&$node, $file, $media) {
-  module_load_include('api.inc', 'cmis');
-  $folder_path = '/Assets/' . floor($node->nid/32000) . "/" . $node->nid;
-  try {
-	  $repository = cmis_get_repository();
-	  //test to see of the folder is there
-	  $root_folder=cmisapi_getObjectByPath($repository->repositoryId, '/Assets');
-	  try {
-		  $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
-	  }
-	  catch (CMISException $e) {
-	  //do nothing
-	  }
-
-    if (!is_object($folder)) { //no resource folder
-      //is the parent folder there?
-      try {
-        $parent_folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000));
-      }
-      catch (CMISException $e) {
-        //cmis_error_handler('sbac_documents_presave_document', $e);
-      }
-
-      //ok, the parent folder is there, now try to create the child folder
-      if (is_object($parent_folder)) {
-        try {
-          $folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
-        }
-        catch (CMISException $e) {
-          //cmis_error_handler('sbac_documents_presave_document', $e);
-        }
-      }
-      else {
-        try {
-          //neither folder is there, so we have to create both the parent and the child (resource node) folders
-          $parent_folder=cmisapi_createFolder($repository->repositoryId, $root_folder->id, floor($node->nid/32000));
-          $folder=cmisapi_createFolder($repository->repositoryId, $parent_folder->id, $node->nid);
-        }
-        catch (CMISException $e) {
-          //cmis_error_handler('sbac_documents_presave_document', $e);
-        }
-      }
-    }
-
-    // Set the folder object to the /Assets/$cardinal/$node->nid
-    $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
-    $document = cmisapi_createDocument($repository->repositoryId, $folder->id, $file->filename, array(), file_get_contents($file->uri), $file->filemime);
-
-    // Save the new document id.
-    $media->document_id = $document->id;
-    entity_save('media', $media);
-
-    //update the doc with the drupalId
-    $alfresco=variable_get('cmis_repositories');
-    $ch = curl_init();
-    // Set the url, number of POST vars, POST data and login details
-    curl_setopt($ch,CURLOPT_URL, $alfresco['default']['update_url']);
-    curl_setopt($ch,CURLOPT_POST, 1);
-    curl_setopt($ch,CURLOPT_POSTFIELDS, 'data=' . json_encode(array('nodeRef'=>$document->id, 'drupalId'=>$node->nid)));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch,CURLOPT_USERPWD,$alfresco['default']['user']. ":" . $alfresco['default']['password']);
-    $result = curl_exec ($ch);
-    curl_close ($ch);
-  }
-  catch (CMISException $e) {
-    // cmis_error_handler('sbac_documents_presave_document', $e);
-  }
-}
-
-
-/**
- * Deletes the file from Alfresco.
- *
- * @param $node, $i = file index
- */
-function sbac_resource_delete_file_from_cmis(&$node, &$media) {
-  module_load_include('api.inc', 'cmis');
-  try {
-    $repository = cmis_get_repository();
-    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $media->document_id);
-    cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
-    entity_delete('media', $media->id);
-    return TRUE;
-  } 
-  catch (CMISException $e) {
-    // cmis_error_handler('sbac_documents_delete_document', $e);
-    return FALSE;
-  }
-}
-
-/**
- * Deletes the file from Alfresco.
- *
- * @param $node, $i = file index
- */
-function sbac_resource_delete_folder_from_cmis(&$node) {
-  module_load_include('api.inc', 'cmis');
-  try {
-    $repository = cmis_get_repository();
-	  $folder = cmisapi_getObjectByPath($repository->repositoryId, '/Assets/' . floor($node->nid/32000) . "/" . $node->nid);
-    //hack commented out until we separate the alfresco environments
-	  //cmisapi_deleteObject($repository->repositoryId, $folder->id);
-  } 
-  catch (CMISException $e) {
-    // cmis_error_handler('sbac_documents_delete_document', $e);
-  }
+  sbac_media_delete_folder_from_cmis($node);
 }
 
 /**
