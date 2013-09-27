@@ -651,7 +651,7 @@ function sbac_media_delete_media($js = FALSE) {
     ctools_modal_add_js();
 
     $form_state = array(
-      'title' => t('To continue, confirm that you wish to delete this media.'),
+      'title' => t('You are about to delete this material'),
       'ajax' => $js,
     );
 
@@ -708,7 +708,7 @@ function sbac_media_delete_media_form() {
   );
 
   $form['submit_description'] = array(
-    '#markup' => '<p>' . t('If you wish to continue, click delete!') . '</p>',
+    '#markup' => '<p>' . t('If you continue, the material will be removed from this resource.') . '</p>',
   );
 
   $form['cancel'] = array(
