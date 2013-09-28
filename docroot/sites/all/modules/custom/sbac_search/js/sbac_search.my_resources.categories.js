@@ -25,7 +25,7 @@
           last_filter.append('<div class="current-filter"><span vid="' + filter_name.attr('vid') + '" tid="' + filter_name.attr('tid') + '" class="filter-name">' + filter_name.html() + '</span></div>');
           filter_name.addClass('current');
           filter_name.parent().addClass('current');
-          Drupal.behaviors.sbac_remove_categories.attach(context, settings);
+          Drupal.behaviors.sbac_my_resources_remove.attach(context, settings);
           // Add the tid to the filter list
           if (current_filters.val() == '') {
             last_filter.removeClass('noshow');
