@@ -402,6 +402,18 @@ function sbac_search_my_resources_categories() {
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.my_resources.categories.js');
 
+  $resource_states = taxonomy_vocabulary_machine_name_load('resource_states');
+  $resource_states_terms = taxonomy_get_tree($resource_states->vid);
+  $allowed_states = array('Draft', 'Submitted', 'In Review', 'Returned', 'Posted');
+  foreach ($resource_states_terms as $key => $resource_state_term) {
+    if (!in_array($resource_state_term->name, $allowed_states)) {
+      unset($resource_states_terms[$key]);
+    }
+  }
+  $categories['resource_states']['display_name'] = 'Resource States';
+  $categories['resource_states']['vocabulary'] = $resource_states;
+  $categories['resource_states']['terms'] = $resource_states_terms;
+
   $subject = taxonomy_vocabulary_machine_name_load('subject');
   $categories['subject']['display_name'] = 'Subjects';
   $categories['subject']['vocabulary'] = $subject;

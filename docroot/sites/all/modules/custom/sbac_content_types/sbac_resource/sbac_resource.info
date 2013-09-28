@@ -122,6 +122,7 @@ features[taxonomy][] = intended_student_populations
 features[taxonomy][] = interactivity_type
 features[taxonomy][] = learning_resource_type
 features[taxonomy][] = license
+features[taxonomy][] = resource_states
 features[taxonomy][] = smarter_balanced_keyword
 features[taxonomy][] = states
 features[taxonomy][] = subject

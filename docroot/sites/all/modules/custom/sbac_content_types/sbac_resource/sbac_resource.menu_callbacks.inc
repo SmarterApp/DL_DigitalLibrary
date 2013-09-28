@@ -16,13 +16,13 @@ function sbac_resource_digital_library_page() {
   // Load up the view.
   $view = views_get_view('resources');
   $view->set_display($display);
-  _sbac_resource_apply_filters($view);
+  sbac_resource_digital_library_apply_filters($view);
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
   $resource_layout_view = $view->preview();
   $_SESSION['sbac_search_count'] = $view->total_rows;
-  // dpq($view->build_info['query']);
+  dpq($view->build_info['query']);
 
   // if there is 0 rows.
   $count = count($view->result);
@@ -81,6 +81,7 @@ function sbac_resource_my_resources_page() {
   $view->_post_execute();
   $my_resources_output = $view->preview();
   $_SESSION['sbac_mr_search_count'] = $view->total_rows;
+  // dpq($view->build_info['query']);
 
   // if there is 0 rows.
   $count = count($view->result);

@@ -392,8 +392,29 @@ function sbac_resource_views_default_views() {
     'needs_review' => 'needs_review',
     'being_reviewed' => 'being_reviewed',
     'rejected' => 'rejected',
-    'approved' => 'approved',
     'published' => 'published',
+  );
+  $handler->display->display_options['filters']['state']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
+  $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
+  $handler->display->display_options['filters']['state']['expose']['identifier'] = 'state';
+  $handler->display->display_options['filters']['state']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['state']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
   );
   /* Filter criterion: User: Current */
   $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
@@ -430,64 +451,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Content: Intended Student Population(s) (field_intended_student) */
-  $handler->display->display_options['filters']['field_intended_student_tid']['id'] = 'field_intended_student_tid';
-  $handler->display->display_options['filters']['field_intended_student_tid']['table'] = 'field_data_field_intended_student';
-  $handler->display->display_options['filters']['field_intended_student_tid']['field'] = 'field_intended_student_tid';
-  $handler->display->display_options['filters']['field_intended_student_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['operator_id'] = 'field_intended_student_tid_op';
-  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['operator'] = 'field_intended_student_tid_op';
-  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['identifier'] = 'field_intended_student_tid';
-  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  $handler->display->display_options['filters']['field_intended_student_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_intended_student_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_intended_student_tid']['vocabulary'] = 'intended_student_populations';
-  /* Filter criterion: Content: Digital Media Type(s) (field_digital_media_type) */
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['id'] = 'field_digital_media_type_tid';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['table'] = 'field_data_field_digital_media_type';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['field'] = 'field_digital_media_type_tid';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['expose']['operator_id'] = 'field_digital_media_type_tid_op';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['expose']['operator'] = 'field_digital_media_type_tid_op';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['expose']['identifier'] = 'field_digital_media_type_tid';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['vocabulary'] = 'digital_media_type';
   /* Filter criterion: Content: Subjects and Domains (field_subject) */
   $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
@@ -517,122 +480,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
-  /* Filter criterion: Content: Geographical Setting(s) (field_geographical_settings) */
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['id'] = 'field_geographical_settings_tid';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['table'] = 'field_data_field_geographical_settings';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['field'] = 'field_geographical_settings_tid';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['operator_id'] = 'field_geographical_settings_tid_op';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['operator'] = 'field_geographical_settings_tid_op';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['identifier'] = 'field_geographical_settings_tid';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['vocabulary'] = 'geographical_settings';
-  /* Filter criterion: Content: Educational Use (field_educational_use) */
-  $handler->display->display_options['filters']['field_educational_use_tid']['id'] = 'field_educational_use_tid';
-  $handler->display->display_options['filters']['field_educational_use_tid']['table'] = 'field_data_field_educational_use';
-  $handler->display->display_options['filters']['field_educational_use_tid']['field'] = 'field_educational_use_tid';
-  $handler->display->display_options['filters']['field_educational_use_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_educational_use_tid']['expose']['operator_id'] = 'field_educational_use_tid_op';
-  $handler->display->display_options['filters']['field_educational_use_tid']['expose']['operator'] = 'field_educational_use_tid_op';
-  $handler->display->display_options['filters']['field_educational_use_tid']['expose']['identifier'] = 'field_educational_use_tid';
-  $handler->display->display_options['filters']['field_educational_use_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_educational_use_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  $handler->display->display_options['filters']['field_educational_use_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_educational_use_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
-  /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator_id'] = 'field_intended_end_user_tid_op';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator'] = 'field_intended_end_user_tid_op';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['identifier'] = 'field_intended_end_user_tid';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['vocabulary'] = 'intended_end_user';
-  /* Filter criterion: Content: Smarter Balanced Keyword(s) (field_smarter_balanced_keyword) */
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['id'] = 'field_smarter_balanced_keyword_tid';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['table'] = 'field_data_field_smarter_balanced_keyword';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['field'] = 'field_smarter_balanced_keyword_tid';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['expose']['operator_id'] = 'field_smarter_balanced_keyword_tid_op';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['expose']['operator'] = 'field_smarter_balanced_keyword_tid_op';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['expose']['identifier'] = 'field_smarter_balanced_keyword_tid';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['vocabulary'] = 'smarter_balanced_keyword';
   /* Filter criterion: Content: Resource Type (field_focus) */
   $handler->display->display_options['filters']['field_focus_tid']['id'] = 'field_focus_tid';
   $handler->display->display_options['filters']['field_focus_tid']['table'] = 'field_data_field_focus';
@@ -662,35 +509,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_focus_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
-  /* Filter criterion: Content: Attributes (field_attributes) */
-  $handler->display->display_options['filters']['field_attributes_tid']['id'] = 'field_attributes_tid';
-  $handler->display->display_options['filters']['field_attributes_tid']['table'] = 'field_data_field_attributes';
-  $handler->display->display_options['filters']['field_attributes_tid']['field'] = 'field_attributes_tid';
-  $handler->display->display_options['filters']['field_attributes_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_attributes_tid']['expose']['operator_id'] = 'field_attributes_tid_op';
-  $handler->display->display_options['filters']['field_attributes_tid']['expose']['operator'] = 'field_attributes_tid_op';
-  $handler->display->display_options['filters']['field_attributes_tid']['expose']['identifier'] = 'field_attributes_tid';
-  $handler->display->display_options['filters']['field_attributes_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_attributes_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  $handler->display->display_options['filters']['field_attributes_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_attributes_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_attributes_tid']['vocabulary'] = 'attributes';
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
@@ -1955,11 +1773,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['state']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['state']['field'] = 'state';
   $handler->display->display_options['filters']['state']['value'] = array(
-    'draft' => 'draft',
-    'needs_review' => 'needs_review',
-    'being_reviewed' => 'being_reviewed',
-    'rejected' => 'rejected',
-    'approved' => 'approved',
     'published' => 'published',
   );
   /* Filter criterion: User: Current */
