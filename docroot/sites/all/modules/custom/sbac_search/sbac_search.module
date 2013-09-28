@@ -6,6 +6,10 @@
 
 include_once 'sbac_search.features.inc';
 
+define('SBAC_SEARCH_MY_RESOURCES_FILTERS', 'sbac-my-resources-filters');
+define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS', 'sbac-digital-library-resources-filters');
+define('SBAC_SEARCH_RESOURCE_REVIEW_FILTERS', 'sbac-resource-review-filters');
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -160,7 +164,7 @@ function sbac_search_block_info() {
   $blocks['sbac_search_categories'] = array(
     'info' => t('Categories'),
     'region' => 'filter',
-    'pages' => "digital-library-resources*",
+    'pages' => "digital-library-resources*\nmy-resources*\nresource-review*",
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'status' => 1,
     'cache' => DRUPAL_NO_CACHE,
@@ -169,7 +173,7 @@ function sbac_search_block_info() {
   $blocks['sbac_search_categories_button'] = array(
     'info' => t('Categories'),
     'region' => 'search',
-    'pages' => "digital-library-resources*",
+    'pages' => "digital-library-resources*\nmy-resources*\nresource-review*",
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'status' => 1,
     'cache' => DRUPAL_NO_CACHE,
@@ -206,7 +210,21 @@ function sbac_search_block_view($delta = '') {
   switch ($delta) {
     case 'sbac_search_categories':
       $block['subject'] = t('');
-      $block['content'] = drupal_get_form('sbac_search_categories_form');
+      switch (arg(0)) {
+        case 'my-resources':
+          $block['content'] = drupal_get_form('sbac_search_my_resources_form');
+          break;
+        case 'digital-library-resources':
+          $block['content'] = drupal_get_form('sbac_search_digital_library_resources_form');
+          break;
+        case 'resource-review':
+          $block['content'] = drupal_get_form('sbac_search_resource_review_form');
+          break;
+        default:
+          $block['content'] = drupal_get_form('sbac_search_digital_library_resources_form');
+          break;
+      }
+
       break;
     case 'sbac_search_categories_button':
       $block['subject'] = t('');
@@ -231,12 +249,82 @@ function sbac_search_hide_category_style() {
  *
  * @return array
  */
-function sbac_search_categories_form() {
+function sbac_search_my_resources_form() {
   $form = array();
 
   $current_filters = NULL;
-  if (isset($_SESSION['sbac-current-filters'])) {
-    $current_filters = $_SESSION['sbac-current-filters'];
+  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS])) {
+    $current_filters = $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS];
+  }
+
+  $form['current_filters'] = array(
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-search-current-filters'),
+  );
+
+  $form['search_categories'] = array(
+    '#markup' => sbac_search_my_resources_categories(),
+  );
+
+  $current_keywords = NULL;
+  if (isset($_SESSION['sbac-search-keywords'])) {
+    $current_keywords = $_SESSION['sbac-search-keywords'];
+  }
+  $form['search_keywords'] = array(
+    '#type' => 'hidden',
+    '#value' => $current_keywords,
+    '#attributes' => array('id' => 'sbac-search-keywords'),
+  );
+
+  $form['close'] = array(
+    '#type' => 'submit',
+    '#value' => 'Close',
+    '#attributes' => array('id' => 'sbac-search-close-button'),
+    '#prefix' => '<div class="category-buttons">',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  $form['filter'] = array(
+    '#type' => 'submit',
+    '#value' => 'Apply Filters',
+    '#attributes' => array('id' => 'sbac-search-filter-button'),
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for categories.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_search_my_resources_form_submit(&$form, &$form_state) {
+  $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = $form_state['input']['current_filters'];
+}
+
+/**
+ * Form for submitting the category filters.
+ *
+ * @return array
+ */
+function sbac_search_digital_library_resources_form() {
+  $form = array();
+
+  $current_filters = NULL;
+  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS])) {
+    $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS];
   }
 
   $form['current_filters'] = array(
@@ -292,7 +380,7 @@ function sbac_search_categories_form() {
  * @param $form
  * @param $form_state
  */
-function sbac_search_categories_form_submit(&$form, &$form_state) {
+function sbac_search_digital_library_resources_form_submit(&$form, &$form_state) {
   $_SESSION['sbac-current-filters'] = $form_state['input']['current_filters'];
   if (isset($_SESSION['sbac-search-keywords'])) {
     $current_keywords = $_SESSION['sbac-search-keywords'];
@@ -302,6 +390,62 @@ function sbac_search_categories_form_submit(&$form, &$form_state) {
     }
   }
   $_SESSION['sbac-search-keywords'] = $form_state['input']['search_keywords'];
+}
+
+/**
+ * Returns the category filters.
+ *
+ * @return null
+ */
+function sbac_search_my_resources_categories() {
+  $categories = array();
+  drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.my_resources.categories.js');
+
+  $subject = taxonomy_vocabulary_machine_name_load('subject');
+  $categories['subject']['display_name'] = 'Subjects';
+  $categories['subject']['vocabulary'] = $subject;
+  $categories['subject']['terms'] = taxonomy_get_tree($subject->vid);
+
+  $grades = taxonomy_vocabulary_machine_name_load('grades');
+  $categories['grades']['display_name'] = 'Grades';
+  $categories['grades']['vocabulary'] = $grades;
+  $categories['grades']['terms'] = taxonomy_get_tree($grades->vid);
+
+  $focus = taxonomy_vocabulary_machine_name_load('focus');
+  $categories['focus']['display_name'] = 'Resource Type';
+  $categories['focus']['vocabulary'] = $focus;
+  $categories['focus']['terms'] = taxonomy_get_tree($focus->vid);
+
+  $cf_value = NULL;
+  $cf_html = array();
+  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS])) {
+    $cf_value = $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS];
+    if ($cf_value) {
+      $filters = explode('::', $cf_value);
+      if ($filters) {
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            if ($vid && $tid) {
+              $term = taxonomy_term_load($tid);
+              if ($term) {
+                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $output = NULL;
+  if ($categories) {
+    $output = theme('sbac_my_resources_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
+  }
+  return $output;
 }
 
 /**
@@ -438,6 +582,16 @@ function sbac_search_theme($existing, $type, $theme, $path) {
   $items['sbac_search_categories'] = array(
     'path' => drupal_get_path('module', 'sbac_search') . '/templates',
     'template' => 'sbac-search-categories',
+    'variables' => array(
+      'categories' => NULL,
+      'cf_value' => NULL,
+      'cf_html' => NULL,
+    ),
+  );
+
+  $items['sbac_my_resources_categories'] = array(
+    'path' => drupal_get_path('module', 'sbac_search') . '/templates',
+    'template' => 'my-resources-categories',
     'variables' => array(
       'categories' => NULL,
       'cf_value' => NULL,

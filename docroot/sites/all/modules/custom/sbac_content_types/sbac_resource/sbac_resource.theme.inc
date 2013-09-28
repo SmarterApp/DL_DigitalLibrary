@@ -34,6 +34,15 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     )
   );
 
+  $items['my_resources'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates',
+    'template' => 'my-resources',
+    'variables' => array(
+      'my_resources_output' => NULL,
+      'no_results' => NULL,
+    )
+  );
+
   // Resources - Grid View
   $items['views_view_fields__resources__grid_view'] = array(
     'template' => 'templates/resources/grid_view/views-view-fields--resources--grid-view',
@@ -60,7 +69,7 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_resource')
   );
 
-
+  // Resources - List View
   $items['views_view_fields__resources__list_view'] = array(
     'template' => 'templates/resources/list_view/views-view-fields--resources--list-view',
     'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
@@ -73,18 +82,7 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_resource')
   );
 
-
-  $items['views_view_unformatted__resources__list_view'] = array(
-    'template' => 'templates/resources/list_view/views-view-unformatted--resources--list-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
-    'original hook' => 'views_view_unformatted',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_unformatted',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
+  // Resources - List View
   $items['views_view__resources__list_view'] = array(
     'template' => 'templates/resources/list_view/views-view--resources--list-view',
     'arguments' => array('view' => NULL),
@@ -156,6 +154,111 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
       'template_preprocess',
       'template_preprocess_views_view',
       'sbac_resource_views_view__resources__list_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+
+  // My Resources - Grid View
+  $items['views_view_fields__my_resources__grid_view'] = array(
+    'template' => 'templates/my_resources/grid_view/views-view-fields--my-resources--grid-view',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_resource_views_view_fields__my_resources__grid_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  // My Resources - Grid View
+  $items['views_view__my_resources__grid_view'] = array(
+    'template' => 'templates/my_resources/grid_view/views-view--my-resources--grid-view',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_resource_views_view__my_resources__grid_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  // My Resources - List View
+  $items['views_view_fields__my_resources__list_view'] = array(
+    'template' => 'templates/my_resources/list_view/views-view-fields--my-resources--list-view',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_resource_views_view_fields__my_resources__list_view__preprocess'
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  // My Resources - List View
+  $items['views_view__my_resources__list_view'] = array(
+    'template' => 'templates/my_resources/list_view/views-view--my-resources--list-view',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_resource_views_view__my_resources__list_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  // Resource Review - Grid View
+  $items['views_view_fields__resource_review__grid_view'] = array(
+    'template' => 'templates/resource_review/grid_view/views-view-fields--resource-review--grid-view',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_resource_views_view_fields__resource_review__grid_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  // Resource Review - Grid View
+  $items['views_view__resource_review__grid_view'] = array(
+    'template' => 'templates/resource_review/grid_view/views-view--resource-review--grid-view',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_resource_views_view__resource_review__grid_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  // Resource Review - List View
+  $items['views_view_fields__resource_review__list_view'] = array(
+    'template' => 'templates/resource_review/list_view/views-view-fields--resource-vreview--list-view',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_resource_views_view_fields__resource_review__list_view__preprocess'
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  // Resource Review - List View
+  $items['views_view__resource_review__list_view'] = array(
+    'template' => 'templates/resource_review/list_view/views-view--resource-review--list-view',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_resource_views_view__resource_review__list_view__preprocess',
     ),
     'path' => drupal_get_path('module', 'sbac_resource')
   );
@@ -273,6 +376,296 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
  * @param $vars
  */
 function sbac_resource_views_view_fields__resources__list_view__preprocess(&$vars) {
+  global $user;
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_add_library('system', 'drupal.ajax');
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  $image_assets = _sbac_resource_grid_image($vars['fields'], 'list');
+  if ($image_assets) {
+    $vars['fields']['image'] = $image_assets['image'];
+    $vars['fields']['mime-type'] = $image_assets['mime-type'];
+    $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
+  }
+  if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
+    $variables = _sbac_resource_contributor_links($vars['fields']);
+  }
+  if (in_array('resource reviewer', $user->roles)) {
+    $variables = _sbac_resource_reviewer_links($vars['fields']);
+  }
+  if (in_array('resource publisher', $user->roles)) {
+    $variables = _sbac_resource_publisher_links($vars['fields']);
+  }
+
+  if (isset($variables['buttons'])) {
+    $vars['fields']['buttons'] = $variables['buttons'];
+  }
+  if (isset($variables['links'])) {
+    $vars['fields']['links'] = $variables['links'];
+  }
+  if (isset($variables['text'])) {
+    $vars['fields']['text'] = $variables['text'];
+  }
+  if (isset($variables['views'])) {
+    $vars['fields']['views'] = $variables['views'];
+  }
+  if (isset($variables['collaborators'])) {
+    $vars['fields']['collaborators'] = $variables['collaborators'];
+  }
+  if (isset($variables['downloads'])) {
+    $vars['fields']['downloads'] = $variables['downloads'];
+  }
+  if (isset($variables['subject'])) {
+    $vars['fields']['subject'] = $variables['subject'];
+  }
+  if (isset($variables['grade'])) {
+    $vars['fields']['grade'] = $variables['grade'];
+  }
+  if (isset($variables['media_types'])) {
+    $vars['fields']['media_types'] = $variables['media_types'];
+  }
+}
+
+/**
+ * Preprocessor for the grid view.
+ *
+ * @param $vars
+ */
+function sbac_resource_views_view__my_resources__grid_view__preprocess(&$vars) {
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_add_library('system', 'drupal.ajax');
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+}
+
+/**
+ * Preprocessor for the list view.
+ *
+ * @param $vars
+ */
+function sbac_resource_views_view__my_resources__list_view__preprocess(&$vars) {
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_add_library('system', 'drupal.ajax');
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+}
+
+/**
+ * Preprocessor for the grid view.
+ *
+ * @param $vars
+ */
+function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$vars) {
+  global $user;
+  $vars['fields']['state_button'] = NULL;
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_add_library('system', 'drupal.ajax');
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  $image_assets = _sbac_resource_grid_image($vars['fields']);
+  if ($image_assets) {
+    $vars['fields']['image'] = $image_assets['image'];
+    $vars['fields']['mime-type'] = $image_assets['mime-type'];
+    $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
+  }
+  if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
+    $variables = _sbac_resource_contributor_links($vars['fields']);
+  }
+  if (in_array('resource reviewer', $user->roles)) {
+    $variables = _sbac_resource_reviewer_links($vars['fields']);
+  }
+  if (in_array('resource publisher', $user->roles)) {
+    $variables = _sbac_resource_publisher_links($vars['fields']);
+  }
+
+  if (isset($variables['buttons'])) {
+    $vars['fields']['buttons'] = $variables['buttons'];
+  }
+  if (isset($variables['links'])) {
+    $vars['fields']['links'] = $variables['links'];
+  }
+  if (isset($variables['text'])) {
+    $vars['fields']['text'] = $variables['text'];
+  }
+  if (isset($variables['views'])) {
+    $vars['fields']['views'] = $variables['views'];
+  }
+  if (isset($variables['collaborators'])) {
+    $vars['fields']['collaborators'] = $variables['collaborators'];
+  }
+  if (isset($variables['downloads'])) {
+    $vars['fields']['downloads'] = $variables['downloads'];
+  }
+  if (isset($variables['subject'])) {
+    $vars['fields']['subject'] = $variables['subject'];
+  }
+  if (isset($variables['grades'])) {
+    $vars['fields']['grades'] = $variables['grades'];
+  }
+  if (isset($variables['media_types'])) {
+    $vars['fields']['media_types'] = $variables['media_types'];
+  }
+}
+
+/**
+ * Preprocessor for the list view.
+ *
+ * @param $vars
+ */
+function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$vars) {
+  global $user;
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_add_library('system', 'drupal.ajax');
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  $image_assets = _sbac_resource_grid_image($vars['fields'], 'list');
+  if ($image_assets) {
+    $vars['fields']['image'] = $image_assets['image'];
+    $vars['fields']['mime-type'] = $image_assets['mime-type'];
+    $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
+  }
+  if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
+    $variables = _sbac_resource_contributor_links($vars['fields']);
+  }
+  if (in_array('resource reviewer', $user->roles)) {
+    $variables = _sbac_resource_reviewer_links($vars['fields']);
+  }
+  if (in_array('resource publisher', $user->roles)) {
+    $variables = _sbac_resource_publisher_links($vars['fields']);
+  }
+
+  if (isset($variables['buttons'])) {
+    $vars['fields']['buttons'] = $variables['buttons'];
+  }
+  if (isset($variables['links'])) {
+    $vars['fields']['links'] = $variables['links'];
+  }
+  if (isset($variables['text'])) {
+    $vars['fields']['text'] = $variables['text'];
+  }
+  if (isset($variables['views'])) {
+    $vars['fields']['views'] = $variables['views'];
+  }
+  if (isset($variables['collaborators'])) {
+    $vars['fields']['collaborators'] = $variables['collaborators'];
+  }
+  if (isset($variables['downloads'])) {
+    $vars['fields']['downloads'] = $variables['downloads'];
+  }
+  if (isset($variables['subject'])) {
+    $vars['fields']['subject'] = $variables['subject'];
+  }
+  if (isset($variables['grade'])) {
+    $vars['fields']['grade'] = $variables['grade'];
+  }
+  if (isset($variables['media_types'])) {
+    $vars['fields']['media_types'] = $variables['media_types'];
+  }
+}
+
+/**
+ * Preprocessor for the grid view.
+ *
+ * @param $vars
+ */
+function sbac_resource_views_view__resource_review__grid_view__preprocess(&$vars) {
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_add_library('system', 'drupal.ajax');
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+}
+
+/**
+ * Preprocessor for the list view.
+ *
+ * @param $vars
+ */
+function sbac_resource_views_view__resource_review__list_view__preprocess(&$vars) {
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_add_library('system', 'drupal.ajax');
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+}
+
+/**
+ * Preprocessor for the grid view.
+ *
+ * @param $vars
+ */
+function sbac_resource_views_view_fields__resource_review__grid_view__preprocess(&$vars) {
+  global $user;
+  $vars['fields']['state_button'] = NULL;
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_add_library('system', 'drupal.ajax');
+  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  $image_assets = _sbac_resource_grid_image($vars['fields']);
+  if ($image_assets) {
+    $vars['fields']['image'] = $image_assets['image'];
+    $vars['fields']['mime-type'] = $image_assets['mime-type'];
+    $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
+  }
+  if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
+    $variables = _sbac_resource_contributor_links($vars['fields']);
+  }
+  if (in_array('resource reviewer', $user->roles)) {
+    $variables = _sbac_resource_reviewer_links($vars['fields']);
+  }
+  if (in_array('resource publisher', $user->roles)) {
+    $variables = _sbac_resource_publisher_links($vars['fields']);
+  }
+
+  if (isset($variables['buttons'])) {
+    $vars['fields']['buttons'] = $variables['buttons'];
+  }
+  if (isset($variables['links'])) {
+    $vars['fields']['links'] = $variables['links'];
+  }
+  if (isset($variables['text'])) {
+    $vars['fields']['text'] = $variables['text'];
+  }
+  if (isset($variables['views'])) {
+    $vars['fields']['views'] = $variables['views'];
+  }
+  if (isset($variables['collaborators'])) {
+    $vars['fields']['collaborators'] = $variables['collaborators'];
+  }
+  if (isset($variables['downloads'])) {
+    $vars['fields']['downloads'] = $variables['downloads'];
+  }
+  if (isset($variables['subject'])) {
+    $vars['fields']['subject'] = $variables['subject'];
+  }
+  if (isset($variables['grades'])) {
+    $vars['fields']['grades'] = $variables['grades'];
+  }
+  if (isset($variables['media_types'])) {
+    $vars['fields']['media_types'] = $variables['media_types'];
+  }
+}
+
+/**
+ * Preprocessor for the list view.
+ *
+ * @param $vars
+ */
+function sbac_resource_views_view_fields__resource_review__list_view__preprocess(&$vars) {
   global $user;
   ctools_include('modal');
   ctools_include('ajax');

@@ -188,3 +188,157 @@ function sbac_resource_views_default_views_alter(&$views) {
     }
   }
 }
+
+/**
+ * Populates contextual filters with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
+function sbac_resource_my_resource_apply_filters(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+
+  // Current filter session - create the args where needed.
+  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] != '') {
+    $current_filters = $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS];
+    $filters = explode('::', $current_filters);
+    if ($filters) {
+      foreach ($filters as $filter) {
+        $filter_info = explode(':', $filter);
+        if ($filter_info && sizeof($filter_info) == 2) {
+          $vid = $filter_info[0];
+          $tid = $filter_info[1];
+          if ($vid && $tid) {
+            $vocabulary = taxonomy_vocabulary_load($vid);
+            $term = taxonomy_term_load($tid);
+            if ($vocabulary && $term) {
+              switch ($vocabulary->machine_name) {
+                case 'attributes':
+                  $view_filters['field_attributes_tid']['value'][] = $tid;
+                  $view_filters['field_attributes_tid']['operator'] = 'and';
+                  break;
+                case 'focus':
+                  $view_filters['field_focus_tid']['value'][] = $tid;
+                  $view_filters['field_focus_tid']['operator'] = 'and';
+                  break;
+                case 'grades':
+                  $view_filters['field_grades_tid']['value'][] = $tid;
+                  $view_filters['field_grades_tid']['operator'] = 'and';
+                  break;
+                case 'intended_student_populations':
+                  $view_filters['field_intended_student_tid']['value'][] = $tid;
+                  $view_filters['field_intended_student_tid']['operator'] = 'and';
+                  break;
+                case 'digital_media_type':
+                  $view_filters['field_digital_media_type_tid']['value'][] = $tid;
+                  $view_filters['field_digital_media_type_tid']['operator'] = 'and';
+                  break;
+                case 'subject':
+                  $view_filters['field_subject_tid']['value'][] = $tid;
+                  $view_filters['field_subject_tid']['operator'] = 'and';
+                  break;
+                case 'geographical_settings':
+                  $view_filters['field_geographical_settings_tid']['value'][] = $tid;
+                  $view_filters['field_geographical_settings_tid']['operator'] = 'and';
+                  break;
+                case 'educational_use':
+                  $view_filters['field_educational_use_tid']['value'][] = $tid;
+                  $view_filters['field_educational_use_tid']['operator'] = 'and';
+                  break;
+                case 'intended_end_user':
+                  $view_filters['field_intended_end_user_tid']['value'][] = $tid;
+                  $view_filters['field_intended_end_user_tid']['operator'] = 'and';
+                  break;
+                case 'smarter_balanced_keyword':
+                  $view_filters['field_smarter_balanced_keyword_tid']['value'][] = $tid;
+                  $view_filters['field_smarter_balanced_keyword_tid']['operator'] = 'and';
+                  break;
+                case 'technologies_for_classroom_use':
+                  $view_filters['field_classroom_technologies_tid']['value'][] = $tid;
+                  $view_filters['field_classroom_technologies_tid']['operator'] = 'and';
+                  break;
+              }
+            }
+          }
+        }
+      }
+    }
+    $view->display_handler->set_option('filters', $view_filters);
+  }
+  // Not searching/filtering, so we default to the user's profile data for filtering
+  else {
+    global $user;
+
+    if (in_array(FEEDBACK_REVIEWER_RID, array_keys($user->roles))) {
+      $account = user_load($user->uid);
+
+      $get_tid = function($element) {
+        return $element['tid'];
+      };
+
+      foreach ($view_filters as &$field) {
+        $field['group'] = 1;
+      }
+
+      $subject_tid_all = 153;
+      $grade_tid_all = 122;
+
+      // subject
+      if (!isset($view_filters['field_subject_tid']['value'])) {
+        $view_filters['field_subject_tid']['value'] = array();
+      }
+
+      $view_filters['field_subject_tid']['operator'] = 'or';
+      $view_filters['field_subject_tid']['group'] = 2;
+
+      if ($subjects = field_get_items('user', $account, 'field_subject_s_')) {
+        $subjects = array_map($get_tid, $subjects);
+
+        // not subject specific - remove filters
+        if (in_array($subject_tid_all, $subjects)) {
+          unset($view_filters['field_subject_tid']);
+        }
+        else {
+          $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
+          $view_filters['field_subject_tid']['value'] += $subjects;
+        }
+      }
+
+      // grade
+      if (!isset($view_filters['field_grades_tid']['value'])) {
+        $view_filters['field_grades_tid']['value'] = array();
+      }
+
+      $view_filters['field_grades_tid']['operator'] = 'or';
+      $view_filters['field_grades_tid']['group'] = 2;
+
+      if ($grades = field_get_items('user', $account, 'field_grade_level_s_')) {
+        $grades = array_map($get_tid, $grades);
+
+        // not grade specific - remove filters
+        if (in_array($grade_tid_all, $grades)) {
+          unset($view_filters['field_grades_tid']);
+        }
+        else {
+          $view_filters['field_grades_tid']['value'][] = $grade_tid_all;
+          $view_filters['field_grades_tid']['value'] += $grades;
+        }
+      }
+
+      $groups = array(
+        'operator' => 'AND',
+        'groups' => array(
+          1 => 'AND',
+        ),
+      );
+
+      if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
+        $groups['groups'][2] = 'OR';
+      }
+
+      $view->display_handler->set_option('filter_groups', $groups);
+      $view->display_handler->set_option('filters', $view_filters);
+    }
+  }
+}
