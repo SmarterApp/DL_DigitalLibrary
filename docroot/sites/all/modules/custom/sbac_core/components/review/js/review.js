@@ -15,6 +15,8 @@ Review.reviews = {
 
 Drupal.behaviors.review = {
   attach: function (context, settings) {
+    console.log('attach behavior');
+
     // form showing functionality on 'Write Review' button
     var trigger_element = $(Review.reviews.form_trigger);
     var target_element = $(Review.reviews.form);
@@ -29,6 +31,11 @@ Drupal.behaviors.review = {
 
         return false;
       });
+
+      // if errors are found on the page, force the form to display
+      if ($('#review .alert-box.alert').length) {
+        target_element.attr('style', 'display: block !important;');
+      }
     }
 
     var tooltip = $('.account-tooltip');

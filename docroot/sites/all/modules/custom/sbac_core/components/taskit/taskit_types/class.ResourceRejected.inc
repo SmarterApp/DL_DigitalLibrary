@@ -37,7 +37,7 @@ class ResourceRejected extends \taskit\sbac_core\BaseTask {
           '!title' => '<span class="taskit-title">' . $node->title. '</span>',
         ));
 
-        $details = $this->reviewerFeedback($node->nid, $viewing_account->uid);
+        $details = $this->reviewerFeedback($node->nid, $viewing_account->uid, TRUE);
       }
 
       // $this->addClass('taskit-collapsed');

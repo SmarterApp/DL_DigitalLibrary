@@ -33,7 +33,7 @@ function sbac_core_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'title' => array(
-      'weight' => '5',
+      'weight' => '6',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -42,13 +42,18 @@ function sbac_core_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'review_author',
     ),
+    'review_helpfulness' => array(
+      'weight' => '1',
+      'label' => 'hidden',
+      'format' => 'review_helpfulness',
+    ),
     'review_vote' => array(
-      'weight' => '7',
+      'weight' => '8',
       'label' => 'hidden',
       'format' => 'review_vote',
     ),
     'review_delete' => array(
-      'weight' => '8',
+      'weight' => '9',
       'label' => 'hidden',
       'format' => 'review_delete',
     ),
@@ -148,26 +153,28 @@ function sbac_core_ds_layout_settings_info() {
     'regions' => array(
       'header' => array(
         0 => 'review_author',
+        1 => 'review_helpfulness',
       ),
       'left' => array(
-        1 => 'field_student_learning',
+        2 => 'field_student_learning',
       ),
       'middle' => array(
-        2 => 'field_pro_dev',
+        3 => 'field_pro_dev',
       ),
       'right' => array(
-        3 => 'field_ease_use',
+        4 => 'field_ease_use',
       ),
       'footer' => array(
-        4 => 'field_appropriate_for',
-        5 => 'title',
-        6 => 'field_details',
-        7 => 'review_vote',
-        8 => 'review_delete',
+        5 => 'field_appropriate_for',
+        6 => 'title',
+        7 => 'field_details',
+        8 => 'review_vote',
+        9 => 'review_delete',
       ),
     ),
     'fields' => array(
       'review_author' => 'header',
+      'review_helpfulness' => 'header',
       'field_student_learning' => 'left',
       'field_pro_dev' => 'middle',
       'field_ease_use' => 'right',

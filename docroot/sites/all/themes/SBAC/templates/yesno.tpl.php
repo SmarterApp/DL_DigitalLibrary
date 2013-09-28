@@ -9,9 +9,9 @@
     }
   ?>
 
-  <span class="flag"> - 
+  <span class="flag">
     <?php
-      echo t('You may also !flag', array(
+      echo t('You may also !flag.', array(
         '!flag' => l(t('flag this review'), ''),
       ));
     ?>
