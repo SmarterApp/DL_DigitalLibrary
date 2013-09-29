@@ -87,7 +87,7 @@ function sbac_resource_my_resources_page() {
   $count = count($view->result);
   if (!$count && $current_filters != '') {
     // Get all results
-    $my_resources_output = views_embed_view('all_resources', $display);
+    $my_resources_output = views_embed_view('all_my_resources', $display);
 
     // Reset variables
     $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = '';
@@ -132,7 +132,7 @@ function sbac_resource_resource_review_page() {
   $count = count($view->result);
   if (!$count && $current_filters != '') {
     // Get all results
-    $resource_review_output = views_embed_view('all_resources', $display); // @TODO CHANGE THIS TO THE RIGHT MOTRUCKIN TING MANG.
+    $resource_review_output = views_embed_view('all_resource_review', $display);
 
     // Reset variables
     $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
