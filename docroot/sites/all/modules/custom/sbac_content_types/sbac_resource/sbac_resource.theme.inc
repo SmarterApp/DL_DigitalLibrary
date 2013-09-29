@@ -360,7 +360,6 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_resource')
   );
 
-
   $items['views_view_fields__all_resource_review__list_view'] = array(
     'template' => 'templates/all_resource_review/list_view/views-view-fields--all-resource-review--list-view',
     'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
