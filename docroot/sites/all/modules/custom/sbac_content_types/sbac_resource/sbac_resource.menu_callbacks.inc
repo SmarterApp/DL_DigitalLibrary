@@ -20,15 +20,15 @@ function sbac_resource_digital_library_page() {
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
-  $resource_layout_view = $view->preview();
+  $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
-  dpq($view->build_info['query']);
+  // dpq($view->build_info['query']);
 
   // if there is 0 rows.
   $count = count($view->result);
   if (!$count && ($search_string != '' || $current_filters != '')) {
     // Get all results
-    $resource_layout_view = views_embed_view('all_resources', $display);
+    $digital_library_output = views_embed_view('all_resources', $display);
 
     // Reset variables
     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
@@ -56,7 +56,7 @@ function sbac_resource_digital_library_page() {
 
   $view->destroy();
   menu_set_active_item('digital-library-resources');
-  return theme('digital_library', array('resource_layout_view' => $resource_layout_view, 'no_results' => $no_results));
+  return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results));
 }
 
 /**
@@ -112,54 +112,39 @@ function sbac_resource_my_resources_page() {
  */
 function sbac_resource_resource_review_page() {
   $no_results = NULL;
-  (isset($_SESSION['sbac-search-keywords']) ? $search_string = $_SESSION['sbac-search-keywords'] : $search_string = '');
-  (isset($_SESSION['sbac-current-filters']) ? $current_filters = $_SESSION['sbac-current-filters'] : $current_filters = '');
+  (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] : $current_filters = '');
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
 
   // Load up the view.
-  $view = views_get_view('resources');
+  $view = views_get_view('resource_review');
   $view->set_display($display);
-  _sbac_resource_apply_filters($view);
+  sbac_resource_resource_review_apply_filters($view);
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
-  $resource_layout_view = $view->preview();
-  $_SESSION['sbac_search_count'] = $view->total_rows;
-  // dpq($view->build_info['query']);
+  $resource_review_output = $view->preview();
+  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
+  dpq($view->build_info['query']);
 
   // if there is 0 rows.
   $count = count($view->result);
-  if (!$count && ($search_string != '' || $current_filters != '')) {
+  if (!$count && $current_filters != '') {
     // Get all results
-    $resource_layout_view = views_embed_view('all_resources', $display);
+    $resource_review_output = views_embed_view('all_resources', $display); // @TODO CHANGE THIS TO THE RIGHT MOTRUCKIN TING MANG.
 
     // Reset variables
-    $_SESSION['sbac-current-filters'] = '';
-    $_SESSION['sbac-search-keywords'] = '';
-    $_COOKIE['sbac_search_categories_closed'] = TRUE;
+    $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+    $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
 
     // Set error message
-    if ($search_string && strlen($search_string) < 3) {
-      drupal_get_messages();
-      $no_results = '<h3>You must enter 3 characters or more.</h3>';
-      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
-      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
-    }
-    else if ($search_string) {
-      $no_results = '<h3>Your search for "' . $search_string . '" returned no results.</h3>';
-      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
-      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
-    }
-    else {
-      $no_results = '<h3>Your search returned no results.</h3>';
-      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
-      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
-    }
+    $no_results = '<h3>Your search returned no results.</h3>';
+    $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
+    $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
   }
 
   $view->destroy();
-  menu_set_active_item('digital-library-resources');
-  return theme('digital_library', array('resource_layout_view' => $resource_layout_view, 'no_results' => $no_results));
+  menu_set_active_item('resource-review');
+  return theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
 }

@@ -11,25 +11,24 @@
  * @param $query
  */
 function sbac_resource_views_query_alter(&$view, &$query) {
-  if ($view->name == 'resources' || $view->name == 'all_resources') {
+  if ($view->name == 'resource_review') {
     global $user;
 
-//    if (in_array('resource reviewer', $user->roles)) {
-//      // Can see needs review, being reviewed and published.
-//      unset($query->where[1]['conditions'][3]['value'][0]);
-//      unset($query->where[1]['conditions'][3]['value'][3]);
-//      unset($query->where[1]['conditions'][3]['value'][4]);
-//      unset($query->where[1]['conditions'][4]);
-//    }
-//
-//    if (in_array('resource publisher', $user->roles)) {
-//      // Can see approved, published
-//      unset($query->where[1]['conditions'][3]['value'][0]);
-//      unset($query->where[1]['conditions'][3]['value'][1]);
-//      unset($query->where[1]['conditions'][3]['value'][2]);
-//      unset($query->where[1]['conditions'][3]['value'][3]);
-//      unset($query->where[1]['conditions'][4]);
-//    }
+    if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
+      // do nothing, roles can be combined to see all states.
+    }
+    else {
+      if (in_array('resource reviewer', $user->roles)) {
+        // Can see needs review, being reviewed
+        unset($query->where[1]['conditions'][3]['value'][2]);
+      }
+
+      if (in_array('resource publisher', $user->roles)) {
+        // Can see approved
+        unset($query->where[1]['conditions'][3]['value'][0]);
+        unset($query->where[1]['conditions'][3]['value'][1]);
+      }
+    }
   }
 }
 
@@ -127,41 +126,41 @@ function sbac_resource_views_post_execute(&$view) {
  * @param $view
  */
 function sbac_resource_views_pre_render(&$view) {
-//  if ($view->name == 'resources' || $view->name == 'all_resources') {
-//    global $user;
-//    if (in_array('resource reviewer', $user->roles)) {
-//      foreach ($view->result as $key => $result) {
-//        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'being_reviewed') {
-//          // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
-//          $gate_keeper = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
-//          if ($gate_keeper) {
-//            unset($view->result[$key]);
-//          }
-//          // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
-//          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
-//          if (count($feedback) == 3) {
-//            unset($view->result[$key]);
-//          }
-//          // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
-//          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
-//          if ($feedback) {
-//            unset($view->result[$key]);
-//          }
-//        }
-//      }
-//    }
-//    if (in_array('resource publisher', $user->roles)) {
-//      foreach ($view->result as $key => $result) {
-//        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'approved') {
-//          // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
-//          $feedback = _sbac_resource_determine_feedback($result->nid, 'post', $user->uid, 1, 0, 1, 'set', TRUE);
-//          if ($feedback) {
-//            unset($view->result[$key]);
-//          }
-//        }
-//      }
-//    }
-//  }
+  if ($view->name == 'resource_review') {
+    global $user;
+    if (in_array('resource reviewer', $user->roles)) {
+      foreach ($view->result as $key => $result) {
+        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'being_reviewed') {
+          // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
+          $gate_keeper = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
+          if ($gate_keeper) {
+            unset($view->result[$key]);
+          }
+          // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
+          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
+          if (count($feedback) == 3) {
+            unset($view->result[$key]);
+          }
+          // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
+          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
+          if ($feedback) {
+            unset($view->result[$key]);
+          }
+        }
+      }
+    }
+    if (in_array('resource publisher', $user->roles)) {
+      foreach ($view->result as $key => $result) {
+        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'approved') {
+          // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
+          $feedback = _sbac_resource_determine_feedback($result->nid, 'post', $user->uid, 1, 0, 1, 'set', TRUE);
+          if ($feedback) {
+            unset($view->result[$key]);
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -504,3 +503,160 @@ function sbac_resource_digital_library_apply_filters(&$view) {
     }
   }
 }
+
+/**
+ * Populates contextual filters with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
+function sbac_resource_resource_review_apply_filters(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+  $available_states = array('being_reviewed', 'needs_review', 'approved');
+  $resource_states = array();
+
+  // Current filter session - create the args where needed.
+  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
+    $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
+    $filters = explode('::', $current_filters);
+    if ($filters) {
+      foreach ($filters as $filter) {
+        $filter_info = explode(':', $filter);
+        if ($filter_info && sizeof($filter_info) == 2) {
+          $vid = $filter_info[0];
+          $tid = $filter_info[1];
+          if ($vid && $tid) {
+            $vocabulary = taxonomy_vocabulary_load($vid);
+            $term = taxonomy_term_load($tid);
+            if ($vocabulary && $term) {
+              switch ($vocabulary->machine_name) {
+                case 'focus':
+                  $view_filters['field_focus_tid']['value'][] = $tid;
+                  $view_filters['field_focus_tid']['operator'] = 'and';
+                  break;
+                case 'grades':
+                  $view_filters['field_grades_tid']['value'][] = $tid;
+                  $view_filters['field_grades_tid']['operator'] = 'and';
+                  break;
+                case 'subject':
+                  $view_filters['field_subject_tid']['value'][] = $tid;
+                  $view_filters['field_subject_tid']['operator'] = 'and';
+                  break;
+                case 'resource_states':
+                  switch($term->name) {
+                    case 'Being Reviewed':
+                      $state = 'being_reviewed';
+                      break;
+                    case 'Needs Review':
+                      $state = 'needs_review';
+                      break;
+                    case 'Needs Posting':
+                      $state = 'approved';
+                      break;
+                    default:
+                      $state = 'being_reviewed';
+                      break;
+                  }
+
+                  $resource_states[$state] = $state;
+                  break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (!$resource_states) {
+      foreach ($available_states AS $state) {
+        $view_filters['state']['value'][$state] = $state;
+        $view_filters['state']['operator'] = 'in';
+      }
+    }
+    else {
+      $view_filters['state']['value'] = array();
+      foreach ($resource_states AS $state) {
+        $view_filters['state']['value'][$state] = $state;
+        $view_filters['state']['operator'] = 'in';
+      }
+    }
+    $view->display_handler->set_option('filters', $view_filters);
+  }
+  // Not searching/filtering, so we default to the user's profile data for filtering
+  else {
+    global $user;
+
+    if (in_array(FEEDBACK_REVIEWER_RID, array_keys($user->roles))) {
+      $account = user_load($user->uid);
+
+      $get_tid = function($element) {
+        return $element['tid'];
+      };
+
+      foreach ($view_filters as &$field) {
+        $field['group'] = 1;
+      }
+
+      $subject_tid_all = 153;
+      $grade_tid_all = 122;
+
+      // subject
+      if (!isset($view_filters['field_subject_tid']['value'])) {
+        $view_filters['field_subject_tid']['value'] = array();
+      }
+
+      $view_filters['field_subject_tid']['operator'] = 'or';
+      $view_filters['field_subject_tid']['group'] = 2;
+
+      if ($subjects = field_get_items('user', $account, 'field_subject_s_')) {
+        $subjects = array_map($get_tid, $subjects);
+
+        // not subject specific - remove filters
+        if (in_array($subject_tid_all, $subjects)) {
+          unset($view_filters['field_subject_tid']);
+        }
+        else {
+          $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
+          $view_filters['field_subject_tid']['value'] += $subjects;
+        }
+      }
+
+      // grade
+      if (!isset($view_filters['field_grades_tid']['value'])) {
+        $view_filters['field_grades_tid']['value'] = array();
+      }
+
+      $view_filters['field_grades_tid']['operator'] = 'or';
+      $view_filters['field_grades_tid']['group'] = 2;
+
+      if ($grades = field_get_items('user', $account, 'field_grade_level_s_')) {
+        $grades = array_map($get_tid, $grades);
+
+        // not grade specific - remove filters
+        if (in_array($grade_tid_all, $grades)) {
+          unset($view_filters['field_grades_tid']);
+        }
+        else {
+          $view_filters['field_grades_tid']['value'][] = $grade_tid_all;
+          $view_filters['field_grades_tid']['value'] += $grades;
+        }
+      }
+
+      $groups = array(
+        'operator' => 'AND',
+        'groups' => array(
+          1 => 'AND',
+        ),
+      );
+
+      if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
+        $groups['groups'][2] = 'OR';
+      }
+
+      $view->display_handler->set_option('filter_groups', $groups);
+      $view->display_handler->set_option('filters', $view_filters);
+    }
+  }
+}
+

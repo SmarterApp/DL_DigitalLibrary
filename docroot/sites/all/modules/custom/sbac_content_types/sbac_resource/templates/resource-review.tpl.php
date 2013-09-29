@@ -6,6 +6,6 @@
   </div>
   <?php endif; ?>
   <div class='column large-12'>
-      <?php print $digital_library_output; ?>
+      <?php print $resource_review_output; ?>
   </div>
 </div>

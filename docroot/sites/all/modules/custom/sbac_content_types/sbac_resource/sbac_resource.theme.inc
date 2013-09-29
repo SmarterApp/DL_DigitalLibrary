@@ -29,7 +29,7 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_resource') . '/templates',
     'template' => 'digital-library',
     'variables' => array(
-      'resource_grid_view' => NULL,
+      'digital_library_output' => NULL,
       'no_results' => NULL,
     )
   );
@@ -39,6 +39,15 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'template' => 'my-resources',
     'variables' => array(
       'my_resources_output' => NULL,
+      'no_results' => NULL,
+    )
+  );
+
+  $items['resource_review'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates',
+    'template' => 'resource-review',
+    'variables' => array(
+      'resource_review_output' => NULL,
       'no_results' => NULL,
     )
   );
@@ -239,7 +248,7 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
 
   // Resource Review - List View
   $items['views_view_fields__resource_review__list_view'] = array(
-    'template' => 'templates/resource_review/list_view/views-view-fields--resource-vreview--list-view',
+    'template' => 'templates/resource_review/list_view/views-view-fields--resource-review--list-view',
     'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
     'original hook' => 'views_view_fields',
     'preprocess functions' => array(

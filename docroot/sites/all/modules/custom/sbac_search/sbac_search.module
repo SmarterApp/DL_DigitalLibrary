@@ -324,6 +324,66 @@ function sbac_search_my_resources_form_submit(&$form, &$form_state) {
  *
  * @return array
  */
+function sbac_search_resource_review_form() {
+  $form = array();
+
+  $current_filters = NULL;
+  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS])) {
+    $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
+  }
+
+  $form['current_filters'] = array(
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-search-current-filters'),
+  );
+
+  $form['search_categories'] = array(
+    '#markup' => sbac_search_resource_review_categories(),
+  );
+
+  $form['close'] = array(
+    '#type' => 'submit',
+    '#value' => 'Close',
+    '#attributes' => array('id' => 'sbac-search-close-button'),
+    '#prefix' => '<div class="category-buttons">',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  $form['filter'] = array(
+    '#type' => 'submit',
+    '#value' => 'Apply Filters',
+    '#attributes' => array('id' => 'sbac-search-filter-button'),
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for categories.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_search_resource_review_form_submit(&$form, &$form_state) {
+  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = $form_state['input']['current_filters'];
+}
+
+/**
+ * Form for submitting the category filters.
+ *
+ * @return array
+ */
 function sbac_search_digital_library_resources_form() {
   $form = array();
 
@@ -470,6 +530,102 @@ function sbac_search_my_resources_categories() {
  *
  * @return null
  */
+function sbac_search_resource_review_categories() {
+  global $user;
+  $categories = array();
+  drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
+
+  $both_roles = $rr = $rp = FALSE;
+  if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
+    $both_roles = TRUE;
+  }
+  else {
+    if (in_array('resource reviewer', $user->roles)) {
+      $rr = TRUE;
+    }
+    if (in_array('resource publisher', $user->roles)) {
+      $rp = TRUE;
+    }
+  }
+
+  $resource_states = taxonomy_vocabulary_machine_name_load('resource_states');
+  $resource_states_terms = taxonomy_get_tree($resource_states->vid);
+  $allowed_both_states = array('Being Reviewed', 'Needs Review', 'Needs Posting');
+  $allowed_rr_states = array('Being Reviewed', 'Needs Review');
+  $allowed_rp_states = array('Needs Posting');
+  foreach ($resource_states_terms as $key => $resource_state_term) {
+    if ($both_roles) {
+      if (!in_array($resource_state_term->name, $allowed_both_states)) {
+        unset($resource_states_terms[$key]);
+      }
+    }
+    else if ($rr) {
+      if (!in_array($resource_state_term->name, $allowed_rr_states)) {
+        unset($resource_states_terms[$key]);
+      }
+    }
+    else if ($rp) {
+      if (!in_array($resource_state_term->name, $allowed_rp_states)) {
+        unset($resource_states_terms[$key]);
+      }
+    }
+  }
+  $categories['resource_states']['display_name'] = 'Resource States';
+  $categories['resource_states']['vocabulary'] = $resource_states;
+  $categories['resource_states']['terms'] = $resource_states_terms;
+
+  $subject = taxonomy_vocabulary_machine_name_load('subject');
+  $categories['subject']['display_name'] = 'Subjects';
+  $categories['subject']['vocabulary'] = $subject;
+  $categories['subject']['terms'] = taxonomy_get_tree($subject->vid);
+
+  $grades = taxonomy_vocabulary_machine_name_load('grades');
+  $categories['grades']['display_name'] = 'Grades';
+  $categories['grades']['vocabulary'] = $grades;
+  $categories['grades']['terms'] = taxonomy_get_tree($grades->vid);
+
+  $focus = taxonomy_vocabulary_machine_name_load('focus');
+  $categories['focus']['display_name'] = 'Resource Type';
+  $categories['focus']['vocabulary'] = $focus;
+  $categories['focus']['terms'] = taxonomy_get_tree($focus->vid);
+
+  $cf_value = NULL;
+  $cf_html = array();
+  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS])) {
+    $cf_value = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
+    if ($cf_value) {
+      $filters = explode('::', $cf_value);
+      if ($filters) {
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            if ($vid && $tid) {
+              $term = taxonomy_term_load($tid);
+              if ($term) {
+                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $output = NULL;
+  if ($categories) {
+    $output = theme('sbac_resource_review_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
+  }
+  return $output;
+}
+
+/**
+ * Returns the category filters.
+ *
+ * @return null
+ */
 function sbac_search_digital_library_categories() {
   $categories = array();
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
@@ -604,6 +760,16 @@ function sbac_search_theme($existing, $type, $theme, $path) {
   $items['sbac_my_resources_categories'] = array(
     'path' => drupal_get_path('module', 'sbac_search') . '/templates',
     'template' => 'my-resources-categories',
+    'variables' => array(
+      'categories' => NULL,
+      'cf_value' => NULL,
+      'cf_html' => NULL,
+    ),
+  );
+
+  $items['sbac_resource_review_categories'] = array(
+    'path' => drupal_get_path('module', 'sbac_search') . '/templates',
+    'template' => 'resource-review-categories',
     'variables' => array(
       'categories' => NULL,
       'cf_value' => NULL,
