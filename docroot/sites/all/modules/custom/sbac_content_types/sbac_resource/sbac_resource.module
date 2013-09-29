@@ -871,16 +871,16 @@ function sbac_resource_block_view($delta = '') {
     case 'sbac_resource_results_count':
       switch (arg(0)) {
         case 'my-resources':
-          $name = SBAC_RESOURCE_MY_RESOURCES_COUNT;
+          $name = SBAC_SEARCH_MY_RESOURCES_COUNT;
           break;
         case 'digital-library-resources':
-          $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_COUNT;
+          $name = SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT;
           break;
         case 'resource-review':
-          $name = SBAC_RESOURCE_RESOURCE_REVIEW;
+          $name = SBAC_SEARCH_RESOURCE_REVIEW_COUNT;
           break;
         default:
-          $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_COUNT;
+          $name = SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT;
           break;
       }
 

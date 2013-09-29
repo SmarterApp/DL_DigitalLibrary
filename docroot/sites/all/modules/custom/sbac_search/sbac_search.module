@@ -36,7 +36,7 @@ function sbac_search_update_projects_alter(&$projects) {
 function sbac_search_menu() {
   $items = array();
 
-  $items['digital-library-resources/clear-all'] = array(
+  $items['sbac-search/clear-all'] = array(
     'title' => 'Digital Library Resources',
     'page callback' => 'sbac_resource_clear_library_page',
     'access arguments' => array('access content'),
@@ -50,7 +50,26 @@ function sbac_search_menu() {
  * Clears the search filters and redirects.
  */
 function sbac_resource_clear_library_page() {
-  $_SESSION['sbac-current-filters'] = '';
+  if (isset($_GET['location'])) {
+    $location = $_GET['location'];
+    switch ($location) {
+      case 'digital-library-resources':
+        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
+        $_SESSION['sbac-search-keywords'] = '';
+        drupal_goto($location);
+        break;
+      case 'my-resources':
+        $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = '';
+        drupal_goto($location);
+        break;
+      case 'resource-review':
+        $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+        drupal_goto($location);
+        break;
+    }
+  }
+
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
   $_SESSION['sbac-search-keywords'] = '';
   drupal_goto('digital-library-resources');
 }

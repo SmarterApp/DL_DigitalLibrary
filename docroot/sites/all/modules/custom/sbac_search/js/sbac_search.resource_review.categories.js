@@ -167,6 +167,7 @@
         $('.category-filter-list ul li').removeClass('current');
         current_filters.val('');
         $('.selectedDiv').hide();
+        window.location.href = 'sbac-search/clear-all?location=resource-review';
         return false;
       });
     }
@@ -207,7 +208,7 @@
   Drupal.behaviors.sbac_resource_review_clear = {
     attach: function (context, settings) {
       $('.sbac-clear-search').click( function() {
-        window.location.href = 'digital-library-resources/clear-all';
+        window.location.href = 'sbac-search/clear-all?location=resource-review';
       });
     }
   };
