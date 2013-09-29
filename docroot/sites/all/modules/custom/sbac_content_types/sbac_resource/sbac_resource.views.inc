@@ -86,7 +86,7 @@ function sbac_resource_views_post_execute(&$view) {
         // Load up all the local data needed for display since all i have is a nid. used views again.
         $data_results = views_get_view_result('resources', 'load_data', implode('+', $nids));
         if ($data_results) {
-          if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
+          if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] != '') {
             // Category filters are set, append the keyword view results into the resource view.
             $combined_results = array();
             foreach ($view->result as $result) {
@@ -109,7 +109,7 @@ function sbac_resource_views_post_execute(&$view) {
         }
       }
       else {
-        if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
+        if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] != '') {
           // if there are filters, return whatever the view found.
         }
         else {
@@ -127,41 +127,41 @@ function sbac_resource_views_post_execute(&$view) {
  * @param $view
  */
 function sbac_resource_views_pre_render(&$view) {
-  if ($view->name == 'resources' || $view->name == 'all_resources') {
-    global $user;
-    if (in_array('resource reviewer', $user->roles)) {
-      foreach ($view->result as $key => $result) {
-        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'being_reviewed') {
-          // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
-          $gate_keeper = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
-          if ($gate_keeper) {
-            unset($view->result[$key]);
-          }
-          // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
-          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
-          if (count($feedback) == 3) {
-            unset($view->result[$key]);
-          }
-          // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
-          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
-          if ($feedback) {
-            unset($view->result[$key]);
-          }
-        }x
-      }
-    }
-    if (in_array('resource publisher', $user->roles)) {
-      foreach ($view->result as $key => $result) {
-        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'approved') {
-          // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
-          $feedback = _sbac_resource_determine_feedback($result->nid, 'post', $user->uid, 1, 0, 1, 'set', TRUE);
-          if ($feedback) {
-            unset($view->result[$key]);
-          }
-        }
-      }
-    }
-  }
+//  if ($view->name == 'resources' || $view->name == 'all_resources') {
+//    global $user;
+//    if (in_array('resource reviewer', $user->roles)) {
+//      foreach ($view->result as $key => $result) {
+//        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'being_reviewed') {
+//          // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
+//          $gate_keeper = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
+//          if ($gate_keeper) {
+//            unset($view->result[$key]);
+//          }
+//          // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
+//          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
+//          if (count($feedback) == 3) {
+//            unset($view->result[$key]);
+//          }
+//          // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
+//          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
+//          if ($feedback) {
+//            unset($view->result[$key]);
+//          }
+//        }
+//      }
+//    }
+//    if (in_array('resource publisher', $user->roles)) {
+//      foreach ($view->result as $key => $result) {
+//        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'approved') {
+//          // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
+//          $feedback = _sbac_resource_determine_feedback($result->nid, 'post', $user->uid, 1, 0, 1, 'set', TRUE);
+//          if ($feedback) {
+//            unset($view->result[$key]);
+//          }
+//        }
+//      }
+//    }
+//  }
 }
 
 /**
@@ -362,8 +362,8 @@ function sbac_resource_digital_library_apply_filters(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
 
   // Current filter session - create the args where needed.
-  if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
-    $current_filters = $_SESSION['sbac-current-filters'];
+  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] != '') {
+    $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS];
     $filters = explode('::', $current_filters);
     if ($filters) {
       foreach ($filters as $filter) {

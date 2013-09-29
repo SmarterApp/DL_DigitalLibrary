@@ -7,8 +7,17 @@
 include_once 'sbac_search.features.inc';
 
 define('SBAC_SEARCH_MY_RESOURCES_FILTERS', 'sbac-my-resources-filters');
-define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS', 'sbac-digital-library-resources-filters');
+define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS', 'sbac-digital-library-filters');
 define('SBAC_SEARCH_RESOURCE_REVIEW_FILTERS', 'sbac-resource-review-filters');
+
+define('SBAC_SEARCH_MY_RESOURCES_COUNT', 'sbac-my-resources-count');
+define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT', 'sbac-digital-library-count');
+define('SBAC_SEARCH_RESOURCE_REVIEW_COUNT', 'sbac-resource-review-count');
+
+define('SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED', 'sbac-my-resources-filters-closed');
+define('SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED', 'sbac-digital-library-filters-closed');
+define('SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED', 'sbac-resource-review-filters-closed');
+
 
 /**
  * Implements hook_update_projects_alter().
@@ -239,7 +248,13 @@ function sbac_search_block_view($delta = '') {
  * Hides category filter if called
  */
 function sbac_search_hide_category_style() {
-  if (isset($_COOKIE['sbac_search_categories_closed']) && $_COOKIE['sbac_search_categories_closed']) {
+  if (isset($_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED]) {
+    return ' style="display:none;"';
+  }
+  if (isset($_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED]) {
+    return ' style="display:none;"';
+  }
+  if (isset($_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) {
     return ' style="display:none;"';
   }
 }
@@ -265,16 +280,6 @@ function sbac_search_my_resources_form() {
 
   $form['search_categories'] = array(
     '#markup' => sbac_search_my_resources_categories(),
-  );
-
-  $current_keywords = NULL;
-  if (isset($_SESSION['sbac-search-keywords'])) {
-    $current_keywords = $_SESSION['sbac-search-keywords'];
-  }
-  $form['search_keywords'] = array(
-    '#type' => 'hidden',
-    '#value' => $current_keywords,
-    '#attributes' => array('id' => 'sbac-search-keywords'),
   );
 
   $form['close'] = array(
@@ -334,7 +339,7 @@ function sbac_search_digital_library_resources_form() {
   );
 
   $form['search_categories'] = array(
-    '#markup' => sbac_search_categories(),
+    '#markup' => sbac_search_digital_library_categories(),
   );
 
   $current_keywords = NULL;
@@ -381,12 +386,12 @@ function sbac_search_digital_library_resources_form() {
  * @param $form_state
  */
 function sbac_search_digital_library_resources_form_submit(&$form, &$form_state) {
-  $_SESSION['sbac-current-filters'] = $form_state['input']['current_filters'];
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = $form_state['input']['current_filters'];
   if (isset($_SESSION['sbac-search-keywords'])) {
     $current_keywords = $_SESSION['sbac-search-keywords'];
     // If the keywords are different, remove filters.
     if ($current_keywords && $current_keywords != $form_state['input']['search_keywords']) {
-      $_SESSION['sbac-current-filters'] = '';
+      $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
     }
   }
   $_SESSION['sbac-search-keywords'] = $form_state['input']['search_keywords'];
@@ -465,7 +470,7 @@ function sbac_search_my_resources_categories() {
  *
  * @return null
  */
-function sbac_search_categories() {
+function sbac_search_digital_library_categories() {
   $categories = array();
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
@@ -505,11 +510,6 @@ function sbac_search_categories() {
   $categories['intended_student_populations']['vocabulary'] = $intended_student_populations;
   $categories['intended_student_populations']['terms'] = taxonomy_get_tree($intended_student_populations->vid);
 
-  //learning resource type
-//  $grades = taxonomy_vocabulary_machine_name_load('grades');
-//  $categories['grades']['vocabulary'] = $grades;
-//  $categories['grades']['terms'] = taxonomy_get_tree($grades->vid);
-
   $educational_use = taxonomy_vocabulary_machine_name_load('educational_use');
   $categories['educational_use']['display_name'] = 'Educational Use';
   $categories['educational_use']['vocabulary'] = $educational_use;
@@ -527,8 +527,8 @@ function sbac_search_categories() {
 
   $cf_value = NULL;
   $cf_html = array();
-  if (isset($_SESSION['sbac-current-filters'])) {
-    $cf_value = $_SESSION['sbac-current-filters'];
+  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS])) {
+    $cf_value = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS];
     if ($cf_value) {
       $filters = explode('::', $cf_value);
       if ($filters) {
@@ -551,7 +551,7 @@ function sbac_search_categories() {
 
   $output = NULL;
   if ($categories) {
-    $output = theme('sbac_search_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
+    $output = theme('sbac_digital_library_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
   }
   return $output;
 }
@@ -591,9 +591,9 @@ function sbac_search_form_submit(&$form, &$form_state) {
  * Implementation of hook_theme()
  */
 function sbac_search_theme($existing, $type, $theme, $path) {
-  $items['sbac_search_categories'] = array(
+  $items['sbac_digital_library_categories'] = array(
     'path' => drupal_get_path('module', 'sbac_search') . '/templates',
-    'template' => 'sbac-search-categories',
+    'template' => 'digital-library-categories',
     'variables' => array(
       'categories' => NULL,
       'cf_value' => NULL,
@@ -612,33 +612,4 @@ function sbac_search_theme($existing, $type, $theme, $path) {
   );
 
   return $items;
-}
-
-
-/**
- * Build the documents before sending them to Solr.
- * The function is the follow-up for apachesolr_update_index
- *
- * @param ApacheSolrDocument $document
- * @param object $entity
- * @param string $entity_type
- * @param string $env_id
- *   The machine name of the environment.
- */
-function sbac_search_apachesolr_index_document_build(ApacheSolrDocument $document, $entity, $entity_type, $env_id) {
-  $var = '';
-}
-
-/**
- * Alter the prepared documents from one entity before sending them to Solr.
- *
- * @param $documents
- *   Array of ApacheSolrDocument objects.
- * @param object $entity
- * @param string $entity_type
- * @param string $env_id
- *   The machine name of the environment.
- */
-function sbac_search_apachesolr_index_documents_alter(array &$documents, $entity, $entity_type, $env_id) {
-  $var = '';
 }

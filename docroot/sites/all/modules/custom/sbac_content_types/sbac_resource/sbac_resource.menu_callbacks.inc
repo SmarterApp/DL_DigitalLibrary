@@ -8,10 +8,10 @@
 function sbac_resource_digital_library_page() {
   $no_results = NULL;
   (isset($_SESSION['sbac-search-keywords']) ? $search_string = $_SESSION['sbac-search-keywords'] : $search_string = '');
-  (isset($_SESSION['sbac-current-filters']) ? $current_filters = $_SESSION['sbac-current-filters'] : $current_filters = '');
+  (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] : $current_filters = '');
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
 
   // Load up the view.
   $view = views_get_view('resources');
@@ -21,7 +21,7 @@ function sbac_resource_digital_library_page() {
   $view->execute();
   $view->_post_execute();
   $resource_layout_view = $view->preview();
-  $_SESSION['sbac_search_count'] = $view->total_rows;
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
   dpq($view->build_info['query']);
 
   // if there is 0 rows.
@@ -31,9 +31,9 @@ function sbac_resource_digital_library_page() {
     $resource_layout_view = views_embed_view('all_resources', $display);
 
     // Reset variables
-    $_SESSION['sbac-current-filters'] = '';
+    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
     $_SESSION['sbac-search-keywords'] = '';
-    $_COOKIE['sbac_search_categories_closed'] = TRUE;
+    $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED] = TRUE;
 
     // Set error message
     if ($search_string && strlen($search_string) < 3) {
@@ -80,7 +80,7 @@ function sbac_resource_my_resources_page() {
   $view->execute();
   $view->_post_execute();
   $my_resources_output = $view->preview();
-  $_SESSION['sbac_mr_search_count'] = $view->total_rows;
+  $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
   // dpq($view->build_info['query']);
 
   // if there is 0 rows.
@@ -91,7 +91,7 @@ function sbac_resource_my_resources_page() {
 
     // Reset variables
     $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = '';
-    $_COOKIE['sbac_mr_filters_closed'] = TRUE;
+    $_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED] = TRUE;
 
     // Set error message
     $no_results = '<h3>Your search returned no results.</h3>';
