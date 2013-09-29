@@ -611,13 +611,6 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
     $variables = _sbac_resource_contributor_links($vars['fields']);
   }
-  if (in_array('resource reviewer', $user->roles)) {
-    $variables = _sbac_resource_reviewer_links($vars['fields']);
-  }
-  if (in_array('resource publisher', $user->roles)) {
-    $variables = _sbac_resource_publisher_links($vars['fields']);
-  }
-
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
   }
@@ -669,13 +662,6 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
     $variables = _sbac_resource_contributor_links($vars['fields']);
   }
-  if (in_array('resource reviewer', $user->roles)) {
-    $variables = _sbac_resource_reviewer_links($vars['fields']);
-  }
-  if (in_array('resource publisher', $user->roles)) {
-    $variables = _sbac_resource_publisher_links($vars['fields']);
-  }
-
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
   }

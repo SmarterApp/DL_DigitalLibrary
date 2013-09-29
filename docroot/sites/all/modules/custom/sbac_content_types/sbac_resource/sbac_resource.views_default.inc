@@ -3150,11 +3150,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['state']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['state']['field'] = 'state';
   $handler->display->display_options['filters']['state']['value'] = array(
-    'draft' => 'draft',
-    'needs_review' => 'needs_review',
-    'being_reviewed' => 'being_reviewed',
-    'rejected' => 'rejected',
-    'approved' => 'approved',
     'published' => 'published',
   );
   $handler->display->display_options['filters']['state']['group'] = 1;
