@@ -110,9 +110,6 @@ function sbac_resource_my_resources_access_callback() {
   if (in_array('resource contributor', $user->roles)) {
     return TRUE;
   }
-  if (in_array('resource reviewer', $user->roles)) {
-    return TRUE;
-  }
   return FALSE;
 }
 
