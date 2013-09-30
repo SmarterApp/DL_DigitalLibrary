@@ -18,6 +18,7 @@ define('SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED', 'sbac-my-resources-filters-clo
 define('SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED', 'sbac-digital-library-filters-closed');
 define('SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED', 'sbac-resource-review-filters-closed');
 
+define('SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS', 'sbac-search-digital-library-keywords');
 
 /**
  * Implements hook_update_projects_alter().
@@ -55,7 +56,7 @@ function sbac_resource_clear_library_page() {
     switch ($location) {
       case 'digital-library-resources':
         $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
-        $_SESSION['sbac-search-keywords'] = '';
+        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
         drupal_goto($location);
         break;
       case 'my-resources':
@@ -70,7 +71,7 @@ function sbac_resource_clear_library_page() {
   }
 
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
-  $_SESSION['sbac-search-keywords'] = '';
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
   drupal_goto('digital-library-resources');
 }
 
@@ -422,8 +423,8 @@ function sbac_search_digital_library_resources_form() {
   );
 
   $current_keywords = NULL;
-  if (isset($_SESSION['sbac-search-keywords'])) {
-    $current_keywords = $_SESSION['sbac-search-keywords'];
+  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS])) {
+    $current_keywords = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
   }
   $form['search_keywords'] = array(
     '#type' => 'hidden',
@@ -466,14 +467,14 @@ function sbac_search_digital_library_resources_form() {
  */
 function sbac_search_digital_library_resources_form_submit(&$form, &$form_state) {
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = $form_state['input']['current_filters'];
-  if (isset($_SESSION['sbac-search-keywords'])) {
-    $current_keywords = $_SESSION['sbac-search-keywords'];
+  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS])) {
+    $current_keywords = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
     // If the keywords are different, remove filters.
     if ($current_keywords && $current_keywords != $form_state['input']['search_keywords']) {
       $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
     }
   }
-  $_SESSION['sbac-search-keywords'] = $form_state['input']['search_keywords'];
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = $form_state['input']['search_keywords'];
 }
 
 /**
@@ -742,8 +743,8 @@ function sbac_search_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'search_block_form') {
     unset($form['#submit']);
     $form['search_block_form']['#attributes'] = array('id' => 'sbac-search-textbox');
-    if (isset($_SESSION['sbac-search-keywords'])) {
-      $form['search_block_form']['#default_value'] = $_SESSION['sbac-search-keywords'];
+    if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS])) {
+      $form['search_block_form']['#default_value'] = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
     }
     if (current_path() != 'digital-library-resources') {
       $form['#action'] = '/digital-library-resources';
@@ -759,7 +760,7 @@ function sbac_search_form_alter(&$form, &$form_state, $form_id) {
  * @param $form_state
  */
 function sbac_search_form_submit(&$form, &$form_state) {
-  $_SESSION['sbac-search-keywords'] = $form_state['input']['search_block_form'];
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = $form_state['input']['search_block_form'];
 }
 
 /**

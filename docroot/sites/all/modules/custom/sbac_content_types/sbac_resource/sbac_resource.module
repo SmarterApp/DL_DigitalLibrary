@@ -12,6 +12,7 @@ include_once 'sbac_resource.theme.inc';
 define('SBAC_RESOURCE_MY_RESOURCES_COUNT', 'sbac-my-resources-count');
 define('SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_COUNT', 'sbac-digital-library-resources-count');
 define('SBAC_RESOURCE_RESOURCE_REVIEW', 'sbac-resoruce-review-count');
+
 // View Mode.
 define('SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE', 'sbac-dl-view-mode');
 define('SBAC_RESOURCE_MY_RESOURCES_VIEW_MODE', 'sbac-mr-view-mode');
@@ -109,6 +110,9 @@ function sbac_resource_my_resources_access_callback() {
   if (in_array('resource contributor', $user->roles)) {
     return TRUE;
   }
+  if (in_array('resource reviewer', $user->roles)) {
+    return TRUE;
+  }
   return FALSE;
 }
 
@@ -120,6 +124,9 @@ function sbac_resource_my_resources_access_callback() {
 function sbac_resource_resource_review_access_callback() {
   global $user;
   if (in_array('resource reviewer', $user->roles)) {
+    return TRUE;
+  }
+  if (in_array('resource publisher', $user->roles)) {
     return TRUE;
   }
   return FALSE;
@@ -241,17 +248,15 @@ function _sbac_resource_preview_materials(&$vars) {
   if (isset($vars['document'][0])) {
     foreach ($vars['document'] as $key => $media) {
       $type = _sbac_resource_determine_type($media);
-
       if ($media->fid) {
         $file = file_load($media->fid);
         $url = file_create_url($file->uri);
       }
+      else if ($type == 'none') {
+        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      }
       else {
         $url = sbac_media_create_embed_url($media);
-      }
-
-      if ($type == 'none') {
-        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       }
 
       // check to see whether its public scheme or not, if so not external
@@ -296,7 +301,6 @@ function _sbac_resource_determine_type($media, $return_embed = FALSE) {
     $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
     $type = _sbac_resource_determine_extension($ext);
   }
-
   return $type;
 }
 
@@ -308,32 +312,25 @@ function _sbac_resource_determine_type($media, $return_embed = FALSE) {
  */
 function _sbac_resource_determine_media($media, $return_embed = FALSE) {
   $type = 'embed';
-
   if ($return_embed) {
     return $type;
   }
-
   $embedded_video_source = $media->embed_url;
   if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
     $type = 'schooltube';
   }
-
   if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
     $type = 'teachertube';
   }
-
   if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
     $type = 'slideshare';
   }
-
   if (strpos($embedded_video_source, 'youtube') !== FALSE) {
     $type = 'youtube';
   }
-
   if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
     $type = 'vimeo';
   }
-
   return $type;
 }
 
@@ -444,7 +441,7 @@ function sbac_resource_preprocess_page(&$vars) {
  * @param $vars
  */
 function sbac_resource_preprocess_html(&$vars) {
-  if (arg(0) == 'digital-library-resources') {
+  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources' || arg(0) == 'resource-review') {
     $display = sbac_resource_determine_grid_or_list();
     if ($display == 'grid_view') {
       $vars['classes_array'][] = 'grid-view';
@@ -595,23 +592,6 @@ function sbac_status_messages($variables) {
 }
 
 /**
- * Implements hook_cron().
- *
- * Cleanup routine for temporary nodes that may have been abandoned during Resource creation.
- * ie. Resource CT creates a node
- */
-function sbac_resource_cron() {
-// @TODO Meet criteria to delete nodes that are just hanging in creation state after a certain amount of time.
-//  $secsback = 60 * 60 * 2; // 2h
-//  $sql = "SELECT n.nid AS nid FROM {node} n JOIN {field_data_field_temp} t ON n.nid = t.entity_id ";
-//  $sql .= "WHERE n.type = :resource AND t.field_temp_value = :temp AND (UNIX_TIMESTAMP() - n.created) > :secsback";
-//  $result = db_query($sql, array(':resource' => 'resource', ':temp' => 1, ':secsback' => $secsback));
-//  foreach ($result as $record) {
-//    node_delete($record->nid);
-//  }
-}
-
-/**
  * Implements hook_node_load().
  *
  * @param $nodes
@@ -666,7 +646,7 @@ function sbac_resource_node_delete($node) {
     }
   }
 
-  //now remove the folder from alfresco
+  // Now remove the folder from alfresco.
   sbac_media_delete_folder_from_cmis($node);
 }
 
@@ -684,7 +664,7 @@ function sbac_resource_node_delete($node) {
  */
 function sbac_resource_workbench_moderation_transition($node, $previous_state, $new_state) {
   if ($node->type == 'resource') {
-    // Necassary to override workbench email into publishing the node. Line 1602, function
+    // Necassary to override workbench moderation into publishing the node. Line 1602, function
     // workbench_moderation_node_data(), they query the DB directly to find out if there is a
     // published node. I bruce lee the publish status here.
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
@@ -703,22 +683,6 @@ function sbac_resource_node_update($node) {
       $node->workbench_moderation['published']->vid = $node->vid;
     }
   }
-}
-
-/**
- * Helper function for Resource form magic.
- * We need to create a node when a user enters a Resource CT form so
- * that we can tie Alignment reference back to the node it belongs to.
- *
- * @param $node
- */
-function sbac_resource_create_node(&$form, &$form_state) {
-  $form['#limit_validation_errors'] = array();
-  $form_state['values'] = array();
-  $form_state['values']['workbench_moderation_state_new'] = 'draft';
-  $form_state['values']['workbench_moderation_state_current'] = 'creation';
-  node_form_submit($form, $form_state);
-  drupal_get_messages(NULL, TRUE);
 }
 
 /**
@@ -894,14 +858,13 @@ function sbac_resource_block_view($delta = '') {
 
     case 'sbac_resource_create_button':
       $block['subject'] = NULL;
-      $destination = $_GET['q'];
       global $user;
       $content = NULL;
       if (in_array('resource contributor', $user->roles)) {
         $content = l('Create New Resource', 'node/add/resource', array(
           'absolute' => TRUE,
           'attributes' => array('class' => array('small', 'button')),
-          'query' => array('destination' => $destination),
+          'query' => array('destination' => arg(0)),
         ));
       }
       $block['content'] = $content;
@@ -1001,68 +964,70 @@ function sbac_resource_determine_grid_or_list() {
  * @param int $maxLength
  * @return string
  */
-function sbac_resource_truncate($html, $maxLength=100){
-    mb_internal_encoding("UTF-8");
-    $printedLength = 0;
-    $position = 0;
-    $tags = array();
-    $newContent = '';
+function sbac_resource_truncate($html, $maxLength = 100) {
+  mb_internal_encoding("UTF-8");
+  $printedLength = 0;
+  $position = 0;
+  $tags = array();
+  $newContent = '';
 
-    $html = $content = preg_replace("/<img[^>]+\>/i", "", $html);
+  $html = $content = preg_replace("/<img[^>]+\>/i", "", $html);
 
-    while ($printedLength < $maxLength && preg_match('{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}', $html, $match, PREG_OFFSET_CAPTURE, $position))
-    {
-        list($tag, $tagPosition) = $match[0];
-        // Print text leading up to the tag.
-        $str = mb_strcut($html, $position, $tagPosition - $position);
-        if ($printedLength + mb_strlen($str) > $maxLength){
-            $newstr = mb_strcut($str, 0, $maxLength - $printedLength);
-            $newstr = preg_replace('~\s+\S+$~', '', $newstr);  
-            $newContent .= $newstr;
-            $printedLength = $maxLength;
-            break;
-        }
-        $newContent .= $str;
-        $printedLength += mb_strlen($str);
-        if ($tag[0] == '&') {
-            // Handle the entity.
-            $newContent .= $tag;
-            $printedLength++;
-        } else {
-            // Handle the tag.
-            $tagName = $match[1][0];
-            if ($tag[1] == '/') {
-              // This is a closing tag.
-              $openingTag = array_pop($tags);
-              assert($openingTag == $tagName); // check that tags are properly nested.
-              $newContent .= $tag;
-            } else if ($tag[mb_strlen($tag) - 2] == '/'){
+  while ($printedLength < $maxLength && preg_match('{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}', $html, $match, PREG_OFFSET_CAPTURE, $position)) {
+    list($tag, $tagPosition) = $match[0];
+    // Print text leading up to the tag.
+    $str = mb_strcut($html, $position, $tagPosition - $position);
+    if ($printedLength + mb_strlen($str) > $maxLength) {
+      $newstr = mb_strcut($str, 0, $maxLength - $printedLength);
+      $newstr = preg_replace('~\s+\S+$~', '', $newstr);
+      $newContent .= $newstr;
+      $printedLength = $maxLength;
+      break;
+    }
+    $newContent .= $str;
+    $printedLength += mb_strlen($str);
+    if ($tag[0] == '&') {
+      // Handle the entity.
+      $newContent .= $tag;
+      $printedLength++;
+    }
+    else {
+      // Handle the tag.
+      $tagName = $match[1][0];
+      if ($tag[1] == '/') {
+        // This is a closing tag.
+        $openingTag = array_pop($tags);
+        assert($openingTag == $tagName); // check that tags are properly nested.
+        $newContent .= $tag;
+      }
+      else {
+        if ($tag[mb_strlen($tag) - 2] == '/') {
           // Self-closing tag.
-            $newContent .= $tag;
-        } else {
+          $newContent .= $tag;
+        }
+        else {
           // Opening tag.
           $newContent .= $tag;
           $tags[] = $tagName;
         }
       }
-
-      // Continue after the tag.
-      $position = $tagPosition + mb_strlen($tag);
     }
 
-    // Print any remaining text.
-    if ($printedLength < $maxLength && $position < mb_strlen($html))
-      {
-        $newstr = mb_strcut($html, $position, $maxLength - $printedLength);
-        $newstr = preg_replace('~\s+\S+$~', '', $newstr);
-        $newContent .= $newstr;
-      }
+    // Continue after the tag.
+    $position = $tagPosition + mb_strlen($tag);
+  }
 
-    // Close any open tags.
-    while (!empty($tags))
-      {
-        $newContent .= sprintf('</%s>', array_pop($tags));
-      }
+  // Print any remaining text.
+  if ($printedLength < $maxLength && $position < mb_strlen($html)) {
+    $newstr = mb_strcut($html, $position, $maxLength - $printedLength);
+    $newstr = preg_replace('~\s+\S+$~', '', $newstr);
+    $newContent .= $newstr;
+  }
 
-    return $newContent;
+  // Close any open tags.
+  while (!empty($tags)) {
+    $newContent .= sprintf('</%s>', array_pop($tags));
+  }
+
+  return $newContent;
 }

@@ -46,7 +46,7 @@ function sbac_resource_views_query_alter(&$view, &$query) {
  */
 function sbac_resource_views_post_execute(&$view) {
   if ($view->name == 'resources' && ($view->current_display == 'grid_view' || $view->current_display == 'list_view')) {
-    if (isset($_SESSION['sbac-search-keywords']) && $_SESSION['sbac-search-keywords'] != '') {
+    if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] != '') {
       // Search apache solr for keyword.
       if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
         switch ($_ENV['AH_SITE_ENVIRONMENT']) {
@@ -69,7 +69,7 @@ function sbac_resource_views_post_execute(&$view) {
 
       $sr_view->set_display('search');
       $view_filters = $sr_view->display_handler->get_option('filters');
-      $view_filters['keyword']['value'] = apachesolr_clean_text($_SESSION['sbac-search-keywords']);
+      $view_filters['keyword']['value'] = apachesolr_clean_text($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]);
       $view_filters['keyword']['operator'] = 'LIKE';
       $sr_view->display_handler->set_option('filters', $view_filters);
       $sr_view->pre_execute();

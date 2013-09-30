@@ -7,7 +7,7 @@
  */
 function sbac_resource_digital_library_page() {
   $no_results = NULL;
-  (isset($_SESSION['sbac-search-keywords']) ? $search_string = $_SESSION['sbac-search-keywords'] : $search_string = '');
+  (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) ? $search_string = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] : $search_string = '');
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] : $current_filters = '');
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
@@ -32,7 +32,7 @@ function sbac_resource_digital_library_page() {
 
     // Reset variables
     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
-    $_SESSION['sbac-search-keywords'] = '';
+    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
     $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED] = TRUE;
 
     // Set error message
