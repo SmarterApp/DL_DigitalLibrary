@@ -94,12 +94,12 @@
       close_categories_list = function () {
         var filter_container = $('.sbac-filter-cat-area');
         if (filter_container.is(':visible')) {
-          $.cookie("sbac_search_categories_closed", 1);
+          $.cookie("sbac-digital-library-filters-closed", 1);
           filter_container.slideUp('slow');
           $('.sbac-filter-cat-area').removeClass("active");
         }
         else{
-          $.cookie("sbac_search_categories_closed", 0);
+          $.cookie("sbac-digital-library-filters-closed", 0);
           filter_container.slideDown('fast');
           $('.sbac-filter-cat-area').addClass("active");
         }

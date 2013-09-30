@@ -410,23 +410,23 @@ function sbac_resource_digital_library_apply_filters(&$view) {
 function sbac_resource_resource_review_apply_filters(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
 
-//  global $user;
-//  $both_roles = $rr = $rp = FALSE;
-//  if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
-//    $both_roles = TRUE;
-//  }
-//  else {
-//    if (in_array('resource reviewer', $user->roles)) {
-//      $rr = TRUE;
-//    }
-//    if (in_array('resource publisher', $user->roles)) {
-//      $rp = TRUE;
-//    }
-//  }
-//
-//  $allowed_both_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review', 'approved' => 'Needs Posting');
-//  $allowed_rr_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review');
-//  $allowed_rp_states = array('approved' => 'Needs Posting');
+  global $user;
+  $both_roles = $rr = $rp = FALSE;
+  if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
+    $both_roles = TRUE;
+  }
+  else {
+    if (in_array('resource reviewer', $user->roles)) {
+      $rr = TRUE;
+    }
+    if (in_array('resource publisher', $user->roles)) {
+      $rp = TRUE;
+    }
+  }
+
+  $allowed_both_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review', 'approved' => 'Needs Posting');
+  $allowed_rr_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review');
+  $allowed_rp_states = array('approved' => 'Needs Posting');
 
   if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
     $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
@@ -463,24 +463,24 @@ function sbac_resource_resource_review_apply_filters(&$view) {
 
     // Bring back all states for the given user roles regardless of what they selected.
     // This is because the database state does not mean what the ouputted label for that state does.
-//    if ($both_roles) {
-//      foreach ($allowed_both_states AS $state => $label) {
-//        $view_filters['state']['value'][$state] = $state;
-//        $view_filters['state']['operator'] = 'in';
-//      }
-//    }
-//    else if ($rr) {
-//      foreach ($allowed_rr_states AS $state => $label) {
-//        $view_filters['state']['value'][$state] = $state;
-//        $view_filters['state']['operator'] = 'in';
-//      }
-//    }
-//    else if ($rp) {
-//      foreach ($allowed_rp_states AS $state => $label) {
-//        $view_filters['state']['value'][$state] = $state;
-//        $view_filters['state']['operator'] = 'in';
-//      }
-//    }
+    if ($both_roles) {
+      foreach ($allowed_both_states AS $state => $label) {
+        $view_filters['state']['value'][$state] = $state;
+        $view_filters['state']['operator'] = 'in';
+      }
+    }
+    else if ($rr) {
+      foreach ($allowed_rr_states AS $state => $label) {
+        $view_filters['state']['value'][$state] = $state;
+        $view_filters['state']['operator'] = 'in';
+      }
+    }
+    else if ($rp) {
+      foreach ($allowed_rp_states AS $state => $label) {
+        $view_filters['state']['value'][$state] = $state;
+        $view_filters['state']['operator'] = 'in';
+      }
+    }
     $view->display_handler->set_option('filters', $view_filters);
   }
   // Not searching/filtering, so we default to the user's profile data for filtering
@@ -560,6 +560,13 @@ function sbac_resource_resource_review_apply_filters(&$view) {
   }
 }
 
+/**
+ * Determines the view output when filters are selected.
+ *
+ * @param $view
+ * @param $filter_terms
+ * @param $roles
+ */
 function sbac_resource_determine_view_output(&$view, $filter_terms, $roles) {
   if ($filter_terms) {
     global $user;
