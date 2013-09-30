@@ -268,13 +268,13 @@ function sbac_search_block_view($delta = '') {
  * Hides category filter if called
  */
 function sbac_search_hide_category_style() {
-  if (isset($_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED]) {
+  if (arg(0) == 'digital-library-resources' && isset($_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED]) {
     return ' style="display:none;"';
   }
-  if (isset($_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED]) {
+  if (arg(0) == 'my-resources' && isset($_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED]) {
     return ' style="display:none;"';
   }
-  if (isset($_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) {
+  if (arg(0) == 'resource-review' && isset($_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) {
     return ' style="display:none;"';
   }
 }
