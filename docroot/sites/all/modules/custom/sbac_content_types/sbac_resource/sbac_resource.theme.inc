@@ -463,16 +463,7 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
     $vars['fields']['mime-type'] = $image_assets['mime-type'];
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
-  if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_contributor_links($vars['fields']);
-  }
-  if (in_array('resource reviewer', $user->roles)) {
-    $variables = _sbac_resource_reviewer_links($vars['fields']);
-  }
-  if (in_array('resource publisher', $user->roles)) {
-    $variables = _sbac_resource_publisher_links($vars['fields']);
-  }
-
+  $variables = _sbac_resource_digital_library_links($vars['fields']);
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
   }
@@ -521,16 +512,7 @@ function sbac_resource_views_view_fields__resources__list_view__preprocess(&$var
     $vars['fields']['mime-type'] = $image_assets['mime-type'];
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
-  if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_contributor_links($vars['fields']);
-  }
-  if (in_array('resource reviewer', $user->roles)) {
-    $variables = _sbac_resource_reviewer_links($vars['fields']);
-  }
-  if (in_array('resource publisher', $user->roles)) {
-    $variables = _sbac_resource_publisher_links($vars['fields']);
-  }
-
+  $variables = _sbac_resource_digital_library_links($vars['fields']);
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
   }
@@ -739,9 +721,6 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
     $vars['fields']['mime-type'] = $image_assets['mime-type'];
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
-  if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_contributor_links($vars['fields']);
-  }
   if (in_array('resource reviewer', $user->roles)) {
     $variables = _sbac_resource_reviewer_links($vars['fields']);
   }
@@ -796,9 +775,6 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
     $vars['fields']['image'] = $image_assets['image'];
     $vars['fields']['mime-type'] = $image_assets['mime-type'];
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
-  }
-  if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_contributor_links($vars['fields']);
   }
   if (in_array('resource reviewer', $user->roles)) {
     $variables = _sbac_resource_reviewer_links($vars['fields']);
@@ -1042,24 +1018,6 @@ function _sbac_resource_reviewer_links($fields) {
         }
 
         break;
-      case 'published':
-        $variables['sticky'] = FALSE;
-        if ($fields['sticky']->raw) {
-          $variables['sticky'] = TRUE;
-        }
-        $variables['views'] = '0 Views';
-        if (isset($fields['field_unique_views'])) {
-          $variables['views'] = $fields['field_unique_views']->content;
-        }
-        $variables['downloads'] = '0 Downloads';
-        if (isset($fields['field_asset_downloads'])) {
-          $variables['downloads'] = $fields['field_asset_downloads']->content;
-        }
-        $variables['collaborators'] = 'N Collaborations';
-        $variables['subject'] = $fields['field_subject']->content;
-        $variables['grades'] = $fields['field_grades']->content;
-        $variables['media_types'] = $fields['field_digital_media_type']->content;
-        break;
     }
   }
   return $variables;
@@ -1083,7 +1041,6 @@ function _sbac_resource_publisher_links($fields) {
       case 'approved':
         global $user;
         $feedback = _sbac_resource_determine_feedback($nid, 'post', $user->uid, 1, 0, 1, 'single');
-
         if ($feedback) {
           $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post'));
           $link = l('Continue Review', $url);
@@ -1099,6 +1056,25 @@ function _sbac_resource_publisher_links($fields) {
           $variables['text'] = t('Needs Posting');
         }
         break;
+    }
+  }
+  return $variables;
+}
+
+/**
+ * Creates the links and buttons for the digital library page.
+ *
+ * Role is not taken into consideration since all roles only
+ * see published nodes at this point.
+ *
+ * @param $fields
+ * @return array
+ */
+function _sbac_resource_digital_library_links($fields) {
+  $variables = array();
+  if (isset($fields['state']->raw)) {
+    $state = $fields['state']->raw;
+    switch ($state) {
       case 'published':
         $variables['sticky'] = FALSE;
         if ($fields['sticky']->raw) {

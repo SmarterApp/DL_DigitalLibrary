@@ -894,12 +894,14 @@ function sbac_resource_block_view($delta = '') {
 
     case 'sbac_resource_create_button':
       $block['subject'] = NULL;
+      $destination = $_GET['q'];
       global $user;
       $content = NULL;
       if (in_array('resource contributor', $user->roles)) {
         $content = l('Create New Resource', 'node/add/resource', array(
           'absolute' => TRUE,
-          'attributes' => array('class' => array('small', 'button'))
+          'attributes' => array('class' => array('small', 'button')),
+          'query' => array('destination' => $destination),
         ));
       }
       $block['content'] = $content;
