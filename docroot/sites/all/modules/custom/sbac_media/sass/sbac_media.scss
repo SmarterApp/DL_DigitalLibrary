@@ -60,6 +60,7 @@
 
     tr {
     	border-bottom: 1px solid #ccc;
+    	cursor: move;
 
     	td {
     		padding-top: 1em;
@@ -85,6 +86,11 @@
 
     tr:nth-child(2) td {
     	padding-top: 45px;
+    }
+
+    tr:nth-child(2).ui-sortable-helper td {
+    	padding-top: 20px;
+    	height: auto;
     }
   }
 }

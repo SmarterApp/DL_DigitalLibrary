@@ -33,9 +33,24 @@
         $('.more-less.long').removeClass('active');
         $('.more-less.short').addClass('active');
       });
+    }
+  };
+
+  Drupal.behaviors.sbac_resource_table_primary = {
+    attach: function (context, settings) {
+      if ($('#sbac-media-list tbody tr:first-child').length) {
+        var row_height = $('#sbac-media-list tbody tr:first-child').height() + 32 + 25;
+        $('.secondary-items-info').css("top",row_height);
+      }
+
+      $('.vertical-tabs-list li:nth-child(2) a').click(function () {
+        var row_height = $('#sbac-media-list tbody tr:first-child').height() + 32 + 25;
+        $('.secondary-items-info').css("top",row_height);
+      });
 
     }
   };
+
 
   /**
    * Controls the buttons at the bottom of the resource form.
