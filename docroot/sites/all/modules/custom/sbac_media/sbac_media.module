@@ -634,7 +634,6 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   // re-populate node so node_presave is up to date.
   $form_state['node']->document = $media_items;
 
-
   return $form['field_file_container'];
 }
 
@@ -660,7 +659,7 @@ function sbac_media_workbench_moderation_transition($node, $previous_state, $new
     // Create a zip file of all the contents.
     $zip = new ZipArchive;
     $archive_uri = 'public://resources/';
-    $filename = 'resource_' . $node->nid . '.zip';
+    $filename = 'resource_' . $node->nid . '_' . $_SERVER['REQUEST_TIME'] . '.zip';
     $archive_uri .= $filename;
     $real_path = drupal_realpath($archive_uri);
     $open = $zip->open($real_path, ZipArchive::CREATE);
