@@ -350,6 +350,9 @@ class Base {
     $set_count = 1;
     $sets = $this->getCriteriaSets();
 
+    watchdog('sbac', 'processing class: ' . get_class($this));
+    watchdog('sbac', 'sets size: ' . sizeof($sets));
+
     foreach ($sets as &$item) {
       // if the entity is completed, the user cannot edit any data, so disable all fields
       if (!resource_access($this->_edit_permission, $this->_resource)) {
