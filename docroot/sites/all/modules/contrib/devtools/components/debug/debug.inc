@@ -68,10 +68,10 @@ function dsmm($data) {
 
 /**
  * Wrapper for debug_backtrace();
- * @param  boolean $remove_args [description]
- * @return [type]               [description]
+ * @param  boolean $remove_extra [description]
+ * @return [type]                [description]
  */
-function bt($remove_args = FALSE) {
+function bt($remove_extra = FALSE) {
   list($handler, $handler_data) = devtools_func_handler(__FUNCTION__, func_get_args());
 
   if ($handler) {
@@ -80,9 +80,10 @@ function bt($remove_args = FALSE) {
   else {
     $bt = debug_backtrace();
 
-    if ($remove_args) {
+    if ($remove_extra) {
       foreach ($bt as &$item) {
         unset($item['args']);
+        unset($item['object']);
       }
     }
 

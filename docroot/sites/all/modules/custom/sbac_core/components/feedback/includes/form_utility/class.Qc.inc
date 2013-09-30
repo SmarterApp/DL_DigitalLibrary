@@ -20,6 +20,11 @@ class Qc extends Base {
 
     if ($focus = field_entity_value($this->_resource, 'field_focus')) {
       $this->_prefix = 'qc_' . $focus->tid . '_';
+ 
+      // total number of sets
+      $this->_set_total = $this->getVar('criteria_num', FEEDBACK_DEFAULT_SET_COUNT, FALSE);
+
+      watchdog('sbac', 'qc total: ' . $this->_set_total);
     }
   }
 

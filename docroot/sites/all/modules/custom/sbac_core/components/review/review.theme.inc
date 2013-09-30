@@ -48,6 +48,39 @@ function theme_review_author($variables) {
 }
 
 /**
+ * Output for Display Suite field "Review Helpfulness"
+ * @param  [type] $variables [description]
+ * @return [type]            [description]
+ */
+function theme_review_helpfulness($variables) {
+  $output = '';
+
+  $entity = $variables['entity'];
+
+  $query = "  SELECT  SUM(IF(value = 1, 1, 0)) AS `yes`,
+                      SUM(IF(value = 1, 0, 1)) AS `no`
+              FROM    votingapi_vote
+              WHERE   entity_type = 'review'
+              AND     entity_id = :id
+           ";
+
+  $vals = db_query($query, array(
+    ':id' => $entity->id,
+  ))->fetchObject();
+
+  $count = $vals->yes;
+  $total = ($vals->yes + $vals->no);
+
+  $output .= t('!count of !total people (!percent%) found this review helpful', array(
+    '!count' => '<span class="count">' . $count . '</span>',
+    '!total' => '<span class="total">' . $total . '</span>',
+    '!percent' => '<span class="percent">' . ($count / $total * 100) . '</span>',
+  ));
+
+  return $output;
+}
+
+/**
  * Output for Display Suite field "Delete Button"
  * @param  [type] $variables [description]
  * @return [type]            [description]

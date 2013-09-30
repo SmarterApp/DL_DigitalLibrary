@@ -39,7 +39,7 @@
         if (strpos($cf_value, $category_vid . ':' . $term->tid) !== FALSE) {
           $class = ' current ';
         }
-        echo '<li class="category-filter category-filter-' . $category_vid . '-' . $term->tid . ' ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '"><span class="highlight"></span><span class="filter-name" vid="' . $category_vid . '" tid="' . $term->tid . '">' . $term->name . '</span></li>';
+        echo '<li class="category-filter category-filter-' . $category_vid . '-' . $term->tid . ' ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '"><span class="highlight"></span><span class="filter-name ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '">' . $term->name . '</span></li>';
       }
 
       echo '</ul>';

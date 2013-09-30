@@ -58,7 +58,32 @@ function review_load_more($node, $sortby, $page) {
               ->execute();
   }
   elseif ($sortby == 'helpful') {
+    $query = "  SELECT    er.id,
+                          SUM(IF(v.value = 1, 1, 0)) AS `yes`,
+                          (
+                            SUM(IF(v.value = 1, 1, 0))  -- YES
+                                /                       --   divided by...
+                            SUM(1)                      -- TOTAL
+                          ) AS `percent`                --   = percent (decimal)
+                FROM      eck_review er
+                LEFT JOIN votingapi_vote v
+                  ON      er.id = v.entity_id
+                  AND     v.entity_type = 'review'
+                WHERE     er.type = 'end_use'
+                AND       er.node_id = :node_id
+                AND       er.status = 1
+                GROUP BY  er.id
+                ORDER BY  `percent`     DESC, 
+                          `yes`         DESC,
+                          er.created    DESC
+                LIMIT     " . $offset . ", " . $page_size . "
+             ";
 
+    $args = array(
+      ':node_id' => $node->nid,
+    );
+
+    $result = db_query($query, $args);
   }
 
   $output = '';
