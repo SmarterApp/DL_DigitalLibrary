@@ -175,6 +175,9 @@ class Base {
       if (get_class($this) == 'sbac_core\components\feedback\form_utility\Qc') {
         watchdog('sbac', 'set ' . $set_count . ' : ' . $key);
       }
+      else {
+        // watchdog('sbac', 'class is: ' . get_class($this));
+      }
 
       if ($set_count > $this->_set_total) {
         $item = array();
