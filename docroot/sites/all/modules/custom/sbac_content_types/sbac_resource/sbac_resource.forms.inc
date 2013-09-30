@@ -1808,7 +1808,7 @@ function sbac_resource_delete_resource_form() {
 
   $form['hidden_url'] = array(
     '#type' => 'hidden',
-    '#value' => $_SERVER['HTTP_REFERER'],
+    '#value' => arg(0),
   );
 
   $form['submit_description'] = array(
