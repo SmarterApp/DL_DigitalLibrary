@@ -225,6 +225,13 @@ function sbac_search_block_info_alter(&$blocks, $theme, $code_blocks) {
   $blocks['search']['form']['visibility'] = BLOCK_VISIBILITY_LISTED;
   $blocks['search']['form']['pages'] = "digital-library-resources*\ncontent*";
   $blocks['search']['form']['weight'] = 2;
+
+  if (isset($blocks['sbac_search']['sbac_search_categories']) && $theme == 'SBAC') {
+    $blocks['sbac_search']['sbac_search_categories']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
+  }
+  if (isset($blocks['sbac_search']['sbac_search_categories_button']) && $theme = 'SBAC') {
+    $blocks['sbac_search']['sbac_search_categories_button']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
+  }
 }
 
 /**

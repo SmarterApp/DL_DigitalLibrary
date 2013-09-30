@@ -110,9 +110,6 @@ function sbac_resource_my_resources_access_callback() {
   if (in_array('resource contributor', $user->roles)) {
     return TRUE;
   }
-  if (in_array('resource reviewer', $user->roles)) {
-    return TRUE;
-  }
   return FALSE;
 }
 
@@ -898,6 +895,16 @@ function sbac_resource_block_view($delta = '') {
 function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
   $blocks['system']['navigation']['status'] = FALSE;
   $blocks['workbench']['block']['status'] = FALSE;
+
+  if (isset($blocks['sbac_resource']['sbac_resource_results_count']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_results_count']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_create_button']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_create_button']['pages'] = "my-resource";
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_grid_list_button']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_grid_list_button']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
+  }
 }
 
 /**
