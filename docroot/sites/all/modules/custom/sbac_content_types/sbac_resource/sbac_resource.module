@@ -795,7 +795,7 @@ function sbac_resource_block_info() {
   $blocks['sbac_resource_create_button'] = array(
     'info' => t('Create New Resource'),
     'region' => 'sub-header',
-    'pages' => "digital-library-resources*\nmy-resources*",
+    'pages' => "my-resources*",
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'weight' => -22,
     'status' => 1,

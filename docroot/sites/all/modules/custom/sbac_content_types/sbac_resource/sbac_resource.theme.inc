@@ -939,6 +939,8 @@ function _sbac_resource_my_resources_links($fields) {
 }
 
 /**
+ * Resource Review Links.
+ *
  * @param $fields
  * @return array
  */
@@ -957,7 +959,6 @@ function _sbac_resource_resource_review_links($fields) {
         break;
       case 'being_reviewed':
         global $user;
-
         // check for a completed GK by any user and then init the review process
         if ($completed = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 1, 1, 'single')) {
           // check for an active Review by the current user to continue review
@@ -981,7 +982,6 @@ function _sbac_resource_resource_review_links($fields) {
           // check for an active GK by the current user to continue review
           if ($active = _sbac_resource_determine_feedback($nid, 'gate_keeper', $user->uid, 1, 0, 1, 'single')) {
             $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-gk', 'query' => array('destination' => arg(0))));
-
             $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
             $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));

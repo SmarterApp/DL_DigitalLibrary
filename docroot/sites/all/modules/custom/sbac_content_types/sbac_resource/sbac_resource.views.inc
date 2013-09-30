@@ -127,8 +127,48 @@ function sbac_resource_views_post_execute(&$view) {
  */
 function sbac_resource_views_pre_render(&$view) {
   if ($view->name == 'resource_review') {
+    $filter_terms = array();
+    // Check for the resource_state filter option.
+    if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
+      $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
+      $filters = explode('::', $current_filters);
+      if ($filters) {
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            if ($vid && $tid) {
+              $vocabulary = taxonomy_vocabulary_load($vid);
+              $term = taxonomy_term_load($tid);
+              if ($vocabulary && $term) {
+                if ($vocabulary->machine_name == 'resource_states') {
+                  $filter_terms[] = $term->name;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Determine the user who is loading the view.
     global $user;
-    if (in_array('resource reviewer', $user->roles)) {
+    $roles = array();
+    if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
+      $roles['both_roles'] = TRUE;
+    }
+    else {
+      if (in_array('resource reviewer', $user->roles)) {
+        $roles['rr'] = TRUE;
+      }
+      if (in_array('resource publisher', $user->roles)) {
+        $roles['rp'] = TRUE;
+      }
+    }
+
+    // if the user is a resource reviewer.
+    if (isset($roles['rr']) && $roles['rr']) {
       foreach ($view->result as $key => $result) {
         if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'being_reviewed') {
           // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
@@ -149,7 +189,9 @@ function sbac_resource_views_pre_render(&$view) {
         }
       }
     }
-    if (in_array('resource publisher', $user->roles)) {
+
+    // If the user if a resource publisher.
+    if (isset($roles['rp']) && $roles['rp']) {
       foreach ($view->result as $key => $result) {
         if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'approved') {
           // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
@@ -159,6 +201,10 @@ function sbac_resource_views_pre_render(&$view) {
           }
         }
       }
+    }
+
+    if ($filter_terms) {
+      sbac_resource_determine_view_output($view, $filter_terms, $roles);
     }
   }
 }
@@ -363,10 +409,25 @@ function sbac_resource_digital_library_apply_filters(&$view) {
  */
 function sbac_resource_resource_review_apply_filters(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
-  $available_states = array('being_reviewed', 'needs_review', 'approved');
-  $resource_states = array();
 
-  // Current filter session - create the args where needed.
+//  global $user;
+//  $both_roles = $rr = $rp = FALSE;
+//  if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
+//    $both_roles = TRUE;
+//  }
+//  else {
+//    if (in_array('resource reviewer', $user->roles)) {
+//      $rr = TRUE;
+//    }
+//    if (in_array('resource publisher', $user->roles)) {
+//      $rp = TRUE;
+//    }
+//  }
+//
+//  $allowed_both_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review', 'approved' => 'Needs Posting');
+//  $allowed_rr_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review');
+//  $allowed_rp_states = array('approved' => 'Needs Posting');
+
   if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
     $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
     $filters = explode('::', $current_filters);
@@ -393,24 +454,6 @@ function sbac_resource_resource_review_apply_filters(&$view) {
                   $view_filters['field_subject_tid']['value'][] = $tid;
                   $view_filters['field_subject_tid']['operator'] = 'and';
                   break;
-                case 'resource_states':
-                  switch($term->name) {
-                    case 'Being Reviewed':
-                      $state = 'being_reviewed';
-                      break;
-                    case 'Needs Review':
-                      $state = 'needs_review';
-                      break;
-                    case 'Needs Posting':
-                      $state = 'approved';
-                      break;
-                    default:
-                      $state = 'being_reviewed';
-                      break;
-                  }
-
-                  $resource_states[$state] = $state;
-                  break;
               }
             }
           }
@@ -418,19 +461,26 @@ function sbac_resource_resource_review_apply_filters(&$view) {
       }
     }
 
-    if (!$resource_states) {
-      foreach ($available_states AS $state) {
-        $view_filters['state']['value'][$state] = $state;
-        $view_filters['state']['operator'] = 'in';
-      }
-    }
-    else {
-      $view_filters['state']['value'] = array();
-      foreach ($resource_states AS $state) {
-        $view_filters['state']['value'][$state] = $state;
-        $view_filters['state']['operator'] = 'in';
-      }
-    }
+    // Bring back all states for the given user roles regardless of what they selected.
+    // This is because the database state does not mean what the ouputted label for that state does.
+//    if ($both_roles) {
+//      foreach ($allowed_both_states AS $state => $label) {
+//        $view_filters['state']['value'][$state] = $state;
+//        $view_filters['state']['operator'] = 'in';
+//      }
+//    }
+//    else if ($rr) {
+//      foreach ($allowed_rr_states AS $state => $label) {
+//        $view_filters['state']['value'][$state] = $state;
+//        $view_filters['state']['operator'] = 'in';
+//      }
+//    }
+//    else if ($rp) {
+//      foreach ($allowed_rp_states AS $state => $label) {
+//        $view_filters['state']['value'][$state] = $state;
+//        $view_filters['state']['operator'] = 'in';
+//      }
+//    }
     $view->display_handler->set_option('filters', $view_filters);
   }
   // Not searching/filtering, so we default to the user's profile data for filtering
@@ -510,3 +560,83 @@ function sbac_resource_resource_review_apply_filters(&$view) {
   }
 }
 
+function sbac_resource_determine_view_output(&$view, $filter_terms, $roles) {
+  if ($filter_terms) {
+    global $user;
+    foreach ($view->result as $key => $result) {
+      // To remove rows that should not be displayed because of the filter option.
+      if (isset($result->workbench_moderation_node_history_state)) {
+        switch ($result->workbench_moderation_node_history_state) {
+          case 'being_reviewed':
+            if ($completed = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single')) {
+              // check for an active Review by the current user to continue review
+              if ($active = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 0, 1, 'single')) {
+                $view->result[$key]->state_label = 'Being Reviewed';
+              }
+              else {
+                $view->result[$key]->state_label = 'Needs Review';
+              }
+            }
+            else {
+              // check for an active GK by the current user to continue review
+              if ($active = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'single')) {
+                $view->result[$key]->state_label = 'Being Reviewed';
+              }
+              else {
+                $view->result[$key]->state_label = 'Needs Review';
+              }
+            }
+            break;
+          case 'needs_review':
+            if ($completed = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single')) {
+              // check for an active Review by the current user to continue review
+              if ($active = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 0, 1, 'single')) {
+                $view->result[$key]->state_label = 'Being Reviewed';
+              }
+              else {
+                $view->result[$key]->state_label = 'Needs Review';
+              }
+            }
+            else {
+              // check for an active GK by the current user to continue review
+              if ($active = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'single')) {
+                $view->result[$key]->state_label = 'Being Reviewed';
+              }
+              else {
+                $view->result[$key]->state_label = 'Needs Review';
+              }
+            }
+            break;
+          case 'approved':
+            $feedback = _sbac_resource_determine_feedback($result->nid, 'post', $user->uid, 1, 0, 1, 'single');
+            if ($feedback) {
+              $view->result[$key]->state_label = 'Being Reviewed';
+            }
+            else {
+              $view->result[$key]->state_label = 'Needs Posting';
+            }
+        }
+      }
+    }
+
+    foreach ($view->result as $key => $result) {
+      switch ($result->state_label) {
+        case 'Being Reviewed':
+          if (!in_array($result->state_label, $filter_terms)) {
+            unset($view->result[$key]);
+          }
+          break;
+        case 'Needs Review':
+          if (!in_array($result->state_label, $filter_terms)) {
+            unset($view->result[$key]);
+          }
+          break;
+        case 'Needs Posting':
+          if (!in_array($result->state_label, $filter_terms)) {
+            unset($view->result[$key]);
+          }
+          break;
+      }
+    }
+  }
+}
