@@ -172,6 +172,10 @@ class Base {
       // track data & check for empty items in set
       $set_count++;
 
+      if (get_class($this) == 'sbac_core\components\feedback\form_utility\Qc') {
+        watchdog('sbac', 'set ' . $set_count . ' : ' . $key);
+      }
+
       if ($set_count > $this->_set_total) {
         $item = array();
         continue;
