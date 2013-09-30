@@ -8,6 +8,16 @@ include_once 'sbac_resource.features.inc';
 include_once 'sbac_resource.forms.inc';
 include_once 'sbac_resource.theme.inc';
 
+// Count.
+define('SBAC_RESOURCE_MY_RESOURCES_COUNT', 'sbac-my-resources-count');
+define('SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_COUNT', 'sbac-digital-library-resources-count');
+define('SBAC_RESOURCE_RESOURCE_REVIEW', 'sbac-resoruce-review-count');
+
+// View Mode.
+define('SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE', 'sbac-dl-view-mode');
+define('SBAC_RESOURCE_MY_RESOURCES_VIEW_MODE', 'sbac-mr-view-mode');
+define('SBAC_RESOURCE_RESOURCE_REVIEW_VIEW_MODE', 'sbac-rr-view-mode');
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -53,6 +63,28 @@ function sbac_resource_menu() {
     'type' => MENU_NORMAL_ITEM,
     'menu_name' => 'main-menu',
     'weight' => -50,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['my-resources'] = array(
+    'title' => 'My Resources',
+    'page callback' => 'sbac_resource_my_resources_page',
+    'access callback' => 'sbac_resource_my_resources_access_callback',
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -48,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['resource-review'] = array(
+    'title' => 'Resource Review',
+    'page callback' => 'sbac_resource_resource_review_page',
+    'access callback' => 'sbac_resource_resource_review_access_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -49,
+    'file' => 'sbac_resource.menu_callbacks.inc',
   );
 
   $items['admin/structure/types/manage/%node_type/messages'] = array(
@@ -66,6 +98,38 @@ function sbac_resource_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Access callback for my resources menu item.
+ *
+ * @return bool
+ */
+function sbac_resource_my_resources_access_callback() {
+  global $user;
+  if (in_array('resource contributor', $user->roles)) {
+    return TRUE;
+  }
+  if (in_array('resource reviewer', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Access callback for resource review menu item.
+ *
+ * @return bool
+ */
+function sbac_resource_resource_review_access_callback() {
+  global $user;
+  if (in_array('resource reviewer', $user->roles)) {
+    return TRUE;
+  }
+  if (in_array('resource publisher', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**
@@ -184,17 +248,15 @@ function _sbac_resource_preview_materials(&$vars) {
   if (isset($vars['document'][0])) {
     foreach ($vars['document'] as $key => $media) {
       $type = _sbac_resource_determine_type($media);
-
       if ($media->fid) {
         $file = file_load($media->fid);
         $url = file_create_url($file->uri);
       }
+      else if ($type == 'none') {
+        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      }
       else {
         $url = sbac_media_create_embed_url($media);
-      }
-
-      if ($type == 'none') {
-        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       }
 
       // check to see whether its public scheme or not, if so not external
@@ -239,7 +301,6 @@ function _sbac_resource_determine_type($media, $return_embed = FALSE) {
     $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
     $type = _sbac_resource_determine_extension($ext);
   }
-
   return $type;
 }
 
@@ -251,32 +312,25 @@ function _sbac_resource_determine_type($media, $return_embed = FALSE) {
  */
 function _sbac_resource_determine_media($media, $return_embed = FALSE) {
   $type = 'embed';
-
   if ($return_embed) {
     return $type;
   }
-
   $embedded_video_source = $media->embed_url;
   if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
     $type = 'schooltube';
   }
-
   if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
     $type = 'teachertube';
   }
-
   if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
     $type = 'slideshare';
   }
-
   if (strpos($embedded_video_source, 'youtube') !== FALSE) {
     $type = 'youtube';
   }
-
   if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
     $type = 'vimeo';
   }
-
   return $type;
 }
 
@@ -387,7 +441,7 @@ function sbac_resource_preprocess_page(&$vars) {
  * @param $vars
  */
 function sbac_resource_preprocess_html(&$vars) {
-  if (arg(0) == 'digital-library-resources') {
+  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources' || arg(0) == 'resource-review') {
     $display = sbac_resource_determine_grid_or_list();
     if ($display == 'grid_view') {
       $vars['classes_array'][] = 'grid-view';
@@ -538,262 +592,6 @@ function sbac_status_messages($variables) {
 }
 
 /**
- * Populates contextual filters with data if provided.
- *
- * @param $view
- *   The view object.
- *
- */
-function _sbac_resource_apply_filters(&$view) {
-  $view_filters = $view->display_handler->get_option('filters');
-
-  // Current filter session - create the args where needed.
-  if (isset($_SESSION['sbac-current-filters']) && $_SESSION['sbac-current-filters'] != '') {
-    $current_filters = $_SESSION['sbac-current-filters'];
-    $filters = explode('::', $current_filters);
-    if ($filters) {
-      foreach ($filters as $filter) {
-        $filter_info = explode(':', $filter);
-        if ($filter_info && sizeof($filter_info) == 2) {
-          $vid = $filter_info[0];
-          $tid = $filter_info[1];
-          if ($vid && $tid) {
-            $vocabulary = taxonomy_vocabulary_load($vid);
-            $term = taxonomy_term_load($tid);
-            if ($vocabulary && $term) {
-              switch ($vocabulary->machine_name) {
-                case 'attributes':
-                  $view_filters['field_attributes_tid']['value'][] = $tid;
-                  $view_filters['field_attributes_tid']['operator'] = 'and';
-                  break;
-                case 'focus':
-                  $view_filters['field_focus_tid']['value'][] = $tid;
-                  $view_filters['field_focus_tid']['operator'] = 'and';
-                  break;
-                case 'grades':
-                  $view_filters['field_grades_tid']['value'][] = $tid;
-                  $view_filters['field_grades_tid']['operator'] = 'and';
-                  break;
-                case 'intended_student_populations':
-                  $view_filters['field_intended_student_tid']['value'][] = $tid;
-                  $view_filters['field_intended_student_tid']['operator'] = 'and';
-                  break;
-                case 'digital_media_type':
-                  $view_filters['field_digital_media_type_tid']['value'][] = $tid;
-                  $view_filters['field_digital_media_type_tid']['operator'] = 'and';
-                  break;
-                case 'subject':
-                  $view_filters['field_subject_tid']['value'][] = $tid;
-                  $view_filters['field_subject_tid']['operator'] = 'and';
-                  break;
-                case 'geographical_settings':
-                  $view_filters['field_geographical_settings_tid']['value'][] = $tid;
-                  $view_filters['field_geographical_settings_tid']['operator'] = 'and';
-                  break;
-                case 'educational_use':
-                  $view_filters['field_educational_use_tid']['value'][] = $tid;
-                  $view_filters['field_educational_use_tid']['operator'] = 'and';
-                  break;
-                case 'intended_end_user':
-                  $view_filters['field_intended_end_user_tid']['value'][] = $tid;
-                  $view_filters['field_intended_end_user_tid']['operator'] = 'and';
-                  break;
-                case 'smarter_balanced_keyword':
-                  $view_filters['field_smarter_balanced_keyword_tid']['value'][] = $tid;
-                  $view_filters['field_smarter_balanced_keyword_tid']['operator'] = 'and';
-                  break;
-                case 'technologies_for_classroom_use':
-                  $view_filters['field_classroom_technologies_tid']['value'][] = $tid;
-                  $view_filters['field_classroom_technologies_tid']['operator'] = 'and';
-                  break;
-              }
-            }
-          }
-        }
-      }
-    }
-    $view->display_handler->set_option('filters', $view_filters);
-  }
-  // Not searching/filtering, so we default to the user's profile data for filtering
-  else {
-    global $user;
-
-    if (in_array(FEEDBACK_REVIEWER_RID, array_keys($user->roles))) {
-      $account = user_load($user->uid);
-
-      $get_tid = function($element) {
-        return $element['tid'];
-      };
-
-      foreach ($view_filters as &$field) {
-        $field['group'] = 1;
-      }
-
-      $subject_tid_all = 153;
-      $grade_tid_all = 122; 
-
-      // subject
-      if (!isset($view_filters['field_subject_tid']['value'])) {
-        $view_filters['field_subject_tid']['value'] = array();
-      }
-
-      $view_filters['field_subject_tid']['operator'] = 'or';
-      $view_filters['field_subject_tid']['group'] = 2;
-
-      if ($subjects = field_get_items('user', $account, 'field_subject_s_')) {
-        $subjects = array_map($get_tid, $subjects);
-
-        // not subject specific - remove filters
-        if (in_array($subject_tid_all, $subjects)) {
-          unset($view_filters['field_subject_tid']);
-        }
-        else {
-          $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
-          $view_filters['field_subject_tid']['value'] += $subjects;
-        }
-      }
-
-      // grade
-      if (!isset($view_filters['field_grades_tid']['value'])) {
-        $view_filters['field_grades_tid']['value'] = array();
-      }
-
-      $view_filters['field_grades_tid']['operator'] = 'or';
-      $view_filters['field_grades_tid']['group'] = 2;
-
-      if ($grades = field_get_items('user', $account, 'field_grade_level_s_')) {
-        $grades = array_map($get_tid, $grades);
-        
-        // not grade specific - remove filters
-        if (in_array($grade_tid_all, $grades)) {
-          unset($view_filters['field_grades_tid']);
-        }
-        else {
-          $view_filters['field_grades_tid']['value'][] = $grade_tid_all;
-          $view_filters['field_grades_tid']['value'] += $grades;
-        }
-      }
-      
-      $groups = array(
-        'operator' => 'AND',
-        'groups' => array(
-          1 => 'AND',
-        ),
-      );
-
-      if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
-        $groups['groups'][2] = 'OR';
-      }
-      
-      $view->display_handler->set_option('filter_groups', $groups);
-      $view->display_handler->set_option('filters', $view_filters);
-    }
-  }
-}
-
-/**
- * Menu Callback.
- *
- * @return string
- */
-function sbac_resource_digital_library_page() {
-  $no_results = NULL;
-  (isset($_SESSION['sbac-search-keywords']) ? $search_string = $_SESSION['sbac-search-keywords'] : $search_string = '');
-  (isset($_SESSION['sbac-current-filters']) ? $current_filters = $_SESSION['sbac-current-filters'] : $current_filters = '');
-  $display = sbac_resource_determine_grid_or_list();
-  // Add appropriate JS.
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
-
-  // Load up the view.
-  $view = views_get_view('resources');
-  $view->set_display($display);
-  _sbac_resource_apply_filters($view);
-  $view->pre_execute();
-  $view->execute();
-  $view->_post_execute();
-  $resource_layout_view = $view->preview();
-  $_SESSION['sbac_search_count'] = $view->total_rows;
-  // dpq($view->build_info['query']);
-
-  // if there is 0 rows.
-  $count = count($view->result);
-  if (!$count && ($search_string != '' || $current_filters != '')) {
-    // Get all results
-    $resource_layout_view = views_embed_view('all_resources', $display);
-
-    // Reset variables
-    $_SESSION['sbac-current-filters'] = '';
-    $_SESSION['sbac-search-keywords'] = '';
-    $_COOKIE['sbac_search_categories_closed'] = TRUE;
-
-    // Set error message
-    if ($search_string && strlen($search_string) < 3) {
-      drupal_get_messages();
-      $no_results = '<h3>You must enter 3 characters or more.</h3>';
-      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
-      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
-    }
-    else if ($search_string) {
-      $no_results = '<h3>Your search for "' . $search_string . '" returned no results.</h3>';
-      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
-      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
-    }
-    else {
-      $no_results = '<h3>Your search returned no results.</h3>';
-      $no_results .= '<p>Please try a different search term or browse any of the resources below that ';
-      $no_results .= 'have been identified for you using the subject(s) and grade(s) in your profile.</p>';
-    }
-  }
-
-  $view->destroy();
-  menu_set_active_item('digital-library-resources');
-  return theme('digital_library', array('resource_layout_view' => $resource_layout_view, 'no_results' => $no_results));
-}
-
-/**
- * Alter the query after it's prepared and cached.
- *
- * Any module performing a search should call
- * drupal_alter('apachesolr_query', $query). That function then invokes this
- * hook. It allows modules to modify the query object and its parameters.
- *
- * A module implementing HOOK_apachesolr_query_alter() may set
- * $query->abort_search to TRUE to flag the query to be aborted.
- *
- * @param DrupalSolrQueryInterface $query
- *   An object implementing DrupalSolrQueryInterface. No need for &.
- */
-function sbac_resource_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
-  // I only want to see articles by the admin.
-  //
-  // NOTE: this "is_uid" filter does NOT refer to the English word "is"
-  // It is a combination of flags representing Integer-Single, which is
-  // abbreviated with the letters i and s.
-  //
-  // @see the <dynamicField> definitions in schema.xml or schema-solr3.xml
-  $var = '';
-}
-
-/**
- * Implements hook_cron().
- *
- * Cleanup routine for temporary nodes that may have been abandoned during Resource creation.
- * ie. Resource CT creates a node
- */
-function sbac_resource_cron() {
-// @TODO Meet criteria to delete nodes that are just hanging in creation state after a certain amount of time.
-//  $secsback = 60 * 60 * 2; // 2h
-//  $sql = "SELECT n.nid AS nid FROM {node} n JOIN {field_data_field_temp} t ON n.nid = t.entity_id ";
-//  $sql .= "WHERE n.type = :resource AND t.field_temp_value = :temp AND (UNIX_TIMESTAMP() - n.created) > :secsback";
-//  $result = db_query($sql, array(':resource' => 'resource', ':temp' => 1, ':secsback' => $secsback));
-//  foreach ($result as $record) {
-//    node_delete($record->nid);
-//  }
-}
-
-
-
-/**
  * Implements hook_node_load().
  *
  * @param $nodes
@@ -848,7 +646,7 @@ function sbac_resource_node_delete($node) {
     }
   }
 
-  //now remove the folder from alfresco
+  // Now remove the folder from alfresco.
   sbac_media_delete_folder_from_cmis($node);
 }
 
@@ -866,7 +664,7 @@ function sbac_resource_node_delete($node) {
  */
 function sbac_resource_workbench_moderation_transition($node, $previous_state, $new_state) {
   if ($node->type == 'resource') {
-    // Necassary to override workbench email into publishing the node. Line 1602, function
+    // Necassary to override workbench moderation into publishing the node. Line 1602, function
     // workbench_moderation_node_data(), they query the DB directly to find out if there is a
     // published node. I bruce lee the publish status here.
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
@@ -885,22 +683,6 @@ function sbac_resource_node_update($node) {
       $node->workbench_moderation['published']->vid = $node->vid;
     }
   }
-}
-
-/**
- * Helper function for Resource form magic.
- * We need to create a node when a user enters a Resource CT form so
- * that we can tie Alignment reference back to the node it belongs to.
- *
- * @param $node
- */
-function sbac_resource_create_node(&$form, &$form_state) {
-  $form['#limit_validation_errors'] = array();
-  $form_state['values'] = array();
-  $form_state['values']['workbench_moderation_state_new'] = 'draft';
-  $form_state['values']['workbench_moderation_state_current'] = 'creation';
-  node_form_submit($form, $form_state);
-  drupal_get_messages(NULL, TRUE);
 }
 
 /**
@@ -941,9 +723,23 @@ function sbac_resource_licensing_form_has_no_license() {
  * @return string
  */
 function sbac_resource_grid_list_button() {
-  $path = 'digital-library-resources';
-  if (isset($_SESSION['dlp-view-mode'])) {
-    $display_mode = $_SESSION['dlp-view-mode'];
+  switch (arg(0)) {
+    case 'my-resources':
+      $name = SBAC_RESOURCE_MY_RESOURCES_VIEW_MODE;
+      break;
+    case 'digital-library-resources':
+      $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE;
+      break;
+    case 'resource-review':
+      $name = SBAC_RESOURCE_RESOURCE_REVIEW_VIEW_MODE;
+      break;
+    default:
+      $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE;
+      break;
+  }
+  $path = arg(0);
+  if (isset($_SESSION[$name])) {
+    $display_mode = $_SESSION[$name];
     if ($display_mode == 'grid_view') {
       $button = l('List View', $path . '/list', array(
         'absolute' => TRUE,
@@ -989,7 +785,7 @@ function sbac_resource_block_info() {
   $blocks['sbac_resource_results_count'] = array(
     'info' => t('Search Results Count'),
     'region' => 'sub-header',
-    'pages' => 'digital-library-resources*',
+    'pages' => "digital-library-resources*\nmy-resources*\nresource-review*",
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'cache' => DRUPAL_NO_CACHE,
     'weight' => -23,
@@ -999,7 +795,7 @@ function sbac_resource_block_info() {
   $blocks['sbac_resource_create_button'] = array(
     'info' => t('Create New Resource'),
     'region' => 'sub-header',
-    'pages' => 'digital-library-resources*',
+    'pages' => "my-resources*",
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'weight' => -22,
     'status' => 1,
@@ -1008,7 +804,7 @@ function sbac_resource_block_info() {
   $blocks['sbac_resource_grid_list_button'] = array(
     'info' => t('Grid / List button'),
     'region' => 'search',
-    'pages' => "digital-library-resources*",
+    'pages' => "digital-library-resources*\nmy-resources*\nresource-review*",
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'cache' => DRUPAL_NO_CACHE,
     'status' => 1,
@@ -1037,9 +833,24 @@ function sbac_resource_block_view($delta = '') {
   $block = array();
   switch ($delta) {
     case 'sbac_resource_results_count':
+      switch (arg(0)) {
+        case 'my-resources':
+          $name = SBAC_SEARCH_MY_RESOURCES_COUNT;
+          break;
+        case 'digital-library-resources':
+          $name = SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT;
+          break;
+        case 'resource-review':
+          $name = SBAC_SEARCH_RESOURCE_REVIEW_COUNT;
+          break;
+        default:
+          $name = SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT;
+          break;
+      }
+
       $count = 0;
-      if (isset($_SESSION["sbac_search_count"])) {
-        $count = $_SESSION["sbac_search_count"];
+      if (isset($_SESSION[$name])) {
+        $count = $_SESSION[$name];
       }
       $block['subject'] = NULL;
       $block['content'] = '<h3 class="left">' . t('Resources (' . $count . ')') . '</h3>';
@@ -1052,7 +863,8 @@ function sbac_resource_block_view($delta = '') {
       if (in_array('resource contributor', $user->roles)) {
         $content = l('Create New Resource', 'node/add/resource', array(
           'absolute' => TRUE,
-          'attributes' => array('class' => array('small', 'button'))
+          'attributes' => array('class' => array('small', 'button')),
+          'query' => array('destination' => arg(0)),
         ));
       }
       $block['content'] = $content;
@@ -1065,7 +877,12 @@ function sbac_resource_block_view($delta = '') {
 
     case 'sbac_resource_back_button':
       $block['subject'] = NULL;
-      $block['content'] = "<a href='/digital-library-resources' class='button'>Back</a>";
+      $previous_url = $_SERVER['HTTP_REFERER'];
+      global $base_url;
+      if (strpos($previous_url, $base_url) !== FALSE) {
+        $previous_url = str_replace($base_url, '', $previous_url);
+      }
+      $block['content'] = "<a href='" . $previous_url . "' class='button'>Back</a>";
       break;
   }
   return $block;
@@ -1102,11 +919,27 @@ function sbac_resource_clean_text(&$form_state) {
 /**
  * Determines if the display is grid / list.
  *
+ * @param string $page can be 'dl', 'mr' or 'rr' (for each page).
  * @return string
  */
 function sbac_resource_determine_grid_or_list() {
-  if (isset($_SESSION['dlp-view-mode'])) {
-    $display = $_SESSION['dlp-view-mode'];
+  switch (arg(0)) {
+    case 'my-resources':
+      $name = SBAC_RESOURCE_MY_RESOURCES_VIEW_MODE;
+      break;
+    case 'digital-library-resources':
+      $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE;
+      break;
+    case 'resource-review':
+      $name = SBAC_RESOURCE_RESOURCE_REVIEW_VIEW_MODE;
+      break;
+    default:
+      $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE;
+      break;
+  }
+
+  if (isset($_SESSION[$name])) {
+    $display = $_SESSION[$name];
     if (arg(1) == 'list') {
       $display = 'list_view';
     }
@@ -1115,7 +948,7 @@ function sbac_resource_determine_grid_or_list() {
         $display = 'grid_view';
       }
     }
-    $_SESSION['dlp-view-mode'] = $display;
+    $_SESSION[$name] = $display;
   }
   else {
     // By default show grid layout with link to list layout
@@ -1124,34 +957,9 @@ function sbac_resource_determine_grid_or_list() {
       $display = 'list_view';
     }
     // Add session variable to persist for users session.
-    $_SESSION['dlp-view-mode'] = $display;
+    $_SESSION[$name] = $display;
   }
   return $display;
-}
-
-/**
- * Implements hook_apachesolr_ENTITY_TYPE_exclude();
- *
- * This is invoked for each entity from the type of ENTITY_TYPE that is being
- * inspected to be added to the index. if any module returns TRUE, 
- * the entity is skipped for indexing.
- *
- * @param string $entity_id
- * @param object $row
- *   A complete set of data from the indexing table.
- * @param string $env_id
- *   The machine name of the environment.
- * @return boolean
- */
-function sbac_resource_apachesolr_node_exclude($entity_id, $row, $env_id) {
-  // Never index a node if it has no title. Yes, this can happen...
-  if ($row->entity_type == 'node' && $row->bundle == 'resource') {
-    $node = node_load($row->entity_id);
-    if ($node && $node->title == NULL) {
-      return TRUE;
-    }
-  }
-  return FALSE;
 }
 
 /**
@@ -1161,68 +969,70 @@ function sbac_resource_apachesolr_node_exclude($entity_id, $row, $env_id) {
  * @param int $maxLength
  * @return string
  */
-function sbac_resource_truncate($html, $maxLength=100){
-    mb_internal_encoding("UTF-8");
-    $printedLength = 0;
-    $position = 0;
-    $tags = array();
-    $newContent = '';
+function sbac_resource_truncate($html, $maxLength = 100) {
+  mb_internal_encoding("UTF-8");
+  $printedLength = 0;
+  $position = 0;
+  $tags = array();
+  $newContent = '';
 
-    $html = $content = preg_replace("/<img[^>]+\>/i", "", $html);
+  $html = $content = preg_replace("/<img[^>]+\>/i", "", $html);
 
-    while ($printedLength < $maxLength && preg_match('{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}', $html, $match, PREG_OFFSET_CAPTURE, $position))
-    {
-        list($tag, $tagPosition) = $match[0];
-        // Print text leading up to the tag.
-        $str = mb_strcut($html, $position, $tagPosition - $position);
-        if ($printedLength + mb_strlen($str) > $maxLength){
-            $newstr = mb_strcut($str, 0, $maxLength - $printedLength);
-            $newstr = preg_replace('~\s+\S+$~', '', $newstr);  
-            $newContent .= $newstr;
-            $printedLength = $maxLength;
-            break;
-        }
-        $newContent .= $str;
-        $printedLength += mb_strlen($str);
-        if ($tag[0] == '&') {
-            // Handle the entity.
-            $newContent .= $tag;
-            $printedLength++;
-        } else {
-            // Handle the tag.
-            $tagName = $match[1][0];
-            if ($tag[1] == '/') {
-              // This is a closing tag.
-              $openingTag = array_pop($tags);
-              assert($openingTag == $tagName); // check that tags are properly nested.
-              $newContent .= $tag;
-            } else if ($tag[mb_strlen($tag) - 2] == '/'){
+  while ($printedLength < $maxLength && preg_match('{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}', $html, $match, PREG_OFFSET_CAPTURE, $position)) {
+    list($tag, $tagPosition) = $match[0];
+    // Print text leading up to the tag.
+    $str = mb_strcut($html, $position, $tagPosition - $position);
+    if ($printedLength + mb_strlen($str) > $maxLength) {
+      $newstr = mb_strcut($str, 0, $maxLength - $printedLength);
+      $newstr = preg_replace('~\s+\S+$~', '', $newstr);
+      $newContent .= $newstr;
+      $printedLength = $maxLength;
+      break;
+    }
+    $newContent .= $str;
+    $printedLength += mb_strlen($str);
+    if ($tag[0] == '&') {
+      // Handle the entity.
+      $newContent .= $tag;
+      $printedLength++;
+    }
+    else {
+      // Handle the tag.
+      $tagName = $match[1][0];
+      if ($tag[1] == '/') {
+        // This is a closing tag.
+        $openingTag = array_pop($tags);
+        assert($openingTag == $tagName); // check that tags are properly nested.
+        $newContent .= $tag;
+      }
+      else {
+        if ($tag[mb_strlen($tag) - 2] == '/') {
           // Self-closing tag.
-            $newContent .= $tag;
-        } else {
+          $newContent .= $tag;
+        }
+        else {
           // Opening tag.
           $newContent .= $tag;
           $tags[] = $tagName;
         }
       }
-
-      // Continue after the tag.
-      $position = $tagPosition + mb_strlen($tag);
     }
 
-    // Print any remaining text.
-    if ($printedLength < $maxLength && $position < mb_strlen($html))
-      {
-        $newstr = mb_strcut($html, $position, $maxLength - $printedLength);
-        $newstr = preg_replace('~\s+\S+$~', '', $newstr);
-        $newContent .= $newstr;
-      }
+    // Continue after the tag.
+    $position = $tagPosition + mb_strlen($tag);
+  }
 
-    // Close any open tags.
-    while (!empty($tags))
-      {
-        $newContent .= sprintf('</%s>', array_pop($tags));
-      }
+  // Print any remaining text.
+  if ($printedLength < $maxLength && $position < mb_strlen($html)) {
+    $newstr = mb_strcut($html, $position, $maxLength - $printedLength);
+    $newstr = preg_replace('~\s+\S+$~', '', $newstr);
+    $newContent .= $newstr;
+  }
 
-    return $newContent;
+  // Close any open tags.
+  while (!empty($tags)) {
+    $newContent .= sprintf('</%s>', array_pop($tags));
+  }
+
+  return $newContent;
 }

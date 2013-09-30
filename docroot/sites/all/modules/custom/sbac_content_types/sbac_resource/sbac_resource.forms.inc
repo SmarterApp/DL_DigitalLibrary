@@ -774,7 +774,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
           $node = node_load($_GET['nid']);
           if ($node) {
             workbench_moderation_moderate($node, 'needs_review');
-            $output[] = ctools_ajax_command_redirect('digital-library-resources');
+            $output[] = ctools_ajax_command_redirect('my-resources');
 
             // create notificaton for resource author
             if ($task = taskit_get_object('resource_submitted')) {
@@ -1808,7 +1808,7 @@ function sbac_resource_delete_resource_form() {
 
   $form['hidden_url'] = array(
     '#type' => 'hidden',
-    '#value' => $_SERVER['HTTP_REFERER'],
+    '#value' => arg(0),
   );
 
   $form['submit_description'] = array(

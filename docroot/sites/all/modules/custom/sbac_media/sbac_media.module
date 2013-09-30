@@ -6,6 +6,15 @@ include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/inc
 include_once 'sbac_media.features.inc';
 
 /**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_media_update_projects_alter(&$projects) {
+  unset($projects['sbac_media']);
+}
+
+/**
  * Implements hook_ctools_plugin_api().
  */
 function sbac_media_ctools_plugin_api($module = NULL, $api = NULL) {
