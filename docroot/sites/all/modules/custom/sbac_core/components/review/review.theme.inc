@@ -57,13 +57,24 @@ function theme_review_helpfulness($variables) {
 
   $entity = $variables['entity'];
 
-  $count = 20;
-  $total = 50;
+  $query = "  SELECT  SUM(IF(value = 1, 1, 0)) AS `yes`,
+                      SUM(IF(value = 1, 0, 1)) AS `no`
+              FROM    votingapi_vote
+              WHERE   entity_type = 'review'
+              AND     entity_id = :id
+           ";
 
-  $output .= t('!count of !total people (!percent%) found this review useful', array(
-    '!count' => $count,
-    '!total' => $total,
-    '!percent' => ($count / $total * 100),
+  $vals = db_query($query, array(
+    ':id' => $entity->id,
+  ))->fetchObject();
+
+  $count = $vals->yes;
+  $total = ($vals->yes + $vals->no);
+
+  $output .= t('!count of !total people (!percent%) found this review helpful', array(
+    '!count' => '<span class="count">' . $count . '</span>',
+    '!total' => '<span class="total">' . $total . '</span>',
+    '!percent' => '<span class="percent">' . ($count / $total * 100) . '</span>',
   ));
 
   return $output;
