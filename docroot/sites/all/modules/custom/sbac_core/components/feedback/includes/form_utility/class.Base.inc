@@ -173,6 +173,7 @@ class Base {
       $set_count++;
 
       if (get_class($this) == 'sbac_core\components\feedback\form_utility\Qc') {
+        dsmm($item);
         watchdog('sbac', 'set ' . $set_count . ' : ' . $key);
       }
       else {
