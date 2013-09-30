@@ -831,8 +831,14 @@ function sbac_media_check_duplicates($media_items) {
   global $user;
   foreach ($media_items as $media_item) {
     if ($media_item->fid) {
-      $query = 'SELECT e.* from {eck_media} AS e JOIN {node} AS n ON e.nid = n.nid WHERE e.file_hash = :file_hash AND n.nid <> :nid and n.uid = :uid';
-      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid));
+      $query  = 'SELECT e.* from eck_media AS e ';
+      $query .= 'JOIN node AS n ON e.nid = n.nid ';
+      $query .= 'JOIN workbench_moderation_node_history AS w ON n.nid = w.nid AND n.vid = w.vid ';
+      $query .= 'WHERE e.file_hash = :file_hash AND ';
+      $query .= 'n.nid <> :nid AND ';
+      $query .= 'n.uid = :uid AND ';
+      $query .= 'w.state = :state';
+      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid, ':state' => 'published'));
       if ($matches->rowCount()) {
         $duplicates = TRUE;
         break;
@@ -853,8 +859,14 @@ function sbac_media_count_duplicates($media_items) {
   global $user;
   foreach ($media_items as $media_item) {
     if ($media_item->fid) {
-      $query = 'SELECT e.* from {eck_media} AS e JOIN {node} AS n ON e.nid = n.nid WHERE e.file_hash = :file_hash AND n.nid <> :nid and n.uid = :uid';
-      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid));
+      $query  = 'SELECT e.* from eck_media AS e ';
+      $query .= 'JOIN node AS n ON e.nid = n.nid ';
+      $query .= 'JOIN workbench_moderation_node_history AS w ON n.nid = w.nid AND n.vid = w.vid ';
+      $query .= 'WHERE e.file_hash = :file_hash AND ';
+      $query .= 'n.nid <> :nid AND ';
+      $query .= 'n.uid = :uid AND ';
+      $query .= 'w.state = :state';
+      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid, ':state' => 'published'));
       if ($matches->rowCount()) {
         $count += $matches->rowCount();
       }
@@ -1188,8 +1200,14 @@ function sbac_media_duplicates_form($form, &$form_state) {
   global $user;
   foreach ($form_state['sbac-media-items'] as $media_item) {
     if ($media_item->fid) {
-      $query = 'SELECT e.* from {eck_media} AS e JOIN {node} AS n ON e.nid = n.nid WHERE e.file_hash = :file_hash AND n.nid <> :nid and n.uid = :uid';
-      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid));
+      $query  = 'SELECT e.* from eck_media AS e ';
+      $query .= 'JOIN node AS n ON e.nid = n.nid ';
+      $query .= 'JOIN workbench_moderation_node_history AS w ON n.nid = w.nid AND n.vid = w.vid ';
+      $query .= 'WHERE e.file_hash = :file_hash AND ';
+      $query .= 'n.nid <> :nid AND ';
+      $query .= 'n.uid = :uid AND ';
+      $query .= 'w.state = :state';
+      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid, ':state' => 'published'));
       foreach ($matches as $match) {
         $duplicates[$match->nid][$match->id] = $match;
       }
@@ -1205,7 +1223,7 @@ function sbac_media_duplicates_form($form, &$form_state) {
         $url = $node->path['alias'];
       }
 
-      $output .= '<p>' . l($node->title, $url, array('attributes' => array('class' => array('sbac-dup')), 'absolute' => TRUE)) . '</p>';
+      $output .= '<p>' . l($node->title, $url, array('attributes' => array('class' => array('sbac-dup'), 'target' => '_blank'), 'absolute' => TRUE)) . '</p>';
       $output .= '<ul>';
       foreach ($media_items as $media) {
         $output .= '<li>' . $media->filename . '</li>';
