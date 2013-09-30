@@ -774,7 +774,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
           $node = node_load($_GET['nid']);
           if ($node) {
             workbench_moderation_moderate($node, 'needs_review');
-            $output[] = ctools_ajax_command_redirect('digital-library-resources');
+            $output[] = ctools_ajax_command_redirect('my-resources');
 
             // create notificaton for resource author
             if ($task = taskit_get_object('resource_submitted')) {
