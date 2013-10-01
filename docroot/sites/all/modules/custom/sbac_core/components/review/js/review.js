@@ -15,8 +15,6 @@ Review.reviews = {
 
 Drupal.behaviors.review = {
   attach: function (context, settings) {
-    console.log('attach behavior');
-
     // form showing functionality on 'Write Review' button
     var trigger_element = $(Review.reviews.form_trigger);
     var target_element = $(Review.reviews.form);
