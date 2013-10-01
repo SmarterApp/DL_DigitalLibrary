@@ -97,6 +97,10 @@
         textarea {
           max-width: 100%;
           width: 100%;
+
+          &.error {
+            width: 92%;
+          }
         }
       }
 
@@ -389,3 +393,7 @@
   }
 }
 
+
+.form-type-fivestar .form-item-error-holder.error + .form-item{
+  background: none;
+}
