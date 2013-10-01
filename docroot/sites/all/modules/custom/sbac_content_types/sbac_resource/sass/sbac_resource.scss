@@ -871,7 +871,12 @@ a.sbac-grid-layout {
     white-space: pre-wrap;
     overflow: visible;
     max-width: 100%;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
+    height: auto !important;
+  }
+
+  .sbac-dup {
+    font-size: 20px;
   }
 }
 

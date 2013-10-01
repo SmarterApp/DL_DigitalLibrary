@@ -911,13 +911,18 @@ a.sbac-grid-layout {
   white-space: pre-wrap;
   overflow: visible;
   max-width: 100%;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
+  height: auto !important;
+}
+/* line 878, ../sass/sbac_resource.scss */
+.page-node-edit.node-type-resource #modalContent .sbac-dup {
+  font-size: 20px;
 }
 
 /* -----------------------------------------
    Node
    ----------------------------------------- */
-/* line 882, ../sass/sbac_resource.scss */
+/* line 887, ../sass/sbac_resource.scss */
 .dialog-trigger-about,
 .dialog-trigger-gk {
   -webkit-border-radius: 6px;
@@ -943,16 +948,16 @@ a.sbac-grid-layout {
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
-/* line 897, ../sass/sbac_resource.scss */
+/* line 902, ../sass/sbac_resource.scss */
 .grid-view .grid-library {
   margin: 0;
   padding: 0;
 }
-/* line 901, ../sass/sbac_resource.scss */
+/* line 906, ../sass/sbac_resource.scss */
 .grid-view .grid-library .resource-card {
   max-width: 290px;
 }
-/* line 905, ../sass/sbac_resource.scss */
+/* line 910, ../sass/sbac_resource.scss */
 .grid-view .grid-library li {
   list-style-type: none;
   float: left;
@@ -960,31 +965,31 @@ a.sbac-grid-layout {
 }
 
 @media all and (min-width: 1271px) {
-  /* line 915, ../sass/sbac_resource.scss */
+  /* line 920, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 1270px;
   }
-  /* line 921, ../sass/sbac_resource.scss */
+  /* line 926, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(4n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 1270px) and (min-width: 961px) {
-  /* line 931, ../sass/sbac_resource.scss */
+  /* line 936, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 960px;
   }
-  /* line 937, ../sass/sbac_resource.scss */
+  /* line 942, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(3n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 960px) {
-  /* line 947, ../sass/sbac_resource.scss */
+  /* line 952, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 656px;
   }
-  /* line 953, ../sass/sbac_resource.scss */
+  /* line 958, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(2n + 1) {
     clear: left;
   }
