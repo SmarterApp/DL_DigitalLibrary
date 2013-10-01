@@ -864,6 +864,17 @@ a.sbac-grid-layout {
   }
 }
 
+.page-node-edit.node-type-resource #modalContent {
+  overflow: none !important;
+
+  #modal-title{
+    white-space: pre-wrap;
+    overflow: visible;
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
 /* -----------------------------------------
    Node
    ----------------------------------------- */
