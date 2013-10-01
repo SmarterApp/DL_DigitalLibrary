@@ -518,7 +518,7 @@ function sbac_resource_resource_review_apply_filters(&$view) {
         }
         else {
           $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
-          $view_filters['field_subject_tid']['value'] += $subjects;
+          array_merge($view_filters['field_subject_tid']['value'], $subjects);
         }
       }
 
@@ -539,7 +539,7 @@ function sbac_resource_resource_review_apply_filters(&$view) {
         }
         else {
           $view_filters['field_grades_tid']['value'][] = $grade_tid_all;
-          $view_filters['field_grades_tid']['value'] += $grades;
+          $view_filters['field_grades_tid']['value'] = array_merge($view_filters['field_grades_tid']['value'], $grades);
         }
       }
 
