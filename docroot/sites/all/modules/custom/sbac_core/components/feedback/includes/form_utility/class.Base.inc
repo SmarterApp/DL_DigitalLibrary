@@ -173,9 +173,7 @@ class Base {
       $set_count++;
 
       if (get_class($this) == 'sbac_core\components\feedback\form_utility\Qc') {
-        // drupal_set_message('<pre>'.print_r($item, 1).'</pre>');
-        
-        drupal_set_message($this->_prefix); 
+        drupal_set_message($this->_prefix . ' : ' . $key); 
         watchdog('sbac', 'set ' . $set_count . ' : ' . $key);
       } 
       else {
@@ -184,6 +182,7 @@ class Base {
 
       if ($set_count > $this->_set_total) {
         $item = array();
+        unset($this->_form[$this->_set_field][$this->_lang][$key]);
         continue;
       }
 
