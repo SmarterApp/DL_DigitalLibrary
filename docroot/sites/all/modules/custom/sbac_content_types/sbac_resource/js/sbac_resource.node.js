@@ -67,7 +67,6 @@
         selectedDiv.hide();
         selectedDiv.removeClass('selectedDiv');
         selectedDiv.removeClass('open');
-        return false;
       });
 
       // when the list is clicked.
