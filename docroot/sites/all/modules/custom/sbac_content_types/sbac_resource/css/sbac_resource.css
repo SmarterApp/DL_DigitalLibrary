@@ -722,8 +722,6 @@ a.sbac-grid-layout {
 /* line 688, ../sass/sbac_resource.scss */
 .preview {
   margin-top: 1em;
-  height: 300px;
-  background: url("../images/preview.jpg") center;
 }
 
 /* line 694, ../sass/sbac_resource.scss */
@@ -916,7 +914,7 @@ a.sbac-grid-layout {
 }
 /* line 878, ../sass/sbac_resource.scss */
 .page-node-edit.node-type-resource #modalContent .sbac-dup {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 /* -----------------------------------------
