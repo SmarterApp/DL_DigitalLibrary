@@ -172,6 +172,16 @@ class Base {
       // track data & check for empty items in set
       $set_count++;
 
+      if (get_class($this) == 'sbac_core\components\feedback\form_utility\Qc') {
+        // drupal_set_message('<pre>'.print_r($item, 1).'</pre>');
+        
+        drupal_set_message($this->_prefix);
+        watchdog('sbac', 'set ' . $set_count . ' : ' . $key);
+      }
+      else {
+        // watchdog('sbac', 'class is: ' . get_class($this));
+      }
+
       if ($set_count > $this->_set_total) {
         $item = array();
         continue;
@@ -342,6 +352,9 @@ class Base {
   public function process() {
     $set_count = 1;
     $sets = $this->getCriteriaSets();
+
+    watchdog('sbac', 'processing class: ' . get_class($this));
+    watchdog('sbac', 'sets size: ' . sizeof($sets)); 
 
     foreach ($sets as &$item) {
       // if the entity is completed, the user cannot edit any data, so disable all fields
