@@ -68,13 +68,24 @@ function theme_review_helpfulness($variables) {
     ':id' => $entity->id,
   ))->fetchObject();
 
-  $count = $vals->yes;
-  $total = ($vals->yes + $vals->no);
+  $count = 0;
+  $total = 0;
+  $percent = 0;
+
+  if ($vals && isset($vals->yes)) {
+    $count = $vals->yes;
+    $total = ($vals->yes + $vals->no);
+
+    // no division by zero
+    if ($total) {
+      $percent = ($count / $total * 100);
+    }
+  }
 
   $output .= t('!count of !total people (!percent%) found this review helpful', array(
     '!count' => '<span class="count">' . $count . '</span>',
     '!total' => '<span class="total">' . $total . '</span>',
-    '!percent' => '<span class="percent">' . ($count / $total * 100) . '</span>',
+    '!percent' => '<span class="percent">' . $percent . '</span>',
   ));
 
   return $output;

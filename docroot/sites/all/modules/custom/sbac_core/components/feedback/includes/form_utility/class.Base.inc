@@ -172,18 +172,9 @@ class Base {
       // track data & check for empty items in set
       $set_count++;
 
-      if (get_class($this) == 'sbac_core\components\feedback\form_utility\Qc') {
-        // drupal_set_message('<pre>'.print_r($item, 1).'</pre>');
-        
-        drupal_set_message($this->_prefix);
-        watchdog('sbac', 'set ' . $set_count . ' : ' . $key);
-      }
-      else {
-        // watchdog('sbac', 'class is: ' . get_class($this));
-      }
-
       if ($set_count > $this->_set_total) {
         $item = array();
+        unset($this->_form[$this->_set_field][$this->_lang][$key]);
         continue;
       }
 

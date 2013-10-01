@@ -159,6 +159,7 @@ function feedback_quality_review_admin_form($form, &$form_state) {
  * @return [type]             [description]
  */
 function feedback_quality_review_admin_form_submit($form, &$form_state) {
+  /*
   if (isset($form_state['feedback_focus_tids']) && $form_state['feedback_focus_tids']) {
     $max = 0;
     foreach ($form_state['feedback_focus_tids'] as $tid) {
@@ -180,6 +181,7 @@ function feedback_quality_review_admin_form_submit($form, &$form_state) {
     // we must clear the field cache in order for the changes to take immediate effect
       field_cache_clear();
   }
+  */
 }
 
 /**

@@ -313,7 +313,7 @@
             no_license_text.show();
 
             // disable button
-            //save_continue.attr('disabled', 'disabled');
+            save_continue.attr('disabled', 'disabled');
             save_continue.unbind('click');
 
             break;

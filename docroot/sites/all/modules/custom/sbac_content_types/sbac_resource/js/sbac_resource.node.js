@@ -9,7 +9,10 @@
    */
   Drupal.behaviors.sbac_resource_load_media = {
     attach: function (context, settings) {
-      $('#sbac-materials li a').click( function () {
+      $('#sbac-materials li a').click( function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+
         var type = $(this).attr('sbac-type');
         var resource = $('#resource-element');
         if (type == 'document') {
@@ -67,7 +70,6 @@
         selectedDiv.hide();
         selectedDiv.removeClass('selectedDiv');
         selectedDiv.removeClass('open');
-        return false;
       });
 
       // when the list is clicked.
@@ -92,7 +94,6 @@
         selectedDiv.hide();
         selectedDiv.removeClass('selectedDiv');
         selectedDiv.removeClass('open');
-        return false;
       });
     }
   };

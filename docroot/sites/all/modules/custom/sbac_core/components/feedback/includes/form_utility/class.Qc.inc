@@ -23,8 +23,6 @@ class Qc extends Base {
  
       // total number of sets
       $this->_set_total = $this->getVar('criteria_num', FEEDBACK_DEFAULT_SET_COUNT, FALSE);
-
-      watchdog('sbac', 'qc total: ' . $this->_set_total);
     }
   }
 

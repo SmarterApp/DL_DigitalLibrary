@@ -827,10 +827,10 @@ function sbac_resource_delete_resource_modal_callback($js = FALSE) {
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if (isset($_GET['nid'])) {
           node_delete($_GET['nid']);
-          $url = 'digital-library-resources';
-          if (isset($form_state['values']['hidden_url'])) {
-            $url = $form_state['values']['hidden_url'];
-          }
+          $url = 'my-resources';
+//          if (isset($form_state['values']['hidden_url'])) {
+//            $url = $form_state['values']['hidden_url'];
+//          }
           $output[] = ctools_ajax_command_redirect($url);
         }
       }
