@@ -252,12 +252,19 @@
   }
 }
 
-.entity-review.view-mode-full {
+.preview .entity-review.view-mode-full {
   background: #eee;
   border: 1px #ccc solid;
-  margin: 10px 0;
   padding: 10px;
+}
+
+.entity-review.view-mode-full{
+  //background: #eee;
+  //border: 1px #ccc solid;
+  margin: 10px 0;
+  padding: 10px 0;
   font-size: 18px;
+  border-bottom: 1px solid silver;
 
   .field-label {
     margin-bottom: 5px;
@@ -398,6 +405,6 @@
 }
 
 
-.form-type-fivestar .form-item-error-holder.error + .form-item{
-  background: none;
+.fivestar-widget {
+  padding: 5px 0;
 }
