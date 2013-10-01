@@ -305,20 +305,24 @@
 .entity-review.view-mode-full .group-footer .rate-widget .vote {
   padding: 0 10px;
 }
-/* line 319, ../sass/review.scss */
+/* line 317, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer .rate-widget .vote .action-triggers {
+  display: none;
+}
+/* line 323, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer h2 {
   font-size: 18px;
   margin-top: 10px;
 }
 
-/* line 327, ../sass/review.scss */
+/* line 331, ../sass/review.scss */
 .footer-title {
   font-weight: bold;
   margin: 10px 0;
 }
 
 /* modals */
-/* line 334, ../sass/review.scss */
+/* line 338, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -327,37 +331,37 @@
   line-height: normal;
   text-align: left;
 }
-/* line 343, ../sass/review.scss */
+/* line 347, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 347, ../sass/review.scss */
+/* line 351, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-/* line 352, ../sass/review.scss */
+/* line 356, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
-/* line 358, ../sass/review.scss */
+/* line 362, ../sass/review.scss */
 .dialog_review_end_use_form_delete #dialog .form-submit {
   float: right;
 }
 
-/* line 364, ../sass/review.scss */
+/* line 368, ../sass/review.scss */
 .rating-label {
   font-size: 12px;
   margin-top: 10px;
 }
 
 /* user tooltips */
-/* line 370, ../sass/review.scss */
+/* line 374, ../sass/review.scss */
 .account-tooltip {
   position: relative;
 }
-/* line 373, ../sass/review.scss */
+/* line 377, ../sass/review.scss */
 .account-tooltip .account-tooltip-body {
   background: #eee;
   border: 1px #ccc solid;
@@ -375,16 +379,16 @@
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 387, ../sass/review.scss */
+/* line 391, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }
-/* line 391, ../sass/review.scss */
+/* line 395, ../sass/review.scss */
 .account-tooltip .line {
   display: none;
 }
 
-/* line 397, ../sass/review.scss */
-.form-type-fivestar .form-item-error-holder.error + .form-item {
+/* line 401, ../sass/review.scss */
+.form-item-error-holder.error + .form-item {
   background: none;
 }

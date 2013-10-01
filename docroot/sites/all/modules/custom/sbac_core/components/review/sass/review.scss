@@ -313,6 +313,10 @@
 
       .vote {
         padding: 0 10px;
+
+        .action-triggers {
+          display: none;
+        } 
       }
     }
 
