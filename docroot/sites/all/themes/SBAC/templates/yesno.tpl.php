@@ -4,8 +4,18 @@
       echo '<span class="text">' . $info . '</span>';
     }
     else {
-      echo '<span class="text">' . t('Was this review helpful?') . '</span>';
-      echo '<span class="vote">' . $buttons[0] . ' / ' . $buttons[1] . '</span>';
+      echo '
+              <span class="text">' . t('Was this review helpful?') . '</span>
+              <span class="vote">
+                <a href="#" class="vote-yes">' . t('Yes') . '</a> /
+                <a href="#" class="vote-no">' . t('No') . '</a>
+                
+                <span class="action-triggers">
+                  <span class="action-yes">' . $buttons[0] . '</span>
+                  <span class="action-no">' . $buttons[1] . '</span>
+                </span>
+              </span>
+           ';
     }
   ?>
 
