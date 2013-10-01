@@ -293,7 +293,7 @@ function sbac_core_field_default_field_bases() {
   // Exported field_base: 'field_review_set'
   $field_bases['field_review_set'] = array(
     'active' => 1,
-    'cardinality' => 2,
+    'cardinality' => 30,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_review_set',
