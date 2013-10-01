@@ -175,7 +175,7 @@ class Base {
       if (get_class($this) == 'sbac_core\components\feedback\form_utility\Qc') {
         // drupal_set_message('<pre>'.print_r($item, 1).'</pre>');
         
-        drupal_set_message($this->_prefix);
+        drupal_set_message($this->_prefix); 
         watchdog('sbac', 'set ' . $set_count . ' : ' . $key);
       } 
       else {
