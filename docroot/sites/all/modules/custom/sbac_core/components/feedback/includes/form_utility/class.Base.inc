@@ -177,7 +177,7 @@ class Base {
         
         drupal_set_message($this->_prefix);
         watchdog('sbac', 'set ' . $set_count . ' : ' . $key);
-      }
+      } 
       else {
         // watchdog('sbac', 'class is: ' . get_class($this));
       }
