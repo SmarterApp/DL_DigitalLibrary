@@ -1,5 +1,7 @@
 /* mixins */
 
+@import "compass/css3/";
+
 @mixin left_col {
   float: left;
   width: 280px;
@@ -297,6 +299,10 @@
     margin-top: 10px;
   }
 
+  .fivestar-summary {
+    margin-top: 5px;
+  }
+
   .group-footer {
     .rate-widget {
       padding: 15px 0;
@@ -304,6 +310,11 @@
       .vote {
         padding: 0 10px;
       }
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-top: 10px
     }
   }
 }
@@ -345,6 +356,12 @@
   }
 }
 
+
+.rating-label {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
 /* user tooltips */
 .account-tooltip {
   position: relative;
@@ -359,10 +376,16 @@
     top: 20px;
     width: 500px;
     z-index: 50;
+    text-align: left;
+    @include border-radius(6px);
   }
 
   .row.first {
     padding: 10px;
+  }
+
+  .line {
+    display: none;
   }
 }
 
