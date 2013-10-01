@@ -1,36 +1,34 @@
 <?php
+
 /**
  * Implements hook_menu().
  */
 function sbac_air_menu() {
   $items = array();
-  
-  $items['devtest'] = array(
-    'title'           => 'DEV',
-    'page callback'   => 'sbac_air_devtest',
-    'access arguments'=> array('admin'),
-    'type'            => MENU_CALLBACK,
+
+  $items['sbac-air/test-data'] = array(
+    'title' => 'Test Air API Data',
+    'page callback' => 'sbac_air_test_data',
+    'access arguments' => array('admin'),
+    'type' => MENU_CALLBACK,
   );
- 
+
   return $items;
 }
+
 /**
  * DEV Callback
  */
-function sbac_air_devtest() {
+function sbac_air_test_data() {
   module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
   $airclient = new AIRAPIClient();
-  
-  //@TODO KS - get list of subjects 
+
+  dsm($airclient->test_data('CC-ELA-v1'));
+  dsm($airclient->test_data('CC-MA-v1'));
+
+  //@TODO KS - get list of subjects
   //dsm($airclient->getSubjectsSBAC());
-  
   //dsm($airclient->getStandards('SBAC-ELA-v1'));
-  //dsm($airclient->test_data('SBAC-ELA-v1'));
-  //dsm($airclient->test_data('SBAC-MA-v1'));
-  dsm($status = $airclient->validate('SBAC-ELA-v1'));
+  //dsm($status = $airclient->validate('SBAC-ELA-v1'));
   //dsm($airclient->validate('SBAC-MA-v1'));
-  
-  
-  
-  return '';
 }

@@ -1,39 +1,22 @@
 (function ($) {
   Drupal.behaviors.sbac_custom = {
     attach: function (context, settings) {
-      $('.disabled').click(function(e) {
-          e.preventDefault();
-          //do other stuff when a click happens
+      $('.disabled').click(function (e) {
+        e.preventDefault();
+        //do other stuff when a click happens
       });
 
-      $('.ccss-term-delete').click(function(){
+      $('.ccss-term-delete').click(function () {
         var nid = $(this).attr('nid');
-        var update_form = function(data) {
+        var update_form = function (data) {
           $('tr#term-' + nid).hide();
-
-          // var obj = jQuery.parseJSON(data);
-          
-          // if (obj.remove_term) {
-          //   var field = $('.node-resource-form .field-name-field-alignment-term input[type=text]');
-          //   var vals = field.val().split(',');
-            
-          //   for (var i = 0; i < vals.length; i++) {
-          //     // trim whitespace
-          //     vals[i] = vals[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-          //     if (vals[i] == obj.term_name) {
-          //       vals.splice(i, 1);
-          //     }
-          //   }
-
-          //   field.val(vals.join(','));
-          // }
         }
 
         $.ajax({
           type: "POST",
           url: "/ajax-alignment-crud",
           success: update_form,
-          data:'op=delete&nid=' + nid
+          data: 'op=delete&nid=' + nid
         });
         return false;
       });
@@ -41,11 +24,11 @@
       $('.sbac-custom-term-remove').click(function () {
         var parentTerm = $(this);
         var parentId = $(this).attr("tid");
-        var update_data = function(data) {
+        var update_data = function (data) {
           var obj = jQuery.parseJSON(data);
           if ((obj.publication == 'SBAC-ELA-v1' && obj.depth <= 3)
-              || (obj.publication == 'SBAC-MA-v1' && obj.depth <= 5)
-              || (obj.publication == '0')){
+            || (obj.publication == 'SBAC-MA-v1' && obj.depth <= 5)
+            || (obj.publication == '0')) {
             $('.alignment-form').hide();
             $('.alignment-buttons').show();
           }
@@ -57,9 +40,9 @@
 
           //reattached the behaviors
           Drupal.attachBehaviors('.sbac-custom-term-remove');
-          $('.disabled').click(function(e) {
-              e.preventDefault();
-              //do other stuff when a click happens
+          $('.disabled').click(function (e) {
+            e.preventDefault();
+            //do other stuff when a click happens
           });
         }
 
@@ -67,46 +50,46 @@
           type: "POST",
           url: "/ajax-terms",
           success: update_data,
-          data:'parent=' + parentId + '&remove=true',
+          data: 'parent=' + parentId + '&remove=true',
         });
 
         return false;
       });
 
-      $('.sbac-custom-term').click( function () {
+      $('.sbac-custom-term').click(function () {
         var parentId = $(this).attr("tid");
 
-        var update_data = function(data) {
+        var update_data = function (data) {
           var obj = jQuery.parseJSON(data);
 
           if ((obj.publication == 'SBAC-ELA-v1' && obj.depth > 3)
-              || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)){
+            || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)) {
             $('.alignment-form').show();
             $('.alignment-buttons').hide();
             $('.alignment-filter').html('');
 
-            var update_form = function(data) {
+            var update_form = function (data) {
               var obj = jQuery.parseJSON(data);
               $('.alignment-form').html(obj.html);
-              $('p[id^=description-]').more({length:200, moreText: 'read more', lessText: 'read less'});
+              $('p[id^=description-]').more({length: 200, moreText: 'read more', lessText: 'read less'});
 
-              $('#ccss-cancel').click(function() {
+              $('#ccss-cancel').click(function () {
                 $('#modalBackdrop').hide();
                 $('#modalContent').hide();
               });
 
-              $('#ccss-submit').click(function() {
+              $('#ccss-submit').click(function () {
                 var countType = countStandard = 0;
                 $('#alignment-msg').html('');
                 //counts type
-                $('#edit-alignment-type option').each(function() {
-                  if($(this).is(':selected') && $(this).val() != ''){
+                $('#edit-alignment-type option').each(function () {
+                  if ($(this).is(':selected') && $(this).val() != '') {
                     countType++;
                   }
                 });
                 //count standards
-                $('input[id^=edit-term-]').each(function() {
-                  if($(this).is(':checked')){
+                $('input[id^=edit-term-]').each(function () {
+                  if ($(this).is(':checked')) {
                     countStandard++;
                   }
                 });
@@ -117,14 +100,14 @@
                   //get ref
                   var alignmentRef = $('input[id=alignment_ref]').val();
                   //counts type
-                  $('#edit-alignment-type option').each(function() {
-                    if($(this).is(':selected') && $(this).val() != ''){
+                  $('#edit-alignment-type option').each(function () {
+                    if ($(this).is(':selected') && $(this).val() != '') {
                       alignmentType = $(this).val();
                     }
                   });
                   //count standards
-                  $('input[id^=edit-term-]').each(function() {
-                    if($(this).is(':checked')){
+                  $('input[id^=edit-term-]').each(function () {
+                    if ($(this).is(':checked')) {
                       var temp = $(this).attr('id');
                       var id = temp.split('-');
                       id = id[2];
@@ -132,7 +115,7 @@
                     }
                   });
 
-                  var closeModal = function(data) {
+                  var closeModal = function (data) {
                     var obj = jQuery.parseJSON(data);
                     $('#sbac-resource-alignment-tag-view').html(obj.html);
                     $('#modalBackdrop').hide();
@@ -155,7 +138,7 @@
                     type: "POST",
                     url: "/ajax-alignment-crud",
                     success: closeModal,
-                    data:'op=create&alignment_type=' + alignmentType + '&alignment_ref=' + alignmentRef + '&alignment_standards=' + alignmentStandards,
+                    data: 'op=create&alignment_type=' + alignmentType + '&alignment_ref=' + alignmentRef + '&alignment_standards=' + alignmentStandards,
                   });
                 }
                 else {
@@ -177,7 +160,7 @@
               type: "POST",
               url: "/ajax-alignment-form",
               success: update_form,
-              data:'tid=' + parentId + '&ref_node=' + refNode
+              data: 'tid=' + parentId + '&ref_node=' + refNode
             });
           }
           else {
@@ -185,9 +168,9 @@
             $('.alignment-buttons').show();
             $('.alignment-filter').html(obj.html);
 
-            $('.disabled').click(function(e) {
-                e.preventDefault();
-                //do other stuff when a click happens
+            $('.disabled').click(function (e) {
+              e.preventDefault();
+              //do other stuff when a click happens
             });
           }
 
@@ -199,10 +182,10 @@
           type: "POST",
           url: "/ajax-terms",
           success: update_data,
-          data:'parent=' + parentId ,
+          data: 'parent=' + parentId,
         });
 
-        var update_breadcrumb = function(data) {
+        var update_breadcrumb = function (data) {
           var obj = jQuery.parseJSON(data);
           $('.alignment-breadcrumb').html(obj.html);
 
@@ -213,27 +196,25 @@
           type: "POST",
           url: "/ajax-alignment-breadcrumbs",
           success: update_breadcrumb,
-          data:'tid=' + parentId ,
+          data: 'tid=' + parentId,
         });
-
-
 
 
         return false;
       });
 
-       $('#disable-feedback').click(function() {
+      $('#disable-feedback').click(function () {
         $.ajax({
-           url: Drupal.settings.basePath + 'disable-feedback',
-           success: function (data, textStatus, jqXHR) {
+          url: Drupal.settings.basePath + 'disable-feedback',
+          success: function (data, textStatus, jqXHR) {
             // if (data == 0) {
             //   document.getElementById('feedback-click').click();
             // }
             document.getElementById('feedback-click').click();
             $('#feedback-dropdown').removeClass('open');
-           }
+          }
         });
-       });
+      });
     }
   };
 })(jQuery);

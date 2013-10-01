@@ -64,6 +64,7 @@ function sbac_alignment_batch_importer_page() {
           '10 - Tenth Grade' =>  array(),
           '11 - Eleventh Grade' =>  array(),
           '12 - Twelfth Grade' =>  array(),
+          'HS - High School' => array(),
         ),
       ),
       'Math' => array(
