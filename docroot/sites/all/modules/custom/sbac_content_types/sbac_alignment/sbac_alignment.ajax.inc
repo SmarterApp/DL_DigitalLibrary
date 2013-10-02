@@ -30,10 +30,16 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
  */
 function sbac_alignment_ajax_terms_callback() {
   $subject_array = $output_array = array();
-  $titles = array(
+  $ela_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
     'Choose Your Strand/Domain',
+    'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
+  );
+  $ma_titles = array(
+    'Choose Your Subject Area',
+    'Choose Your Grade',
+    'Choose Your Domain',
     'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
   );
 
@@ -54,7 +60,12 @@ function sbac_alignment_ajax_terms_callback() {
   $publication = $parent->field_alignment_publication['und'][0]['value'];
   $output_array['publication'] = (empty($publication)) ? 0 : $publication;
   $output_array['depth'] = $depth = sbac_alignment_term_depth($parent->tid);
-  $level_title = $titles[$depth];
+  if ($publication == 'CC-MA-v1') {
+    $level_title = $ma_titles[$depth];
+  }
+  else {
+    $level_title = $ela_titles[$depth];
+  }
 
   $output_array['tids'] = array();
   foreach ($terms as $term) {
