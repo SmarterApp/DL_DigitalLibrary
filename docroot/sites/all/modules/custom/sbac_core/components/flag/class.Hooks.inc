@@ -3,9 +3,34 @@ namespace sbac_core\components\flag;
 
 class Hooks extends \devtools\Hooks {
 
+  /**
+   * Post-initialization operations.
+   * @return [type] [description]
+   */
+  function postInit() {
+    // add custom Display Suite fields
+    $ds_args = array(
+      'path' => $this->_path,
+      'file' => 'flag.theme.inc',
+      'variables' => array(),
+    );
+
+    add_ds_field('review',  array(
+      'key' => 'flagging_form',
+      'name' => t('Flagging Form'),
+    ) + $ds_args);
+  }
+
   /*----------------------------------------------------------------------------
       DRUPAL HOOKS
   ----------------------------------------------------------------------------*/
+
+  /**
+   * Don't remove!
+   */
+  function hook_init() {
+
+  }
 
   /**
    * Extends hook_form_alter().
@@ -22,8 +47,20 @@ class Hooks extends \devtools\Hooks {
         $form['node_id']['#value'] = $node->nid;
         $form['node_id']['#access'] = FALSE;
 
-        // print_rr($form);
-        // exit();
+        $form['actions'] = array(
+          '#prefix' => '<div class="actions">',
+          '#suffix' => '</div>',
+        );
+
+        $form['actions']['cancel'] = array(
+          '#markup' => '<a href="#" class="button secondary flag-cancel">' . t('Cancel') . '</a>',
+        );
+
+        $form['actions']['submit'] = $form['submit'];
+        unset($form['submit']);
+
+        $form['actions']['submit']['#value'] = t('Flag Review');
+
       }
     }
   }

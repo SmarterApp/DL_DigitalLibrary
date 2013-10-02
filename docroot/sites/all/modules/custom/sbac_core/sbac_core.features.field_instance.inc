@@ -646,7 +646,7 @@ function sbac_core_field_default_field_instances() {
     ),
     'entity_type' => 'flag',
     'field_name' => 'field_issue_type',
-    'label' => 'Issue Type',
+    'label' => 'What issue did you find with this review?',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -922,7 +922,6 @@ function sbac_core_field_default_field_instances() {
   t('Helps Improve Student Learning');
   t('Helps My Professional Development');
   t('Is Easy to Use');
-  t('Issue Type');
   t('Meets Gate-Keeping Criterion?');
   t('Posting Options');
   t('Quality Criterion Level');
@@ -934,6 +933,7 @@ function sbac_core_field_default_field_instances() {
   t('To Reviewer 1');
   t('To Reviewer 2');
   t('To Reviewer 3');
+  t('What issue did you find with this review?');
 
   return $field_instances;
 }

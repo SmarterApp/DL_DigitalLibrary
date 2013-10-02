@@ -22,13 +22,8 @@
   <span class="flag">
     <?php
       echo t('You may also !flag.', array(
-        '!flag' => l(t('flag this review'), ''),
+        '!flag' => '<a href="#" class="flag-trigger">' . t('flag this review') .'</a>',
       ));
     ?>
   </span>
 </span>
-
-<?php
-  $form = eck__entity__add('flag', 'review_end_use');
-  echo drupal_render($form);
-?>

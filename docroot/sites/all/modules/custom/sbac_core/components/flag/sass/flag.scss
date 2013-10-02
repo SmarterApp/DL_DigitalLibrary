@@ -1,6 +1,24 @@
 .flag-review-end-use-wrap {
-  .field-name-field-issue-type {
+  form {
+    margin-bottom: 30px;
+  }
 
+  .field-name-field-issue-type {
+    .form-item {
+      label {
+        p.new-line {
+          display: block;
+          font-size: 1em;
+          padding-left: 25px;
+        }
+      }
+    }
+
+    .description {
+      border-bottom: 1px #ccc solid;
+      margin-bottom: 30px;
+      padding: 10px 0 15px 25px;
+    }
   }
 
   .field-name-field-details {
@@ -16,6 +34,16 @@
       position: absolute;
       right: 0;
       top: 0;
+    }
+  }
+
+  .actions {
+    text-align: right; 
+
+    .button.secondary {
+      display: inline-block;
+      margin-bottom: 0;
+      margin-left: 1em;
     }
   }
 }
