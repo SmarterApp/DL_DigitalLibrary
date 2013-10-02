@@ -879,7 +879,7 @@ function sbac_resource_block_view($delta = '') {
       if (strpos($previous_url, $base_url) !== FALSE) {
         $previous_url = str_replace($base_url, '', $previous_url);
       }
-      $block['content'] = "<a href='" . $previous_url . "' class='button'>Back</a>";
+      $block['content'] = '<a onclick="window.history.go(-1); return false;" href="' . $previous_url . '" class="button">Back</a>';
       break;
   }
   return $block;
