@@ -97,6 +97,10 @@
         textarea {
           max-width: 100%;
           width: 100%;
+
+          &.error {
+            width: 92%;
+          }
         }
       }
 
@@ -248,12 +252,19 @@
   }
 }
 
-.entity-review.view-mode-full {
+.preview .entity-review.view-mode-full {
   background: #eee;
   border: 1px #ccc solid;
-  margin: 10px 0;
   padding: 10px;
+}
+
+.entity-review.view-mode-full{
+  //background: #eee;
+  //border: 1px #ccc solid;
+  margin: 10px 0;
+  padding: 10px 0;
   font-size: 18px;
+  border-bottom: 1px solid silver;
 
   .field-label {
     margin-bottom: 5px;
@@ -393,3 +404,7 @@
   }
 }
 
+
+.fivestar-widget {
+  padding: 5px 0;
+}

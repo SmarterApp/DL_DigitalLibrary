@@ -354,22 +354,34 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     padding: 0;
     margin: 0;
     margin-left: 30px;
-    font-size: emCalc(20px);
+    font-size: emCalc(18px);
     font-weight: normal;
     font-family: "Franklin Gothic Medium";
     background-color: #0980a8;
-    background:url('../images/tab-left.svg') top left no-repeat, url('../images/tab-right.svg') top right no-repeat, #0980a8;
-    padding: 0 33px;
+    position: relative;
 
-    &:before{
+    &:before {
+      content: '';
       display:inline-block;
       width: 33px;
       height: 25px;
       background:url('../images/tab-left.svg') top left no-repeat;
       position: absolute;
-      top: 0;
-      left: 0;
+      top:0;
+      left: -30px;
     }
+
+    &:after {
+      content: '';
+      display:inline-block;
+      width: 33px;
+      height: 25px;
+      background:url('../images/tab-right.svg') top left no-repeat;
+      position: absolute;
+      top: 0;
+      right: -32px;
+    }
+
   }
 
   .button {
