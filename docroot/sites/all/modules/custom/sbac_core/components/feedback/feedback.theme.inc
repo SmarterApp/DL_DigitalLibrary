@@ -113,9 +113,10 @@ function theme_resource_slideshow($variables) {
 	return $output.drupal_render($form);
   }
   else return $output;
-}
 */
-return $output;
+  return $output;
+}
+
 /**
  * Prepares output for taxonomy field.
  * @param  [type] $node       [description]
