@@ -30,21 +30,11 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
  */
 function sbac_alignment_ajax_terms_callback() {
   $subject_array = $output_array = array();
-  $ela_titles = array(
+  $titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
-    'Choose Your Claim',
-    'Choose Your Target',
-    'Select Your Common Core State Standard(s)',
-  );
-  $ma_titles = array(
-    'Choose Your Subject Area',
-    'Choose Your Grade',
-    'Choose Your Claim',
-    'Choose Your Domain',
-    'Choose Your Target',
-    'Choose Your Emphasis',
-    'Select Your Common Core State Standard(s)',
+    'Choose Your Strand/Domain',
+    'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
   );
 
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
@@ -61,21 +51,19 @@ function sbac_alignment_ajax_terms_callback() {
 
   $output_array['parent'] = $parent;
   $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
-
   $publication = $parent->field_alignment_publication['und'][0]['value'];
   $output_array['publication'] = (empty($publication)) ? 0 : $publication;
-
   $output_array['depth'] = $depth = sbac_alignment_term_depth($parent->tid);
-
-  if ($publication == 'SBAC-MA-v1') {
-    $level_title = $ma_titles[$depth];
-  }
-  else {
-    $level_title = $ela_titles[$depth];
-  }
+  $level_title = $titles[$depth];
 
   $output_array['tids'] = array();
   foreach ($terms as $term) {
+    $pos = strpos($term->name, ':');
+    if ($pos !== FALSE) {
+      $new_name = substr($term->name, $pos + 1);
+      $term->name = trim($new_name);
+    }
+
     $output_array['tids'][] = $term;
     $children = taxonomy_get_children($term->tid);
     $output_array['children'][] = $children;
@@ -92,7 +80,6 @@ function sbac_alignment_ajax_terms_callback() {
   }
 
   $output_array['tids_count'] = count($output_array['tids']);
-
   $output = theme('alignment_tags', array('terms' => $terms, 'level_title' => $level_title));
   $output_array['html'] = $output;
 
@@ -236,6 +223,16 @@ function sbac_alignment_ajax_alignment_form_callback() {
 function sbac_alignment_ajax_alignment_breadcrumbs_callback() {
   $output = $terms = array();
   $parents = taxonomy_get_parents_all($_POST['tid']);
+
+  foreach ($parents AS $key => $term) {
+    $pos = strpos($term->name, ':');
+    if ($pos !== FALSE) {
+      $new_name = substr($term->name, $pos + 1);
+      $term->name = trim($new_name);
+      $parents[$key] = $term;
+    }
+  }
+
   $output['html'] = theme('alignment_breadcrumbs', array('terms' => array_reverse($parents)));
   print drupal_json_encode($output);
   exit;
