@@ -311,7 +311,8 @@
   }
 
   .fivestar-summary {
-    margin-top: 5px;
+    display: none;
+    /*margin-top: 5px;*/
   }
 
   .group-footer {
@@ -330,6 +331,18 @@
     h2 {
       font-size: 18px;
       margin-top: 10px
+    }
+
+    .field-name-review-vote {
+      float: left;
+      width: 740px;
+    }
+
+    .field-name-review-delete {
+      float: right;
+      padding-top: 5px;
+      text-align: right;
+      width: 90px;
     }
   }
 }
