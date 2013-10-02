@@ -68,7 +68,7 @@ Drupal.behaviors.review = {
 
           percent = 0;
           if (total) {
-            percent = count / total * 100;
+            percent = Math.round(count / total * 100);
           }
 
           count_el.html(count);
@@ -88,7 +88,7 @@ Drupal.behaviors.review = {
 
               update_score(help_wrapper, 1);
 
-              $('.action-triggers .action-yes a').click();
+              $('.action-triggers .action-yes a', widget_wrapper).click();
 
               return false;
             });
@@ -96,9 +96,9 @@ Drupal.behaviors.review = {
             $('.vote-no', widget_wrapper).once('vote-no').click(function(e) {
               e.preventDefault();
 
-              update_score(widget_wrapper, 0);
+              update_score(help_wrapper, 0);
 
-              $('.action-triggers .action-no a').click();
+              $('.action-triggers .action-no a', widget_wrapper).click();
 
               return false;
             });
