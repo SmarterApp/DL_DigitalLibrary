@@ -330,19 +330,17 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   &.main-top {
     background-color: #f2f2f2;
     border-top:5px solid #0980a8;
+    border-bottom: 1px solid $header-borders;
     height: auto;
+
   }
 
   &.sub-top {
     background-color: #f9f9f9; // color overlay
-    @include box-shadow(1px 2px 2px rgba(204,204,198,.5)); // drop shadow
-    @include background-image(linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%)); // layer fill content
-    background-image: -webkit-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
-    background-image: -moz-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
     height: auto;
-    background-image: -ms-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebe5', endColorstr='#e4e4dc');
+    border-bottom: 1px solid $header-borders;
   }
+
   &.last-top {
     @include box-shadow(1px 2px 2px rgba(204,204,198,.5)); // drop shadow
     height: auto;
@@ -412,11 +410,11 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     line-height: 45px;
 
     li {
-      border-left:1px solid black;
+      border-left:1px solid $header-borders;
       padding: 0px;
       margin: 0px;
       &:hover {
-        background: #515151;
+        background: #c9eaf8;
       }
 
       li {
@@ -464,7 +462,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
 .bottom-bar {
   background: #006184;
-  
+
   color: $white;
   padding: 5px;
 
@@ -539,7 +537,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       }
 
      li {
-      color: #333;
+      color: $header-text;
       padding: 0;
       margin: 0;
       border-left: none;
@@ -607,7 +605,7 @@ nav.main-nav {
         display: block;
         padding: 6px 10px 1px;
         font-size: emCalc(11px);
-        color: #494949; // text color
+        color: $header-text; // text color
 
         &.active { 
           @include text-shadow(0 -1px 0 rgba(0,0,0,.5)); // drop shadow
@@ -636,7 +634,7 @@ nav.main-nav {
   float: right;
   height: 45px;
   margin-right: 10px;
-  color: $white;
+  color: $header-text;
 
   a {
     color: inherit;
