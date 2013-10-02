@@ -26,8 +26,8 @@
         var parentId = $(this).attr("tid");
         var update_data = function (data) {
           var obj = jQuery.parseJSON(data);
-          if ((obj.publication == 'SBAC-ELA-v1' && obj.depth <= 3)
-            || (obj.publication == 'SBAC-MA-v1' && obj.depth <= 5)
+          if ((obj.publication == 'CC-ELA-v1' && obj.depth <= 2)
+            || (obj.publication == 'CC-MA-v1' && obj.depth <= 2)
             || (obj.publication == '0')) {
             $('.alignment-form').hide();
             $('.alignment-buttons').show();
@@ -62,8 +62,8 @@
         var update_data = function (data) {
           var obj = jQuery.parseJSON(data);
 
-          if ((obj.publication == 'SBAC-ELA-v1' && obj.depth > 3)
-            || (obj.publication == 'SBAC-MA-v1' && obj.depth > 5)) {
+          if ((obj.publication == 'CC-ELA-v1' && obj.depth > 2)
+            || (obj.publication == 'CC-MA-v1' && obj.depth > 2)) {
             $('.alignment-form').show();
             $('.alignment-buttons').hide();
             $('.alignment-filter').html('');
@@ -81,12 +81,12 @@
               $('#ccss-submit').click(function () {
                 var countType = countStandard = 0;
                 $('#alignment-msg').html('');
-                //counts type
-                $('#edit-alignment-type option').each(function () {
-                  if ($(this).is(':selected') && $(this).val() != '') {
-                    countType++;
-                  }
-                });
+//                //counts type
+//                $('#edit-alignment-type option').each(function () {
+//                  if ($(this).is(':selected') && $(this).val() != '') {
+//                    countType++;
+//                  }
+//                });
                 //count standards
                 $('input[id^=edit-term-]').each(function () {
                   if ($(this).is(':checked')) {
@@ -94,17 +94,18 @@
                   }
                 });
 
-                if (countStandard > 0 && countType > 0) {
-                  var alignmentStandards = alignmentType = '';
+                if (countStandard > 0) {
+                  var alignmentStandards = '';
+                  var alignmentType = $('#edit-alignment-type').val();
 
                   //get ref
                   var alignmentRef = $('input[id=alignment_ref]').val();
                   //counts type
-                  $('#edit-alignment-type option').each(function () {
-                    if ($(this).is(':selected') && $(this).val() != '') {
-                      alignmentType = $(this).val();
-                    }
-                  });
+//                  $('#edit-alignment-type option').each(function () {
+//                    if ($(this).is(':selected') && $(this).val() != '') {
+//                      alignmentType = $(this).val();
+//                    }
+//                  });
                   //count standards
                   $('input[id^=edit-term-]').each(function () {
                     if ($(this).is(':checked')) {
@@ -147,9 +148,9 @@
                   if (countStandard < 1) {
                     $('#alignment-msg .alignment-error ul').append('<li>Please select a standard.</li>');
                   }
-                  if (countType < 1) {
-                    $('#alignment-msg .alignment-error ul').append('<li>Please select alignment type.</li>');
-                  }
+//                  if (countType < 1) {
+//                    $('#alignment-msg .alignment-error ul').append('<li>Please select alignment type.</li>');
+//                  }
                 }
               });
             }
