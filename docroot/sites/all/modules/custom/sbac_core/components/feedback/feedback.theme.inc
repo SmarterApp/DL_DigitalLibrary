@@ -104,8 +104,14 @@ function theme_resource_slideshow($variables) {
                 </div>
               ';
   }
-
-  return $output;
+  global $user;
+  if (in_array('advanced end user', $user->roles) || $user->uid==1)
+  {
+	$form=drupal_get_form('sbac_anonymous_url_form');
+	$form['nid']['#value']=$node->nid;
+	return $output.drupal_render($form);
+  }
+  else return $output;
 }
 
 /**

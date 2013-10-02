@@ -1,3 +1,32 @@
+<?php global $user; 
+	if ($user->uid==179 && !$_GET['key']) header("location: /user/logout");
+	if ($_GET['key']) 
+	{
+		$exp_node_key=getNodeByKey($_GET['key']);
+		if ($exp_node_key>0)
+		{
+			if ($user->uid==0)
+			{
+				$uid=user_authenticate('guest', 'password');
+				$user = user_load($uid);
+				$arr = array ('name'=>'guest','pass'=>'password');
+				user_login_finalize($arr);	
+				$options = array('absolute' => TRUE);
+				$url = url('node/' . $exp_node_key, array('absolute' => true, 'query'=>array('key'=>$_GET['key'])));
+				header("location: " . $url);
+			}
+			elseif ($user->uid==179)
+			{
+				if ($exp_node_key!==$node->nid) header("location: /user/logout");
+			}
+		}
+		else
+		{
+			if ($user->uid==179) header("location: /user/logout"); 
+		}
+	}
+	global $user;
+?>
 <!-- Header and Nav -->
 <div class="page-wrap">
 <nav class="top-bar main-top clearfix">
@@ -6,7 +35,6 @@
     <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
   </ul>
   <h1 class="title left">Digital Library Beta</h1>
-  <?php global $user; ?>
   <?php if ($user->uid): ?>
   <ul class="inline-list right user-nav">
     <li class="user-info">
