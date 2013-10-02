@@ -55,8 +55,25 @@ Drupal.behaviors.review = {
     // review yes/no voting
       var reviews = $('.entity-review');
       if (reviews.length) {
-        var update_score = function (widget_wrapper) {
-          var count = $('.count', widget_wrapper)
+        var update_score = function (help_wrapper, change) {
+          var count_el    = $('.count', help_wrapper);
+          var total_el    = $('.total', help_wrapper);
+          var percent_el  = $('.percent', help_wrapper);
+
+          var count   = parseInt(count_el.html());
+          var total   = parseInt(total_el.html());
+
+          count += change;
+          total += 1;
+
+          percent = 0;
+          if (total) {
+            percent = count / total * 100;
+          }
+
+          count_el.html(count);
+          total_el.html(total);
+          percent_el.html(percent);
         };
 
         reviews.each(function (i, el) {
@@ -69,9 +86,9 @@ Drupal.behaviors.review = {
             $('.vote-yes', widget_wrapper).once('vote-yes').click(function(e) {
               e.preventDefault();
 
-              update_score(widget_wrapper, 0);
+              update_score(help_wrapper, 1);
 
-              // $('.action-triggers .action-yes a').click();
+              $('.action-triggers .action-yes a').click();
 
               return false;
             });
@@ -79,9 +96,9 @@ Drupal.behaviors.review = {
             $('.vote-no', widget_wrapper).once('vote-no').click(function(e) {
               e.preventDefault();
 
-              update_score(widget_wrapper, -1);
+              update_score(widget_wrapper, 0);
 
-              // $('.action-triggers .action-no a').click();
+              $('.action-triggers .action-no a').click();
 
               return false;
             });
