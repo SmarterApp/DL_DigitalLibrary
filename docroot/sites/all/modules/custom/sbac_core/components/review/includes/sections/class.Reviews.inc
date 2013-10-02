@@ -18,7 +18,6 @@ class Reviews extends Base {
       $output = '';
 
       $has_review = user_has_review($this->_node->nid, $this->_account->uid);
-      $has_review = FALSE;
 
       $button = '';
       if (!$has_review) { 
