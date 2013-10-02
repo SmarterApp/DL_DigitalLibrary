@@ -37,6 +37,11 @@ function sbac_core_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'default',
     ),
+    'flagging_form' => array(
+      'weight' => '10',
+      'label' => 'hidden',
+      'format' => 'flagging_form',
+    ),
     'review_author' => array(
       'weight' => '0',
       'label' => 'hidden',
@@ -170,6 +175,7 @@ function sbac_core_ds_layout_settings_info() {
         7 => 'field_details',
         8 => 'review_vote',
         9 => 'review_delete',
+        10 => 'flagging_form',
       ),
     ),
     'fields' => array(
@@ -183,6 +189,7 @@ function sbac_core_ds_layout_settings_info() {
       'field_details' => 'footer',
       'review_vote' => 'footer',
       'review_delete' => 'footer',
+      'flagging_form' => 'footer',
     ),
     'classes' => array(),
     'wrappers' => array(

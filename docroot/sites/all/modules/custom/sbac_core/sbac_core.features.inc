@@ -140,8 +140,13 @@ $items = array(
       'type' => 'integer',
       'behavior' => 'changed',
     ),
-    'node_id' => array(
-      'label' => 'Node id',
+    'entity_type' => array(
+      'label' => 'Entity Type',
+      'type' => 'text',
+      'behavior' => 'textfield',
+    ),
+    'entity_id' => array(
+      'label' => 'Entity Id',
       'type' => 'integer',
       'behavior' => 'textfield',
     ),
