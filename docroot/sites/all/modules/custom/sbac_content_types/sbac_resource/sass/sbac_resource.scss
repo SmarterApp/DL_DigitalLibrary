@@ -60,11 +60,13 @@ $body-font-family: Arial, Helvetica, sans-serif;
 
 a.sbac-grid-layout, a.sbac-list-layout {
   display: inline-block;
-  margin: 4px 20px 0 10px;
+  margin: 0 20px 0 10px;
   background: url("../images/list.png") no-repeat center left;
   background-size: 24px 24px;
   padding-left: 30px;
   color: #494949;
+  height: 45px;
+  line-height: 45px;
 
   &:hover {
     color: #494949;
@@ -78,14 +80,17 @@ a.sbac-grid-layout {
 .block-sbac-resource-sbac-resource-results-count {
   float:left;
   margin-right: 10px;
-  margin-left: 10px;
+  margin-left: 26px;
   font-size: emCalc(24px);
 
   h3 {
     color: #0085ad;
-    margin-top: 9px;
+    height: 45px;
+    line-height: 45px;
+    padding: 0;
+    margin:0;
     font-weight: normal;
-    font-size: 1.5em;
+    font-size: 1.2rem;
   }
 }
 
@@ -609,16 +614,17 @@ a.sbac-grid-layout {
   }
 
   #sbac-search-cat-button{
-    padding: 5px 20px;
+    padding: 0 20px;
+    height: 45px;
+    line-height: 45px;
     display: inline-block;
     color: #333;
-    border:1px solid silver;
+    border:1px solid #94d8f3;
     border-width: 0 1px;
     
-    &.active {
-      @include text-shadow(rgba(0,0,0, 0.5) 1px 1px 0);
-      background-color: #0085ad;
-      color: #f3f3f3;
+    &.active, #hover {
+      background-color: #c9eaf8;
+      color: #063e5f;
     }
   }
 }
