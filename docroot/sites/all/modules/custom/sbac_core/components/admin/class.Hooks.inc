@@ -8,6 +8,16 @@ class Hooks extends \devtools\Hooks {
   ----------------------------------------------------------------------------*/
 
   /**
+   * Extends hook_init().
+   * @return [type] [description]
+   */
+  function hook_init() {
+    if (variable_get('no_puke_design', FALSE)) {
+      drupal_add_css($this->_path . '/css/normal_colors.css');
+    }
+  }
+
+  /**
    * Extends hook_menu().
    */
   function hook_menu() {
