@@ -1,0 +1,16 @@
+/* line 6, ../sass/flag.scss */
+.flag-review-end-use-wrap .field-name-field-details {
+  position: relative;
+}
+/* line 9, ../sass/flag.scss */
+.flag-review-end-use-wrap .field-name-field-details textarea {
+  max-width: 100%;
+  width: 100%;
+}
+/* line 14, ../sass/flag.scss */
+.flag-review-end-use-wrap .field-name-field-details .counter {
+  font-size: 0.9em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

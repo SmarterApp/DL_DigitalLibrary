@@ -27,3 +27,8 @@
     ?>
   </span>
 </span>
+
+<?php
+  $form = eck__entity__add('flag', 'review_end_use');
+  echo drupal_render($form);
+?>

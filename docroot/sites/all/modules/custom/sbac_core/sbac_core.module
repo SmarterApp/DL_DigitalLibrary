@@ -209,6 +209,7 @@ function sbac_core_devtools_components() {
     'field_profanity' => array(),
     // 'field_required' => array(),
     'field_xss' => array(),
+    'flag' => array(),
     'input_format' => array(),
     // 'maxlength_above' => array(),
     'memory' => array(),

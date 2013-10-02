@@ -1,0 +1,21 @@
+.flag-review-end-use-wrap {
+  .field-name-field-issue-type {
+
+  }
+
+  .field-name-field-details {
+    position: relative;
+
+    textarea {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .counter {
+      font-size: 0.9em;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+}
