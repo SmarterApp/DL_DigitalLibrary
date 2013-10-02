@@ -430,9 +430,11 @@ a.sbac-grid-layout {
 
 .filters {
   background: #c9eaf8;
-  color: $white;
+  color: #0684ad;
   padding: 20px 0;
   border-top: 2px solid #0684ad;
+  border-bottom: 1px solid #94d8f3;
+
   position: relative;
 
   &.active{
@@ -463,14 +465,13 @@ a.sbac-grid-layout {
       color: $white;
       font-size: emCalc(16px);
       margin-bottom: 10px;
-      //font-family: $body-font-family;
       position: relative;
     }
   }
 
   li {
     @include border-radius(3px);
-    background: #8d9297 url('../images/icon-drop.png') no-repeat 97% center;
+    background: #FFF url('../images/icon-drop.png') no-repeat 97% center;
     padding: 5px 10px;
     margin:0 0 10px;
     font-size: 12px;
@@ -582,7 +583,8 @@ a.sbac-grid-layout {
     border-width: 0 0 1px;
 
     h3 {
-      color: inherit;
+      color: #063e5f;
+      font-size: 18px;
     }
 
     .current-filter {
@@ -591,8 +593,9 @@ a.sbac-grid-layout {
       float: left;
       margin:10px 10px 10px 0;
       font-size: 0.8em;
-      padding: 5px 40px 5px 10px;
-      background: #0085ad url('../images/icon-close.png') no-repeat right center;
+      padding: 10px 40px 10px 10px;
+      background: #fff url('../images/icon-close.png') no-repeat right center;
+      color: #7d8a95;
     }
   }
 
