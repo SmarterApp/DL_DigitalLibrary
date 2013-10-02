@@ -9,7 +9,6 @@ class Hooks extends \devtools\Hooks {
 
   /**
    * Extends hook_init().
-   * @return [type] [description]
    */
   function hook_init() {
     if (variable_get('no_puke_design', FALSE)) {

@@ -98,7 +98,7 @@ class Reviews extends Base {
           else {
             $class = 'mid-col';
           }
-
+          
           // the 'top 3' terms are highlighted
           if (isset($term->highlight)) {
             $class .= ' highlight';
