@@ -1,0 +1,11 @@
+name = SBAC Anonymous URL
+description = Generates and manages exipring URLs to SBAC resources
+core = 7.x
+package = ~SBAC
+php = 5.2.4
+version = 7.x-1.0
+project = sbac_anonymous_url
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = field_group
+dependencies[] = number
