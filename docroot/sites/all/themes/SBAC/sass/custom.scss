@@ -336,15 +336,14 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   }
 
   &.sub-top {
-    background-color: #f9f9f9; // color overlay
+    background-color: $white; // color overlay
     height: auto;
     border-bottom: 1px solid $header-borders;
   }
 
   &.last-top {
-    @include box-shadow(1px 2px 2px rgba(204,204,198,.5)); // drop shadow
     height: auto;
-    background-color: #f9f9f9; // color overlay
+    background-color: $white; // color overlay
   }
 
   h1.title {
@@ -587,30 +586,28 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
 nav.main-nav {
   ul {
-    font-size: 100%;
-    margin-left: 20px;
+    margin-left: 18px;
 
     li { 
       display: inline-block;
       margin: 0px;
       padding: 0px;
-      border-left: 1px #cdcdcd solid;
+      border-left: 1px $header-borders solid;
 
       &:hover {
         background: #b0e6f4;
       }
 
       a {
-        @include text-shadow(0 1px 0 rgba(255,255,255,.75)); // drop shadow
         display: block;
-        padding: 6px 10px 1px;
-        font-size: emCalc(11px);
+        padding: 0 10px 1px;
+        height: 45px;
+        line-height: 45px;
         color: $header-text; // text color
 
         &.active { 
-          @include text-shadow(0 -1px 0 rgba(0,0,0,.5)); // drop shadow
-          background-color: #0085ad; // color overlay
-          color: #f3f3f3; // text color + color overlay
+          background-color: #93d8f3; // color overlay
+          color: #063e5f; // text color + color overlay
         }
       }
     }
