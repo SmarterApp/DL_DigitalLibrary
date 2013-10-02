@@ -55,7 +55,7 @@ html, body {
 }
 
 body {
-  background-color: #b1b2b4;
+  background-color: #0684ad;
 }
 
 ul,
@@ -408,7 +408,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
   .user-nav {
     font-size: 1em;
-    color: $white;
+    color: #333;
     line-height: 45px;
 
     li {
@@ -463,11 +463,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 }
 
 .bottom-bar {
-  background: #3b3b3b;
-  @include background-image(linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), linear-gradient(top, #a9a9a9 0%, #ebebe5 100%)); // gradient overlay and layer fill content
-  background-image: -webkit-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
-  background-image: -moz-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
-  background-image: -ms-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%);
+  background: #006184;
+  
   color: $white;
   padding: 5px;
 
