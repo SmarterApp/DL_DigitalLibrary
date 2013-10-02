@@ -162,6 +162,30 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
 
     // Root term. first set after the grade
     if ($term['treeLevel'] < 2) {
+      if ($term['fkParent'] == NULL) {
+        $weight = 0;
+        switch($term['name']) {
+          case 'RF':
+            $weight = 4;
+            break;
+          case 'L':
+            $weight = 5;
+            break;
+          case 'RI':
+            $weight = 2;
+            break;
+          case 'RL':
+            $weight = 0;
+            break;
+          case 'SL':
+            $weight = 3;
+            break;
+          case 'W':
+            $weight = 1;
+            break;
+        }
+        $term['weight'] = $weight;
+      }
       $parent_tid = $grade_terms[$grade]->tid;
       $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
       $parents[$key] = $new_term->tid;
