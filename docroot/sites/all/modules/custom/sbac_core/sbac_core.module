@@ -204,11 +204,17 @@ function sbac_core_devtools_components() {
         'feedback.pages.modal_post.inc',
         'feedback.pages.modal_qc.inc',
         'feedback.forms.inc',
+        'feedback.theme.inc',
       ),
     ),
     'field_profanity' => array(),
     // 'field_required' => array(),
     'field_xss' => array(),
+    'flag' => array(
+      'files' => array(
+        'flag.theme.inc',
+      ),
+    ),
     'input_format' => array(),
     // 'maxlength_above' => array(),
     'memory' => array(),
@@ -223,6 +229,7 @@ function sbac_core_devtools_components() {
       'files' => array(
         'review.forms.inc',
         'review.pages.modal_eu.inc',
+        'review.theme.inc',
       ),
     ),
     'sections' => array(),

@@ -209,7 +209,6 @@
 <div class="bottom-bar">
   <div class="row">
     <div class="large-6 columns">
-      <a class="left "href="<?php echo url(''); ?>"><img src="<?php echo $logo; ?>" /></a>
       <p><?php if ($site_name) :?>
         &copy; <?php print t('Copyright') . ' ' . date('Y'); ?>
       <?php endif; ?></p>

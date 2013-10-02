@@ -1,5 +1,7 @@
 /* mixins */
 
+@import "compass/css3/";
+
 @mixin left_col {
   float: left;
   width: 280px;
@@ -95,6 +97,10 @@
         textarea {
           max-width: 100%;
           width: 100%;
+
+          &.error {
+            width: 92%;
+          }
         }
       }
 
@@ -246,12 +252,19 @@
   }
 }
 
-.entity-review.view-mode-full {
+.preview .entity-review.view-mode-full {
   background: #eee;
   border: 1px #ccc solid;
-  margin: 10px 0;
   padding: 10px;
+}
+
+.entity-review.view-mode-full{
+  //background: #eee;
+  //border: 1px #ccc solid;
+  margin: 10px 0;
+  padding: 10px 0;
   font-size: 18px;
+  border-bottom: 1px solid silver;
 
   .field-label {
     margin-bottom: 5px;
@@ -297,13 +310,39 @@
     margin-top: 10px;
   }
 
+  .fivestar-summary {
+    display: none;
+    /*margin-top: 5px;*/
+  }
+
   .group-footer {
     .rate-widget {
       padding: 15px 0;
 
       .vote {
         padding: 0 10px;
+
+        .action-triggers {
+          display: none;
+        } 
       }
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-top: 10px
+    }
+
+    .field-name-review-vote {
+      float: left;
+      width: 740px;
+    }
+
+    .field-name-review-delete {
+      float: right;
+      padding-top: 5px;
+      text-align: right;
+      width: 90px;
     }
   }
 }
@@ -345,6 +384,12 @@
   }
 }
 
+
+.rating-label {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
 /* user tooltips */
 .account-tooltip {
   position: relative;
@@ -359,10 +404,20 @@
     top: 20px;
     width: 500px;
     z-index: 50;
+    text-align: left;
+    @include border-radius(6px);
   }
 
   .row.first {
     padding: 10px;
   }
+
+  .line {
+    display: none;
+  }
 }
 
+
+.fivestar-widget {
+  padding: 5px 0;
+}

@@ -6,7 +6,7 @@
     <thead>
       <tr>
         <th><?php print t('Standard'); ?></th>
-        <th><?php print t('Alignment Type'); ?></th>
+<!--        <th>--><?php //print t('Alignment Type'); ?><!--</th>-->
         <th><?php print t('Operations'); ?></th>
       </tr>
     </thead>
@@ -42,9 +42,9 @@
       ?>
 
       <tr id="term-<?php print $row['nid']; ?>">
-        <td><?php print $tag_node->field_alignment_key['und'][0]['value']; ?></td>
+        <td><?php print $tag_node->field_alignment_shortname['und'][0]['value']; ?></td>
         <!--<td><?php print $row['field_education_alignment']; ?></td>-->
-        <td><?php print $row['field_alignment_type']; ?></td>
+<!--        <td>--><?php //print $row['field_alignment_type']; ?><!--</td>-->
         <td>
           <div class="read-more">
             <a href="" class=""><i class="accessibility foundicon-eyeball"></i></a>
@@ -52,13 +52,19 @@
               <div class="description-content">
               <h2><?php print $subject->name; ?></h2>
               <div class="ccss-standard">
-                 <h2><?php print $tag_node->field_alignment_key['und'][0]['value']; ?></h2>
+                <h3>CCSS</h3>
+                 <h2><?php print $tag_node->field_alignment_shortname['und'][0]['value']; ?></h2>
                  <?php print $tag_node->description; ?>
               </div>
               <div class="ccss-grade">
                 <h3>Grade</h3>
                 <?php
                   if (isset($grade)) {
+                    $pos = strpos($grade->name, ':');
+                    if ($pos !== FALSE) {
+                      $new_name = substr($grade->name, $pos + 1);
+                      $grade->name = trim($new_name);
+                    }
                     print $grade->name;
                   }
                 ?>

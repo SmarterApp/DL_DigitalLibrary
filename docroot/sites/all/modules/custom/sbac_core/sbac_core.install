@@ -179,3 +179,4 @@ function sbac_core_update_7012() {
 
   module_enable($modules);
 }
+

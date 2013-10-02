@@ -576,6 +576,93 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'flag-review_end_use-field_details'
+  $field_instances['flag-review_end_use-field_details'] = array(
+    'bundle' => 'review_end_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'flag',
+    'field_name' => 'field_details',
+    'label' => 'Details',
+    'profanity' => 1,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 600,
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => '@remaining characters',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 1,
+    ),
+    'xss' => 1,
+  );
+
+  // Exported field_instance: 'flag-review_end_use-field_issue_type'
+  $field_instances['flag-review_end_use-field_issue_type'] = array(
+    'bundle' => 'review_end_use',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Flagged reviews and users are reviewed by the Smarter Balanced Assessment Consortium to determine whether they violate the terms of service. Violations can lead to account termination.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'flag',
+    'field_name' => 'field_issue_type',
+    'label' => 'What issue did you find with this review?',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 0,
+    ),
+  );
+
   // Exported field_instance: 'review-end_use-field_appropriate_for'
   $field_instances['review-end_use-field_appropriate_for'] = array(
     'bundle' => 'end_use',
@@ -830,6 +917,8 @@ function sbac_core_field_default_field_instances() {
   t('Add some details');
   t('Appropriate For');
   t('Comments');
+  t('Details');
+  t('Flagged reviews and users are reviewed by the Smarter Balanced Assessment Consortium to determine whether they violate the terms of service. Violations can lead to account termination.');
   t('Helps Improve Student Learning');
   t('Helps My Professional Development');
   t('Is Easy to Use');
@@ -844,6 +933,7 @@ function sbac_core_field_default_field_instances() {
   t('To Reviewer 1');
   t('To Reviewer 2');
   t('To Reviewer 3');
+  t('What issue did you find with this review?');
 
   return $field_instances;
 }

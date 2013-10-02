@@ -311,8 +311,8 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
   }
 
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
-  $form['#attached']['js'][] = 'http://code.jquery.com/ui/1.10.3/jquery-ui.js';
-  $form['#attached']['css'][] = 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css';
+  $form['#attached']['js'][] = '//code.jquery.com/ui/1.10.3/jquery-ui.js';
+  $form['#attached']['css'][] = '//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css';
   $form['#attached']['css'][] = drupal_get_path('module', 'sbac_media') . '/css/sbac_media.css';
 
   $form['field_file_container']['#tree'] = TRUE;
