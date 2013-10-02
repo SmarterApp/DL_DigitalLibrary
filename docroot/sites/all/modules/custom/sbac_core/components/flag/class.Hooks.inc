@@ -33,6 +33,28 @@ class Hooks extends \devtools\Hooks {
   }
 
   /**
+   * Extends hook_menu().
+   */
+  function hook_menu() {
+    $items = array();
+
+    $base = array(
+      'file' => 'flag.pages.inc',
+      'file path' => $this->_path,
+    );
+
+    $items['flag/review/%'] = array(
+      'title' => 'Flag Review',
+      'page callback' => 'flag_review_ajax_page',
+      'access callback' => 'flag_access',
+      'access arguments' => array('create flag', 1 , 2),
+      'type' => MENU_CALLBACK,
+    ) + $base;
+
+    return $items;
+  }
+
+  /**
    * Extends hook_form_alter().
    */
   function hook_form_alter(&$form, &$form_state, $form_id) {
