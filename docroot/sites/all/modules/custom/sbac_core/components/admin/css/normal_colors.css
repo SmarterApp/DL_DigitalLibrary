@@ -1,0 +1,12 @@
+/* line 2, ../sass/normal_colors.scss */
+html body {
+  background-color: #ccc !important;
+}
+/* line 5, ../sass/normal_colors.scss */
+html body .filters {
+  background: #ddd !important;
+}
+/* line 9, ../sass/normal_colors.scss */
+html body .bottom-bar {
+  background: #333 !important;
+}
