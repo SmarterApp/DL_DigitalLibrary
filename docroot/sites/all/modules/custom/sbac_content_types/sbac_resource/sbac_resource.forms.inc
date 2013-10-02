@@ -718,6 +718,7 @@ function sbac_resource_modal_callback($js = FALSE) {
   if ($js) {
     ctools_include('ajax');
     ctools_include('modal');
+    drupal_add_js(drupal_get_path("module", "sbac_alignment") . "/js/sbac_alignment.js");
 
     drupal_add_js(array(
       'ctools-ccss-style' => array(
