@@ -6,7 +6,7 @@
     <thead>
       <tr>
         <th><?php print t('Standard'); ?></th>
-        <th><?php print t('Alignment Type'); ?></th>
+<!--        <th>--><?php //print t('Alignment Type'); ?><!--</th>-->
         <th><?php print t('Operations'); ?></th>
       </tr>
     </thead>
@@ -44,7 +44,7 @@
       <tr id="term-<?php print $row['nid']; ?>">
         <td><?php print $tag_node->field_alignment_key['und'][0]['value']; ?></td>
         <!--<td><?php print $row['field_education_alignment']; ?></td>-->
-        <td><?php print $row['field_alignment_type']; ?></td>
+<!--        <td>--><?php //print $row['field_alignment_type']; ?><!--</td>-->
         <td>
           <div class="read-more">
             <a href="" class=""><i class="accessibility foundicon-eyeball"></i></a>

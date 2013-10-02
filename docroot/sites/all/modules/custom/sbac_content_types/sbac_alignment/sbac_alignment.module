@@ -66,14 +66,14 @@ function sbac_alignment_menu() {
 
   //DEV FUNCTIONS
   $items['test-import'] = array(
-    'title' => 'DEV',
+    'title' => 'DEV - CCSS Import',
     'page callback' => 'sbac_alignment_test_import',
     'access arguments' => array('admin'),
     'type' => MENU_CALLBACK,
     'file' => 'sbac_alignment.dev.inc',
   );
   $items['ccss-import'] = array(
-    'title' => 'DEV',
+    'title' => 'CCSS Import',
     'page callback' => 'sbac_alignment_batch_importer_page',
     'access arguments' => array('admin'),
     'type' => MENU_CALLBACK,
@@ -136,14 +136,16 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
 
   //@TODO KS- change to terms
   $form['alignment_type'] = array(
-    '#type' => 'select',
+    '#type' => 'hidden',
     '#title' => 'Choose Alignment Type',
-    '#required' => TRUE,
-    '#options' => array(
-      'Assesses' => 'Assesses',
-      'Teaches' => 'Teaches',
-      'Requires' => 'Requires'
-    ),
+//    '#required' => TRUE,
+//    '#options' => array(
+//      'Assesses' => 'Assesses',
+//      'Teaches' => 'Teaches',
+//      'Requires' => 'Requires'
+//    ),
+    '#default_value' => 'Teaches',
+    '#attributes' => array('id' => 'edit-alignment-type'),
   );
 
   $form['ccss-submit'] = array(
@@ -268,7 +270,7 @@ function sbac_alignment_add_terms($vid, $terms, $parent_tid = 0) {
     $parent = (object) array(
       'name' => $term,
       'description' => (isset($data['desc'])) ? $data['desc'] : '',
-      'weight' => 0,
+      'weight' => (isset($data['weight']) ? $data['weight'] : 0),
       'vid' => $vid,
       'parent' => $parent_tid,
     );
