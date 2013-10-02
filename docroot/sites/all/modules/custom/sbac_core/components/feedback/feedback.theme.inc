@@ -104,6 +104,7 @@ function theme_resource_slideshow($variables) {
                 </div>
               ';
   }
+/* 
   global $user;
   if (in_array('advanced end user', $user->roles) || $user->uid==1)
   {
@@ -113,7 +114,8 @@ function theme_resource_slideshow($variables) {
   }
   else return $output;
 }
-
+*/
+return $output;
 /**
  * Prepares output for taxonomy field.
  * @param  [type] $node       [description]

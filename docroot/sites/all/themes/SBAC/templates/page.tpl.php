@@ -1,5 +1,5 @@
 <?php global $user; 
-	if ($user->uid==179 && !$_GET['key']) header("location: /user/logout");
+	/* if ($user->uid==179 && !$_GET['key']) header("location: /user/logout");
 	if ($_GET['key']) 
 	{
 		$exp_node_key=getNodeByKey($_GET['key']);
@@ -26,6 +26,7 @@
 		}
 	}
 	global $user;
+	*/
 ?>
 <!-- Header and Nav -->
 <div class="page-wrap">
