@@ -82,18 +82,21 @@ class Reviews extends Base {
       // build the 'appropriate for' terms output
         $appropriate_output = '';
         $i = 1;
+        $j = 0;
         foreach ($tree as $term) {
           $class = '';
           $suffix = '';
-          if ($i % 3 == 0) {
+
+          if (($i - ($j * 3)) % 2 == 0) {
+            $class = 'left-col';
+          }
+          elseif (($i - ($j * 3)) % 3 == 0) {
+            $j++;
             $class = 'right-col';
             $suffix = '<div class="clear"></div>';
           }
-          elseif ($i % 2 == 0) {
-            $class = 'mid-col';
-          }
           else {
-            $class = 'left-col';
+            $class = 'mid-col';
           }
 
           // the 'top 3' terms are highlighted

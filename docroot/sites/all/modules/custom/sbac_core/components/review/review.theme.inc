@@ -78,7 +78,7 @@ function theme_review_helpfulness($variables) {
 
     // no division by zero
     if ($total) {
-      $percent = ($count / $total * 100);
+      $percent = round(($count / $total * 100));
     }
   }
 
