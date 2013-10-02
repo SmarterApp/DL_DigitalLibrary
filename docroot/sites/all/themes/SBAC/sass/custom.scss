@@ -421,6 +421,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
           padding-left: 20px;
           padding-right: 20px;
           color: black;
+          height: auto;
+          line-height: normal;
         }
 
         border:none;
@@ -431,6 +433,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       color: inherit;
       padding-left: 20px;
       padding-right: 20px;
+      height: 50px;
+      line-height: 50px;
     }
 
 
@@ -586,13 +590,13 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
 nav.main-nav {
   ul {
-    margin-left: 18px;
+    margin-left: 26px;
 
     li { 
       display: inline-block;
       margin: 0px;
       padding: 0px;
-      border-left: 1px $header-borders solid;
+      border-right: 1px $header-borders solid;
 
       &:hover {
         background: #b0e6f4;
@@ -601,8 +605,8 @@ nav.main-nav {
       a {
         display: block;
         padding: 0 10px 1px;
-        height: 45px;
-        line-height: 45px;
+        height: 40px;
+        line-height: 40px;
         color: $header-text; // text color
 
         &.active { 
@@ -629,7 +633,7 @@ nav.main-nav {
 
 .help-dropdown {
   float: right;
-  height: 45px;
+  height: 50px;
   margin-right: 10px;
   color: $header-text;
 
