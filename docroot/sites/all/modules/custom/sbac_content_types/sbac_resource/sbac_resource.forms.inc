@@ -349,6 +349,16 @@ function sbac_resource_validate_title(&$form, &$form_state) {
       drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
       drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
     }
+
+    $dups = _sbac_resource_check_duplicated_title($form, $form_state, $title);
+    if ($dups) {
+      $error = "An identical title for the resource already exists in the Smarter Balanced Digital Library. Please enter a unique title to continue.";
+      $error .= "<p class='smaller'>Tip: Incorporate audience grade, subject or topic details to differentiate your resource title</p>";
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
+    }
   }
 }
 
@@ -375,6 +385,16 @@ function sbac_resource_validate_general(&$form, &$form_state) {
       _sbac_resource_remove_error_message($error);
       drupal_set_message('general:title:single:Please remove any inappropriate language to continue', 'sbac_resource_error');
       drupal_set_message('general:title:group:Please remove any inappropriate language to continue', 'sbac_resource_error');
+    }
+
+    $dups = _sbac_resource_check_duplicated_title($form, $form_state, $title);
+    if ($dups) {
+      $error = "An identical title for the resource already exists in the Smarter Balanced Digital Library. Please enter a unique title to continue.";
+      $error .= "<p class='smaller'>Tip: Incorporate audience grade, subject or topic details to differentiate your resource title</p>";
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
     }
   }
 
@@ -1844,4 +1864,24 @@ function _sbac_resource_remove_error_message($value) {
       unset($_SESSION['messages']['error'][$key]);
     }
   }
+}
+
+/**
+ * Checks for duplicated titles.
+ *
+ * @param $form
+ * @param $form_state
+ * @param $title
+ * @return array
+ */
+function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
+  $duplicates = array();
+
+  $sql = "SELECT nid FROM {node} WHERE title = :title";
+  $results = db_query($sql, array(':title' => $title));
+  foreach ($results AS $row) {
+    $duplicates[$row->nid] = $row;
+  }
+
+  return $duplicates;
 }
