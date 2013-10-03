@@ -351,6 +351,7 @@ function _sbac_resource_determine_extension($ext) {
     case 'ppt';
     case 'odt';
     case 'odp';
+    case 'ods';
       $media = 'document';
       break;
     case 'mp4';
@@ -366,7 +367,6 @@ function _sbac_resource_determine_extension($ext) {
       break;
     case 'mpg';
     case 'avi';
-    case 'ods';
       $media = 'none';
       break;
   }
