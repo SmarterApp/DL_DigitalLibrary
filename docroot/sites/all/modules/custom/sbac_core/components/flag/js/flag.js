@@ -7,7 +7,10 @@ Drupal.behaviors.flag = {
       forms.each(function(i, form) {
         // hide form initially
           form = $(form);
-          form.hide();
+
+          if (!$('body').hasClass('page-admin')) {
+            form.hide();
+          }
 
         // position 'details' field after the selected radio button
           var details_wrap = $('.field-name-field-details', form);

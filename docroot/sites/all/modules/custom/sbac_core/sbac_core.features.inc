@@ -140,13 +140,13 @@ $items = array(
       'type' => 'integer',
       'behavior' => 'changed',
     ),
-    'entity_type' => array(
-      'label' => 'Entity Type',
+    'target_type' => array(
+      'label' => 'Target Type',
       'type' => 'text',
       'behavior' => 'textfield',
     ),
-    'entity_id' => array(
-      'label' => 'Entity Id',
+    'target_id' => array(
+      'label' => 'Target ID',
       'type' => 'integer',
       'behavior' => 'textfield',
     ),
