@@ -155,7 +155,8 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
       variable_set('sbac_alignment_import_counter', $i);
       variable_set('sbac_alignment_import_data', $parents);
     }
-    
+
+    // For Batch API. Since it does it in batches, we may have already added this term.
     if (isset($parents[$key])) {
       continue;
     }
