@@ -40,3 +40,14 @@
   margin-bottom: 0;
   margin-left: 1em;
 }
+
+/* modals */
+/* line 53, ../sass/flag.scss */
+.dialog_flag_review_modal_form_submit #dialog .intro {
+  border-bottom: 1px solid silver;
+  padding-bottom: 1em;
+  border-bottom: 1em;
+  font-size: 0.8em;
+  line-height: normal;
+  text-align: left;
+}

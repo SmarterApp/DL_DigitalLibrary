@@ -176,3 +176,106 @@ function form_set_defaults($fields, $values, &$form) {
     }
   }
 }
+
+/**
+ * Prepares error message text for given form field.
+ * @param  [type] $field_name    [description]
+ * @param  [type] $field_message [description]
+ * @param  [type] $delta_path    [description]
+ * @return [type]                [description]
+ */
+function form_prepare_error_text($field_name, $field_message, $delta_path) {
+  list($handler, $handler_data) = devtools_func_handler(__FUNCTION__, func_get_args());
+
+  if ($handler) {
+    return $handler_data;
+  }
+  else {
+    // default "empty field" message
+    if ($field_name == $field_message) {
+      $error_text = t('Field is required.');
+    }
+    // customized message
+    else {
+      if (!is_array($delta_path)) {
+        $delta_path = array($delta_path);
+      }
+
+      $item_delta = array_pop($delta_path);
+      $args = array(
+        '!delta'          => $item_delta,
+        '!delta_friendly' => $item_delta + 1,
+        '!field_name'     => $field_name,
+      );
+
+      if ($size = sizeof($delta_path)) {
+        for ($i = $size - 1; $i >= 0; $i--) {
+          $delta_key = '!delta_minus_' . ($size - $i);
+          $args[$delta_key] = array_pop($delta_path);
+          $args[$delta_key . '_friendly'] = $args[$delta_key] + 1;
+        }
+      }
+
+      $error_text = t($field_message, $args);
+    }
+
+    return $error_text;
+  }
+}
+
+/**
+ * Recursively loops through state values, looking for specified field structure
+ * and setting custom error messages when empty values are found. Assumes field
+ * values are stored in ['values'].
+ * 
+ * @param  [type] $fields   [description]
+ * @param  [type] $values   [description]
+ * @param  [type] $lang     [description]
+ * @param  array  $key_path [description]
+ * @return [type]           [description]
+ */
+function form_check_fields($fields, $values, $lang, $key_path = array(), $delta_path = array()) {
+  list($handler, $handler_data) = devtools_func_handler(__FUNCTION__, func_get_args());
+
+  if ($handler) {
+    return $handler_data;
+  }
+  else {
+    foreach ($fields as $field_name => $data) {
+      if (isset($values[$field_name])) {
+        if (is_array($data)) {
+          foreach ($values[$field_name][$lang] as $delta => $item) {
+            $child_kp = $key_path;
+            $child_kp[] = $field_name;
+            $child_kp[] = $lang;
+            $child_kp[] = $delta;
+
+            $child_dp = $delta_path;
+            $child_dp[] = $delta;
+
+            form_check_fields($data, $item, $lang, $child_kp, $child_dp);
+          }
+        }
+        else {
+          foreach ($values[$field_name][$lang] as $delta => $item) {
+            $val = trim($item['value']);
+
+            if (is_null($val) || $val == '' || $val === FALSE) {
+              $child_kp = $key_path;
+              $child_kp[] = $field_name;
+
+              $child_dp = $delta_path;
+              $child_dp[] = $delta;
+
+              $error_key = implode('][', $child_kp);
+
+              $error_text = form_prepare_error_text($field_name, $data, $child_dp);
+
+              form_set_error($error_key, $error_text);
+            }
+          }
+        }
+      }
+    }
+  }
+}

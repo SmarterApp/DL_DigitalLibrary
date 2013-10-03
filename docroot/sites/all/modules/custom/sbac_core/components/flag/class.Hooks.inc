@@ -2,6 +2,8 @@
 namespace sbac_core\components\flag;
 
 class Hooks extends \devtools\Hooks {
+  const AJAX_CALLBACK = 'flag_review_end_use_ajax';
+  const FORM_WRAPPER = 'flag-review-end-use-wrap';
 
   /**
    * Post-initialization operations.
@@ -60,16 +62,19 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_form_alter(&$form, &$form_state, $form_id, $data) {
     if (preg_match('/eck__entity__form_(add|edit)_flag_review_end_use/', $form_id)) {
-      $form['#attached']['css'][] = $this->_path . '/css/flag.css';
-      $form['#attached']['js'][] = $this->_path . '/js/flag.js';
-
-      $form['#prefix'] = '<div class="flag-review-end-use-wrap">';
-      $form['#suffix'] = '</div>';
-
       if (isset($form_state['build_info']['args'][0])) {
+        $form['#attached']['css'][] = $this->_path . '/css/flag.css';
+        $form['#attached']['js'][] = $this->_path . '/js/flag.js';
+
         $flag = $form_state['build_info']['args'][0];
         $review = entity_load_single('review', $flag->target_id);
 
+        $form['#validate'][] = 'flag_review_end_use_validate';
+        $form['#submit'][] = 'flag_review_end_use_submit';
+
+        $form['#prefix'] = '<div class="' . $this::FORM_WRAPPER . '" id="' . $this::FORM_WRAPPER . '-' . $review->id . '">';
+        $form['#suffix'] = '</div>';
+      
         $form['target_type']['#value'] = $flag->target_type;
         $form['target_type']['#weight'] = -99;
         $form['target_type']['#access'] = FALSE;
@@ -121,6 +126,11 @@ class Hooks extends \devtools\Hooks {
 
           // submit button
             $form['actions']['submit'] = $form['submit'];
+            $form['actions']['submit']['#ajax'] = array(
+              'callback' => $this::AJAX_CALLBACK,
+              'wrapper' => $this::FORM_WRAPPER . '-' . $review->id,
+            );
+
             unset($form['submit']);
         }
       }
