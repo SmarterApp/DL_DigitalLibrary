@@ -656,7 +656,7 @@ function sbac_search_resource_review_categories() {
 function sbac_search_digital_library_categories() {
   $categories = array();
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
 
   $subject = taxonomy_vocabulary_machine_name_load('subject');
   $categories['subject']['display_name'] = 'Subjects';
