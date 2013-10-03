@@ -421,9 +421,10 @@ function sbac_checkbox($variables) {
     $temp = explode('term-', $element['#parents'][0]);
     $tid = $temp[1];
     $term = taxonomy_term_load($tid);
-    $element['term'] = $term;
-
-    return theme('alignment_checkbox', array('element' => $element));
+    if ($term) {
+      $element['term'] = $term;
+      return theme('alignment_checkbox', array('element' => $element));
+    }
   }
 
   return ' <input' . drupal_attributes($element['#attributes']) . ' />';

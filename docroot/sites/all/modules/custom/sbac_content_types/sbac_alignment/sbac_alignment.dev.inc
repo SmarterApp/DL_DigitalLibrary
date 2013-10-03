@@ -108,7 +108,7 @@ function sbac_alignment_batch_importer_page() {
     $batch = array(
       'title' => t('Exporting'),
       'operations' => array(
-        array('sbac_alignment_batch', array($edu_alignment_vocab->vid, $json, $grade_terms)),
+        array('sbac_alignment_batch', array($edu_alignment_vocab->vid, $json, $grade_terms, $api_type)),
       ),
       'finished' => 'sbac_alignment_batch_test_finished',
       'file' => drupal_get_path('module', 'sbac_alignment') . '/sbac_alignment.dev.inc',
@@ -123,7 +123,7 @@ function sbac_alignment_batch_importer_page() {
  * Batch Callback
  * BATCH API. Imports the ccss tags.
  */
-function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
+function sbac_alignment_batch($vid, $json, $grade_terms, $api_type, &$context) {
   ini_set('max_execution_time', 9999);
   ini_set('memory_limit', '1024M');
   
@@ -164,27 +164,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
     // Root term. first set after the grade
     if ($term['treeLevel'] < 2) {
       if ($term['fkParent'] == NULL) {
-        $weight = 0;
-        switch($term['name']) {
-          case 'RF':
-            $weight = 4;
-            break;
-          case 'L':
-            $weight = 5;
-            break;
-          case 'RI':
-            $weight = 2;
-            break;
-          case 'RL':
-            $weight = 0;
-            break;
-          case 'SL':
-            $weight = 3;
-            break;
-          case 'W':
-            $weight = 1;
-            break;
-        }
+        $weight = sbac_alignment_set_weight($term, $api_type);
         $term['weight'] = $weight;
       }
       $parent_tid = $grade_terms[$grade]->tid;
@@ -535,4 +515,151 @@ function sbac_alignment_delete_vocab() {
   }
 
   return '';
+}
+
+/**
+ * Sets the weight determined by awesome logic.
+ *
+ * @param $term
+ * @param $api_type
+ * @return int
+ */
+function sbac_alignment_set_weight($term, $api_type) {
+  $weight = 0;
+  if ($api_type == 'CC-ELA-v1') {
+    switch($term['name']) {
+      case 'RL':
+        $weight = 0;
+        break;
+      case 'RI':
+        $weight = 1;
+        break;
+      case 'RF':
+        $weight = 2;
+        break;
+      case 'W':
+        $weight = 3;
+        break;
+      case 'SL':
+        $weight = 4;
+        break;
+      case 'L':
+        $weight = 5;
+        break;
+      case 'RH':
+        $weight = 6;
+        break;
+      case 'RST':
+        $weight = 7;
+        break;
+      case 'WHST':
+        $weight = 8;
+        break;
+    }
+  }
+  else {
+    switch($term['name']) {
+      case 'CC':
+        $weight = 0;
+        break;
+      case 'OA':
+        $weight = 1;
+        break;
+      case 'NBT':
+        $weight = 2;
+        break;
+      case 'MD':
+        $weight = 3;
+        break;
+      case 'G':
+        $weight = 4;
+        break;
+      case 'NF':
+        $weight = 5;
+        break;
+      case 'RP':
+        $weight = 6;
+        break;
+      case 'NS':
+        $weight = 7;
+        break;
+      case 'EE':
+        $weight = 8;
+        break;
+      case 'SP':
+        $weight = 9;
+        break;
+      case 'F':
+        $weight = 10;
+        break;
+      case 'HSN-RN':
+        $weight = 11;
+        break;
+      case 'HSN-Q':
+        $weight = 12;
+        break;
+      case 'HSN-CN':
+        $weight = 13;
+        break;
+      case 'HSN-VM':
+        $weight = 14;
+        break;
+      case 'HSA-SSE':
+        $weight = 15;
+        break;
+      case 'HSA-APR':
+        $weight = 16;
+        break;
+      case 'HSA_CED':
+        $weight = 17;
+        break;
+      case 'HSA-REI':
+        $weight = 18;
+        break;
+      case 'HSF-IF':
+        $weight = 19;
+        break;
+      case 'HSF-BF':
+        $weight = 20;
+        break;
+      case 'HSF-LE':
+        $weight = 21;
+        break;
+      case 'HSF-TF':
+        $weight = 22;
+        break;
+      case 'HSG-CO':
+        $weight = 23;
+        break;
+      case 'HSG-SRT':
+        $weight = 24;
+        break;
+      case 'HSG-C':
+        $weight = 25;
+        break;
+      case 'HSG-GPE':
+        $weight = 26;
+        break;
+      case 'HSG-GMD':
+        $weight = 27;
+        break;
+      case 'HSG-MG':
+        $weight = 28;
+        break;
+      case 'HSS-ID':
+        $weight = 29;
+        break;
+      case 'HSS-IC':
+        $weight = 30;
+        break;
+      case 'HSS-CP':
+        $weight = 31;
+        break;
+      case 'HSS-MD':
+        $weight = 32;
+        break;
+    }
+  }
+
+  return $weight;
 }

@@ -351,6 +351,7 @@ function _sbac_resource_determine_extension($ext) {
     case 'ppt';
     case 'odt';
     case 'odp';
+    case 'ods';
       $media = 'document';
       break;
     case 'mp4';
@@ -366,7 +367,6 @@ function _sbac_resource_determine_extension($ext) {
       break;
     case 'mpg';
     case 'avi';
-    case 'ods';
       $media = 'none';
       break;
   }
@@ -477,6 +477,9 @@ function sbac_resource_status_messages($variables) {
       $field = $elements[1];
       $error_type = $elements[2];
       $error_message = $elements[3];
+      if (isset($elements[4])) {
+        $error_message .= ': ' . $elements[4];
+      }
       $structured_messages[$section][$error_type][$field] = $error_message;
     }
   }

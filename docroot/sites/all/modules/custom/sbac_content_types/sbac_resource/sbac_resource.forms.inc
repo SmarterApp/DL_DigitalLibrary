@@ -23,6 +23,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 
     $form['#attached']['js'] = array(
       drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
+      drupal_get_path('module', 'sbac_alignment') . '/js/sbac_alignment.js',
       drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
       libraries_get_path('jquery.more') . '/jquery.more.js',
     );
@@ -348,6 +349,16 @@ function sbac_resource_validate_title(&$form, &$form_state) {
       drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
       drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
     }
+
+    $dups = _sbac_resource_check_duplicated_title($form, $form_state, $title);
+    if ($dups) {
+      $error = "An identical title for the resource already exists in the Smarter Balanced Digital Library. Please enter a unique title to continue.";
+      $error .= "<p class='smaller'>Tip: Incorporate audience grade, subject or topic details to differentiate your resource title</p>";
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
+    }
   }
 }
 
@@ -374,6 +385,16 @@ function sbac_resource_validate_general(&$form, &$form_state) {
       _sbac_resource_remove_error_message($error);
       drupal_set_message('general:title:single:Please remove any inappropriate language to continue', 'sbac_resource_error');
       drupal_set_message('general:title:group:Please remove any inappropriate language to continue', 'sbac_resource_error');
+    }
+
+    $dups = _sbac_resource_check_duplicated_title($form, $form_state, $title);
+    if ($dups) {
+      $error = "An identical title for the resource already exists in the Smarter Balanced Digital Library. Please enter a unique title to continue.";
+      $error .= "<p class='smaller'>Tip: Incorporate audience grade, subject or topic details to differentiate your resource title</p>";
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
     }
   }
 
@@ -1158,7 +1179,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   // Materials
   $form['field_file']['#access'] = FALSE;
-  $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
   // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);
@@ -1353,7 +1373,7 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
 
   // Description
   $form['alignment_tag_description'] = array(
-    '#markup' => '<p>'.t('Identify the Common Core State Standard(s) and the alignment type(s) to which this resource is aligned. Select all that apply.').'</p>',
+    '#markup' => '<p>'.t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards or Mathematical Practices are included alongside content standards for all grades.').'</p>',
     '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
     '#suffix' => '</div>',
     '#weight' => 101,
@@ -1844,4 +1864,24 @@ function _sbac_resource_remove_error_message($value) {
       unset($_SESSION['messages']['error'][$key]);
     }
   }
+}
+
+/**
+ * Checks for duplicated titles.
+ *
+ * @param $form
+ * @param $form_state
+ * @param $title
+ * @return array
+ */
+function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
+  $duplicates = array();
+
+  $sql = "SELECT nid FROM {node} WHERE title = :title";
+  $results = db_query($sql, array(':title' => $title));
+  foreach ($results AS $row) {
+    $duplicates[$row->nid] = $row;
+  }
+
+  return $duplicates;
 }

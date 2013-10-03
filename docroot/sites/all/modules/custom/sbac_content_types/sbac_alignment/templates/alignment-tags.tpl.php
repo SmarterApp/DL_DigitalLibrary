@@ -18,9 +18,9 @@
               <?php print $term->name; ?>
             <?php endif; ?>
             <?php if(!empty($term->description)): ?>
-              <div class="tooltip-b arrow-box">
-                  <p><?php print $term->description; ?></p>
-              </div>
+<!--              <div class="tooltip-b arrow-box">-->
+<!--                  <p>--><?php //print $term->description; ?><!--</p>-->
+<!--              </div>-->
             <?php endif; ?>
           </a>
         </div>

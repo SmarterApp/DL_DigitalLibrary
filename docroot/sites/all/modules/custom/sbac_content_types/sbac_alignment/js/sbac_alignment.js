@@ -1,13 +1,33 @@
 (function ($) {
-  Drupal.behaviors.sbac_custom = {
+  Drupal.behaviors = Drupal.behaviors || {};
+
+  Drupal.behaviors.sbac_alignment_everything = {
     attach: function (context, settings) {
+      read_more_less = function (element) {
+        var term_id = $(element).attr('term');
+        var container = $(element).parent().parent();
+        var less = $(container).children('.checkbox-less-' + term_id);
+        var more = $(container).children('.checkbox-more-' + term_id)
+        if ($(less).hasClass('active')) {
+          $(less).removeClass('active');
+          $(less).hide();
+          $(more).addClass('active');
+          $(more).show();
+        }
+        else {
+          $(more).removeClass('active');
+          $(more).hide();
+          $(less).addClass('active');
+          $(less).show();
+        }
+      };
+
       // Modal Delete callback.
       $('.ccss-term-delete').click(function () {
         var nid = $(this).attr('nid');
         var update_form = function (data) {
           $('tr#term-' + nid).hide();
         }
-
         $.ajax({
           type: "POST",
           url: "/ajax-alignment-crud",
@@ -110,14 +130,11 @@
                     Drupal.attachBehaviors('.ccss-term-delete');
 
                     var field = $('.node-resource-form .field-name-field-alignment-term input[type=text]');
-
                     var vals = [];
                     if (field.val() != '') {
                       vals.push(field.val());
                     }
-
                     vals = $.merge(vals, obj.terms);
-
                     field.val(vals.join());
                   }
 
