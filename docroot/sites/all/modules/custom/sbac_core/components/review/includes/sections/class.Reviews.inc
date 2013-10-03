@@ -18,7 +18,6 @@ class Reviews extends Base {
       $output = '';
 
       $has_review = user_has_review($this->_node->nid, $this->_account->uid);
-      $has_review = FALSE;
 
       $button = '';
       if (!$has_review) { 
@@ -87,16 +86,16 @@ class Reviews extends Base {
           $class = '';
           $suffix = '';
 
-          if (($i - ($j * 3)) % 2 == 0) {
-            $class = 'left-col';
-          }
-          elseif (($i - ($j * 3)) % 3 == 0) {
+          if (($i - ($j * 3)) % 3 == 0) {
             $j++;
             $class = 'right-col';
             $suffix = '<div class="clear"></div>';
           }
-          else {
+          elseif (($i - ($j * 3)) % 2 == 0) {
             $class = 'mid-col';
+          }
+          else {
+            $class = 'left-col';
           }
           
           // the 'top 3' terms are highlighted

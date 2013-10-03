@@ -13,15 +13,14 @@
             $shortname = $term_data->field_alignment_shortname['und'][0]['value'];
           ?>
             <?php if (!empty($shortname)): ?>
-              <?php //print $shortname . ' ( ' . $term->name . ' )'; ?>
               <?php print $shortname; ?>
             <?php else: ?>
               <?php print $term->name; ?>
             <?php endif; ?>
             <?php if(!empty($term->description)): ?>
-              <div class="tooltip-b arrow-box">
-                  <p><?php print $term->description; ?></p>
-              </div>
+<!--              <div class="tooltip-b arrow-box">-->
+<!--                  <p>--><?php //print $term->description; ?><!--</p>-->
+<!--              </div>-->
             <?php endif; ?>
           </a>
         </div>

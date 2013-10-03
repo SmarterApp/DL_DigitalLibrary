@@ -39,6 +39,12 @@ function sbac_core_eck_bundle_info() {
   'name' => 'qc',
   'label' => 'Quality Criteria Review',
 ),
+  'flag_review_end_use' => array(
+  'machine_name' => 'flag_review_end_use',
+  'entity_type' => 'flag',
+  'name' => 'review_end_use',
+  'label' => 'Review End Use',
+),
   'review_end_use' => array(
   'machine_name' => 'review_end_use',
   'entity_type' => 'review',
@@ -110,6 +116,37 @@ $items = array(
     ),
     'reminder' => array(
       'label' => 'reminder',
+      'type' => 'integer',
+      'behavior' => 'textfield',
+    ),
+  ),
+),
+       'flag' => array(
+  'name' => 'flag',
+  'label' => 'Flag',
+  'properties' => array(
+    'uid' => array(
+      'label' => 'Author',
+      'type' => 'integer',
+      'behavior' => 'author',
+    ),
+    'created' => array(
+      'label' => 'Created',
+      'type' => 'integer',
+      'behavior' => 'created',
+    ),
+    'changed' => array(
+      'label' => 'Changed',
+      'type' => 'integer',
+      'behavior' => 'changed',
+    ),
+    'target_type' => array(
+      'label' => 'Target Type',
+      'type' => 'text',
+      'behavior' => 'textfield',
+    ),
+    'target_id' => array(
+      'label' => 'Target ID',
       'type' => 'integer',
       'behavior' => 'textfield',
     ),

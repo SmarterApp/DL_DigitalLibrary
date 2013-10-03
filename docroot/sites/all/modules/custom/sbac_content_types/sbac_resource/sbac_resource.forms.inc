@@ -23,6 +23,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 
     $form['#attached']['js'] = array(
       drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
+      drupal_get_path('module', 'sbac_alignment') . '/js/sbac_alignment.js',
       drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
       libraries_get_path('jquery.more') . '/jquery.more.js',
     );
@@ -718,6 +719,7 @@ function sbac_resource_modal_callback($js = FALSE) {
   if ($js) {
     ctools_include('ajax');
     ctools_include('modal');
+    drupal_add_js(drupal_get_path("module", "sbac_alignment") . "/js/sbac_alignment.js");
 
     drupal_add_js(array(
       'ctools-ccss-style' => array(
@@ -1352,7 +1354,7 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
 
   // Description
   $form['alignment_tag_description'] = array(
-    '#markup' => '<p>'.t('Identify the Common Core State Standard(s) and the alignment type(s) to which this resource is aligned. Select all that apply.').'</p>',
+    '#markup' => '<p>'.t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards or Mathematical Practices are included alongside content standards for all grades.').'</p>',
     '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
     '#suffix' => '</div>',
     '#weight' => 101,

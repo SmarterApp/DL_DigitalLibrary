@@ -36,7 +36,10 @@ function resource_access($op, $node, $account = NULL) {
       return (in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles)));
     }
     elseif (in_array($op, array('access review process', 'view reviews'))) {
-      return (in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles)));
+      $published = ($node->status && $node->workbench_moderation['current']->state == 'published');
+      $role = in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
+
+      return ($published && $role);
     }
 
     $args = array(

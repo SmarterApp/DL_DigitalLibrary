@@ -1,0 +1,86 @@
+<?php
+//$Id$
+
+/**
+ * Implementation of hook_install()
+ */
+
+function sbac_anonymous_url_install() {
+  if (db_table_exists('node_anonymous_url') == FALSE) {
+    drupal_install_schema('node_anonymous_url');
+  }
+}
+
+/**
+ * Implementation of hook_uninstall()
+ */
+
+function sbac_anonymous_url_uninstall() {
+  $delete = db_query("drop table if exists `node_anonymous_url`");
+}
+
+/**
+ * Implementation of hook_schema()
+ */
+
+function node_anonymous_url_schema() {
+  $schema['node_anonymous_url'] = array(
+    'description' => t('Stores keys to generate an expiring anonymous url'),
+    'fields' => array(
+      'id' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => TRUE,
+        'description' => t('Blind primary key'),		
+	  ),
+	  'nid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the resource'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who viewed the resource'),
+      ),
+      'create_datetime' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The unix_timestamp create date'),
+      ),
+      'expire_datetime' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The unix_timestamp expiration date'),
+      ),
+ 	  'key'=>array(
+		'type'=>'varchar',
+		'length'=>'32', 
+		'not null'=>FALSE,
+		'description'=>t('contains a key to be shared with the anonymous user'),
+	  ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'nid' => array('nid','key'),
+      'uid' => array('uid'),
+    ),
+  );
+  return $schema;
+}
+
+?>
