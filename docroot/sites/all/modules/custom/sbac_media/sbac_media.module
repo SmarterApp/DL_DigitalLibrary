@@ -321,6 +321,14 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     '#suffix'=>'</div>',
   );
 
+  // Resource Summary.
+  $form['field_file_container']['field_file_summary'] = array(
+    '#type' => 'item',
+    '#title' => t('Add Materials') . ' ' . theme('form_required_marker'),
+    '#markup' => '<p>'.t('You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.').'</p>',
+    '#weight' => -101,
+  );
+
   $form['field_file_container']['materials'] = array(
     '#markup' => '<div id="sbac-media-list"></div>',
     '#weight' => -100,
@@ -509,11 +517,20 @@ function _sbac_media_create_list($media_items) {
     $output .= '<td class="' . $type . ' ui-icon"></td>';
 
     // Filename.
-    $output .= '<td>' . $media_item->filename . '</td>';
+    $output .= '<td>' . $media_item->filename;
+    if (!$media_item->fid && $media_item->filesize) {
+      if (strpos($media_item->embed_url, 'slideshare') !== FALSE) {
+        $output .= ' (' . $media_item->filesize . ' total slides)';
+      }
+      else {
+        $output .= ' (' . gmdate("i:s", $media_item->filesize) . ')';
+      }
+    }
+    $output .= '</td>';
 
     // Filesize.
     $bytes = 'Embedded Video';
-    if ($media_item->filesize) {
+    if ($media_item->fid && $media_item->filesize) {
       $bytes = number_format($media_item->filesize / 1024, 2) . ' KB';
     }
     $output .= '<td>' . $bytes . '</td>';
@@ -1139,7 +1156,7 @@ function sbac_media_save_embedded_source($embedded_video_source, $nid) {
     $media->fid = 0;
     $media->nid = $nid;
     $media->filename = $file->filename;
-    $media->file_size = 0;
+    $media->file_size = (isset($file->duration) ? $file->duration : 0);
     $media->weight = 100;
     $media->embed_url = $embedded_video_source;
     entity_save('media', $media);

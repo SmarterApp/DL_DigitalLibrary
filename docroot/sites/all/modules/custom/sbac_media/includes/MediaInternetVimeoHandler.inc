@@ -47,6 +47,9 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
     // Try to default the file name to the video's title.
     if (empty($file->fid) && $info = $this->getOEmbed()) {
       $file->filename = truncate_utf8($info['title'], 255);
+      if (isset($info['duration']) && $info['duration']) {
+        $file->duration = $info['duration'];
+      }
     }
     return $file;
   }

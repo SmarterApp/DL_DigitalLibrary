@@ -43,6 +43,9 @@ class MediaInternetSlideShareHandler extends MediaInternetBaseHandler {
     if (empty($file->fid) && $info = $this->getOEmbed()) {
       $file->filename = truncate_utf8($info['title'], 255);
       $file->uri = file_stream_wrapper_uri_normalize('slideshare://v/' . $info['slideshow_id']);
+      if (isset($info['total_slides']) && $info['total_slides']) {
+        $file->duration = $info['total_slides'];
+      }
     }
 
     return $file;

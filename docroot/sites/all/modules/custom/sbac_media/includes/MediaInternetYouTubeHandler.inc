@@ -61,9 +61,31 @@ class MediaInternetYouTubeHandler extends MediaInternetBaseHandler {
   public function getFileObject() {
     $uri = $this->parse($this->embedCode);
     $file = file_uri_to_object($uri, TRUE);
+    $video_id = $file->filename;
 
     if (empty($file->fid) && $info = $this->getOEmbed()) {
       $file->filename = truncate_utf8($info['title'], 255);
+
+      // Retrieve the duration of the file.
+      if (isset($file->filename) && $file->filename) {
+        $path = 'http://gdata.youtube.com/feeds/api/videos/' . $video_id;
+        $query = array(
+          'v' => '2',
+          'alt' => 'jsonc'
+        );
+        $url = url($path, array('query' => $query));
+        $response = drupal_http_request($url);
+        if (!isset($response->error)) {
+          $youtube_info = drupal_json_decode($response->data);
+          if ($youtube_info['data'] && isset($youtube_info['data']['duration']) && $youtube_info['data']['duration']) {
+            $file->duration = $youtube_info['data']['duration'];
+          }
+        }
+        else {
+          throw new Exception("Error Processing Request. (Error: {$response->code}, {$response->error})");
+          return;
+        }
+      }
     }
 
     return $file;
