@@ -35,7 +35,6 @@ function sbac_alignment_theme($existing, $type, $theme, $path) {
     'render element' => 'form',
   );
 
-  // My Resources - Grid View
   $items['views_view_table__alignment__resource_admin_view'] = array(
     'template' => 'templates/alignment/resource_admin_view/views-view-table--alignment--resource-admin-view',
     'arguments' => array('variables' => NULL),

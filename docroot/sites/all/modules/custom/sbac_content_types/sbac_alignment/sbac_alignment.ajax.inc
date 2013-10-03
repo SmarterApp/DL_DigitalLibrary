@@ -237,9 +237,16 @@ function sbac_alignment_ajax_alignment_breadcrumbs_callback() {
 
   foreach ($parents AS $key => $term) {
     $pos = strpos($term->name, ':');
+    // Remove the ":" from the string.
     if ($pos !== FALSE) {
       $new_name = substr($term->name, $pos + 1);
       $term->name = trim($new_name);
+      $parents[$key] = $term;
+    }
+
+    // Trim the name if its greater then 41 characters.
+    if (strlen($term->name) > 41) {
+      $term->name = substr($term->name, 0, 41) . '...';
       $parents[$key] = $term;
     }
   }

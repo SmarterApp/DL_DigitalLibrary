@@ -95,6 +95,10 @@ function sbac_alignment_menu() {
  * Alignment form.
  */
 function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_alignment') . '/js/sbac_alignment.js',
+  );
+
   $ref_node = 0;
   if (isset($_GET['tid'])) {
     $tid = $_GET['tid'];
@@ -138,12 +142,6 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $form['alignment_type'] = array(
     '#type' => 'hidden',
     '#title' => 'Choose Alignment Type',
-//    '#required' => TRUE,
-//    '#options' => array(
-//      'Assesses' => 'Assesses',
-//      'Teaches' => 'Teaches',
-//      'Requires' => 'Requires'
-//    ),
     '#default_value' => 'Teaches',
     '#attributes' => array('id' => 'edit-alignment-type'),
   );
