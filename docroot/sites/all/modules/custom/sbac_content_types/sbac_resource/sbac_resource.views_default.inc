@@ -88,6 +88,7 @@ function sbac_resource_views_default_views() {
     'needs_review' => 'needs_review',
     'being_reviewed' => 'being_reviewed',
     'rejected' => 'rejected',
+    'approved' => 'approved',
     'published' => 'published',
   );
   $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
@@ -1303,6 +1304,7 @@ function sbac_resource_views_default_views() {
     'needs_review' => 'needs_review',
     'being_reviewed' => 'being_reviewed',
     'rejected' => 'rejected',
+    'approved' => 'approved',
     'published' => 'published',
   );
   $handler->display->display_options['filters']['state']['exposed'] = TRUE;
