@@ -20,7 +20,7 @@
           alert(window.location.protocol);
           alert(location.protocol);
           alert(google_url);
-          if (window.location.protocol == 'https') {
+          if (window.location.protocol == 'https:') {
             google_url = 'https://docs.google.com/viewer';
           }
           alert(google_url);
