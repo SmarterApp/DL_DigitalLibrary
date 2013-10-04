@@ -39,12 +39,12 @@
   Drupal.behaviors.sbac_resource_table_primary = {
     attach: function (context, settings) {
       if ($('#sbac-media-list tbody tr:first-child').length) {
-        var row_height = $('#sbac-media-list tbody tr:first-child').height() + 32 + 25;
+        var row_height = $('#sbac-media-list tbody tr:first-child').height() + 32 + 25 + 67;
         $('.secondary-items-info').css("top",row_height);
       }
 
       $('.vertical-tabs-list li:nth-child(2) a').click(function () {
-        var row_height = $('#sbac-media-list tbody tr:first-child').height() + 32 + 25;
+        var row_height = $('#sbac-media-list tbody tr:first-child').height() + 32 + 25 + 67;
         $('.secondary-items-info').css("top",row_height);
       });
 
