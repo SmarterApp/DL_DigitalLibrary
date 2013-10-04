@@ -197,12 +197,7 @@ function _sbac_resource_preview_content(&$vars) {
     }
 
     if ($type == 'document') {
-      global $base_url;
-      $google_url = 'http://docs.google.viewer.com/viewer';
-      if (strpos($base_url, 'https') !== FALSE) {
-        $google_url = 'https://docs.google.viewer.com/viewer';
-      }
-      $viewer['viewer'] = '<iframe src="' . $google_url . '?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+      $viewer['viewer'] = '<iframe src="http://docs.google.com/viewer?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
     }
     else if ($type == 'video') {
       $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 850});});';
