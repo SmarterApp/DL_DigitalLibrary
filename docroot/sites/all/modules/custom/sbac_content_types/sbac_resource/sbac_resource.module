@@ -197,9 +197,8 @@ function _sbac_resource_preview_content(&$vars) {
     }
 
     if ($type == 'document') {
-      global $base_url;
       $google_url = 'http://docs.google.com/viewer';
-      if (strpos($base_url, 'https') !== FALSE) {
+      if (isset($_SERVER['HTTPS'])) {
         $google_url = 'https://docs.google.com/viewer';
       }
       $viewer['viewer'] = '<iframe src="' . $google_url . '?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';

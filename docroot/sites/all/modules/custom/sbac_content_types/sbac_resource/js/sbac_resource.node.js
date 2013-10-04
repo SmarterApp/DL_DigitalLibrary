@@ -16,7 +16,11 @@
         var type = $(this).attr('sbac-type');
         var resource = $('#resource-element');
         if (type == 'document') {
-          var google_viewer = '<iframe src="http://docs.google.com/viewer?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+          var google_url = 'http://docs.google.com/viewer';
+          if (window.location.protocol == 'https') {
+            google_url = 'https://docs.google.com/viewer';
+          }
+          var google_viewer = '<iframe src="' + google_url + '?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
           resource.empty().append(google_viewer);
         }
         else if (type == 'video') { // includes youtube
