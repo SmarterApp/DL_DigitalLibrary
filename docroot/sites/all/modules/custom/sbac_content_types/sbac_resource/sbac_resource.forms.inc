@@ -1877,9 +1877,16 @@ function _sbac_resource_remove_error_message($value) {
 function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
   $duplicates = array();
 
-  $sql = "SELECT nid FROM {node} WHERE title = :title";
-  $results = db_query($sql, array(':title' => $title));
-  foreach ($results AS $row) {
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'));
+  $query->condition('n.title', $title);
+  $query->condition('n.type', 'resource');
+  if (isset($form_state['node']->nid)) {
+    $query->condition('n.nid', $form_state['node']->nid, '<>');
+  }
+
+  $result = $query->execute();
+  foreach ($result AS $row) {
     $duplicates[$row->nid] = $row;
   }
 
