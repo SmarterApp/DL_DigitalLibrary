@@ -19,10 +19,13 @@
           var google_url = 'http://docs.google.com/viewer';
           alert(window.location.protocol);
           alert(location.protocol);
+          alert(google_url);
           if (window.location.protocol == 'https') {
             google_url = 'https://docs.google.com/viewer';
           }
+          alert(google_url);
           var google_viewer = '<iframe src="' + google_url + '?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+          alert(google_viewer);
           resource.empty().append(google_viewer);
         }
         else if (type == 'video') { // includes youtube
