@@ -30,12 +30,6 @@ function sbac_report_individual() {
       $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
 
       // Gate-Keeping Reviews.
-
-//      so an accepted GK is status 1, completed 1, met_criteria 1
-//      not accepted is the same but met_criteria = 0
-//      anything with status = 1 and completed = 0 is an active, on-going review
-//      anything with status = 0 is an expired review
-
       $name = sbac_report_get_session_value('sne', 'name');
       $gk_ind_accepted = sbac_report_get_ind_accepted_gate_keeper($uid, $date_range);
       $gk_ind_returned = sbac_report_get_ind_returned_gate_keeper($uid, $date_range);
@@ -44,8 +38,8 @@ function sbac_report_individual() {
       $gate_keeping = sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned);
 
       // All Reviews.
-      $reviews_in_progress = '';
-      $completed_reviews = '';
+      $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
+      $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
       $average_consistency_rate = '';
       $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
     }
@@ -224,16 +218,9 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
 
   // First row.
   $rows[] = array(
-    array('data' => 0),
-    array('data' => 1),
-    array('data' => 0 . '%'),
-  );
-
-  // Second row.
-  $rows[] = array(
-    array('data' => 0),
-    array('data' => 1),
-    array('data' => 0 . '%'),
+    array('data' => count($reviews_in_progress)),
+    array('data' => count($completed_reviews)),
+    array('data' => round($average_consistency_rate, 1) . '%'),
   );
 
   return theme('table', array(
