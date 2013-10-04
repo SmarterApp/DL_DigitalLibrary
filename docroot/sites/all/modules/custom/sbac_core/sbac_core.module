@@ -212,7 +212,9 @@ function sbac_core_devtools_components() {
     'field_xss' => array(),
     'flag' => array(
       'files' => array(
+        'flag.forms.inc',
         'flag.theme.inc',
+        'flag.pages.modal_review.inc',
       ),
     ),
     'input_format' => array(),

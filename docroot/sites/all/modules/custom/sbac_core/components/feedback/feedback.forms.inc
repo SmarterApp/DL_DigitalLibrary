@@ -11,61 +11,6 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
   $values = $form_state['values'];
   $lang = $values['entity']->language;
 
-  // determines the error message for given field
-  $error_message = function($field_name, $field_message, $delta) {
-    // default "empty field" message
-    if ($field_name == $field_message) {
-      $error_text = t('Field is required.');
-    }
-    // customized message
-    else {
-      $error_text = t($field_message, array(
-        '!delta'      => $delta,
-        '!delta+1'    => $delta + 1,
-        '!field_name' => $field_name,
-      ));
-    }
-
-    return $error_text;
-  };
-
-  // checks that $fields are filled in within the given $container
-  // field_collection
-  $required_set_check = function($container, $fields) use ($values, $lang, $error_message) {
-    foreach ($values[$container][$lang] as $delta => $item) {
-      foreach ($fields as $field_name => $field_message) {
-        $value = trim(field_get_value($item, $field_name));
-        if (is_null($value) || $value == '') {
-          $error_key = implode('][', array(
-            $container,
-            $lang,
-            $delta,
-            $field_name,
-          ));
-
-          $error_text = $error_message($field_name, $field_message, $delta);
-
-          form_set_error($error_key, $error_text);
-        }
-      }
-    }
-  };
-
-  // checks required fields
-  $required_flat_check = function($fields) use ($values, $lang, $error_message) {
-    foreach ($fields as $field_name => $field_message) {
-      foreach ($values[$field_name][$lang] as $delta => $item) {
-        $val = trim($item['value']);
-
-        if (is_null($val) || $val == '' || $val === FALSE) {
-          $error_text = $error_message($field_name, $field_message, $delta);
-
-          form_set_error($field_name, $error_text);
-        }
-      }
-    }
-  };
-
   // checks for profanity messages and updates the error text
   $profanity_check = function($container) use ($values) {
     if ($errors = form_get_errors()) {
@@ -107,10 +52,14 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
       switch ($values['action']) {
         case 'validate':
-          $required_set_check($container, array(
-            'field_comments' => 'Please add a comment to Gate-Keeping Criteria !delta+1 to continue',
-            'field_meets_criterion' => 'You must make a decision in Quality Criteria !delta+1 to continue',
-          ));
+          $fields = array(
+            $container => array(
+              'field_comments' => 'Please add a comment to Gate-Keeping Criteria !delta_minus_1_friendly to continue',
+              'field_meets_criterion' => 'You must make a decision in Quality Criteria !delta_minus_1_friendly to continue',
+            ),
+          );
+
+          form_check_fields($fields, $form_state['values'], $lang);
 
           break;
       }
@@ -134,15 +83,16 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
 
       switch ($values['action']) {
         case 'validate':
-          $required_set_check($container, array(
-            'field_comments' => 'Please add a comment to Criteria !delta+1 to continue',
-            'field_level' => 'You must make a decision in Criteria !delta+1 to continue',
-          ));
-
-          $required_flat_check(array(
+          $fields = array(
+            $container => array(
+              'field_comments' => 'Please add a comment to Criteria !delta_minus_1_friendly to continue',
+              'field_level' => 'You must make a decision in Criteria !delta_minus_1_friendly to continue',
+            ),
             'field_rec_options' => 'You must select a Recommendation Option to continue',
             'field_rec_rationale' => 'You must enter Rationale for Recommendation to continue',
-          ));
+          );
+
+          form_check_fields($fields, $form_state['values'], $lang);
 
           break;
       }
@@ -156,13 +106,15 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       switch ($values['action']) {
         case 'validate':
 
-          $required_flat_check(array(
+          $fields = array(
             'field_to_contributor' => 'You must enter a comment for the Contributor to continue',
             'field_to_reviewer_1' => 'You must enter a comment for Reviewer 1 to continue',
             'field_to_reviewer_2' => 'You must enter a comment for Reviewer 2 to continue',
             'field_to_reviewer_3' => 'You must enter a comment for Reviewer 3 to continue',
             'field_post_options' => 'You must select a Post Option to continue',
-          ));
+          );
+
+          form_check_fields($fields, $form_state['values'], $lang);
 
           break;
       }

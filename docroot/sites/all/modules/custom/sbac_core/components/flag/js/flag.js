@@ -9,7 +9,7 @@ Drupal.behaviors.flag = {
           form = $(form);
 
           if (!$('body').hasClass('page-admin')) {
-            form.hide();
+            // form.hide();
           }
 
         // position 'details' field after the selected radio button

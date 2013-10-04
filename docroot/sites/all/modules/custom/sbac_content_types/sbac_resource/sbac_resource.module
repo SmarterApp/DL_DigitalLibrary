@@ -197,7 +197,11 @@ function _sbac_resource_preview_content(&$vars) {
     }
 
     if ($type == 'document') {
-      $viewer['viewer'] = '<iframe src="http://docs.google.com/viewer?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+      $google_url = 'http://docs.google.com/viewer';
+      if (isset($_SERVER['HTTPS'])) {
+        $google_url = 'https://docs.google.com/viewer';
+      }
+      $viewer['viewer'] = '<iframe src="' . $google_url . '?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
     }
     else if ($type == 'video') {
       $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 850});});';
@@ -477,6 +481,9 @@ function sbac_resource_status_messages($variables) {
       $field = $elements[1];
       $error_type = $elements[2];
       $error_message = $elements[3];
+      if (isset($elements[4])) {
+        $error_message .= ': ' . $elements[4];
+      }
       $structured_messages[$section][$error_type][$field] = $error_message;
     }
   }
