@@ -133,6 +133,14 @@ class Hooks extends \devtools\Hooks {
 
             unset($form['submit']);
         }
+
+        $settings = array(
+          'flag' => array(
+            'form_error' => -1,
+          )
+        );
+
+        drupal_add_js($settings, 'setting');
       }
     }
   }

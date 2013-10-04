@@ -42,6 +42,14 @@ function flag_review_modal_form($form, &$form_state, $review, $state, $trigger_i
           ),
           'submit' => array('submit' => array('element' => &$form['state_submit']['submit'])),
           'submit_autoclose' => TRUE,
+          'submit_js_callback' => array(
+            'behavior' => 'flag',
+            'method' => 'submit_modal_callback_flag',
+            'data' => array(
+              'review_id' => $review->id,
+              'review_wrapper' => '#flag-review-end-use-wrap-' . $review->id,
+            ),
+          ),
           'close_link' => TRUE,
           'close_link_text' => t('Cancel'),
           'close_link_class' => array(

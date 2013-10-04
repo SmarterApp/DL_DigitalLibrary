@@ -2,7 +2,7 @@
  * Command to trigger a callback.
  */
 Drupal.ajax.prototype.commands.callback = function(ajax, response, status) {
-  Drupal.behaviors[response.behavior][response.method]();
+  Drupal.behaviors[response.behavior][response.method](response.data);
 };
 
 /**

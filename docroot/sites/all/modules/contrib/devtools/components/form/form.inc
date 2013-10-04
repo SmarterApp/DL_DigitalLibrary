@@ -263,15 +263,43 @@ function form_check_fields($fields, $values, $lang, $key_path = array(), $delta_
             if (is_null($val) || $val == '' || $val === FALSE) {
               $child_kp = $key_path;
               $child_kp[] = $field_name;
+              $child_kp[] = $lang;
+
+              $error_key = implode('][', $child_kp);
+
+              // get the current set of errors, which should contain an element with the
+              // key matching our $error_key; we'll use this to identify the error text
+              // which was set, and remove it from $_SESSION further down
+              $errors = form_get_errors();
 
               $child_dp = $delta_path;
               $child_dp[] = $delta;
 
-              $error_key = implode('][', $child_kp);
-
               $error_text = form_prepare_error_text($field_name, $data, $child_dp);
 
+              // remove previous error messages on this element in form_set_error's 
+              // static cache
+              $form = &drupal_static('form_set_error', array());
+              if (isset($form[$error_key])) {
+                unset($form[$error_key]);
+              }
+
+              // assign our new error
               form_set_error($error_key, $error_text);
+
+              // remove the previous error messsage from the $_SESSION
+              if (isset($errors[$error_key])) {
+                $index = array_search($errors[$error_key], $_SESSION['messages']['error']);
+                
+                if ($index !== FALSE) {
+                  unset($_SESSION['messages']['error'][$index]);
+
+                  // now that we've removed an element from the error messages, we must
+                  // rebuild the keys in this array, otherwise Drupal might not display
+                  // the error messages (if, for example, we removed index 0)
+                  $_SESSION['messages']['error'] = array_merge($_SESSION['messages']['error']);
+                }
+              }
             }
           }
         }

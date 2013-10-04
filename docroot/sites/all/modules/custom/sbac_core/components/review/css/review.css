@@ -333,15 +333,19 @@
   text-align: right;
   width: 90px;
 }
+/* line 348, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer .field-name-flagging-form {
+  clear: both;
+}
 
-/* line 351, ../sass/review.scss */
+/* line 355, ../sass/review.scss */
 .footer-title {
   font-weight: bold;
   margin: 10px 0;
 }
 
 /* modals */
-/* line 358, ../sass/review.scss */
+/* line 362, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -350,37 +354,37 @@
   line-height: normal;
   text-align: left;
 }
-/* line 367, ../sass/review.scss */
+/* line 371, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 371, ../sass/review.scss */
+/* line 375, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   float: none;
 }
-/* line 376, ../sass/review.scss */
+/* line 380, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
-/* line 382, ../sass/review.scss */
+/* line 386, ../sass/review.scss */
 .dialog_review_end_use_form_delete #dialog .form-submit {
   float: right;
 }
 
-/* line 388, ../sass/review.scss */
+/* line 392, ../sass/review.scss */
 .rating-label {
   font-size: 12px;
   margin-top: 10px;
 }
 
 /* user tooltips */
-/* line 394, ../sass/review.scss */
+/* line 398, ../sass/review.scss */
 .account-tooltip {
   position: relative;
 }
-/* line 397, ../sass/review.scss */
+/* line 401, ../sass/review.scss */
 .account-tooltip .account-tooltip-body {
   background: #eee;
   border: 1px #ccc solid;
@@ -398,16 +402,16 @@
   -o-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 411, ../sass/review.scss */
+/* line 415, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }
-/* line 415, ../sass/review.scss */
+/* line 419, ../sass/review.scss */
 .account-tooltip .line {
   display: none;
 }
 
-/* line 421, ../sass/review.scss */
+/* line 425, ../sass/review.scss */
 .fivestar-widget {
   padding: 5px 0;
 }

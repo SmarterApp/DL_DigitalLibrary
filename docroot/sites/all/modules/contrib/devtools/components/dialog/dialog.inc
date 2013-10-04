@@ -203,7 +203,13 @@ function dialog_form_submit($form, &$form_state) {
         // check for a javascript callback when the dialog is submitted
           if (isset($settings['states'][$current_state]['submit_js_callback'])) {
             $callback = $settings['states'][$current_state]['submit_js_callback'];
-            $commands[] = ajax_command_callback($callback['behavior'], $callback['method']);
+
+            // data being passed to the callback is optional
+            if (!isset($callback['data'])) {
+              $callback['data'] = array();
+            }
+
+            $commands[] = ajax_command_callback($callback['behavior'], $callback['method'], $callback['data']);
           }
 
         // if autoclose is enabled we leave the dialog closed

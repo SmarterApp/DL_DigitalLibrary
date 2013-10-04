@@ -75,6 +75,10 @@ Drupal.behaviors.flag = {
 
       });
     }
+  },
+
+  submit_modal_callback_flag: function (data) {
+    $(data.review_wrapper + ' form .actions .form-submit').mousedown();
   }
 };
 
