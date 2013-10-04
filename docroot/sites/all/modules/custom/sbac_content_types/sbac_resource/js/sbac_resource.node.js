@@ -17,6 +17,8 @@
         var resource = $('#resource-element');
         if (type == 'document') {
           var google_url = 'http://docs.google.com/viewer';
+          alert(window.location.protocol);
+          alert(location.protocol);
           if (window.location.protocol == 'https') {
             google_url = 'https://docs.google.com/viewer';
           }
