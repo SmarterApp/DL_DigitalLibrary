@@ -40,9 +40,13 @@
   margin-bottom: 0;
   margin-left: 1em;
 }
+/* line 49, ../sass/flag.scss */
+.flag-review-end-use-wrap .actions .button.hide {
+  display: none;
+}
 
 /* modals */
-/* line 53, ../sass/flag.scss */
+/* line 57, ../sass/flag.scss */
 .dialog_flag_review_modal_form_submit #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;

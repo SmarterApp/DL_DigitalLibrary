@@ -1,5 +1,10 @@
 (function($) {
 
+flag = {
+  submit: false,
+  review_id: 0,
+};
+
 Drupal.behaviors.flag = {
   attach: function (context, settings) {
     var forms = $('.flag-review-end-use-wrap form');
@@ -7,11 +12,12 @@ Drupal.behaviors.flag = {
       forms.each(function(i, form) {
         // hide form initially
           form = $(form);
-
+          var form_wrap_id = '#' + form.parent().attr('id');
+          
           if (!$('body').hasClass('page-admin')) {
-            // form.hide();
+            form.hide();
           }
-
+          
         // position 'details' field after the selected radio button
           var details_wrap = $('.field-name-field-details', form);
           var details = $('textarea', details_wrap);
@@ -73,11 +79,58 @@ Drupal.behaviors.flag = {
             });
           }
 
+        // form submission & modal
+          var submit_button = $('.actions .form-submit', form);
+          if (submit_button.length) {
+            submit_button.once('submit-modal').mousedown(function(e) {
+              // this is the default flag value, prior to form submission
+              var default_value = -1;
+              
+              // this will get called (recursively) to check the current value of the flag, as
+              // well as re-set it to the default value after the change_callback has been called
+              var value_callback = function (value) {
+                if (typeof value !== 'undefined') {
+                  Drupal.settings.flag.form_error = value;
+                }
+
+                return Drupal.settings.flag.form_error;
+              };
+
+              // this will get called when the value has changed (ie. been updated by the form), 
+              // and error_status will contain the new flag value
+              var change_callback = function (error_status) {
+                // proceed only if there are no form errors
+                if (!error_status) {
+                  if (flag.submit) {
+                    var flag_wrap = $('#entity-review-' + flag.review_id + ' .flag');
+                    flag_wrap.html(Drupal.settings.flag.update_message);
+                  }
+                  else {
+                    var select = $(form_wrap_id + ' select.submit-action option[value="submit"]');
+                    select.prop('selected', true);
+
+                    var modal_anchor = $(form_wrap_id + ' a.use-dialog');
+                    if (modal_anchor.length) {
+                      modal_anchor.trigger('click');
+                    }
+                  }
+                }
+              };
+
+              // The form itself will return JS which will set a flag to either 1 or 0, and
+              // this function will recursively check for that flag value every 200ms.
+              Drupal.behaviors.js_watch_value.watch_value(default_value, value_callback, change_callback);
+            });
+          }
       });
     }
   },
 
   submit_modal_callback_flag: function (data) {
+    // set flag so we don't call the modal again
+    flag.submit = true;
+    flag.review_id = data.review_id;
+
     $(data.review_wrapper + ' form .actions .form-submit').mousedown();
   }
 };

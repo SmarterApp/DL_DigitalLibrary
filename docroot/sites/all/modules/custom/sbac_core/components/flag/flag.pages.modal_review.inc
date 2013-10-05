@@ -36,7 +36,7 @@ function flag_review_modal_form($form, &$form_state, $review, $state, $trigger_i
 
         'submit' => array(
           'dialog' => array(
-            'title' => t('You are about to start reviewing this Resource'),
+            'title' => t('You are about to flag this review'),
             'width' => '700px',
             'position' => 'center',
           ),

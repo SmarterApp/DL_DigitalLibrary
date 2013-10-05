@@ -181,7 +181,7 @@ Drupal.behaviors.feedback = {
 
         // The form itself will return JS which will set a flag to either 1 or 0, and
         // this function will recursively check for that flag value every 200ms.
-        watch_value(default_value, value_callback, change_callback);
+        Drupal.behaviors.js_watch_value.watch_value(default_value, value_callback, change_callback);
       });
 
     // propagate click events on our form buttons to the anchors which will trigger the
@@ -191,15 +191,15 @@ Drupal.behaviors.feedback = {
           $.each(Feedback[name].buttons, function(button_key, data) {
             $(Feedback[name].form + ' ' + data.button).once('mousedown-event').click(function(e) {
               e.preventDefault();
-
+              
               // update action
               Feedback.utilities.set_action('validate', name);
-
+              
               // a modal-triggering button has been clicked, so the first thing we need to do
               // is ajax-submit the form to validate it, and we do this by clicking the Save &
               // Close button
               $(Feedback.wrapper + ' ' + Feedback[name].form + ' ' + Feedback.submit_button).trigger('mousedown', data.anchor);
-
+              
               return false;
             });
           });

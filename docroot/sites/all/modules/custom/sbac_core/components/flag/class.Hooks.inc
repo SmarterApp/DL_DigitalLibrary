@@ -70,7 +70,11 @@ class Hooks extends \devtools\Hooks {
         $review = entity_load_single('review', $flag->target_id);
 
         $form['#validate'][] = 'flag_review_end_use_validate';
-        $form['#submit'][] = 'flag_review_end_use_submit';
+        $form['#submit']= array(
+          // we overwrite rather than append, as we'll call the eck submit
+          // handler in our own
+          'flag_review_end_use_submit',
+        );
 
         $form['#prefix'] = '<div class="' . $this::FORM_WRAPPER . '" id="' . $this::FORM_WRAPPER . '-' . $review->id . '">';
         $form['#suffix'] = '</div>';
@@ -82,6 +86,21 @@ class Hooks extends \devtools\Hooks {
         $form['target_id']['#value'] = $flag->target_id;
         $form['target_id']['#weight'] = -99;
         $form['target_id']['#access'] = FALSE;
+
+        $form['action'] = array(
+          '#type' => 'select',
+          '#options' => array(
+            'validate' => 'validate',
+            'submit' => 'submit',
+          ),
+          '#default_value' => 'validate',
+          '#attributes' => array(
+            'class' => array(
+              'submit-action',
+              'hide',
+            ),
+          ),
+        );
 
         $form['actions'] = array(
           '#prefix' => '<div class="actions">',
@@ -115,6 +134,7 @@ class Hooks extends \devtools\Hooks {
                   'use-dialog',
                   'button',
                   'radius',
+                  'hide',
                 ),
                 'id' => $trigger_id,
               ),
@@ -126,6 +146,7 @@ class Hooks extends \devtools\Hooks {
 
           // submit button
             $form['actions']['submit'] = $form['submit'];
+            $form['actions']['submit']['#value'] = t('Flag Review');
             $form['actions']['submit']['#ajax'] = array(
               'callback' => $this::AJAX_CALLBACK,
               'wrapper' => $this::FORM_WRAPPER . '-' . $review->id,
@@ -142,6 +163,16 @@ class Hooks extends \devtools\Hooks {
 
         drupal_add_js($settings, 'setting');
       }
+    }
+  }
+
+  /**
+   * Extends hook_entity_view().
+   */
+  function hook_entity_view_alter(&$build, $type) {
+    if ($type == 'review') {
+      $build['#prefix'] = '<div class="entity-review-wrap" id="entity-review-' . $build['#entity']->id . '">';
+      $build['#suffix'] = '</div>';
     }
   }
 
