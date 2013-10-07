@@ -12,7 +12,7 @@ function theme_flagging_form($variables) {
   $entity = &$variables['entity'];
 
   // don't show this on Preview
-  if (isset($entity->id)) {
+  if (isset($entity->id)) { 
     $entity_type_name = 'flag';
     $bundle_name = 'review_end_use';
 
