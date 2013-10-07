@@ -6792,45 +6792,51 @@ button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-sear
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px;
-  background: #e2e2e2;
-  border: 1px #646464 solid;
-  color: #646464;
+  text-shadow: 0px 1px 0px #0f546b;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  -moz-box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  background: #0084b0;
+  border: 1px solid #0d6785;
+  color: #FFF;
   padding: 8px 18px;
   font-family: Arial, Helvetica, sans-serif;
 }
-/* line 175, ../sass/custom.scss */
+/* line 177, ../sass/custom.scss */
 button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus, #edit-cancel:hover, #edit-cancel:focus, #edit-tags-cancel:hover, #edit-tags-cancel:focus, #sbac-search-close-button:hover, #sbac-search-close-button:focus, .button.devtools-dialog-close:hover, .button.devtools-dialog-close:focus, #gate-keeper-cancel:hover, #gate-keeper-cancel:focus, #review-cancel:hover, #review-cancel:focus, #edit-delete-overlay:hover, #edit-delete-overlay:focus, #edit-cancel-overlay:hover, #edit-cancel-overlay:focus, #post-cancel:hover, #post-cancel:focus, div.ctools-modal-content a.close:hover, div.ctools-modal-content a.close:focus, a.remove:hover, a.remove:focus, a.fake-cancel:hover, a.fake-cancel:focus {
-  background: #8a1538;
-  border: 1px #8a1538 solid;
-  color: white;
-  text-shadow: 0px -1px 0px black, 0px 1px 0px rgba(255, 255, 255, 0);
+  -webkit-box-shadow: inset 0px 1px 0px 0px #006184;
+  -moz-box-shadow: inset 0px 1px 0px 0px #006184;
+  box-shadow: inset 0px 1px 0px 0px #006184;
+  background: #006184;
 }
 
 /* line 187, ../sass/custom.scss */
 button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-continue, button.disabled, button[disabled], .button.disabled, .button[disabled] {
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+  text-shadow: 0px 1px 0px #45613e;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #6dc088;
+  -moz-box-shadow: inset 0px 1px 0px 0px #6dc088;
+  box-shadow: inset 0px 1px 0px 0px #6dc088;
   display: inline-block;
   font-size: 16px;
-  font-weight: bold;
-  color: #006298;
-  background: #bfd8e5;
-  border: 1px rgba(0, 98, 152, 0.5) solid;
+  font-weight: normal;
+  color: #FFF;
+  background: #2aa549;
+  border: 1px solid #268a16;
   padding: 8px 18px;
   text-align: center;
 }
-/* line 146, ../sass/custom.scss */
+/* line 147, ../sass/custom.scss */
 button:hover, .button:hover, .button.form-submit:hover, button.form-submit:hover, #edit-submit:hover, #edit-continue:hover, button.disabled:hover, button[disabled]:hover, .button.disabled:hover, .button[disabled]:hover {
-  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
   -o-transition: all 500ms ease;
   transition: all 500ms ease;
-  background: #0085ad;
+  background: #317f47;
   color: white;
 }
 /* line 153, ../sass/custom.scss */
@@ -7519,30 +7525,32 @@ a.tabledrag-handle .handle {
 
 /* line 826, ../sass/custom.scss */
 .user-pass-confirm a {
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+  text-shadow: 0px 1px 0px #45613e;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #6dc088;
+  -moz-box-shadow: inset 0px 1px 0px 0px #6dc088;
+  box-shadow: inset 0px 1px 0px 0px #6dc088;
   display: inline-block;
   font-size: 16px;
-  font-weight: bold;
-  color: #006298;
-  background: #bfd8e5;
-  border: 1px rgba(0, 98, 152, 0.5) solid;
+  font-weight: normal;
+  color: #FFF;
+  background: #2aa549;
+  border: 1px solid #268a16;
   padding: 8px 18px;
   text-align: center;
   margin-bottom: 1.5em;
 }
-/* line 146, ../sass/custom.scss */
+/* line 147, ../sass/custom.scss */
 .user-pass-confirm a:hover {
-  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
   -o-transition: all 500ms ease;
   transition: all 500ms ease;
-  background: #0085ad;
+  background: #317f47;
   color: white;
 }
 /* line 153, ../sass/custom.scss */
@@ -8614,29 +8622,31 @@ a.tabledrag-handle .handle {
 }
 /* line 1822, ../sass/custom.scss */
 #sbac-resource-delete-resource-form > div #edit-delete-overlay {
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+  text-shadow: 0px 1px 0px #45613e;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #6dc088;
+  -moz-box-shadow: inset 0px 1px 0px 0px #6dc088;
+  box-shadow: inset 0px 1px 0px 0px #6dc088;
   display: inline-block;
   font-size: 16px;
-  font-weight: bold;
-  color: #006298;
-  background: #bfd8e5;
-  border: 1px rgba(0, 98, 152, 0.5) solid;
+  font-weight: normal;
+  color: #FFF;
+  background: #2aa549;
+  border: 1px solid #268a16;
   padding: 8px 18px;
   text-align: center;
 }
-/* line 146, ../sass/custom.scss */
+/* line 147, ../sass/custom.scss */
 #sbac-resource-delete-resource-form > div #edit-delete-overlay:hover {
-  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
   -o-transition: all 500ms ease;
   transition: all 500ms ease;
-  background: #0085ad;
+  background: #317f47;
   color: white;
 }
 /* line 153, ../sass/custom.scss */

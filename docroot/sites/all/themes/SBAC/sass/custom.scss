@@ -132,21 +132,21 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   }
 
 @mixin global-button {
-    @include text-shadow(0px 1px 0px rgba(255,255,255,.5));
+    @include text-shadow(0px 1px 0px #45613e);
     @include border-radius(6px);
+    @include box-shadow(inset 0px 1px 0px 0px #6DC088); 
     display: inline-block;
     font-size: 16px;
-    font-weight: bold;
-    color: rgba(0, 98, 152, 1);
-    background: rgba(191, 216, 229, 1);
-    border: 1px rgba(0, 98, 152, .5) solid;
+    font-weight: normal;
+    color: #FFF;
+    background: #2aa549;
+    border: 1px solid #268a16;
     padding: 8px 18px;
     text-align: center;
 
     &:hover {
-      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
       @include transition(all 500ms ease);
-      background: rgba(0, 133, 173, 1);
+      background: #317f47;
       color: white;
   }
 
@@ -166,17 +166,17 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 
 @mixin global-button-negative {
   @include border-radius (6px);
-  background: rgba(226, 226, 226, 1);
-  border: 1px rgba(100, 100, 100, 1) solid;
-  color: rgba(100, 100, 100, 1);
+  @include text-shadow(0px 1px 0px #0f546b);
+  @include box-shadow(inset 0px 1px 0px 0px #22b3e3);
+  background: #0084b0;
+  border: 1px solid #0d6785;
+  color: #FFF;
   padding: 8px 18px;
   font-family: $body-font-family;
 
   &:hover, &:focus  {
-    background: rgba(138, 21, 56, 1);
-    border: 1px rgba(138, 21, 56, 1) solid;
-    color: rgba(255, 255, 255, 1);
-    text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+    @include box-shadow(inset 0px 1px 0px 0px #006184);
+    background: #006184;
   }
 }
 
