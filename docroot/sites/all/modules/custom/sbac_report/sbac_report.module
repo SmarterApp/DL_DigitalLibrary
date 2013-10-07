@@ -813,6 +813,59 @@ SQL;
 }
 
 /**
+ *
+ *
+ * @param $reviews
+ *
+ * @return array
+ */
+function sbac_report_get_all_consistency_rate($reviews) {
+  $consistency_rates = array();
+  foreach($reviews as $review) {
+    $consistency_rates[] = sbac_report_get_consistency_rate($review->id);
+  }
+  return $consistency_rates;
+}
+
+/**
+ *
+ * @param $reviews
+ *
+ * @return string
+ */
+function sbac_report_get_consistency_rate($review_id) {
+  $consistency_rate = NULL;
+  if ($review_id == NULL) {
+    return $consistency_rate;
+  }
+
+
+  $sql = <<<SQL
+
+  SELECT f.node_id AS nid, n.sticky AS sticky, w.state AS state
+  FROM {eck_feedback} AS f
+  JOIN {node} AS n
+    ON f.node_id = n.nid
+  JOIN {workbench_moderation_node_history} AS w
+    ON n.nid = w.nid AND n.vid = w.vid
+  WHERE f.id = :review_id
+
+SQL;
+
+  $review_data = db_query($sql, array(':review_id' => $review_id))->fetchAll();
+  if ($review_data) {
+    if ($review_data['sticky'] == 1 && $review_data['state'] == 'published') {
+      $consistency_rate = sbac_report_get_posted_recommendation_rate();
+    }
+    else {
+      $consistency_rate = sbac_report_get_qc_ratings_rate();
+    }
+  }
+
+  return $consistency_rate;
+}
+
+/**
  * Implements hook_workbench_moderation_transition().
  */
 function sbac_report_workbench_moderation_transition($node, $previous_state, $new_state) {

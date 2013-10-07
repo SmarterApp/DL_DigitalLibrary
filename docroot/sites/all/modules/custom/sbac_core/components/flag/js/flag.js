@@ -92,6 +92,8 @@ Drupal.behaviors.flag = {
             var submit_button = $('.actions .form-submit', form);
             if (submit_button.length) {
               submit_button.once('submit-modal').mousedown(function(e) {
+                e.preventDefault();
+
                 // this is the default flag value, prior to form submission
                 var default_value = -1;
                 
@@ -115,9 +117,6 @@ Drupal.behaviors.flag = {
                       flag_wrap.html(Drupal.settings.flag.update_message);
                     }
                     else {
-                      var select = $(form_wrap_id + ' select.submit-action option[value="submit"]');
-                      select.prop('selected', true);
-
                       var modal_anchor = $(form_wrap_id + ' a.use-dialog');
                       if (modal_anchor.length) {
                         modal_anchor.trigger('click');
@@ -129,6 +128,8 @@ Drupal.behaviors.flag = {
                 // The form itself will return JS which will set a flag to either 1 or 0, and
                 // this function will recursively check for that flag value every 200ms.
                 Drupal.behaviors.js_watch_value.watch_value(default_value, value_callback, change_callback);
+
+                return false;
               });
             }
         });
@@ -139,6 +140,10 @@ Drupal.behaviors.flag = {
     // set flag so we don't call the modal again
     flag.submit = true;
     flag.review_id = data.review_id;
+
+    // update action taking place
+    var select = $(data.review_wrapper + ' select.submit-action option[value="submit"]');
+    select.prop('selected', true);
 
     $(data.review_wrapper + ' form .actions .form-submit').mousedown();
   }
