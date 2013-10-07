@@ -118,6 +118,7 @@ function form_set_defaults($fields, $values, &$form) {
       );
     }
 
+    $i = 1;
     foreach ($fields as $field_key) {
       if (isset($values[$field_key])) {
         $default_value = '';
@@ -125,8 +126,9 @@ function form_set_defaults($fields, $values, &$form) {
         $tree = array();
         flatten_tree($values[$field_key], $tree);
         
+        $field_info = field_info_field($field_key);
         // multi-value field
-        if (sizeof($tree) > 1) {
+        if (($field_info['cardinality'] > 1) || ($field_info['cardinality'] == -1)) {
           // aggregate the separate values into a single array
           $default_value = array();
           foreach ($tree as $key_tree) {
@@ -136,11 +138,17 @@ function form_set_defaults($fields, $values, &$form) {
           // for multi-value fields, the #default_value is set on the element immediately above
           // the separate field values. In other words, we need to set the value at the point of
           // divergence in our trees, so let's compare the first two and find that point:
-          $divergence = array_flat_divergence($tree[0], $tree[1]);
+          if (sizeof($tree) > 1) {
+            $divergence = array_flat_divergence($tree[0], $tree[1]);
+          }
+          else {
+            $divergence = current($tree[0]);
+          }
           
           // navigate down the tree to the point of divergence to find the element we want to set
           // defaults on
           $element = &$form[$field_key];
+
           foreach ($key_tree as $path_child) {
             $element = &$element[$path_child];
 
@@ -148,9 +156,10 @@ function form_set_defaults($fields, $values, &$form) {
               break;
             }
           }
-          
+
           $element['#default_value'] = $default_value;
         }
+        // single-value field
         else {
           foreach ($tree as $key_tree) {
             // $key_tree will be an array of keys used to access the final value, plus the value itself
