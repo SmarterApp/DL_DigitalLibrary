@@ -573,6 +573,90 @@ function sbac_resource_views_default_views() {
     23 => 0,
     26 => 0,
   );
+  /* Filter criterion: Content: Grade(s) (field_grades) */
+  $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
+  $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator_id'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['identifier'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
+  /* Filter criterion: Content: Subjects and Domains (field_subject) */
+  $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
+  $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['operator_id'] = 'field_subject_tid_op';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['operator'] = 'field_subject_tid_op';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['identifier'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
+  /* Filter criterion: Content: Resource Type (field_focus) */
+  $handler->display->display_options['filters']['field_focus_tid']['id'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['table'] = 'field_data_field_focus';
+  $handler->display->display_options['filters']['field_focus_tid']['field'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['operator_id'] = 'field_focus_tid_op';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['operator'] = 'field_focus_tid_op';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['identifier'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
