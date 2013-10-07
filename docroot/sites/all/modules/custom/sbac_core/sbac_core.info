@@ -102,6 +102,7 @@ features[variable][] = field_bundle_settings_field_collection_item__field_review
 features[variable][] = field_bundle_settings_review__end_use
 features[variable][] = field_bundle_settings_taxonomy_term__education_alignment
 features[variable][] = fivestar_tags
+features[variable][] = rate_widgets
 features[variable][] = taskit_breakdown
 features[variable][] = taskit_email
 features[variable][] = taskit_grouping

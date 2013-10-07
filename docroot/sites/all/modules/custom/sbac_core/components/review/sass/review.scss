@@ -34,18 +34,18 @@
 }
 
 /* layout */
-.review-form-header {
-  margin-bottom: 10px;
-}
-
 #review-wrap-reviews {
   margin: 0 30px;
   padding-bottom: 20px;
 
-  .section-title {
-    float: left;
-    font-size: 1.2em;
-    font-weight: bold;
+  .review-form-header {
+    margin-bottom: 10px;
+
+    .section-title {
+      float: left;
+      font-size: 1.3em;
+      font-weight: bold;
+    }
   }
 
   .review-form-trigger {
@@ -165,6 +165,65 @@
       }
     }
   }
+
+  .review-section-header {
+    border-bottom: 1px #000 solid;
+    border-top: 1px #000 solid;
+    font-size: 1em;
+    margin: 10px 0;
+    padding: 10px 0;
+
+    .section-title {
+      font-weight: bold;
+
+      .secondary {
+        font-weight: normal;
+      }
+    }
+
+    .sorting-order {
+      float: right;
+    }
+  }
+
+  #summary {
+    .summary-widgets {
+
+    }
+
+    .appropriate-for {
+      .term {
+        font-size: 0.8em;
+        margin-bottom: 10px;
+
+        &.highlight {
+          font-weight: bold;
+        }
+      }
+    }
+
+    .item-title {
+      font-size: 0.9em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .left-col {
+      @include left_col;
+    } 
+
+    .mid-col {
+      @include mid_col;
+    } 
+
+    .right-col {
+      @include right_col;
+    } 
+  }
+
+  #individual-reviews {
+
+  }
 }
 
 .entity-review.view-mode-full {
@@ -237,6 +296,12 @@
 
   .close-dialog {
     display: inline;
+  }
+}
+
+.dialog_review_end_use_form_delete #dialog {
+  .form-submit {
+    float: right;
   }
 }
 

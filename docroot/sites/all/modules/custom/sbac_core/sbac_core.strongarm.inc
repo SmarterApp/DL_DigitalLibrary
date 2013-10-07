@@ -152,6 +152,67 @@ function sbac_core_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'rate_widgets';
+  $strongarm->value = array(
+    1 => (object) array(
+      'name' => 'review_helpful',
+      'tag' => 'helpful',
+      'title' => 'Was this review helpful?',
+      'node_types' => array(),
+      'comment_types' => array(),
+      'options' => array(
+        0 => array(
+          0 => '1',
+          1 => 'yes',
+        ),
+        1 => array(
+          0 => '2',
+          1 => 'no',
+        ),
+      ),
+      'template' => 'yesno',
+      'node_display' => '0',
+      'teaser_display' => FALSE,
+      'comment_display' => '0',
+      'node_display_mode' => '1',
+      'teaser_display_mode' => '1',
+      'comment_display_mode' => '1',
+      'roles' => array(
+        2 => '2',
+        3 => 0,
+        24 => 0,
+        1 => 0,
+        25 => 0,
+        8 => 0,
+        7 => 0,
+        11 => 0,
+        22 => 0,
+        13 => 0,
+        26 => 0,
+        15 => 0,
+        16 => 0,
+        17 => 0,
+        23 => 0,
+      ),
+      'allow_voting_by_author' => 1,
+      'noperm_behaviour' => '1',
+      'displayed' => '1',
+      'displayed_just_voted' => '2',
+      'description' => '',
+      'description_in_compact' => TRUE,
+      'delete_vote_on_second_click' => '0',
+      'use_source_translation' => TRUE,
+      'value_type' => 'option',
+      'theme' => 'rate_template_yesno',
+      'css' => 'sites/all/modules/contrib/rate/templates/yesno/yesno.css',
+      'translate' => TRUE,
+    ),
+  );
+  $export['rate_widgets'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'taskit_breakdown';
   $strongarm->value = 'group';
   $export['taskit_breakdown'] = $strongarm;

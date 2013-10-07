@@ -46,3 +46,59 @@ function theme_review_author($variables) {
 
   return $output;
 }
+
+/**
+ * Output for Display Suite field "Delete Button"
+ * @param  [type] $variables [description]
+ * @return [type]            [description]
+ */
+function theme_review_delete($variables) {
+  $output = '';
+
+  $entity = $variables['entity'];
+
+  global $user;
+  if ($entity->uid == $user->uid || in_array('administrator', $user->roles)) {
+    $trigger_id = 'review-delete';
+    $url = 'node/' . $entity->node_id . '/review/end_use/delete/' . $trigger_id . '/' . $entity->id;
+
+    $options = array(
+      'attributes' => array(
+        'class' => array(
+          'use-ajax',
+          'use-dialog',
+          'button',
+          'radius',
+        ),
+        'id' => $trigger_id,
+      ),
+    );
+
+    $output = l(t('Delete'), $url, $options);
+  }
+  return $output;
+}
+
+/**
+ * Helpful Vote Widget
+ * @param  [type] $variables [description]
+ * @return [type]            [description]
+ */
+function theme_review_vote($variables) {
+  $output = '';
+
+  $entity = $variables['entity'];
+
+  $machine_name = 'review_helpful';
+  $widgets = variable_get(RATE_VAR_WIDGETS, array());
+  foreach ($widgets as $widget_id => $widget) {
+    if ($widget->name != $machine_name) {
+      continue;
+    }
+
+    $output .= t('Was this review helpful?');
+    $output .= rate_generate_widget($widget_id, 'review', $entity->id);
+  }
+
+  return $output;
+}

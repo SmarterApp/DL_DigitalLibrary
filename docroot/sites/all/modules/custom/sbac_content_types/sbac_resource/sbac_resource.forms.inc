@@ -556,6 +556,24 @@ function sbac_resource_validate_materials(&$form, $form_state) {
     form_set_error('field_file_upload', $error);
     _sbac_resource_remove_error_message($error);
   }
+  else {
+    $duplicates = sbac_media_check_duplicates($media_items);
+    if ($duplicates) {
+      // set a form_state variable that says there is duplicates.
+      // no need to loop around all, just need to find first dup.
+      // (will need to update the function or create a new one)
+      // in the submit handler, create a condition to check for the form state variable
+      // then return js that pops up the modal like in sbac_media
+      // hopefully this works (above)
+      // inside the modal, send in this nid,
+      // which loads up a form, with cancel and save continue
+      // the form will load up the media items from the nid
+      // loop around and create output for the user to see.
+      // on save / continue closes the modal, saves the node (submits to alfresco)
+      // and returns the form to the next tab
+      // cancel keeps the user on the materials tab
+    }
+  }
 
   if ($form_state['values']['field_author']['und'][0]['value'] == NULL) {
     $error = 'Please enter an author to continue';
