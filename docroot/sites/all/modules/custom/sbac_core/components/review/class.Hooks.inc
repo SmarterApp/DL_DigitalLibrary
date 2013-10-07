@@ -402,6 +402,8 @@ class Hooks extends \devtools\Hooks {
     unset($form['state_preview']['actions']['submit']['#ajax']);
 
     // submit button (modal)
+    drupal_add_library('dialog', 'dialog');
+    
     $trigger_id = 'review-submit';
     $url = 'node/' . $node->nid . '/review/end_use/submit/' . $trigger_id;
 

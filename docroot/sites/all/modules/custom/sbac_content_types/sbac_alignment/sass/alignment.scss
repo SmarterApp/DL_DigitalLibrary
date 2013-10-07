@@ -40,9 +40,12 @@
 
   .alignment-breadcrumb {
 
-    margin: 0 20px 20px;
+    ul {
+      margin: 0 20px 20px;
+      padding: 0;
+    }
 
-    ul, li {
+    li {
       margin: 0;
       padding: 0;
     }
@@ -126,6 +129,10 @@
     margin: 0px 0 20px;
     border: 1px solid #BDE3F8;
     border-width:1px 0;
+
+    h2 {
+      margin:20px 0;
+    }
 
     .button {
       width: 100%;
@@ -212,9 +219,14 @@
       padding: 10px;
       border: 1px solid silver;
       @include border-radius(5px);
+      background-color: white;
 
       p {
         font-size: 16px;
+        color: #8d9297;
+      }
+
+      .checkbox-more-less {
         color: #8d9297;
       }
     }
@@ -314,6 +326,7 @@
 
 .alignment-buttons {
   text-align: right;
+  margin-right: 20px;
     
   a.button {
     display: inline-block;
@@ -328,6 +341,7 @@
 
 #ccss-submit {
   margin-left: 10px;
+  margin-right: 20px;
   float: right;
 }
 

@@ -115,6 +115,7 @@ class Hooks extends \devtools\Hooks {
             );
 
           // flag button
+            drupal_add_library('dialog', 'dialog');
             $trigger_id = 'flag-review-' . $review->id;
 
             $text = t('Flag Review');
