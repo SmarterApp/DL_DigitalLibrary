@@ -11,7 +11,7 @@
  * @param $query
  */
 function sbac_resource_views_query_alter(&$view, &$query) {
-  if ($view->name == 'resource_review') {
+  if ($view->name == 'resource_review' || $view->name == 'all_resource_review') {
     global $user;
 
     if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
@@ -426,7 +426,7 @@ function sbac_resource_resource_review_apply_filters(&$view) {
 
   $allowed_both_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review', 'approved' => 'Needs Posting');
   $allowed_rr_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review');
-  $allowed_rp_states = array('approved' => 'Needs Posting');
+  $allowed_rp_states = array('approved' => 'Being Reviewed', 'approved' => 'Needs Posting');
 
   if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
     $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
@@ -626,6 +626,9 @@ function sbac_resource_determine_view_output(&$view, $filter_terms, $roles) {
       }
     }
 
+    // Loop around results. Determine if the filter(s) chosen are in the
+    // results. If not, remove the items that are not part of the filter
+    // criteria. Else, keep the result as it is part of the return set.
     foreach ($view->result as $key => $result) {
       switch ($result->state_label) {
         case 'Being Reviewed':
