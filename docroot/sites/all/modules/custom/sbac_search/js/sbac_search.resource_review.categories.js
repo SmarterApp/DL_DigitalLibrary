@@ -193,9 +193,15 @@
       $('#sbac-search-textbox').change( function(event) {
         $('#sbac-search-keywords').val($(this).val());
       });
+
       // Hide the Keyword field.
       $('#views-exposed-form-resource-review-grid-view').hide();
       $('#views-exposed-form-resource-review-list-view').hide();
+
+      // Hide the Keyword field.
+      $('#views-exposed-form-all-resource-review-grid-view').hide();
+      $('#views-exposed-form-all-resource-review-list-view').hide();
+
 
       if ($('#sbac-search-textbox').val() != '') {
         $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
