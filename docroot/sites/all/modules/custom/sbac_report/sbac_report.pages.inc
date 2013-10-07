@@ -40,7 +40,8 @@ function sbac_report_individual() {
       // All Reviews.
       $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
       $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
-      $average_consistency_rate = '';
+      $reviews = array_merge($reviews_in_progress, $completed_reviews);
+      $average_consistency_rate = sbac_report_get_all_consistency_rate($reviews);
       $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
     }
   }
