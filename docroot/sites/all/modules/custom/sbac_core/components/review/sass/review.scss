@@ -362,7 +362,7 @@
   .intro {
     border-bottom: 1px solid silver;
     padding-bottom: 1em;
-    border-bottom: 1em;
+    border-bottom: 1em; 
     font-size: 0.8em;
     line-height: normal;
     text-align: left; 
@@ -374,7 +374,7 @@
 
   .form-submit {
     display: inline;
-    float: none;
+    /*float: none;*/
   }
 
   .close-dialog {
