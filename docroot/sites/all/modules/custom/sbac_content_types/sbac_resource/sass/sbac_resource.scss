@@ -487,9 +487,13 @@ a.sbac-grid-layout {
 
   .sbac-search-filter-name {
       margin: 0;
-      font-weight: normal;
+      font-weight: bold;
       font-size: 1.1em;
       position: relative;
+
+      li {
+        font-weight: normal;
+      }
     }
 
     span {
