@@ -809,13 +809,12 @@ SQL;
     $completed[] = $row;
   }
 
-
-  // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
-  $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
-  if (count($feedback) == 3) {
-    unset($view->result[$key]);
+  foreach ($completed as $key => $user_completed_review) {
+    $feedback = _sbac_resource_determine_feedback($user_completed_review->node_id, 'qc', $uid, 1, FALSE, 1, 'set', TRUE);
+    if (count($feedback) != 2) { // two other reviewers
+      unset($completed[$key]);
+    }
   }
-
 
   return $completed;
 }
