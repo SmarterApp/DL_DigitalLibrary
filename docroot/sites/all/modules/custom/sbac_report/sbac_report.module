@@ -849,21 +849,45 @@ function sbac_report_get_consistency_rate($review_id) {
   JOIN {workbench_moderation_node_history} AS w
     ON n.nid = w.nid AND n.vid = w.vid
   WHERE f.id = :review_id
+    AND w.current = :current
 
 SQL;
 
-  $review_data = db_query($sql, array(':review_id' => $review_id))->fetchAll();
+  $review_data = db_query($sql, array(':review_id' => $review_id, ':current' => 1))->fetchAll();
   if ($review_data) {
     if ($review_data['sticky'] == 1 && $review_data['state'] == 'published') {
-      $consistency_rate = sbac_report_get_posted_recommendation_rate();
+      $consistency_rate = sbac_report_get_posted_recommendation_rate($review_data);
     }
     else {
-      $consistency_rate = sbac_report_get_qc_ratings_rate();
+      $consistency_rate = sbac_report_get_qc_ratings_rate($review_data);
     }
   }
 
   return $consistency_rate;
 }
+
+/**
+ * @param $review_data
+ * @return array
+ */
+function sbac_report_get_posted_recommendation_rate($review_data) {
+  $rate = array();
+
+  return $rate;
+}
+
+/**
+ *
+ *
+ * @param $review_data
+ * @return array
+ */
+function sbac_report_get_qc_ratings_rate($review_data) {
+  $rate = array();
+
+  return $rate;
+}
+
 
 /**
  * Implements hook_workbench_moderation_transition().
