@@ -442,9 +442,11 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       span { 
         display: inline-block;
         width: 27px;
-        height: 37px;
-        background: url('../images/icons/notification-number.png') center 10px no-repeat;
+        height: 40px;
+        background: url('../images/icons/notification-number.png') center 13px no-repeat;
         text-align: center;
+        color: white;
+        font-weight: bold;
       }
     }
 
@@ -459,6 +461,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       width: 16px;
       height: 16px;
       display: inline-block;
+      background-size: cover;
     }
   }
 }
