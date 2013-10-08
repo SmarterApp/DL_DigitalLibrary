@@ -23,7 +23,7 @@
     <?php
       global $user;
 
-      $review = entity_load_single($content_type, $content_id);
+      $review = entity_load_single($content_type, $content_id); 
 
       // can't flag own content
       if (1 || $review->uid != $user->uid) {
