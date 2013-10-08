@@ -179,6 +179,13 @@ function sbac_core_user_view($account, $view_mode, $langcode) {
 }
 
 /**
+ * Implements hook_username_alter().
+ */
+function sbac_core_username_alter(&$name, $account) {
+  \sbac_core\Core::hook('username_alter', NULL, $name, $account);
+}
+
+/**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function sbac_core_form_node_form_alter(&$form, $form_state) {

@@ -6,6 +6,8 @@
  * @return [type] [description]
  */
 function user_has_review($nid, $uid) {
+  return false;
+
   $id = db_select('eck_review', 'er')
         ->fields('er', array('id'))
         ->condition('type', 'end_use')
