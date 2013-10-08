@@ -187,10 +187,10 @@ class Reviews extends Base {
             $label = t('Agree');
           }
           elseif ($average >= 25) {
-            $label = t('Diagree');
+            $label = t('Disagree');
           }
           else {
-            $label = t('Strongly Diagree');
+            $label = t('Strongly Disagree');
           }
 
           $widgets_content .= '
