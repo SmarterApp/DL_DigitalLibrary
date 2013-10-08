@@ -17,7 +17,7 @@ class Reviews extends Base {
     // create header & new review form
       $output = '';
 
-      $has_review = user_has_review($this->_node->nid, $this->_account->uid);
+      $has_review = user_has_review($this->_node->nid, $this->_account->uid) || ($this->_node->uid == $this->_account->uid);
 
       $button = '';
       if (!$has_review) { 
