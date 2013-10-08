@@ -291,6 +291,7 @@ class Hooks extends \devtools\Hooks {
     $form['node_id']['#default_value'] = $form_state['node_object']->nid;
 
     // cancel button
+    drupal_add_library('dialog', 'dialog');
     $trigger_id = 'review-cancel';
     $url = 'node/' . $node->nid . '/review/end_use/cancel/' . $trigger_id;
 

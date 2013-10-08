@@ -361,7 +361,7 @@
 /* line 375, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
-  float: none;
+  /*float: none;*/
 }
 /* line 380, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
