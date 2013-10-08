@@ -26,6 +26,20 @@ class Hooks extends \devtools\Hooks {
     return $items;
   }
 
+  /**
+   * Extends hook_username_alter().
+   */
+  function hook_username_alter(&$name, $account) {
+    // change username to first/last names when they're available
+    if (isset($account->field_first_name[LANGUAGE_NONE][0]['safe_value'])) {
+      $name = $account->field_first_name[LANGUAGE_NONE][0]['safe_value'];
+
+      if (isset($account->field_last_name[LANGUAGE_NONE][0]['safe_value'])) {
+        $name .= ' ' . $account->field_last_name[LANGUAGE_NONE][0]['safe_value'];
+      }
+    }
+  }
+
   /*----------------------------------------------------------------------------
       MODULE HOOKS
   ----------------------------------------------------------------------------*/
