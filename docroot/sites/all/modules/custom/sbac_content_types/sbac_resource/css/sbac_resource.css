@@ -59,7 +59,7 @@ a.sbac-grid-layout, a.sbac-list-layout {
   display: inline-block;
   margin: 0 20px 0 10px;
   background: url("../images/list.png") no-repeat center left;
-  background-size: 24px 24px;
+  background-size: 16px 16px;
   padding-left: 30px;
   color: #494949;
   height: 45px;
