@@ -21,9 +21,30 @@
 
   <span class="flag">
     <?php
-      echo t('You may also !flag.', array(
-        '!flag' => '<a href="#" class="flag-trigger">' . t('flag this review') .'</a>',
-      ));
+      global $user;
+
+      $review = entity_load_single($content_type, $content_id);
+
+      // can't flag own content
+      if (1 || $review->uid != $user->uid) {
+        $flags = entity_load_multiple_by_name('flag', FALSE, array(
+          'type' => 'review_end_use',
+          'target_type' => $content_type,
+          'target_id' => $content_id,
+          'uid' => $user->uid,
+        ));
+
+        if (sizeof($flags)) {
+          $flag = current($flags);
+          $issue_type = field_get_value($flag, 'field_issue_type');
+          echo flag_flagged_message($issue_type);
+        }
+        else {
+          echo t('You may also !flag.', array(
+            '!flag' => '<a href="#" class="flag-trigger">' . t('flag this review') .'</a>',
+          ));
+        }
+      }
     ?>
   </span>
 </span>

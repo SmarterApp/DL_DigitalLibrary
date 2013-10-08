@@ -80,26 +80,8 @@ function flag_review_end_use_ajax($form, &$form_state) {
   $errors = form_get_errors();
   $form_error = (int) !empty($errors);
 
-  $update_message = 'You flagged this review because it ';
-
-  $issue_options = field_allowed_values('field_issue_type');
   $issue_type = field_get_value($form_state['values'], 'field_issue_type');
-
-  switch ($issue_type) {
-    case 'inaccurate':
-    case 'unintelligible':
-    case 'biased':
-      $update_message .= ' is ';
-      break;
-
-    case 'pii':
-    case 'spam':
-    default:
-      break;
-  }
-
-  $update_message .= ' ' . strtolower($issue_options[$issue_type]) . '.';
-  $update_message = t($update_message);
+  $update_message = flag_flagged_message($issue_type);
 
   $form['run_js'] = array(
     '#markup' => '
@@ -111,4 +93,33 @@ function flag_review_end_use_ajax($form, &$form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Returns the user-friendly "You've already flagged..." message.
+ * @param  [type] $issue_type [description]
+ * @return [type]             [description]
+ */
+function flag_flagged_message($issue_type) {
+  $message = 'You flagged this review because it ';
+
+  $issue_options = field_allowed_values('field_issue_type');
+
+  switch ($issue_type) {
+    case 'inaccurate':
+    case 'unintelligible':
+    case 'biased':
+      $message .= ' is ';
+      break;
+
+    case 'pii':
+    case 'spam':
+    default:
+      break;
+  }
+
+  $message .= ' ' . strtolower($issue_options[$issue_type]) . '.';
+  $message = t($message);
+
+  return $message;
 }
