@@ -872,7 +872,7 @@ function sbac_media_check_duplicates($media_items) {
  * @param $form_state
  */
 function sbac_media_count_duplicates($media_items) {
-  $count = 0;
+  $count = array();
   global $user;
   foreach ($media_items as $media_item) {
     if ($media_item->fid) {
@@ -885,7 +885,7 @@ function sbac_media_count_duplicates($media_items) {
       $query .= 'w.state = :state';
       $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid, ':state' => 'published'));
       if ($matches->rowCount()) {
-        $count += $matches->rowCount();
+        $count[$media_item->nid] += $matches->rowCount();
       }
     }
   }
@@ -1181,7 +1181,7 @@ function sbac_media_duplicates($js = FALSE) {
       $count = sbac_media_count_duplicates($media_items);
       $title = 'There are :count published resources in the Smarter Balanced Digital Library with similar combination of materials';
       $form_state = array(
-        'title' => t($title, array(':count' => $count)),
+        'title' => t($title, array(':count' => count($count))),
         'ajax' => $js,
         'sbac-media-items' => $media_items,
       );
@@ -1278,12 +1278,14 @@ function sbac_media_duplicates_form($form, &$form_state) {
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
+    '#prefix' => '<div class="right dup-btns">',
     '#attributes' => array('id' => array('edit-cancel-media-duplicates'))
   );
 
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Save and Continue',
+    '#suffix' => '</div>',
     '#attributes' => array('id' => array('edit-save-media-duplicates'))
   );
 
