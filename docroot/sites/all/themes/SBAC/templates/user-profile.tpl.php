@@ -10,15 +10,16 @@
 	<?php if ($user_profile['user_picture']['#markup']): ?>
 		<div class="column large-3 profile-pic">
 			<?php
-			// display default photo if privacy on for picture
-			// we use field_first_name because field_privacy may not exist
-			if (isset($user_profile['field_first_name']['#object'])) {
-				if (!sbac_user_privacy_check('picture', $user_profile['field_first_name']['#object'])) {
-				  $filepath = variable_get('user_picture_default', '');
-				  $alt = t("@user's picture", array('@user' => format_username($user_profile['field_first_name']['#object'])));
-			      $user_profile['user_picture']['#markup'] = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt));
-			    }
-			}
+  			// display default photo if privacy on for picture
+  			// we use field_first_name because field_privacy may not exist
+  			if (isset($user_profile['field_first_name']['#object'])) {
+  				if (!sbac_user_privacy_check('picture', $user_profile['field_first_name']['#object'])) {
+  				  $filepath = variable_get('user_picture_default', '');
+  				  $alt = t("@user's picture", array('@user' => format_username($user_profile['field_first_name']['#object'])));
+  			      $user_profile['user_picture']['#markup'] = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt));
+  			    }
+  			}
+        
 		    echo drupal_render($user_profile['user_picture']);
 			?>
 		</div>
