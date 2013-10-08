@@ -13,7 +13,6 @@
   			// display default photo if privacy on for picture
   			// we use field_first_name because field_privacy may not exist
   			if (isset($user_profile['field_first_name']['#object'])) {
-          print_rr($user_profile['field_first_name']['#object']);
   				if (!sbac_user_privacy_check('picture', $user_profile['field_first_name']['#object'])) {
   				  $filepath = variable_get('user_picture_default', '');
   				  $alt = t("@user's picture", array('@user' => format_username($user_profile['field_first_name']['#object'])));
