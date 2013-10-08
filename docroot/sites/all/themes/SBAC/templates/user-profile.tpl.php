@@ -14,7 +14,6 @@
   			// we use field_first_name because field_privacy may not exist
   			if (isset($user_profile['field_first_name']['#object'])) {
   				if (!sbac_user_privacy_check('picture', $user_profile['field_first_name']['#object'])) {
-            echo 'here';
   				  $filepath = variable_get('user_picture_default', '');
   				  $alt = t("@user's picture", array('@user' => format_username($user_profile['field_first_name']['#object'])));
   			      $user_profile['user_picture']['#markup'] = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt));
