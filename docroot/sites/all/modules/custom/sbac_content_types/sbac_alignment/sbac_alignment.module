@@ -147,7 +147,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   );
 
   $form['ccss-submit'] = array(
-    '#markup' => l(t('Add to Resource'), '#',
+    '#markup' => l(t('Add Standard(s) to Resource'), '#',
       array(
         'attributes' => array(
           'class' => array('form-submit', 'button'),

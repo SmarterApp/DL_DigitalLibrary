@@ -70,7 +70,7 @@
                 ?>
               </div>
               <div class="ccss-claim">
-                <h3>Claim</h3>
+                <h3>Strands/Domains</h3>
                 <?php if (isset($claim)): ?>
                   <h2>
                     <?php print $claim->field_alignment_shortname['und'][0]['value']; ?>
