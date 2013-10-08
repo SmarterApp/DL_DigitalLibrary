@@ -40,8 +40,8 @@ function sbac_report_individual() {
       // All Reviews.
       $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
       $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
-      $reviews = array_merge($reviews_in_progress, $completed_reviews);
-      $average_consistency_rate = sbac_report_get_all_consistency_rate($reviews);
+      // $reviews = array_merge($reviews_in_progress, $completed_reviews);
+      $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $completed_reviews);
       $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
     }
   }
@@ -164,15 +164,15 @@ function sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $
   $gk_ind_accepted_count = count($gk_ind_accepted);
   $gk_ind_returned_count = count($gk_ind_returned);
   $gk_ind_total = $gk_ind_accepted_count + $gk_ind_returned_count;
-  $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1);
-  $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1);
+  $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1) * 100;
+  $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1) * 100;
 
     // All.
   $gk_all_accepted_count = count($gk_all_accepted);
   $gk_all_returned_count = count($gk_all_returned);
   $gk_all_total = $gk_all_accepted_count + $gk_all_returned_count;
-  $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 1);
-  $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 1);
+  $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 1) * 100;
+  $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 1) * 100;
 
   // First Row.
   $rows[] = array(
@@ -221,7 +221,7 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
   $rows[] = array(
     array('data' => count($reviews_in_progress)),
     array('data' => count($completed_reviews)),
-    array('data' => round($average_consistency_rate, 1) . '%'),
+    array('data' => (round($average_consistency_rate, 1) * 100) . '%'),
   );
 
   return theme('table', array(

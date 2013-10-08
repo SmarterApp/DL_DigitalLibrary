@@ -809,6 +809,13 @@ SQL;
     $completed[] = $row;
   }
 
+  foreach ($completed as $key => $user_completed_review) {
+    $feedback = _sbac_resource_determine_feedback($user_completed_review->node_id, 'qc', $uid, 1, FALSE, 1, 'set', TRUE);
+    if (count($feedback) != 2) { // two other reviewers
+      unset($completed[$key]);
+    }
+  }
+
   return $completed;
 }
 
@@ -819,12 +826,19 @@ SQL;
  *
  * @return array
  */
-function sbac_report_get_all_consistency_rate($reviews) {
+function sbac_report_get_average_consistency_rate_acr($uid, $reviews) {
   $consistency_rates = array();
   foreach($reviews as $review) {
-    $consistency_rates[] = sbac_report_get_consistency_rate($review->id);
+    $consistency_rates[] = sbac_report_get_posting_consistency_rate($uid, $review);
   }
-  return $consistency_rates;
+
+  $rate = 0;
+  foreach ($consistency_rates as $consistency_rate) {
+    $rate += $consistency_rate;
+  }
+
+  $average_consistency_rate = abs($rate / count($consistency_rates));
+  return $average_consistency_rate;
 }
 
 /**
@@ -833,61 +847,75 @@ function sbac_report_get_all_consistency_rate($reviews) {
  *
  * @return string
  */
-function sbac_report_get_consistency_rate($review_id) {
+function sbac_report_get_posting_consistency_rate($uid, $review = NULL) {
   $consistency_rate = NULL;
-  if ($review_id == NULL) {
+  if ($review == NULL) {
     return $consistency_rate;
   }
 
 
+  // Get the Reviewer's A, B and C options to determine rate.
+  // Ordering of the result set is the order of the reviews.
+  // First record changed = Reviewer A etc.
   $sql = <<<SQL
 
-  SELECT f.node_id AS nid, n.sticky AS sticky, w.state AS state
-  FROM {eck_feedback} AS f
-  JOIN {node} AS n
-    ON f.node_id = n.nid
-  JOIN {workbench_moderation_node_history} AS w
-    ON n.nid = w.nid AND n.vid = w.vid
-  WHERE f.id = :review_id
-    AND w.current = :current
+    SELECT *
+    FROM eck_feedback
+      AS f
+    JOIN field_data_field_rec_options
+      AS o
+    ON f.id = o.entity_id
+    WHERE f.node_id = :nid
+      AND f.type = :type
+      AND f.status = :feedback_status
+      AND f.completed = :feedback_completed
+      AND o.deleted = :deleted
+    ORDER BY f.changed
 
 SQL;
 
-  $review_data = db_query($sql, array(':review_id' => $review_id, ':current' => 1))->fetchAll();
+  //  Values as stored in DB are:
+  //  0|Do not recommend
+  //  1|Recommend with Revisions
+  //  2|Recommend
+  //  3|Recommend with Distinction
+  $review_data = db_query($sql, array(':nid' => $review->node_id, ':type' => 'qc', ':feedback_status' => 1, ':feedback_completed' => 1, ':deleted' => 0))->fetchAll();
   if ($review_data) {
-    if ($review_data['sticky'] == 1 && $review_data['state'] == 'published') {
-      $consistency_rate = sbac_report_get_posted_recommendation_rate($review_data);
+    $reviewer_alpha = array(0 => 'Reviewer A', 1 => 'Reviewer B', 2 => 'Reviewer C');
+    $math_value = 1; $count = 1;
+    $math_elements = array();
+    foreach ($review_data as $review) {
+      switch ($review->field_rec_options_value) {
+        case '0':
+          $math_value = 1;
+          break;
+        case '1':
+          $math_value = 2;
+          break;
+        case '2':
+          $math_value = 3;
+          break;
+        case '3':
+          $math_value = 4;
+          break;
+      }
+
+      if ($uid == $review->uid) {
+        $math_elements[$reviewer_alpha[0]] = $math_value;
+      }
+      else {
+        $math_elements[$reviewer_alpha[$count]] = $math_value;
+        $count++;
+      }
     }
-    else {
-      $consistency_rate = sbac_report_get_qc_ratings_rate($review_data);
+
+    if ($math_elements) {
+      $consistency_rate = abs(1 - (abs($math_elements['Reviewer A'] - $math_elements['Reviewer B']) + abs($math_elements['Reviewer A'] - $math_elements['Reviewer C'])) / 6);
     }
   }
 
   return $consistency_rate;
 }
-
-/**
- * @param $review_data
- * @return array
- */
-function sbac_report_get_posted_recommendation_rate($review_data) {
-  $rate = array();
-
-  return $rate;
-}
-
-/**
- *
- *
- * @param $review_data
- * @return array
- */
-function sbac_report_get_qc_ratings_rate($review_data) {
-  $rate = array();
-
-  return $rate;
-}
-
 
 /**
  * Implements hook_workbench_moderation_transition().
