@@ -143,35 +143,39 @@
 #alignment-page .standards-browser .button {
   width: 100%;
   padding: 20px 40px 20px 20px;
-  background: white url("../images/caret-right.png") no-repeat 95% center;
+  background: white url("../images/caret-blue-right.png") no-repeat 95% center;
   border: 1px solid #AED9E5;
   position: relative;
   float: left;
   text-align: left;
   font-size: emCalc(16px);
-  -webkit-box-shadow: 0, 0, 3px, #aed9e5;
-  -moz-box-shadow: 0, 0, 3px, #aed9e5;
-  box-shadow: 0, 0, 3px, #aed9e5;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-box-shadow: #aed9e5 0 0 3px;
+  -moz-box-shadow: #aed9e5 0 0 3px;
+  box-shadow: #aed9e5 0 0 3px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
   -o-transition: all 500ms ease;
   transition: all 500ms ease;
+  text-shadow: none;
+  color: #0785AD;
+  font-weight: bold;
 }
-/* line 150, ../sass/alignment.scss */
+/* line 153, ../sass/alignment.scss */
 #alignment-page .standards-browser .button:hover {
-  background-color: #0085AD;
+  background: #0085ad url("../images/caret-right.png") no-repeat 95% center;
+  color: #FFF !important;
 }
-/* line 152, ../sass/alignment.scss */
+/* line 156, ../sass/alignment.scss */
 #alignment-page .standards-browser .button:hover .tooltip-b {
   opacity: 1;
   display: block;
 }
-/* line 160, ../sass/alignment.scss */
+/* line 164, ../sass/alignment.scss */
 #alignment-page .standards-browser .tooltip-b {
   opacity: 0;
   display: none;
@@ -192,12 +196,12 @@
   z-index: 999;
   border: 1px solid #3C7646;
 }
-/* line 180, ../sass/alignment.scss */
+/* line 184, ../sass/alignment.scss */
 #alignment-page .standards-browser .tooltip-b p {
   font-size: inherit;
   margin: 0;
 }
-/* line 185, ../sass/alignment.scss */
+/* line 189, ../sass/alignment.scss */
 #alignment-page .standards-browser .tooltip-b:after {
   content: ' ';
   position: absolute;
@@ -210,7 +214,7 @@
   height: 0;
   z-index: 99;
 }
-/* line 198, ../sass/alignment.scss */
+/* line 202, ../sass/alignment.scss */
 #alignment-page .standards-browser .tooltip-b:before {
   content: ' ';
   position: absolute;
@@ -223,13 +227,13 @@
   height: 0;
   z-index: 97;
 }
-/* line 212, ../sass/alignment.scss */
+/* line 216, ../sass/alignment.scss */
 #alignment-page .standards-browser .arrow_box {
   position: absolute;
   background: #DFE5CC;
   border: 1px solid #3C7646;
 }
-/* line 218, ../sass/alignment.scss */
+/* line 222, ../sass/alignment.scss */
 #alignment-page .standards-browser .standard {
   padding: 10px;
   border: 1px solid silver;
@@ -240,16 +244,16 @@
   border-radius: 5px;
   background-color: white;
 }
-/* line 224, ../sass/alignment.scss */
+/* line 228, ../sass/alignment.scss */
 #alignment-page .standards-browser .standard p {
   font-size: 16px;
   color: #8d9297;
 }
-/* line 229, ../sass/alignment.scss */
+/* line 233, ../sass/alignment.scss */
 #alignment-page .standards-browser .standard .checkbox-more-less {
   color: #8d9297;
 }
-/* line 233, ../sass/alignment.scss */
+/* line 237, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info {
   display: block;
   cursor: pointer;
@@ -257,11 +261,11 @@
   width: 100px;
   height: 15px;
 }
-/* line 240, ../sass/alignment.scss */
+/* line 244, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info a {
   display: block;
 }
-/* line 244, ../sass/alignment.scss */
+/* line 248, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info .more {
   display: none;
   transition-property: opacity;
@@ -281,12 +285,12 @@
   z-index: 999;
   border: 1px solid #3C7646;
 }
-/* line 263, ../sass/alignment.scss */
+/* line 267, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info .more p {
   font-size: inherit;
   margin: 0;
 }
-/* line 268, ../sass/alignment.scss */
+/* line 272, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info .more:after {
   content: ' ';
   position: absolute;
@@ -299,7 +303,7 @@
   height: 0;
   z-index: 99;
 }
-/* line 280, ../sass/alignment.scss */
+/* line 284, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info .more:before {
   content: ' ';
   position: absolute;
@@ -312,11 +316,11 @@
   height: 0;
   z-index: 97;
 }
-/* line 295, ../sass/alignment.scss */
+/* line 299, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info:hover .more {
   display: block;
 }
-/* line 302, ../sass/alignment.scss */
+/* line 306, ../sass/alignment.scss */
 #alignment-page .form-type-checkbox label {
   color: #0085AD;
   font-size: 16px;
@@ -324,40 +328,40 @@
   cursor: default;
 }
 
-/* line 310, ../sass/alignment.scss */
+/* line 314, ../sass/alignment.scss */
 #edit-field-education-alignment {
   display: none;
 }
 
-/* line 315, ../sass/alignment.scss */
+/* line 319, ../sass/alignment.scss */
 .form-item-alignment-type select {
   width: 200px;
   display: inline-block;
 }
-/* line 320, ../sass/alignment.scss */
+/* line 324, ../sass/alignment.scss */
 .form-item-alignment-type label {
   width: 120px !important;
   float: left !important;
   display: inline-block;
 }
 
-/* line 327, ../sass/alignment.scss */
+/* line 331, ../sass/alignment.scss */
 .alignment-buttons {
   text-align: right;
   margin-right: 20px;
 }
-/* line 331, ../sass/alignment.scss */
+/* line 335, ../sass/alignment.scss */
 .alignment-buttons a.button {
   display: inline-block;
   margin-left: 10px;
 }
-/* line 336, ../sass/alignment.scss */
+/* line 340, ../sass/alignment.scss */
 .alignment-buttons #edit-submit {
   float: right;
   margin-left: 10px;
 }
 
-/* line 342, ../sass/alignment.scss */
+/* line 346, ../sass/alignment.scss */
 #ccss-submit {
   margin-left: 10px;
   margin-right: 20px;
