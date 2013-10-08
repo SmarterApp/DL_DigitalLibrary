@@ -65,21 +65,6 @@ function sbac_core_ds_field_settings_info() {
   );
   $export['review|end_use|default'] = $ds_fieldsetting;
 
-  $ds_fieldsetting = new stdClass();
-  $ds_fieldsetting->api_version = 1;
-  $ds_fieldsetting->id = 'user|user|tooltip';
-  $ds_fieldsetting->entity_type = 'user';
-  $ds_fieldsetting->bundle = 'user';
-  $ds_fieldsetting->view_mode = 'tooltip';
-  $ds_fieldsetting->settings = array(
-    'ds_user_picture' => array(
-      'weight' => '0',
-      'label' => 'hidden',
-      'format' => 'ds_picture_flexslider_full',
-    ),
-  );
-  $export['user|user|tooltip'] = $ds_fieldsetting;
-
   return $export;
 }
 
@@ -206,57 +191,6 @@ function sbac_core_ds_layout_settings_info() {
     'layout_link_custom' => '',
   );
   $export['review|end_use|default'] = $ds_layout;
-
-  $ds_layout = new stdClass();
-  $ds_layout->api_version = 1;
-  $ds_layout->id = 'user|user|tooltip';
-  $ds_layout->entity_type = 'user';
-  $ds_layout->bundle = 'user';
-  $ds_layout->view_mode = 'tooltip';
-  $ds_layout->layout = 'ds_2col_stacked';
-  $ds_layout->settings = array(
-    'regions' => array(
-      'left' => array(
-        0 => 'ds_user_picture',
-      ),
-      'right' => array(
-        1 => 'field_first_name',
-        2 => 'field_last_name',
-        3 => 'field_position',
-        4 => 'field_school_name',
-        5 => 'field_district_name',
-      ),
-      'footer' => array(
-        6 => 'field_subject_s_',
-        7 => 'field_grade_level_s_',
-        8 => 'field_special_populations',
-      ),
-    ),
-    'fields' => array(
-      'ds_user_picture' => 'left',
-      'field_first_name' => 'right',
-      'field_last_name' => 'right',
-      'field_position' => 'right',
-      'field_school_name' => 'right',
-      'field_district_name' => 'right',
-      'field_subject_s_' => 'footer',
-      'field_grade_level_s_' => 'footer',
-      'field_special_populations' => 'footer',
-    ),
-    'classes' => array(),
-    'wrappers' => array(
-      'header' => 'div',
-      'left' => 'div',
-      'right' => 'div',
-      'footer' => 'div',
-    ),
-    'layout_wrapper' => 'div',
-    'layout_attributes' => '',
-    'layout_attributes_merge' => 1,
-    'layout_link_attribute' => '',
-    'layout_link_custom' => '',
-  );
-  $export['user|user|tooltip'] = $ds_layout;
 
   return $export;
 }
