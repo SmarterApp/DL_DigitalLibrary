@@ -1278,12 +1278,14 @@ function sbac_media_duplicates_form($form, &$form_state) {
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
+    '#prefix' => '<div class="right dup-btns">',
     '#attributes' => array('id' => array('edit-cancel-media-duplicates'))
   );
 
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Save and Continue',
+    '#suffix' => '</div>',
     '#attributes' => array('id' => array('edit-save-media-duplicates'))
   );
 
