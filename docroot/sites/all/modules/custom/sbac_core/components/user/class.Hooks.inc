@@ -34,9 +34,9 @@ class Hooks extends \devtools\Hooks {
     if (isset($account->field_first_name[LANGUAGE_NONE][0]['safe_value'])) {
       $name = $account->field_first_name[LANGUAGE_NONE][0]['safe_value'];
 
-      if (isset($account->field_last_name[LANGUAGE_NONE][0]['safe_value'])) {
-        $name .= ' ' . $account->field_last_name[LANGUAGE_NONE][0]['safe_value'];
-      }
+      // if (isset($account->field_last_name[LANGUAGE_NONE][0]['safe_value'])) {
+      //   $name .= ' ' . $account->field_last_name[LANGUAGE_NONE][0]['safe_value'];
+      // }
     }
   }
 
