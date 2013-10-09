@@ -952,7 +952,7 @@ a.sbac-grid-layout {
 /* line 914, ../sass/sbac_resource.scss */
 .sbac-media-duplicates-container {
   border: 1px solid silver;
-  border-width: 1px 0;
+  border-width: 0 0 1px;
   margin: 10px 0;
   padding: 10px;
 }
