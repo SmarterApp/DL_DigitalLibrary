@@ -13,7 +13,7 @@ class Reviews extends Base {
   public function getContent() {
     // add necessary css
     drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/profile.css');
-
+      
     // create header & new review form
       $output = '';
 

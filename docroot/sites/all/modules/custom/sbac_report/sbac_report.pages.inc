@@ -15,6 +15,7 @@ function sbac_report_individual() {
   $contributed_details = '';
   $gate_keeping = '';
   $all_reviews = '';
+  $summation = '';
 
   // Get SESSION values.
   $uid = sbac_report_get_session_value('sne', 'uid');
@@ -43,6 +44,9 @@ function sbac_report_individual() {
       // $reviews = array_merge($reviews_in_progress, $completed_reviews);
       $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $completed_reviews);
       $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
+
+      // The big 'summation' table.
+      $summation = sbac_report_build_summation_table($uid, $date_range);
     }
   }
 
@@ -53,6 +57,7 @@ function sbac_report_individual() {
       'contributed_details' => $contributed_details,
       'gate_keeping' => $gate_keeping,
       'all_reviews' => $all_reviews,
+      'summation' => $summation,
     )
   );
 }
@@ -223,6 +228,80 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
     array('data' => count($completed_reviews)),
     array('data' => (round($average_consistency_rate, 1) * 100) . '%'),
   );
+
+  return theme('table', array(
+      'header' => $header,
+      'rows' => $rows,
+      'attributes' => array(
+        'class' => array('large-12')
+      ),
+    )
+  );
+}
+
+function sbac_report_build_summation_table($uid, $date_range) {
+  $header = array(
+    t('Resource Title'),
+    t('Review Date'),
+    t('Recc.'),
+    t('Recc. Consistency'),
+    t('GK'),
+  );
+
+  // $types = field_info_field_map();
+  // $types = field_info_instances('feedback', 'qc');
+  // print_rr($types);exit();
+
+  $query = "  SELECT      gk.id AS gk_id,
+                          gk.met_criteria AS met_criteria,
+                          gk.uid AS gk_uid,
+                          gk.node_id AS nid,
+                          qc.id AS qc_id,
+                          qc.created AS qc_created
+
+              FROM        eck_feedback gk
+              LEFT JOIN   eck_feedback qc
+                ON        qc.type = 'qc'
+                AND       qc.node_id = gk.node_id
+                AND       qc.status = 1
+                AND       qc.completed = 1
+                AND       qc.current = 1
+                AND       qc.uid = :uid
+
+              WHERE       gk.status = 1
+              AND         gk.completed = 1
+              AND         gk.current = 1
+           ";
+
+  $result = db_query($query, array(
+    ':uid' => (int) $uid,
+  ));
+
+  foreach ($result as $row) {
+    dsmm($row);
+  }
+
+  $rows = array();
+
+  for ($i = 0; $i < 10; $i++) {
+    $rows[] = array(
+      array(
+        'data' => 'test',
+      ),
+      array(
+        'data' => 'test1',
+      ),
+      array(
+        'data' => 'test2',
+      ),
+      array(
+        'data' => 'test3',
+      ),
+      array(
+        'data' => 'test4',
+      ),
+    );
+  }
 
   return theme('table', array(
       'header' => $header,
