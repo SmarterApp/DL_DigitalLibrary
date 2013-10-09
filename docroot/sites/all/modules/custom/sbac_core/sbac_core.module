@@ -243,6 +243,7 @@ function sbac_core_devtools_components() {
     ),
     'sections' => array(),
     'taskit' => array(),
+    'tooltip' => array(),
     'user' => array(),
     'user_profile' => array(),
   );

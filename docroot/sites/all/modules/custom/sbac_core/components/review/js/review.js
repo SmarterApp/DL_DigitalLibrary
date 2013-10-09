@@ -36,22 +36,6 @@ Drupal.behaviors.review = {
         }
       }
 
-    // tooltips
-      var tooltip = $('.account-tooltip');
-      if (tooltip.length) {
-        $(tooltip).each(function(i, el) {
-          var wrapper = $(el);
-
-          $('.account-tooltip-trigger', wrapper).once('tooltip-trigger').mouseover(function () {
-            $('.account-tooltip-body', wrapper).show();
-          });
-
-          $(wrapper).once('tooltip-trigger').mouseout(function () {
-            $('.account-tooltip-body', wrapper).hide();
-          });
-        }); 
-      }
-
     // review yes/no voting
       var reviews = $('.entity-review');
       if (reviews.length) {
@@ -104,10 +88,6 @@ Drupal.behaviors.review = {
             });
           }
         });
-
-
-        
-
       }
   },
 

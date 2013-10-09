@@ -240,7 +240,7 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
 }
 
 function sbac_report_build_summation_table($uid, $date_range) {
-  $header = array(
+  $subheader = array(
     t('Resource Title'),
     t('Review Date'),
     t('Recc.'),
@@ -248,9 +248,60 @@ function sbac_report_build_summation_table($uid, $date_range) {
     t('GK'),
   );
 
-  // $types = field_info_field_map();
-  // $types = field_info_instances('feedback', 'qc');
-  // print_rr($types);exit();
+  $instructional_tid  = 84;
+  $professional_tid   = 85;
+
+  $focus_map = array(
+
+    // instructional
+    $instructional_tid  => variable_get('qc_' . $instructional_tid . '_criteria_num'),
+    // professional
+    $professional_tid   => variable_get('qc_' . $professional_tid . '_criteria_num'),
+  );
+
+  $header = array(
+    array(
+      'data' => '&nbsp;',
+      'colspan' => sizeof($subheader),
+    ),
+  );
+
+  foreach ($focus_map as $tid => $count) {
+    $term = taxonomy_term_load($tid);
+    $header[] = array(
+      'data' => $term->name,
+      'colspan' => $count,
+    );
+
+    for ($i = 1; $i <= $count; $i++) {
+      $title = variable_get('qc_' . $tid . '_criteria_' . $i . '_title');
+      $desc  = variable_get('qc_' . $tid . '_criteria_' . $i . '_description');
+
+      $cell = ' 
+                <span class="devtools-tooltip report-qc-tooltip">
+                  <a href="#" class="devtools-tooltip-trigger">' . $i . '</a>
+                  <div class="devtools-tooltip-body">
+                    <span class="title">' . filter_text($title) . '</span>
+                    <span class="desc">' . filter_text($desc) . '</span>
+                  </div>
+                </span>
+              ';
+
+      $subheader[] = $cell;
+    }
+  }
+
+  // qc_84_criteria_num
+
+  // qc_84_criteria_1_description
+  // qc_84_criteria_1_title
+
+  // $vals = field_allowed_values('field_focus');
+  // print_rr($vals);exit();
+
+  // $qc_fields = field_info_instances('feedback', 'qc');
+  // $qc_fields = field_info_instances('field_collection_item', 'field_review_set');
+  // print_rr($qc_fields);exit();
 
   $query = "  SELECT      gk.id AS gk_id,
                           gk.met_criteria AS met_criteria,
@@ -278,10 +329,12 @@ function sbac_report_build_summation_table($uid, $date_range) {
   ));
 
   foreach ($result as $row) {
-    dsmm($row);
+    // dsmm($row);
   }
 
-  $rows = array();
+  $rows = array(
+    $subheader,
+  );
 
   for ($i = 0; $i < 10; $i++) {
     $rows[] = array(
@@ -303,7 +356,7 @@ function sbac_report_build_summation_table($uid, $date_range) {
     );
   }
 
-  return theme('table', array(
+  $output = theme('table', array(
       'header' => $header,
       'rows' => $rows,
       'attributes' => array(
@@ -311,4 +364,6 @@ function sbac_report_build_summation_table($uid, $date_range) {
       ),
     )
   );
+
+  return $output;
 }

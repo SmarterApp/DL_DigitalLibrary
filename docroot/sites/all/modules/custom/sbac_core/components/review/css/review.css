@@ -380,38 +380,16 @@
 }
 
 /* user tooltips */
-/* line 398, ../sass/review.scss */
-.account-tooltip {
-  position: relative;
-}
-/* line 401, ../sass/review.scss */
-.account-tooltip .account-tooltip-body {
-  background: #eee;
-  border: 1px #ccc solid;
-  display: none;
-  left: 20px;
-  padding: 10px;
-  position: absolute;
-  top: 20px;
-  width: 500px;
-  z-index: 50;
-  text-align: left;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
-}
-/* line 415, ../sass/review.scss */
+/* line 399, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }
-/* line 419, ../sass/review.scss */
+/* line 403, ../sass/review.scss */
 .account-tooltip .line {
   display: none;
 }
 
-/* line 425, ../sass/review.scss */
+/* line 409, ../sass/review.scss */
 .fivestar-widget {
   padding: 5px 0;
 }
