@@ -1,8 +1,8 @@
-.more-less-text .hidden,
+.more-less-text .more-less-text-hidden,
 .more-less-text .more-less-text-full {
   display: none;
 }
 
-.more-less-text .more-less-text-full.open {
+.more-less-text .more-less-text-full.more-less-text-open {
   display: block;
 }
