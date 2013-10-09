@@ -112,7 +112,6 @@ function theme_review_delete($variables) {
           'use-ajax',
           'use-dialog',
           'button',
-          'radius',
         ),
         'id' => $trigger_id,
       ),
