@@ -119,14 +119,14 @@ function sbac_alignment_ajax_alignment_crud_callback() {
       $data = array(
         'deleted_nid' => $nid,
       );
-
+      
       $node = node_load($nid);
       if (node_access('delete', $node)) {
         node_delete($nid);
       }
-
+      
       print drupal_json_encode($data);
-
+      
       break;
 
     case 'create':

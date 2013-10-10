@@ -375,13 +375,13 @@ function sbac_alignment_node_load($nodes, $types) {
 
       if (isset($result['node'])) {
         $terms = array();
-
+        
         foreach ($result['node'] as $item) {
           if ($alignment = node_load($item->nid)) {
             $terms = array_merge_recursive($terms, $alignment->field_education_alignment);
           }
         }
-
+        
         $node->field_alignment_term = array_merge_recursive($node->field_alignment_term, $terms);
       }
     }
