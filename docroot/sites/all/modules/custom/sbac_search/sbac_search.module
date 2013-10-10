@@ -47,7 +47,9 @@ function sbac_search_apachesolr_index_document_build_user(ApacheSolrDocument $do
 
   if (isset($user->field_school_name['und'])) {
     foreach ($user->field_school_name['und'] as $key => $value) {
-      $document->setMultiValue('sm_school_name', $value['value']);
+      if (isset($value['value'])) {
+        $document->setMultiValue('sm_school_name', $value['value']);
+      }
     }
   }
 
@@ -60,18 +62,17 @@ function sbac_search_apachesolr_index_document_build_user(ApacheSolrDocument $do
 
   if (isset($user->field_subject_s_['und'])) {
     foreach ($user->field_subject_s_['und'] as $key => $value) {
-      $document->setMultiValue('sm_subject_s', $value['value']);
+      if (isset($value['value'])) {
+        $document->setMultiValue('sm_subject_s', $value['value']);
+      }
     }
   }
 
   if (isset($user->field_grade_level_s_['und'])) {
     foreach ($user->field_grade_level_s_['und'] as $key => $value) {
-      $val = '';
       if (isset($value['value'])) {
-        $val = $value['value'];
+        $document->setMultiValue('sm_grade_level_s', $val);
       }
-
-      $document->setMultiValue('sm_grade_level_s', $val);
     }
   }
 }
