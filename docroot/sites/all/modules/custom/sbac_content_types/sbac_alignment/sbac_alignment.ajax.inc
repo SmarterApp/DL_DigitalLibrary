@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Page Callback
  * Outputs the alignment tagger UI.
  */
-function sbac_alignment_ajax_alignment_page($ref_node = null) {
+function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
   drupal_add_js(libraries_get_path('jquery.more') . '/jquery.more.js');
   drupal_add_css(libraries_get_path('jquery.more') . '/jquery.more.css');
   drupal_add_js(drupal_get_path('theme', 'sbac') . '/js/custom.js');
@@ -12,17 +13,18 @@ function sbac_alignment_ajax_alignment_page($ref_node = null) {
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
   $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
 
-  $output .= '<div id="alignment-page"><input id="ref_node" style="display:none" value="' . $ref_node . '"> ';
+  $output = '<div id="alignment-page"><input id="ref_node" style="display:none" value="' . $ref_node . '"> ';
   $output .= '<div class="alignment-breadcrumb"></div>';
   $output .= '<div id="alignment-msg"></div>';
   $output .= '<div class="alignment-filter">';
   $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject Area'));
   $output .= '</div><div class="alignment-form"></div>';
-  $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add to Resource</a><a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
+  $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add Standard(s) to Resource</a><a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
   $output .= '</div></div>';
 
   return $output;
 }
+
 /**
  * AJAX Callback
  */
@@ -31,25 +33,21 @@ function sbac_alignment_ajax_terms_callback() {
   $ela_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
-    'Choose Your Claim',
-    'Choose Your Target',
-    'Select Your Common Core State Standard(s)',
+    'Choose Your Strand/Domain',
+    'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
   );
   $ma_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
-    'Choose Your Claim',
     'Choose Your Domain',
-    'Choose Your Target',
-    'Choose Your Emphasis',
-    'Select Your Common Core State Standard(s)',
+    'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
   );
 
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
   $parent = taxonomy_term_load($_POST['parent']);
-  if(isset($_POST['remove'])) {
+  if (isset($_POST['remove'])) {
     $temp = array_shift(taxonomy_get_parents($parent->tid));
-    if(empty($temp)) {
+    if (empty($temp)) {
       $parent->tid = 0;
     }
     else {
@@ -59,13 +57,10 @@ function sbac_alignment_ajax_terms_callback() {
 
   $output_array['parent'] = $parent;
   $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
-
   $publication = $parent->field_alignment_publication['und'][0]['value'];
-  $output_array['publication'] = (empty($publication))? 0 : $publication;
-
+  $output_array['publication'] = (empty($publication)) ? 0 : $publication;
   $output_array['depth'] = $depth = sbac_alignment_term_depth($parent->tid);
-
-  if($publication == 'SBAC-MA-v1') {
+  if ($publication == 'CC-MA-v1') {
     $level_title = $ma_titles[$depth];
   }
   else {
@@ -74,6 +69,12 @@ function sbac_alignment_ajax_terms_callback() {
 
   $output_array['tids'] = array();
   foreach ($terms as $term) {
+    $pos = strpos($term->name, ':');
+    if ($pos !== FALSE) {
+      $new_name = substr($term->name, $pos + 1);
+      $term->name = trim($new_name);
+    }
+
     $output_array['tids'][] = $term;
     $children = taxonomy_get_children($term->tid);
     $output_array['children'][] = $children;
@@ -90,13 +91,13 @@ function sbac_alignment_ajax_terms_callback() {
   }
 
   $output_array['tids_count'] = count($output_array['tids']);
-
-  $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => $level_title));
+  $output = theme('alignment_tags', array('terms' => $terms, 'level_title' => $level_title));
   $output_array['html'] = $output;
 
   print drupal_json_encode($output_array);
   exit;
 }
+
 /**
  * AJAX Callback
  * CRUD for Alignment nodes.
@@ -105,64 +106,81 @@ function sbac_alignment_ajax_alignment_crud_callback() {
   global $user;
   $op = 'none';
   $nid = 0;
-  if(isset($_POST['op'])){
+  if (isset($_POST['op'])) {
     $op = $_POST['op'];
   }
-  
-  switch($op) {
+
+  switch ($op) {
     case 'delete':
-      if(isset($_POST['nid'])){
+      if (isset($_POST['nid'])) {
         $nid = $_POST['nid'];
       }
-
-      node_delete($nid);
-      print drupal_json_encode('deleted: ' . $nid);
+      // prep JSON response
+      $data = array(
+        'deleted_nid' => $nid,
+      );
+      print drupal_json_encode($data);
       break;
+
     case 'create':
-      if(isset($_POST['alignment_standards'])){
+      if (isset($_POST['alignment_standards'])) {
         $standards = explode('|', $_POST['alignment_standards']);
         array_shift($standards);
       }
-      if(isset($_POST['alignment_type'])){
+      if (isset($_POST['alignment_type'])) {
         $alignment_type = $_POST['alignment_type'];
       }
-      if(isset($_POST['alignment_ref'])){
+      if (isset($_POST['alignment_ref'])) {
         $alignment_ref = $_POST['alignment_ref'];
-      } else {$alignment_ref = 537;}
-      
+      }
+      else {
+        $alignment_ref = 537;
+      }
+
       $types = array();
       $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_TYPE_VOCAB_NAME);
       $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
 
-      foreach($terms as $term) {
+      foreach ($terms as $term) {
         $types[$term->name] = $term->tid;
       }
-      
-      foreach($standards as $tid) {
+
+      $standards_terms = array();
+      foreach ($standards as $tid) {
         //create alignment
         $node = new stdClass();
         $node->title = "resource-$alignment_ref-alignment-$tid";
         $node->type = 'alignment';
         $node->uid = $user->uid;
-        $entity->node_type = 'comment_node_alignment';
         node_object_prepare($node);
-        
-        
+
         $node->field_education_alignment['und'][]['tid'] = $tid;
         $node->field_alignment_type['und'][]['tid'] = $types[$alignment_type];
         $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
         node_save($node);
-        
-        $node = node_load($alignment_ref);
-        $node->field_alignment_term['und'][]['tid'] = $tid;
-        node_save($node);
+
+        $term = taxonomy_term_load($tid);
+        $standards_terms[] = $term->name;
+
+        // $resource_node = node_load($alignment_ref, NULL, FALSE);
+        // $resource_node = node_load($alignment_ref);
+        // $resource_node->field_alignment_term['und'][]['tid'] = $tid;
+        // entity_save_field('field_alignment_term', $resource_node, 'node', $resource_node->nid);
       }
-      print drupal_json_encode(array('html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref)));
+
+      $data = array(
+        'html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref),
+        'terms' => $standards_terms,
+      );
+
+      print drupal_json_encode($data);
+
       exit;
       break;
   }
   exit;
 }
+
 /**
  * AJAX Callback
  * Lazy-loading the form.
@@ -173,6 +191,7 @@ function sbac_alignment_ajax_alignment_form_callback() {
   print drupal_json_encode($output);
   exit;
 }
+
 /**
  * AJAX Callback
  * Outputs the breadcumbs.
@@ -180,6 +199,23 @@ function sbac_alignment_ajax_alignment_form_callback() {
 function sbac_alignment_ajax_alignment_breadcrumbs_callback() {
   $output = $terms = array();
   $parents = taxonomy_get_parents_all($_POST['tid']);
+
+  foreach ($parents AS $key => $term) {
+    $pos = strpos($term->name, ':');
+    // Remove the ":" from the string.
+    if ($pos !== FALSE) {
+      $new_name = substr($term->name, $pos + 1);
+      $term->name = trim($new_name);
+      $parents[$key] = $term;
+    }
+
+    // Trim the name if its greater then 41 characters.
+    if (strlen($term->name) > 41) {
+      $term->name = substr($term->name, 0, 41) . '...';
+      $parents[$key] = $term;
+    }
+  }
+
   $output['html'] = theme('alignment_breadcrumbs', array('terms' => array_reverse($parents)));
   print drupal_json_encode($output);
   exit;

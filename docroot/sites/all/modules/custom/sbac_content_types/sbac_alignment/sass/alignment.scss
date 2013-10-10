@@ -5,6 +5,12 @@
    Alignment Tags Browser
    ----------------------------------------- */
 
+#modal-content {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 #alignment-page {
   .form-item {
     margin: 5px 0;
@@ -33,7 +39,13 @@
   }
 
   .alignment-breadcrumb {
-    ul, li {
+
+    ul {
+      margin: 0 20px 20px;
+      padding: 0;
+    }
+
+    li {
       margin: 0;
       padding: 0;
     }
@@ -112,28 +124,35 @@
   }
 
   .standards-browser {
-    margin: 10px 0 20px;
-    padding: 20px 0 10px;
-    border: 1px solid silver;
-    border-width: 1px 0;
+    background: #E6F4F8;
+    padding: 0 40px 30px 40px;
+    margin: 0px 0 20px;
+    border: 1px solid #BDE3F8;
+    border-width:1px 0;
+
+    h2 {
+      margin:20px 0;
+    }
 
     .button {
       width: 100%;
       padding: 20px 40px 20px 20px;
-      background: #8d9297 url("../images/caret-right.png") no-repeat 95% center;
-      border: 1px rgba(100, 100, 100, 1) solid;
+      background: #FFF url("../images/caret-blue-right.png") no-repeat 95% center;
+      border:1px solid #AED9E5;
       position: relative;
       float: left;
       text-align: left;
-      color: white;
       font-size: emCalc(16px);
-      @include box-shadow(none);
-      @include border-radius(3px);
-      @include text-shadow(0px -1px 0px rgba(0,0,0,1));
+      @include box-shadow(#AED9E5 0 0 3px);
+      @include border-radius(10px);
       @include transition(all 500ms ease);
+      @include text-shadow(none);
+      color: #0785AD;
+      font-weight: bold;
 
       &:hover {
-        background-color:#0085AD;
+        background: #0085AD url("../images/caret-right.png") no-repeat 95% center;
+        color: #FFF !important;
         .tooltip-b {
           opacity: 1;
           display: block;
@@ -204,9 +223,14 @@
       padding: 10px;
       border: 1px solid silver;
       @include border-radius(5px);
+      background-color: white;
 
       p {
         font-size: 16px;
+        color: #8d9297;
+      }
+
+      .checkbox-more-less {
         color: #8d9297;
       }
     }
@@ -306,6 +330,7 @@
 
 .alignment-buttons {
   text-align: right;
+  margin-right: 20px;
     
   a.button {
     display: inline-block;
@@ -320,6 +345,7 @@
 
 #ccss-submit {
   margin-left: 10px;
+  margin-right: 20px;
   float: right;
 }
 
