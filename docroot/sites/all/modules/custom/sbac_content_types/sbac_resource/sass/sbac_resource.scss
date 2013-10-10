@@ -543,7 +543,7 @@ a.sbac-grid-layout {
   .category-filter-list {
     @include border-radius(6px); // border radius
     @include box-shadow(1px 1px 1px rgba(0,0,0,.3)); // drop shadow
-    height: 300px;
+    max-height: 300px;
     width: 500px;
     overflow: scroll;
     background: #edf3e0;
