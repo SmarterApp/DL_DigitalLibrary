@@ -743,7 +743,9 @@ function sbac_resource_node_delete($node, $i) {
   $i=0;
   while ($i < count($node->field_file['und'])) {
 	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
-		  sbac_resource_delete_file_from_cmis($node, $i);
+      watchdog('sbac', 'deleting file from cmis: ' . $node->nid . ':' . $i);
+
+		  sbac_resource_delete_file_from_cmis($node->field_document_id['und'][$i]['value'], $i);
 		  unset($node->field_document_id['und'][$i]);
 	  }
 	  $i++;
@@ -836,14 +838,15 @@ function sbac_resource_node_delete($node, $i) {
  *
  * @param $node, $i = file index
  */
-function sbac_resource_delete_file_from_cmis(&$node, $i) 
+function sbac_resource_delete_file_from_cmis($document_id, $i) 
 {
   module_load_include('api.inc', 'cmis');
   try {
     $repository = cmis_get_repository();
-    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $node->field_document_id['und'][$i]['value']);
+    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $document_id);
     cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
-    $node->field_document_id['und'][$i]['value'] = NULL;
+
+    watchdog('sbac', 'done delete');
   } 
   catch (CMISException $e) {
     // cmis_error_handler('sbac_documents_delete_document', $e);
