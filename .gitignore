@@ -5,5 +5,4 @@ docroot/sites/*/private
 config
 .idea
 docroot/phpinfo.php
-
-
+_settings.php
