@@ -202,7 +202,7 @@
 /* line 221, ../sass/review.scss */
 #review-wrap-reviews #summary .appropriate-for .term {
   font-size: 0.8em;
-  margin-bottom: 10px;
+  padding: 10px;
 }
 /* line 225, ../sass/review.scss */
 #review-wrap-reviews #summary .appropriate-for .term.highlight {
