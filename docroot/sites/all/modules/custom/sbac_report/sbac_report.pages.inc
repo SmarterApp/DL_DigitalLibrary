@@ -239,6 +239,12 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
   );
 }
 
+/**
+ * Builds the overall resource qc review summation table.
+ * @param  [type] $uid        [description]
+ * @param  [type] $date_range [description]
+ * @return [type]             [description]
+ */
 function sbac_report_build_summation_table($uid, $date_range) {
   $subheader = array(
     t('Resource Title'),
@@ -248,15 +254,17 @@ function sbac_report_build_summation_table($uid, $date_range) {
     t('GK'),
   );
 
-  $instructional_tid  = 84;
-  $professional_tid   = 85;
-
   $focus_map = array(
-
-    // instructional
-    $instructional_tid  => variable_get('qc_' . $instructional_tid . '_criteria_num'),
-    // professional
-    $professional_tid   => variable_get('qc_' . $professional_tid . '_criteria_num'),
+    array(
+      'tid' => 85,
+      'title' => t('Professional Learning Quality Criteria Consistency Rates'),
+      'count' => variable_get('qc_85_criteria_num', 0),
+    ),
+    array(
+      'tid' => 84,
+      'title' => t('Instructional Quality Criteria Consistency Rates'),
+      'count' => variable_get('qc_84_criteria_num', 0),
+    ),
   );
 
   $header = array(
@@ -266,16 +274,15 @@ function sbac_report_build_summation_table($uid, $date_range) {
     ),
   );
 
-  foreach ($focus_map as $tid => $count) {
-    $term = taxonomy_term_load($tid);
+  foreach ($focus_map as $focus_data) {
     $header[] = array(
-      'data' => $term->name,
-      'colspan' => $count,
+      'data' => $focus_data['title'],
+      'colspan' => $focus_data['count'],
     );
 
-    for ($i = 1; $i <= $count; $i++) {
-      $title = variable_get('qc_' . $tid . '_criteria_' . $i . '_title');
-      $desc  = variable_get('qc_' . $tid . '_criteria_' . $i . '_description');
+    for ($i = 1; $i <= $focus_data['count']; $i++) {
+      $title = variable_get('qc_' . $focus_data['tid'] . '_criteria_' . $i . '_title');
+      $desc  = variable_get('qc_' . $focus_data['tid'] . '_criteria_' . $i . '_description');
 
       $cell = ' 
                 <span class="devtools-tooltip report-qc-tooltip">
@@ -303,57 +310,60 @@ function sbac_report_build_summation_table($uid, $date_range) {
   // $qc_fields = field_info_instances('field_collection_item', 'field_review_set');
   // print_rr($qc_fields);exit();
 
+  // TODO:
+  //  - query for all gate_keeper/qc entities created by current user
+  //  - build data structure, grouping gate keeper/qc (don't mess up ordering!)
+  //  - create rows from new data structure
+
   $query = "  SELECT      gk.id AS gk_id,
                           gk.met_criteria AS met_criteria,
                           gk.uid AS gk_uid,
                           gk.node_id AS nid,
                           qc.id AS qc_id,
-                          qc.created AS qc_created
+                          n.title AS node_title,
+
+                          IF(qc.created IS NULL, gk.created, qc.created) AS review_date
 
               FROM        eck_feedback gk
+              
+              INNER JOIN  node n
+                ON        n.nid = gk.node_id
+                
               LEFT JOIN   eck_feedback qc
                 ON        qc.type = 'qc'
                 AND       qc.node_id = gk.node_id
                 AND       qc.status = 1
                 AND       qc.completed = 1
                 AND       qc.current = 1
-                AND       qc.uid = :uid
 
               WHERE       gk.status = 1
               AND         gk.completed = 1
               AND         gk.current = 1
+              AND         :uid IN (gk.uid, qc.uid)
+              -- remove rows where user ha
+              AND         IF (gk.uid = :uid AND qc.uid != :uid, qc.id = NULL, 1)
+              ORDER BY    review_date DESC
            ";
 
   $result = db_query($query, array(
     ':uid' => (int) $uid,
   ));
 
-  foreach ($result as $row) {
-    // dsmm($row);
-  }
-
   $rows = array(
     $subheader,
   );
 
-  for ($i = 0; $i < 10; $i++) {
-    $rows[] = array(
-      array(
-        'data' => 'test',
-      ),
-      array(
-        'data' => 'test1',
-      ),
-      array(
-        'data' => 'test2',
-      ),
-      array(
-        'data' => 'test3',
-      ),
-      array(
-        'data' => 'test4',
-      ),
-    );
+  foreach ($result as $row) {
+    $item = array();
+
+    // print_rr($row);
+
+    // resource title
+    $item[] = l($row->node_title, 'node/' . $row->nid);
+    // review date
+    $item[] = format_date($row->review_date, 'simple');
+
+    $rows[] = $item;
   }
 
   $output = theme('table', array(
