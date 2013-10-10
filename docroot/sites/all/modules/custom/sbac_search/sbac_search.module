@@ -66,7 +66,12 @@ function sbac_search_apachesolr_index_document_build_user(ApacheSolrDocument $do
 
   if (isset($user->field_grade_level_s_['und'])) {
     foreach ($user->field_grade_level_s_['und'] as $key => $value) {
-      $document->setMultiValue('sm_grade_level_s', $value['value']);
+      $val = '';
+      if (isset($value['value'])) {
+        $val = $value['value'];
+      }
+
+      $document->setMultiValue('sm_grade_level_s', $val);
     }
   }
 }
