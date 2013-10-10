@@ -110,6 +110,8 @@ function sbac_alignment_ajax_alignment_crud_callback() {
     $op = $_POST['op'];
   }
 
+  watchdog('sbac', 'crud callback');
+
   switch ($op) {
     case 'delete':
       if (isset($_POST['nid'])) {
@@ -119,14 +121,18 @@ function sbac_alignment_ajax_alignment_crud_callback() {
       $data = array(
         'deleted_nid' => $nid,
       );
-      
+
+      watchdog('sbac', 'nid: ' . $nid);
+
       $node = node_load($nid);
       if (node_access('delete', $node)) {
         node_delete($nid);
+
+        watchdog('sbac', 'deleted: ' . $nid);
       }
-      
+
       print drupal_json_encode($data);
-      
+
       break;
 
     case 'create':
