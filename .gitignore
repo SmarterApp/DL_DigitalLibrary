@@ -2,4 +2,8 @@
 docroot/files
 docroot/sites/*/files
 docroot/sites/*/private
+config
+.idea
+docroot/phpinfo.php
+
 
