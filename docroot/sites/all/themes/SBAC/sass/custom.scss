@@ -494,10 +494,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       padding: 0px;
       margin: 0px;
 
-      &:hover {
-        background: #505050;
-      }
-
       .active {
         background: #777777;
       }
@@ -511,6 +507,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
         &.help {
           background-image: url('../images/icons/help-small.png');
+          background-size: contain;
         }
 
         &.feedback {
