@@ -739,7 +739,7 @@ function sbac_resource_node_presave($node) {
  *
  * @param $node, $i = file index
  */
-function sbac_resource_node_delete($node, $i) {
+function sbac_resource_node_delete($node, $i = 0) {
   $i=0;
   while ($i < count($node->field_file['und'])) {
 	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
