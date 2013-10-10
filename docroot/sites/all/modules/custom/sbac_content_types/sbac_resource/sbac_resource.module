@@ -842,11 +842,16 @@ function sbac_resource_delete_file_from_cmis($document_id, $i)
 {
   module_load_include('api.inc', 'cmis');
   try {
+    $start = microtime_float();
+
     $repository = cmis_get_repository();
     $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $document_id);
     cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
 
-    watchdog('sbac', 'done delete');
+    $end = microtime_float();
+    $difference = $end - $start;
+
+    watchdog('sbac', 'did delete in: ' . $difference . ' seconds');
   } 
   catch (CMISException $e) {
     // cmis_error_handler('sbac_documents_delete_document', $e);
