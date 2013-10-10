@@ -286,10 +286,10 @@ function sbac_report_state_options() {
 
     $options['all'] = t('All');
     // Return if we only want the first one.
-    if ($first_only) {
+    if (isset($first_only) && $first_only) {
       return $options;
     }
-
+    
     $states = taxonomy_vocabulary_machine_name_load("states");
     $vid = $states->vid;
     $terms = taxonomy_get_tree($vid);
