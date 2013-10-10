@@ -14,7 +14,7 @@ function sbac_search_apachesolr_environments() {
   $environment->api_version = 1;
   $environment->env_id = 'amazon_apache_solr_dev';
   $environment->name = 'Amazon Apache Solr - Dev';
-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/dev';
+  $environment->url = 'http://ec2-23-21-33-12.compute-1.amazonaws.com:8080/solr/dev';
   $environment->service_class = '';
   $environment->conf = array(
     'apachesolr_access_always_add_grants' => 0,
@@ -42,7 +42,7 @@ function sbac_search_apachesolr_environments() {
   $environment->api_version = 1;
   $environment->env_id = 'amazon_apache_solr_environment_local';
   $environment->name = 'Amazon Apache Solr - Local';
-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/dev';
+  $environment->url = 'http://ec2-23-21-33-12.compute-1.amazonaws.com:8080/solr/dev';
   $environment->service_class = '';
   $environment->conf = array(
     'apachesolr_access_always_add_grants' => 0,
@@ -54,7 +54,7 @@ function sbac_search_apachesolr_environments() {
   $environment->api_version = 1;
   $environment->env_id = 'amazon_apache_solr_prod';
   $environment->name = 'Amazon Apache Solr - Prod';
-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/production';
+  $environment->url = 'http://ec2-23-21-33-12.compute-1.amazonaws.com:8080/solr/production';
   $environment->service_class = '';
   $environment->conf = array(
     'apachesolr_access_always_add_grants' => 0,
@@ -82,7 +82,7 @@ function sbac_search_apachesolr_environments() {
   $environment->api_version = 1;
   $environment->env_id = 'amazon_apache_solr_test';
   $environment->name = 'Amazon Apache Solr - Test';
-  $environment->url = 'http://ec2-54-242-95-39.compute-1.amazonaws.com:8080/solr/staging';
+  $environment->url = 'http://ec2-23-21-33-12.compute-1.amazonaws.com:8080/solr/staging';
   $environment->service_class = '';
   $environment->conf = array(
     'apachesolr_access_always_add_grants' => 0,
