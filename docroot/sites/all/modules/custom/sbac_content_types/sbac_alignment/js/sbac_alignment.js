@@ -22,6 +22,35 @@
         }
       };
 
+      // Close the open modal content and backdrop
+      function closeCtoolsModal() {
+        // Unbind the events
+        $(window).unbind('resize',  modalContentResize);
+        
+        // Remove the content
+        $('#modalContent').remove();
+        $('#modalBackdrop').remove();
+      }
+
+      // Move and resize the modalBackdrop and modalContent on resize of the window
+      modalContentResize = function(){
+        // Get our heights
+        var docHeight = $(document).height();
+        var docWidth = $(document).width();
+        var winHeight = $(window).height();
+        var winWidth = $(window).width();
+        if( docHeight < winHeight ) docHeight = winHeight;
+
+        // Get where we should move content to
+        var modalContent = $('#modalContent');
+        var mdcTop = ( winHeight / 2 ) - (  modalContent.outerHeight() / 2);
+        var mdcLeft = ( winWidth / 2 ) - ( modalContent.outerWidth() / 2);
+
+        // Apply the changes
+        $('#modalBackdrop').css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+        modalContent.css('top', mdcTop + 'px').css('left', mdcLeft + 'px').show();
+      };
+
       // Modal Delete callback.
       $('.ccss-term-delete').click(function () {
         var nid = $(this).attr('nid');
@@ -92,8 +121,9 @@
               $('p[id^=description-]').more({length: 200, moreText: 'read more', lessText: 'read less'});
 
               $('#ccss-cancel').click(function () {
-                $('#modalBackdrop').hide();
-                $('#modalContent').hide();
+                closeCtoolsModal();
+                // $('#modalBackdrop').hide();
+                // $('#modalContent').hide();
               });
 
               $('#ccss-submit').click(function () {
@@ -125,8 +155,9 @@
                   var closeModal = function (data) {
                     var obj = jQuery.parseJSON(data);
                     $('#sbac-resource-alignment-tag-view').html(obj.html);
-                    $('#modalBackdrop').hide();
-                    $('#modalContent').hide();
+                    closeCtoolsModal();
+                    // $('#modalBackdrop').hide();
+                    // $('#modalContent').hide();
                     Drupal.attachBehaviors('.ccss-term-delete');
 
                     var field = $('.node-resource-form .field-name-field-alignment-term input[type=text]');
