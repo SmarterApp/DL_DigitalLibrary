@@ -152,6 +152,7 @@
                     $('#alignment-msg .alignment-error ul').append('<li>Please select a standard.</li>');
                   }
                 }
+                return false;
               });
             }
 
