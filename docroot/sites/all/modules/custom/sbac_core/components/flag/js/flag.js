@@ -79,6 +79,17 @@ Drupal.behaviors.flag = {
               cancel_trigger.click(function(e) {
                 e.preventDefault();
 
+                // remove error/status messages which may have been prepended to the form
+                var previous_sibling = form.prev();
+                if ($('.alert-box', previous_sibling)) {
+                  previous_sibling.remove();
+                }
+
+                // remove error labels
+                $('.error', form).each(function(i, el) {
+                  $(el).removeClass('error');
+                });
+
                 issue_type.prop('checked', false);
                 details.val('');
                 details_wrap.hide();
