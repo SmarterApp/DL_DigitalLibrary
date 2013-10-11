@@ -383,6 +383,10 @@ function sbac_alignment_node_load($nodes, $types) {
         }
         
         $node->field_alignment_term = $terms;
+
+        if (isset($_GET['debug'])) {
+          drupal_set_message(print_r($node->field_alignment_term, 1));
+        }
       }
     }
   }
