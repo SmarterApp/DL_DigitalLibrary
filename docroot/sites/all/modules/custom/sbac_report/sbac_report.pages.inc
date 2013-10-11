@@ -169,16 +169,27 @@ function sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $
   $gk_ind_accepted_count = count($gk_ind_accepted);
   $gk_ind_returned_count = count($gk_ind_returned);
   $gk_ind_total = $gk_ind_accepted_count + $gk_ind_returned_count;
-  $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1) * 100;
-  $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1) * 100;
+  if ($gk_ind_total != 0) {
+    $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1) * 100;
+    $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1) * 100;
+  }
+  else {
+    $gk_ind_accepted_percentage = 0;
+    $gk_ind_returned_percentage = 0;
+  }
 
     // All.
   $gk_all_accepted_count = count($gk_all_accepted);
   $gk_all_returned_count = count($gk_all_returned);
   $gk_all_total = $gk_all_accepted_count + $gk_all_returned_count;
-  $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 1) * 100;
-  $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 1) * 100;
-
+  if ($gk_ind_total != 0) {
+    $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 1) * 100;
+    $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 1) * 100;
+  }
+  else {
+    $gk_all_accepted_percentage = 0;
+    $gk_all_returned_percentage = 0;
+  }
   // First Row.
   $rows[] = array(
     array('data' => $name),
