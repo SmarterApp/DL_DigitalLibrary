@@ -9,8 +9,11 @@
         <div class="large-6 columns">
           <a id="term-<?php print $term->tid; ?>" class="sbac-custom-term button" tid="<?php print $term->tid; ?>" href="#">
           <?php
-            $term_data = taxonomy_term_load($term->tid);
-            $shortname = $term_data->field_alignment_shortname['und'][0]['value'];
+            if ($term_data = taxonomy_term_load($term->tid)) {
+              if (isset($term_data->field_alignment_shortname['und'][0]['value'])) {
+                $shortname = $term_data->field_alignment_shortname['und'][0]['value'];
+              }
+            }
           ?>
             <?php if (!empty($shortname)): ?>
               <?php print $shortname; ?>
