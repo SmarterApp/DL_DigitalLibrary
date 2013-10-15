@@ -837,8 +837,13 @@ function sbac_report_get_average_consistency_rate_acr($uid, $reviews) {
     $rate += $consistency_rate;
   }
 
-  $average_consistency_rate = abs($rate / count($consistency_rates));
-  return $average_consistency_rate;
+  if ($consistency_rates) {
+    $average_consistency_rate = abs($rate / count($consistency_rates));
+    return $average_consistency_rate;
+  }
+  else {
+    return 0;
+  }
 }
 
 /**

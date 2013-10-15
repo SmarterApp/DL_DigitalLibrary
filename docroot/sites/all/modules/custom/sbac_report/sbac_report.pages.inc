@@ -50,7 +50,7 @@ function sbac_report_individual() {
     }
   }
 
-  return theme('sbac_report_individual', array(
+  $individual_tab = theme('sbac_report_individual', array(
       'form' => $form,
       'sne_details' => $sne_details,
       'contributed_summary' => $contributed_summary,
@@ -60,6 +60,31 @@ function sbac_report_individual() {
       'summation' => $summation,
     )
   );
+
+  $csv_tab = '-- tab 2 --';
+
+  $output = array();
+  $output['vt'] = array(
+    '#type' => 'vertical_tabs',
+    'tab1' => array(
+      '#type' => 'fieldset', 
+      '#title' => t('Example vertical tab'), 
+      '#collapsible' => TRUE, 
+      'content' => array(
+        '#markup' => $individual_tab,
+      ),
+    ),
+    'tab2' => array(
+      '#type' => 'fieldset', 
+      '#title' => t('Example vertical tab'), 
+      '#collapsible' => TRUE, 
+      'content' => array(
+        '#markup' => $csv_tab,
+      ),
+    ),
+  );
+
+  return drupal_render($output);
 }
 
 /**
@@ -254,6 +279,8 @@ function sbac_report_build_summation_table($uid, $date_range) {
     t('GK'),
   );
 
+  $core_column_count = sizeof($subheader);
+
   $focus_map = array(
     array(
       'tid' => 85,
@@ -270,7 +297,7 @@ function sbac_report_build_summation_table($uid, $date_range) {
   $header = array(
     array(
       'data' => '&nbsp;',
-      'colspan' => sizeof($subheader),
+      'colspan' => $core_column_count,
     ),
   );
 
@@ -298,28 +325,16 @@ function sbac_report_build_summation_table($uid, $date_range) {
     }
   }
 
-  // qc_84_criteria_num
+  $subheader[] = $header[] = array(
+    'data' => '&nbsp;',
+  );
 
-  // qc_84_criteria_1_description
-  // qc_84_criteria_1_title
-
-  // $vals = field_allowed_values('field_focus');
-  // print_rr($vals);exit();
-
-  // $qc_fields = field_info_instances('feedback', 'qc');
-  // $qc_fields = field_info_instances('field_collection_item', 'field_review_set');
-  // print_rr($qc_fields);exit();
-
-  // TODO:
-  //  - query for all gate_keeper/qc entities created by current user
-  //  - build data structure, grouping gate keeper/qc (don't mess up ordering!)
-  //  - create rows from new data structure
-
-  $query = "  SELECT      gk.id AS gk_id,
+  $query = "  SELECT      DISTINCT gk.id AS gk_id,
                           gk.met_criteria AS met_criteria,
                           gk.uid AS gk_uid,
                           gk.node_id AS nid,
                           qc.id AS qc_id,
+                          qc.uid AS qc_uid,
                           n.title AS node_title,
 
                           IF(qc.created IS NULL, gk.created, qc.created) AS review_date
@@ -328,7 +343,7 @@ function sbac_report_build_summation_table($uid, $date_range) {
               
               INNER JOIN  node n
                 ON        n.nid = gk.node_id
-                
+              
               LEFT JOIN   eck_feedback qc
                 ON        qc.type = 'qc'
                 AND       qc.node_id = gk.node_id
@@ -336,12 +351,19 @@ function sbac_report_build_summation_table($uid, $date_range) {
                 AND       qc.completed = 1
                 AND       qc.current = 1
 
-              WHERE       gk.status = 1
+              WHERE       gk.type = 'gate_keeper'
+              AND         gk.status = 1
               AND         gk.completed = 1
               AND         gk.current = 1
+
               AND         :uid IN (gk.uid, qc.uid)
-              -- remove rows where user ha
+
+              -- remove rows where user created the GK, but didn't create the QC
               AND         IF (gk.uid = :uid AND qc.uid != :uid, qc.id = NULL, 1)
+
+              -- GROUP BY    gk.id,
+                          -- qc.id
+
               ORDER BY    review_date DESC
            ";
 
@@ -356,12 +378,91 @@ function sbac_report_build_summation_table($uid, $date_range) {
   foreach ($result as $row) {
     $item = array();
 
-    // print_rr($row);
-
     // resource title
     $item[] = l($row->node_title, 'node/' . $row->nid);
+    
     // review date
     $item[] = format_date($row->review_date, 'simple');
+    
+    // gate keeper decision
+    if ($row->gk_uid == $uid) {
+      $gk_decision = $row->met_criteria ? 'Y' : 'N';
+    }
+    else {
+      $gk_decision = '-';
+    }
+
+    $fill = t('-');
+
+    if ($gk_decision == 'N' || is_null($row->qc_id)) {
+      // recommendation decision
+      $item[] = t('-');
+
+      // recommendation consistency
+      $item[] = t('-');
+
+      // gate keeper decision
+      $item[] = t($gk_decision);
+
+      $current_size = sizeof($item);
+      $max = sizeof($subheader);
+
+      $item += array_fill($current_size - 1, $max - $current_size, $fill);
+    }
+    else {
+      // recommendation decision
+      $qc = entity_load_single('feedback', $row->qc_id);
+      $resource = node_load($row->nid);
+      $focus = field_get_value($resource, 'field_focus', 'tid');
+
+      switch (field_get_value($qc, 'field_rec_options')) {
+        case 0: $item[] = t('NR');  break;
+        case 1: $item[] = t('R-');  break;
+        case 2: $item[] = t('R');   break;
+        case 3: $item[] = t('R+');  break;
+      }
+
+      // recommendation consistency
+      $item[] = t('0%');
+
+      // gate keeper decision
+      $item[] = t($gk_decision);
+
+      foreach ($focus_map as $focus_data) {
+        for ($i = 0; $i < $focus_data['count']; $i++) {
+          if ($focus_data['tid'] == $focus) {
+            $entities = entity_load('feedback', FALSE, array(
+              'node_id' => $resource->nid,
+              'type' => 'qc',
+              'status' => 1,
+              'current' => 1,
+              'completed' => 1,
+            ));
+
+            $current_qc = $entities[$row->qc_id];
+            unset($entities[$row->qc_id]);
+
+            if (sizeof($entities) == 2) {
+
+            }
+            // other reviews aren't completed, so we don't show consistency percentages
+            else {
+              $item[] = $fill;
+            } 
+
+            // print_rr($current_qc);
+            // print_rr($entities);
+            // exit();
+          }
+          else {
+            $item[] = $fill;
+          }
+        }
+      }
+    }
+
+    // info tooltip
+    $item[] = 'i*';
 
     $rows[] = $item;
   }
