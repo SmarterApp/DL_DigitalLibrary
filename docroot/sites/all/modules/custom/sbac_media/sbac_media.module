@@ -6,6 +6,15 @@ include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/inc
 include_once 'sbac_media.features.inc';
 
 /**
+ * Implements hook_init().
+ */
+function sbac_media_init() {
+  module_load_include('inc', 'sbac_media', 'includes/MediaYouTubeStreamWrapper');
+  module_load_include('inc', 'sbac_media', 'includes/VimeoStreamWrapper');
+}
+
+
+/**
  * Implements hook_update_projects_alter().
  *
  * @param $projects
@@ -327,6 +336,7 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     '#title' => t('Add Materials') . ' ' . theme('form_required_marker'),
     '#markup' => '<p>'.t('You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.').'</p>',
     '#weight' => -101,
+    '#prefix' => '<div class="media-table">',
   );
 
   $form['field_file_container']['materials'] = array(
@@ -342,6 +352,7 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
       $form['field_file_container']['materials'] = array(
         '#markup' => $output,
         '#weight' => -100,
+        '#suffix' => '</div>',
       );
     }
   }
@@ -1278,7 +1289,7 @@ function sbac_media_duplicates_form($form, &$form_state) {
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
-    '#prefix' => '<div class="right dup-btns">',
+    '#prefix' => '<div class="dup-btns">',
     '#attributes' => array('id' => array('edit-cancel-media-duplicates'))
   );
 

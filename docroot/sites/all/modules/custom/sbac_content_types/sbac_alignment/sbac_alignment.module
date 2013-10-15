@@ -366,6 +366,8 @@ function sbac_alignment_node_load($nodes, $types) {
   // alignment nodes
   foreach ($nodes as $node) {
     if ($node->type == 'resource') {
+      $node->field_alignment_term = array();
+
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', 'alignment')
@@ -382,7 +384,7 @@ function sbac_alignment_node_load($nodes, $types) {
           }
         }
 
-        $node->field_alignment_term = array_merge_recursive($node->field_alignment_term, $terms);
+        $node->field_alignment_term = $terms;
       }
     }
   }

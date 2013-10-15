@@ -95,7 +95,12 @@
   }
 }
 
+.media-table {
+	position:relative;
+}
+
 #sbac-field-file-container {
+
 	.form-item-field-embed-video {
 		width: 55%;
 		margin-right: 2%;
@@ -124,4 +129,8 @@
 /* overlay cancel button */
 #edit-cancel-media-overlay {
 	margin-right: 10px;
+}
+
+.dup-btns{
+	text-align:right;
 }
