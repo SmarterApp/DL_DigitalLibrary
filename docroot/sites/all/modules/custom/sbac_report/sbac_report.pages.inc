@@ -63,20 +63,19 @@ function sbac_report_individual() {
 
   $csv_tab = '-- tab 2 --';
 
-  $output = array();
-  $output['vt'] = array(
+  $output = array(
     '#type' => 'vertical_tabs',
-    'tab1' => array(
+    'individual' => array(
       '#type' => 'fieldset', 
-      '#title' => t('Example vertical tab'), 
+      '#title' => t('Individual Contributor and Reviewer'), 
       '#collapsible' => TRUE, 
       'content' => array(
         '#markup' => $individual_tab,
       ),
     ),
-    'tab2' => array(
+    'csv_exorts' => array(
       '#type' => 'fieldset', 
-      '#title' => t('Example vertical tab'), 
+      '#title' => t('CSV Exports'), 
       '#collapsible' => TRUE, 
       'content' => array(
         '#markup' => $csv_tab,
