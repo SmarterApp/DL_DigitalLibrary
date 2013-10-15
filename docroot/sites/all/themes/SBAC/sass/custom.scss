@@ -65,6 +65,55 @@ dl {
   list-style-position: inside; /* this can create issues */
 }
 
+
+/** Tables **/
+table {
+  $cellpad: 18px; //defines the padding on the table cells
+  $border-style: 1px solid #ccc;
+
+  border:$border-style;
+  background:none;
+
+  thead{
+    tr{
+      th{
+        @include background-image(linear-gradient(#ededed, #ebebeb));
+        border-bottom: $border-style;
+        padding:$cellpad;
+        color: #056b8d;
+        a {
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  tbody {
+    border-top: none;
+    background:none;
+  }
+
+  tr.even, tr.odd {
+    td {
+      padding: $cellpad;
+      @include background-image(linear-gradient(#fbfbfb, #fafafa));
+    }
+  }
+  
+  tr.alt, tr:nth-of-type(even){
+    td {
+      @include background-image(linear-gradient(#f8f8f8, #f6f6f6));
+    }
+    &:hover {
+      td{
+        @include background-image(linear-gradient(#fbfbfb, #fafafa));
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+
 .f-dropdown ul {
   padding: 0;
 }
