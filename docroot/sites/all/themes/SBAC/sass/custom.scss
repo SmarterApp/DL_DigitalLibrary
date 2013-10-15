@@ -81,8 +81,14 @@ table {
         border-bottom: $border-style;
         padding:$cellpad;
         color: #056b8d;
+        border: $border-style;
+        
         a {
           color: inherit;
+        }
+
+        &.active {
+          background:#C9EAF8;
         }
       }
     }
@@ -97,12 +103,19 @@ table {
     td {
       padding: $cellpad;
       @include background-image(linear-gradient(#fbfbfb, #fafafa));
+      border: $border-style;
+      &.active {
+         background:#EDF8FC;
+      }
     }
   }
   
   tr.alt, tr:nth-of-type(even){
     td {
       @include background-image(linear-gradient(#f8f8f8, #f6f6f6));
+      &.active {
+        background:#E1F3F9;
+      }
     }
     &:hover {
       td{
