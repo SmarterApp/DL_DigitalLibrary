@@ -77,9 +77,9 @@ function sbac_user_menu() {
     'file' => "sbac_admin.clean.flood.inc",
   );
 
-  
   return $items;
 }
+
 function sbac_user_access_check() {
   return TRUE;
 }

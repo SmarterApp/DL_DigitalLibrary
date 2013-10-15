@@ -301,10 +301,10 @@ function sbac_report_state_options() {
 
     $options['all'] = t('All');
     // Return if we only want the first one.
-    if ($first_only) {
+    if (isset($first_only) && $first_only) {
       return $options;
     }
-
+    
     $states = taxonomy_vocabulary_machine_name_load("states");
     $vid = $states->vid;
     $terms = taxonomy_get_tree($vid);
@@ -837,8 +837,13 @@ function sbac_report_get_average_consistency_rate_acr($uid, $reviews) {
     $rate += $consistency_rate;
   }
 
-  $average_consistency_rate = abs($rate / count($consistency_rates));
-  return $average_consistency_rate;
+  if ($consistency_rates) {
+    $average_consistency_rate = abs($rate / count($consistency_rates));
+    return $average_consistency_rate;
+  }
+  else {
+    return 0;
+  }
 }
 
 /**
