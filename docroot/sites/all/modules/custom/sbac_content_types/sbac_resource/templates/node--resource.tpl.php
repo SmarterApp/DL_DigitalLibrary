@@ -90,6 +90,11 @@
     <?php if (isset($license) && $license): ?>
       <p><span class="license"><strong>License: </strong><?php print $license; ?></span></p>
     <?php endif; ?>
+
+    <?php if (isset($edit_link) && $edit_link): ?>
+      <p><span class="edit-link"><?php print $edit_link; ?></span></p>
+    <?php endif; ?>
+
     <p class="metadata"></p>
   </div>
 

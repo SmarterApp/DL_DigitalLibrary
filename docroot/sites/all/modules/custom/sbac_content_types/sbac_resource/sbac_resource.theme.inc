@@ -1032,9 +1032,16 @@ function _sbac_resource_resource_review_links($fields) {
 function _sbac_resource_digital_library_links($fields) {
   $variables = array();
   if (isset($fields['state']->raw)) {
+    global $user;
     $state = $fields['state']->raw;
     switch ($state) {
       case 'published':
+        if (in_array('DLRB member', $user->roles)) {
+          $nid = $fields['nid']->raw;
+          $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+        }
+
         $variables['sticky'] = FALSE;
         if ($fields['sticky']->raw) {
           $variables['sticky'] = TRUE;

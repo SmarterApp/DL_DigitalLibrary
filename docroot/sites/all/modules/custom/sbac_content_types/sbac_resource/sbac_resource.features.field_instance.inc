@@ -1344,6 +1344,58 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_posting_options'
+  $field_instances['node-resource-field_posting_options'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 40,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_posting_options',
+    'label' => 'Posting Options',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => 'The original posting option is displayed below.',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 42,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_principles'
   $field_instances['node-resource-field_principles'] = array(
     'bundle' => 'resource',
@@ -1465,8 +1517,8 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_resource_action'
-  $field_instances['node-resource-field_resource_action'] = array(
+  // Exported field_instance: 'node-resource-field_resource_actions'
+  $field_instances['node-resource-field_resource_actions'] = array(
     'bundle' => 'resource',
     'default_value' => array(
       0 => array(
@@ -1474,9 +1526,6 @@ function sbac_resource_field_default_field_instances() {
       ),
       1 => array(
         'value' => 1,
-      ),
-      2 => array(
-        'value' => 2,
       ),
     ),
     'deleted' => 0,
@@ -1487,19 +1536,19 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 2,
+        'weight' => 39,
       ),
       'search_index' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 0,
       ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 26,
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1509,8 +1558,8 @@ function sbac_resource_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_resource_action',
-    'label' => 'Resource Action',
+    'field_name' => 'field_resource_actions',
+    'label' => 'What can people do with this resource?',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1518,9 +1567,12 @@ function sbac_resource_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'label_help_description' => 'By default, resources are only accessible by authenticating into the Digital Library',
+        'maxlength_js_label' => '',
+      ),
       'type' => 'options_buttons',
-      'weight' => 28,
+      'weight' => 41,
     ),
   );
 
@@ -1694,6 +1746,62 @@ function sbac_resource_field_default_field_instances() {
       ),
       'type' => 'options_select',
       'weight' => 20,
+    ),
+  );
+
+  // Exported field_instance: 'node-resource-field_subscription_package_type'
+  $field_instances['node-resource-field_subscription_package_type'] = array(
+    'bundle' => 'resource',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 37,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_subscription_package_type',
+    'label' => 'Subscription Package Type',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => 'Identify the subscription package to which this resource is aligned',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 38,
     ),
   );
 
@@ -2065,7 +2173,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => array(
       0 => array(
-        'value' => 'All Consortium State',
+        'value' => 0,
       ),
     ),
     'deleted' => 0,
@@ -2076,20 +2184,19 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 12,
+        'weight' => 38,
       ),
       'search_index' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 16,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'secondary_teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 31,
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2108,9 +2215,12 @@ function sbac_resource_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'label_help_description' => 'By default, a resource entered via the posting workflow is visible to all Smarter Balanced member states.',
+        'maxlength_js_label' => '',
+      ),
       'type' => 'options_buttons',
-      'weight' => 26,
+      'weight' => 39,
     ),
   );
 
@@ -2164,7 +2274,7 @@ function sbac_resource_field_default_field_instances() {
         'apply_chosen' => 1,
       ),
       'type' => 'options_select',
-      'weight' => 27,
+      'weight' => 40,
     ),
   );
 
@@ -2208,8 +2318,8 @@ function sbac_resource_field_default_field_instances() {
   t('Owner');
   t('Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.');
   t('Personally Identifiable Student Information');
+  t('Posting Options');
   t('Principles');
-  t('Resource Action');
   t('Resource Type');
   t('Setting(s) for which this resource is appropriate. Select all that apply.');
   t('Smarter Balanced Keyword(s)');
@@ -2217,6 +2327,7 @@ function sbac_resource_field_default_field_instances() {
   t('Student Engagement in the Formative Assesment Process');
   t('Student population(s) for which the resource is best suited. Select all that apply.');
   t('Subjects and Domains');
+  t('Subscription Package Type');
   t('Success Criteria');
   t('Supporting Evidence');
   t('Technologies Required for Use in Classroom');
@@ -2233,6 +2344,7 @@ function sbac_resource_field_default_field_instances() {
   t('Unique Views');
   t('View Permissions');
   t('View Permissions Per State');
+  t('What can people do with this resource?');
   t('Which attributes of the formative assessment process does this resource include? Select all that apply.');
 
   return $field_instances;

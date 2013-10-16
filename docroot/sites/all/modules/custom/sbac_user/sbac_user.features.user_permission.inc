@@ -81,6 +81,7 @@ function sbac_user_user_default_permissions() {
   $permissions['access content overview'] = array(
     'name' => 'access content overview',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -128,6 +129,7 @@ function sbac_user_user_default_permissions() {
   $permissions['access workbench'] = array(
     'name' => 'access workbench',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
@@ -192,6 +194,7 @@ function sbac_user_user_default_permissions() {
   $permissions['administer nodes'] = array(
     'name' => 'administer nodes',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
     ),
@@ -295,6 +298,7 @@ function sbac_user_user_default_permissions() {
   $permissions['bypass node access'] = array(
     'name' => 'bypass node access',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -304,6 +308,7 @@ function sbac_user_user_default_permissions() {
   $permissions['bypass workbench moderation'] = array(
     'name' => 'bypass workbench moderation',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
     ),
     'module' => 'workbench_moderation',
@@ -364,6 +369,7 @@ function sbac_user_user_default_permissions() {
   $permissions['delete revisions'] = array(
     'name' => 'delete revisions',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource publisher' => 'resource publisher',
     ),
@@ -491,6 +497,7 @@ function sbac_user_user_default_permissions() {
   $permissions['revert revisions'] = array(
     'name' => 'revert revisions',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
@@ -533,6 +540,7 @@ function sbac_user_user_default_permissions() {
   $permissions['use workbench_moderation my drafts tab'] = array(
     'name' => 'use workbench_moderation my drafts tab',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
     ),
@@ -543,6 +551,7 @@ function sbac_user_user_default_permissions() {
   $permissions['use workbench_moderation needs review tab'] = array(
     'name' => 'use workbench_moderation needs review tab',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
       'resource reviewer' => 'resource reviewer',
@@ -554,6 +563,7 @@ function sbac_user_user_default_permissions() {
   $permissions['view all unpublished content'] = array(
     'name' => 'view all unpublished content',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
@@ -575,6 +585,7 @@ function sbac_user_user_default_permissions() {
   $permissions['view moderation history'] = array(
     'name' => 'view moderation history',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
@@ -587,6 +598,7 @@ function sbac_user_user_default_permissions() {
   $permissions['view moderation messages'] = array(
     'name' => 'view moderation messages',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
@@ -619,6 +631,7 @@ function sbac_user_user_default_permissions() {
   $permissions['view private files'] = array(
     'name' => 'view private files',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
@@ -631,6 +644,7 @@ function sbac_user_user_default_permissions() {
   $permissions['view revisions'] = array(
     'name' => 'view revisions',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',

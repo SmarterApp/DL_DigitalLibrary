@@ -23,9 +23,11 @@ function sbac_resource_field_group_info() {
     'label' => 'Advanced',
     'weight' => '4',
     'children' => array(
-      0 => 'field_resource_action',
-      1 => 'field_view_permissions',
-      2 => 'field_view_permissions_per_state',
+      0 => 'field_view_permissions_per_state',
+      1 => 'field_subscription_package_type',
+      2 => 'field_view_permissions',
+      3 => 'field_resource_actions',
+      4 => 'field_posting_options',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
