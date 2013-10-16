@@ -193,8 +193,14 @@ function sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $
   $gk_ind_accepted_count = count($gk_ind_accepted);
   $gk_ind_returned_count = count($gk_ind_returned);
   $gk_ind_total = $gk_ind_accepted_count + $gk_ind_returned_count;
-  $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1) * 100;
-  $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1) * 100;
+
+  $gk_ind_accepted_percentage = 0;
+  $gk_ind_returned_percentage = 0;
+
+  if ($gk_ind_total) {
+    $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1) * 100;
+    $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1) * 100;
+  }
 
     // All.
   $gk_all_accepted_count = count($gk_all_accepted);
@@ -271,11 +277,26 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
  */
 function sbac_report_build_summation_table($uid, $date_range) {
   $subheader = array(
-    t('Resource Title'),
-    t('Review Date'),
-    t('Recc.'),
-    t('Recc. Consistency'),
-    t('GK'),
+    array(
+      'data' => t('Resource Title'),
+      'class' => 'subheader',
+    ),
+    array(
+      'data' => t('Review Date'),
+      'class' => 'subheader',
+    ),
+    array(
+      'data' => t('Recc.'),
+      'class' => 'subheader',
+    ),
+    array(
+      'data' => t('Recc. Consistency'),
+      'class' => 'subheader',
+    ),
+    array(
+      'data' => t('GK'),
+      'class' => 'subheader',
+    ),
   );
 
   $core_column_count = sizeof($subheader);
@@ -297,6 +318,7 @@ function sbac_report_build_summation_table($uid, $date_range) {
     array(
       'data' => '&nbsp;',
       'colspan' => $core_column_count,
+      'class' => 'empty',
     ),
   );
 
@@ -304,6 +326,7 @@ function sbac_report_build_summation_table($uid, $date_range) {
     $header[] = array(
       'data' => $focus_data['title'],
       'colspan' => $focus_data['count'],
+      'class' => 'header header-' . $focus_data['tid'],
     );
 
     for ($i = 1; $i <= $focus_data['count']; $i++) {
@@ -320,12 +343,16 @@ function sbac_report_build_summation_table($uid, $date_range) {
                 </span>
               ';
 
-      $subheader[] = $cell;
+      $subheader[] = array(
+        'data' => $cell,
+        'class' => 'subheader',
+      );
     }
   }
 
   $subheader[] = $header[] = array(
     'data' => '&nbsp;',
+    'class' => 'subheader empty',
   );
 
   $query = "  SELECT      DISTINCT gk.id AS gk_id,
@@ -378,10 +405,16 @@ function sbac_report_build_summation_table($uid, $date_range) {
     $item = array();
 
     // resource title
-    $item[] = l($row->node_title, 'node/' . $row->nid);
+    $item[] = array(
+      'data' => l($row->node_title, 'node/' . $row->nid),
+      'class' => 'cell title',
+    );
     
     // review date
-    $item[] = format_date($row->review_date, 'simple');
+    $item[] = array(
+      'data' => format_date($row->review_date, 'simple'),
+      'class' => 'cell date',
+    );
     
     // gate keeper decision
     if ($row->gk_uid == $uid) {
@@ -391,17 +424,28 @@ function sbac_report_build_summation_table($uid, $date_range) {
       $gk_decision = '-';
     }
 
-    $fill = t('-');
+    $fill = array(
+      'data' => t('-'),
+      'class' => 'cell fill',
+    );
+
+    $empty = array(
+      'data' => '&nbsp;',
+      'class' => 'cell empty',
+    );
 
     if ($gk_decision == 'N' || is_null($row->qc_id)) {
       // recommendation decision
-      $item[] = t('-');
+      $item[] = $fill;
 
       // recommendation consistency
-      $item[] = t('-');
+      $item[] = $fill;
 
       // gate keeper decision
-      $item[] = t($gk_decision);
+      $item[] = array(
+        'data' => t($gk_decision),
+        'class' => 'cell gk-decision',
+      );
 
       $current_size = sizeof($item);
       $max = sizeof($subheader);
@@ -415,43 +459,108 @@ function sbac_report_build_summation_table($uid, $date_range) {
       $focus = field_get_value($resource, 'field_focus', 'tid');
 
       switch (field_get_value($qc, 'field_rec_options')) {
-        case 0: $item[] = t('NR');  break;
-        case 1: $item[] = t('R-');  break;
-        case 2: $item[] = t('R');   break;
-        case 3: $item[] = t('R+');  break;
+        case 0: 
+          $item[] = array(
+            'data' => t('NR'),
+            'class' => 'cell rec-dec',
+          );
+
+          break;
+
+        case 1: 
+          $item[] = array(
+            'data' => t('R-'),
+            'class' => 'cell rec-dec',
+          );
+
+          break;
+
+        case 2: 
+          $item[] = array(
+            'data' => t('R'),
+            'class' => 'cell rec-dec',
+          );
+
+          break;
+
+        case 3: 
+          $item[] = array(
+            'data' => t('R+'),
+            'class' => 'cell rec-dec',
+          );
+
+          break;
       }
 
       // recommendation consistency
-      $item[] = t('0%');
+      $entities = entity_load('feedback', FALSE, array(
+        'node_id' => $resource->nid,
+        'type' => 'qc',
+        'status' => 1,
+        'current' => 1,
+        'completed' => 1,
+      ));
+
+      $current_qc = $entities[$row->qc_id];
+      unset($entities[$row->qc_id]);
+
+      $current_rec_value = field_entity_value($current_qc, 'field_rec_options') + 1;
+
+      $consistency = 0;
+
+      foreach ($entities as $other_qc) {
+        $other_rec_value = field_entity_value($other_qc, 'field_rec_options') + 1;
+
+        $consistency += abs($current_rec_value - $other_rec_value);
+      }
+
+      $consistency /= 6;
+      $consistency = round((1 - $consistency) * 100) . '%';
+
+      $item[] = array(
+        'data' => $consistency,
+        'class' => 'cell gk-con',
+      );
 
       // gate keeper decision
-      $item[] = t($gk_decision);
+      $item[] = array(
+        'data' => t($gk_decision),
+        'class' => 'cell gk-decision',
+      );
 
       foreach ($focus_map as $focus_data) {
         for ($i = 0; $i < $focus_data['count']; $i++) {
           if ($focus_data['tid'] == $focus) {
-            $entities = entity_load('feedback', FALSE, array(
-              'node_id' => $resource->nid,
-              'type' => 'qc',
-              'status' => 1,
-              'current' => 1,
-              'completed' => 1,
-            ));
+            if (!isset($current_qc_questions[$i])) {
+              $item[] = $empty;
+              continue;
+            }
 
-            $current_qc = $entities[$row->qc_id];
-            unset($entities[$row->qc_id]);
+            $current_qc_questions = field_entity_value($current_qc, 'field_review_set');
+            $current_value = field_entity_value($current_qc_questions[$i], 'field_level');
 
             if (sizeof($entities) == 2) {
+              $consistency = 0;
+              
+              foreach ($entities as $other_qc) {
+                $other_questions = field_entity_value($other_qc, 'field_review_set');
+                $other_value = field_entity_value($other_questions[$i], 'field_level');
 
+                $consistency += abs($current_value - $other_value);
+              }
+
+              $consistency /= 8;
+              $consistency = round((1 - $consistency) * 100) . '%';
+
+              $item[] = array(
+                'data' => $consistency,
+                'class' => 'cell qc-con',
+              );
             }
             // other reviews aren't completed, so we don't show consistency percentages
             else {
               $item[] = $fill;
             } 
-
-            // print_rr($current_qc);
-            // print_rr($entities);
-            // exit();
           }
           else {
             $item[] = $fill;
@@ -461,7 +570,10 @@ function sbac_report_build_summation_table($uid, $date_range) {
     }
 
     // info tooltip
-    $item[] = 'i*';
+    $item[] = array(
+      'data' => 'i*',
+      'class' => 'cell info',
+    );
 
     $rows[] = $item;
   }
