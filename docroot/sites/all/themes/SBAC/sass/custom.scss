@@ -1785,6 +1785,7 @@ a.tabledrag-handle .handle {
     border-radius: 5px;
     border: 1px solid #ccc;
     overflow: hidden;
+    height: auto !important;
 
     .modal-header {
       background: none;
