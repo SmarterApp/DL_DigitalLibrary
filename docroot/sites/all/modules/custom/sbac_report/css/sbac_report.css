@@ -228,18 +228,17 @@
 table.report-summation {
   border: none !important;
   background: none;
-  font-size: 0.8em;
 }
-/* line 242, ../sass/sbac_report.scss */
+/* line 241, ../sass/sbac_report.scss */
 table.report-summation thead {
   background: none;
 }
-/* line 245, ../sass/sbac_report.scss */
+/* line 244, ../sass/sbac_report.scss */
 table.report-summation thead tr th {
   background: none;
   border: none;
 }
-/* line 249, ../sass/sbac_report.scss */
+/* line 248, ../sass/sbac_report.scss */
 table.report-summation thead tr th.header {
   border: 1px solid #ccc;
   color: #056b8d;
@@ -250,7 +249,7 @@ table.report-summation thead tr th.header {
   background-image: -o-linear-gradient(#ededed, #ebebeb);
   background-image: linear-gradient(#ededed, #ebebeb);
 }
-/* line 259, ../sass/sbac_report.scss */
+/* line 258, ../sass/sbac_report.scss */
 table.report-summation tbody tr td.subheader {
   border: 1px solid #ccc;
   color: #056b8d;
