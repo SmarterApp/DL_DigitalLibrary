@@ -229,7 +229,7 @@ function sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $
       'header' => $header,
       'rows' => $rows,
       'attributes' => array(
-        'class' => array('large-12')
+        'class' => array('large-12 report-gk')
       ),
     )
   );
@@ -263,7 +263,7 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
       'header' => $header,
       'rows' => $rows,
       'attributes' => array(
-        'class' => array('large-12')
+        'class' => array('large-12 report-ar')
       ),
     )
   );
@@ -541,7 +541,7 @@ function sbac_report_build_summation_table($uid, $date_range) {
 
             if (sizeof($entities) == 2) {
               $consistency = 0;
-              
+
               foreach ($entities as $other_qc) {
                 $other_questions = field_entity_value($other_qc, 'field_review_set');
                 $other_value = field_entity_value($other_questions[$i], 'field_level');
@@ -582,7 +582,7 @@ function sbac_report_build_summation_table($uid, $date_range) {
       'header' => $header,
       'rows' => $rows,
       'attributes' => array(
-        'class' => array('large-12')
+        'class' => array('large-12 report-summation')
       ),
     )
   );
