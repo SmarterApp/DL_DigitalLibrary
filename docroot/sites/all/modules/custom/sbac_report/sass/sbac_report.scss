@@ -230,6 +230,7 @@ $darkgreen: #246a34;
 table.report-summation {
 	border:none !important;
 	background:none;
+	font-size: 0.9em;
 
 	@mixin table-header() {
 		border:1px solid #ccc;
