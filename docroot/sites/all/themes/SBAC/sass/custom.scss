@@ -82,7 +82,7 @@ table {
         padding:$cellpad;
         color: #056b8d;
         border: $border-style;
-        
+
         a {
           color: inherit;
         }
@@ -1804,6 +1804,7 @@ a.tabledrag-handle .handle {
       padding-top: 0;
       overflow: hidden;
       overflow-y:auto;
+      width: auto !important;
 
       .form-item {
         margin-top: 0;
