@@ -68,7 +68,7 @@ dl {
 
 /** Tables **/
 table {
-  $cellpad: 18px; //defines the padding on the table cells
+  $cellpad: 18px 2px; //defines the padding on the table cells
   $border-style: 1px solid #ccc;
 
   border:$border-style;

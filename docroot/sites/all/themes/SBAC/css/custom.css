@@ -6729,7 +6729,7 @@ table thead tr th {
   background-image: -o-linear-gradient(#ededed, #ebebeb);
   background-image: linear-gradient(#ededed, #ebebeb);
   border-bottom: 1px solid #cccccc;
-  padding: 18px;
+  padding: 18px 2px;
   color: #056b8d;
   border: 1px solid #cccccc;
 }
@@ -6748,7 +6748,7 @@ table tbody {
 }
 /* line 103, ../sass/custom.scss */
 table tr.even td, table tr.odd td {
-  padding: 18px;
+  padding: 18px 2px;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fbfbfb), color-stop(100%, #fafafa));
   background-image: -webkit-linear-gradient(#fbfbfb, #fafafa);
   background-image: -moz-linear-gradient(#fbfbfb, #fafafa);
