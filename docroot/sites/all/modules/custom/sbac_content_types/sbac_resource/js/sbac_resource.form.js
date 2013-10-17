@@ -19,6 +19,10 @@
       $('.vertical-tabs-list li:nth-child(4) a').click(function () {
         control_form_buttons();
       });
+
+      $('.vertical-tabs-list li:nth-child(5) a').click(function () {
+        control_form_buttons();
+      });
     }
   };
 
@@ -68,6 +72,14 @@
 
     if (active_tab == 'Tags') {
       $('#edit-save-continue').html('Submit Resource');
+    }
+
+    if (active_tab == 'Advanced') {
+      $('#edit-cancel-all-changes').show();
+      $('#sbac-resource-save-all-changes').show();
+      $('#edit-save-continue').hide();
+      submit_resource.hide();
+      $('#edit-submit').hide();
     }
   };
 
@@ -213,14 +225,40 @@
    */
   Drupal.behaviors.sbac_resource_permissions = {
     attach: function (context, settings) {
-      if ($('#edit-field-view-permissions-und-all-consortium-state').is(':checked')) {
+      // States
+      if ($('#edit-field-view-permissions-und-0').is(':checked')) {
         $('#edit-field-view-permissions-per-state').hide();
       }
-      $('#edit-field-view-permissions-und-all-consortium-state').click(function () {
+      $('#edit-field-view-permissions-und-0').click(function () {
         $('#edit-field-view-permissions-per-state').hide();
       });
-      $('#edit-field-view-permissions-und-only-consortium-states-i-choose').click(function () {
+      $('#edit-field-view-permissions-und-1').click(function () {
         $('#edit-field-view-permissions-per-state').show();
+      });
+
+      // Resource actions
+      $('#edit-field-posting-options-comment').hide();
+      if ($('#edit-field-posting-options-und-0').is(':checked')) {
+        $('#edit-field-posting-options-comment').show();
+      }
+      if ($('#edit-field-posting-options-und-1').is(':checked')) {
+        $('#edit-field-posting-options-comment').show();
+      }
+      if ($('#edit-field-posting-options-und-2').is(':checked')) {
+        $('#edit-field-posting-options-comment').show();
+      }
+
+      $('#edit-field-posting-options-und-0').click(function() {
+        $('#edit-field-posting-options-comment').show();
+        $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+      });
+      $('#edit-field-posting-options-und-1').click(function() {
+        $('#edit-field-posting-options-comment').show();
+        $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+      });
+      $('#edit-field-posting-options-und-2').click(function() {
+        $('#edit-field-posting-options-comment').show();
+        $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
       });
     }
   };
@@ -334,6 +372,19 @@
           change_option(el.val(), true);
         });
       });
+    }
+  };
+
+
+  /**
+   * Displays or hides the permissions field.
+   *
+   * @type {{attach: Function}}
+   */
+  Drupal.behaviors.sbac_resource_advanced_buttons = {
+    attach: function (context, settings) {
+      $('#edit-cancel-all-changes').hide();
+      $('#sbac-resource-save-all-changes').hide();
     }
   };
 

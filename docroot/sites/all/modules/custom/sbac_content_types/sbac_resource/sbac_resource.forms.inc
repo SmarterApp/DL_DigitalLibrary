@@ -76,9 +76,10 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_save_continue_button($form, $form_state);
     _sbac_resource_form_cancel_button($form, $form_state);
     _sbac_resource_form_submit_resource($form, $form_state);
+    _sbac_resource_form_cancel_all_changes_button($form, $form_state);
+    _sbac_resource_form_save_all_changes_button($form, $form_state);
     _sbac_resource_form_required_fields($form, $form_state);
     _sbac_resource_form_remove_elements($form, $form_state);
-    // _sbac_resource_clean_workbench_moderation($form, $form_state); // this needs to stay commented out!!!
   }
 }
 
@@ -283,6 +284,13 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   }
 
   return $form;
+}
+
+function sbac_resource_cancel_all_changes_submit(&$form, &$form_state) {
+  if (isset($form_state['clicked_button']['#value']) && $form_state['clicked_button']['#value'] == 'Cancel All Changes') {
+    $form_state['redirect'] = 'digital-library-resources';
+    drupal_redirect_form($form_state);
+  }
 }
 
 /**
@@ -755,6 +763,43 @@ function sbac_resource_modal_callback($js = FALSE) {
     $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
     $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
     
+    module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
+    $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
+
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Modal callback
+ *
+ * @param bool $js
+ * @return array|mixed
+ */
+function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    drupal_add_js(drupal_get_path("module", "sbac_alignment") . "/js/sbac_alignment.js");
+
+    drupal_add_js(array(
+      'ctools-ccss-style' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 800,
+          'height' => 580,
+        ),
+      ),
+    ), 'setting');
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
+    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
+
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
     $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
 
@@ -1408,13 +1453,25 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_advanced(&$form, &$form_state) {
-//  $form['advanced_tag_title'] = array(
-//    '#type' => 'item',
-//    '#markup' => '<h2>'.t('Advanced') . '</h2>',
-//    '#prefix' => '<div class="form-item-title resource-tag-title">',
-//    '#suffix' => '</div>',
-//  );
-//  $form['#group_children']['advanced_tag_title'] = "group_advanced";
+  // Subscription Package Type.
+  unset($form['field_subscription_package_type']['und']['#options']['_none']);
+  $form['field_subscription_package_type']['und']['#default_value'] = 0;
+
+  // Permissions field.
+  $form['field_view_permissions']['und']['#default_value'] = 0;
+
+  // View permissions per state.
+  $form['field_view_permissions_per_state']['und']['#title'] = '';
+
+  // Resource Actions.
+  $form['field_resource_actions']['und']['#default_value'] = array(0, 1);
+
+  // Posting options.
+  $default_value = NULL;
+  unset($form['field_posting_options']['und']['#options']['_none']);
+  if ($form['field_posting_options']['und']['#default_value'] == 2) {
+    $form['field_posting_options_comment']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
+  }
 }
 
 /**
@@ -1505,6 +1562,54 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
     // JS to properly size the modal when submit resource is clicked.
     $js_settings = array(
       'sbac-resource-modal-submit-resource' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 160,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
+  }
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
+  $form['actions']['cancel_all_changes'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel All Changes',
+    '#weight' => 0,
+    '#validate' => array('sbac_resource_cancel_all_changes_submit'),
+    "#executes_submit_callback" => FALSE,
+    '#limit_validation_errors' => array(),
+  );
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
+  if (isset($form['#node']->nid)) {
+    $form['actions']['save_all_changes'] = array(
+      '#markup' => l(t('Save All Changes'), 'sbac_resource/nojs/save-all-changes', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-resource-save-all-changes',
+          'id' => 'sbac-resource-save-all-changes'
+        ),
+        'query' => array(
+          'nid' => $form['#node']->nid
+        )
+      )),
+      '#weight' => 4,
+    );
+
+    // JS to properly size the modal when submit resource is clicked.
+    $js_settings = array(
+      'sbac-resource-save-all-changes' => array(
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,

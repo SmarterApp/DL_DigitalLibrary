@@ -90,6 +90,7 @@ function sbac_resource_views_default_views() {
     'rejected' => 'rejected',
     'approved' => 'approved',
     'published' => 'published',
+    'removed' => 'removed',
   );
   $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
   $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
@@ -1390,6 +1391,7 @@ function sbac_resource_views_default_views() {
     'rejected' => 'rejected',
     'approved' => 'approved',
     'published' => 'published',
+    'removed' => 'removed',
   );
   $handler->display->display_options['filters']['state']['exposed'] = TRUE;
   $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
@@ -1920,7 +1922,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['draggableviews']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
-  /* Field: Content: Document Information (field_document_information:delta) */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['delta']['id'] = 'delta';
   $handler->display->display_options['fields']['delta']['table'] = 'field_data_field_document_information';
   $handler->display->display_options['fields']['delta']['field'] = 'delta';

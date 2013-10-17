@@ -49,17 +49,17 @@ $darkgreen: #246a34;
 }
 
 .view-sne-details {
-	.row.first {
-		padding: 20px 0;
-	}
+  .row.first {
+    padding: 20px 0;
+  }
 }
 
 .view-display-id-resources_summary {
-	tbody {
-		td {
-			text-align: center;
-		}
-	}
+  tbody {
+    td {
+      text-align: center;
+    }
+  }
 }
 
 .view-filters {
@@ -67,156 +67,260 @@ $darkgreen: #246a34;
   text-align: right;
 
   .throbber {
-		display: none;
+    display: none;
   }
 }
 
 .view-contributed-resources {
-	.throbber {
-		display: none;
-	}
+  .throbber {
+    display: none;
+  }
 }
 
 .report-form-container {
-	position: relative;
+  position: relative;
 
-	
-	/* state container */
-	.form-item-state {
-		width: 25%;
-		margin-right: 20px;
-		float: left;
+  
+  /* state container */
+  .form-item-state {
+    width: 25%;
+    margin-right: 20px;
+    float: left;
 
-		.chzn-container-single {
-			width: 100% !important;
+    .chzn-container-single {
+      width: 100% !important;
 
-			.chzn-single {
-				height: 32px;
+      .chzn-single {
+        height: 32px;
 
-				span {
-					font-size: 14px;
-					line-height: 24px;
-				}
-			}
-		}
+        span {
+          font-size: 14px;
+          line-height: 24px;
+        }
+      }
+    }
 
-		.ajax-progress-throbber {
-			display: none;
-		}
-	}
+    .ajax-progress-throbber {
+      display: none;
+    }
+  }
 
-	/* date range container */
-	.date-range-container {
-		width: 25%;
-		margin: 1em 20px 1em 0;
-		float: left;
+  /* date range container */
+  .date-range-container {
+    width: 25%;
+    margin: 1em 20px 1em 0;
+    float: left;
 
-		.report-dropdown-toggle {
-			color: #4d4d4d;
-			height: 2.3125em;
-			border: 1px solid #aaa;
-			width: 100%;
-			display: inline-block;
-			padding: 5px;
-			font-size: 0.875em;
-			@include border-radius (5px);
-			@include background-image(linear-gradient(#ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%));
-			line-height: 1em;
+    .report-dropdown-toggle {
+      color: #4d4d4d;
+      height: 2.3125em;
+      border: 1px solid #aaa;
+      width: 100%;
+      display: inline-block;
+      padding: 5px;
+      font-size: 0.875em;
+      @include border-radius (5px);
+      @include background-image(linear-gradient(#ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%));
+      line-height: 1em;
 
-			&:after {
-				content: " ";
-				background: url(../images/icon-arrow-down.png) no-repeat;
-				display: block;
-				width: 10px;
-				height: 10px;
-				float: right;
-				margin: 4px 3px 0 0;
-			}
+      &:after {
+        content: " ";
+        background: url(../images/icon-arrow-down.png) no-repeat;
+        display: block;
+        width: 10px;
+        height: 10px;
+        float: right;
+        margin: 4px 3px 0 0;
+      }
 
-			&.show {
-				&:after {
-					content: " ";
-					background: url(../images/icon-arrow-up.png) no-repeat;
-					display: block;
-					width: 10px;
-					height: 10px;
-					float: right;
-					margin: 3px 3px 0 0;					
-				}
-			}
-		}
-	}
+      &.show {
+        &:after {
+          content: " ";
+          background: url(../images/icon-arrow-up.png) no-repeat;
+          display: block;
+          width: 10px;
+          height: 10px;
+          float: right;
+          margin: 3px 3px 0 0;          
+        }
+      }
+    }
+  }
 
-	.report-dropdown  {
-		position: absolute;
-		background: $white;
-		width: 52%;
-		z-index: 500;
-	}
+  .report-dropdown  {
+    position: absolute;
+    background: $white;
+    width: 52%;
+    z-index: 500;
+  }
 
 
-	.form-item-sne {
-		width: 25%;
-		float: left;
-		margin-right: 10px;
-	}
+  .form-item-sne {
+    width: 25%;
+    float: left;
+    margin-right: 10px;
+  }
 
-	button {
-		float: right;
-		margin-top: 1.875em;
-	}
+  button {
+    float: right;
+    margin-top: 1.875em;
+  }
 
-	.container-inline-date {
-		margin-right: 20px;
-		clear: none;
+  .container-inline-date {
+    margin-right: 20px;
+    clear: none;
 
-		> .form-item {
-			margin-right: 1.5em;
-		}
+    > .form-item {
+      margin-right: 1.5em;
+    }
 
-		.form-type-date-popup {
-			float: left;
-		}
+    .form-type-date-popup {
+      float: left;
+    }
 
-		.date-padding {
-			padding: 10px 0;
-		}
-	}
+    .date-padding {
+      padding: 10px 0;
+    }
+  }
 }
 
 #date-range-dropdown {
-	margin: 0;
-	padding: 10px;
-	border: 1px solid #ddd;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #ddd;
   @include box-shadow(1px 2px 2px rgba(0,0,0,.3));
   border-radius: 0 12px 12px 12px;
 
-	ul {
-		margin: .5em 0 1em;
-		padding: 0;
+  ul {
+    margin: .5em 0 1em;
+    padding: 0;
 
-		+ div {
-			margin-bottom: 20px;
-			font-weight: bold;
-		}
+    + div {
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
 
-		li {
-			list-style-type: none;
-			display: inline-block;
-			margin: 0 20px 10px 0;
+    li {
+      list-style-type: none;
+      display: inline-block;
+      margin: 0 20px 10px 0;
 
-			.report-dropdown-toggle.date-range-item {
-				border: none;
-				width: auto;
-				height: auto;
-				@include global-button;
-				padding: 3px 5px;
+      .report-dropdown-toggle.date-range-item {
+        border: none;
+        width: auto;
+        height: auto;
+        @include global-button;
+        padding: 3px 5px;
 
-				&:after {
-					background: none;
-					margin: 0;
-				}
-			} 
-		}
-	}
+        &:after {
+          background: none;
+          margin: 0;
+        }
+      } 
+    }
+  }
+}
+
+
+
+/**
+ Tables
+  **/
+
+table.report-summation {
+  border:none !important;
+  background:none;
+  font-size: 0.9em;
+
+  @mixin table-header() {
+    border:1px solid #ccc;
+        color: #056b8d;
+        font-weight: bold;
+    @include background-image(linear-gradient(#ededed, #ebebeb));
+  }
+
+  thead {
+    background:none;
+    tr{
+      th{
+        background:none;
+        border:none;
+
+        &.header {
+          @include table-header();
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr{
+      td {
+        &.subheader{
+          @include table-header();
+        }
+      }
+    }
+  }
+}
+
+/**
+ Modals
+  **/
+.clear {
+  clear: both;
+}
+
+.dialog_sbac_report_individual_modal_form {
+  #dialog {
+    text-align: right;
+
+    .intro {
+      text-align: left;
+
+      .review-date {
+        float: left;
+      }
+
+      .recommendation {
+        float: right;
+      }
+    }
+
+    .flexslider {
+      margin: 20px auto 50px;
+      text-align: left;
+      width: 580px;
+
+      .slides {
+        li {
+          margin: 0;
+
+          .slide-title,
+          .inline-title {
+            font-weight: bold;
+          }
+
+          .gk-item,
+          .qc-item,
+          .post-item,
+          .post-decision,
+          .qc-question-item {
+            margin: 0 0 10px 0;
+          }
+        }
+      }
+    }
+
+    .flexslider-continue {
+      display: inline;
+      float: right;
+      margin: 0 0 0 10px;
+    }
+
+    .close-dialog {
+      display: inline;
+      margin: 0;
+    }
+  }
 }
