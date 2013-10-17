@@ -296,13 +296,26 @@ table.report-summation tbody tr td.subheader {
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li {
   margin: 0;
 }
-/* line 302, ../sass/sbac_report.scss */
+/* line 300, ../sass/sbac_report.scss */
+.dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .slide-title,
+.dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .inline-title {
+  font-weight: bold;
+}
+/* line 308, ../sass/sbac_report.scss */
+.dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .gk-item,
+.dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .qc-item,
+.dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .post-item,
+.dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .post-decision,
+.dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .qc-question-item {
+  margin: 0 0 10px 0;
+}
+/* line 315, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .flexslider-continue {
   display: inline;
   float: right;
   margin: 0 0 0 10px;
 }
-/* line 308, ../sass/sbac_report.scss */
+/* line 321, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .close-dialog {
   display: inline;
   margin: 0;

@@ -476,39 +476,10 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       $qc = entity_load_single('feedback', $row->qc_id);
       $focus = field_get_value($resource, 'field_focus', 'tid');
 
-      switch (field_get_value($qc, 'field_rec_options')) {
-        case 0: 
-          $item[] = array(
-            'data' => t('NR'),
-            'class' => 'cell rec-dec',
-          );
-
-          break;
-
-        case 1: 
-          $item[] = array(
-            'data' => t('R-'),
-            'class' => 'cell rec-dec',
-          );
-
-          break;
-
-        case 2: 
-          $item[] = array(
-            'data' => t('R'),
-            'class' => 'cell rec-dec',
-          );
-
-          break;
-
-        case 3: 
-          $item[] = array(
-            'data' => t('R+'),
-            'class' => 'cell rec-dec',
-          );
-
-          break;
-      }
+      $item[] = array(
+        'data' => rec_friendly_name($qc),
+        'class' => 'cell rec-dec',
+      );
 
       // recommendation consistency
       $entities = entity_load('feedback', FALSE, array(
@@ -522,21 +493,8 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       $current_qc = $entities[$row->qc_id];
       unset($entities[$row->qc_id]);
 
-      $current_rec_value = field_entity_value($current_qc, 'field_rec_options') + 1;
-
-      $consistency = 0;
-
-      foreach ($entities as $other_qc) {
-        $other_rec_value = field_entity_value($other_qc, 'field_rec_options') + 1;
-
-        $consistency += abs($current_rec_value - $other_rec_value);
-      }
-
-      $consistency /= 6;
-      $consistency = round((1 - $consistency) * 100) . '%';
-
       $item[] = array(
-        'data' => $consistency,
+        'data' => rec_consistency_rate($entities, $current_qc),
         'class' => 'cell gk-con',
       );
 
@@ -711,8 +669,18 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
   // default state
     $output = '';
 
-    // load all QC reviews
-    $entities = entity_load('feedback', FALSE, array(
+    // load all reviews
+    $gk_entities = entity_load('feedback', FALSE, array(
+      'node_id' => $node->nid,
+      'type' => 'gate_keeper',
+      'status' => 1,
+      'current' => 1,
+      'completed' => 1,
+    ));
+
+    $gk = current($gk_entities);
+
+    $qc_entities = entity_load('feedback', FALSE, array(
       'node_id' => $node->nid,
       'type' => 'qc',
       'status' => 1,
@@ -720,30 +688,33 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
       'completed' => 1,
     ));
 
+    $post_entities = entity_load('feedback', FALSE, array(
+      'node_id' => $node->nid,
+      'type' => 'post',
+      'status' => 1,
+      'current' => 1,
+      'completed' => 1,
+    ));
+
+    $post = FALSE;
+    if ($post_entities) {
+      $post = current($post_entities);
+    }
+
     $user_review = FALSE;
     $recommendation = '';
 
     // try to find the QC created by the user we're looking at
-    foreach ($entities as $qc) {
+    foreach ($qc_entities as $qc) {
       if ($qc->uid == $uid) {
         $user_review = $qc;
       }
     }
 
-    // if we still didn't find a QC, then the user must have a GK, so pull it up
+    // if we still didn't find a QC, then the user must have a GK, and it'll be the one we 
+    // already loaded
     if (!$user_review) {
-      $entities = entity_load('feedback', FALSE, array(
-        'node_id' => $node->nid,
-        'type' => 'gate_keeper',
-        'status' => 1,
-        'current' => 1,
-        'completed' => 1,
-        'uid' => $uid,
-      ));
-
-      if ($entities) {
-        $user_review = current($entities);
-      }
+      $user_review = $gk;
     }
 
     $date = '';
@@ -751,75 +722,188 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
       $date = t('Review Date: !date', array('!date' => date('m/d/y', $user_review->created)));
 
       if ($user_review->type == 'qc') {
-        $rec_value = field_entity_value($user_review, 'field_rec_options');
-        switch ($rec_value) {
-          case 0: $rec = 'NR';  break;
-          case 1: $rec = 'R-';  break;
-          case 2: $rec = 'R';  break;
-          case 3: $rec = 'R+';  break;
-        }
-
+        $rec = rec_friendly_name($user_review);
         $recommendation = t('Recommendation: !val', array('!val' => $rec));
       }
     }
 
-    $output .=  '  
-                  <div class="intro">
-                    <div class="review-date">
-                      ' . $date . '
+    // prepare header/intro
+      $output .=  '  
+                    <div class="intro">
+                      <div class="review-date">
+                        ' . $date . '
+                      </div>
+                      <div class="recommendation">
+                        ' . $recommendation . '
+                      </div>
+                      <div class="clear"></div>
                     </div>
-                    <div class="recommendation">
-                      ' . $recommendation . '
+                  ';
+
+
+    // add GK summary slide
+      $items = array();
+
+      $gk_slide = '<div class="slide-title">' . t('Gate-Keeping Criteria') . '</div>';
+
+      foreach (field_entity_value($gk, 'field_quality_set') as $count => $question) {
+        $comments = field_entity_value($question, 'field_comments');
+        $decision = field_entity_value($question, 'field_meets_criterion');
+
+        $gk_slide .= '
+                        <div class="gk-item">
+                          <span class="item-num">' . ($count + 1) . '</span>
+                          <span class="item-decision">' . ($decision ? t('Y') : t('N')) . '</span>
+                          <span class="item-comments">' . $comments . '</span>
+                        </div>
+                     ';
+      }
+
+      $items[] = $gk_slide;
+
+    // add QC recommendations slide
+      $qc_rec_slide = '';
+      $qc_count = 1;
+      foreach ($qc_entities as $qc) {
+        $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
+        $qc_account = user_load($qc->uid);
+
+        $location = '';
+
+        if ($states = field_entity_value($qc_account, 'field_state')) {
+          $term = current($states);
+          $location = t(', State of !state', array(
+            '!state' => $term->name
+          ));
+        }
+
+        $qc_rec_slide .= '
+                          <div class="qc-item">
+                            <div class="qc-rec-name">
+                              ' . theme('username', array('account' => $qc_account)) . $location . '
+                            </div>
+                            
+                            <div class="qc-rec-value">
+                             <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
+                            </div>
+
+                            <div class="qc-rec-con">
+                              <span>' . t('Resource Consistency Rate:') . '</span> ' .
+                              rec_consistency_rate($qc_entities, $qc) . '
+                            </div>
+
+                            <div class="qc-rec-rationale">
+                              <span>' . t('Rationale:') . '</span> ' . 
+                              field_entity_value($qc, 'field_rec_rationale') . '
+                            </div>
+                          </div>
+                         ';
+
+        $qc_count++;
+      }
+
+      $items[] = $qc_rec_slide;
+
+    // add Poster comments recommendations slide
+      if ($post) {
+        $post_options = field_allowed_values('field_post_options');
+        $post_value = field_entity_value($post, 'field_post_options');
+
+        $post_slide = '
+                        <div class="slide-title">' . t('SLT') . '</div>
+                        <div class="post-decision">' . t('Posting decision: !dec', array('!dec' => $post_options[$post_value])) . '</div>
+                      ';
+
+        $fields = array(
+          'field_to_contributor' => t('Comment to Contributor'),
+          'field_to_reviewer_1' => t('Comment to Reviewer 1'),
+          'field_to_reviewer_2' => t('Comment to Reviewer 2'),
+          'field_to_reviewer_3' => t('Comment to Reviewer 3'),
+        );
+
+        foreach ($fields as $field_name => $title) {
+          $post_slide .=  '
+                            <div class="post-item">
+                              <span class="inline-title">' . $title . ': </span>
+                              ' . field_entity_value($post, $field_name) . '
+                            </div>
+                          ';
+        }
+
+        $items[] = $post_slide;
+      }
+
+    // add Quality Criteria question slides
+      $questions = field_entity_value(reset($qc_entities), 'field_review_set');
+      $questions_count = sizeof($questions);
+      
+      for ($i = 0; $i < $questions_count; $i++) {
+        $slide = '<div class="slide-title">' . t('Quality Criteria !count', array('!count' => $i + 1)) . '</div>';
+
+        $levels = array();
+        $comments = '';
+
+        $j = 1;
+        foreach ($qc_entities as $qc) {
+          $questions = field_entity_value($qc, 'field_review_set');
+
+          $level = field_entity_value($questions[$i], 'field_level');
+
+          if ($qc->uid == $uid) {
+            array_unshift($levels, '<strong>' . $level . '</strong>');
+          }
+          else {
+            $levels[] = $level;
+          }
+
+          $comments .= '
+                      <div class="qc-question-item">
+                        <span class="inline-title">' . t('Reviewer !count Comment', array('!count' => $j)) . ': </span>
+                        ' . field_entity_value($questions[$i], 'field_comments') . '
+                      </div>
+                    ';
+
+          $j++;
+        }
+
+        $slide .= '<div class="qc-question-levels">' . t('- Level: ') . implode(' / ', $levels) . '</div>';
+        $slide .= $comments;
+        
+        $items[] = $slide;
+      }
+
+    // render slides
+      $item_list = theme('item_list', array(
+        'items' => $items,
+        'attributes' => array(
+          'class' => array(
+            'slides',
+          ),
+        ),
+      ));
+
+      $output .= '
+                  <div class="flexslider item-list">
+                    <div class="flex-viewport">
+                      ' . $item_list . '
                     </div>
-                    <div class="clear"></div>
                   </div>
                 ';
 
-    $item_list = theme('item_list', array(
-      'items' => array(
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-        'lorem ipsum',
-      ),
-      'attributes' => array(
-        'class' => array(
-          'slides',
+    // add content to form structure
+      $form['state_default']['content'] = array(
+        '#markup' => $output,
+      );
+
+      $form['state_default']['continue'] = array(
+        '#type' => 'button',
+        '#value' => t('Continue'),
+        '#attributes' => array(
+          'class' => array(
+            'flexslider-continue',
+          ),
         ),
-      ),
-    ));
-
-    $output .= '
-                <div class="flexslider item-list">
-                  <div class="flex-viewport">
-                    ' . $item_list . '
-                  </div>
-                </div>
-              ';
-
-    $form['state_default']['content'] = array(
-      '#markup' => $output,
-    );
-
-    $form['state_default']['continue'] = array(
-      '#type' => 'button',
-      '#value' => t('Continue'),
-      '#attributes' => array(
-        'class' => array(
-          'flexslider-continue',
-        ),
-      ),
-    );
+      );
 
   // dialog configuration
     $dialog_common_options = array(
@@ -857,4 +941,49 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
   dialog_form_prepare($form, $form_state);
 
   return $form;
+}
+
+/**
+ * Returns the friendly recommendation value name from given entity.
+ * @param  [type] $entity [description]
+ * @return [type]         [description]
+ */
+function rec_friendly_name($entity) {
+  $rec_value = field_entity_value($entity, 'field_rec_options');
+  $rec = '';
+
+  switch ($rec_value) {
+    case 0: $rec = 'NR';  break;
+    case 1: $rec = 'R-';  break;
+    case 2: $rec = 'R';   break;
+    case 3: $rec = 'R+';  break;
+  }
+
+  return $rec;
+}
+
+/**
+ * Calculates recommendation consistency between the $current entity
+ * and $all entities.
+ * @param  [type] $all     [description]
+ * @param  [type] $current [description]
+ * @return [type]          [description]
+ */
+function rec_consistency_rate($all, $current) {
+  $current_rec_value = field_entity_value($current, 'field_rec_options') + 1;
+
+  $consistency = 0;
+  foreach ($all as $other) {
+    if ($other->id == $current->id) {
+      continue;
+    }
+
+    $other_rec_value = field_entity_value($other, 'field_rec_options') + 1;
+    $consistency += abs($current_rec_value - $other_rec_value);
+  }
+
+  $consistency /= 6;
+  $consistency = round((1 - $consistency) * 100) . '%';
+
+  return $consistency;
 }
