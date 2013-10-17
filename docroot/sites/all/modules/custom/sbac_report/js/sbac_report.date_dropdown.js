@@ -2,7 +2,6 @@
  * Date range dropdown.
  */
 // TODO: make this a more general purpose class and pull out of the scope of reports.
-// TODO: instantiate the html too.
 DateDropDown = (function($, $which) {
 
   // class attributes
@@ -113,7 +112,7 @@ DateDropDown = (function($, $which) {
     });
 
     // Update the dropdown text, when the user enters a custom date.
-    $("#"+$to_date_input+" input").on('change', function() {
+    $($to_date_input+" input").on('change', function() {
       var toInput = getInput(this);
       var fromInput = getInput($from_date_input+" input");
       if (fromInput && toInput) {
@@ -125,7 +124,7 @@ DateDropDown = (function($, $which) {
     });
 
     // Update the dropdown text, when the user enters a custom date.
-    $("#"+$from_date_input+" input").on('change', function() {
+    $($from_date_input+" input").on('change', function() {
       var fromInput = getInput(this);
       var toInput = getInput($to_date_input+" input");
       if (fromInput && toInput) {
