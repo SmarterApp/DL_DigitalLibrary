@@ -67,60 +67,62 @@ dl {
 
 
 /** Tables **/
-table {
-  $cellpad: 18px 2px; //defines the padding on the table cells
-  $border-style: 1px solid #ccc;
+.page-reports{
+  table {
+    $cellpad: 18px 2px; //defines the padding on the table cells
+    $border-style: 1px solid #ccc;
 
-  border:$border-style;
-  background:none;
-
-  thead{
-    tr{
-      th{
-        @include background-image(linear-gradient(#ededed, #ebebeb));
-        border-bottom: $border-style;
-        padding:$cellpad;
-        color: #056b8d;
-        border: $border-style;
-
-        a {
-          color: inherit;
-        }
-
-        &.active {
-          background:#C9EAF8;
-        }
-      }
-    }
-  }
-
-  tbody {
-    border-top: none;
+    border:$border-style;
     background:none;
-  }
 
-  tr.even, tr.odd {
-    td {
-      padding: $cellpad;
-      @include background-image(linear-gradient(#fbfbfb, #fafafa));
-      border: $border-style;
-      &.active {
-         background:#EDF8FC;
+    thead{
+      tr{
+        th{
+          @include background-image(linear-gradient(#ededed, #ebebeb));
+          border-bottom: $border-style;
+          padding:$cellpad;
+          color: #056b8d;
+          border: $border-style;
+
+          a {
+            color: inherit;
+          }
+
+          &.active {
+            background:#C9EAF8;
+          }
+        }
       }
     }
-  }
-  
-  tr.alt, tr:nth-of-type(even){
-    td {
-      @include background-image(linear-gradient(#f8f8f8, #f6f6f6));
-      &.active {
-        background:#E1F3F9;
-      }
+
+    tbody {
+      border-top: none;
+      background:none;
     }
-    &:hover {
-      td{
+
+    tr.even, tr.odd {
+      td {
+        padding: $cellpad;
         @include background-image(linear-gradient(#fbfbfb, #fafafa));
-        cursor: pointer;
+        border: $border-style;
+        &.active {
+           background:#EDF8FC;
+        }
+      }
+    }
+    
+    tr.alt, tr:nth-of-type(even){
+      td {
+        @include background-image(linear-gradient(#f8f8f8, #f6f6f6));
+        &.active {
+          background:#E1F3F9;
+        }
+      }
+      &:hover {
+        td{
+          @include background-image(linear-gradient(#fbfbfb, #fafafa));
+          cursor: pointer;
+        }
       }
     }
   }
