@@ -62,20 +62,19 @@ function sbac_report_individual() {
   );
 
   $csv_form = drupal_get_form('sbac_report_csv_form');
-  $csv_summary = '';
+  $csv_summary = 'yo';
 
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
     $csv_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
   }
 
-  $csv_tab =
-    theme('sbac_report_csv', array(
+  $csv_tab = theme('sbac_report_csv', array(
       'form' => $csv_form,
       'csv_summary' => $csv_summary,
     )
   );
 
-//  $csv_tab = '-- tab2 --';
+  //$csv_tab = '-- tab2 --';
 
   $output = array(
     '#type' => 'vertical_tabs',
