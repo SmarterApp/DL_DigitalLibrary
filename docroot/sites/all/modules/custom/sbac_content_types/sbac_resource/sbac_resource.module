@@ -56,6 +56,13 @@ function sbac_resource_menu() {
     'file' => 'sbac_resource.forms.inc',
   );
 
+  $items['sbac_resource/%ctools_js/save-all-changes'] = array(
+    'page callback' => 'sbac_resource_save_all_changes_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
   $items['digital-library-resources'] = array(
     'title' => 'Digital Library Resources',
     'page callback' => 'sbac_resource_digital_library_page',

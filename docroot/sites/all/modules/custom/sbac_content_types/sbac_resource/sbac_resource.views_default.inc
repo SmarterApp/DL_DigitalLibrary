@@ -90,6 +90,7 @@ function sbac_resource_views_default_views() {
     'rejected' => 'rejected',
     'approved' => 'approved',
     'published' => 'published',
+    'removed' => 'removed',
   );
   $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
   $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
@@ -1390,6 +1391,7 @@ function sbac_resource_views_default_views() {
     'rejected' => 'rejected',
     'approved' => 'approved',
     'published' => 'published',
+    'removed' => 'removed',
   );
   $handler->display->display_options['filters']['state']['exposed'] = TRUE;
   $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';

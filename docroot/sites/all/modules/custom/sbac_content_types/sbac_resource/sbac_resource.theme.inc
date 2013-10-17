@@ -922,6 +922,30 @@ function _sbac_resource_my_resources_links($fields) {
         $variables['grades'] = $fields['field_grades']->content;
         $variables['media_types'] = $fields['field_digital_media_type']->content;
         break;
+      case 'removed':
+        $url = url('node/' . $nid, array('absolute' => TRUE));
+        $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+        $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+          'html' => TRUE,
+          'attributes' => array(
+            'class' => 'use-ajax medium button ctools-modal-sbac-resource-modal-delete-resource',
+            'id' => 'sbac-resource-modal-delete-resource'
+          ),
+          'query' => array('nid' => $nid),
+        ));
+        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+          'html' => TRUE,
+          'query' => array(
+            'nid' => $nid
+          ),
+          'attributes' => array(
+            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource',
+            'id' => 'sbac-resource-modal-delete-resource'
+          )
+        ));
+        $variables['text'] = t('Removed');
+        break;
     }
 
     // JS to properly size the modal when submit resource is clicked.

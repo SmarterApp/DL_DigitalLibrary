@@ -28,6 +28,7 @@ function sbac_resource_field_group_info() {
       2 => 'field_view_permissions',
       3 => 'field_resource_actions',
       4 => 'field_posting_options',
+      5 => 'field_posting_options_comment',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
