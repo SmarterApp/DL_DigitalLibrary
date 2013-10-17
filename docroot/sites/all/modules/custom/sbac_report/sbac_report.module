@@ -93,7 +93,7 @@ function sbac_report_theme($existing, $type, $theme, $path) {
   $themes['sbac_report_date_range_dropdown'] = array(
     'template' => 'templates/sbac-report-date-range-dropdown',
     'path' => $module_path,
-    'arguments' => array('date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL),
+    'arguments' => array('which'=>'0','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL),
     'preprocess functions' => array(
       'template_preprocess',
     ),
@@ -178,7 +178,7 @@ function sbac_report_individual_form($form, &$form_state) {
     $date_display = sbac_report_format_date_range($session_date_range);
   }
 
-  sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options);
+  sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options, '');
 
   $form['sne'] = array(
     '#type' => 'textfield',
@@ -293,7 +293,7 @@ function sbac_report_csv_form($form, &$form_state) {
     $date_display = sbac_report_format_date_range($session_date_range);
   }
 
-  sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options);
+  sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options, '1');
 
   // TODO: user groups instead of SNE.
   //$user_group_options = sbac_report_user_group_options();
@@ -378,7 +378,7 @@ function sbac_report_csv_form_submit($form, &$form_state) {
  * @param array $date_options
  *   An associative array of default date options.
  */
-function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $date_display, $date_options) {
+function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $date_display, $date_options, $which) {
 
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_report') . '/js/sbac_report.date_dropdown.js';
 
@@ -398,6 +398,7 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
     '#type' => 'markup',
     '#markup' => theme('sbac_report_date_range_dropdown',
       array(
+        'which' => $which,
         'date_display' => $date_display ? $date_display : t('Last 30 Days'),
         'ago_30' => $date_options['Last 30 Days'],
         'ago_60' => $date_options['Last 60 Days'],

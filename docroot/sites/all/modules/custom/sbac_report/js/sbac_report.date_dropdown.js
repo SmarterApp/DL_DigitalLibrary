@@ -1,7 +1,22 @@
 /**
  * Date range dropdown.
  */
-(function($) {
+// TODO: make this a more general purpose class and pull out of the scope of reports.
+// TODO: instantiate the html too.
+DateDropDown = (function($, $which) {
+  // id attributes
+  var $drop_down_id='#date-range-dropdown', $selected_id='#date-selected',
+      $date_range_field_id='#date-range-field', $from_date_input='#from-date',
+      $to_date_input='#to-date', $ui_datepicker_div='#ui-datepicker-div';
+  // class attributes
+  var $date_range_item='.date-range-item', $report_dropdown_toggle='.report-dropdown-toggle';
+  if ($which!=0) {
+    $drop_down_id='#date-range-dropdown'+$which, $selected_id='#date-selected'+$which,
+    $date_range_field_id='#date-range-field'+$which, $from_date_input='#from-date'+$which,
+    $to_date_input='#to-date'+$which, $ui_datepicker_div='#ui-datepicker-div'+$which;
+    // ? Do I need to individualize class attributes ?
+    // $date_range_item='.date-range-item'+$which, $report_dropdown_toggle='.report-dropdown-toggle'+$which;
+  }
   /**
    * Action on the dropdown.
    *
@@ -35,11 +50,11 @@
   function toggleDropdown($dropdown, $dropdown_id) {
     // Show.
     if ($dropdown.hasClass('hide')) {
-      dropdown($dropdown, 'show', $dropdown_id); //'#date-selected');
+      dropdown($dropdown, 'show', $dropdown_id);
     }
     // Hide.
     else {
-      dropdown($dropdown, 'hide', $dropdown_id); //'#date-selected');
+      dropdown($dropdown, 'hide', $dropdown_id);
     }
   }
 
@@ -66,13 +81,13 @@
 
   // DOM ready.
   $(function() {
-    var $dateRangeField = $('#date-range-field');
-    var $dateSelected = $('#date-selected');
-    var dropdownId = '#date-range-dropdown';
-    var $dropdown = $(dropdownId);
+    var $dateRangeField = $($date_range_field_id);
+    var $dateSelected = $($selected_id);
+    //var dropdownId = '#date-range-dropdown';
+    var $dropdown = $($drop_down_id);
 
     // Update the text when an item is selected.
-    $('.date-range-item').click(function() {
+    $($date_range_item).click(function() {
       var value = $(this).data('value');
       var text = $(this).text();
       $dateRangeField.text(value);
@@ -80,10 +95,10 @@
       $dateSelected.text(text);
     });
 
-    $('.report-dropdown-toggle').click(function(e) {
+    $($report_dropdown_toggle).click(function(e) {
       e.preventDefault();
       e.stopPropagation();
-      toggleDropdown($dropdown, '#date-selected');
+      toggleDropdown($dropdown, $selected_id);
     });
 
     // On "show" event.
@@ -91,11 +106,11 @@
       $(document).on('click keydown', function(e) {
         // ESC closes the dropdown.
         if (e.keyCode === 27) {
-          dropdown($dropdown, 'hide', '#date-selected');
+          dropdown($dropdown, 'hide', $selected_id);
         }
         // Clicking outside the dropdown will close the dropdown.
-        if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 && $('#ui-datepicker-div').has(e.target).length === 0) {
-          dropdown($dropdown, 'hide', '#date-selected');
+        if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 && $($ui_datepicker_div).has(e.target).length === 0) {
+          dropdown($dropdown, 'hide', $selected_id);
         }
       });
     });
@@ -103,7 +118,7 @@
     // Update the dropdown text, when the user enters a custom date.
     $('#to-date input').on('change', function() {
       var toInput = getInput(this);
-      var fromInput = getInput('#from-date input');
+      var fromInput = getInput($from_date_input+" input");
       if (fromInput && toInput) {
         var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
         $dateRangeField.text(value);
@@ -115,7 +130,7 @@
     // Update the dropdown text, when the user enters a custom date.
     $('#from-date input').on('change', function() {
       var fromInput = getInput(this);
-      var toInput = getInput('#to-date input');
+      var toInput = getInput($to_date_input+" input");
       if (fromInput && toInput) {
         var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
         $dateRangeField.text(value);
@@ -125,4 +140,8 @@
     });
 
   });
-})(jQuery);
+});
+
+// instantiate the drop downs for reports.
+DateDropDown(jQuery, 0);
+DateDropDown(jQuery, 1);
