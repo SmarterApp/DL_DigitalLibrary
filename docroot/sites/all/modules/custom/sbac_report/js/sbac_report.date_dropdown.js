@@ -12,7 +12,7 @@ DateDropDown = (function($, $which) {
     // id attributes
   var $drop_down_id='#date-range-dropdown'+$which, $selected_id='#date-selected'+$which,
       $date_range_field_id='#date-range-field'+$which, $from_date_input='#from-date'+$which,
-      $to_date_input='#to-date'+$which, $ui_datepicker_div='#ui-datepicker-div'+$which;
+      $to_date_input='#to-date'+$which, $ui_datepicker_div='#ui-datepicker-div';//+$which;
 
   /**
    * Action on the dropdown.
@@ -113,7 +113,7 @@ DateDropDown = (function($, $which) {
     });
 
     // Update the dropdown text, when the user enters a custom date.
-    $('#to-date input').on('change', function() {
+    $("#"+$to_date_input+" input").on('change', function() {
       var toInput = getInput(this);
       var fromInput = getInput($from_date_input+" input");
       if (fromInput && toInput) {
@@ -125,7 +125,7 @@ DateDropDown = (function($, $which) {
     });
 
     // Update the dropdown text, when the user enters a custom date.
-    $('#from-date input').on('change', function() {
+    $("#"+$from_date_input+" input").on('change', function() {
       var fromInput = getInput(this);
       var toInput = getInput($to_date_input+" input");
       if (fromInput && toInput) {

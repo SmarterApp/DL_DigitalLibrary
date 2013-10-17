@@ -79,20 +79,28 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'sbac_report_preprocess_sbac_report_individual',
     ),
   );
-
-//  $themes['sbac_report_csv'] = array(
-//      'template' => 'templates/sbac-report-csv',
-//      'path' => $module_path,
-//      'file' => 'sbac_report.preprocess.inc',
-//      'preprocess functions' => array(
-//          'template_preprocess',
-//          'sbac_report_preprocess_sbac_report_csv',
-//      ),
-//  );
+  // todo:: figure this out:
+  $themes['sbac_report_csv'] = array(
+      'template' => 'templates/sbac-report-csv',
+      'path' => $module_path,
+      'file' => 'sbac_report.preprocess.inc',
+      'preprocess functions' => array(
+          'template_preprocess',
+          'sbac_report_preprocess_sbac_report_csv',
+      ),
+  );
   $themes['sbac_report_date_range_dropdown'] = array(
     'template' => 'templates/sbac-report-date-range-dropdown',
     'path' => $module_path,
     'arguments' => array('which'=>'','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL), //default values
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+  $themes['sbac_report_date_range_dropdown1'] = array(
+    'template' => 'templates/sbac-report-date-range-dropdown1',
+    'path' => $module_path,
+    'arguments' => array('which'=>'1','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL), //default values
     'preprocess functions' => array(
       'template_preprocess',
     ),
@@ -395,7 +403,7 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
 
   $form["date_range_dropdown$which"] = array(
     '#type' => 'markup',
-    '#markup' => theme('sbac_report_date_range_dropdown',
+    '#markup' => theme("sbac_report_date_range_dropdown$which",
       array(
         'which' => $which,
         'date_display' => $date_display ? $date_display : t('Last 30 Days'),
@@ -405,6 +413,20 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
       )
     )
   );
+
+//    array(
+//      'template' => 'templates/sbac-report-date-range-dropdown',
+//      'path' => $module_path,
+//      'arguments' => array(
+//          'which' => $which,
+//          'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+//          'ago_30' => $date_options['Last 30 Days'],
+//          'ago_60' => $date_options['Last 60 Days'],
+//          'ago_90' => $date_options['Last 90 Days'],
+//        ),
+//      'preprocess functions' => array(
+//        'template_preprocess',
+//    ),
 
   $form["from_date$which"] = array(
     '#id' => "from-date$which",
