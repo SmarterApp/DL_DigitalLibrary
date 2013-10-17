@@ -75,6 +75,7 @@ function sbac_report_individual() {
     )
   );
 
+//  $csv_tab = '-- tab2 --';
 
   $output = array(
     '#type' => 'vertical_tabs',

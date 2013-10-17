@@ -4,19 +4,16 @@
 // TODO: make this a more general purpose class and pull out of the scope of reports.
 // TODO: instantiate the html too.
 DateDropDown = (function($, $which) {
-  // id attributes
-  var $drop_down_id='#date-range-dropdown', $selected_id='#date-selected',
-      $date_range_field_id='#date-range-field', $from_date_input='#from-date',
-      $to_date_input='#to-date', $ui_datepicker_div='#ui-datepicker-div';
+
   // class attributes
-  var $date_range_item='.date-range-item', $report_dropdown_toggle='.report-dropdown-toggle';
-  if ($which!=0) {
-    $drop_down_id='#date-range-dropdown'+$which, $selected_id='#date-selected'+$which,
-    $date_range_field_id='#date-range-field'+$which, $from_date_input='#from-date'+$which,
-    $to_date_input='#to-date'+$which, $ui_datepicker_div='#ui-datepicker-div'+$which;
-    // ? Do I need to individualize class attributes ?
-    // $date_range_item='.date-range-item'+$which, $report_dropdown_toggle='.report-dropdown-toggle'+$which;
-  }
+  // ? Do I need to individualize class attributes ?
+  var $date_range_item='.date-range-item',//+$which,
+      $report_dropdown_toggle='.report-dropdown-toggle'; //+$which;
+    // id attributes
+  var $drop_down_id='#date-range-dropdown'+$which, $selected_id='#date-selected'+$which,
+      $date_range_field_id='#date-range-field'+$which, $from_date_input='#from-date'+$which,
+      $to_date_input='#to-date'+$which, $ui_datepicker_div='#ui-datepicker-div'+$which;
+
   /**
    * Action on the dropdown.
    *
@@ -143,5 +140,5 @@ DateDropDown = (function($, $which) {
 });
 
 // instantiate the drop downs for reports.
-DateDropDown(jQuery, 0);
-DateDropDown(jQuery, 1);
+DateDropDown(jQuery, '');
+DateDropDown(jQuery, '1');
