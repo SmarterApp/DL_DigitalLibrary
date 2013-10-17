@@ -48,6 +48,10 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     global $user;
     if (!in_array('DLRB member', $user->roles)) {
       field_group_hide_field_groups($form, array('group_advanced'));
+      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
+    }
+    else {
+      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
     }
 
     // Setup the form
@@ -147,14 +151,6 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   $form_state['values']['workbench_moderation_state_new'] = 'draft';
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
-
-  // $node = node_load($form_state['build_info']['args'][0]->nid, NULL, TRUE);
-  // if (isset($node->field_alignment_term[LANGUAGE_NONE][0]['tid'])) {
-  //   foreach ($node->field_alignment_term[LANGUAGE_NONE] as $key => $item) {
-  //     $term = taxonomy_term_load($item['tid']);
-  //     $form_state['values']['field_alignment_term'][LANGUAGE_NONE][$key] = $term;
-  //   }
-  // }
   
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
@@ -227,22 +223,15 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     return $form;
   }
 
-  $dlrb_member = FALSE;
-  if ($form_state['clicked_button']['#value'] == 'Save All Changes') {
-    $dlrb_member = TRUE;
-  }
-
   $duplicates = FALSE;
   $active_tab = $form_state['values']['additional_settings__active_tab'];
-  if (!$dlrb_member) {
-    if ($active_tab == 'edit-group_materials') {
-      $media_items = sbac_media_load_items($form['#node']->nid);
-      $duplicates = sbac_media_check_duplicates($media_items);
-    }
+  if ($active_tab == 'edit-group_materials') {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    $duplicates = sbac_media_check_duplicates($media_items);
   }
 
   // Submit node, everything is good to go.
-  if (!$dlrb_member) {
+  if ($active_tab != 'edit-group_advanced') {
     ctools_include('ajax');
     $selector = NULL;
     $valid = FALSE;
@@ -257,8 +246,14 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $valid = FALSE;
         break;
       case 'edit-group_tags':
-        $selector = NULL;
-        $valid = TRUE;
+        global $user;
+        if (in_array('DLRB member', $user->roles)) {
+          $valid = FALSE;
+        }
+        else {
+          $valid = TRUE;
+        }
+        $selector = ".vertical-tabs-list li:nth-child(5) a";
         break;
       case 'edit-group_summary':
         $valid = FALSE;
@@ -287,7 +282,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
     );
   }
-  else if (!$dlrb_member) {
+  else if ($active_tab != 'edit-group_advanced') {
     // Add appropriate JS.
     drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
     if ($selector) {
@@ -1535,9 +1530,13 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
 
   // Permissions field.
   $form['field_view_permissions']['und']['#default_value'] = 0;
+  $form['field_view_permissions']['und']['#prefix'] = '<div id="sbac-permissions-per-state">';
+  $form['field_view_permissions']['und']['#suffix'] = '</div>';
 
   // View permissions per state.
   $form['field_view_permissions_per_state']['und']['#title'] = '';
+  $form['field_view_permissions_per_state']['und']['#prefix'] = '<div id="sbac-permissions-state">';
+  $form['field_view_permissions_per_state']['und']['#suffix'] = '</div>';
 
   // Resource Actions.
   $form['field_resource_actions']['und']['#default_value'] = array(0, 1);
@@ -1549,23 +1548,33 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   }
 
   $default_value = 0;
-  if ($form['#node']->workbench_moderation['current']->state == 'published') {
-    $default_value = 0;
-  }
-  if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
-    $default_value = 1;
-  }
-  if ($form['#node']->workbench_moderation['current']->state == 'removed') {
-    $default_value = 2;
-  }
-
   if (isset($form['#node']->field_posting_options['und'][0]['value'])) {
     $default_value = $form['#node']->field_posting_options['und'][0]['value'];
   }
-
+  else {
+    if ($form['#node']->workbench_moderation['current']->state == 'published') {
+      $default_value = 0;
+    }
+    if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
+      $default_value = 1;
+    }
+    if ($form['#node']->workbench_moderation['current']->state == 'removed') {
+      $default_value = 2;
+    }
+  }
   $form['field_posting_options']['und']['#default_value'] = $default_value;
 
   // Hidden field to store original value.
+  $original_default_value = 0;
+  if ($form['#node']->workbench_moderation['current']->state == 'published') {
+    $original_default_value = 0;
+  }
+  if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
+    $original_default_value = 1;
+  }
+  if ($form['#node']->workbench_moderation['current']->state == 'removed') {
+    $original_default_value = 2;
+  }
   $form['field_posting_option_hidden'] = array(
     '#type' => 'hidden',
     '#value' => $original_default_value,
@@ -1604,15 +1613,9 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
-  global $user;
-  $title = 'Save All Changes';
-  if (!in_array('DLRB member', $user->roles)) {
-    $title = 'Save and Continue';
-  }
-
   $form['actions']['save_continue'] = array(
     '#type' => 'submit',
-    '#value' => $title,
+    '#value' => 'Save and Continue',
     '#weight' => 2,
     '#validate' => array('sbac_resource_validate_form'),
     '#attributes' => array('id' => 'edit-save-continue'),

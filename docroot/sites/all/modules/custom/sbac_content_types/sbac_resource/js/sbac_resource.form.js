@@ -16,11 +16,7 @@
       }
 
       control_form_buttons();
-      $('.vertical-tabs-list li:nth-child(4) a').click(function () {
-        control_form_buttons();
-      });
-
-      $('.vertical-tabs-list li:nth-child(5) a').click(function () {
+      $('.vertical-tabs-list li a').click(function () {
         control_form_buttons();
       });
     }
@@ -40,6 +36,11 @@
     }
   };
 
+  /**
+   * Adjusts the hieght of the list.
+   *
+   * @type {{attach: Function}}
+   */
   Drupal.behaviors.sbac_resource_table_primary = {
     attach: function (context, settings) {
       if ($('#sbac-media-list tbody tr:first-child').length) {
@@ -55,16 +56,17 @@
     }
   };
 
-
   /**
    * Controls the buttons at the bottom of the resource form.
    */
   control_form_buttons = function () {
     var cancel_button = $('#edit-cancel');
     var resource_state = Drupal.settings.resource_workbench_current_state;
+    var dlrb_member = Drupal.settings.sbac_dlrb_member;
     var submit_resource = $('#sbac-resource-modal-submit-resource');
     var save_all_changes = $('#sbac-resource-save-all-changes');
     var active_tab = $('.vertical-tab-button.selected a strong').html();
+
     submit_resource.hide();
     cancel_button.hide();
     save_all_changes.hide();
@@ -72,8 +74,14 @@
       cancel_button.show();
     }
 
-    if (active_tab == 'Tags' && $('#edit-save-continue').html() != 'Save All Changes') {
+    if (active_tab == 'Tags' && dlrb_member == false) {
       $('#edit-save-continue').html('Submit Resource');
+    }
+    else if (active_tab == 'Advanced') {
+      $('#edit-save-continue').html('Save All Changes');
+    }
+    else {
+      $('#edit-save-continue').html('Save and Continue');
     }
   };
 
@@ -220,14 +228,14 @@
   Drupal.behaviors.sbac_resource_permissions = {
     attach: function (context, settings) {
       // States
-      if ($('#edit-field-view-permissions-und-0').is(':checked')) {
-        $('#edit-field-view-permissions-per-state').hide();
+      if ($('#sbac-permissions-per-state input:radio:first').is(':checked')) {
+        $('.form-item-field-view-permissions-per-state-und').hide();
       }
-      $('#edit-field-view-permissions-und-0').click(function () {
-        $('#edit-field-view-permissions-per-state').hide();
+      $('#sbac-permissions-per-state input:radio:first').click(function () {
+        $('.form-item-field-view-permissions-per-state-und').hide();
       });
-      $('#edit-field-view-permissions-und-1').click(function () {
-        $('#edit-field-view-permissions-per-state').show();
+      $('#sbac-permissions-per-state input:radio:last').click(function () {
+        $('.form-item-field-view-permissions-per-state-und').show();
       });
 
       // Resource actions
