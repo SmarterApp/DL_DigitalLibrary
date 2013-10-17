@@ -226,42 +226,43 @@ $darkgreen: #246a34;
 /**
  Tables
   **/
+.page-reports {
+	table.report-summation {
+	  border:none !important;
+	  background:none;
+	  font-size: 0.9em;
 
-table.report-summation {
-  border:none !important;
-  background:none;
-  font-size: 0.9em;
+	  @mixin table-header() {
+	    border:1px solid #ccc;
+	        color: #056b8d;
+	        font-weight: bold;
+	    @include background-image(linear-gradient(#ededed, #ebebeb));
+	  }
 
-  @mixin table-header() {
-    border:1px solid #ccc;
-        color: #056b8d;
-        font-weight: bold;
-    @include background-image(linear-gradient(#ededed, #ebebeb));
-  }
+	  thead {
+	    background:none;
+	    tr{
+	      th{
+	        background:none;
+	        border:none;
 
-  thead {
-    background:none;
-    tr{
-      th{
-        background:none;
-        border:none;
+	        &.header {
+	          @include table-header();
+	        }
+	      }
+	    }
+	  }
 
-        &.header {
-          @include table-header();
-        }
-      }
-    }
-  }
-
-  tbody {
-    tr{
-      td {
-        &.subheader{
-          @include table-header();
-        }
-      }
-    }
-  }
+	  tbody {
+	    tr{
+	      td {
+	        &.subheader{
+	          @include table-header();
+	        }
+	      }
+	    }
+	  }
+	}
 }
 
 /**
