@@ -63,23 +63,17 @@
     var cancel_button = $('#edit-cancel');
     var resource_state = Drupal.settings.resource_workbench_current_state;
     var submit_resource = $('#sbac-resource-modal-submit-resource');
+    var save_all_changes = $('#sbac-resource-save-all-changes');
     var active_tab = $('.vertical-tab-button.selected a strong').html();
     submit_resource.hide();
     cancel_button.hide();
+    save_all_changes.hide();
     if (active_tab == 'General' && resource_state == 'creation') {
       cancel_button.show();
     }
 
-    if (active_tab == 'Tags') {
+    if (active_tab == 'Tags' && $('#edit-save-continue').html() != 'Save All Changes') {
       $('#edit-save-continue').html('Submit Resource');
-    }
-
-    if (active_tab == 'Advanced') {
-      $('#edit-cancel-all-changes').show();
-      $('#sbac-resource-save-all-changes').show();
-      $('#edit-save-continue').hide();
-      submit_resource.hide();
-      $('#edit-submit').hide();
     }
   };
 
@@ -251,15 +245,32 @@
       $('#edit-field-posting-options-und-0').click(function() {
         $('#edit-field-posting-options-comment').show();
         $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+        save_all_changes_href($(this).val());
       });
       $('#edit-field-posting-options-und-1').click(function() {
         $('#edit-field-posting-options-comment').show();
         $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+        save_all_changes_href($(this).val());
       });
       $('#edit-field-posting-options-und-2').click(function() {
         $('#edit-field-posting-options-comment').show();
         $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
+        save_all_changes_href($(this).val());
       });
+    }
+  };
+
+  /**
+   * Updates the posting option.
+   */
+  save_all_changes_href = function (posted_option) {
+    var save_all_changes = $('#sbac-resource-save-all-changes');
+    var href = $(save_all_changes).attr('href');
+    var pos = href.indexOf('posting_option');
+    if (pos > -1) {
+      var new_href = href.substr(0, pos);
+      new_href += 'posting_option=' + posted_option;
+      save_all_changes.attr('href', new_href);
     }
   };
 
@@ -372,19 +383,6 @@
           change_option(el.val(), true);
         });
       });
-    }
-  };
-
-
-  /**
-   * Displays or hides the permissions field.
-   *
-   * @type {{attach: Function}}
-   */
-  Drupal.behaviors.sbac_resource_advanced_buttons = {
-    attach: function (context, settings) {
-      $('#edit-cancel-all-changes').hide();
-      $('#sbac-resource-save-all-changes').hide();
     }
   };
 
