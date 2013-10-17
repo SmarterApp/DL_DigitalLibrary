@@ -9,7 +9,7 @@
  */
 function sbac_report_individual() {
   drupal_set_title(t('Usage and Activity Reports'));
-  $form = drupal_get_form('sbac_report_individual_form');
+  $individual_form = drupal_get_form('sbac_report_individual_form');
   $sne_details = '';
   $contributed_summary = '';
   $contributed_details = '';
@@ -51,7 +51,7 @@ function sbac_report_individual() {
   }
 
   $individual_tab = theme('sbac_report_individual', array(
-      'form' => $form,
+      'form' => $individual_form,
       'sne_details' => $sne_details,
       'contributed_summary' => $contributed_summary,
       'contributed_details' => $contributed_details,
@@ -61,7 +61,19 @@ function sbac_report_individual() {
     )
   );
 
-  $csv_tab = '-- tab 2 --';
+  $csv_form = drupal_get_form('sbac_report_csv_form');
+  $csv_summary = '';
+
+  if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
+    $csv_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
+  }
+
+  $csv_tab = theme('sbac_report_csv', array(
+      'form' => $csv_form,
+      'csv_summary' => $csv_summary,
+    )
+  );
+
 
   $output = array(
     '#type' => 'vertical_tabs',
@@ -73,14 +85,14 @@ function sbac_report_individual() {
         '#markup' => $individual_tab,
       ),
     ),
-    'csv_exorts' => array(
-      '#type' => 'fieldset', 
-      '#title' => t('CSV Exports'), 
-      '#collapsible' => TRUE, 
-      'content' => array(
-        '#markup' => $csv_tab,
-      ),
-    ),
+//    'csv_exorts' => array(
+//      '#type' => 'fieldset',
+//      '#title' => t('CSV Exports'),
+//      '#collapsible' => TRUE,
+//      'content' => array(
+//        '#markup' => $csv_tab,
+//      ),
+//    ),
   );
 
   return drupal_render($output);

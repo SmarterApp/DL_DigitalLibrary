@@ -1,5 +1,5 @@
 /**
- * Date range dropdown.
+ * User Group dropdown.
  */
 (function($) {
   /**
@@ -8,12 +8,12 @@
    * @param {op}
    *   'show' or 'hide'.
    */
-  function dropdown($dropdown, op, $dropdown_id) {
+  function dropdown_user_group($dropdown, op) {
     // Show.
     if (op == 'show') {
       if ($dropdown.hasClass('hide')) {
         $dropdown.removeClass('hide');
-        $($dropdown_id).addClass('show');
+        $('#user-group-selected').addClass('show');
         $dropdown.unbind('hide');
         $dropdown.trigger('show');
       }
@@ -22,7 +22,7 @@
     else {
       if (!$dropdown.hasClass('hide')) {
         $dropdown.addClass('hide');
-        $($dropdown_id).removeClass('show');
+        $('#user-group-selected').removeClass('show');
         $dropdown.unbind('show');
         $dropdown.trigger('hide');
       }
@@ -32,14 +32,14 @@
   /**
    * Toggle dropdown.
    */
-  function toggleDropdown($dropdown, $dropdown_id) {
+  function toggleDropdown_user_group($dropdown) {
     // Show.
     if ($dropdown.hasClass('hide')) {
-      dropdown($dropdown, 'show', $dropdown_id); //'#date-selected');
+      dropdown_usergroup($dropdown, 'show');
     }
     // Hide.
     else {
-      dropdown($dropdown, 'hide', $dropdown_id); //'#date-selected');
+      dropdown_user_group($dropdown, 'hide');
     }
   }
 
@@ -66,13 +66,13 @@
 
   // DOM ready.
   $(function() {
-    var $dateRangeField = $('#date-range-field');
+    var $dateRangeField = $('#user-group-field');
     var $dateSelected = $('#date-selected');
-    var dropdownId = '#date-range-dropdown';
+    var dropdownId = '#user-group-dropdown';
     var $dropdown = $(dropdownId);
 
     // Update the text when an item is selected.
-    $('.date-range-item').click(function() {
+    $('.user-group-item').click(function() {
       var value = $(this).data('value');
       var text = $(this).text();
       $dateRangeField.text(value);
@@ -83,7 +83,7 @@
     $('.report-dropdown-toggle').click(function(e) {
       e.preventDefault();
       e.stopPropagation();
-      toggleDropdown($dropdown, '#date-selected');
+      toggleDropdown_user_group($dropdown);
     });
 
     // On "show" event.
@@ -91,38 +91,38 @@
       $(document).on('click keydown', function(e) {
         // ESC closes the dropdown.
         if (e.keyCode === 27) {
-          dropdown($dropdown, 'hide', '#date-selected');
+            toggleDropdown_user_group($dropdown, 'hide');
         }
         // Clicking outside the dropdown will close the dropdown.
-        if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 && $('#ui-datepicker-div').has(e.target).length === 0) {
-          dropdown($dropdown, 'hide', '#date-selected');
+        if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 && $('#ui-user-grouppicker-div').has(e.target).length === 0) {
+            toggleDropdown_user_group($dropdown, 'hide');
         }
       });
     });
 
-    // Update the dropdown text, when the user enters a custom date.
-    $('#to-date input').on('change', function() {
-      var toInput = getInput(this);
-      var fromInput = getInput('#from-date input');
-      if (fromInput && toInput) {
-        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
-        $dateRangeField.text(value);
-        $dateRangeField.val(value);
-        $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
-      }
-    });
-
-    // Update the dropdown text, when the user enters a custom date.
-    $('#from-date input').on('change', function() {
-      var fromInput = getInput(this);
-      var toInput = getInput('#to-date input');
-      if (fromInput && toInput) {
-        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
-        $dateRangeField.text(value);
-        $dateRangeField.val(value);
-        $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
-      }
-    });
+//    // Update the dropdown text, when the user enters a custom date.
+//    $('#to-date input').on('change', function() {
+//      var toInput = getInput(this);
+//      var fromInput = getInput('#from-date input');
+//      if (fromInput && toInput) {
+//        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
+//        $dateRangeField.text(value);
+//        $dateRangeField.val(value);
+//        $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
+//      }
+//    });
+//
+//    // Update the dropdown text, when the user enters a custom date.
+//    $('#from-date input').on('change', function() {
+//      var fromInput = getInput(this);
+//      var toInput = getInput('#to-date input');
+//      if (fromInput && toInput) {
+//        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
+//        $dateRangeField.text(value);
+//        $dateRangeField.val(value);
+//        $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
+//      }
+//    });
 
   });
 })(jQuery);
