@@ -295,6 +295,19 @@ table.report-summation {
       .slides {
         li {
           margin: 0;
+
+          .slide-title,
+          .inline-title {
+            font-weight: bold;
+          }
+
+          .gk-item,
+          .qc-item,
+          .post-item,
+          .post-decision,
+          .qc-question-item {
+            margin: 0 0 10px 0;
+          }
         }
       }
     }
