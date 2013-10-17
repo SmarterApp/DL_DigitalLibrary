@@ -29,6 +29,7 @@ function sbac_resource_user_default_permissions() {
   $permissions['delete any resource content'] = array(
     'name' => 'delete any resource content',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'resource publisher' => 'resource publisher',
     ),
@@ -54,6 +55,7 @@ function sbac_resource_user_default_permissions() {
   $permissions['edit any resource content'] = array(
     'name' => 'edit any resource content',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'digital library administrator' => 'digital library administrator',
       'resource publisher' => 'resource publisher',

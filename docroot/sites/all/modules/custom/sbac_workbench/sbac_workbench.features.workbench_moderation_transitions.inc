@@ -41,6 +41,10 @@ function sbac_workbench_workbench_moderation_export_transitions() {
       'from_name' => 'needs_review',
       'to_name' => 'being_reviewed',
     ),
+    'published:removed' => array(
+      'from_name' => 'published',
+      'to_name' => 'removed',
+    ),
     'rejected:needs_review' => array(
       'from_name' => 'rejected',
       'to_name' => 'needs_review',

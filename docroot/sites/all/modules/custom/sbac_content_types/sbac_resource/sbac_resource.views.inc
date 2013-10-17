@@ -243,7 +243,7 @@ function sbac_resource_views_default_views_alter(&$views) {
  */
 function sbac_resource_my_resource_apply_filters(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
-  $available_states = array('draft', 'needs_review', 'being_reviewed', 'rejected', 'published');
+  $available_states = array('draft', 'needs_review', 'being_reviewed', 'rejected', 'published', 'removed');
   $resource_states = array();
 
   // Current filter session - create the args where needed.
@@ -289,6 +289,9 @@ function sbac_resource_my_resource_apply_filters(&$view) {
                       break;
                     case 'Submitted':
                       $state = 'needs_review';
+                      break;
+                    case 'Removed':
+                      $state = 'removed';
                       break;
                     default:
                       $state = 'draft';
