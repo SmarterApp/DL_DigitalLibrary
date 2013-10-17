@@ -502,7 +502,7 @@ function sbac_search_my_resources_categories() {
 
   $resource_states = taxonomy_vocabulary_machine_name_load('resource_states');
   $resource_states_terms = taxonomy_get_tree($resource_states->vid);
-  $allowed_states = array('Draft', 'Submitted', 'In Review', 'Returned', 'Posted');
+  $allowed_states = array('Draft', 'Submitted', 'In Review', 'Returned', 'Posted', 'Removed');
   foreach ($resource_states_terms as $key => $resource_state_term) {
     if (!in_array($resource_state_term->name, $allowed_states)) {
       unset($resource_states_terms[$key]);
