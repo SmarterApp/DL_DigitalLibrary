@@ -751,6 +751,7 @@ function sbac_resource_validate_tags(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_validate_advanced($form, $form_state) {
+  $error = FALSE;
   $required = FALSE;
   if (isset($form_state['values']['field_posting_options']['und'][0]['value'])) {
     if ($form_state['values']['field_posting_options']['und'][0]['value'] == 2) {
@@ -765,9 +766,11 @@ function sbac_resource_validate_advanced($form, $form_state) {
       _sbac_resource_remove_error_message($error);
       drupal_set_message('advanced:field_posting_options_comment:single:' . $error, 'sbac_resource_error');
       drupal_set_message('advanced:field_posting_options_comment:group:' . $error, 'sbac_resource_error');
+      $error = TRUE;
     }
   }
 
+  $text = NULL;
   if ($form_state['values']['field_posting_options_comment']['und'][0]['value'] != NULL) {
     $text = $form_state['values']['field_posting_options_comment']['und'][0]['value'];
     $bad_words = profanity_validate_text($text);
@@ -777,7 +780,16 @@ function sbac_resource_validate_advanced($form, $form_state) {
       _sbac_resource_remove_error_message($error);
       drupal_set_message('advanced:field_posting_options_comment:single:' . $error, 'sbac_resource_error');
       drupal_set_message('advanced:field_posting_options_comment:group:' . $error, 'sbac_resource_error');
+      $error = TRUE;
     }
+  }
+
+  if (!$error) {
+    $_SESSION['sbac-posting-option-comment'] = $text;
+    $_SESSION['sbac-posting-option'] = $form_state['values']['field_posting_options']['und'][0]['value'];
+    $_SESSION['sbac-original-posting-option'] = $form_state['values']['field_posting_option_hidden'];
+    // remove the comment so that it doesn't show up on the node next time.
+    $form_state['values']['field_posting_options_comment']['und'][0]['value'] = NULL;
   }
 }
 
@@ -845,7 +857,14 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
     ctools_include('ajax');
     ctools_include('modal');
 
-    switch ($_GET['posting_option']) {
+    $original_posting_option = $_SESSION['sbac-original-posting-option'];
+    $posting_option = $_SESSION['sbac-posting-option'];
+    $chosen_option = $posting_option;
+    if ($original_posting_option == $posting_option) {
+      $chosen_option = 3;
+    }
+
+    switch ($chosen_option) {
       case 0:
         $description = 'You are about to post this resource without distinction.';
         break;
@@ -855,6 +874,9 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
       case 2:
         $description = 'You are about to remove this resource.';
         break;
+      case 3:
+        $description = 'You are about to save changes to a posted resource.';
+        break;
       default:
         $description = 'You are about to save changes to a posted resource.';
     }
@@ -862,6 +884,7 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
     $form_state = array(
       'title' => t($description),
       'ajax' => $js,
+      'chosen_option' => $chosen_option,
     );
 
     $output = ctools_modal_form_wrapper('sbac_resource_save_all_changes_form', $form_state);
@@ -1543,41 +1566,32 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
 
   // Posting options.
   unset($form['field_posting_options']['und']['#options']['_none']);
+  $form['field_posting_options']['und']['#prefix'] = '<div id="sbac-posting-options">';
+  $form['field_posting_options']['und']['#suffix'] = '</div>';
+
+  $form['field_posting_options_comment']['und']['#prefix'] = '<div id="sbac-posting-options-comment">';
+  $form['field_posting_options_comment']['und']['#suffix'] = '</div>';
   if ($form['field_posting_options']['und']['#default_value'] == 2) {
     $form['field_posting_options_comment']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   }
 
   $default_value = 0;
-  if (isset($form['#node']->field_posting_options['und'][0]['value'])) {
-    $default_value = $form['#node']->field_posting_options['und'][0]['value'];
+  if ($form['#node']->workbench_moderation['current']->state == 'published') {
+    $default_value = 0;
   }
-  else {
-    if ($form['#node']->workbench_moderation['current']->state == 'published') {
-      $default_value = 0;
-    }
-    if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
-      $default_value = 1;
-    }
-    if ($form['#node']->workbench_moderation['current']->state == 'removed') {
-      $default_value = 2;
-    }
+  if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
+    $default_value = 1;
+  }
+  if ($form['#node']->workbench_moderation['current']->state == 'removed') {
+    $default_value = 2;
   }
   $form['field_posting_options']['und']['#default_value'] = $default_value;
 
   // Hidden field to store original value.
-  $original_default_value = 0;
-  if ($form['#node']->workbench_moderation['current']->state == 'published') {
-    $original_default_value = 0;
-  }
-  if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
-    $original_default_value = 1;
-  }
-  if ($form['#node']->workbench_moderation['current']->state == 'removed') {
-    $original_default_value = 2;
-  }
   $form['field_posting_option_hidden'] = array(
     '#type' => 'hidden',
-    '#value' => $original_default_value,
+    '#value' => $default_value,
+    '#attributes' => array('id' => 'sbac-posting-option-hidden'),
   );
 }
 
@@ -1708,22 +1722,15 @@ function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
  */
 function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
   if (isset($form['#node']->nid)) {
-    $posting_option = 0;
-    if (isset($form['#node']->field_posting_options['und'][0]['value'])) {
-      $posting_option = $form['#node']->field_posting_options['und'][0]['value'];
+    $default_value = 0;
+    if ($form['#node']->workbench_moderation['current']->state == 'published') {
+      $default_value = 0;
     }
-    else {
-      if ($form['#node']->workbench_moderation['current']->state == 'published') {
-        $posting_option = 0;
-      }
-
-      if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
-        $posting_option = 1;
-      }
-
-      if ($form['#node']->workbench_moderation['current']->state == 'removed') {
-        $posting_option = 2;
-      }
+    if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
+      $default_value = 1;
+    }
+    if ($form['#node']->workbench_moderation['current']->state == 'removed') {
+      $default_value = 2;
     }
 
     $form['actions']['save_all_changes'] = array(
@@ -1734,7 +1741,8 @@ function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
         ),
         'query' => array(
           'nid' => $form['#node']->nid,
-          'posting_option' => $posting_option,
+          'posting_option' => $default_value,
+          'original_posting_option' => $default_value,
         )
       )),
       '#weight' => 4,
@@ -2034,10 +2042,8 @@ function sbac_resource_check_tags($form, $form_state) {
  *
  * @return array
  */
-function sbac_resource_save_all_changes_form() {
-  $form = array();
-
-  switch ($_GET['posting_option']) {
+function sbac_resource_save_all_changes_form($form, $form_state) {
+  switch ($form_state['chosen_option']) {
     case 0:
       $description = 'Posting this resource without distinction will display the resource in the Digital Library without the distinction badge. Notification
                       will be sent to the contributor.';
@@ -2053,9 +2059,13 @@ function sbac_resource_save_all_changes_form() {
                       the ability to edit this resource. You can axcess this resource by going to a resource list in the admin options.';
       $button_text = 'Remove Resource';
       break;
+    case 3:
+      $description = 'Save changes to this resource will make these changes visible to all user of the Digital Library.';
+      $button_text = 'Save All Changes';
+      break;
     default:
       $description = 'Save changes to this resource will make these changes visible to all user of the Digital Library.';
-      $button_text = 'Submit All Changes';
+      $button_text = 'Save All Changes';
   }
 
   $form['submit_description'] = array(

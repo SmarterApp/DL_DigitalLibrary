@@ -239,32 +239,50 @@
       });
 
       // Resource actions
-      $('#edit-field-posting-options-comment').hide();
-      if ($('#edit-field-posting-options-und-0').is(':checked')) {
-        $('#edit-field-posting-options-comment').show();
-      }
-      if ($('#edit-field-posting-options-und-1').is(':checked')) {
-        $('#edit-field-posting-options-comment').show();
-      }
-      if ($('#edit-field-posting-options-und-2').is(':checked')) {
-        $('#edit-field-posting-options-comment').show();
-      }
+      $('#sbac-posting-options-comment').hide();
+      $('#sbac-posting-options input:nth(0)').click(function() {
+        if ($('#sbac-posting-option-hidden').val() != 0) {
+          $('#sbac-posting-options-comment').show();
+          $('#sbac-posting-options-comment textarea').val('');
+          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+        }
+        else {
+          $('#sbac-posting-options-comment').hide();
+        }
+        save_all_changes_href($(this).val());
+      });
 
-      $('#edit-field-posting-options-und-0').click(function() {
-        $('#edit-field-posting-options-comment').show();
-        $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+      $('#sbac-posting-options input:nth(1)').click(function() {
+        if ($('#sbac-posting-option-hidden').val() != 1) {
+          $('#sbac-posting-options-comment').show();
+          $('#sbac-posting-options-comment textarea').val('');
+          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+        }
+        else {
+          $('#sbac-posting-options-comment').hide();
+        }
         save_all_changes_href($(this).val());
       });
-      $('#edit-field-posting-options-und-1').click(function() {
-        $('#edit-field-posting-options-comment').show();
-        $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+
+      $('#sbac-posting-options input:nth(2)').click(function() {
+        if ($('#sbac-posting-option-hidden').val() != 2) {
+          $('#sbac-posting-options-comment').show();
+          $('#sbac-posting-options-comment textarea').val('');
+          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
+        }
+        else {
+          $('#sbac-posting-options-comment').hide();
+        }
         save_all_changes_href($(this).val());
       });
-      $('#edit-field-posting-options-und-2').click(function() {
-        $('#edit-field-posting-options-comment').show();
+
+      // if removed is already checked, display it. Occurs when an error is thrown.
+      if ($('#sbac-posting-options input:nth(2)').is(':checked')) {
+        $('#sbac-posting-options-comment').show();
+        $('#sbac-posting-options-comment textarea').val('');
         $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
         save_all_changes_href($(this).val());
-      });
+      }
     }
   };
 
