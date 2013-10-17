@@ -6,6 +6,8 @@ class Qc extends Base {
   const title = 'Quality Criteria Review';
   const permission = 'view quality criteria';
 
+  protected $_access_override = TRUE;
+
   protected $_show_disabled = TRUE;
 
   /**
