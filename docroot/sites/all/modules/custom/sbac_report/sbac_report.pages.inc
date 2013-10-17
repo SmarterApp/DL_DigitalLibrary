@@ -271,11 +271,12 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
 
 /**
  * Builds the overall resource qc review summation table.
- * @param  [type] $uid        [description]
- * @param  [type] $date_range [description]
- * @return [type]             [description]
+ * @param  [type]  $uid        [description]
+ * @param  [type]  $date_range [description]
+ * @param  integer $display    [description]
+ * @return [type]              [description]
  */
-function sbac_report_build_summation_table($uid, $date_range) {
+function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
   $subheader = array(
     array(
       'data' => t('Resource Title'),
@@ -355,6 +356,10 @@ function sbac_report_build_summation_table($uid, $date_range) {
     'class' => 'subheader empty',
   );
 
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
   $query = "  SELECT      DISTINCT gk.id AS gk_id,
                           gk.met_criteria AS met_criteria,
                           gk.uid AS gk_uid,
@@ -384,17 +389,29 @@ function sbac_report_build_summation_table($uid, $date_range) {
 
               AND         :uid IN (gk.uid, qc.uid)
 
-              -- remove rows where user created the GK, but didn't create the QC
-              AND         IF (gk.uid = :uid AND qc.uid != :uid, qc.id = NULL, 1)
+              AND         DATE_FORMAT(
+                            (
+                              DATE_ADD('19700101', INTERVAL IF(qc.created IS NULL, gk.created, qc.created) SECOND)
+                               + 
+                              INTERVAL -25200 SECOND
+                            ),
+                            '%Y%m%d'
+                          ) BETWEEN :from_date AND :to_date
 
-              -- GROUP BY    gk.id,
-                          -- qc.id
+              -- remove rows where user created the GK, but didn't create the QC
+              AND         IF ((gk.uid = :uid AND qc.uid != :uid), qc.id = NULL, 1)
 
               ORDER BY    review_date DESC
            ";
 
+  if ($display != -1) {
+    $query .= ' LIMIT ' . (int) $display;
+  }
+
   $result = db_query($query, array(
     ':uid' => (int) $uid,
+    ':from_date' => $from_date,
+    ':to_date' => $to_date,
   ));
 
   $rows = array(
@@ -410,9 +427,11 @@ function sbac_report_build_summation_table($uid, $date_range) {
       'class' => 'cell title',
     );
     
+    $resource = node_load($row->nid);
+
     // review date
     $item[] = array(
-      'data' => format_date($row->review_date, 'simple'),
+      'data' => date('m/d/y', $row->review_date),
       'class' => 'cell date',
     );
     
@@ -455,7 +474,6 @@ function sbac_report_build_summation_table($uid, $date_range) {
     else {
       // recommendation decision
       $qc = entity_load_single('feedback', $row->qc_id);
-      $resource = node_load($row->nid);
       $focus = field_get_value($resource, 'field_focus', 'tid');
 
       switch (field_get_value($qc, 'field_rec_options')) {
@@ -531,12 +549,13 @@ function sbac_report_build_summation_table($uid, $date_range) {
       foreach ($focus_map as $focus_data) {
         for ($i = 0; $i < $focus_data['count']; $i++) {
           if ($focus_data['tid'] == $focus) {
+            $current_qc_questions = field_entity_value($current_qc, 'field_review_set');
+
             if (!isset($current_qc_questions[$i])) {
               $item[] = $empty;
               continue;
             }
-
-            $current_qc_questions = field_entity_value($current_qc, 'field_review_set');
+            
             $current_value = field_entity_value($current_qc_questions[$i], 'field_level');
 
             if (sizeof($entities) == 2) {
@@ -569,9 +588,25 @@ function sbac_report_build_summation_table($uid, $date_range) {
       }
     }
 
+    drupal_add_library('dialog', 'dialog');
+    $trigger_id = 'report-' . $resource->nid;
+    $url = 'reports/' . $resource->nid . '/info/default/' . $trigger_id . '/' . $uid;
+
+    $options = array(
+      'attributes' => array(
+        'class' => array(
+          'use-ajax',
+          'use-dialog',
+        ),
+        'id' => $trigger_id,
+      ),
+    );
+
+    $info_link = l(t('i'), $url, $options);
+
     // info tooltip
     $item[] = array(
-      'data' => 'i*',
+      'data' => $info_link,
       'class' => 'cell info',
     );
 
@@ -579,13 +614,247 @@ function sbac_report_build_summation_table($uid, $date_range) {
   }
 
   $output = theme('table', array(
-      'header' => $header,
-      'rows' => $rows,
-      'attributes' => array(
-        'class' => array('large-12 report-summation')
-      ),
-    )
-  );
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array(
+      'class' => array('large-12 report-summation no-sticky')
+    ),
+    'sticky' => FALSE,
+  ));
+
+  $form = drupal_get_form('sbac_report_build_gk_table_display_form', array(
+    'uid' => $uid,
+    'date_range' => $date_range,
+  ));
+
+  $output .= drupal_render($form);
+
+  $output = '<div id="summation-table">' . $output . '</div>';
 
   return $output;
+}
+
+/**
+ * Form to change the number of items displayed in the summation table.
+ * 
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @param  [type] $data       [description]
+ * @return [type]             [description]
+ */
+function sbac_report_build_gk_table_display_form($form, &$form_state, $data) {
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#value' => $data['uid'],
+  );
+
+  $form['date_range'] = array(
+    '#type' => 'hidden',
+    '#value' => $data['date_range'],
+  );
+
+  $form['display'] = array(
+    '#title' => t('Display'),
+    '#type' => 'select',
+    '#options' => array(
+      5 => t('Up to 5'),
+      10 => t('Up to 10'),
+      15 => t('Up to 15'),
+      -1 => t('All'),
+    ),
+    '#ajax' => array(
+      'callback' => 'sbac_report_build_gk_table_display_form_ajax',
+      'wrapper' => 'summation-table',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * AJAX submit handler for sbac_report_build_gk_table_display_form
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_report_build_gk_table_display_form_ajax($form, &$form_state) {
+  $values = $form_state['values'];
+
+  $output = sbac_report_build_summation_table($values['uid'], $values['date_range'], $values['display']);
+
+  return $output;
+}
+
+/**
+ * Callback for /reports/%node/info/
+ * @return [type] [description]
+ */
+function sbac_report_individual_modal($node, $state, $trigger_id, $uid) {
+  $commands = dialog_show_form('sbac_report_individual_modal_form', $node, $state, $trigger_id, $uid);
+
+  ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
+}
+
+/**
+ * The form to initialize Resource Report Info Modal.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @param  [type] $node       [description]
+ * @param  [type] $state      [description]
+ * @param  [type] $trigger_id [description]
+ * @param  [type] $uid        [description]
+ * @return [type]             [description]
+ */
+function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $trigger_id, $uid) {
+  $form = array();
+
+  // default state
+    $output = '';
+
+    // load all QC reviews
+    $entities = entity_load('feedback', FALSE, array(
+      'node_id' => $node->nid,
+      'type' => 'qc',
+      'status' => 1,
+      'current' => 1,
+      'completed' => 1,
+    ));
+
+    $user_review = FALSE;
+    $recommendation = '';
+
+    // try to find the QC created by the user we're looking at
+    foreach ($entities as $qc) {
+      if ($qc->uid == $uid) {
+        $user_review = $qc;
+      }
+    }
+
+    // if we still didn't find a QC, then the user must have a GK, so pull it up
+    if (!$user_review) {
+      $entities = entity_load('feedback', FALSE, array(
+        'node_id' => $node->nid,
+        'type' => 'gate_keeper',
+        'status' => 1,
+        'current' => 1,
+        'completed' => 1,
+        'uid' => $uid,
+      ));
+
+      if ($entities) {
+        $user_review = current($entities);
+      }
+    }
+
+    $date = '';
+    if ($user_review) {
+      $date = t('Review Date: !date', array('!date' => date('m/d/y', $user_review->created)));
+
+      if ($user_review->type == 'qc') {
+        $rec_value = field_entity_value($user_review, 'field_rec_options');
+        switch ($rec_value) {
+          case 0: $rec = 'NR';  break;
+          case 1: $rec = 'R-';  break;
+          case 2: $rec = 'R';  break;
+          case 3: $rec = 'R+';  break;
+        }
+
+        $recommendation = t('Recommendation: !val', array('!val' => $rec));
+      }
+    }
+
+    $output .=  '  
+                  <div class="intro">
+                    <div class="review-date">
+                      ' . $date . '
+                    </div>
+                    <div class="recommendation">
+                      ' . $recommendation . '
+                    </div>
+                    <div class="clear"></div>
+                  </div>
+                ';
+
+    $item_list = theme('item_list', array(
+      'items' => array(
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+        'lorem ipsum',
+      ),
+      'attributes' => array(
+        'class' => array(
+          'slides',
+        ),
+      ),
+    ));
+
+    $output .= '
+                <div class="flexslider item-list">
+                  <div class="flex-viewport">
+                    ' . $item_list . '
+                  </div>
+                </div>
+              ';
+
+    $form['state_default']['content'] = array(
+      '#markup' => $output,
+    );
+
+    $form['state_default']['continue'] = array(
+      '#type' => 'button',
+      '#value' => t('Continue'),
+      '#attributes' => array(
+        'class' => array(
+          'flexslider-continue',
+        ),
+      ),
+    );
+
+  // dialog configuration
+    $dialog_common_options = array(
+      'width' => '700px',
+      'position' => 'center',
+    );
+
+  // state configuration
+    $state_common_options = array(
+      'close_link' => TRUE,
+      'close_link_text' => t('Cancel'),
+      'close_link_class' => array(
+        'button',
+        'radius',
+      ),
+    );
+
+    $form_state['dialog_settings'] = array(
+      'current_state' => $state,
+      'trigger_id' => $trigger_id,
+      'states' => array(
+
+        'default' => array(
+          'dialog' => array('title' => $node->title) + $dialog_common_options,
+          'close_link' => TRUE,
+          'close_link_text' => t('Cancel'),
+          'close_link_class' => array(
+            'button',
+            'radius',
+          ),
+        ),
+      ),
+    );
+
+  dialog_form_prepare($form, $form_state);
+
+  return $form;
 }
