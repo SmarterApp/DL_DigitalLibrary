@@ -68,7 +68,8 @@ function sbac_report_individual() {
     $csv_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
   }
 
-  $csv_tab = theme('sbac_report_csv', array(
+  $csv_tab =
+    theme('sbac_report_csv', array(
       'form' => $csv_form,
       'csv_summary' => $csv_summary,
     )
@@ -85,14 +86,14 @@ function sbac_report_individual() {
         '#markup' => $individual_tab,
       ),
     ),
-//    'csv_exorts' => array(
-//      '#type' => 'fieldset',
-//      '#title' => t('CSV Exports'),
-//      '#collapsible' => TRUE,
-//      'content' => array(
-//        '#markup' => $csv_tab,
-//      ),
-//    ),
+    'csv_exorts' => array(
+      '#type' => 'fieldset',
+      '#title' => t('CSV Exports'),
+      '#collapsible' => TRUE,
+      'content' => array(
+        '#markup' => $csv_tab,
+      ),
+    ),
   );
 
   return drupal_render($output);

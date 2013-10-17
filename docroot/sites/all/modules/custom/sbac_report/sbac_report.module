@@ -80,20 +80,19 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     ),
   );
 
-  $themes['sbac_report_csv'] = array(
-      'template' => 'templates/sbac-report-csv',
-      'path' => $module_path,
-      'file' => 'sbac_report.preprocess.inc',
-      'preprocess functions' => array(
-          'template_preprocess',
-          'sbac_report_preprocess_sbac_report_csv',
-      ),
-  );
-
+//  $themes['sbac_report_csv'] = array(
+//      'template' => 'templates/sbac-report-csv',
+//      'path' => $module_path,
+//      'file' => 'sbac_report.preprocess.inc',
+//      'preprocess functions' => array(
+//          'template_preprocess',
+//          'sbac_report_preprocess_sbac_report_csv',
+//      ),
+//  );
   $themes['sbac_report_date_range_dropdown'] = array(
     'template' => 'templates/sbac-report-date-range-dropdown',
     'path' => $module_path,
-    'arguments' => array('which'=>'0','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL),
+    'arguments' => array('which'=>'','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL), //default values
     'preprocess functions' => array(
       'template_preprocess',
     ),
@@ -385,16 +384,16 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
   // Hidden, used to pass the value through submit handler.
   // Value is set when the user selects an item in the dropdown.
   // @see sbac_report.js
-  $form['date_range'] = array(
+  $form['date_range'+$which] = array(
     '#type' => 'hidden',
     '#title' => t('Choose a time period'),
     '#default_value' => $default_date_range,
     '#attributes' => array(
-      'id' => 'date-range-field',
+      'id' => 'date-range-field'+$which,
     ),
   );
 
-  $form['date_range_dropdown'] = array(
+  $form['date_range_dropdown'+$which] = array(
     '#type' => 'markup',
     '#markup' => theme('sbac_report_date_range_dropdown',
       array(
@@ -407,8 +406,8 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
     )
   );
 
-  $form['from_date'] = array(
-    '#id' => 'from-date',
+  $form['from_date'+$which] = array(
+    '#id' => 'from-date'+$which,
     '#title' => t('From'),
     '#type' => 'date_popup',
     '#date_type' => DATE_DATETIME,
@@ -418,8 +417,8 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
     '#datepicker_options' => array(),
   );
 
-  $form['to_date'] = array(
-    '#id' => 'to-date',
+  $form['to_date'+$which] = array(
+    '#id' => 'to-date'+$which,
     '#title' => t('To'),
     '#type' => 'date_popup',
     '#date_type' => DATE_DATETIME,
