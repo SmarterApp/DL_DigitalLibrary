@@ -51,6 +51,12 @@ function sbac_workbench_workbench_moderation_export_states() {
       'description' => 'Did not pass reviewer',
       'weight' => -6,
     ),
+    'removed' => array(
+      'name' => 'removed',
+      'label' => 'Removed',
+      'description' => 'Removes the resource.',
+      'weight' => 0,
+    ),
   );
   return $items;
 }
