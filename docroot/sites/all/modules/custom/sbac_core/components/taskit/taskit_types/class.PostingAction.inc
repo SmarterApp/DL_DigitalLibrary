@@ -10,31 +10,43 @@ class PostingAction extends \taskit\sbac_core\BaseTask {
 
     if ($node && $account) {
       $this->setTaskUrl('node/' . $node->nid);
-
-      $viewing_account = current_user();
-
       $output = array();
-      $details = '';
-      if ($node->uid == $viewing_account->uid) {
-        $output[] = t('!title was posted to the Digital Library', array(
-          '!title' => '<span class="taskit-title">' . $node->title . '</span>',
-        ));
-        
-        $details = $this->contributorFeedback($node->nid, $viewing_account->uid);
-      }
-      else {
-        $output[] = t('!title, a resource you reviewed, was posted to the Digital Library', array(
-          '!title' => '<span class="taskit-title">' . $node->title . '</span>',
-        ));
 
-        $details = $this->reviewerFeedback($node->nid, $viewing_account->uid);
+      $original_posting_option = $_SESSION['sbac-original-posting-option'];
+      $posting_option = $_SESSION['sbac-posting-option'];
+      $chosen_option = $posting_option;
+      if ($original_posting_option == $posting_option) {
+        $chosen_option = 3;
       }
+
+      switch ($chosen_option) {
+        case 0: // Post without distinction
+          $output[] = t('!title was demoted (posted without distinction) by the :username', array(
+            '!title' => '<span class="taskit-title">' . $node->title . '</span>',
+            ':username' => $account->name,
+          ));
+          break;
+        case 1: // Post with distinction
+          $output[] = t('!title was promoted (posted with distinction) by the :username', array(
+            '!title' => '<span class="taskit-title">' . $node->title . '</span>',
+            ':username' => $account->name,
+          ));
+          break;
+        case 2:
+          $output[] = t('!title was removed by the :username', array(
+            '!title' => '<span class="taskit-title">' . $node->title . '</span>',
+            ':username' => $account->name,
+          ));
+          break;
+        case 3:
+          // The UI does not provide a comment when 3 is selected.
+          break;
+      }
+
 
       $output[] = '<span class="taskit-timestamp">' . date($this->_date_format, $this->_created). '</span>';
-
-      if ($details) {
-        $output[] = '<div class="taskit-content-toggle">' . $details . '</div>';
-      }
+      $details = $_SESSION['sbac-posting-option-comment'];
+      $output[] = '<div class="taskit-content-toggle">' . $details . '</div>';
 
       return $this->linkDisplay($output);
     }
