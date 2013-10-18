@@ -62,15 +62,25 @@ function sbac_report_individual() {
   );
 
   $csv_form = drupal_get_form('sbac_report_csv_form');
-  $csv_summary = 'yo';
+  $csv_activity_report = '';
 
-  if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
-    $csv_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
+  // Get SESSION values for csv report;
+  $state_tid1 = sbac_report_get_session_value('state', 'tid');
+  $date_range1 = sbac_report_get_session_value('date_range1', 'range');
+  $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
+
+  $csv_activity_report = '';
+  if (!empty($usergroups) && !empty($date_range1) && !empty($state_tid1)) {
+    // display feedback to the browser:
+    // todo: make this work:
+    $csv_activity_report = views_embed_view('activity-reports', 'resources_summary', $state_tid1, $date_range1, $usergroups);
+    // dump the csv file here:
+    // # todo: csv file dump.
   }
 
   $csv_tab = theme('sbac_report_csv', array(
       'form' => $csv_form,
-      'csv_summary' => $csv_summary,
+      'csv_activity_report' => $csv_activity_report,
     )
   );
 

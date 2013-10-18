@@ -79,7 +79,7 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'sbac_report_preprocess_sbac_report_individual',
     ),
   );
-  // todo:: figure this out:
+
   $themes['sbac_report_csv'] = array(
       'template' => 'templates/sbac-report-csv',
       'path' => $module_path,
@@ -97,14 +97,6 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'template_preprocess',
     ),
   );
-//  $themes['sbac_report_date_range_dropdown1'] = array(
-//    'template' => 'templates/sbac-report-date-range-dropdown1',
-//    'path' => $module_path,
-//    'arguments' => array('which'=>'1','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL), //default values
-//    'preprocess functions' => array(
-//      'template_preprocess',
-//    ),
-//  );
 
   $themes['sbac_report_user_group_dropdown'] = array(
     'template' => 'templates/sbac-report-user-group-dropdown',
@@ -604,6 +596,9 @@ function sbac_report_get_session_value($field, $key) {
     if ($field == 'date_range' && !sbac_report_validate_date_range($value)) {
       unset($_SESSION['sbac_report']);
       $value = NULL;
+    }
+    if (is_array($value)) {
+      return $value;
     }
     return check_plain($value);
   }
