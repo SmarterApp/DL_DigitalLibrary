@@ -12,14 +12,7 @@ class PostingAction extends \taskit\sbac_core\BaseTask {
       $this->setTaskUrl('node/' . $node->nid);
       $output = array();
 
-      $original_posting_option = $_SESSION['sbac-original-posting-option'];
-      $posting_option = $_SESSION['sbac-posting-option'];
-      $chosen_option = $posting_option;
-      if ($original_posting_option == $posting_option) {
-        $chosen_option = 3;
-      }
-
-      switch ($chosen_option) {
+      switch ($node->field_posting_options['und'][0]['value']) {
         case 0: // Post without distinction
           $output[] = t('!title was demoted (posted without distinction) by the :username', array(
             '!title' => '<span class="taskit-title">' . $node->title . '</span>',
@@ -45,7 +38,7 @@ class PostingAction extends \taskit\sbac_core\BaseTask {
 
 
       $output[] = '<span class="taskit-timestamp">' . date($this->_date_format, $this->_created). '</span>';
-      $details = $_SESSION['sbac-posting-option-comment'];
+      $details = $node->field_posting_options_comment['und'][0]['value'];
       $output[] = '<div class="taskit-content-toggle">' . $details . '</div>';
 
       return $this->linkDisplay($output);
