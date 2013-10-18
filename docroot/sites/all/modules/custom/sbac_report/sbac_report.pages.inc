@@ -1026,12 +1026,8 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups)
   $users = get_users_for_user_groups($usergroups);
 
   $user_profiles = user_load_multiple(array_keys($users));
-//  foreach ($users as $user) {
-//    $account= user_load($user->uid);
-//  }
-  // node_user_paradata
-  return $user_profiles;
 
+  return $user_profiles;
 }
 
 function get_users_for_user_groups($usergroups)
@@ -1063,58 +1059,67 @@ function aget_users_for_user_groups($usergroups)
 
   return $values;
 }
-//function get_user_activity($users)
-//{
-//  # resources viewed
-//  $sql = <<<SQL select count(nid) From node_user_paradata where uid = 372; SQL;
-//
-//  select count(nid) From node_user_paradata where uid = 374;
-//
-//# resouces downloaded
-//# not ready: select * from field_ass where uid = 372;
-//
-//# resources reviewed/rated
-//select count(id) from eck_review where uid = 1 and status = 1;
-//
-//# resources contributed:
-//select * from node where uid = 372 and type = 'resource';
-//
-//# GC Review accepted on contributed resource:
-//select * from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1;
-//
-//# GC Review accepted on contributed resource:
-//select * from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 0;
-//
-//# GC Reviews completed:
-//select * from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1;
-//
-//# QC Reviews completed:
-//select * from eck_feedback where uid = 151 and type = 'qx' and status = 1 and completed = 1;
-//
-//# Poster Reviews completed:
-//select * from eck_feedback where uid = 111 and type = 'post' and status = 1 and completed = 1;
-//
-//# Contributed resources posted
-//select * from node where uid = 372 and nid in (
-//  select nid from workbench_moderation_node_history where published = 1
-//);
-//select * from node where uid = 372 and nid in (
-//  select nid from workbench_moderation_node_history where state = 'published'
-//);
-//
-//# Contributed resources posted with distinction
-//select * from node where uid = 372 and sticky = 1 and nid in (
-//  select nid from workbench_moderation_node_history where published = 1
-//);
-//
-//select * from node where uid = 372 and sticky = 1 and nid in (
-//  select nid from workbench_moderation_node_history where state = 'published'
-//);
-//
-//
-//# Contributed resources reviewed and returned
-//select * from node where uid = 372 and nid in (
-//  select nid from workbench_moderation_node_history where state = 'rejected'
-//);
-//}
+
+
+
+function get_user_activity($users)
+{
+  function count_with_users_query($sql, $users)
+  {
+    $result = db_query($sql,array(':users' => $users,));
+    return $result;
+  }
+
+  $users = implode(',',$users);
+
+  # resources viewed
+  $sql = "select count(nid) From node_user_paradata where uid in (:users)";
+  $user_activity['resources_viewed'] = count_with_users_query($sql, $users);
+  # resouces downloaded
+  # not ready: select * from field_ass where uid = 372;
+
+  # resources reviewed/rated
+  $sql = "select count(id) from eck_review where uid = 1 and status = 1";
+  $user_activity['resources_reviewed'] = count_with_users_query($sql, $users);
+
+  # resources contributed:
+  $sql = "select count(nid) from node where uid = 372 and type = 'resource'";
+  $user_activity['resources_contributed'] = count_with_users_query($sql, $users);
+
+  # GC Review accepted on contributed resource:
+  $sql = "select count(id) from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1";
+  $user_activity['resources_viewed'] = count_with_users_query($sql, $users);
+
+  # GC Review accepted on contributed resource:
+  $sql = "select count(id) from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 0";
+  $user_activity['gc_reviews_accepted_on_contributed_resources'] = count_with_users_query($sql, $users);
+
+  # GC Reviews completed:
+  $sql = "select count(id) from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1";
+  $user_activity['gc_reviews_completed'] = count_with_users_query($sql, $users);
+
+  # QC Reviews completed:
+  $sql = "select count(id) from eck_feedback where uid = 151 and type = 'qx' and status = 1 and completed = 1";
+  $user_activity['qc_reviews_completed'] = count_with_users_query($sql, $users);
+
+  # Poster Reviews completed:
+  $sql = "select count(id) from eck_feedback where uid = 111 and type = 'post' and status = 1 and completed = 1";
+  $user_activity['poster_reviews_completed'] = count_with_users_query($sql, $users);
+
+  # Contributed resources posted
+  //$sql = "select * from node where uid = 372 and nid in(select nid from workbench_moderation_node_history where published = 1)";
+  $sql = "select count(nid) from node where uid = 372 and nid in(select nid from workbench_moderation_node_history where state = 'published')";
+  $user_activity['contributed_resources'] = count_with_users_query($sql, $users);
+
+  # Contributed resources posted with distinction
+  //$sql = "select * from node where uid = 372 and sticky = 1 and nid in(select nid from workbench_moderation_node_history where published = 1)";
+  $sql = "select count(nid) from node where uid = 372 and sticky = 1 and nid in(select nid from workbench_moderation_node_history where state = 'published')";
+  $user_activity['contributed_resources_posted_with_distiction'] = count_with_users_query($sql, $users);
+
+  # Contributed resources reviewed and returned
+  $sql = "select count(nid) from node where uid = 372 and nid in( select nid from workbench_moderation_node_history where state = 'rejected')";
+  $user_activity['contributed_resources_viewed_and_returned'] = count_with_users_query($sql, $users);
+
+  return $user_activity;
+}
 
