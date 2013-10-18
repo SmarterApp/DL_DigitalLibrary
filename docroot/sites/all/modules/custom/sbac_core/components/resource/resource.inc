@@ -28,6 +28,24 @@ function resource_access($op, $node, $account = NULL) {
     if (in_array($op, array('access about process', 'view about'))) {
       return TRUE;
     }
+    elseif ($op == 'access review comments') {
+      if ($node->workbench_moderation['current']->state == 'rejected' && $node->uid == $account->uid) {
+        return TRUE;
+      }
+
+      return FALSE;
+    }
+    elseif ($op == 'access qc review comments') {
+      $qc_entities = entity_load('feedback', FALSE, array(
+        'node_id' => $node->nid,
+        'type' => 'qc',
+        'status' => 1,
+        'current' => 1,
+        'completed' => 1,
+      ));
+
+      return (bool) $qc_entities;
+    }
 
     if ($op == 'access quality criteria process') {
       return (in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles)));

@@ -6,9 +6,18 @@ class Qc extends Base {
   const title = 'Quality Criteria Review';
   const permission = 'view quality criteria';
 
-  protected $_access_override = TRUE;
-
   protected $_show_disabled = TRUE;
+
+  /**
+   * Initialization/setup
+   * @return [type] [description]
+   */
+  protected function init() {
+    // hide the tab when this resource isn't in the review/publishing process
+    if (!in_array($this->_node_state, array('being_reviewed', 'approved'))) {
+      $this->_show_disabled = FALSE;
+    }
+  }
 
   /**
    * Returns a modal-triggering "start review" link.

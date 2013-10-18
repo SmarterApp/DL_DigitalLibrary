@@ -50,8 +50,8 @@ class Post extends Base {
     if ($focus = field_entity_value($this->_resource, 'field_focus')) {
       $reviewUtil->setPrefix('qc_' . $focus->tid . '_');
       $total = $reviewUtil->getSetTotal();
-
-      $items = array();
+      
+      $items = array(); 
       for ($i = 1; $i <= $total; $i++) {
         $item = array();
         $item += $reviewUtil->getSetTitle($i);
@@ -83,10 +83,10 @@ class Post extends Base {
       );
       $item += $reviewUtil->getReviewTeaser(function($entity) {
         $options = field_allowed_values('field_rec_options');
-
+        
         $headline = $options[field_entity_value($entity, 'field_rec_options')];
         $comments = field_entity_value($entity, 'field_rec_rationale');
-
+        
         return array($headline, $comments);
       });
 
