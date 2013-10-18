@@ -32,7 +32,7 @@ function resource_access($op, $node, $account = NULL) {
       if ($node->workbench_moderation['current']->state == 'rejected' && $node->uid == $account->uid) {
         return TRUE;
       }
-
+ 
       return FALSE;
     }
     elseif ($op == 'access qc review comments') {
