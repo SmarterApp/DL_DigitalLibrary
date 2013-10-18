@@ -563,31 +563,20 @@ function sbac_report_date_range_options() {
  * Options for the user groups.
  */
 function sbac_report_user_group_options() {
-
-  $options = array(
-    'End Users' => 'end-users',
-    'Contributors' => 'contributors',
-    'Reviewers' => 'reviewers',
-    'Posters' => 'posters',
-    'SNE Members' => 'sne-members',
-    'SLT Members' => 'snl-members',
-    'Moderators' => 'moderators',
-    'Facilitators' => 'facilitators',
-    'DLRB Members' => 'dlrb-members',
-    'Admins' => 'admins',
-  );
-  $options = array(
-    'End Users',
-    'Contributors',
-    'Reviewers',
-    'Posters',
-    'SNE Members',
-    'SLT Members',
-    'Moderators',
-    'Facilitators',
-    'DLRB Members',
-    'Admins',
-  );
+  // TODO: get this data from the database
+//  $options = array(
+//    0 => 'End Users' ,
+//    3 => 'Contributors',
+//    6 => 'Reviewers',
+//    9 => 'Posters',
+//    12 => 'SNE Members',
+//    15=> 'SLT Members',
+//    18=> 'Moderators',
+//    7 => 'Facilitators',
+//    8 => 'DLRB Members',
+//    19 => 'Admins',
+//  );
+  $options = get_user_groups();
 
   return $options;
 }
@@ -1185,4 +1174,27 @@ function sbac_report_preprocess_views_view_field(&$vars) {
       }
     }
   }
+}
+
+/**
+ *  get user groups
+ */
+function get_user_groups()
+{
+  $sql = <<<SQL
+    SELECT *
+    FROM role
+    ORDER BY weight
+SQL;
+  $result = db_query($sql,
+    array(
+      '',
+    )
+  );
+
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->rid] = $record->name;
+  }
+  return $values;
 }
