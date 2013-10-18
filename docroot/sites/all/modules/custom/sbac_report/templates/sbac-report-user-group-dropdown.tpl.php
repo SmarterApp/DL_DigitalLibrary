@@ -10,9 +10,7 @@
   <?php print t('Choose a user group'); ?>
   <span class="form-required" title="This field is required.">*</span>
   </label>
-  <a href="#" id="user-group-selected" class="report-dropdown-toggle">User Group</a>
-
-    <select name="user-groups" multiple>
+    <select id="edit-state--3" name="usergroups" multiple class="form-select required ajax-processed" >
       <?php foreach ($user_group_options as $user_group) { ?>
         <option value="<?php print "$user_group"?>"><?php print "$user_group"?></option>
       <?php } ?>

@@ -281,7 +281,27 @@ function sbac_report_csv_form($form, &$form_state) {
     ),
     '#required' => TRUE,
   );
+  // TODO: user groups instead of SNE.
+  $user_group_options = sbac_report_user_group_options();
 
+  $form['user_group_dropdown'] = array(
+    '#type' => 'select',
+    '#title' => t('Choose User Groups'),
+    '#options' => $user_group_options,
+    '#multiple' => TRUE,
+//    '#default_value' => sbac_report_get_default_usergroup_tid(),
+//    '#ajax' => array(
+//      'callback' => 'sbac_report_state_ajax',
+//    ),
+    '#required' => TRUE,
+  );
+//  $form['user_group_dropdown'] = array(
+//    '#type' => 'markup',
+//    '#markup' => theme('sbac_report_user_group_dropdown',
+//      array('user_group_options' => $user_group_options,
+//      )
+//    ),
+//  );
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
 
@@ -302,20 +322,12 @@ function sbac_report_csv_form($form, &$form_state) {
 
   sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options, '1');
 
-  // TODO: user groups instead of SNE.
-  $user_group_options = sbac_report_user_group_options();
 
-  $form['user_group_dropdown'] = array(
-    '#type' => 'markup',
-    '#markup' => theme('sbac_report_user_group_dropdown',
-      array('user_group_options' => $user_group_options,
-      )
-    ),
-  );
+
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Submit'),
+    '#value' => t('Export'),
   );
 
   $form['#validate'][] = 'sbac_report_csv_form_validate';
@@ -327,7 +339,7 @@ function sbac_report_csv_form($form, &$form_state) {
  * CSV Report: form validate.
  */
 function sbac_report_csv_form_validate($form, &$form_state) {
-  if (empty($form_state['values']['uid']) || !is_numeric($form_state['values']['uid'])) {
+  if (false) {
     form_set_error('sne', t('Please type and select an existing SNE'));
   }
 }
@@ -354,11 +366,10 @@ function sbac_report_csv_form_submit($form, &$form_state) {
   }
 
   // Time range.
-  $_SESSION['sbac_report']['date_range']['range'] = $form_state['values']['date_range'];
+  $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
 
   // TODO: change this to user group: SNE.
-  $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
-  $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
+  $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
 }
 
 /**
@@ -502,6 +513,10 @@ function sbac_report_get_default_state_tid() {
   }
   return $state_tid;
 }
+function sbac_report_get_default_usergroup_tid() {
+
+  return 'end-users';
+}
 
 /**
  * Check if the user is an SLT.
@@ -624,6 +639,20 @@ function sbac_report_state_ajax($form, &$form_state) {
   }
   return $form;
 }
+
+/**
+ * Ajax callback for the User Group field.
+ * Store the selected state in SESSION
+ * so the autocomplete for SNE text field is filtered based on the state.
+ */
+//function sbac_report_user_group_ajax($form, &$form_state) {
+//  if (isset($form_state['values']['usergroups'])) {
+//    $usergroups_tid = $form_state['values']['usergroups'];
+//    $_SESSION['sbac_report']['usergroups']['tid'] = $usergroups_tid;
+//
+//  }
+//  return $form;
+//}
 
 /**
  * Validate the date range string used for Views Contextual Range filter.
