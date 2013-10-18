@@ -1024,26 +1024,97 @@ function rec_consistency_rate($all, $current) {
 function build_activity_report_csv($state_tid, $date_range, $usergroups)
 {
   $users = get_users_for_user_groups($usergroups);
-  
+
+  $user_profiles = user_load_multiple(array_keys($users));
+//  foreach ($users as $user) {
+//    $account= user_load($user->uid);
+//  }
+  // node_user_paradata
+  return $user_profiles;
 
 }
 
-function get_users_for_user_groups($usergroup_ids)
+function get_users_for_user_groups($usergroups)
 {
-  $sql = <<<SQL
-    select * from users as u join users_roles as ur on
-    u.uid = ur.uid
-    where ur.rid in (:groups);
-SQL;
+  $groups = implode(',',$usergroups);
+  $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in (:groups)";
+
   $result = db_query($sql,
     array(
-      ':groups' => implode(',',$usergroup_ids),
+      ':groups' => $groups,
     )
   );
+  $values = array(); foreach ($result as $record) { $values[$record->uid] = $record; }
 
-  $values = array();
-  foreach ($result as $record) {
-    $values[$record->uid] = $record->name;
-  }
   return $values;
 }
+
+function aget_users_for_user_groups($usergroups)
+{
+  $groups = implode(',',$usergroups);
+  $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in (:groups)";
+
+  $result = db_query($sql,
+    array(
+      ':groups' => $groups,
+    )
+  );
+  $values = array(); foreach ($result as $record) { $values[$record->uid] = $record; }
+
+  return $values;
+}
+//function get_user_activity($users)
+//{
+//  # resources viewed
+//  $sql = <<<SQL select count(nid) From node_user_paradata where uid = 372; SQL;
+//
+//  select count(nid) From node_user_paradata where uid = 374;
+//
+//# resouces downloaded
+//# not ready: select * from field_ass where uid = 372;
+//
+//# resources reviewed/rated
+//select count(id) from eck_review where uid = 1 and status = 1;
+//
+//# resources contributed:
+//select * from node where uid = 372 and type = 'resource';
+//
+//# GC Review accepted on contributed resource:
+//select * from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1;
+//
+//# GC Review accepted on contributed resource:
+//select * from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 0;
+//
+//# GC Reviews completed:
+//select * from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1;
+//
+//# QC Reviews completed:
+//select * from eck_feedback where uid = 151 and type = 'qx' and status = 1 and completed = 1;
+//
+//# Poster Reviews completed:
+//select * from eck_feedback where uid = 111 and type = 'post' and status = 1 and completed = 1;
+//
+//# Contributed resources posted
+//select * from node where uid = 372 and nid in (
+//  select nid from workbench_moderation_node_history where published = 1
+//);
+//select * from node where uid = 372 and nid in (
+//  select nid from workbench_moderation_node_history where state = 'published'
+//);
+//
+//# Contributed resources posted with distinction
+//select * from node where uid = 372 and sticky = 1 and nid in (
+//  select nid from workbench_moderation_node_history where published = 1
+//);
+//
+//select * from node where uid = 372 and sticky = 1 and nid in (
+//  select nid from workbench_moderation_node_history where state = 'published'
+//);
+//
+//
+//# Contributed resources reviewed and returned
+//select * from node where uid = 372 and nid in (
+//  select nid from workbench_moderation_node_history where state = 'rejected'
+//);
+//}
+

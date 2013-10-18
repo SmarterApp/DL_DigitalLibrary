@@ -281,7 +281,7 @@ function sbac_report_csv_form($form, &$form_state) {
     '#title' => t('Choose User Groups'),
     '#options' => $user_group_options,
     '#multiple' => TRUE,
-//    '#default_value' => sbac_report_get_default_usergroup_tid(),
+    '#default_value' => sbac_report_get_default_usergroup(),
 //    '#ajax' => array(
 //      'callback' => 'sbac_report_state_ajax',
 //    ),
@@ -401,20 +401,6 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
     )
   );
 
-//    array(
-//      'template' => 'templates/sbac-report-date-range-dropdown',
-//      'path' => $module_path,
-//      'arguments' => array(
-//          'which' => $which,
-//          'date_display' => $date_display ? $date_display : t('Last 30 Days'),
-//          'ago_30' => $date_options['Last 30 Days'],
-//          'ago_60' => $date_options['Last 60 Days'],
-//          'ago_90' => $date_options['Last 90 Days'],
-//        ),
-//      'preprocess functions' => array(
-//        'template_preprocess',
-//    ),
-
   $form["from_date$which"] = array(
     '#id' => "from-date$which",
     '#title' => t('From'),
@@ -501,9 +487,12 @@ function sbac_report_get_default_state_tid() {
   }
   return $state_tid;
 }
-function sbac_report_get_default_usergroup_tid() {
-
-  return 'end-users';
+function sbac_report_get_default_usergroup() {
+  $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
+  if (empty($usergroups)) {
+    return array();
+  }
+  return $usergroups;
 }
 
 /**
