@@ -48,6 +48,10 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     global $user;
     if (!in_array('DLRB member', $user->roles)) {
       field_group_hide_field_groups($form, array('group_advanced'));
+      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
+    }
+    else {
+      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
     }
 
     // Setup the form
@@ -147,14 +151,6 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   $form_state['values']['workbench_moderation_state_new'] = 'draft';
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
-
-  // $node = node_load($form_state['build_info']['args'][0]->nid, NULL, TRUE);
-  // if (isset($node->field_alignment_term[LANGUAGE_NONE][0]['tid'])) {
-  //   foreach ($node->field_alignment_term[LANGUAGE_NONE] as $key => $item) {
-  //     $term = taxonomy_term_load($item['tid']);
-  //     $form_state['values']['field_alignment_term'][LANGUAGE_NONE][$key] = $term;
-  //   }
-  // }
   
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
@@ -227,22 +223,15 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     return $form;
   }
 
-  $dlrb_member = FALSE;
-  if ($form_state['clicked_button']['#value'] == 'Save All Changes') {
-    $dlrb_member = TRUE;
-  }
-
   $duplicates = FALSE;
   $active_tab = $form_state['values']['additional_settings__active_tab'];
-  if (!$dlrb_member) {
-    if ($active_tab == 'edit-group_materials') {
-      $media_items = sbac_media_load_items($form['#node']->nid);
-      $duplicates = sbac_media_check_duplicates($media_items);
-    }
+  if ($active_tab == 'edit-group_materials') {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    $duplicates = sbac_media_check_duplicates($media_items);
   }
 
   // Submit node, everything is good to go.
-  if (!$dlrb_member) {
+  if ($active_tab != 'edit-group_advanced') {
     ctools_include('ajax');
     $selector = NULL;
     $valid = FALSE;
@@ -257,8 +246,14 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $valid = FALSE;
         break;
       case 'edit-group_tags':
-        $selector = NULL;
-        $valid = TRUE;
+        global $user;
+        if (in_array('DLRB member', $user->roles)) {
+          $valid = FALSE;
+        }
+        else {
+          $valid = TRUE;
+        }
+        $selector = ".vertical-tabs-list li:nth-child(5) a";
         break;
       case 'edit-group_summary':
         $valid = FALSE;
@@ -287,7 +282,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
     );
   }
-  else if (!$dlrb_member) {
+  else if ($active_tab != 'edit-group_advanced') {
     // Add appropriate JS.
     drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
     if ($selector) {
@@ -756,6 +751,7 @@ function sbac_resource_validate_tags(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_validate_advanced($form, $form_state) {
+  $error = FALSE;
   $required = FALSE;
   if (isset($form_state['values']['field_posting_options']['und'][0]['value'])) {
     if ($form_state['values']['field_posting_options']['und'][0]['value'] == 2) {
@@ -770,9 +766,11 @@ function sbac_resource_validate_advanced($form, $form_state) {
       _sbac_resource_remove_error_message($error);
       drupal_set_message('advanced:field_posting_options_comment:single:' . $error, 'sbac_resource_error');
       drupal_set_message('advanced:field_posting_options_comment:group:' . $error, 'sbac_resource_error');
+      $error = TRUE;
     }
   }
 
+  $text = NULL;
   if ($form_state['values']['field_posting_options_comment']['und'][0]['value'] != NULL) {
     $text = $form_state['values']['field_posting_options_comment']['und'][0]['value'];
     $bad_words = profanity_validate_text($text);
@@ -782,7 +780,16 @@ function sbac_resource_validate_advanced($form, $form_state) {
       _sbac_resource_remove_error_message($error);
       drupal_set_message('advanced:field_posting_options_comment:single:' . $error, 'sbac_resource_error');
       drupal_set_message('advanced:field_posting_options_comment:group:' . $error, 'sbac_resource_error');
+      $error = TRUE;
     }
+  }
+
+  if (!$error) {
+    $_SESSION['sbac-posting-option-comment'] = $text;
+    $_SESSION['sbac-posting-option'] = $form_state['values']['field_posting_options']['und'][0]['value'];
+    $_SESSION['sbac-original-posting-option'] = $form_state['values']['field_posting_option_hidden'];
+    // remove the comment so that it doesn't show up on the node next time.
+    $form_state['values']['field_posting_options_comment']['und'][0]['value'] = NULL;
   }
 }
 
@@ -850,7 +857,14 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
     ctools_include('ajax');
     ctools_include('modal');
 
-    switch ($_GET['posting_option']) {
+    $original_posting_option = $_SESSION['sbac-original-posting-option'];
+    $posting_option = $_SESSION['sbac-posting-option'];
+    $chosen_option = $posting_option;
+    if ($original_posting_option == $posting_option) {
+      $chosen_option = 3;
+    }
+
+    switch ($chosen_option) {
       case 0:
         $description = 'You are about to post this resource without distinction.';
         break;
@@ -860,6 +874,9 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
       case 2:
         $description = 'You are about to remove this resource.';
         break;
+      case 3:
+        $description = 'You are about to save changes to a posted resource.';
+        break;
       default:
         $description = 'You are about to save changes to a posted resource.';
     }
@@ -867,6 +884,7 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
     $form_state = array(
       'title' => t($description),
       'ajax' => $js,
+      'chosen_option' => $chosen_option,
     );
 
     $output = ctools_modal_form_wrapper('sbac_resource_save_all_changes_form', $form_state);
@@ -1535,15 +1553,24 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
 
   // Permissions field.
   $form['field_view_permissions']['und']['#default_value'] = 0;
+  $form['field_view_permissions']['und']['#prefix'] = '<div id="sbac-permissions-per-state">';
+  $form['field_view_permissions']['und']['#suffix'] = '</div>';
 
   // View permissions per state.
   $form['field_view_permissions_per_state']['und']['#title'] = '';
+  $form['field_view_permissions_per_state']['und']['#prefix'] = '<div id="sbac-permissions-state">';
+  $form['field_view_permissions_per_state']['und']['#suffix'] = '</div>';
 
   // Resource Actions.
   $form['field_resource_actions']['und']['#default_value'] = array(0, 1);
 
   // Posting options.
   unset($form['field_posting_options']['und']['#options']['_none']);
+  $form['field_posting_options']['und']['#prefix'] = '<div id="sbac-posting-options">';
+  $form['field_posting_options']['und']['#suffix'] = '</div>';
+
+  $form['field_posting_options_comment']['und']['#prefix'] = '<div id="sbac-posting-options-comment">';
+  $form['field_posting_options_comment']['und']['#suffix'] = '</div>';
   if ($form['field_posting_options']['und']['#default_value'] == 2) {
     $form['field_posting_options_comment']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   }
@@ -1558,17 +1585,13 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   if ($form['#node']->workbench_moderation['current']->state == 'removed') {
     $default_value = 2;
   }
-
-  if (isset($form['#node']->field_posting_options['und'][0]['value'])) {
-    $default_value = $form['#node']->field_posting_options['und'][0]['value'];
-  }
-
   $form['field_posting_options']['und']['#default_value'] = $default_value;
 
   // Hidden field to store original value.
   $form['field_posting_option_hidden'] = array(
     '#type' => 'hidden',
-    '#value' => $original_default_value,
+    '#value' => $default_value,
+    '#attributes' => array('id' => 'sbac-posting-option-hidden'),
   );
 }
 
@@ -1604,15 +1627,9 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
-  global $user;
-  $title = 'Save All Changes';
-  if (!in_array('DLRB member', $user->roles)) {
-    $title = 'Save and Continue';
-  }
-
   $form['actions']['save_continue'] = array(
     '#type' => 'submit',
-    '#value' => $title,
+    '#value' => 'Save and Continue',
     '#weight' => 2,
     '#validate' => array('sbac_resource_validate_form'),
     '#attributes' => array('id' => 'edit-save-continue'),
@@ -1705,22 +1722,15 @@ function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
  */
 function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
   if (isset($form['#node']->nid)) {
-    $posting_option = 0;
-    if (isset($form['#node']->field_posting_options['und'][0]['value'])) {
-      $posting_option = $form['#node']->field_posting_options['und'][0]['value'];
+    $default_value = 0;
+    if ($form['#node']->workbench_moderation['current']->state == 'published') {
+      $default_value = 0;
     }
-    else {
-      if ($form['#node']->workbench_moderation['current']->state == 'published') {
-        $posting_option = 0;
-      }
-
-      if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
-        $posting_option = 1;
-      }
-
-      if ($form['#node']->workbench_moderation['current']->state == 'removed') {
-        $posting_option = 2;
-      }
+    if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
+      $default_value = 1;
+    }
+    if ($form['#node']->workbench_moderation['current']->state == 'removed') {
+      $default_value = 2;
     }
 
     $form['actions']['save_all_changes'] = array(
@@ -1731,7 +1741,8 @@ function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
         ),
         'query' => array(
           'nid' => $form['#node']->nid,
-          'posting_option' => $posting_option,
+          'posting_option' => $default_value,
+          'original_posting_option' => $default_value,
         )
       )),
       '#weight' => 4,
@@ -2031,10 +2042,8 @@ function sbac_resource_check_tags($form, $form_state) {
  *
  * @return array
  */
-function sbac_resource_save_all_changes_form() {
-  $form = array();
-
-  switch ($_GET['posting_option']) {
+function sbac_resource_save_all_changes_form($form, $form_state) {
+  switch ($form_state['chosen_option']) {
     case 0:
       $description = 'Posting this resource without distinction will display the resource in the Digital Library without the distinction badge. Notification
                       will be sent to the contributor.';
@@ -2050,9 +2059,13 @@ function sbac_resource_save_all_changes_form() {
                       the ability to edit this resource. You can axcess this resource by going to a resource list in the admin options.';
       $button_text = 'Remove Resource';
       break;
+    case 3:
+      $description = 'Save changes to this resource will make these changes visible to all user of the Digital Library.';
+      $button_text = 'Save All Changes';
+      break;
     default:
       $description = 'Save changes to this resource will make these changes visible to all user of the Digital Library.';
-      $button_text = 'Submit All Changes';
+      $button_text = 'Save All Changes';
   }
 
   $form['submit_description'] = array(
