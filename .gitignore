@@ -6,3 +6,4 @@ config
 .idea
 docroot/phpinfo.php
 _settings.php
+.DS_Store

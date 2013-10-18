@@ -3,6 +3,7 @@ namespace sbac_core\components\sections;
 
 abstract class Base implements iSection {
   protected $_node = NULL;
+  protected $_node_state = NULL;
   protected $_account = NULL;
 
   protected $_show_disabled = FALSE;
@@ -16,6 +17,20 @@ abstract class Base implements iSection {
   public function __construct($node, $account) {
     $this->_node = $node;
     $this->_account = $account;
+
+    if (isset($node->workbench_moderation['current']->state)) {
+      $this->_node_state = $node->workbench_moderation['current']->state;
+    }
+
+    $this->init();
+  }
+
+  /**
+   * Post-constructor initialization/setup
+   * @return [type] [description]
+   */
+  protected function init() {
+
   }
 
   /**
