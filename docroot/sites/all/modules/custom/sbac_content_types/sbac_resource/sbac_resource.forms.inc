@@ -143,17 +143,73 @@ function _sbac_resource_clean_workbench_moderation($form, $form_state) {
  * @param $form_state
  */
 function sbac_resource_save_and_close(&$form, &$form_state) {
-  // look at the session value's to determine what to do to the node, then set the form
-  // state values.
-
-  // your if condition is if the tab is "advanced" and they clicked "save and close"
   sbac_resource_clean_text($form_state);
-  // If there's a title, lets push this to the new state.
-  $form_state['values']['workbench_moderation_state_current'] = 'draft';
-  $form_state['values']['workbench_moderation_state_new'] = 'draft';
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
-  
+
+  // If the save and close button was clicked via the modal, do the following.
+  if (isset($form_state['values']['additional_settings__active_tab']) &&
+    $form_state['values']['additional_settings__active_tab'] == 'edit-group_advanced' &&
+    isset($form_state['clicked_button']['#value']) &&
+    $form_state['clicked_button']['#value'] == 'Save and Close') {
+
+    $original_posting_option = $_SESSION['sbac-original-posting-option'];
+    $posting_option = $_SESSION['sbac-posting-option'];
+    $chosen_option = $posting_option;
+    if ($original_posting_option == $posting_option) {
+      $chosen_option = 3;
+    }
+
+    switch ($chosen_option) {
+      case 0:
+        $form_state['values']['sticky'] = 0;
+        $form_state['values']['workbench_moderation_state_new'] = 'published';
+        break;
+      case 1:
+        $form_state['values']['sticky'] = 1;
+        $form_state['values']['workbench_moderation_state_new'] = 'published';
+        break;
+      case 2:
+        $form_state['values']['workbench_moderation_state_new'] = 'removed';
+        break;
+      case 3:
+        $form_state['values']['workbench_moderation_state_new'] = 'published';
+        break;
+      default:
+        $form_state['values']['workbench_moderation_state_new'] = 'published';
+    }
+
+    if (isset($_SESSION['sbac-posting-option-comment']) && $_SESSION['sbac-posting-option-comment']) {
+      // Create notificaton for contributor.
+      if ($task = taskit_get_object('resource_submitted')) {
+        global $user;
+        $node = $form_state['node'];
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $node->nid);
+        $task->addOwningUser($node->uid);
+        $task->addTriggeringUser($user->uid);
+        $task->save();
+      }
+    }
+
+    unset($_SESSION['sbac-original-posting-option']);
+    unset($_SESSION['sbac-posting-option']);
+    unset($_SESSION['sbac-posting-option-comment']);
+  }
+  else { // User clicked the button.
+    if (isset($form_state['values']['workbench_moderation_state_current']) &&
+      $form_state['values']['workbench_moderation_state_current'] == 'published') {
+      // Keep it in Published State.
+      $form_state['values']['workbench_moderation_state_new'] = 'published';
+    }
+    else {
+      // Set coming from state to Draft.
+      $form_state['values']['workbench_moderation_state_current'] = 'draft';
+      // Set state to Draft.
+      $form_state['values']['workbench_moderation_state_new'] = 'draft';
+    }
+  }
+  // save the node.
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
@@ -267,10 +323,17 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         break;
     }
 
-    // Set coming from state to Draft.
-    $form_state['values']['workbench_moderation_state_current'] = 'draft';
-    // Set state to Draft.
-    $form_state['values']['workbench_moderation_state_new'] = 'draft';
+    if (isset($form_state['values']['workbench_moderation_state_current']) &&
+      $form_state['values']['workbench_moderation_state_current'] == 'published') {
+      // Keep it in Published State.
+      $form_state['values']['workbench_moderation_state_new'] = 'published';
+    }
+    else {
+      // Set coming from state to Draft.
+      $form_state['values']['workbench_moderation_state_current'] = 'draft';
+      // Set state to Draft.
+      $form_state['values']['workbench_moderation_state_new'] = 'draft';
+    }
   }
 
   // Cleans the text
@@ -899,16 +962,16 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
-        $node = node_load($_GET['nid']);
+        // All changes are saved in the save_and_close submit handler.
         switch ($chosen_option) {
           case 0: // post without distinction.
-            db_query('UPDATE {node} SET sticky = 0 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+            $output[] = ajax_command_callback('save_and_close', 'click');
             break;
           case 1: // post with distinction.
-            db_query('UPDATE {node} SET sticky = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+            $output[] = ajax_command_callback('save_and_close', 'click');
             break;
           case 2: // remove post.
-            workbench_moderation_moderate($node, 'removed');
+            $output[] = ajax_command_callback('save_and_close', 'click');
             break;
           case 3: // save changes.
             $output[] = ajax_command_callback('save_and_close', 'click');
@@ -1566,10 +1629,14 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
 function _sbac_resource_form_advanced(&$form, &$form_state) {
   // Subscription Package Type.
   unset($form['field_subscription_package_type']['und']['#options']['_none']);
-  $form['field_subscription_package_type']['und']['#default_value'] = 0;
+  if ($form['field_subscription_package_type']['und']['#default_value'] == NULL) {
+    $form['field_subscription_package_type']['und']['#default_value'] = 0;
+  }
 
   // Permissions field.
-  $form['field_view_permissions']['und']['#default_value'] = 0;
+  if ($form['field_view_permissions']['und']['#default_value'] == NULL) {
+    $form['field_view_permissions']['und']['#default_value'] = 0;
+  }
   $form['field_view_permissions']['und']['#prefix'] = '<div id="sbac-permissions-per-state">';
   $form['field_view_permissions']['und']['#suffix'] = '</div>';
 
@@ -1579,7 +1646,9 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['field_view_permissions_per_state']['und']['#suffix'] = '</div>';
 
   // Resource Actions.
-  $form['field_resource_actions']['und']['#default_value'] = array(0, 1);
+  if ($form['field_resource_actions']['und']['#default_value'] == NULL) {
+    $form['field_resource_actions']['und']['#default_value'] = array(0, 1);
+  }
 
   // Posting options.
   unset($form['field_posting_options']['und']['#options']['_none']);
