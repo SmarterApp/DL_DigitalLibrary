@@ -181,7 +181,7 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
 
     if (isset($_SESSION['sbac-posting-option-comment']) && $_SESSION['sbac-posting-option-comment']) {
       // Create notificaton for contributor.
-      if ($task = taskit_get_object('resource_submitted')) {
+      if ($task = taskit_get_object('posting_action')) {
         global $user;
         $node = $form_state['node'];
         $task->addVisibility($task::VISIBILITY_USER);
