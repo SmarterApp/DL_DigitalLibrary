@@ -79,6 +79,8 @@ function sbac_report_individual() {
     }
     // dump the csv file here:
     // # todo: csv file dump.
+    $csv_activity_report_result = build_activity_report_csv($state_tid1, $date_range1, $usergroups);
+
   }
 
   $csv_tab = theme('sbac_report_csv', array(
@@ -1017,4 +1019,31 @@ function rec_consistency_rate($all, $current) {
   $consistency = round((1 - $consistency) * 100) . '%';
 
   return $consistency;
+}
+
+function build_activity_report_csv($state_tid, $date_range, $usergroups)
+{
+  $users = get_users_for_user_groups($usergroups);
+  
+
+}
+
+function get_users_for_user_groups($usergroup_ids)
+{
+  $sql = <<<SQL
+    select * from users as u join users_roles as ur on
+    u.uid = ur.uid
+    where ur.rid in (:groups);
+SQL;
+  $result = db_query($sql,
+    array(
+      ':groups' => implode(',',$usergroup_ids),
+    )
+  );
+
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->uid] = $record->name;
+  }
+  return $values;
 }
