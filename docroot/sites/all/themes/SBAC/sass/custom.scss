@@ -15,7 +15,7 @@
 :: Help Modal
 :: Digital Library Resources (DLR)
 :: Create
-   - Resource
+   - Resource 
 :: Legal
 :: Admin theme fixes
 */
@@ -56,6 +56,10 @@ html, body {
 
 body {
   background-color: #0684ad;
+
+  &#tinymce { 
+    background-color: #fff;
+  }
 }
 
 ul,
@@ -65,62 +69,67 @@ dl {
   list-style-position: inside; /* this can create issues */
 }
 
-
 /** Tables **/
-table {
-  $cellpad: 18px 2px; //defines the padding on the table cells
-  $border-style: 1px solid #ccc;
+.page-reports{
+  table {
+    $cellpad: 18px 2px; //defines the padding on the table cells
+    $linkcolor: #056b8d;
+    $border-style: 1px solid #ccc;
 
-  border:$border-style;
-  background:none;
+    border:$border-style;
+    background:none;
 
-  thead{
-    tr{
-      th{
-        @include background-image(linear-gradient(#ededed, #ebebeb));
-        border-bottom: $border-style;
-        padding:$cellpad;
-        color: #056b8d;
+    thead{
+      tr{
+        th{
+          @include background-image(linear-gradient(#ededed, #ebebeb));
+          border-bottom: $border-style;
+          padding:$cellpad;
+          color: $linkcolor;
+          border: $border-style;
+
+          a {
+            color: inherit;
+          }
+
+          &.active {
+            background:#C9EAF8;
+          }
+        }
+      }
+    }
+
+    tbody {
+      border-top: none;
+      background:none;
+    }
+
+    tr.even, tr.odd {
+      td {
+        padding: $cellpad;
+        @include background-image(linear-gradient(#fbfbfb, #fafafa));
         border: $border-style;
+        &.active {
+           background:#EDF8FC;
+        }
 
         a {
-          color: inherit;
+          color: $linkcolor;
         }
-
+      }
+    }
+    
+    tr.alt, tr:nth-of-type(even){
+      td {
+        @include background-image(linear-gradient(#f8f8f8, #f6f6f6));
         &.active {
-          background:#C9EAF8;
+          background:#E1F3F9;
         }
       }
-    }
-  }
-
-  tbody {
-    border-top: none;
-    background:none;
-  }
-
-  tr.even, tr.odd {
-    td {
-      padding: $cellpad;
-      @include background-image(linear-gradient(#fbfbfb, #fafafa));
-      border: $border-style;
-      &.active {
-         background:#EDF8FC;
-      }
-    }
-  }
-  
-  tr.alt, tr:nth-of-type(even){
-    td {
-      @include background-image(linear-gradient(#f8f8f8, #f6f6f6));
-      &.active {
-        background:#E1F3F9;
-      }
-    }
-    &:hover {
-      td{
-        @include background-image(linear-gradient(#fbfbfb, #fafafa));
-        cursor: pointer;
+      &:hover {
+        td{
+          @include background-image(linear-gradient(#fbfbfb, #fafafa));
+        }
       }
     }
   }
