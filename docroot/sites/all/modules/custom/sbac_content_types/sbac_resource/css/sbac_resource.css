@@ -88,7 +88,7 @@
 .sbac-resource-advanced .field-name-field-view-permissions label,
 .sbac-resource-advanced .field-name-field-resource-actions label,
 .sbac-resource-advanced .field-name-field-posting-options label {
-  font-size: 1.2em;
+  font-size: 1em;
 }
 /* line 94, ../sass/sbac_resource.scss */
 .sbac-resource-advanced .field-name-field-subscription-package-type .form-type-radio label,
