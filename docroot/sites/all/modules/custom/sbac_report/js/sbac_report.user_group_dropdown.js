@@ -100,29 +100,7 @@
 //      });
 //    });
 //
-////    // Update the dropdown text, when the user enters a custom date.
-////    $('#to-date input').on('change', function() {
-////      var toInput = getInput(this);
-////      var fromInput = getInput('#from-date input');
-////      if (fromInput && toInput) {
-////        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
-////        $dateRangeField.text(value);
-////        $dateRangeField.val(value);
-////        $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
-////      }
-////    });
-////
-////    // Update the dropdown text, when the user enters a custom date.
-////    $('#from-date input').on('change', function() {
-////      var fromInput = getInput(this);
-////      var toInput = getInput('#to-date input');
-////      if (fromInput && toInput) {
-////        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
-////        $dateRangeField.text(value);
-////        $dateRangeField.val(value);
-////        $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
-////      }
-////    });
+//
 //
 //  });
 //})(jQuery);

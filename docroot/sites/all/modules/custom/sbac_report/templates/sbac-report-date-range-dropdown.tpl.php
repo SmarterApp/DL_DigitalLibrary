@@ -4,13 +4,13 @@
  * Date range dropdown template.
  */
 ?>
-<div id="edit-date-range-dropdown<?php $which ?>" class="date-range-container">
+<div id="edit-date-range-dropdown<?php print $which ?>" class="date-range-container">
   <label>
   <?php print t('Choose a time period'); ?>
   <span class="form-required" title="This field is required.">*</span>
   </label>
-  <a href="#" id="date-selected<?php $which ?>" class="report-dropdown-toggle"><?php print $date_display; ?></a>
-  <div id="date-range-dropdown<?php $which ?>" class="report-dropdown hide">
+  <a href="#" id="date-selected<?php print $which ?>" class="report-dropdown-toggle"><?php print $date_display; ?></a>
+  <div id="date-range-dropdown<?php print $which ?>" class="report-dropdown hide">
     <ul>
       <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_30; ?>">
               <?php print t('Last 30 Days'); ?>

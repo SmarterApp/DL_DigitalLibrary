@@ -1,4 +1,4 @@
-<!--
+
 <?php
 /**
  * @file
@@ -11,17 +11,15 @@
   <span class="form-required" title="This field is required.">*</span>
   </label>
   <a href="#" id="user-group-selected" class="report-dropdown-toggle">User Group</a>
-  <div id="user-group-dropdown" class="report-dropdown hide">
 
-    <ul>
-
+    <select name="user-groups" multiple>
       <?php foreach ($user_group_options as $user_group) { ?>
-         <li><a class="user-group-item report-dropdown-toggle" data-value="<?php print $user_group; ?>">
-         <?php print t($user_group); ?>
-      </a></li>'
+        <option value="<?php print "$user_group"?>"><?php print "$user_group"?></option>
       <?php } ?>
-    </ul>
 
-    <div><?php print t('User Group'); ?></div>
+    </select>
+
 <?php // The closing tags are attached to the date popup form element. ?>
-    -->
+
+
+

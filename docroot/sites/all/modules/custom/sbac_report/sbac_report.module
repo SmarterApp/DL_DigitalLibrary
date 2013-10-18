@@ -97,15 +97,15 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'template_preprocess',
     ),
   );
-  $themes['sbac_report_date_range_dropdown1'] = array(
-    'template' => 'templates/sbac-report-date-range-dropdown1',
-    'path' => $module_path,
-    'arguments' => array('which'=>'1','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL), //default values
-    'preprocess functions' => array(
-      'template_preprocess',
-    ),
-  );
-/*
+//  $themes['sbac_report_date_range_dropdown1'] = array(
+//    'template' => 'templates/sbac-report-date-range-dropdown1',
+//    'path' => $module_path,
+//    'arguments' => array('which'=>'1','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL), //default values
+//    'preprocess functions' => array(
+//      'template_preprocess',
+//    ),
+//  );
+
   $themes['sbac_report_user_group_dropdown'] = array(
     'template' => 'templates/sbac-report-user-group-dropdown',
     'path' => $module_path,
@@ -114,7 +114,7 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'template_preprocess',
     ),
   );
-*/
+
 
   $themes['views_view_fields__sne_details'] = array(
     'template' => 'views-view-fields--sne-details',
@@ -303,27 +303,15 @@ function sbac_report_csv_form($form, &$form_state) {
   sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options, '1');
 
   // TODO: user groups instead of SNE.
-  //$user_group_options = sbac_report_user_group_options();
-  $user_group_options = array(
-    'End Users',
-    'Contributors',
-    'Reviewers',
-    'Posters',
-    'SNE Members',
-    'SLT Members',
-    'Moderators',
-    'Facilitators',
-    'DLRB Members',
-    'Admins',
-  );
+  $user_group_options = sbac_report_user_group_options();
 
-//  $form['user_group_dropdown'] = array(
-//    '#type' => 'markup',
-//    '#markup' => theme('sbac_report_user_group_dropdown',
-//      array('user_group_options' => $user_group_options,
-//      )
-//    )
-//  );
+  $form['user_group_dropdown'] = array(
+    '#type' => 'markup',
+    '#markup' => theme('sbac_report_user_group_dropdown',
+      array('user_group_options' => $user_group_options,
+      )
+    ),
+  );
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -403,7 +391,7 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
 
   $form["date_range_dropdown$which"] = array(
     '#type' => 'markup',
-    '#markup' => theme("sbac_report_date_range_dropdown$which",
+    '#markup' => theme("sbac_report_date_range_dropdown",
       array(
         'which' => $which,
         'date_display' => $date_display ? $date_display : t('Last 30 Days'),
@@ -572,6 +560,18 @@ function sbac_report_user_group_options() {
     'Facilitators' => 'facilitators',
     'DLRB Members' => 'dlrb-members',
     'Admins' => 'admins',
+  );
+  $options = array(
+    'End Users',
+    'Contributors',
+    'Reviewers',
+    'Posters',
+    'SNE Members',
+    'SLT Members',
+    'Moderators',
+    'Facilitators',
+    'DLRB Members',
+    'Admins',
   );
 
   return $options;
