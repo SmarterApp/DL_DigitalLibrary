@@ -864,3 +864,39 @@ function sbac_resource_update_7037() {
 
   return $ret;
 }
+
+/**
+ * Delete the Use of Resource Action field.
+ */
+function sbac_resource_update_7038() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+
+  $field = field_info_instance('node', 'field_resource_action', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_resource_action');
+  field_delete_field($field);
+
+  $field = field_info_instance('node', 'field_view_permissions', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_view_permissions');
+  field_delete_field($field);
+
+  $field = field_info_instance('node', 'field_posting_options', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_posting_options');
+  field_delete_field($field);
+
+  $field = field_info_instance('node', 'field_posting_options_comment', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_posting_options_comment');
+  field_delete_field($field);
+
+  $field = field_info_instance('node', 'field_subscription_package_type', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_subscription_package_type');
+  field_delete_field($field);
+
+  return $ret;
+}
