@@ -1170,8 +1170,10 @@ function sbac_report_preprocess_views_view_field(&$vars) {
       }
     }
   }
-}
+  elseif ($vars['view']->current_display == 'resources_activity_report') {
 
+  }
+}
 /**
  *  get user groups
  */

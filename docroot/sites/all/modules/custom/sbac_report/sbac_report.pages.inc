@@ -72,8 +72,11 @@ function sbac_report_individual() {
   $csv_activity_report = '';
   if (!empty($usergroups) && !empty($date_range1) && !empty($state_tid1)) {
     // display feedback to the browser:
-    // todo: make this work:
-    $csv_activity_report = views_embed_view('activity-reports', 'resources_summary', $state_tid1, $date_range1, $usergroups);
+    // todo: make this work right (message if no data found).
+    $csv_activity_report = "state: $state_tid1  user groups:";
+    foreach ($usergroups as $usergroup) {
+      $csv_activity_report = $csv_activity_report . " $usergroup ";
+    }
     // dump the csv file here:
     // # todo: csv file dump.
   }
