@@ -558,9 +558,10 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
         ),
         'id' => $trigger_id,
       ),
+      'html'=> true,
     );
 
-    $info_link = l(t('i'), $url, $options);
+    $info_link = l('<i class="accessibility foundicon-eyeball"></i>', $url, $options);
 
     // info tooltip
     $item[] = array(
