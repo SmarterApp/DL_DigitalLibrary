@@ -1388,7 +1388,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'label_help_description' => 'The original posting option is displayed below.',
+        'label_help_description' => 'The last saved posting determination.',
         'maxlength_js_label' => '',
       ),
       'type' => 'options_buttons',

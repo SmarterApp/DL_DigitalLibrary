@@ -700,12 +700,15 @@ function sbac_resource_delete_file_from_cmis($document_id, $i)
  *  The new state of the revision.
  */
 function sbac_resource_workbench_moderation_transition($node, $previous_state, $new_state) {
-  if ($node->type == 'resource') {
+  if ($node->type == 'resource' && $new_state != 'removed') {
     // Necassary to override workbench moderation into publishing the node. Line 1602, function
     // workbench_moderation_node_data(), they query the DB directly to find out if there is a
     // published node. I bruce lee the publish status here.
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+  }
+  else if ($node->type == 'resource' && $new_state == 'removed') {
+    $node->status = 0;
   }
 }
 

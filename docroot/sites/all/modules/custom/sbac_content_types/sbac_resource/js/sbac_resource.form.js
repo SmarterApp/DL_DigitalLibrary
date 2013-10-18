@@ -2,6 +2,7 @@
   Drupal.behaviors = Drupal.behaviors || {};
   var isDirty = false;
   var button_clicked = false;
+  var clicked = false;
 
   /**
    * Some general JS behavior gets attached to the resource form.
@@ -61,6 +62,7 @@
    */
   control_form_buttons = function () {
     var cancel_button = $('#edit-cancel');
+    var save_and_close = $('#sbac-resource-save-continue button');
     var resource_state = Drupal.settings.resource_workbench_current_state;
     var dlrb_member = Drupal.settings.sbac_dlrb_member;
     var submit_resource = $('#sbac-resource-modal-submit-resource');
@@ -73,7 +75,9 @@
     if (active_tab == 'General' && resource_state == 'creation') {
       cancel_button.show();
     }
-
+    if (dlrb_member) {
+      save_and_close.hide();
+    }
     if (active_tab == 'Tags' && dlrb_member == false) {
       $('#edit-save-continue').html('Submit Resource');
     }
@@ -161,6 +165,7 @@
 
       $('#edit-save-continue').mousedown(function () {
         isDirty = false;
+        clicked = true;
       });
     }
   };
@@ -192,6 +197,12 @@
     submit_resource.show();
     submit_resource.click();
     submit_resource.hide();
+  };
+
+  Drupal.behaviors.save_and_close = {
+    click: function (context, settings) {
+      $('#sbac-resource-save-continue button').click();
+    }
   };
 
   /**
@@ -279,9 +290,7 @@
       // if removed is already checked, display it. Occurs when an error is thrown.
       if ($('#sbac-posting-options input:nth(2)').is(':checked')) {
         $('#sbac-posting-options-comment').show();
-        $('#sbac-posting-options-comment textarea').val('');
         $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
-        save_all_changes_href($(this).val());
       }
     }
   };
