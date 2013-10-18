@@ -25,6 +25,12 @@ function resource_feedback_page($node) {
           'about',  // about tab
         ),
       ),
+      'access review comments' => array(
+        'feedback' => array(
+          'gk_comments',  // gate keeper comments
+          'qc_comments',  // quality criteria comments
+        ),
+      ),
       'access review process' => array(
         'review' => array(
           'reviews', // reviews tab

@@ -15,7 +15,7 @@
 :: Help Modal
 :: Digital Library Resources (DLR)
 :: Create
-   - Resource
+   - Resource 
 :: Legal
 :: Admin theme fixes
 */
@@ -56,6 +56,10 @@ html, body {
 
 body {
   background-color: #0684ad;
+
+  &#tinymce { 
+    background-color: #fff;
+  }
 }
 
 ul,
@@ -64,7 +68,6 @@ dl {
   font-size: 1em;
   list-style-position: inside; /* this can create issues */
 }
-
 
 /** Tables **/
 .page-reports{
