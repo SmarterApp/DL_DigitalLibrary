@@ -79,7 +79,7 @@
       <?php
         if (isset($fields['buttons']) && is_array($fields['buttons'])) {
           foreach ($fields['buttons'] as $type => $button) {
-            print '<div class="resource-button left">';
+            print '<div class="resource-button right">';
             print $button;
             print '</div>';
           }

@@ -121,6 +121,14 @@ a.sbac-grid-layout, a.sbac-list-layout {
   }
 }
 
+.resource-button {
+  margin-top: 10px;
+
+  a {
+    margin-bottom: 5px;
+  }
+}
+
 a.sbac-grid-layout {
   background-image: url("../images/thumbnails.png");
 }
