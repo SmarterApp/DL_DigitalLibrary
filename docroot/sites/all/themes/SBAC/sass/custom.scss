@@ -73,6 +73,7 @@ dl {
 .page-reports{
   table {
     $cellpad: 18px 2px; //defines the padding on the table cells
+    $linkcolor: #056b8d;
     $border-style: 1px solid #ccc;
 
     border:$border-style;
@@ -84,7 +85,7 @@ dl {
           @include background-image(linear-gradient(#ededed, #ebebeb));
           border-bottom: $border-style;
           padding:$cellpad;
-          color: #056b8d;
+          color: $linkcolor;
           border: $border-style;
 
           a {
@@ -111,6 +112,10 @@ dl {
         &.active {
            background:#EDF8FC;
         }
+
+        a {
+          color: $linkcolor;
+        }
       }
     }
     
@@ -124,7 +129,6 @@ dl {
       &:hover {
         td{
           @include background-image(linear-gradient(#fbfbfb, #fafafa));
-          cursor: pointer;
         }
       }
     }
