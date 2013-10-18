@@ -1418,23 +1418,24 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     ),
   );
 
-  $state_license_2 = array(
-    'input[name="field_license_information[und]"]' => array(
-      array('value' => '2'),
-    ),
-  );
+  // $state_license_2 = array(
+  //   'input[name="field_license_information[und]"]' => array(
+  //     array('value' => '2'),
+  //   ),
+  // );
 
   $form['field_author']['#states']['visible'] = $state_license_either;
   $form['field_author']['#states']['required'] = $state_license_either;
-  $form['field_author']['#states']['invisible'] = $state_license_2;
+  // $form['field_author']['#states']['invisible'] = $state_license_2;
   $form['field_author']['und'][0]['value']['#maxlength'] = 75;
 
   //Show this when field_license_information option 0 or 1 is selected
   $form['field_publisher']['#states']['visible'] = $state_license_either;
   $form['field_publisher']['#states']['required'] = $state_license_either;
-  $form['field_publisher']['#states']['invisible'] = $state_license_2;
+  // $form['field_publisher']['#states']['invisible'] = $state_license_2;
   $form['field_publisher']['und'][0]['value']['#maxlength'] = 75;
 
+  /*
   //Show this when field_license_information option 0  is selected
   $form['field_license_text'] = array(
     '#markup' => '
@@ -1446,6 +1447,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     ',
     '#weight' => $form['field_license']['#weight'],
   );
+  */
 
   //Show this when field_license_information option 1 is selected
   $form['field_license']['#states']['visible'] = $state_license_1;
@@ -1458,6 +1460,10 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     'effect' => 'fade',
     'event' => 'change',
   );
+  $form['field_license']['#suffix'] = '<div id="sbac-resource-license-url"></div>';
+
+  $form['field_license_secondary']['#states']['visible'] = $state_license_1;
+  $form['field_license_secondary']['und']['#options']['_none'] = '--Select License--';
 
   $form['group_license_information'] = array(
     '#prefix' => '<div id="license-information-group">',
@@ -1465,8 +1471,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   );
 
   $form['group_license_information']['field_license_url'] = array(
-    '#prefix' => '<div id="sbac-resource-license-url">',
-    '#suffix' => '</div>',
     '#weight' => 40,
   );
 
@@ -1475,7 +1479,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   global $user;
   $form['user_name'] = array(
     '#type' => 'hidden',
-    '#value' => ucwords($user->name),
+    '#value' => ucwords(full_name($user)),
     '#prefix' => '<div id="sbac-resource-user-name">',
     '#suffix' => '</div>',
   );
@@ -1484,9 +1488,10 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['group_license_information']['field_author'] = $form['field_author'];
   $form['group_license_information']['field_publisher'] = $form['field_publisher'];
   $form['group_license_information']['field_license'] = $form['field_license'];
-  $form['group_license_information']['field_license_text'] = $form['field_license_text'];
-  unset($form['field_author'], $form['field_publisher'], $form['field_license'], $form['field_license_text']);
-  unset($form['#group_children']['field_author'], $form['#group_children']['field_publisher'], $form['#group_children']['field_license'], $form['#group_children']['field_license_text']);
+  $form['group_license_information']['field_license_secondary'] = $form['field_license_secondary'];
+  // $form['group_license_information']['field_license_text'] = $form['field_license_text'];
+  unset($form['field_author'], $form['field_publisher'], $form['field_license'], $form['field_license_secondary']/*, $form['field_license_text']*/);
+  unset($form['#group_children']['field_author'], $form['#group_children']['field_publisher'], $form['#group_children']['field_license'], $form['#group_children']['field_license_secondary']/*, $form['#group_children']['field_license_text']*/);
 
   $form['no license'] = array(
     '#markup' => sbac_resource_licensing_form_has_no_license(),
@@ -1662,14 +1667,16 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   }
 
   $default_value = 0;
-  if ($form['#node']->workbench_moderation['current']->state == 'published') {
-    $default_value = 0;
-  }
-  if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
-    $default_value = 1;
-  }
-  if ($form['#node']->workbench_moderation['current']->state == 'removed') {
-    $default_value = 2;
+  if (isset($form['#node']->workbench_moderation)) {
+    if ($form['#node']->workbench_moderation['current']->state == 'published') {
+      $default_value = 0;
+    }
+    if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
+      $default_value = 1;
+    }
+    if ($form['#node']->workbench_moderation['current']->state == 'removed') {
+      $default_value = 2;
+    }
   }
   $form['field_posting_options']['und']['#default_value'] = $default_value;
 
