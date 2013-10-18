@@ -72,6 +72,36 @@ $body-font-family: Arial, Helvetica, sans-serif;
   display: none;
 }
 
+.sbac-resource-advanced {
+  .sbac-resource-container{
+    margin-top: 33px;
+  }
+
+  .field-name-field-subscription-package-type,
+  .field-name-field-view-permissions,
+  .field-name-field-resource-actions,
+  .field-name-field-posting-options {
+    margin:10px 0;
+    padding:10px 0;
+    border-bottom:1px solid #ccc;
+
+    label {
+      font-size: 1.2em;
+    }
+
+    .form-type-radio,
+    .form-type-checkbox {
+      label {
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  #edit-field-posting-options {
+    border-bottom:none;
+  }
+}
+
 /* -----------------------------------------
    Digital Library
    ----------------------------------------- */
