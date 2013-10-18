@@ -76,9 +76,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_materials($form, $form_state);
     _sbac_resource_form_tags($form, $form_state);
     _sbac_resource_form_advanced($form, $form_state);
-    if (in_array('DLRB member', $user->roles)) {
-      _sbac_resource_form_cancel_all_changes_button($form, $form_state);
-    }
+    _sbac_resource_form_cancel_all_changes_button($form, $form_state);
     _sbac_resource_form_save_all_changes_button($form, $form_state);
     _sbac_resource_form_submit_button($form, $form_state);
     _sbac_resource_form_save_continue_button($form, $form_state);
@@ -145,6 +143,10 @@ function _sbac_resource_clean_workbench_moderation($form, $form_state) {
  * @param $form_state
  */
 function sbac_resource_save_and_close(&$form, &$form_state) {
+  // look at the session value's to determine what to do to the node, then set the form
+  // state values.
+
+  // your if condition is if the tab is "advanced" and they clicked "save and close"
   sbac_resource_clean_text($form_state);
   // If there's a title, lets push this to the new state.
   $form_state['values']['workbench_moderation_state_current'] = 'draft';
@@ -204,6 +206,10 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       }
       if ($field_name == 'field_subject' || $field_name == 'field_grades') {
         $selector = ".vertical-tabs-list li:nth-child(4) a";
+        break;
+      }
+      if ($field_name == 'field_posting_options_comment') {
+        $selector = ".vertical-tabs-list li:nth-child(5) a";
         break;
       }
     }
@@ -271,8 +277,10 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   sbac_resource_clean_text($form_state);
   // Set path alias
   $form_state['values']['path']['pathauto'] = TRUE;
-  // Save node and rebuild form.
-  node_form_submit($form, $form_state);
+  if ($active_tab != 'edit-group_advanced') {
+    // Save node and rebuild form.
+    node_form_submit($form, $form_state);
+  }
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
   // Clear drupal messages.
   drupal_get_messages();
@@ -765,7 +773,6 @@ function sbac_resource_validate_advanced($form, $form_state) {
       form_set_error('field_posting_options_comment', $error);
       _sbac_resource_remove_error_message($error);
       drupal_set_message('advanced:field_posting_options_comment:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('advanced:field_posting_options_comment:group:' . $error, 'sbac_resource_error');
       $error = TRUE;
     }
   }
@@ -779,7 +786,6 @@ function sbac_resource_validate_advanced($form, $form_state) {
       form_set_error('field_posting_options_comment', $error);
       _sbac_resource_remove_error_message($error);
       drupal_set_message('advanced:field_posting_options_comment:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('advanced:field_posting_options_comment:group:' . $error, 'sbac_resource_error');
       $error = TRUE;
     }
   }
@@ -893,7 +899,21 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
-
+        $node = node_load($_GET['nid']);
+        switch ($chosen_option) {
+          case 0: // post without distinction.
+            db_query('UPDATE {node} SET sticky = 0 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+            break;
+          case 1: // post with distinction.
+            db_query('UPDATE {node} SET sticky = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+            break;
+          case 2: // remove post.
+            workbench_moderation_moderate($node, 'removed');
+            break;
+          case 3: // save changes.
+            $output[] = ajax_command_callback('save_and_close', 'click');
+            break;
+        }
       }
     }
 
@@ -989,9 +1009,6 @@ function sbac_resource_delete_resource_modal_callback($js = FALSE) {
         if (isset($_GET['nid'])) {
           node_delete($_GET['nid']);
           $url = 'my-resources';
-//          if (isset($form_state['values']['hidden_url'])) {
-//            $url = $form_state['values']['hidden_url'];
-//          }
           $output[] = ctools_ajax_command_redirect($url);
         }
       }
@@ -1593,6 +1610,11 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
     '#value' => $default_value,
     '#attributes' => array('id' => 'sbac-posting-option-hidden'),
   );
+
+  // Markup for js.
+  $form['field_markup_for_js'] = array(
+    '#markup' => '<div id="sbac-markup-for-js"></div>'
+  );
 }
 
 /**
@@ -1606,18 +1628,13 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
   unset($form['#submit']);
   unset($form['#validate']);
   unset($form['actions']['submit']['#submit']);
-  if (in_array('DLRB member', $user->roles)) {
-    unset($form['actions']['submit']);
-  }
-  else {
-    $form['actions']['submit']['#validate'][] = 'sbac_resource_validate_title';
-    $form['actions']['submit']['#value'] = t('Save and Close');
-    $form['actions']['submit']['#submit'] = array('sbac_resource_save_and_close');
-    $form['actions']['submit']['#prefix'] = '<div id="sbac-resource-save-continue">';
-    $form['actions']['submit']['#suffix'] = '</div>';
-    $form['actions']['submit']['#weight'] = 1;
-    $form['actions']['submit']['#attributes'] = array('id' => 'edit-submit');
-  }
+  $form['actions']['submit']['#validate'][] = 'sbac_resource_validate_title';
+  $form['actions']['submit']['#value'] = t('Save and Close');
+  $form['actions']['submit']['#submit'] = array('sbac_resource_save_and_close');
+  $form['actions']['submit']['#prefix'] = '<div id="sbac-resource-save-continue">';
+  $form['actions']['submit']['#suffix'] = '</div>';
+  $form['actions']['submit']['#weight'] = 1;
+  $form['actions']['submit']['#attributes'] = array('id' => 'edit-submit');
 }
 
 /**
@@ -1651,6 +1668,10 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
  */
 function _sbac_resource_form_cancel_button(&$form, &$form_state) {
   if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'draft') {
+    return;
+  }
+  global $user;
+  if (in_array('DLRB member', $user->roles)) {
     return;
   }
 
@@ -1965,9 +1986,6 @@ function sbac_resource_check_materials($form, $form_state) {
     if (!$form_state['values']['field_pii']['und'][0]['value']) {
       $valid = FALSE;
     }
-    // if (!$form_state['values']['field_use_of_student_images']['und'][0]['value']) {
-    //   $valid = FALSE;
-    // }
   }
   else {
     if (isset($form['#node']->nid)) {
@@ -1990,9 +2008,6 @@ function sbac_resource_check_materials($form, $form_state) {
     if (!$form['field_pii']['und']['#default_value']) {
       $valid = FALSE;
     }
-    // if (!$form['field_use_of_student_images']['und']['#default_value']) {
-    //   $valid = FALSE;
-    // }
   }
   return $valid;
 }
