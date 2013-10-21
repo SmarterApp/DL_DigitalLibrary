@@ -1,3 +1,5 @@
+@import "compass/css3"; 
+
 /* mixins */
   $border_color: #ccc;
 
@@ -10,6 +12,11 @@
 /* resource review tabs */
 .feedback-wrap {
   padding: 10px 30px;
+
+
+  h2.main-title {
+    font-size: 1.4em;
+  }
 
   p {
     font-size: 1em;
@@ -104,7 +111,8 @@
                 p {
                   font-size: 1em;
                   font-weight: bold;
-                  max-width: 800px
+                  max-width: 800px;
+                  margin-left: 5px;
                 }
               }
 
@@ -294,11 +302,10 @@
         padding: 0 0 1em 0;
 
         .criteria-set-title {
-          p {
-            font-weight: bold;
-          }
 
-          margin: 0 0 1em 0;
+          font-weight:bold;
+          font-size: 1.1em;
+          margin: 0 0 10px 0;
         }
 
         .criteria-set-comments-text {
@@ -537,8 +544,6 @@
     }
   }
 }
-
-@import "compass/css3";
 
 .field-name-resource-slideshow {
   margin: 0 0 70px 0;
