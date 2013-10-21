@@ -35,6 +35,15 @@ $darkgreen: #246a34;
 }
 
 
+i.icon-info {
+  width: 18px;
+  height: 18px;
+  display: block;
+  background: url('../images/icon-info.svg') center no-repeat;
+  background-size:cover;
+  text-indent: -9999em;
+}
+
 .view-content table {
   width: 100%;
 }
