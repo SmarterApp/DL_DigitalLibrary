@@ -1027,20 +1027,31 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups)
 
   $user_profiles = user_load_multiple(array_keys($users));
 
-  return $user_profiles;
+  $user_activity = get_user_activity(array_keys($users));
+  $user_activity['user_profiles']=$user_profiles;
+  $file_data = create_user_activity_from_data($user_activity);
+
+  return $user_activity;
 }
 
 function get_users_for_user_groups($usergroups)
 {
-  $groups = implode(',',$usergroups);
-  $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in (:groups)";
-
-  $result = db_query($sql,
-    array(
-      ':groups' => $groups,
-    )
-  );
-  $values = array(); foreach ($result as $record) { $values[$record->uid] = $record; }
+  $usergroups = implode(',',$usergroups);
+// The below statement doesn't work, where usergroups is passed as a string or an array.
+//  $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in :stuff";
+//  $result = db_query($sql,
+//    array(
+//      ':stuff' => $usergroups,
+//    )
+//  );
+  // done this way because the prepared statement didn't work:
+  // todo make comma separated list work here or escape string.
+  $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in ($usergroups)";
+  $result = db_query($sql);
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->uid] = $record;
+  }
 
   return $values;
 }
@@ -1055,7 +1066,10 @@ function aget_users_for_user_groups($usergroups)
       ':groups' => $groups,
     )
   );
-  $values = array(); foreach ($result as $record) { $values[$record->uid] = $record; }
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->uid] = $record;
+  }
 
   return $values;
 }
@@ -1066,60 +1080,272 @@ function get_user_activity($users)
 {
   function count_with_users_query($sql, $users)
   {
-    $result = db_query($sql,array(':users' => $users,));
-    return $result;
+    // done this way because the prepared statement didn't work passing array or comma separated string.
+    // TODO: make prepared statement work here, or escape string???
+    $sql = sprintf($sql,$users);
+    $result = db_query($sql);
+    $values = array();
+    foreach ($result as $record) {
+      $values[$record->uid] = $record;
+    }
+
+    return $values;
   }
 
   $users = implode(',',$users);
 
   # resources viewed
-  $sql = "select count(nid) From node_user_paradata where uid in (:users)";
+  $sql = "select count(nid) as count, uid From node_user_paradata where uid in (%s) group by uid";
   $user_activity['resources_viewed'] = count_with_users_query($sql, $users);
   # resouces downloaded
   # not ready: select * from field_ass where uid = 372;
 
   # resources reviewed/rated
-  $sql = "select count(id) from eck_review where uid = 1 and status = 1";
+  $sql = "select count(id) as count, uid from eck_review where status = 1 and uid in (%s) group by uid";
   $user_activity['resources_reviewed'] = count_with_users_query($sql, $users);
 
   # resources contributed:
-  $sql = "select count(nid) from node where uid = 372 and type = 'resource'";
+  $sql = "select count(nid) as count, uid from node where type = 'resource' and uid in (%s) group by uid";
   $user_activity['resources_contributed'] = count_with_users_query($sql, $users);
 
   # GC Review accepted on contributed resource:
-  $sql = "select count(id) from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1";
+  $sql = "select count(id) as count, uid from eck_feedback where
+type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1 and uid in (%s) group by uid";
   $user_activity['resources_viewed'] = count_with_users_query($sql, $users);
 
   # GC Review accepted on contributed resource:
-  $sql = "select count(id) from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 0";
+  $sql = "select count(id) as count, uid from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
+    met_criteria = 0 and uid in (%s) group by uid";
   $user_activity['gc_reviews_accepted_on_contributed_resources'] = count_with_users_query($sql, $users);
 
   # GC Reviews completed:
-  $sql = "select count(id) from eck_feedback where uid = 151 and type = 'gate_keeper' and status = 1 and completed = 1";
+  $sql = "select count(id) as count, uid from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
+    uid in (%s) group by uid";
   $user_activity['gc_reviews_completed'] = count_with_users_query($sql, $users);
 
   # QC Reviews completed:
-  $sql = "select count(id) from eck_feedback where uid = 151 and type = 'qx' and status = 1 and completed = 1";
+  $sql = "select count(id) as count, uid from eck_feedback where type = 'qx' and status = 1 and completed = 1 and
+    uid in (%s) group by uid";
   $user_activity['qc_reviews_completed'] = count_with_users_query($sql, $users);
 
   # Poster Reviews completed:
-  $sql = "select count(id) from eck_feedback where uid = 111 and type = 'post' and status = 1 and completed = 1";
+  $sql = "select count(id) as count, uid from eck_feedback where type = 'post' and status = 1 and completed = 1 and
+    uid in (%s) group by uid";
   $user_activity['poster_reviews_completed'] = count_with_users_query($sql, $users);
 
   # Contributed resources posted
-  //$sql = "select * from node where uid = 372 and nid in(select nid from workbench_moderation_node_history where published = 1)";
-  $sql = "select count(nid) from node where uid = 372 and nid in(select nid from workbench_moderation_node_history where state = 'published')";
-  $user_activity['contributed_resources'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid from node where nid in(select nid from workbench_moderation_node_history where
+    state = 'published')  and uid in (%s) group by uid";
+  $user_activity['contributed_resources_posted'] = count_with_users_query($sql, $users);
 
   # Contributed resources posted with distinction
-  //$sql = "select * from node where uid = 372 and sticky = 1 and nid in(select nid from workbench_moderation_node_history where published = 1)";
-  $sql = "select count(nid) from node where uid = 372 and sticky = 1 and nid in(select nid from workbench_moderation_node_history where state = 'published')";
-  $user_activity['contributed_resources_posted_with_distiction'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid from node where sticky = 1 and nid in(select nid from workbench_moderation_node_history
+    where state = 'published')  and uid in (%s) group by uid";
+  $user_activity['contributed_resources_posted_with_distinction'] = count_with_users_query($sql, $users);
 
   # Contributed resources reviewed and returned
-  $sql = "select count(nid) from node where uid = 372 and nid in( select nid from workbench_moderation_node_history where state = 'rejected')";
-  $user_activity['contributed_resources_viewed_and_returned'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid from node where nid in( select nid from workbench_moderation_node_history where
+  state = 'rejected') and uid in (%s) group by uid";
+  $user_activity['contributed_resources_reviewed_and_returned'] = count_with_users_query($sql, $users);
 
   return $user_activity;
+}
+
+function create_user_activity_from_data($user_activity)
+{
+  function format_value_field(&$row, $field, $separator, $subseparator, $quote_arrays, $subquote)
+  {
+    //reset($array); $first =  key($array);
+    $count = count($field['und']); $ix = 0;
+    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
+    foreach ($field['und'] as $array_value) {
+      $value = $array_value['value'];
+      $row .= $value . $subseparator;
+      $ix++;
+      if ($ix == $count) {
+        $row = substr($row, 0, -1);
+      } // reduce length by one removing the last sub-separator
+    }
+    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
+    $row .= $separator;
+  }
+
+  $separator = ', ';
+  $quote_arrays = true;
+  $subseparator = ';';
+  $subquote = "'";
+  $csv = '';
+
+  ksort($user_activity['user_profiles']);
+
+  $fieldkeys = array();
+  $foreignidkeys = array();
+  $stringkeys = array();
+  $uidcountkeys = array();
+  $titles = '';
+  validate_and_fill_out_user_activity($user_activity, &$titles, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys);
+
+  $titles = '';
+  foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey.$separator; }
+  foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey.$separator; }
+  foreach ($stringkeys as $stringkey) { $titles .= $stringkey.$separator; }
+  foreach ($uidcountkeys as $uidcountkey) { $titles .= $uidcountkey.$separator; }
+  $titles = substr($titles, 0, -1);
+  $titles .= "\r\n";
+
+  $csv = $titles;
+  $count = count($user_activity['user_profiles']); $ix = 0;
+
+  foreach ($user_activity['user_profiles'] as $user_profile) {
+    $uid = $user_profile->{'uid'};
+    $row = '';
+    foreach ($fieldkeys as $fieldkey) {
+      format_value_field($row, $user_profile->{$fieldkey}, $separator, $subseparator, $quote_arrays, $subquote);
+    }
+    foreach ($foreignidkeys as $foreignidkey) {
+      // tid is replaced by the actual value in the value field.
+      format_value_field($row, $user_profile->{$foreignidkey}, $separator, $subseparator, $quote_arrays, $subquote);
+    }
+    foreach ($stringkeys as $stringkey) {
+      $row .= $user_profile->{$stringkey} . $separator;
+    }
+    $array = $stringkeys; end($array); $last = key($array);
+    foreach ($uidcountkeys as $uidcountkey) {
+      $row .= $user_activity[$uidcountkey][$uid]->count . $separator;
+    }
+    if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
+
+    $csv .= $row."\r\n";
+  }
+  // output the csv for download.
+  // _cex_download($csv, 'output.csv');
+
+  echo $csv;
+  return $csv;
+}
+function _cex_download( $output, $filename )
+{
+  header("Pragma: public");
+  header("Expires: 0");
+  header("Cache-Control: private");
+  header("Content-type: application/octet-stream");
+  header("Content-Disposition: attachment; filename=$filename");
+  header("Accept-Ranges: bytes");
+  echo $output;
+  exit;
+}
+
+function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys)
+{
+  // loop through all values and make sure 0's and '' are used as placeholders for missing values.
+  // todo: is slt needed
+  // todo: is sne needed
+  // todo: is terms of service, version of terms of service, date of version
+
+//  $titles =  'first-name, last-name, state, district,school, grade,subject, school-population, email,'.
+//    ' is-slt, is-sne, date-created, last-access, last-login, '.
+//    ' date-of-terms-of-service, version-of-terms-of-service, date-of-service-version,'.
+//    ' resources-viewed, resources-reviewed-rated, resources-contributed,'.
+//    ' gk-reviews-accepted-on-contributed-resources, gk-reviews-returned-on-contributed-resources,'.
+//    ' contributed-resources-posted, contributed-resources-posted-with-distinction, contributed-resources-reviewed-and-returned'.
+//    ' gk-reviews-completed, qc-reviews-completed, posting-reviews-completed'
+//    ."\r\n";
+
+  array_push($fieldkeys, 'field_first_name');
+  array_push($fieldkeys, 'field_last_name');
+  array_push($foreignidkeys, 'field_state');
+  array_push($foreignidkeys, 'field_district');  // todo:
+  array_push($foreignidkeys, 'field_grade_level_s_');
+  array_push($foreignidkeys, 'field_subject_s_');
+  array_push($foreignidkeys, 'field_special_populations');
+
+  array_push($stringkeys, 'mail');
+  array_push($stringkeys, 'is-slt');// todo:
+  array_push($stringkeys, 'is-sne');// todo:
+  array_push($stringkeys, 'date-created');// todo:
+  array_push($stringkeys, 'last-access');// todo:
+  array_push($stringkeys, 'last-login');// todo:
+  array_push($stringkeys, 'date-of-terms-of-service');// todo:
+  array_push($stringkeys, 'version-of-terms-of-service');// todo:
+  array_push($stringkeys, 'date-of-service-version');// todo:
+
+  array_push($uidcountkeys, 'resources_viewed');
+  array_push($uidcountkeys, 'resources_reviewed');
+  array_push($uidcountkeys, 'resources_contributed');
+  array_push($uidcountkeys, 'gc_reviews_accepted_on_contributed_resources');
+  array_push($uidcountkeys, 'gc_reviews_completed');
+  array_push($uidcountkeys, 'qc_reviews_completed');
+  array_push($uidcountkeys, 'poster_reviews_completed');
+  array_push($uidcountkeys, 'contributed_resources_posted');
+  array_push($uidcountkeys, 'contributed_resources_posted_with_distinction');
+  array_push($uidcountkeys, 'contributed_resources_reviewed_and_returned');
+
+  function format_value_property(&$user_profile, $fieldkey, $missing_string) {
+    if (!property_exists($user_profile,$fieldkey)) {
+      $user_profile->{$fieldkey} = array();
+    }
+    if (is_null($user_profile->{$fieldkey}['und'])) {
+      $user_profile->{$fieldkey}['und'] = array();
+      $user_profile->{$fieldkey}['und'][0] = array();
+      $user_profile->{$fieldkey}['und'][0]['value'] = $missing_string;
+    }
+    $ix = 0;
+    foreach ($user_profile->{$fieldkey}['und'] as $field) {
+      if (is_null($user_profile->{$fieldkey}['und'][0]['value'])) {
+        $user_profile->{$fieldkey}['und'][$ix]['value'] = $missing_string;
+      }
+      $ix++;
+    }
+  }
+  function format_tid_property(&$user_profile, $fieldkey, $missing_string) {
+    // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
+    if (!property_exists($user_profile,$fieldkey)) {
+      $user_profile->{$fieldkey} = array();
+    }
+    if (is_null($user_profile->{$fieldkey}['und'])) {
+      $user_profile->{$fieldkey}['und'] = array();
+      $user_profile->{$fieldkey}['und'][0] = array();
+      $user_profile->{$fieldkey}['und'][0]['tid'] = $missing_string;
+      $user_profile->{$fieldkey}['und'][0]['value'] = $missing_string;
+    }
+    $ix = 0;
+    foreach ($user_profile->{$fieldkey}['und'] as &$field) {
+
+      if (is_null($field['tid'])) {
+        $field['tid'] = $missing_string;
+        $field['value'] = $missing_string;
+      }
+      // look up the value in the foreign table.
+      if ($field['tid'] != $missing_string) {
+        $field['value'] = 'ya'.$ix.' ';
+      }
+      $ix++;
+    }
+  }
+  // replace missing values with ' ' or 0
+  $missing_string = ' ';
+  $missing_integer = 0;
+
+  foreach ($user_activity['user_profiles'] as $user_profile) {
+    $uid = $user_profile->{'uid'};
+    foreach ($fieldkeys as $fieldkey) {
+      format_value_property($user_profile, $fieldkey, $missing_string);
+    }
+    foreach ($foreignidkeys as $foreignidkey) {
+      format_tid_property($user_profile, $foreignidkey, $missing_string);
+    }
+    foreach ($stringkeys as $stringkey) {
+      if (!property_exists($user_profile,$stringkey)) {
+        $user_profile->{$stringkey} = $missing_string;
+      }
+    }
+    foreach ($uidcountkeys as $uidcountkey) {
+      if (is_null($user_activity[$uidcountkey][$uid])) {
+        $user_activity[$uidcountkey][$uid] = new stdClass();
+        $user_activity[$uidcountkey][$uid]->count = $missing_integer;
+        $user_activity[$uidcountkey][$uid]->uid = $uid;
+      }
+    }
+  }
 }
 
