@@ -48,6 +48,50 @@ function theme_review_author($variables) {
 }
 
 /**
+ * Output for Display Suite field "Review Helpfulness"
+ * @param  [type] $variables [description]
+ * @return [type]            [description]
+ */
+function theme_review_helpfulness($variables) {
+  $output = '';
+
+  $entity = $variables['entity'];
+
+  $query = "  SELECT  SUM(IF(value = 1, 1, 0)) AS `yes`,
+                      SUM(IF(value = 1, 0, 1)) AS `no`
+              FROM    votingapi_vote
+              WHERE   entity_type = 'review'
+              AND     entity_id = :id
+           ";
+
+  $vals = db_query($query, array(
+    ':id' => $entity->id,
+  ))->fetchObject();
+
+  $count = 0;
+  $total = 0;
+  $percent = 0;
+
+  if ($vals && isset($vals->yes)) {
+    $count = $vals->yes;
+    $total = ($vals->yes + $vals->no);
+
+    // no division by zero
+    if ($total) {
+      $percent = round(($count / $total * 100));
+    }
+  }
+
+  $output .= t('!count of !total people (!percent%) found this review helpful', array(
+    '!count' => '<span class="count">' . $count . '</span>',
+    '!total' => '<span class="total">' . $total . '</span>',
+    '!percent' => '<span class="percent">' . $percent . '</span>',
+  ));
+
+  return $output;
+}
+
+/**
  * Output for Display Suite field "Delete Button"
  * @param  [type] $variables [description]
  * @return [type]            [description]
@@ -58,7 +102,7 @@ function theme_review_delete($variables) {
   $entity = $variables['entity'];
 
   global $user;
-  if ($entity->uid == $user->uid || in_array('administrator', $user->roles)) {
+  if ($entity->id && ($entity->uid == $user->uid || in_array('administrator', $user->roles))) {
     $trigger_id = 'review-delete';
     $url = 'node/' . $entity->node_id . '/review/end_use/delete/' . $trigger_id . '/' . $entity->id;
 
@@ -96,7 +140,6 @@ function theme_review_vote($variables) {
       continue;
     }
 
-    $output .= t('Was this review helpful?');
     $output .= rate_generate_widget($widget_id, 'review', $entity->id);
   }
 

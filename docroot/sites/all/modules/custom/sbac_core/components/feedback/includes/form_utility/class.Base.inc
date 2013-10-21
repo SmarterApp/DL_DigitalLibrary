@@ -174,6 +174,7 @@ class Base {
 
       if ($set_count > $this->_set_total) {
         $item = array();
+        unset($this->_form[$this->_set_field][$this->_lang][$key]);
         continue;
       }
 
@@ -342,6 +343,7 @@ class Base {
   public function process() {
     $set_count = 1;
     $sets = $this->getCriteriaSets();
+
     foreach ($sets as &$item) {
       // if the entity is completed, the user cannot edit any data, so disable all fields
       if (!resource_access($this->_edit_permission, $this->_resource)) {

@@ -23,6 +23,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 
     $form['#attached']['js'] = array(
       drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
+      drupal_get_path('module', 'sbac_alignment') . '/js/sbac_alignment.js',
       drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
       libraries_get_path('jquery.more') . '/jquery.more.js',
     );
@@ -143,6 +144,15 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   $form_state['values']['workbench_moderation_state_new'] = 'draft';
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
+
+  // $node = node_load($form_state['build_info']['args'][0]->nid, NULL, TRUE);
+  // if (isset($node->field_alignment_term[LANGUAGE_NONE][0]['tid'])) {
+  //   foreach ($node->field_alignment_term[LANGUAGE_NONE] as $key => $item) {
+  //     $term = taxonomy_term_load($item['tid']);
+  //     $form_state['values']['field_alignment_term'][LANGUAGE_NONE][$key] = $term;
+  //   }
+  // }
+  
   node_form_submit($form, $form_state);
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
@@ -174,6 +184,7 @@ function sbac_resource_after_build_resource_form(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_save_and_continue(&$form, &$form_state) {
+  // Check for errors.
   $errors = form_get_errors();
   if ($errors) {
     $selector = NULL;
@@ -202,51 +213,76 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
     }
     drupal_add_js(array('sbac_resource_valid_state' => FALSE), 'setting');
+
+    $active_tab = $form_state['values']['additional_settings__active_tab'];
+    if ($active_tab == 'edit-group_materials') {
+      $media_items = sbac_media_load_items($form['#node']->nid);
+      $output = _sbac_media_create_list($media_items);
+      $form['field_file_container']['materials']['#markup'] = $output;
+      $form['field_file_container']['materials']['#weight'] = -100;
+    }
     return $form;
   }
-  else{
-    ctools_include('ajax');
-    $selector = NULL; $valid = FALSE;
-    $active_tab = $form_state['values']['additional_settings__active_tab'];
-    switch ($active_tab) {
-      case 'edit-group_materials':
-        $selector = ".vertical-tabs-list li:nth-child(3) a";
-        $valid = FALSE;
-        break;
-      case 'edit-group_basic':
-        $selector = ".vertical-tabs-list li:nth-child(2) a";
-        $valid = FALSE;
-        break;
-      case 'edit-group_tags':
-        $selector = NULL;
-        $valid = TRUE;
-        break;
-      case 'edit-group_summary':
-        $valid = FALSE;
-        $selector = ".vertical-tabs-list li:nth-child(4) a";
-        break;
-    }
 
-    // Set coming from state to Draft.
-    $form_state['values']['workbench_moderation_state_current'] = 'draft';
-    // Set state to Draft.
-    $form_state['values']['workbench_moderation_state_new'] = 'draft';
-    // Cleans the text
-    sbac_resource_clean_text($form_state);
-    // Set path alias
-    $form_state['values']['path']['pathauto'] = TRUE;
-    // Save node and rebuild form.
-    node_form_submit($form, $form_state);
-    $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
-    // Clear drupal messages.
-    drupal_get_messages();
+  $duplicates = FALSE;
+  $active_tab = $form_state['values']['additional_settings__active_tab'];
+  if ($active_tab == 'edit-group_materials') {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    $duplicates = sbac_media_check_duplicates($media_items);
+  }
+
+  // Submit node, everything is good to go.
+  ctools_include('ajax');
+  $selector = NULL;
+  $valid = FALSE;
+  $active_tab = $form_state['values']['additional_settings__active_tab'];
+  switch ($active_tab) {
+    case 'edit-group_materials':
+      $selector = ".vertical-tabs-list li:nth-child(3) a";
+      $valid = FALSE;
+      break;
+    case 'edit-group_basic':
+      $selector = ".vertical-tabs-list li:nth-child(2) a";
+      $valid = FALSE;
+      break;
+    case 'edit-group_tags':
+      $selector = NULL;
+      $valid = TRUE;
+      break;
+    case 'edit-group_summary':
+      $valid = FALSE;
+      $selector = ".vertical-tabs-list li:nth-child(4) a";
+      break;
+  }
+
+  // Set coming from state to Draft.
+  $form_state['values']['workbench_moderation_state_current'] = 'draft';
+  // Set state to Draft.
+  $form_state['values']['workbench_moderation_state_new'] = 'draft';
+  // Cleans the text
+  sbac_resource_clean_text($form_state);
+  // Set path alias
+  $form_state['values']['path']['pathauto'] = TRUE;
+  // Save node and rebuild form.
+  node_form_submit($form, $form_state);
+  $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
+  // Clear drupal messages.
+  drupal_get_messages();
+
+  if ($duplicates) {
+    $form['run_js'] = array(
+      '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
+    );
+  }
+  else {
     // Add appropriate JS.
     drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
     if ($selector) {
       drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
     }
-    return $form;
   }
+
+  return $form;
 }
 
 /**
@@ -313,6 +349,16 @@ function sbac_resource_validate_title(&$form, &$form_state) {
       drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
       drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
     }
+
+    $dups = _sbac_resource_check_duplicated_title($form, $form_state, $title);
+    if ($dups) {
+      $error = "An identical title for the resource already exists in the Smarter Balanced Digital Library. Please enter a unique title to continue.";
+      $error .= "<p class='smaller'>Tip: Incorporate audience grade, subject or topic details to differentiate your resource title</p>";
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
+    }
   }
 }
 
@@ -322,7 +368,7 @@ function sbac_resource_validate_title(&$form, &$form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_general(&$form, $form_state) {
+function sbac_resource_validate_general(&$form, &$form_state) {
   if (!$form_state['values']['title']) {
     $error = 'Please add a title to continue.';
     form_set_error('title', $error);
@@ -339,6 +385,16 @@ function sbac_resource_validate_general(&$form, $form_state) {
       _sbac_resource_remove_error_message($error);
       drupal_set_message('general:title:single:Please remove any inappropriate language to continue', 'sbac_resource_error');
       drupal_set_message('general:title:group:Please remove any inappropriate language to continue', 'sbac_resource_error');
+    }
+
+    $dups = _sbac_resource_check_duplicated_title($form, $form_state, $title);
+    if ($dups) {
+      $error = "An identical title for the resource already exists in the Smarter Balanced Digital Library. Please enter a unique title to continue.";
+      $error .= "<p class='smaller'>Tip: Incorporate audience grade, subject or topic details to differentiate your resource title</p>";
+      form_set_error('title', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:title:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
     }
   }
 
@@ -383,7 +439,7 @@ function sbac_resource_validate_general(&$form, $form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_summary(&$form, $form_state) {
+function sbac_resource_validate_summary(&$form, &$form_state) {
   if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
     $error = 'Please add a resource summary to continue';
     form_set_error('field_alt_body', $error);
@@ -542,37 +598,18 @@ function sbac_resource_validate_summary(&$form, $form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_materials(&$form, $form_state) {
+function sbac_resource_validate_materials(&$form, &$form_state) {
   $media_items = sbac_media_load_items($form['#node']->nid);
   if (!$media_items) {
-    $error = 'You must provide a material for this Resource to continue';
+    $error = 'You must add at least one material to continue';
     form_set_error('field_embed_video', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('materials:field_embed_video:single:' . $error, 'sbac_resource_error');
     drupal_set_message('materials:field_embed_video:group:Provide a material', 'sbac_resource_error');
 
     // field_file_upload
-    $error = 'You must provide a material for this Resource to continue';
     form_set_error('field_file_upload', $error);
     _sbac_resource_remove_error_message($error);
-  }
-  else {
-    $duplicates = sbac_media_check_duplicates($media_items);
-    if ($duplicates) {
-      // set a form_state variable that says there is duplicates.
-      // no need to loop around all, just need to find first dup.
-      // (will need to update the function or create a new one)
-      // in the submit handler, create a condition to check for the form state variable
-      // then return js that pops up the modal like in sbac_media
-      // hopefully this works (above)
-      // inside the modal, send in this nid,
-      // which loads up a form, with cancel and save continue
-      // the form will load up the media items from the nid
-      // loop around and create output for the user to see.
-      // on save / continue closes the modal, saves the node (submits to alfresco)
-      // and returns the form to the next tab
-      // cancel keeps the user on the materials tab
-    }
   }
 
   if ($form_state['values']['field_author']['und'][0]['value'] == NULL) {
@@ -644,7 +681,7 @@ function sbac_resource_validate_materials(&$form, $form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_tags(&$form, $form_state) {
+function sbac_resource_validate_tags(&$form, &$form_state) {
   // Select all alignments with this nid
   if (!$form_state['values']['field_subject']['und'][0]['tid']) {
     $error = 'Please select a subject and domain tag to continue';
@@ -702,6 +739,7 @@ function sbac_resource_modal_callback($js = FALSE) {
   if ($js) {
     ctools_include('ajax');
     ctools_include('modal');
+    drupal_add_js(drupal_get_path("module", "sbac_alignment") . "/js/sbac_alignment.js");
 
     drupal_add_js(array(
       'ctools-ccss-style' => array(
@@ -758,7 +796,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
           $node = node_load($_GET['nid']);
           if ($node) {
             workbench_moderation_moderate($node, 'needs_review');
-            $output[] = ctools_ajax_command_redirect('digital-library-resources');
+            $output[] = ctools_ajax_command_redirect('my-resources');
 
             // create notificaton for resource author
             if ($task = taskit_get_object('resource_submitted')) {
@@ -811,10 +849,10 @@ function sbac_resource_delete_resource_modal_callback($js = FALSE) {
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if (isset($_GET['nid'])) {
           node_delete($_GET['nid']);
-          $url = 'digital-library-resources';
-          if (isset($form_state['values']['hidden_url'])) {
-            $url = $form_state['values']['hidden_url'];
-          }
+          $url = 'my-resources';
+//          if (isset($form_state['values']['hidden_url'])) {
+//            $url = $form_state['values']['hidden_url'];
+//          }
           $output[] = ctools_ajax_command_redirect($url);
         }
       }
@@ -1137,18 +1175,10 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_video']['#access'] = FALSE;
-  //$form['field_file'][LANGUAGE_NONE]['#after_build'][] = 'sbac_resource_form_file_after_build';
-
-  // NEW STUFF!!!
-  // embed a view here, displays a list of materials (pri/sec), delete option, filename, file size
-  // embed url ability -> confirmation dialogs after, custom form.
-  // choose file and upload ability -> custom form
-  // error messages move inline
   sbac_media_widget_form_element($form, $form_state);
 
   // Materials
   $form['field_file']['#access'] = FALSE;
-  $form['field_file']['und']['#description'] = '<p>' .t('You can add a combination of videos, images, and documents to this resource. This resource must contain at least one (1) material.') . '</p>';
   // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);
@@ -1249,9 +1279,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   $form['field_pii']['und']['#title'] .= ' ' . theme('form_required_marker');
   unset($form['field_pii']['und']['#options'][0]);
-  
-  // $form['field_use_of_student_images']['und']['#title'] .= ' ' . theme('form_required_marker');
-  // unset($form['field_use_of_student_images']['und']['#options'][0]);
 }
 
 /**
@@ -1346,7 +1373,7 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
 
   // Description
   $form['alignment_tag_description'] = array(
-    '#markup' => '<p>'.t('Identify the Common Core State Standard(s) and the alignment type(s) to which this resource is aligned. Select all that apply.').'</p>',
+    '#markup' => '<p>'.t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards or Mathematical Practices are included alongside content standards for all grades.').'</p>',
     '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
     '#suffix' => '</div>',
     '#weight' => 101,
@@ -1566,11 +1593,6 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
 function sbac_resource_check_general($form, $form_state) {
   $valid = TRUE;
 
-  // Return if 'remove' was clicked.
-  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
-    return $valid;
-  }
-
   // Submitted via ajax.
   if (isset($form_state['values'])) {
     if (!$form_state['values']['title']) {
@@ -1611,11 +1633,6 @@ function sbac_resource_check_general($form, $form_state) {
  */
 function sbac_resource_check_summary($form, $form_state) {
   $valid = TRUE;
-
-  // Return if 'remove' was clicked.
-  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
-    return $valid;
-  }
 
   if(isset($form_state['values'])) {
     if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
@@ -1681,14 +1698,12 @@ function sbac_resource_check_summary($form, $form_state) {
 function sbac_resource_check_materials($form, $form_state) {
   $valid = TRUE;
 
-  // Return if 'remove' was clicked.
-  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
-    return $valid;
-  }
-
   if (isset($form_state['values'])) {
-    if (!$form_state['values']['field_file']['und'][0]['fid']) {
-      $valid = FALSE;
+    if (isset($form_state['node']->nid)) {
+      $media_items = sbac_media_load_items($form_state['node']->nid);
+      if (!$media_items) {
+        $valid = FALSE;
+      }
     }
     if (!$form_state['values']['field_author']['und'][0]['value']) {
       $valid = FALSE;
@@ -1709,8 +1724,11 @@ function sbac_resource_check_materials($form, $form_state) {
     // }
   }
   else {
-    if (!isset($form['field_file']['und'][0]['#default_value']['fid'])) {
-      $valid = FALSE;
+    if (isset($form['#node']->nid)) {
+      $media_items = sbac_media_load_items($form['#node']->nid);
+      if (!$media_items) {
+        $valid = FALSE;
+      }
     }
     if (!$form['field_author']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
@@ -1741,11 +1759,6 @@ function sbac_resource_check_materials($form, $form_state) {
  */
 function sbac_resource_check_tags($form, $form_state) {
   $valid = TRUE;
-
-  // Return if 'remove' was clicked.
-  if (isset($form_state['triggering_element']['#value']) && $form_state['triggering_element']['#value'] == 'Remove') {
-    return $valid;
-  }
 
   if (isset($form_state['values'])) {
     if (!$form_state['values']['field_subject']['und'][0]['tid']) {
@@ -1816,7 +1829,7 @@ function sbac_resource_delete_resource_form() {
 
   $form['hidden_url'] = array(
     '#type' => 'hidden',
-    '#value' => $_SERVER['HTTP_REFERER'],
+    '#value' => arg(0),
   );
 
   $form['submit_description'] = array(
@@ -1851,4 +1864,31 @@ function _sbac_resource_remove_error_message($value) {
       unset($_SESSION['messages']['error'][$key]);
     }
   }
+}
+
+/**
+ * Checks for duplicated titles.
+ *
+ * @param $form
+ * @param $form_state
+ * @param $title
+ * @return array
+ */
+function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
+  $duplicates = array();
+
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'));
+  $query->condition('n.title', $title);
+  $query->condition('n.type', 'resource');
+  if (isset($form_state['node']->nid)) {
+    $query->condition('n.nid', $form_state['node']->nid, '<>');
+  }
+
+  $result = $query->execute();
+  foreach ($result AS $row) {
+    $duplicates[$row->nid] = $row;
+  }
+
+  return $duplicates;
 }

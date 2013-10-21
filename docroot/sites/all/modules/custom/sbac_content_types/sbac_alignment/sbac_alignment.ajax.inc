@@ -33,18 +33,14 @@ function sbac_alignment_ajax_terms_callback() {
   $ela_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
-    'Choose Your Claim',
-    'Choose Your Target',
-    'Select Your Common Core State Standard(s)',
+    'Choose Your Strand/Domain',
+    'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
   );
   $ma_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
-    'Choose Your Claim',
     'Choose Your Domain',
-    'Choose Your Target',
-    'Choose Your Emphasis',
-    'Select Your Common Core State Standard(s)',
+    'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
   );
 
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
@@ -61,13 +57,10 @@ function sbac_alignment_ajax_terms_callback() {
 
   $output_array['parent'] = $parent;
   $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
-
   $publication = $parent->field_alignment_publication['und'][0]['value'];
   $output_array['publication'] = (empty($publication)) ? 0 : $publication;
-
   $output_array['depth'] = $depth = sbac_alignment_term_depth($parent->tid);
-
-  if ($publication == 'SBAC-MA-v1') {
+  if ($publication == 'CC-MA-v1') {
     $level_title = $ma_titles[$depth];
   }
   else {
@@ -76,6 +69,12 @@ function sbac_alignment_ajax_terms_callback() {
 
   $output_array['tids'] = array();
   foreach ($terms as $term) {
+    $pos = strpos($term->name, ':');
+    if ($pos !== FALSE) {
+      $new_name = substr($term->name, $pos + 1);
+      $term->name = trim($new_name);
+    }
+
     $output_array['tids'][] = $term;
     $children = taxonomy_get_children($term->tid);
     $output_array['children'][] = $children;
@@ -92,7 +91,6 @@ function sbac_alignment_ajax_terms_callback() {
   }
 
   $output_array['tids_count'] = count($output_array['tids']);
-
   $output = theme('alignment_tags', array('terms' => $terms, 'level_title' => $level_title));
   $output_array['html'] = $output;
 
@@ -117,10 +115,13 @@ function sbac_alignment_ajax_alignment_crud_callback() {
       if (isset($_POST['nid'])) {
         $nid = $_POST['nid'];
       }
-
-      node_delete($nid);
-      print drupal_json_encode('deleted: ' . $nid);
+      // prep JSON response
+      $data = array(
+        'deleted_nid' => $nid,
+      );
+      print drupal_json_encode($data);
       break;
+
     case 'create':
       if (isset($_POST['alignment_standards'])) {
         $standards = explode('|', $_POST['alignment_standards']);
@@ -144,26 +145,36 @@ function sbac_alignment_ajax_alignment_crud_callback() {
         $types[$term->name] = $term->tid;
       }
 
+      $standards_terms = array();
       foreach ($standards as $tid) {
         //create alignment
         $node = new stdClass();
         $node->title = "resource-$alignment_ref-alignment-$tid";
         $node->type = 'alignment';
         $node->uid = $user->uid;
-        $entity->node_type = 'comment_node_alignment';
         node_object_prepare($node);
-
 
         $node->field_education_alignment['und'][]['tid'] = $tid;
         $node->field_alignment_type['und'][]['tid'] = $types[$alignment_type];
         $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
         node_save($node);
 
-        $node = node_load($alignment_ref);
-        $node->field_alignment_term['und'][]['tid'] = $tid;
-        node_save($node);
+        $term = taxonomy_term_load($tid);
+        $standards_terms[] = $term->name;
+
+        // $resource_node = node_load($alignment_ref, NULL, FALSE);
+        // $resource_node = node_load($alignment_ref);
+        // $resource_node->field_alignment_term['und'][]['tid'] = $tid;
+        // entity_save_field('field_alignment_term', $resource_node, 'node', $resource_node->nid);
       }
-      print drupal_json_encode(array('html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref)));
+
+      $data = array(
+        'html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref),
+        'terms' => $standards_terms,
+      );
+
+      print drupal_json_encode($data);
+
       exit;
       break;
   }
@@ -188,6 +199,23 @@ function sbac_alignment_ajax_alignment_form_callback() {
 function sbac_alignment_ajax_alignment_breadcrumbs_callback() {
   $output = $terms = array();
   $parents = taxonomy_get_parents_all($_POST['tid']);
+
+  foreach ($parents AS $key => $term) {
+    $pos = strpos($term->name, ':');
+    // Remove the ":" from the string.
+    if ($pos !== FALSE) {
+      $new_name = substr($term->name, $pos + 1);
+      $term->name = trim($new_name);
+      $parents[$key] = $term;
+    }
+
+    // Trim the name if its greater then 41 characters.
+    if (strlen($term->name) > 41) {
+      $term->name = substr($term->name, 0, 41) . '...';
+      $parents[$key] = $term;
+    }
+  }
+
   $output['html'] = theme('alignment_breadcrumbs', array('terms' => array_reverse($parents)));
   print drupal_json_encode($output);
   exit;

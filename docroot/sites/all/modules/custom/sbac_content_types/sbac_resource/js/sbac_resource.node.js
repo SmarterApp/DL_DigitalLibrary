@@ -10,15 +10,21 @@
   Drupal.behaviors.sbac_resource_load_media = {
     attach: function (context, settings) {
       $('#sbac-materials li a').click( function (event) {
+        event.stopPropagation();
         event.preventDefault();
+
         var type = $(this).attr('sbac-type');
         var resource = $('#resource-element');
         if (type == 'document') {
-          var google_viewer = '<iframe src="http://docs.google.com/viewer?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
-          resource.empty().html(google_viewer);
+          var google_url = 'http://docs.google.com/viewer';
+          if (window.location.protocol == 'https:') {
+            google_url = 'https://docs.google.com/viewer';
+          }
+          var google_viewer = '<iframe src="' + google_url + '?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+          resource.empty().append(google_viewer);
         }
         else if (type == 'video') { // includes youtube
-          resource.html('<div id="sbac-jwplayer"></div>');
+          resource.empty().append('<div id="sbac-jwplayer"></div>');
           jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850, primary: "flash" });
           jwplayer('sbac-jwplayer').play();
         }
@@ -27,36 +33,38 @@
           img.attr('src', $(this).attr('href'));
           img.attr('height', 400);
           img.attr('width', 850);
-          resource.empty().html(img);
+          resource.empty().append(img);
         }
         else if (type == 'schooltube') {
-          resource.html('<div class="flex-video"><iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>');
+          resource.empty().append('<div class="flex-video"><iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>');
         }
         else if (type == 'teachertube') {
-          resource.html('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe>');
+          resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe>');
         } 
         else if (type == 'slideshare') {
-          resource.html('<div class="flex-video"><iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>');
+          resource.empty().append('<div class="flex-video"><iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>');
         }
         else if (type == 'vimeo') {
-          resource.html('<div class="flex-video"><iframe src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>');
+          resource.empty().append('<div class="flex-video"><iframe src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>');
         }
         else if (type == 'youtube') {
-          resource.html('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>');
+          resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>');
         }        
         else {
           var img = $('<img>');
           img.attr('src', $(this).attr('href'));
           img.attr('height', 400);
           img.attr('width', 850);
-          resource.empty().html(img);
+          resource.empty().append(img);
         }
+
         var doc_type = $('#sbac-resource-doc-type');
         var filename = $('#sbac-filename');
-        filename.html($(this).html());
+        filename.empty().append($(this).html());
         doc_type.removeClass();
         doc_type.addClass(type);
-        doc_type.html(type);
+        doc_type.empty().append(type);
+
         return false;
       });
 

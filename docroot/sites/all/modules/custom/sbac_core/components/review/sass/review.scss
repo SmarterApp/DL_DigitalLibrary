@@ -1,5 +1,7 @@
 /* mixins */
 
+@import "compass/css3/";
+
 @mixin left_col {
   float: left;
   width: 280px;
@@ -8,13 +10,15 @@
 @mixin mid_col {
   border-left: 1px #ccc solid;
   float: left;
-  width: 280px;
+  width: 270px;
+  padding-left: 10px;
 }
 
 @mixin right_col {
   border-left: 1px #ccc solid;
   float: left;
-  width: 280px;
+  width: 270px;
+  padding-left: 10px;
 }
 
 @mixin maxlength {
@@ -30,6 +34,18 @@
       margin: 0;
       padding: 0;
     }
+  }
+}
+
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
   }
 }
 
@@ -81,6 +97,10 @@
         textarea {
           max-width: 100%;
           width: 100%;
+
+          &.error {
+            width: 92%;
+          }
         }
       }
 
@@ -184,6 +204,10 @@
     .sorting-order {
       float: right;
     }
+
+    .summary-content {
+      margin-top: 10px;
+    }
   }
 
   #summary {
@@ -192,6 +216,8 @@
     }
 
     .appropriate-for {
+      margin-top: 10px;
+
       .term {
         font-size: 0.8em;
         margin-bottom: 10px;
@@ -226,34 +252,55 @@
   }
 }
 
-.entity-review.view-mode-full {
+.preview .entity-review.view-mode-full {
   background: #eee;
   border: 1px #ccc solid;
-  margin: 10px 0;
   padding: 10px;
+}
+
+.entity-review.view-mode-full{
+  //background: #eee;
+  //border: 1px #ccc solid;
+  margin: 10px 0;
+  padding: 10px 0;
   font-size: 18px;
+  border-bottom: 1px solid silver;
 
   .field-label {
     margin-bottom: 5px;
   }
 
   .group-header {
+    @include clearfix;
+    
     margin-bottom: 10px;
+    text-align: right;
+
+    .field-name-review-author {
+      float: left;
+    }
+
+    .field-name-review-helpfulness {
+      float: right;
+    }
   }
 
   .group-left {
-    width:33%;
+    clear: both;
+    width: 33%;
   }
 
   .group-middle {
-    width:33%;
+    width: 33%;
+
     .field-name-field-pro-dev {
       padding-left: 10px;
     }
   }
 
   .group-right {
-    width:33%;
+    width: 33%;
+
     .field-name-field-ease-use {
       padding-left: 10px;
     }
@@ -263,8 +310,44 @@
     margin-top: 10px;
   }
 
-  .group-footer {
+  .fivestar-summary {
+    display: none;
+    /*margin-top: 5px;*/
+  }
 
+  .group-footer {
+    .rate-widget {
+      padding: 15px 0;
+
+      .vote {
+        padding: 0 10px;
+
+        .action-triggers {
+          display: none;
+        } 
+      }
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-top: 10px
+    }
+
+    .field-name-review-vote {
+      float: left;
+      width: 740px;
+    }
+
+    .field-name-review-delete {
+      float: right;
+      padding-top: 5px;
+      text-align: right;
+      width: 90px;
+    }
+
+    .field-name-flagging-form {
+      clear: both;
+    }
   }
 }
 
@@ -305,6 +388,12 @@
   }
 }
 
+
+.rating-label {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
 /* user tooltips */
 .account-tooltip {
   position: relative;
@@ -319,10 +408,20 @@
     top: 20px;
     width: 500px;
     z-index: 50;
+    text-align: left;
+    @include border-radius(6px);
   }
 
   .row.first {
     padding: 10px;
   }
+
+  .line {
+    display: none;
+  }
 }
 
+
+.fivestar-widget {
+  padding: 5px 0;
+}

@@ -148,6 +148,7 @@ function devtools_devtools_components() {
     'http' => array(),
     'jquery' => array(),
     'js_suppress_alert' => array(),
+    'js_watch_value' => array(),
     'state_required' => array(),
     'string' => array(),
     'taxonomy' => array(),

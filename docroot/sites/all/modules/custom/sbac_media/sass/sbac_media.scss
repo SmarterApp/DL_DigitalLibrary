@@ -36,8 +36,31 @@
 			font-size: 12px;
     }
 
+    .ui-icon {
+    	width: 8%;
+    	font-family: "GeneralFoundicons";
+    	font-size: 1em;
+
+    	&.document:before {
+    		content: "\f009";
+    	}
+
+    	&.video:before {
+    		content: "\f01f";
+    	}
+
+    	 &.embed:before {
+    		content: "\f01f";
+    	}
+
+    	&.image:before {
+    		content: "\f020";
+    	}
+    }
+
     tr {
     	border-bottom: 1px solid #ccc;
+    	cursor: move;
 
     	td {
     		padding-top: 1em;
@@ -62,16 +85,25 @@
     }
 
     tr:nth-child(2) td {
-    	padding-top: 40px;
+    	padding-top: 45px;
+    }
+
+    tr:nth-child(2).ui-sortable-helper td {
+    	padding-top: 20px;
+    	height: auto;
     }
   }
 }
 
 #sbac-field-file-container {
 	.form-item-field-embed-video {
-		width: 45%;
+		width: 55%;
 		margin-right: 2%;
 		float: left;
+
+		.description {
+			display: block;
+		}
 	}
 
 	.form-file {

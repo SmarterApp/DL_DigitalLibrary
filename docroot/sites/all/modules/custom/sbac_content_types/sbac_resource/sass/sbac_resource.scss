@@ -60,11 +60,13 @@ $body-font-family: Arial, Helvetica, sans-serif;
 
 a.sbac-grid-layout, a.sbac-list-layout {
   display: inline-block;
-  margin: 4px 20px 0 10px;
+  margin: 0 20px 0 10px;
   background: url("../images/list.png") no-repeat center left;
   background-size: 24px 24px;
   padding-left: 30px;
   color: #494949;
+  height: 45px;
+  line-height: 45px;
 
   &:hover {
     color: #494949;
@@ -78,14 +80,17 @@ a.sbac-grid-layout {
 .block-sbac-resource-sbac-resource-results-count {
   float:left;
   margin-right: 10px;
-  margin-left: 10px;
+  margin-left: 26px;
   font-size: emCalc(24px);
 
   h3 {
     color: #0085ad;
-    margin-top: 9px;
+    height: 45px;
+    line-height: 45px;
+    padding: 0;
+    margin:0;
     font-weight: normal;
-    font-size: 1.5em;
+    font-size: 1.2rem;
   }
 }
 
@@ -94,7 +99,9 @@ a.sbac-grid-layout {
   margin-top: -4px;
 }
 
-.page-digital-library-resources {
+.page-digital-library-resources,
+.page-my-resources,
+.page-resource-review  {
   #page-title {
     display: none;
   } 
@@ -422,10 +429,12 @@ a.sbac-grid-layout {
 //Resource Dropdown 
 
 .filters {
-  background: #6b6b6b;
-  color: $white;
+  background: #c9eaf8;
+  color: #0684ad;
   padding: 20px 0;
-  border-top: 2px solid #575656;
+  border-top: 2px solid #0684ad;
+  border-bottom: 1px solid #94d8f3;
+
   position: relative;
 
   &.active{
@@ -456,14 +465,13 @@ a.sbac-grid-layout {
       color: $white;
       font-size: emCalc(16px);
       margin-bottom: 10px;
-      //font-family: $body-font-family;
       position: relative;
     }
   }
 
   li {
     @include border-radius(3px);
-    background: #8d9297 url('../images/icon-drop.png') no-repeat 97% center;
+    background: #FFF url('../images/icon-drop.png') no-repeat 97% center;
     padding: 5px 10px;
     margin:0 0 10px;
     font-size: 12px;
@@ -575,7 +583,8 @@ a.sbac-grid-layout {
     border-width: 0 0 1px;
 
     h3 {
-      color: inherit;
+      color: #063e5f;
+      font-size: 18px;
     }
 
     .current-filter {
@@ -584,8 +593,9 @@ a.sbac-grid-layout {
       float: left;
       margin:10px 10px 10px 0;
       font-size: 0.8em;
-      padding: 5px 40px 5px 10px;
-      background: #0085ad url('../images/icon-close.png') no-repeat right center;
+      padding: 10px 40px 10px 10px;
+      background: #fff url('../images/icon-close.png') no-repeat right center;
+      color: #7d8a95;
     }
   }
 
@@ -607,16 +617,17 @@ a.sbac-grid-layout {
   }
 
   #sbac-search-cat-button{
-    padding: 5px 20px;
+    padding: 0 20px;
+    height: 45px;
+    line-height: 45px;
     display: inline-block;
     color: #333;
-    border:1px solid silver;
+    border:1px solid #94d8f3;
     border-width: 0 1px;
     
-    &.active {
-      @include text-shadow(rgba(0,0,0, 0.5) 1px 1px 0);
-      background-color: #0085ad;
-      color: #f3f3f3;
+    &.active, #hover {
+      background-color: #c9eaf8;
+      color: #063e5f;
     }
   }
 }
@@ -685,8 +696,8 @@ a.sbac-grid-layout {
 
 .preview{
   margin-top: 1em;
-  height: 300px;
-  background: url('../images/preview.jpg') center;
+  //height: 300px;
+  //background: url('../images/preview.jpg') center;
 }
 
   #sbac-resource-doc-type {
@@ -859,6 +870,22 @@ a.sbac-grid-layout {
 .view-resource-tutorial {
   ul {
     list-style: none;
+  }
+}
+
+.page-node-edit.node-type-resource #modalContent {
+  overflow: none !important;
+
+  #modal-title{
+    white-space: pre-wrap;
+    overflow: visible;
+    max-width: 100%;
+    padding-bottom: 20px;
+    height: auto !important;
+  }
+
+  .sbac-dup {
+    font-size: 18px;
   }
 }
 

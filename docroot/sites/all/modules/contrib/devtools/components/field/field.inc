@@ -96,10 +96,11 @@ function field_has_value($entity, $field, $source = 'value', $min = NULL) {
  * Returns first value for specified field.
  * @param  [type] $entity [description]
  * @param  [type] $field  [description]
- * @param  [type] $source [description]
+ * @param  string $source [description]
+ * @param  [type] $lang   [description]
  * @return [type]         [description]
  */
-function field_get_value($entity, $field, $source = 'value') {
+function field_get_value($entity, $field, $source = 'value', $lang = LANGUAGE_NONE) {
   list($handler, $handler_data) = devtools_func_handler(__FUNCTION__, func_get_args());
 
   if ($handler) {
@@ -108,7 +109,6 @@ function field_get_value($entity, $field, $source = 'value') {
   else {
     $entity = (array) $entity;
 
-    $lang = LANGUAGE_NONE;
     if (isset($entity['language'])) {
       $lang = $entity['language'];
     }
@@ -176,7 +176,7 @@ function field_set_value($entity, $field, $value, $index = 0, $source = 'value')
     }
 
     $entity[$field][$lang][$index][$source] = $value;
-
+    
     return $entity;
   }
 }

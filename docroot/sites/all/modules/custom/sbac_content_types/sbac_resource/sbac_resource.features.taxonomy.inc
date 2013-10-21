@@ -285,6 +285,29 @@ function sbac_resource_taxonomy_default_vocabularies() {
         ),
       ),
     ),
+    'resource_states' => array(
+      'name' => 'Resource States',
+      'machine_name' => 'resource_states',
+      'description' => '',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          0 => 'skos:ConceptScheme',
+        ),
+        'name' => array(
+          'predicates' => array(
+            0 => 'dc:title',
+          ),
+        ),
+        'description' => array(
+          'predicates' => array(
+            0 => 'rdfs:comment',
+          ),
+        ),
+      ),
+    ),
     'smarter_balanced_keyword' => array(
       'name' => 'Smarter Balanced Keyword',
       'machine_name' => 'smarter_balanced_keyword',

@@ -1,0 +1,57 @@
+/* line 2, ../sass/flag.scss */
+.flag-review-end-use-wrap form {
+  margin-bottom: 30px;
+}
+/* line 9, ../sass/flag.scss */
+.flag-review-end-use-wrap .field-name-field-issue-type .form-item label p.new-line {
+  display: block;
+  font-size: 1em;
+  padding-left: 25px;
+}
+/* line 17, ../sass/flag.scss */
+.flag-review-end-use-wrap .field-name-field-issue-type .description {
+  border-bottom: 1px #ccc solid;
+  margin-bottom: 30px;
+  padding: 10px 0 15px 25px;
+}
+/* line 24, ../sass/flag.scss */
+.flag-review-end-use-wrap .field-name-field-details {
+  position: relative;
+}
+/* line 27, ../sass/flag.scss */
+.flag-review-end-use-wrap .field-name-field-details textarea {
+  max-width: 100%;
+  width: 100%;
+}
+/* line 32, ../sass/flag.scss */
+.flag-review-end-use-wrap .field-name-field-details .counter {
+  font-size: 0.9em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+/* line 40, ../sass/flag.scss */
+.flag-review-end-use-wrap .actions {
+  text-align: right;
+}
+/* line 43, ../sass/flag.scss */
+.flag-review-end-use-wrap .actions .button {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-left: 1em;
+}
+/* line 49, ../sass/flag.scss */
+.flag-review-end-use-wrap .actions .button.hide {
+  display: none;
+}
+
+/* modals */
+/* line 57, ../sass/flag.scss */
+.dialog_flag_review_modal_form_submit #dialog .intro {
+  border-bottom: 1px solid silver;
+  padding-bottom: 1em;
+  border-bottom: 1em;
+  font-size: 0.8em;
+  line-height: normal;
+  text-align: left;
+}

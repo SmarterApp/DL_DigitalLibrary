@@ -594,6 +594,13 @@ class Hooks extends \devtools\Hooks {
   }
 
   /**
+   * Extemds hook_entity_view_alter().
+   */
+  function hook_entity_view_alter(&$build, $type) {
+
+  }
+
+  /**
    * Extends hook_form_BASE_FORM_ID_alter().
    */
   function hook_form_node_form_alter(&$form, $form_state) {

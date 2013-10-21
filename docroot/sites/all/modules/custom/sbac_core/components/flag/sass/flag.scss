@@ -1,0 +1,65 @@
+.flag-review-end-use-wrap {
+  form {
+    margin-bottom: 30px;
+  }
+
+  .field-name-field-issue-type {
+    .form-item {
+      label {
+        p.new-line {
+          display: block;
+          font-size: 1em;
+          padding-left: 25px;
+        }
+      }
+    }
+
+    .description {
+      border-bottom: 1px #ccc solid;
+      margin-bottom: 30px;
+      padding: 10px 0 15px 25px;
+    }
+  }
+
+  .field-name-field-details {
+    position: relative;
+
+    textarea {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .counter {
+      font-size: 0.9em;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .actions {
+    text-align: right; 
+
+    .button {
+      display: inline-block;
+      margin-bottom: 0;
+      margin-left: 1em;
+    }
+
+    .button.hide {
+      display: none; 
+    }
+  }
+}
+
+/* modals */
+.dialog_flag_review_modal_form_submit #dialog {
+  .intro {
+    border-bottom: 1px solid silver;
+    padding-bottom: 1em;
+    border-bottom: 1em;
+    font-size: 0.8em;
+    line-height: normal;
+    text-align: left; 
+  }
+}

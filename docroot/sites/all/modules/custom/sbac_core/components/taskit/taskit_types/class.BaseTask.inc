@@ -43,7 +43,7 @@ class BaseTask extends \taskit\Task {
     return field_get_value($post, 'field_to_contributor');
   }
 
-  public function reviewerFeedback($resource_nid, $viewing_uid) {
+  public function reviewerFeedback($resource_nid, $viewing_uid, $debug = FALSE) {
     $posts = entity_load('feedback', FALSE, array(
       'node_id' => $resource_nid,
       'type' => 'post',
@@ -55,7 +55,7 @@ class BaseTask extends \taskit\Task {
 
     $reviews = entity_load('feedback', FALSE, array(
       'node_id' => $resource_nid,
-      'type' => 'review',
+      'type' => 'qc',
       'completed' => 1,
       'status' => 1,
     ));

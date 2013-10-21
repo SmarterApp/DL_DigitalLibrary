@@ -291,6 +291,7 @@ function sbac_report_state_options() {
   global $user;
   $roles = $user->roles;
   $options = array();
+  $first_only =  FALSE;
 
   // Admin user can select between state.
   if ($user->uid == 1 ||
@@ -559,6 +560,256 @@ function sbac_report_gate_keeping_reviews_rate($uid, $date_range) {
     $rate['return'] = $rate['total'] - $rate['acceptance'];
   }
   return $rate;
+}
+
+/**
+ * Returns the accepted gate keeper results for the given user and data range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ *   An associative array of the gate keeper reviews.
+ */
+function sbac_report_get_ind_accepted_gate_keeper($uid, $date_range) {
+  $accepted_gk = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    status = :status AND
+    completed = :completed AND
+    met_criteria = :met_criteria AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // so an accepted GK is status 1, completed 1, met_criteria 1
+  $result = db_query($sql, array(':type' => 'gate_keeper', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':met_criteria' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $accepted_gk[] = $row;
+  }
+  return $accepted_gk;
+}
+
+/**
+ * Returns the returned gate keeper results for the given user and data range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ *   An associative array of the gate keeper reviews.
+ */
+function sbac_report_get_ind_returned_gate_keeper($uid, $date_range) {
+  $returned_gk = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    status = :status AND
+    completed = :completed AND
+    met_criteria = :met_criteria AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // so an accepted GK is status 1, completed 1, met_criteria 0
+  $result = db_query($sql, array(':type' => 'gate_keeper', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':met_criteria' => 0, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $returned_gk[] = $row;
+  }
+  return $returned_gk;
+}
+
+/**
+ * Returns the accepted gate keeper results for all users and the data range.
+ *
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ *   An associative array of the gate keeper reviews.
+ */
+function sbac_report_get_all_accepted_gate_keeper($date_range) {
+  $accepted_gk = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    status = :status AND
+    completed = :completed AND
+    met_criteria = :met_criteria AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // so an accepted GK is status 1, completed 1, met_criteria 1
+  $result = db_query($sql, array(':type' => 'gate_keeper', ':status' => 1, ':completed' => 1, ':met_criteria' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $accepted_gk[] = $row;
+  }
+  return $accepted_gk;
+}
+
+/**
+ * Returns the returned gate keeper results for all users and the data range.
+ *
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ *   An associative array of the gate keeper reviews.
+ */
+function sbac_report_get_all_returned_gate_keeper($date_range) {
+  $returned_gk = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    status = :status AND
+    completed = :completed AND
+    met_criteria = :met_criteria AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // so an accepted GK is status 1, completed 1, met_criteria 0
+  $result = db_query($sql, array(':type' => 'gate_keeper', ':status' => 1, ':completed' => 1, ':met_criteria' => 0, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $returned_gk[] = $row;
+  }
+  return $returned_gk;
+}
+
+/**
+ * Gets all the reviews in the "in review" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+function sbac_report_get_in_reviews($uid, $date_range) {
+  $in_review = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    status = :status AND
+    completed = :completed AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // anything with status = 1 and completed = 0 is an active, on-going review
+  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 0, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $in_review[] = $row;
+  }
+
+  return $in_review;
+}
+
+/**
+ * Gets all the reviews in the "completed" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+function sbac_report_get_completed_reviews($uid, $date_range) {
+  $completed = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    status = :status AND
+    completed = :completed AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // anything with status = 1 and completed = 1 is completed.
+  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+
+  return $completed;
 }
 
 /**

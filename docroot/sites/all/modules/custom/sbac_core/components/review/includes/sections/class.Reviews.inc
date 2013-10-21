@@ -11,11 +11,13 @@ class Reviews extends Base {
    * @return [type] [description]
    */
   public function getContent() {
+    // add necessary css
+    drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/profile.css');
+
     // create header & new review form
       $output = '';
 
       $has_review = user_has_review($this->_node->nid, $this->_account->uid);
-      $has_review = FALSE;
 
       $button = '';
       if (!$has_review) { 
@@ -79,20 +81,23 @@ class Reviews extends Base {
       // build the 'appropriate for' terms output
         $appropriate_output = '';
         $i = 1;
+        $j = 0;
         foreach ($tree as $term) {
           $class = '';
           $suffix = '';
-          if ($i % 3 == 0) {
+
+          if (($i - ($j * 3)) % 3 == 0) {
+            $j++;
             $class = 'right-col';
             $suffix = '<div class="clear"></div>';
           }
-          elseif ($i % 2 == 0) {
+          elseif (($i - ($j * 3)) % 2 == 0) {
             $class = 'mid-col';
           }
           else {
             $class = 'left-col';
           }
-
+          
           // the 'top 3' terms are highlighted
           if (isset($term->highlight)) {
             $class .= ' highlight';

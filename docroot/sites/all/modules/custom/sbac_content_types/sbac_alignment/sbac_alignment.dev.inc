@@ -5,24 +5,19 @@
  */
 ini_set('max_execution_time', 999);
 ini_set('memory_limit', '1024M');
+
 /**
  * Global Variables
  */
 define('SBAC_ALIGNMENT_DATA_PATH', 'http://' . $_SERVER['HTTP_HOST'] . '/' .  drupal_get_path('module', 'sbac_alignment') . '/data/');
+
 /**
  * Batch Callback
  * Imports the ccss tags using BATCH API.
  */
 function sbac_alignment_batch_importer_page() {
   if (!(isset($_GET['op']) && $_GET['op'] == 'import')) {
-    return '';
-  }
-  
-  if(isset($_GET['vocab'])) {
-    $edu_alignment_vocab_name = $_GET['vocab'];
-  }
-  else {
-    $edu_alignment_vocab_name = "education_alignment2";
+    return 'You must provide a op parameter.';
   }
   
   if(isset($_GET['reset'])) {
@@ -31,19 +26,13 @@ function sbac_alignment_batch_importer_page() {
     variable_set('sbac_alignment_import_bad_terms', '');
   }
 
-  if(isset($_GET['file'])) {
-    $filename = $_GET['file'];
-  }
-  else {
-    $filename = "ela.json";
-  }
-
+  $edu_alignment_vocab_name = "education_alignment";
   $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
   $grade_terms = array();
-
-  $create_base = TRUE;
-  $create = TRUE;
-  $print = FALSE;
+  $create_base = FALSE;
+  if ($_GET['create_base']) {
+    $create_base = TRUE;
+  }
 
   // create base terms
   if ($create_base) {
@@ -51,71 +40,75 @@ function sbac_alignment_batch_importer_page() {
     $terms = array(
       'English / Language Arts' => array(
         'children' => array(
-          'KG - Kindergarten' =>  array(),
-          '1 - First Grade' =>  array(),
-          '2 - Second Grade' =>  array(),
-          '3 - Third Grade' =>  array(),
-          '4 - Fourth Grade' =>  array(),
-          '5 - Fifth Grade' =>  array(),
-          '6 - Sixth Grade' =>  array(),
-          '7 - Seventh Grade' =>  array(),
-          '8 - Eighth Grade' =>  array(),
-          '9 - Ninth Grade' =>  array(),
-          '10 - Tenth Grade' =>  array(),
-          '11 - Eleventh Grade' =>  array(),
-          '12 - Twelfth Grade' =>  array(),
+          'KG : Kindergarden' => array('weight' => 0),
+          '1 : Grade 1' => array('weight' => 1),
+          '2 : Grade 2' => array('weight' => 2),
+          '3 : Grade 3' => array('weight' => 3),
+          '4 : Grade 4' => array('weight' => 4),
+          '5 : Grade 5' => array('weight' => 5),
+          '6 : Grade 6' => array('weight' => 6),
+          '7 : Grade 7' => array('weight' => 7),
+          '8 : Grade 8' => array('weight' => 8),
+          '9-10 : Grade 9 - 10' => array('weight' => 9),
+          '11-12 : Grade 11 - 12' => array('weight' => 10),
         ),
       ),
-      'Math' => array(
+      'Mathematics' => array(
         'children' => array(
-          'KG - Kindergarten' =>  array(),
-        '1 - First Grade' =>  array(),
-        '2 - Second Grade' =>  array(),
-        '3 - Third Grade' =>  array(),
-        '4 - Fourth Grade' =>  array(),
-        '5 - Fifth Grade' =>  array(),
-        '6 - Sixth Grade' =>  array(),
-        '7 - Seventh Grade' =>  array(),
-        '8 - Eighth Grade' =>  array(),
-        '9 - Ninth Grade' =>  array(),
-        '10 - Tenth Grade' =>  array(),
-        '11 - Eleventh Grade' =>  array(),
-        '12 - Twelfth Grade' =>  array(),
+          'KG : Kindergarden' => array('weight' => 0),
+          '1 : Grade 1' => array('weight' => 1),
+          '2 : Grade 2' => array('weight' => 2),
+          '3 : Grade 3' => array('weight' => 3),
+          '4 : Grade 4' => array('weight' => 4),
+          '5 : Grade 5' => array('weight' => 5),
+          '6 : Grade 6' => array('weight' => 6),
+          '7 : Grade 7' => array('weight' => 7),
+          '8 : Grade 8' => array('weight' => 8),
+          'HS : High School' => array('weight' => 9),
         ),
       ),
     );
-    
     sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
   }
-  
+
+  // Only available types are "Mathematics" and "English / Language Arts"
   if(isset($_GET['type'])) {
-    $subject = array_pop(taxonomy_get_term_by_name($_GET['type']));
+    $type = $_GET['type'];
+    $subject = array_pop(taxonomy_get_term_by_name($type));
   }
   else {
-    $subject = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
+    return 'You must enter a type. Only available types are "Mathematics" and "English / Language Arts';
   }
-  
+
+  $create = TRUE;
+
   //create terms
-  if ($create) {
+  if ($create && $subject) {
     // get grades tids
     $terms = taxonomy_get_tree($edu_alignment_vocab->vid, $subject->tid, 1, TRUE);
     foreach ($terms as $term) {
       if($term->depth == 0) {
-        $name = explode('-', $term->name);
+        $name = explode(':', $term->name);
         $grade_terms[trim($name[0])] = $term;
       }
     }
     
     //get data
-    $data = drupal_http_request(SBAC_ALIGNMENT_DATA_PATH . $filename);
-    $contents = $data->data;
-    $json = drupal_json_decode($contents);
+    module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
+    $airclient = new AIRAPIClient();
+    if ($subject->name == 'English / Language Arts') {
+      $api_type = 'CC-ELA-v1';
+    }
+    else {
+      $api_type = 'CC-MA-v1';
+    }
+    $json = $airclient->getStandards($api_type);
     uasort($json, 'sbac_alignment_sort_tree');
   
     $batch = array(
       'title' => t('Exporting'),
       'operations' => array(
-        array('sbac_alignment_batch', array($edu_alignment_vocab->vid, $json, $grade_terms)),
+        array('sbac_alignment_batch', array($edu_alignment_vocab->vid, $json, $grade_terms, $api_type)),
       ),
       'finished' => 'sbac_alignment_batch_test_finished',
       'file' => drupal_get_path('module', 'sbac_alignment') . '/sbac_alignment.dev.inc',
@@ -123,14 +116,14 @@ function sbac_alignment_batch_importer_page() {
     batch_set($batch);
     // Only needed if not inside a form _submit handler.
     // Setting redirect in batch_process.
-    batch_process('foo');
+    batch_process('ccss-import');
   }
 }
 /**
  * Batch Callback
  * BATCH API. Imports the ccss tags.
  */
-function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
+function sbac_alignment_batch($vid, $json, $grade_terms, $api_type, &$context) {
   ini_set('max_execution_time', 9999);
   ini_set('memory_limit', '1024M');
   
@@ -145,15 +138,12 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
   $counter = variable_get('sbac_alignment_import_counter', 0);
   $parents = variable_get('sbac_alignment_import_data', array());
   $bad_terms = variable_get('sbac_alignment_import_bad_terms', array());
-  
-  $parent_tid = 0;
+
   $json_count = count($json);
-  
   $msg = "
     count " . $counter . "
     parents " . drupal_json_encode($parents) . "
 ";
-
   watchdog('sbac_alignment', $msg);
   
   for ($i = $counter; $i < $json_count; $i++) {
@@ -165,13 +155,18 @@ function sbac_alignment_batch($vid, $json, $grade_terms, &$context) {
       variable_set('sbac_alignment_import_counter', $i);
       variable_set('sbac_alignment_import_data', $parents);
     }
-    
+
+    // For Batch API. Since it does it in batches, we may have already added this term.
     if (isset($parents[$key])) {
       continue;
     }
 
     // Root term. first set after the grade
     if ($term['treeLevel'] < 2) {
+      if ($term['fkParent'] == NULL) {
+        $weight = sbac_alignment_set_weight($term, $api_type);
+        $term['weight'] = $weight;
+      }
       $parent_tid = $grade_terms[$grade]->tid;
       $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
       $parents[$key] = $new_term->tid;
@@ -520,4 +515,151 @@ function sbac_alignment_delete_vocab() {
   }
 
   return '';
+}
+
+/**
+ * Sets the weight determined by awesome logic.
+ *
+ * @param $term
+ * @param $api_type
+ * @return int
+ */
+function sbac_alignment_set_weight($term, $api_type) {
+  $weight = 0;
+  if ($api_type == 'CC-ELA-v1') {
+    switch($term['name']) {
+      case 'RL':
+        $weight = 0;
+        break;
+      case 'RI':
+        $weight = 1;
+        break;
+      case 'RF':
+        $weight = 2;
+        break;
+      case 'W':
+        $weight = 3;
+        break;
+      case 'SL':
+        $weight = 4;
+        break;
+      case 'L':
+        $weight = 5;
+        break;
+      case 'RH':
+        $weight = 6;
+        break;
+      case 'RST':
+        $weight = 7;
+        break;
+      case 'WHST':
+        $weight = 8;
+        break;
+    }
+  }
+  else {
+    switch($term['name']) {
+      case 'CC':
+        $weight = 0;
+        break;
+      case 'OA':
+        $weight = 1;
+        break;
+      case 'NBT':
+        $weight = 2;
+        break;
+      case 'MD':
+        $weight = 3;
+        break;
+      case 'G':
+        $weight = 4;
+        break;
+      case 'NF':
+        $weight = 5;
+        break;
+      case 'RP':
+        $weight = 6;
+        break;
+      case 'NS':
+        $weight = 7;
+        break;
+      case 'EE':
+        $weight = 8;
+        break;
+      case 'SP':
+        $weight = 9;
+        break;
+      case 'F':
+        $weight = 10;
+        break;
+      case 'HSN-RN':
+        $weight = 11;
+        break;
+      case 'HSN-Q':
+        $weight = 12;
+        break;
+      case 'HSN-CN':
+        $weight = 13;
+        break;
+      case 'HSN-VM':
+        $weight = 14;
+        break;
+      case 'HSA-SSE':
+        $weight = 15;
+        break;
+      case 'HSA-APR':
+        $weight = 16;
+        break;
+      case 'HSA_CED':
+        $weight = 17;
+        break;
+      case 'HSA-REI':
+        $weight = 18;
+        break;
+      case 'HSF-IF':
+        $weight = 19;
+        break;
+      case 'HSF-BF':
+        $weight = 20;
+        break;
+      case 'HSF-LE':
+        $weight = 21;
+        break;
+      case 'HSF-TF':
+        $weight = 22;
+        break;
+      case 'HSG-CO':
+        $weight = 23;
+        break;
+      case 'HSG-SRT':
+        $weight = 24;
+        break;
+      case 'HSG-C':
+        $weight = 25;
+        break;
+      case 'HSG-GPE':
+        $weight = 26;
+        break;
+      case 'HSG-GMD':
+        $weight = 27;
+        break;
+      case 'HSG-MG':
+        $weight = 28;
+        break;
+      case 'HSS-ID':
+        $weight = 29;
+        break;
+      case 'HSS-IC':
+        $weight = 30;
+        break;
+      case 'HSS-CP':
+        $weight = 31;
+        break;
+      case 'HSS-MD':
+        $weight = 32;
+        break;
+    }
+  }
+
+  return $weight;
 }

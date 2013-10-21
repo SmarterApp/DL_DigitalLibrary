@@ -204,11 +204,19 @@ function sbac_core_devtools_components() {
         'feedback.pages.modal_post.inc',
         'feedback.pages.modal_qc.inc',
         'feedback.forms.inc',
+        'feedback.theme.inc',
       ),
     ),
     'field_profanity' => array(),
     // 'field_required' => array(),
     'field_xss' => array(),
+    'flag' => array(
+      'files' => array(
+        'flag.forms.inc',
+        'flag.theme.inc',
+        'flag.pages.modal_review.inc',
+      ),
+    ),
     'input_format' => array(),
     // 'maxlength_above' => array(),
     'memory' => array(),
@@ -223,6 +231,7 @@ function sbac_core_devtools_components() {
       'files' => array(
         'review.forms.inc',
         'review.pages.modal_eu.inc',
+        'review.theme.inc',
       ),
     ),
     'sections' => array(),
@@ -255,6 +264,13 @@ function sbac_core_taskit_types() {
  */
 function sbac_core_workbench_moderation_transition($node, $previous_state, $new_state) {
   \sbac_core\Core::hook('workbench_moderation_transition', NULL, $node, $previous_state, $new_state);
+}
+
+/**
+ * Implements hook_rate_widget_alter().
+ */
+function sbac_core_rate_widget_alter(&$widget, $context) {
+  \sbac_core\Core::hook('rate_widget_alter', NULL, $widget, $context);
 }
 
 /*----------------------------------------------------------------------------

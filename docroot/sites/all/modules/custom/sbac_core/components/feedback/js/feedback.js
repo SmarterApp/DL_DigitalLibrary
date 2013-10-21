@@ -16,36 +16,6 @@ Feedback.submit_button =      '.button.secondary';
 // general utility functions
 Feedback.utilities = {
   /**
-   * This implements a custom success/fail callback for our AJAX form, since there
-   * isn't anything out of the box with Drupal's AJAX/FAPI implementation.
-   *
-   * The form itself will return JS which will set a flag to either 1 or 0, and
-   * this function will recursively check for that flag value every 200ms.
-   * 
-   * @param  {[type]} default_value   Default value to identify a non-set flag (ex. -1).
-   * @param  {[type]} value_callback  Callback function which will return the current
-   *                                  flag value, and optionally change it to the passed value.
-   * @param  {[type]} change_callback Callback function which will receive the new
-   *                                  flag value (to act upon it) when it's detected.
-   * @return {[type]}                 [description]
-   */
-  watch_value: function(default_value, value_callback, change_callback) {
-    setTimeout(function() {
-      var current_value = value_callback();
-      // target value is still set to the default, so call self again
-      if (current_value == default_value) {
-        Feedback.utilities.watch_value(default_value, value_callback, change_callback);
-      }
-      // target value has changed, so pass it to the callback and reset
-      else {
-        change_callback(current_value);
-        value_callback(default_value);
-        return;
-      }
-    }, 200);
-  },
-
-  /**
    * When the Gate Keeper form is submitted and returned, we check for messages and
    * move them to the "standard" locaton in DOM. If the messages contain errors (which
    * prevented form submission), we also scroll the user to the top of the page so
@@ -209,7 +179,9 @@ Drupal.behaviors.feedback = {
           }
         };
 
-        Feedback.utilities.watch_value(default_value, value_callback, change_callback);
+        // The form itself will return JS which will set a flag to either 1 or 0, and
+        // this function will recursively check for that flag value every 200ms.
+        Drupal.behaviors.js_watch_value.watch_value(default_value, value_callback, change_callback);
       });
 
     // propagate click events on our form buttons to the anchors which will trigger the
@@ -219,15 +191,15 @@ Drupal.behaviors.feedback = {
           $.each(Feedback[name].buttons, function(button_key, data) {
             $(Feedback[name].form + ' ' + data.button).once('mousedown-event').click(function(e) {
               e.preventDefault();
-
+              
               // update action
               Feedback.utilities.set_action('validate', name);
-
+              
               // a modal-triggering button has been clicked, so the first thing we need to do
               // is ajax-submit the form to validate it, and we do this by clicking the Save &
               // Close button
               $(Feedback.wrapper + ' ' + Feedback[name].form + ' ' + Feedback.submit_button).trigger('mousedown', data.anchor);
-
+              
               return false;
             });
           });

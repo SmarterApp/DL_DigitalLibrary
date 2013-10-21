@@ -1,3 +1,33 @@
+<?php global $user; 
+	/* if ($user->uid==179 && !$_GET['key']) header("location: /user/logout");
+	if ($_GET['key']) 
+	{
+		$exp_node_key=getNodeByKey($_GET['key']);
+		if ($exp_node_key>0)
+		{
+			if ($user->uid==0)
+			{
+				$uid=user_authenticate('guest', 'password');
+				$user = user_load($uid);
+				$arr = array ('name'=>'guest','pass'=>'password');
+				user_login_finalize($arr);	
+				$options = array('absolute' => TRUE);
+				$url = url('node/' . $exp_node_key, array('absolute' => true, 'query'=>array('key'=>$_GET['key'])));
+				header("location: " . $url);
+			}
+			elseif ($user->uid==179)
+			{
+				if ($exp_node_key!==$node->nid) header("location: /user/logout");
+			}
+		}
+		else
+		{
+			if ($user->uid==179) header("location: /user/logout"); 
+		}
+	}
+	global $user;
+	*/
+?>
 <!-- Header and Nav -->
 <div class="page-wrap">
 <nav class="top-bar main-top clearfix">
@@ -6,7 +36,6 @@
     <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
   </ul>
   <h1 class="title left">Digital Library Beta</h1>
-  <?php global $user; ?>
   <?php if ($user->uid): ?>
   <ul class="inline-list right user-nav">
     <li class="user-info">
@@ -100,9 +129,11 @@
   </div>
   <div><?php print render($page['sub-header']); ?></div>
 </div>
+<?php if($page['filter']): ?>
 <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie */ print sbac_search_hide_category_style(); ?>>
       <?php print render($page['filter']); ?>
 </div>
+<?php endif; ?>
 
 <?php endif; ?>
 <?php if ($site_slogan): ?>
@@ -181,7 +212,6 @@
 <div class="bottom-bar">
   <div class="row">
     <div class="large-6 columns">
-      <a class="left "href="<?php echo url(''); ?>"><img src="<?php echo $logo; ?>" /></a>
       <p><?php if ($site_name) :?>
         &copy; <?php print t('Copyright') . ' ' . date('Y'); ?>
       <?php endif; ?></p>

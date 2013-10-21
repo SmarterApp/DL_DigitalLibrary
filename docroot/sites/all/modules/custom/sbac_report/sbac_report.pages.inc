@@ -13,8 +13,9 @@ function sbac_report_individual() {
   $sne_details = '';
   $contributed_summary = '';
   $contributed_details = '';
+  $gate_keeping = '';
+  $all_reviews = '';
 
-  // unset($_SESSION['sbac_report']);
   // Get SESSION values.
   $uid = sbac_report_get_session_value('sne', 'uid');
   $state_tid = sbac_report_get_session_value('state', 'tid');
@@ -28,13 +29,19 @@ function sbac_report_individual() {
       $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
       $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
 
-      /* Uncomment for Phase 2 of the report
       // Gate-Keeping Reviews.
       $name = sbac_report_get_session_value('sne', 'name');
-      $gk_indv_rate = sbac_report_gate_keeping_reviews_rate($uid, $date_range);
-      $gk_all_rate = sbac_report_gate_keeping_reviews_rate('all', $date_range);
-      $gate_keeping = sbac_report_build_gk_table($name, $gk_indv_rate, $gk_all_rate);
-      */
+      $gk_ind_accepted = sbac_report_get_ind_accepted_gate_keeper($uid, $date_range);
+      $gk_ind_returned = sbac_report_get_ind_returned_gate_keeper($uid, $date_range);
+      $gk_all_accepted = sbac_report_get_all_accepted_gate_keeper($date_range);
+      $gk_all_returned = sbac_report_get_all_returned_gate_keeper($date_range);
+      $gate_keeping = sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned);
+
+      // All Reviews.
+      $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
+      $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
+      $average_consistency_rate = '';
+      $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
     }
   }
 
@@ -43,7 +50,8 @@ function sbac_report_individual() {
       'sne_details' => $sne_details,
       'contributed_summary' => $contributed_summary,
       'contributed_details' => $contributed_details,
-      // 'gate_keeping' => $gate_keeping,
+      'gate_keeping' => $gate_keeping,
+      'all_reviews' => $all_reviews,
     )
   );
 }
@@ -142,34 +150,77 @@ SQL;
  * @return string
  *   HTML.
  */
-function sbac_report_build_gk_table($name, $indv_rate, $all_rate) {
+function sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned) {
   $header = array(
     '',
-    t('Number of Gate-Keeping Reviews'),
-    t('Acceptance Rate'),
-    t('Return Rate'),
+    t('Accepted Reviews'),
+    t('Returned Reviews'),
+    t('Total Reviews'),
+  );
+
+  $rows = array();
+  // Individual.
+  $gk_ind_accepted_count = count($gk_ind_accepted);
+  $gk_ind_returned_count = count($gk_ind_returned);
+  $gk_ind_total = $gk_ind_accepted_count + $gk_ind_returned_count;
+  $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1);
+  $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1);
+
+    // All.
+  $gk_all_accepted_count = count($gk_all_accepted);
+  $gk_all_returned_count = count($gk_all_returned);
+  $gk_all_total = $gk_all_accepted_count + $gk_all_returned_count;
+  $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 1);
+  $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 1);
+
+  // First Row.
+  $rows[] = array(
+    array('data' => $name),
+    array('data' => $gk_ind_accepted_count . ' (' . $gk_ind_accepted_percentage . '%)'),
+    array('data' => $gk_ind_returned_count . ' (' . $gk_ind_returned_percentage . '%)'),
+    array('data' => $gk_ind_total),
+  );
+
+  // Second row.
+  $rows[] = array(
+    array('data' => t('All SNE Members')),
+    array('data' => $gk_all_accepted_count . ' (' . $gk_all_accepted_percentage . '%)'),
+    array('data' => $gk_all_returned_count . ' (' . $gk_all_returned_percentage . '%)'),
+    array('data' => $gk_all_total),
+  );
+
+  return theme('table', array(
+      'header' => $header,
+      'rows' => $rows,
+      'attributes' => array(
+        'class' => array('large-12')
+      ),
+    )
+  );
+}
+
+/**
+ * Returns the HTML for the table output.
+ *
+ * @param $reviews_in_progress
+ * @param $completed_reviews
+ * @param $average_consistency_rate
+ * @return string
+ */
+function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate) {
+  $header = array(
+    t('Reviews in Progress'),
+    t('Completed Reviews'),
+    t('Average Consistency Rate for All Completed Reviews'),
   );
 
   $rows = array();
 
   // First row.
-  $indv_acceptance = ($indv_rate['acceptance'] / $indv_rate['total']) * 100;
-  $indv_return = ($indv_rate['return'] / $indv_rate['total']) * 100;
   $rows[] = array(
-    array('data' => $name),
-    array('data' => $indv_rate['total']),
-    array('data' => $indv_rate['acceptance'] . ' (' . round($indv_acceptance, 0) . '%)'),
-    array('data' => $indv_rate['return'] . ' (' . round($indv_return, 0) . '%)'),
-  );
-
-  // Second row.
-  $all_acceptance = ($all_rate['acceptance'] / $all_rate['total']) * 100;
-  $all_return = ($all_rate['return'] / $all_rate['total']) * 100;
-  $rows[] = array(
-    array('data' => t('All SNEs')),
-    array('data' => $all_rate['total']),
-    array('data' => $all_rate['acceptance'] . ' (' . round($all_acceptance, 0) . '%)'),
-    array('data' => $all_rate['return'] . ' (' . round($all_return, 0) . '%)'),
+    array('data' => count($reviews_in_progress)),
+    array('data' => count($completed_reviews)),
+    array('data' => round($average_consistency_rate, 1) . '%'),
   );
 
   return theme('table', array(

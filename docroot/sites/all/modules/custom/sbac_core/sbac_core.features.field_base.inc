@@ -116,6 +116,35 @@ function sbac_core_field_default_field_bases() {
     'type' => 'fivestar',
   );
 
+  // Exported field_base: 'field_issue_type'
+  $field_bases['field_issue_type'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_issue_type',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'inaccurate' => 'Inaccurate / misleading',
+        'unintelligible' => 'Unintelligible',
+        'biased' => 'Biased and objectionable or culturally insensitive <p class="new-line">(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>',
+        'pii' => 'Contains personally identifiable information (PII)',
+        'spam' => 'Appears to be spam',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_level'
   $field_bases['field_level'] = array(
     'active' => 1,
@@ -293,7 +322,7 @@ function sbac_core_field_default_field_bases() {
   // Exported field_base: 'field_review_set'
   $field_bases['field_review_set'] = array(
     'active' => 1,
-    'cardinality' => 2,
+    'cardinality' => 30,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_review_set',

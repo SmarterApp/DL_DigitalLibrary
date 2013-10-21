@@ -5,7 +5,7 @@ class Hooks extends \devtools\Hooks {
   protected static $_ds;
 
   function __construct() {
-    $this->_ds = \devtools\components\DisplaySuite::instance();
+    self::$_ds = \devtools\components\DisplaySuite::instance();
   }
 
   /**
@@ -14,7 +14,7 @@ class Hooks extends \devtools\Hooks {
   public function hook_theme($existing, $type, $theme, $path) {
     $data = array();
 
-    foreach ($this->_ds->getFields() as $entity_type => $fields) {
+    foreach (self::$_ds->getFields() as $entity_type => $fields) {
       foreach ($fields as $field_name => $field_data) {
         $data[$field_name] = $field_data;
       }
@@ -29,7 +29,7 @@ class Hooks extends \devtools\Hooks {
   function hook_ds_fields_info($entity_type) {
     $data = array();
 
-    $fields = $this->_ds->getFields();
+    $fields = self::$_ds->getFields();
 
     if (isset($fields[$entity_type])) {
       foreach ($fields[$entity_type] as $field) {

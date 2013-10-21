@@ -76,7 +76,20 @@ class Debug extends \devtools\patterns\Singleton {
    * @return [type]       [description]
    */
   protected function style($data) {
-    $output = '<pre style="position: relative; z-index: 999999; width: 1000px; text-transform: none; background: #fff; color: #333; padding: 10px; border: 1px #ccc solid; margin: 10px; text-align: left;">';
+    $output = '<pre style="
+      background: #eee;
+      border: 1px #ccc solid;
+      color: #111;
+      font-size: 1.1em;
+      margin: 10px;
+      min-width: 1000px;
+      padding: 10px;
+      position: relative;
+      text-align: left;
+      text-transform: none;
+      width: 100%;
+      z-index: 999999;
+    ">';
     $output .= print_r($data, 1);
     $output .= '</pre>';
 

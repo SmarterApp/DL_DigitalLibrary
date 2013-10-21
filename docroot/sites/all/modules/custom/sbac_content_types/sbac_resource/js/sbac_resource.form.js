@@ -19,11 +19,6 @@
       $('.vertical-tabs-list li:nth-child(4) a').click(function () {
         control_form_buttons();
       });
-
-      //$('#submission-general-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      //$('#submission-summary-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      //$('#submission-materials-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
-      //$('#submission-tags-guidelines').more({length: 300, moreText: 'read more', lessText: 'read less'});
     }
   };
 
@@ -38,9 +33,24 @@
         $('.more-less.long').removeClass('active');
         $('.more-less.short').addClass('active');
       });
+    }
+  };
+
+  Drupal.behaviors.sbac_resource_table_primary = {
+    attach: function (context, settings) {
+      if ($('#sbac-media-list tbody tr:first-child').length) {
+        var row_height = $('#sbac-media-list tbody tr:first-child').height() + 32 + 25 + 67;
+        $('.secondary-items-info').css("top",row_height);
+      }
+
+      $('.vertical-tabs-list li:nth-child(2) a').click(function () {
+        var row_height = $('#sbac-media-list tbody tr:first-child').height() + 32 + 25 + 67;
+        $('.secondary-items-info').css("top",row_height);
+      });
 
     }
   };
+
 
   /**
    * Controls the buttons at the bottom of the resource form.
@@ -303,7 +313,7 @@
             no_license_text.show();
 
             // disable button
-            //save_continue.attr('disabled', 'disabled');
+            save_continue.attr('disabled', 'disabled');
             save_continue.unbind('click');
 
             break;

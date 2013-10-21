@@ -55,7 +55,7 @@ html, body {
 }
 
 body {
-  background-color: #b1b2b4;
+  background-color: #0684ad;
 }
 
 ul,
@@ -328,36 +328,57 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   margin: 0;
 
   &.main-top {
-    background-color: #313131;
-    @include background-image(linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), linear-gradient(top, #a9a9a9 0%, #ebebe5 100%)); // gradient overlay and layer fill content
-    background-image: -webkit-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
-    background-image: -moz-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
-    background-image: -ms-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#494949', endColorstr='#313131');
-  }
-  &.sub-top {
-    background-color: #f9f9f9; // color overlay
-    @include box-shadow(1px 2px 2px rgba(204,204,198,.5)); // drop shadow
-    @include background-image(linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%)); // layer fill content
-    background-image: -webkit-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
-    background-image: -moz-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
+    background-color: #f2f2f2;
+    border-top:5px solid #0980a8;
+    border-bottom: 1px solid $header-borders;
     height: auto;
-    background-image: -ms-linear-gradient(top, #c5c5ba 0%, #ebebe5 16.75%, #e4e4dc 92.99%, #c8c8bd 96.51%, #c8c8bd 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebe5', endColorstr='#e4e4dc');
-  }
-  &.last-top {
-    @include box-shadow(1px 2px 2px rgba(204,204,198,.5)); // drop shadow
-    height: auto;
-    background-color: #f9f9f9; // color overlay
+
   }
 
-  h1,title {
-    color: #dbdddd;
+  &.sub-top {
+    background-color: $white; // color overlay
+    height: auto;
+    border-bottom: 1px solid $header-borders;
+  }
+
+  &.last-top {
+    height: auto;
+    background-color: $white; // color overlay
+  }
+
+  h1.title {
+    color: #fcfcfc;
     padding: 0;
     margin: 0;
     margin-left: 30px;
     font-size: emCalc(18px);
-    line-height: 45px;
+    font-weight: normal;
+    font-family: "Franklin Gothic Medium";
+    background-color: #0980a8;
+    position: relative;
+
+    &:before {
+      content: '';
+      display:inline-block;
+      width: 33px;
+      height: 25px;
+      background:url('../images/tab-left.svg') top left no-repeat;
+      position: absolute;
+      top:0;
+      left: -30px;
+    }
+
+    &:after {
+      content: '';
+      display:inline-block;
+      width: 33px;
+      height: 25px;
+      background:url('../images/tab-right.svg') top left no-repeat;
+      position: absolute;
+      top: 0;
+      right: -32px;
+    }
+
   }
 
   .button {
@@ -384,15 +405,15 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
   .user-nav {
     font-size: 1em;
-    color: $white;
+    color: #333;
     line-height: 45px;
 
     li {
-      border-left:1px solid black;
+      border-left:1px solid $header-borders;
       padding: 0px;
       margin: 0px;
       &:hover {
-        background: #515151;
+        background: #c9eaf8;
       }
 
       li {
@@ -400,6 +421,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
           padding-left: 20px;
           padding-right: 20px;
           color: black;
+          height: auto;
+          line-height: normal;
         }
 
         border:none;
@@ -410,6 +433,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       color: inherit;
       padding-left: 20px;
       padding-right: 20px;
+      height: 50px;
+      line-height: 50px;
     }
 
 
@@ -439,11 +464,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 }
 
 .bottom-bar {
-  background: #3b3b3b;
-  @include background-image(linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), linear-gradient(top, #a9a9a9 0%, #ebebe5 100%)); // gradient overlay and layer fill content
-  background-image: -webkit-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
-  background-image: -moz-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%), -webkit-linear-gradient(top, #a9a9a9 0%, #ebebe5 100%);
-  background-image: -ms-linear-gradient(bottom, #313131 0%, #313131 0.49%, #373737 48.78%, #3b3b3b 50.49%, #454545 96.07%, #696969 98.05%, #494949 100%);
+  background: #006184;
+
   color: $white;
   padding: 5px;
 
@@ -518,7 +540,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       }
 
      li {
-      color: #333;
+      color: $header-text;
       padding: 0;
       margin: 0;
       border-left: none;
@@ -568,30 +590,28 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
 nav.main-nav {
   ul {
-    font-size: 100%;
-    margin-left: 20px;
+    margin-left: 26px;
 
     li { 
       display: inline-block;
       margin: 0px;
       padding: 0px;
-      border-left: 1px #cdcdcd solid;
+      border-right: 1px $header-borders solid;
 
       &:hover {
         background: #b0e6f4;
       }
 
       a {
-        @include text-shadow(0 1px 0 rgba(255,255,255,.75)); // drop shadow
         display: block;
-        padding: 6px 10px 1px;
-        font-size: emCalc(11px);
-        color: #494949; // text color
+        padding: 0 10px 1px;
+        height: 40px;
+        line-height: 40px;
+        color: $header-text; // text color
 
         &.active { 
-          @include text-shadow(0 -1px 0 rgba(0,0,0,.5)); // drop shadow
-          background-color: #0085ad; // color overlay
-          color: #f3f3f3; // text color + color overlay
+          background-color: #93d8f3; // color overlay
+          color: #063e5f; // text color + color overlay
         }
       }
     }
@@ -613,9 +633,9 @@ nav.main-nav {
 
 .help-dropdown {
   float: right;
-  height: 45px;
+  height: 50px;
   margin-right: 10px;
-  color: $white;
+  color: $header-text;
 
   a {
     color: inherit;

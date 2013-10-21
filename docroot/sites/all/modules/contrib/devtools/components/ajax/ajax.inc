@@ -14,11 +14,12 @@
  * @return
  *   An array suitable for use with the ajax_render() function.
  */
-function ajax_command_callback($behavior, $method) {
+function ajax_command_callback($behavior, $method, $data = array()) {
   return array(
     'command' => 'callback',
     'behavior' => $behavior,
     'method' => $method,
+    'data' => $data,
   );
 }
 
