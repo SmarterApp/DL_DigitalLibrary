@@ -24,11 +24,11 @@ function sbac_resource_field_group_info() {
     'weight' => '4',
     'children' => array(
       0 => 'field_view_permissions_per_state',
-      1 => 'field_subscription_package_type',
-      2 => 'field_view_permissions',
-      3 => 'field_resource_actions',
-      4 => 'field_posting_options',
-      5 => 'field_posting_options_comment',
+      1 => 'field_resource_actions',
+      2 => 'field_posting_options',
+      3 => 'field_posting_options_comment',
+      4 => 'field_subscription_package_type',
+      5 => 'field_view_permissions',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

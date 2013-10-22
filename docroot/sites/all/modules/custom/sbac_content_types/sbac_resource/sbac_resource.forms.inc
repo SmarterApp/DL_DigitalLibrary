@@ -211,6 +211,10 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   }
   // save the node.
   node_form_submit($form, $form_state);
+
+  // rebuild permissions
+  node_access_acquire_grants($form_state['node'], TRUE);
+
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
 }
@@ -343,6 +347,9 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   if ($active_tab != 'edit-group_advanced') {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
+
+    // rebuild permissions
+    node_access_acquire_grants($form_state['node'], TRUE);
   }
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
   // Clear drupal messages.
@@ -1018,6 +1025,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
           $node = node_load($_GET['nid']);
           if ($node) {
             workbench_moderation_moderate($node, 'needs_review');
+            node_access_acquire_grants($node, TRUE);
             $output[] = ctools_ajax_command_redirect('my-resources');
 
             // create notificaton for resource author
@@ -1801,6 +1809,11 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
+  global $user;
+  if (!in_array('DLRB Member', $user->roles)) {
+    return;
+  }
+
   $form['actions']['cancel_all_changes'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel All Changes',
@@ -1923,7 +1936,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_alignment_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
   $form['field_document_information']['#access'] = FALSE;
-  // $form['field_file']['und']['add_more']['#access'] = FALSE;
+  $form['field_resource_state']['#access'] = FALSE;
 }
 
 /**

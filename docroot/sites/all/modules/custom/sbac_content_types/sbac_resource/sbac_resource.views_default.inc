@@ -2698,13 +2698,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['current']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['current']['field'] = 'current';
   $handler->display->display_options['filters']['current']['value'] = '1';
-  /* Filter criterion: Workbench Moderation: State */
-  $handler->display->display_options['filters']['state']['id'] = 'state';
-  $handler->display->display_options['filters']['state']['table'] = 'workbench_moderation_node_history';
-  $handler->display->display_options['filters']['state']['field'] = 'state';
-  $handler->display->display_options['filters']['state']['value'] = array(
-    'published' => 'published',
-  );
   /* Filter criterion: Content: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
@@ -2995,6 +2988,14 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_attributes_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_attributes_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_attributes_tid']['vocabulary'] = 'attributes';
+  /* Filter criterion: Content: Resource State (field_resource_state) */
+  $handler->display->display_options['filters']['field_resource_state_value']['id'] = 'field_resource_state_value';
+  $handler->display->display_options['filters']['field_resource_state_value']['table'] = 'field_data_field_resource_state';
+  $handler->display->display_options['filters']['field_resource_state_value']['field'] = 'field_resource_state_value';
+  $handler->display->display_options['filters']['field_resource_state_value']['value'] = array(
+    'published' => 'published',
+    'published_distinction' => 'published_distinction',
+  );
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
@@ -3333,14 +3334,14 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['current']['field'] = 'current';
   $handler->display->display_options['filters']['current']['value'] = '1';
   $handler->display->display_options['filters']['current']['group'] = 1;
-  /* Filter criterion: Workbench Moderation: State */
-  $handler->display->display_options['filters']['state']['id'] = 'state';
-  $handler->display->display_options['filters']['state']['table'] = 'workbench_moderation_node_history';
-  $handler->display->display_options['filters']['state']['field'] = 'state';
-  $handler->display->display_options['filters']['state']['value'] = array(
+  /* Filter criterion: Content: Resource State (field_resource_state) */
+  $handler->display->display_options['filters']['field_resource_state_value']['id'] = 'field_resource_state_value';
+  $handler->display->display_options['filters']['field_resource_state_value']['table'] = 'field_data_field_resource_state';
+  $handler->display->display_options['filters']['field_resource_state_value']['field'] = 'field_resource_state_value';
+  $handler->display->display_options['filters']['field_resource_state_value']['value'] = array(
     'published' => 'published',
+    'published_distinction' => 'published_distinction',
   );
-  $handler->display->display_options['filters']['state']['group'] = 1;
   $export['resources'] = $view;
 
   $view = new view();

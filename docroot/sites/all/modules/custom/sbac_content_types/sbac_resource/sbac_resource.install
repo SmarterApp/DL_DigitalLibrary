@@ -900,3 +900,76 @@ function sbac_resource_update_7038() {
 
   return $ret;
 }
+
+/**
+ * Migrate script. Takes all nodes and adds the correct resource_state to the new field.
+ *
+ **/
+function sbac_resource_update_7039() {
+  $result = db_query("SELECT * from {node} WHERE type = :type", array(':type' => 'resource'));
+  foreach ($result as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      if (isset($node->workbench_moderation['current']->state)) {
+        switch ($node->workbench_moderation['current']->state) {
+          case 'creation':
+            $node->field_resource_state['und'][0]['value'] = 'creation';
+            break;
+          case 'draft':
+            $node->field_resource_state['und'][0]['value'] = 'draft';
+            break;
+          case 'needs_review':
+            $node->field_resource_state['und'][0]['value'] = 'needs_review';
+            break;
+          case 'being_reviewed':
+            $node->field_resource_state['und'][0]['value'] = 'being_reviewed';
+            $completed = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+            if ($completed) {
+              $active = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1);
+              if ($active) {
+                $node->field_resource_state['und'][]['value'] = 'qc_being_reviewed';
+              }
+              else {
+                $node->field_resource_state['und'][]['value'] = 'needs_qc_review';
+              }
+            }
+            else {
+              $active = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'set');
+              if ($active) {
+                $node->field_resource_state['und'][]['value'] = 'gk_being_reviewed';
+              }
+              else {
+                $node->field_resource_state['und'][]['value'] = 'needs_gk_review';
+              }
+            }
+
+            break;
+          case 'rejected':
+            $node->field_resource_state['und'][0]['value'] = 'rejected';
+            break;
+          case 'approved':
+            $node->field_resource_state['und'][0]['value'] = 'approved';
+            $feedback = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1);
+            if ($feedback) {
+              $node->field_resource_state['und'][]['value'] = 'post_being_reviewed';
+            }
+            else {
+              $node->field_resource_state['und'][]['value'] = 'needs_post_review';
+            }
+
+            break;
+          case 'published':
+            $node->field_resource_state['und'][0]['value'] = 'published';
+            if ($node->sticky) {
+              $node->field_resource_state['und'][0]['value'] = 'published_distinction';
+            }
+            break;
+          case 'removed':
+            $node->field_resource_state['und'][0]['value'] = 'removed';
+            break;
+        }
+      }
+      entity_save_field('field_resource_state', $node, 'node', $node->nid);
+    }
+  }
+}

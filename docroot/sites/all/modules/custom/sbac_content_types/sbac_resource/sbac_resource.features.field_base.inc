@@ -843,6 +843,45 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
+  // Exported field_base: 'field_resource_state'
+  $field_bases['field_resource_state'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_resource_state',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'creation' => 'Creation',
+        'draft' => 'Draft',
+        'rejected' => 'Rejected',
+        'published' => 'Published',
+        'published_distinction' => 'Published with Distinction',
+        'removed' => 'Removed',
+        'needs_review' => 'Needs Review',
+        'being_reviewed' => 'Being Reviewed',
+        'needs_gk_review' => 'Needs GK Review',
+        'gk_being_reviewed' => 'GK Being Reviewed',
+        'needs_qc_review' => 'Needs QC Review',
+        'qc_being_reviewed' => 'QC Being Reviewed',
+        'approved' => 'Approved',
+        'needs_post_review' => 'Needs Posting',
+        'post_being_reviewed' => 'Post Being Reviewed',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_smarter_balanced_keyword'
   $field_bases['field_smarter_balanced_keyword'] = array(
     'active' => 1,

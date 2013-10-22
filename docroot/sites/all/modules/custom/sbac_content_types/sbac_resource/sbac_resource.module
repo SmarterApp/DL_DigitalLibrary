@@ -694,7 +694,7 @@ function sbac_resource_delete_file_from_cmis($document_id, $i)
 }
 
 /**
- * Implemenets hook_node_load().
+ * Implemenets hook_workbench_moderation_transition().
  *
  * @param $new_state
  *  The new state of the revision.
@@ -709,6 +709,193 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
   }
   else if ($node->type == 'resource' && $new_state == 'removed') {
     $node->status = 0;
+  }
+
+  // Set the field level state. This is being put in place to better handle states vs workbench method.
+  if ($node->type == 'resource') {
+    // clear out the old values.
+    unset($node->field_resource_state);
+
+    switch ($new_state) {
+      case 'creation':
+        $node->field_resource_state['und'][]['value'] = 'creation';
+        break;
+      case 'draft':
+        $node->field_resource_state['und'][]['value'] = 'draft';
+        break;
+      case 'needs_review':
+        $node->field_resource_state['und'][]['value'] = 'needs_review';
+        break;
+      case 'being_reviewed':
+        $node->field_resource_state['und'][]['value'] = 'being_reviewed';
+        // check for a completed GK by any user and then init the review process
+        $completed = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+        // check for an active Review
+        if ($completed) {
+          $active = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1);
+          if ($active) {
+            $node->field_resource_state['und'][]['value'] = 'qc_being_reviewed';
+          }
+          else {
+            $node->field_resource_state['und'][]['value'] = 'needs_qc_review';
+          }
+        }
+        else {
+          // no completed GK, so start or continue
+          // check for an active GK that is being reviewed
+          $active = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1);
+          if ($active) {
+            $node->field_resource_state['und'][]['value'] = 'gk_being_reviewed';
+          }
+          else {
+            $node->field_resource_state['und'][]['value'] = 'needs_gk_review';
+          }
+        }
+
+        break;
+      case 'rejected':
+        $node->field_resource_state['und'][]['value'] = 'rejected';
+        break;
+      case 'approved':
+        $node->field_resource_state['und'][]['value'] = 'approved';
+        // check for an active feedback.
+        $feedback = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1);
+        if ($feedback) {
+          $node->field_resource_state['und'][]['value'] = 'post_being_reviewed';
+        }
+        else {
+          $node->field_resource_state['und'][]['value'] = 'needs_post_review';
+        }
+
+        break;
+      case 'published':
+        $node->field_resource_state['und'][]['value'] = 'published';
+        if ($node->sticky) {
+          $node->field_resource_state['und'][]['value'] = 'published_distinction';
+        }
+        break;
+      case 'removed':
+        $node->field_resource_state['und'][]['value'] = 'removed';
+        break;
+    }
+    entity_save_field('field_resource_state', $node, 'node', $node->nid);
+  }
+}
+
+/**
+ * Implements hook_node_access_records().
+ *
+ * @param $node
+ */
+function sbac_resource_node_access_records($node) {
+  global $user;
+
+  if ($node->type == 'resource') {
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
+      $uids = array();
+      $role = user_role_load_by_name('resource reviewer');
+      $query = "SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid = :rid";
+      $result = db_query($query, array(':rid' => $role->rid));
+      foreach ($result as $row) {
+        $uids[] = $row->uid;
+      }
+      $users = user_load_multiple($uids);
+
+      if ($users) {
+        $grants = array();
+
+        foreach ($users as $user) {
+          // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
+          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
+          if ($gate_keeper) {
+            $grants[] = array(
+              'realm' => 'gk_review_in_progress',
+              'gid' => $user->uid,
+              'grant_view' => 0,
+              'grant_update' => 0,
+              'grant_delete' => 0,
+              'priority' => 0,
+            );
+          }
+
+          // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
+          $feedback = _sbac_resource_determine_feedback($node->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
+          if (count($feedback) == 3) {
+            $grants[] = array(
+              'realm' => 'reviewed_by_three',
+              'gid' => $user->uid,
+              'grant_view' => 0,
+              'grant_update' => 0,
+              'grant_delete' => 0,
+              'priority' => 0,
+            );
+          }
+
+          // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
+          $feedback = _sbac_resource_determine_feedback($node->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
+          if ($feedback) {
+            $grants[] = array(
+              'realm' => 'self_reviewed',
+              'gid' => $user->uid,
+              'grant_view' => 0,
+              'grant_update' => 0,
+              'grant_delete' => 0,
+              'priority' => 0,
+            );
+          }
+        }
+
+        return $grants;
+      }
+    }
+
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
+      $uids = array();
+      $role = user_role_load_by_name('resource reviewer');
+      $query = "SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid = :rid";
+      $result = db_query($query, array(':rid' => $role->rid));
+      foreach ($result as $row) {
+        $uids[] = $row->uid;
+      }
+      $users = user_load_multiple($uids);
+
+      if ($users) {
+        $grants = array();
+        foreach ($users as $user) {
+          // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
+          $feedback = _sbac_resource_determine_feedback($node->nid, 'post', $user->uid, 1, 0, 1, 'set', TRUE);
+          if ($feedback) {
+            $grants[] = array(
+              'realm' => 'reviewed_already',
+              'gid' => $user->uid,
+              'grant_view' => 0,
+              'grant_update' => 0,
+              'grant_delete' => 0,
+              'priority' => 0,
+            );
+          }
+        }
+        return $grants;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_grants().
+ *
+ * @param $account
+ * @param $op
+ */
+function sbac_resource_node_grants($account, $op) {
+  if (in_array('resource reviewer', $account->roles)) {
+    $grants['gk_review_in_progress'] = array($account->uid);
+    $grants['reviewed_by_three'] = array($account->uid);
+    $grants['self_reviewed'] = array($account->uid);
+  }
+
+  if (in_array('resource publisher', $account->roles)) {
+    $grants['reviewed_already'] = array($account->uid);
   }
 }
 

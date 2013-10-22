@@ -589,7 +589,7 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_my_resources_links($vars['fields']);
+    $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
   }
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
@@ -640,7 +640,7 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_my_resources_links($vars['fields']);
+    $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
   }
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
@@ -718,7 +718,7 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
     $vars['fields']['mime-type'] = $image_assets['mime-type'];
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
-  $variables = _sbac_resource_resource_review_links($vars['fields']);
+  $variables = _sbac_resource_resource_review_links($vars['fields'], $vars['row']);
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
   }
@@ -766,7 +766,7 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
     $vars['fields']['mime-type'] = $image_assets['mime-type'];
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
-  $variables = _sbac_resource_resource_review_links($vars['fields']);
+  $variables = _sbac_resource_resource_review_links($vars['fields'], $vars['row']);
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
   }
@@ -806,18 +806,28 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   if (isset($fields['nid']->raw)) {
     $nid = $fields['nid']->raw;
     $node = node_load($nid);
-    if ($node && isset($node->document[0])) {
+    if ($node) {
       $class = 'grid-image';
       if ($view_display == 'list') {
         $class = 'list-image';
       }
 
       $default_file = 'public://file.png';
-      $media = $node->document[0];
-      if ($media->fid) {
-        $file = file_load($media->fid);
-        $url = file_create_url($file->uri);
-        $uri = $file->uri;
+      if (isset($node->document[0])) {
+        $media = $node->document[0];
+        if ($media->fid) {
+          $file = file_load($media->fid);
+          $url = file_create_url($file->uri);
+          $uri = $file->uri;
+          if (!file_exists($uri)) {
+            $url = $default_file;
+            $uri = $default_file;
+          }
+        }
+        else {
+          $url = $default_file;
+          $uri = $default_file;
+        }
       }
       else {
         $url = $default_file;
@@ -847,11 +857,11 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
  * @param $buttons
  * @param $text
  */
-function _sbac_resource_my_resources_links($fields) {
+function _sbac_resource_my_resources_links($fields, $row) {
   $variables = array();
-  if (isset($fields['state']->raw)) {
+  if (isset($row->field_field_resource_state[0]['raw']['value'])) {
     $nid = $fields['nid']->raw;
-    $state = $fields['state']->raw;
+    $state = $row->field_field_resource_state[0]['raw']['value'];
     switch ($state) {
       case 'draft':
         $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
@@ -906,9 +916,21 @@ function _sbac_resource_my_resources_links($fields) {
         break;
       case 'published':
         $variables['sticky'] = FALSE;
-        if ($fields['sticky']->raw) {
-          $variables['sticky'] = TRUE;
+        $variables['views'] = '0 Views';
+        if (isset($fields['field_unique_views'])) {
+          $variables['views'] = $fields['field_unique_views']->content;
         }
+        $variables['downloads'] = '0 Downloads';
+        if (isset($fields['field_asset_downloads'])) {
+          $variables['downloads'] = $fields['field_asset_downloads']->content;
+        }
+        $variables['collaborators'] = 'N Collaborations';
+        $variables['subject'] = $fields['field_subject']->content;
+        $variables['grades'] = $fields['field_grades']->content;
+        $variables['media_types'] = $fields['field_digital_media_type']->content;
+        break;
+      case 'published_distinction':
+        $variables['sticky'] = TRUE;
         $variables['views'] = '0 Views';
         if (isset($fields['field_unique_views'])) {
           $variables['views'] = $fields['field_unique_views']->content;
@@ -969,18 +991,47 @@ function _sbac_resource_my_resources_links($fields) {
  * @param $fields
  * @return array
  */
-function _sbac_resource_resource_review_links($fields) {
+function _sbac_resource_resource_review_links($fields, $row) {
   $variables = array();
-  if (isset($fields['state']->raw)) {
+  if (isset($row->field_field_resource_state[0]['raw']['value'])) {
     $nid = $fields['nid']->raw;
     $node = node_load($nid);
-    $state = $fields['state']->raw;
+    $state = $row->field_field_resource_state[0]['raw']['value'];
     switch ($state) {
       case 'needs_review':
         $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
         $variables['text'] = t('Needs Review');
+        break;
+      case 'needs_gk_review':
+        $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
+        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
+        $variables['text'] = t('Needs Review');
+        break;
+      case 'gk_being_reviewed':
+        break;
+      case 'needs_qc_review':
+        $variables['buttons'][] = _sbac_resource_start_review_link($node, 'qc');
+        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['links'][] = _sbac_resource_start_review_link($node, 'qc', 'link');
+        $variables['text'] = t('Needs Review');
+        break;
+      case 'qc_being_reviewed':
+        $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc', 'query' => array('destination' => arg(0))));
+        $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+        $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['text'] = t('Being Reviewed');
+        break;
+      case 'needs_post_review':
+        $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
+        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
+        $variables['text'] = t('Needs Posting');
+        break;
+      case 'post_being_reviewed':
         break;
       case 'being_reviewed':
         global $user;
@@ -996,10 +1047,7 @@ function _sbac_resource_resource_review_links($fields) {
           }
           // start review
           else {
-            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'qc');
-            $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-            $variables['links'][] = _sbac_resource_start_review_link($node, 'qc', 'link');
-            $variables['text'] = t('Needs Review');
+
           }
         }
         // no completed GK, so start or continue
@@ -1014,10 +1062,7 @@ function _sbac_resource_resource_review_links($fields) {
           }
           // start review
           else {
-            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
-            $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-            $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
-            $variables['text'] = t('Needs Review');
+
           }
         }
         break;
@@ -1033,10 +1078,7 @@ function _sbac_resource_resource_review_links($fields) {
           $variables['text'] = t('Being Reviewed');
         }
         else {
-          $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
-          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
-          $variables['text'] = t('Needs Posting');
+
         }
         break;
     }
@@ -1067,9 +1109,27 @@ function _sbac_resource_digital_library_links($fields) {
         }
 
         $variables['sticky'] = FALSE;
-        if ($fields['sticky']->raw) {
-          $variables['sticky'] = TRUE;
+        $variables['views'] = '0 Views';
+        if (isset($fields['field_unique_views'])) {
+          $variables['views'] = $fields['field_unique_views']->content;
         }
+        $variables['downloads'] = '0 Downloads';
+        if (isset($fields['field_asset_downloads'])) {
+          $variables['downloads'] = $fields['field_asset_downloads']->content;
+        }
+        $variables['collaborators'] = 'N Collaborations';
+        $variables['subject'] = $fields['field_subject']->content;
+        $variables['grades'] = $fields['field_grades']->content;
+        $variables['media_types'] = $fields['field_digital_media_type']->content;
+        break;
+      case 'published_distinction':
+        if (in_array('DLRB member', $user->roles)) {
+          $nid = $fields['nid']->raw;
+          $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+        }
+
+        $variables['sticky'] = TRUE;
         $variables['views'] = '0 Views';
         if (isset($fields['field_unique_views'])) {
           $variables['views'] = $fields['field_unique_views']->content;
