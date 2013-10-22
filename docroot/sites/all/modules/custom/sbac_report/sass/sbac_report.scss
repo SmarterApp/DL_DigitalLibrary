@@ -89,6 +89,12 @@ i.icon-info {
 .report-form-container {
   position: relative;
 
+
+  /** User group **/
+
+  .form-item-user-group-dropdown {
+    clear: both;
+  }
   
   /* state container */
   .form-item-state {
@@ -193,7 +199,8 @@ i.icon-info {
   }
 }
 
-#date-range-dropdown {
+#date-range-dropdown,
+#date-range-dropdown1{
   margin: 0;
   padding: 10px;
   border: 1px solid #ddd;
