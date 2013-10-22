@@ -39,7 +39,7 @@ class Gk_Comments extends Base {
         $output_gk .= '
           <div class="feedback-item">
             <div class="criteria-set-title">
-              ' . $i . '.' . $item_title . '
+              ' . $i . '.' . strip_tags($item_title) . '
             </div>
             <div class="desc">
               ' . $item_desc . '
@@ -58,7 +58,7 @@ class Gk_Comments extends Base {
     // finalize output
       $output = '
         <div class="feedback-wrap" id="feedback-wrap-gk-comments">
-          <h2>' . t('Gate Keeping Criteria') . '</h2>
+          <h2 class="main-title">' . t('Gate Keeping Criteria') . '</h2>
 
           <div class="feedback-items">
             ' . $output_gk . '
