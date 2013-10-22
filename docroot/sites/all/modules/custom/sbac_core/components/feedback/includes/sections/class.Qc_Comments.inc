@@ -88,7 +88,7 @@ class Qc_Comments extends Base {
 
         $output_item = '
                           <div class="criteria-set-title">
-                            ' . ($i + 1) . '. ' . $item_title . '
+                            ' . ($i + 1) . '. ' . strip_tags($item_title) . '
                           </div>
                           <div class="criteria-set-commentes-text">
                             ' . $item_desc . '
