@@ -764,47 +764,49 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
       $items[] = $gk_slide;
 
     // add QC recommendations slide
-      $qc_rec_slide = '';
-      $qc_count = 1;
-      foreach ($qc_entities as $qc) {
-        $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
-        $qc_account = user_load($qc->uid);
+      if ($qc_entities) {
+        $qc_rec_slide = '';
+        $qc_count = 1;
+        foreach ($qc_entities as $qc) {
+          $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
+          $qc_account = user_load($qc->uid);
 
-        $location = '';
+          $location = '';
 
-        if ($states = field_entity_value($qc_account, 'field_state')) {
-          $term = current($states);
-          $location = t(', State of !state', array(
-            '!state' => $term->name
-          ));
+          if ($states = field_entity_value($qc_account, 'field_state')) {
+            $term = current($states);
+            $location = t(', State of !state', array(
+              '!state' => $term->name
+            ));
+          }
+
+          $qc_rec_slide .= '
+                            <div class="qc-item">
+                              <div class="qc-rec-name">
+                                ' . theme('username', array('account' => $qc_account)) . $location . '
+                              </div>
+                              
+                              <div class="qc-rec-value">
+                               <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
+                              </div>
+
+                              <div class="qc-rec-con">
+                                <span>' . t('Resource Consistency Rate:') . '</span> ' .
+                                rec_consistency_rate($qc_entities, $qc) . '
+                              </div>
+
+                              <div class="qc-rec-rationale">
+                                <span>' . t('Rationale:') . '</span> ' . 
+                                field_entity_value($qc, 'field_rec_rationale') . '
+                              </div>
+                            </div>
+                           ';
+
+          $qc_count++;
         }
 
-        $qc_rec_slide .= '
-                          <div class="qc-item">
-                            <div class="qc-rec-name">
-                              ' . theme('username', array('account' => $qc_account)) . $location . '
-                            </div>
-                            
-                            <div class="qc-rec-value">
-                             <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
-                            </div>
-
-                            <div class="qc-rec-con">
-                              <span>' . t('Resource Consistency Rate:') . '</span> ' .
-                              rec_consistency_rate($qc_entities, $qc) . '
-                            </div>
-
-                            <div class="qc-rec-rationale">
-                              <span>' . t('Rationale:') . '</span> ' . 
-                              field_entity_value($qc, 'field_rec_rationale') . '
-                            </div>
-                          </div>
-                         ';
-
-        $qc_count++;
+        $items[] = $qc_rec_slide;
       }
-
-      $items[] = $qc_rec_slide;
 
     // add Poster comments recommendations slide
       if ($post) {
@@ -836,42 +838,44 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
       }
 
     // add Quality Criteria question slides
-      $questions = field_entity_value(reset($qc_entities), 'field_review_set');
-      $questions_count = sizeof($questions);
-      
-      for ($i = 0; $i < $questions_count; $i++) {
-        $slide = '<div class="slide-title">' . t('Quality Criteria !count', array('!count' => $i + 1)) . '</div>';
-
-        $levels = array();
-        $comments = '';
-
-        $j = 1;
-        foreach ($qc_entities as $qc) {
-          $questions = field_entity_value($qc, 'field_review_set');
-
-          $level = field_entity_value($questions[$i], 'field_level');
-
-          if ($qc->uid == $uid) {
-            array_unshift($levels, '<strong>' . $level . '</strong>');
-          }
-          else {
-            $levels[] = $level;
-          }
-
-          $comments .= '
-                      <div class="qc-question-item">
-                        <span class="inline-title">' . t('Reviewer !count Comment', array('!count' => $j)) . ': </span>
-                        ' . field_entity_value($questions[$i], 'field_comments') . '
-                      </div>
-                    ';
-
-          $j++;
-        }
-
-        $slide .= '<div class="qc-question-levels">' . t('- Level: ') . implode(' / ', $levels) . '</div>';
-        $slide .= $comments;
+      if ($qc_entities) {
+        $questions = field_entity_value(reset($qc_entities), 'field_review_set');
+        $questions_count = sizeof($questions);
         
-        $items[] = $slide;
+        for ($i = 0; $i < $questions_count; $i++) {
+          $slide = '<div class="slide-title">' . t('Quality Criteria !count', array('!count' => $i + 1)) . '</div>';
+
+          $levels = array();
+          $comments = '';
+
+          $j = 1;
+          foreach ($qc_entities as $qc) {
+            $questions = field_entity_value($qc, 'field_review_set');
+
+            $level = field_entity_value($questions[$i], 'field_level');
+
+            if ($qc->uid == $uid) {
+              array_unshift($levels, '<strong>' . $level . '</strong>');
+            }
+            else {
+              $levels[] = $level;
+            }
+
+            $comments .= '
+                        <div class="qc-question-item">
+                          <span class="inline-title">' . t('Reviewer !count Comment', array('!count' => $j)) . ': </span>
+                          ' . field_entity_value($questions[$i], 'field_comments') . '
+                        </div>
+                      ';
+
+            $j++;
+          }
+
+          $slide .= '<div class="qc-question-levels">' . t('- Level: ') . implode(' / ', $levels) . '</div>';
+          $slide .= $comments;
+          
+          $items[] = $slide;
+        }
       }
 
     // render slides
