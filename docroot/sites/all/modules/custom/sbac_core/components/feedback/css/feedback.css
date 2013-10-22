@@ -341,10 +341,6 @@
 .feedback-wrap .form-item-error-holder.error + .form-item .form-item {
   background: none;
 }
-/* line 327, ../sass/feedback.scss */
-.feedback-wrap .feedback-items ul {
-  margin-left: 30px;
-}
 /* line 331, ../sass/feedback.scss */
 .feedback-wrap .feedback-items .feedback-item {
   border-bottom: 1px #ccc solid;
