@@ -857,11 +857,11 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
  * @param $buttons
  * @param $text
  */
-function _sbac_resource_my_resources_links($fields, $row) {
+function _sbac_resource_my_resources_links($fields) {
   $variables = array();
-  if (isset($row->field_field_resource_state[0]['raw']['value'])) {
+  if (isset($fields['state']->raw)) {
     $nid = $fields['nid']->raw;
-    $state = $row->field_field_resource_state[0]['raw']['value'];
+    $state = $fields['state']->raw;
     switch ($state) {
       case 'draft':
         $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
@@ -870,7 +870,7 @@ function _sbac_resource_my_resources_links($fields, $row) {
           'html' => TRUE,
           'attributes' => array(
             'class' => 'use-ajax medium button ctools-modal-sbac-resource-modal-delete-resource',
-             'id' => 'sbac-resource-modal-delete-resource'
+            'id' => 'sbac-resource-modal-delete-resource'
           ),
           'query' => array('nid' => $nid),
         ));
@@ -916,21 +916,9 @@ function _sbac_resource_my_resources_links($fields, $row) {
         break;
       case 'published':
         $variables['sticky'] = FALSE;
-        $variables['views'] = '0 Views';
-        if (isset($fields['field_unique_views'])) {
-          $variables['views'] = $fields['field_unique_views']->content;
+        if ($fields['sticky']->raw) {
+          $variables['sticky'] = TRUE;
         }
-        $variables['downloads'] = '0 Downloads';
-        if (isset($fields['field_asset_downloads'])) {
-          $variables['downloads'] = $fields['field_asset_downloads']->content;
-        }
-        $variables['collaborators'] = 'N Collaborations';
-        $variables['subject'] = $fields['field_subject']->content;
-        $variables['grades'] = $fields['field_grades']->content;
-        $variables['media_types'] = $fields['field_digital_media_type']->content;
-        break;
-      case 'published_distinction':
-        $variables['sticky'] = TRUE;
         $variables['views'] = '0 Views';
         if (isset($fields['field_unique_views'])) {
           $variables['views'] = $fields['field_unique_views']->content;
@@ -985,53 +973,25 @@ function _sbac_resource_my_resources_links($fields, $row) {
   return $variables;
 }
 
+
 /**
  * Resource Review Links.
  *
  * @param $fields
  * @return array
  */
-function _sbac_resource_resource_review_links($fields, $row) {
+function _sbac_resource_resource_review_links($fields) {
   $variables = array();
-  if (isset($row->field_field_resource_state[0]['raw']['value'])) {
+  if (isset($fields['state']->raw)) {
     $nid = $fields['nid']->raw;
     $node = node_load($nid);
-    $state = $row->field_field_resource_state[0]['raw']['value'];
+    $state = $fields['state']->raw;
     switch ($state) {
       case 'needs_review':
         $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
         $variables['text'] = t('Needs Review');
-        break;
-      case 'needs_gk_review':
-        $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
-        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
-        $variables['text'] = t('Needs Review');
-        break;
-      case 'gk_being_reviewed':
-        break;
-      case 'needs_qc_review':
-        $variables['buttons'][] = _sbac_resource_start_review_link($node, 'qc');
-        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['links'][] = _sbac_resource_start_review_link($node, 'qc', 'link');
-        $variables['text'] = t('Needs Review');
-        break;
-      case 'qc_being_reviewed':
-        $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc', 'query' => array('destination' => arg(0))));
-        $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-        $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['text'] = t('Being Reviewed');
-        break;
-      case 'needs_post_review':
-        $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
-        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
-        $variables['text'] = t('Needs Posting');
-        break;
-      case 'post_being_reviewed':
         break;
       case 'being_reviewed':
         global $user;
@@ -1047,7 +1007,10 @@ function _sbac_resource_resource_review_links($fields, $row) {
           }
           // start review
           else {
-
+            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'qc');
+            $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+            $variables['links'][] = _sbac_resource_start_review_link($node, 'qc', 'link');
+            $variables['text'] = t('Needs Review');
           }
         }
         // no completed GK, so start or continue
@@ -1062,7 +1025,10 @@ function _sbac_resource_resource_review_links($fields, $row) {
           }
           // start review
           else {
-
+            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
+            $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+            $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
+            $variables['text'] = t('Needs Review');
           }
         }
         break;
@@ -1078,7 +1044,10 @@ function _sbac_resource_resource_review_links($fields, $row) {
           $variables['text'] = t('Being Reviewed');
         }
         else {
-
+          $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
+          $variables['text'] = t('Needs Posting');
         }
         break;
     }
@@ -1109,27 +1078,9 @@ function _sbac_resource_digital_library_links($fields) {
         }
 
         $variables['sticky'] = FALSE;
-        $variables['views'] = '0 Views';
-        if (isset($fields['field_unique_views'])) {
-          $variables['views'] = $fields['field_unique_views']->content;
+        if ($fields['sticky']->raw) {
+          $variables['sticky'] = TRUE;
         }
-        $variables['downloads'] = '0 Downloads';
-        if (isset($fields['field_asset_downloads'])) {
-          $variables['downloads'] = $fields['field_asset_downloads']->content;
-        }
-        $variables['collaborators'] = 'N Collaborations';
-        $variables['subject'] = $fields['field_subject']->content;
-        $variables['grades'] = $fields['field_grades']->content;
-        $variables['media_types'] = $fields['field_digital_media_type']->content;
-        break;
-      case 'published_distinction':
-        if (in_array('DLRB member', $user->roles)) {
-          $nid = $fields['nid']->raw;
-          $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-        }
-
-        $variables['sticky'] = TRUE;
         $variables['views'] = '0 Views';
         if (isset($fields['field_unique_views'])) {
           $variables['views'] = $fields['field_unique_views']->content;
