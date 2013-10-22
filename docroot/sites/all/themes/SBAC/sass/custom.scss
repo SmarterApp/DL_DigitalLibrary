@@ -1442,6 +1442,29 @@ a.tabledrag-handle .handle {
       display: block !important;
     }
   }
+  
+  .field-name-field-license-secondary {
+    .form-item {
+      .chzn-container {
+        .chzn-choices {
+          margin-left: 0 !important;
+          margin-top: 10px;
+
+          input[type=text] {
+            height: auto;
+            padding: 0.5em;
+            width: 607px !important;
+          }
+        }
+
+        .chzn-drop {
+          .chzn-results {
+            margin-left: 0 !important;
+          }
+        }
+      }
+    }
+  }
 
   .form-radios .form-item {
     margin: .5em 0 1em;

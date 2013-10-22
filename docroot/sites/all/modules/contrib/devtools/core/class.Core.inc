@@ -16,10 +16,11 @@ class Core extends \devtools\Base {
    * @return [type]                 [description]
    */
   public static function hook($name, $default_return = NULL, &$a1 = NULL, &$a2 = NULL, &$a3 = NULL, &$a4 = NULL, &$a5 = NULL, &$a6 = NULL, &$a7 = NULL, &$a8 = NULL, &$a9 = NULL, &$a10 = NULL) {
-    // build an array of components that extend hooks
-      static $hook_classes;
+    // build the hook objects
+      $hook_classes =& drupal_static('devtools_core');
+      $module_path = drupal_get_path('module', static::module);
 
-      if (is_null($hook_classes[static::module]) || empty($hook_classes[static::module])) {
+      if (!isset($hook_classes[static::module]) || empty($hook_classes[static::module])) {
         $hook_classes[static::module] = array();
 
         foreach (array_keys(devtools_components(static::module)) as $component) {
@@ -34,27 +35,25 @@ class Core extends \devtools\Base {
           $full_class_name = implode('\\', $class_pieces);
 
           if (class_exists($full_class_name)) {
-            $hook_classes[static::module][$component] = $full_class_name;
+            $hooksObj = new $full_class_name();
+            $hooksObj->setPath($module_path . '/components/' . $component);
+            $hooksObj->setComponentsPath($module_path . '/components');
+            $hooksObj->setModulePath($module_path);
+            $hooksObj->postInit();
+
+            $hook_classes[static::module][$component] = $hooksObj;
           }
         }
       }
 
     // call the hook in components which declare it
       $return_data = $default_return;
-      $module_path = drupal_get_path('module', static::module);
 
       if (!empty($hook_classes[static::module])) {
-        foreach ($hook_classes[static::module] as $component => $class) {
+        foreach ($hook_classes[static::module] as $component => $hooksObj) {
           $method = 'hook_' . $name;
 
-          if (method_exists($class, $method)) {
-            $hooksObj = new $class(); // TODO: every hook instantiates a new component object - think
-            // this through; can we make do with a singleton?
-            $hooksObj->setPath($module_path . '/components/' . $component);
-            $hooksObj->setComponentsPath($module_path . '/components');
-            $hooksObj->setModulePath($module_path);
-            $hooksObj->postInit();
-
+          if (method_exists($hooksObj, $method)) {
             $return_value = $hooksObj->{$method}($a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10);
 
             /*

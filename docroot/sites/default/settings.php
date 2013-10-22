@@ -559,7 +559,7 @@ $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
 
 // Acquia DB String
 if (file_exists('/var/www/site-php')) {
-  require('/var/www/site-php/willappnovationcom/willappnovationcom-settings.inc');
+  require('/var/www/site-php/sbac/sbac-settings.inc');
 }
 
 // Sets the Apache Solr Environment

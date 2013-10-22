@@ -388,6 +388,7 @@
 
             break;
 
+        /*
           case 2:
             // hide the author/owner group
             group.hide();
@@ -401,6 +402,7 @@
             save_continue.unbind('click');
 
             break;
+        */
         }
       };
 
