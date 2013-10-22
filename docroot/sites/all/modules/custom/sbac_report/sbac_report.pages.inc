@@ -1302,7 +1302,6 @@ function create_user_activity_from_data($user_activity)
 
     $csv .= $row."\r\n";
   }
-
   return $csv;
 }
 function _cex_download( $output, $filename )
