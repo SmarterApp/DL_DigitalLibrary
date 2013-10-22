@@ -167,6 +167,15 @@ function sbac_resource_views_pre_render(&$view) {
       }
     }
 
+    // remove the user's own resources (can't remove own stuff)
+      foreach ($view->result as $key => $item) {
+        if (isset($item->_field_data['nid']['entity'])) {
+          if ($item->_field_data['nid']['entity']->uid == $user->uid) {
+            unset($view->result[$key]);
+          }
+        }
+      }
+
     // if the user is a resource reviewer.
     if (isset($roles['rr']) && $roles['rr']) {
       foreach ($view->result as $key => $result) {
