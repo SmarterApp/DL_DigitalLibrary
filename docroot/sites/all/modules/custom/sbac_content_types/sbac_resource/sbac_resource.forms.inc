@@ -747,7 +747,7 @@ function sbac_resource_validate_materials(&$form, &$form_state) {
       form_set_error('field_publisher', $error);
       _sbac_resource_remove_error_message($error);
       drupal_set_message('materials:field_publisher:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('materials:field_publisher:group:Remove inappropriate language from the source', 'sbac_resource_error');
+      drupal_set_message('materials:field_publisher:group:Remove inappropriate language from the owner', 'sbac_resource_error');
     }
   }
   if ($form_state['values']['field_license_information']['und'][0]['value'] != 0 && $form_state['values']['field_license']['und'][0]['tid'] == NULL) {

@@ -226,3 +226,17 @@ function sbac_core_update_7015() {
     ));
   }
 }
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Updates license taxonomy.
+ */
+function sbac_core_update_7016() {
+  $vid = db_query("SELECT vid FROM taxonomy_vocabulary WHERE machine_name = 'license'")->fetchField();
+  db_query("UPDATE taxonomy_term_data SET name = :new_name WHERE vid = :vid AND name = :name", array(
+    ':new_name' => 'Smarter Balanced Copyright Clearance Form (signed by the owner)',
+    ':vid' => $vid,
+    ':name' => 'The Smarter Balanced Copyright Clearance Form',
+  ));
+}

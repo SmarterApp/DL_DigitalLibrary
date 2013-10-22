@@ -99,6 +99,7 @@ class Qc_Comments extends Base {
                        ';
 
         $j = 1;
+        $output_item .= '<div class="feedback-item-triplet">';
         foreach ($qc_entities as $entity) {
           $questions = field_entity_value($entity, 'field_review_set');
 
@@ -117,6 +118,7 @@ class Qc_Comments extends Base {
 
           $j++;
         } 
+        $output_item .= '</div>';
 
         $output_qc .= '<div class="feedback-item">' . $output_item . '<div class="clear"></div></div>';
       }
