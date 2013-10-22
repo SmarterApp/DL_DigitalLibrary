@@ -1398,6 +1398,117 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_posting_options'
+  $field_instances['node-resource-field_posting_options'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 40,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_posting_options',
+    'label' => 'Posting Options',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => 'The last saved posting determination.',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 42,
+    ),
+  );
+
+  // Exported field_instance: 'node-resource-field_posting_options_comment'
+  $field_instances['node-resource-field_posting_options_comment'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 41,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_posting_options_comment',
+    'label' => 'To contributor',
+    'profanity' => 1,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 300,
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Character count: @remaining',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 43,
+    ),
+    'xss' => 1,
+  );
+
   // Exported field_instance: 'node-resource-field_principles'
   $field_instances['node-resource-field_principles'] = array(
     'bundle' => 'resource',
@@ -1809,6 +1920,62 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_subscription_package_type'
+  $field_instances['node-resource-field_subscription_package_type'] = array(
+    'bundle' => 'resource',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 37,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_subscription_package_type',
+    'label' => 'Subscription Package Type',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => 'Identify the subscription package to which this resource is aligned',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 38,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_success_criteria'
   $field_instances['node-resource-field_success_criteria'] = array(
     'bundle' => 'resource',
@@ -2172,6 +2339,62 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_view_permissions'
+  $field_instances['node-resource-field_view_permissions'] = array(
+    'bundle' => 'resource',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 38,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_view_permissions',
+    'label' => 'View Permissions',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => 'By default, a resource entered via the posting workflow is visible to all Smarter Balanced member states.',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 39,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_view_permissions_per_state'
   $field_instances['node-resource-field_view_permissions_per_state'] = array(
     'bundle' => 'resource',
@@ -2268,6 +2491,7 @@ function sbac_resource_field_default_field_instances() {
   t('Owner');
   t('Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.');
   t('Personally Identifiable Student Information');
+  t('Posting Options');
   t('Principles');
   t('Resource State');
   t('Resource Type');
@@ -2276,6 +2500,7 @@ function sbac_resource_field_default_field_instances() {
   t('Student Engagement in the Formative Assesment Process');
   t('Student population(s) for which the resource is best suited. Select all that apply.');
   t('Subjects and Domains');
+  t('Subscription Package Type');
   t('Success Criteria');
   t('Supporting Evidence');
   t('Technologies Required for Use in Classroom');
@@ -2288,8 +2513,10 @@ function sbac_resource_field_default_field_instances() {
   t('The purpose of the instructional resources in the context of a lesson. Select all that apply.');
   t('The technologies required to use this resource in the classroom. Select all that apply.');
   t('The type(s) of media included in the resource. Select all that apply.');
+  t('To contributor');
   t('Total Views');
   t('Unique Views');
+  t('View Permissions');
   t('View Permissions Per State');
   t('What can people do with this resource?');
   t('Which attributes of the formative assessment process does this resource include? Select all that apply.');

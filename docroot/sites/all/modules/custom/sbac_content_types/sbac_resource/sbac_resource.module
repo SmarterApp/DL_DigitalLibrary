@@ -800,10 +800,8 @@ function sbac_resource_node_access_records($node) {
         $uids[] = $row->uid;
       }
       $users = user_load_multiple($uids);
-
       if ($users) {
         $grants = array();
-
         foreach ($users as $user) {
           // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
           $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
@@ -844,7 +842,6 @@ function sbac_resource_node_access_records($node) {
             );
           }
         }
-
         return $grants;
       }
     }
@@ -858,7 +855,6 @@ function sbac_resource_node_access_records($node) {
         $uids[] = $row->uid;
       }
       $users = user_load_multiple($uids);
-
       if ($users) {
         $grants = array();
         foreach ($users as $user) {
