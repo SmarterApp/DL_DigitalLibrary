@@ -144,7 +144,7 @@ function export_report_user_activity($form, &$form_state) {
   // dump the csv file here:
   $csv_activity_report_result = build_activity_report_csv($state_tid1, $date_range1, $usergroups, $snefilter);
   // output the csv for download.
- # _cex_download($csv_activity_report_result, 'output.csv');
+  _cex_download($csv_activity_report_result, 'output.csv');
 
   //echo $csv_activity_report_result;
 }
@@ -1068,7 +1068,7 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
 
   $user_profiles = user_load_multiple(array_keys($users));
   $user_profiles = filter_users_by_sne_slt($user_profiles, $sne_slt_filter);
-  $user_profiles = filter_users_by_state($user_profiles, $sne_slt_filter);
+  $user_profiles = filter_users_by_state($user_profiles, $state_tid);
 
   $user_activity = get_user_activity(array_keys($users), $date_range);
   $user_activity['user_profiles']=$user_profiles;
@@ -1229,7 +1229,7 @@ function get_user_activity($users, $date_range)
   $user_activity['contributed_resources_reviewed_and_returned'] = count_with_users_query($sql, $users);
 
   # terms of service.
-  $sql = "SELECT la.uid,la.accepted,lc.version,lc.revision,lc.date
+  $sql = "SELECT la.uid,la.accepted as 'tos-accepted',lc.version as 'tos-version',lc.revision as 'tos-revision',lc.date as 'tos-revision-date'
           FROM legal_conditions as lc join legal_accepted as la on lc.version=la.version
           WHERE uid in (%s)";
   $sql = sprintf($sql,$users);
@@ -1273,14 +1273,15 @@ function create_user_activity_from_data($user_activity)
   $foreignidkeys = array();
   $stringkeys = array();
   $uidcountkeys = array();
-  $titles = '';
-  validate_and_fill_out_user_activity($user_activity, &$titles, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys);
+  $toskeys = array();
+  validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys);
 
   $titles = '';
   foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey.$separator; }
   foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey.$separator; }
   foreach ($stringkeys as $stringkey) { $titles .= $stringkey.$separator; }
   foreach ($uidcountkeys as $uidcountkey) { $titles .= $uidcountkey.$separator; }
+  foreach ($toskeys as $toskey) { $titles .= $toskey.$separator; }
   $titles = substr($titles, 0, -1);
   $titles .= "\r\n";
 
@@ -1300,10 +1301,13 @@ function create_user_activity_from_data($user_activity)
     foreach ($stringkeys as $stringkey) {
       $row .= $user_profile->{$stringkey} . $separator;
     }
-    $array = $stringkeys; end($array); $last = key($array);
     foreach ($uidcountkeys as $uidcountkey) {
       $row .= $user_activity[$uidcountkey][$uid]->count . $separator;
     }
+    foreach ($toskeys as $toskey) {
+      $row .=  $user_activity['tos'][$uid][$toskey] . $separator;
+    }
+
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
 
     $csv .= $row."\r\n";
@@ -1322,11 +1326,10 @@ function _cex_download( $output, $filename )
   exit;
 }
 
-function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys)
+function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, $toskeys)
 {
   // loop through all values and make sure 0's and '' are used as placeholders for missing values.
-  // todo: is slt needed
-  // todo: is sne needed
+
   // todo: is terms of service, version of terms of service, date of version
 
 //  $titles =  'first-name, last-name, state, district,school, grade,subject, school-population, email,'.
@@ -1340,10 +1343,10 @@ function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldk
 
   array_push($fieldkeys, 'field_first_name');
   array_push($fieldkeys, 'field_last_name');
-  array_push($fieldkeys, 'field_sne_memeber');
-  array_push($fieldkeys, 'field_slt_memeber');
+  array_push($fieldkeys, 'field_sne_member');
+  array_push($fieldkeys, 'field_slt_member');
   array_push($fieldkeys, 'field_district_name');
-  array_push($fieldkeys, 'field_state');
+  array_push($foreignidkeys, 'field_state');
   array_push($foreignidkeys, 'field_grade_level_s_');
   array_push($foreignidkeys, 'field_subject_s_');
   array_push($foreignidkeys, 'field_special_populations');
@@ -1352,9 +1355,6 @@ function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldk
   array_push($stringkeys, 'created');
   array_push($stringkeys, 'access');
   array_push($stringkeys, 'login');
-  array_push($stringkeys, 'date-of-terms-of-service');// todo:
-  array_push($stringkeys, 'version-of-terms-of-service');// todo:
-  array_push($stringkeys, 'date-of-service-version');// todo:
 
   array_push($uidcountkeys, 'resources_viewed');
   array_push($uidcountkeys, 'resources_reviewed');
@@ -1366,6 +1366,11 @@ function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldk
   array_push($uidcountkeys, 'contributed_resources_posted');
   array_push($uidcountkeys, 'contributed_resources_posted_with_distinction');
   array_push($uidcountkeys, 'contributed_resources_reviewed_and_returned');
+
+  array_push($toskeys, 'tos-accepted');
+  array_push($toskeys, 'tos-version');
+  array_push($toskeys, 'tos-revision');
+  array_push($toskeys, 'tos-revision-date');
 
   function format_value_property(&$user_profile, $fieldkey, $missing_string) {
     if (!property_exists($user_profile,$fieldkey)) {
@@ -1384,7 +1389,7 @@ function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldk
       $ix++;
     }
   }
-  function format_tid_property(&$user_profile, $fieldkey, $missing_string) {
+  function format_tid_property(&$user_profile, $fieldkey, $missing_string, &$used_tids) {
     // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
     if (!property_exists($user_profile,$fieldkey)) {
       $user_profile->{$fieldkey} = array();
@@ -1397,14 +1402,25 @@ function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldk
     }
     $ix = 0;
     foreach ($user_profile->{$fieldkey}['und'] as &$field) {
-
       if (is_null($field['tid'])) {
         $field['tid'] = $missing_string;
         $field['value'] = $missing_string;
       }
       // look up the value in the foreign table.
       if ($field['tid'] != $missing_string) {
-        $field['value'] = $field['tid'].' ';
+        $used_tids[$field['tid']] = $field['tid'];
+      }
+      $ix++;
+    }
+  }
+  function set_tid_property(&$user_profile, $fieldkey, &$tid_terms) {
+    // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
+
+    $ix = 0;
+    foreach ($user_profile->{$fieldkey}['und'] as &$field) {
+      // look up the value in the foreign table.
+      if ($field['tid'] != 0) {
+        $field['value'] = $tid_terms[$field['tid']]->name;
       }
       $ix++;
     }
@@ -1413,14 +1429,18 @@ function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldk
   $missing_string = ' ';
   $missing_integer = 0;
 
+  $used_tids = array();
   foreach ($user_activity['user_profiles'] as $user_profile) {
     $uid = $user_profile->{'uid'};
     foreach ($fieldkeys as $fieldkey) {
       format_value_property($user_profile, $fieldkey, $missing_string);
     }
+    // build taxonomy index table while validating. grab all the ids then
+    // load them all in one has table for quick reference.
     foreach ($foreignidkeys as $foreignidkey) {
-      format_tid_property($user_profile, $foreignidkey, $missing_string);
+      format_tid_property($user_profile, $foreignidkey, $missing_string, $used_tids);
     }
+
     foreach ($stringkeys as $stringkey) {
       if (!property_exists($user_profile,$stringkey)) {
         $user_profile->{$stringkey} = $missing_string;
@@ -1432,6 +1452,29 @@ function validate_and_fill_out_user_activity(&$user_activity, &$titles, &$fieldk
         $user_activity[$uidcountkey][$uid]->count = $missing_integer;
         $user_activity[$uidcountkey][$uid]->uid = $uid;
       }
+    }
+    if (is_null($user_activity['tos'][$uid])) {
+      $user_activity['tos'][$uid]['uid'] = $uid;
+      foreach ($toskeys as $toskey) {
+        $user_activity['tos'][$uid][$toskey] = "";
+      }
+    }
+  }
+
+  // have all the tids, now get the term data and set the report values:
+  # terms of service.
+  $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
+    $usergroups = implode(',',array_keys($used_tids)));
+  $result = db_query($sql);
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->tid] = $record;
+  }
+  $tid_terms = $values;
+
+  foreach ($user_activity['user_profiles'] as $user_profile) {
+    foreach ($foreignidkeys as $foreignidkey) {
+      set_tid_property($user_profile, $foreignidkey, $tid_terms);
     }
   }
 }

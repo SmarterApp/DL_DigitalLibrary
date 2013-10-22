@@ -450,6 +450,7 @@ function sbac_report_state_options() {
   global $user;
   $roles = $user->roles;
   $options = array();
+
   $first_only =  FALSE;
 
   // Admin user can select between state.
@@ -500,7 +501,7 @@ function sbac_report_state_options() {
 function sbac_report_get_default_state_tid() {
   $state_tid = sbac_report_get_session_value('state', 'tid');
   if (empty($state_tid)) {
-    $state = sbac_report_state_options(TRUE);
+    $state = sbac_report_state_options();
     $state_tid = key($state);
   }
   return $state_tid;
