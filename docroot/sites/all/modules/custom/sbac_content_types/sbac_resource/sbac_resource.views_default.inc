@@ -3342,7 +3342,7 @@ function sbac_resource_views_default_views() {
   );
   $handler->display->display_options['filters']['state']['group'] = 1;
   $export['resources'] = $view;
-  
+
   $view = new view();
   $view->name = 'search_resources';
   $view->description = '';

@@ -718,9 +718,8 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
  * @param $node
  */
 function sbac_resource_node_access_records($node) {
-  global $user;
-
   if ($node->type == 'resource') {
+    global $user;
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
       $uids = array();
       $role = user_role_load_by_name('resource reviewer');
@@ -729,17 +728,18 @@ function sbac_resource_node_access_records($node) {
       foreach ($result as $row) {
         $uids[] = $row->uid;
       }
-      $users = user_load_multiple($uids);
-      if ($users) {
+      $accounts = user_load_multiple($uids);
+      if ($accounts) {
         $grants = array();
-        foreach ($users as $user) {
+        foreach ($accounts as $account) {
           // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
-          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
+          // So, if this user has a gate keeping review in process, give him access, revoke everyone else.
+          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', $account->uid, 1, 0, 1, 'set', FALSE);
           if ($gate_keeper) {
             $grants[] = array(
               'realm' => 'gk_review_in_progress',
-              'gid' => $user->uid,
-              'grant_view' => 0,
+              'gid' => $account->uid,
+              'grant_view' => 1,
               'grant_update' => 0,
               'grant_delete' => 0,
               'priority' => 0,
@@ -747,11 +747,11 @@ function sbac_resource_node_access_records($node) {
           }
 
           // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
-          $feedback = _sbac_resource_determine_feedback($node->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
+          $feedback = _sbac_resource_determine_feedback($node->nid, 'qc', $account->uid, 1, FALSE, 1, 'set', TRUE);
           if (count($feedback) == 3) {
             $grants[] = array(
               'realm' => 'reviewed_by_three',
-              'gid' => $user->uid,
+              'gid' => $account->uid,
               'grant_view' => 0,
               'grant_update' => 0,
               'grant_delete' => 0,
@@ -760,11 +760,11 @@ function sbac_resource_node_access_records($node) {
           }
 
           // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
-          $feedback = _sbac_resource_determine_feedback($node->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
+          $feedback = _sbac_resource_determine_feedback($node->nid, 'qc', $account->uid, 1, 1, FALSE, 'single');
           if ($feedback) {
             $grants[] = array(
               'realm' => 'self_reviewed',
-              'gid' => $user->uid,
+              'gid' => $account->uid,
               'grant_view' => 0,
               'grant_update' => 0,
               'grant_delete' => 0,
@@ -778,22 +778,22 @@ function sbac_resource_node_access_records($node) {
 
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
       $uids = array();
-      $role = user_role_load_by_name('resource reviewer');
+      $role = user_role_load_by_name('resource publisher');
       $query = "SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid = :rid";
       $result = db_query($query, array(':rid' => $role->rid));
       foreach ($result as $row) {
         $uids[] = $row->uid;
       }
-      $users = user_load_multiple($uids);
-      if ($users) {
+      $accounts = user_load_multiple($uids);
+      if ($accounts) {
         $grants = array();
-        foreach ($users as $user) {
+        foreach ($accounts as $account) {
           // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
-          $feedback = _sbac_resource_determine_feedback($node->nid, 'post', $user->uid, 1, 0, 1, 'set', TRUE);
+          $feedback = _sbac_resource_determine_feedback($node->nid, 'post', $account->uid, 1, 0, 1, 'set', TRUE);
           if ($feedback) {
             $grants[] = array(
               'realm' => 'reviewed_already',
-              'gid' => $user->uid,
+              'gid' => $account->uid,
               'grant_view' => 0,
               'grant_update' => 0,
               'grant_delete' => 0,
@@ -823,6 +823,11 @@ function sbac_resource_node_grants($account, $op) {
   if (in_array('resource publisher', $account->roles)) {
     $grants['reviewed_already'] = array($account->uid);
   }
+  return $grants;
+}
+
+function sbac_resource_node_grants_alter(&$grants, $account, $op) {
+  $var = '';
 }
 
 /**
