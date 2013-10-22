@@ -869,6 +869,7 @@ function sbac_resource_update_7037() {
  * Delete the Use of Resource Action field.
  */
 function sbac_resource_update_7038() {
+  /*
   $ret = array();
 
   module_load_include('inc','field','field.crud');
@@ -899,4 +900,5 @@ function sbac_resource_update_7038() {
   field_delete_field($field);
 
   return $ret;
+  */
 }
