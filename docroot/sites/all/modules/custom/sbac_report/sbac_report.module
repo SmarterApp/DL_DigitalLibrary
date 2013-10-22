@@ -45,6 +45,13 @@ function sbac_report_menu() {
     'access callback' => 'sbac_report_user_access',
     'type' => MENU_CALLBACK,
   );
+  $items['export_report_user_activity'] = array(
+    'title' => 'Export Report User Activity',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'export_report_user_activity',
+    'access callback' => 'export_report_user_activity',
+    'type' => MENU_CALLBACK
+  );
 
   return $items;
 }
@@ -282,10 +289,20 @@ function sbac_report_csv_form($form, &$form_state) {
     '#options' => $user_group_options,
     '#multiple' => TRUE,
     '#default_value' => sbac_report_get_default_usergroup(),
-//    '#ajax' => array(
-//      'callback' => 'sbac_report_state_ajax',
-//    ),
     '#required' => TRUE,
+  );
+
+  $form['user_sne_slt_radio']['sne-slt-filter'] = array(
+    '#type' => 'radios',
+    '#title' => t('SNE/SLT Filter'),
+    '#description' => t('Filter results by SNE/SLT'),
+    '#default_value' => variable_get('sne-slt-filter', 2),
+    '#options' => array(
+      t('SNE'),
+      t('SLT'),
+      t('Both SNE and SLT'),
+    ),
+
   );
 //  $form['user_group_dropdown'] = array(
 //    '#type' => 'markup',
@@ -317,6 +334,7 @@ function sbac_report_csv_form($form, &$form_state) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Export'),
+    '#submit' => array('export_report_user_activity'),
   );
 
   $form['#validate'][] = 'sbac_report_csv_form_validate';
