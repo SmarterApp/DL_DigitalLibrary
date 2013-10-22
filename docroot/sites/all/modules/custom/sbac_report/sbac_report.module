@@ -1176,6 +1176,9 @@ function sbac_report_preprocess_views_view_field(&$vars) {
         }
       }
     }
+    elseif ($vars['field']->field_alias == 'node_title') {
+      $vars['output'] = truncate($vars['output'], 55, array('check_markup' => FALSE));
+    }
   }
   elseif ($vars['view']->current_display == 'resources_activity_report') {
 

@@ -1,3 +1,5 @@
+@import "compass/css3"; 
+
 /* mixins */
   $border_color: #ccc;
 
@@ -11,12 +13,45 @@
 .feedback-wrap {
   padding: 10px 30px;
 
+
+  h2{
+    font-size: 1.4em;
+  }
+
   p {
     font-size: 1em;
   }
 
   textarea {
     resize: none;
+  }
+
+  .criteria-set-title {
+    font-weight:bold;
+    font-size: 1.1em;
+    margin: 0 0 10px 0;
+  }
+
+  .more-less-text{
+    margin-bottom: 20px;
+
+    .more-less-text-trigger-more {
+      font-size: 0.8em;
+      display: inline-block;
+      padding: 3px 5px;
+      border: 1px solid #ccc;
+      @include border-radius(3px);
+      background-color:#eee;
+      color: #0085ad;
+    }
+  }
+
+  .author {
+    font-weight: bold;
+  }
+
+  .created {
+    font-style: italic;
   }
 
   /* intro form elements */
@@ -101,10 +136,15 @@
 
               /* title */
               .criteria-set-title{
+                font-weight:bold;
+                font-size: 1.1em;
+                margin: 0 0 10px 0;
+
                 p {
                   font-size: 1em;
                   font-weight: bold;
-                  max-width: 800px
+                  max-width: 800px;
+                  margin-left: 5px;
                 }
               }
 
@@ -285,20 +325,22 @@
   /* review items content on post tab */
     .feedback-items {
       ul {
-        margin-left: 30px;
+        //margin-left: 10px;
       }
 
       .feedback-item {
         border-bottom: 1px #ccc solid;
-        margin: 0 0 1em 0;
-        padding: 0 0 1em 0;
+        margin: 0 0 1.5em 0;
+        padding: 0 0 1.5em 0;
 
         .criteria-set-title {
-          p {
-            font-weight: bold;
-          }
+          font-weight:bold;
+          font-size: 1.1em;
+          margin: 0 0 10px 0;
+        }
 
-          margin: 0 0 1em 0;
+        .date {
+          font-style: italic;
         }
 
         .criteria-set-comments-text {
@@ -312,24 +354,30 @@
         }
 
         .reviewer-comments-title {
-          /*font-size: 0.8em;*/
+          //font-size: 0.8em;
         }
 
         .comments-title {
-          font-size: 0.8em;
+          //font-size: 0.8em;
           font-weight: bold;
           margin: 0 0 1em 0;
         }
 
         .feedback-review {
-          &:last-child {
-            margin-right: 0;
-          } 
 
           float: left;
-          font-size: 0.8em;
-          margin-right: 1%;
-          width: 32%;
+          //font-size: 0.8em;
+          margin-right: 1.5%;
+          padding-right:1.5%;
+          width: 31%;
+          border-right: 1px solid #ccc;
+
+
+          &:last-child,
+          &.feedback-review-3 {
+            margin-right: 0;
+            border-right: none;
+          } 
 
           .author {
             margin: 0 0 0.5em 0;
@@ -537,8 +585,6 @@
     }
   }
 }
-
-@import "compass/css3";
 
 .field-name-resource-slideshow {
   margin: 0 0 70px 0;

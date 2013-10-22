@@ -20,13 +20,17 @@ function truncate($input, $length = 140, $options = array()) {
       $options += array(
         'ellipsis' => '...',
         'format' => 'plain_text',
+        'check_markup' => TRUE,
       );
 
       if ($options['format'] == 'plain_text') {
         $output = strip_tags($output);
       }
 
-      $output = check_markup($output, $options['format']);
+      if ($options['check_markup']) {
+        $output = check_markup($output, $options['format']);
+      }
+      
       $output = substr($output, 0, $length);
 
       if ($space = strrpos($output, ' ')) {

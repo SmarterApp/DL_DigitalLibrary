@@ -355,6 +355,20 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
         '#suffix' => '</div>',
       );
     }
+    else {
+      $form['field_file_container']['materials'] = array(
+        '#markup' => '',
+        '#weight' => -100,
+        '#suffix' => '</div>',
+      );
+    }
+  }
+  else {
+    $form['field_file_container']['materials'] = array(
+      '#markup' => '',
+      '#weight' => -100,
+      '#suffix' => '</div>',
+    );
   }
 
   $weight = array();

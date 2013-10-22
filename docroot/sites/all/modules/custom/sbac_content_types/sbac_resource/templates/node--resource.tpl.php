@@ -88,7 +88,18 @@
     <?php endif; ?>
 
     <?php if (isset($license) && $license): ?>
-      <p><span class="license"><strong>License: </strong><?php print $license; ?></span></p>
+      <p><span class="license"><strong><?php echo t('License for Primary Material') ?>: </strong><?php print $license; ?></span></p>
+    <?php endif; ?>
+
+    <?php
+      $license_sec = array();
+      foreach (field_entity_value($node, 'field_license_secondary') as $term) {
+        $license_sec[] = $term->name;
+      }
+      
+      if ($license_sec):
+    ?>
+      <p><span class="license"><strong><?php echo t('License(s) for Secondary Material(s)') ?>: </strong><?php echo implode(', ', $license_sec); ?></span></p>
     <?php endif; ?>
 
     <?php if (isset($edit_link) && $edit_link): ?>

@@ -109,6 +109,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Review reminder.'),
         'class' => 'ReviewReminder',
       ),
+      // a published resource was changed by a DLRB member
+      array(
+        'name' => 'posting_action',
+        'description' => t('Posting Action.'),
+        'class' => 'PostingAction',
+      ),
     );
 
     foreach ($types as &$type) {
