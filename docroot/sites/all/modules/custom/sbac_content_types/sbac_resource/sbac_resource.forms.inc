@@ -1634,12 +1634,12 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
 function _sbac_resource_form_advanced(&$form, &$form_state) {
   // Subscription Package Type.
   unset($form['field_subscription_package_type']['und']['#options']['_none']);
-  if ($form['field_subscription_package_type']['und']['#default_value'] == NULL) {
+  if (isset($form['field_subscription_package_type']['und']['#default_value']) && $form['field_subscription_package_type']['und']['#default_value'] == NULL) {
     $form['field_subscription_package_type']['und']['#default_value'] = 0;
   }
 
   // Permissions field.
-  if ($form['field_view_permissions']['und']['#default_value'] == NULL) {
+  if (isset($form['field_view_permissions']['und']['#default_value']) && $form['field_view_permissions']['und']['#default_value'] == NULL) {
     $form['field_view_permissions']['und']['#default_value'] = 0;
   }
   $form['field_view_permissions']['und']['#prefix'] = '<div id="sbac-permissions-per-state">';
@@ -1662,7 +1662,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
 
   $form['field_posting_options_comment']['und']['#prefix'] = '<div id="sbac-posting-options-comment">';
   $form['field_posting_options_comment']['und']['#suffix'] = '</div>';
-  if ($form['field_posting_options']['und']['#default_value'] == 2) {
+  if (isset($form['field_posting_options']['und']['#default_value']) && $form['field_posting_options']['und']['#default_value'] == 2) {
     $form['field_posting_options_comment']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   }
 
