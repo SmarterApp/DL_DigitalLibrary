@@ -186,7 +186,7 @@ function sbac_core_update_7012() {
  * Cleans up Flag entity type.
  */
 function sbac_core_update_7013() {
-  db_query("ALTER TABLE eck_flag DROP COLUMN node_id");
+  /* db_query("ALTER TABLE eck_flag DROP COLUMN node_id"); */
 }
 
 /**
