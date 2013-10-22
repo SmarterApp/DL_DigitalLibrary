@@ -667,6 +667,9 @@ class Hooks extends \devtools\Hooks {
       // if the node isn't in review yet, set it to being_reviewed
       if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
         workbench_moderation_moderate($node, 'being_reviewed');
+
+        // rebuild permissions
+        node_access_acquire_grants($node, TRUE);
       }
     }
   }  

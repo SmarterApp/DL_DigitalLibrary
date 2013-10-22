@@ -249,6 +249,9 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
 
       $task = taskit_get_object('resource_rejected');
 
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
       break;
 
     case 'meet':
@@ -273,6 +276,9 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       drupal_set_message(t('Quality Criteria Review process started.'));
 
       entity_save('feedback', $qc);
+
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
 
       break;
   }
@@ -402,6 +408,9 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
           $task = taskit_get_object('resource_rejected');
         }
 
+        // rebuild permissions
+        node_access_acquire_grants($node, TRUE);
+
         send_review_notifications($task, $node, $reviews);
       }
 
@@ -463,6 +472,9 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 
       $task = taskit_get_object('resource_rejected');
 
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
       break;
 
     case 'post':
@@ -472,6 +484,9 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       workbench_moderation_moderate($node, 'published');
 
       $task = taskit_get_object('resource_published');
+
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
 
       break;
 
@@ -485,6 +500,9 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       workbench_moderation_moderate($node, 'published');
 
       $task = taskit_get_object('resource_published');
+
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
 
       break;
   }
