@@ -39,6 +39,8 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_init().
    */
   function hook_init() {
+    module_load_include('inc', $this->_path, 'feedback.theme');
+
     // redirect gate keeper entities to their appropriate resource node;
     // in the "natural" user-flow, the user will only end up here after
     // submitting a Gate Keeper entity as either "meets" or "doesn't meet."
