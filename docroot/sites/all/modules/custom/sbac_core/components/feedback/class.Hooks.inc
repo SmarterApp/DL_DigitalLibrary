@@ -39,6 +39,7 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_init().
    */
   function hook_init() {
+
     // redirect gate keeper entities to their appropriate resource node;
     // in the "natural" user-flow, the user will only end up here after
     // submitting a Gate Keeper entity as either "meets" or "doesn't meet."

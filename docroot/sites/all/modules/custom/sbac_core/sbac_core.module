@@ -5,6 +5,8 @@
 ----------------------------------------------------------------------------*/
 
 include_once 'sbac_core.features.inc';
+include_once 'components/feedback/feedback.theme.inc';
+include_once 'components/review/review.theme.inc';
 
 // load required files
 module_load_include('inc', 'sbac_core', 'core/class.Core');
@@ -20,9 +22,6 @@ if (module_exists('devtools')) {
   // this must happen as early as possible in order to load any files that
   // may have menu access callbacks
   devtools_load('sbac_core');
-
-  module_load_include('inc', 'sbac_core', 'components/feedback/feedback.theme');
-  module_load_include('inc', 'sbac_core', 'components/review/review.theme');
 }
 
 /*----------------------------------------------------------------------------
