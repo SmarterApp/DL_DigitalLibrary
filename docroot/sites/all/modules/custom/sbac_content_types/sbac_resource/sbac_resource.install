@@ -902,3 +902,12 @@ function sbac_resource_update_7038() {
   return $ret;
   */
 }
+
+/**
+ * Rebuild node access perms on resources.
+ */
+function sbac_resource_update_7039() {
+  $ret = array();
+  node_access_rebuild(TRUE);
+  return $ret;
+}
