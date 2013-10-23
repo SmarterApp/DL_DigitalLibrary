@@ -81,7 +81,7 @@ function sbac_resource_my_resources_page() {
   $view->_post_execute();
   $my_resources_output = $view->preview();
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
-//  dpq($view->build_info['query']);
+  dpq($view->build_info['query']);
 
   // if there is 0 rows.
   $count = count($view->result);

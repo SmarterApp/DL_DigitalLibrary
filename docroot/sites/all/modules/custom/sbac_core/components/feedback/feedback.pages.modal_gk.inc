@@ -173,8 +173,10 @@ function feedback_gate_keeper_form_submit($form, &$form_state) {
 
       entity_save('feedback', $entity);
 
-      // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
+      if ($node->workbench_moderation['current']->state == 'being_reviewed') {
+        // rebuild permissions
+        node_access_acquire_grants($node, TRUE);
+      }
 
       break;
 
