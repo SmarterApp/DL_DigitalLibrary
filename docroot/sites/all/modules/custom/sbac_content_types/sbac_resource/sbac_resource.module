@@ -694,7 +694,7 @@ function sbac_resource_delete_file_from_cmis($document_id, $i)
 }
 
 /**
- * Implemenets hook_node_load().
+ * Implemenets hook_workbench_moderation_transition().
  *
  * @param $new_state
  *  The new state of the revision.
@@ -710,6 +710,162 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
   else if ($node->type == 'resource' && $new_state == 'removed') {
     $node->status = 0;
   }
+}
+
+/**
+ * Implements hook_node_access_records().
+ *
+ * @param $node
+ */
+function sbac_resource_node_access_records($node) {
+  if ($node->type == 'resource') {
+    $grants = array();
+    $restricted = FALSE;
+
+    // Being reviewed node access perms.
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
+      $uids = array();
+      $role = user_role_load_by_name('resource reviewer');
+      $query = "SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid = :rid";
+      $result = db_query($query, array(':rid' => $role->rid));
+      foreach ($result as $row) {
+        $uids[] = $row->uid;
+      }
+      $accounts = user_load_multiple($uids);
+      if ($accounts) {
+        $not_allowed_to_view = array();
+
+        // new one, if gate keeping in completed, give access to that user, no one else
+        $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
+        if ($gate_keeper) {
+          $restricted = TRUE;
+          $grants[] = array(
+            'realm' => 'gk_review_in_progress',
+            'gid' => $gate_keeper['uid'],
+            'grant_view' => 1,
+            'grant_update' => 0,
+            'grant_delete' => 0,
+            'priority' => 0,
+          );
+        }
+        else {
+
+          // if there is less then 3 reviews, give access to everyone except the people who reviewed it.
+          // However, when a 3rd reviewer starts the review process, no one else has access to the node.
+          // so only give access to that 3rd reviewer.
+          $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
+          if (count($completed_feedback) <= 3) {
+            $third_reviewer = FALSE;
+            if (count($completed_feedback) == 2) {
+              global $user; // get the user who just trigger this event.
+              $current_review = _sbac_resource_determine_feedback($node->nid, 'qc', $user->uid, 1, 0, 1, 'single');
+              if ($current_review) {
+                $restricted = TRUE;
+                $third_reviewer = TRUE;
+                $grants[] = array(
+                  'realm' => 'able_to_review_qc',
+                  'gid' => $user->uid,
+                  'grant_view' => 1,
+                  'grant_update' => 0,
+                  'grant_delete' => 0,
+                  'priority' => 0,
+                );
+              }
+            }
+
+            if (!$third_reviewer) {
+              foreach ($completed_feedback as $review) {
+                $not_allowed_to_view[] = $review->uid;
+              }
+
+              foreach ($accounts as $account) {
+                if (!in_array($account->uid, $not_allowed_to_view)) {
+                  $restricted = TRUE;
+                  $grants[] = array(
+                    'realm' => 'able_to_review_qc',
+                    'gid' => $account->uid,
+                    'grant_view' => 1,
+                    'grant_update' => 0,
+                    'grant_delete' => 0,
+                    'priority' => 0,
+                  );
+                }
+              }
+            }
+          }
+
+          // give access to the user who completed the gate keeper too. only if he has not completed the QC though.
+          // hence the need for the $not_allowed_to_view check.
+          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+          if ($gate_keeper && !in_array($gate_keeper['uid'], $not_allowed_to_view)) {
+            $restricted = TRUE;
+            $grants[] = array(
+              'realm' => 'completed_gk',
+              'gid' => $gate_keeper['uid'],
+              'grant_view' => 1,
+              'grant_update' => 0,
+              'grant_delete' => 0,
+              'priority' => 0,
+            );
+          }
+        }
+      }
+    }
+
+    // Approved node access perms.
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
+      // check for in progress feedback.
+      if (isset($_REQUEST['_triggering_element_value']) && strpos($_REQUEST['_triggering_element_value'], 'Start') !== FALSE) {
+        $in_progress_feedback = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
+        if ($in_progress_feedback) {
+          $restricted = TRUE;
+          $grants[] = array(
+            'realm' => 'able_to_review_post',
+            'gid' => $in_progress_feedback['uid'],
+            'grant_view' => 1,
+            'grant_update' => 0,
+            'grant_delete' => 0,
+            'priority' => 0,
+          );
+        }
+      }
+    }
+
+    // This is so the resource contributor can view his own nodes regardless of state.
+    if ($restricted) {
+      $grants[] = array(
+        'realm' => 'node_author',
+        'gid' => $node->uid,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+        'priority' => 0,
+      );
+    }
+
+    return $grants;
+  }
+}
+
+/**
+ * Implements hook_node_grants().
+ *
+ * @param $account
+ * @param $op
+ */
+function sbac_resource_node_grants($account, $op) {
+  if (in_array('resource reviewer', $account->roles)) {
+    $grants['gk_review_in_progress'] = array($account->uid);
+    $grants['able_to_review_qc'] = array($account->uid);
+    $grants['completed_gk'] = array($account->uid);
+  }
+
+  if (in_array('resource publisher', $account->roles)) {
+    $grants['able_to_review_post'] = array($account->uid);
+  }
+
+  $grants['node_author'] = array($account->uid);
+  return $grants;
 }
 
 /**

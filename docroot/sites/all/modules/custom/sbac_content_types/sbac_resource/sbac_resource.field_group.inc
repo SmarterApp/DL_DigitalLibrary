@@ -23,12 +23,12 @@ function sbac_resource_field_group_info() {
     'label' => 'Advanced',
     'weight' => '4',
     'children' => array(
-      0 => 'field_view_permissions_per_state',
-      1 => 'field_posting_options',
-      2 => 'field_posting_options_comment',
+      0 => 'field_subscription_package_type',
+      1 => 'field_view_permissions',
+      2 => 'field_view_permissions_per_state',
       3 => 'field_resource_actions',
-      4 => 'field_subscription_package_type',
-      5 => 'field_view_permissions',
+      4 => 'field_posting_options',
+      5 => 'field_posting_options_comment',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

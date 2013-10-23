@@ -188,12 +188,18 @@ function feedback_post_form_submit($form, &$form_state) {
         drupal_set_message(t('Post review process could not be started because another user is currently reviewing the resource.'), 'error');
       }
 
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
       break;
 
     case 'cancel':
       if ($entity = entity_load_single('feedback', $form_state['build_info']['args'][3])) {
         $entity->status = 0;
         entity_save('feedback', $entity);
+
+        // rebuild permissions
+        node_access_acquire_grants($node, TRUE);
       }
 
       break;
