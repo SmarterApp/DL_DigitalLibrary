@@ -335,6 +335,7 @@ function sbac_report_csv_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Export'),
     '#submit' => array('export_report_user_activity'),
+    '#prefix' => '<div class="clear"></div>',
   );
 
   $form['#validate'][] = 'sbac_report_csv_form_validate';
