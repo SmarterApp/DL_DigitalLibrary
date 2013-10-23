@@ -414,6 +414,9 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
         send_review_notifications($task, $node, $reviews);
       }
 
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
       break;
   }
 

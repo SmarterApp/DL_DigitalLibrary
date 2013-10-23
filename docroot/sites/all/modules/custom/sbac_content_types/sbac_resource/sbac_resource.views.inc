@@ -33,10 +33,6 @@ function sbac_resource_views_query_alter(&$view, &$query) {
         unset($query->where[1]['conditions'][3]['value']['qc_being_reviewed']);
       }
     }
-
-    if (isset($query->where['AND']['conditions'][0]['field']->conditions[0])) {
-      unset($query->where['AND']['conditions'][0]['field']->conditions[0]);
-    }
   }
 }
 
