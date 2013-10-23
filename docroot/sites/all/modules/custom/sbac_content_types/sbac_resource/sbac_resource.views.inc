@@ -20,17 +20,13 @@ function sbac_resource_views_query_alter(&$view, &$query) {
     else {
       if (in_array('resource reviewer', $user->roles)) {
         // Can see needs review, being reviewed
-        unset($query->where[1]['conditions'][3]['value']['needs_post_review']);
-        unset($query->where[1]['conditions'][3]['value']['post_being_reviewed']);
+        unset($query->where[1]['conditions'][3]['value'][2]);
       }
 
       if (in_array('resource publisher', $user->roles)) {
         // Can see approved
-        unset($query->where[1]['conditions'][3]['value']['needs_review']);
-        unset($query->where[1]['conditions'][3]['value']['needs_gk_review']);
-        unset($query->where[1]['conditions'][3]['value']['gk_being_reviewed']);
-        unset($query->where[1]['conditions'][3]['value']['needs_qc_review']);
-        unset($query->where[1]['conditions'][3]['value']['qc_being_reviewed']);
+        unset($query->where[1]['conditions'][3]['value'][0]);
+        unset($query->where[1]['conditions'][3]['value'][1]);
       }
     }
   }
