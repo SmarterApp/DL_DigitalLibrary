@@ -342,17 +342,7 @@ function create_user_activity_from_data($user_activity)
   return $csv;
 }
 
-function _cex_download( $output, $filename )
-{
-  header("Pragma: public");
-  header("Expires: 0");
-  header("Cache-Control: private");
-  header("Content-type: application/octet-stream");
-  header("Content-Disposition: attachment; filename=$filename");
-  header("Accept-Ranges: bytes");
-  echo $output;
-  exit;
-}
+
 
 function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, $toskeys)
 {

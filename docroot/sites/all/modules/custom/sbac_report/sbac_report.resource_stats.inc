@@ -89,7 +89,7 @@ function query_taxonomy_term($sql)
  */
 function sbac_report_resource_type_options()
 {
-  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 14";
+  $sql = "SELECT * FROM taxonomy_term_data where vid = 14";
   return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_type_option()
@@ -101,7 +101,7 @@ function sbac_report_default_resource_type_option()
  */
 function sbac_report_resource_status_options()
 {
-  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 13";
+  $sql = "SELECT * FROM taxonomy_term_data where vid = 13";
   return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_status_option()
@@ -113,7 +113,7 @@ function sbac_report_default_resource_status_option()
  */
 function sbac_report_resource_subject_options()
 {
-  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 9";
+  $sql = "SELECT * FROM taxonomy_term_data where vid = 9";
   return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_subject_option()
@@ -126,7 +126,7 @@ function sbac_report_default_resource_subject_option()
  */
 function sbac_report_resource_grade_options()
 {
-  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 16";
+  $sql = "SELECT * FROM taxonomy_term_data where vid = 16";
   return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_grade_option()
@@ -139,7 +139,7 @@ function sbac_report_default_resource_grade_option()
  */
 function sbac_report_resource_attribute_options()
 {
-  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 28";
+  $sql = "SELECT * FROM taxonomy_term_data where vid = 28";
   return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_attribute_option()
