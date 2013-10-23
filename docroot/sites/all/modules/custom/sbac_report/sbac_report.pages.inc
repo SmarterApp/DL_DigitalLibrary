@@ -16,7 +16,7 @@ function sbac_report_individual() {
   $gate_keeping = '';
   $all_reviews = '';
   $summation = '';
-
+  
   // Get SESSION values.
   $uid = sbac_report_get_session_value('sne', 'uid');
   $state_tid = sbac_report_get_session_value('state', 'tid');

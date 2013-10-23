@@ -470,7 +470,7 @@ function sbac_resource_resource_review_apply_filters(&$view) {
         }
         else {
           $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
-          array_merge($view_filters['field_subject_tid']['value'], $subjects);
+          $view_filters['field_subject_tid']['value'] = array_merge($view_filters['field_subject_tid']['value'], $subjects);
         }
       }
 
@@ -503,7 +503,7 @@ function sbac_resource_resource_review_apply_filters(&$view) {
       );
 
       if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
-        $groups['groups'][2] = 'OR';
+        $groups['groups'][2] = 'AND';
       }
 
       $view->display_handler->set_option('filter_groups', $groups);
