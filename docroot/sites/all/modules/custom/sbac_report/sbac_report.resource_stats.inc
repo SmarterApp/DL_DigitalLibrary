@@ -73,28 +73,52 @@ function sbac_csv_report_resource_stats_export_form_submit()
 {
   echo "done";
 }
+function query_taxonomy_term($sql)
+{
+  $result = db_query($sql);
+  $values = array();
+  $values[0] = 'All';
+
+  foreach ($result as $record) {
+    $values[$record->tid] = $record->name;
+  }
+  return $values;
+}
 /*
  * Resource Type
  */
 function sbac_report_resource_type_options()
 {
-  return array(0=>"type",1=>"two",2=>"three");
+  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 14";
+  return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_type_option()
 {
-  return "two";
+  return 0;
 }
-
+/*
+ * Resource Status
+ */
+function sbac_report_resource_status_options()
+{
+  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 13";
+  return query_taxonomy_term($sql);
+}
+function sbac_report_default_resource_status_option()
+{
+  return 0;
+}
 /*
  * Resource Subject
  */
 function sbac_report_resource_subject_options()
 {
-  return array(0=>"subject",1=>"two",2=>"three");
+  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 9";
+  return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_subject_option()
 {
-  return "two";
+  return 0;
 }
 
 /*
@@ -102,11 +126,12 @@ function sbac_report_default_resource_subject_option()
  */
 function sbac_report_resource_grade_options()
 {
-  return array(0=>"grade",1=>"two",2=>"three");
+  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 16";
+  return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_grade_option()
 {
-  return "two";
+  return 0;
 }
 
 /*
@@ -114,21 +139,11 @@ function sbac_report_default_resource_grade_option()
  */
 function sbac_report_resource_attribute_options()
 {
-  return array(0=>"attribute",1=>"two",2=>"three");
+  $sql = "SELECT * FROM sbac.taxonomy_term_data where vid = 28";
+  return query_taxonomy_term($sql);
 }
 function sbac_report_default_resource_attribute_option()
 {
-  return "two";
+  return 0;
 }
 
-/*
- * Resource Status
- */
-function sbac_report_resource_status_options()
-{
-  return array(0=>"status",1=>"two",2=>"three");
-}
-function sbac_report_default_resource_status_option()
-{
-  return "two";
-}
