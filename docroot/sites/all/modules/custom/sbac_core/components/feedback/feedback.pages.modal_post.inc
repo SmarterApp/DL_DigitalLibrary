@@ -167,21 +167,26 @@ function feedback_post_form_submit($form, &$form_state) {
     case 'start':
       global $user;
 
-      $entity = new stdClass;
-      $entity->title = $node->title .' - Post - ' . $user->uid;
-      $entity->type = 'post';
-      $entity->uid = $user->uid;
-      $entity->created = REQUEST_TIME;
-      $entity->changed = REQUEST_TIME;
-      $entity->language = LANGUAGE_NONE;
-      $entity->status = 1;
-      $entity->completed = 0;
-      $entity->current = 1;
-      $entity->node_id = $node->nid;
+      if (resource_access('view post', $node, $user)) {
+        $entity = new stdClass;
+        $entity->title = $node->title .' - Post - ' . $user->uid;
+        $entity->type = 'post';
+        $entity->uid = $user->uid;
+        $entity->created = REQUEST_TIME;
+        $entity->changed = REQUEST_TIME;
+        $entity->language = LANGUAGE_NONE;
+        $entity->status = 1;
+        $entity->completed = 0;
+        $entity->current = 1;
+        $entity->node_id = $node->nid;
 
-      drupal_set_message(t('Post review process started.'));
+        drupal_set_message(t('Post review process started.'));
 
-      entity_save('feedback', $entity);
+        entity_save('feedback', $entity);
+      }
+      else {
+        drupal_set_message(t('Post review process could not be started because another user is currently reviewing the resource.'), 'error');
+      }
 
       break;
 
