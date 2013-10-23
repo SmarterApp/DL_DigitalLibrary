@@ -152,57 +152,6 @@ function sbac_resource_views_pre_render(&$view) {
 //      }
 //    }
 
-    // Determine the user who is loading the view.
-//    global $user;
-//    $roles = array();
-//    if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
-//      $roles['both_roles'] = TRUE;
-//    }
-//    else {
-//      if (in_array('resource reviewer', $user->roles)) {
-//        $roles['rr'] = TRUE;
-//      }
-//      if (in_array('resource publisher', $user->roles)) {
-//        $roles['rp'] = TRUE;
-//      }
-//    }
-
-    // if the user is a resource reviewer.
-//    if (isset($roles['rr']) && $roles['rr']) {
-//      foreach ($view->result as $key => $result) {
-//        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'being_reviewed') {
-//          // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
-//          $gate_keeper = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
-//          if ($gate_keeper) {
-//            unset($view->result[$key]);
-//          }
-//          // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
-//          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
-//          if (count($feedback) == 3) {
-//            unset($view->result[$key]);
-//          }
-//          // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
-//          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
-//          if ($feedback) {
-//            unset($view->result[$key]);
-//          }
-//        }
-//      }
-//    }
-
-    // If the user if a resource publisher.
-//    if (isset($roles['rp']) && $roles['rp']) {
-//      foreach ($view->result as $key => $result) {
-//        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'approved') {
-//          // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
-//          $feedback = _sbac_resource_determine_feedback($result->nid, 'post', $user->uid, 1, 0, 1, 'set', TRUE);
-//          if ($feedback) {
-//            unset($view->result[$key]);
-//          }
-//        }
-//      }
-//    }
-
     if ($filter_terms) {
       sbac_resource_determine_view_output($view, $filter_terms, $roles);
     }
