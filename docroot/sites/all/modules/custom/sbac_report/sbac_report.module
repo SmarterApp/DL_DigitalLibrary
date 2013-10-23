@@ -6,6 +6,7 @@
 
 include_once 'sbac_report.features.inc';
 include_once 'sbac_report.user_activity.inc';
+include_once 'sbac_report.resource_stats.inc';
 
 /**
  * Implements hook_update_projects_alter().
@@ -46,11 +47,20 @@ function sbac_report_menu() {
     'access callback' => 'sbac_report_user_access',
     'type' => MENU_CALLBACK,
   );
+
   $items['export_report_user_activity'] = array(
     'title' => 'Export Report User Activity',
     'file' => 'sbac_report.pages.inc',
-    'page callback' => 'sbac_report_csv_export_form_submit',
-    'access callback' => 'sbac_report_csv_export_form_submit',
+    'page callback' => 'sbac_csv_report_user_activity_export_form_submit',
+    'access callback' => 'sbac_csv_report_user_activity_export_form_submit',
+    'type' => MENU_CALLBACK
+  );
+
+  $items['export_report_resource_stats'] = array(
+    'title' => 'Export Report Detailed Resource Statistics',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+    'access callback' => 'sbac_csv_report_resource_stats_export_form_submit',
     'type' => MENU_CALLBACK
   );
 
@@ -88,15 +98,24 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     ),
   );
 
-  $themes['sbac_report_csv'] = array(
-      'template' => 'templates/sbac-report-csv',
+  $themes['sbac_csv_report_user_activity'] = array(
+      'template' => 'templates/sbac-csv-report-user-activity',
       'path' => $module_path,
-      'file' => 'sbac_report.preprocess.inc',
+//      'file' => 'sbac_report.preprocess.inc',
       'preprocess functions' => array(
           'template_preprocess',
-          'sbac_report_preprocess_sbac_report_csv',
+//          'sbac_report_preprocess_sbac_csv_report_user_activity',
       ),
   );
+
+  $themes['sbac_csv_report_resource_stats'] = array(
+    'template' => 'templates/sbac-csv-report-resource-stats',
+    'path' => $module_path,
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
   $themes['sbac_report_date_range_dropdown'] = array(
     'template' => 'templates/sbac-report-date-range-dropdown',
     'path' => $module_path,
@@ -114,7 +133,6 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'template_preprocess',
     ),
   );
-
 
   $themes['views_view_fields__sne_details'] = array(
     'template' => 'views-view-fields--sne-details',
@@ -256,101 +274,6 @@ function sbac_report_individual_form_submit($form, &$form_state) {
   $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
 }
 
-
-/**
- * CSV Report filter form.
- */
-function sbac_report_csv_form($form, &$form_state) {
-  $form = array();
-
-  // Make sure to load this after autocomplete.js
-  // @see sbac_report.csv.js
-  $form['#attached']['js'] = array(
-    drupal_get_path('module', 'sbac_report') .
-    '/js/sbac_report.csv.js' => array('weight' => 99),
-  );
-
-  $form['state'] = array(
-    '#type' => 'select',
-    '#title' => t('Choose a state'),
-    '#options' => sbac_report_state_options(),
-    '#multiple' => FALSE,
-    '#default_value' => sbac_report_get_default_state_tid(),
-    '#ajax' => array(
-      'callback' => 'sbac_report_state_ajax',
-    ),
-    '#required' => TRUE,
-  );
-  // TODO: user groups instead of SNE.
-  $user_group_options = sbac_report_user_group_options();
-
-  $form['user_group_dropdown'] = array(
-    '#type' => 'select',
-    '#title' => t('Choose User Groups'),
-    '#options' => $user_group_options,
-    '#multiple' => TRUE,
-    '#default_value' => sbac_report_get_default_usergroup(),
-    '#required' => TRUE,
-  );
-
-  $form['user_sne_slt_radio']['sne-slt-filter'] = array(
-    '#type' => 'radios',
-    '#title' => t('SNE/SLT Filter'),
-    '#description' => t('Filter results by SNE/SLT'),
-    '#default_value' => variable_get('sne-slt-filter', 2),
-    '#options' => array(
-      t('SNE'),
-      t('SLT'),
-      t('Both SNE and SLT'),
-    ),
-
-  );
-//  $form['user_group_dropdown'] = array(
-//    '#type' => 'markup',
-//    '#markup' => theme('sbac_report_user_group_dropdown',
-//      array('user_group_options' => $user_group_options,
-//      )
-//    ),
-//  );
-  $date_options = sbac_report_date_range_options();
-  $session_date_range = sbac_report_get_session_value('date_range', 'range');
-
-  // If there was no date range stored in SESSION.
-  // Default to the "Last 30 Days".
-  if (empty($session_date_range)) {
-    $session_date_range = $date_options['Last 30 Days'];
-    $date_display = t('Last 30 Days');
-  }
-  // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
-  elseif ($key = array_search($session_date_range, $date_options)) {
-    $date_display = t($key);
-  }
-  // If it was a custom selection, format the string.
-  else {
-    $date_display = sbac_report_format_date_range($session_date_range);
-  }
-
-  sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options, '1');
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Export'),
-    '#submit' => array('sbac_report_csv_export_form_submit'),
-  );
-
-  $form['#validate'][] = 'sbac_report_csv_form_validate';
-
-  return $form;
-}
-
-/**
- * CSV Report: form validate.
- */
-function sbac_report_csv_form_validate($form, &$form_state) {
-  if (false) {
-     // TODO: validate csv form
-  }
-}
 
 
 
@@ -535,25 +458,23 @@ function sbac_report_date_range_options() {
  * Options for the user groups.
  */
 function sbac_report_user_group_options() {
-  // TODO: get this data from the database
-//  $options = array(
-//    0 => 'End Users' ,
-//    3 => 'Contributors',
-//    6 => 'Reviewers',
-//    9 => 'Posters',
-//    12 => 'SNE Members',
-//    15=> 'SLT Members',
-//    18=> 'Moderators',
-//    7 => 'Facilitators',
-//    8 => 'DLRB Members',
-//    19 => 'Admins',
-//  );
+
   $options = get_user_groups();
-  // TODO: get this from the database:
-  $options[100] = 'SNE Members';
-  $options[101] = 'SLT Members';
-  // TODO: filter out unwanted values from the database query.???
-  // anonymous user, authenticated user, onboarding?
+  // TODO: filter out unwanted values from the database query.
+  // requirements are for these values:
+  //  $options = array(
+  //    0 => 'End Users' ,
+  //    3 => 'Contributors',
+  //    6 => 'Reviewers',
+  //    9 => 'Posters',
+  //    12 => 'SNE Members',
+  //    15=> 'SLT Members',
+  //    18=> 'Moderators',
+  //    7 => 'Facilitators',
+  //    8 => 'DLRB Members',
+  //    19 => 'Admins',
+  //  );
+  // filter out: anonymous user, authenticated user, onboarding?
 
   return $options;
 }
