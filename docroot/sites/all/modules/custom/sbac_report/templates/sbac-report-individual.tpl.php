@@ -4,7 +4,7 @@
  * Template for SBAC Individual Report page.
  */
 ?>
-<h2><?php print t('Individual Contributor and Reviewer Report'); ?></h2>
+<h2 class="report-title"><?php print t('Individual Contributor and Reviewer Report'); ?></h2>
 <div class="report-form-container"><?php print drupal_render($form); ?></div>
 <hr>
 <?php if (!empty($sne_details) && !empty($contributed_summary)) : ?>
