@@ -368,6 +368,14 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['field_first_name']['element_type'] = 'h2';
   $handler->display->display_options['fields']['field_first_name']['element_class'] = 'name clearfix';
   $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
+  /* Field: User: Title */
+  $handler->display->display_options['fields']['field_position']['id'] = 'field_position';
+  $handler->display->display_options['fields']['field_position']['table'] = 'field_data_field_position';
+  $handler->display->display_options['fields']['field_position']['field'] = 'field_position';
+  $handler->display->display_options['fields']['field_position']['label'] = '';
+  $handler->display->display_options['fields']['field_position']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_position']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_position']['type'] = 'taxonomy_term_reference_plain';
   /* Field: User: State */
   $handler->display->display_options['fields']['field_state']['id'] = 'field_state';
   $handler->display->display_options['fields']['field_state']['table'] = 'field_data_field_state';
@@ -383,7 +391,7 @@ function sbac_report_views_default_views() {
   $handler->display->display_options['fields']['nothing_3']['table'] = 'views';
   $handler->display->display_options['fields']['nothing_3']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_3']['label'] = '';
-  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = 'SNE from [field_state]';
+  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = '[field_position] from [field_state]';
   $handler->display->display_options['fields']['nothing_3']['element_label_colon'] = FALSE;
   /* Field: User: District Name */
   $handler->display->display_options['fields']['field_district_name']['id'] = 'field_district_name';

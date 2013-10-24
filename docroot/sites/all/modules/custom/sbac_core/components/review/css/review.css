@@ -306,48 +306,83 @@
   display: none;
   /*margin-top: 5px;*/
 }
-/* line 321, ../sass/review.scss */
+/* line 320, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer {
+  clear: both;
+  padding-top: 10px;
+}
+/* line 324, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .rate-widget {
   padding: 15px 0;
 }
-/* line 324, ../sass/review.scss */
+/* line 327, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .rate-widget .vote {
   padding: 0 10px;
 }
-/* line 327, ../sass/review.scss */
+/* line 330, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .rate-widget .vote .action-triggers {
   display: none;
 }
-/* line 333, ../sass/review.scss */
+/* line 336, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer .field-name-field-appropriate-for {
+  padding-top: 0px;
+  border-top: 1px solid #eee;
+  font-size: 0.95em;
+}
+/* line 341, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .field-label {
+  color: inherit;
+  font-size: 0.8em;
+}
+/* line 346, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer .field-name-field-appropriate-for ul {
+  font-size: 0.8em;
+  margin: 0 0 20px 0;
+  padding: 0;
+}
+/* line 351, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer .field-name-field-appropriate-for ul li {
+  list-style-type: none;
+  padding: 5px 0;
+}
+/* line 358, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .term {
+  padding: 10px;
+}
+/* line 361, ../sass/review.scss */
+.entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .term.highlight {
+  font-weight: bold;
+}
+/* line 367, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer h2 {
   font-size: 18px;
   margin-top: 10px;
 }
-/* line 338, ../sass/review.scss */
+/* line 372, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-review-vote {
   float: left;
   width: 740px;
 }
-/* line 343, ../sass/review.scss */
+/* line 377, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-review-delete {
   float: right;
   padding-top: 5px;
   text-align: right;
   width: 90px;
 }
-/* line 350, ../sass/review.scss */
+/* line 384, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-flagging-form {
   clear: both;
 }
 
-/* line 357, ../sass/review.scss */
+/* line 391, ../sass/review.scss */
 .footer-title {
   font-weight: bold;
   margin: 10px 0;
 }
 
 /* modals */
-/* line 364, ../sass/review.scss */
+/* line 398, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -356,42 +391,42 @@
   line-height: normal;
   text-align: left;
 }
-/* line 373, ../sass/review.scss */
+/* line 407, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 377, ../sass/review.scss */
+/* line 411, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   /*float: none;*/
 }
-/* line 382, ../sass/review.scss */
+/* line 416, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
-/* line 388, ../sass/review.scss */
+/* line 422, ../sass/review.scss */
 .dialog_review_end_use_form_delete #dialog .form-submit {
   float: right;
 }
 
-/* line 394, ../sass/review.scss */
+/* line 428, ../sass/review.scss */
 .rating-label {
   font-size: 12px;
   margin-top: 10px;
 }
 
 /* user tooltips */
-/* line 401, ../sass/review.scss */
+/* line 435, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }
-/* line 405, ../sass/review.scss */
+/* line 439, ../sass/review.scss */
 .account-tooltip .line {
   display: none;
 }
 
-/* line 411, ../sass/review.scss */
+/* line 445, ../sass/review.scss */
 .fivestar-widget {
   padding: 5px 0;
 }

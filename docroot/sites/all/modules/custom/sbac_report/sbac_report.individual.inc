@@ -160,7 +160,6 @@ function sbac_report_individual_form_submit($form=null, &$form_state=null) {
       $_SESSION['sbac_report']['active_tab'] = 0;
       return;
     }
-
   }
   $_SESSION['sbac_report']['summation'] = $summation;
   $_SESSION['sbac_report']['sne_details'] = $sne_details;
