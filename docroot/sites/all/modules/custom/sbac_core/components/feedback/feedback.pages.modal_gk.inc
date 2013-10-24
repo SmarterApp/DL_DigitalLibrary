@@ -178,6 +178,8 @@ function feedback_gate_keeper_form_submit($form, &$form_state) {
         node_access_acquire_grants($node, TRUE);
       }
 
+      sbac_resource_save_current_state($node);
+
       break;
 
     case 'cancel':
@@ -187,6 +189,8 @@ function feedback_gate_keeper_form_submit($form, &$form_state) {
 
         // rebuild permissions
         node_access_acquire_grants($node, TRUE);
+
+        sbac_resource_save_current_state($node);
       }
 
       break;

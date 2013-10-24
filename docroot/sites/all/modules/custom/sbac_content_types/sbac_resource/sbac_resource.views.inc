@@ -129,31 +129,46 @@ function sbac_resource_views_pre_render(&$view) {
   if ($view->name == 'resource_review') {
     $filter_terms = array();
     // Check for the resource_state filter option.
-//    if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
-//      $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
-//      $filters = explode('::', $current_filters);
-//      if ($filters) {
-//        foreach ($filters as $filter) {
-//          $filter_info = explode(':', $filter);
-//          if ($filter_info && sizeof($filter_info) == 2) {
-//            $vid = $filter_info[0];
-//            $tid = $filter_info[1];
-//            if ($vid && $tid) {
-//              $vocabulary = taxonomy_vocabulary_load($vid);
-//              $term = taxonomy_term_load($tid);
-//              if ($vocabulary && $term) {
-//                if ($vocabulary->machine_name == 'resource_states') {
-//                  $filter_terms[] = $term->name;
-//                }
-//              }
-//            }
-//          }
-//        }
-//      }
-//    }
+    if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
+      $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
+      $filters = explode('::', $current_filters);
+      if ($filters) {
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            if ($vid && $tid) {
+              $vocabulary = taxonomy_vocabulary_load($vid);
+              $term = taxonomy_term_load($tid);
+              if ($vocabulary && $term) {
+                if ($vocabulary->machine_name == 'resource_states') {
+                  $filter_terms[] = $term->name;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Determine the user who is loading the view.
+    global $user;
+    $roles = array();
+    if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
+      $roles['both_roles'] = TRUE;
+    }
+    else {
+      if (in_array('resource reviewer', $user->roles)) {
+        $roles['rr'] = TRUE;
+      }
+      if (in_array('resource publisher', $user->roles)) {
+        $roles['rp'] = TRUE;
+      }
+    }
 
     if ($filter_terms) {
-      sbac_resource_determine_view_output($view, $filter_terms, $roles);
+//      sbac_resource_determine_view_output($view, $filter_terms, $roles);
     }
   }
 }
