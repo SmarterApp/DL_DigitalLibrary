@@ -62,16 +62,16 @@ function sbac_resource_schema() {
     'fields' => array(
       'nid' => array(
         'type' => 'int',
-        'size' => 'big',
         'unsigned' => TRUE,
-        'not null' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
         'description' => t('The nid of the resource'),
       ),
       'uid' => array(
         'type' => 'int',
-        'size' => 'big',
         'unsigned' => TRUE,
-        'not null' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
         'description' => t('The uid who modified the resource'),
       ),
       'state' => array(
@@ -85,6 +85,7 @@ function sbac_resource_schema() {
     'indexes' => array(
       'nid' => array('nid'),
       'uid' => array('uid'),
+      'both' => array('nid', 'uid'),
     ),
   );
   return $schema;
