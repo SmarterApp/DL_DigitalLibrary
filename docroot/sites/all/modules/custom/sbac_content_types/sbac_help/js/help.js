@@ -29,14 +29,12 @@
   Drupal.behaviors.sbac_help_area = {
     attach: function (context, settings) {
       $('#helpmodal .views-field-field-help-icon a').click(function (e) {
-        alert("NO WAY");
         var nid = $(this).parents('.views-field-field-help-icon').next('.views-field-title').next('.views-field-nid').find('.field-content').html();
         sbacHelpAjax(nid);
         return false;
       });
 
       $('#helpmodal .views-field-title a').click(function (e) {
-        alert("NO WAY 2");
         var nid = $(this).parents('.views-field-title').next('.views-field-nid').find('.field-content').html();
         sbacHelpAjax(nid);
         return false;

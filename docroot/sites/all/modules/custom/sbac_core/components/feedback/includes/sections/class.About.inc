@@ -10,7 +10,7 @@ class About extends Base {
    * Returns a modal-triggering "start review" link.
    * @return [type]       [description]
    */
-  public function getStartLink($stub, $machine_name) {
+  public function getStartLink($stub = '', $machine_name = '') {
     if (!resource_access('start gate keeper', $this->_node)) {
       return '';
     }
