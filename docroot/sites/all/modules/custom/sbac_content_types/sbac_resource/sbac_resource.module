@@ -993,7 +993,6 @@ function sbac_resource_node_access_records($node) {
   if ($node->type == 'resource') {
     $grants = array();
     $restricted = FALSE;
-
     // Being reviewed node access perms.
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
       $accounts = sbac_resource_get_users_by_role('resource reviewer');
