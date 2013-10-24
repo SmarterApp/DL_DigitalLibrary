@@ -726,6 +726,10 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
  */
 function sbac_resource_save_current_state($node) {
   if ($node->type == 'resource') {
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
+      sbac_resource_save_resource_state_for_all_role($node, 'resource reviewer', 'needs_review');
+    }
+
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
       // new one, if gate keeping in progress, give access to that user, no one else
       $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
@@ -789,6 +793,11 @@ function sbac_resource_save_current_state($node) {
       }
     }
 
+    if (isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state != 'needs_review') {
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', NULL, array('needs_review'));
+    }
+
     // if the node is in neither state, delete all records associated to this role and node.
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state != 'being_reviewed' &&
@@ -801,6 +810,20 @@ function sbac_resource_save_current_state($node) {
       $node->workbench_moderation['current']->state != 'approved') {
       sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', NULL, array('post_being_reviewed', 'post_needs_review'));
     }
+  }
+}
+
+/**
+ * Implements hook_query_alter().
+ *
+ * Alters the resource review view since the group by statement doesn't work
+ * in the hook_views_query_alter(). This is a bug in views.
+ *
+ * @param $query
+ */
+function sbac_resource_query_alter( &$query) {
+  if($query->alterMetaData['view']->name == "resource_review"){
+    $query->groupBy("node.nid");
   }
 }
 
