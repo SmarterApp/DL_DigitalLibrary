@@ -267,9 +267,9 @@ function create_resource_stats_from_data($nodes)
   validate_and_fill_out_resource_stats($node, $fieldkeys, $foreignidkeys, $stringkeys);
 
   $titles = '';
-  foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey.$separator; }
-  foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey.$separator; }
-  foreach ($stringkeys as $stringkey) { $titles .= $stringkey.$separator; }
+  foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey[1].$separator; }
+  foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey[1].$separator; }
+  foreach ($stringkeys as $stringkey) { $titles .= $stringkey[1].$separator; }
 
   $titles = substr($titles, 0, -1);
   $titles .= "\r\n";
@@ -281,14 +281,14 @@ function create_resource_stats_from_data($nodes)
     $nid = $resource->{'nid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
-      format_value_field($row, $resource->{$fieldkey}, $separator, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $resource->{$fieldkey[0]}, $separator, $subseparator, $quote_arrays, $subquote);
     }
     foreach ($foreignidkeys as $foreignidkey) {
       // tid is replaced by the actual value in the value field.
-      format_value_field($row, $resource->{$foreignidkey}, $separator, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $resource->{$foreignidkey[0]}, $separator, $subseparator, $quote_arrays, $subquote);
     }
     foreach ($stringkeys as $stringkey) {
-      $row .= $resource->{$stringkey} . $separator;
+      $row .= $resource->{$stringkey[0]} . $separator;
     }
 
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
@@ -379,18 +379,34 @@ function validate_and_fill_out_resource_stats(&$resource_nodes, &$fieldkeys, &$f
   foreach ($resource_nodes['resource_nodes'] as $resource_node) {
     $uid = $resource_node->{'uid'};
     foreach ($fieldkeys as $fieldkey) {
-      format_value_property($resource_node, $fieldkey, $missing_string);
+      format_value_property($resource_node, $fieldkey[0], $missing_string);
     }
     // build taxonomy index table while validating. grab all the ids then
     // load them all in one has table for quick reference.
     foreach ($foreignidkeys as $foreignidkey) {
-      format_tid_property($resource_node, $foreignidkey, $missing_string, $used_tids);
+      format_tid_property($resource_node, $foreignidkey[0], $missing_string, $used_tids);
     }
 
     foreach ($stringkeys as $stringkey) {
-      if (!property_exists($resource_node,$stringkey)) {
-        $resource_node->{$stringkey} = $missing_string;
+      if (!property_exists($resource_node,$stringkey[0])) {
+        $resource_node->{$stringkey[0]} = $missing_string;
       }
+    }
+  }
+  // have all the tids, now get the term data and set the report values:
+  # terms of service.
+  $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
+    implode(',',array_keys($used_tids)));
+  $result = db_query($sql);
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->tid] = $record;
+  }
+  $tid_terms = $values;
+
+  foreach ($resource_nodes as $resource_node) {
+    foreach ($foreignidkeys as $foreignidkey) {
+      set_tid_property($resource_node, $foreignidkey[0], $tid_terms);
     }
   }
 }

@@ -486,7 +486,7 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   // have all the tids, now get the term data and set the report values:
   # terms of service.
   $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
-    $usergroups = implode(',',array_keys($used_tids)));
+    implode(',',array_keys($used_tids)));
   $result = db_query($sql);
   $values = array();
   foreach ($result as $record) {
