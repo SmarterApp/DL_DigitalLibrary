@@ -87,6 +87,8 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
   $_SESSION['sbac_report']['active_tab'] = 2;
   // _cex exits and does not return.
   _cex_download($csv_resource_stats_result, 'output.csv');
+  // can't get back to clear errors because fo the exit from _cex to force the
+  // download of the csv file. drupal_goto('/reports');
   // _cex exits and does not return.
 }
 
