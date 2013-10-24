@@ -313,11 +313,11 @@ function create_user_activity_from_data($user_activity)
   validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys);
 
   $titles = '';
-  foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey.$separator; }
-  foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey.$separator; }
-  foreach ($stringkeys as $stringkey) { $titles .= $stringkey.$separator; }
-  foreach ($uidcountkeys as $uidcountkey) { $titles .= $uidcountkey.$separator; }
-  foreach ($toskeys as $toskey) { $titles .= $toskey.$separator; }
+  foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey[1].$separator; }
+  foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey[1].$separator; }
+  foreach ($stringkeys as $stringkey) { $titles .= $stringkey[1].$separator; }
+  foreach ($uidcountkeys as $uidcountkey) { $titles .= $uidcountkey[1].$separator; }
+  foreach ($toskeys as $toskey) { $titles .= $toskey[1].$separator; }
   $titles = substr($titles, 0, -1);
   $titles .= "\r\n";
 
@@ -328,20 +328,20 @@ function create_user_activity_from_data($user_activity)
     $uid = $user_profile->{'uid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
-      format_value_field($row, $user_profile->{$fieldkey}, $separator, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $user_profile->{$fieldkey[0]}, $separator, $subseparator, $quote_arrays, $subquote);
     }
     foreach ($foreignidkeys as $foreignidkey) {
       // tid is replaced by the actual value in the value field.
-      format_value_field($row, $user_profile->{$foreignidkey}, $separator, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $user_profile->{$foreignidkey[0]}, $separator, $subseparator, $quote_arrays, $subquote);
     }
     foreach ($stringkeys as $stringkey) {
-      $row .= $user_profile->{$stringkey} . $separator;
+      $row .= $user_profile->{$stringkey[0]} . $separator;
     }
     foreach ($uidcountkeys as $uidcountkey) {
-      $row .= $user_activity[$uidcountkey][$uid]->count . $separator;
+      $row .= $user_activity[$uidcountkey[0]][$uid]->count . $separator;
     }
     foreach ($toskeys as $toskey) {
-      $row .=  $user_activity['tos'][$uid][$toskey] . $separator;
+      $row .=  $user_activity['tos'][$uid][$toskey[0]] . $separator;
     }
 
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
@@ -363,36 +363,36 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
 //    ' gk-reviews-completed, qc-reviews-completed, posting-reviews-completed'
 //    ."\r\n";
 
-  array_push($fieldkeys, 'field_first_name');
-  array_push($fieldkeys, 'field_last_name');
-  array_push($fieldkeys, 'field_sne_member');
-  array_push($fieldkeys, 'field_slt_member');
-  array_push($fieldkeys, 'field_district_name');
-  array_push($foreignidkeys, 'field_state');
-  array_push($foreignidkeys, 'field_grade_level_s_');
-  array_push($foreignidkeys, 'field_subject_s_');
-  array_push($foreignidkeys, 'field_special_populations');
+  array_push($fieldkeys, array('field_first_name', 'First Name'));
+  array_push($fieldkeys, array('field_last_name', 'Last Name'));
+  array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
+  array_push($fieldkeys, array('field_slt_member', 'Is SLT Member'));
+  array_push($fieldkeys, array('field_district_name', 'District'));
+  array_push($foreignidkeys, array('field_state', 'State'));
+  array_push($foreignidkeys, array('field_grade_level_s_', 'Grade(s)'));
+  array_push($foreignidkeys, array('field_subject_s_', 'Subject(s)'));
+  array_push($foreignidkeys, array('field_special_populations', 'School Population(s)'));
 
-  array_push($stringkeys, 'mail');
-  array_push($stringkeys, 'created');
-  array_push($stringkeys, 'access');
-  array_push($stringkeys, 'login');
+  array_push($stringkeys, array('mail', 'Email'));
+  array_push($stringkeys, array('created','Date Created'));
+  array_push($stringkeys, array('access','Last Access'));
+  array_push($stringkeys, array('login','Last Login'));
 
-  array_push($uidcountkeys, 'resources_viewed');
-  array_push($uidcountkeys, 'resources_reviewed');
-  array_push($uidcountkeys, 'resources_contributed');
-  array_push($uidcountkeys, 'gc_reviews_accepted_on_contributed_resources');
-  array_push($uidcountkeys, 'gc_reviews_completed');
-  array_push($uidcountkeys, 'qc_reviews_completed');
-  array_push($uidcountkeys, 'poster_reviews_completed');
-  array_push($uidcountkeys, 'contributed_resources_posted');
-  array_push($uidcountkeys, 'contributed_resources_posted_with_distinction');
-  array_push($uidcountkeys, 'contributed_resources_reviewed_and_returned');
+  array_push($uidcountkeys, array('resources_viewed','Resources Viewed'));
+  array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed'));
+  array_push($uidcountkeys, array('resources_contributed', 'Resources Contributed'));
+  array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contriubted Resources'));
+  array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
+  array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
+  array_push($uidcountkeys, array('poster_reviews_completed', 'Poster Reviews Completed'));
+  array_push($uidcountkeys, array('contributed_resources_posted', 'Contributed Resources Posted'));
+  array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', 'Contributed Resources Posted with Distinction'));
+  array_push($uidcountkeys, array('contributed_resources_reviewed_and_returned', 'Contributed Resources Reviewed and Returned'));
 
-  array_push($toskeys, 'tos-accepted');
-  array_push($toskeys, 'tos-version');
-  array_push($toskeys, 'tos-revision');
-  array_push($toskeys, 'tos-revision-date');
+  array_push($toskeys, array('tos-accepted', 'Date TOS Accepted'));
+  array_push($toskeys, array('tos-version', 'TOS Version'));
+  array_push($toskeys, array('tos-revision', 'TOS Revision'));
+  array_push($toskeys, array('tos-revision-date', 'Date of TOS Revision'));
 
   function format_value_property(&$user_profile, $fieldkey, $missing_string) {
     if (!property_exists($user_profile,$fieldkey)) {
@@ -455,30 +455,30 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   foreach ($user_activity['user_profiles'] as $user_profile) {
     $uid = $user_profile->{'uid'};
     foreach ($fieldkeys as $fieldkey) {
-      format_value_property($user_profile, $fieldkey, $missing_string);
+      format_value_property($user_profile, $fieldkey[0], $missing_string);
     }
     // build taxonomy index table while validating. grab all the ids then
     // load them all in one has table for quick reference.
     foreach ($foreignidkeys as $foreignidkey) {
-      format_tid_property($user_profile, $foreignidkey, $missing_string, $used_tids);
+      format_tid_property($user_profile, $foreignidkey[0], $missing_string, $used_tids);
     }
 
     foreach ($stringkeys as $stringkey) {
-      if (!property_exists($user_profile,$stringkey)) {
-        $user_profile->{$stringkey} = $missing_string;
+      if (!property_exists($user_profile,$stringkey[0])) {
+        $user_profile->{$stringkey[0]} = $missing_string;
       }
     }
     foreach ($uidcountkeys as $uidcountkey) {
-      if (is_null($user_activity[$uidcountkey][$uid])) {
-        $user_activity[$uidcountkey][$uid] = new stdClass();
-        $user_activity[$uidcountkey][$uid]->count = $missing_integer;
-        $user_activity[$uidcountkey][$uid]->uid = $uid;
+      if (is_null($user_activity[$uidcountkey[0]][$uid])) {
+        $user_activity[$uidcountkey[0]][$uid] = new stdClass();
+        $user_activity[$uidcountkey[0]][$uid]->count = $missing_integer;
+        $user_activity[$uidcountkey[0]][$uid]->uid = $uid;
       }
     }
     if (is_null($user_activity['tos'][$uid])) {
       $user_activity['tos'][$uid]['uid'] = $uid;
       foreach ($toskeys as $toskey) {
-        $user_activity['tos'][$uid][$toskey] = "";
+        $user_activity['tos'][$uid][$toskey[0]] = "";
       }
     }
   }
@@ -496,7 +496,7 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
 
   foreach ($user_activity['user_profiles'] as $user_profile) {
     foreach ($foreignidkeys as $foreignidkey) {
-      set_tid_property($user_profile, $foreignidkey, $tid_terms);
+      set_tid_property($user_profile, $foreignidkey[0], $tid_terms);
     }
   }
 }

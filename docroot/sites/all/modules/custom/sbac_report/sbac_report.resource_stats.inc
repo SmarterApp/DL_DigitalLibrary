@@ -193,6 +193,11 @@ function sbac_report_default_resource_attribute_option()
 function build_resource_stats_csv($resource_filters)
 {
   $resources = get_resources($resource_filters);
+
+  $nodes = node_load_multiple(array_keys($resources));
+
+  $file_data = create_resource_stats_from_data($nodes);
+
   return $resources;
 }
 
@@ -230,5 +235,164 @@ SQL;
   return $values;
 }
 
+function create_resource_stats_from_data($nodes)
+{
+  function format_value_field(&$row, $field, $separator, $subseparator, $quote_arrays, $subquote)
+  {
+    //reset($array); $first =  key($array);
+    $count = count($field['und']); $ix = 0;
+    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
+    foreach ($field['und'] as $array_value) {
+      $value = $array_value['value'];
+      $row .= $value . $subseparator;
+      $ix++;
+      if ($ix == $count) {
+        $row = substr($row, 0, -1);
+      } // reduce length by one removing the last sub-separator
+    }
+    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
+    $row .= $separator;
+  }
+
+  $separator = ', ';
+  $quote_arrays = true;
+  $subseparator = ';';
+  $subquote = "'";
+
+  ksort($node);
+
+  $fieldkeys = array();
+  $foreignidkeys = array();
+  $stringkeys = array();
+  validate_and_fill_out_resource_stats($node, $fieldkeys, $foreignidkeys, $stringkeys);
+
+  $titles = '';
+  foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey.$separator; }
+  foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey.$separator; }
+  foreach ($stringkeys as $stringkey) { $titles .= $stringkey.$separator; }
+
+  $titles = substr($titles, 0, -1);
+  $titles .= "\r\n";
+
+  $csv = $titles;
+  $count = count($nodes); $ix = 0;
+
+  foreach ($nodes as $resource) {
+    $nid = $resource->{'nid'};
+    $row = '';
+    foreach ($fieldkeys as $fieldkey) {
+      format_value_field($row, $resource->{$fieldkey}, $separator, $subseparator, $quote_arrays, $subquote);
+    }
+    foreach ($foreignidkeys as $foreignidkey) {
+      // tid is replaced by the actual value in the value field.
+      format_value_field($row, $resource->{$foreignidkey}, $separator, $subseparator, $quote_arrays, $subquote);
+    }
+    foreach ($stringkeys as $stringkey) {
+      $row .= $resource->{$stringkey} . $separator;
+    }
+
+    if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
+
+    $csv .= $row."\r\n";
+  }
+  return $csv;
+}
+
+
+
+function validate_and_fill_out_resource_stats(&$resource_nodes, &$fieldkeys, &$foreignidkeys, &$stringkeysb)
+{
+  // loop through all values and make sure 0's and '' are used as placeholders for missing values.
+//  $titles =  'first-name, last-name, state, district,school, grade,subject, school-population, email,'.
+//    ' is-slt, is-sne, date-created, last-access, last-login, '.
+//    ' date-of-terms-of-service, version-of-terms-of-service, date-of-service-version,'.
+//    ' resources-viewed, resources-reviewed-rated, resources-contributed,'.
+//    ' gk-reviews-accepted-on-contributed-resources, gk-reviews-returned-on-contributed-resources,'.
+//    ' contributed-resources-posted, contributed-resources-posted-with-distinction, contributed-resources-reviewed-and-returned'.
+//    ' gk-reviews-completed, qc-reviews-completed, posting-reviews-completed'
+//    ."\r\n";
+
+  array_push($fieldkeys, 'field_first_name');
+  array_push($foreignidkeys, 'field_attribute'); //attributes of formative assessment process??
+  array_push($strixngkeys, 'title'); //title
+  array_push($stringkeys, 'field_student_agency'); //student engagement in the formative proceess
+  array_push($workbench_moderation, array('current','state')); //status
+
+
+  function format_value_property(&$resource_node, $fieldkey, $missing_string) {
+    if (!property_exists($resource_node,$fieldkey)) {
+      $resource_node->{$fieldkey} = array();
+    }
+    if (is_null($resource_node->{$fieldkey}['und'])) {
+      $resource_node->{$fieldkey}['und'] = array();
+      $resource_node->{$fieldkey}['und'][0] = array();
+      $resource_node->{$fieldkey}['und'][0]['value'] = $missing_string;
+    }
+    $ix = 0;
+    foreach ($resource_node->{$fieldkey}['und'] as $field) {
+      if (is_null($resource_node->{$fieldkey}['und'][0]['value'])) {
+        $resource_node->{$fieldkey}['und'][$ix]['value'] = $missing_string;
+      }
+      $ix++;
+    }
+  }
+  function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used_tids) {
+    // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
+    if (!property_exists($resource_node,$fieldkey)) {
+      $resource_node->{$fieldkey} = array();
+    }
+    if (is_null($resource_node->{$fieldkey}['und'])) {
+      $resource_node->{$fieldkey}['und'] = array();
+      $resource_node->{$fieldkey}['und'][0] = array();
+      $resource_node->{$fieldkey}['und'][0]['tid'] = $missing_string;
+      $resource_node->{$fieldkey}['und'][0]['value'] = $missing_string;
+    }
+    $ix = 0;
+    foreach ($resource_node->{$fieldkey}['und'] as &$field) {
+      if (is_null($field['tid'])) {
+        $field['tid'] = $missing_string;
+        $field['value'] = $missing_string;
+      }
+      // look up the value in the foreign table.
+      if ($field['tid'] != $missing_string) {
+        $used_tids[$field['tid']] = $field['tid'];
+      }
+      $ix++;
+    }
+  }
+  function set_tid_property(&$resource_node, $fieldkey, &$tid_terms) {
+    // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
+
+    $ix = 0;
+    foreach ($resource_node->{$fieldkey}['und'] as &$field) {
+      // look up the value in the foreign table.
+      if ($field['tid'] != 0) {
+        $field['value'] = $tid_terms[$field['tid']]->name;
+      }
+      $ix++;
+    }
+  }
+  // replace missing values with ' ' or 0
+  $missing_string = ' ';
+
+  $used_tids = array();
+  foreach ($resource_nodes['resource_nodes'] as $resource_node) {
+    $uid = $resource_node->{'uid'};
+    foreach ($fieldkeys as $fieldkey) {
+      format_value_property($resource_node, $fieldkey, $missing_string);
+    }
+    // build taxonomy index table while validating. grab all the ids then
+    // load them all in one has table for quick reference.
+    foreach ($foreignidkeys as $foreignidkey) {
+      format_tid_property($resource_node, $foreignidkey, $missing_string, $used_tids);
+    }
+
+    foreach ($stringkeys as $stringkey) {
+      if (!property_exists($resource_node,$stringkey)) {
+        $resource_node->{$stringkey} = $missing_string;
+      }
+    }
+  }
+}
 
 
