@@ -1017,9 +1017,6 @@ function sbac_resource_node_access_records($node) {
           // if there is less then 3 reviews, give access to everyone except the people who reviewed it.
           // However, when a 3rd reviewer starts the review process, no one else has access to the node.
           // so only give access to that 3rd reviewer.
-          if ($node->nid == 1780) {
-            $var = '';
-          }
           $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
           if (count($completed_feedback) <= 3) {
             $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
@@ -1107,9 +1104,8 @@ function sbac_resource_node_access_records($node) {
         'grant_delete' => 0,
         'priority' => 0,
       );
+      return $grants;
     }
-
-    return $grants;
   }
 }
 
