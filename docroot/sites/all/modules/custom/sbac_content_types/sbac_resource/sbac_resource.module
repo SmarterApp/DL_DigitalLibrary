@@ -793,8 +793,8 @@ function sbac_resource_save_current_state($node) {
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state != 'being_reviewed' &&
       $node->workbench_moderation['current']->state != 'approved') {
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer');
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher');
+      //sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer');
+      //sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher');
     }
   }
 }
