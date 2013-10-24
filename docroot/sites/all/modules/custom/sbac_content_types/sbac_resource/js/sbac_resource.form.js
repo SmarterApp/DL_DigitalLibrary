@@ -365,6 +365,7 @@
 
             if ($(selector).val() == '' || switching) {
               $(selector).val(value);
+              $(selector).change(); // trigger change event to set correct maxlength counts
             }
           });
         }
