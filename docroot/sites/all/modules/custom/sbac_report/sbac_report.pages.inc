@@ -16,39 +16,63 @@ function sbac_report_individual() {
   $gate_keeping = '';
   $all_reviews = '';
   $summation = '';
-  
-  // Get SESSION values.
-  $uid = sbac_report_get_session_value('sne', 'uid');
-  $state_tid = sbac_report_get_session_value('state', 'tid');
-  $date_range = sbac_report_get_session_value('date_range', 'range');
 
-  if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
-    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
-    // If there are no SNE with the selected state and uid. Display none.
-    // @todo: custom message if there's no result.
-    if (!empty($sne_details)) {
-      $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
-      $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
-
-      // Gate-Keeping Reviews.
-      $name = sbac_report_get_session_value('sne', 'name');
-      $gk_ind_accepted = sbac_report_get_ind_accepted_gate_keeper($uid, $date_range);
-      $gk_ind_returned = sbac_report_get_ind_returned_gate_keeper($uid, $date_range);
-      $gk_all_accepted = sbac_report_get_all_accepted_gate_keeper($date_range);
-      $gk_all_returned = sbac_report_get_all_returned_gate_keeper($date_range);
-      $gate_keeping = sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned);
-
-      // All Reviews.
-      $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
-      $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
-      // $reviews = array_merge($reviews_in_progress, $completed_reviews);
-      $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $completed_reviews);
-      $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
-
-      // The big 'summation' table.
-      $summation = sbac_report_build_summation_table($uid, $date_range);
+  // individual report displayed on the first tab.
+  if ($_SESSION['sbac_report']) {
+    if ($_SESSION['sbac_report']['summation']) {
+      $summation = $_SESSION['sbac_report']['summation'];
+    }
+    if ($_SESSION['sbac_report']['sne_details']) {
+      $sne_details = $_SESSION['sbac_report']['sne_details'];
+    }
+    if ($_SESSION['sbac_report']['contributed_summary']) {
+      $contributed_summary = $_SESSION['sbac_report']['contributed_summary'];
+    }
+    if ($_SESSION['sbac_report']['contributed_details']) {
+      $contributed_details = $_SESSION['sbac_report']['contributed_details'];
+    }
+    if ($_SESSION['sbac_report']['gate_keeping']) {
+      $gate_keeping = $_SESSION['sbac_report']['gate_keeping'];
+    }
+    if ($_SESSION['sbac_report']['all_reviews']) {
+      $all_reviews = $_SESSION['sbac_report']['all_reviews'];
+    }
+    if ($_SESSION['sbac_report']['error_message']) {
+      $error_message = $_SESSION['sbac_report']['error_message'];
     }
   }
+  // Get SESSION values.
+//  $uid = sbac_report_get_session_value('sne', 'uid');
+//  $state_tid = sbac_report_get_session_value('state', 'tid');
+//  $date_range = sbac_report_get_session_value('date_range', 'range');
+
+//  if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
+//    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
+//    // If there are no SNE with the selected state and uid. Display none.
+//    // @todo: custom message if there's no result.
+//    if (!empty($sne_details)) {
+//      $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
+//      $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
+//
+//      // Gate-Keeping Reviews.
+//      $name = sbac_report_get_session_value('sne', 'name');
+//      $gk_ind_accepted = sbac_report_get_ind_accepted_gate_keeper($uid, $date_range);
+//      $gk_ind_returned = sbac_report_get_ind_returned_gate_keeper($uid, $date_range);
+//      $gk_all_accepted = sbac_report_get_all_accepted_gate_keeper($date_range);
+//      $gk_all_returned = sbac_report_get_all_returned_gate_keeper($date_range);
+//      $gate_keeping = sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned);
+//
+//      // All Reviews.
+//      $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
+//      $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
+//      // $reviews = array_merge($reviews_in_progress, $completed_reviews);
+//      $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $completed_reviews);
+//      $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
+//
+//      // The big 'summation' table.
+//      $summation = sbac_report_build_summation_table($uid, $date_range);
+//    }
+//  }
 
   $individual_tab = theme('sbac_report_individual', array(
       'form' => $individual_form,
@@ -58,6 +82,7 @@ function sbac_report_individual() {
       'gate_keeping' => $gate_keeping,
       'all_reviews' => $all_reviews,
       'summation' => $summation,
+      'error_message' => $error_message,
     )
   );
 
@@ -72,35 +97,46 @@ function sbac_report_individual() {
       'form' => $csv_form2,
     )
   );
-
-  $output = array(
-    '#type' => 'vertical_tabs',
-    'individual' => array(
-      '#type' => 'fieldset', 
-      '#title' => t('Individual Contributor and Reviewer'), 
-      '#collapsible' => TRUE, 
-      'content' => array(
-        '#markup' => $individual_tab,
-      ),
-    ),
-    'csv_user_activity_exports' => array(
-      '#type' => 'fieldset',
-      '#title' => t('User Activity (CSV Report)'),
-      '#collapsible' => TRUE,
-      'content' => array(
-        '#markup' => $csv_user_activity_tab,
-      ),
-    ),
-    'csv_resource_stats_exports' => array(
-      '#type' => 'fieldset',
-      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
-      '#collapsible' => TRUE,
-      'content' => array(
-        '#markup' => $csv_resource_stats_tab,
-      ),
+  $tabs = array();
+  $tabs[0] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Individual Contributor and Reviewer'),
+    '#collapsible' => TRUE,
+    'content' => array(
+      '#markup' => $individual_tab,
     ),
   );
-
+  $tabs[1] = array(
+    '#type' => 'fieldset',
+    '#title' => t('User Activity (CSV Report)'),
+    '#collapsible' => TRUE,
+    'content' => array(
+      '#markup' => $csv_user_activity_tab,
+    ),
+  );
+  $tabs[2] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
+    '#collapsible' => TRUE,
+    'content' => array(
+      '#markup' => $csv_resource_stats_tab,
+    ),
+  );
+  $default_tab = 0;
+  if ($_SESSION['sbac_report'] && $_SESSION['sbac_report']['active_tab']) {
+    $default_tab = $_SESSION['sbac_report']['active_tab'];
+  }
+  $output = array('#type' => 'vertical_tabs');
+  # put the active tab first, then add the rest.
+  array_push($output,$tabs[$default_tab]);
+  for ($i=0;$i<3;$i++) {
+    if ($i != $default_tab) {
+      array_push($output,$tabs[$i]);
+    }
+  }
+  if ($error_message) {
+    drupal_set_message($error_message, 'error');
+  }
   return drupal_render($output);
 }
 

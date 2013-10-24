@@ -46,7 +46,6 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Export'),
@@ -69,10 +68,28 @@ function sbac_csv_report_resource_stats_form_validate($form, &$form_state) {
 /*
  * Submit to do the export.
  */
-function sbac_csv_report_resource_stats_export_form_submit()
+function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
 {
-  echo "done";
+  // State.
+  $resource = array();
+  $resource['types'] = implode(',',$form_state['resource_type_dropdown']);
+  $resource['subject'] = implode(',',$form_state['resource_subect_dropdown']);
+  $resource['grade'] = implode(',',$form_state['resource_grade_dropdown']);
+  $resource['attribute'] = implode(',',$form_state['resource_attribute_dropdown']);
+  $resource['status'] = implode(',',$form_state['resource_status_dropdown']);
+  $csv_resource_stats_result = null; // #todo generate the report data
+  if ($csv_resource_stats_result == null) {
+    $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
+    $_SESSION['sbac_report']['active_tab'] = 2;
+    return; // report did not contain any data.
+  }
+  $_SESSION['sbac_report']['error_message'] = '';
+  $_SESSION['sbac_report']['active_tab'] = 2;
+  // _cex exits and does not return.
+  _cex_download($csv_resource_stats_result, 'output.csv');
+  // _cex exits and does not return.
 }
+
 function query_taxonomy_term($sql)
 {
   $result = db_query($sql);
