@@ -130,11 +130,18 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   // dump the csv file here:
   $csv_activity_report_result = build_activity_report_csv($state_tid1, $date_range1, $usergroups, $snefilter);
   // output the csv for download.
+
+  if ($csv_activity_report_result == null) {
+    $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
+    $_SESSION['sbac_report']['active_tab'] = 1;
+    return; // report did not contain any data.
+  }
+  $_SESSION['sbac_report']['error_message'] = '';
+  $_SESSION['sbac_report']['active_tab'] = 1;
+  // _cex exits and does not return.
   _cex_download($csv_activity_report_result, 'output.csv');
-
-  //echo $csv_activity_report_result;
+  // _cex exits and does not return.
 }
-
 
 function get_users_for_user_groups($usergroups)
 {
@@ -230,7 +237,7 @@ function get_user_activity($users, $date_range)
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
   $user_activity['qc_reviews_completed'] = count_with_users_query($sql, $users, $from_date, $to_date);
-//    array(':from_date' => $from_date, ':to_date' => $to_date));
+  //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # Poster Reviews completed:
   $sql = "select count(id) as count, uid from eck_feedback where type = 'post' and status = 1 and completed = 1 and
@@ -238,7 +245,7 @@ function get_user_activity($users, $date_range)
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
   $user_activity['poster_reviews_completed'] = count_with_users_query($sql, $users, $from_date, $to_date);
-//    array(':from_date' => $from_date, ':to_date' => $to_date));
+  //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # Contributed resources posted
   $sql = "select count(nid) as count, uid from node where nid in(select nid from workbench_moderation_node_history where
@@ -342,14 +349,9 @@ function create_user_activity_from_data($user_activity)
   return $csv;
 }
 
-
-
 function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, $toskeys)
 {
   // loop through all values and make sure 0's and '' are used as placeholders for missing values.
-
-  // todo: is terms of service, version of terms of service, date of version
-
 //  $titles =  'first-name, last-name, state, district,school, grade,subject, school-population, email,'.
 //    ' is-slt, is-sne, date-created, last-access, last-login, '.
 //    ' date-of-terms-of-service, version-of-terms-of-service, date-of-service-version,'.
@@ -505,6 +507,9 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
   $user_profiles = user_load_multiple(array_keys($users));
   $user_profiles = filter_users_by_sne_slt($user_profiles, $sne_slt_filter);
   $user_profiles = filter_users_by_state($user_profiles, $state_tid);
+  if (count($user_profiles) == 0) {
+    return null;
+  }
 
   $user_activity = get_user_activity(array_keys($users), $date_range);
   $user_activity['user_profiles']=$user_profiles;

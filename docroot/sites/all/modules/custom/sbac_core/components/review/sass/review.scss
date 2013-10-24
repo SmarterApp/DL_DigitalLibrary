@@ -318,6 +318,9 @@
   }
 
   .group-footer {
+    clear: both;
+    padding-top: 10px;
+
     .rate-widget {
       padding: 15px 0;
 
@@ -327,6 +330,37 @@
         .action-triggers {
           display: none;
         } 
+      }
+    }
+
+    .field-name-field-appropriate-for {
+      padding-top: 0px;
+      border-top:1px solid #eee;
+      font-size: 0.95em;
+
+      .field-label {
+        color: inherit;
+        font-size: 0.8em;
+      }
+
+      ul {
+        font-size: 0.8em;
+        margin:0 0 20px 0;
+        padding:0;
+
+        li {
+          list-style-type: none;
+          padding: 5px 0;
+
+        }
+      }
+
+      .term {
+        padding: 10px;
+
+        &.highlight {
+          font-weight: bold;
+        }
       }
     }
 
