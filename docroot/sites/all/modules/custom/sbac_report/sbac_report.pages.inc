@@ -61,13 +61,17 @@ function sbac_report_individual() {
     )
   );
 
-  $csv_form = drupal_get_form('sbac_report_csv_form');
-  $csv_tab = theme('sbac_report_csv', array(
-      'form' => $csv_form,
+  $csv_form1 = drupal_get_form('sbac_csv_report_user_activity_form');
+  $csv_user_activity_tab = theme('sbac_csv_report_user_activity', array(
+      'form' => $csv_form1,
     )
   );
 
-  //$csv_tab = '-- tab2 --';
+  $csv_form2 = drupal_get_form('sbac_csv_report_resource_stats_form');
+  $csv_resource_stats_tab = theme('sbac_csv_report_resource_stats', array(
+      'form' => $csv_form2,
+    )
+  );
 
   $output = array(
     '#type' => 'vertical_tabs',
@@ -79,12 +83,20 @@ function sbac_report_individual() {
         '#markup' => $individual_tab,
       ),
     ),
-    'csv_exorts' => array(
+    'csv_user_activity_exports' => array(
       '#type' => 'fieldset',
-      '#title' => t('CSV Exports'),
+      '#title' => t('User Activity (CSV Report)'),
       '#collapsible' => TRUE,
       'content' => array(
-        '#markup' => $csv_tab,
+        '#markup' => $csv_user_activity_tab,
+      ),
+    ),
+    'csv_resource_stats_exports' => array(
+      '#type' => 'fieldset',
+      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
+      '#collapsible' => TRUE,
+      'content' => array(
+        '#markup' => $csv_resource_stats_tab,
       ),
     ),
   );
