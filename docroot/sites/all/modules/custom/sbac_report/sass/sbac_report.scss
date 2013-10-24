@@ -290,6 +290,11 @@ i.icon-info {
 	        &.subheader{
 	          @include table-header();
 	        }
+
+          &.cell.title {
+            max-width: 52px;
+            overflow-x: hidden; 
+          }
 	      }
 	    }
 	  }
