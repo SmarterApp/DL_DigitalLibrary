@@ -995,6 +995,24 @@ function sbac_resource_node_access_records($node) {
     $restricted = FALSE;
 
     // Being reviewed node access perms.
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
+      $accounts = sbac_resource_get_users_by_role('resource reviewer');
+      foreach ($accounts as $account) {
+        if ($account->uid != $node->uid) {
+          $restricted = TRUE;
+          $grants[] = array(
+            'realm' => 'able_to_review',
+            'gid' => $account->uid,
+            'grant_view' => 1,
+            'grant_update' => 0,
+            'grant_delete' => 0,
+            'priority' => 0,
+          );
+        }
+      }
+    }
+
+    // Being reviewed node access perms.
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
       $accounts = sbac_resource_get_users_by_role('resource reviewer');
       if ($accounts) {
@@ -1035,6 +1053,7 @@ function sbac_resource_node_access_records($node) {
             }
 
 
+            $not_allowed_to_view[] = $node->uid;
             foreach ($completed_feedback as $review) {
               $not_allowed_to_view[] = $review->uid;
             }
@@ -1116,17 +1135,25 @@ function sbac_resource_node_access_records($node) {
  * @param $op
  */
 function sbac_resource_node_grants($account, $op) {
+  if (arg(0) == 'resource-review') {
+    if (!in_array('resource contributor', $account->roles)) {
+      $grants['node_author'] = array($account->uid);
+    }
+  }
+  else {
+    $grants['node_author'] = array($account->uid);
+  }
+
   if (in_array('resource reviewer', $account->roles)) {
     $grants['gk_review_in_progress'] = array($account->uid);
     $grants['able_to_review_qc'] = array($account->uid);
     $grants['completed_gk'] = array($account->uid);
+    $grants['able_to_review'] = array($account->uid);
   }
 
   if (in_array('resource publisher', $account->roles)) {
     $grants['able_to_review_post'] = array($account->uid);
   }
-
-  $grants['node_author'] = array($account->uid);
   return $grants;
 }
 
