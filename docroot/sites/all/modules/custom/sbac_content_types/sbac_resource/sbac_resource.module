@@ -793,13 +793,13 @@ function sbac_resource_save_current_state($node) {
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state != 'being_reviewed' &&
       $node->workbench_moderation['current']->state != 'needs_review') {
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer');
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', NULL, array('gk_being_reviewed', 'gk_needs_review', 'qc_being_reviewed', 'qc_needs_review'));
     }
 
     // if the node is in neither state, delete all records associated to this role and node.
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state != 'approved') {
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher');
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', NULL, array('post_being_reviewed', 'post_needs_review'));
     }
   }
 }
@@ -877,30 +877,45 @@ function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_
  * @param $role_name
  * @param null $keep_uid
  */
-function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $keep_uid = NULL) {
+function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $keep_uid = NULL, $states_to_delete = array()) {
   // Remove all other users
   $accounts = sbac_resource_get_users_by_role($role_name);
   foreach ($accounts as $account) {
-    if ($keep_uid != NULL) {
-      if (is_array($keep_uid)) {
+    if ($keep_uid != NULL) { // if there is uid(s) to keep.
+      if (is_array($keep_uid)) { // if the uid(s) is an array
         if (!in_array($account->uid, $keep_uid)) {
           $entity = NULL;
           $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-          sbac_resource_delete_resource_state($entity, $new_record);
+          if ($states_to_delete && in_array($entity->state, $states_to_delete)) { // valid states to delete
+            sbac_resource_delete_resource_state($entity, $new_record);
+          }
+          else if (!$states_to_delete) { // delete all states.
+            sbac_resource_delete_resource_state($entity, $new_record);
+          }
         }
       }
       else{
         if ($account->uid != $keep_uid) {
           $entity = NULL;
           $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-          sbac_resource_delete_resource_state($entity, $new_record);
+          if ($states_to_delete && in_array($entity->state, $states_to_delete)) {
+            sbac_resource_delete_resource_state($entity, $new_record);
+          }
+          else if (!$states_to_delete) {
+            sbac_resource_delete_resource_state($entity, $new_record);
+          }
         }
       }
     }
     else {
       $entity = NULL;
       $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-      sbac_resource_delete_resource_state($entity, $new_record);
+      if ($states_to_delete && in_array($entity->state, $states_to_delete)) {
+        sbac_resource_delete_resource_state($entity, $new_record);
+      }
+      else if (!$states_to_delete) {
+        sbac_resource_delete_resource_state($entity, $new_record);
+      }
     }
   }
 }
@@ -914,6 +929,7 @@ function sbac_resource_delete_resource_state($entity) {
   db_delete('sbac_node_resource_state')
     ->condition('nid', $entity->nid)
     ->condition('uid', $entity->uid)
+    ->condition('state', $entity->state)
     ->execute();
 }
 
