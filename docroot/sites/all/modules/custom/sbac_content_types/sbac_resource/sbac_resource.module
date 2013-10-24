@@ -822,7 +822,7 @@ function sbac_resource_save_current_state($node) {
  * @param $query
  */
 function sbac_resource_query_alter( &$query) {
-  if($query->alterMetaData['view']->name == "resource_review"){
+  if(isset($query->alterMetaData['view']->name) && $query->alterMetaData['view']->name == "resource_review"){
     $query->groupBy("node.nid");
   }
 }
