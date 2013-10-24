@@ -72,11 +72,13 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
 {
   // State.
   $resource = array();
-  $resource['types'] = implode(',',$form_state['resource_type_dropdown']);
-  $resource['subject'] = implode(',',$form_state['resource_subect_dropdown']);
-  $resource['grade'] = implode(',',$form_state['resource_grade_dropdown']);
-  $resource['attribute'] = implode(',',$form_state['resource_attribute_dropdown']);
-  $resource['status'] = implode(',',$form_state['resource_status_dropdown']);
+  if ($form_state) {
+    $resource['types'] = implode(',',$form_state['resource_type_dropdown']);
+    $resource['subject'] = implode(',',$form_state['resource_subect_dropdown']);
+    $resource['grade'] = implode(',',$form_state['resource_grade_dropdown']);
+    $resource['attribute'] = implode(',',$form_state['resource_attribute_dropdown']);
+    $resource['status'] = implode(',',$form_state['resource_status_dropdown']);
+  }
   $csv_resource_stats_result = null; // #todo generate the report data
   if ($csv_resource_stats_result == null) {
     $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
