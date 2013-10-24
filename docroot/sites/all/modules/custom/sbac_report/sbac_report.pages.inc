@@ -1,4 +1,10 @@
 <?php
+
+
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+
 /**
  * @file
  * Page callbacks for SBAC Report.
@@ -135,7 +141,7 @@ function sbac_report_individual() {
     }
   }
   if ($error_message) {
-    drupal_set_message($error_message, 'error');
+    drupal_set_message($error_message, 'warning');
   }
   return drupal_render($output);
 }
