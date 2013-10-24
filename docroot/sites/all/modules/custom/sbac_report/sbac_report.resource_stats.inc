@@ -20,6 +20,8 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#multiple' => TRUE,
     '#default_value' => sbac_report_default_resource_status_option(),
     '#required' => TRUE,
+    '#attributes' => array ('class' => array('chzn-widget')),
+
   );
   $form['resource_subject_dropdown'] = array(
     '#type' => 'select',
@@ -71,15 +73,30 @@ function sbac_csv_report_resource_stats_form_validate($form, &$form_state) {
 function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
 {
   // State.
-  $resource = array();
+  $resource_filters = array();
   if ($form_state) {
-    $resource['types'] = implode(',',$form_state['resource_type_dropdown']);
-    $resource['subject'] = implode(',',$form_state['resource_subect_dropdown']);
-    $resource['grade'] = implode(',',$form_state['resource_grade_dropdown']);
-    $resource['attribute'] = implode(',',$form_state['resource_attribute_dropdown']);
-    $resource['status'] = implode(',',$form_state['resource_status_dropdown']);
+    function set_resource_filter(&$resource_filters, $key, $form_value, $vid) {
+      if (in_array('0', $form_value)) {
+        $resource_filters[$key]="select tid from taxonomy_term_data where vid = $vid";
+      }
+      else if (in_array('1', $form_value)) { // attribute = "not yet assigned"
+
+      }
+      else if (in_array('2', $form_value)) { // attribute = "all"
+
+      }
+      else {
+        $resource_filters[$key] = implode(',',$form_value);
+      }
+    }
+    set_resource_filter($resource_filters, 'types', $form_state['values']['resource_type_dropdown'], 14);
+    set_resource_filter($resource_filters, 'subject', $form_state['values']['resource_type_dropdown'], 9);
+    set_resource_filter($resource_filters, 'grade', $form_state['values']['resource_type_dropdown'], 16);
+    set_resource_filter($resource_filters, 'status', $form_state['values']['resource_type_dropdown'], 13);
+    set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_type_dropdown'], 28);
   }
-  $csv_resource_stats_result = null; // #todo generate the report data
+  $csv_resource_stats_result = build_resource_stats_csv($resource_filters);
+
   if ($csv_resource_stats_result == null) {
     $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
     $_SESSION['sbac_report']['active_tab'] = 2;
@@ -161,10 +178,56 @@ function sbac_report_default_resource_grade_option()
 function sbac_report_resource_attribute_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = 28";
-  return query_taxonomy_term($sql);
+  $values = query_taxonomy_term($sql);
+//  $values[1] = 'Not Yet Assigned an Attribute';
+//  $values[2] = 'Assigned Any Attribute';
+
+  return $values;
 }
 function sbac_report_default_resource_attribute_option()
 {
-  return 0;
+  return 1;
 }
+
+function build_resource_stats_csv($resource_filters)
+{
+  $resources = get_resources($resource_filters);
+  return $resources;
+}
+
+function get_resources($resource_filters) {
+
+  $sql = <<<SQL
+    select * from node where nid in
+    (
+    select distinct(ti1.nid) from
+    taxonomy_index as ti1 join
+    taxonomy_index as ti2 join
+    taxonomy_index as ti3 join
+    taxonomy_index as ti4
+    on ti1.nid = ti2.nid and ti2.nid = ti3.nid and ti3.nid = ti4.nid
+    where
+    ti1.tid in (%s)
+    and
+    ti2.tid in (%s)
+    and
+    ti3.tid in (%s)
+    and
+    ti4.tid in (%s)
+
+    order by ti1.nid
+    );
+SQL;
+  $sql = sprintf($sql, $resource_filters['types'], $resource_filters['subject'],
+    $resource_filters['grade'],$resource_filters['status']);
+  $result = db_query($sql);
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->nid] = $record;
+  }
+  // todo: filter on attribute: $resource_filters['attribute']
+  return $values;
+}
+
+
 

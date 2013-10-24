@@ -128,10 +128,12 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     'template' => 'templates/sbac-report-user-group-dropdown',
     'path' => $module_path,
     'arguments' => sbac_report_user_group_options(),
+    'attributes' => array ('class' => array('chzn-widget')),
     'preprocess functions' => array(
       'template_preprocess',
     ),
   );
+
 
   $themes['views_view_fields__sne_details'] = array(
     'template' => 'views-view-fields--sne-details',
