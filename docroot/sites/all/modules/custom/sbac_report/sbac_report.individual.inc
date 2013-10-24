@@ -95,7 +95,7 @@ function sbac_report_individual_form_validate($form, &$form_state) {
  *   'sne' => array('uid' => 1, 'name' => 'first last'),
  * );
  */
-function sbac_report_individual_form_submit($form, &$form_state) {
+function sbac_report_individual_form_submit() {
   // State.
   $state_tid = $form_state['values']['state'];
   $_SESSION['sbac_report']['state']['tid'] = $state_tid;
@@ -159,7 +159,6 @@ function sbac_report_individual_form_submit($form, &$form_state) {
       $_SESSION['sbac_report']['active_tab'] = 0;
       return;
     }
-
   }
   $_SESSION['sbac_report']['summation'] = $summation;
   $_SESSION['sbac_report']['sne_details'] = $sne_details;

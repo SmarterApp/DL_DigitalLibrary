@@ -9,6 +9,8 @@ include_once 'sbac_report.individual.inc';
 include_once 'sbac_report.user_activity.inc';
 include_once 'sbac_report.resource_stats.inc';
 
+include_once 'sbac_report.preprocess.inc';
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -25,7 +27,7 @@ function sbac_report_menu() {
   $items['reports'] = array(
     'title' => 'Reports',
     'file' => 'sbac_report.pages.inc',
-    'page callback' => 'sbac_report_individual_form_submit',
+    'page callback' => 'sbac_report_individual',
     'access callback' => 'sbac_report_user_access',
     'type' => MENU_NORMAL_ITEM,
     'menu_name' => 'main-menu',
