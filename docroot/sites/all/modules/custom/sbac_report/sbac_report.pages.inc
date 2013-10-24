@@ -1,4 +1,8 @@
 <?php
+
+
+
+
 /**
  * @file
  * Page callbacks for SBAC Report.
@@ -16,6 +20,7 @@ function sbac_report_individual() {
   $gate_keeping = '';
   $all_reviews = '';
   $summation = '';
+  $error_message = '';
 
   // individual report displayed on the first tab.
   if ($_SESSION['sbac_report']) {
@@ -135,7 +140,7 @@ function sbac_report_individual() {
     }
   }
   if ($error_message) {
-    drupal_set_message($error_message, 'error');
+    drupal_set_message($error_message, 'warning');
   }
   return drupal_render($output);
 }
@@ -181,11 +186,7 @@ function sbac_report_sne_autocomplete($string = '') {
     ON users.uid = field_sne_member.entity_id AND (field_sne_member.entity_type = 'user' AND field_sne_member.deleted = '0')
 
   WHERE (
-    (
-      (field_first_name.field_first_name_value LIKE :str)
-      OR (field_last_name.field_last_name_value LIKE :str)
-      OR (CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str)
-    )
+    CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
     AND (users.status <> '0')
     AND (field_sne_member.field_sne_member_value = 1)
     $state_condition
@@ -252,17 +253,17 @@ function sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $
   $gk_ind_returned_percentage = 0;
 
   if ($gk_ind_total) {
-    $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1) * 100;
-    $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1) * 100;
+    $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 2) * 100;
+    $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 2) * 100;
   }
 
-    // All.
+  // All.
   $gk_all_accepted_count = count($gk_all_accepted);
   $gk_all_returned_count = count($gk_all_returned);
   $gk_all_total = $gk_all_accepted_count + $gk_all_returned_count;
   if ($gk_ind_total != 0) {
-    $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 1) * 100;
-    $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 1) * 100;
+    $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 2) * 100;
+    $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 2) * 100;
   }
   else {
     $gk_all_accepted_percentage = 0;
@@ -315,7 +316,7 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
   $rows[] = array(
     array('data' => count($reviews_in_progress)),
     array('data' => count($completed_reviews)),
-    array('data' => (round($average_consistency_rate, 1) * 100) . '%'),
+    array('data' => (round($average_consistency_rate, 2) * 100) . '%'),
   );
 
   return theme('table', array(

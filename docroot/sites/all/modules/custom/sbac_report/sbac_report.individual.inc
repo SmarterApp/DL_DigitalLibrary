@@ -97,23 +97,24 @@ function sbac_report_individual_form_validate($form, &$form_state) {
  */
 function sbac_report_individual_form_submit($form, &$form_state) {
   // State.
-  $state_tid = $form_state['values']['state'];
-  $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-  if (!is_numeric($state_tid) && $state_tid == 'all') {
-    $_SESSION['sbac_report']['state']['name'] = 'all';
+  if (isset($form_state)) {
+    $state_tid = $form_state['values']['state'];
+    $_SESSION['sbac_report']['state']['tid'] = $state_tid;
+    if (!is_numeric($state_tid) && $state_tid == 'all') {
+      $_SESSION['sbac_report']['state']['name'] = 'all';
+    }
+    else {
+      $state_options = $form['state']['#options'];
+      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+    }
+
+    // Time range.
+    $_SESSION['sbac_report']['date_range']['range'] = $form_state['values']['date_range'];
+
+    // SNE.
+    $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
+    $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
   }
-  else {
-    $state_options = $form['state']['#options'];
-    $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
-  }
-
-  // Time range.
-  $_SESSION['sbac_report']['date_range']['range'] = $form_state['values']['date_range'];
-
-  // SNE.
-  $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
-  $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
-
   // Get SESSION values.
   $uid = sbac_report_get_session_value('sne', 'uid');
   $state_tid = sbac_report_get_session_value('state', 'tid');
@@ -159,7 +160,6 @@ function sbac_report_individual_form_submit($form, &$form_state) {
       $_SESSION['sbac_report']['active_tab'] = 0;
       return;
     }
-
   }
   $_SESSION['sbac_report']['summation'] = $summation;
   $_SESSION['sbac_report']['sne_details'] = $sne_details;
