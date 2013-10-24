@@ -501,7 +501,7 @@ function sbac_resource_resource_review_apply_filters(&$view) {
           1 => 'AND',
         ),
       );
-
+      
       if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
         $groups['groups'][2] = 'AND';
       }
