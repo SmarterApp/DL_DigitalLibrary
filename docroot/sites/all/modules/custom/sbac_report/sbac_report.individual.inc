@@ -95,7 +95,7 @@ function sbac_report_individual_form_validate($form, &$form_state) {
  *   'sne' => array('uid' => 1, 'name' => 'first last'),
  * );
  */
-function sbac_report_individual_form_submit($form=null, &$form_state=null) {
+function sbac_report_individual_form_submit($form, &$form_state) {
   // State.
   if (isset($form_state)) {
     $state_tid = $form_state['values']['state'];

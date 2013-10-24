@@ -20,6 +20,7 @@ function sbac_report_individual() {
   $gate_keeping = '';
   $all_reviews = '';
   $summation = '';
+  $error_message = '';
 
   // individual report displayed on the first tab.
   if ($_SESSION['sbac_report']) {
@@ -185,11 +186,7 @@ function sbac_report_sne_autocomplete($string = '') {
     ON users.uid = field_sne_member.entity_id AND (field_sne_member.entity_type = 'user' AND field_sne_member.deleted = '0')
 
   WHERE (
-    (
-      (field_first_name.field_first_name_value LIKE :str)
-      OR (field_last_name.field_last_name_value LIKE :str)
-      OR (CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str)
-    )
+    CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
     AND (users.status <> '0')
     AND (field_sne_member.field_sne_member_value = 1)
     $state_condition
