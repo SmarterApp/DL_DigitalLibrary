@@ -551,6 +551,21 @@ function sbac_user_util_move_file($old_name, $new_name) {
   return true;
 }
 
+/**
+ * Implements hook_user_presave().
+ *
+ * Rebuild permissions when the user is updated.
+ *
+ * @param $edit
+ * @param $account
+ * @param $category
+ */
+function sbac_user_presave(&$edit, $account, $category) {
+  if (isset($edit['roles'])) {
+    node_access_rebuild();
+  }
+}
+
 /*
  * Implements hook_entity_presave($entity, $type)
  */

@@ -30,7 +30,7 @@ class ResourceRejected extends \taskit\sbac_core\BaseTask {
 
         $details = $this->reviewerFeedback($node->nid, $viewing_account->uid, $feedback);
       }
-
+      
       // $this->addClass('taskit-collapsed');
 
       drupal_add_library('system', 'drupal.ajax');

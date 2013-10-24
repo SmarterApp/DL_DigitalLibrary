@@ -7,16 +7,12 @@ class ResourcePublished extends \taskit\sbac_core\BaseTask {
   public function display($entities, $accounts) {
     $node     = node_load(current($entities['node']));
     $account  = user_load(current($accounts));
+    $feedback = $entities['feedback'];
 
     if ($node && $account) {
       $this->setTaskUrl('node/' . $node->nid);
 
       $viewing_account = current_user();
-
-      $feedback = entity_load('feedback', FALSE, array(
-        'node_id' => $node->nid,
-        'type' => 'post',
-      ));
 
       $output = array();
       $details = '';
@@ -25,14 +21,14 @@ class ResourcePublished extends \taskit\sbac_core\BaseTask {
           '!title' => '<span class="taskit-title">' . $node->title . '</span>',
         ));
         
-        $details = $this->contributorFeedback($node->nid, $viewing_account->uid);
+        $details = $this->contributorFeedback($node->nid, $viewing_account->uid, $feedback);
       }
       else {
         $output[] = t('!title, a resource you reviewed, was posted to the Digital Library', array(
           '!title' => '<span class="taskit-title">' . $node->title . '</span>',
         ));
 
-        $details = $this->reviewerFeedback($node->nid, $viewing_account->uid);
+        $details = $this->reviewerFeedback($node->nid, $viewing_account->uid, $feedback);
       }
 
       $output[] = '<span class="taskit-timestamp">' . date($this->_date_format, $this->_created). '</span>';

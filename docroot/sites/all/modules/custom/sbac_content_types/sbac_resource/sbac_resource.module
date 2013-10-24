@@ -933,7 +933,7 @@ function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $ke
     else {
       $entity = NULL;
       $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-      if ($states_to_delete && in_array($entity->state, $states_to_delete)) {
+      if ($states_to_delete && isset($entity->state) && in_array($entity->state, $states_to_delete)) {
         sbac_resource_delete_resource_state($entity, $new_record);
       }
       else if (!$states_to_delete) {
@@ -993,6 +993,11 @@ function sbac_resource_node_access_records($node) {
   if ($node->type == 'resource') {
     $grants = array();
     $restricted = FALSE;
+
+    if (isset($node->workbench_moderation['current']->state) && ($node->workbench_moderation['current']->state == 'creation' || $node->workbench_moderation['current']->state == 'draft')) {
+      $restricted = TRUE;
+    }
+
     // Being reviewed node access perms.
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
       $accounts = sbac_resource_get_users_by_role('resource reviewer');
