@@ -444,8 +444,6 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
   foreach ($result as $row) {
     $item = array();
 
-    // $row->node_title = truncate($row->node_title, 10, array('check_markup' => FALSE));
-
     // resource title
     $item[] = array(
       'data' => l($row->node_title, 'node/' . $row->nid),

@@ -510,6 +510,8 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       break;
   }
 
+  $reviews[] = $entity;
+
   send_review_notifications($task, $node, $reviews);
 
   $form_state['redirect'] = 'node/' . $node->nid;
