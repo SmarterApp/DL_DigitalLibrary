@@ -4,6 +4,7 @@
  * Code for the SBAC Report feature.
  */
 
+include_once 'sbac_report.utils.inc';
 include_once 'sbac_report.features.inc';
 include_once 'sbac_report.individual.inc';
 include_once 'sbac_report.user_activity.inc';
@@ -130,10 +131,12 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     'template' => 'templates/sbac-report-user-group-dropdown',
     'path' => $module_path,
     'arguments' => sbac_report_user_group_options(),
+    'attributes' => array ('class' => array('chzn-widget')),
     'preprocess functions' => array(
       'template_preprocess',
     ),
   );
+
 
   $themes['views_view_fields__sne_details'] = array(
     'template' => 'views-view-fields--sne-details',

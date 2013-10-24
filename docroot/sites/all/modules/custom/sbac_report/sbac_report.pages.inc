@@ -1,4 +1,8 @@
 <?php
+
+
+
+
 /**
  * @file
  * Page callbacks for SBAC Report.
@@ -136,7 +140,7 @@ function sbac_report_individual() {
     }
   }
   if ($error_message) {
-    drupal_set_message($error_message, 'error');
+    drupal_set_message($error_message, 'warning');
   }
   return drupal_render($output);
 }

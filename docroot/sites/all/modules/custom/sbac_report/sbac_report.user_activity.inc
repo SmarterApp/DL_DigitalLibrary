@@ -104,23 +104,25 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
 
 function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   // State.
-  $state_tid = $form_state['values']['state'];
-  $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-  if (!is_numeric($state_tid) && $state_tid == 'all') {
-    $_SESSION['sbac_report']['state']['name'] = 'all';
+  if ($form_state) {
+
+    $state_tid = $form_state['values']['state'];
+    $_SESSION['sbac_report']['state']['tid'] = $state_tid;
+    if (!is_numeric($state_tid) && $state_tid == 'all') {
+      $_SESSION['sbac_report']['state']['name'] = 'all';
+    }
+    else {
+      $state_options = $form['state']['#options'];
+      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+    }
+
+    // Time range.
+    $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
+
+    // user groups.
+    $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
+    $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne-slt-filter'];
   }
-  else {
-    $state_options = $form['state']['#options'];
-    $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
-  }
-
-  // Time range.
-  $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
-
-  // user groups.
-  $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
-  $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne-slt-filter'];
-
   # todo: set these above rather than retrieve them again.
   $state_tid1 = sbac_report_get_session_value('state', 'tid');
   $date_range1 = sbac_report_get_session_value('date_range1', 'range');
