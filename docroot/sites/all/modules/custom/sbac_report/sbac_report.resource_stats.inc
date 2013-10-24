@@ -179,9 +179,10 @@ function sbac_report_resource_attribute_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = 28";
   $values = query_taxonomy_term($sql);
-//  $values[1] = 'Not Yet Assigned an Attribute';
-//  $values[2] = 'Assigned Any Attribute';
-
+  unset($values[0]);
+  $values[1] = 'Not Yet Assigned an Attribute';
+  $values[2] = 'Assigned Any Attribute';
+  ksort($values);
   return $values;
 }
 function sbac_report_default_resource_attribute_option()
