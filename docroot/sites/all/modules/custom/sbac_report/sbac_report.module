@@ -77,17 +77,39 @@ function sbac_report_menu() {
 }
 
 /**
- * Custom user access.
+ * User access callback for the /report page.
  */
 function sbac_report_user_access() {
   global $user;
-  $roles = $user->roles;
 
-  return $user->uid == 1 ||
-    in_array('DLRB member', $roles) ||
-    in_array('digital library administrator', $roles) ||
-    in_array('system administrator', $roles) ||
-    sbac_report_is_slt($user);
+  // SLT users are allowed to access the page, but only the individual reports tab
+  $account = user_load($user->uid);
+  $slt = field_entity_value($account, 'field_slt_member');
+  if ($slt) {
+    return TRUE;
+  }
+
+  return sbac_report_user_access_all($account);
+}
+
+/**
+ * User access callback for the tabs on the /report page.
+ * @return [type] [description]
+ */
+function sbac_report_user_access_all($account = NULL) {
+  if (is_null($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  $allowed_roles = array(
+    3   => 'administrator',
+    7   => 'DLRB member',
+    8   => 'digital library administrator',
+    23  => 'system administrator',
+  );
+
+  return (bool) array_intersect(array_keys($account->roles), array_keys($allowed_roles));
 }
 
 /**

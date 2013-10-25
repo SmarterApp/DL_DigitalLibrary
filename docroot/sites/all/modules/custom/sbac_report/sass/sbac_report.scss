@@ -261,10 +261,19 @@ i.icon-info {
  Tables
   **/
 .page-reports {
+  div.vertical-tabs {
+    margin-left: 8em;
+
+    ul.vertical-tabs-list {
+      margin-left: -8em;
+      width: 8em;
+    }
+  }
+
 	table.report-summation {
 	  border:none !important;
 	  background:none;
-	  font-size: 0.9em;
+	  font-size: 0.85em;
 
 	  @mixin table-header() {
 	    border:1px solid #ccc;
@@ -294,7 +303,7 @@ i.icon-info {
 	          @include table-header();
 	        }
 
-          &.cell.title {
+          .cell-scroll { 
             max-width: 52px;
             overflow-x: scroll; 
           }
