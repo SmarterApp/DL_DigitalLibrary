@@ -56,7 +56,7 @@ function sbac_report_individual() {
     }
   }
   else {
-    $error_message = '<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>';
+    $error_message = '<div>' . t('No data exists for the filters you have selected. Please choose a new combination of filters and attempt your export again.') . '</div>';
   }
 
   $individual_tab = theme('sbac_report_individual', array(
