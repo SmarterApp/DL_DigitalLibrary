@@ -9,6 +9,7 @@
  * Page callback for the report.
  */
 function sbac_report_individual() {
+  ini_set('memory_limit', '196M');
   drupal_set_title(t('Usage and Activity Reports'));
   $individual_form = drupal_get_form('sbac_report_individual_form');
 
