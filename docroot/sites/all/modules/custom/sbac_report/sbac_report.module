@@ -379,8 +379,8 @@ function sbac_report_user_group_admins() {
 
   $admin_aggregates = array();
   // admins aggregated:
-  $key = array_search('DLRB member',$options);
-  $admin_aggregates[$key] = $options[$key];
+//  $key = array_search('DLRB member',$options);
+//  $admin_aggregates[$key] = $options[$key];
   $key = array_search('administrator',$options);
   $admin_aggregates[$key] = $options[$key];
   $key = array_search('system administrator',$options);
