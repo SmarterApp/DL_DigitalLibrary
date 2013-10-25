@@ -1071,7 +1071,7 @@ function _sbac_resource_digital_library_links($fields) {
     $state = $fields['state']->raw;
     switch ($state) {
       case 'published':
-        if (in_array('DLRB member', $user->roles)) {
+        if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
           $nid = $fields['nid']->raw;
           $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
           $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));

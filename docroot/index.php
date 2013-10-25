@@ -1,5 +1,8 @@
 <?php
-
+error_reporting(E_ALL|E_STRICT);
+//$conf['error_level'] = 2;
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
 /**
  * @file
  * The PHP page that serves all page requests on a Drupal installation.
