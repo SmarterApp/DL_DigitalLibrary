@@ -356,7 +356,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       'class' => 'subheader',
     ),
     array(
-      'data' => t('Recc. Consistency'),
+      'data' => t('Recc. Cons.'),
       'class' => 'subheader',
     ),
     array(
