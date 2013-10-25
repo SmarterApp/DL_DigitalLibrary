@@ -84,6 +84,8 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
  * CSV Report: form validate.
  */
 function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
+  $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_USER;
+
   if (false) {
     // TODO: validate csv form
   }
@@ -135,12 +137,10 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   // output the csv for download.
 
   if ($csv_activity_report_result == null) {
-    $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
-    $_SESSION['sbac_report']['active_tab'] = 1;
+    $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';
-  $_SESSION['sbac_report']['active_tab'] = 1;
   // _cex exits and does not return.
   _cex_download($csv_activity_report_result, 'output.csv');
   // _cex exits and does not return.

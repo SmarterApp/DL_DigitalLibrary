@@ -81,6 +81,8 @@ function sbac_report_individual_form($form, &$form_state) {
  * Individual Report: form validate.
  */
 function sbac_report_individual_form_validate($form, &$form_state) {
+  $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
+  
   if (empty($form_state['values']['uid']) || !is_numeric($form_state['values']['uid'])) {
     form_set_error('sne', t('Please type and select an existing SNE'));
   }
@@ -118,6 +120,4 @@ function sbac_report_individual_form_submit($form, &$form_state) {
     $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
     $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
   }
-
-  $_SESSION['sbac_report']['active_tab'] = 0;
 }

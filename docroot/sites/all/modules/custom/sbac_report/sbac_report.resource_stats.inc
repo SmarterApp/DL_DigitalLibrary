@@ -66,6 +66,8 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
  * CSV Report: form validate.
  */
 function sbac_csv_report_resource_stats_form_validate($form, &$form_state) {
+  $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_STATES;
+
   if (false) {
     // TODO: validate csv form
   }
@@ -101,12 +103,10 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
   $csv_resource_stats_result = build_resource_stats_csv($resource_filters);
 
   if ($csv_resource_stats_result == null) {
-    $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
-    $_SESSION['sbac_report']['active_tab'] = 2;
+    $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';
-  $_SESSION['sbac_report']['active_tab'] = 2;
   // _cex exits and does not return.
   _cex_download($csv_resource_stats_result, 'output.csv');
   // can't get back to clear errors because fo the exit from _cex to force the
