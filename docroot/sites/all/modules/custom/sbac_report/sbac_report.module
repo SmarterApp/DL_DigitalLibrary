@@ -104,7 +104,7 @@ function sbac_report_user_access_all($account = NULL) {
 
   $allowed_roles = array(
     3   => 'administrator',
-    7   => 'DLRB member',
+    // 7   => 'DLRB member',
     8   => 'digital library administrator',
     23  => 'system administrator',
   );
