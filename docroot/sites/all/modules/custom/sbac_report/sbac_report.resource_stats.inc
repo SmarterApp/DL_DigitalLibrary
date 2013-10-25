@@ -155,7 +155,11 @@ function sbac_report_default_resource_status_option()
 function sbac_report_resource_subject_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = 9";
-  return query_taxonomy_term($sql);
+
+  $values = query_taxonomy_term($sql);
+  $values[1] = 'Not Yet Select';
+  ksort($values);
+  return $values;
 }
 function sbac_report_default_resource_subject_option()
 {
@@ -168,7 +172,11 @@ function sbac_report_default_resource_subject_option()
 function sbac_report_resource_grade_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = 16";
-  return query_taxonomy_term($sql);
+
+  $values = query_taxonomy_term($sql);
+  $values[1] = 'Not Yet Select';
+  ksort($values);
+  return $values;
 }
 function sbac_report_default_resource_grade_option()
 {
@@ -182,14 +190,13 @@ function sbac_report_resource_attribute_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = 28";
   $values = query_taxonomy_term($sql);
-  $values[1] = 'Not Yet Assigned an Attribute';
-  $values[2] = 'Assigned Any Attribute';
+  $values[1] = 'Not Yet Select';
   ksort($values);
   return $values;
 }
 function sbac_report_default_resource_attribute_option()
 {
-  return 1;
+  return 0;
 }
 
 function build_resource_stats_csv($resource_filters)

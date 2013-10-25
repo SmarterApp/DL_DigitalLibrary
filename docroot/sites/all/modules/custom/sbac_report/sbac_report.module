@@ -300,7 +300,7 @@ function sbac_report_get_default_state_tid() {
 }
 function sbac_report_get_default_usergroup() {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
-  
+
   if (empty($usergroups)) {
     return array();
   }
@@ -348,27 +348,56 @@ function sbac_report_date_range_options() {
   return $options;
 }
 
+
+/**
+ * Options for the user groups.
+ */
+function sbac_report_user_group_admins() {
+  $options = get_user_groups();
+
+  $admin_aggregates = array();
+  // admins aggregated:
+  $key = array_search('DLRB member',$options);
+  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('system administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('digital library administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+
+  return $admin_aggregates;
+}
+
 /**
  * Options for the user groups.
  */
 function sbac_report_user_group_options() {
-
   $options = get_user_groups();
-  // TODO: filter out unwanted values from the database query.
-  // requirements are for these values:
-  //  $options = array(
-  //    0 => 'End Users' ,
-  //    3 => 'Contributors',
-  //    6 => 'Reviewers',
-  //    9 => 'Posters',
-  //    12 => 'SNE Members',
-  //    15=> 'SLT Members',
-  //    18=> 'Moderators',
-  //    7 => 'Facilitators',
-  //    8 => 'DLRB Members',
-  //    19 => 'Admins',
-  //  );
-  // filter out: anonymous user, authenticated user, onboarding?
+
+
+  // filter out unwanted values from the database query.
+  // remove drupalisms:
+  unset($options[array_search('anonymous user',$options)]);
+  unset($options[array_search('authenticated user',$options)]);
+
+  // remove unused, but included in all:
+  unset($options[array_search('basic end user',$options)]);
+  unset($options[array_search('on-boarding',$options)]);
+  unset($options[array_search('help desk',$options)]);
+
+  // admins aggregated:
+  $key = array_search('DLRB member',$options);
+  unset($options[$key]);
+  $key = array_search('administrator',$options);
+  unset($options[$key]);
+  $key = array_search('system administrator',$options);
+  unset($options[$key]);
+  $key = array_search('digital library administrator',$options);
+  unset($options[$key]);
+
+  // add back a selector for the 4 admins as an aggregate:
+  $options[1] = 'admins';
 
   return $options;
 }
@@ -996,6 +1025,7 @@ SQL;
   );
 
   $values = array();
+  $values[0] = 'all';
   foreach ($result as $record) {
     $values[$record->rid] = $record->name;
   }
