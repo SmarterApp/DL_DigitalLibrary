@@ -997,7 +997,6 @@ function sbac_resource_node_access_records($node) {
     if (isset($node->workbench_moderation['current']->state) &&
         ($node->workbench_moderation['current']->state == 'creation' ||
          $node->workbench_moderation['current']->state == 'draft' ||
-         $node->workbench_moderation['current']->state == 'rejected' ||
          $node->workbench_moderation['current']->state == 'removed')) {
       $restricted = TRUE;
     }
