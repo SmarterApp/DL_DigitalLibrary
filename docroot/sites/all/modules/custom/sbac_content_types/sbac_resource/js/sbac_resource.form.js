@@ -255,7 +255,7 @@
         if ($('#sbac-posting-option-hidden').val() != 0) {
           $('#sbac-posting-options-comment').show();
           $('#sbac-posting-options-comment textarea').val('');
-          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+          $('#sbac-posting-options-comment label').empty().append('To contributor'); // Remove required marker.
         }
         else {
           $('#sbac-posting-options-comment').hide();
@@ -267,7 +267,7 @@
         if ($('#sbac-posting-option-hidden').val() != 1) {
           $('#sbac-posting-options-comment').show();
           $('#sbac-posting-options-comment textarea').val('');
-          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+          $('#sbac-posting-options-comment label').empty().append('To contributor'); // Remove required marker.
         }
         else {
           $('#sbac-posting-options-comment').hide();
@@ -279,7 +279,7 @@
         if ($('#sbac-posting-option-hidden').val() != 2) {
           $('#sbac-posting-options-comment').show();
           $('#sbac-posting-options-comment textarea').val('');
-          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
+          $('#sbac-posting-options-comment label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
         }
         else {
           $('#sbac-posting-options-comment').hide();
@@ -290,7 +290,7 @@
       // if removed is already checked, display it. Occurs when an error is thrown.
       if ($('#sbac-posting-options input:nth(2)').is(':checked')) {
         $('#sbac-posting-options-comment').show();
-        $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
+        $('#sbac-posting-options-comment label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
       }
     }
   };
