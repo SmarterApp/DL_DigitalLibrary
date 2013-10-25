@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 /**
  * @file
  * Page callbacks for SBAC Report.
@@ -19,8 +16,12 @@ function sbac_report_individual() {
   $uid = sbac_report_get_session_value('sne', 'uid');
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range', 'range');
+
   $error_message = '';
-  
+  if (isset($_SESSION['sbac_report']['error_message'])) {
+    $error_message = $_SESSION['sbac_report']['error_message'];
+  }
+
   $sne_details = '';
   $contributed_summary = '';
   $contributed_details = '';
@@ -55,9 +56,6 @@ function sbac_report_individual() {
       $summation = sbac_report_build_summation_table($uid, $date_range);
     }
   }
-  else {
-    $error_message = '<div>' . t('No data exists for the filters you have selected. Please choose a new combination of filters and attempt your export again.') . '</div>';
-  }
 
   $individual_tab = theme('sbac_report_individual', array(
     'form' => $individual_form,
@@ -81,46 +79,75 @@ function sbac_report_individual() {
       'form' => $csv_form2,
     )
   );
-  $tabs = array();
-  $tabs[0] = array(
+
+  $output = array(
+    '#type' => 'vertical_tabs',
+    '#attached' => array(
+      'js' => array(
+        drupal_get_path('module', 'sbac_report') . '/js/sbac_report.default_tab.js',
+      ),
+    ),
+  );
+
+
+  $output[SBAC_REPORT_TAB_INDIVIDUAL] = array(
     '#type' => 'fieldset',
-    '#title' => t('Individual Contributor and Reviewer'),
     '#collapsible' => TRUE,
+    '#title' => t('Individual Contributor and Reviewer'),
+    '#attributes' => array(
+      'id' => SBAC_REPORT_TAB_INDIVIDUAL,
+    ),
     'content' => array(
       '#markup' => $individual_tab,
     ),
   );
-  $tabs[1] = array(
+  
+  $output[SBAC_REPORT_TAB_USER] = array(
     '#type' => 'fieldset',
-    '#title' => t('User Activity (CSV Report)'),
     '#collapsible' => TRUE,
+    '#title' => t('User Activity (CSV Report)'),
+    '#attributes' => array(
+      'id' => SBAC_REPORT_TAB_USER,
+    ),
     'content' => array(
       '#markup' => $csv_user_activity_tab,
     ),
   );
-  $tabs[2] = array(
+
+  $output[SBAC_REPORT_TAB_STATES] = array(
     '#type' => 'fieldset',
-    '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
     '#collapsible' => TRUE,
+    '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
+    '#attributes' => array(
+      'id' => SBAC_REPORT_TAB_STATES,
+    ),
     'content' => array(
       '#markup' => $csv_resource_stats_tab,
     ),
   );
-  $default_tab = 0;
-  if ($_SESSION['sbac_report'] && $_SESSION['sbac_report']['active_tab']) {
+
+  $default_tab = SBAC_REPORT_TAB_INDIVIDUAL;
+  if (isset($_SESSION['sbac_report']['active_tab'])) {
     $default_tab = $_SESSION['sbac_report']['active_tab'];
   }
-  $output = array('#type' => 'vertical_tabs');
-  # put the active tab first, then add the rest.
-  array_push($output,$tabs[$default_tab]);
-  for ($i=0;$i<3;$i++) {
-    if ($i != $default_tab) {
-      array_push($output,$tabs[$i]);
-    }
-  }
+
+  $js = array(
+    'sbac_report' => array(
+      'tabs' => array(
+        SBAC_REPORT_TAB_INDIVIDUAL,
+        SBAC_REPORT_TAB_USER,
+        SBAC_REPORT_TAB_STATES,
+      ),
+      'default_tab' => $default_tab,
+    ),
+  );
+
+  drupal_add_js($js, 'setting');
+
   if ($error_message) {
     drupal_set_message($error_message, 'warning');
   }
+
   return drupal_render($output);
 }
 

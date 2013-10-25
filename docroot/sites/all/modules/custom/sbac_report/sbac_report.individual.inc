@@ -119,5 +119,5 @@ function sbac_report_individual_form_submit($form, &$form_state) {
     $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
   }
 
-  $_SESSION['sbac_report']['active_tab'] = 0;
+  $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
 }
