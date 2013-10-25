@@ -295,7 +295,7 @@ function sbac_report_get_default_state_tid() {
 }
 function sbac_report_get_default_usergroup() {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
-  
+
   if (empty($usergroups)) {
     return array();
   }
@@ -347,23 +347,13 @@ function sbac_report_date_range_options() {
  * Options for the user groups.
  */
 function sbac_report_user_group_options() {
-
   $options = get_user_groups();
-  // TODO: filter out unwanted values from the database query.
-  // requirements are for these values:
-  //  $options = array(
-  //    0 => 'End Users' ,
-  //    3 => 'Contributors',
-  //    6 => 'Reviewers',
-  //    9 => 'Posters',
-  //    12 => 'SNE Members',
-  //    15=> 'SLT Members',
-  //    18=> 'Moderators',
-  //    7 => 'Facilitators',
-  //    8 => 'DLRB Members',
-  //    19 => 'Admins',
-  //  );
-  // filter out: anonymous user, authenticated user, onboarding?
+  // filter out unwanted values from the database query.
+  unset($options[array_search('anonymous user',$options)]);
+  unset($options[array_search('authenticated user',$options)]);
+  unset($options[array_search('administrator',$options)]);
+  unset($options[array_search('help desk',$options)]);
+  unset($options[array_search('on-boarding',$options)]);
 
   return $options;
 }
