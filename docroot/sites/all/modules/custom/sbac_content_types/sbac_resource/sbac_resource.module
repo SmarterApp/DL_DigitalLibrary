@@ -998,7 +998,7 @@ function sbac_resource_node_access_records($node) {
       $restricted = TRUE;
     }
 
-    // Being reviewed node access perms.
+    // Needs review node access perms.
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
       $accounts = sbac_resource_get_users_by_role('resource reviewer');
       foreach ($accounts as $account) {
@@ -1035,10 +1035,8 @@ function sbac_resource_node_access_records($node) {
           );
         }
         else {
-
+          $third_review = FALSE;
           // if there is less then 3 reviews, give access to everyone except the people who reviewed it.
-          // However, when a 3rd reviewer starts the review process, no one else has access to the node.
-          // so only give access to that 3rd reviewer.
           $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
           if (count($completed_feedback) <= 3) {
             $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
@@ -1056,6 +1054,11 @@ function sbac_resource_node_access_records($node) {
               }
             }
 
+            // However, when a 3rd reviewer starts the review process, no one else has access to the node.
+            // so only give access to that 3rd reviewer.
+            if (count($completed_feedback) == 2 && count($current_reviews) == 1) {
+              $third_review = TRUE;
+            }
 
             $not_allowed_to_view[] = $node->uid;
             foreach ($completed_feedback as $review) {
@@ -1063,7 +1066,7 @@ function sbac_resource_node_access_records($node) {
             }
 
             // If there is no third review, everyone can review this.
-            if (!$current_reviews) {
+            if (!$current_reviews && !$third_review) {
               foreach ($accounts as $account) {
                 if (!in_array($account->uid, $not_allowed_to_view)) {
                   $restricted = TRUE;
