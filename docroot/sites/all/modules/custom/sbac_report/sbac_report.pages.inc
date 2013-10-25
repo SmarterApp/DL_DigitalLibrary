@@ -101,29 +101,31 @@ function sbac_report_individual() {
     ),
   );
   
-  $output[SBAC_REPORT_TAB_USER] = array(
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#title' => t('User Activity (CSV Report)'),
-    '#attributes' => array(
-      'id' => SBAC_REPORT_TAB_USER,
-    ),
-    'content' => array(
-      '#markup' => $csv_user_activity_tab,
-    ),
-  );
+  if (sbac_report_user_access_all()) {
+    $output[SBAC_REPORT_TAB_USER] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('User Activity (CSV Report)'),
+      '#attributes' => array(
+        'id' => SBAC_REPORT_TAB_USER,
+      ),
+      'content' => array(
+        '#markup' => $csv_user_activity_tab,
+      ),
+    );
 
-  $output[SBAC_REPORT_TAB_STATES] = array(
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
-    '#attributes' => array(
-      'id' => SBAC_REPORT_TAB_STATES,
-    ),
-    'content' => array(
-      '#markup' => $csv_resource_stats_tab,
-    ),
-  );
+    $output[SBAC_REPORT_TAB_STATES] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
+      '#attributes' => array(
+        'id' => SBAC_REPORT_TAB_STATES,
+      ),
+      'content' => array(
+        '#markup' => $csv_resource_stats_tab,
+      ),
+    );
+  }
 
   $default_tab = SBAC_REPORT_TAB_INDIVIDUAL;
   if (isset($_SESSION['sbac_report']['active_tab'])) {
