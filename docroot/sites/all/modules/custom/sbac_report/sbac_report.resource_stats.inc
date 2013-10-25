@@ -81,25 +81,23 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
   $resource_filters = array();
   if ($form_state) {
     function set_resource_filter(&$resource_filters, $key, $form_value, $vid) {
-      if (in_array('0', $form_value)) {
-        $resource_filters[$key]="select tid from taxonomy_term_data where vid = $vid";
+      if (in_array('0', $form_value)) { // all.
+        $resource_filters[$key]=array();
       }
       else if (in_array('1', $form_value)) { // attribute = "not yet assigned"
 
       }
-      else if (in_array('2', $form_value)) { // attribute = "all"
-
-      }
       else {
-        $resource_filters[$key] = implode(',',$form_value);
+        $resource_filters[$key] = $form_value;
       }
     }
     set_resource_filter($resource_filters, 'types', $form_state['values']['resource_type_dropdown'], 14);
-    set_resource_filter($resource_filters, 'subject', $form_state['values']['resource_type_dropdown'], 9);
-    set_resource_filter($resource_filters, 'grade', $form_state['values']['resource_type_dropdown'], 16);
-    set_resource_filter($resource_filters, 'status', $form_state['values']['resource_type_dropdown'], 13);
-    set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_type_dropdown'], 28);
+    set_resource_filter($resource_filters, 'subject', $form_state['values']['resource_status_dropdown'], 9);
+    set_resource_filter($resource_filters, 'grade', $form_state['values']['resource_subject_dropdown'], 16);
+    set_resource_filter($resource_filters, 'status', $form_state['values']['resource_grade_dropdown'], 13);
+    set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_attribute_dropdown'], 28);
   }
+
   $csv_resource_stats_result = build_resource_stats_csv($resource_filters);
 
   if ($csv_resource_stats_result == null) {
@@ -212,38 +210,75 @@ function build_resource_stats_csv($resource_filters)
 
 function get_resources($resource_filters) {
 
-  $sql = <<<SQL
-    select * from node where nid in
-    (
-    select distinct(ti1.nid) from
-    taxonomy_index as ti1 join
-    taxonomy_index as ti2 join
-    taxonomy_index as ti3 join
-    taxonomy_index as ti4
-    on ti1.nid = ti2.nid and ti2.nid = ti3.nid and ti3.nid = ti4.nid
-    where
-    ti1.tid in (%s)
-    and
-    ti2.tid in (%s)
-    and
-    ti3.tid in (%s)
-    and
-    ti4.tid in (%s)
+  $query = new EntityFieldQuery();
+  $entities = $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'resource')
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_focus', 'tid', $resource_filters['types'])
+    ->fieldCondition('field_', 'tid', $resource_filters['status'])
+    ->fieldCondition('field_subject', 'tid', $resource_filters['subject'])
+    ->fieldCondition('field_grades', 'tid', $resource_filters['grade'])
+    ->fieldCondition('field_attributes', 'tid', $resource_filters['attribute'])
+    ->execute();
 
-    order by ti1.nid
-    );
-SQL;
-  $sql = sprintf($sql, $resource_filters['types'], $resource_filters['subject'],
-    $resource_filters['grade'],$resource_filters['status']);
-  $result = db_query($sql);
-  $values = array();
-  foreach ($result as $record) {
-    $values[$record->nid] = $record;
-  }
-  // todo: filter on attribute: $resource_filters['attribute']
-  return $values;
+  $nids = array_keys($entities['node']);
 
-  //entity_load('node', FALSE, array());
+  $nodes = node_load_multiple($nids);
+  return $nodes;
+//  $resource_filters['types'], $resource_filters['subject'],
+//    $resource_filters['grade'],$resource_filters['status']
+//
+//  $sql = <<<SQL
+//    select * from node where nid in
+//    (
+//      select distinct(ti1.nid) from
+//      taxonomy_index as ti1 join
+//      taxonomy_index as ti2 join
+//      taxonomy_index as ti3 join
+//      taxonomy_index as ti4
+//      on ti1.nid = ti2.nid and ti2.nid = ti3.nid and ti3.nid = ti4.nid
+//      where
+//      ti1.tid in (%s)
+//      and
+//      ti2.tid in (%s)
+//      and
+//      ti3.tid in (%s)
+//      and
+//      ti4.tid in (%s)
+//
+//      order by ti1.nid
+//    );
+//SQL;
+//
+//
+//  $sql = sprintf($sql, $resource_filters['types'], $resource_filters['subject'],
+//    $resource_filters['grade'],$resource_filters['status']);
+//  $result = db_query($sql);
+//  $values = array();
+//  foreach ($result as $record) {
+//    $values[$record->nid] = $record;
+//  }
+//  // todo: filter on attribute: $resource_filters['attribute']
+//  return $values;
+//
+
+//
+//  entity_load('node', FALSE, array());
+//
+//  $query = new EntityFieldQuery();
+//  $result = $query
+//    ->entityCondition(' ', 'taxonomy_term')
+//    ->propertyCondition('vid', 2, '=')  // Where $vid = 2, for example
+//    ->propertyCondition('tid', 5, '!=') // Where 5 is the tid you want to exclude
+//    ->execute();
+////dsm($result['taxonomy_term']);
+//
+//  $tids = array();
+//  foreach($result['taxonomy_term'] as $term) {
+//    $tids[] = $term->tid;
+//  }
+//  $terms = entity_load('node', );
+//dsm($terms);
 }
 
 function create_resource_stats_from_data($nodes)
