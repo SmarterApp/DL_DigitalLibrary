@@ -488,7 +488,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
     // resource title
     $item[] = array(
-      'data' => l($row->node_title, 'node/' . $row->nid),
+      'data' => '<div class="cell-scroll">' . l($row->node_title, 'node/' . $row->nid) . '</div>',
       'class' => 'cell title',
     );
     

@@ -303,7 +303,7 @@ i.icon-info {
   background-image: linear-gradient(#ededed, #ebebeb);
 }
 /* line 297, ../sass/sbac_report.scss */
-.page-reports table.report-summation tbody tr td.cell.title {
+.page-reports table.report-summation tbody tr td .cell-scroll {
   max-width: 52px;
   overflow-x: scroll;
 }

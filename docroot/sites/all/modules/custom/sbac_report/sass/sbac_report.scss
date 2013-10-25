@@ -294,7 +294,7 @@ i.icon-info {
 	          @include table-header();
 	        }
 
-          &.cell.title {
+          .cell-scroll { 
             max-width: 52px;
             overflow-x: scroll; 
           }
