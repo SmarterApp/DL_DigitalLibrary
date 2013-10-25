@@ -2164,11 +2164,11 @@ function sbac_resource_save_all_changes_form($form, $form_state) {
       $button_text = 'Remove Resource';
       break;
     case 3:
-      $description = 'Save changes to this resource will make these changes visible to all user of the Digital Library.';
+      $description = 'Save changes to this resource will make these changes visible to all users of the Digital Library.';
       $button_text = 'Save All Changes';
       break;
     default:
-      $description = 'Save changes to this resource will make these changes visible to all user of the Digital Library.';
+      $description = 'Save changes to this resource will make these changes visible to all users of the Digital Library.';
       $button_text = 'Save All Changes';
   }
 
