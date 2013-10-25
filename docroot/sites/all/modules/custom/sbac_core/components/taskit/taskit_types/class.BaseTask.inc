@@ -57,27 +57,11 @@ class BaseTask extends \taskit\Task {
       return '';
     }
 
-    $posts = entity_load('feedback', FALSE, array(
-      'node_id' => $resource_nid,
-      'type' => 'post',
-      'completed' => 1,
-      'status' => 1,
-    ));
-
-    $post = array_shift($posts);
-
-    $reviews = entity_load('feedback', FALSE, array(
-      'node_id' => $resource_nid,
-      'type' => 'qc',
-      'completed' => 1,
-      'status' => 1,
-    ));
-
     $i = 0;
-    foreach ($reviews as $review) {
+    foreach (entity_load('feedback', array_values($feedback)) as $entity) {
       $i++;
 
-      if ($viewing_uid == $review->uid) {
+      if ($entity->type == 'qc' && $viewing_uid == $entity->uid) {
         break;
       }
     }

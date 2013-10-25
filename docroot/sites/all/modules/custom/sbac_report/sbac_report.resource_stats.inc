@@ -12,6 +12,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#multiple' => TRUE,
     '#default_value' => sbac_report_default_resource_type_option(),
     '#required' => TRUE,
+    '#attributes' => array('class' => array('chosen-widget')),
   );
   $form['resource_status_dropdown'] = array(
     '#type' => 'select',
@@ -20,8 +21,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#multiple' => TRUE,
     '#default_value' => sbac_report_default_resource_status_option(),
     '#required' => TRUE,
-    '#attributes' => array ('class' => array('chzn-widget')),
-
+    '#attributes' => array ('class' => array('chosen-widget')),
   );
   $form['resource_subject_dropdown'] = array(
     '#type' => 'select',
@@ -30,6 +30,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#multiple' => TRUE,
     '#default_value' => sbac_report_default_resource_subject_option(),
     '#required' => TRUE,
+    '#attributes' => array('class' => array('chosen-widget')),
   );
   $form['resource_grade_dropdown'] = array(
     '#type' => 'select',
@@ -38,6 +39,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#multiple' => TRUE,
     '#default_value' => sbac_report_default_resource_grade_option(),
     '#required' => TRUE,
+    '#attributes' => array('class' => array('chosen-widget')),
   );
   $form['resource_attribute_dropdown'] = array(
     '#type' => 'select',
@@ -46,6 +48,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#multiple' => TRUE,
     '#default_value' => sbac_report_default_resource_attribute_option(),
     '#required' => TRUE,
+    '#attributes' => array('class' => array('chosen-widget')),
   );
 
   $form['submit'] = array(
