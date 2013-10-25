@@ -46,12 +46,13 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 
     // Hide the Advanced fieldset if not DLRB member.
     global $user;
-    if (!in_array('DLRB member', $user->roles)) {
-      field_group_hide_field_groups($form, array('group_advanced'));
-      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
+
+    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
     }
     else {
-      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
+      field_group_hide_field_groups($form, array('group_advanced'));
+      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
     }
 
     // Setup the form
@@ -1708,7 +1709,6 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_submit_button(&$form, &$form_state) {
-  global $user;
   unset($form['#submit']);
   unset($form['#validate']);
   unset($form['actions']['submit']['#submit']);
