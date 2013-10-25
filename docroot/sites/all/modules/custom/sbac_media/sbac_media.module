@@ -909,10 +909,8 @@ function sbac_media_count_duplicates($media_items) {
       $query .= 'n.uid = :uid AND ';
       $query .= 'w.state = :state';
       $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid, ':state' => 'published'));
-      if ($matches->rowCount()) {
-        $count[$media_item->nid] += $matches->rowCount();
-        $count['overall'] += $matches->rowCount();
-        $count['node_count']++;
+      foreach ($matches as $match) {
+        $count[$match->nid][$match->id] = $match;
       }
     }
   }
@@ -1208,7 +1206,7 @@ function sbac_media_duplicates($js = FALSE) {
       $count = sbac_media_count_duplicates($media_items);
       $title = 'There are :count published resources in the Smarter Balanced Digital Library with similar combination of materials';
       $form_state = array(
-        'title' => t($title, array(':count' => $count['node_count'])),
+        'title' => t($title, array(':count' => count($count))),
         'ajax' => $js,
         'sbac-media-items' => $media_items,
       );
