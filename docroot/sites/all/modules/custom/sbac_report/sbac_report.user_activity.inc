@@ -48,13 +48,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     ),
 
   );
-//  $form['user_group_dropdown'] = array(
-//    '#type' => 'markup',
-//    '#markup' => theme('sbac_report_user_group_dropdown',
-//      array('user_group_options' => $user_group_options,
-//      )
-//    ),
-//  );
+
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
 
@@ -131,6 +125,11 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
   $snefilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
+  if (array_count_values($usergroups)==0) {
+    $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
+    $_SESSION['sbac_report']['active_tab'] = 1;
+    return; // report did not contain any data.
+  }
   // dump the csv file here:
   $csv_activity_report_result = build_activity_report_csv($state_tid1, $date_range1, $usergroups, $snefilter);
   // output the csv for download.
@@ -149,6 +148,24 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
 
 function get_users_for_user_groups($usergroups)
 {
+  if (array_key_exists (1, $usergroups)) {
+    $admins = sbac_report_user_group_admins();
+    unset($usergroups[1]);
+    foreach ($admins as $key => $value) {
+      $usergroups[$key] = $key;
+    }
+  }
+  else if (array_key_exists(0,$usergroups)) {
+    $admins = sbac_report_user_group_admins();
+    foreach ($admins as $key => $value) {
+      $usergroups[$key] = $key;
+    }
+    $all = sbac_report_user_group_options();
+    foreach ($all as $key=>$value) {
+      $usergroups[$key] = $key;
+    }
+  }
+
   $usergroups = implode(',',$usergroups);
 // The below statement doesn't work, where usergroups is passed as a string or an array.
 //  $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in :stuff";
@@ -158,7 +175,6 @@ function get_users_for_user_groups($usergroups)
 //    )
 //  );
   // done this way because the prepared statement didn't work:
-  // todo make comma separated list work here or escape string.
   $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in ($usergroups)";
   $result = db_query($sql);
   $values = array();
