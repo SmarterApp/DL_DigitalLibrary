@@ -3706,7 +3706,7 @@ function sbac_resource_views_default_views() {
   $view->name = 'search_resources_integration';
   $view->description = '';
   $view->tag = 'default';
-  $view->base_table = 'apachesolr__amazon_apache_solr_integ';
+  $view->base_table = 'apachesolr__amazon_apache_solr_integration';
   $view->human_name = 'Search Resources - Integration';
   $view->core = 7;
   $view->api_version = '3.0';
@@ -3726,19 +3726,19 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Field: Apache Solr: entity_id */
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_integ';
+  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_integration';
   $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['label'] = '';
   $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
   /* Field: Apache Solr: entity_type */
   $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_integ';
+  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_integration';
   $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
   $handler->display->display_options['fields']['entity_type']['label'] = '';
   $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
   /* Filter criterion: Apache Solr: entity_type */
   $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_integ';
+  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_integration';
   $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
   $handler->display->display_options['filters']['entity_type']['value'] = 'node';
   $handler->display->display_options['filters']['entity_type']['expose']['operator_id'] = 'entity_type_op';
@@ -3747,7 +3747,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['entity_type']['expose']['identifier'] = 'entity_type';
   /* Filter criterion: Apache Solr: bundle */
   $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_integ';
+  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_integration';
   $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
   $handler->display->display_options['filters']['bundle']['value'] = 'resource';
   $handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
@@ -3756,7 +3756,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
   /* Filter criterion: Apache Solr: Search */
   $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_integ';
+  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_integration';
   $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
   $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
   $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
@@ -3789,7 +3789,7 @@ function sbac_resource_views_default_views() {
   $view->name = 'search_resources_training';
   $view->description = '';
   $view->tag = 'default';
-  $view->base_table = 'apachesolr__amazon_apache_solr_train';
+  $view->base_table = 'apachesolr__amazon_apache_solr_training';
   $view->human_name = 'Search Resources - Training';
   $view->core = 7;
   $view->api_version = '3.0';
@@ -3809,19 +3809,19 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Field: Apache Solr: entity_id */
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_train';
+  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_training';
   $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['label'] = '';
   $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
   /* Field: Apache Solr: entity_type */
   $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_train';
+  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_training';
   $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
   $handler->display->display_options['fields']['entity_type']['label'] = '';
   $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
   /* Filter criterion: Apache Solr: entity_type */
   $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_train';
+  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_training';
   $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
   $handler->display->display_options['filters']['entity_type']['value'] = 'node';
   $handler->display->display_options['filters']['entity_type']['expose']['operator_id'] = 'entity_type_op';
@@ -3839,7 +3839,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
   /* Filter criterion: Apache Solr: Search */
   $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_train';
+  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_training';
   $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
   $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
   $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
