@@ -455,6 +455,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   .button {
     @include border-radius (6px);
     @include transition (all 500ms ease);
+    @include box-shadow(none);
     padding: 8px 18px;
     margin-left: 10px;
     background: rgba(191, 216, 229, 1);
