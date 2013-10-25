@@ -444,18 +444,20 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
 
   // have all the tids, now get the term data and set the report values:
   # terms of service.
-  $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
-    implode(',',array_keys($used_tids)));
-  $result = db_query($sql);
-  $values = array();
-  foreach ($result as $record) {
-    $values[$record->tid] = $record;
-  }
-  $tid_terms = $values;
+  if (array_count_values($user_tids) > 0) {
+    $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
+      implode(',',array_keys($used_tids)));
+    $result = db_query($sql);
+    $values = array();
+    foreach ($result as $record) {
+      $values[$record->tid] = $record;
+    }
+    $tid_terms = $values;
 
-  foreach ($user_activity['user_profiles'] as $user_profile) {
-    foreach ($foreignidkeys as $foreignidkey) {
-      set_tid_property($user_profile, $foreignidkey[0], $tid_terms);
+    foreach ($user_activity['user_profiles'] as $user_profile) {
+      foreach ($foreignidkeys as $foreignidkey) {
+        set_tid_property($user_profile, $foreignidkey[0], $tid_terms);
+      }
     }
   }
 }
@@ -474,6 +476,10 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
 
   $user_activity = get_user_activity(array_keys($users), $date_range);
   $user_activity['user_profiles']=$user_profiles;
+  if (array_count_values($user_activity)== 0 )
+  {
+    return null;
+  }
   $file_data = create_user_activity_from_data($user_activity);
 
   return $file_data;
