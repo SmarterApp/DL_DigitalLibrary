@@ -343,17 +343,56 @@ function sbac_report_date_range_options() {
   return $options;
 }
 
+
+/**
+ * Options for the user groups.
+ */
+function sbac_report_user_group_admins() {
+  $options = get_user_groups();
+
+  $admin_aggregates = array();
+  // admins aggregated:
+  $key = array_search('DLRB member',$options);
+  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('system administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('digital library administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+
+  return $admin_aggregates;
+}
+
 /**
  * Options for the user groups.
  */
 function sbac_report_user_group_options() {
   $options = get_user_groups();
+
+
   // filter out unwanted values from the database query.
+  // remove drupalisms:
   unset($options[array_search('anonymous user',$options)]);
   unset($options[array_search('authenticated user',$options)]);
-  unset($options[array_search('administrator',$options)]);
-  unset($options[array_search('help desk',$options)]);
+
+  // remove unused, but included in all:
+  unset($options[array_search('basic end user',$options)]);
   unset($options[array_search('on-boarding',$options)]);
+  unset($options[array_search('help desk',$options)]);
+
+  // admins aggregated:
+  $key = array_search('DLRB member',$options);
+  unset($options[$key]);
+  $key = array_search('administrator',$options);
+  unset($options[$key]);
+  $key = array_search('system administrator',$options);
+  unset($options[$key]);
+  $key = array_search('digital library administrator',$options);
+  unset($options[$key]);
+
+  // add back a selector for the 4 admins as an aggregate:
+  $options[1] = 'admins';
 
   return $options;
 }
@@ -978,6 +1017,7 @@ SQL;
   );
 
   $values = array();
+  $values[0] = 'all';
   foreach ($result as $record) {
     $values[$record->rid] = $record->name;
   }
