@@ -17,6 +17,10 @@ $body-font-family: Arial, Helvetica, sans-serif;
    ----------------------------------------- */
 
 
+.chzn-container-multi .chzn-choices .search-field input {
+  padding:0;
+  height: 20px;
+}
 .alert-box {
   margin-top: 10px;
 
