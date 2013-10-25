@@ -283,27 +283,12 @@ function get_user_activity($users, $date_range)
 
 function create_user_activity_from_data($user_activity)
 {
-  function format_value_field(&$row, $field, $separator, $subseparator, $quote_arrays, $subquote)
-  {
-    //reset($array); $first =  key($array);
-    $count = count($field['und']); $ix = 0;
-    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
-    foreach ($field['und'] as $array_value) {
-      $value = $array_value['value'];
-      $row .= $value . $subseparator;
-      $ix++;
-      if ($ix == $count) {
-        $row = substr($row, 0, -1);
-      } // reduce length by one removing the last sub-separator
-    }
-    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
-    $row .= $separator;
-  }
-
-  $separator = ', ';
+  $separator = ',';
+  $encloseer = '"';
   $quote_arrays = true;
   $subseparator = ';';
   $subquote = "'";
+  $line_ending = "\r\n";
 
   ksort($user_activity['user_profiles']);
 
@@ -321,7 +306,7 @@ function create_user_activity_from_data($user_activity)
   foreach ($uidcountkeys as $uidcountkey) { $titles .= $uidcountkey[1].$separator; }
   foreach ($toskeys as $toskey) { $titles .= $toskey[1].$separator; }
   $titles = substr($titles, 0, -1);
-  $titles .= "\r\n";
+  $titles .= $line_ending;
 
   $csv = $titles;
   $count = count($user_activity['user_profiles']); $ix = 0;
@@ -330,11 +315,11 @@ function create_user_activity_from_data($user_activity)
     $uid = $user_profile->{'uid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
-      format_value_field($row, $user_profile->{$fieldkey[0]}, $separator, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $user_profile->{$fieldkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote);
     }
     foreach ($foreignidkeys as $foreignidkey) {
       // tid is replaced by the actual value in the value field.
-      format_value_field($row, $user_profile->{$foreignidkey[0]}, $separator, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $user_profile->{$foreignidkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote);
     }
     foreach ($stringkeys as $stringkey) {
       $row .= $user_profile->{$stringkey[0]} . $separator;
@@ -348,7 +333,7 @@ function create_user_activity_from_data($user_activity)
 
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
 
-    $csv .= $row."\r\n";
+    $csv .= $row.$line_ending;
   }
   return $csv;
 }
@@ -396,59 +381,6 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($toskeys, array('tos-revision', 'TOS Revision'));
   array_push($toskeys, array('tos-revision-date', 'Date of TOS Revision'));
 
-  function format_value_property(&$user_profile, $fieldkey, $missing_string) {
-    if (!property_exists($user_profile,$fieldkey)) {
-      $user_profile->{$fieldkey} = array();
-    }
-    if (is_null($user_profile->{$fieldkey}['und'])) {
-      $user_profile->{$fieldkey}['und'] = array();
-      $user_profile->{$fieldkey}['und'][0] = array();
-      $user_profile->{$fieldkey}['und'][0]['value'] = $missing_string;
-    }
-    $ix = 0;
-    foreach ($user_profile->{$fieldkey}['und'] as $field) {
-      if (is_null($user_profile->{$fieldkey}['und'][0]['value'])) {
-        $user_profile->{$fieldkey}['und'][$ix]['value'] = $missing_string;
-      }
-      $ix++;
-    }
-  }
-  function format_tid_property(&$user_profile, $fieldkey, $missing_string, &$used_tids) {
-    // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
-    if (!property_exists($user_profile,$fieldkey)) {
-      $user_profile->{$fieldkey} = array();
-    }
-    if (is_null($user_profile->{$fieldkey}['und'])) {
-      $user_profile->{$fieldkey}['und'] = array();
-      $user_profile->{$fieldkey}['und'][0] = array();
-      $user_profile->{$fieldkey}['und'][0]['tid'] = $missing_string;
-      $user_profile->{$fieldkey}['und'][0]['value'] = $missing_string;
-    }
-    $ix = 0;
-    foreach ($user_profile->{$fieldkey}['und'] as &$field) {
-      if (is_null($field['tid'])) {
-        $field['tid'] = $missing_string;
-        $field['value'] = $missing_string;
-      }
-      // look up the value in the foreign table.
-      if ($field['tid'] != $missing_string) {
-        $used_tids[$field['tid']] = $field['tid'];
-      }
-      $ix++;
-    }
-  }
-  function set_tid_property(&$user_profile, $fieldkey, &$tid_terms) {
-    // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
-
-    $ix = 0;
-    foreach ($user_profile->{$fieldkey}['und'] as &$field) {
-      // look up the value in the foreign table.
-      if ($field['tid'] != 0) {
-        $field['value'] = $tid_terms[$field['tid']]->name;
-      }
-      $ix++;
-    }
-  }
   // replace missing values with ' ' or 0
   $missing_string = ' ';
   $missing_integer = 0;
@@ -488,7 +420,7 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   // have all the tids, now get the term data and set the report values:
   # terms of service.
   $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
-    $usergroups = implode(',',array_keys($used_tids)));
+    implode(',',array_keys($used_tids)));
   $result = db_query($sql);
   $values = array();
   foreach ($result as $record) {
