@@ -379,7 +379,7 @@ function sbac_report_user_group_options() {
  *        for date field: "range".
  *        for SNE field: "uid".
  *
- * @return string|int
+ * @return string|int|array|NULL
  *   The value stored in SESSION.
  */
 function sbac_report_get_session_value($field, $key) {
@@ -390,11 +390,14 @@ function sbac_report_get_session_value($field, $key) {
       unset($_SESSION['sbac_report']);
       $value = NULL;
     }
+
     if (is_array($value)) {
       return $value;
     }
+
     return check_plain($value);
   }
+
   return NULL;
 }
 
