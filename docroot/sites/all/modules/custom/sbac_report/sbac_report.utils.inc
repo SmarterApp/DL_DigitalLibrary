@@ -40,7 +40,9 @@ function format_value_field(&$row, $field, $separator, $encloseer, $subseparator
   //reset($array); $first =  key($array);
   $count = count($field['und']); $ix = 0;
   $row.=$encloseer;
-  if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
+  if ($count > 1 and $quote_arrays)  {
+    $row .= $subquote;
+  }
   foreach ($field['und'] as $array_value) {
     if ($is_date) {
       $value = date('Y-m-d',$array_value['value']);
