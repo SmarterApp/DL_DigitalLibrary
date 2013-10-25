@@ -14,82 +14,61 @@
 function sbac_report_individual() {
   drupal_set_title(t('Usage and Activity Reports'));
   $individual_form = drupal_get_form('sbac_report_individual_form');
+
+  // Get SESSION values.
+  $uid = sbac_report_get_session_value('sne', 'uid');
+  $state_tid = sbac_report_get_session_value('state', 'tid');
+  $date_range = sbac_report_get_session_value('date_range', 'range');
+  $error_message = '';
+  
   $sne_details = '';
   $contributed_summary = '';
   $contributed_details = '';
   $gate_keeping = '';
   $all_reviews = '';
   $summation = '';
-  $error_message = '';
 
-  // individual report displayed on the first tab.
-  if ($_SESSION['sbac_report']) {
-    if ($_SESSION['sbac_report']['summation']) {
-      $summation = $_SESSION['sbac_report']['summation'];
-    }
-    if ($_SESSION['sbac_report']['sne_details']) {
-      $sne_details = $_SESSION['sbac_report']['sne_details'];
-    }
-    if ($_SESSION['sbac_report']['contributed_summary']) {
-      $contributed_summary = $_SESSION['sbac_report']['contributed_summary'];
-    }
-    if ($_SESSION['sbac_report']['contributed_details']) {
-      $contributed_details = $_SESSION['sbac_report']['contributed_details'];
-    }
-    if ($_SESSION['sbac_report']['gate_keeping']) {
-      $gate_keeping = $_SESSION['sbac_report']['gate_keeping'];
-    }
-    if ($_SESSION['sbac_report']['all_reviews']) {
-      $all_reviews = $_SESSION['sbac_report']['all_reviews'];
-    }
-    if ($_SESSION['sbac_report']['error_message']) {
-      $error_message = $_SESSION['sbac_report']['error_message'];
+  if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
+    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
+    // If there are no SNE with the selected state and uid. Display none.
+    // @todo: custom message if there's no result.
+    if (!empty($sne_details)) {
+      $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
+      $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
+
+      // Gate-Keeping Reviews.
+      $name = sbac_report_get_session_value('sne', 'name');
+      $gk_ind_accepted = sbac_report_get_ind_accepted_gate_keeper($uid, $date_range);
+      $gk_ind_returned = sbac_report_get_ind_returned_gate_keeper($uid, $date_range);
+      $gk_all_accepted = sbac_report_get_all_accepted_gate_keeper($date_range);
+      $gk_all_returned = sbac_report_get_all_returned_gate_keeper($date_range);
+      $gate_keeping = sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned);
+
+      // All Reviews.
+      $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
+      $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
+      // $reviews = array_merge($reviews_in_progress, $completed_reviews);
+      $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $completed_reviews);
+      $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
+
+      // The big 'summation' table.
+      $summation = sbac_report_build_summation_table($uid, $date_range);
     }
   }
-  // Get SESSION values.
-//  $uid = sbac_report_get_session_value('sne', 'uid');
-//  $state_tid = sbac_report_get_session_value('state', 'tid');
-//  $date_range = sbac_report_get_session_value('date_range', 'range');
-
-//  if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
-//    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
-//    // If there are no SNE with the selected state and uid. Display none.
-//    // @todo: custom message if there's no result.
-//    if (!empty($sne_details)) {
-//      $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
-//      $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
-//
-//      // Gate-Keeping Reviews.
-//      $name = sbac_report_get_session_value('sne', 'name');
-//      $gk_ind_accepted = sbac_report_get_ind_accepted_gate_keeper($uid, $date_range);
-//      $gk_ind_returned = sbac_report_get_ind_returned_gate_keeper($uid, $date_range);
-//      $gk_all_accepted = sbac_report_get_all_accepted_gate_keeper($date_range);
-//      $gk_all_returned = sbac_report_get_all_returned_gate_keeper($date_range);
-//      $gate_keeping = sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned);
-//
-//      // All Reviews.
-//      $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
-//      $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
-//      // $reviews = array_merge($reviews_in_progress, $completed_reviews);
-//      $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $completed_reviews);
-//      $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
-//
-//      // The big 'summation' table.
-//      $summation = sbac_report_build_summation_table($uid, $date_range);
-//    }
-//  }
+  else {
+    $error_message = '<div>' . t('No data exists for the filters you have selected. Please choose a new combination of filters and attempt your export again.') . '</div>';
+  }
 
   $individual_tab = theme('sbac_report_individual', array(
-      'form' => $individual_form,
-      'sne_details' => $sne_details,
-      'contributed_summary' => $contributed_summary,
-      'contributed_details' => $contributed_details,
-      'gate_keeping' => $gate_keeping,
-      'all_reviews' => $all_reviews,
-      'summation' => $summation,
-      'error_message' => $error_message,
-    )
-  );
+    'form' => $individual_form,
+    'sne_details' => $sne_details,
+    'contributed_summary' => $contributed_summary,
+    'contributed_details' => $contributed_details,
+    'gate_keeping' => $gate_keeping,
+    'all_reviews' => $all_reviews,
+    'summation' => $summation,
+    'error_message' => $error_message,
+  ));
 
   $csv_form1 = drupal_get_form('sbac_csv_report_user_activity_form');
   $csv_user_activity_tab = theme('sbac_csv_report_user_activity', array(
