@@ -309,16 +309,16 @@ function validate_and_fill_out_resource_stats(&$resource_nodes, &$fieldkeys, &$f
   array_push($fieldkeys, array('field_learning_goals', 'Learning Targets'));
   array_push($fieldkeys, array('field_success_criteria', 'Success Criteria'));
   array_push($fieldkeys, array('field_supporting_evidence', 'Supporting Evidence'));
-  array_push($fieldkeys, array('field_principles', 'Principles, Literature or Research'));
+  array_push($fieldkeys, array('field_principles', 'Principles Literature or Research'));
   array_push($fieldkeys, array('field_license_information', 'License?'));
-  array_push($fieldkeys, array('field_student_agency', 'Student Engagement in the Formative Process')); //student engagement in the formative proceess
+  array_push($fieldkeys, array('field_student_agency', 'Student Engagement in the Formative Process')); //
   array_push($fieldkeys, array('field_total_views', 'Views'));
   array_push($fieldkeys, array('field_unique_views', 'Unique Views'));
 
   array_push($foreignidkeys, array('field_attributes', 'Attribute of Formative Assessment Process')); //
   array_push($foreignidkeys, array('field_focus', 'Resource Type')); //
   array_push($foreignidkeys, array('field_grades', 'Grade(s)')); //
-  array_push($foreignidkeys, array('field_indended_end_user', 'Intended End User(s)')); //
+  array_push($foreignidkeys, array('field_intended_end_user', 'Intended End User(s)')); //
   array_push($foreignidkeys, array('field_graphical_settings', 'Geographic Setting(s)')); //
   array_push($foreignidkeys, array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)')); //
   array_push($foreignidkeys, array('field_digital_media_type', 'Media Type(s)')); //
