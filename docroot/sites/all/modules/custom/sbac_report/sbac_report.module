@@ -83,11 +83,14 @@ function sbac_report_user_access() {
   global $user;
   $roles = $user->roles;
 
-  return $user->uid == 1 ||
-    in_array('DLRB member', $roles) ||
-    in_array('digital library administrator', $roles) ||
-    in_array('system administrator', $roles) ||
-    sbac_report_is_slt($user);
+  $roles = array(
+    3 => 'administrator',
+    7 => 'DLRB member',
+    8 => 'digital library administrator',
+    23 => 'system administrator',
+  );
+
+  return (bool) array_intersect(array_keys($user->roles), array_keys($roles));
 }
 
 /**
