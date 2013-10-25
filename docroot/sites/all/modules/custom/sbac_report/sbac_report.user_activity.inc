@@ -18,6 +18,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#options' => sbac_report_state_options(),
     '#multiple' => FALSE,
     '#default_value' => sbac_report_get_default_state_tid(),
+    '#attributes' => array('class' => array('chosen-widget')),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
     ),
@@ -29,6 +30,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Choose User Groups'),
     '#options' => $user_group_options,
+    '#attributes' => array('class' => array('chosen-widget')),
     '#multiple' => TRUE,
     '#default_value' => sbac_report_get_default_usergroup(),
     '#required' => TRUE,
