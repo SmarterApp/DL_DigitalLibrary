@@ -9,10 +9,9 @@
 $MAX_PROCESS = 0; // 0=all, +int=exit after that many rows
 $live_delay = 5;  // in seconds
 $DEBUG = 1;
-$LOGFILE = "/mnt//tmp/sbacstg2/sbac_migration.". date("Ymd-His", time()) .".log";
 
-print "LOGGING to: $LOGFILE\n";
-
+// This is stuff you need to change for EACH migration!
+$LOGFILE = "/mnt//tmp/sbacstg3/sbac_migration.". date("Ymd-His", time()) .".log";
 $dbhost = 'staging-6153.prod.hosting.acquia.com';
 $dbuser = 's6620';
 $dbpass = 'jQUyse5GuhuU5se';
@@ -20,6 +19,7 @@ $dbname = 'sbacstg3';
 $fs_private_basedir = '/mnt/files/sbacstg3/files-private/'; // with ending slash
 $fs_public_basedir = '/mnt/files/sbacstg3/sites/default/files/'; // with ending slash
 
+print "LOGGING to: $LOGFILE\n";
 
 // test if directories exists and if they are writable - abort if not
 check_dir($fs_public_basedir);
