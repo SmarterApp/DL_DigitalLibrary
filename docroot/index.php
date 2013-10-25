@@ -1,5 +1,6 @@
 <?php
-error_reporting(E_ALL|E_STRICT);
+error_reporting(E_ERROR);
+//error_reporting(E_ALL|E_STRICT);
 //$conf['error_level'] = 2;
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
