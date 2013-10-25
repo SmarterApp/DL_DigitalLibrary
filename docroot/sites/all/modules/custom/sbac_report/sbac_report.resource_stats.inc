@@ -198,7 +198,7 @@ function build_resource_stats_csv($resource_filters)
 
   $file_data = create_resource_stats_from_data($nodes);
 
-  return $resources;
+  return $file_data;
 }
 
 function get_resources($resource_filters) {
@@ -237,34 +237,19 @@ SQL;
 
 function create_resource_stats_from_data($nodes)
 {
-  function format_value_field(&$row, $field, $separator, $subseparator, $quote_arrays, $subquote)
-  {
-    //reset($array); $first =  key($array);
-    $count = count($field['und']); $ix = 0;
-    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
-    foreach ($field['und'] as $array_value) {
-      $value = $array_value['value'];
-      $row .= $value . $subseparator;
-      $ix++;
-      if ($ix == $count) {
-        $row = substr($row, 0, -1);
-      } // reduce length by one removing the last sub-separator
-    }
-    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
-    $row .= $separator;
-  }
-
-  $separator = ', ';
+  $separator = ',';
+  $encloseer = '"';
   $quote_arrays = true;
   $subseparator = ';';
   $subquote = "'";
+  $line_ending = "\r\n";
 
-  ksort($node);
+  ksort($nodes);
 
   $fieldkeys = array();
   $foreignidkeys = array();
   $stringkeys = array();
-  validate_and_fill_out_resource_stats($node, $fieldkeys, $foreignidkeys, $stringkeys);
+  validate_and_fill_out_resource_stats($nodes, $fieldkeys, $foreignidkeys, $stringkeys);
 
   $titles = '';
   foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey[1].$separator; }
@@ -272,7 +257,7 @@ function create_resource_stats_from_data($nodes)
   foreach ($stringkeys as $stringkey) { $titles .= $stringkey[1].$separator; }
 
   $titles = substr($titles, 0, -1);
-  $titles .= "\r\n";
+  $titles .= $line_ending;
 
   $csv = $titles;
   $count = count($nodes); $ix = 0;
@@ -281,11 +266,11 @@ function create_resource_stats_from_data($nodes)
     $nid = $resource->{'nid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
-      format_value_field($row, $resource->{$fieldkey[0]}, $separator, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $resource->{$fieldkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote);
     }
     foreach ($foreignidkeys as $foreignidkey) {
       // tid is replaced by the actual value in the value field.
-      format_value_field($row, $resource->{$foreignidkey[0]}, $separator, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $resource->{$foreignidkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote);
     }
     foreach ($stringkeys as $stringkey) {
       $row .= $resource->{$stringkey[0]} . $separator;
@@ -293,14 +278,14 @@ function create_resource_stats_from_data($nodes)
 
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
 
-    $csv .= $row."\r\n";
+    $csv .= $row.$line_ending;
   }
   return $csv;
 }
 
 
 
-function validate_and_fill_out_resource_stats(&$resource_nodes, &$fieldkeys, &$foreignidkeys, &$stringkeysb)
+function validate_and_fill_out_resource_stats(&$resource_nodes, &$fieldkeys, &$foreignidkeys, &$stringkeys)
 {
   // loop through all values and make sure 0's and '' are used as placeholders for missing values.
 //  $titles =  'first-name, last-name, state, district,school, grade,subject, school-population, email,'.
@@ -312,72 +297,46 @@ function validate_and_fill_out_resource_stats(&$resource_nodes, &$fieldkeys, &$f
 //    ' gk-reviews-completed, qc-reviews-completed, posting-reviews-completed'
 //    ."\r\n";
 
-  array_push($fieldkeys, 'field_first_name');
-  array_push($foreignidkeys, 'field_attribute'); //attributes of formative assessment process??
-  array_push($strixngkeys, 'title'); //title
-  array_push($stringkeys, 'field_student_agency'); //student engagement in the formative proceess
-  array_push($workbench_moderation, array('current','state')); //status
+  array_push($fieldkeys, array('field_publisher', 'Owner'));
+  array_push($fieldkeys, array('field_author', 'Author'));
+  array_push($fieldkeys, array('field_alt_body', 'Resource Summary'));
+  array_push($fieldkeys, array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'));
+  array_push($fieldkeys, array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'));
+  array_push($fieldkeys, array('field_contexts', 'Context(s) Within Which the Resource Could be Used'));
+  array_push($fieldkeys, array('field_learning_goals', 'Learning Targets'));
+  array_push($fieldkeys, array('field_success_criteria', 'Success Criteria'));
+  array_push($fieldkeys, array('field_supporting_evidence', 'Supporting Evidence'));
+  array_push($fieldkeys, array('field_principles', 'Principles, Literature or Research'));
+  array_push($fieldkeys, array('field_license_information', 'License?'));
+  array_push($fieldkeys, array('field_student_agency', 'Student Engagement in the Formative Process')); //student engagement in the formative proceess
+  array_push($fieldkeys, array('field_total_views', 'Views'));
+  array_push($fieldkeys, array('field_unique_views', 'Unique Views'));
 
+  array_push($foreignidkeys, array('field_attributes', 'Attribute of Formative Assessment Process')); //
+  array_push($foreignidkeys, array('field_focus', 'Resource Type')); //
+  array_push($foreignidkeys, array('field_grades', 'Grade(s)')); //
+  array_push($foreignidkeys, array('field_indended_end_user', 'Intended End User(s)')); //
+  array_push($foreignidkeys, array('field_graphical_settings', 'Geographic Setting(s)')); //
+  array_push($foreignidkeys, array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)')); //
+  array_push($foreignidkeys, array('field_digital_media_type', 'Media Type(s)')); //
+  array_push($foreignidkeys, array('field_educational_use', 'Educational Use')); //
+  array_push($foreignidkeys, array('field_alignment_tags', 'Common Core State Standards?')); //
+  array_push($foreignidkeys, array('field_subject', 'Subjects and Domains')); //
+  array_push($foreignidkeys, array('field_intended_student', 'Intended Student Population(s)')); //
+  array_push($foreignidkeys, array('field_classroom_technologies', 'Technologies Required for Use in the Classroom')); //
 
-  function format_value_property(&$resource_node, $fieldkey, $missing_string) {
-    if (!property_exists($resource_node,$fieldkey)) {
-      $resource_node->{$fieldkey} = array();
-    }
-    if (is_null($resource_node->{$fieldkey}['und'])) {
-      $resource_node->{$fieldkey}['und'] = array();
-      $resource_node->{$fieldkey}['und'][0] = array();
-      $resource_node->{$fieldkey}['und'][0]['value'] = $missing_string;
-    }
-    $ix = 0;
-    foreach ($resource_node->{$fieldkey}['und'] as $field) {
-      if (is_null($resource_node->{$fieldkey}['und'][0]['value'])) {
-        $resource_node->{$fieldkey}['und'][$ix]['value'] = $missing_string;
-      }
-      $ix++;
-    }
-  }
-  function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used_tids) {
-    // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
-    if (!property_exists($resource_node,$fieldkey)) {
-      $resource_node->{$fieldkey} = array();
-    }
-    if (is_null($resource_node->{$fieldkey}['und'])) {
-      $resource_node->{$fieldkey}['und'] = array();
-      $resource_node->{$fieldkey}['und'][0] = array();
-      $resource_node->{$fieldkey}['und'][0]['tid'] = $missing_string;
-      $resource_node->{$fieldkey}['und'][0]['value'] = $missing_string;
-    }
-    $ix = 0;
-    foreach ($resource_node->{$fieldkey}['und'] as &$field) {
-      if (is_null($field['tid'])) {
-        $field['tid'] = $missing_string;
-        $field['value'] = $missing_string;
-      }
-      // look up the value in the foreign table.
-      if ($field['tid'] != $missing_string) {
-        $used_tids[$field['tid']] = $field['tid'];
-      }
-      $ix++;
-    }
-  }
-  function set_tid_property(&$resource_node, $fieldkey, &$tid_terms) {
-    // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
+  array_push($stringkeys, array('title', 'Title')); //title
+  //todo: not showing up
+  array_push($stringkeys, array('created', 'Contribution Date'));
 
-    $ix = 0;
-    foreach ($resource_node->{$fieldkey}['und'] as &$field) {
-      // look up the value in the foreign table.
-      if ($field['tid'] != 0) {
-        $field['value'] = $tid_terms[$field['tid']]->name;
-      }
-      $ix++;
-    }
-  }
+  array_push($workbench_moderation, array(array('current','state'), 'Status')); //status
+
   // replace missing values with ' ' or 0
   $missing_string = ' ';
 
   $used_tids = array();
-  foreach ($resource_nodes['resource_nodes'] as $resource_node) {
-    $uid = $resource_node->{'uid'};
+  foreach ($resource_nodes as $resource_node) {
+    $nid = $resource_node->{'nid'};
     foreach ($fieldkeys as $fieldkey) {
       format_value_property($resource_node, $fieldkey[0], $missing_string);
     }
@@ -395,18 +354,20 @@ function validate_and_fill_out_resource_stats(&$resource_nodes, &$fieldkeys, &$f
   }
   // have all the tids, now get the term data and set the report values:
   # terms of service.
-  $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
-    implode(',',array_keys($used_tids)));
-  $result = db_query($sql);
-  $values = array();
-  foreach ($result as $record) {
-    $values[$record->tid] = $record;
-  }
-  $tid_terms = $values;
+  if (count($used_tids)>0) {
+    $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
+      implode(',',array_keys($used_tids)));
+    $result = db_query($sql);
+    $values = array();
+    foreach ($result as $record) {
+      $values[$record->tid] = $record;
+    }
+    $tid_terms = $values;
 
-  foreach ($resource_nodes as $resource_node) {
-    foreach ($foreignidkeys as $foreignidkey) {
-      set_tid_property($resource_node, $foreignidkey[0], $tid_terms);
+    foreach ($resource_nodes as $resource_node) {
+      foreach ($foreignidkeys as $foreignidkey) {
+        set_tid_property($resource_node, $foreignidkey[0], $tid_terms);
+      }
     }
   }
 }
