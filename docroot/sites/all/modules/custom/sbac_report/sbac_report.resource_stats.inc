@@ -242,6 +242,8 @@ SQL;
   }
   // todo: filter on attribute: $resource_filters['attribute']
   return $values;
+
+  //entity_load('node', FALSE, array());
 }
 
 function create_resource_stats_from_data($nodes)
