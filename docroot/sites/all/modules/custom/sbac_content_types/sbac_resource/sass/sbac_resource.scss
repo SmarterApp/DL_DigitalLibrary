@@ -21,6 +21,13 @@ $body-font-family: Arial, Helvetica, sans-serif;
   padding:0;
   height: 20px;
 }
+
+.devtools-tooltip-body .user-profile .profile-details .title  {
+  position:static !important;
+  border:none !important;
+}
+
+
 .alert-box {
   margin-top: 10px;
 
