@@ -315,14 +315,23 @@ function create_user_activity_from_data($user_activity)
     $uid = $user_profile->{'uid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
-      format_value_field($row, $user_profile->{$fieldkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $user_profile->{$fieldkey[0]}, $separator, $encloseer,
+        $subseparator, $quote_arrays, $subquote, $fieldkey[2]=='date');
     }
     foreach ($foreignidkeys as $foreignidkey) {
       // tid is replaced by the actual value in the value field.
-      format_value_field($row, $user_profile->{$foreignidkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $user_profile->{$foreignidkey[0]}, $separator, $encloseer,
+        $subseparator, $quote_arrays, $subquote, $foreignidkey[2]=='date');
     }
+
     foreach ($stringkeys as $stringkey) {
-      $row .= $user_profile->{$stringkey[0]} . $separator;
+      if ($stringkey[2]=='date') {
+        $value = date('Y-m-d',$user_profile->{$stringkey[0]});
+      }
+      else {
+        $value = $user_profile->{$stringkey[0]};
+      }
+      $row .= $value . $separator;
     }
     foreach ($uidcountkeys as $uidcountkey) {
       $row .= $user_activity[$uidcountkey[0]][$uid]->count . $separator;
@@ -361,14 +370,14 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($foreignidkeys, array('field_special_populations', 'School Population(s)'));
 
   array_push($stringkeys, array('mail', 'Email'));
-  array_push($stringkeys, array('created','Date Created'));
-  array_push($stringkeys, array('access','Last Access'));
-  array_push($stringkeys, array('login','Last Login'));
+  array_push($stringkeys, array('created','Date Created','date'));
+  array_push($stringkeys, array('access','Last Access','date'));
+  array_push($stringkeys, array('login','Last Login','date'));
 
   array_push($uidcountkeys, array('resources_viewed','Resources Viewed'));
   array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed'));
   array_push($uidcountkeys, array('resources_contributed', 'Resources Contributed'));
-  array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contriubted Resources'));
+  array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contributed Resources'));
   array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
   array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
   array_push($uidcountkeys, array('poster_reviews_completed', 'Poster Reviews Completed'));
@@ -376,10 +385,10 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', 'Contributed Resources Posted with Distinction'));
   array_push($uidcountkeys, array('contributed_resources_reviewed_and_returned', 'Contributed Resources Reviewed and Returned'));
 
-  array_push($toskeys, array('tos-accepted', 'Date TOS Accepted'));
+  array_push($toskeys, array('tos-accepted', 'Date TOS Accepted','date'));
   array_push($toskeys, array('tos-version', 'TOS Version'));
   array_push($toskeys, array('tos-revision', 'TOS Revision'));
-  array_push($toskeys, array('tos-revision-date', 'Date of TOS Revision'));
+  array_push($toskeys, array('tos-revision-date', 'Date of TOS Revision','date'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';

@@ -295,6 +295,7 @@ function sbac_report_get_default_state_tid() {
 }
 function sbac_report_get_default_usergroup() {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
+  
   if (empty($usergroups)) {
     return array();
   }

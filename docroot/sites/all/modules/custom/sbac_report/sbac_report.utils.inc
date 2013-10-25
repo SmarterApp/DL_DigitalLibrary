@@ -35,14 +35,19 @@ if(!function_exists('str_putcsv'))
 }
 
 
-function format_value_field(&$row, $field, $separator, $encloseer, $subseparator, $quote_arrays, $subquote)
+function format_value_field(&$row, $field, $separator, $encloseer, $subseparator, $quote_arrays, $subquote, $is_date=false)
 {
   //reset($array); $first =  key($array);
   $count = count($field['und']); $ix = 0;
   $row.=$encloseer;
   if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
   foreach ($field['und'] as $array_value) {
-    $value = $array_value['value'];
+    if ($is_date) {
+      $value = date('Y-m-d',$array_value['value']);
+    }
+    else {
+      $value = $array_value['value'];
+    }
     $row .= str_replace("$encloseer","$encloseer$encloseer",$value) . $subseparator; //subseparator removed later if at end of array.
     $ix++;
     if ($ix == $count) {

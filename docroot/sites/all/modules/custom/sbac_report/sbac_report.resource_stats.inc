@@ -182,7 +182,6 @@ function sbac_report_resource_attribute_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = 28";
   $values = query_taxonomy_term($sql);
-  unset($values[0]);
   $values[1] = 'Not Yet Assigned an Attribute';
   $values[2] = 'Assigned Any Attribute';
   ksort($values);
@@ -269,14 +268,22 @@ function create_resource_stats_from_data($nodes)
     $nid = $resource->{'nid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
-      format_value_field($row, $resource->{$fieldkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $resource->{$fieldkey[0]}, $separator, $encloseer,
+        $subseparator, $quote_arrays, $subquote, $fieldkey[2]=='date');
     }
     foreach ($foreignidkeys as $foreignidkey) {
       // tid is replaced by the actual value in the value field.
-      format_value_field($row, $resource->{$foreignidkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote);
+      format_value_field($row, $resource->{$foreignidkey[0]}, $separator, $encloseer,
+        $subseparator, $quote_arrays, $subquote, $foreignidkey[2]=='date');
     }
     foreach ($stringkeys as $stringkey) {
-      $row .= $resource->{$stringkey[0]} . $separator;
+      if ($stringkey[2]=='date') {
+        $value = date('Y-m-d',$resource->{$stringkey[0]});
+      }
+      else {
+        $value = $resource->{$stringkey[0]};
+      }
+      $row .= $value . $separator;
     }
 
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
@@ -330,7 +337,7 @@ function validate_and_fill_out_resource_stats(&$resource_nodes, &$fieldkeys, &$f
 
   array_push($stringkeys, array('title', 'Title')); //title
   //todo: not showing up
-  array_push($stringkeys, array('created', 'Contribution Date'));
+  array_push($stringkeys, array('created', 'Contribution Date','date'));
 
   array_push($workbench_moderation, array(array('current','state'), 'Status')); //status
 
