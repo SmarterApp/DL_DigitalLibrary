@@ -65,13 +65,13 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK
   );
 
-  $items['export_report_resource_stats'] = array(
-    'title' => 'Export Report Detailed Resource Statistics',
-    'file' => 'sbac_report.pages.inc',
-    'page callback' => 'sbac_csv_report_resource_stats_export_form_submit',
-    'access callback' => 'sbac_csv_report_resource_stats_export_form_submit',
-    'type' => MENU_CALLBACK
-  );
+//  $items['export_report_resource_stats'] = array(
+//    'title' => 'Export Report Detailed Resource Statistics',
+//    'file' => 'sbac_report.pages.inc',
+//    'page callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+//    'access callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+//    'type' => MENU_CALLBACK
+//  );
 
   return $items;
 }
