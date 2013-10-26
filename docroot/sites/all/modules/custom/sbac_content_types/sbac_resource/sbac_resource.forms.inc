@@ -1755,7 +1755,7 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
     return;
   }
   global $user;
-  if (in_array('DLRB member', $user->roles)) {
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
     return;
   }
 
@@ -1810,7 +1810,10 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
  */
 function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
   global $user;
-  if (!in_array('DLRB member', $user->roles)) {
+  if ($user->uid > 1 && (
+    !in_array('DLRB member', $user->roles) ||
+    !in_array('digital library administrator', $user->roles) ||
+    !in_array('system administrator', $user->roles))) {
     return;
   }
 
