@@ -9,7 +9,6 @@
  * Page callback for the report.
  */
 function sbac_report_individual() {
-  ini_set('memory_limit', '196M');
   drupal_set_title(t('Usage and Activity Reports'));
   $individual_form = drupal_get_form('sbac_report_individual_form');
 
@@ -115,17 +114,17 @@ function sbac_report_individual() {
       ),
     );
 
-//    $output[SBAC_REPORT_TAB_STATES] = array(
-//      '#type' => 'fieldset',
-//      '#collapsible' => TRUE,
-//      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
-//      '#attributes' => array(
-//        'id' => SBAC_REPORT_TAB_STATES,
-//      ),
-//      'content' => array(
-//        '#markup' => $csv_resource_stats_tab,
-//      ),
-//    );
+    $output[SBAC_REPORT_TAB_STATES] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
+      '#attributes' => array(
+        'id' => SBAC_REPORT_TAB_STATES,
+      ),
+      'content' => array(
+        '#markup' => $csv_resource_stats_tab,
+      ),
+    );
   }
 
   $default_tab = SBAC_REPORT_TAB_INDIVIDUAL;
@@ -138,7 +137,7 @@ function sbac_report_individual() {
       'tabs' => array(
         SBAC_REPORT_TAB_INDIVIDUAL,
         SBAC_REPORT_TAB_USER,
-//        SBAC_REPORT_TAB_STATES,
+        SBAC_REPORT_TAB_STATES,
       ),
       'default_tab' => $default_tab,
     ),

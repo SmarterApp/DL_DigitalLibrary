@@ -164,7 +164,6 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     ),
   );
 
-
   $themes['views_view_fields__sne_details'] = array(
     'template' => 'views-view-fields--sne-details',
     'path' => $module_path . '/templates/views',
@@ -409,8 +408,8 @@ function sbac_report_user_group_options() {
   unset($options[array_search('help desk',$options)]);
 
   // admins aggregated:
-  $key = array_search('DLRB member',$options);
-  unset($options[$key]);
+//  $key = array_search('DLRB member',$options);
+//  unset($options[$key]);
   $key = array_search('administrator',$options);
   unset($options[$key]);
   $key = array_search('system administrator',$options);

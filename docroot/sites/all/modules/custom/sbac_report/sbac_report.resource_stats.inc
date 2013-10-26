@@ -80,22 +80,26 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
   // State.
   $resource_filters = array();
   if ($form_state) {
-    function set_resource_filter(&$resource_filters, $key, $form_value, $vid) {
+    function set_resource_filter(&$resource_filters, $key, $form_value, $vid, $all_values) {
       if (in_array('0', $form_value)) { // all.
-        $resource_filters[$key]=array();
+        $resource_filters[$key] = $all_values;
       }
-      else if (in_array('1', $form_value)) { // attribute = "not yet assigned"
-
+      else if (in_array('1', $form_value)) {
+        $resource_filters[$key] = array();
+      }
+      else if (is_null($resource_filters[$key]) || empty($resource_filters[$key])) {
+        $resource_filters[$key] = array();
       }
       else {
         $resource_filters[$key] = $form_value;
       }
     }
-    set_resource_filter($resource_filters, 'types', $form_state['values']['resource_type_dropdown'], 14);
-    set_resource_filter($resource_filters, 'subject', $form_state['values']['resource_status_dropdown'], 9);
-    set_resource_filter($resource_filters, 'grade', $form_state['values']['resource_subject_dropdown'], 16);
-    set_resource_filter($resource_filters, 'status', $form_state['values']['resource_grade_dropdown'], 13);
-    set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_attribute_dropdown'], 28);
+
+    set_resource_filter($resource_filters, 'types', $form_state['values']['resource_type_dropdown'], 14, sbac_report_resource_type_options());
+    set_resource_filter($resource_filters, 'subject', $form_state['values']['resource_status_dropdown'], 9, sbac_report_resource_status_options());
+    set_resource_filter($resource_filters, 'grade', $form_state['values']['resource_subject_dropdown'], 16, sbac_report_resource_subject_options());
+    set_resource_filter($resource_filters, 'status', $form_state['values']['resource_grade_dropdown'], 13, sbac_report_resource_grade_options());
+    set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_attribute_dropdown'], 28, sbac_report_resource_attribute_options());
   }
 
   $csv_resource_stats_result = build_resource_stats_csv($resource_filters);
@@ -214,11 +218,11 @@ function get_resources($resource_filters) {
   $entities = $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'resource')
     ->propertyCondition('status', 1)
-    ->fieldCondition('field_focus', 'tid', $resource_filters['types'])
-    ->fieldCondition('field_', 'tid', $resource_filters['status'])
-    ->fieldCondition('field_subject', 'tid', $resource_filters['subject'])
-    ->fieldCondition('field_grades', 'tid', $resource_filters['grade'])
-    ->fieldCondition('field_attributes', 'tid', $resource_filters['attribute'])
+    ->fieldCondition('field_focus', 'tid', array_keys($resource_filters['types']))
+    ->fieldCondition('field_status', 'tid', array_keys($resource_filters['status']))
+    ->fieldCondition('field_subject', 'tid', array_keys($resource_filters['subject']))
+    ->fieldCondition('field_grades', 'tid', array_keys($resource_filters['grade']))
+    ->fieldCondition('field_attributes', 'tid', array_keys($resource_filters['attribute']))
     ->execute();
 
   $nids = array_keys($entities['node']);

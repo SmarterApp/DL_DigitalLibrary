@@ -25,7 +25,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
   $user_group_options = sbac_report_user_group_options();
-
+  
   $form['user_group_dropdown'] = array(
     '#type' => 'select',
     '#title' => t('Choose User Groups'),
