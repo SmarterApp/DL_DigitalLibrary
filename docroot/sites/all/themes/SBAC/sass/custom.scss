@@ -29,6 +29,11 @@ $header: #18577e;
 $teal: #0085ad;
 $darkgreen: #246a34;
 
+
+/** Font Face **/
+
+@font-face { font-family: Franklin; src: url('../fonts/Franklin_Gothic_Medium.ttf'); } 
+
 /* -----------------------------------------
    Shared Styles
    ----------------------------------------- */
@@ -424,7 +429,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     margin-left: 30px;
     font-size: emCalc(18px);
     font-weight: normal;
-    font-family: "Franklin Gothic Medium";
+    font-family: "Franklin Gothic Medium", Franklin, sans-serif;
     background-color: #0980a8;
     position: relative;
 
