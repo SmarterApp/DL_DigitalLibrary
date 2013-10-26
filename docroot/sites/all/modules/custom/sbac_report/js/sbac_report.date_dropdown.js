@@ -105,7 +105,11 @@ DateDropDown = (function($, $which) {
           dropdown($dropdown, 'hide', $selected_id);
         }
         // Clicking outside the dropdown will close the dropdown.
-        if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 && $($ui_datepicker_div).has(e.target).length === 0) {
+        if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 &&
+            $($ui_datepicker_div).has(e.target).length === 0 &&
+            e.target.className!=="ui-icon ui-icon-circle-triangle-w" &&
+            e.target.className!=="ui-icon ui-icon-circle-triangle-e")
+          {
           dropdown($dropdown, 'hide', $selected_id);
         }
       });
