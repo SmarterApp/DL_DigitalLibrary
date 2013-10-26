@@ -1030,9 +1030,6 @@ function sbac_resource_node_access_records($node) {
       if ($accounts) {
         $completed_gk = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
         if ($completed_gk) {
-          if ($node->nid == 1796) {
-            $var = '';
-          }
           $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
           $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
           // everyone has access when no completed or current review
@@ -1051,7 +1048,7 @@ function sbac_resource_node_access_records($node) {
           }
 
           // everyone has access when the completed = 0 and current reviews <= 3.
-          if (!$completed_feedback && $current_reviews <= 3) {
+          if (!$completed_feedback && $current_reviews && count($current_reviews) <= 3) {
             // if current reviews is less then 3, give access to everyone.
             if (count($current_reviews) < 3) {
               foreach ($accounts as $account) {
