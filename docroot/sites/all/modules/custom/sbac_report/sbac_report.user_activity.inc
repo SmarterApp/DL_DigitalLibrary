@@ -232,15 +232,17 @@ function get_user_activity($users, $date_range)
   # not ready: select * from field_ass where uid = 372;
 
   # resources reviewed/rated
-  $sql = "select count(id) as count, uid from eck_review where status = 1 and uid in (%s) group by uid";
-  $user_activity['resources_reviewed'] = count_with_users_query($sql, $users);
+  $sql = "select count(id) as count, uid,created from eck_review where status = 1 and uid in (%s) and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['resources_reviewed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # resources contributed:
-  $sql = "select count(nid) as count, uid from node where type = 'resource' and uid in (%s) group by uid";
-  $user_activity['resources_contributed'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid,created from node where type = 'resource' and uid in (%s) and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['resources_contributed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # GC Review accepted on contributed resource:
-  $sql = "select count(id) as count, uid from eck_feedback where
+  $sql = "select count(id) as count, uid,created from eck_feedback where
     type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1 and uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
 
@@ -249,7 +251,7 @@ function get_user_activity($users, $date_range)
   //  array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # GC Review accepted on contributed resource:
-  $sql = "select count(id) as count, uid from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
     met_criteria = 0 and uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
@@ -257,7 +259,7 @@ function get_user_activity($users, $date_range)
 //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # GC Reviews completed:
-  $sql = "select count(id) as count, uid from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
@@ -265,7 +267,7 @@ function get_user_activity($users, $date_range)
 //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # QC Reviews completed:
-  $sql = "select count(id) as count, uid from eck_feedback where type = 'qx' and status = 1 and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'qx' and status = 1 and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
@@ -273,7 +275,7 @@ function get_user_activity($users, $date_range)
   //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # Poster Reviews completed:
-  $sql = "select count(id) as count, uid from eck_feedback where type = 'post' and status = 1 and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'post' and status = 1 and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
@@ -281,22 +283,25 @@ function get_user_activity($users, $date_range)
   //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # Contributed resources posted
-  $sql = "select count(nid) as count, uid from node where nid in(select nid from workbench_moderation_node_history where
-    state = 'published') and uid in (%s) group by uid";
-  $user_activity['contributed_resources_posted'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid, created from node where nid in(select nid from workbench_moderation_node_history where
+    state = 'published') and uid in (%s) and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['contributed_resources_posted'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Contributed resources posted with distinction
-  $sql = "select count(nid) as count, uid from node where sticky = 1 and nid in(select nid from workbench_moderation_node_history
-    where state = 'published') and uid in (%s) group by uid";
-  $user_activity['contributed_resources_posted_with_distinction'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid, created from node where sticky = 1 and nid in(select nid from workbench_moderation_node_history
+    where state = 'published') and uid in (%s) and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['contributed_resources_posted_with_distinction'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Contributed resources reviewed and returned
-  $sql = "select count(nid) as count, uid from node where nid in( select nid from workbench_moderation_node_history where
-  state = 'rejected') and uid in (%s) group by uid";
-  $user_activity['contributed_resources_reviewed_and_returned'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid, created from node where nid in( select nid from workbench_moderation_node_history where
+  state = 'rejected') and uid in (%s) and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['contributed_resources_reviewed_and_returned'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # terms of service.
-  $sql = "SELECT la.uid,la.accepted as 'tos-accepted',lc.version as 'tos-version',lc.revision as 'tos-revision',lc.date as 'tos-revision-date'
+  $sql = "SELECT la.uid,la.accepted as 'tos_accepted',lc.version as 'tos_version',lc.revision as 'tos_revision',lc.date as 'tos_revision_date'
           FROM legal_conditions as lc join legal_accepted as la on lc.version=la.version
           WHERE uid in (%s)";
   $sql = sprintf($sql,$users);
@@ -333,7 +338,9 @@ function create_user_activity_from_data($user_activity)
   foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey[1].$separator; }
   foreach ($stringkeys as $stringkey) { $titles .= $stringkey[1].$separator; }
   foreach ($uidcountkeys as $uidcountkey) { $titles .= $uidcountkey[1].$separator; }
-  foreach ($toskeys as $toskey) { $titles .= $toskey[1].$separator; }
+  foreach ($toskeys as $toskey) {
+    $titles .= $toskey[1].$separator;
+  }
   $titles = substr($titles, 0, -1);
   $titles .= $line_ending;
 
@@ -365,8 +372,14 @@ function create_user_activity_from_data($user_activity)
     foreach ($uidcountkeys as $uidcountkey) {
       $row .= $user_activity[$uidcountkey[0]][$uid]->count . $separator;
     }
+    $param = array();
+    $param['und'] = array();
+    $param['und'][0] = array();
     foreach ($toskeys as $toskey) {
-      $row .=  $user_activity['tos'][$uid][$toskey[0]] . $separator;
+      $is_date = (array_key_exists(2,$toskey) ? $toskey[2]=='date' : false);
+      $param['und'][0]['value'] = $user_activity['tos'][$uid]->{$toskey[0]};
+      format_value_field($row, $param, $separator, $encloseer,
+        $subseparator, $quote_arrays, $subquote, $is_date);
     }
 
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
@@ -376,7 +389,7 @@ function create_user_activity_from_data($user_activity)
   return $csv;
 }
 
-function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, $toskeys)
+function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys)
 {
   // loop through all values and make sure 0's and '' are used as placeholders for missing values.
 //  $titles =  'first-name, last-name, state, district,school, grade,subject, school-population, email,'.
@@ -414,10 +427,10 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', 'Contributed Resources Posted with Distinction'));
   array_push($uidcountkeys, array('contributed_resources_reviewed_and_returned', 'Contributed Resources Reviewed and Returned'));
 
-  array_push($toskeys, array('tos-accepted', 'Date TOS Accepted','date'));
-  array_push($toskeys, array('tos-version', 'TOS Version'));
-  array_push($toskeys, array('tos-revision', 'TOS Revision'));
-  array_push($toskeys, array('tos-revision-date', 'Date of TOS Revision','date'));
+  array_push($toskeys, array('tos_accepted', 'Date TOS Accepted','date'));
+  array_push($toskeys, array('tos_version', 'TOS Version'));
+  array_push($toskeys, array('tos_revision', 'TOS Revision'));
+  array_push($toskeys, array('tos_revision_date', 'Date of TOS Revision','date'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';
@@ -447,12 +460,23 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
         $user_activity[$uidcountkey[0]][$uid]->uid = $uid;
       }
     }
-    if (is_null($user_activity['tos'][$uid])) {
-      $user_activity['tos'][$uid]['uid'] = $uid;
-      foreach ($toskeys as $toskey) {
-        $user_activity['tos'][$uid][$toskey[0]] = "";
+
+    foreach ($toskeys as $toskey) {
+      if (is_null($user_activity['tos'][$uid])) {
+        $user_activity['tos'][$uid]->tos_accepted = '';
+        $user_activity['tos'][$uid]->tos_version = '';
+        $user_activity['tos'][$uid]->tos_revision = '';
+        $user_activity['tos'][$uid]->tos_revision_date = '';
+        $user_activity['tos'][$uid]->uid = $uid;
       }
     }
+
+    foreach ($toskeys as $toskey) {
+      if (is_null($user_activity['tos'][$uid]->{$toskey[0]})) {
+        $user_activity['tos'][$uid]->{$toskey[0]} = '';
+      }
+    }
+
   }
 
   // have all the tids, now get the term data and set the report values:
