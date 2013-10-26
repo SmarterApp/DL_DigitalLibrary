@@ -90,6 +90,7 @@ function sbac_resource_views_default_views() {
     'rejected' => 'rejected',
     'approved' => 'approved',
     'published' => 'published',
+    'removed' => 'removed',
   );
   $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
   $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
@@ -573,6 +574,90 @@ function sbac_resource_views_default_views() {
     23 => 0,
     26 => 0,
   );
+  /* Filter criterion: Content: Grade(s) (field_grades) */
+  $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
+  $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator_id'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['identifier'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
+  /* Filter criterion: Content: Subjects and Domains (field_subject) */
+  $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
+  $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['operator_id'] = 'field_subject_tid_op';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['operator'] = 'field_subject_tid_op';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['identifier'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
+  /* Filter criterion: Content: Resource Type (field_focus) */
+  $handler->display->display_options['filters']['field_focus_tid']['id'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['table'] = 'field_data_field_focus';
+  $handler->display->display_options['filters']['field_focus_tid']['field'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['operator_id'] = 'field_focus_tid_op';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['operator'] = 'field_focus_tid_op';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['identifier'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
@@ -1306,6 +1391,7 @@ function sbac_resource_views_default_views() {
     'rejected' => 'rejected',
     'approved' => 'approved',
     'published' => 'published',
+    'removed' => 'removed',
   );
   $handler->display->display_options['filters']['state']['exposed'] = TRUE;
   $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
@@ -1836,7 +1922,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['draggableviews']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
-  /* Field: Content: Document Information (field_document_information:delta) */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['delta']['id'] = 'delta';
   $handler->display->display_options['fields']['delta']['table'] = 'field_data_field_document_information';
   $handler->display->display_options['fields']['delta']['field'] = 'delta';
@@ -1901,6 +1987,10 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -2430,21 +2520,117 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['state']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['state']['field'] = 'state';
   $handler->display->display_options['filters']['state']['value'] = array(
-    'draft' => 'draft',
     'needs_review' => 'needs_review',
     'being_reviewed' => 'being_reviewed',
-    'rejected' => 'rejected',
     'approved' => 'approved',
-    'published' => 'published',
   );
   $handler->display->display_options['filters']['state']['group'] = 1;
-  /* Filter criterion: User: Current */
-  $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['table'] = 'users';
-  $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid';
-  $handler->display->display_options['filters']['uid_current']['value'] = '1';
-  $handler->display->display_options['filters']['uid_current']['group'] = 1;
+  $handler->display->display_options['filters']['state']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
+  $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
+  $handler->display->display_options['filters']['state']['expose']['identifier'] = 'state';
+  $handler->display->display_options['filters']['state']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['state']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  /* Filter criterion: Content: Grade(s) (field_grades) */
+  $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
+  $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator_id'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['identifier'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
+  /* Filter criterion: Content: Subjects and Domains (field_subject) */
+  $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
+  $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['operator_id'] = 'field_subject_tid_op';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['operator'] = 'field_subject_tid_op';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['identifier'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
+  /* Filter criterion: Content: Resource Type (field_focus) */
+  $handler->display->display_options['filters']['field_focus_tid']['id'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['table'] = 'field_data_field_focus';
+  $handler->display->display_options['filters']['field_focus_tid']['field'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['operator_id'] = 'field_focus_tid_op';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['operator'] = 'field_focus_tid_op';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['identifier'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+  $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
   $export['resource_review'] = $view;
 
   $view = new view();

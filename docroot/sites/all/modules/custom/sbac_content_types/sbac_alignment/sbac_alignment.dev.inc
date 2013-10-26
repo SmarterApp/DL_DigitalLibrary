@@ -40,7 +40,7 @@ function sbac_alignment_batch_importer_page() {
     $terms = array(
       'English / Language Arts' => array(
         'children' => array(
-          'KG : Kindergarden' => array('weight' => 0),
+          'KG : Kindergarten' => array('weight' => 0),
           '1 : Grade 1' => array('weight' => 1),
           '2 : Grade 2' => array('weight' => 2),
           '3 : Grade 3' => array('weight' => 3),
@@ -55,7 +55,7 @@ function sbac_alignment_batch_importer_page() {
       ),
       'Mathematics' => array(
         'children' => array(
-          'KG : Kindergarden' => array('weight' => 0),
+          'KG : Kindergarten' => array('weight' => 0),
           '1 : Grade 1' => array('weight' => 1),
           '2 : Grade 2' => array('weight' => 2),
           '3 : Grade 3' => array('weight' => 3),

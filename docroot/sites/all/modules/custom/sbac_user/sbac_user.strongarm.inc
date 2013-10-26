@@ -54,8 +54,8 @@ function sbac_user_strongarm() {
             'visible' => TRUE,
           ),
           'tooltip' => array(
-            'weight' => '12',
-            'visible' => FALSE,
+            'weight' => '5',
+            'visible' => TRUE,
           ),
         ),
       ),

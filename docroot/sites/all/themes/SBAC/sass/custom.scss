@@ -15,7 +15,7 @@
 :: Help Modal
 :: Digital Library Resources (DLR)
 :: Create
-   - Resource
+   - Resource 
 :: Legal
 :: Admin theme fixes
 */
@@ -56,6 +56,10 @@ html, body {
 
 body {
   background-color: #0684ad;
+
+  &#tinymce { 
+    background-color: #fff;
+  }
 }
 
 ul,
@@ -64,6 +68,73 @@ dl {
   font-size: 1em;
   list-style-position: inside; /* this can create issues */
 }
+
+/** Tables **/
+.page-reports{
+  table {
+    $cellpad: 18px 2px; //defines the padding on the table cells
+    $linkcolor: #056b8d;
+    $border-style: 1px solid #ccc;
+
+    border:$border-style;
+    background:none;
+
+    thead{
+      tr{
+        th{
+          @include background-image(linear-gradient(#ededed, #ebebeb));
+          border-bottom: $border-style;
+          padding:$cellpad;
+          color: $linkcolor;
+          border: $border-style;
+
+          a {
+            color: inherit;
+          }
+
+          &.active {
+            background:#C9EAF8;
+          }
+        }
+      }
+    }
+
+    tbody {
+      border-top: none;
+      background:none;
+    }
+
+    tr.even, tr.odd {
+      td {
+        padding: $cellpad;
+        @include background-image(linear-gradient(#fbfbfb, #fafafa));
+        border: $border-style;
+        &.active {
+           background:#EDF8FC;
+        }
+
+        a {
+          color: $linkcolor;
+        }
+      }
+    }
+    
+    tr.alt, tr:nth-of-type(even){
+      td {
+        @include background-image(linear-gradient(#f8f8f8, #f6f6f6));
+        &.active {
+          background:#E1F3F9;
+        }
+      }
+      &:hover {
+        td{
+          @include background-image(linear-gradient(#fbfbfb, #fafafa));
+        }
+      }
+    }
+  }
+}
+
 
 .f-dropdown ul {
   padding: 0;
@@ -132,21 +203,21 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   }
 
 @mixin global-button {
-    @include text-shadow(0px 1px 0px rgba(255,255,255,.5));
+    @include text-shadow(0px 1px 0px #45613e);
     @include border-radius(6px);
+    @include box-shadow(inset 0px 1px 0px 0px #6DC088); 
     display: inline-block;
     font-size: 16px;
-    font-weight: bold;
-    color: rgba(0, 98, 152, 1);
-    background: rgba(191, 216, 229, 1);
-    border: 1px rgba(0, 98, 152, .5) solid;
+    font-weight: normal;
+    color: #FFF;
+    background: #2aa549;
+    border: 1px solid #268a16;
     padding: 8px 18px;
     text-align: center;
 
     &:hover {
-      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
       @include transition(all 500ms ease);
-      background: rgba(0, 133, 173, 1);
+      background: #317f47;
       color: white;
   }
 
@@ -166,17 +237,17 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 
 @mixin global-button-negative {
   @include border-radius (6px);
-  background: rgba(226, 226, 226, 1);
-  border: 1px rgba(100, 100, 100, 1) solid;
-  color: rgba(100, 100, 100, 1);
+  @include text-shadow(0px 1px 0px #0f546b);
+  @include box-shadow(inset 0px 1px 0px 0px #22b3e3);
+  background: #0084b0;
+  border: 1px solid #0d6785;
+  color: #FFF;
   padding: 8px 18px;
   font-family: $body-font-family;
 
   &:hover, &:focus  {
-    background: rgba(138, 21, 56, 1);
-    border: 1px rgba(138, 21, 56, 1) solid;
-    color: rgba(255, 255, 255, 1);
-    text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+    @include box-shadow(inset 0px 1px 0px 0px #006184);
+    background: #006184;
   }
 }
 
@@ -442,9 +513,11 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       span { 
         display: inline-block;
         width: 27px;
-        height: 37px;
-        background: url('../images/icons/notification-number.png') center 10px no-repeat;
+        height: 40px;
+        background: url('../images/icons/notification-number.png') center 13px no-repeat;
         text-align: center;
+        color: white;
+        font-weight: bold;
       }
     }
 
@@ -459,6 +532,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       width: 16px;
       height: 16px;
       display: inline-block;
+      background-size: cover;
     }
   }
 }
@@ -491,10 +565,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       padding: 0px;
       margin: 0px;
 
-      &:hover {
-        background: #505050;
-      }
-
       .active {
         background: #777777;
       }
@@ -508,6 +578,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
         &.help {
           background-image: url('../images/icons/help-small.png');
+          background-size: contain;
         }
 
         &.feedback {
@@ -1723,6 +1794,7 @@ a.tabledrag-handle .handle {
     border-radius: 5px;
     border: 1px solid #ccc;
     overflow: hidden;
+    height: auto !important;
 
     .modal-header {
       background: none;
@@ -1742,6 +1814,7 @@ a.tabledrag-handle .handle {
       padding-top: 0;
       overflow: hidden;
       overflow-y:auto;
+      width: auto !important;
 
       .form-item {
         margin-top: 0;

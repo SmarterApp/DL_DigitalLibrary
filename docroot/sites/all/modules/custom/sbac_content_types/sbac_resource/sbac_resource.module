@@ -56,6 +56,13 @@ function sbac_resource_menu() {
     'file' => 'sbac_resource.forms.inc',
   );
 
+  $items['sbac_resource/%ctools_js/save-all-changes'] = array(
+    'page callback' => 'sbac_resource_save_all_changes_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
   $items['digital-library-resources'] = array(
     'title' => 'Digital Library Resources',
     'page callback' => 'sbac_resource_digital_library_page',
@@ -161,6 +168,13 @@ function sbac_resource_preprocess_node(&$vars) {
     if (isset($vars['field_license'][0]['taxonomy_term']->name)) {
       $vars['license'] = $vars['field_license'][0]['taxonomy_term']->name;
     }
+    // Edit link for DLRB member's.
+    global $user;
+    if (in_array('DLRB member', $user->roles)) {
+      $url = url('node/' . $vars['nid'] . '/edit', array('absolute' => TRUE));
+      $vars['edit_link'] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'))));
+    }
+    // Documents
     if (isset($vars['document'][0])) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
       $viewer = _sbac_resource_preview_content($vars);
@@ -639,40 +653,62 @@ function sbac_resource_node_load($nodes, $types) {
 /**
  * Implements hook_node_delete().
  *
- * @param $node
+ * @param $node, $i = file index
  */
 function sbac_resource_node_delete($node) {
-  if (isset($node->document)) {
-    foreach ($node->document as $key => $media) {
-      if ($media->document_id) {
-        sbac_media_delete_file_from_cmis($node, $media);
-      }
+  $i = 0;
+  if (isset($node->field_file['und'])) {
+    while ($i < count($node->field_file['und'])) {
+  	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
+  		  sbac_resource_delete_file_from_cmis($node->field_document_id['und'][$i]['value'], $i);
+  		  unset($node->field_document_id['und'][$i]);
+  	  }
+      
+  	  $i++;
     }
   }
-
-  // Now remove the folder from alfresco.
-  sbac_media_delete_folder_from_cmis($node);
 }
 
 /**
- * Allows modules to respond to state transitions.
- *
- * @param $node
- *  The node that is being transitioned.
- *
- * @param $previous_state
- *  The state of the revision before the transition occurred.
+ * The state of the revision before the transition occurred.
+ * @param $node, $i = file index
+ */
+function sbac_resource_delete_file_from_cmis($document_id, $i) 
+{
+  module_load_include('api.inc', 'cmis');
+  try {
+    $start = microtime_float();
+
+    $repository = cmis_get_repository();
+    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $document_id);
+    cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
+
+    $end = microtime_float();
+    $difference = $end - $start;
+
+    watchdog('sbac', 'did delete in: ' . $difference . ' seconds');
+  } 
+  catch (CMISException $e) {
+    // cmis_error_handler('sbac_documents_delete_document', $e);
+  }
+}
+
+/**
+ * Implemenets hook_node_load().
  *
  * @param $new_state
  *  The new state of the revision.
  */
 function sbac_resource_workbench_moderation_transition($node, $previous_state, $new_state) {
-  if ($node->type == 'resource') {
+  if ($node->type == 'resource' && $new_state != 'removed') {
     // Necassary to override workbench moderation into publishing the node. Line 1602, function
     // workbench_moderation_node_data(), they query the DB directly to find out if there is a
     // published node. I bruce lee the publish status here.
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+  }
+  else if ($node->type == 'resource' && $new_state == 'removed') {
+    $node->status = 0;
   }
 }
 

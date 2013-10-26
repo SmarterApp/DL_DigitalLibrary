@@ -115,9 +115,10 @@ class Hooks extends \devtools\Hooks {
             );
 
           // flag button
+            drupal_add_library('dialog', 'dialog');
             $trigger_id = 'flag-review-' . $review->id;
 
-            $text = t('Flag Review');
+            $text = t('Flag Review Modal');
 
             $url = implode('/', array(
               'flag',
@@ -151,6 +152,7 @@ class Hooks extends \devtools\Hooks {
               'callback' => $this::AJAX_CALLBACK,
               'wrapper' => $this::FORM_WRAPPER . '-' . $review->id,
             );
+            $form['actions']['submit']['#attributes']['class'][] = 'final-submit';
 
             unset($form['submit']);
         }

@@ -1,0 +1,19 @@
+@import "compass/css3/";
+
+.devtools-tooltip {
+  position: relative;
+
+  .devtools-tooltip-body {
+    background: #eee;
+    border: 1px #ccc solid;
+    display: none;
+    left: 20px;
+    padding: 10px;
+    position: absolute;
+    top: 20px;
+    width: 500px;
+    z-index: 50;
+    text-align: left;
+    @include border-radius(6px);
+  }
+}

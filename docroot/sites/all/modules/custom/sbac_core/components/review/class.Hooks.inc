@@ -119,18 +119,18 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_form_alter(&$form, &$form_state, $form_id) {
     $args = func_get_args();
-
+    
     // feedback add/edit form
     if (preg_match('/^eck__entity__form_(edit|add)_review_(' . implode('|', $this->_bundles) . ')$/', $form_id, $matches)) {
       // wrap in a selector that'll be targeted for AJAX replacement on form submissions
         $form['#prefix'] = '<div id="' . $this::FORM_WRAPPER . '">';
         $form['#suffix'] = '</div>';
-
+        
       // prep structure for multi-step functionality
         if (!isset($form_state['current_state'])) {
           $form_state['current_state'] = 'create';
         }
-
+        
       // we store the node in state because it won't always be available for grabs (ex. ajax requests, which have
       // a non-node URI)
         if (!isset($form_state['node_object'])) {
@@ -291,6 +291,7 @@ class Hooks extends \devtools\Hooks {
     $form['node_id']['#default_value'] = $form_state['node_object']->nid;
 
     // cancel button
+    drupal_add_library('dialog', 'dialog');
     $trigger_id = 'review-cancel';
     $url = 'node/' . $node->nid . '/review/end_use/cancel/' . $trigger_id;
 
@@ -300,7 +301,6 @@ class Hooks extends \devtools\Hooks {
           'use-ajax',
           'use-dialog',
           'button',
-          'radius',
         ),
         'id' => $trigger_id,
       ),
@@ -402,6 +402,8 @@ class Hooks extends \devtools\Hooks {
     unset($form['state_preview']['actions']['submit']['#ajax']);
 
     // submit button (modal)
+    drupal_add_library('dialog', 'dialog');
+    
     $trigger_id = 'review-submit';
     $url = 'node/' . $node->nid . '/review/end_use/submit/' . $trigger_id;
 
@@ -411,7 +413,6 @@ class Hooks extends \devtools\Hooks {
           'use-ajax',
           'use-dialog',
           'button',
-          'radius',
         ),
         'id' => $trigger_id,
       ),

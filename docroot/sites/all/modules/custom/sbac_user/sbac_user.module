@@ -77,9 +77,9 @@ function sbac_user_menu() {
     'file' => "sbac_admin.clean.flood.inc",
   );
 
-  
   return $items;
 }
+
 function sbac_user_access_check() {
   return TRUE;
 }
@@ -404,7 +404,8 @@ function sbac_user_field_access($op, $field, $entity_type, $entity, $account) {
  *   Array of fields.
  */
 function sbac_user_privacy_fields($entity) {
-  $fields = &drupal_static(__FUNCTION__);
+  // $fields = &drupal_static(__FUNCTION__);
+  $fields = array();
   if (isset($entity->field_privacy['und'])) {
     if (!count($fields)) {
       foreach ($entity->field_privacy['und'] as $key => $value) {

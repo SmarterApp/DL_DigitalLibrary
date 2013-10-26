@@ -1,0 +1,22 @@
+/* line 3, ../sass/tooltip.scss */
+.devtools-tooltip {
+  position: relative;
+}
+/* line 6, ../sass/tooltip.scss */
+.devtools-tooltip .devtools-tooltip-body {
+  background: #eee;
+  border: 1px #ccc solid;
+  display: none;
+  left: 20px;
+  padding: 10px;
+  position: absolute;
+  top: 20px;
+  width: 500px;
+  z-index: 50;
+  text-align: left;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+}

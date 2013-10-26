@@ -4,8 +4,8 @@
     $class_full = '';
     
     if ($show_open) {
-      $class_summary = 'hidden';
-      $class_full = 'open';
+      $class_summary = 'more-less-text-hidden';
+      $class_full = 'more-less-text-open';
     }
   ?>
 

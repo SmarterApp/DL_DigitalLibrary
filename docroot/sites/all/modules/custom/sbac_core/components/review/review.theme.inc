@@ -31,9 +31,9 @@ function theme_review_author($variables) {
   $account_renderable = user_view($account, 'tooltip');
 
   $tooltip = '
-              <span class="account-tooltip">
-                <a href="#" class="account-tooltip-trigger">' . format_username($account) . '</a>
-                <div class="account-tooltip-body">' . render($account_renderable) . '</div>
+              <span class="devtools-tooltip account-tooltip">
+                <a href="#" class="devtools-tooltip-trigger">' . format_username($account) . '</a>
+                <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
               </span>
              ';
 
@@ -112,7 +112,6 @@ function theme_review_delete($variables) {
           'use-ajax',
           'use-dialog',
           'button',
-          'radius',
         ),
         'id' => $trigger_id,
       ),

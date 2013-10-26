@@ -46,4 +46,40 @@
     });
 
   });
+
+  Drupal.behaviors.sbac_report_individual = {
+    attach: function (context, settings) {
+      var dialog = $('.dialog_sbac_report_individual_modal_form');
+      if (dialog.length) {
+        var slider_width = 572;
+
+        $('.flexslider', dialog).flexslider({
+          animation: "slide",
+          animationLoop: false,
+          itemMargin: 0,
+          itemWidth: slider_width,
+          slideshow: false
+        });
+
+        $('.flexslider .slides li', dialog).css('width', slider_width + 'px');
+
+        $('.flexslider-continue', dialog).click(function(e) {
+          e.preventDefault();
+
+          var next = $('.flex-next', dialog);
+          var first = $('.flex-control-paging li:first-child a', dialog);
+
+          if (!next.hasClass('flex-disabled')) {
+            next.click();
+          }
+          else {
+            first.click();
+          }
+
+          return false;
+        });
+      }
+    }
+  };
+
 })(jQuery);

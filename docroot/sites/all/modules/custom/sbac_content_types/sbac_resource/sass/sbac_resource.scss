@@ -16,6 +16,24 @@ $body-font-family: Arial, Helvetica, sans-serif;
    Forms
    ----------------------------------------- */
 
+
+.alert-box {
+  margin-top: 10px;
+
+  li {
+    margin-bottom: 20px;
+  }
+
+  .smaller {
+    font-size: 0.8em;
+    margin: 0;
+    padding: 0;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+}
 #resource-help-box .button {
   margin-right: 10px;
 }
@@ -54,6 +72,36 @@ $body-font-family: Arial, Helvetica, sans-serif;
   display: none;
 }
 
+.sbac-resource-advanced {
+  .sbac-resource-container{
+    margin-top: 33px;
+  }
+
+  .field-name-field-subscription-package-type,
+  .field-name-field-view-permissions,
+  .field-name-field-resource-actions,
+  .field-name-field-posting-options {
+    margin:10px 0;
+    padding:10px 0;
+    border-bottom:1px solid #ccc;
+
+    label {
+      font-size: 1em;
+    }
+
+    .form-type-radio,
+    .form-type-checkbox {
+      label {
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  #edit-field-posting-options {
+    border-bottom:none;
+  }
+}
+
 /* -----------------------------------------
    Digital Library
    ----------------------------------------- */
@@ -62,7 +110,7 @@ a.sbac-grid-layout, a.sbac-list-layout {
   display: inline-block;
   margin: 0 20px 0 10px;
   background: url("../images/list.png") no-repeat center left;
-  background-size: 24px 24px;
+  background-size: 16px 16px;
   padding-left: 30px;
   color: #494949;
   height: 45px;
@@ -70,6 +118,14 @@ a.sbac-grid-layout, a.sbac-list-layout {
 
   &:hover {
     color: #494949;
+  }
+}
+
+.resource-button {
+  margin-top: 10px;
+
+  a {
+    margin-bottom: 5px;
   }
 }
 
@@ -308,6 +364,7 @@ a.sbac-grid-layout {
     .resource-stats {
       padding: 10px 0;
       font-size: 14px;
+      clear: both;
     }
 
     .views-label-field-age-range {
@@ -487,9 +544,13 @@ a.sbac-grid-layout {
 
   .sbac-search-filter-name {
       margin: 0;
-      font-weight: normal;
+      font-weight: bold;
       font-size: 1.1em;
       position: relative;
+
+      li {
+        font-weight: normal;
+      }
     }
 
     span {
@@ -521,7 +582,7 @@ a.sbac-grid-layout {
   .category-filter-list {
     @include border-radius(6px); // border radius
     @include box-shadow(1px 1px 1px rgba(0,0,0,.3)); // drop shadow
-    height: 300px;
+    max-height: 300px;
     width: 500px;
     overflow: scroll;
     background: #edf3e0;
@@ -887,6 +948,17 @@ a.sbac-grid-layout {
   .sbac-dup {
     font-size: 18px;
   }
+}
+
+.sbac-media-duplicates-container {
+  border: 1px solid silver;
+  border-width: 0 0 1px;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.dup-btns {
+  margin-top: 20px;
 }
 
 /* -----------------------------------------

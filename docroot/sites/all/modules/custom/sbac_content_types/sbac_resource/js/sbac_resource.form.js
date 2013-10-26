@@ -2,6 +2,7 @@
   Drupal.behaviors = Drupal.behaviors || {};
   var isDirty = false;
   var button_clicked = false;
+  var clicked = false;
 
   /**
    * Some general JS behavior gets attached to the resource form.
@@ -16,7 +17,7 @@
       }
 
       control_form_buttons();
-      $('.vertical-tabs-list li:nth-child(4) a').click(function () {
+      $('.vertical-tabs-list li a').click(function () {
         control_form_buttons();
       });
     }
@@ -36,6 +37,11 @@
     }
   };
 
+  /**
+   * Adjusts the hieght of the list.
+   *
+   * @type {{attach: Function}}
+   */
   Drupal.behaviors.sbac_resource_table_primary = {
     attach: function (context, settings) {
       if ($('#sbac-media-list tbody tr:first-child').length) {
@@ -51,23 +57,35 @@
     }
   };
 
-
   /**
    * Controls the buttons at the bottom of the resource form.
    */
   control_form_buttons = function () {
     var cancel_button = $('#edit-cancel');
+    var save_and_close = $('#sbac-resource-save-continue button');
     var resource_state = Drupal.settings.resource_workbench_current_state;
+    var dlrb_member = Drupal.settings.sbac_dlrb_member;
     var submit_resource = $('#sbac-resource-modal-submit-resource');
+    var save_all_changes = $('#sbac-resource-save-all-changes');
     var active_tab = $('.vertical-tab-button.selected a strong').html();
+
     submit_resource.hide();
     cancel_button.hide();
+    save_all_changes.hide();
     if (active_tab == 'General' && resource_state == 'creation') {
       cancel_button.show();
     }
-
-    if (active_tab == 'Tags') {
+    if (dlrb_member) {
+      save_and_close.hide();
+    }
+    if (active_tab == 'Tags' && dlrb_member == false) {
       $('#edit-save-continue').html('Submit Resource');
+    }
+    else if (active_tab == 'Advanced') {
+      $('#edit-save-continue').html('Save All Changes');
+    }
+    else {
+      $('#edit-save-continue').html('Save and Continue');
     }
   };
 
@@ -147,6 +165,7 @@
 
       $('#edit-save-continue').mousedown(function () {
         isDirty = false;
+        clicked = true;
       });
     }
   };
@@ -178,6 +197,12 @@
     submit_resource.show();
     submit_resource.click();
     submit_resource.hide();
+  };
+
+  Drupal.behaviors.save_and_close = {
+    click: function (context, settings) {
+      $('#sbac-resource-save-continue button').click();
+    }
   };
 
   /**
@@ -213,15 +238,74 @@
    */
   Drupal.behaviors.sbac_resource_permissions = {
     attach: function (context, settings) {
-      if ($('#edit-field-view-permissions-und-all-consortium-state').is(':checked')) {
-        $('#edit-field-view-permissions-per-state').hide();
+      // States
+      if ($('#sbac-permissions-per-state input:radio:first').is(':checked')) {
+        $('.form-item-field-view-permissions-per-state-und').hide();
       }
-      $('#edit-field-view-permissions-und-all-consortium-state').click(function () {
-        $('#edit-field-view-permissions-per-state').hide();
+      $('#sbac-permissions-per-state input:radio:first').click(function () {
+        $('.form-item-field-view-permissions-per-state-und').hide();
       });
-      $('#edit-field-view-permissions-und-only-consortium-states-i-choose').click(function () {
-        $('#edit-field-view-permissions-per-state').show();
+      $('#sbac-permissions-per-state input:radio:last').click(function () {
+        $('.form-item-field-view-permissions-per-state-und').show();
       });
+
+      // Resource actions
+      $('#sbac-posting-options-comment').hide();
+      $('#sbac-posting-options input:nth(0)').click(function() {
+        if ($('#sbac-posting-option-hidden').val() != 0) {
+          $('#sbac-posting-options-comment').show();
+          $('#sbac-posting-options-comment textarea').val('');
+          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+        }
+        else {
+          $('#sbac-posting-options-comment').hide();
+        }
+        save_all_changes_href($(this).val());
+      });
+
+      $('#sbac-posting-options input:nth(1)').click(function() {
+        if ($('#sbac-posting-option-hidden').val() != 1) {
+          $('#sbac-posting-options-comment').show();
+          $('#sbac-posting-options-comment textarea').val('');
+          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor'); // Remove required marker.
+        }
+        else {
+          $('#sbac-posting-options-comment').hide();
+        }
+        save_all_changes_href($(this).val());
+      });
+
+      $('#sbac-posting-options input:nth(2)').click(function() {
+        if ($('#sbac-posting-option-hidden').val() != 2) {
+          $('#sbac-posting-options-comment').show();
+          $('#sbac-posting-options-comment textarea').val('');
+          $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
+        }
+        else {
+          $('#sbac-posting-options-comment').hide();
+        }
+        save_all_changes_href($(this).val());
+      });
+
+      // if removed is already checked, display it. Occurs when an error is thrown.
+      if ($('#sbac-posting-options input:nth(2)').is(':checked')) {
+        $('#sbac-posting-options-comment').show();
+        $('#field-posting-options-comment-add-more-wrapper label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
+      }
+    }
+  };
+
+  /**
+   * Updates the posting option.
+   */
+  save_all_changes_href = function (posted_option) {
+    var save_all_changes = $('#sbac-resource-save-all-changes');
+    var href = $(save_all_changes).attr('href');
+    var pos = href.indexOf('posting_option');
+    if (pos > -1) {
+      var new_href = href.substr(0, pos);
+      new_href += 'posting_option=' + posted_option;
+      save_all_changes.attr('href', new_href);
     }
   };
 

@@ -13,14 +13,22 @@ class Reviews extends Base {
   public function getContent() {
     // add necessary css
     drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/profile.css');
-
+      
     // create header & new review form
       $output = '';
 
-      $has_review = user_has_review($this->_node->nid, $this->_account->uid);
+      // check access to review creation
+      $allowed_to_create = TRUE;
+      if (user_has_review($this->_node->nid, $this->_account->uid)) {
+        $allowed_to_create = FALSE;
+      }
+
+      if ($allowed_to_create && ($this->_node->uid == $this->_account->uid)) {
+        $allowed_to_create = FALSE;
+      }
 
       $button = '';
-      if (!$has_review) { 
+      if ($allowed_to_create) { 
         $button = '<a href="#" class="review-form-trigger button medium">' . t('Write your review') . '</a>';
       }
 
@@ -32,7 +40,7 @@ class Reviews extends Base {
                     </div>
                  ';
 
-      if (!$has_review) {
+      if ($allowed_to_create) {
         $output .= $this->getNewEntityForm('review', 'end_use');
       }
 
@@ -187,10 +195,10 @@ class Reviews extends Base {
             $label = t('Agree');
           }
           elseif ($average >= 25) {
-            $label = t('Diagree');
+            $label = t('Disagree');
           }
           else {
-            $label = t('Strongly Diagree');
+            $label = t('Strongly Disagree');
           }
 
           $widgets_content .= '

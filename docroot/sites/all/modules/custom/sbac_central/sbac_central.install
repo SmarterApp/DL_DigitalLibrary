@@ -655,3 +655,15 @@ function sbac_central_update_7056() {
     sbac_central_save_taxonomy_term($terms, $vocab);
   }
 }
+
+/**
+ * Add a taxonomy term to the resource_states vocab
+ */
+function sbac_central_update_7057() {
+  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'resource_states'))->fetchAssoc();
+  if ($vocab) {
+    // Define the terms.
+    $terms[] = array('name' => 'Removed');
+    sbac_central_save_taxonomy_term($terms, $vocab);
+  }
+}

@@ -93,33 +93,43 @@
   height: auto;
 }
 
-/* line 99, ../sass/sbac_media.scss */
+/* line 98, ../sass/sbac_media.scss */
+.media-table {
+  position: relative;
+}
+
+/* line 104, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video {
   width: 55%;
   margin-right: 2%;
   float: left;
 }
-/* line 104, ../sass/sbac_media.scss */
+/* line 109, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video .description {
   display: block;
 }
-/* line 109, ../sass/sbac_media.scss */
+/* line 114, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-file {
   width: 50%;
   float: left;
   clear: both;
 }
-/* line 115, ../sass/sbac_media.scss */
+/* line 120, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-submit {
   float: right;
 }
-/* line 119, ../sass/sbac_media.scss */
+/* line 124, ../sass/sbac_media.scss */
 #sbac-field-file-container .video-embed-button {
   margin-top: 3em;
 }
 
 /* overlay cancel button */
-/* line 125, ../sass/sbac_media.scss */
+/* line 130, ../sass/sbac_media.scss */
 #edit-cancel-media-overlay {
   margin-right: 10px;
+}
+
+/* line 134, ../sass/sbac_media.scss */
+.dup-btns {
+  text-align: right;
 }

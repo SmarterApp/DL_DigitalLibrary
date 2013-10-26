@@ -806,33 +806,34 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   if (isset($fields['nid']->raw)) {
     $nid = $fields['nid']->raw;
     $node = node_load($nid);
-    $image = field_get_items('node', $node, 'field_file');
-    $default_file = 'public://file.png';
-
-    $class = 'grid-image';
-    if ($view_display == 'list') {
-      $class = 'list-image';
-    }
-
-    if ($image) {
-      $material = field_view_value('node', $node, 'field_file', $image[0]);
-      if ($material['#file']) {
-        $url = $material['#file']->uri;
-        $ext = pathinfo($url, PATHINFO_EXTENSION);
-        $media = _sbac_resource_determine_extension($ext);
-        if ($media != 'image') {
-          $url = $default_file;
-        }
-        $variables['image'] = theme('image_style', array('style_name' => 'resource_image_grid', 'path' => $url, 'attributes' => array('class' => $class)));
-        $variables['mime-type'] = file_get_mimetype($material['#file']->uri);
-        $variables['file-type-icon'] = _sbac_resource_determine_file_type_icon($ext);
+    if ($node && isset($node->document[0])) {
+      $class = 'grid-image';
+      if ($view_display == 'list') {
+        $class = 'list-image';
       }
-    }
-    else {
-      $url = $default_file;
-      $variables['image'] = theme('image_style', array('style_name' => 'resource_image_grid', 'path' => $url, 'attributes' => array('class' => $class)));
-      $variables['mime-type'] = 'image';
-      $variables['file-type-icon'] = _sbac_resource_determine_file_type_icon('jpg');
+
+      $default_file = 'public://file.png';
+      $media = $node->document[0];
+      if ($media->fid) {
+        $file = file_load($media->fid);
+        $url = file_create_url($file->uri);
+        $uri = $file->uri;
+      }
+      else {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+
+      $ext = pathinfo($url, PATHINFO_EXTENSION);
+      $type = _sbac_resource_determine_extension($ext);
+      if ($type != 'image') {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+
+      $variables['image'] = theme('image_style', array('style_name' => 'resource_image_grid', 'path' => $uri, 'attributes' => array('class' => $class)));
+      $variables['mime-type'] = file_get_mimetype($url);
+      $variables['file-type-icon'] = _sbac_resource_determine_file_type_icon($ext);
     }
   }
   return $variables;
@@ -920,6 +921,30 @@ function _sbac_resource_my_resources_links($fields) {
         $variables['subject'] = $fields['field_subject']->content;
         $variables['grades'] = $fields['field_grades']->content;
         $variables['media_types'] = $fields['field_digital_media_type']->content;
+        break;
+      case 'removed':
+        $url = url('node/' . $nid, array('absolute' => TRUE));
+        $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+        $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+          'html' => TRUE,
+          'attributes' => array(
+            'class' => 'use-ajax medium button ctools-modal-sbac-resource-modal-delete-resource',
+            'id' => 'sbac-resource-modal-delete-resource'
+          ),
+          'query' => array('nid' => $nid),
+        ));
+        $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+          'html' => TRUE,
+          'query' => array(
+            'nid' => $nid
+          ),
+          'attributes' => array(
+            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource',
+            'id' => 'sbac-resource-modal-delete-resource'
+          )
+        ));
+        $variables['text'] = t('Removed');
         break;
     }
 
@@ -1031,9 +1056,16 @@ function _sbac_resource_resource_review_links($fields) {
 function _sbac_resource_digital_library_links($fields) {
   $variables = array();
   if (isset($fields['state']->raw)) {
+    global $user;
     $state = $fields['state']->raw;
     switch ($state) {
       case 'published':
+        if (in_array('DLRB member', $user->roles)) {
+          $nid = $fields['nid']->raw;
+          $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+        }
+
         $variables['sticky'] = FALSE;
         if ($fields['sticky']->raw) {
           $variables['sticky'] = TRUE;

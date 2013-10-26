@@ -37,6 +37,15 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['reports/%node/info'] = array(
+    'title' => 'Resource Report Information',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_report_individual_modal',
+    'page arguments' => array(1),
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -301,10 +310,10 @@ function sbac_report_state_options() {
 
     $options['all'] = t('All');
     // Return if we only want the first one.
-    if ($first_only) {
+    if (isset($first_only) && $first_only) {
       return $options;
     }
-
+    
     $states = taxonomy_vocabulary_machine_name_load("states");
     $vid = $states->vid;
     $terms = taxonomy_get_tree($vid);
@@ -809,7 +818,117 @@ SQL;
     $completed[] = $row;
   }
 
+  foreach ($completed as $key => $user_completed_review) {
+    $feedback = _sbac_resource_determine_feedback($user_completed_review->node_id, 'qc', $uid, 1, FALSE, 1, 'set', TRUE);
+    if (count($feedback) != 2) { // two other reviewers
+      unset($completed[$key]);
+    }
+  }
+
   return $completed;
+}
+
+/**
+ *
+ *
+ * @param $reviews
+ *
+ * @return array
+ */
+function sbac_report_get_average_consistency_rate_acr($uid, $reviews) {
+  $consistency_rates = array();
+  foreach($reviews as $review) {
+    $consistency_rates[] = sbac_report_get_posting_consistency_rate($uid, $review);
+  }
+
+  $rate = 0;
+  foreach ($consistency_rates as $consistency_rate) {
+    $rate += $consistency_rate;
+  }
+
+  if ($consistency_rates) {
+    $average_consistency_rate = abs($rate / count($consistency_rates));
+    return $average_consistency_rate;
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
+ *
+ * @param $reviews
+ *
+ * @return string
+ */
+function sbac_report_get_posting_consistency_rate($uid, $review = NULL) {
+  $consistency_rate = NULL;
+  if ($review == NULL) {
+    return $consistency_rate;
+  }
+
+
+  // Get the Reviewer's A, B and C options to determine rate.
+  // Ordering of the result set is the order of the reviews.
+  // First record changed = Reviewer A etc.
+  $sql = <<<SQL
+
+    SELECT *
+    FROM eck_feedback
+      AS f
+    JOIN field_data_field_rec_options
+      AS o
+    ON f.id = o.entity_id
+    WHERE f.node_id = :nid
+      AND f.type = :type
+      AND f.status = :feedback_status
+      AND f.completed = :feedback_completed
+      AND o.deleted = :deleted
+    ORDER BY f.changed
+
+SQL;
+
+  //  Values as stored in DB are:
+  //  0|Do not recommend
+  //  1|Recommend with Revisions
+  //  2|Recommend
+  //  3|Recommend with Distinction
+  $review_data = db_query($sql, array(':nid' => $review->node_id, ':type' => 'qc', ':feedback_status' => 1, ':feedback_completed' => 1, ':deleted' => 0))->fetchAll();
+  if ($review_data) {
+    $reviewer_alpha = array(0 => 'Reviewer A', 1 => 'Reviewer B', 2 => 'Reviewer C');
+    $math_value = 1; $count = 1;
+    $math_elements = array();
+    foreach ($review_data as $review) {
+      switch ($review->field_rec_options_value) {
+        case '0':
+          $math_value = 1;
+          break;
+        case '1':
+          $math_value = 2;
+          break;
+        case '2':
+          $math_value = 3;
+          break;
+        case '3':
+          $math_value = 4;
+          break;
+      }
+
+      if ($uid == $review->uid) {
+        $math_elements[$reviewer_alpha[0]] = $math_value;
+      }
+      else {
+        $math_elements[$reviewer_alpha[$count]] = $math_value;
+        $count++;
+      }
+    }
+
+    if ($math_elements) {
+      $consistency_rate = abs(1 - (abs($math_elements['Reviewer A'] - $math_elements['Reviewer B']) + abs($math_elements['Reviewer A'] - $math_elements['Reviewer C'])) / 6);
+    }
+  }
+
+  return $consistency_rate;
 }
 
 /**

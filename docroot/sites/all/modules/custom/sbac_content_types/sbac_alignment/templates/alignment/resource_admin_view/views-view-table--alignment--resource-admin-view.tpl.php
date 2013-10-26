@@ -29,12 +29,9 @@
            $grade = array_pop($parents);
            $claim = array_pop($parents);
         }
-        elseif ($is_ma = ($subject->name == 'Math')) {
+        elseif ($is_ma = ($subject->name == 'Mathematics')) {
            $grade = array_pop($parents);
            $claim = array_pop($parents);
-           $domain = array_pop($parents);
-           $target = array_pop($parents);
-           $emphasis = array_pop($parents);
         }
         else {
            //do nothing
@@ -70,37 +67,19 @@
                 ?>
               </div>
               <div class="ccss-claim">
-                <h3>Claim</h3>
+                <?php if ($is_ela) : ?>
+                  <h3>Strands/Domain</h3>
+                <?php endif; ?>
+                <?php if ($is_ma) : ?>
+                  <h3>Domain</h3>
+                <?php endif; ?>
                 <?php if (isset($claim)): ?>
-                  <h2>
-                    <?php print $claim->field_alignment_shortname['und'][0]['value']; ?>
-                  </h2>
-                  <?php print $claim->description; ?>
+                  <?php print $claim->field_alignment_shortname['und'][0]['value']; ?>
                 <?php endif; ?>
               </div>
-              <?php if ($is_ma):?>
-                  <div class="ccss-target">
-                    <h3>Domain</h3>
-                    <h2><?php print $domain->field_alignment_shortname['und'][0]['value']; ?></h2>
-                    <?php print $domain->description; ?>
-                  </div>
-                  <div class="ccss-target">
-                    <h3>Target</h3>
-                    <h2><?php print $target->field_alignment_shortname['und'][0]['value']; ?></h2>
-                    <?php print $target->description; ?>
-                  </div>
-                  <div class="ccss-emphasis">
-                    <h3>Emphasis</h3>
-                    <h2><?php print $emphasis->field_alignment_shortname['und'][0]['value']; ?></h2>
-                    <?php print $emphasis->description; ?>
-                 </div>
-              <?php endif; ?>
               </div>
             </div>
           </div>
-
-          <?php //print $row['edit_node']; ?>
-          <?php //print $row['delete_node']; ?>
           <?php print l('<i class="gen-enclosed foundicon-remove"></i>', '#', array('html' => TRUE, 'attributes' => array('class' => 'ccss-term-delete', 'nid' => $row['nid']))); ?>
         </td>
       </tr>

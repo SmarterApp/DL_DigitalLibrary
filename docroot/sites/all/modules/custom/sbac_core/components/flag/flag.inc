@@ -15,7 +15,6 @@ function flag_access($op, $entity_type, $entity_id, $account = NULL) {
                 WHERE     target_type = 'review'
                 AND       target_id = :target_id
                 AND       uid = :uid
-
              ";
 
     $id = db_query($query, array(

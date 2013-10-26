@@ -19,7 +19,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
   $output .= '<div class="alignment-filter">';
   $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject Area'));
   $output .= '</div><div class="alignment-form"></div>';
-  $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add to Resource</a><a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
+  $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add Standard(s) to Resource</a><a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
   $output .= '</div></div>';
 
   return $output;
@@ -119,7 +119,14 @@ function sbac_alignment_ajax_alignment_crud_callback() {
       $data = array(
         'deleted_nid' => $nid,
       );
+
+      $node = node_load($nid);
+      if (node_access('delete', $node)) {
+        node_delete($nid);
+      }
+
       print drupal_json_encode($data);
+
       break;
 
     case 'create':

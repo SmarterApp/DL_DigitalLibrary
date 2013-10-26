@@ -31,4 +31,5 @@
                     for which all reviews were completed in the selected
                     time period.'); ?></p>
   <?php print $all_reviews; ?>
+  <?php print $summation; ?>
 <?php endif ?>

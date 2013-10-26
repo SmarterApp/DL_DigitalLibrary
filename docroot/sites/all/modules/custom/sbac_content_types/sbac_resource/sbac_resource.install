@@ -837,3 +837,30 @@ function sbac_resource_update_7035() {
 
   return $ret;
 }
+
+/**
+ * Delete the Use of View Permissions field.
+ */
+function sbac_resource_update_7036() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+  field_del_instance('field_view_permissions', 'node', 'resource');
+  field_delete_field('field_view_permissions');
+
+  return $ret;
+}
+
+
+/**
+ * Delete the Use of Resource Action field.
+ */
+function sbac_resource_update_7037() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+  field_del_instance('field_resource_action', 'node', 'resource');
+  field_delete_field('field_resource_action');
+
+  return $ret;
+}

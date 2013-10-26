@@ -220,7 +220,7 @@
 
       .term {
         font-size: 0.8em;
-        margin-bottom: 10px;
+        padding: 10px;
 
         &.highlight {
           font-weight: bold;
@@ -362,7 +362,7 @@
   .intro {
     border-bottom: 1px solid silver;
     padding-bottom: 1em;
-    border-bottom: 1em;
+    border-bottom: 1em; 
     font-size: 0.8em;
     line-height: normal;
     text-align: left; 
@@ -374,7 +374,7 @@
 
   .form-submit {
     display: inline;
-    float: none;
+    /*float: none;*/
   }
 
   .close-dialog {
@@ -396,22 +396,6 @@
 
 /* user tooltips */
 .account-tooltip {
-  position: relative;
-
-  .account-tooltip-body {
-    background: #eee;
-    border: 1px #ccc solid;
-    display: none;
-    left: 20px;
-    padding: 10px;
-    position: absolute;
-    top: 20px;
-    width: 500px;
-    z-index: 50;
-    text-align: left;
-    @include border-radius(6px);
-  }
-
   .row.first {
     padding: 10px;
   }
