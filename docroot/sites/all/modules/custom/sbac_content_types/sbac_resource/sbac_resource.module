@@ -1205,13 +1205,25 @@ function sbac_resource_node_access_records($node) {
     // Approved node access perms.
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
       // check for in progress feedback.
-      if (isset($_REQUEST['_triggering_element_value']) && strpos($_REQUEST['_triggering_element_value'], 'Start') !== FALSE) {
-        $in_progress_feedback = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
-        if ($in_progress_feedback) {
+      $in_progress_feedback = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
+      if ($in_progress_feedback) {
+        $restricted = TRUE;
+        $grants[] = array(
+          'realm' => 'able_to_review_post',
+          'gid' => $in_progress_feedback['uid'],
+          'grant_view' => 1,
+          'grant_update' => 0,
+          'grant_delete' => 0,
+          'priority' => 0,
+        );
+      }
+      else {
+        $accounts = sbac_resource_get_users_by_role('resource publisher');
+        foreach ($accounts as $account) {
           $restricted = TRUE;
           $grants[] = array(
             'realm' => 'able_to_review_post',
-            'gid' => $in_progress_feedback['uid'],
+            'gid' => $account->uid,
             'grant_view' => 1,
             'grant_update' => 0,
             'grant_delete' => 0,
