@@ -391,6 +391,28 @@ function sbac_report_user_group_admins() {
   return $admin_aggregates;
 }
 
+/**
+ * Options for the sne/slt dropdown.
+ */
+function sbac_report_sne_slt_options() {
+  $options = array(
+    'Neither SNE nor SLT',
+    'SNE members only',
+    'SLT members only',
+    'Combination SLT/SNE members',
+    );
+  return $options;
+}
+
+function sbac_report_get_default_sne_slt() {
+
+  $snesltfilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
+
+  if (empty($snesltfilter)) {
+    return array('0');
+  }
+  return $snesltfilter;
+}
 
 /**
  * Options for the user groups.

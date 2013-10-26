@@ -16,7 +16,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
-    '#multiple' => FALSE,
+    '#multiple' => TRUE,
     '#default_value' => sbac_report_get_default_state_tid(),
     '#attributes' => array('class' => array('chosen-widget')),
     '#ajax' => array(
@@ -36,19 +36,31 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $form['user_sne_slt_radio']['sne-slt-filter'] = array(
-    '#type' => 'radios',
-    '#title' => t('SNE/SLT Filter'),
-    '#description' => t('Filter results by SNE/SLT'),
-    '#default_value' => variable_get('sne-slt-filter', 2),
-    '#options' => array(
-      t('SNE'),
-      t('SLT'),
-      t('Neither'),
-      t('Both SNE and SLT'),
-    ),
+  $sne_slt_options = sbac_report_sne_slt_options();
 
+  $form['sne_slt_filter'] = array(
+    '#type' => 'select',
+    '#title' => t('Filter for SNE or SLT Members'),
+    '#options' => $sne_slt_options,
+    '#attributes' => array('class' => array('chosen-widget')),
+    '#multiple' => TRUE,
+    '#default_value' => sbac_report_get_default_sne_slt(),
+    '#required' => TRUE,
   );
+
+//  $form['user_sne_slt_radio']['sne-slt-filter'] = array(
+//    '#type' => 'radios',
+//    '#title' => t('SNE/SLT Filter'),
+//    '#description' => t('Filter results by SNE/SLT'),
+//    '#default_value' => variable_get('sne-slt-filter', 2),
+//    '#options' => array(
+//      t('SNE'),
+//      t('SLT'),
+//      t('Neither'),
+//      t('Both SNE and SLT'),
+//    ),
+//
+//  );
 
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
@@ -107,7 +119,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
 
     $state_tid = $form_state['values']['state'];
     $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-    if (!is_numeric($state_tid) && $state_tid == 'all') {
+    if (!is_numeric($state_tid) && !is_array($state_tid) && $state_tid == 'all') {
       $_SESSION['sbac_report']['state']['name'] = 'all';
     }
     else {
@@ -120,7 +132,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
 
     // user groups.
     $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
-    $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne-slt-filter'];
+    $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne_slt_filter'];
   }
   # todo: set these above rather than retrieve them again.
   $state_tid1 = sbac_report_get_session_value('state', 'tid');
@@ -488,21 +500,44 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
 
 function filter_users_by_sne_slt($user_profiles, $sne_slt_filter)
 {
-  // sne filter: 0=>sne, 1=>slt, 2=> both
+  // sne filter: 0=>neither, 1=>sne, 2=>slt, 2=>both
   $filtered_user_profiles = array();
-  if ($sne_slt_filter == 3) { // both, nothing to filter.
-    return $user_profiles;
-  }
+// no all condition:
+//  if (in_array(4, $sne_slt_filter)) { // both, nothing to filter.
+//    return $user_profiles;
+//  }
+  $look_for_both_sne_and_slt = in_array(3, $sne_slt_filter);
+  $look_for_slt = in_array(2, $sne_slt_filter);
+  $look_for_sne = in_array(1, $sne_slt_filter);
+  $look_for_neither = in_array(0, $sne_slt_filter);
+
   foreach ($user_profiles as $user_profile) {
-    if (($sne_slt_filter == 0 && $user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') ||
-        ($sne_slt_filter == 1 && $user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')) {
+    if ($look_for_both_sne_and_slt &&
+        ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
+        ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
+       )
+    { // both
       $filtered_user_profiles[$user_profile->uid] = $user_profile;
     }
-    else if ($sne_slt_filter == 2 && (
-      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') ||
+    else if ($look_for_slt &&
+      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '0') &&
       ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
-    ))
-    {
+    )
+    { // slt only.
+      $filtered_user_profiles[$user_profile->uid] = $user_profile;
+    }
+    else if ($look_for_sne &&
+      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
+      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '0')
+    )
+    { // sne only.
+      $filtered_user_profiles[$user_profile->uid] = $user_profile;
+    }
+    else if ($look_for_neither &&
+      ((bool)!$user_profile->field_sne_member || $user_profile->field_sne_member['und'][0]['value'] == '0') &&
+      ((bool)!$user_profile->field_slt_member || $user_profile->field_slt_member['und'][0]['value'] == '0')
+      )
+    { // niether.
       $filtered_user_profiles[$user_profile->uid] = $user_profile;
     }
   }
@@ -513,12 +548,12 @@ function filter_users_by_state($user_profiles, $state_tid)
 {
   // sne filter: 0=>sne, 1=>slt, 2=> both
   $filtered_user_profiles = array();
-  if ($state_tid == 'all') { // both, nothing to filter.
+  if ($state_tid['all']) { // both, nothing to filter.
     return $user_profiles;
   }
   foreach ($user_profiles as $user_profile) {
     if ($user_profile->field_state['und'] &&
-      $user_profile->field_state['und'][0]['value'] == $state_tid) {
+      in_array($user_profile->field_state['und'][0]['tid'],$state_tid)) {
       $filtered_user_profiles[$user_profile->uid] = $user_profile;
     }
   }
