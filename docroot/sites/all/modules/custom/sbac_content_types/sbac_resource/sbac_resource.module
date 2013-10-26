@@ -901,6 +901,11 @@ function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_
  * @param null $keep_uid
  */
 function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $keep_uid = NULL, $states_to_delete = array()) {
+  // Sometimes we get an nid string.
+  if (!is_object($node)) {
+    $node = node_load($node);
+  }
+
   // Remove all other users
   $accounts = sbac_resource_get_users_by_role($role_name);
   foreach ($accounts as $account) {
@@ -1023,27 +1028,47 @@ function sbac_resource_node_access_records($node) {
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
       $accounts = sbac_resource_get_users_by_role('resource reviewer');
       if ($accounts) {
-        $not_allowed_to_view = array();
-        // new one, if gate keeping in completed, give access to that user, no one else
-        $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
-        if ($gate_keeper) {
-          $restricted = TRUE;
-          $grants[] = array(
-            'realm' => 'gk_review_in_progress',
-            'gid' => $gate_keeper['uid'],
-            'grant_view' => 1,
-            'grant_update' => 0,
-            'grant_delete' => 0,
-            'priority' => 0,
-          );
-        }
-        else {
-          $third_review = FALSE;
-          // if there is less then 3 reviews, give access to everyone except the people who reviewed it.
+        $completed_gk = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+        if ($completed_gk) {
+          if ($node->nid == 1796) {
+            $var = '';
+          }
           $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
-          if (count($completed_feedback) <= 3) {
-            $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
-            if ($current_reviews) {
+          $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
+          // everyone has access when no completed or current review
+          if (!$completed_feedback && !$current_reviews) {
+            foreach ($accounts as $account) {
+              $restricted = TRUE;
+              $grants[] = array(
+                'realm' => 'able_to_review_qc',
+                'gid' => $account->uid,
+                'grant_view' => 1,
+                'grant_update' => 0,
+                'grant_delete' => 0,
+                'priority' => 0,
+              );
+            }
+          }
+
+          // everyone has access when the completed = 0 and current reviews <= 3.
+          if (!$completed_feedback && $current_reviews <= 3) {
+            // if current reviews is less then 3, give access to everyone.
+            if (count($current_reviews) < 3) {
+              foreach ($accounts as $account) {
+                $restricted = TRUE;
+                $grants[] = array(
+                  'realm' => 'able_to_review_qc',
+                  'gid' => $account->uid,
+                  'grant_view' => 1,
+                  'grant_update' => 0,
+                  'grant_delete' => 0,
+                  'priority' => 0,
+                );
+              }
+            }
+
+            // if current reviews is 3, give access to only those 3 reviewers.
+            if (count($current_reviews) == 3) {
               foreach ($current_reviews as $current_review) {
                 $restricted = TRUE;
                 $grants[] = array(
@@ -1056,20 +1081,66 @@ function sbac_resource_node_access_records($node) {
                 );
               }
             }
+          }
 
-            // However, when a 3rd reviewer starts the review process, no one else has access to the node.
-            // so only give access to that 3rd reviewer.
-            if (count($completed_feedback) == 2 && count($current_reviews) == 1) {
-              $third_review = TRUE;
+          // everyone has access except when completed = 3
+          if ($completed_feedback && count($completed_feedback) < 3) {
+            if ($current_reviews) {
+              // everyone has access except when the completed = 1 and current reviews = 2
+              if (count($completed_feedback) == 1 && count($current_reviews) == 2) {
+                foreach ($current_reviews as $current_review) {
+                  $restricted = TRUE;
+                  $grants[] = array(
+                    'realm' => 'able_to_review_qc',
+                    'gid' => $current_review->uid,
+                    'grant_view' => 1,
+                    'grant_update' => 0,
+                    'grant_delete' => 0,
+                    'priority' => 0,
+                  );
+                }
+              }
+              // everyone has access except when the completed = 2 and current reviews = 1
+              else if (count($completed_feedback) == 2 && count($current_reviews) == 1) {
+                foreach ($current_reviews as $current_review) {
+                  $restricted = TRUE;
+                  $grants[] = array(
+                    'realm' => 'able_to_review_qc',
+                    'gid' => $current_review->uid,
+                    'grant_view' => 1,
+                    'grant_update' => 0,
+                    'grant_delete' => 0,
+                    'priority' => 0,
+                  );
+                }
+              }
+              else {
+                $not_allowed_to_view = array();
+                foreach ($completed_feedback as $feedback) {
+                  $not_allowed_to_view[] = $feedback->uid;
+                }
+
+                foreach ($accounts as $account) {
+                  if (!in_array($account->uid, $not_allowed_to_view)) {
+                    $restricted = TRUE;
+                    $grants[] = array(
+                      'realm' => 'able_to_review_qc',
+                      'gid' => $account->uid,
+                      'grant_view' => 1,
+                      'grant_update' => 0,
+                      'grant_delete' => 0,
+                      'priority' => 0,
+                    );
+                  }
+                }
+              }
             }
+            else {
+              $not_allowed_to_view = array();
+              foreach ($completed_feedback as $feedback) {
+                $not_allowed_to_view[] = $feedback->uid;
+              }
 
-            $not_allowed_to_view[] = $node->uid;
-            foreach ($completed_feedback as $review) {
-              $not_allowed_to_view[] = $review->uid;
-            }
-
-            // If there is no third review, everyone can review this.
-            if (!$current_reviews && !$third_review) {
               foreach ($accounts as $account) {
                 if (!in_array($account->uid, $not_allowed_to_view)) {
                   $restricted = TRUE;
@@ -1087,18 +1158,48 @@ function sbac_resource_node_access_records($node) {
           }
 
           // give access to the user who completed the gate keeper too. only if he has not completed the QC though.
-          // hence the need for the $not_allowed_to_view check.
           $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
-          if ($gate_keeper && !in_array($gate_keeper['uid'], $not_allowed_to_view)) {
+          if ($gate_keeper) {
+            $current_review = _sbac_resource_determine_feedback($node->nid, 'qc', $gate_keeper['uid'], 1, 1, 1, 'single');
+            if (!$current_review) {
+              $restricted = TRUE;
+              $grants[] = array(
+                'realm' => 'completed_gk',
+                'gid' => $gate_keeper['uid'],
+                'grant_view' => 1,
+                'grant_update' => 0,
+                'grant_delete' => 0,
+                'priority' => 0,
+              );
+            }
+          }
+        }
+        else {
+          // new one, if gate keeping in progress, give access to that user, no one else
+          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
+          if ($gate_keeper) {
             $restricted = TRUE;
             $grants[] = array(
-              'realm' => 'completed_gk',
+              'realm' => 'gk_review_in_progress',
               'gid' => $gate_keeper['uid'],
               'grant_view' => 1,
               'grant_update' => 0,
               'grant_delete' => 0,
               'priority' => 0,
             );
+          }
+          else {
+            foreach ($accounts as $account) {
+              $restricted = TRUE;
+              $grants[] = array(
+                'realm' => 'able_to_review_qc',
+                'gid' => $account->uid,
+                'grant_view' => 1,
+                'grant_update' => 0,
+                'grant_delete' => 0,
+                'priority' => 0,
+              );
+            }
           }
         }
       }
