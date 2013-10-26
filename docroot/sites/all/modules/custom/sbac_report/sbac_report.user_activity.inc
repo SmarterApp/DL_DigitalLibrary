@@ -475,7 +475,6 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   }
 }
 
-
 function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_slt_filter)
 {
   $users = get_users_for_user_groups($usergroups);
