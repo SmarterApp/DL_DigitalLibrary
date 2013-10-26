@@ -44,6 +44,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#options' => array(
       t('SNE'),
       t('SLT'),
+      t('Neither'),
       t('Both SNE and SLT'),
     ),
 
@@ -489,12 +490,19 @@ function filter_users_by_sne_slt($user_profiles, $sne_slt_filter)
 {
   // sne filter: 0=>sne, 1=>slt, 2=> both
   $filtered_user_profiles = array();
-  if ($sne_slt_filter == 2) { // both, nothing to filter.
+  if ($sne_slt_filter == 3) { // both, nothing to filter.
     return $user_profiles;
   }
   foreach ($user_profiles as $user_profile) {
     if (($sne_slt_filter == 0 && $user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') ||
-      ($sne_slt_filter == 1 && $user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')) {
+        ($sne_slt_filter == 1 && $user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')) {
+      $filtered_user_profiles[$user_profile->uid] = $user_profile;
+    }
+    else if ($sne_slt_filter == 2 && (
+      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') ||
+      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
+    ))
+    {
       $filtered_user_profiles[$user_profile->uid] = $user_profile;
     }
   }
