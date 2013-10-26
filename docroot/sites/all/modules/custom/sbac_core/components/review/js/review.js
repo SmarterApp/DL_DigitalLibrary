@@ -31,7 +31,7 @@ Drupal.behaviors.review = {
         });
 
         // if errors are found on the page, force the form to display
-        if ($('#review .alert-box.alert').length) {
+        if ($('#review #review-end-use-wrap .alert-box.alert').length) {
           target_element.attr('style', 'display: block !important;');
         }
       }
