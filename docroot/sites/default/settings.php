@@ -559,7 +559,7 @@ $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
 
 // Acquia DB String
 if (file_exists('/var/www/site-php')) {
-  require('/var/www/site-php/willappnovationcom/willappnovationcom-settings.inc');
+  require('/var/www/site-php/sbac/sbac-settings.inc');
 }
 
 // Sets the Apache Solr Environment
@@ -659,3 +659,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 else {
   $conf['apachesolr_default_environment'] = 'amazon_apache_solr_environment_local';
 }
+
+error_reporting(E_ERROR);
+//error_reporting(E_ALL|E_STRICT);
+//$conf['error_level'] = 2;
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);

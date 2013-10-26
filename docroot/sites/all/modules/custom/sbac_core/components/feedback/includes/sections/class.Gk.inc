@@ -10,7 +10,7 @@ class Gk extends Base {
    * Returns a modal-triggering "start review" link.
    * @return [type]       [description]
    */
-  public function getStartLink() {
+  public function getStartLink($stub = '', $machine_name = '') {
     if (!resource_access('start gate keeper', $this->_node)) {
       return '';
     }
@@ -24,18 +24,17 @@ class Gk extends Base {
    */
   public function getContent() {
     $output = '';
-
+     
     drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_gate_keeper.js');
-
-    // TODO: permission 'gate keeper readonly' doesn't exist
-    if (!$output = $this->getEntityForm('gate_keeper', 'gate keeper readonly')) {
+    
+    if (!$output = $this->getEntityForm('gate_keeper')) {
       if ($intro = variable_get('resource_gate_keeper_help', '')) {
         $output .= '<div class="gate-keeper-intro">' . filter_text($intro) . '</div>';
       }
       
       $output .= $this->getStartLink();
     }
-
+    
     $output = '<div class="feedback-wrap" id="feedback-wrap-gk">' . $output . '</div>';
 
     return $output;

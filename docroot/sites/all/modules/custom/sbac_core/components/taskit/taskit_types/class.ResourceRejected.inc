@@ -1,27 +1,18 @@
 <?php
 namespace taskit\sbac_core;
-
+      
 require_once('class.BaseTask.inc');
 
 class ResourceRejected extends \taskit\sbac_core\BaseTask {
   public function display($entities, $accounts) {
     $node     = node_load(current($entities['node']));
     $account  = user_load(current($accounts));
+    $feedback = $entities['feedback'];
 
     if ($node && $account) {
       $this->setTaskUrl('node/' . $node->nid);
 
       $viewing_account = current_user();
-
-      $feedback = entity_load('feedback', FALSE, array(
-        'node_id' => $node->nid,
-        'type' => 'post',
-      ));
-
-      $post = FALSE;
-      if ($feedback) {
-        $post = array_shift($feedback);
-      }
 
       $output = array();
       $details = '';
@@ -30,16 +21,16 @@ class ResourceRejected extends \taskit\sbac_core\BaseTask {
           '!title' => '<span class="taskit-title">' . $node->title . '</span>',
         ));
 
-        $details = $this->contributorFeedback($node->nid, $viewing_account->uid);
+        $details = $this->contributorFeedback($node->nid, $viewing_account->uid, $feedback);
       }
       else {
         $output[] = t('!title, a resource you reviewed, was returned to the submitter', array(
           '!title' => '<span class="taskit-title">' . $node->title. '</span>',
         ));
 
-        $details = $this->reviewerFeedback($node->nid, $viewing_account->uid, TRUE);
+        $details = $this->reviewerFeedback($node->nid, $viewing_account->uid, $feedback);
       }
-
+      
       // $this->addClass('taskit-collapsed');
 
       drupal_add_library('system', 'drupal.ajax');

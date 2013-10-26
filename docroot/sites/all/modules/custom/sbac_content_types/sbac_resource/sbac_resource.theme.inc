@@ -589,7 +589,7 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_my_resources_links($vars['fields']);
+    $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
   }
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
@@ -640,7 +640,7 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_my_resources_links($vars['fields']);
+    $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
   }
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
@@ -718,7 +718,7 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
     $vars['fields']['mime-type'] = $image_assets['mime-type'];
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
-  $variables = _sbac_resource_resource_review_links($vars['fields']);
+  $variables = _sbac_resource_resource_review_links($vars['fields'], $vars['row']);
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
   }
@@ -766,7 +766,7 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
     $vars['fields']['mime-type'] = $image_assets['mime-type'];
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
-  $variables = _sbac_resource_resource_review_links($vars['fields']);
+  $variables = _sbac_resource_resource_review_links($vars['fields'], $vars['row']);
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
   }
@@ -806,18 +806,28 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   if (isset($fields['nid']->raw)) {
     $nid = $fields['nid']->raw;
     $node = node_load($nid);
-    if ($node && isset($node->document[0])) {
+    if ($node) {
       $class = 'grid-image';
       if ($view_display == 'list') {
         $class = 'list-image';
       }
 
       $default_file = 'public://file.png';
-      $media = $node->document[0];
-      if ($media->fid) {
-        $file = file_load($media->fid);
-        $url = file_create_url($file->uri);
-        $uri = $file->uri;
+      if (isset($node->document[0])) {
+        $media = $node->document[0];
+        if ($media->fid) {
+          $file = file_load($media->fid);
+          $url = file_create_url($file->uri);
+          $uri = $file->uri;
+          if (!file_exists($uri)) {
+            $url = $default_file;
+            $uri = $default_file;
+          }
+        }
+        else {
+          $url = $default_file;
+          $uri = $default_file;
+        }
       }
       else {
         $url = $default_file;
@@ -860,7 +870,7 @@ function _sbac_resource_my_resources_links($fields) {
           'html' => TRUE,
           'attributes' => array(
             'class' => 'use-ajax medium button ctools-modal-sbac-resource-modal-delete-resource',
-             'id' => 'sbac-resource-modal-delete-resource'
+            'id' => 'sbac-resource-modal-delete-resource'
           ),
           'query' => array('nid' => $nid),
         ));
@@ -963,6 +973,7 @@ function _sbac_resource_my_resources_links($fields) {
   return $variables;
 }
 
+
 /**
  * Resource Review Links.
  *
@@ -1060,7 +1071,7 @@ function _sbac_resource_digital_library_links($fields) {
     $state = $fields['state']->raw;
     switch ($state) {
       case 'published':
-        if (in_array('DLRB member', $user->roles)) {
+        if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
           $nid = $fields['nid']->raw;
           $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
           $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));

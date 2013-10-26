@@ -88,7 +88,7 @@ class Qc_Comments extends Base {
 
         $output_item = '
                           <div class="criteria-set-title">
-                            ' . ($i + 1) . '. ' . $item_title . '
+                            ' . ($i + 1) . '. ' . strip_tags($item_title) . '
                           </div>
                           <div class="criteria-set-commentes-text">
                             ' . $item_desc . '
@@ -99,6 +99,7 @@ class Qc_Comments extends Base {
                        ';
 
         $j = 1;
+        $output_item .= '<div class="feedback-item-triplet">';
         foreach ($qc_entities as $entity) {
           $questions = field_entity_value($entity, 'field_review_set');
 
@@ -117,6 +118,7 @@ class Qc_Comments extends Base {
 
           $j++;
         } 
+        $output_item .= '</div>';
 
         $output_qc .= '<div class="feedback-item">' . $output_item . '<div class="clear"></div></div>';
       }

@@ -10,7 +10,7 @@ class Post extends Base {
    * Returns a modal-triggering "start review" link.
    * @return [type]       [description]
    */
-  public function getStartLink() {
+  public function getStartLink($stub = '', $machine_name = '') {
     return parent::getStartLink('post', 'post');
   }
 

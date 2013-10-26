@@ -455,6 +455,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   .button {
     @include border-radius (6px);
     @include transition (all 500ms ease);
+    @include box-shadow(none);
     padding: 8px 18px;
     margin-left: 10px;
     background: rgba(191, 216, 229, 1);
@@ -1440,6 +1441,29 @@ a.tabledrag-handle .handle {
 
     .field-name-field-publisher {
       display: block !important;
+    }
+  }
+  
+  .field-name-field-license-secondary {
+    .form-item {
+      .chzn-container {
+        .chzn-choices {
+          margin-left: 0 !important;
+          margin-top: 10px;
+
+          input[type=text] {
+            height: auto;
+            padding: 0.5em;
+            width: 607px !important;
+          }
+        }
+
+        .chzn-drop {
+          .chzn-results {
+            margin-left: 0 !important;
+          }
+        }
+      }
     }
   }
 

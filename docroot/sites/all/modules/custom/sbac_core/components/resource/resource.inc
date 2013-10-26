@@ -302,6 +302,20 @@ function resource_access($op, $node, $account = NULL) {
     }
     elseif (in_array($op, array('view post'))) {
       if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
+        // check for active reviews by other users
+        $query = "  SELECT  COUNT(id)
+                    FROM    eck_feedback
+                    WHERE   type = 'post'
+                    AND     uid != :uid
+                    AND     status = 1
+                    AND     node_id = :node_id
+                 ";
+
+        $id = db_query($query, $args)->fetchField();
+        if ($id) {
+          return FALSE;
+        } 
+
         return TRUE;
       }
 

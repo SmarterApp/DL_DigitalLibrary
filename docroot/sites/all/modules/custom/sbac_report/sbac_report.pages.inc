@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Page callbacks for SBAC Report.
@@ -8,19 +9,26 @@
  * Page callback for the report.
  */
 function sbac_report_individual() {
+  ini_set('memory_limit', '196M');
   drupal_set_title(t('Usage and Activity Reports'));
-  $form = drupal_get_form('sbac_report_individual_form');
+  $individual_form = drupal_get_form('sbac_report_individual_form');
+
+  // Get SESSION values.
+  $uid = sbac_report_get_session_value('sne', 'uid');
+  $state_tid = sbac_report_get_session_value('state', 'tid');
+  $date_range = sbac_report_get_session_value('date_range', 'range');
+
+  $error_message = '';
+  if (isset($_SESSION['sbac_report']['error_message'])) {
+    $error_message = $_SESSION['sbac_report']['error_message'];
+  }
+
   $sne_details = '';
   $contributed_summary = '';
   $contributed_details = '';
   $gate_keeping = '';
   $all_reviews = '';
   $summation = '';
-
-  // Get SESSION values.
-  $uid = sbac_report_get_session_value('sne', 'uid');
-  $state_tid = sbac_report_get_session_value('state', 'tid');
-  $date_range = sbac_report_get_session_value('date_range', 'range');
 
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
     $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
@@ -51,37 +59,96 @@ function sbac_report_individual() {
   }
 
   $individual_tab = theme('sbac_report_individual', array(
-      'form' => $form,
-      'sne_details' => $sne_details,
-      'contributed_summary' => $contributed_summary,
-      'contributed_details' => $contributed_details,
-      'gate_keeping' => $gate_keeping,
-      'all_reviews' => $all_reviews,
-      'summation' => $summation,
+    'form' => $individual_form,
+    'sne_details' => $sne_details,
+    'contributed_summary' => $contributed_summary,
+    'contributed_details' => $contributed_details,
+    'gate_keeping' => $gate_keeping,
+    'all_reviews' => $all_reviews,
+    'summation' => $summation,
+    'error_message' => $error_message,
+  ));
+
+  $csv_form1 = drupal_get_form('sbac_csv_report_user_activity_form');
+  $csv_user_activity_tab = theme('sbac_csv_report_user_activity', array(
+      'form' => $csv_form1,
     )
   );
 
-  $csv_tab = '-- tab 2 --';
+  $csv_form2 = drupal_get_form('sbac_csv_report_resource_stats_form');
+  $csv_resource_stats_tab = theme('sbac_csv_report_resource_stats', array(
+      'form' => $csv_form2,
+    )
+  );
 
   $output = array(
     '#type' => 'vertical_tabs',
-    'individual' => array(
-      '#type' => 'fieldset', 
-      '#title' => t('Individual Contributor and Reviewer'), 
-      '#collapsible' => TRUE, 
-      'content' => array(
-        '#markup' => $individual_tab,
-      ),
-    ),
-    'csv_exorts' => array(
-      '#type' => 'fieldset', 
-      '#title' => t('CSV Exports'), 
-      '#collapsible' => TRUE, 
-      'content' => array(
-        '#markup' => $csv_tab,
+    '#attached' => array(
+      'js' => array(
+        drupal_get_path('module', 'sbac_report') . '/js/sbac_report.default_tab.js',
       ),
     ),
   );
+
+  $output[SBAC_REPORT_TAB_INDIVIDUAL] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#title' => t('Individual Contributor and Reviewer'),
+    '#attributes' => array(
+      'id' => SBAC_REPORT_TAB_INDIVIDUAL,
+    ),
+    'content' => array(
+      '#markup' => $individual_tab,
+    ),
+  );
+  
+  if (sbac_report_user_access_all()) {
+    $output[SBAC_REPORT_TAB_USER] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('User Activity (CSV Report)'),
+      '#attributes' => array(
+        'id' => SBAC_REPORT_TAB_USER,
+      ),
+      'content' => array(
+        '#markup' => $csv_user_activity_tab,
+      ),
+    );
+
+//    $output[SBAC_REPORT_TAB_STATES] = array(
+//      '#type' => 'fieldset',
+//      '#collapsible' => TRUE,
+//      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
+//      '#attributes' => array(
+//        'id' => SBAC_REPORT_TAB_STATES,
+//      ),
+//      'content' => array(
+//        '#markup' => $csv_resource_stats_tab,
+//      ),
+//    );
+  }
+
+  $default_tab = SBAC_REPORT_TAB_INDIVIDUAL;
+  if (isset($_SESSION['sbac_report']['active_tab'])) {
+    $default_tab = $_SESSION['sbac_report']['active_tab'];
+  }
+
+  $js = array(
+    'sbac_report' => array(
+      'tabs' => array(
+        SBAC_REPORT_TAB_INDIVIDUAL,
+        SBAC_REPORT_TAB_USER,
+//        SBAC_REPORT_TAB_STATES,
+      ),
+      'default_tab' => $default_tab,
+    ),
+  );
+
+  drupal_add_js($js, 'setting');
+
+  if ($error_message) {
+    drupal_set_message($error_message, 'warning');
+  }
 
   return drupal_render($output);
 }
@@ -127,11 +194,7 @@ function sbac_report_sne_autocomplete($string = '') {
     ON users.uid = field_sne_member.entity_id AND (field_sne_member.entity_type = 'user' AND field_sne_member.deleted = '0')
 
   WHERE (
-    (
-      (field_first_name.field_first_name_value LIKE :str)
-      OR (field_last_name.field_last_name_value LIKE :str)
-      OR (CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str)
-    )
+    CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
     AND (users.status <> '0')
     AND (field_sne_member.field_sne_member_value = 1)
     $state_condition
@@ -198,17 +261,22 @@ function sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $
   $gk_ind_returned_percentage = 0;
 
   if ($gk_ind_total) {
-    $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 1) * 100;
-    $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 1) * 100;
+    $gk_ind_accepted_percentage = round($gk_ind_accepted_count / $gk_ind_total, 2) * 100;
+    $gk_ind_returned_percentage = round($gk_ind_returned_count / $gk_ind_total, 2) * 100;
   }
 
-    // All.
+  // All.
   $gk_all_accepted_count = count($gk_all_accepted);
   $gk_all_returned_count = count($gk_all_returned);
   $gk_all_total = $gk_all_accepted_count + $gk_all_returned_count;
-  $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 1) * 100;
-  $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 1) * 100;
-
+  if ($gk_ind_total != 0) {
+    $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 2) * 100;
+    $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 2) * 100;
+  }
+  else {
+    $gk_all_accepted_percentage = 0;
+    $gk_all_returned_percentage = 0;
+  }
   // First Row.
   $rows[] = array(
     array('data' => $name),
@@ -256,7 +324,7 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
   $rows[] = array(
     array('data' => count($reviews_in_progress)),
     array('data' => count($completed_reviews)),
-    array('data' => (round($average_consistency_rate, 1) * 100) . '%'),
+    array('data' => (round($average_consistency_rate, 2) * 100) . '%'),
   );
 
   return theme('table', array(
@@ -291,7 +359,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       'class' => 'subheader',
     ),
     array(
-      'data' => t('Recc. Consistency'),
+      'data' => t('Recc. Cons.'),
       'class' => 'subheader',
     ),
     array(
@@ -423,7 +491,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
     // resource title
     $item[] = array(
-      'data' => l($row->node_title, 'node/' . $row->nid),
+      'data' => '<div class="cell-scroll">' . l($row->node_title, 'node/' . $row->nid) . '</div>',
       'class' => 'cell title',
     );
     
@@ -561,7 +629,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       'html'=> true,
     );
 
-    $info_link = l('<i class="accessibility foundicon-eyeball"></i>', $url, $options);
+    $info_link = l('<i class="icon-info">Info</i>', $url, $options);
 
     // info tooltip
     $item[] = array(
@@ -762,47 +830,49 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
       $items[] = $gk_slide;
 
     // add QC recommendations slide
-      $qc_rec_slide = '';
-      $qc_count = 1;
-      foreach ($qc_entities as $qc) {
-        $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
-        $qc_account = user_load($qc->uid);
+      if ($qc_entities) {
+        $qc_rec_slide = '';
+        $qc_count = 1;
+        foreach ($qc_entities as $qc) {
+          $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
+          $qc_account = user_load($qc->uid);
 
-        $location = '';
+          $location = '';
 
-        if ($states = field_entity_value($qc_account, 'field_state')) {
-          $term = current($states);
-          $location = t(', State of !state', array(
-            '!state' => $term->name
-          ));
+          if ($states = field_entity_value($qc_account, 'field_state')) {
+            $term = current($states);
+            $location = t(', State of !state', array(
+              '!state' => $term->name
+            ));
+          }
+
+          $qc_rec_slide .= '
+                            <div class="qc-item">
+                              <div class="qc-rec-name">
+                                ' . theme('username', array('account' => $qc_account)) . $location . '
+                              </div>
+                              
+                              <div class="qc-rec-value">
+                               <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
+                              </div>
+
+                              <div class="qc-rec-con">
+                                <span>' . t('Resource Consistency Rate:') . '</span> ' .
+                                rec_consistency_rate($qc_entities, $qc) . '
+                              </div>
+
+                              <div class="qc-rec-rationale">
+                                <span>' . t('Rationale:') . '</span> ' . 
+                                field_entity_value($qc, 'field_rec_rationale') . '
+                              </div>
+                            </div>
+                           ';
+
+          $qc_count++;
         }
 
-        $qc_rec_slide .= '
-                          <div class="qc-item">
-                            <div class="qc-rec-name">
-                              ' . theme('username', array('account' => $qc_account)) . $location . '
-                            </div>
-                            
-                            <div class="qc-rec-value">
-                             <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
-                            </div>
-
-                            <div class="qc-rec-con">
-                              <span>' . t('Resource Consistency Rate:') . '</span> ' .
-                              rec_consistency_rate($qc_entities, $qc) . '
-                            </div>
-
-                            <div class="qc-rec-rationale">
-                              <span>' . t('Rationale:') . '</span> ' . 
-                              field_entity_value($qc, 'field_rec_rationale') . '
-                            </div>
-                          </div>
-                         ';
-
-        $qc_count++;
+        $items[] = $qc_rec_slide;
       }
-
-      $items[] = $qc_rec_slide;
 
     // add Poster comments recommendations slide
       if ($post) {
@@ -834,42 +904,44 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
       }
 
     // add Quality Criteria question slides
-      $questions = field_entity_value(reset($qc_entities), 'field_review_set');
-      $questions_count = sizeof($questions);
-      
-      for ($i = 0; $i < $questions_count; $i++) {
-        $slide = '<div class="slide-title">' . t('Quality Criteria !count', array('!count' => $i + 1)) . '</div>';
-
-        $levels = array();
-        $comments = '';
-
-        $j = 1;
-        foreach ($qc_entities as $qc) {
-          $questions = field_entity_value($qc, 'field_review_set');
-
-          $level = field_entity_value($questions[$i], 'field_level');
-
-          if ($qc->uid == $uid) {
-            array_unshift($levels, '<strong>' . $level . '</strong>');
-          }
-          else {
-            $levels[] = $level;
-          }
-
-          $comments .= '
-                      <div class="qc-question-item">
-                        <span class="inline-title">' . t('Reviewer !count Comment', array('!count' => $j)) . ': </span>
-                        ' . field_entity_value($questions[$i], 'field_comments') . '
-                      </div>
-                    ';
-
-          $j++;
-        }
-
-        $slide .= '<div class="qc-question-levels">' . t('- Level: ') . implode(' / ', $levels) . '</div>';
-        $slide .= $comments;
+      if ($qc_entities) {
+        $questions = field_entity_value(reset($qc_entities), 'field_review_set');
+        $questions_count = sizeof($questions);
         
-        $items[] = $slide;
+        for ($i = 0; $i < $questions_count; $i++) {
+          $slide = '<div class="slide-title">' . t('Quality Criteria !count', array('!count' => $i + 1)) . '</div>';
+
+          $levels = array();
+          $comments = '';
+
+          $j = 1;
+          foreach ($qc_entities as $qc) {
+            $questions = field_entity_value($qc, 'field_review_set');
+
+            $level = field_entity_value($questions[$i], 'field_level');
+
+            if ($qc->uid == $uid) {
+              array_unshift($levels, '<strong>' . $level . '</strong>');
+            }
+            else {
+              $levels[] = $level;
+            }
+
+            $comments .= '
+                        <div class="qc-question-item">
+                          <span class="inline-title">' . t('Reviewer !count Comment', array('!count' => $j)) . ': </span>
+                          ' . field_entity_value($questions[$i], 'field_comments') . '
+                        </div>
+                      ';
+
+            $j++;
+          }
+
+          $slide .= '<div class="qc-question-levels">' . t('- Level: ') . implode(' / ', $levels) . '</div>';
+          $slide .= $comments;
+          
+          $items[] = $slide;
+        }
       }
 
     // render slides

@@ -30,41 +30,38 @@ class BaseTask extends \taskit\Task {
     ));
   }
 
-  public function contributorFeedback($resource_nid, $viewing_uid) {
-    $posts = entity_load('feedback', FALSE, array(
-      'node_id' => $resource_nid,
-      'type' => 'post',
-      'completed' => 1,
-      'status' => 1,
-    ));
+  public function contributorFeedback($resource_nid, $viewing_uid, $feedback) {
+    $post = FALSE;
+    foreach (entity_load('feedback', array_values($feedback)) as $entity) {
+      if ($entity->type == 'post') {
+        $post = $entity;
+      }
+    }
 
-    $post = array_shift($posts);
+    if (!$post) {
+      return '';
+    }
 
     return field_get_value($post, 'field_to_contributor');
   }
 
-  public function reviewerFeedback($resource_nid, $viewing_uid, $debug = FALSE) {
-    $posts = entity_load('feedback', FALSE, array(
-      'node_id' => $resource_nid,
-      'type' => 'post',
-      'completed' => 1,
-      'status' => 1,
-    ));
+  public function reviewerFeedback($resource_nid, $viewing_uid, $feedback) {
+    $post = FALSE;
+    foreach (entity_load('feedback', array_values($feedback)) as $entity) {
+      if ($entity->type == 'post') {
+        $post = $entity;
+      }
+    }
 
-    $post = array_shift($posts);
-
-    $reviews = entity_load('feedback', FALSE, array(
-      'node_id' => $resource_nid,
-      'type' => 'qc',
-      'completed' => 1,
-      'status' => 1,
-    ));
+    if (!$post) {
+      return '';
+    }
 
     $i = 0;
-    foreach ($reviews as $review) {
+    foreach (entity_load('feedback', array_values($feedback)) as $entity) {
       $i++;
 
-      if ($viewing_uid == $review->uid) {
+      if ($entity->type == 'qc' && $viewing_uid == $entity->uid) {
         break;
       }
     }

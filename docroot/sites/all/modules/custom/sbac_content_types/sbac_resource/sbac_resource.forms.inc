@@ -46,12 +46,13 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
 
     // Hide the Advanced fieldset if not DLRB member.
     global $user;
-    if (!in_array('DLRB member', $user->roles)) {
-      field_group_hide_field_groups($form, array('group_advanced'));
-      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
+
+    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
     }
     else {
-      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
+      field_group_hide_field_groups($form, array('group_advanced'));
+      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
     }
 
     // Setup the form
@@ -181,7 +182,7 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
 
     if (isset($_SESSION['sbac-posting-option-comment']) && $_SESSION['sbac-posting-option-comment']) {
       // Create notificaton for contributor.
-      if ($task = taskit_get_object('resource_submitted')) {
+      if ($task = taskit_get_object('posting_action')) {
         global $user;
         $node = $form_state['node'];
         $task->addVisibility($task::VISIBILITY_USER);
@@ -211,6 +212,10 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   }
   // save the node.
   node_form_submit($form, $form_state);
+
+  // rebuild permissions
+  node_access_acquire_grants($form_state['node'], TRUE);
+
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
 }
@@ -343,6 +348,9 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   if ($active_tab != 'edit-group_advanced') {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
+
+    // rebuild permissions
+    node_access_acquire_grants($form_state['node'], TRUE);
   }
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
   // Clear drupal messages.
@@ -747,7 +755,7 @@ function sbac_resource_validate_materials(&$form, &$form_state) {
       form_set_error('field_publisher', $error);
       _sbac_resource_remove_error_message($error);
       drupal_set_message('materials:field_publisher:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('materials:field_publisher:group:Remove inappropriate language from the source', 'sbac_resource_error');
+      drupal_set_message('materials:field_publisher:group:Remove inappropriate language from the owner', 'sbac_resource_error');
     }
   }
   if ($form_state['values']['field_license_information']['und'][0]['value'] != 0 && $form_state['values']['field_license']['und'][0]['tid'] == NULL) {
@@ -1018,6 +1026,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
           $node = node_load($_GET['nid']);
           if ($node) {
             workbench_moderation_moderate($node, 'needs_review');
+            node_access_acquire_grants($node, TRUE);
             $output[] = ctools_ajax_command_redirect('my-resources');
 
             // create notificaton for resource author
@@ -1418,23 +1427,24 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     ),
   );
 
-  $state_license_2 = array(
-    'input[name="field_license_information[und]"]' => array(
-      array('value' => '2'),
-    ),
-  );
+  // $state_license_2 = array(
+  //   'input[name="field_license_information[und]"]' => array(
+  //     array('value' => '2'),
+  //   ),
+  // );
 
   $form['field_author']['#states']['visible'] = $state_license_either;
   $form['field_author']['#states']['required'] = $state_license_either;
-  $form['field_author']['#states']['invisible'] = $state_license_2;
+  // $form['field_author']['#states']['invisible'] = $state_license_2;
   $form['field_author']['und'][0]['value']['#maxlength'] = 75;
 
   //Show this when field_license_information option 0 or 1 is selected
   $form['field_publisher']['#states']['visible'] = $state_license_either;
   $form['field_publisher']['#states']['required'] = $state_license_either;
-  $form['field_publisher']['#states']['invisible'] = $state_license_2;
+  // $form['field_publisher']['#states']['invisible'] = $state_license_2;
   $form['field_publisher']['und'][0]['value']['#maxlength'] = 75;
 
+  /*
   //Show this when field_license_information option 0  is selected
   $form['field_license_text'] = array(
     '#markup' => '
@@ -1446,6 +1456,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     ',
     '#weight' => $form['field_license']['#weight'],
   );
+  */
 
   //Show this when field_license_information option 1 is selected
   $form['field_license']['#states']['visible'] = $state_license_1;
@@ -1458,6 +1469,10 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     'effect' => 'fade',
     'event' => 'change',
   );
+  $form['field_license']['#suffix'] = '<div id="sbac-resource-license-url"></div>';
+
+  $form['field_license_secondary']['#states']['visible'] = $state_license_1;
+  $form['field_license_secondary']['und']['#options']['_none'] = '--Select License--';
 
   $form['group_license_information'] = array(
     '#prefix' => '<div id="license-information-group">',
@@ -1465,8 +1480,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   );
 
   $form['group_license_information']['field_license_url'] = array(
-    '#prefix' => '<div id="sbac-resource-license-url">',
-    '#suffix' => '</div>',
     '#weight' => 40,
   );
 
@@ -1475,7 +1488,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   global $user;
   $form['user_name'] = array(
     '#type' => 'hidden',
-    '#value' => ucwords($user->name),
+    '#value' => ucwords(full_name($user)),
     '#prefix' => '<div id="sbac-resource-user-name">',
     '#suffix' => '</div>',
   );
@@ -1484,9 +1497,10 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['group_license_information']['field_author'] = $form['field_author'];
   $form['group_license_information']['field_publisher'] = $form['field_publisher'];
   $form['group_license_information']['field_license'] = $form['field_license'];
-  $form['group_license_information']['field_license_text'] = $form['field_license_text'];
-  unset($form['field_author'], $form['field_publisher'], $form['field_license'], $form['field_license_text']);
-  unset($form['#group_children']['field_author'], $form['#group_children']['field_publisher'], $form['#group_children']['field_license'], $form['#group_children']['field_license_text']);
+  $form['group_license_information']['field_license_secondary'] = $form['field_license_secondary'];
+  // $form['group_license_information']['field_license_text'] = $form['field_license_text'];
+  unset($form['field_author'], $form['field_publisher'], $form['field_license'], $form['field_license_secondary']/*, $form['field_license_text']*/);
+  unset($form['#group_children']['field_author'], $form['#group_children']['field_publisher'], $form['#group_children']['field_license'], $form['#group_children']['field_license_secondary']/*, $form['#group_children']['field_license_text']*/);
 
   $form['no license'] = array(
     '#markup' => sbac_resource_licensing_form_has_no_license(),
@@ -1662,14 +1676,16 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   }
 
   $default_value = 0;
-  if ($form['#node']->workbench_moderation['current']->state == 'published') {
-    $default_value = 0;
-  }
-  if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
-    $default_value = 1;
-  }
-  if ($form['#node']->workbench_moderation['current']->state == 'removed') {
-    $default_value = 2;
+  if (isset($form['#node']->workbench_moderation)) {
+    if ($form['#node']->workbench_moderation['current']->state == 'published') {
+      $default_value = 0;
+    }
+    if ($form['#node']->workbench_moderation['current']->state == 'published' && $form['#node']->sticky == 1) {
+      $default_value = 1;
+    }
+    if ($form['#node']->workbench_moderation['current']->state == 'removed') {
+      $default_value = 2;
+    }
   }
   $form['field_posting_options']['und']['#default_value'] = $default_value;
 
@@ -1693,7 +1709,6 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_submit_button(&$form, &$form_state) {
-  global $user;
   unset($form['#submit']);
   unset($form['#validate']);
   unset($form['actions']['submit']['#submit']);
@@ -1794,6 +1809,11 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
+  global $user;
+  if (!in_array('DLRB member', $user->roles)) {
+    return;
+  }
+
   $form['actions']['cancel_all_changes'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel All Changes',
@@ -1916,7 +1936,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_alignment_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
   $form['field_document_information']['#access'] = FALSE;
-  // $form['field_file']['und']['add_more']['#access'] = FALSE;
+  $form['field_resource_state']['#access'] = FALSE;
 }
 
 /**
@@ -2144,11 +2164,11 @@ function sbac_resource_save_all_changes_form($form, $form_state) {
       $button_text = 'Remove Resource';
       break;
     case 3:
-      $description = 'Save changes to this resource will make these changes visible to all user of the Digital Library.';
+      $description = 'Save changes to this resource will make these changes visible to all users of the Digital Library.';
       $button_text = 'Save All Changes';
       break;
     default:
-      $description = 'Save changes to this resource will make these changes visible to all user of the Digital Library.';
+      $description = 'Save changes to this resource will make these changes visible to all users of the Digital Library.';
       $button_text = 'Save All Changes';
   }
 

@@ -667,3 +667,13 @@ function sbac_central_update_7057() {
     sbac_central_save_taxonomy_term($terms, $vocab);
   }
 }
+
+/**
+ * Enables Air API
+ */
+function sbac_central_update_7058() {
+  $modules = array(
+    'sbac_air',
+  );
+  module_enable($modules);
+}

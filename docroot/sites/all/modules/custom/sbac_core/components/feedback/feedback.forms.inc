@@ -249,6 +249,11 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
 
       $task = taskit_get_object('resource_rejected');
 
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
+      sbac_resource_save_current_state($node);
+
       break;
 
     case 'meet':
@@ -273,6 +278,12 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       drupal_set_message(t('Quality Criteria Review process started.'));
 
       entity_save('feedback', $qc);
+
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
+      sbac_resource_save_current_state($node);
+
 
       break;
   }
@@ -402,17 +413,24 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
           $task = taskit_get_object('resource_rejected');
         }
 
+        // rebuild permissions
+        node_access_acquire_grants($node, TRUE);
+
         send_review_notifications($task, $node, $reviews);
+
+        sbac_resource_save_current_state($node);
       }
+
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
+      sbac_resource_save_current_state($node);
 
       break;
   }
 
   $form_state['redirect'] = array(
-    'node/' . $node->nid,
-    array(
-      'fragment' => 'review-qc',
-    ),
+    'resource-review'
   );
 }
 
@@ -463,6 +481,11 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 
       $task = taskit_get_object('resource_rejected');
 
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
+      sbac_resource_save_current_state($node);
+
       break;
 
     case 'post':
@@ -472,6 +495,11 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       workbench_moderation_moderate($node, 'published');
 
       $task = taskit_get_object('resource_published');
+
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
+      sbac_resource_save_current_state($node);
 
       break;
 
@@ -486,8 +514,15 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 
       $task = taskit_get_object('resource_published');
 
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
+
+      sbac_resource_save_current_state($node);
+
       break;
   }
+
+  $reviews[] = $entity;
 
   send_review_notifications($task, $node, $reviews);
 

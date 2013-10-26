@@ -17,6 +17,17 @@ $body-font-family: Arial, Helvetica, sans-serif;
    ----------------------------------------- */
 
 
+.chzn-container-multi .chzn-choices .search-field input {
+  padding:0;
+  height: 20px;
+}
+
+.devtools-tooltip-body .user-profile .profile-details .title  {
+  position:static !important;
+  border:none !important;
+}
+
+
 .alert-box {
   margin-top: 10px;
 
@@ -99,6 +110,19 @@ $body-font-family: Arial, Helvetica, sans-serif;
 
   #edit-field-posting-options {
     border-bottom:none;
+  }
+
+  .field-name-field-posting-options-comment {
+    position:relative;
+    .counter {
+      //position:absolute;
+      //top: 0;
+      right: 0;
+      float: right;
+      margin-bottom: 20px;
+      margin-top: 3px;
+      font-size: 0.8em;
+    }
   }
 }
 

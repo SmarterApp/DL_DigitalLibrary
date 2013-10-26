@@ -97,6 +97,7 @@ function send_review_notifications($task, $node, $reviews) {
     // resource reviewers
     foreach ($reviews as $entity) {
       $task->addOwningUser($entity->uid);
+      $task->addEntity('feedback', $entity->id);
     }
 
     $task->addTriggeringUser(1);

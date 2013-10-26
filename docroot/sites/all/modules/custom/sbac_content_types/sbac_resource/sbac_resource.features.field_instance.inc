@@ -337,7 +337,7 @@ function sbac_resource_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_author',
     'label' => 'Author',
-    'profanity' => 0,
+    'profanity' => 1,
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -355,6 +355,7 @@ function sbac_resource_field_default_field_instances() {
       'type' => 'text_textfield',
       'weight' => 34,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'node-resource-field_classroom_technologies'
@@ -1216,7 +1217,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_license',
-    'label' => 'Specific License',
+    'label' => 'License for Primary Material',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1291,6 +1292,59 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_license_secondary'
+  $field_instances['node-resource-field_license_secondary'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 42,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_license_secondary',
+    'label' => 'License(s) for Secondary Material(s)',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 1,
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 37,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_pii'
   $field_instances['node-resource-field_pii'] = array(
     'bundle' => 'resource',
@@ -1340,7 +1394,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_buttons',
-      'weight' => 37,
+      'weight' => 38,
     ),
   );
 
@@ -1515,7 +1569,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -1556,7 +1610,7 @@ function sbac_resource_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_publisher',
     'label' => 'Owner',
-    'profanity' => 0,
+    'profanity' => 1,
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -1574,6 +1628,7 @@ function sbac_resource_field_default_field_instances() {
       'type' => 'text_textfield',
       'weight' => 35,
     ),
+    'xss' => 1,
   );
 
   // Exported field_instance: 'node-resource-field_resource_actions'
@@ -1632,6 +1687,63 @@ function sbac_resource_field_default_field_instances() {
       ),
       'type' => 'options_buttons',
       'weight' => 41,
+    ),
+  );
+
+  // Exported field_instance: 'node-resource-field_resource_state'
+  $field_instances['node-resource-field_resource_state'] = array(
+    'bundle' => 'resource',
+    'default_value' => array(
+      0 => array(
+        'value' => 'creation',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 42,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_resource_state',
+    'label' => 'Resource State',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 0,
+        'label_help_description' => '',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 44,
     ),
   );
 
@@ -1976,7 +2088,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 
@@ -2369,6 +2481,8 @@ function sbac_resource_field_default_field_instances() {
   t('Intended Student Population(s)');
   t('Learning Targets');
   t('License Information');
+  t('License for Primary Material');
+  t('License(s) for Secondary Material(s)');
   t('List either:
 <ol type=\'A\'><li>the principles of adult learning or professional development reflected in the resource; and/or</li>
 <li>the literature, research, or widely accepted practices used to inform the content in the resource. </li>
@@ -2379,10 +2493,10 @@ function sbac_resource_field_default_field_instances() {
   t('Personally Identifiable Student Information');
   t('Posting Options');
   t('Principles');
+  t('Resource State');
   t('Resource Type');
   t('Setting(s) for which this resource is appropriate. Select all that apply.');
   t('Smarter Balanced Keyword(s)');
-  t('Specific License');
   t('Student Engagement in the Formative Assesment Process');
   t('Student population(s) for which the resource is best suited. Select all that apply.');
   t('Subjects and Domains');

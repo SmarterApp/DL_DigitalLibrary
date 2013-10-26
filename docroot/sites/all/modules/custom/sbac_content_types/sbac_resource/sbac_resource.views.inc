@@ -16,17 +16,94 @@ function sbac_resource_views_query_alter(&$view, &$query) {
 
     if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
       // do nothing, roles can be combined to see all states.
+      $roles['both'] = TRUE;
     }
     else {
       if (in_array('resource reviewer', $user->roles)) {
         // Can see needs review, being reviewed
         unset($query->where[1]['conditions'][3]['value'][2]);
+        $roles['rr'] = TRUE;
       }
 
       if (in_array('resource publisher', $user->roles)) {
         // Can see approved
         unset($query->where[1]['conditions'][3]['value'][0]);
         unset($query->where[1]['conditions'][3]['value'][1]);
+        $roles['rp'] = TRUE;
+      }
+    }
+
+    if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
+      $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
+      $filters = explode('::', $current_filters);
+      if ($filters) {
+        $values = array();
+        $view->query->add_table('sbac_node_resource_state');
+        $view->query->table_queue['sbac_node_resource_state']['join']->extra[0] = array('field' => 'uid', 'value' => $user->uid);
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            if ($vid && $tid) {
+              $vocabulary = taxonomy_vocabulary_load($vid);
+              $term = taxonomy_term_load($tid);
+              if ($vocabulary && $term) {
+                if ($vocabulary->machine_name = 'resource_states') {
+
+                  if (isset($roles['rp'])) {
+                    switch ($term->name) {
+                      case 'Needs Posting':
+                        $values[] = 'post_needs_review';
+                        break;
+                      case 'Being Reviewed':
+                        $values[] = 'post_being_reviewed';
+                        break;
+                    }
+                  }
+
+                  if (isset($roles['rr'])) {
+                    switch ($term->name) {
+                      case 'Needs Review':
+                        $values[] = 'gk_needs_review';
+                        $values[] = 'qc_needs_review';
+                        $values[] = 'needs_review';
+                        break;
+                      case 'Being Reviewed':
+                        $values[] = 'gk_being_reviewed';
+                        $values[] = 'qc_being_reviewed';
+                        break;
+                    }
+                  }
+
+                  if (isset($roles['both'])) {
+                    switch ($term->name) {
+                      case 'Needs Review':
+                        $values[] = 'gk_needs_review';
+                        $values[] = 'qc_needs_review';
+                        $values[] = 'needs_review';
+                        break;
+                      case 'Being Reviewed':
+                        $values[] = 'post_being_reviewed';
+                        $values[] = 'gk_being_reviewed';
+                        $values[] = 'qc_being_reviewed';
+                        break;
+                      case 'Needs Posting':
+                        $values[] = 'post_needs_review';
+                        break;
+                    }
+                  }
+
+                }
+              }
+            }
+          }
+        }
+
+        if ($values) {
+          $condition = db_or()->condition('sbac_node_resource_state.state', $values, 'IN');
+          $view->query->add_where('AND', $condition);
+        }
       }
     }
   }
@@ -48,7 +125,13 @@ function sbac_resource_views_post_execute(&$view) {
   if ($view->name == 'resources' && ($view->current_display == 'grid_view' || $view->current_display == 'list_view')) {
     if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] != '') {
       // Search apache solr for keyword.
-      if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+      if (strpos($_SERVER['HTTP_HOST'], 'integration') !== FALSE) {
+        $sr_view = views_get_view('search_resources_integration', TRUE);
+      }
+      else if (strpos($_SERVER['HTTP_HOST'], 'training') !== FALSE) {
+        $sr_view = views_get_view('search_resources_training', TRUE);
+      }
+      else if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
         switch ($_ENV['AH_SITE_ENVIRONMENT']) {
           case 'dev':
             $sr_view = views_get_view('search_resources_dev', TRUE);
@@ -116,95 +199,6 @@ function sbac_resource_views_post_execute(&$view) {
           $view->result = array();
         }
       }
-    }
-  }
-}
-
-/**
- * Implements hook_views_pre_render().
- *
- * @param $view
- */
-function sbac_resource_views_pre_render(&$view) {
-  if ($view->name == 'resource_review') {
-    $filter_terms = array();
-    // Check for the resource_state filter option.
-    if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
-      $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
-      $filters = explode('::', $current_filters);
-      if ($filters) {
-        foreach ($filters as $filter) {
-          $filter_info = explode(':', $filter);
-          if ($filter_info && sizeof($filter_info) == 2) {
-            $vid = $filter_info[0];
-            $tid = $filter_info[1];
-            if ($vid && $tid) {
-              $vocabulary = taxonomy_vocabulary_load($vid);
-              $term = taxonomy_term_load($tid);
-              if ($vocabulary && $term) {
-                if ($vocabulary->machine_name == 'resource_states') {
-                  $filter_terms[] = $term->name;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    // Determine the user who is loading the view.
-    global $user;
-    $roles = array();
-    if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
-      $roles['both_roles'] = TRUE;
-    }
-    else {
-      if (in_array('resource reviewer', $user->roles)) {
-        $roles['rr'] = TRUE;
-      }
-      if (in_array('resource publisher', $user->roles)) {
-        $roles['rp'] = TRUE;
-      }
-    }
-
-    // if the user is a resource reviewer.
-    if (isset($roles['rr']) && $roles['rr']) {
-      foreach ($view->result as $key => $result) {
-        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'being_reviewed') {
-          // Do not show nodes to resource reviewer when the node is in the process of the gate keeper review.
-          $gate_keeper = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'set', TRUE);
-          if ($gate_keeper) {
-            unset($view->result[$key]);
-          }
-          // Do not show nodes to resource reviewers when the node is being reviewed by 3 people.
-          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, FALSE, 1, 'set', TRUE);
-          if (count($feedback) == 3) {
-            unset($view->result[$key]);
-          }
-          // Do not show nodes to the resource reviewers when the node has been reviewed by this person and is complete.
-          $feedback = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 1, FALSE, 'single');
-          if ($feedback) {
-            unset($view->result[$key]);
-          }
-        }
-      }
-    }
-
-    // If the user if a resource publisher.
-    if (isset($roles['rp']) && $roles['rp']) {
-      foreach ($view->result as $key => $result) {
-        if (isset($result->workbench_moderation_node_history_state) && $result->workbench_moderation_node_history_state == 'approved') {
-          // Do not show nodes to the resource publishers when the node has been reviewed by another resource publisher
-          $feedback = _sbac_resource_determine_feedback($result->nid, 'post', $user->uid, 1, 0, 1, 'set', TRUE);
-          if ($feedback) {
-            unset($view->result[$key]);
-          }
-        }
-      }
-    }
-
-    if ($filter_terms) {
-      sbac_resource_determine_view_output($view, $filter_terms, $roles);
     }
   }
 }
@@ -412,25 +406,6 @@ function sbac_resource_digital_library_apply_filters(&$view) {
  */
 function sbac_resource_resource_review_apply_filters(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
-
-  global $user;
-  $both_roles = $rr = $rp = FALSE;
-  if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
-    $both_roles = TRUE;
-  }
-  else {
-    if (in_array('resource reviewer', $user->roles)) {
-      $rr = TRUE;
-    }
-    if (in_array('resource publisher', $user->roles)) {
-      $rp = TRUE;
-    }
-  }
-
-  $allowed_both_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review', 'approved' => 'Needs Posting');
-  $allowed_rr_states = array('being_reviewed' => 'Being Reviewed', 'needs_review' => 'Needs Review');
-  $allowed_rp_states = array('approved' => 'Being Reviewed', 'approved' => 'Needs Posting');
-
   if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
     $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
     $filters = explode('::', $current_filters);
@@ -461,27 +436,6 @@ function sbac_resource_resource_review_apply_filters(&$view) {
             }
           }
         }
-      }
-    }
-
-    // Bring back all states for the given user roles regardless of what they selected.
-    // This is because the database state does not mean what the ouputted label for that state does.
-    if ($both_roles) {
-      foreach ($allowed_both_states AS $state => $label) {
-        $view_filters['state']['value'][$state] = $state;
-        $view_filters['state']['operator'] = 'in';
-      }
-    }
-    else if ($rr) {
-      foreach ($allowed_rr_states AS $state => $label) {
-        $view_filters['state']['value'][$state] = $state;
-        $view_filters['state']['operator'] = 'in';
-      }
-    }
-    else if ($rp) {
-      foreach ($allowed_rp_states AS $state => $label) {
-        $view_filters['state']['value'][$state] = $state;
-        $view_filters['state']['operator'] = 'in';
       }
     }
     $view->display_handler->set_option('filters', $view_filters);
@@ -521,7 +475,7 @@ function sbac_resource_resource_review_apply_filters(&$view) {
         }
         else {
           $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
-          array_merge($view_filters['field_subject_tid']['value'], $subjects);
+          $view_filters['field_subject_tid']['value'] = array_merge($view_filters['field_subject_tid']['value'], $subjects);
         }
       }
 
@@ -552,9 +506,9 @@ function sbac_resource_resource_review_apply_filters(&$view) {
           1 => 'AND',
         ),
       );
-
+      
       if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
-        $groups['groups'][2] = 'OR';
+        $groups['groups'][2] = 'AND';
       }
 
       $view->display_handler->set_option('filter_groups', $groups);
@@ -652,4 +606,87 @@ function sbac_resource_determine_view_output(&$view, $filter_terms, $roles) {
       }
     }
   }
+}
+
+function sbac_resource_views_data() {
+//  | sbac_node_resource_state |
+//  CREATE TABLE `sbac_node_resource_state` (
+//  `nid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The nid of the resource',
+//  `uid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The uid who modified the resource',
+//  `state` varchar(255) NOT NULL COMMENT 'The actual resource state',
+//  PRIMARY KEY (`nid`,`uid`),
+//  KEY `nid` (`nid`),
+//  KEY `uid` (`uid`)
+
+  $data['sbac_node_resource_state']['table']['group'] = t('SBAC Resource Node State');
+  // Base table.
+  $data['sbac_node_resource_state']['table']['base'] = array(
+    'field' => 'nid', // This is the identifier field for the view.
+    'title' => t('SBAC Resource Node Table'),
+    'help' => t('Custom data for the resource states.'),
+    'weight' => -10,
+  );
+  // Join.
+  $data['sbac_node_resource_state']['table']['join'] = array(
+    'node' => array(
+      'left_field' => 'nid',
+      'field' => 'nid',
+    ),
+    'users' => array(
+      'left_field' => 'uid',
+      'field' => 'uid',
+    ),
+  );
+
+
+  // Node ID table field.
+  $data['sbac_node_resource_state']['nid'] = array(
+    'title' => t('Resource NID'),
+    'help' => t('Custom data for the resource states.'),
+    'relationship' => array(
+      'base' => 'node', // The name of the table to join with.
+      'base field' => 'nid', // The name of the field on the joined table.
+      'handler' => 'views_handler_relationship',
+      'label' => t('Default label for the relationship'),
+      'title' => t('Title shown when adding the relationship'),
+      'help' => t('More information on this relationship'),
+    ),
+  );
+
+  // User ID field.
+  $data['sbac_node_resource_state']['uid'] = array(
+    'title' => t('User ID'),
+    'help' => t('User ID.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  // State field.
+  $data['sbac_node_resource_state']['state'] = array(
+    'title' => t('State field.'),
+    'help' => t('State field.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_in_operator',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  return $data;
 }
