@@ -2475,3 +2475,19 @@ a.tabledrag-handle .handle {
     color: inherit;
   } 
 }
+
+
+
+/** Start Review Modal **/
+
+.gate-keeper-modal-intro {
+  margin-bottom: 20px;
+}
+
+#dialog-feedback_qc_form-wrapper {
+  button {
+    float: right;
+    color: white;
+    background: #2aa549;
+  }
+}

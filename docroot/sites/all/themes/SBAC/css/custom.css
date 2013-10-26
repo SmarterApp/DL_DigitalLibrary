@@ -9349,3 +9349,16 @@ a.tabledrag-handle .handle {
   color: #333;
   color: inherit;
 }
+
+/** Start Review Modal **/
+/* line 2483, ../sass/custom.scss */
+.gate-keeper-modal-intro {
+  margin-bottom: 20px;
+}
+
+/* line 2488, ../sass/custom.scss */
+#dialog-feedback_qc_form-wrapper button {
+  float: right;
+  color: white;
+  background: #2aa549;
+}
