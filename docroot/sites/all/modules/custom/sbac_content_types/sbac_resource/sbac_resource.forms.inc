@@ -314,7 +314,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         break;
       case 'edit-group_tags':
         global $user;
-        if (in_array('DLRB member', $user->roles)) {
+        if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
           $valid = FALSE;
         }
         else {
@@ -2163,7 +2163,7 @@ function sbac_resource_save_all_changes_form($form, $form_state) {
       break;
     case 2:
       $description = 'Removing this resource will make it unavailable to Digital Library Community, including the contributor. You no longer will have
-                      the ability to edit this resource. You can axcess this resource by going to a resource list in the admin options.';
+                      the ability to edit this resource. You can access this resource by going to a resource list in the administrative options.';
       $button_text = 'Remove Resource';
       break;
     case 3:

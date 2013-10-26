@@ -594,13 +594,18 @@ function sbac_status_messages($variables) {
       if (count($messages) > 1) {
         $output .= " <ul>\n";
         foreach ($messages as $message) {
+          if ($message == 'Content permissions have been rebuilt.') {
+            continue;
+          }
           $output .= '  <li>' . $message . "</li>\n";
         }
         $output .= " </ul>\n";
       }
       else {
         if ($messages) {
-          $output .= $messages[0];
+          if ($messages[0] != 'Content permissions have been rebuilt.') {
+            $output .= $messages[0];
+          }
         }
       }
       $output .= "</div>\n";
