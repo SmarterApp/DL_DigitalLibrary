@@ -314,7 +314,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         break;
       case 'edit-group_tags':
         global $user;
-        if (in_array('DLRB member', $user->roles)) {
+        if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
           $valid = FALSE;
         }
         else {
