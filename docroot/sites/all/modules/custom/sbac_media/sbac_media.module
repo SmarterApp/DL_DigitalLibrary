@@ -285,7 +285,7 @@ function sbac_media_create_embed_url($media) {
   }
 
   $url = NULL;
-  if (isset($file->fid)) {
+  if (isset($file->uri)) {
     $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
     $parts = $wrapper->get_parameters();
     $id = check_plain($parts['v']);
