@@ -153,15 +153,12 @@ function is_hosted_remotely($uri) {
  */
 function construct_url_for_video($uri) {
 	if (preg_match('/^youtube/', $uri)) {
-		//return "http://www.youtube.com/watch?v=".basename($uri);
-		return "http://www.youtube.com/embed/".basename($uri);
+		return "http://www.youtube.com/watch?v=".basename($uri);
 	}
 
 	if (preg_match('/^teachertube/', $uri)) {
-		//return "http://www.teachertube.com/viewVideo.php?video_id=".basename($uri);
-		return "http://www.teachertube.com/embed.php?pg=video_". basename($uri);
+		return "http://www.teachertube.com/viewVideo.php?video_id=".basename($uri);
 	}
-
 	return "";
 }
 
@@ -322,6 +319,7 @@ function process_file_list($fl, $dbh) {
 
     		// update db
     		$sitem = $item;
+        $sitem['type'] = 'media';
     		$sitem['hash'] = $md5sum;
     		$sitem['uri'] = $virtual_newdir ."/". basename($item['uri']);
     		$sitem['weight'] = $item['delta'];

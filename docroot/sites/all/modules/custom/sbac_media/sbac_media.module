@@ -284,29 +284,33 @@ function sbac_media_create_embed_url($media) {
     $file = $handler->getFileObject();
   }
 
-  $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
-  $parts = $wrapper->get_parameters();
-  $id = check_plain($parts['v']);
+  $url = NULL;
+  if (isset($file->fid)) {
+    $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
+    $parts = $wrapper->get_parameters();
+    $id = check_plain($parts['v']);
 
-  switch($file->filemime) {
-    case 'video/schooltube': 
-      $url = '//www.schooltube.com/embed_force/' . $id;
-      break;
-    case 'video/slideshare':
-      $url = '//www.slideshare.net/slideshow/embed_code/' . $id . '?rel=0';
-      break;
-    case 'video/teachertube':
-      $url = 'http://www.teachertube.com/embed.php?pg=video_' . $id;
-      break;
-    case 'video/vimeo':
-      $url = '//player.vimeo.com/video/' . $id;
-      break;
-    case 'video/youtube':
-      $url = '//www.youtube.com/embed/' . $id;
-      break;
+    switch($file->filemime) {
+      case 'video/schooltube':
+        $url = '//www.schooltube.com/embed_force/' . $id;
+        break;
+      case 'video/slideshare':
+        $url = '//www.slideshare.net/slideshow/embed_code/' . $id . '?rel=0';
+        break;
+      case 'video/teachertube':
+        $url = 'http://www.teachertube.com/embed.php?pg=video_' . $id;
+        break;
+      case 'video/vimeo':
+        $url = '//player.vimeo.com/video/' . $id;
+        break;
+      case 'video/youtube':
+        $url = '//www.youtube.com/embed/' . $id;
+        break;
+    }
+
+    return url($url, array('external' => TRUE));
   }
-
-  return url($url, array('external' => TRUE));
+  return $url;
 }
 
 /**
