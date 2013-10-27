@@ -4,7 +4,8 @@
 (function($) {
   // DOM ready.
     $(function() {
-        setTimeout(function ()  {  $(".alert-box.secondary").hide(); }, 10000);
-        setTimeout(function ()  {  $(".alert-box").hide(); }, 10000);
+        if ($("div#id, div.alert-box.secondary, h2#element-invisible").text().indexOf("Warning message") == 1) {
+          setTimeout(function ()  {  $(".alert-box.secondary").hide(); }, 10000);
+        }
     });
 })(jQuery);
