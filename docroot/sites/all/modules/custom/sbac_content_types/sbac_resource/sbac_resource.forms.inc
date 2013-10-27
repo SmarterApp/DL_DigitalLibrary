@@ -1940,8 +1940,6 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_document_id']['#access'] = FALSE;
   $form['field_document_information']['#access'] = FALSE;
   $form['field_resource_state']['#access'] = FALSE;
-
-  watchdog('sbac', 'removed access');
 }
 
 /**

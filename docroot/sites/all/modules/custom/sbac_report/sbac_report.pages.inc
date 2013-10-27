@@ -819,6 +819,10 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
 
       $gk_slide = '<div class="slide-title">' . t('Gate-Keeping Criteria') . '</div>';
 
+      $focus = field_entity_value($node, 'field_focus');
+
+      $gk_slide = '<div class="resource-type">' . t('Resource Type: !type', array('!type' => $focus->name)) . '</div>';
+
       foreach (field_entity_value($gk, 'field_quality_set') as $count => $question) {
         $comments = field_entity_value($question, 'field_comments');
         $decision = field_entity_value($question, 'field_meets_criterion');
@@ -842,11 +846,11 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
           $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
           $qc_account = user_load($qc->uid);
 
-          $location = '';
+          $location = l(full_name($qc_account), 'user/' . $qc_account->uid);
 
           if ($states = field_entity_value($qc_account, 'field_state')) {
             $term = current($states);
-            $location = t(', State of !state', array(
+            $location .= t(', State of !state', array(
               '!state' => $term->name
             ));
           }
@@ -854,7 +858,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
           $qc_rec_slide .= '
                             <div class="qc-item">
                               <div class="qc-rec-name">
-                                ' . theme('username', array('account' => $qc_account)) . $location . '
+                                ' . $location . '
                               </div>
                               
                               <div class="qc-rec-value">
