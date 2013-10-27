@@ -362,8 +362,6 @@ function sbac_alignment_node_load($nodes, $types) {
     return;
   }
 
-  watchdog('sbac', __FUNCTION__);
-
   // forcefully populate the alignment term field based on associated
   // alignment nodes
   foreach ($nodes as $node) {
@@ -373,11 +371,10 @@ function sbac_alignment_node_load($nodes, $types) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', 'alignment')
+        ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
         ->fieldCondition('field_resource_reference', 'target_id', $node->nid);
 
       $result = $query->execute();
-
-      watchdog('sbac', 'processing nid ' . $node->nid);
 
       if (isset($result['node'])) {
         $terms = array();
@@ -387,8 +384,6 @@ function sbac_alignment_node_load($nodes, $types) {
             $terms = array_merge_recursive($terms, $alignment->field_education_alignment);
           }
         }
-
-        watchdog('sbac', 'setting terms: ' . sizeof($terms));
 
         $node->field_alignment_term = $terms;
       }
