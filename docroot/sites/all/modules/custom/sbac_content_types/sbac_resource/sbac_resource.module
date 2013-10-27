@@ -581,34 +581,39 @@ function sbac_status_messages($variables) {
   $error_messages = drupal_get_messages($display);
   foreach ($error_messages as $type => $messages) {
     if ($messages) {
+      $type_output = '';
       if (isset($status_mapping[$type])) {
-        $output .= "<div class=\"alert-box $status_mapping[$type]\">\n";
+        $type_output .= "<div class=\"alert-box $status_mapping[$type]\">\n";
       }
       else {
-        $output .= "<div class=\"alert-box\">\n";
+        $type_output .= "<div class=\"alert-box\">\n";
       }
 
       if (!empty($status_heading[$type])) {
-        $output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
+        $type_output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
       }
+
+      $added_message = FALSE;
       if (count($messages) > 1) {
-        $output .= " <ul>\n";
+        $type_output .= " <ul>\n";
         foreach ($messages as $message) {
           if ($message == 'Content permissions have been rebuilt.') {
             continue;
           }
-          $output .= '  <li>' . $message . "</li>\n";
+          $type_output .= '  <li>' . $message . "</li>\n";
+          $added_message = TRUE;
         }
-        $output .= " </ul>\n";
+        $type_output .= " </ul>\n";
       }
-      else {
-        if ($messages) {
-          if ($messages[0] != 'Content permissions have been rebuilt.') {
-            $output .= $messages[0];
-          }
-        }
+      elseif ($messages[0] != 'Content permissions have been rebuilt.') {
+        $type_output .= $messages[0];
+        $added_message = TRUE;
       }
-      $output .= "</div>\n";
+      $type_output .= "</div>\n";
+
+      if ($added_message) {
+        $output .= $type_output;
+      }
     }
   }
   return $output;

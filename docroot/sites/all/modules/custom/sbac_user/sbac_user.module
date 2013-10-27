@@ -105,17 +105,17 @@ function sbac_user_init() {
   }
 
   // remove change password message if already logged in and replace - don't try this at home
-  $messages = drupal_get_messages('status', FALSE);
-  if (isset($messages['status'])) {
-    foreach ($messages['status'] as $message) {
-      if (strpos($message, 'You are logged in as') !== FALSE) {
-        // clear status message queue -- BLAMMO
-        drupal_get_messages('status', TRUE);
-        drupal_set_message(t('You are already logged in.'));
-        break;
-      }
-    }
-  }
+  // $messages = drupal_get_messages('status', FALSE);
+  // if (isset($messages['status'])) {
+  //   foreach ($messages['status'] as $message) {
+  //     if (strpos($message, 'You are logged in as') !== FALSE) {
+  //       // clear status message queue -- BLAMMO
+  //       drupal_get_messages('status', TRUE);
+  //       drupal_set_message(t('You are already logged in.'));
+  //       break;
+  //     }
+  //   }
+  // }
 }
 
 /*

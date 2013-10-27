@@ -854,7 +854,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
               '!state' => $term->name
             ));
           }
-
+          
           $qc_rec_slide .= '
                             <div class="qc-item">
                               <div class="qc-rec-name">
