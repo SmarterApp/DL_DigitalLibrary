@@ -55,6 +55,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Export'),
     '#submit' => array('sbac_csv_report_resource_stats_export_form_submit'),
+//    '#attributes' => array('OnSubmit' => 'closeSecondaryAlert();'),
   );
 
   $form['#validate'][] = 'sbac_csv_report_resource_stats_form_validate';
@@ -102,6 +103,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
 
   if ($csv_resource_stats_result == null) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
+    $_SESSION['sbac_report']['first_time']=1;
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';

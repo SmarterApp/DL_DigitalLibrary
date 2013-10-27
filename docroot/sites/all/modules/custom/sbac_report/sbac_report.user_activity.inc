@@ -48,20 +48,6 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-//  $form['user_sne_slt_radio']['sne-slt-filter'] = array(
-//    '#type' => 'radios',
-//    '#title' => t('SNE/SLT Filter'),
-//    '#description' => t('Filter results by SNE/SLT'),
-//    '#default_value' => variable_get('sne-slt-filter', 2),
-//    '#options' => array(
-//      t('SNE'),
-//      t('SLT'),
-//      t('Neither'),
-//      t('Both SNE and SLT'),
-//    ),
-//
-//  );
-
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
 
@@ -86,6 +72,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Export'),
     '#submit' => array('sbac_csv_report_user_activity_export_form_submit'),
+//    '#attributes' => array('OnSubmit' => 'closeSecondaryAlert();'),
   );
 
   $form['#validate'][] = 'sbac_csv_report_user_activity_form_validate';
@@ -141,7 +128,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   $snefilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
   if (array_count_values($usergroups)==0) {
-    $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
+    $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['active_tab'] = 1;
     return; // report did not contain any data.
   }
@@ -151,9 +138,12 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
 
   if ($csv_activity_report_result == null) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
+    $_SESSION['sbac_report']['first_time'] = 1;
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';
+  $_SESSION['sbac_report']['first_time'] = 0;
+
   // _cex exits and does not return.
   _cex_download($csv_activity_report_result, 'output.csv');
   // _cex exits and does not return.
@@ -417,7 +407,7 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($stringkeys, array('login','Last Login','date'));
 
   array_push($uidcountkeys, array('resources_viewed','Resources Viewed'));
-  array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed'));
+  array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed/Rated'));
   array_push($uidcountkeys, array('resources_contributed', 'Resources Contributed'));
   array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contributed Resources'));
   array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
