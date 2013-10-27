@@ -7,10 +7,12 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
 
   // Make sure to load this after autocomplete.js
   // @see sbac_report.csv.js
-  $form['#attached']['js'] = array(
-    drupal_get_path('module', 'sbac_report') .
-    '/js/sbac_report.csv.js' => array('weight' => 99),
-  );
+  if (match_uri('reports')) {
+    $form['#attached']['js'] = array(
+      drupal_get_path('module', 'sbac_report') .
+      '/js/sbac_report.csv.js' => array('weight' => 99),
+    );
+  }
 
   $form['state'] = array(
     '#type' => 'select',
