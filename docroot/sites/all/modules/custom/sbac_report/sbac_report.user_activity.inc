@@ -244,7 +244,7 @@ function get_user_activity($users, $date_range)
 
   # GC Review accepted on contributed resource:
   $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
-    met_criteria = 0 and uid in (%s) and
+    met_criteria = 1 and uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
   $user_activity['gc_reviews_accepted_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
@@ -283,13 +283,13 @@ function get_user_activity($users, $date_range)
   //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # Contributed resources posted
-  $sql = "select count(nid) as count, uid, created from node where nid in(select nid from workbench_moderation_node_history where
+  $sql = "select count(nid) as count, uid, created from node where type = 'resource' and nid in (select nid from workbench_moderation_node_history where
     state = 'published') and uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
   $user_activity['contributed_resources_posted'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Contributed resources posted with distinction
-  $sql = "select count(nid) as count, uid, created from node where sticky = 1 and nid in(select nid from workbench_moderation_node_history
+  $sql = "select count(nid) as count, uid, created from node where type = 'resource' and sticky = 1 and nid in(select nid from workbench_moderation_node_history
     where state = 'published') and uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
   $user_activity['contributed_resources_posted_with_distinction'] = count_with_users_query($sql, $users, $from_date, $to_date);
