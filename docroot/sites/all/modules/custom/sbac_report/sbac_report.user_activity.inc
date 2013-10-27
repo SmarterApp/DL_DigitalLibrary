@@ -419,7 +419,7 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
 
   array_push($toskeys, array('tos_accepted', 'Date of Terms of Service','date'));
   array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
-  array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
+  //array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
   array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version','date'));
 
   // replace missing values with ' ' or 0
