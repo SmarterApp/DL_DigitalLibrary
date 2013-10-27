@@ -84,6 +84,8 @@ function sbac_report_user_access() {
 
   // SLT users are allowed to access the page, but only the individual reports tab
   $account = user_load($user->uid);
+  $account->entity_type = 'user';
+  $account->entity_id = $account->uid;
   $slt = field_entity_value($account, 'field_slt_member');
   if ($slt) {
     return TRUE;
