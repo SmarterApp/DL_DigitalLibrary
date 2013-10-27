@@ -9362,8 +9362,9 @@ a.tabledrag-handle .handle {
   margin-bottom: 20px;
 }
 
-/* line 2493, ../sass/custom.scss */
-#dialog-feedback_qc_form-wrapper button {
+/* line 2494, ../sass/custom.scss */
+#dialog-feedback_qc_form-wrapper button,
+#dialog-feedback_post_form-wrapper button {
   float: right;
   color: white;
   background: #2aa549;
