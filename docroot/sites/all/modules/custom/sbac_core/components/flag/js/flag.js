@@ -10,7 +10,7 @@ Drupal.behaviors.flag = {
     // hide form initially
       $('.flag-review-end-use-wrap').parent().once('setup-flag', function () {
         var field_wrap = $(this);
-        form = $('.flag-review-end-use-wrap form', field_wrap);
+        var form = $('.flag-review-end-use-wrap form', field_wrap);
         if (form.length) {
           form = $(form);
           
@@ -23,8 +23,8 @@ Drupal.behaviors.flag = {
     // main forms functionality
       var forms = $('.flag-review-end-use-wrap form');
       if (forms.length) {
-        forms.each(function(i, form) {
-          form = $(form);
+        forms.each(function(i, form_item) {
+          var form = $(form_item);
           var form_wrap_id = '#' + form.parent().attr('id');
 
           // position 'details' field after the selected radio button
@@ -64,19 +64,27 @@ Drupal.behaviors.flag = {
           // show the form when trigger is clicked
             var form_toggle_trigger = $('.field-name-review-vote a.flag-trigger', form.parents('.group-footer'));
             if (form_toggle_trigger.length) {
-              form_toggle_trigger.click(function(e) {
+              var form_toggle_trigger_event = function(e) {
                 e.preventDefault();
 
-                form.toggle();
+                if (form.css('display') == 'block') {
+                  $('a.flag-cancel', form).click();
+                }
+                else {
+                  form.show();
+                }
 
                 return false;
-              });
+              };
+
+              form_toggle_trigger.unbind('click');
+              form_toggle_trigger.click(form_toggle_trigger_event);
             }
 
           // hide & clear the form when cancel is clicked
             var cancel_trigger = $('a.flag-cancel', form);
             if (cancel_trigger.length) {
-              cancel_trigger.click(function(e) {
+              var cancel_trigger_event = function(e) {
                 e.preventDefault();
 
                 // remove error/status messages which may have been prepended to the form
@@ -96,13 +104,16 @@ Drupal.behaviors.flag = {
                 form.hide();
 
                 return false;
-              });
+              };
+
+              cancel_trigger.unbind('click');
+              cancel_trigger.click(cancel_trigger_event);
             }
 
           // form submission & modal
             var submit_button = $('.actions .form-submit', form);
             if (submit_button.length) {
-              submit_button.once('submit-modal').mousedown(function(e) {
+              var submit_button_event = function(e) {
                 e.preventDefault();
 
                 // this is the default flag value, prior to form submission
@@ -141,7 +152,10 @@ Drupal.behaviors.flag = {
                 Drupal.behaviors.js_watch_value.watch_value(default_value, value_callback, change_callback);
 
                 return false;
-              });
+              };
+
+              submit_button.unbind('mousedown', submit_button_event);
+              submit_button.mousedown(submit_button_event);
             }
         });
       }
@@ -157,6 +171,7 @@ Drupal.behaviors.flag = {
     select.prop('selected', true);
 
     $(data.review_wrapper + ' form .actions .form-submit').mousedown();
+    flag.submit = false;
   }
 };
 
