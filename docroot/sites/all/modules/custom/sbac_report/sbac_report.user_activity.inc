@@ -231,7 +231,7 @@ function get_user_activity($users, $date_range)
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
   $user_activity['resources_contributed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
-  # GC Review accepted on contributed resource:
+  # Resources Viewed:
   $sql = "select count(id) as count, uid,created from eck_feedback where
     type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1 and uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
@@ -247,6 +247,14 @@ function get_user_activity($users, $date_range)
     BETWEEN %s AND %s group by uid";
   $user_activity['gc_reviews_accepted_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
 //    array(':from_date' => $from_date, ':to_date' => $to_date));
+
+  # GC Review returned on contributed resource:
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
+    met_criteria = 0 and uid in (%s) and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
+    BETWEEN %s AND %s group by uid";
+  $user_activity['gc_reviews_returned_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
+
 
   # GC Reviews completed:
   $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
@@ -410,6 +418,7 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed/Rated'));
   array_push($uidcountkeys, array('resources_contributed', 'Resources Contributed'));
   array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contributed Resources'));
+  array_push($uidcountkeys, array('gc_reviews_returned_on_contributed_resources', 'GK Reviews Returned on Contributed Resources'));
   array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
   array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
   array_push($uidcountkeys, array('poster_reviews_completed', 'Posting Reviews Completed'));
