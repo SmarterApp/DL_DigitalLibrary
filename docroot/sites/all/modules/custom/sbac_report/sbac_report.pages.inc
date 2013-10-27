@@ -489,6 +489,11 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
   foreach ($result as $row) {
     $item = array();
 
+    $count_items = _sbac_resource_determine_feedback($row->nid, 'qc', $uid, 1, FALSE, 1, 'set', TRUE);
+    if (count($count_items) != 2) { // two other reviewers
+      continue;
+    }
+
     // resource title
     $item[] = array(
       'data' => '<div class="cell-scroll">' . l($row->node_title, 'node/' . $row->nid) . '</div>',
