@@ -257,7 +257,7 @@ function get_user_activity($users, $date_range)
 //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # QC Reviews completed:
-  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'qx' and status = 1 and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'qc' and status = 1 and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
