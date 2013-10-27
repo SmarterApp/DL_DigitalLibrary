@@ -135,6 +135,9 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'preprocess functions' => array(
           'template_preprocess',
       ),
+//      '#attached' => array(
+//        'js' => drupal_get_path('module', 'sbac_report') . '/js/sbac_report.user_activity.js',
+//      ),
   );
 
   $themes['sbac_csv_report_resource_stats'] = array(

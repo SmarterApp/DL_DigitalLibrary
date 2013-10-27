@@ -83,9 +83,5 @@
   };
 })(jQuery);
 
-//function closeSecondaryAlert()
-//{
-//    $(".alert-box.secondary").hide();
-//}
 
 
