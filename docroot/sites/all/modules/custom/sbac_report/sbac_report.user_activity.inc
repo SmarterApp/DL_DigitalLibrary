@@ -403,7 +403,9 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($fieldkeys, array('field_last_name', 'Last Name'));
   array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
   array_push($fieldkeys, array('field_slt_member', 'Is SLT Member'));
+  array_push($fieldkeys, array('field_school_name', 'School'));
   array_push($fieldkeys, array('field_district_name', 'District'));
+  array_push($foreignidkeys, array('field_position', 'Title'));
   array_push($foreignidkeys, array('field_state', 'State'));
   array_push($foreignidkeys, array('field_grade_level_s_', 'Grade(s)'));
   array_push($foreignidkeys, array('field_subject_s_', 'Subject(s)'));
