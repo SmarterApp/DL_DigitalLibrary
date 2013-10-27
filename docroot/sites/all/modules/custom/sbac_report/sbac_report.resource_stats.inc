@@ -221,6 +221,7 @@ function get_resources($resource_filters) {
     ->fieldCondition('field_subject', 'tid', $resource_filters['subject'])
     ->fieldCondition('field_grades', 'tid', $resource_filters['grade'])
     ->fieldCondition('field_attributes', 'tid', $resource_filters['attribute'])
+    ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
     ->execute();
 
   $nids = array_keys($entities['node']);
