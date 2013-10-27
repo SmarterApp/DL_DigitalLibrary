@@ -918,7 +918,9 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
         $questions_count = sizeof($questions);
         
         for ($i = 0; $i < $questions_count; $i++) {
-          $slide = '<div class="slide-title">' . t('Quality Criteria !count', array('!count' => $i + 1)) . '</div>';
+          $qc_title = variable_get('qc_' . field_entity_value($node, 'field_focus')->tid . '_criteria_' . ($i + 1) . '_title', '');
+
+          $slide = '<div class="slide-title">' . filter_text($qc_title) . '</div>';
 
           $levels = array();
           $comments = '';
