@@ -24,7 +24,7 @@ function sbac_report_individual_form($form, &$form_state) {
     ),
     '#required' => TRUE,
   );
-  if (!$_SESSION['sbac_report']['first_time']) {
+  if (!isset($_SESSION['sbac_report']['first_time']) || !$_SESSION['sbac_report']['first_time']) {
     $_SESSION['sbac_report']['error_message'] = '';
   }
   else {
