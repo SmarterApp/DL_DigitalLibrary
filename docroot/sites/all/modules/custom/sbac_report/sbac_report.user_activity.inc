@@ -412,15 +412,15 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contributed Resources'));
   array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
   array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
-  array_push($uidcountkeys, array('poster_reviews_completed', 'Poster Reviews Completed'));
+  array_push($uidcountkeys, array('poster_reviews_completed', 'Posting Reviews Completed'));
   array_push($uidcountkeys, array('contributed_resources_posted', 'Contributed Resources Posted'));
   array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', 'Contributed Resources Posted with Distinction'));
   array_push($uidcountkeys, array('contributed_resources_reviewed_and_returned', 'Contributed Resources Reviewed and Returned'));
 
-  array_push($toskeys, array('tos_accepted', 'Date TOS Accepted','date'));
-  array_push($toskeys, array('tos_version', 'TOS Version'));
-  array_push($toskeys, array('tos_revision', 'TOS Revision'));
-  array_push($toskeys, array('tos_revision_date', 'Date of TOS Revision','date'));
+  array_push($toskeys, array('tos_accepted', 'Date of Terms of Service','date'));
+  array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
+  array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
+  array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version','date'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';
