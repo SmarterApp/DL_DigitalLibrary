@@ -6,6 +6,9 @@
   $(function() {
     var $uidField = $('#sne-uid-field');
 
+    // todo: do this the right way, fix autocomplete without a timeout call.
+    setTimeout(function ()  {  $("#edit-sne").attr( 'autocomplete','ON'); }, 500);
+
     // Individual Report: Get the id from the autocomplete suggestion.
     $(document).on('click', '#autocomplete li', function() {
       var uid = $(this).find('.autocomplete-suggestion').data('uid');
