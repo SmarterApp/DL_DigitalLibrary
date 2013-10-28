@@ -2,6 +2,7 @@
 /**
  * CSV Report resource statistics form.
  */
+
 function sbac_csv_report_resource_stats_form($form, &$form_state) {
   $form = array();
 
@@ -74,7 +75,7 @@ function sbac_csv_report_resource_stats_form_validate($form, &$form_state) {
   }
 }
 /*
- * Submit to do the export.
+ * Submit to do the export for the detailed resource statistics csv report.
  */
 function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
 {
@@ -117,7 +118,10 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
   // download of the csv file. drupal_goto('/reports');
   // _cex exits and does not return.
 }
-
+/*
+ * Query for a taxonomy term given an sql string, add 'All' to the query result.  Used for dropdowns on the
+ * detailed resource stats csv report.
+ */
 function query_taxonomy_term($sql)
 {
   $result = db_query($sql);
@@ -130,31 +134,43 @@ function query_taxonomy_term($sql)
   return $values;
 }
 /*
- * Resource Type
+ * Resource Type Dropdown options extracted from the taxonomy table.
+ *
+ * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_type_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = 14";
   return query_taxonomy_term($sql);
 }
+/*
+ * Default options for the resource type option list
+ */
 function sbac_report_default_resource_type_option()
 {
   return 0;
 }
 /*
- * Resource Status
+ * Resource Status Dropdown options extracted from the taxonomy table.
+ *
+ * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_status_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = 13";
   return query_taxonomy_term($sql);
 }
+/*
+ * Default options for the resource status option list
+ */
 function sbac_report_default_resource_status_option()
 {
   return 0;
 }
 /*
- * Resource Subject
+ * Resource Subject Dropdown options extracted from the taxonomy table.
+ *
+ * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_subject_options()
 {
@@ -165,13 +181,18 @@ function sbac_report_resource_subject_options()
   ksort($values);
   return $values;
 }
+/*
+ * Default options for the resource subject option list
+ */
 function sbac_report_default_resource_subject_option()
 {
   return 0;
 }
 
 /*
- * Resource Grade
+ * Resource Grade Dropdown options extracted from the taxonomy table.
+ *
+ * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_grade_options()
 {
@@ -182,13 +203,18 @@ function sbac_report_resource_grade_options()
   ksort($values);
   return $values;
 }
+/*
+ * Default options for the resource grade option list
+ */
 function sbac_report_default_resource_grade_option()
 {
   return 0;
 }
 
 /*
- * Resource Attribute
+ * Resource Attribute Dropdown options extracted from the taxonomy table.
+ *
+ * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_attribute_options()
 {
@@ -198,11 +224,19 @@ function sbac_report_resource_attribute_options()
   ksort($values);
   return $values;
 }
+/*
+ * Default options for the resource attributes option list
+ */
 function sbac_report_default_resource_attribute_option()
 {
   return 0;
 }
 
+/*
+ * This routine builds the detailed resource statistics csv report.  It uses other routines to get the data,
+ * and format the report.  It returns the report as a string to the caller.  It takes as input the filters
+ * from the front end form selector with five filter parameters: type, status, grade, attribute, and grade.
+ */
 function build_resource_stats_csv($resource_filters)
 {
   $resources = get_resources($resource_filters);
@@ -213,7 +247,11 @@ function build_resource_stats_csv($resource_filters)
 
   return $file_data;
 }
-
+/*
+ * Get the resources from the node table using five constraints: type, status, grade, attribute, and grade.
+ * Returns an array of node ids to the resources.
+ *
+ */
 function get_resources($resource_filters) {
 
   $query = new EntityFieldQuery();
@@ -287,7 +325,9 @@ function get_resources($resource_filters) {
 //  $terms = entity_load('node', );
 //dsm($terms);
 }
-
+/*
+ * Creates the resource report given a list of node ids.
+ */
 function create_resource_stats_from_data($nodes)
 {
   $separator = ',';

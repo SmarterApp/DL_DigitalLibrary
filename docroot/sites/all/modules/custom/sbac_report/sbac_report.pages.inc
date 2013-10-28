@@ -159,19 +159,6 @@ function sbac_report_sne_autocomplete($string = '') {
   // Get the selected state if there's any.
   $matches = array();
 
-//  $state_tid = sbac_report_get_default_state_tid();
-//  if ($state_tid == 'all') {
-//    $state_condition = '';
-//  }
-//  elseif (!empty($state_tid)) {
-//    $state_condition = "AND (field_state.field_state_tid = '$state_tid')";
-//  }
-//  else {
-//    $matches['none'] = t('Please select a state');
-//    print drupal_json_encode($matches);
-//    exit;
-//  }
-
   $sql = <<<SQL
 
   SELECT users.uid AS uid,
