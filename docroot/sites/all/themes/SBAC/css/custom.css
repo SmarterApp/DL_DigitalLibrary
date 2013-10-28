@@ -7937,7 +7937,7 @@ a.tabledrag-handle .handle {
 /* line 1182, ../sass/custom.scss */
 .resource-info .links li {
   display: inline-block;
-  margin-right: 3px;
+  margin-right: 8px;
 }
 /* line 1186, ../sass/custom.scss */
 .resource-info .links li:after {
@@ -7954,7 +7954,7 @@ a.tabledrag-handle .handle {
 }
 /* line 1202, ../sass/custom.scss */
 .resource-info .field-name-field-alignment-term li {
-  line-height: 0.8em;
+  line-height: 0;
 }
 
 /* -----------------------------------------
@@ -9245,7 +9245,7 @@ a.tabledrag-handle .handle {
   padding: 20px;
   position: absolute;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  top: 30px;
+  top: 15px;
   transition-property: opacity;
   transition-duration: 500ms;
   -webkit-transition-property: opacity;

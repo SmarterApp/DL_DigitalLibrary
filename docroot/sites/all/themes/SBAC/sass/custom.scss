@@ -1181,7 +1181,7 @@ a.tabledrag-handle .handle {
 
     li {
       display: inline-block;
-      margin-right: 3px;
+      margin-right: 8px;
 
       &:after {
         content: ",";
@@ -1200,7 +1200,7 @@ a.tabledrag-handle .handle {
 
   .field-name-field-alignment-term {
     li {
-      line-height: 0.8em;
+      line-height: 0;
     }
   }
 }
@@ -1536,7 +1536,7 @@ a.tabledrag-handle .handle {
   #edit-group_summary,
   #edit-field-author,
   #edit-field-publisher,
-  #edit-group_materials  {
+  #edit-group_materials,  {
     .form-type-textfield,
     .form-type-textarea {
       position: relative;
@@ -2379,7 +2379,7 @@ a.tabledrag-handle .handle {
       padding: 20px;
       position: absolute;
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-      top: 30px;
+      top: 15px;
       transition-property: opacity;
       transition-duration: 500ms;
       -webkit-transition-property: opacity;
