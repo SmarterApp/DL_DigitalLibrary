@@ -650,6 +650,16 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $conf['apachesolr_default_environment'] = 'amazon_apache_solr_test';
       break;
 
+    case 'stage2':
+      // do something on staging
+      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_train';
+      break;
+
+    case 'stage3':
+      // do something on staging
+      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_integ';
+      break;
+
     case 'prod':
       // do something on prod
       $conf['apachesolr_default_environment'] = 'amazon_apache_solr_prod';
