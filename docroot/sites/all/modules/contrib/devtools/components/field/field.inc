@@ -135,7 +135,7 @@ function field_entity_value($entity, $field) {
   }
   else {
     // get value via entity module's wrapper
-    if (function_exists('entity_metadata_wrapper')) {
+    if (function_exists('entity_metadata_wrapper') && isset($entity->{$field})) {
       $wrappers = &drupal_static(__FUNCTION__);
       if (!isset($wrappers[$entity->entity_type][$entity->entity_id])) {
         $wrappers[$entity->entity_type][$entity->entity_id] = entity_metadata_wrapper($entity->entity_type, $entity);

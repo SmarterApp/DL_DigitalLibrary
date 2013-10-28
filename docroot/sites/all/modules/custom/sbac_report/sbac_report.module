@@ -65,29 +65,53 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK
   );
 
-  $items['export_report_resource_stats'] = array(
-    'title' => 'Export Report Detailed Resource Statistics',
-    'file' => 'sbac_report.pages.inc',
-    'page callback' => 'sbac_csv_report_resource_stats_export_form_submit',
-    'access callback' => 'sbac_csv_report_resource_stats_export_form_submit',
-    'type' => MENU_CALLBACK
-  );
+//  $items['export_report_resource_stats'] = array(
+//    'title' => 'Export Report Detailed Resource Statistics',
+//    'file' => 'sbac_report.pages.inc',
+//    'page callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+//    'access callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+//    'type' => MENU_CALLBACK
+//  );
 
   return $items;
 }
 
 /**
- * Custom user access.
+ * User access callback for the /report page.
  */
 function sbac_report_user_access() {
   global $user;
-  $roles = $user->roles;
 
-  return $user->uid == 1 ||
-    in_array('DLRB member', $roles) ||
-    in_array('digital library administrator', $roles) ||
-    in_array('system administrator', $roles) ||
-    sbac_report_is_slt($user);
+  // SLT users are allowed to access the page, but only the individual reports tab
+  $account = user_load($user->uid);
+  $account->entity_type = 'user';
+  $account->entity_id = $account->uid;
+  $slt = field_entity_value($account, 'field_slt_member');
+  if ($slt) {
+    return TRUE;
+  }
+
+  return sbac_report_user_access_all($account);
+}
+
+/**
+ * User access callback for the tabs on the /report page.
+ * @return [type] [description]
+ */
+function sbac_report_user_access_all($account = NULL) {
+  if (is_null($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  $allowed_roles = array(
+    3   => 'administrator',
+    // 7   => 'DLRB member',
+    8   => 'digital library administrator',
+    23  => 'system administrator',
+  );
+
+  return (bool) array_intersect(array_keys($account->roles), array_keys($allowed_roles));
 }
 
 /**
@@ -113,6 +137,9 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'preprocess functions' => array(
           'template_preprocess',
       ),
+//      '#attached' => array(
+//        'js' => drupal_get_path('module', 'sbac_report') . '/js/sbac_report.user_activity.js',
+//      ),
   );
 
   $themes['sbac_csv_report_resource_stats'] = array(
@@ -302,7 +329,7 @@ function sbac_report_get_default_usergroup() {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
 
   if (empty($usergroups)) {
-    return array();
+    return array('0');
   }
   return $usergroups;
 }
@@ -357,8 +384,8 @@ function sbac_report_user_group_admins() {
 
   $admin_aggregates = array();
   // admins aggregated:
-  $key = array_search('DLRB member',$options);
-  $admin_aggregates[$key] = $options[$key];
+//  $key = array_search('DLRB member',$options);
+//  $admin_aggregates[$key] = $options[$key];
   $key = array_search('administrator',$options);
   $admin_aggregates[$key] = $options[$key];
   $key = array_search('system administrator',$options);
@@ -367,6 +394,29 @@ function sbac_report_user_group_admins() {
   $admin_aggregates[$key] = $options[$key];
 
   return $admin_aggregates;
+}
+
+/**
+ * Options for the sne/slt dropdown.
+ */
+function sbac_report_sne_slt_options() {
+  $options = array(
+    'Neither SNE nor SLT',
+    'SNE members only',
+    'SLT members only',
+    'Combination SLT/SNE members',
+    );
+  return $options;
+}
+
+function sbac_report_get_default_sne_slt() {
+
+  $snesltfilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
+
+  if (empty($snesltfilter)) {
+    return array('0');
+  }
+  return $snesltfilter;
 }
 
 /**
@@ -382,13 +432,12 @@ function sbac_report_user_group_options() {
   unset($options[array_search('authenticated user',$options)]);
 
   // remove unused, but included in all:
-  unset($options[array_search('basic end user',$options)]);
   unset($options[array_search('on-boarding',$options)]);
   unset($options[array_search('help desk',$options)]);
 
   // admins aggregated:
-  $key = array_search('DLRB member',$options);
-  unset($options[$key]);
+//  $key = array_search('DLRB member',$options);
+//  unset($options[$key]);
   $key = array_search('administrator',$options);
   unset($options[$key]);
   $key = array_search('system administrator',$options);

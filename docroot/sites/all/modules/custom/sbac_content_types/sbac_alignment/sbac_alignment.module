@@ -371,6 +371,7 @@ function sbac_alignment_node_load($nodes, $types) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', 'alignment')
+        ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
         ->fieldCondition('field_resource_reference', 'target_id', $node->nid);
 
       $result = $query->execute();

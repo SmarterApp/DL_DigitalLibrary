@@ -276,7 +276,7 @@ function devtools_load_component($module, $name) {
         }
       }
     }
-  
+
   return TRUE;
 }
 

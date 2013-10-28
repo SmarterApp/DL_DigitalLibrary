@@ -16,9 +16,9 @@ function flag_review_modal_form($form, &$form_state, $review, $state, $trigger_i
     $form['state_submit']['intro'] = array(
       '#markup' => '
                     <div class="intro">
-                      ' . t('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla dictum nunc
-                        ligula, sit amet bibendum sem consequat vel. Nulla laoreet, est sit amet sagittis
-                        laoreet, elit leo placerat purus, sit amet facilisis urna tellus vel urna.') . '
+                      ' . t("If you proceed the Digital Library moderators will be notified. 
+                        They will review this resource based on your input, so please be 
+                        sure any comments you've provided are clear and actionable.") . '
                     </div>
                    ',
     );

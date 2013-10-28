@@ -11,36 +11,18 @@ function _cex_download( $output, $filename)
   header("Content-Disposition: attachment; filename=$filename");
   header("Accept-Ranges: bytes");
   echo $output;
+  // this doesn't force the output to download: module_invoke_all('exit');
   exit;
 }
-
-/* From: http://www.php.net/manual/en/function.str-getcsv.php#88773 and http://www.php.net/manual/en/function.str-getcsv.php#91170 */
-if(!function_exists('str_putcsv'))
-{
-  function str_putcsv($input, $delimiter = ',', $enclosure = '"')
-  {
-    // Open a memory "file" for read/write...
-    $fp = fopen('php://temp', 'r+');
-    // ... write the $input array to the "file" using fputcsv()...
-    fputcsv($fp, $input, $delimiter, $enclosure);
-    // ... rewind the "file" so we can read what we just wrote...
-    rewind($fp);
-    // ... read the entire line into a variable...
-    $data = fread($fp, 1048576);
-    // ... close the "file"...
-    fclose($fp);
-    // ... and return the $data to the caller, with the trailing newline from fgets() removed.
-    return rtrim($data, "\n");
-  }
-}
-
 
 function format_value_field(&$row, $field, $separator, $encloseer, $subseparator, $quote_arrays, $subquote, $is_date=false)
 {
   //reset($array); $first =  key($array);
   $count = count($field['und']); $ix = 0;
   $row.=$encloseer;
-  if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
+  if ($count > 1 and $quote_arrays)  {
+    $row .= $subquote;
+  }
   foreach ($field['und'] as $array_value) {
     if ($is_date) {
       $value = date('Y-m-d',$array_value['value']);

@@ -17,10 +17,10 @@ function full_name($account, $show_last = TRUE) {
 
   // build first/last
   $name = '';
-  if ($first = field_entity_value($account, 'field_first_name')) {
+  if (isset($account->field_first_name) && $first = field_entity_value($account, 'field_first_name')) {
     $name .= $first;
 
-    if ($show_last && $last = field_entity_value($account, 'field_last_name')) {
+    if ($show_last && isset($account->field_last_name) && $last = field_entity_value($account, 'field_last_name')) {
       $name .= ' ' . $last;
     }
   }

@@ -125,7 +125,13 @@ function sbac_resource_views_post_execute(&$view) {
   if ($view->name == 'resources' && ($view->current_display == 'grid_view' || $view->current_display == 'list_view')) {
     if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] != '') {
       // Search apache solr for keyword.
-      if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+      if (strpos($_SERVER['HTTP_HOST'], 'integration') !== FALSE) {
+        $sr_view = views_get_view('search_resources_integration', TRUE);
+      }
+      else if (strpos($_SERVER['HTTP_HOST'], 'training') !== FALSE) {
+        $sr_view = views_get_view('search_resources_training', TRUE);
+      }
+      else if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
         switch ($_ENV['AH_SITE_ENVIRONMENT']) {
           case 'dev':
             $sr_view = views_get_view('search_resources_dev', TRUE);

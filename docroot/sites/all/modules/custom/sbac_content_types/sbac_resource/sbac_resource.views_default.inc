@@ -159,6 +159,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -268,6 +269,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -698,6 +700,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -807,6 +810,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -1130,6 +1134,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -1239,6 +1244,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -1548,6 +1554,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -1657,6 +1664,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -2217,6 +2225,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -2326,6 +2335,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -3035,6 +3045,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -3144,6 +3155,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -3234,6 +3246,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['field'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['label'] = 'Sticky';
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -3701,6 +3714,172 @@ function sbac_resource_views_default_views() {
   /* Display: Search */
   $handler = $view->new_display('block', 'Search', 'search');
   $export['search_resources_test'] = $view;
+
+  $view = new view();
+  $view->name = 'search_resources_integration';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'apachesolr__amazon_apache_solr_integration';
+  $view->human_name = 'Search Resources - Integration';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Search Resources - Test';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Apache Solr: entity_id */
+  $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
+  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_integration';
+  $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
+  $handler->display->display_options['fields']['entity_id']['label'] = '';
+  $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
+  /* Field: Apache Solr: entity_type */
+  $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
+  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_integration';
+  $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
+  $handler->display->display_options['fields']['entity_type']['label'] = '';
+  $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
+  /* Filter criterion: Apache Solr: entity_type */
+  $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
+  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_integration';
+  $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
+  $handler->display->display_options['filters']['entity_type']['value'] = 'node';
+  $handler->display->display_options['filters']['entity_type']['expose']['operator_id'] = 'entity_type_op';
+  $handler->display->display_options['filters']['entity_type']['expose']['label'] = 'entity_type';
+  $handler->display->display_options['filters']['entity_type']['expose']['operator'] = 'entity_type_op';
+  $handler->display->display_options['filters']['entity_type']['expose']['identifier'] = 'entity_type';
+  /* Filter criterion: Apache Solr: bundle */
+  $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
+  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_integration';
+  $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
+  $handler->display->display_options['filters']['bundle']['value'] = 'resource';
+  $handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
+  $handler->display->display_options['filters']['bundle']['expose']['label'] = 'bundle';
+  $handler->display->display_options['filters']['bundle']['expose']['operator'] = 'bundle_op';
+  $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
+  /* Filter criterion: Apache Solr: Search */
+  $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
+  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_integration';
+  $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
+  $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
+  $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
+  $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
+  $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+
+  /* Display: Search */
+  $handler = $view->new_display('block', 'Search', 'search');
+  $export['search_resources_integration'] = $view;
+
+  $view = new view();
+  $view->name = 'search_resources_training';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'apachesolr__amazon_apache_solr_training';
+  $view->human_name = 'Search Resources - Training';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Search Resources - Test';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Apache Solr: entity_id */
+  $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
+  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_training';
+  $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
+  $handler->display->display_options['fields']['entity_id']['label'] = '';
+  $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
+  /* Field: Apache Solr: entity_type */
+  $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
+  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_training';
+  $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
+  $handler->display->display_options['fields']['entity_type']['label'] = '';
+  $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
+  /* Filter criterion: Apache Solr: entity_type */
+  $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
+  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_training';
+  $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
+  $handler->display->display_options['filters']['entity_type']['value'] = 'node';
+  $handler->display->display_options['filters']['entity_type']['expose']['operator_id'] = 'entity_type_op';
+  $handler->display->display_options['filters']['entity_type']['expose']['label'] = 'entity_type';
+  $handler->display->display_options['filters']['entity_type']['expose']['operator'] = 'entity_type_op';
+  $handler->display->display_options['filters']['entity_type']['expose']['identifier'] = 'entity_type';
+  /* Filter criterion: Apache Solr: bundle */
+  $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
+  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_train';
+  $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
+  $handler->display->display_options['filters']['bundle']['value'] = 'resource';
+  $handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
+  $handler->display->display_options['filters']['bundle']['expose']['label'] = 'bundle';
+  $handler->display->display_options['filters']['bundle']['expose']['operator'] = 'bundle_op';
+  $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
+  /* Filter criterion: Apache Solr: Search */
+  $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
+  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_training';
+  $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
+  $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
+  $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
+  $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
+  $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+  );
+
+  /* Display: Search */
+  $handler = $view->new_display('block', 'Search', 'search');
+  $export['search_resources_training'] = $view;
 
   return $export;
 }
