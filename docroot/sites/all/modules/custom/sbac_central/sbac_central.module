@@ -9,6 +9,92 @@ include_once 'sbac_central.features.inc';
 function sbac_central_update_projects_alter(&$projects) {
   unset($projects['sbac_central']);
 }
+
+function sbac_central_menu() {
+  $items = array();
+
+  $items['sbac-central-fix-broken-ccss'] = array(
+    'title' => 'My Resources',
+    'page callback' => 'sbac_central_fix_broken_ccss',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Script to fix broken ccss. yay...
+ */
+function sbac_central_fix_broken_ccss() {
+  $LOGFILE = "/tmp/sbac_ccss_migration.". date("Ymd-His", time()) .".log";
+  $logmsg = "Starting ccss migraiton\n";
+  ini_set('max_execution_time', 300);
+
+  $sql = "SELECT n.nid AS nid FROM {node} n WHERE n.type = 'alignment' AND n.changed <= 1382943600";
+  $result = db_query($sql);
+  $vid = 11; //same across all environments.
+
+  foreach ($result as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      if (isset($node->field_education_alignment['und'][0])) {
+        $logmsg .= "Selected node->title: " . $node->title . " node->nid: " . $node->nid . "\n";
+        $tid = $node->field_education_alignment['und'][0]['tid'];
+
+        db_set_active('sbac_prod_old');
+        $sql2 = "SELECT * FROM {taxonomy_term_data} WHERE tid = :tid AND vid = :vid";
+        $results2 = db_query($sql2, array(':tid' => $tid, ':vid' => $vid))->fetchAssoc();
+        if ($results2) {
+          $logmsg .= "Selected term id from old db (tid = " . $tid . ")\n";
+          $old_term = taxonomy_term_load($results2['tid']);
+          // have the old data, now find it in the new db.
+          db_set_active();
+          $sql3 = "SELECT * FROM taxonomy_term_data td
+            JOIN field_data_field_alignment_grade fag ON td.tid = fag.entity_id
+            JOIN field_data_field_alignment_key fak ON td.tid = fak.entity_id
+            JOIN field_data_field_alignment_publication fap ON td.tid = fap.entity_id
+            JOIN field_data_field_alignment_shortname fas ON td.tid = fas.entity_id
+            WHERE fag.field_alignment_grade_value = :grade
+            AND fak.field_alignment_key_value = :key
+            AND fap.field_alignment_publication_value = :publication
+            AND fas.field_alignment_shortname_value = :shortname";
+
+          $grade = $old_term->field_alignment_grade['und'][0]['value'];
+          $key = $old_term->field_alignment_key['und'][0]['value'];
+          $publication = $old_term->field_alignment_publication['und'][0]['value'];
+          $shortname = $old_term->field_alignment_shortname['und'][0]['value'];
+          $results3 = db_query($sql3, array(
+            ':grade' => $grade,
+            ':key' => $key,
+            ':publication' => $publication,
+            ':shortname' => $shortname
+          ))->fetchAssoc();
+
+          if ($results3) {
+            //This is the new tid.
+            $logmsg .= "Saved new tid (" . $results3['tid'] . ") to the node\n";
+            $node->field_education_alignment['und'][0]['tid'] = $results3['tid'];
+            node_save($node);
+          }
+          else {
+            $logmsg .= "Unable to select term id from new db with the following info:\n";
+            $logmsg .= "grade: " . $grade . "\n";
+            $logmsg .= "key: " . $key . "\n";
+            $logmsg .= "publication: " . $publication . "\n";
+            $logmsg .= "shortname: " . $shortname . "\n";
+          }
+        }
+        else {
+          $logmsg .= "Unable to select term id from old db (tid = " . $tid . ")\n";
+        }
+        db_set_active();
+      }
+    }
+  }
+  error_log($logmsg, 3, $LOGFILE);
+}
+
 /**
  * Implements hook_init().
  * Enables/disables maillog per environment.
