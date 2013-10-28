@@ -2,7 +2,7 @@
 
 flag = {
   submit: false,
-  review_id: 0,
+  review_id: 0
 };
 
 Drupal.behaviors.flag = {
@@ -137,6 +137,7 @@ Drupal.behaviors.flag = {
                     if (flag.submit) {
                       var flag_wrap = $('#entity-review-' + flag.review_id + ' .flag');
                       flag_wrap.html(Drupal.settings.flag.update_message);
+                      flag.submit = false;
                     }
                     else {
                       var modal_anchor = $(form_wrap_id + ' a.use-dialog');
@@ -171,7 +172,6 @@ Drupal.behaviors.flag = {
     select.prop('selected', true);
 
     $(data.review_wrapper + ' form .actions .form-submit').mousedown();
-    flag.submit = false;
   }
 };
 
