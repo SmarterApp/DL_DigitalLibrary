@@ -115,17 +115,17 @@ function sbac_report_individual() {
       ),
     );
 
-//    $output[SBAC_REPORT_TAB_STATES] = array(
-//      '#type' => 'fieldset',
-//      '#collapsible' => TRUE,
-//      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
-//      '#attributes' => array(
-//        'id' => SBAC_REPORT_TAB_STATES,
-//      ),
-//      'content' => array(
-//        '#markup' => $csv_resource_stats_tab,
-//      ),
-//    );
+    $output[SBAC_REPORT_TAB_STATES] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
+      '#attributes' => array(
+        'id' => SBAC_REPORT_TAB_STATES,
+      ),
+      'content' => array(
+        '#markup' => $csv_resource_stats_tab,
+      ),
+    );
   }
 
   $default_tab = SBAC_REPORT_TAB_INDIVIDUAL;
@@ -197,7 +197,6 @@ function sbac_report_sne_autocomplete($string = '') {
     CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
     AND (users.status <> '0')
     AND (field_sne_member.field_sne_member_value = 1)
-    $state_condition
   )
 
   GROUP BY uid
