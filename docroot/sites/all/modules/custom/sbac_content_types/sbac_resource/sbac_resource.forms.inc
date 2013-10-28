@@ -430,7 +430,14 @@ function sbac_resource_validate_form(&$form, &$form_state) {
         sbac_resource_validate_advanced($form, $form_state);
         break;
     }
-    $check = node_last_changed($form['#node']->nid);
+
+    if (isset($form['#node']->nid)) {
+      $check = node_last_changed($form['#node']->nid);
+    }
+    else {
+      $check = $form['#node']->created;
+    }
+    
     $form_state['values']['changed'] = $check + 120;
   }
 }
