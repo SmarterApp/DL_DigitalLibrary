@@ -105,6 +105,8 @@ function sbac_central_init() {
     switch ($_ENV['AH_SITE_ENVIRONMENT']) {
       case 'dev':
       case 'test':
+      case 'stage2':
+      case 'stage3':
         if(!module_exists('maillog')) {
           module_enable(array('maillog'));
           watchdog('SBAC', 'Enabling maillog. See sbac_central_init for details.');
