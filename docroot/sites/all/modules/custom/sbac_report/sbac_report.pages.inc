@@ -159,18 +159,18 @@ function sbac_report_sne_autocomplete($string = '') {
   // Get the selected state if there's any.
   $matches = array();
 
-  $state_tid = sbac_report_get_default_state_tid();
-  if ($state_tid == 'all') {
-    $state_condition = '';
-  }
-  elseif (!empty($state_tid)) {
-    $state_condition = "AND (field_state.field_state_tid = '$state_tid')";
-  }
-  else {
-    $matches['none'] = t('Please select a state');
-    print drupal_json_encode($matches);
-    exit;
-  }
+//  $state_tid = sbac_report_get_default_state_tid();
+//  if ($state_tid == 'all') {
+//    $state_condition = '';
+//  }
+//  elseif (!empty($state_tid)) {
+//    $state_condition = "AND (field_state.field_state_tid = '$state_tid')";
+//  }
+//  else {
+//    $matches['none'] = t('Please select a state');
+//    print drupal_json_encode($matches);
+//    exit;
+//  }
 
   $sql = <<<SQL
 
@@ -196,7 +196,6 @@ function sbac_report_sne_autocomplete($string = '') {
     CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
     AND (users.status <> '0')
     AND (field_sne_member.field_sne_member_value = 1)
-    $state_condition
   )
 
   GROUP BY uid
@@ -487,6 +486,11 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
   foreach ($result as $row) {
     $item = array();
+
+    $count_items = _sbac_resource_determine_feedback($row->nid, 'qc', $uid, 1, FALSE, 1, 'set', TRUE);
+    if (count($count_items) != 2) { // two other reviewers
+      continue;
+    }
 
     // resource title
     $item[] = array(
@@ -813,6 +817,10 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
 
       $gk_slide = '<div class="slide-title">' . t('Gate-Keeping Criteria') . '</div>';
 
+      $focus = field_entity_value($node, 'field_focus');
+
+      $gk_slide = '<div class="resource-type">' . t('Resource Type: !type', array('!type' => $focus->name)) . '</div>';
+
       foreach (field_entity_value($gk, 'field_quality_set') as $count => $question) {
         $comments = field_entity_value($question, 'field_comments');
         $decision = field_entity_value($question, 'field_meets_criterion');
@@ -836,19 +844,19 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
           $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
           $qc_account = user_load($qc->uid);
 
-          $location = '';
+          $location = l(full_name($qc_account), 'user/' . $qc_account->uid);
 
           if ($states = field_entity_value($qc_account, 'field_state')) {
             $term = current($states);
-            $location = t(', State of !state', array(
+            $location .= t(', State of !state', array(
               '!state' => $term->name
             ));
           }
-
+          
           $qc_rec_slide .= '
                             <div class="qc-item">
                               <div class="qc-rec-name">
-                                ' . theme('username', array('account' => $qc_account)) . $location . '
+                                ' . $location . '
                               </div>
                               
                               <div class="qc-rec-value">
@@ -908,7 +916,9 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
         $questions_count = sizeof($questions);
         
         for ($i = 0; $i < $questions_count; $i++) {
-          $slide = '<div class="slide-title">' . t('Quality Criteria !count', array('!count' => $i + 1)) . '</div>';
+          $qc_title = variable_get('qc_' . field_entity_value($node, 'field_focus')->tid . '_criteria_' . ($i + 1) . '_title', '');
+
+          $slide = '<div class="slide-title">' . filter_text($qc_title) . '</div>';
 
           $levels = array();
           $comments = '';

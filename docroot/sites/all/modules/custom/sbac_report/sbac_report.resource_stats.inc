@@ -55,6 +55,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Export'),
     '#submit' => array('sbac_csv_report_resource_stats_export_form_submit'),
+//    '#attributes' => array('OnSubmit' => 'closeSecondaryAlert();'),
   );
 
   $form['#validate'][] = 'sbac_csv_report_resource_stats_form_validate';
@@ -106,6 +107,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
 
   if ($csv_resource_stats_result == null) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
+    $_SESSION['sbac_report']['first_time']=1;
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';
@@ -218,11 +220,12 @@ function get_resources($resource_filters) {
   $entities = $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'resource')
     ->propertyCondition('status', 1)
-    ->fieldCondition('field_focus', 'tid', array_keys($resource_filters['types']))
-    ->fieldCondition('field_status', 'tid', array_keys($resource_filters['status']))
-    ->fieldCondition('field_subject', 'tid', array_keys($resource_filters['subject']))
-    ->fieldCondition('field_grades', 'tid', array_keys($resource_filters['grade']))
-    ->fieldCondition('field_attributes', 'tid', array_keys($resource_filters['attribute']))
+    ->fieldCondition('field_focus', 'tid', $resource_filters['types'])
+    ->fieldCondition('field_', 'tid', $resource_filters['status'])
+    ->fieldCondition('field_subject', 'tid', $resource_filters['subject'])
+    ->fieldCondition('field_grades', 'tid', $resource_filters['grade'])
+    ->fieldCondition('field_attributes', 'tid', $resource_filters['attribute'])
+    ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
     ->execute();
 
   $nids = array_keys($entities['node']);

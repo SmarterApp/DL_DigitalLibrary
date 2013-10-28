@@ -24,6 +24,12 @@ function sbac_report_individual_form($form, &$form_state) {
     ),
     '#required' => TRUE,
   );
+  if (!isset($_SESSION['sbac_report']['first_time']) || !$_SESSION['sbac_report']['first_time']) {
+    $_SESSION['sbac_report']['error_message'] = '';
+  }
+  else {
+    $_SESSION['sbac_report']['first_time']=0;
+  }
 
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');

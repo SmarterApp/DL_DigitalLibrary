@@ -7,16 +7,18 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
 
   // Make sure to load this after autocomplete.js
   // @see sbac_report.csv.js
-//  $form['#attached']['js'] = array(
-//    drupal_get_path('module', 'sbac_report') .
-//    '/js/sbac_report.csv.js' => array('weight' => 99),
-//  );
+  if (match_uri('reports')) {
+    $form['#attached']['js'] = array(
+      drupal_get_path('module', 'sbac_report') .
+      '/js/sbac_report.csv.js' => array('weight' => 99),
+    );
+  }
 
   $form['state'] = array(
     '#type' => 'select',
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
-    '#multiple' => FALSE,
+    '#multiple' => TRUE,
     '#default_value' => sbac_report_get_default_state_tid(),
     '#attributes' => array('class' => array('chosen-widget')),
     '#ajax' => array(
@@ -36,17 +38,16 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $form['user_sne_slt_radio']['sne-slt-filter'] = array(
-    '#type' => 'radios',
-    '#title' => t('SNE/SLT Filter'),
-    '#description' => t('Filter results by SNE/SLT'),
-    '#default_value' => variable_get('sne-slt-filter', 2),
-    '#options' => array(
-      t('SNE'),
-      t('SLT'),
-      t('Both SNE and SLT'),
-    ),
+  $sne_slt_options = sbac_report_sne_slt_options();
 
+  $form['sne_slt_filter'] = array(
+    '#type' => 'select',
+    '#title' => t('Filter for SNE or SLT Members'),
+    '#options' => $sne_slt_options,
+    '#attributes' => array('class' => array('chosen-widget')),
+    '#multiple' => TRUE,
+    '#default_value' => sbac_report_get_default_sne_slt(),
+    '#required' => TRUE,
   );
 
   $date_options = sbac_report_date_range_options();
@@ -73,6 +74,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Export'),
     '#submit' => array('sbac_csv_report_user_activity_export_form_submit'),
+//    '#attributes' => array('OnSubmit' => 'closeSecondaryAlert();'),
   );
 
   $form['#validate'][] = 'sbac_csv_report_user_activity_form_validate';
@@ -106,7 +108,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
 
     $state_tid = $form_state['values']['state'];
     $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-    if (!is_numeric($state_tid) && $state_tid == 'all') {
+    if (!is_numeric($state_tid) && !is_array($state_tid) && $state_tid == 'all') {
       $_SESSION['sbac_report']['state']['name'] = 'all';
     }
     else {
@@ -119,7 +121,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
 
     // user groups.
     $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
-    $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne-slt-filter'];
+    $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne_slt_filter'];
   }
   # todo: set these above rather than retrieve them again.
   $state_tid1 = sbac_report_get_session_value('state', 'tid');
@@ -128,7 +130,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   $snefilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
   if (array_count_values($usergroups)==0) {
-    $_SESSION['sbac_report']['error_message'] = "<div> No data exists for the filters you have selected.  Please choose a new combination of filters and attempt your export again. </div>";
+    $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['active_tab'] = 1;
     return; // report did not contain any data.
   }
@@ -138,9 +140,12 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
 
   if ($csv_activity_report_result == null) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
+    $_SESSION['sbac_report']['first_time'] = 1;
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';
+  $_SESSION['sbac_report']['first_time'] = 0;
+
   // _cex exits and does not return.
   _cex_download($csv_activity_report_result, 'output.csv');
   // _cex exits and does not return.
@@ -219,40 +224,30 @@ function get_user_activity($users, $date_range)
   # not ready: select * from field_ass where uid = 372;
 
   # resources reviewed/rated
-  $sql = "select count(id) as count, uid from eck_review where status = 1 and uid in (%s) group by uid";
-  $user_activity['resources_reviewed'] = count_with_users_query($sql, $users);
+  $sql = "select count(id) as count, uid,created from eck_review where status = 1 and uid in (%s) and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['resources_reviewed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # resources contributed:
-  $sql = "select count(nid) as count, uid from node where type = 'resource' and uid in (%s) group by uid";
-  $user_activity['resources_contributed'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid,created from node where type = 'resource' and uid in (%s) and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['resources_contributed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
-  # GC Review accepted on contributed resource:
-  $sql = "select count(id) as count, uid from eck_feedback where
+  # Resources Viewed:
+  $sql = "select count(id) as count, uid,created from eck_feedback where
     type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1 and uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
-
-
   $user_activity['resources_viewed'] = count_with_users_query($sql, $users, $from_date, $to_date);
-  //  array(':from_date' => $from_date, ':to_date' => $to_date));
 
-  # GC Review accepted on contributed resource:
-  $sql = "select count(id) as count, uid from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
-    met_criteria = 0 and uid in (%s) and
-    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
-    BETWEEN %s AND %s group by uid";
-  $user_activity['gc_reviews_accepted_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
-//    array(':from_date' => $from_date, ':to_date' => $to_date));
-
-  # GC Reviews completed:
-  $sql = "select count(id) as count, uid from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
+  # GK Reviews completed:
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
   $user_activity['gc_reviews_completed'] = count_with_users_query($sql, $users, $from_date, $to_date);
-//    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # QC Reviews completed:
-  $sql = "select count(id) as count, uid from eck_feedback where type = 'qx' and status = 1 and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'qc' and status = 1 and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
@@ -260,30 +255,49 @@ function get_user_activity($users, $date_range)
   //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # Poster Reviews completed:
-  $sql = "select count(id) as count, uid from eck_feedback where type = 'post' and status = 1 and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'post' and status = 1 and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
   $user_activity['poster_reviews_completed'] = count_with_users_query($sql, $users, $from_date, $to_date);
   //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
+  # Resources with GK Review accepted on contributed resource:
+  $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and nid in (
+    select node_id from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
+    met_criteria = 1  and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
+    BETWEEN %s AND %s group by uid)";
+  $user_activity['gc_reviews_accepted_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
+
+  # Resources with GK Review returned on contributed resource:
+  $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and nid in (
+    select node_id from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and
+    met_criteria = 0 and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
+    BETWEEN %s AND %s group by uid)";
+  $user_activity['gc_reviews_returned_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
+
   # Contributed resources posted
-  $sql = "select count(nid) as count, uid from node where nid in(select nid from workbench_moderation_node_history where
-    state = 'published') and uid in (%s) group by uid";
-  $user_activity['contributed_resources_posted'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and nid in (select nid from workbench_moderation_node_history where
+    state = 'published') and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['contributed_resources_posted'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Contributed resources posted with distinction
-  $sql = "select count(nid) as count, uid from node where sticky = 1 and nid in(select nid from workbench_moderation_node_history
-    where state = 'published') and uid in (%s) group by uid";
-  $user_activity['contributed_resources_posted_with_distinction'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and sticky = 1 and nid in (select nid from workbench_moderation_node_history
+    where state = 'published') and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['contributed_resources_posted_with_distinction'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Contributed resources reviewed and returned
-  $sql = "select count(nid) as count, uid from node where nid in( select nid from workbench_moderation_node_history where
-  state = 'rejected') and uid in (%s) group by uid";
-  $user_activity['contributed_resources_reviewed_and_returned'] = count_with_users_query($sql, $users);
+  $sql = "select count(nid) as count, uid, created from node where uid in (%s) and nid in (select nid from workbench_moderation_node_history where
+  state = 'rejected')  and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['contributed_resources_reviewed_and_returned'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # terms of service.
-  $sql = "SELECT la.uid,la.accepted as 'tos-accepted',lc.version as 'tos-version',lc.revision as 'tos-revision',lc.date as 'tos-revision-date'
+  $sql = "SELECT la.uid,la.accepted as 'tos_accepted',lc.version as 'tos_version',lc.revision as 'tos_revision',lc.date as 'tos_revision_date'
           FROM legal_conditions as lc join legal_accepted as la on lc.version=la.version
           WHERE uid in (%s)";
   $sql = sprintf($sql,$users);
@@ -320,7 +334,9 @@ function create_user_activity_from_data($user_activity)
   foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey[1].$separator; }
   foreach ($stringkeys as $stringkey) { $titles .= $stringkey[1].$separator; }
   foreach ($uidcountkeys as $uidcountkey) { $titles .= $uidcountkey[1].$separator; }
-  foreach ($toskeys as $toskey) { $titles .= $toskey[1].$separator; }
+  foreach ($toskeys as $toskey) {
+    $titles .= $toskey[1].$separator;
+  }
   $titles = substr($titles, 0, -1);
   $titles .= $line_ending;
 
@@ -352,8 +368,14 @@ function create_user_activity_from_data($user_activity)
     foreach ($uidcountkeys as $uidcountkey) {
       $row .= $user_activity[$uidcountkey[0]][$uid]->count . $separator;
     }
+    $param = array();
+    $param['und'] = array();
+    $param['und'][0] = array();
     foreach ($toskeys as $toskey) {
-      $row .=  $user_activity['tos'][$uid][$toskey[0]] . $separator;
+      $is_date = (array_key_exists(2,$toskey) ? $toskey[2]=='date' : false);
+      $param['und'][0]['value'] = $user_activity['tos'][$uid]->{$toskey[0]};
+      format_value_field($row, $param, $separator, $encloseer,
+        $subseparator, $quote_arrays, $subquote, $is_date);
     }
 
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
@@ -363,7 +385,7 @@ function create_user_activity_from_data($user_activity)
   return $csv;
 }
 
-function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, $toskeys)
+function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys)
 {
   // loop through all values and make sure 0's and '' are used as placeholders for missing values.
 //  $titles =  'first-name, last-name, state, district,school, grade,subject, school-population, email,'.
@@ -379,7 +401,9 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($fieldkeys, array('field_last_name', 'Last Name'));
   array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
   array_push($fieldkeys, array('field_slt_member', 'Is SLT Member'));
+  array_push($fieldkeys, array('field_school_name', 'School'));
   array_push($fieldkeys, array('field_district_name', 'District'));
+  array_push($foreignidkeys, array('field_position', 'Title'));
   array_push($foreignidkeys, array('field_state', 'State'));
   array_push($foreignidkeys, array('field_grade_level_s_', 'Grade(s)'));
   array_push($foreignidkeys, array('field_subject_s_', 'Subject(s)'));
@@ -391,20 +415,21 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($stringkeys, array('login','Last Login','date'));
 
   array_push($uidcountkeys, array('resources_viewed','Resources Viewed'));
-  array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed'));
+  array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed/Rated'));
   array_push($uidcountkeys, array('resources_contributed', 'Resources Contributed'));
   array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contributed Resources'));
+  array_push($uidcountkeys, array('gc_reviews_returned_on_contributed_resources', 'GK Reviews Returned on Contributed Resources'));
   array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
   array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
-  array_push($uidcountkeys, array('poster_reviews_completed', 'Poster Reviews Completed'));
+  array_push($uidcountkeys, array('poster_reviews_completed', 'Posting Reviews Completed'));
   array_push($uidcountkeys, array('contributed_resources_posted', 'Contributed Resources Posted'));
   array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', 'Contributed Resources Posted with Distinction'));
   array_push($uidcountkeys, array('contributed_resources_reviewed_and_returned', 'Contributed Resources Reviewed and Returned'));
 
-  array_push($toskeys, array('tos-accepted', 'Date TOS Accepted','date'));
-  array_push($toskeys, array('tos-version', 'TOS Version'));
-  array_push($toskeys, array('tos-revision', 'TOS Revision'));
-  array_push($toskeys, array('tos-revision-date', 'Date of TOS Revision','date'));
+  array_push($toskeys, array('tos_accepted', 'Date of Terms of Service','date'));
+  array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
+  //array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
+  array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version','date'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';
@@ -434,12 +459,23 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
         $user_activity[$uidcountkey[0]][$uid]->uid = $uid;
       }
     }
-    if (is_null($user_activity['tos'][$uid])) {
-      $user_activity['tos'][$uid]['uid'] = $uid;
-      foreach ($toskeys as $toskey) {
-        $user_activity['tos'][$uid][$toskey[0]] = "";
+
+    foreach ($toskeys as $toskey) {
+      if (is_null($user_activity['tos'][$uid])) {
+        $user_activity['tos'][$uid]->tos_accepted = '';
+        $user_activity['tos'][$uid]->tos_version = '';
+        $user_activity['tos'][$uid]->tos_revision = '';
+        $user_activity['tos'][$uid]->tos_revision_date = '';
+        $user_activity['tos'][$uid]->uid = $uid;
       }
     }
+
+    foreach ($toskeys as $toskey) {
+      if (is_null($user_activity['tos'][$uid]->{$toskey[0]})) {
+        $user_activity['tos'][$uid]->{$toskey[0]} = '';
+      }
+    }
+
   }
 
   // have all the tids, now get the term data and set the report values:
@@ -461,7 +497,6 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
     }
   }
 }
-
 
 function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_slt_filter)
 {
@@ -487,14 +522,44 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
 
 function filter_users_by_sne_slt($user_profiles, $sne_slt_filter)
 {
-  // sne filter: 0=>sne, 1=>slt, 2=> both
+  // sne filter: 0=>neither, 1=>sne, 2=>slt, 2=>both
   $filtered_user_profiles = array();
-  if ($sne_slt_filter == 2) { // both, nothing to filter.
-    return $user_profiles;
-  }
+// no all condition:
+//  if (in_array(4, $sne_slt_filter)) { // both, nothing to filter.
+//    return $user_profiles;
+//  }
+  $look_for_both_sne_and_slt = in_array(3, $sne_slt_filter);
+  $look_for_slt = in_array(2, $sne_slt_filter);
+  $look_for_sne = in_array(1, $sne_slt_filter);
+  $look_for_neither = in_array(0, $sne_slt_filter);
+
   foreach ($user_profiles as $user_profile) {
-    if (($sne_slt_filter == 0 && $user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') ||
-      ($sne_slt_filter == 1 && $user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')) {
+    if ($look_for_both_sne_and_slt &&
+        ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
+        ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
+       )
+    { // both
+      $filtered_user_profiles[$user_profile->uid] = $user_profile;
+    }
+    else if ($look_for_slt &&
+      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '0') &&
+      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
+    )
+    { // slt only.
+      $filtered_user_profiles[$user_profile->uid] = $user_profile;
+    }
+    else if ($look_for_sne &&
+      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
+      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '0')
+    )
+    { // sne only.
+      $filtered_user_profiles[$user_profile->uid] = $user_profile;
+    }
+    else if ($look_for_neither &&
+      ((bool)!$user_profile->field_sne_member || $user_profile->field_sne_member['und'][0]['value'] == '0') &&
+      ((bool)!$user_profile->field_slt_member || $user_profile->field_slt_member['und'][0]['value'] == '0')
+      )
+    { // niether.
       $filtered_user_profiles[$user_profile->uid] = $user_profile;
     }
   }
@@ -505,12 +570,12 @@ function filter_users_by_state($user_profiles, $state_tid)
 {
   // sne filter: 0=>sne, 1=>slt, 2=> both
   $filtered_user_profiles = array();
-  if ($state_tid == 'all') { // both, nothing to filter.
+  if ($state_tid['all']) { // both, nothing to filter.
     return $user_profiles;
   }
   foreach ($user_profiles as $user_profile) {
     if ($user_profile->field_state['und'] &&
-      $user_profile->field_state['und'][0]['value'] == $state_tid) {
+      in_array($user_profile->field_state['und'][0]['tid'],$state_tid)) {
       $filtered_user_profiles[$user_profile->uid] = $user_profile;
     }
   }

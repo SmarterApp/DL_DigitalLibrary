@@ -159,6 +159,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -268,6 +269,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -698,6 +700,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -807,6 +810,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -1130,6 +1134,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -1239,6 +1244,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -1548,6 +1554,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -1657,6 +1664,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -2217,6 +2225,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -2326,6 +2335,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -3035,6 +3045,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['alter']['max_length'] = '140';
   $handler->display->display_options['fields']['field_alt_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -3144,6 +3155,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['element_type'] = 'p';
   $handler->display->display_options['fields']['field_alt_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_alt_body']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content revision: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node_revision';
@@ -3234,6 +3246,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['field'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['label'] = 'Sticky';
+  $handler->display->display_options['fields']['field_alt_body']['type'] = 'text_plain';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';

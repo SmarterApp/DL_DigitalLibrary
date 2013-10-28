@@ -251,7 +251,7 @@
 .feedback-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .form-radios .form-item,
 .feedback-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-radios .form-radios .form-item {
   display: inline;
-  margin-right: .5em;
+  margin-right: 0;
 }
 /* line 229, ../sass/feedback.scss */
 .feedback-wrap .field-name-field-review-set .field-multiple-table tbody tr td .criteria-set-radios .desc,
