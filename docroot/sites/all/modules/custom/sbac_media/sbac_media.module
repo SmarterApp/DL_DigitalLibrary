@@ -717,7 +717,14 @@ function sbac_media_workbench_moderation_transition($node, $previous_state, $new
     // Create a zip file of all the contents.
     $zip = new ZipArchive;
     $archive_uri = 'public://resources/';
-    $filename = 'resource_' . $node->nid . '_' . $_SERVER['REQUEST_TIME'] . '.zip';
+    if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+      $prepend = $_ENV['AH_SITE_ENVIRONMENT'];
+    }
+    else {
+      $prepend = 'local';
+    }
+
+    $filename = 'resource_' . $node->nid . '_' . $_SERVER['REQUEST_TIME'] . '.' . $prepend . '.zip';
     $archive_uri .= $filename;
     $real_path = drupal_realpath($archive_uri);
     $open = $zip->open($real_path, ZipArchive::CREATE);
