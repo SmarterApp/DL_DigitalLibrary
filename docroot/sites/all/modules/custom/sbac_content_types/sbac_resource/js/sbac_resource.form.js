@@ -153,6 +153,10 @@
         }
       });
 
+      $('#resource-help-box .backButton').click(function() {
+        isDirty = false;
+      });
+
       $(window).bind('beforeunload', function () {
         if (isDirty) {
           return 'You will lose all unsaved changes made to this page.';
