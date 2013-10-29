@@ -36,6 +36,10 @@ Drupal.behaviors.sections = {
     if (hash == '#profile-notifications') {
       Drupal.behaviors.sbac_taskit.mark_notifications_read();
     }
+    else if (hash == '#review-gk') {
+      $('section.section-1').css('width', '100%');
+      Feedback.about.init_flexslider();
+    }
 
     var tab = $('a[href=' + hash + ']');
     if (tab.length) {
