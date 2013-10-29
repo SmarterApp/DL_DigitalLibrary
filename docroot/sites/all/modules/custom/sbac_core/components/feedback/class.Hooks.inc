@@ -671,6 +671,8 @@ class Hooks extends \devtools\Hooks {
     if ($node = node_load($review->node_id)) {
       watchdog('sbac', 'feedback: got node: ' . $node->workbench_moderation['current']->state);
 
+      dsmm($node);
+
       // if the node isn't in review yet, set it to being_reviewed
       if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
         workbench_moderation_moderate($node, 'being_reviewed');
