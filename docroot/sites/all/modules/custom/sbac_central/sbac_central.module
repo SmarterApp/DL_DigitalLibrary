@@ -55,9 +55,9 @@ function sbac_central_fix_broken_ccss() {
       if (isset($node->field_education_alignment['und'][0])) {
         $logmsg .= "Selected node->title: " . $node->title . " node->nid: " . $node->nid . "\n";
         $tid = $node->field_education_alignment['und'][0]['tid'];
-
         db_set_active('sbac_prod_old');
         $sql2 = "SELECT * FROM {taxonomy_term_data} WHERE tid = :tid AND vid = :vid";
+        // only select a TID with the given VID, to ensure its the correct vocab.
         $results2 = db_query($sql2, array(':tid' => $tid, ':vid' => $vid))->fetchAssoc();
         if ($results2) {
           $logmsg .= "Selected term id from old db (tid = " . $tid . ")\n";
