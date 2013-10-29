@@ -579,6 +579,8 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_entity_insert().
    */
   function hook_entity_insert($entity, $type) {
+    watchdog('sbac', 'feedback: entity_insert');
+
     if ($type == 'feedback') {
       $this->_check_resource_review_state($entity);
     }
@@ -588,6 +590,8 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_entity_update().
    */
   function hook_entity_update($entity, $type) {
+    watchdog('sbac', 'feedback: entity_update');
+
     if ($type == 'feedback') {
       $this->_check_resource_review_state($entity);
     }
@@ -663,10 +667,14 @@ class Hooks extends \devtools\Hooks {
   ----------------------------------------------------------------------------*/
 
   protected function _check_resource_review_state($review) {
+    watchdog('sbac', 'feedback: ' . __FUNCTION__);
     if ($node = node_load($review->node_id)) {
+      watchdog('sbac', 'feedback: got node: ' . $node->workbench_moderation['current']->state);
+
       // if the node isn't in review yet, set it to being_reviewed
       if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
         workbench_moderation_moderate($node, 'being_reviewed');
+        watchdog('sbac', 'set correct status');
 
         // rebuild permissions
         node_access_acquire_grants($node, TRUE);
