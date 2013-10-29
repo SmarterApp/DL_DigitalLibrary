@@ -1264,6 +1264,7 @@ function sbac_resource_node_access_records($node) {
         'grant_delete' => 0,
         'priority' => 0,
       );
+
       return $grants;
     }
   }

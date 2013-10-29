@@ -451,7 +451,7 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
   $form['field_file_container']['field_file_upload_button'] = array(
     '#type' => 'submit',
     '#value' => 'Upload (100MB Max)',
-    '#submit' => array('sbac_media_widget_form_element_upload'),
+    // '#submit' => array('sbac_media_widget_form_element_upload'),
     '#sbac_embed_video' => FALSE,
     '#ajax'=> array(
       'callback'=>'sbac_media_widget_form_element_upload',
@@ -656,7 +656,10 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     if ($writable) {
       $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), $directory, $replace = FILE_EXISTS_REPLACE);
-      if ($file && !$form_state['executed']) {
+
+      // Yuriy: I've removed the and'ed !$form_state['executed'] condition because it
+      // was preventing file uploads, and I don't see a reason for it to be here. 
+      if ($file) {
         $file->status = FILE_STATUS_PERMANENT;
         file_save($file);
 
