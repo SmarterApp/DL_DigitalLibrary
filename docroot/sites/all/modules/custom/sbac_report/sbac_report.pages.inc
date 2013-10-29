@@ -157,21 +157,27 @@ function sbac_report_individual() {
  * Ajax for the autocomplete SNE textfield.
  */
 function sbac_report_sne_autocomplete($string = '') {
+  $args = array(
+    ':str' => '%' . $string . '%',
+  );
+
   // Get the selected state if there's any.
   $matches = array();
 
-//  $state_tid = sbac_report_get_default_state_tid();
-//  if ($state_tid == 'all') {
-//    $state_condition = '';
-//  }
-//  elseif (!empty($state_tid)) {
-//    $state_condition = "AND (field_state.field_state_tid = '$state_tid')";
-//  }
-//  else {
-//    $matches['none'] = t('Please select a state');
-//    print drupal_json_encode($matches);
-//    exit;
-//  }
+  $state_condition = '';
+  $state_tid = sbac_report_get_default_state_tid();
+  if ($state_tid == 'all') {
+    $state_condition = '';
+  }
+  elseif (!empty($state_tid)) {
+    $state_condition = "AND (field_state.field_state_tid = :state_tid)";
+    $args[':state_tid'] = $state_tid;
+  }
+  else {
+    $matches['none'] = t('Please select a state');
+    print drupal_json_encode($matches);
+    exit;
+  }
 
   $sql = <<<SQL
 
@@ -179,23 +185,24 @@ function sbac_report_sne_autocomplete($string = '') {
     users.name AS name,
     field_last_name.field_last_name_value AS 'last_name',
     field_first_name.field_first_name_value AS 'first_name'
+    
   FROM {users} users
 
+  INNER JOIN {field_data_field_state} AS field_state
+    ON users.uid = field_state.entity_id AND field_state.entity_type = 'user' AND field_state.deleted = 0
+
   LEFT JOIN {field_data_field_last_name} AS field_last_name
-    ON users.uid = field_last_name.entity_id AND (field_last_name.entity_type = 'user' AND field_last_name.deleted = '0')
+    ON users.uid = field_last_name.entity_id AND field_last_name.entity_type = 'user' AND field_last_name.deleted = 0
 
   LEFT JOIN {field_data_field_first_name} AS field_first_name
-    ON users.uid = field_first_name.entity_id AND (field_first_name.entity_type = 'user' AND field_first_name.deleted = '0')
-
-  LEFT JOIN {field_data_field_state} AS field_state
-    ON users.uid = field_state.entity_id AND (field_state.entity_type = 'user' AND field_state.deleted = '0')
+    ON users.uid = field_first_name.entity_id AND field_first_name.entity_type = 'user' AND field_first_name.deleted = 0
 
   LEFT JOIN {field_data_field_sne_member} AS field_sne_member
-    ON users.uid = field_sne_member.entity_id AND (field_sne_member.entity_type = 'user' AND field_sne_member.deleted = '0')
+    ON users.uid = field_sne_member.entity_id AND field_sne_member.entity_type = 'user' AND field_sne_member.deleted = 0
 
   WHERE (
     CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
-    AND (users.status <> '0')
+    AND (users.status <> 0)
     AND (field_sne_member.field_sne_member_value = 1)
     $state_condition
   )
@@ -206,11 +213,7 @@ function sbac_report_sne_autocomplete($string = '') {
 
 SQL;
 
-  $result = db_query($sql,
-    array(
-      ':str' => '%' . $string . '%',
-    )
-  );
+  $result = db_query($sql, $args);
 
   foreach ($result as $record) {
     $first_name = $record->first_name;
