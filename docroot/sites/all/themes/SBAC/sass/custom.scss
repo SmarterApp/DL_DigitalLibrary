@@ -1196,8 +1196,9 @@ a.tabledrag-handle .handle {
         bottom: 0;
       }
 
-      &:last-child:after {
+      &:last-child .field:after {
         content: " ";
+        visibility: hidden;
       }
     }
 
