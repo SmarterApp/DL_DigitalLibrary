@@ -94,7 +94,6 @@ function sbac_resource_my_resources_page() {
   return theme('my_resources', array('my_resources_output' => $my_resources_output, 'no_results' => $no_results));
 }
 
-
 /**
  * Menu Callback.
  *
