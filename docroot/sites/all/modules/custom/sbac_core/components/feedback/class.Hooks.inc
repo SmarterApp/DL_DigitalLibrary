@@ -668,19 +668,19 @@ class Hooks extends \devtools\Hooks {
 
   protected function _check_resource_review_state($review) {
     watchdog('sbac', 'feedback: ' . __FUNCTION__);
-    if ($node = node_load($review->node_id)) {
-      watchdog('sbac', 'feedback: got node: ' . $node->workbench_moderation['current']->state);
 
-      dsmm($node);
+    $query = "SELECT state FROM workbench_moderation_node_history WHERE nid = :nid AND current = 1 ORDER BY vid DESC";
+    $state = db_query($query, array(
+      ':nid' => $review->node_id
+    ))->fetchField();
 
-      // if the node isn't in review yet, set it to being_reviewed
-      if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
-        workbench_moderation_moderate($node, 'being_reviewed');
-        watchdog('sbac', 'set correct status');
+    watchdog('sbac', 'state: ' . $state);
 
-        // rebuild permissions
-        node_access_acquire_grants($node, TRUE);
-      }
+    if ($state == 'needs_review' && $node = node_load($review->node_id)) {
+      workbench_moderation_moderate($node, 'being_reviewed');
+
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
     }
   }  
 }
