@@ -1187,9 +1187,13 @@ a.tabledrag-handle .handle {
     li {
       display: inline-block;
       margin-right: 8px;
+      position:relative;
 
-      &:after {
+      .field:after {
         content: ",";
+        position:absolute;
+        right: -4px;
+        bottom: 0;
       }
 
       &:last-child:after {
@@ -1205,7 +1209,7 @@ a.tabledrag-handle .handle {
 
   .field-name-field-alignment-term {
     li {
-      line-height: 0;
+      //line-height: 0;
     }
   }
 }
@@ -2384,7 +2388,7 @@ a.tabledrag-handle .handle {
       padding: 20px;
       position: absolute;
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-      top: 16px;
+      top: 30px;
       transition-property: opacity;
       transition-duration: 500ms;
       -webkit-transition-property: opacity;
