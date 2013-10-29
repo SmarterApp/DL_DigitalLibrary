@@ -348,9 +348,6 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   if ($active_tab != 'edit-group_advanced') {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
-
-    // rebuild permissions
-    node_access_acquire_grants($form_state['node'], TRUE);
   }
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
   // Clear drupal messages.

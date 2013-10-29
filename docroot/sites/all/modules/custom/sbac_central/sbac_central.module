@@ -27,23 +27,37 @@ function sbac_central_menu() {
  * Script to fix broken ccss. yay...
  */
 function sbac_central_fix_broken_ccss() {
-  $LOGFILE = "/tmp/sbac_ccss_migration.". date("Ymd-His", time()) .".log";
-  $logmsg = "Starting ccss migraiton\n";
   ini_set('max_execution_time', 300);
-
-  $sql = "SELECT n.nid AS nid FROM {node} n WHERE n.type = 'alignment' AND n.changed <= 1382943600";
-  $result = db_query($sql);
   $vid = 11; //same across all environments.
 
+  if (isset($_GET['debug']) && $_GET['debug'] == 1) {
+    $debug = TRUE;
+  }
+  else {
+    $debug = FALSE;
+  }
+
+  $LOGFILE = "/tmp/sbac_ccss_migration.". date("Ymd-His", time()) .".log";
+  $logmsg = "Starting ccss migraiton\n";
+  if ($debug) {
+    $logmsg .= "Operating in debug mode\n";
+  }
+  else {
+    $logmsg .= "Operating in live mode\n";
+  }
+
+  // only get items up till oct.28th (before the push).
+  $sql = "SELECT n.nid AS nid FROM {node} n WHERE n.type = 'alignment' AND n.changed <= 1382943600";
+  $result = db_query($sql);
   foreach ($result as $row) {
     $node = node_load($row->nid);
     if ($node) {
       if (isset($node->field_education_alignment['und'][0])) {
         $logmsg .= "Selected node->title: " . $node->title . " node->nid: " . $node->nid . "\n";
         $tid = $node->field_education_alignment['und'][0]['tid'];
-
         db_set_active('sbac_prod_old');
         $sql2 = "SELECT * FROM {taxonomy_term_data} WHERE tid = :tid AND vid = :vid";
+        // only select a TID with the given VID, to ensure its the correct vocab.
         $results2 = db_query($sql2, array(':tid' => $tid, ':vid' => $vid))->fetchAssoc();
         if ($results2) {
           $logmsg .= "Selected term id from old db (tid = " . $tid . ")\n";
@@ -73,9 +87,14 @@ function sbac_central_fix_broken_ccss() {
 
           if ($results3) {
             //This is the new tid.
-            $logmsg .= "Saved new tid (" . $results3['tid'] . ") to the node\n";
-            $node->field_education_alignment['und'][0]['tid'] = $results3['tid'];
-            node_save($node);
+            if ($debug) {
+              $logmsg .= "Did not save tid (" . $results3['tid'] . "), operating in debug mode\n";
+            }
+            else {
+              $logmsg .= "Saved new tid (" . $results3['tid'] . ") to the node\n";
+              $node->field_education_alignment['und'][0]['tid'] = $results3['tid'];
+              node_save($node);
+            }
           }
           else {
             $logmsg .= "Unable to select term id from new db with the following info:\n";

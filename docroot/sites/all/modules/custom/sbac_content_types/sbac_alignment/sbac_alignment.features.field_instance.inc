@@ -172,10 +172,11 @@ function sbac_alignment_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
+        'apply_chosen' => 0,
         'label_help_description' => '',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
-      'type' => 'options_buttons',
+      'type' => 'options_select',
       'weight' => 1,
     ),
   );
