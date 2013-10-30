@@ -16,8 +16,6 @@ class Hooks extends \devtools\Hooks {
       $css = $libraries['chosen']['css']['sites/all/libraries/chosen/chosen.css'];
       $libraries['chosen']['css']['sites/all/libraries/chosen/chosen/chosen.css'] = $css;
       unset($libraries['chosen']['css']['sites/all/libraries/chosen/chosen.css']);
-
-      // dsmm($libraries);
     }
   }
 
