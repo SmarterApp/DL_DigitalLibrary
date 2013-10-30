@@ -217,11 +217,14 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
       $form_state['values']['workbench_moderation_state_new'] = 'draft';
     }
   }
+
+  // Set the HTML5 flag.
+  if ($form_state['html5']) {
+    $form_state['values']['field_html5']['und'][0]['value'] = 1;
+  }
+
   // save the node.
   node_form_submit($form, $form_state);
-
-  // rebuild permissions
-  node_access_acquire_grants($form_state['node'], TRUE);
 
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
@@ -352,6 +355,12 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   sbac_resource_clean_text($form_state);
   // Set path alias
   $form_state['values']['path']['pathauto'] = TRUE;
+
+  // Set the HTML5 flag.
+  if ($form_state['html5']) {
+    $form_state['values']['field_html5']['und'][0]['value'] = 1;
+  }
+
   if ($active_tab != 'edit-group_advanced') {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);

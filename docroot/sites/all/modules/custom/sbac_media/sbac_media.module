@@ -325,79 +325,76 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
   }
 
   // Attach JS / CSS.
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
   $form['#attached']['js'][] = '//code.jquery.com/ui/1.10.3/jquery-ui.js';
   $form['#attached']['css'][] = '//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css';
   $form['#attached']['css'][] = drupal_get_path('module', 'sbac_media') . '/css/sbac_media.css';
 
+  $html5 = FALSE;
   if ($form_state['html5']) {
-    _sbac_media_html5_widget($form, $form_state);
+    $html5 = TRUE;
   }
-  else {
-    _sbac_media_materials_widget($form, $form_state);
+
+  if ($html5) {
+    $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.html5.js';
+
+    // Content Module Container.
+    $form['field_content_module_container']['#tree'] = TRUE;
+    $form['field_content_module_container'] = array(
+      '#prefix'=>'<div id="sbac-content-module-container">',
+      '#suffix'=>'</div>',
+    );
+
+    // Content Module Description.
+    $form['field_content_module_container']['field_content_module_summary'] = array(
+      '#type' => 'item',
+      '#title' => t('Add Content Module') . ' ' . theme('form_required_marker'),
+      '#markup' => '<p>'.t('This is the content module with which you want users to interact. You can add a HTML5 captivate package file with a zip or gz extension.').'</p>',
+      '#weight' => -101,
+    );
+
+    // Content Module Upload Picker.
+    $form['field_content_module_container']['field_content_module_picker'] = array(
+      '#type' => 'file',
+      '#title' => t('Upload2'),
+      '#size' => 22,
+      '#theme_wrappers' => array(),
+    );
+
+    // Content Module Upload Button.
+    $form['field_content_module_container']['field_content_module_upload'] = array(
+      '#type' => 'submit',
+      '#value' => 'Upload (25MB Max)',
+      '#sbac_embed_video' => FALSE,
+      '#ajax'=> array(
+        'callback'=>'sbac_media_html5_element_upload',
+        'wrapper'=> 'sbac-content-module-container',
+        'method'=> 'replace',
+        'effect'=> 'fade',
+      ),
+    );
+
+    $form['#group_children']['field_content_module_container'] = 'group_materials';
   }
-}
-
-function _sbac_media_html5_widget(&$form, &$form_state) {
-  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.html5.js';
-
-  // Content Module Container.
-  $form['field_content_module_container']['#tree'] = TRUE;
-  $form['field_content_module_container'] = array(
-    '#prefix'=>'<div id="sbac-content-module-container">',
-    '#suffix'=>'</div>',
-  );
-
-  // Content Module Description.
-  $form['field_content_module_container']['field_content_module_summary'] = array(
-    '#type' => 'item',
-    '#title' => t('Add Content Module') . ' ' . theme('form_required_marker'),
-    '#markup' => '<p>'.t('This is the content module with which you want users to interact. You can add a HTML5 captivate package file with a zip or gz extension.').'</p>',
-    '#weight' => -101,
-  );
-
-  $form['field_content_module_container']['field_content_module_picker'] = array(
-    '#type' => 'file',
-    '#title' => t('Upload2'),
-    '#size' => 22,
-    '#theme_wrappers' => array(),
-  );
-
-  $form['field_content_module_container']['field_content_module_upload'] = array(
-    '#type' => 'submit',
-    '#value' => 'Upload (25MB Max)',
-    '#sbac_embed_video' => FALSE,
-    '#ajax'=> array(
-      'callback'=>'sbac_media_widget_form_element_upload',
-      'wrapper'=> 'sbac-field-file-container',
-      'method'=> 'replace',
-      'effect'=> 'fade',
-    ),
-  );
-
-  $form['#after_build'][] = 'sbac_media_after_build_form';
-  $form['#group_children']['field_content_module_container'] = 'group_materials';
-}
-
-/**
- * Materials widget / form element.
- *
- * @param $form
- * @param $form_state
- */
-function _sbac_media_materials_widget(&$form, &$form_state) {
-  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
 
   $form['field_file_container']['#tree'] = TRUE;
   $form['field_file_container'] = array(
-    '#prefix'=>'<div id="sbac-content-module-container">',
+    '#prefix'=>'<div id="sbac-field-file-container">',
     '#suffix'=>'</div>',
   );
+
+  $summary_title = 'Add Materials';
+  $summary_description = 'You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.';
+  if ($html5) {
+    $summary_title = 'Add Secondary Module Materials';
+    $summary_description = 'These will be available in addition to module content. You can add a combination of videos, images and documents to add to this module.';
+  }
 
   // Resource Summary.
   $form['field_file_container']['field_file_summary'] = array(
     '#type' => 'item',
-    '#title' => t('Add Materials') . ' ' . theme('form_required_marker'),
-    '#markup' => '<p>'.t('You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.').'</p>',
+    '#title' => t($summary_title) . ' ' . theme('form_required_marker'),
+    '#markup' => '<p>'.t($summary_description).'</p>',
     '#weight' => -101,
     '#prefix' => '<div class="media-table">',
   );
@@ -714,7 +711,7 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
     $directory = "private://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     if ($writable) {
-      $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), $directory, $replace = FILE_EXISTS_REPLACE);
+      $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), $directory, FILE_EXISTS_REPLACE);
 
       // Yuriy: I've removed the and'ed !$form_state['executed'] condition because it
       // was preventing file uploads, and I don't see a reason for it to be here. 
@@ -752,6 +749,88 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   $form_state['node']->document = $media_items;
 
   return $form['field_file_container'];
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_media_html5_element_upload($form, $form_state) {
+  if (form_get_errors()) {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    $output = _sbac_media_create_list($media_items);
+    $form['field_file_container']['materials']['#markup'] = $output;
+    $form['field_file_container']['materials']['#weight'] = -100;
+    return $form['field_file_container'];
+  }
+
+  $allowed_file_types = array('zip');
+  $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
+  $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+  if ($writable) {
+    // File is temporarily saved.
+    $file = file_save_upload('field_content_module_picker', array('file_validate_extensions' => $allowed_file_types), $directory, FILE_EXISTS_REPLACE);
+    if ($file) {
+      // Open the zip and save the file.
+      $real_path = drupal_realpath($file->uri);
+      $zip = new ZipArchive;
+      if ($zip->open($real_path) === TRUE) {
+        $saved = $zip->extractTo($directory);
+        $zip->close();
+      }
+
+      // Check that the zip saved.
+      $no_errors = FALSE;
+      if (file_exists($real_path)) {
+        $zip_file_path = drupal_realpath($directory);
+        $file_data = pathinfo($real_path);
+        if ($file_data) {
+          $zip_archive_path = $zip_file_path . '/' . $file_data['basename'];
+          $zip_contents_path = $zip_file_path . '/' . $file_data['filename'];
+          // Check that the zip contents saved.
+          if (file_exists($zip_contents_path)) {
+            //Check the file contents.
+            $index_html_path = $zip_contents_path . '/index.html';
+            $dlcomponents_path = $zip_contents_path . '/dlcomponents/coverpage.html';
+            if (file_exists($index_html_path) && file_exists($dlcomponents_path)) {
+              // File contents do exists, save file correctly
+              $var = '';
+              $no_errors = TRUE;
+            }
+            else {
+              // File content not there, create errors and delete temporary files (zip, zip contents, and file record).
+              form_set_error('field_content_module_picker', t('The selected file ' . $file->filename . ' cannot be uploaded as content module. It is not a valid module file. Only files with a zip extension are allowed for content module upload.'));
+              unlink($zip_contents_path);
+              unlink($zip_archive_path);
+              file_delete($file);
+            }
+          }
+        }
+      }
+
+      if ($no_errors) {
+        $file->status = FILE_STATUS_PERMANENT;
+        file_save($file);
+        if (isset($form_state['node'])) {
+          $node = $form_state['node'];
+          $file_url = drupal_realpath($file->uri);
+          $file_hash = md5_file($file_url);
+
+          // Create the media item, duplicates get checked later.
+          $media = new stdClass;
+          $media->type = 'media';
+          $media->fid = $file->fid;
+          $media->nid = $node->nid;
+          $media->filename = $file->filename;
+          $media->file_size = $file->filesize;
+          $media->file_hash = $file_hash;
+          $media->weight = 100;
+          entity_save('media', $media);
+        }
+      }
+    }
+  }
 }
 
 /**
