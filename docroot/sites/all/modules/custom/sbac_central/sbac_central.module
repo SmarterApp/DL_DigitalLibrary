@@ -27,8 +27,8 @@ function sbac_central_menu() {
  * Script to fix broken ccss. yay...
  */
 function sbac_central_fix_broken_ccss() {
-  ini_set('max_execution_time', 600);
-  ini_set('memory_limit', '512M');
+  ini_set('max_execution_time', 900);
+  ini_set('memory_limit', '1024M');
   $vid = 11; //same across all environments.
 
   if (isset($_GET['debug']) && $_GET['debug'] == 1) {
