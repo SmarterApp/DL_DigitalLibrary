@@ -133,7 +133,7 @@ function sbac_resource_resource_review_page() {
 function sbac_resource_no_search_results($string = '') {
   $output = '';
   if ($string) {
-    if (strlen($string < 3)) {
+    if (strlen($string) < 3) {
       $output .= '<h3>' . t('You must enter 3 characters or more.') . '</h3>';
     }
     else {
