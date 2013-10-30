@@ -319,18 +319,77 @@ function sbac_media_create_embed_url($media) {
  * @param $form
  */
 function sbac_media_widget_form_element(&$form, &$form_state) {
+  // Prevent form element from firing js.
   if (isset($form_state['build_info']['args'][1]) && $form_state['build_info']['args'][1] == 'edit_tags') {
     return;
   }
 
-  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
+  // Attach JS / CSS.
   $form['#attached']['js'][] = '//code.jquery.com/ui/1.10.3/jquery-ui.js';
   $form['#attached']['css'][] = '//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css';
   $form['#attached']['css'][] = drupal_get_path('module', 'sbac_media') . '/css/sbac_media.css';
 
+  if ($form_state['html5']) {
+    _sbac_media_html5_widget($form, $form_state);
+  }
+  else {
+    _sbac_media_materials_widget($form, $form_state);
+  }
+}
+
+function _sbac_media_html5_widget(&$form, &$form_state) {
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.html5.js';
+
+  // Content Module Container.
+  $form['field_content_module_container']['#tree'] = TRUE;
+  $form['field_content_module_container'] = array(
+    '#prefix'=>'<div id="sbac-content-module-container">',
+    '#suffix'=>'</div>',
+  );
+
+  // Content Module Description.
+  $form['field_content_module_container']['field_content_module_summary'] = array(
+    '#type' => 'item',
+    '#title' => t('Add Content Module') . ' ' . theme('form_required_marker'),
+    '#markup' => '<p>'.t('This is the content module with which you want users to interact. You can add a HTML5 captivate package file with a zip or gz extension.').'</p>',
+    '#weight' => -101,
+  );
+
+  $form['field_content_module_container']['field_content_module_picker'] = array(
+    '#type' => 'file',
+    '#title' => t('Upload2'),
+    '#size' => 22,
+    '#theme_wrappers' => array(),
+  );
+
+  $form['field_content_module_container']['field_content_module_upload'] = array(
+    '#type' => 'submit',
+    '#value' => 'Upload (25MB Max)',
+    '#sbac_embed_video' => FALSE,
+    '#ajax'=> array(
+      'callback'=>'sbac_media_widget_form_element_upload',
+      'wrapper'=> 'sbac-field-file-container',
+      'method'=> 'replace',
+      'effect'=> 'fade',
+    ),
+  );
+
+  $form['#after_build'][] = 'sbac_media_after_build_form';
+  $form['#group_children']['field_content_module_container'] = 'group_materials';
+}
+
+/**
+ * Materials widget / form element.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_media_materials_widget(&$form, &$form_state) {
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
+
   $form['field_file_container']['#tree'] = TRUE;
   $form['field_file_container'] = array(
-    '#prefix'=>'<div id="sbac-field-file-container">',
+    '#prefix'=>'<div id="sbac-content-module-container">',
     '#suffix'=>'</div>',
   );
 

@@ -1458,11 +1458,8 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
-  $form['field_video']['#access'] = FALSE;
   sbac_media_widget_form_element($form, $form_state);
 
-  // Materials
-  $form['field_file']['#access'] = FALSE;
   // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);
@@ -1984,7 +1981,6 @@ function _sbac_resource_form_required_fields(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_remove_elements(&$form, &$form_state) {
-  global $user;
   (isset($form['actions']['preview_changes']) ? $form['actions']['preview_changes']['#access'] = FALSE : '');
   (isset($form['actions']['delete']) ? $form['actions']['delete']['#access'] = FALSE : '');
 
