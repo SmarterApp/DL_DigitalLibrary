@@ -41,18 +41,20 @@ function contextual_range_filter_config_form() {
 
           if (isset($field_data['argument']['handler'])) {
 
+            // All handler classes are identified by thier names (i.e. string),
+            // so we cannot use instanceof. This means that this code requires
+            // PHP 5.3.9
+            // @see http://php.net/manual/en/function.is-a.php
             $handler = $field_data['argument']['handler'];
 
             $is_date_handler = @is_a($handler, 'views_handler_argument_date', TRUE);
-            // views_handler_argument_field_list        extends views_handler_argument_numeric
-            // views_handler_argument_field_list_string extends views_handler_argument_string
             $is_list_handler = @is_a($handler, 'views_handler_argument_field_list', TRUE) || @is_a($handler, 'views_handler_argument_field_list_string', TRUE);
-            // Numeric covers taxonomy tids, but note:
-            // views_handler_argument_taxonomy extends             views_handler_argument_numeric
-            // views_handler_argument_term_node_tid_depth          extends views_handler_argument
-            // views_handler_argument_term_node_tid_depth_modifier extends views_handler_argument
-            $is_numeric_handler = @is_a($handler, 'views_handler_argument_numeric', TRUE) || is_a($handler, 'views_handler_argument_comment_user_uid', TRUE);
             $is_string_handler = @is_a($handler, 'views_handler_argument_string', TRUE);
+            // Numeric covers taxonomy tids, but note:
+            // views_handler_argument_term_node_tid_depth and
+            // views_handler_argument_term_node_tid_depth_modifier extend
+            // views_handler_argument, so aren't covered
+            $is_numeric_handler = @is_a($handler, 'views_handler_argument_numeric', TRUE) || @is_a($handler, 'views_handler_argument_comment_user_uid', TRUE);
 
             if ($is_date_handler || $is_list_handler || $is_numeric_handler || $is_string_handler) {
 
@@ -132,7 +134,7 @@ function contextual_range_filter_config_form_submit($form, &$form_state) {
     $added_filters = array_diff($filters, $prev_filters);
     $removed_filters = array_diff($prev_filters, $filters);
     $changed_filters = array_merge($added_filters, $removed_filters);
-
+   
     if (empty($changed_filters)) {
       continue;
     }

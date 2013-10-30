@@ -183,7 +183,7 @@ function apachesolr_user_facetapi_facet_info($searcher_info) {
       'dependency plugins' => array('bundle', 'role'),
     );
 
-    // Add facets for all fields attached to the user entity.
+    // Add facets for all fields attached to the user entity. 
     $facets = array_merge($facets, apachesolr_entity_field_facets('user'));
   }
   return $facets;

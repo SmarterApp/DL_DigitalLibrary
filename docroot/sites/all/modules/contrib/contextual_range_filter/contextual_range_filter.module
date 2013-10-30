@@ -137,3 +137,18 @@ function contextual_range_filter_views_api() {
     'path' => drupal_get_path('module', 'contextual_range_filter') . '/views',
   );
 }
+
+/**
+ * Implements hook_requirements().
+ */
+function contextual_range_filter_requirements($phase) {
+  $php_version = phpversion();
+  if (version_compare($php_version, '5.3.9', '<')) {
+    $requirements['contextual_range_filter'] = array(
+      'title' => t('Views Contextual Range Filter'),
+      'value' => t('This version of Views Contextual Range Filter requires PHP 5.3.9 or later. You are on PHP @version so it will not work properly. Try Views Contexutal Range Filter 7.x-1.1 instead.', array('@version' => $php_version)),
+      'severity' => REQUIREMENT_ERROR
+    );
+    return $requirements;
+  }
+}
