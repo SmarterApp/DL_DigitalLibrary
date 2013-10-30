@@ -117,6 +117,9 @@ function sbac_resource_my_resources_access_callback() {
   if (in_array('resource contributor', $user->roles)) {
     return TRUE;
   }
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    return TRUE;
+  }
   return FALSE;
 }
 
@@ -1485,16 +1488,7 @@ function sbac_resource_block_view($delta = '') {
 
     case 'sbac_resource_create_button':
       $block['subject'] = NULL;
-      global $user;
-      $content = NULL;
-      if (in_array('resource contributor', $user->roles)) {
-        $content = l('Create New Resource', 'node/add/resource', array(
-          'absolute' => TRUE,
-          'attributes' => array('class' => array('small', 'button')),
-          'query' => array('destination' => arg(0)),
-        ));
-      }
-      $block['content'] = $content;
+      $block['content'] = sbac_resource_create_button();
       break;
 
     case 'sbac_resource_grid_list_button':
@@ -1535,6 +1529,40 @@ function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
   if (isset($blocks['sbac_resource']['sbac_resource_grid_list_button']) && $theme == 'SBAC') {
     $blocks['sbac_resource']['sbac_resource_grid_list_button']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
   }
+}
+
+/**
+ * Create button
+ *
+ * @return null|string
+ */
+function sbac_resource_create_button() {
+  global $user;
+  $content = NULL;
+
+  // Resource contributor button.
+  if (in_array('resource contributor', $user->roles)) {
+    $content = l('Create New Resource', 'node/add/resource', array(
+      'absolute' => TRUE,
+      'attributes' => array('class' => array('small', 'button')),
+      'query' => array('destination' => arg(0)),
+    ));
+  }
+
+  // DLRB admin / member button.
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    $create_urls[] = l('Resource', 'node/add/resource', array('attributes' => array('class' => array('create-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resource')));
+    $create_urls[] = l('Module', 'node/add/resource', array('attributes' => array('class' => array('create-module')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'module')));
+    $content = '<a class="button small arrow sbac-create-resource-dropdown" data-dropdown="sbac-create-resource">'. t('Create'). '<span></span></a>';
+    $content .= theme('item_list', array(
+      'items' => $create_urls,
+      'attributes' => array(
+        'class' => 'materials-dropdown f-dropdown',
+        'id' => 'sbac-create-resource'
+      )
+    ));
+  }
+  return $content;
 }
 
 /**
