@@ -7,6 +7,9 @@ class Hooks extends \devtools\Hooks {
       DRUPAL HOOKS
   ----------------------------------------------------------------------------*/
 
+  /**
+   * Extends hook_library_alter().
+   */
   function hook_library_alter(&$libraries, $module) {
     if ($module == 'chosen') {
       $js = $libraries['chosen']['js']['sites/all/libraries/chosen/chosen.jquery.min.js'];
