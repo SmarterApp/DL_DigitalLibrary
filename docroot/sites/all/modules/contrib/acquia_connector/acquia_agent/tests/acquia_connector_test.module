@@ -294,17 +294,25 @@ function acquia_connector_test_nspi_update($data) {
       return FALSE;
     }
     else {
+      $result = acquia_connector_test_validate_authenticator($data);
       $spi_data = $data['body'];
-      if (!isset($spi_data['spi_data_version'])) {
-        $return_result = TRUE;
+      $result->body = array('spi_data_received' => TRUE);
+      if (isset($spi_data['spi_def_update'])) {
+        $result->body['update_spi_definition'] = TRUE;
       }
-      else {
-        $return_result = array('result' => TRUE);
-        if (isset($spi_data['spi_def_update'])) {
-          $return_result['update_spi_definition'] = TRUE;
-        }
+
+      // Reflect send_method as nspi_messages if set.
+      if (isset($spi_data['send_method'])) {
+        $result->body['nspi_messages'][] = $spi_data['send_method'];
       }
-      return $return_result;
+
+      $result->authenticator['hash'] = _acquia_agent_hmac($result->secret['key'], $result->authenticator['time'], $result->authenticator['nonce'], $result->body);
+
+      if (isset($spi_data['test_validation_error'])) {
+        $result->authenticator['nonce'] = 'TEST'; // Force a validation fail.
+      }
+      unset($result->secret);
+      return $result;
     }
   }
   else {
@@ -384,6 +392,7 @@ function acquia_connector_test_validate_authenticator($data) {
     $result->is_error = TRUE;
     return $result;
   }
+
   if ($key === ACQTEST_EXPIRED_KEY) {
     $result->code = ACQTEST_SUBSCRIPTION_EXPIRED;
     $result->message = t('Subscription expired.');

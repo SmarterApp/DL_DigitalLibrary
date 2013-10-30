@@ -227,11 +227,11 @@ function acquia_agent_init() {
     empty($_POST) &&  user_access('administer site configuration') &&
     (!acquia_agent_has_credentials()) &&
     (strpos($request, variable_get('file_public_path', conf_path() . DIRECTORY_SEPARATOR . 'files')) !== 0)) {
-    $text = 'Get a <a href="!acquia-free">free 30-day trial</a> of the Acquia Network which includes a <a href="!library" target="_blank">library</a> of expert knowledge, <a href="!services" target="_blank">tools and services</a> to make your site awesome, and <a href="!support" target="_blank">Drupal support</a> when you need it.<br/>If you have an Acquia Network subscription, <a href="!settings">connect now</a>. Otherwise, you can turn this message off by disabling the Acquia Network <a href="!admin-modules">modules</a>.';
+    $text = 'Sign up for Acquia Cloud Free, a free Drupal sandbox to experiment with new features, test your code quality, and apply continuous integration best practices. Check out the <a href="!acquia-free">epic set of dev features and tools</a> that come with your free subscription.<br/>If you have an Acquia Network subscription, <a href="!settings">connect now</a>. Otherwise, you can turn this message off by disabling the Acquia Network modules.';
     if (isset($_SERVER['AH_SITE_GROUP'])) {
       $text = '<a href="!settings">Connect your site to the Acquia Network now</a>. <a href="!more">Learn more</a>.';
     }
-    $message = t($text, array('!more' => url('https://docs.acquia.com/network/install/connector'), '!acquia-free' => url('admin/config/system/acquia-agent'), '!library' => url('http://library.acquia.com'), '!settings' => url('admin/config/system/acquia-agent/setup'), '!support' => url('http://www.acquia.com/drupal-support'), '!services' => url('http://www.acquia.com/products-services/acquia-network/cloud-services'), '!admin-modules' => url('admin/modules')));
+    $message = t($text, array('!acquia-free' => url('https://www.acquia.com/acquia-cloud-free'), '!settings' => url('admin/config/system/acquia-agent/setup')));
     drupal_set_message($message, 'warning', FALSE);
   }
 }
@@ -524,11 +524,14 @@ function acquia_agent_help($path, $arg) {
     case 'admin/help#acquia_agent':
       $output = '<h2>' . t('Acquia Network and Connector modules') . '</h2>';
       $output .= '<p>' . t("The Acquia Network Connector suite of modules allow you to connect your site to the Acquia Network and use its variety of services.") . '<p>';
+      $output .= '<p>' . t("<a href='!url'>Read more about the installation and use of the Acquia Network Connector module on the Acquia Library</a>.", array('!url' => url('https://docs.acquia.com/network/install/connector', array('external' => TRUE)))) . '</p>';
       $output .= '<dl>';
       $output .= '<dt>Acquia Agent</dt>';
       $output .= '<dd>' . t('Enables secure communication between your Drupal sites and the Acquia Network.') . '</dt>';
       $output .= '<dt>Acquia SPI</dt>';
       $output .= '<dd>' . t('Automates the collection of site information. Required for use with the Acquia Insight service.') . '</dt>';
+      $output .= '<dt>Acquia SPI Custom Tests</dt>';
+      $output .= '<dd>' . t('Acquia Insight supports custom tests for your site. See <strong>acquia_spi.api.php</strong> for information on the custom test hook and validate your tests for inclusion in outgoing SPI data with the Drush command, <strong>spi-test-validate</strong>.') . '</dt>';
       $output .= '<dt>Acquia Search</dt>';
       $output .= '<dd>' . t('Provides authentication service to the Apache Solr Search Integration module to enable use of Acquia\'s hosted Solr search indexes.') . '</dt>';
       $output .= '</dl>';
@@ -549,6 +552,8 @@ function acquia_agent_help($path, $arg) {
       }
       $output .= '<dt>' . t('Receive updates from Acquia Network') . '</dt>';
       $output .= '<dd>' . t('Receive dynamic updates on the Network Settings page from Acquia.com about your subscription and new features.') . '</dd>';
+      $output .= '<dt>' . t('Allow Insight to update list of approved variables.') . '</dt>';
+      $output .= '<dd>' . t('As part of the Acquia Insight service, some variables can be corrected to their recommended settings from within the Insight system. The list of variables that can be corrected can also be updated at your discretion.') . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -756,8 +761,12 @@ function acquia_agent_stream_context_create($url, $module = 'acquia_agent') {
 /**
  * Determine if a response from the Acquia Network is valid.
  *
- * @param $data
- *   The data array returned by acquia_agent_call().
+ * @param $data The data array returned by acquia_agent_call(). Expected keys:
+ *   'authenticator' - request authenticator sent to server
+ *   'result' - response from server including keys
+ *     'authenticator' - server response authenticator
+ *     'body' - server response body
+ *
  * @return
  *   TRUE or FALSE.
  */
