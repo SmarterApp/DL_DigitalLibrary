@@ -439,7 +439,11 @@ function sbac_resource_resource_review_apply_filters(&$view) {
   }
   // Not searching/filtering, so we default to the user's profile data for filtering
   else {
-    sbac_resource_filter_user_tags($view);
+    global $user;
+
+    if (in_array(FEEDBACK_REVIEWER_RID, array_keys($user->roles))) {
+      sbac_resource_filter_user_tags($view, $user);
+    }
   }
 }
 
@@ -620,82 +624,86 @@ function sbac_resource_views_data() {
 /**
  * Applies filtering options on View which restrict resources displayed to ones
  * matching the user's Subject & Grade values
- * @param  [type] $view [description]
- * @return [type]       [description]
+ *
+ * @param  [type] $view    [description]
+ * @param  [type] $account [description]
+ * @return [type]          [description]
  */
-function sbac_resource_filter_user_tags(&$view) {
-  global $user;
-
-  if (in_array(FEEDBACK_REVIEWER_RID, array_keys($user->roles))) {
-    $view_filters = $view->display_handler->get_option('filters');
-
-    $account = user_load($user->uid);
-
-    $get_tid = function($element) {
-      return $element['tid'];
-    };
-
-    foreach ($view_filters as &$field) {
-      $field['group'] = 1;
-    }
-
-    $subject_tid_all = 153;
-    $grade_tid_all = 122;
-
-    // subject
-    if (!isset($view_filters['field_subject_tid']['value'])) {
-      $view_filters['field_subject_tid']['value'] = array();
-    }
-
-    $view_filters['field_subject_tid']['operator'] = 'or';
-    $view_filters['field_subject_tid']['group'] = 2;
-
-    if ($subjects = field_get_items('user', $account, 'field_subject_s_')) {
-      $subjects = array_map($get_tid, $subjects);
-
-      // not subject specific - remove filters
-      if (in_array($subject_tid_all, $subjects)) {
-        unset($view_filters['field_subject_tid']);
-      }
-      else {
-        $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
-        $view_filters['field_subject_tid']['value'] = array_merge($view_filters['field_subject_tid']['value'], $subjects);
-      }
-    }
-
-    // grade
-    if (!isset($view_filters['field_grades_tid']['value'])) {
-      $view_filters['field_grades_tid']['value'] = array();
-    }
-
-    $view_filters['field_grades_tid']['operator'] = 'or';
-    $view_filters['field_grades_tid']['group'] = 2;
-
-    if ($grades = field_get_items('user', $account, 'field_grade_level_s_')) {
-      $grades = array_map($get_tid, $grades);
-
-      // not grade specific - remove filters
-      if (in_array($grade_tid_all, $grades)) {
-        unset($view_filters['field_grades_tid']);
-      }
-      else {
-        $view_filters['field_grades_tid']['value'][] = $grade_tid_all;
-        $view_filters['field_grades_tid']['value'] = array_merge($view_filters['field_grades_tid']['value'], $grades);
-      }
-    }
-
-    $groups = array(
-      'operator' => 'AND',
-      'groups' => array(
-        1 => 'AND',
-      ),
-    );
-    
-    if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
-      $groups['groups'][2] = 'AND';
-    }
-
-    $view->display_handler->set_option('filter_groups', $groups);
-    $view->display_handler->set_option('filters', $view_filters);
+function sbac_resource_filter_user_tags(&$view, $account = NULL) {
+  if (is_null($account)) {
+    global $user;
+    $account = $user;
   }
+
+  // reload account
+  $account = user_load($account->uid);
+
+  $view_filters = $view->display_handler->get_option('filters');
+
+  $get_tid = function($element) {
+    return $element['tid'];
+  };
+
+  foreach ($view_filters as &$field) {
+    $field['group'] = 1;
+  }
+
+  $subject_tid_all = 153;
+  $grade_tid_all = 122;
+
+  // subject
+  if (!isset($view_filters['field_subject_tid']['value'])) {
+    $view_filters['field_subject_tid']['value'] = array();
+  }
+
+  $view_filters['field_subject_tid']['operator'] = 'or';
+  $view_filters['field_subject_tid']['group'] = 2;
+
+  if ($subjects = field_get_items('user', $account, 'field_subject_s_')) {
+    $subjects = array_map($get_tid, $subjects);
+
+    // not subject specific - remove filters
+    if (in_array($subject_tid_all, $subjects)) {
+      unset($view_filters['field_subject_tid']);
+    }
+    else {
+      $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
+      $view_filters['field_subject_tid']['value'] = array_merge($view_filters['field_subject_tid']['value'], $subjects);
+    }
+  }
+
+  // grade
+  if (!isset($view_filters['field_grades_tid']['value'])) {
+    $view_filters['field_grades_tid']['value'] = array();
+  }
+
+  $view_filters['field_grades_tid']['operator'] = 'or';
+  $view_filters['field_grades_tid']['group'] = 2;
+
+  if ($grades = field_get_items('user', $account, 'field_grade_level_s_')) {
+    $grades = array_map($get_tid, $grades);
+
+    // not grade specific - remove filters
+    if (in_array($grade_tid_all, $grades)) {
+      unset($view_filters['field_grades_tid']);
+    }
+    else {
+      $view_filters['field_grades_tid']['value'][] = $grade_tid_all;
+      $view_filters['field_grades_tid']['value'] = array_merge($view_filters['field_grades_tid']['value'], $grades);
+    }
+  }
+
+  $groups = array(
+    'operator' => 'AND',
+    'groups' => array(
+      1 => 'AND',
+    ),
+  );
+  
+  if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
+    $groups['groups'][2] = 'AND';
+  }
+
+  $view->display_handler->set_option('filter_groups', $groups);
+  $view->display_handler->set_option('filters', $view_filters);
 }
