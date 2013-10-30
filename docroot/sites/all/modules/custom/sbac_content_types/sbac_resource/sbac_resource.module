@@ -671,17 +671,17 @@ function sbac_resource_node_load($nodes, $types) {
  * @param $node, $i = file index
  */
 function sbac_resource_node_delete($node) {
-  $i = 0;
-  if (isset($node->field_file['und'])) {
-    while ($i < count($node->field_file['und'])) {
-  	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
-  		  sbac_resource_delete_file_from_cmis($node->field_document_id['und'][$i]['value'], $i);
-  		  unset($node->field_document_id['und'][$i]);
-  	  }
-      
-  	  $i++;
-    }
-  }
+//  $i = 0;
+//  if (isset($node->field_file['und'])) {
+//    while ($i < count($node->field_file['und'])) {
+//  	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
+//  		  sbac_resource_delete_file_from_cmis($node->field_document_id['und'][$i]['value'], $i);
+//  		  unset($node->field_document_id['und'][$i]);
+//  	  }
+//
+//  	  $i++;
+//    }
+//  }
 }
 
 /**

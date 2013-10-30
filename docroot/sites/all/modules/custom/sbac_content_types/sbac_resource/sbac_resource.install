@@ -963,3 +963,19 @@ function sbac_resource_update_7041() {
     }
   }
 }
+
+/**
+ * Delete the old file / video upload fields.
+ */
+function sbac_resource_update_7042() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+  field_del_instance('field_file', 'node', 'resource');
+  field_delete_field('field_file');
+
+  field_del_instance('field_video', 'node', 'resource');
+  field_delete_field('field_video');
+
+  return $ret;
+}
