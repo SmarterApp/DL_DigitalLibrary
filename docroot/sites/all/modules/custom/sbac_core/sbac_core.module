@@ -32,6 +32,8 @@ if (module_exists('devtools')) {
  * Implements hook_init().
  */
 function sbac_core_init() {
+  // date_default_timezone_set(variable_get('date_default_timezone', 'America/Vancouver'));
+  
   // There is some kind of race condition that occasionally results in missing
   // theme implementations for display suite fields declared through DevTools.
   // This code checks for one of those theme implementations, and if it's missing,

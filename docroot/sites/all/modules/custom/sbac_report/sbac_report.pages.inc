@@ -507,7 +507,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
     // review date
     $item[] = array(
-      'data' => date('m/d/y', $row->review_date),
+      'data' => format_date($row->review_date, 'custom', 'm/d/y'),
       'class' => 'cell date',
     );
     
@@ -796,7 +796,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
 
     $date = '';
     if ($user_review) {
-      $date = t('Review Date: !date', array('!date' => date('m/d/y', $user_review->created)));
+      $date = t('Review Date: !date', array('!date' => format_date($user_review->created, 'custom', 'm/d/y')));
 
       if ($user_review->type == 'qc') {
         $rec = rec_friendly_name($user_review);
