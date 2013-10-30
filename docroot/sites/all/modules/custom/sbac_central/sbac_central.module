@@ -28,6 +28,7 @@ function sbac_central_menu() {
  */
 function sbac_central_fix_broken_ccss() {
   ini_set('max_execution_time', 300);
+  ini_set('memory_limit', '256M');
   $vid = 11; //same across all environments.
 
   if (isset($_GET['debug']) && $_GET['debug'] == 1) {
