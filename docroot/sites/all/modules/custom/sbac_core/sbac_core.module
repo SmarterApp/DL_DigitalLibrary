@@ -209,6 +209,13 @@ function sbac_core_form_node_form_alter(&$form, $form_state) {
   \sbac_core\Core::hook('form_node_form_alter', NULL, $form, $form_state);
 }
 
+/**
+ * Implements hook_libraries_alter().
+ */
+function sbac_core_library_alter(&$libraries, $module) {
+  \sbac_core\Core::hook('library_alter', NULL, $libraries, $module);
+}
+
 /*----------------------------------------------------------------------------
       MODULE HOOKS
 ----------------------------------------------------------------------------*/
