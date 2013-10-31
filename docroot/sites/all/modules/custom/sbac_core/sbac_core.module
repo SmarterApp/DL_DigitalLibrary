@@ -32,6 +32,18 @@ if (module_exists('devtools')) {
  * Implements hook_init().
  */
 function sbac_core_init() {
+  // date_default_timezone_set(variable_get('date_default_timezone', 'America/Vancouver'));
+  
+  // There is some kind of race condition that occasionally results in missing
+  // theme implementations for display suite fields declared through DevTools.
+  // This code checks for one of those theme implementations, and if it's missing,
+  // forces the theme registry to be rebuilt (which fixes the issue).
+  $registry = cache_get('theme_registry:SBAC');
+  if (!isset($registry->data['resource_slideshow'])) {
+    db_query("DELETE FROM cache WHERE cid IN ('theme_registry:SBAC', 'theme_registry:runtime:SBAC', 'theme_registry:build:modules')");
+    registry_rebuild();
+  }
+
   \sbac_core\Core::hook('init', NULL);
 
   global $settings_php_js;
@@ -59,6 +71,14 @@ function sbac_core_theme($existing, $type, $theme, $path) {
  */
 function sbac_core_theme_registry_alter(&$theme_registry) {
   \sbac_core\Core::hook('theme_registry_alter', NULL, $theme_registry);
+
+  // $data = array();
+
+  // foreach (\devtools\components\DisplaySuite::instance()->getFields() as $entity_type => $fields) {
+  //   foreach ($fields as $field_name => $field_data) {
+  //     $data[$field_name] = $field_data;
+  //   }
+  // }
 }
 
 /**
@@ -189,6 +209,13 @@ function sbac_core_username_alter(&$name, $account) {
  */
 function sbac_core_form_node_form_alter(&$form, $form_state) {
   \sbac_core\Core::hook('form_node_form_alter', NULL, $form, $form_state);
+}
+
+/**
+ * Implements hook_libraries_alter().
+ */
+function sbac_core_library_alter(&$libraries, $module) {
+  \sbac_core\Core::hook('library_alter', NULL, $libraries, $module);
 }
 
 /*----------------------------------------------------------------------------

@@ -19,6 +19,11 @@ function acquia_spi_drush_command() {
       'spi-get --format=json --outfile=spi.json' => 'Write JSON encoded SPI data to spi.json in current directory.',
     ),
   );
+  $items['spi-test-validate'] = array(
+    'callback'    => 'drush_acquia_spi_custom_test_validate',
+    'description' => dt('Perform a validation check on any modules with Acquia SPI custom tests.'),
+    'aliases'     => array('spi-tv'),
+  );
   return $items;
 }
 
@@ -83,4 +88,63 @@ function _acquia_spi_drush_get() {
     drush_include(dirname(dirname(__FILE__)) . '/acquia_agent', 'acquia_agent', drush_drupal_major_version(), 'module');
   }
   return acquia_spi_get();
+}
+
+/**
+ * A command callback and drush wrapper for custom test validation.
+ *
+ */
+function drush_acquia_spi_custom_test_validate() {
+
+  $pass = array();
+  $failure = array();
+
+  $modules = module_implements('acquia_spi_test');
+  drush_print_r(dt("Acquia SPI custom tests were detected in: @modules \n", array('@modules' => implode(', ', $modules))));
+
+  foreach (module_implements('acquia_spi_test') as $module) {
+    $function = $module . '_acquia_spi_test';
+    if (function_exists($function)) {
+      $result = acquia_spi_test_validate($function());
+
+      if (!$result['result']) {
+        $failure[] = $module;
+        drush_print_r(dt("[FAILED]  Validation failed for '@module' and has been logged.", array('@module' => $module)));
+        $custom_data[$module] = $result;
+
+        foreach ($result['failure'] as $test_name => $test_failures) {
+          foreach ($test_failures as $test_param => $test_value) {
+            $variables = array(
+              '!module_name' => $module,
+              '@message'     => $test_value['message'],
+              '!param_name'  => $test_param,
+              '!test_name'   => $test_name,
+              '!value'       => $test_value['value'],
+            );
+            drush_print_r(dt("[DETAILS] @message for parameter '!param_name'; current value '!value'. (Test !test_name in module !module_name)", $variables));
+            watchdog('acquia spi test', "<em>Custom test validation failed</em>: @message for parameter '!param_name'; current value '!value'. (<em>Test '!test_name' in module '!module_name'</em>)", $variables);
+          }
+        }
+      }
+      else {
+        $pass[] = $module;
+        drush_print_r(dt("[PASSED]  Validation passed for '@module.'", array('@module' => $module)));
+      }
+    }
+    drush_print_r("");
+  }
+
+  $message = 'Validation checks completed.';
+  if (count($pass) > 0) {
+    $variables['@passes'] = implode(', ', $pass);
+    $variables['@pass_count'] = count($pass);
+    $message .= "\n@pass_count module(s) passed validation: @passes.";
+  }
+  if (count($failure) > 0) {
+    $variables['@failures'] = implode(', ', $failure);
+    $variables['@fail_count'] = count($failure);
+    $message .= "\n@fail_count module(s) failed validation: @failures.";
+  }
+
+  drush_print_r(dt($message, $variables));
 }

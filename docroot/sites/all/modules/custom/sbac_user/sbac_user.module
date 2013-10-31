@@ -700,10 +700,26 @@ function sbac_user_mail($key, &$message, $params) {
  * Implements hook_user_update().
  */
 function sbac_user_update(&$edit, $account, $category) {
-  if ($category == 'account') {
-    if (isset($edit['roles'])) {
-      node_access_rebuild();
+  if (strpos($_GET['q'], 'user_import') === FALSE) {
+    if ($category == 'account') {
+      if (isset($edit['roles'])) {
+        node_access_rebuild();
+      }
     }
+  }
+}
+
+/**
+ * Implements hook_user_import_imported().
+ *
+ * When done, rebuild user perms.
+ *
+ * @param $import_id
+ * @param $settings
+ */
+function sbac_user_user_import_imported($import_id, $settings) {
+  if (isset($settings['form_id']) && $settings['form_id'] == 'user_import_edit') {
+    node_access_rebuild(TRUE);
   }
 }
 
@@ -716,8 +732,6 @@ function sbac_user_update(&$edit, $account, $category) {
  *  The hashed dir structures will be created there and should scale nicely.
  */
 function sbac_user_entity_update($entity, $type) {
-  //error_log("====================\n". var_export($entity, true) ."\n", 3, "/tmp/sbac.log");
-
   // UGLY WORKAROUND WARNING: this hook is called twice for some reason, don't know why.
   // on 2nd call the image was already hashed so preg_match will fail and cause this to skip.
   if ($type == 'file' && isset($entity->source) && $entity->source == 'picture_upload' &&

@@ -22,31 +22,17 @@ function theme_flexslider_list(&$vars) {
   if (!empty($items)) {
     $output .= "<$type" . drupal_attributes($attributes) . '>';
     foreach ($items as $i => $item) {
-      // If the slide hasn't been set, build the slide using the image
-      // attributes given (assumes we're using a multi-image field)
-      // @todo need to allow for different types of field and collection fields
-      if (!isset($item['slide'])) {
-        $image_options = array(
-          'style_name' => $optionset->imagestyle_normal,
-          'path'       => $item['uri'],
-          'height'     => isset($item['height']) ? $item['height'] : '',
-          'width'      => isset($item['width']) ? $item['width'] : '',
-          'alt'        => $item['alt'],
-          'title'      => $item['title'],
-          'attributes' => array(),
-        );
-      }
 
       $caption = '';
-      if (!empty($item['title'])) {
-        $caption = $item['title'];
+      if (!empty($item['caption'])) {
+        $caption = $item['caption'];
       }
-      $output .= theme('flexslider_list_item', array(
-        'item' => isset($item['slide']) ? $item['slide'] : theme_image_style($image_options),
-        'item' => isset($item['slide']) ? $item['slide'] : ($optionset->imagestyle_normal ? theme_image_style($image_options) : theme_image($image_options)),
 
-        'thumb' => isset($item['thumb']) ? $item['thumb'] : image_style_url($optionset->imagestyle_thumbnail, $item['uri']),
-        'optionset' => $optionset,
+      $output .= theme('flexslider_list_item', array(
+        'item' => $item['slide'],
+        'settings' => array(
+          'optionset' => $optionset,
+        ),
         'caption' => $caption,
       ));
     }
@@ -60,25 +46,7 @@ function theme_flexslider_list(&$vars) {
  * Default theme implementation for flexslider_list_item
  */
 function theme_flexslider_list_item(&$vars) {
-  // Reference configuration variables
-  $item = &$vars['item'];
-  $attributes = &$vars['settings']['attributes'];
-
-  if ($vars['optionset']->options['controlNav'] === "thumbnails" &&
-      isset($vars['thumb'])
-  ) {
-    $attributes['data-thumb'] = $vars['thumb'];
-  }
-
-  $caption = '';
-  if (!empty($vars['caption'])) {
-    $caption = '<p class="flex-caption">' . $vars['caption'] . '</p>';
-  }
-
-  $output = '';
-  $output .= '<li' . drupal_attributes($attributes) . '>' . $item . $caption . "</li>\n";
-
-  return $output;
+  return '<li' . drupal_attributes($vars['settings']['attributes']) . '>' . $vars['item'] . $vars['caption'] . "</li>\n";
 }
 
 /**
@@ -93,7 +61,7 @@ function template_process_flexslider(&$vars) {
 
   // Set the default container type
   if (empty($settings['type'])) {
-    $settings['type'] = 'ul';    
+    $settings['type'] = 'ul';
   }
 
   // Load the selected optionset
@@ -140,9 +108,9 @@ function template_process_flexslider(&$vars) {
 }
 
 /**
- * Preprocess function for flexslider_list_item
+ * Process function for flexslider_list_item
  */
-function template_preprocess_flexslider_list(&$vars) {
+function template_process_flexslider_list(&$vars) {
   // Reset the list of attributes
   $vars['settings']['attributes'] = array(
     // @todo find a way to detect the outter container class if possible
@@ -152,13 +120,39 @@ function template_preprocess_flexslider_list(&$vars) {
 }
 
 /**
- * Preprocess function for flexslider_list_item
+ * Process function for flexslider_list_item
  */
-function template_preprocess_flexslider_list_item(&$vars) {
+function template_process_flexslider_list_item(&$vars) {
   // Reset the list of attributes
   $vars['settings']['attributes'] = array();
-  //dpm($vars);
 
-  //$vars['item'] = implode('', $vars['item']);
-  // @todo add attributes for thumbnails
+  // Reference configuration variables
+  $item = &$vars['item'];
+  $settings = &$vars['settings'];
+  $caption = &$vars['caption'];
+  $attributes = &$vars['settings']['attributes'];
+
+  // Generated thumbnail support
+  if (isset($settings['optionset']->options['controlNav']) and $settings['optionset']->options['controlNav'] === "thumbnails") {
+    // If the thumbnails are enabled in the option set, scan for the first img
+    // tag and extract the src attribute to set as the thumbnail data
+    $src = array();
+    preg_match("<img.+?src=[\"'](.+?)[\"'].+?>", $item, $src);
+
+    if (!empty($src[1])) {
+      $attributes['data-thumb'] = $src[1];
+    }
+  }
+
+  if (isset($settings['optionset']->options['thumbCaptions']) and $settings['optionset']->options['thumbCaptions'] and !empty($caption)) {
+    $attributes['data-thumbcaption'] = $caption;
+    // Prevent captions from appearing in the slider as well
+    if (isset($settings['optionset']->options['thumbCaptionsBoth']) and FALSE === $settings['optionset']->options['thumbCaptionsBoth']) {
+      $caption = '';      
+    }
+  }
+
+  if (!empty($caption)) {
+    $caption = '<div class="flex-caption">' . $caption . '</div>';
+  }
 }

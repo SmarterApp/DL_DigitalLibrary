@@ -3,9 +3,9 @@ description = The Upload QC module extends D7 to add checks and validations for 
 core = 7.x
 package = "Other"
 
-; Information added by drupal.org packaging script on 2012-11-02
+; Information added by drupal.org packaging script on 2013-10-19
 version = "7.x-1.x-dev"
 core = "7.x"
 project = "upload_qc"
-datestamp = "1351821266"
+datestamp = "1382150023"
 

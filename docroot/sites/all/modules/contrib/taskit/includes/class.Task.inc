@@ -56,6 +56,8 @@ class Task extends \taskit\Base implements iTask {
     $this->_type = $type;
     $this->_task_id = $task_id;
 
+    date_default_timezone_set(variable_get('date_default_timezone', 'America/Vancouver'));
+
     $this->addClass('taskit-new');
 
     if ($task_id) {

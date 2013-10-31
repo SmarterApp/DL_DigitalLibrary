@@ -89,14 +89,28 @@ function _ldap_authentication_form_user_profile_form_alter(&$form, $form_state) 
     }
 
     if (!ldap_authentication_show_reset_pwd($form['#user'])) {
-      $form['account']['current_pass']['#disabled'] = TRUE;
-      if ($auth_conf->ldapUserHelpLinkUrl) {
-        $form['account']['current_pass']['#description'] = l(t($auth_conf->ldapUserHelpLinkText), $auth_conf->ldapUserHelpLinkUrl);
+      /**  If passwordOption = LDAP_AUTHENTICATION_PASSWORD_FIELD_HIDE then don't show the password fields,
+        otherwise show the fields but in a disabled state.
+       */
+        switch ($auth_conf->passwordOption) {
+
+          case LDAP_AUTHENTICATION_PASSWORD_FIELD_HIDE:
+            $form['account']['current_pass']['#access'] = FALSE;
+            $form['account']['pass']['#access'] = FALSE;
+            break;
+
+          case LDAP_AUTHENTICATION_PASSWORD_FIELD_SHOW:
+                    // Show in a disabled state since ldap_authentication_show_reset_pwd() has returned FALSE
+            $form['account']['current_pass']['#disabled'] = TRUE;
+            if ($auth_conf->ldapUserHelpLinkUrl) {
+              $form['account']['current_pass']['#description'] = l(t($auth_conf->ldapUserHelpLinkText), $auth_conf->ldapUserHelpLinkUrl);
+            }
+            else {
+              $form['account']['current_pass']['#description'] = t('The password cannot be changed using this website');
+            }
+            $form['account']['pass']['#disabled'] = TRUE;
+            break;
       }
-      else {
-        $form['account']['current_pass']['#description'] = t('The password cannot be changed using this website');
-      }
-      $form['account']['pass']['#disabled'] = TRUE;
     }
   }
 }
@@ -113,8 +127,25 @@ function _ldap_authentication_form_user_profile_form_alter(&$form, $form_state) 
   */
 function _ldap_authentication_user_login_authenticate_validate(&$form_state, $return_user) {
 
+  // Check if Flood control was triggered; if so, don't authenticate
+  if (isset($form_state['flood_control_triggered'])) {
+    return;
+  }
+
   $detailed_watchdog_log = variable_get('ldap_help_watchdog_detail', 0);
-  $authname = $form_state['values']['name']; // $authname is the name the user is authenticated with from the logon form // patch 1599632
+
+  // Default to name
+  $entered_name = $form_state['values']['name'];
+  $authname_drupal_property = 'name';
+
+  // Email registration module populates name even though user entered email
+  if (!empty($form_state['values']['email'])) {
+    $entered_name = $form_state['values']['email'];
+    $authname_drupal_property = 'mail';
+  }
+
+  // $authname is the name the user is authenticated with from the logon form // patch 1599632
+  $authname = $entered_name;
 
   /*
    * If a fake form state was passed into this function from
@@ -187,6 +218,14 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
     return;
   }
 
+  /*
+   * IV.a Workaround for the provisioning server not always getting saved in
+   *      the user object.  So we save it in a session variable as a backup.
+   */
+  if ($ldap_server_authenticated_on) {
+    $_SESSION[LDAP_USER_SESSION_PROV_SID] = $ldap_server_authenticated_on->sid;
+  }
+
   /**
    * V. if account_name_attr is set, drupal username is different than authname
    */
@@ -226,7 +265,12 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
       $drupal_account = $ldap_server_authenticated_on->userUserEntityFromPuid($puid);
       if ($drupal_account) {
         $drupal_account_exists = TRUE;
-        $user_edit = array('name' => $drupal_accountname);
+        if ($drupal_accountname == $authname) {
+          $user_edit = array($authname_drupal_property => $drupal_accountname);
+        }
+        else {
+          $user_edit = array('name' => $drupal_accountname);
+        }
         $drupal_account = user_save($drupal_account, $user_edit, 'ldap_user');
         user_set_authmaps($drupal_account, array("authname_ldap_user" => $authname));
         $drupal_account_is_authmapped = TRUE;
@@ -323,6 +367,16 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
      *       for external authentication modules
      */
 
+      $user_register = variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+      if ($auth_conf->ldapUser->acctCreation == LDAP_USER_ACCT_CREATION_USER_SETTINGS_FOR_LDAP &&
+            $user_register == USER_REGISTER_ADMINISTRATORS_ONLY) {
+          watchdog('ldap_user', 'Failed to create account for %drupal_accountname. Administrative user must create user.',
+              $watchdog_tokens, WATCHDOG_ERROR);
+          form_set_error('name', t('Server Error: Attempt to create account for %drupal_accountname failed. Administrative user must create user.',
+              $watchdog_tokens));
+          return;
+    }
+
     if ($auth_conf->ldapUser->acctCreation == LDAP_AUTHENTICATION_ACCT_CREATION_USER_SETTINGS_FOR_LDAP &&
         variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) {
       $user_edit = array('name' => $drupal_accountname, 'status' => 0); // if admin approval required, set status to 0.
@@ -339,6 +393,9 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
       watchdog('ldap_user', 'Failed to find or create %drupal_accountname on logon.', $watchdog_tokens, WATCHDOG_ERROR);
       form_set_error('name', t('Server Error: Failed to create Drupal user account for %drupal_accountname', $watchdog_tokens));
       return;
+    }
+    else {
+      user_set_authmaps($drupal_account, array('authname_ldap_user' => $authname));
     }
   }
 
@@ -367,7 +424,7 @@ function _ldap_authentication_user_login_authenticate_validate(&$form_state, $re
  */
 function ldap_authentication_corresponding_drupal_user($authname, $auth_conf, &$watchdog_tokens) {
   $detailed_watchdog_log = variable_get('ldap_help_watchdog_detail', 0);
-  if (!($drupal_account = user_load_by_name($authname))) {
+  if (!($drupal_account = user_load_by_name($authname)) && !($drupal_account = user_load_by_mail($authname))) {
     $uid = db_query("SELECT uid FROM {authmap} WHERE authname = :authname AND module = 'ldap_user'", array(':authname' => $authname))->fetchColumn();
     $drupal_account = $uid ? user_load($uid) : FALSE;
   }
@@ -424,26 +481,6 @@ function ldap_authentication_test_credentials($auth_conf, $sso_login, $authname,
     elseif ($detailed_watchdog_log) {
       watchdog('ldap_authentication',  '%username : Success at connecting to %sid', $watchdog_tokens, WATCHDOG_DEBUG);
     }
-
-/**
-  *
-  LDAP_SERVERS_BIND_METHOD_SERVICE_ACCT => t('Service Account Bind.  Use credentials in following section to
-  bind to ldap.  This option is usually a best practice. Service account is entered in next section.'),
-
-  LDAP_SERVERS_BIND_METHOD_USER => t('Bind with Users Credentials.  Use users\' entered credentials
-  to bind to LDAP.  This is only useful for modules that work during user logon such
-  as ldap authentication and ldap authorization.  This option is not a best practice in most cases.
-  The users dn must be of the form "cn=[username],[base dn]" for this option to work.'),
-
-  LDAP_SERVERS_BIND_METHOD_ANON_USER => t('Anonymous Bind for search, then Bind with Users Credentials.
-  Searches for user DN then uses users\' entered credentials to bind to LDAP.  This is only useful for
-  modules that work during user logon such as ldap authentication and ldap authorization.
-  The users dn must be discovered by an anonymous search for this option to work.'),
-
-  LDAP_SERVERS_BIND_METHOD_ANON => t('Anonymous Bind. Use no credentials to bind to ldap server.
-  Will not work on most ldaps.'),
-
-  */
 
     $bind_success = FALSE;
     if ($ldap_server->bind_method == LDAP_SERVERS_BIND_METHOD_SERVICE_ACCT) {
@@ -565,6 +602,11 @@ function ldap_authentication_test_credentials($auth_conf, $sso_login, $authname,
           $ldap_server->bind_method == LDAP_SERVERS_BIND_METHOD_ANON_USER) {
           $ldap_server->disconnect();
       }
+      // Update ldapUser with the sid of the server that the user authenticated
+      // on if that option was enabled in the LDAP user configuration.
+      if ($auth_conf->ldapUser->drupalAcctProvisionServer == LDAP_USER_AUTH_SERVER_SID) {
+        $auth_conf->ldapUser->drupalAcctProvisionServer = $ldap_server->sid;
+      }
       break; //success
     }
 
@@ -648,3 +690,4 @@ function _ldap_authentication_err_text($error) {
 
   return $msg;
 }
+

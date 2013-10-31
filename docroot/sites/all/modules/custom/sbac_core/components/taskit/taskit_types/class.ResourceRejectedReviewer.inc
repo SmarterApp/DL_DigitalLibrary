@@ -16,7 +16,7 @@ class ResourceRejectedReviewer extends \taskit\sbac_core\BaseTask {
         '!title' => '<span class="taskit-title">' . $node->title . '</span>',
       ));
 
-      $output[] = '<span class="taskit-timestamp">' . date($this->_date_format, $this->_created). '</span>';
+      $output[] = '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format). '</span> ';
       $output[] = '<div class="taskit-content-toggle">details...</div>';
 
       return $this->linkDisplay($output);

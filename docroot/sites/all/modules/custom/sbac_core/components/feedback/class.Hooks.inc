@@ -39,7 +39,6 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_init().
    */
   function hook_init() {
-
     // redirect gate keeper entities to their appropriate resource node;
     // in the "natural" user-flow, the user will only end up here after
     // submitting a Gate Keeper entity as either "meets" or "doesn't meet."
@@ -580,6 +579,8 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_entity_insert().
    */
   function hook_entity_insert($entity, $type) {
+    watchdog('sbac', 'feedback: entity_insert');
+
     if ($type == 'feedback') {
       $this->_check_resource_review_state($entity);
     }
@@ -589,6 +590,8 @@ class Hooks extends \devtools\Hooks {
    * Extends hook_entity_update().
    */
   function hook_entity_update($entity, $type) {
+    watchdog('sbac', 'feedback: entity_update');
+
     if ($type == 'feedback') {
       $this->_check_resource_review_state($entity);
     }
@@ -664,14 +667,20 @@ class Hooks extends \devtools\Hooks {
   ----------------------------------------------------------------------------*/
 
   protected function _check_resource_review_state($review) {
-    if ($node = node_load($review->node_id)) {
-      // if the node isn't in review yet, set it to being_reviewed
-      if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
-        workbench_moderation_moderate($node, 'being_reviewed');
+    watchdog('sbac', 'feedback: ' . __FUNCTION__);
 
-        // rebuild permissions
-        node_access_acquire_grants($node, TRUE);
-      }
+    $query = "SELECT state FROM workbench_moderation_node_history WHERE nid = :nid AND current = 1 ORDER BY vid DESC";
+    $state = db_query($query, array(
+      ':nid' => $review->node_id
+    ))->fetchField();
+
+    watchdog('sbac', 'state: ' . $state);
+
+    if ($state == 'needs_review' && $node = node_load($review->node_id)) {
+      workbench_moderation_moderate($node, 'being_reviewed');
+
+      // rebuild permissions
+      node_access_acquire_grants($node, TRUE);
     }
   }  
 }

@@ -348,9 +348,6 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   if ($active_tab != 'edit-group_advanced') {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
-
-    // rebuild permissions
-    node_access_acquire_grants($form_state['node'], TRUE);
   }
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
   // Clear drupal messages.
@@ -430,7 +427,14 @@ function sbac_resource_validate_form(&$form, &$form_state) {
         sbac_resource_validate_advanced($form, $form_state);
         break;
     }
-    $check = node_last_changed($form['#node']->nid);
+
+    if (isset($form['#node']->nid)) {
+      $check = node_last_changed($form['#node']->nid);
+    }
+    else {
+      $check = $form['#node']->created;
+    }
+    
     $form_state['values']['changed'] = $check + 120;
   }
 }

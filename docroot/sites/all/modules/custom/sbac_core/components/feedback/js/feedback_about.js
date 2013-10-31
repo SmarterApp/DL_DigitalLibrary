@@ -13,6 +13,8 @@ Feedback.about = {
   init_flexslider : function() {
     // set up flexslider on the about page's resource slideshow
     if ((slider = $(Feedback.about.slider)).length) {
+      $(slider).css('width', '820px'); // why? because.
+
       slider.flexslider({
         animation: "slide",
         animationLoop: false,
