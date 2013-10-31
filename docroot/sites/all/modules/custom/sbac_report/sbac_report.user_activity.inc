@@ -522,7 +522,6 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
         $user_activity['tos'][$uid]->{$toskey[0]} = '';
       }
     }
-
   }
 
   // have all the tids, now get the term data and set the report values:
