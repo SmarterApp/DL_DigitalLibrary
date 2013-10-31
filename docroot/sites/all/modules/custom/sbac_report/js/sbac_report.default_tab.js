@@ -13,15 +13,23 @@ Drupal.behaviors.sbac_report_default_tab = {
           tab_index = i;
         }
       });
+      
+      $('.vertical-tabs-list li a', tabs).each(function (j, el) {
+        var el = $(el);
+        el.click(function () {
+          // update default tab in JS settings
+          var tab = Drupal.settings.sbac_report.tabs[j];
+          Drupal.settings.sbac_report.default_tab = tab;
 
-      if (tab_index) {
-        $('.vertical-tabs-list li a', tabs).each(function (j, el) {
-          if (j == tab_index) {
-            $(el).click();
-            return;
-          }
-        }); 
-      }
+          // update default tab in backend
+          $.get(Drupal.settings.basePath + 'reports/set_tab/' + tab);
+        });
+
+        if (tab_index && j == tab_index) {
+          el.click();
+          return;
+        }
+      }); 
     }
   }
 };

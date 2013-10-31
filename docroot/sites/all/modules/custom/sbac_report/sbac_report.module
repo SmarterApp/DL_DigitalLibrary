@@ -40,6 +40,14 @@ function sbac_report_menu() {
     'weight' => -10,
   );
 
+  $items['reports/set_tab'] = array(
+    'title' => 'Set active tab',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_reports_set_tab_ajax',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['sne/autocomplete'] = array(
     'title' => 'Autocomplete SNE Names',
     'file' => 'sbac_report.pages.inc',
@@ -491,6 +499,8 @@ function sbac_report_get_session_value($field, $key) {
  * so the autocomplete for SNE text field is filtered based on the state.
  */
 function sbac_report_state_ajax($form, &$form_state) {
+  $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
+
   if (isset($form_state['values']['state'])) {
     $state_tid = $form_state['values']['state'];
     $_SESSION['sbac_report']['state']['tid'] = $state_tid;
