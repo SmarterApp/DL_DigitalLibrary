@@ -358,7 +358,7 @@ function create_user_activity_from_data($user_activity)
 
     foreach ($stringkeys as $stringkey) {
       if ($stringkey[2]=='date') {
-        $value = date('Y-m-d',$user_profile->{$stringkey[0]});
+        $value = format_date($user_profile->{$stringkey[0]}, 'custom', 'Y-m-d');
       }
       else {
         $value = $user_profile->{$stringkey[0]};

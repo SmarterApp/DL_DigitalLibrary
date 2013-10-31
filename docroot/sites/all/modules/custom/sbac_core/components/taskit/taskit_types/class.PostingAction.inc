@@ -37,7 +37,7 @@ class PostingAction extends \taskit\sbac_core\BaseTask {
       }
 
 
-      $output[] = '<span class="taskit-timestamp">' . date($this->_date_format, $this->_created). '</span>';
+      $output[] = '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format). '</span> ';
       $details = $node->field_posting_options_comment['und'][0]['value'];
       $output[] = '<div class="taskit-content-toggle">' . $details . '</div>';
 

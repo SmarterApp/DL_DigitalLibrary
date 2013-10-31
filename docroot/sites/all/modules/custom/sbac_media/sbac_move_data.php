@@ -11,13 +11,13 @@ $live_delay = 5;  // in seconds
 $DEBUG = 1;
 
 // This is stuff you need to change for EACH migration!
-$LOGFILE = "/mnt//tmp/sbacstg2/sbac_migration.". date("Ymd-His", time()) .".log";
-$dbhost = 'staging-6153.prod.hosting.acquia.com';
-$dbuser = 's6619';
-$dbpass = 'oz4YHz3Dq2ju7b9';
-$dbname = 'sbacstg2';
-$fs_private_basedir = '/mnt/files/sbacstg2/files-private/'; // with ending slash
-$fs_public_basedir = '/mnt/files/sbacstg2/sites/default/files/'; // with ending slash
+$LOGFILE = "/mnt//tmp/sbac/sbac_migration.". date("Ymd-His", time()) .".log";
+$dbhost = 'ded-6151.prod.hosting.acquia.com';
+$dbuser = 's6063';
+$dbpass = 'TuW9m7VqTHNnHpG';
+$dbname = 'sbac';
+$fs_private_basedir = '/mnt/files/sbac/files-private/'; // with ending slash
+$fs_public_basedir = '/mnt/files/sbac/sites/default/files/'; // with ending slash
 
 print "LOGGING to: $LOGFILE\n";
 

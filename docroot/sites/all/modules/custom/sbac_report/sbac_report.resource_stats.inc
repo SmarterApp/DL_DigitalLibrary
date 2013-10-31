@@ -325,7 +325,7 @@ function create_resource_stats_from_data($nodes)
     }
     foreach ($stringkeys as $stringkey) {
       if ($stringkey[2]=='date') {
-        $value = date('Y-m-d',$resource->{$stringkey[0]});
+        $value = format_date($resource->{$stringkey[0]}, 'custom', 'Y-m-d');
       }
       else {
         $value = $resource->{$stringkey[0]};

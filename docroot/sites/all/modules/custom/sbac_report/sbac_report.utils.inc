@@ -25,7 +25,7 @@ function format_value_field(&$row, $field, $separator, $encloseer, $subseparator
   }
   foreach ($field['und'] as $array_value) {
     if ($is_date) {
-      $value = date('Y-m-d',$array_value['value']);
+      $value = format_date($array_value['value'], 'custom', 'Y-m-d');
     }
     else {
       $value = $array_value['value'];

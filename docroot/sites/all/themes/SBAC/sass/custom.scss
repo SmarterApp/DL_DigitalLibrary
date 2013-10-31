@@ -1186,14 +1186,19 @@ a.tabledrag-handle .handle {
 
     li {
       display: inline-block;
-      margin-right: 3px;
+      margin-right: 8px;
+      position:relative;
 
-      &:after {
+      .field:after {
         content: ",";
+        position:absolute;
+        right: -4px;
+        bottom: 0;
       }
 
-      &:last-child:after {
+      &:last-child .field:after {
         content: " ";
+        visibility: hidden;
       }
     }
 
@@ -1205,7 +1210,7 @@ a.tabledrag-handle .handle {
 
   .field-name-field-alignment-term {
     li {
-      line-height: 0.8em;
+      //line-height: 0;
     }
   }
 }
@@ -1541,7 +1546,7 @@ a.tabledrag-handle .handle {
   #edit-group_summary,
   #edit-field-author,
   #edit-field-publisher,
-  #edit-group_materials  {
+  #edit-group_materials,  {
     .form-type-textfield,
     .form-type-textarea {
       position: relative;
@@ -2379,7 +2384,7 @@ a.tabledrag-handle .handle {
       color: #3C7646;
       display: block;
       font-size: 12px;
-      left: 20px;
+      left: -20px;
       opacity: 1;
       padding: 20px;
       position: absolute;
@@ -2500,7 +2505,7 @@ a.tabledrag-handle .handle {
 }
 
 #edit-submit--3 {
-  float: right;
+  //float: right;
   color: white;
   background: #2aa549;
 }

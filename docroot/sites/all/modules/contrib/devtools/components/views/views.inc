@@ -67,3 +67,26 @@ function render_views_block($block) {
     return $output;
   }
 }
+
+/**
+ * Clears Views' exposed filters static cache
+ * @param  [type] $a1 View object, or view name
+ * @param  [type] $a2 View display id
+ * @return [type]     [description]
+ */
+function clear_views_exposed_filter_cache($a1 = NULL, $a2 = NULL) {
+  $views_exposed = &drupal_static('views_exposed_form_cache');
+
+  // have View object
+  if (is_object($a1)) {
+    unset($views_exposed[$a1->name][$a1->current_display]);
+  }
+  // have View & Display names
+  elseif (is_string($a1) && is_string($a2)) {
+    unset($views_exposed[$a1][$a2]);
+  }
+  // have nothing, clear all
+  else {
+    $views_exposed = array();
+  }
+}

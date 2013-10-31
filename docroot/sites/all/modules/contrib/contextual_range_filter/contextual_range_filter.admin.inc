@@ -132,7 +132,7 @@ function contextual_range_filter_config_form_submit($form, &$form_state) {
     $added_filters = array_diff($filters, $prev_filters);
     $removed_filters = array_diff($prev_filters, $filters);
     $changed_filters = array_merge($added_filters, $removed_filters);
-
+   
     if (empty($changed_filters)) {
       continue;
     }

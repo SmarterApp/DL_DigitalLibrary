@@ -9,8 +9,7 @@ class AcquiaAgentTestCase extends DrupalWebTestCase {
   protected $credentials_path;
   protected $settings_path;
   protected $help_path;
-  protected $cloud_services_url;
-  protected $trial_url;
+  protected $cloud_free_url;
   protected $acquia_test_id;
   protected $acquia_test_key;
 
@@ -43,8 +42,7 @@ class AcquiaAgentTestCase extends DrupalWebTestCase {
     $this->credentials_path = 'admin/config/system/acquia-agent/credentials';
     $this->settings_path = 'admin/config/system/acquia-agent';
     $this->help_path = 'admin/help/acquia_agent';
-    $this->cloud_services_url = 'http://www.acquia.com/products-services/acquia-network/cloud-services';
-    $this->trial_url = 'https://www.acquia.com/trial';
+    $this->cloud_free_url = 'https://www.acquia.com/acquia-cloud-free';
     $this->status_report_url = 'admin/reports/status';
     $this->migrate_path = 'admin/config/system/acquia-agent/migrate';
     variable_set('acquia_network_address', $base_url);
@@ -58,8 +56,8 @@ class AcquiaAgentTestCase extends DrupalWebTestCase {
    */
   private function acquiaAgentStrings($id) {
     switch ($id) {
-      case '30-day':
-        return 'Get a free 30-day trial of the Acquia Network which includes a library of expert knowledge, tools and services to make your site awesome, and Drupal support when you need it.';
+      case 'free':
+        return 'Sign up for Acquia Cloud Free, a free Drupal sandbox to experiment with new features, test your code quality, and apply continuous integration best practices.';
       case 'get-connected':
         return 'If you have an Acquia Network subscription, connect now. Otherwise, you can turn this message off by disabling the Acquia Network modules.';
       case 'enter-email':
@@ -96,15 +94,15 @@ class AcquiaAgentTestCase extends DrupalWebTestCase {
   public function testAcquiaAgentGetConnected() {
     // Check for call to get connected.
     $this->drupalGet('admin');
-    $this->assertText($this->acquiaAgentStrings('30-day'), 'The explanation of services text exists');
-    $this->assertLinkByHref($this->cloud_services_url, 0, 'Link to Acquia.com Cloud Services exists');
+    $this->assertText($this->acquiaAgentStrings('free'), 'The explanation of services text exists');
+    $this->assertLinkByHref($this->cloud_free_url, 0, 'Link to Acquia.com Cloud Services exists');
     $this->assertText($this->acquiaAgentStrings('get-connected'), 'The call-to-action to connect text exists');
     $this->assertLink('connect now', 0, 'The "connect now" link exists');
     // Check connection setup page.
     $this->drupalGet($this->setup_path);
     $this->assertText($this->acquiaAgentStrings('enter-email'), 'The email address field label exists');
     $this->assertText($this->acquiaAgentStrings('enter-password'), 'The password field label exists');
-    $this->assertLinkByHref($this->trial_url, 0, 'Link to Acquia.com trial signup exists');
+    $this->assertLinkByHref($this->cloud_free_url, 0, 'Link to Acquia.com free signup exists');
     // Check errors on automatic setup page.
     $edit_fields = array(
       'email' => $this->randomName(),
@@ -118,7 +116,7 @@ class AcquiaAgentTestCase extends DrupalWebTestCase {
     $this->drupalGet($this->credentials_path);
     $this->assertText($this->acquiaAgentStrings('id-key'), 'The network key and id description exists');
     $this->assertText($this->acquiaAgentStrings('enter-key'), 'The network key field label exists');
-    $this->assertLinkByHref($this->trial_url, 0, 'Link to Acquia.com trial signup exists');
+    $this->assertLinkByHref($this->cloud_free_url, 0, 'Link to Acquia.com free signup exists');
     // Check errors on connection page.
     $edit_fields = array(
       'acquia_identifier' => $this->randomName(),

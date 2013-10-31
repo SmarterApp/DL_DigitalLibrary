@@ -475,6 +475,12 @@ function apachesolr_search_page_settings_form_validate($form, &$form_state) {
   elseif (count(explode('%', $form_state['values']['search_path'])) > 2) {
     form_set_error('search_path', t('Only one % placeholder is allowed.'));
   }
+  // Make sure we cannot get duplicate search page paths
+  foreach (apachesolr_search_load_all_search_pages() as $search_page) {
+    if ($form_state['values']['search_path'] == $search_page['search_path'] && $form_state['values']['page_id'] != $search_page['page_id']) {
+      form_set_error('search_path', t('The search path must be unique. This path is already in use by another search page.'));
+    }
+  }
 }
 
 /**
@@ -654,6 +660,12 @@ function apachesolr_search_get_fields($environment = NULL) {
  * Menu callback - Bias settings form.
  */
 function apachesolr_bias_settings_page($environment = NULL) {
+  // Check if we got an argument as to which environment to load
+  if (is_string($environment)) {
+    $environment = apachesolr_environment_load($environment);
+  }
+
+  // if nothing was given, load the default
   if (empty($environment)) {
     $env_id = apachesolr_default_environment();
     $environment = apachesolr_environment_load($env_id);

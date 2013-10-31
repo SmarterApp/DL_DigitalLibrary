@@ -16,3 +16,4 @@ version = "7.x-1.2"
 core = "7.x"
 project = "contextual_range_filter"
 datestamp = "1375327322"
+

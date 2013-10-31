@@ -142,7 +142,7 @@ function acquia_agent_migrate_form($form, &$form_state) {
 }
 
 /**
- *  Main 30 day trial form function
+ *  Main free subscription form function
  */
 function acquia_agent_an_start_form($form, &$form_state, $banner) {
   $header = acquia_agent_an_info_header();
@@ -181,7 +181,7 @@ function acquia_agent_settings_page($arg = NULL) {
   drupal_add_css($path . '/css/acquia_agent.css');
 
   if (empty($identifier) && empty($key) && $arg != 'setup') {
-    drupal_set_title(t('Get a free 30 day trial of the Acquia Network'));
+    drupal_set_title(t('Get an Acquia Cloud Free subscription'));
     return drupal_get_form('acquia_agent_an_start_form', $banner);
   }
   if (empty($identifier) && empty($key)) {
@@ -221,7 +221,7 @@ function _acquia_agent_automatic_setup_form_start(&$form_state) {
     'pass' => array(
       '#type' => 'password',
       '#title' => t('Enter your Acquia Network password:'),
-      '#description' => t('Your password will not be stored locally and will be sent securely to Acquia.com. <a href="!url" target="_blank">Forgot password?</a>', array('!url' => url('http://acquia.com/user/password'))),
+      '#description' => t('Your password will not be stored locally and will be sent securely to Acquia.com. <a href="!url" target="_blank">Forgot password?</a>', array('!url' => url('https://accounts.acquia.com/user/password'))),
       '#size' => 32,
       '#required' => TRUE,
     ),
@@ -232,7 +232,7 @@ function _acquia_agent_automatic_setup_form_start(&$form_state) {
         '#value' => t('Next'),
       ),
       'signup' => array(
-        '#markup' => t('Need a subscription? <a href="!url">Get one</a>.', array('!url' => url('https://www.acquia.com/trial'))),
+        '#markup' => t('Need a subscription? <a href="!url">Get one</a>.', array('!url' => url('https://www.acquia.com/acquia-cloud-free'))),
       ),
     ),
   );
@@ -365,7 +365,7 @@ function acquia_agent_settings_credentials($form, &$form_state) {
   $identifier = acquia_agent_settings('acquia_identifier');
   $key = acquia_agent_settings('acquia_key');
 
-  $form['#prefix'] = t('Enter your <a href="!net">identifer and key</a> from your subscriptions overview or <a href="!url">log in</a> to connect your site to the Acquia Network.', array('!net' => url('http://network.acquia.com/network/dashboard/subscription'), '!url' => url('admin/config/system/acquia-agent/setup')));
+  $form['#prefix'] = t('Enter your <a href="!net">identifer and key</a> from your subscriptions overview or <a href="!url">log in</a> to connect your site to the Acquia Network.', array('!net' => url('https://insight.acquia.com/subscriptions'), '!url' => url('admin/config/system/acquia-agent/setup')));
   $form['acquia_identifier'] = array(
     '#type' => 'textfield',
     '#title' => t('Identifier'),
@@ -384,7 +384,7 @@ function acquia_agent_settings_credentials($form, &$form_state) {
     '#value' => t('Connect'),
   );
   $form['actions']['signup'] = array(
-    '#markup' => t('Need a subscription? <a href="!url">Get one</a>.', array('!url' => url('https://www.acquia.com/trial'))),
+    '#markup' => t('Need a subscription? <a href="!url">Get one</a>.', array('!url' => url('https://www.acquia.com/acquia-cloud-free'))),
   );
 
   return $form;
