@@ -129,7 +129,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
   $snefilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
-  if (array_count_values($usergroups)==0) {
+  if (count($usergroups)==0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['active_tab'] = 1;
     return; // report did not contain any data.
@@ -377,17 +377,20 @@ function create_user_activity_from_data($user_activity)
     $uid = $user_profile->{'uid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
+      $is_date = (array_key_exists(2,$fieldkey) ? $fieldkey[2]=='date' : false);
       format_value_field($row, $user_profile->{$fieldkey[0]}, $separator, $encloseer,
-        $subseparator, $quote_arrays, $subquote, $fieldkey[2]=='date');
+        $subseparator, $quote_arrays, $subquote, $is_date);
     }
     foreach ($foreignidkeys as $foreignidkey) {
+      $is_date = (array_key_exists(2,$foreignidkey) ? $foreignidkey[2]=='date' : false);
       // tid is replaced by the actual value in the value field.
       format_value_field($row, $user_profile->{$foreignidkey[0]}, $separator, $encloseer,
-        $subseparator, $quote_arrays, $subquote, $foreignidkey[2]=='date');
+        $subseparator, $quote_arrays, $subquote, $is_date);
     }
 
     foreach ($stringkeys as $stringkey) {
-      if ($stringkey[2]=='date') {
+      $is_date = (array_key_exists(2,$stringkey) ? $stringkey[2]=='date' : false );
+      if ($is_date) {
         $value = format_date($user_profile->{$stringkey[0]}, 'custom', 'Y-m-d');
       }
       else {
@@ -500,7 +503,12 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
       }
     }
     foreach ($uidcountkeys as $uidcountkey) {
-      if (is_null($user_activity[$uidcountkey[0]][$uid])) {
+      if (!array_key_exists($uidcountkey[0], $user_activity) or
+        !array_key_exists($uid, $user_activity[$uidcountkey[0]]) or
+        is_null($user_activity[$uidcountkey[0]][$uid])) {
+        if (!array_key_exists($uidcountkey[0], $user_activity) ) {
+          $user_activity[$uidcountkey[0]] = array();
+        }
         $user_activity[$uidcountkey[0]][$uid] = new stdClass();
         $user_activity[$uidcountkey[0]][$uid]->count = $missing_integer;
         $user_activity[$uidcountkey[0]][$uid]->uid = $uid;
@@ -508,16 +516,19 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
     }
 
     foreach ($toskeys as $toskey) {
-      if (is_null($user_activity['tos'][$uid])) {
+      if (!array_key_exists('tos', $user_activity)) {
+        $user_activity['tos'] = array();
+      }
+      if (!array_key_exists($uid, $user_activity['tos']) or
+          is_null($user_activity['tos'][$uid])) {
+
+        $user_activity['tos'][$uid] = new stdClass();
         $user_activity['tos'][$uid]->tos_accepted = '';
         $user_activity['tos'][$uid]->tos_version = '';
         $user_activity['tos'][$uid]->tos_revision = '';
         $user_activity['tos'][$uid]->tos_revision_date = '';
         $user_activity['tos'][$uid]->uid = $uid;
       }
-    }
-
-    foreach ($toskeys as $toskey) {
       if (is_null($user_activity['tos'][$uid]->{$toskey[0]})) {
         $user_activity['tos'][$uid]->{$toskey[0]} = '';
       }
@@ -562,7 +573,7 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
 
   $user_activity = get_user_activity(array_keys($users), $date_range);
   $user_activity['user_profiles']=$user_profiles;
-  if (array_count_values($user_activity)== 0 )
+  if (count($user_activity)== 0 )
   {
     return null;
   }

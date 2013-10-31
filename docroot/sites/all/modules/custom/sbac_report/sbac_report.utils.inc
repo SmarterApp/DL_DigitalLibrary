@@ -24,11 +24,17 @@ function format_value_field(&$row, $field, $separator, $encloseer, $subseparator
     $row .= $subquote;
   }
   foreach ($field['und'] as $array_value) {
+
     if ($is_date) {
       $value = format_date($array_value['value'], 'custom', 'Y-m-d');
     }
     else {
-      $value = $array_value['value'];
+      if (is_null($array_value)) {
+        $value = '';
+      }
+      else {
+        $value = $array_value['value'];
+      }
     }
     $row .= str_replace("$encloseer","$encloseer$encloseer",$value) . $subseparator; //subseparator removed later if at end of array.
     $ix++;
@@ -45,7 +51,8 @@ function format_value_property(&$resource_node, $fieldkey, $missing_string) {
   if (!property_exists($resource_node,$fieldkey)) {
     $resource_node->{$fieldkey} = array();
   }
-  if (is_null($resource_node->{$fieldkey}['und'])) {
+  if (!array_key_exists('und', $resource_node->{$fieldkey}) or
+    is_null($resource_node->{$fieldkey}['und'])) {
     $resource_node->{$fieldkey}['und'] = array();
     $resource_node->{$fieldkey}['und'][0] = array();
     $resource_node->{$fieldkey}['und'][0]['value'] = $missing_string;
@@ -64,7 +71,8 @@ function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used
   if (!property_exists($resource_node,$fieldkey)) {
     $resource_node->{$fieldkey} = array();
   }
-  if (is_null($resource_node->{$fieldkey}['und'])) {
+  if (!array_key_exists('und', $resource_node->{$fieldkey}) or
+    is_null($resource_node->{$fieldkey}['und'])) {
     $resource_node->{$fieldkey}['und'] = array();
     $resource_node->{$fieldkey}['und'][0] = array();
     $resource_node->{$fieldkey}['und'][0]['tid'] = $missing_string;
@@ -72,10 +80,10 @@ function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used
   }
   $ix = 0;
   foreach ($resource_node->{$fieldkey}['und'] as &$field) {
-    if (is_null($field['tid'])) {
+    if (!array_key_exists('tid', $field) or is_null($field['tid'])) {
       $field['tid'] = $missing_string;
     }
-    if (is_null($field['value'])) {
+    if (!array_key_exists('value', $field) or is_null($field['value'])) {
       $field['value'] = $missing_string;
     }
     // look up the value in the foreign table.
@@ -180,7 +188,7 @@ function get_field_value_using_key($fieldkey, $data, $resource, &$is_date) {
     try {
       $value = $resource->{$fieldkey[0]}->value();
     } catch (EntityMetadataWrapperException $e) {
-      $value = "Unknown Field: $fieldkey[0]";
+      $value = "Unknown Field";
       $is_date = false;
     }
   }

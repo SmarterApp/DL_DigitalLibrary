@@ -406,17 +406,17 @@ SQL;
   // reviewers
   $reviewers = array();
 
-  foreach ($feedback_reviews as $reviews) {
-    foreach ($reviews as $review) {
-      try {
-        $value = $review->uid->value(); /// get's the actual user.
-        $value = entity_metadata_wrapper('user', $value);
-        $reviewers[$value] = $value;
-      } catch (EntityMetadataWrapperException $e) {
-        print $e->getMessage();
-      }
-    }
-  }
+//  foreach ($feedback_reviews as $reviews) {
+//    foreach ($reviews as $review) {
+//      try {
+//        $value = $review->uid->value(); /// get's the actual user.
+//        $value = entity_metadata_wrapper('user', $value);
+//        $reviewers[$value] = $value;
+//      } catch (EntityMetadataWrapperException $e) {
+//        print $e->getMessage();
+//      }
+//    }
+//  }
 
   return array($authors, $reviewers);
 }
