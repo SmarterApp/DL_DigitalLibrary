@@ -661,6 +661,11 @@ function sbac_resource_node_load($nodes, $types) {
     if ($node->type == 'resource') {
       $media_items = sbac_media_load_items($node->nid);
       $node->document = $media_items;
+
+      $html5_item = sbac_media_load_html5_item($node->nid);
+      if ($html5_item !== FALSE) {
+        $node->document['html5'] = $html5_item;
+      }
     }
   }
 }
