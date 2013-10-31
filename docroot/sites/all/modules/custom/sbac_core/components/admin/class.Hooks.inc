@@ -14,6 +14,10 @@ class Hooks extends \devtools\Hooks {
     if (variable_get('no_puke_design', FALSE)) {
       drupal_add_css($this->_path . '/css/normal_colors.css');
     }
+
+    if (match_uri('admin')) {
+      drupal_add_css($this->_path . '/css/admin.css');
+    }
   }
 
   /**

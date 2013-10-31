@@ -156,6 +156,8 @@ function sbac_report_individual() {
  * Ajax for the autocomplete SNE textfield.
  */
 function sbac_report_sne_autocomplete($string = '') {
+  $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
+
   $args = array(
     ':str' => '%' . $string . '%',
   );
@@ -165,6 +167,7 @@ function sbac_report_sne_autocomplete($string = '') {
 
   $state_condition = '';
   $state_tid = sbac_report_get_default_state_tid();
+
   if ($state_tid == 'all') {
     $state_condition = '';
   }
@@ -1070,4 +1073,13 @@ function rec_consistency_rate($all, $current) {
   $consistency = round((1 - $consistency) * 100) . '%';
 
   return $consistency;
+}
+
+/**
+ * Updates the active tab.
+ * @param  [type] $tab [description]
+ * @return [type]      [description]
+ */
+function sbac_reports_set_tab_ajax($tab) {
+  $_SESSION['sbac_report']['active_tab'] = $tab;
 }
