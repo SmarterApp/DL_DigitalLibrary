@@ -60,6 +60,13 @@ function sbac_core_menu() {
 }
 
 /**
+ * Implements hook_menu_alter().
+ */
+function sbac_core_menu_alter(&$items) {
+  \sbac_core\Core::hook('menu_alter', NULL, $items);
+}
+
+/**
  * Implements hook_theme().
  */
 function sbac_core_theme($existing, $type, $theme, $path) {

@@ -35,6 +35,16 @@ class Hooks extends \devtools\Hooks {
   }
 
   /**
+   * Extends hook_menu_alter().
+   */
+  function hook_menu_alter(&$items) {
+    // override the people page with a custom callback
+    $items['admin/people']['page callback'] = 'sbac_user_admin';
+    $items['admin/people']['file'] = 'admin.pages.inc';
+    $items['admin/people']['file path'] = $this->_path;
+  }
+
+  /**
    * Extends hook_permission().
    */
   function hook_permission() {
@@ -44,6 +54,21 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Grants permission to configure SBAC settings.'),
       ),
     );
+  }
+
+  /**
+   * Extends hook_form_alter().
+   */
+  function hook_form_alter(&$form, &$form_state, $form_id) {
+    if ($form_id == 'sbac_user_filter_form') {
+      
+
+      // $index = array_search('user_filter_form_submit', $form['#submit']);
+      // unset($form['#submit'][$index]);
+      // $form['#submit'] = array_merge($form['#submit']);
+
+      $form['#submit'][] = 'sbac_user_filter_form_submit';
+    }
   }
 
   /*----------------------------------------------------------------------------
