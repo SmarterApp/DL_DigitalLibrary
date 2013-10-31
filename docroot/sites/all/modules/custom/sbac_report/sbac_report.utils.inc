@@ -119,7 +119,7 @@ function grab_field_value($value) {
 }
 function get_field_value_using_schema($schemakey, $data, $resource, &$is_date) {
   if (array_key_exists('keys', $schemakey)) {
-    $key = get_field_value_using_schema($schemakey['key'], $data, $resource, &$is_date);
+    $key = get_field_value_using_schema($schemakey['key'], $data, $resource, $is_date);
     try {
       $value = $resource->{$key}->value();
     } catch (EntityMetadataWrapperException $e) {
@@ -129,7 +129,7 @@ function get_field_value_using_schema($schemakey, $data, $resource, &$is_date) {
     return $value;
   }
   else {
-    return get_field_value_using_key($schemakey, $data, $resource, &$is_date);
+    return get_field_value_using_key($schemakey, $data, $resource, $is_date);
   }
 }
 
