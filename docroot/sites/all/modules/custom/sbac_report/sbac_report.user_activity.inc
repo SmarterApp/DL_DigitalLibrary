@@ -27,7 +27,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
   $user_group_options = sbac_report_user_group_options();
-
+  
   $form['user_group_dropdown'] = array(
     '#type' => 'select',
     '#title' => t('Choose User Groups'),
@@ -83,7 +83,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
 }
 
 /**
- * CSV Report: form validate.
+ * CSV Report: form validate. This routine also sets the user activity report as the active tab
  */
 function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_USER;
@@ -95,11 +95,11 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
 
 /**
  * CSV Report: Form submit.
- * Store in SESSION:
- * $_SESSION['sbac_report'] = array(
- *   'state' => array('name' => 'California', 'tid' => 123),
- *   'date_range' => array('range' => '20130515--20140515'),
- * );
+ *
+ * If there are values in the session, grab them, then build the report and send it to the
+ * browser.
+ *
+ * Note: This routine calls "exit" in order to force the browser to download the csv file.
  */
 
 function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
@@ -129,7 +129,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
   $snefilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
-  if (array_count_values($usergroups)==0) {
+  if (count($usergroups)==0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['active_tab'] = 1;
     return; // report did not contain any data.
@@ -146,20 +146,28 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   $_SESSION['sbac_report']['error_message'] = '';
   $_SESSION['sbac_report']['first_time'] = 0;
 
-  // _cex exits and does not return.
+  // _cex exits and does not return in order to force a download by the browser.
   _cex_download($csv_activity_report_result, 'output.csv');
   // _cex exits and does not return.
 }
 
+/*
+ * Get the user groups for a given user group.  Note that a query with 'in (%s)' in the string doesn't work
+ * properly with Drupals perpared statement support.
+ *
+ */
 function get_users_for_user_groups($usergroups)
 {
+  // look for the aggregated admins option "admins"
   if (array_key_exists (1, $usergroups)) {
+    // get the admins:
     $admins = sbac_report_user_group_admins();
     unset($usergroups[1]);
     foreach ($admins as $key => $value) {
       $usergroups[$key] = $key;
     }
   }
+  // look for the 'all' option being set:
   else if (array_key_exists(0,$usergroups)) {
     $admins = sbac_report_user_group_admins();
     foreach ($admins as $key => $value) {
@@ -172,6 +180,8 @@ function get_users_for_user_groups($usergroups)
   }
 
   $usergroups = implode(',',$usergroups);
+// todo: get prepared statement to work with 'in (%s)'.
+
 // The below statement doesn't work, where usergroups is passed as a string or an array.
 //  $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in :stuff";
 //  $result = db_query($sql,
@@ -189,34 +199,44 @@ function get_users_for_user_groups($usergroups)
 
   return $values;
 }
-
+/*
+ * Get the user activity on resources and reviews.  There are 12 different statistics that are retrieved by this
+ * routine, each one a count of something.  This routine also gets the terms of service legal information.
+ */
 function get_user_activity($users, $date_range)
 {
-  function count_with_users_query($sql_template, $users, $from_date=null, $to_date=null)//$parameters=null)
-  {
-    // done this way because the prepared statement didn't work passing array or comma separated string.
-    // TODO: make prepared statement work here, or escape string???
+    /*
+     * Local function that handles all the query logic for the count queries.  It injects the user list and optionally
+     * a from/to date into the query.  It then performs the query and returns the resulting records in a hash by user
+     * id (uid).
+    */
+    function count_with_users_query($sql_template, $users, $from_date=null, $to_date=null)//$parameters=null)
+    {
+      // done this way because the prepared statement didn't work passing array or comma separated string.
+      // TODO: make prepared statement work here, or escape string???
 
-    if ($from_date && $to_date) {
-      $sql = sprintf($sql_template,$users,'%Y%m%d',$from_date,$to_date);
-    }
-    else {
-      $sql = sprintf($sql_template,$users);
-    }
-    $result = db_query($sql);
-    $values = array();
-    foreach ($result as $record) {
-      $values[$record->uid] = $record;
+      if ($from_date && $to_date) {
+        $sql = sprintf($sql_template,$users,'%Y%m%d',$from_date,$to_date);
+      }
+      else {
+        $sql = sprintf($sql_template,$users);
+      }
+      $result = db_query($sql);
+      $values = array();
+      foreach ($result as $record) {
+        $values[$record->uid] = $record;
+      }
+
+      return $values;
     }
 
-    return $values;
-  }
-
-  $users = implode(',',$users);
+  $users = implode(',',$users);  // make the users a comma separated list.
+  // extract the date range into a from and to date
   $dates = explode('--', $date_range);
   $from_date = $dates[0];
   $to_date = $dates[1];
 
+  // Count queries:
   # resources viewed
   $sql = "select count(nid) as count, uid From node_user_paradata where uid in (%s) group by uid";
   $user_activity['resources_viewed'] = count_with_users_query($sql, $users);
@@ -311,6 +331,14 @@ function get_user_activity($users, $date_range)
   return $user_activity;
 }
 
+/*
+ * Create the User Activity CSV report.  This routine uses 'validate_and_fill_out_user_activity_report to specify
+ * the columns of the report and to fill out the missing values in the queried data set.  Once it has the columns of
+ * the report and the cleaned up data, it formats the CSV report as a string and returns it.
+ *
+ * @param $user_activity contains all the data for the report, basically, a list of users with various statistics
+ * counted.  See 'get_user_activity()' for the queries to retreive this data.
+ */
 function create_user_activity_from_data($user_activity)
 {
   $separator = ',';
@@ -327,6 +355,8 @@ function create_user_activity_from_data($user_activity)
   $stringkeys = array();
   $uidcountkeys = array();
   $toskeys = array();
+
+  // get the fields for the report and clean up the data.
   validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys);
 
   $titles = '';
@@ -347,17 +377,20 @@ function create_user_activity_from_data($user_activity)
     $uid = $user_profile->{'uid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
+      $is_date = (array_key_exists(2,$fieldkey) ? $fieldkey[2]=='date' : false);
       format_value_field($row, $user_profile->{$fieldkey[0]}, $separator, $encloseer,
-        $subseparator, $quote_arrays, $subquote, $fieldkey[2]=='date');
+        $subseparator, $quote_arrays, $subquote, $is_date);
     }
     foreach ($foreignidkeys as $foreignidkey) {
+      $is_date = (array_key_exists(2,$foreignidkey) ? $foreignidkey[2]=='date' : false);
       // tid is replaced by the actual value in the value field.
       format_value_field($row, $user_profile->{$foreignidkey[0]}, $separator, $encloseer,
-        $subseparator, $quote_arrays, $subquote, $foreignidkey[2]=='date');
+        $subseparator, $quote_arrays, $subquote, $is_date);
     }
 
     foreach ($stringkeys as $stringkey) {
-      if ($stringkey[2]=='date') {
+      $is_date = (array_key_exists(2,$stringkey) ? $stringkey[2]=='date' : false );
+      if ($is_date) {
         $value = format_date($user_profile->{$stringkey[0]}, 'custom', 'Y-m-d');
       }
       else {
@@ -385,6 +418,23 @@ function create_user_activity_from_data($user_activity)
   return $csv;
 }
 
+/*
+ * This routine defines the columns of the user activity report and also validates and pads out the query data.
+ *
+ * An array is created that defines the columns of the report.  Each entry in the array contains an index into the data
+ * set, the human readable title, and a flag for wether the field is a date.
+ *
+ * There are five types of locations where the data for fields can be found.
+ *
+ * stringkey: from the user profile as a direct value
+ * fieldkey: from the user profile drupal field data as a direct value
+ * foreignidkey: from the user profile field data, but as a foreign key to the taxonomy table.
+ * uidcountkey: from the 12 specialized statistic queries
+ * toskey: the terms of service queries.
+ *
+ *
+ * todo: break into separate routines, definition, and validate/pad.
+ */
 function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys)
 {
   // loop through all values and make sure 0's and '' are used as placeholders for missing values.
@@ -453,7 +503,12 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
       }
     }
     foreach ($uidcountkeys as $uidcountkey) {
-      if (is_null($user_activity[$uidcountkey[0]][$uid])) {
+      if (!array_key_exists($uidcountkey[0], $user_activity) or
+        !array_key_exists($uid, $user_activity[$uidcountkey[0]]) or
+        is_null($user_activity[$uidcountkey[0]][$uid])) {
+        if (!array_key_exists($uidcountkey[0], $user_activity) ) {
+          $user_activity[$uidcountkey[0]] = array();
+        }
         $user_activity[$uidcountkey[0]][$uid] = new stdClass();
         $user_activity[$uidcountkey[0]][$uid]->count = $missing_integer;
         $user_activity[$uidcountkey[0]][$uid]->uid = $uid;
@@ -461,21 +516,23 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
     }
 
     foreach ($toskeys as $toskey) {
-      if (is_null($user_activity['tos'][$uid])) {
+      if (!array_key_exists('tos', $user_activity)) {
+        $user_activity['tos'] = array();
+      }
+      if (!array_key_exists($uid, $user_activity['tos']) or
+          is_null($user_activity['tos'][$uid])) {
+
+        $user_activity['tos'][$uid] = new stdClass();
         $user_activity['tos'][$uid]->tos_accepted = '';
         $user_activity['tos'][$uid]->tos_version = '';
         $user_activity['tos'][$uid]->tos_revision = '';
         $user_activity['tos'][$uid]->tos_revision_date = '';
         $user_activity['tos'][$uid]->uid = $uid;
       }
-    }
-
-    foreach ($toskeys as $toskey) {
       if (is_null($user_activity['tos'][$uid]->{$toskey[0]})) {
         $user_activity['tos'][$uid]->{$toskey[0]} = '';
       }
     }
-
   }
 
   // have all the tids, now get the term data and set the report values:
@@ -498,6 +555,11 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   }
 }
 
+/*
+ * Build an User Activity CSV report.  Gets the users, loads the profiles, filters them by the SNE/SLT dropdown,
+ * and by state, then gets the user activty statistics and legal terms of service data, then calls the routine
+ * to create the report from the data.
+ */
 function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_slt_filter)
 {
   $users = get_users_for_user_groups($usergroups);
@@ -511,7 +573,7 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
 
   $user_activity = get_user_activity(array_keys($users), $date_range);
   $user_activity['user_profiles']=$user_profiles;
-  if (array_count_values($user_activity)== 0 )
+  if (count($user_activity)== 0 )
   {
     return null;
   }
@@ -520,11 +582,14 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
   return $file_data;
 }
 
+/*
+ * Fitler the users by the sne/slt value in the dropdown menu.
+ */
 function filter_users_by_sne_slt($user_profiles, $sne_slt_filter)
 {
   // sne filter: 0=>neither, 1=>sne, 2=>slt, 2=>both
   $filtered_user_profiles = array();
-// no all condition:
+// the all condition if it ever gets requested:
 //  if (in_array(4, $sne_slt_filter)) { // both, nothing to filter.
 //    return $user_profiles;
 //  }
@@ -566,6 +631,9 @@ function filter_users_by_sne_slt($user_profiles, $sne_slt_filter)
   return $filtered_user_profiles;
 }
 
+/*
+ * Filter out users by states.
+ */
 function filter_users_by_state($user_profiles, $state_tid)
 {
   // sne filter: 0=>sne, 1=>slt, 2=> both

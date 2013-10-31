@@ -24,11 +24,17 @@ function format_value_field(&$row, $field, $separator, $encloseer, $subseparator
     $row .= $subquote;
   }
   foreach ($field['und'] as $array_value) {
+
     if ($is_date) {
       $value = format_date($array_value['value'], 'custom', 'Y-m-d');
     }
     else {
-      $value = $array_value['value'];
+      if (is_null($array_value)) {
+        $value = '';
+      }
+      else {
+        $value = $array_value['value'];
+      }
     }
     $row .= str_replace("$encloseer","$encloseer$encloseer",$value) . $subseparator; //subseparator removed later if at end of array.
     $ix++;
@@ -45,7 +51,8 @@ function format_value_property(&$resource_node, $fieldkey, $missing_string) {
   if (!property_exists($resource_node,$fieldkey)) {
     $resource_node->{$fieldkey} = array();
   }
-  if (is_null($resource_node->{$fieldkey}['und'])) {
+  if (!array_key_exists('und', $resource_node->{$fieldkey}) or
+    is_null($resource_node->{$fieldkey}['und'])) {
     $resource_node->{$fieldkey}['und'] = array();
     $resource_node->{$fieldkey}['und'][0] = array();
     $resource_node->{$fieldkey}['und'][0]['value'] = $missing_string;
@@ -58,12 +65,14 @@ function format_value_property(&$resource_node, $fieldkey, $missing_string) {
     $ix++;
   }
 }
+
 function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used_tids) {
   // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
   if (!property_exists($resource_node,$fieldkey)) {
     $resource_node->{$fieldkey} = array();
   }
-  if (is_null($resource_node->{$fieldkey}['und'])) {
+  if (!array_key_exists('und', $resource_node->{$fieldkey}) or
+    is_null($resource_node->{$fieldkey}['und'])) {
     $resource_node->{$fieldkey}['und'] = array();
     $resource_node->{$fieldkey}['und'][0] = array();
     $resource_node->{$fieldkey}['und'][0]['tid'] = $missing_string;
@@ -71,10 +80,10 @@ function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used
   }
   $ix = 0;
   foreach ($resource_node->{$fieldkey}['und'] as &$field) {
-    if (is_null($field['tid'])) {
+    if (!array_key_exists('tid', $field) or is_null($field['tid'])) {
       $field['tid'] = $missing_string;
     }
-    if (is_null($field['value'])) {
+    if (!array_key_exists('value', $field) or is_null($field['value'])) {
       $field['value'] = $missing_string;
     }
     // look up the value in the foreign table.
@@ -93,4 +102,145 @@ function set_tid_property(&$resource_node, $fieldkey, &$tid_terms) {
     }
     $ix++;
   }
+}
+function grab_field_value($value) {
+  if (is_array($value)) {
+    if (count($value) == 0) {
+      $actual_value = '';
+    }
+    else if (count($value) == 1) {
+      list($actual_value) = $value; // get first value.
+      $actual_value = $actual_value->name;
+    }
+    else {
+      $actual_value = array();
+      foreach ($value as $v) {
+        array_push($actual_value,$v->name);
+      }
+    }
+    $value = $actual_value;
+  }
+  else if (is_object($value)) {
+    $value = $value->name;
+  }
+  return $value;
+}
+function get_field_value_using_schema($schemakey, $data, $resource, &$is_date) {
+  if (array_key_exists('keys', $schemakey)) {
+    $key = get_field_value_using_schema($schemakey['key'], $data, $resource, $is_date);
+    try {
+      $value = $resource->{$key}->value();
+    } catch (EntityMetadataWrapperException $e) {
+      $value = "Unknown Field: $key";
+      $is_date = false;
+    }
+    return $value;
+  }
+  else {
+    return get_field_value_using_key($schemakey, $data, $resource, $is_date);
+  }
+}
+
+function get_field_value_using_key($fieldkey, $data, $resource, &$is_date) {
+  $is_date = false;
+  if (array_key_exists('fieldtype', $fieldkey)) {
+    $is_date = $fieldkey['fieldtype'] == 'date';
+  }
+  if (array_key_exists('function', $fieldkey)) {
+    $value = $fieldkey['function']($fieldkey, $resource);
+  } else if (array_key_exists('path', $fieldkey) and is_array($fieldkey['path'])) {
+    $value = $data[$fieldkey['datasource']][$resource->nid->value()];
+    foreach ($fieldkey['path'] as $accessor => $type) {
+      try {
+        if ($type = 'class') {
+          $value = $value->{$accessor};
+        } else {
+          $value = $value[$accessor];
+        }
+      } catch (EntityMetadataWrapperException $e) {
+        $value = "Unknown type/accessor: $type/$accessor";
+        $is_date = false;
+        break;
+      }
+    }
+  } else if (array_key_exists('datasource', $fieldkey)) {
+    if (array_key_exists('index', $fieldkey) and
+      array_key_exists($fieldkey['datasource'], $data) and
+      array_key_exists($resource->nid->value(), $data[$fieldkey['datasource']])
+    ) {
+      $values = array_values($data[$fieldkey['datasource']][$resource->nid->value()]);
+      if ($values and array_key_exists($fieldkey['index'], $values)) {
+        try {
+          $value = $values[$fieldkey['index']]
+            ->{$fieldkey[0]}
+            ->value();
+        } catch (EntityMetadataWrapperException $e) {
+          $value = "Unknown Field: $fieldkey[0]";
+          $is_date = false;
+        }
+      } else {
+        $value = '';
+      }
+    } else {
+      $value = '';
+    }
+  } else {
+    try {
+      $value = $resource->{$fieldkey[0]}->value();
+    } catch (EntityMetadataWrapperException $e) {
+      $value = "Unknown Field";
+      $is_date = false;
+    }
+  }
+  return $value;
+  //   $separator, $encloseer, $subseparator, $quote_arrays, $subquote, $is_date);
+
+}
+
+function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date=false)
+{
+  $separator=$csv_configuration['separator'];
+  $encloseer=$csv_configuration['encloseer'];
+  $subseparator=$csv_configuration['subseparator'];
+  $quote_arrays=$csv_configuration['quote_arrays'];
+  $subquote=$csv_configuration['subquote'];
+
+  $field = grab_field_value($field);
+  $ix = 0;
+  $row.=$encloseer;
+  if ($field == null) {
+    $row.='';
+  }
+  else if (is_array($field)) {
+    $count = count($field);
+    if ($count > 1 and $quote_arrays)  {
+      $row .= $subquote;
+    }
+    foreach ($field as $array_value) {
+      if ($is_date) {
+        $value = date('Y-m-d',$array_value);
+      }
+      else {
+        $value = $array_value;
+      }
+      $row .= str_replace("$encloseer","$encloseer$encloseer",$value) . $subseparator; //subseparator removed later if at end of array.
+      $ix++;
+      if ($ix == $count) {
+        $row = substr($row, 0, -1);
+      } // reduce length by one removing the last sub-separator
+    }
+    if ($count > 1 and $quote_arrays)  { $row .= $subquote; }
+  }
+  else {
+    if ($is_date) {
+      $value = date('Y-m-d',intval($field));
+    }
+    else {
+      $value = $field;
+    }
+    $row .= str_replace("$encloseer","$encloseer$encloseer",$value);
+
+  }
+  $row.=$encloseer;
+  $row.=$separator;
 }

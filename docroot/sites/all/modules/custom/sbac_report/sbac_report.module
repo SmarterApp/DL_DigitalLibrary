@@ -9,11 +9,11 @@ define('SBAC_REPORT_TAB_USER',       'user_activity');
 define('SBAC_REPORT_TAB_STATES',     'resource_states');
 define('SBAC_REPORT_FILTER_ERROR',   '<div>' . t('No data exists for the filters you have selected. Please choose a new combination of filters and attempt your export again.') . '</div>');
 
-include_once 'sbac_report.utils.inc';
-include_once 'sbac_report.features.inc';
-include_once 'sbac_report.individual.inc';
-include_once 'sbac_report.user_activity.inc';
-include_once 'sbac_report.resource_stats.inc';
+include_once('sbac_report.utils.inc');
+include_once('sbac_report.features.inc');
+include_once('sbac_report.individual.inc');
+include_once('sbac_report.user_activity.inc');
+include_once('sbac_report.resource_stats.inc');
 
 include_once 'sbac_report.preprocess.inc';
 
@@ -73,13 +73,13 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK
   );
 
-//  $items['export_report_resource_stats'] = array(
-//    'title' => 'Export Report Detailed Resource Statistics',
-//    'file' => 'sbac_report.pages.inc',
-//    'page callback' => 'sbac_csv_report_resource_stats_export_form_submit',
-//    'access callback' => 'sbac_csv_report_resource_stats_export_form_submit',
-//    'type' => MENU_CALLBACK
-//  );
+  $items['export_report_resource_stats'] = array(
+    'title' => 'Export Report Detailed Resource Statistics',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+    'access callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+    'type' => MENU_CALLBACK
+  );
 
   return $items;
 }
@@ -114,7 +114,6 @@ function sbac_report_user_access_all($account = NULL) {
 
   $allowed_roles = array(
     3   => 'administrator',
-    // 7   => 'DLRB member',
     8   => 'digital library administrator',
     23  => 'system administrator',
   );
@@ -176,7 +175,6 @@ function sbac_report_theme($existing, $type, $theme, $path) {
       'template_preprocess',
     ),
   );
-
 
   $themes['views_view_fields__sne_details'] = array(
     'template' => 'views-view-fields--sne-details',
@@ -323,7 +321,7 @@ function sbac_report_state_options() {
 }
 
 /**
- * Get default state.
+ *  Get default state.
  */
 function sbac_report_get_default_state_tid() {
   $state_tid = sbac_report_get_session_value('state', 'tid');
@@ -333,11 +331,14 @@ function sbac_report_get_default_state_tid() {
   }
   return $state_tid;
 }
+/**
+ *  Get the default user group, either the values in the session, or 'all'.
+ */
 function sbac_report_get_default_usergroup() {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
 
   if (empty($usergroups)) {
-    return array('0');
+    return array('0'); // 0 is 'all', 1 is 'admins'
   }
   return $usergroups;
 }
@@ -385,7 +386,7 @@ function sbac_report_date_range_options() {
 
 
 /**
- * Options for the user groups.
+ * Get the admin user groups.
  */
 function sbac_report_user_group_admins() {
   $options = get_user_groups();
@@ -416,23 +417,25 @@ function sbac_report_sne_slt_options() {
     );
   return $options;
 }
-
+/*
+ * Default options for the SNE/SLT dropdown.  The default is what's in the session, or 0 which is the niether option.
+ */
 function sbac_report_get_default_sne_slt() {
 
   $snesltfilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
   if (empty($snesltfilter)) {
-    return array('0');
+    return array('0'); // 0 is niether
   }
   return $snesltfilter;
 }
 
 /**
- * Options for the user groups.
+ * Options for the user groups.  Note, three admin roles are aggregated as 'admins' for option 1.
+ * 'All' is option 0.  The rest are retrireved from the database, but 4 users are filtered out of the query.
  */
 function sbac_report_user_group_options() {
   $options = get_user_groups();
-
 
   // filter out unwanted values from the database query.
   // remove drupalisms:
@@ -444,8 +447,6 @@ function sbac_report_user_group_options() {
   unset($options[array_search('help desk',$options)]);
 
   // admins aggregated:
-//  $key = array_search('DLRB member',$options);
-//  unset($options[$key]);
   $key = array_search('administrator',$options);
   unset($options[$key]);
   $key = array_search('system administrator',$options);
@@ -486,7 +487,6 @@ function sbac_report_get_session_value($field, $key) {
     if (is_array($value)) {
       return $value;
     }
-
     return check_plain($value);
   }
 
@@ -514,20 +514,6 @@ function sbac_report_state_ajax($form, &$form_state) {
   }
   return $form;
 }
-
-/**
- * Ajax callback for the User Group field.
- * Store the selected state in SESSION
- * so the autocomplete for SNE text field is filtered based on the state.
- */
-//function sbac_report_user_group_ajax($form, &$form_state) {
-//  if (isset($form_state['values']['usergroups'])) {
-//    $usergroups_tid = $form_state['values']['usergroups'];
-//    $_SESSION['sbac_report']['usergroups']['tid'] = $usergroups_tid;
-//
-//  }
-//  return $form;
-//}
 
 /**
  * Validate the date range string used for Views Contextual Range filter.
@@ -1068,7 +1054,7 @@ function sbac_report_preprocess_views_view_field(&$vars) {
   }
 }
 /**
- *  get user groups
+ *  Get user groups from the role table, add 'all' option to the list.
  */
 function get_user_groups()
 {
