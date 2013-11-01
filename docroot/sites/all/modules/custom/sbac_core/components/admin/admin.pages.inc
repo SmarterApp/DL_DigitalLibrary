@@ -150,7 +150,7 @@ function sbac_user_admin_account() {
   $header = array(
     'username' => array('data' => t('Username'), 'field' => 'u.name'),
     'status' => array('data' => t('Status'), 'field' => 'u.status'),
-    'state' => array('data' => t('State')),
+    'state' => array('data' => t('State'), 'field' => 'term.name'),
     'sne' => array('data' => t('Is SNE'), 'field' => 'sne.field_sne_member_value'),
     'slt' => array('data' => t('Is SLT'), 'field' => 'slt.field_slt_member_value'),
     'roles' => array('data' => t('Roles')),
