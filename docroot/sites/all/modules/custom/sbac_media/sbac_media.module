@@ -336,50 +336,7 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
   }
 
   if ($html5) {
-    $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.html5.js';
-
-    // Content Module Container.
-    $form['field_content_module_container']['#tree'] = TRUE;
-    $form['field_content_module_container'] = array(
-      '#prefix'=>'<div id="sbac-content-module-container">',
-      '#suffix'=>'</div>',
-    );
-
-    // Content Module Description.
-    $form['field_content_module_container']['field_content_module_summary'] = array(
-      '#type' => 'item',
-      '#title' => t('Add Content Module') . ' ' . theme('form_required_marker'),
-      '#markup' => '<p>'.t('This is the content module with which you want users to interact. You can add a HTML5 captivate package file with a zip or gz extension.').'</p>',
-      '#weight' => -101,
-    );
-
-    // Check for default value.
-    if (isset($form['#node']->document['html5'])) {
-      sbac_media_build_html5_section($form, $form_state);
-    }
-    else {
-
-      // Content Module Upload Picker.
-      $form['field_content_module_container']['field_content_module_picker'] = array(
-        '#type' => 'file',
-        '#title' => t(''),
-        '#size' => 22,
-      );
-
-      // Content Module Upload Button.
-      $form['field_content_module_container']['field_content_module_upload'] = array(
-        '#type' => 'submit',
-        '#value' => 'Upload (25MB Max)',
-        '#sbac_embed_video' => FALSE,
-        '#ajax'=> array(
-          'callback'=>'sbac_media_html5_element_upload',
-          'wrapper'=> 'sbac-content-module-container',
-          'method'=> 'replace',
-          'effect'=> 'fade',
-        ),
-      );
-    }
-    $form['#group_children']['field_content_module_container'] = 'group_materials';
+    sbac_media_build_html5_section($form, $form_state);
   }
 
   $form['field_file_container']['#tree'] = TRUE;
@@ -538,60 +495,118 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_media_build_html5_section(&$form, &$form_state) {
-  $html5_media_item = $form['#node']->document['html5'];
-  $form['field_content_module_container']['ajax_container'] = array(
-    '#prefix'=>'<div id="sbac-ajax-container">',
+  // Content Module Container.
+  $form['field_content_module_container']['#tree'] = TRUE;
+  $form['field_content_module_container'] = array(
+    '#prefix'=>'<div id="sbac-content-module-container">',
     '#suffix'=>'</div>',
-    '#weight' => -99,
   );
 
-  $form['field_content_module_container']['ajax_container']['header'] = array(
-    '#markup' => "<h4 class='label'>Content Module</h4>",
-    '#weight' => -98,
+  // Content Module Description.
+  $form['field_content_module_container']['field_content_module_summary'] = array(
+    '#type' => 'item',
+    '#title' => t('Add Content Module') . ' ' . theme('form_required_marker'),
+    '#markup' => '<p>'.t('This is the content module with which you want users to interact. You can add a HTML5 captivate package file with a zip or gz extension.').'</p>',
+    '#weight' => -101,
   );
 
-  $form['field_content_module_container']['ajax_container']['subcontainer'] = array(
-    '#prefix'=>'<div id="sbac-content-module-subcontainer">',
-    '#suffix'=>'</div>',
-    '#weight' => -97,
-  );
+  // Check for default value.
+  $html5_content = FALSE;
+  if (isset($form['#node']->document['html5'])) {
+    $html5_content = TRUE;
+    $html5_media_item = $form['#node']->document['html5'];
+    $form['field_content_module_container']['ajax_container'] = array(
+      '#prefix'=>'<div id="sbac-ajax-container">',
+      '#suffix'=>'</div>',
+      '#weight' => -99,
+    );
 
-  $form['field_content_module_container']['ajax_container']['subcontainer']['uploaded_file'] = array(
-    '#markup' => "<p class='uploaded-file'>" . $html5_media_item->filename . "</p>",
-    '#weight' => -96,
-  );
+    $form['field_content_module_container']['ajax_container']['header'] = array(
+      '#markup' => "<h4 class='label'>Content Module</h4>",
+      '#weight' => -98,
+    );
 
-  // Delete link.
-  $delete_link = l(t('Delete'), 'sbac-media/nojs/delete-media', array(
-    'attributes' => array(
-      'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media',
-      'id' => 'sbac-media-modal-delete-media'
-    ),
-    'query' => array(
-      'fid' => $html5_media_item->fid,
-      'nid' => $html5_media_item->nid,
-      'id' => $html5_media_item->id,
-      'html5' => $form_state['html5'],
-    )
-  ));
+    $form['field_content_module_container']['ajax_container']['subcontainer'] = array(
+      '#prefix'=>'<div id="sbac-content-module-subcontainer">',
+      '#suffix'=>'</div>',
+      '#weight' => -97,
+    );
 
-  // JS to properly size the modal.
-  $js_settings = array(
-    'sbac-media-modal-delete-media' => array(
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 600,
-        'height' => 160,
+    $form['field_content_module_container']['ajax_container']['subcontainer']['uploaded_file'] = array(
+      '#markup' => "<p class='uploaded-file'>" . $html5_media_item->filename . "</p>",
+      '#weight' => -96,
+    );
+
+    // Delete link.
+    $delete_link = l(t('Delete'), 'sbac-media/nojs/delete-media', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media',
+        'id' => 'sbac-media-modal-delete-media'
       ),
+      'query' => array(
+        'fid' => $html5_media_item->fid,
+        'nid' => $html5_media_item->nid,
+        'id' => $html5_media_item->id,
+        'html5' => $form_state['html5'],
+      )
+    ));
+
+    // JS to properly size the modal.
+    $js_settings = array(
+      'sbac-media-modal-delete-media' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 160,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
+
+    $form['field_content_module_container']['ajax_container']['subcontainer']['delete_button'] = array(
+      '#markup' => $delete_link,
+      '#weight' => -95,
+    );
+  }
+
+  $container = '<div id="display-container" style="display:block;">';
+  if ($html5_content) {
+    $container = '<div id="display-container" style="display:none;">';
+  }
+
+  $form['field_content_module_container']['field_display'] = array(
+    '#prefix'=> $container,
+    '#suffix'=> '</div>',
+  );
+
+  // Content Module Upload Picker.
+  $form['field_content_module_container']['field_display']['field_content_module_picker'] = array(
+    '#type' => 'file',
+    '#title' => t(''),
+    '#size' => 22,
+    '#weight' => -96,
+    '#attributes' => array('id' => array('edit-field-content-module-picker'), 'name' => 'files[field_content_module_picker]'),
+  );
+
+  // Content Module Upload Button.
+  $form['field_content_module_container']['field_display']['field_content_module_upload'] = array(
+    '#type' => 'submit',
+    '#value' => 'Upload (25MB Max)',
+    '#sbac_embed_video' => FALSE,
+    '#weight' => -95,
+    '#attributes' => array('class' => array('sbac-html5-uploader'), 'id' => 'edit-field-content-module-upload'),
+    '#ajax' => array(
+      'callback' => 'sbac_media_html5_element_upload',
+      'wrapper' => 'sbac-content-module-container',
+      'method' => 'replace',
+      'effect' => 'fade',
     ),
   );
-  drupal_add_js($js_settings, 'setting');
 
-  $form['field_content_module_container']['ajax_container']['subcontainer']['delete_button'] = array(
-    '#markup' => $delete_link,
-    '#weight' => -95,
-  );
+  $form['#group_children']['field_content_module_container'] = 'group_materials';
 }
+
+
 
 /**
  * After build function to add the submit handler in.
@@ -1227,19 +1242,28 @@ function sbac_media_delete_media($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if ($form_state['html5']) {
-          $html5_media_item = sbac_media_load_html5_item($form_state['values']['nid']);
+          // Build path to delete file folder.
+          $file = file_load($form_state['values']['fid']);
+          $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
+          $real_path = drupal_realpath($directory) . '/' . $file->filename;
+          $file_data = pathinfo($real_path);
+          $zip_contents_path = drupal_realpath($directory) . '/' . $file_data['filename'];
+          file_unmanaged_delete_recursive($zip_contents_path);
+
+          // Delete the record from file system (DB and File System)
+          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+
+          // Rebuild the HTML5 section.
           $form = array();
-          $form['#node']->document['html5'] = $html5_media_item;
           $form_state = array();
           $form_state['html5'] = TRUE;
           sbac_media_build_html5_section($form, $form_state);
-          $output[] = ajax_command_html('#sbac-ajax-container', $form['field_content_module_container']);
+          $rendered_output = drupal_render($form['field_content_module_container']);
+          $output[] = ajax_command_html('#sbac-content-module-container', $rendered_output);
         }
         else {
-          // Delete document reference.
-          if ($form_state['values']['id']) {
-            sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
-          }
+          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+          // Rebuild the list of items.
           $media_items = sbac_media_load_items($form_state['values']['nid']);
           $media_list = _sbac_media_create_list($media_items, $form_state);
           $output[] = ajax_command_html('#sbac-media-list', $media_list);
