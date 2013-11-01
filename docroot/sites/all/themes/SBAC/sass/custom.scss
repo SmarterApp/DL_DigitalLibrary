@@ -1151,6 +1151,7 @@ a.tabledrag-handle .handle {
 .field-name-resource-slideshow .flexslider .flex-viewport ul li label {
   color: $darkgreen;
   font-size: 18px;
+  word-break:keep-all !important;
 }
 
 .slides {
@@ -1160,6 +1161,7 @@ a.tabledrag-handle .handle {
 .slider-body {
   color: #717880;
   margin-bottom: 25px;
+  word-break:normal !important;
 }
 
 .resource-info {
