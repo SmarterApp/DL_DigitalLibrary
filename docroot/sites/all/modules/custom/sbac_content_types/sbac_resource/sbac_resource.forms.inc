@@ -1882,7 +1882,9 @@ function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
   if (($user->uid == 1 ||
     in_array('DLRB member', $user->roles) ||
     in_array('digital library administrator', $user->roles) ||
-    in_array('system administrator', $user->roles)) && isset($form['#node']->workbench_moderation['current']->state)) {
+    in_array('system administrator', $user->roles)) &&
+    isset($form['#node']->workbench_moderation['current']->state) &&
+    $form['#node']->workbench_moderation['current']->state == 'published') {
 
     $form['actions']['cancel_all_changes'] = array(
       '#type' => 'submit',

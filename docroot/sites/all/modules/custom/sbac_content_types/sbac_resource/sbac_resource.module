@@ -179,7 +179,7 @@ function sbac_resource_preprocess_node(&$vars) {
       $vars['edit_link'] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'))));
     }
     // Documents
-    if (isset($vars['document'][0])) {
+    if (isset($vars['document'][0]) || isset($vars['document']['html5'])) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
       $viewer = _sbac_resource_preview_content($vars);
       $materials = _sbac_resource_preview_materials($vars);
@@ -201,11 +201,24 @@ function sbac_resource_preprocess_node(&$vars) {
  */
 function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
-  if ($vars['document'][0]) {
+  $html5 = FALSE;
+  if (isset($vars['document']['html5'])) {
+    $html5 = TRUE;
+    $media = $vars['document']['html5'];
+    $file = file_load($media->fid);
+    $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
+    $real_path = drupal_realpath($directory) . '/' . $file->filename;
+    $file_data = pathinfo($real_path);
+    $source = $directory . '/' . $file_data['filename'] . '/dlcomponents/CoverPage.html';
+    $url = file_create_url($source);
+    $viewer['viewer_filename'] = ucwords($file_data['filename']);
+    $viewer['viewer'] = '<iframe src="' . $url . '" width="850" height="600" style="border: none;"></iframe>';
+  }
+
+  if ($vars['document'][0] && !$html5) {
     $media = $vars['document'][0];
     $type = _sbac_resource_determine_type($media);
     $viewer['viewer_filename'] = $media->filename;
-
     if ($media->fid) {
       $file = file_load($media->fid);
       $url = file_create_url($file->uri);
@@ -213,7 +226,6 @@ function _sbac_resource_preview_content(&$vars) {
     else {
       $url = sbac_media_create_embed_url($media);
     }
-
     if ($type == 'document') {
       $google_url = 'http://docs.google.com/viewer';
       if (isset($_SERVER['HTTPS'])) {
@@ -263,6 +275,17 @@ function _sbac_resource_preview_content(&$vars) {
 function _sbac_resource_preview_materials(&$vars) {
   $materials = '';
   $material_urls = array();
+
+  if (isset($vars['document']['html5'])) {
+    $type = 'html5';
+    $media = $vars['document']['html5'];
+    $file = file_load($media->fid);
+    $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
+    $real_path = drupal_realpath($directory) . '/' . $file->filename;
+    $file_data = pathinfo($real_path);
+    $source = drupal_realpath($directory) . '/' . $file_data['filename'] . '/dlcomponents/CoverPage.html';
+    $material_urls[] = l(ucwords($media->filename), $source, array('attributes' => array('sbac-type' => $type)));
+  }
 
   if (isset($vars['document'][0])) {
     foreach ($vars['document'] as $key => $media) {

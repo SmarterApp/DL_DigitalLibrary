@@ -848,6 +848,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
       // Check that the zip saved.
       $no_errors = FALSE;
       if (file_exists($real_path)) {
+        global $user;
         $zip_file_path = drupal_realpath($directory);
         $file_data = pathinfo($real_path); // provides filename with extension on it.
         if ($file_data) {
@@ -881,8 +882,6 @@ function sbac_media_html5_element_upload($form, $form_state) {
           $file_url = drupal_realpath($file->uri);
           $file_hash = md5_file($file_url);
 
-          $test = entity_load_single('media', 756);
-
           // Create the media item
           $media = new stdClass;
           $media->type = 'html5';
@@ -893,6 +892,34 @@ function sbac_media_html5_element_upload($form, $form_state) {
           $media->file_hash = $file_hash;
           $media->weight = 100;
           entity_save('media', $media);
+
+          // Create recursive dir iterator which skips dot folders
+          $dir = new RecursiveDirectoryIterator($zip_contents_path, FilesystemIterator::SKIP_DOTS);
+          // Flatten the recursive iterator, folders come before their files
+          $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+          // Basic loop displaying different messages based on file or folder
+          foreach ($it as $fileinfo) {
+            if (!$fileinfo->isDir()) {
+              $filename = $fileinfo->getFilename();
+              if ($filename != '.DS_Store') {
+                // need fid, uid, filename, uri, filemime, filesize, status, timestamp, type
+                $path = $fileinfo->getPath();
+                $full_path = str_replace($zip_contents_path, '', $path);
+                $full_path_uri = $directory . '/' . $file_data['filename'] . $full_path . '/' . $filename;
+                $mime_type = file_get_mimetype($full_path_uri);
+                $dir_file = new stdClass();
+                $dir_file->uid = $user->uid;
+                $dir_file->filename = $filename;
+                $dir_file->uri = $full_path_uri;
+                $dir_file->filemime = $mime_type;
+                $dir_file->filesize = $fileinfo->getSize();
+                $dir_file->status = 1;
+                $dir_file->timestamp = mktime();
+                $dir_file->type = $mime_type;
+                drupal_write_record('file_managed', $dir_file);
+              }
+            }
+          }
 
           // rebuild the form, output.
           $html5_media_item = sbac_media_load_html5_item($node->nid);
