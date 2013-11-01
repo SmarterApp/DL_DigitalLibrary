@@ -129,7 +129,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
+    'description' => 'Enter a descriptive summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -171,7 +171,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
+        'label_help_description' => 'Enter a descriptive summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
         'maxlength_js' => 600,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -181,6 +181,7 @@ function sbac_resource_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 2,
     ),
+    'xss' => 0,
   );
 
   // Exported field_instance: 'node-resource-field_asset_downloads'
@@ -1135,7 +1136,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_learning_goals',
-    'label' => 'Learning Targets',
+    'label' => 'Learning Goals',
     'profanity' => 0,
     'required' => 0,
     'settings' => array(
@@ -1156,6 +1157,7 @@ function sbac_resource_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 6,
     ),
+    'xss' => 0,
   );
 
   // Exported field_instance: 'node-resource-field_license'
@@ -2401,7 +2403,7 @@ function sbac_resource_field_default_field_instances() {
   t('Individual(s) or group(s) for whom the resource was produced. Select all that apply.');
   t('Intended End User(s)');
   t('Intended Student Population(s)');
-  t('Learning Targets');
+  t('Learning Goals');
   t('License Information');
   t('License for Primary Material');
   t('License(s) for Secondary Material(s)');
