@@ -75,7 +75,25 @@ function sbac_user_filter_form() {
   );
 
   foreach ($filters as $key => $filter) {
+    // our custom filters provide their own FAPI declarations in the 'element' key
     if (isset($filter['element'])) {
+      // we don't allow selection of multiple options for our custom filters, so
+      // we remove the filter when an option is present
+      $default_value = NULL;
+
+      foreach ($session as $session_filter) {
+        list($type, $value) = $session_filter;
+
+        if ($type == $key) {
+          $default_value = $value;
+        }
+      }
+
+      if (!is_null($default_value)) {
+        $filter['element']['#default_value'] = $default_value;
+        $filter['element']['#disabled'] = TRUE;
+      }
+      
       $form['filters']['status']['filters'][$key] = $filter['element'];
     }
     else {
@@ -100,8 +118,21 @@ function sbac_user_filter_form() {
 
   $form['filters']['status']['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Filter'),
+    '#value' => (count($session) ? t('Refine') : t('Filter')),
   );
+
+  if (count($session)) {
+    $form['filters']['status']['actions']['undo'] = array(
+      '#type' => 'submit',
+      '#value' => t('Undo'),
+    );
+    $form['filters']['status']['actions']['reset'] = array(
+      '#type' => 'submit',
+      '#value' => t('Reset'),
+    );
+  }
+
+  $form['#submit'][] = 'sbac_user_filter_form_submit';
 
   drupal_add_library('system', 'drupal.form');
 
@@ -119,6 +150,9 @@ function sbac_user_admin_account() {
   $header = array(
     'username' => array('data' => t('Username'), 'field' => 'u.name'),
     'status' => array('data' => t('Status'), 'field' => 'u.status'),
+    'state' => array('data' => t('State'), 'field' => 'term.name'),
+    'sne' => array('data' => t('Is SNE'), 'field' => 'sne.field_sne_member_value'),
+    'slt' => array('data' => t('Is SLT'), 'field' => 'slt.field_slt_member_value'),
     'roles' => array('data' => t('Roles')),
     'member_for' => array('data' => t('Member for'), 'field' => 'u.created', 'sort' => 'desc'),
     'access' => array('data' => t('Last access'), 'field' => 'u.access'),
@@ -127,6 +161,14 @@ function sbac_user_admin_account() {
 
   $query = db_select('users', 'u');
   $query->condition('u.uid', 0, '<>');
+  
+  // we join these tables so that the data can be displayed in the actual table, but we only do
+  // a value restriction when the user filters by that
+  $user_field_join_condition = "u.uid = %alias.entity_id AND %alias.entity_type = 'user' AND %alias.bundle = 'user'";
+  $sne_alias   = $query->leftJoin('field_data_field_sne_member', 'sne', $user_field_join_condition);
+  $slt_alias   = $query->leftJoin('field_data_field_slt_member', 'slt', $user_field_join_condition);
+  $state_alias = $query->leftJoin('field_data_field_state', 'state', $user_field_join_condition);
+  $term_alias  = $query->leftJoin('taxonomy_term_data', 'term', $state_alias . ".field_state_tid = %alias.tid");
 
   $filters = user_filters() + sbac_user_filters();
 
@@ -136,60 +178,62 @@ function sbac_user_admin_account() {
 
     switch ($key) {
       case 'sne':
-
+        $query->condition($sne_alias . '.field_sne_member_value', $value);
         break;
 
       case 'slt':
-
+        $query->condition($slt_alias . '.field_slt_member_value', $value);
         break;
 
       case 'state':
-        // $state_alias = $query->join('field_data_field_state', 'p', $users_roles_alias . '.rid = %alias.rid');
-        // $query->condition($state_alias . '.permission', $value);
+        $query->condition($state_alias . '.field_state_tid', $value);
+        break;
 
+      case 'permission':
+        // This checks to see if this permission filter is an enabled permission for
+        // the authenticated role. If so, then all users would be listed, and we can
+        // skip adding it to the filter query.
+        $account = new stdClass();
+        $account->uid = 'user_filter';
+        $account->roles = array(DRUPAL_AUTHENTICATED_RID => 1);
+        if (user_access($value, $account)) {
+          continue;
+        }
+        $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
+        $permission_alias = $query->join('role_permission', 'p', $users_roles_alias . '.rid = %alias.rid');
+        $query->condition($permission_alias . '.permission', $value);
+
+        break;
+
+      case 'role':
+        $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
+        $query->condition($users_roles_alias . '.rid' , $value);
+
+        break;
+
+      default:
+        $query->condition($filters[$key]['field'], $value);
 
         break;
     }
-
-    print_rr($key);
-
-    continue;
-
-    // This checks to see if this permission filter is an enabled permission for
-    // the authenticated role. If so, then all users would be listed, and we can
-    // skip adding it to the filter query.
-    if ($key == 'permission') {
-      $account = new stdClass();
-      $account->uid = 'user_filter';
-      $account->roles = array(DRUPAL_AUTHENTICATED_RID => 1);
-      if (user_access($value, $account)) {
-        continue;
-      }
-      $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
-      $permission_alias = $query->join('role_permission', 'p', $users_roles_alias . '.rid = %alias.rid');
-      $query->condition($permission_alias . '.permission', $value);
-    }
-    elseif ($key == 'role') {
-      $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
-      $query->condition($users_roles_alias . '.rid' , $value);
-    }
-    else {
-      $query->condition($filters[$key]['field'], $value);
-    }
   }
 
-
-
-
+  // the count query only cares about the total number of results, so we clone the
+  // original query before fields are added
   $count_query = clone $query;
   $count_query->addExpression('COUNT(u.uid)');
 
+  // now that the query has been cloned for the count, we add fields and options 
+  // specific to the displayed data
   $query = $query->extend('PagerDefault')->extend('TableSort');
-  $query
-    ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
-    ->limit(50)
-    ->orderByHeader($header)
-    ->setCountQuery($count_query);
+  $query->fields('u', array('uid', 'name', 'status', 'created', 'access'))
+        ->fields('term', array('name'))
+        ->fields('sne', array('field_sne_member_value'))
+        ->fields('slt', array('field_slt_member_value'))
+        ->limit(50)
+        ->orderByHeader($header)
+        ->setCountQuery($count_query);
+
   $result = $query->execute();
 
   $form['options'] = array(
@@ -234,6 +278,9 @@ function sbac_user_admin_account() {
     $options[$account->uid] = array(
       'username' => theme('username', array('account' => $account)),
       'status' =>  $status[$account->status],
+      'state' => $account->term_name,
+      'sne' => $account->field_sne_member_value ? t('Yes') : t('No'),
+      'slt' => $account->field_slt_member_value ? t('Yes') : t('No'),
       'roles' => theme('item_list', array('items' => $users_roles)),
       'member_for' => format_interval(REQUEST_TIME - $account->created),
       'access' =>  $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
@@ -263,33 +310,62 @@ function sbac_user_filter_form_submit($form, &$form_state) {
   switch ($op) {
     case t('Filter'):
     case t('Refine'):
-    dsmm($filters);
-
       // Apply every filter that has a choice selected other than 'any'.
       foreach ($filters as $filter => $options) {
-
-
         if (isset($form_state['values'][$filter]) && $form_state['values'][$filter] != '[any]') {
           // Merge an array of arrays into one if necessary.
           $options = ($filter == 'permission') ? form_options_flatten($filters[$filter]['options']) : $filters[$filter]['options'];
           // Only accept valid selections offered on the dropdown, block bad input.
           if (isset($options[$form_state['values'][$filter]])) {
-            $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
+            // disabled elements are showing previously-selected filters and we
+            // don't want to stack them
+            if (!isset($form['filters']['status']['filters'][$filter]['#disabled']) || !$form['filters']['status']['filters'][$filter]['#disabled']) {
+              $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
+            }
           }
         }
       }
       break;
+    case t('Undo'):
+      array_pop($_SESSION['user_overview_filter']);
+      break;
+    case t('Reset'):
+      $_SESSION['user_overview_filter'] = array();
+      break;
+    case t('Update'):
+      return;
   }
 }
 
+/**
+ * Returns the custom filters used on the /admin/people page
+ * @return [type] [description]
+ */
 function sbac_user_filters() {
+  $filters['state'] = array(
+    'title' => t('state'),
+    'field' => 'state.field_state_tid',
+    'options' => sbac_state_options(),
+    'element' => array(
+      '#title' => t('state'),
+      '#type' => 'select',
+      '#options' => sbac_state_options(),
+    ),
+  );
+
+  $radio_options = array(
+    1 => t('yes'),
+    0 => t('no'),
+  );
+
   $filters['sne'] = array(
     'title' => 'is SNE',
     'field' => 'sne.field_sne_member_value',
     'options' => array(0, 1),
     'element' => array(
       '#title' => t('is SNE'),
-      '#type' => 'checkbox',
+      '#type' => 'radios',
+      '#options' => $radio_options,
     ),
   );
 
@@ -299,18 +375,8 @@ function sbac_user_filters() {
     'options' => array(0, 1),
     'element' => array(
       '#title' => t('is SLT'),
-      '#type' => 'checkbox',
-    ),
-  );
-
-  $filters['state'] = array(
-    'title' => t('state'),
-    'field' => 'state.field_state_tid',
-    'options' => sbac_state_options(),
-    'element' => array(
-      '#title' => t('state'),
-      '#type' => 'select',
-      '#options' => sbac_state_options(),
+      '#type' => 'radios',
+      '#options' => $radio_options,
     ),
   );
 

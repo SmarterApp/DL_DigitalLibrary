@@ -56,21 +56,6 @@ class Hooks extends \devtools\Hooks {
     );
   }
 
-  /**
-   * Extends hook_form_alter().
-   */
-  function hook_form_alter(&$form, &$form_state, $form_id) {
-    if ($form_id == 'sbac_user_filter_form') {
-      
-
-      // $index = array_search('user_filter_form_submit', $form['#submit']);
-      // unset($form['#submit'][$index]);
-      // $form['#submit'] = array_merge($form['#submit']);
-
-      $form['#submit'][] = 'sbac_user_filter_form_submit';
-    }
-  }
-
   /*----------------------------------------------------------------------------
       MODULE HOOKS
   ----------------------------------------------------------------------------*/
