@@ -1156,7 +1156,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_learning_goals',
-    'label' => 'Learning Targets',
+    'label' => 'Learning Goals',
     'profanity' => 0,
     'required' => 0,
     'settings' => array(
@@ -1177,6 +1177,7 @@ function sbac_resource_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 6,
     ),
+    'xss' => 0,
   );
 
   // Exported field_instance: 'node-resource-field_license'
@@ -2479,7 +2480,7 @@ function sbac_resource_field_default_field_instances() {
   t('Individual(s) or group(s) for whom the resource was produced. Select all that apply.');
   t('Intended End User(s)');
   t('Intended Student Population(s)');
-  t('Learning Targets');
+  t('Learning Goals');
   t('License Information');
   t('License for Primary Material');
   t('License(s) for Secondary Material(s)');

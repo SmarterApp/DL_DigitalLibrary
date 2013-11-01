@@ -43,7 +43,7 @@ function sbac_user_filter_form() {
     '#title' => t('Show only users where'),
     '#theme' => 'exposed_filters__user',
   );
-
+  
   foreach ($session as $filter) {
     list($type, $value) = $filter;
     if ($type == 'permission') {

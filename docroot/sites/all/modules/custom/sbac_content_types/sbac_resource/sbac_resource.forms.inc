@@ -630,21 +630,21 @@ function sbac_resource_validate_summary(&$form, &$form_state) {
   }
 
   if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
-    $error = 'Please add learning targets to continue';
+    $error = 'Please add learning goals to continue';
     form_set_error('field_learning_goals', $error);
     _sbac_resource_remove_error_message($error);
     drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_learning_goals:group:Please add learning targets to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_learning_goals:group:Please add learning goals to continue', 'sbac_resource_error');
   }
   else {
     $text = $form_state['values']['field_learning_goals']['und'][0]['value'];
     $bad_words = profanity_validate_text($text);
     if ($bad_words) {
-      $error = 'You must remove inappropriate language from the learning targets to continue';
+      $error = 'You must remove inappropriate language from the learning goals to continue';
       form_set_error('field_learning_goals', $error);
       _sbac_resource_remove_error_message($error);
       drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('summary:field_learning_goals:group:Remove inappropriate language from the learning targets', 'sbac_resource_error');
+      drupal_set_message('summary:field_learning_goals:group:Remove inappropriate language from the learning goals', 'sbac_resource_error');
     }
   }
 
@@ -1389,7 +1389,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards') . ' ' . theme('form_required_marker');
   // Connection to FAP
   $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process') . ' ' . theme('form_required_marker');
-  // Learning Targets
+  // Learning Goals
   $form['field_learning_goals']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   // Success Critieria
   $form['field_success_criteria']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');

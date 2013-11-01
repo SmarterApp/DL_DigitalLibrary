@@ -62,7 +62,7 @@ function resource_field_label($field_name) {
     'field_student_agency' => 'Student Engagement in the Formative Assessment Process',
     'field_focus' => 'Resource Type',
     'field_alt_body' => 'Resource Summary',
-    'field_learning_goals' => 'Learning Targets',
+    'field_learning_goals' => 'Learning Goals',
     'field_success_criteria' => 'Success Criteria',
     'field_supporting_evidence' => 'Supporting Evidence',
     'field_contexts' => 'Context(s) Within Which the Resource Could Be Used',
