@@ -77,9 +77,11 @@ function sbac_media_menu() {
  * @return bool
  */
 function sbac_media_downloadable_scheme($documents) {
-  foreach ($documents as $media) {
-    if ($media->fid) {
-      return TRUE;
+  foreach ($documents as $key => $media) {
+    if (is_numeric($key)) {
+      if ($media->fid) {
+        return TRUE;
+      }
     }
   }
   return FALSE;
@@ -205,11 +207,13 @@ function sbac_media_download_contents($node) {
       $real_path = drupal_realpath($archive_uri);
       $open = $zip->open($real_path, ZipArchive::CREATE);
       if ($open === TRUE) {
-        foreach ($node->document as $media) {
-          if ($media->fid) {
-            $file = file_load($media->fid);
-            if ($file) {
-              $zip->addFile(drupal_realpath($file->uri), $file->filename);
+        foreach ($node->document as $key => $media) {
+          if (is_numeric($key)) {
+            if ($media->fid) {
+              $file = file_load($media->fid);
+              if ($file) {
+                $zip->addFile(drupal_realpath($file->uri), $file->filename);
+              }
             }
           }
         }
