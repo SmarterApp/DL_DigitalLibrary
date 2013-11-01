@@ -33,20 +33,19 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     );
 
     // Set the state in JS for later use.
-    if (isset($form['#node']->workbench_moderation->current['state'])) {
-      drupal_add_js(array('resource_workbench_current_state' => $form['#node']['workbench_moderation']->current['state']), 'setting');
+    if (isset($form['#node']->workbench_moderation['current']->state)) {
+      drupal_add_js(array('resource_workbench_current_state' => $form['#node']->workbench_moderation['current']->state), 'setting');
     }
     else {
       drupal_add_js(array('resource_workbench_current_state' => 'creation'), 'setting');
     }
 
     if (!isset($form['#node']->nid)) {
-      drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
+      //drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
     }
 
     // Hide the Advanced fieldset if not DLRB member.
     global $user;
-
     if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
       drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
     }
@@ -64,10 +63,18 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
       $generate = TRUE;
     }
 
+    $form_state['html5'] = FALSE;
+    if (isset($_GET['type']) && $_GET['type'] == 'module') {
+      $form_state['html5'] = TRUE;
+    }
+    if (isset($form['field_html5']['und']['#default_value']) && $form['field_html5']['und']['#default_value'] == 1) {
+      $form_state['html5'] = TRUE;
+    }
+
+    _sbac_resource_module_flag($form, $form_state);
     if ($generate) {
       _sbac_resource_create_complete_flag($form, $form_state);
     }
-
     _sbac_resource_create_open_container($form, $form_state);
     _sbac_resource_create_resource_title($form, $form_state);
     _sbac_resource_content_type_description($form, $form_state);
@@ -210,11 +217,14 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
       $form_state['values']['workbench_moderation_state_new'] = 'draft';
     }
   }
+
+  // Set the HTML5 flag.
+  if ($form_state['html5']) {
+    $form_state['values']['field_html5']['und'][0]['value'] = 1;
+  }
+
   // save the node.
   node_form_submit($form, $form_state);
-
-  // rebuild permissions
-  node_access_acquire_grants($form_state['node'], TRUE);
 
   $form_state['redirect'] = 'digital-library-resources';
   drupal_redirect_form($form_state);
@@ -255,7 +265,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $selector = ".vertical-tabs-list li:nth-child(1) a";
         break;
       }
-      if ($field_name == 'field_file' || $field_name == 'field_author' || $field_name == 'field_license') {
+      if ($field_name == 'field_author' || $field_name == 'field_license') {
         $selector = ".vertical-tabs-list li:nth-child(2) a";
         break;
       }
@@ -283,7 +293,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     $active_tab = $form_state['values']['additional_settings__active_tab'];
     if ($active_tab == 'edit-group_materials') {
       $media_items = sbac_media_load_items($form['#node']->nid);
-      $output = _sbac_media_create_list($media_items);
+      $output = _sbac_media_create_list($media_items, $form_state);
       $form['field_file_container']['materials']['#markup'] = $output;
       $form['field_file_container']['materials']['#weight'] = -100;
     }
@@ -345,6 +355,12 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   sbac_resource_clean_text($form_state);
   // Set path alias
   $form_state['values']['path']['pathauto'] = TRUE;
+
+  // Set the HTML5 flag.
+  if ($form_state['html5']) {
+    $form_state['values']['field_html5']['und'][0]['value'] = 1;
+  }
+
   if ($active_tab != 'edit-group_advanced') {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
@@ -1307,6 +1323,51 @@ function _sbac_resource_content_type_description(&$form, &$form_state) {
 }
 
 /**
+ * Creates the "content module" html output.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_module_flag(&$form, &$form_state) {
+  if ($form_state['html5']) {
+    $form['html5_identifier_basic'] = array(
+      '#markup' => '<span class="html5-content"></span>',
+      '#prefix' => '<div class="html5-identifier" id="html5-identifier-basic">',
+      '#suffix' => '</div>'
+    );
+    $form['#group_children']['html5_identifier_basic'] = "group_basic";
+
+    $form['html5_identifier_materials'] = array(
+      '#markup' => '<span class="html5-content"></span>',
+      '#prefix' => '<div class="html5-identifier" id="html5-identifier-materials">',
+      '#suffix' => '</div>'
+    );
+    $form['#group_children']['html5_identifier_materials'] = "group_materials";
+
+    $form['html5_identifier_summary'] = array(
+      '#markup' => '<span class="html5-content"></span>',
+      '#prefix' => '<div class="html5-identifier" id="html5-identifier-summary">',
+      '#suffix' => '</div>'
+    );
+    $form['#group_children']['html5_identifier_summary'] = "group_summary";
+
+    $form['html5_identifier_tags'] = array(
+      '#markup' => '<span class="html5-content"></span>',
+      '#prefix' => '<div class="html5-identifier" id="html5-identifier-tags">',
+      '#suffix' => '</div>'
+    );
+    $form['#group_children']['html5_identifier_tags'] = "group_tags";
+
+    $form['html5_identifier_advanced'] = array(
+      '#markup' => '<span class="html5-content"></span>',
+      '#prefix' => '<div class="html5-identifier" id="html5-identifier-advanced">',
+      '#suffix' => '</div>'
+    );
+    $form['#group_children']['html5_identifier_advanced'] = "group_advanced";
+  }
+}
+
+/**
  * Creates the closing title / description container.
  *
  * @param $form
@@ -1406,11 +1467,8 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
-  $form['field_video']['#access'] = FALSE;
   sbac_media_widget_form_element($form, $form_state);
 
-  // Materials
-  $form['field_file']['#access'] = FALSE;
   // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);
@@ -1758,9 +1816,16 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
   if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'draft') {
     return;
   }
+
   global $user;
-  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
-    return;
+  if ($user->uid == 1 ||
+    in_array('DLRB member', $user->roles) ||
+    in_array('digital library administrator', $user->roles) ||
+    in_array('system administrator', $user->roles)) {
+
+    if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state != 'creation') {
+      return;
+    }
   }
 
   $form['actions']['cancel'] = array(
@@ -1814,21 +1879,22 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
  */
 function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
   global $user;
-  if ($user->uid > 1 && (
-    !in_array('DLRB member', $user->roles) ||
-    !in_array('digital library administrator', $user->roles) ||
-    !in_array('system administrator', $user->roles))) {
-    return;
-  }
+  if (($user->uid == 1 ||
+    in_array('DLRB member', $user->roles) ||
+    in_array('digital library administrator', $user->roles) ||
+    in_array('system administrator', $user->roles)) &&
+    isset($form['#node']->workbench_moderation['current']->state) &&
+    $form['#node']->workbench_moderation['current']->state == 'published') {
 
-  $form['actions']['cancel_all_changes'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel All Changes',
-    '#weight' => 0,
-    '#validate' => array('sbac_resource_cancel_all_changes_submit'),
-    "#executes_submit_callback" => FALSE,
-    '#limit_validation_errors' => array(),
-  );
+    $form['actions']['cancel_all_changes'] = array(
+      '#type' => 'submit',
+      '#value' => 'Cancel All Changes',
+      '#weight' => 0,
+      '#validate' => array('sbac_resource_cancel_all_changes_submit'),
+      "#executes_submit_callback" => FALSE,
+      '#limit_validation_errors' => array(),
+    );
+  }
 }
 
 /**
@@ -1926,15 +1992,12 @@ function _sbac_resource_form_required_fields(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_remove_elements(&$form, &$form_state) {
-  global $user;
   (isset($form['actions']['preview_changes']) ? $form['actions']['preview_changes']['#access'] = FALSE : '');
   (isset($form['actions']['delete']) ? $form['actions']['delete']['#access'] = FALSE : '');
-  if (!in_array('administrator', $user->roles)) {
-    $form['revision_information']['#access'] = FALSE;
-    $form['author']['#access'] = FALSE;
-    $form['options']['#access'] = FALSE;
-    
-  }
+
+  $form['revision_information']['#access'] = FALSE;
+  $form['author']['#access'] = FALSE;
+  $form['options']['#access'] = FALSE;
   $form['field_alignment_tags']['#access'] = FALSE;
   $form['field_temp']['#access'] = FALSE;
   $form['field_asset_downloads']['#access'] = FALSE;
@@ -1944,6 +2007,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_document_id']['#access'] = FALSE;
   $form['field_document_information']['#access'] = FALSE;
   $form['field_resource_state']['#access'] = FALSE;
+  $form['field_html5']['#access'] = FALSE;
 }
 
 /**

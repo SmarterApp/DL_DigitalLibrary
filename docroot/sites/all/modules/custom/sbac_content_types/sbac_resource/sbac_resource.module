@@ -117,6 +117,9 @@ function sbac_resource_my_resources_access_callback() {
   if (in_array('resource contributor', $user->roles)) {
     return TRUE;
   }
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    return TRUE;
+  }
   return FALSE;
 }
 
@@ -176,7 +179,7 @@ function sbac_resource_preprocess_node(&$vars) {
       $vars['edit_link'] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'))));
     }
     // Documents
-    if (isset($vars['document'][0])) {
+    if (isset($vars['document'][0]) || isset($vars['document']['html5'])) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
       $viewer = _sbac_resource_preview_content($vars);
       $materials = _sbac_resource_preview_materials($vars);
@@ -198,11 +201,24 @@ function sbac_resource_preprocess_node(&$vars) {
  */
 function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
-  if ($vars['document'][0]) {
+  $html5 = FALSE;
+  if (isset($vars['document']['html5'])) {
+    $html5 = TRUE;
+    $media = $vars['document']['html5'];
+    $file = file_load($media->fid);
+    $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
+    $real_path = drupal_realpath($directory) . '/' . $file->filename;
+    $file_data = pathinfo($real_path);
+    $source = $directory . '/' . $file_data['filename'] . '/dlcomponents/CoverPage.html';
+    $url = file_create_url($source);
+    $viewer['viewer_filename'] = ucwords($file_data['filename']);
+    $viewer['viewer'] = '<iframe src="' . $url . '" width="850" height="600" style="border: none;"></iframe>';
+  }
+
+  if ($vars['document'][0] && !$html5) {
     $media = $vars['document'][0];
     $type = _sbac_resource_determine_type($media);
     $viewer['viewer_filename'] = $media->filename;
-
     if ($media->fid) {
       $file = file_load($media->fid);
       $url = file_create_url($file->uri);
@@ -210,7 +226,6 @@ function _sbac_resource_preview_content(&$vars) {
     else {
       $url = sbac_media_create_embed_url($media);
     }
-
     if ($type == 'document') {
       $google_url = 'http://docs.google.com/viewer';
       if (isset($_SERVER['HTTPS'])) {
@@ -261,29 +276,42 @@ function _sbac_resource_preview_materials(&$vars) {
   $materials = '';
   $material_urls = array();
 
+  if (isset($vars['document']['html5'])) {
+    $type = 'html5';
+    $media = $vars['document']['html5'];
+    $file = file_load($media->fid);
+    $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
+    $real_path = drupal_realpath($directory) . '/' . $file->filename;
+    $file_data = pathinfo($real_path);
+    $source = drupal_realpath($directory) . '/' . $file_data['filename'] . '/dlcomponents/CoverPage.html';
+    $material_urls[] = l(ucwords($file_data['filename']), $source, array('attributes' => array('sbac-type' => $type)));
+  }
+
   if (isset($vars['document'][0])) {
     foreach ($vars['document'] as $key => $media) {
-      $type = _sbac_resource_determine_type($media);
-      if ($media->fid) {
-        $file = file_load($media->fid);
-        $url = file_create_url($file->uri);
-      }
-      else if ($type == 'none') {
-        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-      }
-      else {
-        $url = sbac_media_create_embed_url($media);
-      }
-
-      // check to see whether its public scheme or not, if so not external
-      if ($media->fid) {
-        $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type)));
-      }
-      else { // embedded media
-        if (strpos($media->embed_url, 'youtube')) {
-          $url .= '?rel=0';
+      if (is_numeric($key)) {
+        $type = _sbac_resource_determine_type($media);
+        if ($media->fid) {
+          $file = file_load($media->fid);
+          $url = file_create_url($file->uri);
         }
-        $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type), 'absolute' => TRUE, 'external' => TRUE));
+        else if ($type == 'none') {
+          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+        }
+        else {
+          $url = sbac_media_create_embed_url($media);
+        }
+
+        // check to see whether its public scheme or not, if so not external
+        if ($media->fid) {
+          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type)));
+        }
+        else { // embedded media
+          if (strpos($media->embed_url, 'youtube')) {
+            $url .= '?rel=0';
+          }
+          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type), 'absolute' => TRUE, 'external' => TRUE));
+        }
       }
     }
   }
@@ -658,6 +686,11 @@ function sbac_resource_node_load($nodes, $types) {
     if ($node->type == 'resource') {
       $media_items = sbac_media_load_items($node->nid);
       $node->document = $media_items;
+
+      $html5_item = sbac_media_load_html5_item($node->nid);
+      if ($html5_item !== FALSE) {
+        $node->document['html5'] = $html5_item;
+      }
     }
   }
 }
@@ -668,17 +701,17 @@ function sbac_resource_node_load($nodes, $types) {
  * @param $node, $i = file index
  */
 function sbac_resource_node_delete($node) {
-  $i = 0;
-  if (isset($node->field_file['und'])) {
-    while ($i < count($node->field_file['und'])) {
-  	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
-  		  sbac_resource_delete_file_from_cmis($node->field_document_id['und'][$i]['value'], $i);
-  		  unset($node->field_document_id['und'][$i]);
-  	  }
-      
-  	  $i++;
-    }
-  }
+//  $i = 0;
+//  if (isset($node->field_file['und'])) {
+//    while ($i < count($node->field_file['und'])) {
+//  	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
+//  		  sbac_resource_delete_file_from_cmis($node->field_document_id['und'][$i]['value'], $i);
+//  		  unset($node->field_document_id['und'][$i]);
+//  	  }
+//
+//  	  $i++;
+//    }
+//  }
 }
 
 /**
@@ -1485,16 +1518,7 @@ function sbac_resource_block_view($delta = '') {
 
     case 'sbac_resource_create_button':
       $block['subject'] = NULL;
-      global $user;
-      $content = NULL;
-      if (in_array('resource contributor', $user->roles)) {
-        $content = l('Create New Resource', 'node/add/resource', array(
-          'absolute' => TRUE,
-          'attributes' => array('class' => array('small', 'button')),
-          'query' => array('destination' => arg(0)),
-        ));
-      }
-      $block['content'] = $content;
+      $block['content'] = sbac_resource_create_button();
       break;
 
     case 'sbac_resource_grid_list_button':
@@ -1535,6 +1559,40 @@ function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
   if (isset($blocks['sbac_resource']['sbac_resource_grid_list_button']) && $theme == 'SBAC') {
     $blocks['sbac_resource']['sbac_resource_grid_list_button']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
   }
+}
+
+/**
+ * Create button
+ *
+ * @return null|string
+ */
+function sbac_resource_create_button() {
+  global $user;
+  $content = NULL;
+
+  // Resource contributor button.
+  if (in_array('resource contributor', $user->roles)) {
+    $content = l('Create New Resource', 'node/add/resource', array(
+      'absolute' => TRUE,
+      'attributes' => array('class' => array('small', 'button')),
+      'query' => array('destination' => arg(0)),
+    ));
+  }
+
+  // DLRB admin / member button.
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    $create_urls[] = l('Resource', 'node/add/resource', array('attributes' => array('class' => array('create-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resource')));
+    $create_urls[] = l('Module', 'node/add/resource', array('attributes' => array('class' => array('create-module')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'module')));
+    $content = '<a class="button small arrow sbac-create-resource-dropdown" data-dropdown="sbac-create-resource">'. t('Create'). '<span></span></a>';
+    $content .= theme('item_list', array(
+      'items' => $create_urls,
+      'attributes' => array(
+        'class' => 'materials-dropdown f-dropdown',
+        'id' => 'sbac-create-resource'
+      )
+    ));
+  }
+  return $content;
 }
 
 /**

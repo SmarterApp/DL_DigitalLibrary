@@ -759,84 +759,6 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_file'
-  $field_instances['node-resource-field_file'] = array(
-    'bundle' => 'resource',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'file',
-        'settings' => array(),
-        'type' => 'file_default',
-        'weight' => 0,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'module' => 'file',
-        'settings' => array(),
-        'type' => 'file_default',
-        'weight' => 1,
-      ),
-      'secondary_teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 24,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_file',
-    'label' => 'Materials',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => 'resource',
-      'file_extensions' => 'doc docx odt pdf xls xlsx ods ppt pptx odp txt jpg png jpeg mp4 mpg mov avi mp3 aac',
-      'max_filesize' => '100 MB',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'media',
-      'settings' => array(
-        'allowed_schemes' => array(
-          'public' => 'public',
-          'schooltube' => 'schooltube',
-          'slideshare' => 'slideshare',
-          'teachertube' => 'teachertube',
-          'vimeo' => 'vimeo',
-          'youtube' => 'youtube',
-        ),
-        'allowed_types' => array(
-          'audio' => 'audio',
-          'document' => 'document',
-          'image' => 'image',
-          'video' => 'video',
-        ),
-        'browser_plugins' => array(
-          'media_default--media_browser_1' => 0,
-          'media_default--media_browser_my_files' => 0,
-          'media_internet' => 'media_internet',
-          'upload' => 'upload',
-          'youtube' => 0,
-        ),
-        'label_help_description' => 'You can add videos, images and documents to this resource. This resource must contain at least one (1) material.',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'media_generic',
-      'weight' => 31,
-    ),
-  );
-
   // Exported field_instance: 'node-resource-field_focus'
   $field_instances['node-resource-field_focus'] = array(
     'bundle' => 'resource',
@@ -1003,6 +925,63 @@ function sbac_resource_field_default_field_instances() {
       ),
       'type' => 'options_select',
       'weight' => 21,
+    ),
+  );
+
+  // Exported field_instance: 'node-resource-field_html5'
+  $field_instances['node-resource-field_html5'] = array(
+    'bundle' => 'resource',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 43,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_html5',
+    'label' => 'HTML5',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+        'label_help_description' => '',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 45,
     ),
   );
 
@@ -2282,63 +2261,6 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_video'
-  $field_instances['node-resource-field_video'] = array(
-    'bundle' => 'resource',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'file',
-        'settings' => array(),
-        'type' => 'file_default',
-        'weight' => 34,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 41,
-      ),
-      'secondary_teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 22,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_video',
-    'label' => 'Embedded Video',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => '',
-      'file_extensions' => 'txt',
-      'max_filesize' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'emfield',
-      'settings' => array(
-        'label_help_description' => '',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'size' => 60,
-      ),
-      'type' => 'enfield_widget',
-      'weight' => 32,
-    ),
-  );
-
   // Exported field_instance: 'node-resource-field_view_permissions'
   $field_instances['node-resource-field_view_permissions'] = array(
     'bundle' => 'resource',
@@ -2465,11 +2387,11 @@ function sbac_resource_field_default_field_instances() {
   t('Digital Media Type(s)');
   t('Document ID');
   t('Educational Use');
-  t('Embedded Video');
   t('Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).');
   t('From the list, select the one choice that most closely describes the type of resource.');
   t('Geographical Setting(s)');
   t('Grade(s)');
+  t('HTML5');
   t('Identifiers aligned to Smarter Balanced topics. Select all that apply.');
   t('Identify how this includes, reflects, and addresses the formative assessment process.');
   t('Identify how this resource addresses the Common Core State Standards (e.g., how it addresses particular claims, clusters, targets, and/or “standards”). Pay special attention to the interconnectedness of claims.');
@@ -2487,7 +2409,6 @@ function sbac_resource_field_default_field_instances() {
 <ol type=\'A\'><li>the principles of adult learning or professional development reflected in the resource; and/or</li>
 <li>the literature, research, or widely accepted practices used to inform the content in the resource. </li>
 </ol>');
-  t('Materials');
   t('Owner');
   t('Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.');
   t('Personally Identifiable Student Information');
