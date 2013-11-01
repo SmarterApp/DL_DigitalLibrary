@@ -1610,7 +1610,7 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
 
   // Description
   $form['alignment_tag_description'] = array(
-    '#markup' => '<p>'.t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards or Mathematical Practices are included alongside content standards for all grades.').'</p>',
+    '#markup' => '<p>'.t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards and Mathematical Practices are included alongside content standards for all grades.').'</p>',
     '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
     '#suffix' => '</div>',
     '#weight' => 101,
