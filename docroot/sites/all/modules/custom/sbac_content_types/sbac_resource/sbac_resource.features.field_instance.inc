@@ -129,7 +129,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
+    'description' => 'Enter a descriptive summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -171,7 +171,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
+        'label_help_description' => 'Enter a descriptive summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
         'maxlength_js' => 600,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -181,6 +181,7 @@ function sbac_resource_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 2,
     ),
+    'xss' => 0,
   );
 
   // Exported field_instance: 'node-resource-field_asset_downloads'
@@ -2467,7 +2468,7 @@ function sbac_resource_field_default_field_instances() {
   t('Document ID');
   t('Educational Use');
   t('Embedded Video');
-  t('Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).');
+  t('Enter a descriptive summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).');
   t('From the list, select the one choice that most closely describes the type of resource.');
   t('Geographical Setting(s)');
   t('Grade(s)');
