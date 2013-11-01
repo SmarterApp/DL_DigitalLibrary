@@ -39,6 +39,22 @@ $darkgreen: #246a34;
   //width: 300px !important;
 }
 
+#sbac-csv-report-resource-stats-form{
+  .chzn-container {
+    width:90% !important;
+  }
+}
+
+#sbac-csv-report-user-activity-form{
+  .chzn-container {
+    width:70% !important;
+  }
+
+  .form-item-state {
+    width: 100%;
+  }
+}
+
 .report-title {
   padding-bottom:10px;
   border-bottom:1px solid #ccc;
@@ -106,6 +122,7 @@ i.icon-info {
   }
 }
 
+
 .report-form-container {
   position: relative;
 
@@ -115,6 +132,8 @@ i.icon-info {
     clear: both;
   }
   
+
+
   /* state container */
   .form-item-state {
     width: 25%;
