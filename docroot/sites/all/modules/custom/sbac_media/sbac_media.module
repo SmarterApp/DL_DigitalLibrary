@@ -957,6 +957,9 @@ function sbac_media_html5_element_upload($form, $form_state) {
  */
 function sbac_media_workbench_moderation_transition($node, $previous_state, $new_state) {
   if ($node->type == 'resource' && $new_state == 'published') {
+    ini_set('max_execution_time', 900);
+    ini_set('memory_limit', '512M');
+
     $destination = variable_get('file_public_path', conf_path() . '/files') . '/resources/';
     if (!file_exists($destination)) {
       mkdir($destination);
