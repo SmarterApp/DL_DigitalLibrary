@@ -191,8 +191,18 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
         $values = array_values($data[$fieldkey['datasource']][$resource->{$primary_key}->value()]);
         if ($values and array_key_exists($fieldkey['index'], $values)) {
           if (array_key_exists('foreigndata', $fieldkey)) {
+            $value = $values[$fieldkey['index']];
             try {
-              $value = $value->{$fieldkey['foreigndata']};
+              if (is_array($value))
+              {
+                $value = $value[$fieldkey['foreigndata']];
+              }
+              else if (is_object($value)) {
+                $value = $value->{$fieldkey['foreigndata']}->raw();
+              }
+              else {
+                $value = "Unknown Foreign Value";
+              }
             } catch (EntityMetadataWrapperException $e) {
               $value = "Unknown Field";
               $is_date = false;

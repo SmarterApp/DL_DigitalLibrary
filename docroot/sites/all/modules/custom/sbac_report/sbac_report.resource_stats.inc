@@ -248,6 +248,7 @@ function sbac_report_default_resource_attribute_option()
  */
 function build_resource_stats_csv($resource_filters)
 {
+  ini_set('memory_limit','256M');
   $resources = get_resources($resource_filters);
   $resource_feedback = get_entities_for_resources($resources, 'feedback');
   $workbench_moderation = get_workbench_moderation_history($resources);
@@ -425,14 +426,14 @@ SQL;
  * @param $data: queried data for the report.  Values will be pulled from this array based on the configured columns.
  *
  */
-function create_resource_stats_from_data($data, $report_configuration)
+function create_resource_stats_from_data($data, $report_configuration, $primary_data_source='resource_nodes', $primary_data_key='nid')
 {
   $csv_configuration = array();
 
   $csv_configuration['separator'] = ',';
   $csv_configuration['encloseer'] = '"';
   $csv_configuration['quote_arrays'] = true;
-  $csv_configuration['subseparator'] = ';';
+  $csv_configuration['subseparator'] = ',';
   $csv_configuration['subquote'] = "'";
   $csv_configuration['line_ending'] = "\r\n";
 
@@ -453,7 +454,7 @@ function create_resource_stats_from_data($data, $report_configuration)
   $titles = substr($titles, 0, -1) . $csv_configuration['line_ending'];
 
   $csv = $titles;
-  $resources = $data['resource_nodes'];
+  $resources = $data[$primary_data_source];
   $schema = $report_configuration['node_schema'];
   $count = count($resources);
   $ix = 0;
@@ -463,7 +464,12 @@ function create_resource_stats_from_data($data, $report_configuration)
     //foreach ($schema as $row_schema) {
     // go through each data source line item. (rows)
     foreach ($schema['fieldkeys'] as $fieldkey) { // (columns)
-      $value = get_field_value_using_schema($fieldkey, $data, $resource, 'nid', $is_date);
+      $primarykey = $primary_data_key;
+      if (array_key_exists('primarykey',$fieldkey)) {
+        $primarykey = $fieldkey['primarykey'];
+      }
+      $value = get_field_value_using_schema($fieldkey, $data, $resource, $primarykey, $is_date);
+
       format_metadata_value_field($row, $value, $csv_configuration, $is_date);
     }
     if (++$ix == $count) {
@@ -564,7 +570,7 @@ function set_report_columns()
 
           // users info
           array('uid', 'Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 1),
-          array('uid', 'Reviewer 1 name', 'datasource' => 'resource_feedback', 'index' => 1, 'foreigndata' => 'name'),
+          array('uid', 'Reviewer 1 name', 'datasource' => 'resource_feedback', 'index' => 1, 'foreigndata' => 'title'),
           array('uid', 'Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 2),
           array('uid', 'Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 3),
           array('uid', 'Poster Id', 'datasource' => 'resource_feedback', 'index' => 4),
