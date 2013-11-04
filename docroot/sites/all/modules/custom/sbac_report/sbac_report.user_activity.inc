@@ -27,7 +27,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
   $user_group_options = sbac_report_user_group_options();
-  
+
   $form['user_group_dropdown'] = array(
     '#type' => 'select',
     '#title' => t('Choose User Groups'),
@@ -108,13 +108,13 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
 
     $state_tid = $form_state['values']['state'];
     $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-    if (!is_numeric($state_tid) && !is_array($state_tid) && $state_tid == 'all') {
-      $_SESSION['sbac_report']['state']['name'] = 'all';
-    }
-    else {
-      $state_options = $form['state']['#options'];
-      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
-    }
+//    if (!is_numeric($state_tid) && !is_array($state_tid) && $state_tid == 'all') {
+//      $_SESSION['sbac_report']['state']['name'] = 'all';
+//    }
+//    else {
+//      $state_options = $form['state']['#options'];
+//      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+//    }
 
     // Time range.
     $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
@@ -390,7 +390,10 @@ function create_user_activity_from_data($user_activity)
 
     foreach ($stringkeys as $stringkey) {
       $is_date = (array_key_exists(2,$stringkey) ? $stringkey[2]=='date' : false );
-      if ($is_date) {
+      if (is_null($user_profile->{$stringkey[0]})) {
+        $value = '';
+      }
+      else if ($is_date) {
         $value = format_date($user_profile->{$stringkey[0]}, 'custom', 'Y-m-d');
       }
       else {
