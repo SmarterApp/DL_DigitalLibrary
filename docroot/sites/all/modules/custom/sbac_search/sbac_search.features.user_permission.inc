@@ -15,6 +15,8 @@ function sbac_search_user_default_permissions() {
     'name' => 'administer search',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'search',
   );
@@ -44,6 +46,8 @@ function sbac_search_user_default_permissions() {
     'name' => 'use advanced search',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'search',
   );

@@ -16,6 +16,8 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'print_pdf',
   );
@@ -83,6 +85,8 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -93,7 +97,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'draggableviews',
   );
@@ -103,6 +109,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'access site in maintenance mode',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );
@@ -112,6 +120,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'access site reports',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );
@@ -121,6 +131,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'access user profiles',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'user',
   );
@@ -131,9 +143,11 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench',
   );
@@ -159,6 +173,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer actions',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );
@@ -168,6 +184,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer content types',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -177,6 +195,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer menu',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'menu',
   );
@@ -186,6 +206,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer modules',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );
@@ -196,7 +218,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -206,6 +230,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer permissions',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'user',
   );
@@ -215,6 +241,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer site configuration',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );
@@ -224,6 +252,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer software updates',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );
@@ -236,6 +266,7 @@ function sbac_user_user_default_permissions() {
       'administrator' => 'administrator',
       'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'taxonomy',
   );
@@ -245,6 +276,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer themes',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );
@@ -254,6 +287,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer url aliases',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'path',
   );
@@ -263,6 +298,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer users',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'user',
   );
@@ -272,6 +309,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer workbench',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench',
   );
@@ -281,6 +320,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'administer workbench moderation',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench_moderation',
   );
@@ -290,6 +331,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'block IP addresses',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );
@@ -300,6 +343,8 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -310,6 +355,8 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench_moderation',
   );
@@ -319,6 +366,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'cancel account',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'user',
   );
@@ -328,6 +377,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'change own username',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'user',
   );
@@ -338,7 +389,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -349,7 +402,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -360,7 +415,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -371,7 +428,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource publisher' => 'resource publisher',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -392,7 +451,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -403,7 +464,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -499,8 +562,10 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -510,6 +575,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'select account cancellation method',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'user',
   );
@@ -520,7 +587,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'sbac_help',
   );
@@ -531,7 +600,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'filter',
   );
@@ -542,7 +613,9 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench_moderation',
   );
@@ -553,8 +626,10 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench_moderation',
   );
@@ -565,9 +640,11 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench_moderation',
   );
@@ -587,9 +664,11 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench_moderation',
   );
@@ -600,9 +679,11 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench_moderation',
   );
@@ -633,9 +714,11 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'file_entity',
   );
@@ -646,9 +729,11 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -658,6 +743,8 @@ function sbac_user_user_default_permissions() {
     'name' => 'view the administration theme',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'system',
   );

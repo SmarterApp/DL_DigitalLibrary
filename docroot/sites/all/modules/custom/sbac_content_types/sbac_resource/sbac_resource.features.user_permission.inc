@@ -31,7 +31,9 @@ function sbac_resource_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource publisher' => 'resource publisher',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
