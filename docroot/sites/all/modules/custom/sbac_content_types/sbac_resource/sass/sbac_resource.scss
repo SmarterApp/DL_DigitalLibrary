@@ -176,7 +176,12 @@ a.sbac-grid-layout {
 
 .block-sbac-resource-sbac-resource-create-button {
   float: left;
-  margin-top: -4px;
+  margin-top: -8px;
+
+  .f-dropdown {
+    top: 55px !important;
+    left: 20px !important; 
+  }
 }
 
 .page-digital-library-resources,
@@ -1001,6 +1006,32 @@ a.sbac-grid-layout {
   padding: 5px 10px;
   color: #494949;
 }
+
+/** ------------------------------------------
+  html5
+  ____________________________________________ */
+
+.form-item-files-field-content-module-picker {
+  float: left;
+  margin-top: 0;
+}
+
+.sbac-html5-uploader {
+  float: right;
+}
+
+#display-container {
+  &:after{
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    height: 1px;
+    width: 100%;
+  }
+}
+
+
 
 /* -----------------------------------------
    Responsive Grid
