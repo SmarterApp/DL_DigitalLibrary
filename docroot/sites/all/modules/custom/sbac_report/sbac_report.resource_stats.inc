@@ -405,19 +405,17 @@ SQL;
   // posters
   // reviewers
   $reviewers = array();
-
-//  foreach ($feedback_reviews as $reviews) {
-//    foreach ($reviews as $review) {
-//      try {
-//        $value = $review->uid->value(); /// get's the actual user.
-//        $value = entity_metadata_wrapper('user', $value);
-//        $reviewers[$value] = $value;
-//      } catch (EntityMetadataWrapperException $e) {
-//        print $e->getMessage();
-//      }
-//    }
-//  }
-
+  foreach ($feedback_reviews as $reviews) {
+    foreach ($reviews as $review) {
+      try {
+        $value = $review->uid->value(); /// get's the actual user.
+        $value = entity_metadata_wrapper('user', $value);
+        $reviewers[$value->uid->value()] = $value;
+      } catch (EntityMetadataWrapperException $e) {
+        print $e->getMessage();
+      }
+    }
+  }
   return array($authors, $reviewers);
 }
 
@@ -444,7 +442,12 @@ function create_resource_stats_from_data($data, $report_configuration)
   $titles = '';
   foreach ($report_configuration as $configuration) {
     foreach ($configuration['fieldkeys'] as $fieldkey) {
-      $titles .= $fieldkey[1] . $csv_configuration['separator'];
+      if (array_key_exists(1, $fieldkey)) {
+        $titles .= $fieldkey[1] . $csv_configuration['separator'];
+      }
+      else {
+        $titles .= '' . $csv_configuration['separator'];
+      }
     }
   }
   $titles = substr($titles, 0, -1) . $csv_configuration['line_ending'];
@@ -460,7 +463,7 @@ function create_resource_stats_from_data($data, $report_configuration)
     //foreach ($schema as $row_schema) {
     // go through each data source line item. (rows)
     foreach ($schema['fieldkeys'] as $fieldkey) { // (columns)
-      $value = get_field_value_using_schema($fieldkey, $data, $resource, $is_date);
+      $value = get_field_value_using_schema($fieldkey, $data, $resource, 'nid', $is_date);
       format_metadata_value_field($row, $value, $csv_configuration, $is_date);
     }
     if (++$ix == $count) {
@@ -485,47 +488,47 @@ function set_report_columns()
         'fieldkeys' => array( // row schema definition of the fields.
 //          array('field_publisher', 'Owner'),
           array('field_author', 'Author'),
-//          array('field_alt_body', 'Resource Summary'),
-//          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
-//          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
-//          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
-//          array('field_learning_goals', 'Learning Goals'),
-//          array('field_success_criteria', 'Success Criteria'),
-//          array('field_supporting_evidence', 'Supporting Evidence'),
-//          array('field_principles', 'Principles Literature or Research'),
-//          array('field_license_information', 'License?'),
-//          array('field_student_agency', 'Student Engagement in the Formative Process'),
-//          array('field_total_views', 'Views'),
-//          array('field_unique_views', 'Unique Views'),
-//          array('field_publisher', 'Owner'),
-//          array('field_author', 'Author'),
-//          array('field_alt_body', 'Resource Summary'),
-//          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
-//          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
-//          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
-//          array('field_learning_goals', 'Learning Goals'),
-//          array('field_success_criteria', 'Success Criteria'),
-//          array('field_supporting_evidence', 'Supporting Evidence'),
-//          array('field_principles', 'Principles Literature or Research'),
-//          array('field_license_information', 'License?'),
-//          array('field_student_agency', 'Student Engagement in the Formative Process'),
-//          array('field_total_views', 'Views'),
-//          array('field_unique_views', 'Unique Views'),
-//          // property keys:
-//          array('title', 'Title'), //title
-//          array('created', 'Contribution Date', 'fieldtype' => 'date'), //todo: not showing up
-//          // foreign keys:
-//          array('field_attributes', 'Attribute of Formative Assessment Process'),
-//          array('field_focus', 'Resource Type'),
-//          array('field_grades', 'Grade(s)'),
-//          array('field_intended_end_user', 'Intended End User(s)'),
-//          array('field_geographical_settings', 'Geographic Setting(s)'),
-//          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
-//          array('field_digital_media_type', 'Media Type(s)'),
-//          array('field_educational_use', 'Educational Use'),
-//          array('field_alignment_tags', 'Common Core State Standards?'),
-//          array('field_subject', 'Subjects and Domains'),
-//          array('field_intended_student', 'Intended Student Population(s)'),
+          array('field_alt_body', 'Resource Summary'),
+          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
+          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
+          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
+          array('field_learning_goals', 'Learning Targets'),
+          array('field_success_criteria', 'Success Criteria'),
+          array('field_supporting_evidence', 'Supporting Evidence'),
+          array('field_principles', 'Principles Literature or Research'),
+          array('field_license_information', 'License?'),
+          array('field_student_agency', 'Student Engagement in the Formative Process'),
+          array('field_total_views', 'Views'),
+          array('field_unique_views', 'Unique Views'),
+          array('field_publisher', 'Owner'),
+          array('field_author', 'Author'),
+          array('field_alt_body', 'Resource Summary'),
+          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
+          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
+          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
+          array('field_learning_goals', 'Learning Targets'),
+          array('field_success_criteria', 'Success Criteria'),
+          array('field_supporting_evidence', 'Supporting Evidence'),
+          array('field_principles', 'Principles Literature or Research'),
+          array('field_license_information', 'License?'),
+          array('field_student_agency', 'Student Engagement in the Formative Process'),
+          array('field_total_views', 'Views'),
+          array('field_unique_views', 'Unique Views'),
+          // property keys:
+          array('title', 'Title'), //title
+          array('created', 'Contribution Date', 'fieldtype' => 'date'), //todo: not showing up
+          // foreign keys:
+          array('field_attributes', 'Attribute of Formative Assessment Process'),
+          array('field_focus', 'Resource Type'),
+          array('field_grades', 'Grade(s)'),
+          array('field_intended_end_user', 'Intended End User(s)'),
+          array('field_geographical_settings', 'Geographic Setting(s)'),
+          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
+          array('field_digital_media_type', 'Media Type(s)'),
+          array('field_educational_use', 'Educational Use'),
+          array('field_alignment_tags', 'Common Core State Standards?'),
+          array('field_subject', 'Subjects and Domains'),
+          array('field_intended_student', 'Intended Student Population(s)'),
           array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
           // non-wrapper fields:
           array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',)),
@@ -561,17 +564,19 @@ function set_report_columns()
 
           // users info
           array('uid', 'Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 1),
+          array('uid', 'Reviewer 1 name', 'datasource' => 'resource_feedback', 'index' => 1, 'foreigndata' => 'name'),
           array('uid', 'Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 2),
           array('uid', 'Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 3),
           array('uid', 'Poster Id', 'datasource' => 'resource_feedback', 'index' => 4),
           array('author', 'Author Id'),
 
-          array(
-            'key' => array('uid', 'name' => 'user_id', 'datasource' => 'resource_nodes'),
-            'data' => array('key' => 'user_id', 'datasource' => 'authors'),
-          ),
+          array('author', 'Contributor UID', 'foreigndata' => 'uid'),
           // test case for functional access:
           array('type', 'Feedback custom', 'datasource' => 'resource_feedback', 'function' => 'get_custom_feedback'),
+//          array('uid', 'Contributor UID',
+//            'foreignkey' => array('uid', 'name' => 'user_id', 'datasource' => 'resource_nodes'),
+//            'foreigndata' => array('key' => 'user_id', 'datasource' => 'authors'),
+//          ),
         ),
       ),
     );
