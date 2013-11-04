@@ -1162,6 +1162,8 @@ a.tabledrag-handle .handle {
   color: #717880;
   margin-bottom: 25px;
   word-break:normal !important;
+  hyphens:none;
+   -moz-hyphens: none;
 }
 
 .resource-info {
