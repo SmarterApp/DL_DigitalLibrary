@@ -589,7 +589,10 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
+    $variables = _sbac_resource_my_resources_links($vars['fields']);
+  }
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    $variables = _sbac_resource_my_resources_admin_links($vars['fields']);
   }
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
@@ -640,7 +643,10 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
+    $variables = _sbac_resource_my_resources_links($vars['fields']);
+  }
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    $variables = _sbac_resource_my_resources_admin_links($vars['fields']);
   }
   if (isset($variables['buttons'])) {
     $vars['fields']['buttons'] = $variables['buttons'];
@@ -846,6 +852,24 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $variables['file-type-icon'] = _sbac_resource_determine_file_type_icon($ext);
     }
   }
+  return $variables;
+}
+
+/**
+ * Creates the admin links (only edit)
+ *
+ * @param $fields
+ * @return array
+ */
+function _sbac_resource_my_resources_admin_links($fields) {
+  $variables = array();
+  $nid = $fields['nid']->raw;
+  $url = url('node/' . $nid, array('absolute' => TRUE));
+  $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+  $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+  $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+  $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+
   return $variables;
 }
 

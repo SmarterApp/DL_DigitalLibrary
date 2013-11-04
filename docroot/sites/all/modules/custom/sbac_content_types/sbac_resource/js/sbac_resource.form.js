@@ -75,7 +75,7 @@
     if (active_tab == 'General' && resource_state == 'creation') {
       cancel_button.show();
     }
-    if (dlrb_member) {
+    if (dlrb_member && resource_state == 'published') {
       save_and_close.hide();
     }
     if (active_tab == 'Tags' && dlrb_member == false) {
@@ -220,6 +220,10 @@
         return;
       }
 
+      if (!Drupal.settings.sbac_tags) {
+        $('.vertical-tabs-list li:nth-child(5) a').unbind('click');
+        $('.vertical-tabs-list li:nth-child(5) a').addClass('sbac-disabled');
+      }
       if (!Drupal.settings.sbac_summary) {
         $('.vertical-tabs-list li:nth-child(4) a').unbind('click');
         $('.vertical-tabs-list li:nth-child(4) a').addClass('sbac-disabled');
