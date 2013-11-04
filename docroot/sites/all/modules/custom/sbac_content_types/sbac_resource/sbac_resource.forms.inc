@@ -41,7 +41,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     }
 
     if (!isset($form['#node']->nid)) {
-      //drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
+      drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
     }
 
     // Hide the Advanced fieldset if not DLRB member.
