@@ -1007,6 +1007,32 @@ a.sbac-grid-layout {
   color: #494949;
 }
 
+/** ------------------------------------------
+  html5
+  ____________________________________________ */
+
+.form-item-files-field-content-module-picker {
+  float: left;
+  margin-top: 0;
+}
+
+.sbac-html5-uploader {
+  float: right;
+}
+
+#display-container {
+  &:after{
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    height: 1px;
+    width: 100%;
+  }
+}
+
+
+
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
