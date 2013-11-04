@@ -862,7 +862,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
           if (file_exists($zip_contents_path)) {
             //Check the file contents.
             $index_html_path = $zip_contents_path . '/index.html';
-            $dlcomponents_path = $zip_contents_path . '/dlcomponents/coverpage.html';
+            $dlcomponents_path = $zip_contents_path . '/dlcomponents/CoverPage.html';
             if (file_exists($index_html_path) && file_exists($dlcomponents_path)) {
               // File contents do exists, save file correctly
               $no_errors = TRUE;
