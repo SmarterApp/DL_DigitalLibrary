@@ -76,12 +76,6 @@ function sbac_search_apachesolr_environments() {
       1 => 'help_page',
       2 => 'resource',
     ),
-    'file' => array(
-      0 => 'audio',
-      1 => 'document',
-      2 => 'image',
-      3 => 'video',
-    ),
     'user' => array(
       0 => 'user',
     ),
@@ -221,12 +215,6 @@ function sbac_search_apachesolr_environments() {
       1 => 'help_page',
       2 => 'resource',
     ),
-    'file' => array(
-      0 => 'audio',
-      1 => 'document',
-      2 => 'image',
-      3 => 'video',
-    ),
     'user' => array(
       0 => 'user',
     ),
@@ -298,12 +286,6 @@ function sbac_search_apachesolr_environments() {
       0 => 'alignment',
       1 => 'help_page',
       2 => 'resource',
-    ),
-    'file' => array(
-      0 => 'audio',
-      1 => 'document',
-      2 => 'image',
-      3 => 'video',
     ),
     'user' => array(
       0 => 'user',
@@ -377,12 +359,6 @@ function sbac_search_apachesolr_environments() {
       1 => 'help_page',
       2 => 'resource',
     ),
-    'file' => array(
-      0 => 'audio',
-      1 => 'document',
-      2 => 'image',
-      3 => 'video',
-    ),
     'user' => array(
       0 => 'user',
     ),
@@ -454,12 +430,6 @@ function sbac_search_apachesolr_environments() {
       0 => 'alignment',
       1 => 'help_page',
       2 => 'resource',
-    ),
-    'file' => array(
-      0 => 'audio',
-      1 => 'document',
-      2 => 'image',
-      3 => 'video',
     ),
     'user' => array(
       0 => 'user',
