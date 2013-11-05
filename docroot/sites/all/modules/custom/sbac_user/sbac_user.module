@@ -103,19 +103,6 @@ function sbac_user_init() {
   if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
     drupal_goto('user');
   }
-
-  // remove change password message if already logged in and replace - don't try this at home
-  // $messages = drupal_get_messages('status', FALSE);
-  // if (isset($messages['status'])) {
-  //   foreach ($messages['status'] as $message) {
-  //     if (strpos($message, 'You are logged in as') !== FALSE) {
-  //       // clear status message queue -- BLAMMO
-  //       drupal_get_messages('status', TRUE);
-  //       drupal_set_message(t('You are already logged in.'));
-  //       break;
-  //     }
-  //   }
-  // }
 }
 
 /*
@@ -129,7 +116,6 @@ function sbac_user_permission() {
   );
   $perms['view and edit account information'] = array(
       'title'       => t('View and edit account information on user profile page'),
-//      'description' => t('View and edit account information on user profile page.')
   );
   $perms['access private fields'] = array(
       'title' => t('Access private fields'),
@@ -778,22 +764,31 @@ function sbac_user_user_login(&$edit, $account) {
   if (!$account->data) { // initialize for new users
     $account->data = array();
   }
+  // Increment login count.
   if (!isset($account->data['login_count'])) {
     $account->data['login_count'] = 1;
   } else {
     $account->data['login_count'] +=1;
   }
+  // Log the time the user first logged in.
   if (!isset($account->data['first_login'])) {
     $account->data['first_login'] = time();
   }
+  // Disable feedback flag.
   if(!isset($account->field_feedback_flag['und'][0])) {
     $account->field_feedback_flag['und'][0]['value'] = (int) 0;
     user_save($account);
   }
+
   user_save($account, array());
-  
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
-  $edit['redirect'] = 'home';
+
+  if (!isset($user->data['disable_help'])) {
+    drupal_goto('user');
+  }
+  else {
+    drupal_goto('digital-library-resources');
+  }
 }
 
 /**
