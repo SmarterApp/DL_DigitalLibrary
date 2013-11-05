@@ -439,39 +439,39 @@ function create_user_activity_from_data($user_activity)
  */
 function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys)
 {
-//  array_push($fieldkeys, array('field_first_name', 'First Name'));
-//  array_push($fieldkeys, array('field_last_name', 'Last Name'));
-//  array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
-//  array_push($fieldkeys, array('field_slt_member', 'Is SLT Member'));
-//  array_push($fieldkeys, array('field_school_name', 'School'));
-//  array_push($fieldkeys, array('field_district_name', 'District'));
-//  array_push($foreignidkeys, array('field_position', 'Title'));
-//  array_push($foreignidkeys, array('field_state', 'State'));
-//  array_push($foreignidkeys, array('field_grade_level_s_', 'Grade(s)'));
-//  array_push($foreignidkeys, array('field_subject_s_', 'Subject(s)'));
-//  array_push($foreignidkeys, array('field_special_populations', 'School Population(s)'));
-//
-//  array_push($stringkeys, array('mail', 'Email'));
-//  array_push($stringkeys, array('created','Date Created','date'));
-//  array_push($stringkeys, array('access','Last Access','date'));
-//  array_push($stringkeys, array('login','Last Login','date'));
-//
-//  array_push($uidcountkeys, array('resources_viewed','Resources Viewed'));
-//  array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed/Rated'));
+  array_push($fieldkeys, array('field_first_name', 'First Name'));
+  array_push($fieldkeys, array('field_last_name', 'Last Name'));
+  array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
+  array_push($fieldkeys, array('field_slt_member', 'Is SLT Member'));
+  array_push($fieldkeys, array('field_school_name', 'School'));
+  array_push($fieldkeys, array('field_district_name', 'District'));
+  array_push($foreignidkeys, array('field_position', 'Title'));
+  array_push($foreignidkeys, array('field_state', 'State'));
+  array_push($foreignidkeys, array('field_grade_level_s_', 'Grade(s)'));
+  array_push($foreignidkeys, array('field_subject_s_', 'Subject(s)'));
+  array_push($foreignidkeys, array('field_special_populations', 'School Population(s)'));
+
+  array_push($stringkeys, array('mail', 'Email'));
+  array_push($stringkeys, array('created','Date Created','date'));
+  array_push($stringkeys, array('access','Last Access','date'));
+  array_push($stringkeys, array('login','Last Login','date'));
+
+  array_push($uidcountkeys, array('resources_viewed','Resources Viewed'));
+  array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed/Rated'));
   array_push($uidcountkeys, array('resources_contributed', 'Resources Contributed'));
-//  array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contributed Resources'));
-//  array_push($uidcountkeys, array('gc_reviews_returned_on_contributed_resources', 'GK Reviews Returned on Contributed Resources'));
-//  array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
-//  array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
-//  array_push($uidcountkeys, array('poster_reviews_completed', 'Posting Reviews Completed'));
-//  array_push($uidcountkeys, array('contributed_resources_posted', 'Contributed Resources Posted'));
-//  array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', 'Contributed Resources Posted with Distinction'));
-//  array_push($uidcountkeys, array('contributed_resources_reviewed_and_returned', 'Contributed Resources Reviewed and Returned'));
-//
-//  array_push($toskeys, array('tos_accepted', 'Date of Terms of Service','date'));
-//  array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
-//  //array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
-//  array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version','date'));
+  array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contributed Resources'));
+  array_push($uidcountkeys, array('gc_reviews_returned_on_contributed_resources', 'GK Reviews Returned on Contributed Resources'));
+  array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
+  array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
+  array_push($uidcountkeys, array('poster_reviews_completed', 'Posting Reviews Completed'));
+  array_push($uidcountkeys, array('contributed_resources_posted', 'Contributed Resources Posted'));
+  array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', 'Contributed Resources Posted with Distinction'));
+  array_push($uidcountkeys, array('contributed_resources_reviewed_and_returned', 'Contributed Resources Reviewed and Returned'));
+
+  array_push($toskeys, array('tos_accepted', 'Date of Terms of Service','date'));
+  array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
+  //array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
+  array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version','date'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';
