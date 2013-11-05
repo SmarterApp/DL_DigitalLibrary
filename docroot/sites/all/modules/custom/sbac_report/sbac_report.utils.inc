@@ -149,12 +149,7 @@ function get_field_value_using_schema($schemakey, $data, $resource, $primary_key
     if ($foreign_object != '') {
       if (array_key_exists('wrapper', $schemakey['foreignkey'])) {
         $wrapper = entity_metadata_wrapper($schemakey['foreignkey']['wrapper'], $foreign_object);
-//        try {
-         // $object = $wrapper->{$schemakey['foreignkey']['object']}->value();
-//          $value = $object->{$schemakey['foreigndata']['field']};
-//        } catch (EntityMetadataWrapperException $e) {
-//          $value = "Unknown Key Field.";
-//        }
+
         // gets the name from the wrapper... now need the state name.
         if (array_key_exists('foreigndata', $schemakey)) {
           $value = get_field_value_using_key($schemakey['foreigndata'], $data, $wrapper, $schemakey['foreignkey'][0], $is_date);
