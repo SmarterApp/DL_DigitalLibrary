@@ -1072,19 +1072,21 @@ a.sbac-grid-layout {
 /** ------------------------------------------
   html5
   ____________________________________________ */
-/* line 1014, ../sass/sbac_resource.scss */
-.form-item-files-field-content-module-picker {
+/* line 1018, ../sass/sbac_resource.scss */
+#sbac-content-module-container .form-item-files-field-content-module-picker,
+#sbac-content-module-container #edit-field-content-module-picker,
+#sbac-content-module-container .form-item.form-type-file {
   float: left;
   margin-top: 0;
   background-position: center right !important;
 }
 
-/* line 1021, ../sass/sbac_resource.scss */
+/* line 1026, ../sass/sbac_resource.scss */
 .sbac-html5-uploader {
   float: right;
 }
 
-/* line 1026, ../sass/sbac_resource.scss */
+/* line 1031, ../sass/sbac_resource.scss */
 #display-container:after {
   content: ".";
   display: block;
@@ -1094,25 +1096,25 @@ a.sbac-grid-layout {
   width: 100%;
 }
 
-/* line 1036, ../sass/sbac_resource.scss */
+/* line 1041, ../sass/sbac_resource.scss */
 #sbac-content-module-subcontainer {
   padding-top: 15px;
   border: 1px solid #ccc;
   border-width: 1px 0;
   margin: 0 5px;
 }
-/* line 1042, ../sass/sbac_resource.scss */
+/* line 1047, ../sass/sbac_resource.scss */
 #sbac-content-module-subcontainer a {
   color: #333;
   text-shadow: none;
 }
-/* line 1045, ../sass/sbac_resource.scss */
+/* line 1050, ../sass/sbac_resource.scss */
 #sbac-content-module-subcontainer a i {
   text-shadow: none;
   font-size: 18px;
 }
 
-/* line 1053, ../sass/sbac_resource.scss */
+/* line 1058, ../sass/sbac_resource.scss */
 .html5-identifier span {
   background-color: #ddd;
   display: inline-block;
@@ -1120,17 +1122,17 @@ a.sbac-grid-layout {
   line-height: normal;
   font-size: 14px;
 }
-/* line 1060, ../sass/sbac_resource.scss */
+/* line 1065, ../sass/sbac_resource.scss */
 .html5-identifier span i:before {
   position: relative;
   top: 2px;
 }
 
-/* line 1067, ../sass/sbac_resource.scss */
+/* line 1072, ../sass/sbac_resource.scss */
 #html5-identifier-node {
   margin-top: -15px;
 }
-/* line 1069, ../sass/sbac_resource.scss */
+/* line 1074, ../sass/sbac_resource.scss */
 #html5-identifier-node p {
   margin-bottom: 0;
 }
@@ -1138,16 +1140,16 @@ a.sbac-grid-layout {
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
-/* line 1080, ../sass/sbac_resource.scss */
+/* line 1085, ../sass/sbac_resource.scss */
 .grid-view .grid-library {
   margin: 0;
   padding: 0;
 }
-/* line 1084, ../sass/sbac_resource.scss */
+/* line 1089, ../sass/sbac_resource.scss */
 .grid-view .grid-library .resource-card {
   max-width: 290px;
 }
-/* line 1088, ../sass/sbac_resource.scss */
+/* line 1093, ../sass/sbac_resource.scss */
 .grid-view .grid-library li {
   list-style-type: none;
   float: left;
@@ -1155,31 +1157,31 @@ a.sbac-grid-layout {
 }
 
 @media all and (min-width: 1271px) {
-  /* line 1098, ../sass/sbac_resource.scss */
+  /* line 1103, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 1270px;
   }
-  /* line 1104, ../sass/sbac_resource.scss */
+  /* line 1109, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(4n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 1270px) and (min-width: 961px) {
-  /* line 1114, ../sass/sbac_resource.scss */
+  /* line 1119, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 960px;
   }
-  /* line 1120, ../sass/sbac_resource.scss */
+  /* line 1125, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(3n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 960px) {
-  /* line 1130, ../sass/sbac_resource.scss */
+  /* line 1135, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 656px;
   }
-  /* line 1136, ../sass/sbac_resource.scss */
+  /* line 1141, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(2n + 1) {
     clear: left;
   }
