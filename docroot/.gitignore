@@ -1,9 +1,7 @@
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
-sites/*.local
-# Ignore paths that contain user-generated content.
 sites/*/files
-sites/*/private
+# Ignore paths that contain user-generated content.
 
 #ignore sass-cache
 sites/all/modules/custom/sbac_user/.sass-cache/
