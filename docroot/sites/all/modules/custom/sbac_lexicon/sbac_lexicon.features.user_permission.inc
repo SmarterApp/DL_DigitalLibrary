@@ -25,7 +25,9 @@ function sbac_lexicon_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'help desk' => 'help desk',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'lexicon',
   );

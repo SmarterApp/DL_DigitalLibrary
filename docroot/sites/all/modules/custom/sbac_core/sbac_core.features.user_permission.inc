@@ -15,6 +15,8 @@ function sbac_core_user_default_permissions() {
     'name' => 'access print',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'print',
   );
@@ -158,6 +160,8 @@ function sbac_core_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'fivestar',
   );
@@ -167,6 +171,8 @@ function sbac_core_user_default_permissions() {
     'name' => 'view any taskit tasks',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'taskit',
   );
@@ -177,6 +183,8 @@ function sbac_core_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'taskit',
   );
@@ -187,6 +195,8 @@ function sbac_core_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'rate',
   );

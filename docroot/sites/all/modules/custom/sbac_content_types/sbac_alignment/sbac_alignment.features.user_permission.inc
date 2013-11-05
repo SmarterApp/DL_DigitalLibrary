@@ -16,9 +16,11 @@ function sbac_alignment_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -29,8 +31,10 @@ function sbac_alignment_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -41,9 +45,11 @@ function sbac_alignment_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -54,8 +60,10 @@ function sbac_alignment_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );
@@ -66,9 +74,11 @@ function sbac_alignment_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'node',
   );

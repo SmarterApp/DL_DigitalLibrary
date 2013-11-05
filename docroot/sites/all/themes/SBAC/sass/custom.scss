@@ -1161,7 +1161,14 @@ a.tabledrag-handle .handle {
 .slider-body {
   color: #717880;
   margin-bottom: 25px;
-  word-break:normal !important;
+  word-break: keep-all !important;
+  -ms-word-break: keep-all;
+
+  hyphens:none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  -webkit-hyphens: none;
+
 }
 
 .resource-info {

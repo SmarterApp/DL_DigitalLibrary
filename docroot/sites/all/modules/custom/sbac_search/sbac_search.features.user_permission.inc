@@ -10,16 +10,18 @@
 function sbac_search_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: administer search.
+  // Exported permission: 'administer search'.
   $permissions['administer search'] = array(
     'name' => 'administer search',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'search',
   );
 
-  // Exported permission: search content.
+  // Exported permission: 'search content'.
   $permissions['search content'] = array(
     'name' => 'search content',
     'roles' => array(
@@ -39,11 +41,13 @@ function sbac_search_user_default_permissions() {
     'module' => 'search',
   );
 
-  // Exported permission: use advanced search.
+  // Exported permission: 'use advanced search'.
   $permissions['use advanced search'] = array(
     'name' => 'use advanced search',
     'roles' => array(
       'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
     ),
     'module' => 'search',
   );
