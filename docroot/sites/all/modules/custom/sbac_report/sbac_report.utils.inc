@@ -108,41 +108,69 @@ function set_tid_property(&$resource_node, $fieldkey, &$tid_terms)
   }
 }
 
-function grab_field_value($value)
+function value_or_field($value, $field_in_object=null) {
+  if ($field_in_object) {
+    return $value->{$field_in_object};
+  }
+  if (is_object($value) and (property_exists($value, 'name') or
+    method_exists($value, 'name'))) {
+    return $value->name;
+  }
+  return $value;
+}
+function grab_field_value($value, $field_in_object=null)
 {
   if (is_array($value)) {
     if (count($value) == 0) {
       $actual_value = '';
-    } else if (count($value) == 1) {
+    }
+    else if (count($value) == 1) {
       list($actual_value) = $value; // get first value.
-      $actual_value = $actual_value->name;
-    } else {
+      $actual_value = value_or_field($actual_value, $field_in_object);
+    }
+    else {
       $actual_value = array();
       foreach ($value as $v) {
-        array_push($actual_value, $v->name);
+        array_push($actual_value, value_or_field($v, $field_in_object));
       }
     }
     $value = $actual_value;
   } else if (is_object($value)) {
-    $value = $value->name;
+    $value = value_or_field($value, $field_in_object);
   }
   return $value;
 }
 
 function get_field_value_using_schema($schemakey, $data, $resource, $primary_key, &$is_date)
 {
-//  if (array_key_exists('foreigndata', $schemakey)) {
-//    $foreign_object = get_field_value_using_schema($schemakey['foreignkey'], $data, $resource, $primary_key, $is_date);
-//    try {
-//      $value = $foreign_object->{$schemakey['foreigndata']}->value();
-//    } catch (EntityMetadataWrapperException $e) {
-//      $value = "Unknown Key Field: $key";
-//      $is_date = false;
-//    }
-//    return $value;
-//  } else {
+  if (array_key_exists('foreignkey', $schemakey)) {
+    $value = '';
+    $foreign_object = get_field_value_using_schema($schemakey['foreignkey'], $data, $resource, $primary_key, $is_date);
+    if ($foreign_object != '') {
+      if (array_key_exists('wrapper', $schemakey['foreignkey'])) {
+        $wrapper = entity_metadata_wrapper($schemakey['foreignkey']['wrapper'], $foreign_object);
+//        try {
+         // $object = $wrapper->{$schemakey['foreignkey']['object']}->value();
+//          $value = $object->{$schemakey['foreigndata']['field']};
+//        } catch (EntityMetadataWrapperException $e) {
+//          $value = "Unknown Key Field.";
+//        }
+        // gets the name from the wrapper... now need the state name.
+        if (array_key_exists('foreigndata', $schemakey)) {
+          $value = get_field_value_using_key($schemakey['foreigndata'], $data, $wrapper, $schemakey['foreignkey'][0], $is_date);
+        }
+        else {
+          $value = get_field_value_using_key($schemakey, $data, $wrapper, $schemakey['foreignkey'][0], $is_date);
+        }
+      }
+      else { // used.
+        $value = $foreign_object; //->{$schemakey['foreignkey']['field']};
+      }
+    }
+    return $value;
+  } else {
     return get_field_value_using_key($schemakey, $data, $resource, $primary_key, $is_date);
-//  }
+  }
 }
 
 function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$is_date)
@@ -152,18 +180,7 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
   if (array_key_exists('fieldtype', $fieldkey)) {
     $is_date = $fieldkey['fieldtype'] == 'date';
   }
-//  if (array_key_exists('foreigndata', $fieldkey)) {
-//    try {
-//      if (array_key_exists(0, $fieldkey)) {
-//        $obj = $resource->{$fieldkey[0]}->value();
-//      }
-//      $value = $obj->{$fieldkey['foreigndata']};
-//    } catch (EntityMetadataWrapperException $e) {
-//      $value = "Unknown Field";
-//      $is_date = false;
-//    }
-//  }
-//  else
+
   if (array_key_exists('function', $fieldkey)) {
     $value = $fieldkey['function']($fieldkey, $resource);
   }
@@ -190,25 +207,6 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
       ) {
         $values = array_values($data[$fieldkey['datasource']][$resource->{$primary_key}->value()]);
         if ($values and array_key_exists($fieldkey['index'], $values)) {
-          if (array_key_exists('foreigndata', $fieldkey)) {
-            $value = $values[$fieldkey['index']];
-            try {
-              if (is_array($value))
-              {
-                $value = $value[$fieldkey['foreigndata']];
-              }
-              else if (is_object($value)) {
-                $value = $value->{$fieldkey['foreigndata']}->raw();
-              }
-              else {
-                $value = "Unknown Foreign Value";
-              }
-            } catch (EntityMetadataWrapperException $e) {
-              $value = "Unknown Field";
-              $is_date = false;
-            }
-          }
-          else {
             try {
               $value = $values[$fieldkey['index']]
                 ->{$fieldkey[0]}
@@ -217,7 +215,6 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
               $value = "Unknown Index Field: $fieldkey[0]";
               $is_date = false;
             }
-          }
         }
       }
 
@@ -234,18 +231,23 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
   } else {
     try {
       if (array_key_exists(0, $fieldkey)) {
+
         $value = $resource->{$fieldkey[0]}->value();
+
       }
     } catch (EntityMetadataWrapperException $e) {
       $value = "Unknown Field";
       $is_date = false;
     }
   }
+//  if (array_key_exists('field',$fieldkey) and !is_array($value) and is_object($value)) {
+//    $value = $value->{$fieldkey['field']};
+//  }
 
   return $value;
 }
 
-function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date = false)
+function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date = false, $field_in_object = null)
 {
   $separator = $csv_configuration['separator'];
   $encloseer = $csv_configuration['encloseer'];
@@ -253,7 +255,7 @@ function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date
   $quote_arrays = $csv_configuration['quote_arrays'];
   $subquote = $csv_configuration['subquote'];
 
-  $field = grab_field_value($field);
+  $field = grab_field_value($field, $field_in_object);
   $ix = 0;
   $row .= $encloseer;
   if ($field == null) {
