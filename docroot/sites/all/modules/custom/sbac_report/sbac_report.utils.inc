@@ -287,7 +287,6 @@ function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date
       $value = $field;
     }
     $row .= str_replace("$encloseer", "$encloseer$encloseer", $value);
-
   }
   $row .= $encloseer;
   $row .= $separator;
