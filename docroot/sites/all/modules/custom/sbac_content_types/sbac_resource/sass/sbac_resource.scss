@@ -1033,6 +1033,22 @@ a.sbac-grid-layout {
   }
 }
 
+#sbac-content-module-subcontainer {
+  padding-top:15px;
+  border: 1px solid #ccc;
+  border-width:1px 0;
+  margin: 0 5px;
+
+  a {
+    color: #333;
+    @include text-shadow(none);
+    i {
+      @include text-shadow(none);
+      font-size: 18px;
+    }
+  }
+}
+
 
 
 /* -----------------------------------------
