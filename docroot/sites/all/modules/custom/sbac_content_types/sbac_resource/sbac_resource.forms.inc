@@ -1621,6 +1621,12 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   );
   $form['#group_children']['resource_tag_title'] = "group_tags";
 
+  $form['tag_wrapper'] = array(
+    '#prefix'=>'<div id="sbac-tags-wrapper">',
+    '#suffix'=>'</div>',
+  );
+  $form['#group_children']['tag_wrapper'] = "group_tags";
+
   $form['field_subject']['und']['#title'] = t('Subjects and Domains') . ' ' . theme('form_required_marker');
   if (isset($form['field_subject']['und']['#options']['_none'])) {
     unset($form['field_subject']['und']['#options']['_none']);
@@ -1656,6 +1662,26 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
     unset($form['field_view_permissions']['und']['#options']['_none']);
   }
   $form['field_classroom_technologies']['und']['#title'] = t('Technologies Required for Use in Classroom');
+
+  $form['tag_wrapper']['field_subject'] = $form['field_subject'];
+  $form['tag_wrapper']['field_grades'] = $form['field_grades'];
+  $form['tag_wrapper']['field_intended_end_user'] = $form['field_intended_end_user'];
+  $form['tag_wrapper']['field_intended_student'] = $form['field_intended_student'];
+  $form['tag_wrapper']['field_geographical_settings'] = $form['field_geographical_settings'];
+  $form['tag_wrapper']['field_smarter_balanced_keyword'] = $form['field_smarter_balanced_keyword'];
+  $form['tag_wrapper']['field_educational_use'] = $form['field_educational_use'];
+  $form['tag_wrapper']['field_classroom_technologies'] = $form['field_classroom_technologies'];
+  $form['tag_wrapper']['field_digital_media_type'] = $form['field_digital_media_type'];
+
+  unset($form['field_subject']);
+  unset($form['field_grades']);
+  unset($form['field_intended_end_user']);
+  unset($form['field_intended_student']);
+  unset($form['field_geographical_settings']);
+  unset($form['field_smarter_balanced_keyword']);
+  unset($form['field_educational_use']);
+  unset($form['field_classroom_technologies']);
+  unset($form['field_digital_media_type']);
 
   // Title
   $form['alignment_tag_title'] = array(
