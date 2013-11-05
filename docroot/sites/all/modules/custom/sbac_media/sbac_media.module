@@ -846,7 +846,19 @@ function sbac_media_html5_element_upload($form, $form_state) {
       $real_path = drupal_realpath($file->uri);
       $zip = new ZipArchive;
       if ($zip->open($real_path) === TRUE) {
-        $saved = $zip->extractTo($directory);
+        $drupal_html5_temp_path = $directory . '/html5_module_temp';
+        $saved = $zip->extractTo($drupal_html5_temp_path);
+        // Handle the situation where the folder name that was zipped could be different then the name of the zip.
+        if ($saved) {
+          $folder_name = $zip->getNameIndex(0);
+          $full_html5_temp_path = drupal_realpath($drupal_html5_temp_path) . '/' . $folder_name;
+          if (file_exists($full_html5_temp_path)) {
+            $full_html5_path = drupal_realpath($directory . '/html5_module');
+            file_prepare_directory($full_html5_path, FILE_CREATE_DIRECTORY);
+            rename($full_html5_temp_path, $full_html5_path);
+            file_unmanaged_delete_recursive($drupal_html5_temp_path);
+          }
+        }
         $zip->close();
       }
 
@@ -856,25 +868,23 @@ function sbac_media_html5_element_upload($form, $form_state) {
         global $user;
         $zip_file_path = drupal_realpath($directory);
         $file_data = pathinfo($real_path); // provides filename with extension on it.
-        if ($file_data) {
-          $zip_archive_path = $zip_file_path . '/' . $file_data['basename'];
-          $zip_contents_path = $zip_file_path . '/' . $file_data['filename'];
-          // Check that the zip contents saved.
-          if (file_exists($zip_contents_path)) {
-            //Check the file contents.
-            $index_html_path = $zip_contents_path . '/index.html';
-            $dlcomponents_path = $zip_contents_path . '/dlcomponents/CoverPage.html';
-            if (file_exists($index_html_path) && file_exists($dlcomponents_path)) {
-              // File contents do exists, save file correctly
-              $no_errors = TRUE;
-            }
-            else {
-              // File content not there, create errors and delete temporary files (zip, zip contents, and file record).
-              form_set_error('field_content_module_picker', t('The selected file ' . $file->filename . ' cannot be uploaded as content module. It is not a valid module file. Only files with a zip extension are allowed for content module upload.'));
-              file_unmanaged_delete_recursive($zip_contents_path);
-              unlink($zip_archive_path);
-              file_delete($file);
-            }
+        $zip_archive_path = $zip_file_path . '/' . $file_data['basename'];
+        $zip_contents_path = $zip_file_path . '/html5_module';
+        // Check that the zip contents saved.
+        if (file_exists($zip_contents_path)) {
+          //Check the file contents.
+          $index_html_path = $zip_contents_path . '/index.html';
+          $dlcomponents_path = $zip_contents_path . '/dlcomponents/CoverPage.html';
+          if (file_exists($index_html_path) && file_exists($dlcomponents_path)) {
+            // File contents do exists, save file correctly
+            $no_errors = TRUE;
+          }
+          else {
+            // File content not there, create errors and delete temporary files (zip, zip contents, and file record).
+            form_set_error('field_content_module_picker', t('The selected file ' . $file->filename . ' cannot be uploaded as content module. It is not a valid module file. Only files with a zip extension are allowed for content module upload.'));
+            file_unmanaged_delete_recursive($zip_contents_path);
+            unlink($zip_archive_path);
+            file_delete($file);
           }
         }
       }
@@ -898,39 +908,20 @@ function sbac_media_html5_element_upload($form, $form_state) {
           $media->weight = 100;
           entity_save('media', $media);
 
-          // Create recursive dir iterator which skips dot folders
-          $dir = new RecursiveDirectoryIterator($zip_contents_path, FilesystemIterator::SKIP_DOTS);
-          // Flatten the recursive iterator, folders come before their files
-          $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
-          // Basic loop displaying different messages based on file or folder
-          foreach ($it as $fileinfo) {
-            if (!$fileinfo->isDir()) {
-              $filename = $fileinfo->getFilename();
-              if ($filename != '.DS_Store') {
-                // need fid, uid, filename, uri, filemime, filesize, status, timestamp, type
-                $path = $fileinfo->getPath();
-                $full_path = str_replace($zip_contents_path, '', $path);
-                $full_path_uri = $directory . '/' . $file_data['filename'] . $full_path . '/' . $filename;
-                $mime_type = file_get_mimetype($full_path_uri);
-                $dir_file = new stdClass();
-                $dir_file->uid = $user->uid;
-                $dir_file->filename = $filename;
-                $dir_file->uri = $full_path_uri;
-                $dir_file->filemime = $mime_type;
-                $dir_file->filesize = $fileinfo->getSize();
-                $dir_file->status = 1;
-                $dir_file->timestamp = mktime();
-                $dir_file->type = $mime_type;
-                drupal_write_record('file_managed', $dir_file);
-              }
-            }
-          }
+          sbac_media_create_file_record_html5_module($zip_contents_path, $directory);
 
           // rebuild the form, output.
           $html5_media_item = sbac_media_load_html5_item($node->nid);
           $form['#node']->document['html5'] = $html5_media_item;
           sbac_media_build_html5_section($form, $form_state);
         }
+      }
+      else {
+        // File content not there, create errors and delete temporary files (zip, zip contents, and file record).
+        form_set_error('field_content_module_picker', t('The selected file ' . $file->filename . ' cannot be uploaded as content module. It is not a valid module file. Only files with a zip extension are allowed for content module upload.'));
+        file_unmanaged_delete_recursive($zip_contents_path);
+        unlink($zip_archive_path);
+        file_delete($file);
       }
     }
     else {
@@ -942,6 +933,78 @@ function sbac_media_html5_element_upload($form, $form_state) {
     form_set_error('field_content_module_picker', t('The file directory is not writable.'));
   }
   return $form['field_content_module_container'];
+}
+
+/**
+ * Creates a record for each file in the module file.
+ *
+ * Needed since the HTML5 module is private, drupal needs a record for all files in the module content.
+ *
+ * @param $zip_contents_path
+ * @param $directory
+ */
+function sbac_media_create_file_record_html5_module($zip_contents_path, $directory) {
+  global $user;
+
+  // Create recursive dir iterator which skips dot folders
+  $dir = new RecursiveDirectoryIterator($zip_contents_path, FilesystemIterator::SKIP_DOTS);
+  // Flatten the recursive iterator, folders come before their files
+  $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+  // Basic loop displaying different messages based on file or folder
+  foreach ($it as $fileinfo) {
+    if (!$fileinfo->isDir()) {
+      $filename = $fileinfo->getFilename();
+      if ($filename != '.DS_Store') {
+        // need fid, uid, filename, uri, filemime, filesize, status, timestamp, type
+        $path = $fileinfo->getPath();
+        $full_path = str_replace($zip_contents_path, '', $path);
+        $full_path_uri = $directory . '/html5_module' . $full_path . '/' . $filename;
+        $mime_type = file_get_mimetype($full_path_uri);
+        $dir_file = new stdClass();
+        $dir_file->uid = $user->uid;
+        $dir_file->filename = $filename;
+        $dir_file->uri = $full_path_uri;
+        $dir_file->filemime = $mime_type;
+        $dir_file->filesize = $fileinfo->getSize();
+        $dir_file->status = 1;
+        $dir_file->timestamp = mktime();
+        $dir_file->type = $mime_type;
+        drupal_write_record('file_managed', $dir_file);
+      }
+    }
+  }
+}
+
+/**
+ * Creates a record for each file in the module file.
+ *
+ * Needed since the HTML5 module is private, drupal needs a record for all files in the module content.
+ *
+ * @param $zip_contents_path
+ * @param $directory
+ */
+function sbac_media_delete_file_record_html5_module($zip_contents_path, $directory) {
+  global $user;
+
+  // Create recursive dir iterator which skips dot folders
+  $dir = new RecursiveDirectoryIterator($zip_contents_path, FilesystemIterator::SKIP_DOTS);
+  // Flatten the recursive iterator, folders come before their files
+  $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+  // Basic loop displaying different messages based on file or folder
+  foreach ($it as $fileinfo) {
+    if (!$fileinfo->isDir()) {
+      $filename = $fileinfo->getFilename();
+      if ($filename != '.DS_Store') {
+        // need fid, uid, filename, uri, filemime, filesize, status, timestamp, type
+        $path = $fileinfo->getPath();
+        $full_path = str_replace($zip_contents_path, '', $path);
+        $full_path_uri = $directory . '/html5_module' . $full_path . '/' . $filename;
+
+        // Create a query which deletes a record depending on path, filename and uid.
+        db_query("DELETE FROM {file_managed} WHERE uid = :uid AND uri = :uri AND filename = :filename", array(':uid' => $user->uid, ':uri' => $full_path_uri, ':filename' => $filename));
+      }
+    }
+  }
 }
 
 /**
@@ -1278,11 +1341,9 @@ function sbac_media_delete_media($js = FALSE) {
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if ($form_state['html5']) {
           // Build path to delete file folder.
-          $file = file_load($form_state['values']['fid']);
           $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
-          $real_path = drupal_realpath($directory) . '/' . $file->filename;
-          $file_data = pathinfo($real_path);
-          $zip_contents_path = drupal_realpath($directory) . '/' . $file_data['filename'];
+          $zip_contents_path = drupal_realpath($directory) . '/html5_module';
+          sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
           file_unmanaged_delete_recursive($zip_contents_path);
 
           // Delete the record from file system (DB and File System)
