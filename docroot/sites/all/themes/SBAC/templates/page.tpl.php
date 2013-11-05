@@ -158,6 +158,9 @@
 
     <?php // if ($breadcrumb): print $breadcrumb; endif; ?>
     <?php if ($title && !$is_front && arg(0) != 'user' && arg(0) != 'legal_accept'): ?>
+      <?php if ($html5) : ?>
+        <div class="sbac-html5-flag"></div>
+      <?php endif; ?>
       <?php print render($title_prefix); ?>
       <h1 id="page-title" class="title"><?php print $title; ?></h1>
       <?php print render($title_suffix); ?>
