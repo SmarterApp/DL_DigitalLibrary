@@ -1011,11 +1011,16 @@ a.sbac-grid-layout {
   html5
   ____________________________________________ */
 
-.form-item-files-field-content-module-picker {
-  float: left;
-  margin-top: 0;
 
-  background-position: center right !important;
+#sbac-content-module-container{
+  .form-item-files-field-content-module-picker,
+  #edit-field-content-module-picker,
+  .form-item.form-type-file {
+    float: left;
+    margin-top: 0;
+
+    background-position: center right !important;
+  }
 }
 
 .sbac-html5-uploader {
