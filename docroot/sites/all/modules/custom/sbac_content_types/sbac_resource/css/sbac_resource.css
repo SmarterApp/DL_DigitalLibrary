@@ -1112,19 +1112,33 @@ a.sbac-grid-layout {
   font-size: 18px;
 }
 
+/* line 1053, ../sass/sbac_resource.scss */
+.html5-identifier span {
+  background-color: #ddd;
+  display: inline-block;
+  padding: 5px;
+  line-height: normal;
+  font-size: 14px;
+}
+/* line 1060, ../sass/sbac_resource.scss */
+.html5-identifier span i:before {
+  position: relative;
+  top: 2px;
+}
+
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
-/* line 1058, ../sass/sbac_resource.scss */
+/* line 1073, ../sass/sbac_resource.scss */
 .grid-view .grid-library {
   margin: 0;
   padding: 0;
 }
-/* line 1062, ../sass/sbac_resource.scss */
+/* line 1077, ../sass/sbac_resource.scss */
 .grid-view .grid-library .resource-card {
   max-width: 290px;
 }
-/* line 1066, ../sass/sbac_resource.scss */
+/* line 1081, ../sass/sbac_resource.scss */
 .grid-view .grid-library li {
   list-style-type: none;
   float: left;
@@ -1132,31 +1146,31 @@ a.sbac-grid-layout {
 }
 
 @media all and (min-width: 1271px) {
-  /* line 1076, ../sass/sbac_resource.scss */
+  /* line 1091, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 1270px;
   }
-  /* line 1082, ../sass/sbac_resource.scss */
+  /* line 1097, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(4n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 1270px) and (min-width: 961px) {
-  /* line 1092, ../sass/sbac_resource.scss */
+  /* line 1107, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 960px;
   }
-  /* line 1098, ../sass/sbac_resource.scss */
+  /* line 1113, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(3n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 960px) {
-  /* line 1108, ../sass/sbac_resource.scss */
+  /* line 1123, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 656px;
   }
-  /* line 1114, ../sass/sbac_resource.scss */
+  /* line 1129, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(2n + 1) {
     clear: left;
   }

@@ -1049,6 +1049,21 @@ a.sbac-grid-layout {
   }
 }
 
+.html5-identifier {
+  span {
+    background-color:#ddd;
+    display: inline-block;
+    padding:5px;
+    line-height: normal;
+    font-size: 14px;
+
+    i:before {
+      position:relative;
+      top:2px;
+    }
+  }
+}
+
 
 
 /* -----------------------------------------

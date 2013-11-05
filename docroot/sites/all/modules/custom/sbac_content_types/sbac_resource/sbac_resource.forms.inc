@@ -1331,35 +1331,35 @@ function _sbac_resource_content_type_description(&$form, &$form_state) {
 function _sbac_resource_module_flag(&$form, &$form_state) {
   if ($form_state['html5']) {
     $form['html5_identifier_basic'] = array(
-      '#markup' => '<p class="html5-content"><i class="general foundicon-website"></i> Content Module</p>',
+      '#markup' => '<p class="html5-content"><span><i class="general foundicon-website"></i> Content Module</span></p>',
       '#prefix' => '<div class="html5-identifier" id="html5-identifier-basic">',
       '#suffix' => '</div>'
     );
     $form['#group_children']['html5_identifier_basic'] = "group_basic";
 
     $form['html5_identifier_materials'] = array(
-      '#markup' => '<p class="html5-content"><i class="general foundicon-website"></i> Content Module</p>',
+      '#markup' => '<p class="html5-content"><span><i class="general foundicon-website"></i> Content Module</span></p>',
       '#prefix' => '<div class="html5-identifier" id="html5-identifier-materials">',
       '#suffix' => '</div>'
     );
     $form['#group_children']['html5_identifier_materials'] = "group_materials";
 
     $form['html5_identifier_summary'] = array(
-      '#markup' => '<p class="html5-content"><i class="general foundicon-website"></i> Content Module</p>',
+      '#markup' => '<p class="html5-content"><span><i class="general foundicon-website"></i> Content Module</span></p>',
       '#prefix' => '<div class="html5-identifier" id="html5-identifier-summary">',
       '#suffix' => '</div>'
     );
     $form['#group_children']['html5_identifier_summary'] = "group_summary";
 
     $form['html5_identifier_tags'] = array(
-      '#markup' => '<p class="html5-content"><i class="general foundicon-website"></i> Content Module</p>',
+      '#markup' => '<p class="html5-content"><span><i class="general foundicon-website"></i> Content Module</span></p>',
       '#prefix' => '<div class="html5-identifier" id="html5-identifier-tags">',
       '#suffix' => '</div>'
     );
     $form['#group_children']['html5_identifier_tags'] = "group_tags";
 
     $form['html5_identifier_advanced'] = array(
-      '#markup' => '<p class="html5-content"><i class="general foundicon-website"></i> Content Module</p>',
+      '#markup' => '<p class="html5-content"><span><i class="general foundicon-website"></i> Content Module</span></p>',
       '#prefix' => '<div class="html5-identifier" id="html5-identifier-advanced">',
       '#suffix' => '</div>'
     );
