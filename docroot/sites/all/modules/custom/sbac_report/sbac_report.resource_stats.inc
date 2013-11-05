@@ -248,7 +248,7 @@ function sbac_report_default_resource_attribute_option()
  */
 function build_resource_stats_csv($resource_filters)
 {
-  ini_set('memory_limit','256M');
+  ini_set('memory_limit','512M');
   $resources = get_resources($resource_filters);
   $resource_feedback = get_entities_for_resources($resources, 'feedback');
   $workbench_moderation = get_workbench_moderation_history($resources);
@@ -469,8 +469,12 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
         $primarykey = $fieldkey['primarykey'];
       }
       $value = get_field_value_using_schema($fieldkey, $data, $resource, $primarykey, $is_date);
-
-      format_metadata_value_field($row, $value, $csv_configuration, $is_date);
+      if (array_key_exists('field', $fieldkey)) {
+        format_metadata_value_field($row, $value, $csv_configuration, $is_date, $fieldkey['field']);
+      }
+      else {
+        format_metadata_value_field($row, $value, $csv_configuration, $is_date);
+      }
     }
     if (++$ix == $count) {
       $row = substr($row, 0, -1);
@@ -492,20 +496,6 @@ function set_report_columns()
     array(
       'node_schema' => array( // sheet 1
         'fieldkeys' => array( // row schema definition of the fields.
-//          array('field_publisher', 'Owner'),
-          array('field_author', 'Author'),
-          array('field_alt_body', 'Resource Summary'),
-          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
-          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
-          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
-          array('field_learning_goals', 'Learning Targets'),
-          array('field_success_criteria', 'Success Criteria'),
-          array('field_supporting_evidence', 'Supporting Evidence'),
-          array('field_principles', 'Principles Literature or Research'),
-          array('field_license_information', 'License?'),
-          array('field_student_agency', 'Student Engagement in the Formative Process'),
-          array('field_total_views', 'Views'),
-          array('field_unique_views', 'Unique Views'),
           array('field_publisher', 'Owner'),
           array('field_author', 'Author'),
           array('field_alt_body', 'Resource Summary'),
@@ -516,13 +506,14 @@ function set_report_columns()
           array('field_success_criteria', 'Success Criteria'),
           array('field_supporting_evidence', 'Supporting Evidence'),
           array('field_principles', 'Principles Literature or Research'),
-          array('field_license_information', 'License?'),
+
           array('field_student_agency', 'Student Engagement in the Formative Process'),
           array('field_total_views', 'Views'),
           array('field_unique_views', 'Unique Views'),
+
           // property keys:
           array('title', 'Title'), //title
-          array('created', 'Contribution Date', 'fieldtype' => 'date'), //todo: not showing up
+          array('created', 'Contribution Date', 'fieldtype' => 'date'),
           // foreign keys:
           array('field_attributes', 'Attribute of Formative Assessment Process'),
           array('field_focus', 'Resource Type'),
@@ -542,47 +533,85 @@ function set_report_columns()
 
           // Gate Keeper
           array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 0), // gk
-          // todo:  array('type', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 0), // gk
-          // todo: array('type', 'Return Date', 'datasource' => 'resource_feedback', 'index' => 0), // gk
+          array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 0, 'fieldtype' => 'date',), // gk
 
           // QC 1, 2,3
           array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 1), // qc 1
           array('created', 'QC Review 1 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 1),
-          // todo: array('', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 1),
+          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 1),
           array('field_rec_rationale', 'QC Review 1 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 1),
           array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 2), // qc 2
           array('created', 'QC Review 2 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 2),
-          // todo: array('', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 2),
+          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 2),
           array('field_rec_rationale', 'QC Review 2 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 2),
           array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 3), // qc 3
           array('created', 'QC Review 3 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 3),
-          // todo: array('', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 3),
+          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 3),
           array('field_rec_rationale', 'QC Review 3 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 3),
 
           // poster
           array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 4), // post
-          array('created', 'Poster Review Submission Date (created)', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
-          array('changed', 'Poster Review Submission Date (changed)', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
+          array('created', 'Poster Review Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
           array('field_to_reviewer_1', 'Poster Comment to Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 4),
           array('field_to_reviewer_2', 'Poster Comment to Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 4),
           array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 4),
           array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 4),
+          array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
 
           // users info
-          array('uid', 'Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 1),
-          array('uid', 'Reviewer 1 name', 'datasource' => 'resource_feedback', 'index' => 1, 'foreigndata' => 'title'),
-          array('uid', 'Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 2),
-          array('uid', 'Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 3),
-          array('uid', 'Poster Id', 'datasource' => 'resource_feedback', 'index' => 4),
-          array('author', 'Author Id'),
+          array('foreign', 'Reviewer 1 Name', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 1,  ),),
+          array('foreign', 'Reviewer 1 State', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 1, 'wrapper'=>'user'),
+            'foreigndata' => array('field_state'),
+          ),
+          array('foreign', 'Reviewer 2 Name', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 2,  ),),
+          array('foreign', 'Reviewer 2 State', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 2, 'wrapper'=>'user'),
+            'foreigndata' => array('field_state'),
+          ),
 
-          array('author', 'Contributor UID', 'foreigndata' => 'uid'),
+          array('foreign', 'Reviewer 3 Name', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 3,  ),),
+          array('foreign', 'Reviewer 3 State', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 3, 'wrapper'=>'user'),
+            'foreigndata' => array('field_state'),
+          ),
+
+          array('foreign', 'Poster Name', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 4,  ),),
+          array('foreign', 'Poster State', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 4, 'wrapper'=>'user'),
+            'foreigndata' => array('field_state'),
+          ),
+          array('author', 'Contributor Name', 'field' => 'name'),
+          array('field_state', 'Contributor State',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+
+          array('roles', 'Contributor Roles',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+
+          array('field_position', 'Contributor Title',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_district_name', 'Contributor School District',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_grade_level_s', 'Contributor Grade(s)',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_subject_s', 'Contributor Subject(s)',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_special_populations', 'Contributor Student Population(s)',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
           // test case for functional access:
           array('type', 'Feedback custom', 'datasource' => 'resource_feedback', 'function' => 'get_custom_feedback'),
-//          array('uid', 'Contributor UID',
-//            'foreignkey' => array('uid', 'name' => 'user_id', 'datasource' => 'resource_nodes'),
-//            'foreigndata' => array('key' => 'user_id', 'datasource' => 'authors'),
-//          ),
+
         ),
       ),
     );
