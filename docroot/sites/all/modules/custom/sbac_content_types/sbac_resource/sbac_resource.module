@@ -1064,7 +1064,7 @@ function sbac_resource_node_access_records($node) {
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
       $accounts = sbac_resource_get_users_by_role('resource reviewer');
       foreach ($accounts as $account) {
-        if ($account->uid != $node->uid) {
+        if ($account->uid != $node->uid) { // a reviewer is not able to review the nodes they created.
           $restricted = TRUE;
           $grants[] = array(
             'realm' => 'able_to_review',
