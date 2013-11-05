@@ -231,9 +231,7 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
   } else {
     try {
       if (array_key_exists(0, $fieldkey)) {
-
         $value = $resource->{$fieldkey[0]}->value();
-
       }
     } catch (EntityMetadataWrapperException $e) {
       $value = "Unknown Field";

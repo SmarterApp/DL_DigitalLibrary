@@ -610,7 +610,7 @@ function set_report_columns()
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
           // test case for functional access:
-          array('type', 'Feedback custom', 'datasource' => 'resource_feedback', 'function' => 'get_custom_feedback'),
+//          array('type', 'Feedback custom', 'datasource' => 'resource_feedback', 'function' => 'get_custom_feedback'),
 
         ),
       ),
