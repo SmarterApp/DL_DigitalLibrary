@@ -209,7 +209,7 @@ function _sbac_resource_preview_content(&$vars) {
     $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
     $real_path = drupal_realpath($directory) . '/' . $file->filename;
     $file_data = pathinfo($real_path);
-    $source = $directory . '/' . $file_data['filename'] . '/dlcomponents/CoverPage.html';
+    $source = $directory . '/html5_module/dlcomponents/CoverPage.html';
     $url = file_create_url($source);
     $viewer['viewer_filename'] = ucwords($file_data['filename']);
     $viewer['viewer'] = '<iframe src="' . $url . '" width="850" height="600" style="border: none;"></iframe>';
@@ -283,7 +283,7 @@ function _sbac_resource_preview_materials(&$vars) {
     $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
     $real_path = drupal_realpath($directory) . '/' . $file->filename;
     $file_data = pathinfo($real_path);
-    $source = drupal_realpath($directory) . '/' . $file_data['filename'] . '/dlcomponents/CoverPage.html';
+    $source = drupal_realpath($directory) . '/html5_module/dlcomponents/CoverPage.html';
     $material_urls[] = l(ucwords($file_data['filename']), $source, array('attributes' => array('sbac-type' => $type)));
   }
 
