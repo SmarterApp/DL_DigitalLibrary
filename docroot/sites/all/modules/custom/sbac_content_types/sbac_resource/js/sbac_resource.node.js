@@ -23,6 +23,9 @@
           var google_viewer = '<iframe src="' + google_url + '?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
           resource.empty().append(google_viewer);
         }
+        else if (type == 'html5') {
+          resource.empty().append('<iframe src="' + $(this).attr('href') + '" width="850" height="600" style="border: none;"></iframe>');
+        }
         else if (type == 'video') { // includes youtube
           resource.empty().append('<div id="sbac-jwplayer"></div>');
           jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850, primary: "flash" });
