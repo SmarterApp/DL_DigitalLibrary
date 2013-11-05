@@ -56,7 +56,7 @@ function sbac_search_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'apachesolr_attachments_tika_jar';
-  $strongarm->value = 'tika-app-1.1.jar';
+  $strongarm->value = '';
   $export['apachesolr_attachments_tika_jar'] = $strongarm;
 
   $strongarm = new stdClass();
