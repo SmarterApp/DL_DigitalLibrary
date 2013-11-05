@@ -526,126 +526,126 @@ function set_report_columns()
     array(
       'node_schema' => array( // sheet 1
         'fieldkeys' => array( // row schema definition of the fields.
-//          array('field_publisher', 'Owner'),
-//          array('field_author', 'Author'),
-//
-//          array('field_alt_body', 'Resource Summary'),
-//          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
-//          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
-//          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
-//          array('field_learning_goals', 'Learning Targets'),
-//          array('field_success_criteria', 'Success Criteria'),
-//          array('field_supporting_evidence', 'Supporting Evidence'),
-//          array('field_principles', 'Principles Literature or Research'),
-//
-//          array('field_student_agency', 'Student Engagement in the Formative Process'),
-//
-//
-//          // property keys:
-//          array('title', 'Title'), //title
-//          array('created', 'Contribution Date', 'fieldtype' => 'date'),
-//          // foreign keys:
-//          array('field_attributes', 'Attribute of Formative Assessment Process'),
-//          array('field_focus', 'Resource Type'),
-//          array('field_grades', 'Grade(s)'),
-//          array('field_subject', 'Subjects and Domains'),
-//          array('field_intended_end_user', 'Intended End User(s)'),
-//          array('field_intended_student', 'Intended Student Population(s)'),
-//          array('field_geographical_settings', 'Geographic Setting(s)'),
-//          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
-//          array('field_digital_media_type', 'Media Type(s)'),
-//          array('field_educational_use', 'Educational Use'),
-//          array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
-//          array('field_alignment_tags', 'Common Core State Standards?'),
-//          // non-wrapper fields:
-//          array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',)),
-//          // entity relationship fields
-//
-//          // Gate Keeper
-//          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 0), // gk
-//          array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 0, 'fieldtype' => 'date',), // gk
-//
-//          // QC 1, 2,3
-//          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 1), // qc 1
-//          array('created', 'QC Review 1 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 1),
-//          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 1),
-//          array('field_rec_rationale', 'QC Review 1 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 1),
-//          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 2), // qc 2
-//          array('created', 'QC Review 2 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 2),
-//          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 2),
-//          array('field_rec_rationale', 'QC Review 2 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 2),
-//          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 3), // qc 3
-//          array('created', 'QC Review 3 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 3),
-//          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 3),
-//          array('field_rec_rationale', 'QC Review 3 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 3),
-//
-//          // poster
-//          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 4), // post
-//          array('created', 'Poster Review Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
-//          array('field_to_reviewer_1', 'Poster Comment to Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 4),
-//          array('field_to_reviewer_2', 'Poster Comment to Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 4),
-//          array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 4),
-//          array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 4),
-//          array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
-//
-//          // users info
-//          array('foreign', 'Reviewer 1 Name', 'field' => 'name',
-//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 1,  ),),
-//          array('foreign', 'Reviewer 1 State', 'field' => 'name',
-//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 1, 'wrapper'=>'user'),
-//            'foreigndata' => array('field_state'),
-//          ),
-//          array('foreign', 'Reviewer 2 Name', 'field' => 'name',
-//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 2,  ),),
-//          array('foreign', 'Reviewer 2 State', 'field' => 'name',
-//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 2, 'wrapper'=>'user'),
-//            'foreigndata' => array('field_state'),
-//          ),
-//
-//          array('foreign', 'Reviewer 3 Name', 'field' => 'name',
-//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 3,  ),),
-//          array('foreign', 'Reviewer 3 State', 'field' => 'name',
-//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 3, 'wrapper'=>'user'),
-//            'foreigndata' => array('field_state'),
-//          ),
-//
-//          array('foreign', 'Poster Name', 'field' => 'name',
-//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 4,  ),),
-//          array('foreign', 'Poster State', 'field' => 'name',
-//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 4, 'wrapper'=>'user'),
-//            'foreigndata' => array('field_state'),
-//          ),
-//          array('author', 'Contributor Name', 'field' => 'name'),
-//          array('field_state', 'Contributor State',
-//            'foreignkey' => array('author', 'wrapper' => 'user',),
-//          ),
-//
-//          array('roles', 'Contributor Roles',
-//            'foreignkey' => array('author', 'wrapper' => 'user',),
-//          ),
-//
-//          array('field_position', 'Contributor Title',
-//            'foreignkey' => array('author', 'wrapper' => 'user',),
-//          ),
-//          array('field_district_name', 'Contributor School District',
-//            'foreignkey' => array('author', 'wrapper' => 'user',),
-//          ),
-//          array('field_grade_level_s_', 'Contributor Grade(s)',
-//            'foreignkey' => array('author', 'wrapper' => 'user',),
-//          ),
-//          array('field_subject_s_', 'Contributor Subject(s)',
-//            'foreignkey' => array('author', 'wrapper' => 'user',),
-//          ),
-//          array('field_special_populations', 'Contributor Student Population(s)',
-//            'foreignkey' => array('author', 'wrapper' => 'user',),
-//          ),
+          array('field_publisher', 'Owner'),
+          array('field_author', 'Author'),
 
-//          array('field_total_views', 'Views'),
-//          array('field_unique_views', 'Unique Views'),
+          array('field_alt_body', 'Resource Summary'),
+          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
+          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
+          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
+          array('field_learning_goals', 'Learning Targets'),
+          array('field_success_criteria', 'Success Criteria'),
+          array('field_supporting_evidence', 'Supporting Evidence'),
+          array('field_principles', 'Principles Literature or Research'),
+
+          array('field_student_agency', 'Student Engagement in the Formative Process'),
+
+
+          // property keys:
+          array('title', 'Title'), //title
+          array('created', 'Contribution Date', 'fieldtype' => 'date'),
+          // foreign keys:
+          array('field_attributes', 'Attribute of Formative Assessment Process'),
+          array('field_focus', 'Resource Type'),
+          array('field_grades', 'Grade(s)'),
+          array('field_subject', 'Subjects and Domains'),
+          array('field_intended_end_user', 'Intended End User(s)'),
+          array('field_intended_student', 'Intended Student Population(s)'),
+          array('field_geographical_settings', 'Geographic Setting(s)'),
+          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
+          array('field_digital_media_type', 'Media Type(s)'),
+          array('field_educational_use', 'Educational Use'),
+          array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
+          array('field_alignment_tags', 'Common Core State Standards?'),
+          // non-wrapper fields:
+          array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',)),
+          // entity relationship fields
+
+          // Gate Keeper
+          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 0), // gk
+          array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 0, 'fieldtype' => 'date',), // gk
+
+          // QC 1, 2,3
+          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 1), // qc 1
+          array('created', 'QC Review 1 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 1),
+          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 1),
+          array('field_rec_rationale', 'QC Review 1 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 1),
+          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 2), // qc 2
+          array('created', 'QC Review 2 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 2),
+          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 2),
+          array('field_rec_rationale', 'QC Review 2 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 2),
+          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 3), // qc 3
+          array('created', 'QC Review 3 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 3),
+          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 3),
+          array('field_rec_rationale', 'QC Review 3 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 3),
+
+          // poster
+          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 4), // post
+          array('created', 'Poster Review Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
+          array('field_to_reviewer_1', 'Poster Comment to Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 4),
+          array('field_to_reviewer_2', 'Poster Comment to Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 4),
+          array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 4),
+          array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 4),
+          array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
+
+          // users info
+          array('foreign', 'Reviewer 1 Name', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 1,  ),),
+          array('foreign', 'Reviewer 1 State', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 1, 'wrapper'=>'user'),
+            'foreigndata' => array('field_state'),
+          ),
+          array('foreign', 'Reviewer 2 Name', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 2,  ),),
+          array('foreign', 'Reviewer 2 State', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 2, 'wrapper'=>'user'),
+            'foreigndata' => array('field_state'),
+          ),
+
+          array('foreign', 'Reviewer 3 Name', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 3,  ),),
+          array('foreign', 'Reviewer 3 State', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 3, 'wrapper'=>'user'),
+            'foreigndata' => array('field_state'),
+          ),
+
+          array('foreign', 'Poster Name', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 4,  ),),
+          array('foreign', 'Poster State', 'field' => 'name',
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 4, 'wrapper'=>'user'),
+            'foreigndata' => array('field_state'),
+          ),
+          array('author', 'Contributor Name', 'field' => 'name'),
+          array('field_state', 'Contributor State',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+
+          array('roles', 'Contributor Roles',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+
+          array('field_position', 'Contributor Title',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_district_name', 'Contributor School District',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_grade_level_s_', 'Contributor Grade(s)',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_subject_s_', 'Contributor Subject(s)',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_special_populations', 'Contributor Student Population(s)',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+
+          array('field_total_views', 'Views'),
+          array('field_unique_views', 'Unique Views'),
           array('', 'Total Number of Tag(s)',
-            'function' => 'get_total_tags')
-          // test case for functional access:
-//          array('type', 'Feedback custom', 'datasource' => 'resource_feedback', 'function' => 'get_custom_feedback'),
+            'function' => 'get_total_tags'),
+//           test case for functional access:
+          array('type', 'Feedback custom', 'datasource' => 'resource_feedback', 'function' => 'get_custom_feedback'),
 
         ),
       ),
