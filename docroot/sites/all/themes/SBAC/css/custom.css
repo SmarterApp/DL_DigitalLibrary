@@ -8587,8 +8587,8 @@ a.tabledrag-handle .handle {
   margin-right: 5%;
 }
 /* line 1779, ../sass/custom.scss */
-.page-node-add-resource #edit-group_tags .fieldset-wrapper .field-widget-options-select:nth-child(even),
-.section-node-edit #edit-group_tags .fieldset-wrapper .field-widget-options-select:nth-child(even) {
+.page-node-add-resource #edit-group_tags .fieldset-wrapper .field-widget-options-select:nth-child(odd),
+.section-node-edit #edit-group_tags .fieldset-wrapper .field-widget-options-select:nth-child(odd) {
   clear: left;
 }
 /* line 1785, ../sass/custom.scss */

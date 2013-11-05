@@ -1736,47 +1736,12 @@ a.tabledrag-handle .handle {
         padding: 5px 0;
       }
 
-      //TODO: Add the descriptions on php
-      /*.field-name-field-age-range label:after {
-        content: 'The typical age range of the resource\'s intended end user.';
-      }
-      .field-name-field-intended-end-user label:after {
-        content: 'Individual or group for which the resource was produced.';
-      }
-      .field-name-field-digital-media-type label:after {
-        content: 'The type of media in which the resource is provided.';
-      }
-      .field-name-field-educational-use label:after {
-        content: 'The purpose of the resource in the context of the Digital Library.';
-      }
-      .field-name-field-subject label:after {
-        content: 'The subject area to which the learning resource applies';
-      }
-      .field-name-field-grade label:after {
-        content: 'The grade(s) at which the opject might be used, regardless of curriculum alignment';
-      }
-      .field-name-field-intended-student label:after {
-        content: 'Student population(s) which the resource can be used';
-      }
-      .field-name-field-geographical-settings label:after {
-        content: 'Setting(s) for which the resource is provided';
-      }
-      .field-name-field-learning-resource-type label:after {
-        content: 'The predominate type or kind characterizing the learning resource.';
-      }
-      .field-name-field-smarter-balanced-keyword label:after {
-        content: 'Identifiers that can be assigned to a resource aligned to Smarter Balance concepts.';
-      }
-      .field-name-field-interactivity-type label:after {
-        content: 'The predominate mode of learning supported by the learning resource.';
-      }*/
-
       .field-widget-options-select {
         float: left;
         width: 40%;
         margin-right: 5%;
 
-        &:nth-child(even) {
+        &:nth-child(odd) {
           clear: left;
         }
       }
