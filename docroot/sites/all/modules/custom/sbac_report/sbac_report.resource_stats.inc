@@ -420,6 +420,11 @@ SQL;
   return array($authors, $reviewers);
 }
 
+function get_counts_for_resource_stats()
+{
+
+}
+
 /*
  * Creates the resource report given a list of node ids.
  *
@@ -491,13 +496,39 @@ function set_report_columns()
   {
     return 'Hi';
   }
+  function get_total_tags($fieldkey, $data)
+  {
+    // count of these fields:
+//          array('field_grades', 'Grade(s)'),
+//          array('field_subject', 'Subjects and Domains'),
+//          array('field_intended_end_user', 'Intended End User(s)'),
+//          array('field_intended_student', 'Intended Student Population(s)'),
+//          array('field_geographical_settings', 'Geographic Setting(s)'),
+//          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
+//          array('field_digital_media_type', 'Media Type(s)'),
+//          array('field_educational_use', 'Educational Use'),
+//          array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
+//          array('field_alignment_tags', 'Common Core State Standards?'),
+    $count = count($data->field_grades->value());
+    $count += count($data->field_subject->value());
+    $count += count($data->field_intended_end_user->value());
+    $count += count($data->field_intended_student->value());
+    $count += count($data->field_geographical_settings->value());
+    $count += count($data->field_smarter_balanced_keyword->value());
+    $count += count($data->field_digital_media_type->value());
+    $count += count($data->field_educational_use->value());
+    $count += count($data->field_classroom_technologies->value());
+    $count += count($data->field_alignment_tags->value());
 
+    return "$count";
+  }
   return
     array(
       'node_schema' => array( // sheet 1
         'fieldkeys' => array( // row schema definition of the fields.
           array('field_publisher', 'Owner'),
           array('field_author', 'Author'),
+
           array('field_alt_body', 'Resource Summary'),
           array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
           array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
@@ -508,8 +539,7 @@ function set_report_columns()
           array('field_principles', 'Principles Literature or Research'),
 
           array('field_student_agency', 'Student Engagement in the Formative Process'),
-          array('field_total_views', 'Views'),
-          array('field_unique_views', 'Unique Views'),
+
 
           // property keys:
           array('title', 'Title'), //title
@@ -518,15 +548,15 @@ function set_report_columns()
           array('field_attributes', 'Attribute of Formative Assessment Process'),
           array('field_focus', 'Resource Type'),
           array('field_grades', 'Grade(s)'),
+          array('field_subject', 'Subjects and Domains'),
           array('field_intended_end_user', 'Intended End User(s)'),
+          array('field_intended_student', 'Intended Student Population(s)'),
           array('field_geographical_settings', 'Geographic Setting(s)'),
           array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
           array('field_digital_media_type', 'Media Type(s)'),
           array('field_educational_use', 'Educational Use'),
-          array('field_alignment_tags', 'Common Core State Standards?'),
-          array('field_subject', 'Subjects and Domains'),
-          array('field_intended_student', 'Intended Student Population(s)'),
           array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
+          array('field_alignment_tags', 'Common Core State Standards?'),
           // non-wrapper fields:
           array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',)),
           // entity relationship fields
@@ -609,8 +639,13 @@ function set_report_columns()
           array('field_special_populations', 'Contributor Student Population(s)',
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
-          // test case for functional access:
-//          array('type', 'Feedback custom', 'datasource' => 'resource_feedback', 'function' => 'get_custom_feedback'),
+
+          array('field_total_views', 'Views'),
+          array('field_unique_views', 'Unique Views'),
+          array('', 'Total Number of Tag(s)',
+            'function' => 'get_total_tags'),
+//           test case for functional access:
+          array('type', 'Feedback custom', 'datasource' => 'resource_feedback', 'function' => 'get_custom_feedback'),
 
         ),
       ),
