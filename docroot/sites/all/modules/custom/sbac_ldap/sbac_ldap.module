@@ -6,21 +6,6 @@
 
 include_once 'sbac_ldap.features.inc';
 
-/*
- * Implements hook_menu().
- */
-function sbac_ldap_menu() {
-  $items['home'] = array(
-    'page callback' => 'sbac_ldap_frontpage_view',
-    'access callback' => TRUE,
-    // 'access arguments' => array('access content'),
-    'type'  => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-
 /**
  * Implements hook_update_projects_alter().
  *
@@ -84,60 +69,6 @@ function sbac_ldap_test_connect() {
     return TRUE;
   }
   return FALSE;
-}
-
-/*
- * Function to check which front page to display
- */
-function sbac_ldap_frontpage_view() {
-  $logged_in = user_is_logged_in();
-  global $user;
-
-  if($logged_in) {
-    if (!isset($user->data['disable_help'])) {
-      drupal_goto('user');
-    }
-    else {
-      drupal_goto('digital-library-resources');
-    }
-  }
-  else {
-    drupal_goto('user');
-  }
-
-}
-
-
-
-/**
- * Implementation of hook_user_import_data().
- */
-function sbac_ldap_user_import_data($settings, $update_setting, $column_settings, $module, $field_id, $data, $column_id) {
-  //
-  //if ($module != 'field') return;
-  //
-  //
-  //dsm('blah');
-  ////dsm(array($settings, $update_setting, $column_settings, $module, $field_id, $data, $column_id));
-  //// STATE
-  //if($field_id == 'field_state') {
-  //  return '304';
-  //  
-  //  
-  //  $tid = 0;
-  //  $states_vocab = taxonomy_vocabulary_machine_name_load('states');
-  //  $terms = taxonomy_get_term_by_name('Washington');
-  //  
-  //  foreach ($terms as $term) {
-  //    if($term->vid == $states_vocab->vid){
-  //      $tid = $term->tid;
-  //      break;
-  //    }
-  //  }
-  //  return $tid;
-  //}
-  //
-  //return $value;
 }
 
 /**

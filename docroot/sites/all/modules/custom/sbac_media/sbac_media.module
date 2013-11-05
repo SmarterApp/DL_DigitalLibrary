@@ -526,7 +526,7 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
     );
 
     $form['field_content_module_container']['ajax_container']['header'] = array(
-      '#markup' => "<h5>Content Module</h5>",
+      '#markup' => "<h6>Content Module</h6>",
       '#weight' => -98,
     );
 
@@ -537,16 +537,17 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
     );
 
     $form['field_content_module_container']['ajax_container']['subcontainer']['uploaded_file'] = array(
-      '#markup' => '<div class="columns large-10"><p class="uploaded-file">' . $html5_media_item->filename . "</p></div>",
+      '#markup' => '<div class="columns large-11"><p class="uploaded-file">' . $html5_media_item->filename . "</p></div>",
       '#weight' => -96,
     );
 
     // Delete link.
-    $delete_link = '<div class="columns large-2">'.l(t('Delete'), 'sbac-media/nojs/delete-media', array(
+    $delete_link = '<div class="columns large-1">'.l('<i class="general foundicon-trash"></i>', 'sbac-media/nojs/delete-media', array(
       'attributes' => array(
         'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media',
         'id' => 'sbac-media-modal-delete-media'
       ),
+      'html' =>true,
       'query' => array(
         'fid' => $html5_media_item->fid,
         'nid' => $html5_media_item->nid,

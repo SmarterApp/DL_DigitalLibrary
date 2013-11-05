@@ -1094,19 +1094,37 @@ a.sbac-grid-layout {
   width: 100%;
 }
 
+/* line 1036, ../sass/sbac_resource.scss */
+#sbac-content-module-subcontainer {
+  padding-top: 15px;
+  border: 1px solid #ccc;
+  border-width: 1px 0;
+  margin: 0 5px;
+}
+/* line 1042, ../sass/sbac_resource.scss */
+#sbac-content-module-subcontainer a {
+  color: #333;
+  text-shadow: none;
+}
+/* line 1045, ../sass/sbac_resource.scss */
+#sbac-content-module-subcontainer a i {
+  text-shadow: none;
+  font-size: 18px;
+}
+
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
-/* line 1042, ../sass/sbac_resource.scss */
+/* line 1058, ../sass/sbac_resource.scss */
 .grid-view .grid-library {
   margin: 0;
   padding: 0;
 }
-/* line 1046, ../sass/sbac_resource.scss */
+/* line 1062, ../sass/sbac_resource.scss */
 .grid-view .grid-library .resource-card {
   max-width: 290px;
 }
-/* line 1050, ../sass/sbac_resource.scss */
+/* line 1066, ../sass/sbac_resource.scss */
 .grid-view .grid-library li {
   list-style-type: none;
   float: left;
@@ -1114,31 +1132,31 @@ a.sbac-grid-layout {
 }
 
 @media all and (min-width: 1271px) {
-  /* line 1060, ../sass/sbac_resource.scss */
+  /* line 1076, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 1270px;
   }
-  /* line 1066, ../sass/sbac_resource.scss */
+  /* line 1082, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(4n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 1270px) and (min-width: 961px) {
-  /* line 1076, ../sass/sbac_resource.scss */
+  /* line 1092, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 960px;
   }
-  /* line 1082, ../sass/sbac_resource.scss */
+  /* line 1098, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(3n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 960px) {
-  /* line 1092, ../sass/sbac_resource.scss */
+  /* line 1108, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 656px;
   }
-  /* line 1098, ../sass/sbac_resource.scss */
+  /* line 1114, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(2n + 1) {
     clear: left;
   }
