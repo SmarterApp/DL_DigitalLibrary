@@ -249,8 +249,9 @@ function get_user_activity($users, $date_range)
   $user_activity['resources_reviewed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # resources contributed:
-  $sql = "select count(nid) as count, uid,created from node where type = 'resource' and uid in (%s) and
-    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $sql = "select count(n.nid) as count, n.uid, n.created from node as n join workbench_moderation_node_history as wmnh on n.nid = wmnh.nid
+    where n.type = 'resource' and n.uid in (%s) and wmnh.state!='draft' and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.uid";
   $user_activity['resources_contributed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Resources Viewed:
@@ -435,21 +436,9 @@ function create_user_activity_from_data($user_activity)
  * uidcountkey: from the 12 specialized statistic queries
  * toskey: the terms of service queries.
  *
- *
- * todo: break into separate routines, definition, and validate/pad.
  */
 function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys)
 {
-  // loop through all values and make sure 0's and '' are used as placeholders for missing values.
-//  $titles =  'first-name, last-name, state, district,school, grade,subject, school-population, email,'.
-//    ' is-slt, is-sne, date-created, last-access, last-login, '.
-//    ' date-of-terms-of-service, version-of-terms-of-service, date-of-service-version,'.
-//    ' resources-viewed, resources-reviewed-rated, resources-contributed,'.
-//    ' gk-reviews-accepted-on-contributed-resources, gk-reviews-returned-on-contributed-resources,'.
-//    ' contributed-resources-posted, contributed-resources-posted-with-distinction, contributed-resources-reviewed-and-returned'.
-//    ' gk-reviews-completed, qc-reviews-completed, posting-reviews-completed'
-//    ."\r\n";
-
   array_push($fieldkeys, array('field_first_name', 'First Name'));
   array_push($fieldkeys, array('field_last_name', 'Last Name'));
   array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
