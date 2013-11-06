@@ -392,14 +392,14 @@ function get_entities_for_resources($resources, $entity_type)
 
 function get_workbench_moderation_history($resources)
 {
-  $query = <<<SQL
-    select * from workbench_moderation_states;
-SQL;
-  $result = db_query($query);
-  $lookup = array();
-  foreach ($result as $record) {
-    $lookup[$record->name] = $record->label;
-  }
+//  $query = <<<SQL
+//    select * from workbench_moderation_states;
+//SQL;
+//  $result = db_query($query);
+//  $lookup = array();
+//  foreach ($result as $record) {
+//    $lookup[$record->name] = $record->label;
+//  }
 
   $sql = <<<SQL
     select * from workbench_moderation_node_history where nid in (%s) and current = 1
@@ -408,9 +408,9 @@ SQL;
   $result = db_query($query);
   $values = array();
   foreach ($result as $record) {
-    if (array_key_exists($record->state, $lookup)) {
-      $record->state = $lookup[$record->state];
-    }
+//    if (array_key_exists($record->state, $lookup)) {
+//      $record->state = $lookup[$record->state];
+//    }
     $values[$record->nid] = $record;
   }
   return $values;
@@ -664,7 +664,9 @@ function set_report_columns()
           array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
           array('field_alignment_tags', 'Common Core State Standards?'),
           // non-wrapper fields:
-          array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',)),
+//          array('status', 'Status', 'accessor' => 'label'),
+          array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',), 'accessor' => 'label'),
+//          array('from_state', 'From Workbench State', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',), 'accessor' => 'label'),
           // Gate Keeper
           array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 'gate_keeper', 'fieldtype' => 'date',), // gk
           array('stamp', 'Return Date', 'datasource' => 'return_date', 'fieldtype' => 'date','not_wrapper' => true), // gk
