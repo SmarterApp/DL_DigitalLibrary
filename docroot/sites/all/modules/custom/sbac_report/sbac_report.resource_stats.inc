@@ -501,7 +501,7 @@ function get_counts_for_resource_stats($nodes, &$data)
   $data['return_date'] = count_with_nodes_query($sql, $nodes, false);
 
   # Review cycle number
-  $sql = "SELECT nid, count(nid) as review_cycle FROM sbacdev.workbench_moderation_node_history where state = 'rejected' group by nid";
+  $sql = "SELECT nid, count(nid) as review_cycle FROM workbench_moderation_node_history where state = 'rejected' group by nid";
   $data['review_cycle'] = count_with_nodes_query($sql, $nodes, false);
 
   # Current student learning rating (average)
