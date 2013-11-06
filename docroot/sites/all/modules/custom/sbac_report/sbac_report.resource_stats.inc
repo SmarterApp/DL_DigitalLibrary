@@ -162,7 +162,9 @@ function sbac_report_default_resource_type_option()
  */
 function sbac_report_resource_status_options()
 {
-  $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
+  // not a taxonomy term, these values come from the workbench moderation states.
+  //$sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
+  $sql = "select name as tid, label as name from workbench_moderation_states";
   return query_taxonomy_term($sql);
 }
 
@@ -303,7 +305,8 @@ function get_resources($resource_filters)
     ->propertyCondition('status', 1)
     ->fieldCondition('field_focus', 'tid', array_keys($resource_filters['types']));
   // this field doesn't work:
-  //->fieldCondition('field_resource_state', 'tid', array_keys($resource_filters['status']))
+  //   ->fieldCondition('field_resource_state', 'tid', array_keys($resource_filters['status']));
+  //set_field_condition_filter($entities, $resource_filters['status'], 'field_resource_state');
   set_field_condition_filter($entities, $resource_filters['subject'], 'field_subject');
   set_field_condition_filter($entities, $resource_filters['grade'], 'field_grades');
   set_field_condition_filter($entities, $resource_filters['attribute'], 'field_attributes');
@@ -328,11 +331,27 @@ function get_resources($resource_filters)
     }
   }
   $nodes = node_load_multiple($nids);
+  $nodes = fitler_resource_status($nodes, $resource_filters['status']);
+
   $wrappers = array();
   foreach ($nodes as $key => $value) {
     $wrappers[$key] = entity_metadata_wrapper('node', $value);
   }
   return $wrappers;
+}
+
+function fitler_resource_status($nodes, $statuses) {
+
+  if (array_key_exists(0,$statuses)) {
+    return $nodes;
+  }
+  $filtered_nodes = array();
+  foreach ($nodes as $key => $node) {
+    if (in_array($node->workbench_moderation['current']->state, $statuses)) {
+      $filtered_nodes[$key] = $node;
+    }
+  }
+  return $filtered_nodes;
 }
 
 /*
