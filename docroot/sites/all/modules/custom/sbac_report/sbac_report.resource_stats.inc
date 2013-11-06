@@ -266,7 +266,7 @@ function build_resource_stats_csv($resource_filters)
   $data['authors'] = $authors;
   $data['reviewers'] = $reviewers;
 
-  get_counts_for_resource_stats($resources, &$data); // already key sorted from here.
+  get_counts_for_resource_stats($resources, $data); // already key sorted from here.
 
   // get the report configuration.
   $report_configuration = set_report_columns();
