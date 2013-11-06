@@ -615,7 +615,7 @@ function set_report_columns()
           array('field_success_criteria', 'Success Criteria'),
           array('field_supporting_evidence', 'Supporting Evidence'),
           array('field_principles', 'Principles Literature or Research'),
-          array('field_license', 'License'),
+          array('field_license', 'Specific License'),
 
           array('field_student_agency', 'Student Engagement in the Formative Process'),
 
