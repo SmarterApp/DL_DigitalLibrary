@@ -809,6 +809,9 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
           entity_save('media', $media);
         }
       }
+      else {
+        form_set_error('field_file_upload', t('You must add a file to continue.'));
+      }
     }
   }
 
