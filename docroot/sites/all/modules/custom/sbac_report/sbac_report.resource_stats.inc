@@ -468,7 +468,7 @@ function get_counts_for_resource_stats($nodes, &$data)
   $nodes = implode(',',array_keys($nodes));
 
   # Number of Uploaded Materials
-  $sql = "SELECT nid, count(id) FROM eck_media where nid in (%s) group by nid";
+  $sql = "SELECT nid, count(id) as number_uploaded FROM eck_media where nid in (%s) group by nid";
   $data['count_uploaded_materials'] = count_with_nodes_query($sql, $nodes);
 
   # Return date
@@ -626,6 +626,9 @@ function set_report_columns()
           // foreign keys:
           array('field_attributes', 'Attribute of Formative Assessment Process'),
           array('field_focus', 'Resource Type'),
+
+          array('number_uploaded', 'Number of Uploaded Materials', 'datasource' => 'count_uploaded_materials', 'not_wrapper' => true), // gk
+
           array('field_grades', 'Grade(s)'),
           array('field_subject', 'Subjects and Domains'),
           array('field_intended_end_user', 'Intended End User(s)'),
