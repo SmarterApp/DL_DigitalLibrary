@@ -709,7 +709,7 @@ function set_report_columns()
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
 
-          array('roles', 'Contributor Roles',
+          array('roles', 'Contributor Roles', 'accessor' => 'label',
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
 
