@@ -611,7 +611,7 @@ function set_report_columns()
           array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
           array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
           array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
-          array('field_learning_goals', 'Learning Targets'),
+          array('field_learning_goals', 'Learning Goal'),
           array('field_success_criteria', 'Success Criteria'),
           array('field_supporting_evidence', 'Supporting Evidence'),
           array('field_principles', 'Principles Literature or Research'),
