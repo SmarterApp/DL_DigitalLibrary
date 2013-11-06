@@ -658,15 +658,15 @@ function set_report_columns()
           array('stamp', 'Return Date', 'datasource' => 'return_date', 'fieldtype' => 'date','not_wrapper' => true), // gk
           // QC 1, 2,3
           array('created', 'QC Review 1 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
-          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
+          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc1', 'accessor'=>'label'),
           array('field_rec_rationale', 'QC Review 1 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
 
           array('created', 'QC Review 2 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
-          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
+          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc2', 'accessor'=>'label'),
           array('field_rec_rationale', 'QC Review 2 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
 
           array('created', 'QC Review 3 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
-          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
+          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc3', 'accessor'=>'label'),
           array('field_rec_rationale', 'QC Review 3 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
 
           // poster
@@ -678,27 +678,27 @@ function set_report_columns()
           array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
 
           // users info
-          array('foreign', 'Reviewer 1 Name', 'field' => 'name',
+          array('foreign', 'Reviewer 1 Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1',  ),),
           array('foreign', 'Reviewer 1 State', 'field' => 'name',
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
-          array('foreign', 'Reviewer 2 Name', 'field' => 'name',
+          array('foreign', 'Reviewer 2 Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2',  ),),
           array('foreign', 'Reviewer 2 State', 'field' => 'name',
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
 
-          array('foreign', 'Reviewer 3 Name', 'field' => 'name',
+          array('foreign', 'Reviewer 3 Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3',  ),),
           array('foreign', 'Reviewer 3 State', 'field' => 'name',
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
 
-          array('foreign', 'Poster Name', 'field' => 'name',
+          array('foreign', 'Poster Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post',  ),),
           array('foreign', 'Poster State', 'field' => 'name',
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post', 'wrapper'=>'user'),
