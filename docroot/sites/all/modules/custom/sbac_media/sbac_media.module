@@ -516,9 +516,10 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
 
   // Check for default value.
   $html5_content = FALSE;
-  if (isset($form['#node']->document['html5'])) {
+  $html5_media_item = sbac_media_load_html5_item($form['#node']->nid);
+  if ($html5_media_item) {
     $html5_content = TRUE;
-    $html5_media_item = $form['#node']->document['html5'];
+
     $form['field_content_module_container']['ajax_container'] = array(
       '#prefix'=>'<div id="sbac-ajax-container">',
       '#suffix'=>'</div>',
@@ -1284,7 +1285,7 @@ function sbac_media_load_items($nid) {
  * @return stdClass
  */
 function sbac_media_load_html5_item($nid) {
-  $html5_item = new stdClass();
+  $html5_item = NULL;
   if ($nid) {
     $html5_item = db_query("SELECT * FROM {eck_media} WHERE nid = :nid AND type = :type ORDER BY weight LIMIT 1", array(':nid' => $nid, ':type' => 'html5'))->fetchObject();
   }
