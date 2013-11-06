@@ -870,7 +870,13 @@ function _sbac_resource_my_resources_admin_links($fields) {
   $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
   $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
   $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-  $variables['text'] = t('Draft');
+  $html5 = db_query("SELECT field_html5_value FROM {field_data_field_html5} WHERE entity_id = :entity_id", array(':entity_id' => $nid))->fetchField();
+  if ($html5) {
+    $variables['text'] = t('Draft Content Module');
+  }
+  else {
+    $variables['text'] = t('Draft Resource');
+  }
 
   return $variables;
 }
