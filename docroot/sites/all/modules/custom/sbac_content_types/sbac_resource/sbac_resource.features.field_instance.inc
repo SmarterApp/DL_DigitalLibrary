@@ -1105,7 +1105,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Identify the learning targets associated with this resource. Learning targets can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.',
+    'description' => 'Identify the learning goals associated with this resource. Learning goals can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.',
     'display' => array(
       'default' => array(
         'label' => 'above',
