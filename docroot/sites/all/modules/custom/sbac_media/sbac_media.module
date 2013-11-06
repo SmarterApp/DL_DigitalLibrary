@@ -597,7 +597,7 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
   // Content Module Upload Button.
   $form['field_content_module_container']['field_display']['field_content_module_upload'] = array(
     '#type' => 'submit',
-    '#value' => 'Upload (25MB Max)',
+    '#value' => 'Upload (100MB Max)',
     '#sbac_embed_video' => FALSE,
     '#weight' => -95,
     '#attributes' => array('class' => array('sbac-html5-uploader'), 'id' => 'edit-field-content-module-upload'),
