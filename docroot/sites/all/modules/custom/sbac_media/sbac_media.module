@@ -1346,8 +1346,13 @@ function sbac_media_delete_media($js = FALSE) {
           // Build path to delete file folder.
           $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
           $zip_contents_path = drupal_realpath($directory) . '/html5_module';
-          sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
-          file_unmanaged_delete_recursive($zip_contents_path);
+          if (file_exists($zip_contents_path)) {
+            sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
+            file_unmanaged_delete_recursive($zip_contents_path);
+          }
+          else {
+            watchdog('SBAC Media', 'Unable to remove HTML5 content module for node with nid of ' .  $form_state['values']['nid']);
+          }
 
           // Delete the record from file system (DB and File System)
           sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
