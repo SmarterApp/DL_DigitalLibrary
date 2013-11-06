@@ -665,7 +665,7 @@ function set_report_columns()
           array('field_alignment_tags', 'Common Core State Standards?'),
           // non-wrapper fields:
 //          array('status', 'Status', 'accessor' => 'label'),
-          array('state', 'Workbench State', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',), 'accessor' => 'label'),
+          array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',), 'accessor' => 'label'),
 //          array('from_state', 'From Workbench State', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',), 'accessor' => 'label'),
           // Gate Keeper
           array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 'gate_keeper', 'fieldtype' => 'date',), // gk
