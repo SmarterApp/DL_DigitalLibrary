@@ -293,6 +293,11 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
 
     $active_tab = $form_state['values']['additional_settings__active_tab'];
     if ($active_tab == 'edit-group_materials') {
+      if ($form_state['html5']) {
+        $form = drupal_rebuild_form('resource_node_form', $form_state);
+        return $form;
+      }
+
       $media_items = sbac_media_load_items($form['#node']->nid);
       $output = _sbac_media_create_list($media_items, $form_state);
       $form['field_file_container']['materials']['#markup'] = $output;
