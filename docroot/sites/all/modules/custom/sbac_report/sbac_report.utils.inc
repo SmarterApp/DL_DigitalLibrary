@@ -197,10 +197,11 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
   }
   else if (array_key_exists('datasource', $fieldkey)) {
     if (array_key_exists('index', $fieldkey)) {
+      $primary_key_value = $resource->{$primary_key}->value();
       if (array_key_exists($fieldkey['datasource'], $data) and
-        array_key_exists($resource->{$primary_key}->value(), $data[$fieldkey['datasource']])
+        array_key_exists($primary_key_value, $data[$fieldkey['datasource']])
       ) {
-        $values = array_values($data[$fieldkey['datasource']][$resource->{$primary_key}->value()]);
+        $values = $data[$fieldkey['datasource']][$primary_key_value];
         if ($values and array_key_exists($fieldkey['index'], $values)) {
             try {
               $value = $values[$fieldkey['index']]
@@ -216,7 +217,15 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
     } else {
       try {
         if (array_key_exists(0, $fieldkey)) {
-          $value = $data[$fieldkey['datasource']][$resource->{$primary_key}->value()]->{$fieldkey[0]}->value();
+          $primary_key_value = $resource->{$primary_key}->value();
+          if (array_key_exists($primary_key_value, $data[$fieldkey['datasource']])) {
+            if (array_key_exists('not_wrapper', $fieldkey)) {
+              $value = $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]};
+            }
+            else {
+              $value = $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]}->value();
+            }
+          }
         }
       } catch (EntityMetadataWrapperException $e) {
         $value = "Unknown Field";

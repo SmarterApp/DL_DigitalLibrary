@@ -249,6 +249,7 @@ function sbac_report_default_resource_attribute_option()
  */
 function build_resource_stats_csv($resource_filters)
 {
+  $data = array();
   ini_set('memory_limit','512M');
   $resources = get_resources($resource_filters);
   $resource_feedback = get_entities_for_resources($resources, 'feedback');
@@ -264,6 +265,8 @@ function build_resource_stats_csv($resource_filters)
   $data['workbench_moderation'] = $workbench_moderation;
   $data['authors'] = $authors;
   $data['reviewers'] = $reviewers;
+
+  get_counts_for_resource_stats($resources, &$data); // already key sorted from here.
 
   // get the report configuration.
   $report_configuration = set_report_columns();
@@ -347,11 +350,29 @@ function get_entities_for_resources($resources, $entity_type)
   $wrappers = array();
   foreach ($values as $value) {
     $wrapper = entity_metadata_wrapper($entity_type, $value);
-    if ($wrapper and $wrapper->node_id->value()) {
-      if (!array_key_exists($wrapper->node_id->value(), $wrappers) or is_null($wrappers[$wrapper->node_id->value()])) {
-        $wrappers[$wrapper->node_id->value()] = array();
+    $node_id = $wrapper->node_id->value();
+    if ($wrapper and $node_id) {
+      if (!array_key_exists($node_id, $wrappers) or
+          is_null($wrappers[$node_id])) {
+        $wrappers[$node_id] = array();
       }
-      $wrappers[$wrapper->node_id->value()][$value->id] = $wrapper; // by node id.
+      if ($value->type=='qc') {
+        if (!$wrappers[$node_id]['qc1']) {
+          $wrappers[$node_id]['qc1'] = $wrapper;
+        }
+        else if  (!$wrappers[$node_id]['qc2']) {
+          $wrappers[$node_id]['qc2'] = $wrapper;
+        }
+        else {
+          $wrappers[$node_id]['qc3'] = $wrapper;
+        }
+      }
+      else if ($value->type=='post') {
+        $wrappers[$node_id][$value->type] = $wrapper; 
+      }
+      else if ($value->type=='gate_keeper') {
+        $wrappers[$node_id][$value->type] = $wrapper;
+      }
     }
   }
   return $wrappers;
@@ -420,9 +441,74 @@ SQL;
   }
   return array($authors, $reviewers);
 }
-
-function get_counts_for_resource_stats()
+/*
+ * Takes a list of node ids.
+ */
+function get_counts_for_resource_stats($nodes, &$data)
 {
+  function count_with_nodes_query($sql_template, $nodes, $merge_necessary=true)//$parameters=null)
+  {
+    // done this way because the prepared statement didn't work passing array or comma separated string.
+    // TODO: make prepared statement work here, or escape string???
+    if ($merge_necessary) {
+      $sql = sprintf($sql_template, $nodes);
+    }
+    else {
+      $sql = $sql_template;
+    }
+    $result = db_query($sql);
+    $values = array();
+    foreach ($result as $record) {
+      $values[$record->nid] = $record;
+    }
+    ksort($values);
+    return $values;
+  }
+
+  $nodes = implode(',',array_keys($nodes));
+
+  # Number of Uploaded Materials
+  $sql = "SELECT nid, count(id) FROM eck_media where nid in (%s) group by nid";
+  $data['count_uploaded_materials'] = count_with_nodes_query($sql, $nodes);
+
+  # Return date
+  $sql = "SELECT nid, stamp FROM workbench_moderation_node_history where state = 'rejected' and
+          nid not in (SELECT nid FROM workbench_moderation_node_history where state = 'approved')";
+  $data['return_date'] = count_with_nodes_query($sql, $nodes, false);
+
+  # Review cycle number
+  $sql = "SELECT nid, count(nid) as review_cycle FROM sbacdev.workbench_moderation_node_history where state = 'rejected' group by nid";
+  $data['review_cycle'] = count_with_nodes_query($sql, $nodes, false);
+
+  # Current student learning rating (average)
+  $sql = "select n.nid, AVG(sl.field_student_learning_rating) as average from
+            eck_review as er
+            join field_data_field_student_learning as sl
+            join node as n
+            on er.node_id = n.nid
+            and sl.entity_id = er.id group by n.nid";
+
+  $data['student_learning_rating_average'] = count_with_nodes_query($sql, $nodes, false);
+
+  # Current professional development rating (average)
+  $sql = "select n.nid, AVG(sl.field_pro_dev_rating) as average from
+            eck_review as er
+            join field_data_field_pro_dev as sl
+            join node as n
+            on er.node_id = n.nid
+            and sl.entity_id = er.id group by n.nid";
+
+  $data['pro_dev_rating_average'] = count_with_nodes_query($sql, $nodes, false);
+
+  # Current ease of use rating (average)
+  $sql = "select n.nid, AVG(sl.field_ease_use_rating) as average from
+            eck_review as er
+            join field_data_field_ease_use as sl
+            join node as n
+            on er.node_id = n.nid
+            and sl.entity_id = er.id group by n.nid";
+
+  $data['ease_use_rating_average'] = count_with_nodes_query($sql, $nodes, false);
 
 }
 
@@ -500,16 +586,7 @@ function set_report_columns()
   function get_total_tags($fieldkey, $data)
   {
     // count of these fields:
-//          array('field_grades', 'Grade(s)'),
-//          array('field_subject', 'Subjects and Domains'),
-//          array('field_intended_end_user', 'Intended End User(s)'),
-//          array('field_intended_student', 'Intended Student Population(s)'),
-//          array('field_geographical_settings', 'Geographic Setting(s)'),
-//          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
-//          array('field_digital_media_type', 'Media Type(s)'),
-//          array('field_educational_use', 'Educational Use'),
-//          array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
-//          array('field_alignment_tags', 'Common Core State Standards?'),
+
     $count = count($data->field_grades->value());
     $count += count($data->field_subject->value());
     $count += count($data->field_intended_end_user->value());
@@ -561,60 +638,55 @@ function set_report_columns()
           array('field_alignment_tags', 'Common Core State Standards?'),
           // non-wrapper fields:
           array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',)),
-          // entity relationship fields
-
           // Gate Keeper
-          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 0), // gk
-          array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 0, 'fieldtype' => 'date',), // gk
-
+          array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 'gate_keeper', 'fieldtype' => 'date',), // gk
+          array('stamp', 'Return Date', 'datasource' => 'return_date', 'fieldtype' => 'date','not_wrapper' => true), // gk
           // QC 1, 2,3
-          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 1), // qc 1
-          array('created', 'QC Review 1 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 1),
-          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 1),
-          array('field_rec_rationale', 'QC Review 1 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 1),
-          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 2), // qc 2
-          array('created', 'QC Review 2 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 2),
-          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 2),
-          array('field_rec_rationale', 'QC Review 2 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 2),
-          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 3), // qc 3
-          array('created', 'QC Review 3 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 3),
-          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 3),
-          array('field_rec_rationale', 'QC Review 3 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 3),
+          array('created', 'QC Review 1 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
+          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
+          array('field_rec_rationale', 'QC Review 1 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
+
+          array('created', 'QC Review 2 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
+          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
+          array('field_rec_rationale', 'QC Review 2 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
+
+          array('created', 'QC Review 3 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
+          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
+          array('field_rec_rationale', 'QC Review 3 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
 
           // poster
-          array('type', 'Feedback Type', 'datasource' => 'resource_feedback', 'index' => 4), // post
-          array('created', 'Poster Review Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
-          array('field_to_reviewer_1', 'Poster Comment to Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 4),
-          array('field_to_reviewer_2', 'Poster Comment to Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 4),
-          array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 4),
-          array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 4),
-          array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 4),
+          array('created', 'Poster Review Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
+          array('field_to_reviewer_1', 'Poster Comment to Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 'post'),
+          array('field_to_reviewer_2', 'Poster Comment to Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 'post'),
+          array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 'post'),
+          array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 'post'),
+          array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
 
           // users info
           array('foreign', 'Reviewer 1 Name', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 1,  ),),
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1',  ),),
           array('foreign', 'Reviewer 1 State', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 1, 'wrapper'=>'user'),
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
           array('foreign', 'Reviewer 2 Name', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 2,  ),),
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2',  ),),
           array('foreign', 'Reviewer 2 State', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 2, 'wrapper'=>'user'),
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
 
           array('foreign', 'Reviewer 3 Name', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 3,  ),),
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3',  ),),
           array('foreign', 'Reviewer 3 State', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 3, 'wrapper'=>'user'),
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
 
           array('foreign', 'Poster Name', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 4,  ),),
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post',  ),),
           array('foreign', 'Poster State', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 4, 'wrapper'=>'user'),
+            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
           array('author', 'Contributor Name', 'field' => 'name'),
@@ -641,6 +713,12 @@ function set_report_columns()
           array('field_special_populations', 'Contributor Student Population(s)',
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
+
+          array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => true), // gk
+          array('average', 'Current Student Learning Rating', 'datasource' => 'student_learning_rating_average', 'not_wrapper' => true), // gk
+          array('average', 'Current Professional Development Rating', 'datasource' => 'pro_dev_rating_average', 'not_wrapper' => true), // gk
+          array('average', 'Current Ease of Use Rating', 'datasource' => 'ease_use_rating_average', 'not_wrapper' => true), // gk
+
 
           array('field_total_views', 'Views'),
           array('field_unique_views', 'Unique Views'),
