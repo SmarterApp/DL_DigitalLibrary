@@ -349,17 +349,17 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     '#suffix'=>'</div>',
   );
 
-  $summary_title = 'Add Materials';
+  $summary_title = t('Add Materials') . theme('form_required_marker');
   $summary_description = 'You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.';
   if ($html5) {
-    $summary_title = 'Add Secondary Module Materials';
+    $summary_title = t('Add Secondary Module Materials');
     $summary_description = 'These will be available in addition to module content. You can add a combination of videos, images and documents to add to this module.';
   }
 
   // Resource Summary.
   $form['field_file_container']['field_file_summary'] = array(
     '#type' => 'item',
-    '#title' => t($summary_title) . ' ' . theme('form_required_marker'),
+    '#title' => $summary_title,
     '#markup' => '<p>'.t($summary_description).'</p>',
     '#weight' => -101,
     '#prefix' => '<div class="media-table">',

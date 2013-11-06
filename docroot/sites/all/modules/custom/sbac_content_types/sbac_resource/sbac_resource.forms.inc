@@ -122,6 +122,7 @@ function sbac_resource_form_license_after_build($element) {
  */
 function _sbac_resource_clean_workbench_moderation($form, $form_state) {
   return;
+
   // Current clean up.
   if (isset($form_state['node']->workbench_moderation['current']->from_state)) {
     $form_state['node']->workbench_moderation['current']->from_state = workbench_moderation_state_none();
