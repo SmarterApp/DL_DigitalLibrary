@@ -138,7 +138,6 @@ function query_taxonomy_term($sql)
 /*
  * Resource Type Dropdown options extracted from the taxonomy table.
  *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_type_options()
 {
@@ -158,7 +157,6 @@ function sbac_report_default_resource_type_option()
 /*
  * Resource Status Dropdown options extracted from the taxonomy table.
  *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_status_options()
 {
@@ -179,7 +177,6 @@ function sbac_report_default_resource_status_option()
 /*
  * Resource Subject Dropdown options extracted from the taxonomy table.
  *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_subject_options()
 {
@@ -201,8 +198,6 @@ function sbac_report_default_resource_subject_option()
 
 /*
  * Resource Grade Dropdown options extracted from the taxonomy table.
- *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_grade_options()
 {
@@ -224,8 +219,6 @@ function sbac_report_default_resource_grade_option()
 
 /*
  * Resource Attribute Dropdown options extracted from the taxonomy table.
- *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_attribute_options()
 {
