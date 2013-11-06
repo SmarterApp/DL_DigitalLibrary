@@ -107,8 +107,44 @@ function set_tid_property(&$resource_node, $fieldkey, &$tid_terms)
     $ix++;
   }
 }
+function get_from_array_or_object($accessor,$value)
+{
+  if (is_array($value)) {
+    return $value[$accessor];
+  }
+  else if (is_object($value)) {
+    return $value->{$accessor};
+  }
+}
 
 function value_or_field($value, $field_in_object=null) {
+  if (is_array($field_in_object)) {
+    $return_value = '';
+    foreach ($field_in_object as $key => $field) {
+      if ($key === 'separator') {
+        $return_value .= $field;
+      }
+      else {
+        if (is_array($field)) {
+
+          foreach($field as $key => $accessor) {
+            if ($key === 0) {
+              $object = get_from_array_or_object($accessor,$value);
+            }
+            else {
+              $object = get_from_array_or_object($accessor,$object);
+            }
+          }
+          $return_value .= $object;
+        }
+        else {
+          $return_value .= $value->{$field};
+        }
+      }
+      $return_value .= ' ';
+    }
+    return $return_value;
+  }
   if ($field_in_object) {
     return $value->{$field_in_object};
   }
