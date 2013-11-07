@@ -285,7 +285,7 @@ function get_resources($resource_filters)
 {
   function set_field_condition_niether_filter(&$entities, $resource_filter, $field)
   {
-    if ($resource_filter[1]) {
+    if (array_key_exists(1,$resource_filter)) {
       unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
       $entities->fieldCondition($field, 'tid', array_keys($resource_filter), 'NOT IN');
     }
@@ -293,18 +293,22 @@ function get_resources($resource_filters)
 
   function set_field_condition_filter_additive(&$entities, $resource_filter, $field)
   {
-    if (!$resource_filter[0] && $resource_filter[1]) {
-      unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+    if (!array_key_exists(0,$resource_filter)) {
+      if (array_key_exists(1,$resource_filter)) {
+        unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+      }
       $entities->fieldCondition($field, 'tid', array_keys($resource_filter));
     }
   }
 
   function set_field_condition_filter_restrictive(&$entities, $resource_filter, $field)
   {
-    if (!$resource_filter[0] && $resource_filter[1]) {
-      unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+    if (!array_key_exists(0,$resource_filter)) {
+      if (array_key_exists(1,$resource_filter)) {
+        unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+      }
       foreach($resource_filter as $key => $filter) {
-        $entities->fieldCondition($field, 'tid', $key);
+        $entities->fieldCondition($field, 'tid', $key, '=');
       }
     }
   }
@@ -325,29 +329,54 @@ function get_resources($resource_filters)
   if (array_key_exists('node', $entities) and $entities['node']) {
     $nids = array_keys($entities['node']);
   }
-  // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
-  if ($resource_filters['subject'][1] || $resource_filters['grade'][1] || $resource_filters['attribute'][1]) {
-    $entities = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'resource')
-      ->propertyCondition('status', 1);
-    set_field_condition_niether_filter($entities, $resource_filters['subject'], 'field_subject');
-    set_field_condition_niether_filter($entities, $resource_filters['grade'], 'field_grades');
-    set_field_condition_niether_filter($entities, $resource_filters['attribute'], 'field_attributes');
+ // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
+ if ($resource_filters['subject'][1] || $resource_filters['grade'][1] || $resource_filters['attribute'][1]) {
+   $entities = $query->entityCondition('entity_type', 'node')
+     ->entityCondition('bundle', 'resource')
+     ->propertyCondition('status', 1);
+   set_field_condition_niether_filter($entities, $resource_filters['subject'], 'field_subject');
+   set_field_condition_niether_filter($entities, $resource_filters['grade'], 'field_grades');
+   set_field_condition_niether_filter($entities, $resource_filters['attribute'], 'field_attributes');
 
-    $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-      ->execute();
-    if (array_key_exists('node', $entities) and $entities['node']) {
-      $nids = array_merge($nids, $entities['node']);
-    }
-  }
+   $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+     ->execute();
+   if (array_key_exists('node', $entities) and $entities['node']) {
+     $nids = array_merge($nids, $entities['node']);
+   }
+ }
   $nodes = node_load_multiple($nids);
   $nodes = fitler_resource_status($nodes, $resource_filters['status']);
+  // $nodes = filter_resource_on_field($nodes, 'field_subject', $resource_filters['subject']);
+  // $nodes = filter_resource_on_field($nodes, 'field_grades', $resource_filters['grade']);
+  // $nodes = filter_resource_on_field($nodes, 'field_attributes', $resource_filters['attribute']);
 
   $wrappers = array();
   foreach ($nodes as $key => $value) {
     $wrappers[$key] = entity_metadata_wrapper('node', $value);
   }
   return $wrappers;
+}
+
+function filter_resource_on_field($nodes, $field, $filter_values)
+{
+  if (array_key_exists(0,$filter_values)) {
+    return $nodes;
+  }
+  $filtered_nodes = array();
+  if (array_key_exists(1, $filter_values)) { // not yet assigned
+    foreach ($nodes as $key => $node) {
+      if (!$node->{$field}) {
+        $filtered_nodes[$key] = $node;
+      }
+    }
+  }
+
+  foreach ($nodes as $key => $node) {
+    if (in_array($node->{$field}, $filter_values)) {
+      $filtered_nodes[$key] = $node;
+    }
+  }
+  return $filtered_nodes;
 }
 
 function fitler_resource_status($nodes, $statuses) {
@@ -629,14 +658,6 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
 
 function set_report_columns()
 {
-  function get_license_url($fieldkey, $data, $resource)
-  {
-    $value = get_field_value_using_key($fieldkey['fieldkey'], $data, $resource, 'nid', &$is_date);
-    if (strpos($value, 'Creative') === 0) {
-      return 'http://creativecommons.org/licenses/by/3.0/';
-    }
-    return '';
-  }
   function get_total_tags($fieldkey, $data, $resource)
   {
     // count of these fields:
@@ -658,137 +679,132 @@ function set_report_columns()
     array(
       'node_schema' => array( // sheet 1
         'fieldkeys' => array( // row schema definition of the fields.
-          array('field_publisher', 'Owner'),
-          array('field_author', 'Author'),
-
-          array('field_alt_body', 'Resource Summary'),
+//          array('field_publisher', 'Owner'),
+//          array('field_author', 'Author'),
+//
+//          array('field_alt_body', 'Resource Summary'),
           array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
-          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
-          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
-          array('field_learning_goals', 'Learning Goal'),
-          array('field_success_criteria', 'Success Criteria'),
-          array('field_supporting_evidence', 'Supporting Evidence'),
-          array('field_principles', 'Principles Literature or Research'),
-          array('field_license', 'Specific License','accessor'=>'label'),
-          array('field_license_secondary', 'Secondary License','accessor'=>'label'),
-
-          array('foreign', 'License URL', 'field' => 'description',
-            'foreignkey' => array('field_license', 'License URL', 'accessor'=>'value'),),
-//          array('', 'License URL', 'function' => 'get_license_url',
-//            'fieldkey' => array('field_license', 'Specific License', 'accessor' => 'label'), //'field' => array(array('field_license', 'und', 0, 'value',),),),
-//          ),
-          array('field_student_agency', 'Student Engagement in the Formative Process'),
-
-
-          // property keys:
-          array('title', 'Title'), //title
-          array('created', 'Contribution Date', 'fieldtype' => 'date'),
-          // foreign keys:
+//          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
+//          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
+//          array('field_learning_goals', 'Learning Goal'),
+//          array('field_success_criteria', 'Success Criteria'),
+//          array('field_supporting_evidence', 'Supporting Evidence'),
+//          array('field_principles', 'Principles Literature or Research'),
+//          array('field_license', 'Specific License','accessor'=>'label'),
+//          array('field_license_secondary', 'Secondary License','accessor'=>'label'),
+//
+//          array('foreign', 'License URL', 'field' => 'description',
+//            'foreignkey' => array('field_license', 'License URL', 'accessor'=>'value'),),
+//          array('field_student_agency', 'Student Engagement in the Formative Process'),
+//
+//
+//          // property keys:
+//          array('title', 'Title'), //title
+//          array('created', 'Contribution Date', 'fieldtype' => 'date'),
+//          // foreign keys:
           array('field_attributes', 'Attribute of Formative Assessment Process'),
           array('field_focus', 'Resource Type'),
-
-          array('number_uploaded', 'Number of Uploaded Materials', 'datasource' => 'count_uploaded_materials', 'not_wrapper' => true), // gk
-
+//
+//          array('number_uploaded', 'Number of Uploaded Materials', 'datasource' => 'count_uploaded_materials', 'not_wrapper' => true), // gk
+//
           array('field_grades', 'Grade(s)'),
           array('field_subject', 'Subjects and Domains'),
-          array('field_intended_end_user', 'Intended End User(s)'),
-          array('field_intended_student', 'Intended Student Population(s)'),
-          array('field_geographical_settings', 'Geographic Setting(s)'),
-          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
-          array('field_digital_media_type', 'Media Type(s)'),
-          array('field_educational_use', 'Educational Use'),
-          array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
-          array('field_alignment_tags', 'Common Core State Standards?'),
-          // non-wrapper fields:
-//          array('status', 'Status', 'accessor' => 'label'),
+//          array('field_intended_end_user', 'Intended End User(s)'),
+//          array('field_intended_student', 'Intended Student Population(s)'),
+//          array('field_geographical_settings', 'Geographic Setting(s)'),
+//          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
+//          array('field_digital_media_type', 'Media Type(s)'),
+//          array('field_educational_use', 'Educational Use'),
+//          array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
+         array('field_alignment_tags', 'Common Core State Standards?'),
+//          // non-wrapper fields:
           array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',),),
-//          array('from_state', 'From Workbench State', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',), 'accessor' => 'label'),
-          // Gate Keeper
-          array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 'gate_keeper', 'fieldtype' => 'date',), // gk
-          array('stamp', 'Return Date', 'datasource' => 'return_date', 'fieldtype' => 'date','not_wrapper' => true), // gk
-          // QC 1, 2,3
-          array('created', 'QC Review 1 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
-          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc1', 'accessor'=>'label'),
-          array('field_rec_rationale', 'QC Review 1 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
-
-          array('created', 'QC Review 2 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
-          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc2', 'accessor'=>'label'),
-          array('field_rec_rationale', 'QC Review 2 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
-
-          array('created', 'QC Review 3 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
-          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc3', 'accessor'=>'label'),
-          array('field_rec_rationale', 'QC Review 3 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
-
-          // poster
-          array('created', 'Poster Review Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
-          array('field_to_reviewer_1', 'Poster Comment to Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 'post'),
-          array('field_to_reviewer_2', 'Poster Comment to Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 'post'),
-          array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 'post'),
-          array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 'post'),
-          array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
-
-          // users info
-          array('foreign', 'Reviewer 1 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1',  ),),
-          array('foreign', 'Reviewer 1 State', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1', 'wrapper'=>'user'),
-            'foreigndata' => array('field_state'),
-          ),
-          array('foreign', 'Reviewer 2 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2',  ),),
-          array('foreign', 'Reviewer 2 State', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2', 'wrapper'=>'user'),
-            'foreigndata' => array('field_state'),
-          ),
-
-          array('foreign', 'Reviewer 3 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3',  ),),
-          array('foreign', 'Reviewer 3 State', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3', 'wrapper'=>'user'),
-            'foreigndata' => array('field_state'),
-          ),
-
-          array('foreign', 'Poster Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post',  ),),
-          array('foreign', 'Poster State', 'field' => 'name',
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post', 'wrapper'=>'user'),
-            'foreigndata' => array('field_state'),
-          ),
-          array('author', 'Contributor Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),),
-          array('field_state', 'Contributor State',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
-
-          array('roles', 'Contributor Roles', 'accessor' => 'label',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
-
-          array('field_position', 'Contributor Title',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
-          array('field_district_name', 'Contributor School District',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
-          array('field_grade_level_s_', 'Contributor Grade(s)',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
-          array('field_subject_s_', 'Contributor Subject(s)',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
-          array('field_special_populations', 'Contributor Student Population(s)',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
-
-          array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => true), // gk
-          array('average', 'Current Student Learning Rating', 'datasource' => 'student_learning_rating_average', 'not_wrapper' => true), // gk
-          array('average', 'Current Professional Development Rating', 'datasource' => 'pro_dev_rating_average', 'not_wrapper' => true), // gk
-          array('average', 'Current Ease of Use Rating', 'datasource' => 'ease_use_rating_average', 'not_wrapper' => true), // gk
-
-
-          array('field_total_views', 'Views'),
-          array('field_unique_views', 'Unique Views'),
-          array('', 'Total Number of Tag(s)',
-            'function' => 'get_total_tags'),
+//          // Gate Keeper
+//          array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 'gate_keeper', 'fieldtype' => 'date',), // gk
+//          array('stamp', 'Return Date', 'datasource' => 'return_date', 'fieldtype' => 'date','not_wrapper' => true), // gk
+//          // QC 1, 2,3
+//          array('created', 'QC Review 1 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
+//          array('field_rec_options', 'QC Review 1 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc1', 'accessor'=>'label'),
+//          array('field_rec_rationale', 'QC Review 1 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc1'),
+//
+//          array('created', 'QC Review 2 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
+//          array('field_rec_options', 'QC Review 2 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc2', 'accessor'=>'label'),
+//          array('field_rec_rationale', 'QC Review 2 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc2'),
+//
+//          array('created', 'QC Review 3 Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
+//          array('field_rec_options', 'QC Review 3 Recommendation', 'datasource' => 'resource_feedback', 'index' => 'qc3', 'accessor'=>'label'),
+//          array('field_rec_rationale', 'QC Review 3 Recommendation Rationale', 'datasource' => 'resource_feedback', 'index' => 'qc3'),
+//
+//          // poster
+//          array('created', 'Poster Review Submission Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
+//          array('field_to_reviewer_1', 'Poster Comment to Reviewer 1', 'datasource' => 'resource_feedback', 'index' => 'post'),
+//          array('field_to_reviewer_2', 'Poster Comment to Reviewer 2', 'datasource' => 'resource_feedback', 'index' => 'post'),
+//          array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 'post'),
+//          array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 'post'),
+//          array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
+//
+//          // users info
+//          array('foreign', 'Reviewer 1 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
+//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1',  ),),
+//          array('foreign', 'Reviewer 1 State', 'field' => 'name',
+//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1', 'wrapper'=>'user'),
+//            'foreigndata' => array('field_state'),
+//          ),
+//          array('foreign', 'Reviewer 2 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
+//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2',  ),),
+//          array('foreign', 'Reviewer 2 State', 'field' => 'name',
+//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2', 'wrapper'=>'user'),
+//            'foreigndata' => array('field_state'),
+//          ),
+//
+//          array('foreign', 'Reviewer 3 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
+//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3',  ),),
+//          array('foreign', 'Reviewer 3 State', 'field' => 'name',
+//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3', 'wrapper'=>'user'),
+//            'foreigndata' => array('field_state'),
+//          ),
+//
+//          array('foreign', 'Poster Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
+//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post',  ),),
+//          array('foreign', 'Poster State', 'field' => 'name',
+//            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post', 'wrapper'=>'user'),
+//            'foreigndata' => array('field_state'),
+//          ),
+//          array('author', 'Contributor Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),),
+//          array('field_state', 'Contributor State',
+//            'foreignkey' => array('author', 'wrapper' => 'user',),
+//          ),
+//
+//          array('roles', 'Contributor Roles', 'accessor' => 'label',
+//            'foreignkey' => array('author', 'wrapper' => 'user',),
+//          ),
+//
+//          array('field_position', 'Contributor Title',
+//            'foreignkey' => array('author', 'wrapper' => 'user',),
+//          ),
+//          array('field_district_name', 'Contributor School District',
+//            'foreignkey' => array('author', 'wrapper' => 'user',),
+//          ),
+//          array('field_grade_level_s_', 'Contributor Grade(s)',
+//            'foreignkey' => array('author', 'wrapper' => 'user',),
+//          ),
+//          array('field_subject_s_', 'Contributor Subject(s)',
+//            'foreignkey' => array('author', 'wrapper' => 'user',),
+//          ),
+//          array('field_special_populations', 'Contributor Student Population(s)',
+//            'foreignkey' => array('author', 'wrapper' => 'user',),
+//          ),
+//
+//          array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => true), // gk
+//          array('average', 'Current Student Learning Rating', 'datasource' => 'student_learning_rating_average', 'not_wrapper' => true), // gk
+//          array('average', 'Current Professional Development Rating', 'datasource' => 'pro_dev_rating_average', 'not_wrapper' => true), // gk
+//          array('average', 'Current Ease of Use Rating', 'datasource' => 'ease_use_rating_average', 'not_wrapper' => true), // gk
+//
+//
+//          array('field_total_views', 'Views'),
+//          array('field_unique_views', 'Unique Views'),
+//          array('', 'Total Number of Tag(s)',
+//            'function' => 'get_total_tags'),
 
         ),
       ),
