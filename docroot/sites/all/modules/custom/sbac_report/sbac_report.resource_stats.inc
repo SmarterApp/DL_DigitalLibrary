@@ -183,6 +183,7 @@ function sbac_report_resource_subject_options()
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'subject')";
 
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -204,6 +205,7 @@ function sbac_report_resource_grade_options()
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'grades')";
 
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -224,6 +226,7 @@ function sbac_report_resource_attribute_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'attributes')";
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -267,6 +270,7 @@ function build_resource_stats_csv($resource_filters)
   $report_configuration = set_report_columns();
   $file_data = create_resource_stats_from_data($data, $report_configuration);
 
+  $data = null; unset($data); //memory management
   return $file_data;
 }
 
@@ -360,6 +364,7 @@ function get_entities_for_resources($resources, $entity_type)
   $eids = array_keys($entities[$entity_type]);
   $values = entity_load($entity_type, $eids);
   $wrappers = array();
+
   foreach ($values as $value) {
     $wrapper = entity_metadata_wrapper($entity_type, $value);
     $node_id = $wrapper->node_id->value();
@@ -405,7 +410,11 @@ SQL;
     select * from workbench_moderation_node_history where nid in (%s) and current = 1
 SQL;
   $query = sprintf($sql, implode(',', array_keys($resources)));
+  $sql = null; unset($sql); //memory management
+
   $result = db_query($query);
+  $query = null; unset($query); //memory management
+
   $values = array();
   foreach ($result as $record) {
     if (array_key_exists($record->state, $lookup)) {
@@ -444,7 +453,11 @@ function get_users_for_resources_stats_report($resources, $feedback_reviews)
     select * from users where name in (%s)
 SQL;
   $query = sprintf($sql, "'" . implode("','", array_keys($authors)) . "'");
+  $sql = null; unset($sql); //memory management
+
   $result = db_query($query);
+  $query = null; unset($query); //memory management
+
   $authors = array();
   foreach ($result as $record) {
     $authors[$record->uid] = entity_metadata_wrapper('user', $record);

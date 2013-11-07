@@ -170,11 +170,14 @@ function grab_field_value($value, $field_in_object=null)
         array_push($actual_value, value_or_field($v, $field_in_object));
       }
     }
-    $value = $actual_value;
+    $return_value = $actual_value;
   } else if (is_object($value)) {
-    $value = value_or_field($value, $field_in_object);
+    $return_value = value_or_field($value, $field_in_object);
   }
-  return $value;
+  else {
+    $return_value = $value;
+  }
+  return $return_value;
 }
 
 function get_field_value_using_schema($schemakey, $data, $resource, $primary_key, &$is_date)
