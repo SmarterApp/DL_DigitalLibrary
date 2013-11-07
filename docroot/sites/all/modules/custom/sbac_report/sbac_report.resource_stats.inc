@@ -590,28 +590,28 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
 
 function set_report_columns()
 {
-  function get_license_url($fieldkey, $data)
+  function get_license_url($fieldkey, $data, $resource)
   {
-    $value = get_field_value_using_key($fieldkey['fieldkey'], $data, $data['resource_nodes'], 'nid', &$is_date);
+    $value = get_field_value_using_key($fieldkey['fieldkey'], $data, $resource, 'nid', &$is_date);
     if (strpos($value, 'Creative') === 0) {
       return 'http://creativecommons.org/licenses/by/3.0/';
     }
     return '';
   }
-  function get_total_tags($fieldkey, $data)
+  function get_total_tags($fieldkey, $data, $resource)
   {
     // count of these fields:
 
-    $count = count($data->field_grades->value());
-    $count += count($data->field_subject->value());
-    $count += count($data->field_intended_end_user->value());
-    $count += count($data->field_intended_student->value());
-    $count += count($data->field_geographical_settings->value());
-    $count += count($data->field_smarter_balanced_keyword->value());
-    $count += count($data->field_digital_media_type->value());
-    $count += count($data->field_educational_use->value());
-    $count += count($data->field_classroom_technologies->value());
-    $count += count($data->field_alignment_tags->value());
+    $count = count($resource->field_grades->value());
+    $count += count($resource->field_subject->value());
+    $count += count($resource->field_intended_end_user->value());
+    $count += count($resource->field_intended_student->value());
+    $count += count($resource->field_geographical_settings->value());
+    $count += count($resource->field_smarter_balanced_keyword->value());
+    $count += count($resource->field_digital_media_type->value());
+    $count += count($resource->field_educational_use->value());
+    $count += count($resource->field_classroom_technologies->value());
+    $count += count($resource->field_alignment_tags->value());
 
     return "$count";
   }

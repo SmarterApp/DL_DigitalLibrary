@@ -177,7 +177,7 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
   }
 
   if (array_key_exists('function', $fieldkey)) {
-    $value = $fieldkey['function']($fieldkey, $resource);
+    $value = $fieldkey['function']($fieldkey, $data, $resource);
   }
   else if (array_key_exists('path', $fieldkey) and is_array($fieldkey['path'])) {
     $value = $data[$fieldkey['datasource']][$resource->{$primary_key}->value()];
