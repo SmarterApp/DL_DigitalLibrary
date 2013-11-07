@@ -402,6 +402,10 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
   ); 
 
   foreach ($focus_map as $focus_data) {
+    if ($focus_data['tid'] == 86) {
+      continue;
+    }
+
     $header[] = array(
       'data' => $focus_data['title'],
       'colspan' => $focus_data['count'],
@@ -506,7 +510,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
     // resource title
     $item[] = array(
-      'data' => '<div class="cell-scroll">' . l($row->node_title, 'node/' . $row->nid) . '</div>',
+      'data' => '<div class="cell-scroll">' . $row->node_title . '</div>',
       'class' => 'cell title',
     );
     
@@ -587,8 +591,23 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
         'class' => 'cell gk-decision',
       );
 
+      if ($focus != 86) {
+        unset($focus_map[2]);
+      }
+      else {
+        $focus_map[] = array(
+          'tid' => 86,
+          'title' => t('Combination of Instructional and Professional Learning Quality Criteria Consistency Rates'),
+          'count' => variable_get('qc_86_criteria_num', 0),
+        );
+      }
+
       foreach ($focus_map as $focus_data) {
         for ($i = 0; $i < $focus_data['count']; $i++) {
+          if ($focus == 86 && $focus_data['tid'] != $focus) {
+            continue;
+          }
+
           if ($focus_data['tid'] == $focus) {
             $current_qc_questions = field_entity_value($current_qc, 'field_review_set');
 
