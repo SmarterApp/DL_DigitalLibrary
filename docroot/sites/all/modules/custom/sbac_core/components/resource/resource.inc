@@ -99,6 +99,11 @@ function resource_access($op, $node, $account = NULL) {
       return FALSE;
     }
 
+    // Specifc check.
+    if ($op == 'view gate keeper' && isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
+      return FALSE;
+    }
+
     if (in_array($op, array('view gate keeper', 'start gate keeper', 'edit gate keeper'))) {
       // read-only access
       // users can view the GK if:
