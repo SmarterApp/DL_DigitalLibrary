@@ -501,9 +501,6 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
   $count = 0;
   foreach ($result as $row) {
-    if ($count == $display) {
-      break;
-    }
     $item = array();
 
     $count_items = _sbac_resource_determine_feedback($row->nid, 'qc', $uid, 1, FALSE, 1, 'set', TRUE);
@@ -680,6 +677,9 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
     $rows[] = $item;
     $count++;
+    if ($count == $display) {
+      break;
+    }
   }
 
   $output = theme('table', array(
