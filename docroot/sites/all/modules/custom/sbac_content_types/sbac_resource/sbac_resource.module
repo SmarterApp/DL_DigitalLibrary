@@ -215,7 +215,7 @@ function _sbac_resource_preview_content(&$vars) {
     $viewer['viewer'] = '<iframe src="' . $url . '" width="850" height="600" style="border: none;"></iframe>';
   }
 
-  if ($vars['document'][0] && !$html5) {
+  if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
     $media = $vars['document'][0];
     $type = _sbac_resource_determine_type($media);
     $viewer['viewer_filename'] = $media->filename;

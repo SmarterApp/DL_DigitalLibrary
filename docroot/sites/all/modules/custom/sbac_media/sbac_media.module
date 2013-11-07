@@ -892,6 +892,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
             file_unmanaged_delete_recursive($zip_contents_path);
             unlink($zip_archive_path);
             file_delete($file);
+            $form = drupal_rebuild_form('resource_node_form', $form_state);
           }
         }
       }
@@ -929,6 +930,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
         file_unmanaged_delete_recursive($zip_contents_path);
         unlink($zip_archive_path);
         file_delete($file);
+        $form = drupal_rebuild_form('resource_node_form', $form_state);
       }
     }
     else {

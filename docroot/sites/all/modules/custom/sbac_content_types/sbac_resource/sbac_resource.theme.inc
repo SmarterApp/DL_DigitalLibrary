@@ -819,7 +819,26 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       }
 
       $default_file = 'public://file.png';
-      if (isset($node->document[0])) {
+      if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
+        if (isset($node->document['html5'])) {
+          $directory = "private://html5/" . floor($nid/32000) . "/" . $nid;
+          $directory_thumbnail_uri = $directory . '/html5_module/dlcomponents/thumbnail.png';
+          $directory_thumbnail_path = drupal_realpath($directory) . '/html5_module/dlcomponents/thumbnail.png';
+          if (file_exists($directory_thumbnail_path)) {
+            $uri = $directory_thumbnail_uri;
+            $url = file_create_url($directory_thumbnail_uri);
+          }
+          else {
+            $url = $default_file;
+            $uri = $default_file;
+          }
+        }
+        else {
+          $url = $default_file;
+          $uri = $default_file;
+        }
+      }
+      else if (isset($node->document[0])) {
         $media = $node->document[0];
         if ($media->fid) {
           $file = file_load($media->fid);
