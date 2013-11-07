@@ -386,6 +386,11 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       'title' => t('Instructional Quality Criteria Consistency Rates'),
       'count' => variable_get('qc_84_criteria_num', 0),
     ),
+    array(
+      'tid' => 86,
+      'title' => t('Combination of Instructional and Professional Learning Quality Criteria Consistency Rates'),
+      'count' => variable_get('qc_86_criteria_num', 0),
+    )
   );
 
   $header = array(
