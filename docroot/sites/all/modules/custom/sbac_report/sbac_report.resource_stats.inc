@@ -112,6 +112,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';
+  gc_enable();
+  gc_collect_cycles();
+  gc_disable();
   // _cex exits and does not return.
   _cex_download($csv_resource_stats_result, 'output.csv');
   // can't get back to clear errors because fo the exit from _cex to force the
@@ -183,6 +186,7 @@ function sbac_report_resource_subject_options()
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'subject')";
 
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -204,6 +208,7 @@ function sbac_report_resource_grade_options()
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'grades')";
 
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -224,6 +229,7 @@ function sbac_report_resource_attribute_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'attributes')";
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -267,6 +273,7 @@ function build_resource_stats_csv($resource_filters)
   $report_configuration = set_report_columns();
   $file_data = create_resource_stats_from_data($data, $report_configuration);
 
+  $data = null; unset($data); //memory management
   return $file_data;
 }
 
@@ -360,6 +367,7 @@ function get_entities_for_resources($resources, $entity_type)
   $eids = array_keys($entities[$entity_type]);
   $values = entity_load($entity_type, $eids);
   $wrappers = array();
+
   foreach ($values as $value) {
     $wrapper = entity_metadata_wrapper($entity_type, $value);
     $node_id = $wrapper->node_id->value();
@@ -392,25 +400,29 @@ function get_entities_for_resources($resources, $entity_type)
 
 function get_workbench_moderation_history($resources)
 {
-//  $query = <<<SQL
-//    select * from workbench_moderation_states;
-//SQL;
-//  $result = db_query($query);
-//  $lookup = array();
-//  foreach ($result as $record) {
-//    $lookup[$record->name] = $record->label;
-//  }
+  $query = <<<SQL
+    select * from workbench_moderation_states;
+SQL;
+  $result = db_query($query);
+  $lookup = array();
+  foreach ($result as $record) {
+    $lookup[$record->name] = $record->label;
+  }
 
   $sql = <<<SQL
     select * from workbench_moderation_node_history where nid in (%s) and current = 1
 SQL;
   $query = sprintf($sql, implode(',', array_keys($resources)));
+  $sql = null; unset($sql); //memory management
+
   $result = db_query($query);
+  $query = null; unset($query); //memory management
+
   $values = array();
   foreach ($result as $record) {
-//    if (array_key_exists($record->state, $lookup)) {
-//      $record->state = $lookup[$record->state];
-//    }
+    if (array_key_exists($record->state, $lookup)) {
+      $record->state = $lookup[$record->state];
+    }
     $values[$record->nid] = $record;
   }
   return $values;
@@ -444,7 +456,11 @@ function get_users_for_resources_stats_report($resources, $feedback_reviews)
     select * from users where name in (%s)
 SQL;
   $query = sprintf($sql, "'" . implode("','", array_keys($authors)) . "'");
+  $sql = null; unset($sql); //memory management
+
   $result = db_query($query);
+  $query = null; unset($query); //memory management
+
   $authors = array();
   foreach ($result as $record) {
     $authors[$record->uid] = entity_metadata_wrapper('user', $record);
@@ -501,7 +517,7 @@ function get_counts_for_resource_stats($nodes, &$data)
   $data['return_date'] = count_with_nodes_query($sql, $nodes, false);
 
   # Review cycle number
-  $sql = "SELECT nid, count(nid) as review_cycle FROM sbacdev.workbench_moderation_node_history where state = 'rejected' group by nid";
+  $sql = "SELECT nid, count(nid) as review_cycle FROM workbench_moderation_node_history where state = 'rejected' group by nid";
   $data['review_cycle'] = count_with_nodes_query($sql, $nodes, false);
 
   # Current student learning rating (average)
@@ -665,7 +681,7 @@ function set_report_columns()
           array('field_alignment_tags', 'Common Core State Standards?'),
           // non-wrapper fields:
 //          array('status', 'Status', 'accessor' => 'label'),
-          array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',), 'accessor' => 'label'),
+          array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',),),
 //          array('from_state', 'From Workbench State', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',), 'accessor' => 'label'),
           // Gate Keeper
           array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 'gate_keeper', 'fieldtype' => 'date',), // gk
@@ -692,33 +708,33 @@ function set_report_columns()
           array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
 
           // users info
-          array('foreign', 'Reviewer 1 Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),
+          array('foreign', 'Reviewer 1 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1',  ),),
           array('foreign', 'Reviewer 1 State', 'field' => 'name',
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
-          array('foreign', 'Reviewer 2 Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),
+          array('foreign', 'Reviewer 2 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2',  ),),
           array('foreign', 'Reviewer 2 State', 'field' => 'name',
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
 
-          array('foreign', 'Reviewer 3 Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),
+          array('foreign', 'Reviewer 3 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3',  ),),
           array('foreign', 'Reviewer 3 State', 'field' => 'name',
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
 
-          array('foreign', 'Poster Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),
+          array('foreign', 'Poster Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post',  ),),
           array('foreign', 'Poster State', 'field' => 'name',
             'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post', 'wrapper'=>'user'),
             'foreigndata' => array('field_state'),
           ),
-          array('author', 'Contributor Name', 'field' => array(array('field_last_name', 'und', 0, 'value',), 'separator' => ',', array('field_first_name', 'und', 0, 'value',),),),
+          array('author', 'Contributor Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),),
           array('field_state', 'Contributor State',
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
