@@ -241,7 +241,6 @@ function _sbac_resource_preview_content(&$vars) {
     else if ($type == 'image') {
       $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400));
     }
-    // replace with theming functions, preprocess theme functions haven't been implemented (except for schooltube), although templates have been
     else if ($type == 'schooltube') {
       $viewer['viewer'] = '<div class="flex-video"><iframe width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>';
     }
