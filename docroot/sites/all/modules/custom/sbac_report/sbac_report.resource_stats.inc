@@ -408,6 +408,9 @@ function get_entities_for_resources($resources, $entity_type)
   $wrappers = array();
 
   foreach ($values as $value) {
+    if ($value->status==='0') {
+      continue;
+    }
     $wrapper = entity_metadata_wrapper($entity_type, $value);
     $node_id = $wrapper->node_id->value();
     if ($wrapper and $node_id) {
@@ -427,7 +430,7 @@ function get_entities_for_resources($resources, $entity_type)
         }
       }
       else if ($value->type=='post') {
-        $wrappers[$node_id][$value->type] = $wrapper; 
+        $wrappers[$node_id][$value->type] = $wrapper;
       }
       else if ($value->type=='gate_keeper') {
         $wrappers[$node_id][$value->type] = $wrapper;
@@ -511,7 +514,7 @@ SQL;
   // posters
   // reviewers
   $reviewers = array();
-  foreach ($feedback_reviews as $reviews) {
+  foreach ($feedback_reviews as $key => $reviews) {
     foreach ($reviews as $review) {
       try {
         $value = $review->uid->value(); /// get's the actual user.
@@ -592,6 +595,10 @@ function get_counts_for_resource_stats($nodes, &$data)
             and sl.entity_id = er.id group by n.nid";
 
   $data['ease_use_rating_average'] = count_with_nodes_query($sql, $nodes, false);
+
+  # number of reviews per resource
+  $sql = "select node_id as nid, count(node_id) as total_reviews From eck_feedback where status = 1 group by node_id";
+  $data['total_reviews_per_node'] = count_with_nodes_query($sql, $nodes, false);
 
 }
 
@@ -701,7 +708,6 @@ function set_report_columns()
             'foreignkey' => array('field_license', '', 'accessor'=>'value'),),
           array('field_student_agency', 'Student Engagement in the Formative Process'),
 
-
           // property keys:
           array('title', 'Title'), //title
           array('created', 'Contribution Date', 'fieldtype' => 'date'),
@@ -748,6 +754,9 @@ function set_report_columns()
           array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 'post'),
           array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 'post'),
           array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
+
+          // total reivews.
+          array('total_reviews', 'Total Reviews', 'datasource' => 'total_reviews_per_node', 'not_wrapper' => true), // gk
 
           // users info
           array('foreign', 'Reviewer 1 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
@@ -800,11 +809,11 @@ function set_report_columns()
           array('field_special_populations', 'Contributor Student Population(s)',
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
-
           array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => true), // gk
           array('average', 'Current Student Learning Rating', 'datasource' => 'student_learning_rating_average', 'not_wrapper' => true), // gk
           array('average', 'Current Professional Development Rating', 'datasource' => 'pro_dev_rating_average', 'not_wrapper' => true), // gk
           array('average', 'Current Ease of Use Rating', 'datasource' => 'ease_use_rating_average', 'not_wrapper' => true), // gk
+
 
 
           array('field_total_views', 'Views'),
