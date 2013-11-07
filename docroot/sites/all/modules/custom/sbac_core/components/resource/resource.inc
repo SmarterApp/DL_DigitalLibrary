@@ -99,8 +99,12 @@ function resource_access($op, $node, $account = NULL) {
       return FALSE;
     }
 
-    // Specifc check.
-    if ($op == 'view gate keeper' && isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
+    // Specifc check, if its an HTML5 module and it's published, do not show GK tab.
+    if ($op == 'view gate keeper'
+      && isset($node->workbench_moderation['current']->state)
+      && $node->workbench_moderation['current']->state == 'published'
+      && isset($node->field_html5['und'][0]['value'])
+      && $node->field_html5['und'][0]['value']) {
       return FALSE;
     }
 
