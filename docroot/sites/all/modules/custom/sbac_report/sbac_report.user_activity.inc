@@ -103,6 +103,7 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
  */
 
 function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
+  ini_set('memory_limit','512M');
   // State.
   if ($form_state) {
 
