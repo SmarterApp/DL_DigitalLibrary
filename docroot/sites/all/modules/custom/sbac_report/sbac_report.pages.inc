@@ -274,7 +274,7 @@ function sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $
   $gk_all_accepted_count = count($gk_all_accepted);
   $gk_all_returned_count = count($gk_all_returned);
   $gk_all_total = $gk_all_accepted_count + $gk_all_returned_count;
-  if ($gk_ind_total != 0) {
+  if ($gk_all_total != 0) {
     $gk_all_accepted_percentage = round($gk_all_accepted_count / $gk_all_total, 2) * 100;
     $gk_all_returned_percentage = round($gk_all_returned_count / $gk_all_total, 2) * 100;
   }
