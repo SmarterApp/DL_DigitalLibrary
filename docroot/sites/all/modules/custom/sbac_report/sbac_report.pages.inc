@@ -592,7 +592,9 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       );
 
       if ($focus != 86) {
-        unset($focus_map[2]);
+        if (count($focus_map) == 3) {
+          array_pop($focus_map);
+        }
       }
       else {
         if (count($focus_map) == 2) {
