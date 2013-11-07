@@ -349,7 +349,7 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
  * @param  integer $display    [description]
  * @return [type]              [description]
  */
-function sbac_report_build_summation_table($uid, $date_range, $display = 6) {
+function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
   $subheader = array(
     array(
       'data' => t('Resource Title'),
@@ -480,15 +480,14 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 6) {
                             '%Y%m%d'
                           ) BETWEEN :from_date AND :to_date
 
-              -- remove rows where user created the GK, but didn't create the QC
               AND         IF ((gk.uid = :uid AND qc.uid != :uid), qc.id = NULL, 1)
 
               ORDER BY    review_date DESC
            ";
 
-  if ($display != -1) {
-    $query .= ' LIMIT ' . (int) $display;
-  }
+//  if ($display != -1) {
+//    $query .= ' LIMIT ' . (int) $display;
+//  }
 
   $result = db_query($query, array(
     ':uid' => (int) $uid,
@@ -500,8 +499,11 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 6) {
     $subheader,
   );
 
-  $count = 1;
+  $count = 0;
   foreach ($result as $row) {
+    if ($count == $display) {
+      break;
+    }
     $item = array();
 
     $count_items = _sbac_resource_determine_feedback($row->nid, 'qc', $uid, 1, FALSE, 1, 'set', TRUE);
