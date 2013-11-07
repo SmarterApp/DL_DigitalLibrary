@@ -814,8 +814,6 @@ function set_report_columns()
           array('average', 'Current Professional Development Rating', 'datasource' => 'pro_dev_rating_average', 'not_wrapper' => true), // gk
           array('average', 'Current Ease of Use Rating', 'datasource' => 'ease_use_rating_average', 'not_wrapper' => true), // gk
 
-
-
           array('field_total_views', 'Views'),
           array('field_unique_views', 'Unique Views'),
           array('', 'Total Number of Tag(s)',
