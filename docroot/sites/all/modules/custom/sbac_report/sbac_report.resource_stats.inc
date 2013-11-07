@@ -112,6 +112,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';
+  gc_enable();
+  gc_collect_cycles();
+  gc_disable();
   // _cex exits and does not return.
   _cex_download($csv_resource_stats_result, 'output.csv');
   // can't get back to clear errors because fo the exit from _cex to force the

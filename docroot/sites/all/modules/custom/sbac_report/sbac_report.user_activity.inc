@@ -150,7 +150,9 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   }
   $_SESSION['sbac_report']['error_message'] = '';
   $_SESSION['sbac_report']['first_time'] = 0;
-
+  gc_enable();
+  gc_collect_cycles();
+  gc_disable();
   // _cex exits and does not return in order to force a download by the browser.
   _cex_download($csv_activity_report_result, 'output.csv');
   // _cex exits and does not return.
