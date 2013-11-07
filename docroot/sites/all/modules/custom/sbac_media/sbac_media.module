@@ -934,10 +934,12 @@ function sbac_media_html5_element_upload($form, $form_state) {
     else {
       // File content not there, throw error.
       form_set_error('field_content_module_picker', t('You must add a content module file to continue.'));
+      $form = drupal_rebuild_form('resource_node_form', $form_state);
     }
   }
   else {
     form_set_error('field_content_module_picker', t('The file directory is not writable.'));
+    $form = drupal_rebuild_form('resource_node_form', $form_state);
   }
   return $form['field_content_module_container'];
 }
@@ -974,7 +976,7 @@ function sbac_media_create_file_record_html5_module($zip_contents_path, $directo
         $dir_file->filemime = $mime_type;
         $dir_file->filesize = $fileinfo->getSize();
         $dir_file->status = 1;
-        $dir_file->timestamp = mktime();
+        $dir_file->timestamp = time();
         $dir_file->type = $mime_type;
         drupal_write_record('file_managed', $dir_file);
       }
