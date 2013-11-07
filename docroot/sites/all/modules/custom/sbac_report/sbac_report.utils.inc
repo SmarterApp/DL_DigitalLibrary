@@ -120,10 +120,14 @@ function get_from_array_or_object($accessor,$value)
 function value_or_field($value, $field_in_object=null) {
   if (is_array($field_in_object)) {
     $return_value = '';
+//    if (array_key_exists(,'accessor',$field_in_object)) {
+//      return $value->{$field_in_object['accessor']}();
+//    }
     foreach ($field_in_object as $key => $field) {
       if ($key === 'separator') {
         $return_value .= $field;
       }
+
       else {
         if (is_array($field)) {
 
