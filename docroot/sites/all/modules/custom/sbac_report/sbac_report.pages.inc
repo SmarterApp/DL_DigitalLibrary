@@ -206,6 +206,7 @@ function sbac_report_sne_autocomplete($string = '') {
     CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
     AND (users.status <> 0)
     AND (field_sne_member.field_sne_member_value = 1)
+    $state_condition
   )
 
   GROUP BY uid
