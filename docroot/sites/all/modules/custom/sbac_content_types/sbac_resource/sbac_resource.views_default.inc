@@ -1626,6 +1626,12 @@ function sbac_resource_views_default_views() {
     'thousand_separator' => ' ',
     'prefix_suffix' => 0,
   );
+  /* Field: Content: HTML5 */
+  $handler->display->display_options['fields']['field_html5']['id'] = 'field_html5';
+  $handler->display->display_options['fields']['field_html5']['table'] = 'field_data_field_html5';
+  $handler->display->display_options['fields']['field_html5']['field'] = 'field_html5';
+  $handler->display->display_options['fields']['field_html5']['label'] = '';
+  $handler->display->display_options['fields']['field_html5']['element_label_colon'] = FALSE;
 
   /* Display: List View */
   $handler = $view->new_display('block', 'List View', 'list_view');
@@ -1735,6 +1741,12 @@ function sbac_resource_views_default_views() {
     'thousand_separator' => ' ',
     'prefix_suffix' => 0,
   );
+  /* Field: Content: HTML5 */
+  $handler->display->display_options['fields']['field_html5']['id'] = 'field_html5';
+  $handler->display->display_options['fields']['field_html5']['table'] = 'field_data_field_html5';
+  $handler->display->display_options['fields']['field_html5']['field'] = 'field_html5';
+  $handler->display->display_options['fields']['field_html5']['label'] = '';
+  $handler->display->display_options['fields']['field_html5']['element_label_colon'] = FALSE;
 
   /* Display: Load Data */
   $handler = $view->new_display('block', 'Load Data', 'load_data');

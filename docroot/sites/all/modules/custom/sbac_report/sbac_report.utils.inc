@@ -107,8 +107,44 @@ function set_tid_property(&$resource_node, $fieldkey, &$tid_terms)
     $ix++;
   }
 }
+function get_from_array_or_object($accessor,$value)
+{
+  if (is_array($value)) {
+    return $value[$accessor];
+  }
+  else if (is_object($value)) {
+    return $value->{$accessor};
+  }
+}
 
 function value_or_field($value, $field_in_object=null) {
+  if (is_array($field_in_object)) {
+    $return_value = '';
+    foreach ($field_in_object as $key => $field) {
+      if ($key === 'separator') {
+        $return_value .= $field;
+      }
+      else {
+        if (is_array($field)) {
+
+          foreach($field as $key => $accessor) {
+            if ($key === 0) {
+              $object = get_from_array_or_object($accessor,$value);
+            }
+            else {
+              $object = get_from_array_or_object($accessor,$object);
+            }
+          }
+          $return_value .= $object;
+        }
+        else {
+          $return_value .= $value->{$field};
+        }
+      }
+      $return_value .= ' ';
+    }
+    return $return_value;
+  }
   if ($field_in_object) {
     return $value->{$field_in_object};
   }
@@ -134,11 +170,14 @@ function grab_field_value($value, $field_in_object=null)
         array_push($actual_value, value_or_field($v, $field_in_object));
       }
     }
-    $value = $actual_value;
+    $return_value = $actual_value;
   } else if (is_object($value)) {
-    $value = value_or_field($value, $field_in_object);
+    $return_value = value_or_field($value, $field_in_object);
   }
-  return $value;
+  else {
+    $return_value = $value;
+  }
+  return $return_value;
 }
 
 function get_field_value_using_schema($schemakey, $data, $resource, $primary_key, &$is_date)
@@ -168,6 +207,13 @@ function get_field_value_using_schema($schemakey, $data, $resource, $primary_key
   }
 }
 
+function set_debug_value($message)
+{
+  if (false) { // set this to true to see debug output.
+    return $message;
+  }
+  return '';
+}
 function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$is_date)
 {
   $value = '';
@@ -189,7 +235,7 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
           $value = $value[$accessor];
         }
       } catch (EntityMetadataWrapperException $e) {
-        $value = "Unknown type/accessor: $type/$accessor";
+        $value = set_debug_value("Unknown type/accessor: $type/$accessor");
         $is_date = false;
         break;
       }
@@ -204,11 +250,9 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
         $values = $data[$fieldkey['datasource']][$primary_key_value];
         if ($values and array_key_exists($fieldkey['index'], $values)) {
             try {
-              $value = $values[$fieldkey['index']]
-                ->{$fieldkey[0]}
-                ->value();
+              $value = get_value_from_wrapper($fieldkey, $values[$fieldkey['index']]->{$fieldkey[0]});
             } catch (EntityMetadataWrapperException $e) {
-              $value = "Unknown Index Field: $fieldkey[0]";
+              $value = set_debug_value("Unknown Index Field: $fieldkey[0]");
               $is_date = false;
             }
         }
@@ -223,22 +267,22 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
               $value = $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]};
             }
             else {
-              $value = $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]}->value();
+              $value = get_value_from_wrapper($fieldkey, $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]});
             }
           }
         }
       } catch (EntityMetadataWrapperException $e) {
-        $value = "Unknown Field";
+        $value = set_debug_value("Unknown Field");
         $is_date = false;
       }
     }
   } else {
     try {
       if (array_key_exists(0, $fieldkey)) {
-        $value = $resource->{$fieldkey[0]}->value();
+        $value = get_value_from_wrapper($fieldkey, $resource->{$fieldkey[0]});
       }
     } catch (EntityMetadataWrapperException $e) {
-      $value = "Unknown Field";
+      $value = set_debug_value("Unknown Field");
       $is_date = false;
     }
   }
@@ -247,6 +291,16 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
 //  }
 
   return $value;
+}
+
+function get_value_from_wrapper($fieldkey, $source)
+{
+  if (array_key_exists('accessor',$fieldkey)) {
+    return $source->{$fieldkey['accessor']}();
+  }
+  else {
+    return $source->value();
+  }
 }
 
 function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date = false, $field_in_object = null)

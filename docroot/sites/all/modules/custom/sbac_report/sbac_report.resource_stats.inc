@@ -112,6 +112,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
     return; // report did not contain any data.
   }
   $_SESSION['sbac_report']['error_message'] = '';
+  gc_enable();
+  gc_collect_cycles();
+  gc_disable();
   // _cex exits and does not return.
   _cex_download($csv_resource_stats_result, 'output.csv');
   // can't get back to clear errors because fo the exit from _cex to force the
@@ -138,7 +141,6 @@ function query_taxonomy_term($sql)
 /*
  * Resource Type Dropdown options extracted from the taxonomy table.
  *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_type_options()
 {
@@ -158,11 +160,12 @@ function sbac_report_default_resource_type_option()
 /*
  * Resource Status Dropdown options extracted from the taxonomy table.
  *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_status_options()
 {
-  $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
+  // not a taxonomy term, these values come from the workbench moderation states.
+  //$sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
+  $sql = "select name as tid, label as name from workbench_moderation_states";
   return query_taxonomy_term($sql);
 }
 
@@ -177,13 +180,13 @@ function sbac_report_default_resource_status_option()
 /*
  * Resource Subject Dropdown options extracted from the taxonomy table.
  *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_subject_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'subject')";
 
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -199,14 +202,13 @@ function sbac_report_default_resource_subject_option()
 
 /*
  * Resource Grade Dropdown options extracted from the taxonomy table.
- *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_grade_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'grades')";
 
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -222,13 +224,12 @@ function sbac_report_default_resource_grade_option()
 
 /*
  * Resource Attribute Dropdown options extracted from the taxonomy table.
- *
- * todo: remove hard coded number for the taxonomy term vocabulary set.
  */
 function sbac_report_resource_attribute_options()
 {
   $sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'attributes')";
   $values = query_taxonomy_term($sql);
+  $sql = null; unset($sql); //memory management
   $values[1] = 'Not Yet Selected';
   ksort($values);
   return $values;
@@ -266,12 +267,13 @@ function build_resource_stats_csv($resource_filters)
   $data['authors'] = $authors;
   $data['reviewers'] = $reviewers;
 
-  get_counts_for_resource_stats($resources, &$data); // already key sorted from here.
+  get_counts_for_resource_stats($resources, $data); // already key sorted from here.
 
   // get the report configuration.
   $report_configuration = set_report_columns();
   $file_data = create_resource_stats_from_data($data, $report_configuration);
 
+  $data = null; unset($data); //memory management
   return $file_data;
 }
 
@@ -339,11 +341,27 @@ function get_resources($resource_filters)
     }
   }
   $nodes = node_load_multiple($nids);
+  $nodes = fitler_resource_status($nodes, $resource_filters['status']);
+
   $wrappers = array();
   foreach ($nodes as $key => $value) {
     $wrappers[$key] = entity_metadata_wrapper('node', $value);
   }
   return $wrappers;
+}
+
+function fitler_resource_status($nodes, $statuses) {
+
+  if (array_key_exists(0,$statuses)) {
+    return $nodes;
+  }
+  $filtered_nodes = array();
+  foreach ($nodes as $key => $node) {
+    if (in_array($node->workbench_moderation['current']->state, $statuses)) {
+      $filtered_nodes[$key] = $node;
+    }
+  }
+  return $filtered_nodes;
 }
 
 /*
@@ -359,6 +377,7 @@ function get_entities_for_resources($resources, $entity_type)
   $eids = array_keys($entities[$entity_type]);
   $values = entity_load($entity_type, $eids);
   $wrappers = array();
+
   foreach ($values as $value) {
     $wrapper = entity_metadata_wrapper($entity_type, $value);
     $node_id = $wrapper->node_id->value();
@@ -368,10 +387,10 @@ function get_entities_for_resources($resources, $entity_type)
         $wrappers[$node_id] = array();
       }
       if ($value->type=='qc') {
-        if (!$wrappers[$node_id]['qc1']) {
+        if (!array_key_exists('qc1', $wrappers[$node_id])) {
           $wrappers[$node_id]['qc1'] = $wrapper;
         }
-        else if  (!$wrappers[$node_id]['qc2']) {
+        else if (!array_key_exists('qc2',$wrappers[$node_id])) {
           $wrappers[$node_id]['qc2'] = $wrapper;
         }
         else {
@@ -391,13 +410,29 @@ function get_entities_for_resources($resources, $entity_type)
 
 function get_workbench_moderation_history($resources)
 {
+  $query = <<<SQL
+    select * from workbench_moderation_states;
+SQL;
+  $result = db_query($query);
+  $lookup = array();
+  foreach ($result as $record) {
+    $lookup[$record->name] = $record->label;
+  }
+
   $sql = <<<SQL
     select * from workbench_moderation_node_history where nid in (%s) and current = 1
 SQL;
   $query = sprintf($sql, implode(',', array_keys($resources)));
+  $sql = null; unset($sql); //memory management
+
   $result = db_query($query);
+  $query = null; unset($query); //memory management
+
   $values = array();
   foreach ($result as $record) {
+    if (array_key_exists($record->state, $lookup)) {
+      $record->state = $lookup[$record->state];
+    }
     $values[$record->nid] = $record;
   }
   return $values;
@@ -431,7 +466,11 @@ function get_users_for_resources_stats_report($resources, $feedback_reviews)
     select * from users where name in (%s)
 SQL;
   $query = sprintf($sql, "'" . implode("','", array_keys($authors)) . "'");
+  $sql = null; unset($sql); //memory management
+
   $result = db_query($query);
+  $query = null; unset($query); //memory management
+
   $authors = array();
   foreach ($result as $record) {
     $authors[$record->uid] = entity_metadata_wrapper('user', $record);
@@ -488,7 +527,7 @@ function get_counts_for_resource_stats($nodes, &$data)
   $data['return_date'] = count_with_nodes_query($sql, $nodes, false);
 
   # Review cycle number
-  $sql = "SELECT nid, count(nid) as review_cycle FROM sbacdev.workbench_moderation_node_history where state = 'rejected' group by nid";
+  $sql = "SELECT nid, count(nid) as review_cycle FROM workbench_moderation_node_history where state = 'rejected' group by nid";
   $data['review_cycle'] = count_with_nodes_query($sql, $nodes, false);
 
   # Current student learning rating (average)

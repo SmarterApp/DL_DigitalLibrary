@@ -215,7 +215,7 @@ function _sbac_resource_preview_content(&$vars) {
     $viewer['viewer'] = '<iframe src="' . $url . '" width="850" height="600" style="border: none;"></iframe>';
   }
 
-  if ($vars['document'][0] && !$html5) {
+  if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
     $media = $vars['document'][0];
     $type = _sbac_resource_determine_type($media);
     $viewer['viewer_filename'] = $media->filename;
@@ -1587,7 +1587,7 @@ function sbac_resource_create_button() {
   // DLRB admin / member button.
   if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
     $create_urls[] = l('Resource', 'node/add/resource', array('attributes' => array('class' => array('create-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resource')));
-    $create_urls[] = l('Module', 'node/add/resource', array('attributes' => array('class' => array('create-module')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'module')));
+    $create_urls[] = l('Content Module', 'node/add/resource', array('attributes' => array('class' => array('create-module')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'module')));
     $content = '<a class="button small arrow sbac-create-resource-dropdown" data-dropdown="sbac-create-resource">'. t('Create'). '<span></span></a>';
     $content .= theme('item_list', array(
       'items' => $create_urls,

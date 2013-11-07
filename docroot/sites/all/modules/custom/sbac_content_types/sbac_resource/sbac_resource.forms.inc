@@ -122,6 +122,7 @@ function sbac_resource_form_license_after_build($element) {
  */
 function _sbac_resource_clean_workbench_moderation($form, $form_state) {
   return;
+
   // Current clean up.
   if (isset($form_state['node']->workbench_moderation['current']->from_state)) {
     $form_state['node']->workbench_moderation['current']->from_state = workbench_moderation_state_none();
@@ -292,6 +293,11 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
 
     $active_tab = $form_state['values']['additional_settings__active_tab'];
     if ($active_tab == 'edit-group_materials') {
+      if ($form_state['html5']) {
+        $form = drupal_rebuild_form('resource_node_form', $form_state);
+        return $form;
+      }
+
       $media_items = sbac_media_load_items($form['#node']->nid);
       $output = _sbac_media_create_list($media_items, $form_state);
       $form['field_file_container']['materials']['#markup'] = $output;
@@ -729,17 +735,29 @@ function sbac_resource_validate_summary(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_validate_materials(&$form, &$form_state) {
-  $media_items = sbac_media_load_items($form['#node']->nid);
-  if (!$media_items) {
-    $error = 'You must add at least one material to continue';
-    form_set_error('field_embed_video', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('materials:field_embed_video:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('materials:field_embed_video:group:Provide a material', 'sbac_resource_error');
+  if ($form_state['html5']) {
+    $media_items = sbac_media_load_html5_item($form['#node']->nid);
+    if (!$media_items) {
+      $error = 'You must add a content module file to continue';
+      form_set_error('field_content_module_picker', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('materials:field_content_module_picker:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('materials:field_content_module_picker:group:Provide a content module file', 'sbac_resource_error');
+    }
+  }
+  else {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    if (!$media_items) {
+      $error = 'You must add at least one material to continue';
+      form_set_error('field_embed_video', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('materials:field_embed_video:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('materials:field_embed_video:group:Provide a material', 'sbac_resource_error');
 
-    // field_file_upload
-    form_set_error('field_file_upload', $error);
-    _sbac_resource_remove_error_message($error);
+      // field_file_upload
+      form_set_error('field_file_upload', $error);
+      _sbac_resource_remove_error_message($error);
+    }
   }
 
   if ($form_state['values']['field_author']['und'][0]['value'] == NULL) {
@@ -2153,9 +2171,17 @@ function sbac_resource_check_materials($form, $form_state) {
 
   if (isset($form_state['values'])) {
     if (isset($form_state['node']->nid)) {
-      $media_items = sbac_media_load_items($form_state['node']->nid);
-      if (!$media_items) {
-        $valid = FALSE;
+      if ($form_state['html5']) {
+        $media_items = sbac_media_load_html5_item($form_state['node']->nid);
+        if (!$media_items) {
+          $valid = FALSE;
+        }
+      }
+      else{
+        $media_items = sbac_media_load_items($form_state['node']->nid);
+        if (!$media_items) {
+          $valid = FALSE;
+        }
       }
     }
     if (!$form_state['values']['field_author']['und'][0]['value']) {
@@ -2175,9 +2201,17 @@ function sbac_resource_check_materials($form, $form_state) {
   }
   else {
     if (isset($form['#node']->nid)) {
-      $media_items = sbac_media_load_items($form['#node']->nid);
-      if (!$media_items) {
-        $valid = FALSE;
+      if ($form_state['html5']) {
+        $media_items = sbac_media_load_html5_item($form['#node']->nid);
+        if (!$media_items) {
+          $valid = FALSE;
+        }
+      }
+      else {
+        $media_items = sbac_media_load_items($form['#node']->nid);
+        if (!$media_items) {
+          $valid = FALSE;
+        }
       }
     }
     if (!$form['field_author']['und'][0]['value']['#default_value']) {

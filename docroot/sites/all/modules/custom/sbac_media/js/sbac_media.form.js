@@ -39,6 +39,10 @@
         var new_href = href.replace("SBAC-MEDIA-EMBEDDED", embed_code);
         modal_link.attr('href', new_href);
       });
+
+      if ($('#edit-field-content-module-upload').length) {
+        $('#edit-field-content-module-upload').html('Upload (100MB Max)');
+      }
     }
   };
 

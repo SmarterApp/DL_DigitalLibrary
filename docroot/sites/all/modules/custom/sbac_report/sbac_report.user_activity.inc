@@ -103,6 +103,7 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
  */
 
 function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
+  ini_set('memory_limit','512M');
   // State.
   if ($form_state) {
 
@@ -137,6 +138,10 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   // dump the csv file here:
   $csv_activity_report_result = build_activity_report_csv($state_tid1, $date_range1, $usergroups, $snefilter);
   // output the csv for download.
+  $state_tid1 = null; unset($state_tid1); //memory management
+  $date_range1 = null; unset($date_range1); //memory management
+  $usergroups = null; unset($usergroups); //memory management
+  $snefilter = null; unset($snefilter); //memory management
 
   if ($csv_activity_report_result == null) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
@@ -145,7 +150,9 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   }
   $_SESSION['sbac_report']['error_message'] = '';
   $_SESSION['sbac_report']['first_time'] = 0;
-
+  gc_enable();
+  gc_collect_cycles();
+  gc_disable();
   // _cex exits and does not return in order to force a download by the browser.
   _cex_download($csv_activity_report_result, 'output.csv');
   // _cex exits and does not return.
@@ -156,30 +163,31 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
  * properly with Drupals perpared statement support.
  *
  */
-function get_users_for_user_groups($usergroups)
+function get_users_for_user_groups(&$usergroups_ids)
 {
   // look for the aggregated admins option "admins"
-  if (array_key_exists (1, $usergroups)) {
+  if (array_key_exists (1, $usergroups_ids)) {
     // get the admins:
     $admins = sbac_report_user_group_admins();
-    unset($usergroups[1]);
+    unset($usergroups_ids[1]);
     foreach ($admins as $key => $value) {
-      $usergroups[$key] = $key;
+      $usergroups_ids[$key] = $key;
     }
   }
   // look for the 'all' option being set:
-  else if (array_key_exists(0,$usergroups)) {
+  else if (array_key_exists(0,$usergroups_ids)) {
     $admins = sbac_report_user_group_admins();
     foreach ($admins as $key => $value) {
-      $usergroups[$key] = $key;
+      $usergroups_ids[$key] = $key;
     }
     $all = sbac_report_user_group_options();
     foreach ($all as $key=>$value) {
-      $usergroups[$key] = $key;
+      $usergroups_ids[$key] = $key;
     }
   }
 
-  $usergroups = implode(',',$usergroups);
+  $usergroups = implode(',',$usergroups_ids);
+
 // todo: get prepared statement to work with 'in (%s)'.
 
 // The below statement doesn't work, where usergroups is passed as a string or an array.
@@ -191,6 +199,8 @@ function get_users_for_user_groups($usergroups)
 //  );
   // done this way because the prepared statement didn't work:
   $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in ($usergroups)";
+  $usergroups = null; unset($usergroups); //memory management
+
   $result = db_query($sql);
   $values = array();
   foreach ($result as $record) {
@@ -351,11 +361,7 @@ function create_user_activity_from_data($user_activity)
 
   ksort($user_activity['user_profiles']);
 
-  $fieldkeys = array();
-  $foreignidkeys = array();
-  $stringkeys = array();
-  $uidcountkeys = array();
-  $toskeys = array();
+  $fieldkeys = array(); $foreignidkeys = array(); $stringkeys = array(); $uidcountkeys = array(); $toskeys = array();
 
   // get the fields for the report and clean up the data.
   validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys);
@@ -372,6 +378,7 @@ function create_user_activity_from_data($user_activity)
   $titles .= $line_ending;
 
   $csv = $titles;
+  $titles = null; unset($titles); //memory management
   $count = count($user_activity['user_profiles']); $ix = 0;
 
   foreach ($user_activity['user_profiles'] as $user_profile) {
@@ -401,6 +408,7 @@ function create_user_activity_from_data($user_activity)
         $value = $user_profile->{$stringkey[0]};
       }
       $row .= $value . $separator;
+      $value = null; unset($value); // memory management
     }
     foreach ($uidcountkeys as $uidcountkey) {
       $row .= $user_activity[$uidcountkey[0]][$uid]->count . $separator;
@@ -418,6 +426,8 @@ function create_user_activity_from_data($user_activity)
     if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
 
     $csv .= $row.$line_ending;
+
+    $row = null; unset($row);//memory mangement
   }
   return $csv;
 }
@@ -552,7 +562,7 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
  * and by state, then gets the user activty statistics and legal terms of service data, then calls the routine
  * to create the report from the data.
  */
-function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_slt_filter)
+function build_activity_report_csv($state_tid, $date_range, &$usergroups, $sne_slt_filter)
 {
   $users = get_users_for_user_groups($usergroups);
 
@@ -569,7 +579,10 @@ function build_activity_report_csv($state_tid, $date_range, $usergroups, $sne_sl
   {
     return null;
   }
+  $user_profiles = null; unset($user_profiles); //memory management
+
   $file_data = create_user_activity_from_data($user_activity);
+  $user_activity = null; unset($user_activity); //memory management
 
   return $file_data;
 }

@@ -1105,7 +1105,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Identify the learning targets associated with this resource. Learning targets can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.',
+    'description' => 'Identify the learning goals associated with this resource. Learning goals can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1147,7 +1147,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Identify the learning targets associated with this resource. Learning targets can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.',
+        'label_help_description' => 'Identify the learning goals associated with this resource. Learning goals can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.',
         'maxlength_js' => 600,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -2398,7 +2398,7 @@ function sbac_resource_field_default_field_instances() {
   t('Identify how this includes, reflects, and addresses the formative assessment process.');
   t('Identify how this resource addresses the Common Core State Standards (e.g., how it addresses particular claims, clusters, targets, and/or “standards”). Pay special attention to the interconnectedness of claims.');
   t('Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.');
-  t('Identify the learning targets associated with this resource. Learning targets can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.');
+  t('Identify the learning goals associated with this resource. Learning goals can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.');
   t('Include evidence that the resource has been tried successfully with educators (or students) and has resulted in a positive impact on educator practices (or student outcomes)');
   t('Individual(s) or group(s) for whom the resource was produced. Select all that apply.');
   t('Intended End User(s)');
