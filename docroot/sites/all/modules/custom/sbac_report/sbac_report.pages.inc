@@ -595,11 +595,13 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
         unset($focus_map[2]);
       }
       else {
-        $focus_map[] = array(
-          'tid' => 86,
-          'title' => t('Combination of Instructional and Professional Learning Quality Criteria Consistency Rates'),
-          'count' => variable_get('qc_86_criteria_num', 0),
-        );
+        if (count($focus_map) == 2) {
+          $focus_map[] = array(
+            'tid' => 86,
+            'title' => t('Combination of Instructional and Professional Learning Quality Criteria Consistency Rates'),
+            'count' => variable_get('qc_86_criteria_num', 0),
+          );
+        }
       }
 
       foreach ($focus_map as $focus_data) {
