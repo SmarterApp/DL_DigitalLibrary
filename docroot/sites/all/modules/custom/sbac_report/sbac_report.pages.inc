@@ -349,7 +349,7 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
  * @param  integer $display    [description]
  * @return [type]              [description]
  */
-function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
+function sbac_report_build_summation_table($uid, $date_range, $display = 6) {
   $subheader = array(
     array(
       'data' => t('Resource Title'),
@@ -500,6 +500,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
     $subheader,
   );
 
+  $count = 1;
   foreach ($result as $row) {
     $item = array();
 
@@ -676,6 +677,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
     );
 
     $rows[] = $item;
+    $count++;
   }
 
   $output = theme('table', array(
