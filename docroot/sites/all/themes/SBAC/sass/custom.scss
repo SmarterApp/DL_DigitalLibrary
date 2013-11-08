@@ -2483,3 +2483,20 @@ a.tabledrag-handle .handle {
   color: white;
   background: #2aa549;
 }
+
+
+/** --------------------------------------------
+  People Page
+  ______________________________________________ **/
+
+  #sbac-user-admin-account .chzn-drop {
+    width: 858px;
+    background-color: white;
+
+    input {
+      //background-image: none !important;
+      background-repeat: no-repeat !important;
+      background-size: 67px 45px !important;
+      background-position: right -25px !important;
+    }
+  }

@@ -8510,43 +8510,6 @@ a.tabledrag-handle .handle {
 .section-node-edit #edit-group_summary .description {
   max-width: 95%;
 }
-/* line 1710, ../sass/custom.scss */
-.page-node-add-resource #edit-group_tags .fieldset-wrapper,
-.section-node-edit #edit-group_tags .fieldset-wrapper {
-  /*.field-name-field-age-range label:after {
-    content: 'The typical age range of the resource\'s intended end user.';
-  }
-  .field-name-field-intended-end-user label:after {
-    content: 'Individual or group for which the resource was produced.';
-  }
-  .field-name-field-digital-media-type label:after {
-    content: 'The type of media in which the resource is provided.';
-  }
-  .field-name-field-educational-use label:after {
-    content: 'The purpose of the resource in the context of the Digital Library.';
-  }
-  .field-name-field-subject label:after {
-    content: 'The subject area to which the learning resource applies';
-  }
-  .field-name-field-grade label:after {
-    content: 'The grade(s) at which the opject might be used, regardless of curriculum alignment';
-  }
-  .field-name-field-intended-student label:after {
-    content: 'Student population(s) which the resource can be used';
-  }
-  .field-name-field-geographical-settings label:after {
-    content: 'Setting(s) for which the resource is provided';
-  }
-  .field-name-field-learning-resource-type label:after {
-    content: 'The predominate type or kind characterizing the learning resource.';
-  }
-  .field-name-field-smarter-balanced-keyword label:after {
-    content: 'Identifiers that can be assigned to a resource aligned to Smarter Balance concepts.';
-  }
-  .field-name-field-interactivity-type label:after {
-    content: 'The predominate mode of learning supported by the learning resource.';
-  }*/
-}
 /* line 1712, ../sass/custom.scss */
 .page-node-add-resource #edit-group_tags .fieldset-wrapper table.views-table,
 .section-node-edit #edit-group_tags .fieldset-wrapper table.views-table {
@@ -8579,59 +8542,59 @@ a.tabledrag-handle .handle {
   font-size: 0.75em;
   padding: 5px 0;
 }
-/* line 1774, ../sass/custom.scss */
+/* line 1739, ../sass/custom.scss */
 .page-node-add-resource #edit-group_tags .fieldset-wrapper .field-widget-options-select,
 .section-node-edit #edit-group_tags .fieldset-wrapper .field-widget-options-select {
   float: left;
   width: 40%;
   margin-right: 5%;
 }
-/* line 1779, ../sass/custom.scss */
+/* line 1744, ../sass/custom.scss */
 .page-node-add-resource #edit-group_tags .fieldset-wrapper .field-widget-options-select:nth-child(odd),
 .section-node-edit #edit-group_tags .fieldset-wrapper .field-widget-options-select:nth-child(odd) {
   clear: left;
 }
-/* line 1785, ../sass/custom.scss */
+/* line 1750, ../sass/custom.scss */
 .page-node-add-resource #edit-group_tags .chzn-container,
 .section-node-edit #edit-group_tags .chzn-container {
   width: 200px !important;
 }
-/* line 1788, ../sass/custom.scss */
+/* line 1753, ../sass/custom.scss */
 .page-node-add-resource #edit-group_tags .chzn-container li input,
 .section-node-edit #edit-group_tags .chzn-container li input {
   padding: 1px !important;
   height: 1.5em;
 }
-/* line 1794, ../sass/custom.scss */
+/* line 1759, ../sass/custom.scss */
 .page-node-add-resource #edit-group_tags .ctools-modal-content,
 .section-node-edit #edit-group_tags .ctools-modal-content {
   height: 160px !important;
 }
-/* line 1798, ../sass/custom.scss */
+/* line 1763, ../sass/custom.scss */
 .page-node-add-resource #edit-group_tags .description,
 .section-node-edit #edit-group_tags .description {
   max-width: 90%;
 }
-/* line 1802, ../sass/custom.scss */
+/* line 1767, ../sass/custom.scss */
 .page-node-add-resource #edit-group_tags div.error,
 .section-node-edit #edit-group_tags div.error {
   background-image: none;
 }
 
-/* line 1809, ../sass/custom.scss */
+/* line 1774, ../sass/custom.scss */
 .node-resource-form .form-actions {
   text-align: right;
 }
-/* line 1812, ../sass/custom.scss */
+/* line 1777, ../sass/custom.scss */
 .node-resource-form .form-actions button, .node-resource-form .form-actions #sbac-resource-save-continue {
   display: inline-block;
 }
-/* line 1816, ../sass/custom.scss */
+/* line 1781, ../sass/custom.scss */
 .node-resource-form .form-actions button {
   margin-right: 10px;
 }
 
-/* line 1822, ../sass/custom.scss */
+/* line 1787, ../sass/custom.scss */
 .form-textarea-wrapper textarea {
   max-width: 624px;
 }
@@ -8639,96 +8602,96 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    CTools Modal
    ----------------------------------------- */
-/* line 1829, ../sass/custom.scss */
+/* line 1794, ../sass/custom.scss */
 #modalBackdrop {
   background: url(../images/colorbox/overlay.png) repeat 0 0 !important;
   opacity: 0.9 !important;
 }
 
-/* line 1836, ../sass/custom.scss */
+/* line 1801, ../sass/custom.scss */
 #modalContent .ctools-modal-content {
   border-radius: 5px;
   border: 1px solid #ccc;
   overflow: hidden;
   height: auto !important;
 }
-/* line 1842, ../sass/custom.scss */
+/* line 1807, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-header {
   background: none;
 }
-/* line 1845, ../sass/custom.scss */
+/* line 1810, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-header #modal-title {
   display: inline-block;
   color: #000;
   padding: 15px 0;
   height: 35px;
 }
-/* line 1851, ../sass/custom.scss */
+/* line 1816, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-header .close {
   display: none;
 }
-/* line 1856, ../sass/custom.scss */
+/* line 1821, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-content {
   padding-top: 0;
   overflow: hidden;
   overflow-y: auto;
   width: auto !important;
 }
-/* line 1862, ../sass/custom.scss */
+/* line 1827, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-content .form-item {
   margin-top: 0;
 }
-/* line 1865, ../sass/custom.scss */
+/* line 1830, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-content .form-item label {
   float: none;
   width: 100%;
   margin: 5px 0;
 }
-/* line 1872, ../sass/custom.scss */
+/* line 1837, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-content .field-widget-text-textfield {
   display: inline-block;
   width: 48%;
   margin-right: 15px;
 }
-/* line 1878, ../sass/custom.scss */
+/* line 1843, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-content #edit-delete-overlay, #modalContent .ctools-modal-content .modal-content #edit-submit-overlay {
   float: right;
 }
-/* line 1888, ../sass/custom.scss */
+/* line 1853, ../sass/custom.scss */
 #modalContent .ctools-modal-content .field-type-taxonomy-term-reference label {
   width: 100%;
 }
-/* line 1891, ../sass/custom.scss */
+/* line 1856, ../sass/custom.scss */
 #modalContent .ctools-modal-content .field-type-taxonomy-term-reference label:after {
   color: #a2a2a2;
   font-size: 0.875em;
   display: block;
   margin: 0.3125em 0;
 }
-/* line 1906, ../sass/custom.scss */
+/* line 1871, ../sass/custom.scss */
 #modalContent .ctools-modal-content #edit-field-alignment-type {
   margin-right: 0;
 }
-/* line 1914, ../sass/custom.scss */
+/* line 1879, ../sass/custom.scss */
 #modalContent .ctools-modal-content .field-type-text-with-summary .form-textarea-wrapper {
   margin-left: 0;
   margin-right: 1.5625em;
 }
-/* line 1920, ../sass/custom.scss */
+/* line 1885, ../sass/custom.scss */
 #modalContent .ctools-modal-content .form-actions {
   text-align: right;
   margin: 0 25px 0 0;
 }
-/* line 1924, ../sass/custom.scss */
+/* line 1889, ../sass/custom.scss */
 #modalContent .ctools-modal-content .form-actions #edit-cancel--2 {
   margin-left: 10px;
 }
 
-/* line 1934, ../sass/custom.scss */
+/* line 1899, ../sass/custom.scss */
 #sbac-resource-delete-resource-form > div #edit-cancel-overlay {
   margin-left: 220px;
 }
-/* line 1938, ../sass/custom.scss */
+/* line 1903, ../sass/custom.scss */
 #sbac-resource-delete-resource-form > div #edit-delete-overlay {
   text-shadow: 0px 1px 0px #45613e;
   -webkit-border-radius: 6px;
@@ -8774,7 +8737,7 @@ a.tabledrag-handle .handle {
   color: white;
 }
 
-/* line 1945, ../sass/custom.scss */
+/* line 1910, ../sass/custom.scss */
 #sbac-resource-submit-resource-form #edit-cancel-overlay {
   margin-left: 250px;
 }
@@ -8782,7 +8745,7 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
   Textify
   ------------------------------------------  */
-/* line 1954, ../sass/custom.scss */
+/* line 1919, ../sass/custom.scss */
 .textify_arrows a.arrow {
   border: none;
   background: url("../../../libraries/flexslider/images/bg_direction_nav.png") left center;
@@ -8803,28 +8766,28 @@ a.tabledrag-handle .handle {
   -o-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
 }
-/* line 1964, ../sass/custom.scss */
+/* line 1929, ../sass/custom.scss */
 .textify_arrows a.arrow.right {
   border: none;
   background-position: right center;
 }
-/* line 1969, ../sass/custom.scss */
+/* line 1934, ../sass/custom.scss */
 .textify_arrows a.arrow:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
-/* line 1973, ../sass/custom.scss */
+/* line 1938, ../sass/custom.scss */
 .textify_arrows a.arrow.disable {
   display: block;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   opacity: 0.3;
 }
 
-/* line 1980, ../sass/custom.scss */
+/* line 1945, ../sass/custom.scss */
 .textify {
   font-size: 14px;
 }
-/* line 1981, ../sass/custom.scss */
+/* line 1946, ../sass/custom.scss */
 .textify .textify_nav ul li {
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
@@ -8836,11 +8799,11 @@ a.tabledrag-handle .handle {
   width: 11px;
   height: 11px;
 }
-/* line 1988, ../sass/custom.scss */
+/* line 1953, ../sass/custom.scss */
 .textify .textify_nav ul li.selected, .textify .textify_nav ul li:hover {
   background: rgba(0, 0, 0, 0.5);
 }
-/* line 1994, ../sass/custom.scss */
+/* line 1959, ../sass/custom.scss */
 .textify p {
   font-size: 14px;
 }
@@ -8848,12 +8811,12 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Legal
    ----------------------------------------- */
-/* line 2003, ../sass/custom.scss */
+/* line 1968, ../sass/custom.scss */
 #terms-and-conditions-body {
   clear: both;
 }
 
-/* line 2007, ../sass/custom.scss */
+/* line 1972, ../sass/custom.scss */
 .terms {
   max-height: 400px;
   overflow-y: auto;
@@ -8862,14 +8825,14 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Admin Theme Fixes
    ----------------------------------------- */
-/* line 2018, ../sass/custom.scss */
+/* line 1983, ../sass/custom.scss */
 .page-admin-structure-views .views-display-top button {
   margin: 1px 0 0;
   padding: 0.4375em 0.625em;
   font-size: 0.75em;
   font-weight: normal;
 }
-/* line 2026, ../sass/custom.scss */
+/* line 1991, ../sass/custom.scss */
 .page-admin-structure-views .label {
   background-color: #fff;
   color: #000;
@@ -8878,13 +8841,13 @@ a.tabledrag-handle .handle {
 }
 
 @media screen and (max-width: 768px) {
-  /* line 2035, ../sass/custom.scss */
+  /* line 2000, ../sass/custom.scss */
   h2 {
     font-size: inherit;
   }
 }
 /* Profile form on user page */
-/* line 2047, ../sass/custom.scss */
+/* line 2012, ../sass/custom.scss */
 .section-container.auto > section.active #user-profile-form .form-item-name,
 .section-container.auto > section.active #user-profile-form .form-item-current-pass,
 .section-container.auto > section.active #user-profile-form .form-item-pass,
@@ -8893,14 +8856,14 @@ a.tabledrag-handle .handle {
   display: none;
 }
 
-/* line 2054, ../sass/custom.scss */
+/* line 2019, ../sass/custom.scss */
 .page-admin-structure-types-manage-resource .description {
   margin-bottom: 2.5em;
   margin-top: 1em;
   font-size: 0.75em;
   line-height: 1.125em;
 }
-/* line 2061, ../sass/custom.scss */
+/* line 2026, ../sass/custom.scss */
 .page-admin-structure-types-manage-resource .filter-wrapper {
   display: none;
 }
@@ -8908,37 +8871,37 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Feedback block
    ----------------------------------------- */
-/* line 2069, ../sass/custom.scss */
+/* line 2034, ../sass/custom.scss */
 #feedback-dropdown {
   display: none;
   right: 100px;
   left: auto !important;
   color: #333;
 }
-/* line 2074, ../sass/custom.scss */
+/* line 2039, ../sass/custom.scss */
 #feedback-dropdown.open {
   top: 50px !important;
   right: 100px;
   left: auto !important;
   display: block;
 }
-/* line 2081, ../sass/custom.scss */
+/* line 2046, ../sass/custom.scss */
 #feedback-dropdown:before {
   right: 15px;
   left: auto!important;
 }
-/* line 2086, ../sass/custom.scss */
+/* line 2051, ../sass/custom.scss */
 #feedback-dropdown:after {
   right: 14px;
   left: auto !important;
 }
-/* line 2093, ../sass/custom.scss */
+/* line 2058, ../sass/custom.scss */
 #feedback-dropdown a {
   color: #0085AD;
   padding: 0;
   word-wrap: break-word;
 }
-/* line 2099, ../sass/custom.scss */
+/* line 2064, ../sass/custom.scss */
 #feedback-dropdown#disable-feedback {
   cursor: pointer;
 }
@@ -8946,7 +8909,7 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Help topics styles
    ----------------------------------------- */
-/* line 2107, ../sass/custom.scss */
+/* line 2072, ../sass/custom.scss */
 #views-form-help-topics-page-4 .views-field-nid-1 a {
   /*  background: white;
     padding: 5px;
@@ -8964,7 +8927,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-/* line 2124, ../sass/custom.scss */
+/* line 2089, ../sass/custom.scss */
 #views-form-help-topics-page-4 .views-field-nid-1 a:hover {
   -webkit-transition: all 500ms ease;
   -moz-transition: all 500ms ease;
@@ -8975,18 +8938,18 @@ a.tabledrag-handle .handle {
   color: white;
 }
 
-/* line 2134, ../sass/custom.scss */
+/* line 2099, ../sass/custom.scss */
 #views-form-help-topics-page-4 .views-field-nid-1 a:focus {
   background: #bfd8e5;
 }
 
-/* line 2139, ../sass/custom.scss */
+/* line 2104, ../sass/custom.scss */
 #views-form-help-topics-page-4,
 #views-form-help-topics-page-2 {
   margin-bottom: 50px;
 }
 
-/* line 2144, ../sass/custom.scss */
+/* line 2109, ../sass/custom.scss */
 .help-topic-link,
 .welcome-tutorial-topic-link {
   /*  background: none repeat scroll 0 0 #DDDDDD;
@@ -9006,7 +8969,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-/* line 2163, ../sass/custom.scss */
+/* line 2128, ../sass/custom.scss */
 .help-topic-link:hover,
 .welcome-tutorial-topic-link:hover {
   -webkit-transition: all 500ms ease;
@@ -9018,14 +8981,14 @@ a.tabledrag-handle .handle {
   color: white;
 }
 
-/* line 2174, ../sass/custom.scss */
+/* line 2139, ../sass/custom.scss */
 .help-topic-link:focus,
 .welcome-tutorial-topic-link:focus {
   background: #bfd8e5;
   color: #006298;
 }
 
-/* line 2180, ../sass/custom.scss */
+/* line 2145, ../sass/custom.scss */
 .page-welcome-tutorial-topics .help-topic-link,
 .page-help-topics .help-topic-link {
   top: 10px;
@@ -9033,14 +8996,14 @@ a.tabledrag-handle .handle {
   right: 10px;
 }
 
-/* line 2186, ../sass/custom.scss */
+/* line 2151, ../sass/custom.scss */
 .view-id-help_topics .help-topic-link1 {
   position: absolute;
   right: 10px;
   top: 10px;
 }
 
-/* line 2194, ../sass/custom.scss */
+/* line 2159, ../sass/custom.scss */
 .view-id-help_topics .help-topic-link2,
 .welcome-tutorial-topic-link {
   bottom: 20px;
@@ -9048,7 +9011,7 @@ a.tabledrag-handle .handle {
   right: 150px;
 }
 
-/* line 2201, ../sass/custom.scss */
+/* line 2166, ../sass/custom.scss */
 .view-id-help_topics #edit-submit,
 .view-id-help_topics #edit-submit--2 {
   position: absolute;
@@ -9056,25 +9019,25 @@ a.tabledrag-handle .handle {
   bottom: 0px;
 }
 
-/* line 2208, ../sass/custom.scss */
+/* line 2173, ../sass/custom.scss */
 #views-form-help-topics-page-2 .tabledrag-toggle-weight,
 #views-form-help-topics-page-4 .tabledrag-toggle-weight {
   display: none;
 }
 
-/* line 2213, ../sass/custom.scss */
+/* line 2178, ../sass/custom.scss */
 #draggableviews-table-help_topics-page_2,
 #draggableviews-table-help_topics-page_4 {
   width: 100%;
 }
 
-/* line 2217, ../sass/custom.scss */
+/* line 2182, ../sass/custom.scss */
 .view-help-topics ul li.views-row {
   list-style: none;
   margin-bottom: 20px;
 }
 
-/* line 2222, ../sass/custom.scss */
+/* line 2187, ../sass/custom.scss */
 .view-help-topics ul li .views-field-title {
   display: block;
   font-size: 18px;
@@ -9082,24 +9045,24 @@ a.tabledrag-handle .handle {
   color: #42a747;
 }
 
-/* line 2230, ../sass/custom.scss */
+/* line 2195, ../sass/custom.scss */
 .view-help-topics ul li .views-field-body p {
   font-size: 15px;
 }
 
-/* line 2235, ../sass/custom.scss */
+/* line 2200, ../sass/custom.scss */
 .view-help-topics ul li .views-field-field-summary {
   margin-bottom: 20px;
 }
 
-/* line 2239, ../sass/custom.scss */
+/* line 2204, ../sass/custom.scss */
 .page-help-topics h1#page-title {
   margin-bottom: 20px;
   margin-top: 30px;
   padding-left: 22px;
 }
 
-/* line 2245, ../sass/custom.scss */
+/* line 2210, ../sass/custom.scss */
 #admin-welcome-tab-message {
   padding: 10px;
   background: #ddd;
@@ -9107,13 +9070,13 @@ a.tabledrag-handle .handle {
   margin-bottom: 20px;
 }
 
-/* line 2252, ../sass/custom.scss */
+/* line 2217, ../sass/custom.scss */
 #draggableviews-table-help_topics-page_4 .views-field-nid-1 {
   text-align: center;
   width: 200px;
 }
 
-/* line 2257, ../sass/custom.scss */
+/* line 2222, ../sass/custom.scss */
 #draggableviews-table-help_topics-page_2 .views-field-status, #draggableviews-table-help_topics-page_4 .views-field-status, #draggableviews-table-help_topics-page_2 .views-field-fields-combine {
   text-align: center;
 }
@@ -9121,7 +9084,7 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    Login text styles
    ----------------------------------------- */
-/* line 2264, ../sass/custom.scss */
+/* line 2229, ../sass/custom.scss */
 .login-text {
   padding-left: 50px;
 }
@@ -9129,7 +9092,7 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Read More
   _________________________________________ */
-/* line 2271, ../sass/custom.scss */
+/* line 2236, ../sass/custom.scss */
 .read-more {
   display: inline-block;
   cursor: pointer;
@@ -9137,11 +9100,11 @@ a.tabledrag-handle .handle {
   width: 16px;
   height: 15px;
 }
-/* line 2278, ../sass/custom.scss */
+/* line 2243, ../sass/custom.scss */
 .read-more a {
   display: block;
 }
-/* line 2282, ../sass/custom.scss */
+/* line 2247, ../sass/custom.scss */
 .read-more .description-hover {
   display: none;
   transition-property: opacity;
@@ -9160,18 +9123,18 @@ a.tabledrag-handle .handle {
   z-index: 999;
   border: 1px solid #3C7646;
 }
-/* line 2283, ../sass/custom.scss */
+/* line 2248, ../sass/custom.scss */
 .read-more .description-hover .description-content {
   max-height: 200px;
   overflow-y: auto;
   padding: 20px;
 }
-/* line 2306, ../sass/custom.scss */
+/* line 2271, ../sass/custom.scss */
 .read-more .description-hover p {
   font-size: inherit;
   margin: 0;
 }
-/* line 2311, ../sass/custom.scss */
+/* line 2276, ../sass/custom.scss */
 .read-more .description-hover:after {
   content: ' ';
   position: absolute;
@@ -9184,7 +9147,7 @@ a.tabledrag-handle .handle {
   height: 0;
   z-index: 99;
 }
-/* line 2323, ../sass/custom.scss */
+/* line 2288, ../sass/custom.scss */
 .read-more .description-hover:before {
   content: ' ';
   position: absolute;
@@ -9197,7 +9160,7 @@ a.tabledrag-handle .handle {
   height: 0;
   z-index: 97;
 }
-/* line 2338, ../sass/custom.scss */
+/* line 2303, ../sass/custom.scss */
 .read-more:hover .more {
   display: block;
 }
@@ -9205,7 +9168,7 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Read More - JS
   _________________________________________ */
-/* line 2347, ../sass/custom.scss */
+/* line 2312, ../sass/custom.scss */
 .more-link {
   padding: 0 3px;
 }
@@ -9213,27 +9176,27 @@ a.tabledrag-handle .handle {
 /**
  Help Topic
  **/
-/* line 2356, ../sass/custom.scss */
+/* line 2321, ../sass/custom.scss */
 .node-help-page p {
   font-size: inherit;
 }
-/* line 2360, ../sass/custom.scss */
+/* line 2325, ../sass/custom.scss */
 .node-help-page ul.inline {
   margin: 0;
   padding: 0;
 }
-/* line 2364, ../sass/custom.scss */
+/* line 2329, ../sass/custom.scss */
 .node-help-page ul.inline li {
   display: inline-block;
   margin: 0;
   padding: 0 10px 0 5px;
   border-right: 1px solid #ccc;
 }
-/* line 2370, ../sass/custom.scss */
+/* line 2335, ../sass/custom.scss */
 .node-help-page ul.inline li:last-child {
   border-right: none;
 }
-/* line 2374, ../sass/custom.scss */
+/* line 2339, ../sass/custom.scss */
 .node-help-page ul.inline li:first-child {
   padding-left: 0;
 }
@@ -9241,12 +9204,12 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Taxonomy tool tips
   _________________________________________ */
-/* line 2384, ../sass/custom.scss */
+/* line 2349, ../sass/custom.scss */
 .view-mode-tooltip {
   display: inline-block;
   position: relative;
 }
-/* line 2389, ../sass/custom.scss */
+/* line 2354, ../sass/custom.scss */
 .view-mode-tooltip:hover .taxonomy-term-description {
   background: #DFE5CC;
   border: 1px solid #3C7646;
@@ -9267,17 +9230,17 @@ a.tabledrag-handle .handle {
   width: 272px;
   z-index: 999;
 }
-/* line 2411, ../sass/custom.scss */
+/* line 2376, ../sass/custom.scss */
 .view-mode-tooltip .taxonomy-term-description {
   display: none;
   opacity: 0;
 }
-/* line 2415, ../sass/custom.scss */
+/* line 2380, ../sass/custom.scss */
 .view-mode-tooltip .taxonomy-term-description p {
   font-size: inherit;
   margin: 0;
 }
-/* line 2420, ../sass/custom.scss */
+/* line 2385, ../sass/custom.scss */
 .view-mode-tooltip .taxonomy-term-description:after {
   content: ' ';
   position: absolute;
@@ -9290,7 +9253,7 @@ a.tabledrag-handle .handle {
   height: 0;
   z-index: 99;
 }
-/* line 2433, ../sass/custom.scss */
+/* line 2398, ../sass/custom.scss */
 .view-mode-tooltip .taxonomy-term-description:before {
   content: ' ';
   position: absolute;
@@ -9307,11 +9270,11 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Taxonomy tool tips
   _________________________________________ */
-/* line 2452, ../sass/custom.scss */
+/* line 2417, ../sass/custom.scss */
 .maintenance-page #header {
   display: none;
 }
-/* line 2456, ../sass/custom.scss */
+/* line 2421, ../sass/custom.scss */
 .maintenance-page #content {
   font-size: 1.2em;
   max-width: 660px;
@@ -9329,11 +9292,11 @@ a.tabledrag-handle .handle {
   -moz-box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.4), inset 2px 0px 1px rgba(255, 255, 255, 0);
   box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.4), inset 2px 0px 1px rgba(255, 255, 255, 0);
 }
-/* line 2467, ../sass/custom.scss */
+/* line 2432, ../sass/custom.scss */
 .maintenance-page #content h2 {
   color: inherit;
 }
-/* line 2472, ../sass/custom.scss */
+/* line 2437, ../sass/custom.scss */
 .maintenance-page #page-title {
   display: none;
 }
@@ -9341,15 +9304,15 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Read More - custom
   _________________________________________ */
-/* line 2480, ../sass/custom.scss */
+/* line 2445, ../sass/custom.scss */
 .more-less {
   display: none;
 }
-/* line 2483, ../sass/custom.scss */
+/* line 2448, ../sass/custom.scss */
 .more-less.active {
   display: block;
 }
-/* line 2487, ../sass/custom.scss */
+/* line 2452, ../sass/custom.scss */
 .more-less .more, .more-less .less {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
@@ -9365,12 +9328,12 @@ a.tabledrag-handle .handle {
 }
 
 /** Start Review Modal **/
-/* line 2502, ../sass/custom.scss */
+/* line 2467, ../sass/custom.scss */
 .gate-keeper-modal-intro {
   margin-bottom: 20px;
 }
 
-/* line 2509, ../sass/custom.scss */
+/* line 2474, ../sass/custom.scss */
 #dialog-feedback_qc_form-wrapper button,
 #dialog-feedback_post_form-wrapper button {
   float: right;
@@ -9378,8 +9341,23 @@ a.tabledrag-handle .handle {
   background: #2aa549;
 }
 
-/* line 2516, ../sass/custom.scss */
+/* line 2481, ../sass/custom.scss */
 #edit-submit--3 {
   color: white;
   background: #2aa549;
+}
+
+/** --------------------------------------------
+  People Page
+  ______________________________________________ **/
+/* line 2492, ../sass/custom.scss */
+#sbac-user-admin-account .chzn-drop {
+  width: 858px;
+  background-color: white;
+}
+/* line 2496, ../sass/custom.scss */
+#sbac-user-admin-account .chzn-drop input {
+  background-repeat: no-repeat !important;
+  background-size: 67px 45px !important;
+  background-position: right -25px !important;
 }
