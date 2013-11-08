@@ -223,7 +223,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
    	if ($is_edit_page !== FALSE) {
  	  $form['field_first_name']['#disabled'] = TRUE;
       $form['field_last_name']['#disabled'] = TRUE;
-      $form['account']['mail']['#disabled'] = TRUE; // primary email address
+      // $form['account']['mail']['#disabled'] = TRUE; // primary email address
       $form['field_alternate_email_address']['#disabled'] = TRUE;
       $form['field_district_name']['#disabled'] = TRUE;
       $form['field_school_name']['#disabled'] = TRUE;
