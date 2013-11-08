@@ -77,7 +77,7 @@ function sbac_csv_report_resource_stats_form_validate($form, &$form_state)
   }
 }
 
-/*
+/**
  * Submit to do the export for the detailed resource statistics csv report.
  */
 function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
@@ -85,6 +85,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
   // State.
   $resource_filters = array();
   if ($form_state) {
+    /**
+     * Local function to filter out resources that don't match a criteria
+     */
     function set_resource_filter(&$resource_filters, $key, $form_value, $all_values)
     {
       if (in_array('0', $form_value)) { // all.
@@ -122,7 +125,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state)
   // _cex exits and does not return.
 }
 
-/*
+/**
  * Query for a taxonomy term given an sql string, add 'All' to the query result.  Used for dropdowns on the
  * detailed resource stats csv report.
  */
@@ -138,9 +141,8 @@ function query_taxonomy_term($sql)
   return $values;
 }
 
-/*
+/**
  * Resource Type Dropdown options extracted from the taxonomy table.
- *
  */
 function sbac_report_resource_type_options()
 {
@@ -149,7 +151,7 @@ function sbac_report_resource_type_options()
   return query_taxonomy_term($sql);
 }
 
-/*
+/**
  * Default options for the resource type option list
  */
 function sbac_report_default_resource_type_option()
@@ -157,9 +159,8 @@ function sbac_report_default_resource_type_option()
   return 0;
 }
 
-/*
+/**
  * Resource Status Dropdown options extracted from the taxonomy table.
- *
  */
 function sbac_report_resource_status_options()
 {
@@ -169,7 +170,7 @@ function sbac_report_resource_status_options()
   return query_taxonomy_term($sql);
 }
 
-/*
+/**
  * Default options for the resource status option list
  */
 function sbac_report_default_resource_status_option()
@@ -177,9 +178,8 @@ function sbac_report_default_resource_status_option()
   return 0;
 }
 
-/*
+/**
  * Resource Subject Dropdown options extracted from the taxonomy table.
- *
  */
 function sbac_report_resource_subject_options()
 {
@@ -192,7 +192,7 @@ function sbac_report_resource_subject_options()
   return $values;
 }
 
-/*
+/**
  * Default options for the resource subject option list
  */
 function sbac_report_default_resource_subject_option()
@@ -200,7 +200,7 @@ function sbac_report_default_resource_subject_option()
   return 0;
 }
 
-/*
+/**
  * Resource Grade Dropdown options extracted from the taxonomy table.
  */
 function sbac_report_resource_grade_options()
@@ -214,7 +214,7 @@ function sbac_report_resource_grade_options()
   return $values;
 }
 
-/*
+/**
  * Default options for the resource grade option list
  */
 function sbac_report_default_resource_grade_option()
@@ -222,7 +222,7 @@ function sbac_report_default_resource_grade_option()
   return 0;
 }
 
-/*
+/**
  * Resource Attribute Dropdown options extracted from the taxonomy table.
  */
 function sbac_report_resource_attribute_options()
@@ -235,7 +235,7 @@ function sbac_report_resource_attribute_options()
   return $values;
 }
 
-/*
+/**
  * Default options for the resource attributes option list
  */
 function sbac_report_default_resource_attribute_option()
@@ -243,7 +243,7 @@ function sbac_report_default_resource_attribute_option()
   return 0;
 }
 
-/*
+/**
  * This routine builds the detailed resource statistics csv report.  It uses other routines to get the data,
  * and format the report.  It returns the report as a string to the caller.  It takes as input the filters
  * from the front end form selector with five filter parameters: type, status, grade, attribute, and grade.
@@ -277,25 +277,63 @@ function build_resource_stats_csv($resource_filters)
   return $file_data;
 }
 
-/*
+/**
  * Get the resources from the node table using five constraints: type, status, grade, attribute, and grade.
  * Returns an array of node ids to the resources.
  */
 function get_resources($resource_filters)
 {
+  /**
+   * Helper function to add a field condition based on a filter.   Resources that don't match the query criteria
+   * are included in the query result.
+   *
+   * @param $entities
+   * @param $resource_filter
+   * @param $field
+   */
   function set_field_condition_niether_filter(&$entities, $resource_filter, $field)
   {
-    if ($resource_filter[1]) {
+    if (array_key_exists(1,$resource_filter)) {
       unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
       $entities->fieldCondition($field, 'tid', array_keys($resource_filter), 'NOT IN');
     }
   }
 
-  function set_field_condition_filter(&$entities, $resource_filter, $field)
+  /**
+   * Helper function to add a field condition based on a filter.  Uses a list of filter values to define an inclusive
+   * filter where a resource with any of the given attributes is included in the query result.
+   *
+   * @param $entities
+   * @param $resource_filter
+   * @param $field
+   */
+  function set_field_condition_filter_additive(&$entities, $resource_filter, $field)
   {
-    if (!$resource_filter[0] && $resource_filter[1]) {
-      unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+    if (!array_key_exists(0,$resource_filter)) {
+      if (array_key_exists(1,$resource_filter)) {
+        unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+      }
       $entities->fieldCondition($field, 'tid', array_keys($resource_filter));
+    }
+  }
+
+  /**
+   * Helper function to add a field condition based on a filter.  Uses each filter in the list to narrow the selection
+   * of the resource.  I.E the resource must have all attributes to be include in the result set.
+   *
+   * @param $entities
+   * @param $resource_filter
+   * @param $field
+   */
+  function set_field_condition_filter_restrictive(&$entities, $resource_filter, $field)
+  {
+    if (!array_key_exists(0,$resource_filter)) {
+      if (array_key_exists(1,$resource_filter)) {
+        unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+      }
+      foreach($resource_filter as $key => $filter) {
+        $entities->fieldCondition($field, 'tid', $key, '=');
+      }
     }
   }
 
@@ -304,34 +342,39 @@ function get_resources($resource_filters)
     ->entityCondition('bundle', 'resource')
     ->propertyCondition('status', 1)
     ->fieldCondition('field_focus', 'tid', array_keys($resource_filters['types']));
-  // this field doesn't work:
+  // this field doesn't work because it's not a taxonomy term:
   //   ->fieldCondition('field_resource_state', 'tid', array_keys($resource_filters['status']));
   //set_field_condition_filter($entities, $resource_filters['status'], 'field_resource_state');
-  set_field_condition_filter($entities, $resource_filters['subject'], 'field_subject');
-  set_field_condition_filter($entities, $resource_filters['grade'], 'field_grades');
-  set_field_condition_filter($entities, $resource_filters['attribute'], 'field_attributes');
+  set_field_condition_filter_restrictive($entities, $resource_filters['subject'], 'field_subject');
+  set_field_condition_filter_restrictive($entities, $resource_filters['grade'], 'field_grades');
+  set_field_condition_filter_restrictive($entities, $resource_filters['attribute'], 'field_attributes');
   $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
     ->execute();
+  $nids = array();
   if (array_key_exists('node', $entities) and $entities['node']) {
     $nids = array_keys($entities['node']);
   }
-  // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
-  if ($resource_filters['subject'][1] || $resource_filters['grade'][1] || $resource_filters['attribute'][1]) {
-    $entities = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'resource')
-      ->propertyCondition('status', 1);
-    set_field_condition_niether_filter($entities, $resource_filters['subject'], 'field_subject');
-    set_field_condition_niether_filter($entities, $resource_filters['grade'], 'field_grades');
-    set_field_condition_niether_filter($entities, $resource_filters['attribute'], 'field_attributes');
+ // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
+ if ($resource_filters['subject'][1] || $resource_filters['grade'][1] || $resource_filters['attribute'][1]) {
+   $entities = $query->entityCondition('entity_type', 'node')
+     ->entityCondition('bundle', 'resource')
+     ->propertyCondition('status', 1);
+   set_field_condition_niether_filter($entities, $resource_filters['subject'], 'field_subject');
+   set_field_condition_niether_filter($entities, $resource_filters['grade'], 'field_grades');
+   set_field_condition_niether_filter($entities, $resource_filters['attribute'], 'field_attributes');
 
-    $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-      ->execute();
-    if (array_key_exists('node', $entities) and $entities['node']) {
-      $nids = array_merge($nids, $entities['node']);
-    }
-  }
+   $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+     ->execute();
+
+   if (array_key_exists('node', $entities) and $entities['node']) {
+     $nids = array_merge($nids, $entities['node']);
+   }
+ }
   $nodes = node_load_multiple($nids);
   $nodes = fitler_resource_status($nodes, $resource_filters['status']);
+  // $nodes = filter_resource_on_field($nodes, 'field_subject', $resource_filters['subject']);
+  // $nodes = filter_resource_on_field($nodes, 'field_grades', $resource_filters['grade']);
+  // $nodes = filter_resource_on_field($nodes, 'field_attributes', $resource_filters['attribute']);
 
   $wrappers = array();
   foreach ($nodes as $key => $value) {
@@ -340,6 +383,44 @@ function get_resources($resource_filters)
   return $wrappers;
 }
 
+/**
+ * Remove resources from the list that don't match a criteria in the fitler_values.
+ * @param $nodes
+ *   The list that get's paired down.
+ * @param $field
+ *   Which field in the object to compare against the filter.  The objects are in the list.
+ * @param $filter_values
+ *   criteria for the filter.
+ * @return array
+ */
+function filter_resource_on_field($nodes, $field, $filter_values)
+{
+  if (array_key_exists(0,$filter_values)) {
+    return $nodes;
+  }
+  $filtered_nodes = array();
+  if (array_key_exists(1, $filter_values)) { // not yet assigned
+    foreach ($nodes as $key => $node) {
+      if (!$node->{$field}) {
+        $filtered_nodes[$key] = $node;
+      }
+    }
+  }
+
+  foreach ($nodes as $key => $node) {
+    if (in_array($node->{$field}, $filter_values)) {
+      $filtered_nodes[$key] = $node;
+    }
+  }
+  return $filtered_nodes;
+}
+
+/**
+ * Filter out resources based on the workbench moderation history's status.
+ * @param $nodes
+ * @param $statuses
+ * @return array
+ */
 function fitler_resource_status($nodes, $statuses) {
 
   if (array_key_exists(0,$statuses)) {
@@ -354,8 +435,11 @@ function fitler_resource_status($nodes, $statuses) {
   return $filtered_nodes;
 }
 
-/*
+/**
  * Get the entities related to resource nodes (review, feedback, etc).
+ * @param $resources
+ * @param $entity_type
+ * @return array
  */
 function get_entities_for_resources($resources, $entity_type)
 {
@@ -369,6 +453,9 @@ function get_entities_for_resources($resources, $entity_type)
   $wrappers = array();
 
   foreach ($values as $value) {
+    if ($value->status==='0') {
+      continue;
+    }
     $wrapper = entity_metadata_wrapper($entity_type, $value);
     $node_id = $wrapper->node_id->value();
     if ($wrapper and $node_id) {
@@ -388,7 +475,7 @@ function get_entities_for_resources($resources, $entity_type)
         }
       }
       else if ($value->type=='post') {
-        $wrappers[$node_id][$value->type] = $wrapper; 
+        $wrappers[$node_id][$value->type] = $wrapper;
       }
       else if ($value->type=='gate_keeper') {
         $wrappers[$node_id][$value->type] = $wrapper;
@@ -398,6 +485,11 @@ function get_entities_for_resources($resources, $entity_type)
   return $wrappers;
 }
 
+/**
+ * A query to get a resource's workbench moderation history (wbmh).  Gets the wbmh for multiple resources.
+ * @param $resources
+ * @return array
+ */
 function get_workbench_moderation_history($resources)
 {
   $query = <<<SQL
@@ -428,9 +520,7 @@ SQL;
   return $values;
 }
 
-/*
- *  get_users_for_resources_stats_report($resources)
- *
+/**
  *  Get the four different users involved in creating and reviewing a resource:
  *   Author/Contributor
  *   Reviewer 1
@@ -471,9 +561,9 @@ SQL;
   foreach ($feedback_reviews as $reviews) {
     foreach ($reviews as $review) {
       try {
-        $value = $review->uid->value(); /// get's the actual user.
-        $value = entity_metadata_wrapper('user', $value);
-        $reviewers[$value->uid->value()] = $value;
+        $uid = $review->uid->value(); /// get's the actual user.
+        $value = entity_metadata_wrapper('user', $uid);
+        $reviewers[$uid] = $value;
       } catch (EntityMetadataWrapperException $e) {
         print $e->getMessage();
       }
@@ -481,11 +571,22 @@ SQL;
   }
   return array($authors, $reviewers);
 }
-/*
- * Takes a list of node ids.
+
+/**
+ * Takes a list of node ids for resources, retrieves various things about each resource in the list.
+ * @param $nodes
+ * @param $data
  */
 function get_counts_for_resource_stats($nodes, &$data)
 {
+  /**
+   * Query helper function for nodes.
+   * @param $sql_template
+   * @param $nodes
+   *   A list of ids to be queried for.
+   * @param bool $merge_necessary
+   * @return array
+   */
   function count_with_nodes_query($sql_template, $nodes, $merge_necessary=true)//$parameters=null)
   {
     // done this way because the prepared statement didn't work passing array or comma separated string.
@@ -550,13 +651,19 @@ function get_counts_for_resource_stats($nodes, &$data)
 
   $data['ease_use_rating_average'] = count_with_nodes_query($sql, $nodes, false);
 
+  # number of reviews per resource
+  $sql = "select node_id as nid, count(node_id) as total_reviews From eck_feedback where status = 1 group by node_id";
+  $data['total_reviews_per_node'] = count_with_nodes_query($sql, $nodes, false);
+
 }
 
-/*
+/**
  * Creates the resource report given a list of node ids.
- *
  * @param $data: queried data for the report.  Values will be pulled from this array based on the configured columns.
- *
+ * @param $report_configuration
+ * @param string $primary_data_source
+ * @param string $primary_data_key
+ * @return string
  */
 function create_resource_stats_from_data($data, $report_configuration, $primary_data_source='resource_nodes', $primary_data_key='nid')
 {
@@ -617,26 +724,36 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
   return $csv;
 }
 
+/**
+ *   Here is where the Resource Detail Statistics Report is defined.  The array created here defines where to find
+ * the data for each column of the report within the queried data.
+ *
+ * @return array
+ */
+
 function set_report_columns()
 {
-  function get_custom_feedback($fieldkey, $data)
-  {
-    return 'Hi';
-  }
-  function get_total_tags($fieldkey, $data)
+  /**
+   * Calculates the total number of tags applied to a given resource node.
+   * @param $fieldkey
+   * @param $data
+   * @param $resource
+   * @return string
+   */
+  function get_total_tags($fieldkey, $data, $resource)
   {
     // count of these fields:
 
-    $count = count($data->field_grades->value());
-    $count += count($data->field_subject->value());
-    $count += count($data->field_intended_end_user->value());
-    $count += count($data->field_intended_student->value());
-    $count += count($data->field_geographical_settings->value());
-    $count += count($data->field_smarter_balanced_keyword->value());
-    $count += count($data->field_digital_media_type->value());
-    $count += count($data->field_educational_use->value());
-    $count += count($data->field_classroom_technologies->value());
-    $count += count($data->field_alignment_tags->value());
+    $count = count($resource->field_grades->value());
+    $count += count($resource->field_subject->value());
+    $count += count($resource->field_intended_end_user->value());
+    $count += count($resource->field_intended_student->value());
+    $count += count($resource->field_geographical_settings->value());
+    $count += count($resource->field_smarter_balanced_keyword->value());
+    $count += count($resource->field_digital_media_type->value());
+    $count += count($resource->field_educational_use->value());
+    $count += count($resource->field_classroom_technologies->value());
+    $count += count($resource->field_alignment_tags->value());
 
     return "$count";
   }
@@ -655,10 +772,12 @@ function set_report_columns()
           array('field_success_criteria', 'Success Criteria'),
           array('field_supporting_evidence', 'Supporting Evidence'),
           array('field_principles', 'Principles Literature or Research'),
-          array('field_license', 'Specific License'),
+          array('field_license', 'Specific License','accessor'=>'label'),
+          array('field_license_secondary', 'Secondary License','accessor'=>'label'),
 
+          array('foreign', 'License URL', 'field' => 'description',
+            'foreignkey' => array('field_license', '', 'accessor'=>'value'),),
           array('field_student_agency', 'Student Engagement in the Formative Process'),
-
 
           // property keys:
           array('title', 'Title'), //title
@@ -678,10 +797,11 @@ function set_report_columns()
           array('field_digital_media_type', 'Media Type(s)'),
           array('field_educational_use', 'Educational Use'),
           array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
-          array('field_alignment_tags', 'Common Core State Standards?'),
-
+          array('field_alignment_term', 'Common Core State Standards', 'accessor' => 'label'),
+          array('foreign', 'Common Core State Standards', 'field' => 'description',
+              'foreignkey' => array('field_alignment_term', '', 'accessor'=>'value'),),
+          // non-wrapper fields:
           array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',),),
-
           // Gate Keeper
           array('created', 'Gate-Keeper Approval Date', 'datasource' => 'resource_feedback', 'index' => 'gate_keeper', 'fieldtype' => 'date',), // gk
           array('stamp', 'Return Date', 'datasource' => 'return_date', 'fieldtype' => 'date','not_wrapper' => true), // gk
@@ -705,6 +825,9 @@ function set_report_columns()
           array('field_to_reviewer_3', 'Poster Comment to Reviewer 3', 'datasource' => 'resource_feedback', 'index' => 'post'),
           array('field_to_contributor', 'Poster Comment to Contributor', 'datasource' => 'resource_feedback', 'index' => 'post'),
           array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
+
+          // total reivews.
+          array('total_reviews', 'Total Reviews', 'datasource' => 'total_reviews_per_node', 'not_wrapper' => true), // gk
 
           // users info
           array('foreign', 'Reviewer 1 Name', 'field' => array(array('field_first_name', 'und', 0, 'value',), array('field_last_name', 'und', 0, 'value',),),
@@ -757,7 +880,6 @@ function set_report_columns()
           array('field_special_populations', 'Contributor Student Population(s)',
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
-
           array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => true), // gk
           array('average', 'Current Student Learning Rating', 'datasource' => 'student_learning_rating_average', 'not_wrapper' => true), // gk
           array('average', 'Current Professional Development Rating', 'datasource' => 'pro_dev_rating_average', 'not_wrapper' => true), // gk

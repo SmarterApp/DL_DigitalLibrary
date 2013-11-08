@@ -15,6 +15,9 @@ sites/all/themes/SBAC/.sass-cache/
 #ignore php storm system files
 .idea/
 
+# phpstorm project specific settings
+atlassian-ide-plugin.xml
+
 #ignore eclipse system files
 .project
 .settings

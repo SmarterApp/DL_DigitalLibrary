@@ -120,10 +120,14 @@ function get_from_array_or_object($accessor,$value)
 function value_or_field($value, $field_in_object=null) {
   if (is_array($field_in_object)) {
     $return_value = '';
+//    if (array_key_exists(,'accessor',$field_in_object)) {
+//      return $value->{$field_in_object['accessor']}();
+//    }
     foreach ($field_in_object as $key => $field) {
       if ($key === 'separator') {
         $return_value .= $field;
       }
+
       else {
         if (is_array($field)) {
 
@@ -223,7 +227,7 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
   }
 
   if (array_key_exists('function', $fieldkey)) {
-    $value = $fieldkey['function']($fieldkey, $resource);
+    $value = $fieldkey['function']($fieldkey, $data, $resource);
   }
   else if (array_key_exists('path', $fieldkey) and is_array($fieldkey['path'])) {
     $value = $data[$fieldkey['datasource']][$resource->{$primary_key}->value()];
