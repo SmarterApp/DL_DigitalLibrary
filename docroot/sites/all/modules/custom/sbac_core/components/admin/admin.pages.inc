@@ -301,6 +301,28 @@ function sbac_user_admin_account() {
 }
 
 /**
+ * Submit the user administration update form.
+ */
+function sbac_user_admin_account_submit($form, &$form_state) {
+  $operations = module_invoke_all('user_operations', $form, $form_state);
+  $operation = $operations[$form_state['values']['operation']];
+  // Filter out unchecked accounts.
+  $accounts = array_filter($form_state['values']['accounts']);
+  if ($function = $operation['callback']) {
+    // Add in callback arguments if present.
+    if (isset($operation['callback arguments'])) {
+      $args = array_merge(array($accounts), $operation['callback arguments']);
+    }
+    else {
+      $args = array($accounts);
+    }
+    call_user_func_array($function, $args);
+
+    drupal_set_message(t('The update has been performed.'));
+  }
+}
+
+/**
  * Process result from user administration filter form.
  */
 function sbac_user_filter_form_submit($form, &$form_state) {
