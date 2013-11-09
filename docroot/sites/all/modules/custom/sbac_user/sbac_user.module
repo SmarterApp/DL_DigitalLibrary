@@ -689,7 +689,7 @@ function sbac_user_update(&$edit, $account, $category) {
   if (strpos($_GET['q'], 'user_import') === FALSE) {
     if ($category == 'account') {
       if (isset($edit['roles'])) {
-        node_access_rebuild();
+        // node_access_rebuild();
       }
     }
   }
