@@ -783,11 +783,17 @@ function sbac_user_user_login(&$edit, $account) {
   user_save($account, array());
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
-  if (!isset($user->data['disable_help'])) {
-    drupal_goto('user');
+  if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
   }
-  else {
-    drupal_goto('digital-library-resources');
+  else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
+  }
+  else{
+    if (!isset($user->data['disable_help'])) {
+      drupal_goto('user');
+    }
+    else {
+      drupal_goto('digital-library-resources');
+    }
   }
 }
 
