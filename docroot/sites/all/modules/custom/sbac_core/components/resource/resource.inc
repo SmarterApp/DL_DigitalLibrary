@@ -99,6 +99,15 @@ function resource_access($op, $node, $account = NULL) {
       return FALSE;
     }
 
+    // Specifc check, if its an HTML5 module and it's published, do not show GK tab.
+    if ($op == 'view gate keeper'
+      && isset($node->workbench_moderation['current']->state)
+      && $node->workbench_moderation['current']->state == 'published'
+      && isset($node->field_html5['und'][0]['value'])
+      && $node->field_html5['und'][0]['value']) {
+      return FALSE;
+    }
+
     if (in_array($op, array('view gate keeper', 'start gate keeper', 'edit gate keeper'))) {
       // read-only access
       // users can view the GK if:

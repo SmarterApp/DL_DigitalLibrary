@@ -223,7 +223,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
    	if ($is_edit_page !== FALSE) {
  	  $form['field_first_name']['#disabled'] = TRUE;
       $form['field_last_name']['#disabled'] = TRUE;
-      $form['account']['mail']['#disabled'] = TRUE; // primary email address
+      // $form['account']['mail']['#disabled'] = TRUE; // primary email address
       $form['field_alternate_email_address']['#disabled'] = TRUE;
       $form['field_district_name']['#disabled'] = TRUE;
       $form['field_school_name']['#disabled'] = TRUE;
@@ -689,7 +689,7 @@ function sbac_user_update(&$edit, $account, $category) {
   if (strpos($_GET['q'], 'user_import') === FALSE) {
     if ($category == 'account') {
       if (isset($edit['roles'])) {
-        node_access_rebuild();
+        // node_access_rebuild();
       }
     }
   }

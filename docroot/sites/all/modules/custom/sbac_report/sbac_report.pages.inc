@@ -480,15 +480,14 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
                             '%Y%m%d'
                           ) BETWEEN :from_date AND :to_date
 
-              -- remove rows where user created the GK, but didn't create the QC
               AND         IF ((gk.uid = :uid AND qc.uid != :uid), qc.id = NULL, 1)
 
               ORDER BY    review_date DESC
            ";
 
-  if ($display != -1) {
-    $query .= ' LIMIT ' . (int) $display;
-  }
+//  if ($display != -1) {
+//    $query .= ' LIMIT ' . (int) $display;
+//  }
 
   $result = db_query($query, array(
     ':uid' => (int) $uid,
@@ -500,6 +499,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
     $subheader,
   );
 
+  $count = 0;
   foreach ($result as $row) {
     $item = array();
 
@@ -676,6 +676,10 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
     );
 
     $rows[] = $item;
+    $count++;
+    if ($count == $display) {
+      break;
+    }
   }
 
   $output = theme('table', array(

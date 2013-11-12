@@ -108,6 +108,26 @@ function sbac_resource_menu() {
 }
 
 /**
+ * Implements hook_user_operations().
+ *
+ * @return mixed
+ */
+function sbac_resource_user_operations() {
+  $operations['sbac_resource_rebuild_permssions'] = array(
+    'label' => t('Rebuild User Permissions'),
+    'callback' => 'sbac_resource_rebuild_node_permissions',
+  );
+  return $operations;
+}
+
+/**
+ * Rebuilds the node access permissions.
+ */
+function sbac_resource_rebuild_node_permissions() {
+  node_access_rebuild(TRUE);
+}
+
+/**
  * Access callback for my resources menu item.
  *
  * @return bool
@@ -241,7 +261,6 @@ function _sbac_resource_preview_content(&$vars) {
     else if ($type == 'image') {
       $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400));
     }
-    // replace with theming functions, preprocess theme functions haven't been implemented (except for schooltube), although templates have been
     else if ($type == 'schooltube') {
       $viewer['viewer'] = '<div class="flex-video"><iframe width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>';
     }
