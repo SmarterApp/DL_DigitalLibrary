@@ -32,8 +32,21 @@ function sbac_report_individual() {
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
     $sne_details = sbac_report_build_sne_details($uid, $state_tid);
     if (!empty($sne_details)) {
-      $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
-      $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
+      $cs_view = views_get_view('contributed_resources');
+      $cs_view->set_display('resources_summary');
+      $cs_view->set_arguments(array($uid, $date_range));
+      $cs_view->pre_execute();
+      $cs_view->execute();
+      $contributed_summary = $cs_view->render();
+      $cs_view->destroy();
+
+      $cd_view = views_get_view('contributed_resources');
+      $cd_view->set_display('resources_details');
+      $cd_view->set_arguments(array($uid, $date_range));
+      $cd_view->pre_execute();
+      $cd_view->execute();
+      $contributed_details = $cd_view->render();
+      $cd_view->destroy();
 
       // Gate-Keeping Reviews.
       $name = sbac_report_get_session_value('sne', 'name');
@@ -350,7 +363,7 @@ SQL;
   foreach ($result as $record) {
     $first_name = $record->first_name;
     $last_name = $record->last_name;
-    $full_name = $first_name . ' ' . $last_name;
+    $full_name = trim($first_name) . ' ' . trim($last_name);
     $uid = $record->uid;
     if (!isset($matches[$full_name])) {
       $matches[$full_name] = '<span class="autocomplete-suggestion" data-uid="' . $uid . '">' . check_plain($full_name) . '</span>';
