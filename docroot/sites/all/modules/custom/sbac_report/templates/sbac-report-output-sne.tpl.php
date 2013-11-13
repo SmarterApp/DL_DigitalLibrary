@@ -47,7 +47,7 @@
                 <div>
                   <span class="title">Grades: </span>
                   <?php
-                    print implode(',', $user_output['grade_level']);
+                    print implode(', ', $user_output['grade_level']);
                   ?>
                 </div>
               </span>
@@ -60,7 +60,7 @@
                 <div>
                   <span class="title">Subjects: </span>
                   <?php
-                    print implode(',', $user_output['subjects']);
+                    print implode(', ', $user_output['subjects']);
                   ?>
                 </div>
               </span>
@@ -72,7 +72,7 @@
               <span class="field-content">
                 <div>
                   <span class="title">Student Populations: </span>
-                    <?php print implode(',', $user_output['populations']); ?>
+                    <?php print implode(', ', $user_output['populations']); ?>
                 </div>
               </span>
             </div>

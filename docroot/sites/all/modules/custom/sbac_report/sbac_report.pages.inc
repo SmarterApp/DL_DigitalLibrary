@@ -172,7 +172,7 @@ function sbac_report_build_sne_details($uid, $state) {
   $sql .= "WHERE u.uid = :uid ";
   $args[':uid'] = $uid;
   if ($state != 'all') {
-    $sql .= "fdfs.field_state_tid = :state ";
+    $sql .= "AND fdfs.field_state_tid = :state";
     $args[':state'] = $state;
   }
 
