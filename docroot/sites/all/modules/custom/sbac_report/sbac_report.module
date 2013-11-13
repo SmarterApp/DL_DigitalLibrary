@@ -207,6 +207,29 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  // Resource Details
+  $themes['views_view_table__contributed_resources__resources_details'] = array(
+    'template' => 'views-view-table--contributed-resources--resources-details',
+    'path' => $module_path . '/templates/views',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'orginal hook' => 'views_view_table',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_table',
+    ),
+  );
+
+  $themes['views_view_table__contributed_resources__resources_summary'] = array(
+    'template' => 'views-view-table--contributed-resources--resources-summary',
+    'path' => $module_path . '/templates/views',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'orginal hook' => 'views_view_table',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_table',
+    ),
+  );
+
   return $themes;
 }
 
@@ -1021,6 +1044,10 @@ function sbac_report_workbench_moderation_transition($node, $previous_state, $ne
       ->condition('nid', $node->nid)
       ->execute();
   }
+}
+
+function sbac_report_preprocess_views_view_table(&$vars) {
+  $var = '';
 }
 
 /**
