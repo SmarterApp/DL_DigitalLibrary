@@ -30,11 +30,7 @@ function sbac_report_individual() {
   $summation = '';
 
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
-//    clear_views_exposed_filter_cache('sne_details', 'sne_details');
-//    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
     $sne_details = sbac_report_build_sne_details($uid, $state_tid);
-    // If there are no SNE with the selected state and uid. Display none.
-    // @todo: custom message if there's no result.
     if (!empty($sne_details)) {
       $contributed_summary = views_embed_view('contributed_resources', 'resources_summary', $uid, $date_range);
       $contributed_details = views_embed_view('contributed_resources', 'resources_details', $uid, $date_range);
