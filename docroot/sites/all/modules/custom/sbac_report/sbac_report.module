@@ -138,15 +138,23 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $themes['sbac_report_output_sne'] = array(
+    'template' => 'templates/sbac-report-output-sne',
+    'path' => $module_path,
+    'variables' => array(
+      'user_output' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
   $themes['sbac_csv_report_user_activity'] = array(
       'template' => 'templates/sbac-csv-report-user-activity',
       'path' => $module_path,
       'preprocess functions' => array(
           'template_preprocess',
       ),
-//      '#attached' => array(
-//        'js' => drupal_get_path('module', 'sbac_report') . '/js/sbac_report.user_activity.js',
-//      ),
   );
 
   $themes['sbac_csv_report_resource_stats'] = array(

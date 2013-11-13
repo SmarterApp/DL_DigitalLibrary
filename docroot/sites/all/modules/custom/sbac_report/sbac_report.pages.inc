@@ -30,7 +30,9 @@ function sbac_report_individual() {
   $summation = '';
 
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
-    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
+//    clear_views_exposed_filter_cache('sne_details', 'sne_details');
+//    $sne_details = sbac_report_embed_view('sne_details', 'sne_details', $uid, $state_tid);
+    $sne_details = sbac_report_build_sne_details($uid, $state_tid);
     // If there are no SNE with the selected state and uid. Display none.
     // @todo: custom message if there's no result.
     if (!empty($sne_details)) {
@@ -153,6 +155,136 @@ function sbac_report_individual() {
 }
 
 /**
+ * @param $uid
+ * @param $state
+ * @return string
+ */
+function sbac_report_build_sne_details($uid, $state) {
+  $output = '';
+
+  $args = array();
+  $sql = "SELECT u.uid FROM {users} u ";
+  if ($state != 'all') {
+    $sql .= "
+      JOIN {field_data_field_state} fdfs
+      ON u.uid = fdfs.entity_id
+      AND fdfs.entity_type = 'user'
+      AND fdfs.deleted = 0 ";
+  }
+  $sql .= "WHERE u.uid = :uid ";
+  $args[':uid'] = $uid;
+  if ($state != 'all') {
+    $sql .= "fdfs.field_state_tid = :state ";
+    $args[':state'] = $state;
+  }
+
+  $result = db_query($sql, $args)->fetchField();
+  if ($result) {
+    $user = user_load($uid);
+    if ($user) {
+      $user_output = sbac_report_build_sne_output($user);
+      $output = theme('sbac_report_output_sne', array('user_output' => $user_output));
+    }
+  }
+
+  return $output;
+}
+
+/**
+ * Checks user privacy options and outputs.
+ *
+ * @param $user
+ * @return array
+ */
+function sbac_report_build_sne_output($user) {
+  $user_output = array();
+
+  // Privacy is set all the time.
+  if (isset($user->field_privacy['und'][0])) {
+    foreach ($user->field_privacy['und'] as $key => $privacy) {
+      switch ($privacy['value']) {
+        case 'picture':
+          if (isset($user->picture->uri)) {
+            $picture = theme('image_style', array(
+              'style_name' => 'profile_image',
+              'path' => $user->picture->uri,
+              'attributes' => array('class' => 'column large-3 profile-pic')
+            ));
+            $user_output['picture'] = '<a href="/user/' . $user->uid . '">' . $picture . '</a>';
+          }
+          break;
+        case 'field_first_name':
+          if (isset($user->field_first_name['und'][0]['value'])) {
+            $user_output['first_name'] = $user->field_first_name['und'][0]['value'];
+          }
+          break;
+        case 'field_last_name':
+          if (isset($user->field_last_name['und'][0]['value'])) {
+            $user_output['last_name'] = $user->field_last_name['und'][0]['value'];
+          }
+          break;
+        case 'field_position':
+          if (isset($user->field_position['und'][0]['tid'])) {
+            $term = taxonomy_term_load($user->field_position['und'][0]['tid']);
+            $user_output['position'] = $term->name;
+          }
+          break;
+        case 'field-state':
+          if (isset($user->field_state['und'][0]['tid'])) {
+            $term = taxonomy_term_load($user->field_state['und'][0]['tid']);
+            $user_output['state'] = $term->name;
+          }
+          break;
+        case 'field-grade-level-s-':
+          if (isset($user->field_grade_level_s_['und'][0])) {
+            foreach ($user->field_grade_level_s_['und'] as $key => $term) {
+              $term = taxonomy_term_load($term['tid']);
+              $user_output['grade_level'][] = $term->name;
+            }
+          }
+          break;
+        case 'field-subject-s-':
+          if (isset($user->field_subject_s_['und'][0])) {
+            foreach ($user->field_subject_s_['und'] as $key => $term) {
+              $term = taxonomy_term_load($term['tid']);
+              $user_output['subjects'][] = $term->name;
+            }
+          }
+          break;
+        case 'special-populations':
+          if (isset($user->field_special_populations['und'][0])) {
+            foreach ($user->field_special_populations['und'] as $key => $term) {
+              $term = taxonomy_term_load($term['tid']);
+              $user_output['populations'][] = $term->name;
+            }
+          }
+          break;
+        case 'mail':
+          $user_output['email'] = $user->mail;
+          break;
+        case 'field_school_name':
+          if (isset($user->field_school_name['und'][0])) {
+            $user_output['school_name'] = $user->field_school_name['und'][0]['value'];
+          }
+          break;
+        case 'field_district_name':
+          if (isset($user->field_district_name['und'][0])) {
+            $user_output['district_name'] = $user->field_district_name['und'][0]['value'];
+          }
+          break;
+        case 'field_introduction':
+          if (isset($user->field_introduction['und'][0])) {
+            $user_output['introduction'] = $user->field_introduction['und'][0]['value'];
+          }
+          break;
+      }
+    }
+  }
+
+  return $user_output;
+}
+
+/**
  * Ajax for the autocomplete SNE textfield.
  */
 function sbac_report_sne_autocomplete($string = '') {
@@ -200,7 +332,7 @@ function sbac_report_sne_autocomplete($string = '') {
     ON users.uid = field_first_name.entity_id AND field_first_name.entity_type = 'user' AND field_first_name.deleted = 0
 
   LEFT JOIN {field_data_field_sne_member} AS field_sne_member
-    ON users.uid = field_sne_member.entity_id AND field_sne_member.entity_type = 'user' AND field_sne_member.deleted = 0
+    ON users.uid = field_sne_member.entity_id AND field_sne_member.entity_type = "user" AND field_sne_member.deleted = 0
 
   WHERE (
     CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
