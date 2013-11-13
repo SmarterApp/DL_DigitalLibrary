@@ -151,6 +151,8 @@ function sbac_report_individual() {
 }
 
 /**
+ * Selects the user information for the details card.
+ *
  * @param $uid
  * @param $state
  * @return string
@@ -328,7 +330,7 @@ function sbac_report_sne_autocomplete($string = '') {
     ON users.uid = field_first_name.entity_id AND field_first_name.entity_type = 'user' AND field_first_name.deleted = 0
 
   LEFT JOIN {field_data_field_sne_member} AS field_sne_member
-    ON users.uid = field_sne_member.entity_id AND field_sne_member.entity_type = "user" AND field_sne_member.deleted = 0
+    ON users.uid = field_sne_member.entity_id AND field_sne_member.entity_type = 'user' AND field_sne_member.deleted = 0
 
   WHERE (
     CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
