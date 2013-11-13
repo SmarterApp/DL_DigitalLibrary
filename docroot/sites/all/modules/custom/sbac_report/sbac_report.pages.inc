@@ -32,21 +32,8 @@ function sbac_report_individual() {
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
     $sne_details = sbac_report_build_sne_details($uid, $state_tid);
     if (!empty($sne_details)) {
-      $cs_view = views_get_view('contributed_resources');
-      $cs_view->set_display('resources_summary');
-      $cs_view->set_arguments(array($uid, $date_range));
-      $cs_view->pre_execute();
-      $cs_view->execute();
-      $contributed_summary = $cs_view->render();
-      $cs_view->destroy();
-
-      $cd_view = views_get_view('contributed_resources');
-      $cd_view->set_display('resources_details');
-      $cd_view->set_arguments(array($uid, $date_range));
-      $cd_view->pre_execute();
-      $cd_view->execute();
-      $contributed_details = $cd_view->render();
-      $cd_view->destroy();
+      $contributed_summary = sbac_report_build_resource_summary($uid, $date_range);
+      $contributed_details = sbac_report_build_resource_details($uid, $date_range);
 
       // Gate-Keeping Reviews.
       $name = sbac_report_get_session_value('sne', 'name');
@@ -111,7 +98,7 @@ function sbac_report_individual() {
       '#markup' => $individual_tab,
     ),
   );
-  
+
   if (sbac_report_user_access_all()) {
     $output[SBAC_REPORT_TAB_USER] = array(
       '#type' => 'fieldset',
@@ -164,6 +151,59 @@ function sbac_report_individual() {
 }
 
 /**
+ * @param $uid
+ * @param $date_range
+ */
+function sbac_report_build_resource_summary($uid, $date_range) {
+  $query = "SELECT node.nid AS nid,
+            workbench_moderation_node_history.published AS workbench_moderation_node_history_published,
+            node.sticky AS node_sticky
+            FROM
+            {node} node
+            LEFT JOIN {node_revision} node_revision ON node.vid = node_revision.vid
+            INNER JOIN {workbench_moderation_node_history} workbench_moderation_node_history ON node_revision.vid = workbench_moderation_node_history.vid
+            WHERE (((node.uid = :uid ))
+            AND (((node.type IN ('resource'))
+            AND (workbench_moderation_node_history.current <> '0')
+            AND (workbench_moderation_node_history.state NOT IN  ('draft')))
+            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') = :date_range))))";
+
+  $rows = array(array(0, 0, 0));
+  $results = db_query($query, array(':uid' => $uid, ':date_range' => $date_range));
+  foreach ($results as $row) {
+    $rows[] = $row;
+  }
+  return theme('sbac_report_resource_summary', array('rows' => $rows));
+}
+
+/**
+ * @param $uid
+ * @param $date_range
+ */
+function sbac_report_build_resource_details($uid, $date_range) {
+  $query = "SELECT node.title AS node_title,
+            node.created AS node_created,
+            workbench_moderation_node_history.state AS workbench_moderation_node_history_state,
+            node.sticky AS node_sticky
+            FROM
+            {node} node
+            LEFT JOIN {node_revision} node_revision ON node.vid = node_revision.vid
+            INNER JOIN {workbench_moderation_node_history} workbench_moderation_node_history ON node_revision.vid = workbench_moderation_node_history.vid
+            WHERE (((node.uid = :uid))
+            AND (((node.type IN ('resource'))
+            AND (workbench_moderation_node_history.current <> '0')
+            AND (workbench_moderation_node_history.state NOT IN  ('draft')))
+            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') = :date_range))))";
+
+  $rows = array(array(0, 0, 0));
+  $results = db_query($query, array(':uid' => $uid, ':date_range' => $date_range));
+  foreach ($results as $row) {
+    $rows[] = $row;
+  }
+  return theme('sbac_report_resource_details', array('rows' => $rows));
+}
+
+/**
  * Selects the user information for the details card.
  *
  * @param $uid
@@ -209,10 +249,16 @@ function sbac_report_build_sne_details($uid, $state) {
  */
 function sbac_report_build_sne_output($user) {
   $user_output = array();
-
+  $always_show[] = array('value' => 'field_first_name');
+  $always_show[] = array('value' => 'field_position');
+  $always_show[] = array('value' => 'field-state');
+  $always_show[] = array('value' => 'field-grade-level-s-');
+  $always_show[] = array('value' => 'field-subject-s-');
+  $always_show[] = array('value' => 'special-populations');
+  $privacy_list = array_merge($user->field_privacy['und'], $always_show);
   // Privacy is set all the time.
-  if (isset($user->field_privacy['und'][0])) {
-    foreach ($user->field_privacy['und'] as $key => $privacy) {
+  if ($privacy_list) {
+    foreach ($privacy_list as $key => $privacy) {
       switch ($privacy['value']) {
         case 'picture':
           if (isset($user->picture->uri)) {

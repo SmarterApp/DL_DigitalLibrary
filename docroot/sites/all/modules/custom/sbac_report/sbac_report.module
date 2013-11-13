@@ -149,6 +149,28 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $themes['sbac_report_resource_summary'] = array(
+    'template' => 'templates/sbac-report-resource-summary',
+    'path' => $module_path,
+    'variables' => array(
+      'rows' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_report_resource_details'] = array(
+    'template' => 'templates/sbac-report-resource-details',
+    'path' => $module_path,
+    'variables' => array(
+      'rows' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
   $themes['sbac_csv_report_user_activity'] = array(
       'template' => 'templates/sbac-csv-report-user-activity',
       'path' => $module_path,
@@ -320,7 +342,7 @@ function sbac_report_state_options() {
     if (isset($first_only) && $first_only) {
       return $options;
     }
-    
+
     $states = taxonomy_vocabulary_machine_name_load("states");
     $vid = $states->vid;
     $terms = taxonomy_get_tree($vid);
@@ -639,7 +661,7 @@ function sbac_report_form_views_exposed_form_alter(&$form, &$form_state) {
             $form['items_per_page']['#options'][$key] = t('Up to !num', array('!num' => $val));
           }
         }
-      }  
+      }
       break;
   }
 }
@@ -1044,10 +1066,6 @@ function sbac_report_workbench_moderation_transition($node, $previous_state, $ne
       ->condition('nid', $node->nid)
       ->execute();
   }
-}
-
-function sbac_report_preprocess_views_view_table(&$vars) {
-  $var = '';
 }
 
 /**
