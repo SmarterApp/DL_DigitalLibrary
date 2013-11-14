@@ -199,18 +199,20 @@ function sbac_report_build_resource_summary($uid, $date_range, $limit = 5) {
  * @param $date_range
  */
 function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
-  // /reports?items_per_page=5&amp;order=state&amp;sort=asc
-  // /reports?items_per_page=5&amp;order=created&amp;sort=desc
-  $order = 'created';
+  // Deal with the sort options on the "Contributed resources details" table.
   $sort = 'desc';
+  $order = 'created';
   if (isset($_GET['order'])) {
     $order = $_GET['order'];
   }
   if (isset($_GET['sort'])) {
     $sort = $_GET['sort'];
   }
-  $table_state_query = '/reports?items_per_page=' . $limit . '&order=state&sort=' . $sort;
-  $table_created_query = '/reports?items_per_page=' . $limit . '&order=created&sort=' . $sort;
+  ($sort == 'asc' ? $opp_sort = 'desc' : $opp_sort = 'asc');
+  $data['table_state_query'] = '/reports?items_per_page=' . $limit . '&order=state&sort=' . $opp_sort;
+  $data['table_created_query'] = '/reports?items_per_page=' . $limit . '&order=created&sort=' . $opp_sort;
+  $src = '/misc/arrow-' . $sort . '.png'; // up / down image.
+  $data[$order . '_image'] = '<img typeof="foaf:Image" src="' . $src . '" width="13" height="13" alt="sort ascending" title="sort ascending">';
 
   $query = "SELECT node.title AS node_title,
             node.created AS node_created,
@@ -224,8 +226,14 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
             AND (((node.type IN ('resource'))
             AND (workbench_moderation_node_history.current <> '0')
             AND (workbench_moderation_node_history.state NOT IN  ('draft')))
-            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))))
-            ORDER BY node.created DESC";
+            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))))";
+
+  if ($order == 'state') {
+    $query .= "ORDER BY workbench_moderation_node_history.state " . $sort;
+  }
+  else {
+    $query .= "ORDER BY node.created " . $sort;
+  }
 
   $dates = explode('--', $date_range);
   $from_date = $dates[0];
@@ -271,7 +279,7 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   ));
   $form_output = drupal_render($form);
 
-  return theme('sbac_report_resource_details', array('rows' => $rows, 'form' => $form_output));
+  return theme('sbac_report_resource_details', array('rows' => $rows, 'form' => $form_output, 'data' => $data));
 }
 
 /**

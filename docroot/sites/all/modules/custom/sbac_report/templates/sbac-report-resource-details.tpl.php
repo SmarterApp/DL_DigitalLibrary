@@ -8,12 +8,21 @@
           Resource Title
         </th>
         <th class="views-field views-field-created active">
-          <a href="/reports?items_per_page=5&amp;order=created&amp;sort=asc" title="sort by Contribution Date"class="active">Contribution Date
-            <img typeof="foaf:Image" src="http://stage.smarterbalancedlibrary.org/misc/arrow-asc.png" width="13" height="13" alt="sort ascending" title="sort ascending">
+          <a href="<?php echo $data['table_created_query']; ?>" title="sort by Contribution Date"class="active">Contribution Date
+          <?php
+            if (isset($data['created_image'])) {
+              echo $data['created_image'];
+            }
+          ?>
           </a>
         </th>
         <th class="views-field views-field-state">
-          <a href="/reports?items_per_page=5&amp;order=state&amp;sort=asc" title="sort by Post Status" class="active">Post Status
+          <a href="<?php echo $data['table_state_query']; ?>" title="sort by Post Status" class="active">Post Status
+            <?php
+            if (isset($data['state_image'])) {
+              echo $data['state_image'];
+            }
+            ?>
           </a>
         </th>
       </tr>

@@ -166,6 +166,7 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     'variables' => array(
       'rows' => NULL,
       'form' => NULL,
+      'data' => NULL,
     ),
     'preprocess functions' => array(
       'template_preprocess',
