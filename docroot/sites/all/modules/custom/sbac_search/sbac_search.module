@@ -48,6 +48,31 @@ function sbac_search_menu() {
 }
 
 /**
+ * Implementation of hook_preprocess_page()
+ *
+ * @param $vars
+ */
+function sbac_search_preprocess_page(&$vars) {
+  if (strpos($_GET['q'], 'digital-library-resources') !== FALSE) {
+    $search_term = '/search_results.php';
+    if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS])) {
+      $search_term = '/search_results.php?q=' . $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
+    }
+
+    $js =  "<script type=\"text/javascript\">
+            var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");
+            document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));
+            </script>
+            <script type=\"text/javascript\">
+            var pageTracker = _gat._getTracker(\"UA-xxxxxx-x\");
+            pageTracker._initData();
+            pageTracker._trackPageview(\"" . $search_term . "\");
+            </script>";
+    drupal_add_js($js, array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
+  }
+}
+
+/**
  * Clears the search filters and redirects.
  */
 function sbac_resource_clear_library_page() {
