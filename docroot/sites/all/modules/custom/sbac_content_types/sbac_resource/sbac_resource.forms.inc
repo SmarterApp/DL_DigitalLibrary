@@ -1629,6 +1629,14 @@ function sbac_resource_license_url(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_tags(&$form, &$form_state) {
+  // Hide access to smarter balanced keywords to non DLRB members or above.
+  global $user;
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+  }
+  else {
+    $form['field_smarter_balanced_keyword']['#access'] = FALSE;
+  }
+
   // Resource Title
   $form['resource_tag_title'] = array(
     '#type' => 'item',
