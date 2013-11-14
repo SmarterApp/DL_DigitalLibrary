@@ -199,6 +199,19 @@ function sbac_report_build_resource_summary($uid, $date_range, $limit = 5) {
  * @param $date_range
  */
 function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
+  // /reports?items_per_page=5&amp;order=state&amp;sort=asc
+  // /reports?items_per_page=5&amp;order=created&amp;sort=desc
+  $order = 'created';
+  $sort = 'desc';
+  if (isset($_GET['order'])) {
+    $order = $_GET['order'];
+  }
+  if (isset($_GET['sort'])) {
+    $sort = $_GET['sort'];
+  }
+  $table_state_query = '/reports?items_per_page=' . $limit . '&order=state&sort=' . $sort;
+  $table_created_query = '/reports?items_per_page=' . $limit . '&order=created&sort=' . $sort;
+
   $query = "SELECT node.title AS node_title,
             node.created AS node_created,
             workbench_moderation_node_history.state AS workbench_moderation_node_history_state,
@@ -257,6 +270,7 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
     'limit' => $limit,
   ));
   $form_output = drupal_render($form);
+
   return theme('sbac_report_resource_details', array('rows' => $rows, 'form' => $form_output));
 }
 
