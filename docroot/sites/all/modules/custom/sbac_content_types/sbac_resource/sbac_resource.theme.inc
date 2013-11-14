@@ -104,70 +104,6 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_resource')
   );
 
-  /*************** ALL RESOURCES *************************************/
-
-  $items['views_view_fields__all_resources__grid_view'] = array(
-    'template' => 'templates/all_resources/grid_view/views-view-fields--all-resources--grid-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
-    'original hook' => 'views_view_fields',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_fields',
-      'sbac_resource_views_view_fields__resources__grid_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view__all_resources__grid_view'] = array(
-    'template' => 'templates/all_resources/grid_view/views-view--all-resources--grid-view',
-    'arguments' => array('view' => NULL),
-    'original hook' => 'views_view',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view',
-      'sbac_resource_views_view__resources__grid_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-
-  $items['views_view_fields__all_resources__list_view'] = array(
-    'template' => 'templates/all_resources/list_view/views-view-fields--all-resources--list-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
-    'original hook' => 'views_view_fields',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_fields',
-      'sbac_resource_views_view_fields__resources__list_view__preprocess'
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-
-  $items['views_view_unformatted__all_resources__list_view'] = array(
-    'template' => 'templates/all_resources/list_view/views-view-unformatted--all-resources--list-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
-    'original hook' => 'views_view_unformatted',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_unformatted',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view__all_resources__list_view'] = array(
-    'template' => 'templates/all_resources/list_view/views-view--all-resources--list-view',
-    'arguments' => array('view' => NULL),
-    'original hook' => 'views_view',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view',
-      'sbac_resource_views_view__resources__list_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-
   // My Resources - Grid View
   $items['views_view_fields__my_resources__grid_view'] = array(
     'template' => 'templates/my_resources/grid_view/views-view-fields--my-resources--grid-view',
@@ -220,68 +156,6 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_resource')
   );
 
-  /*************** ALL MY RESOURCES *************************************/
-
-  $items['views_view_fields__all_my_resources__grid_view'] = array(
-    'template' => 'templates/all_my_resources/grid_view/views-view-fields--all-my-resources--grid-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
-    'original hook' => 'views_view_fields',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_fields',
-      'sbac_resource_views_view_fields__my_resources__grid_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view__all_my_resources__grid_view'] = array(
-    'template' => 'templates/all_my_resources/grid_view/views-view--all-my-resources--grid-view',
-    'arguments' => array('view' => NULL),
-    'original hook' => 'views_view',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view',
-      'sbac_resource_views_view__my_resources__grid_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-
-  $items['views_view_fields__all_my_resources__list_view'] = array(
-    'template' => 'templates/all_my_resources/list_view/views-view-fields--all-my-resources--list-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
-    'original hook' => 'views_view_fields',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_fields',
-      'sbac_resource_views_view_fields__my_resources__list_view__preprocess'
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view_unformatted__all_my_resources__list_view'] = array(
-    'template' => 'templates/all_my_resources/list_view/views-view-unformatted--all-my-resources--list-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
-    'original hook' => 'views_view_unformatted',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_unformatted',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view__all_my_resources__list_view'] = array(
-    'template' => 'templates/all_my_resources/list_view/views-view--all-my-resources--list-view',
-    'arguments' => array('view' => NULL),
-    'original hook' => 'views_view',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view',
-      'sbac_resource_views_view__my_resources__list_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
   // Resource Review - Grid View
   $items['views_view_fields__resource_review__grid_view'] = array(
     'template' => 'templates/resource_review/grid_view/views-view-fields--resource-review--grid-view',
@@ -324,67 +198,6 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
   // Resource Review - List View
   $items['views_view__resource_review__list_view'] = array(
     'template' => 'templates/resource_review/list_view/views-view--resource-review--list-view',
-    'arguments' => array('view' => NULL),
-    'original hook' => 'views_view',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view',
-      'sbac_resource_views_view__resource_review__list_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  /*************** ALL RESOURCES *************************************/
-
-  $items['views_view_fields__all_resource_review__grid_view'] = array(
-    'template' => 'templates/all_resource_review/grid_view/views-view-fields--all-resource-review--grid-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
-    'original hook' => 'views_view_fields',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_fields',
-      'sbac_resource_views_view_fields__resource_review__grid_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view__all_resource_review__grid_view'] = array(
-    'template' => 'templates/all_resource_review/grid_view/views-view--all-resource-review--grid-view',
-    'arguments' => array('view' => NULL),
-    'original hook' => 'views_view',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view',
-      'sbac_resource_views_view__resource_review__grid_view__preprocess',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view_fields__all_resource_review__list_view'] = array(
-    'template' => 'templates/all_resource_review/list_view/views-view-fields--all-resource-review--list-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
-    'original hook' => 'views_view_fields',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_fields',
-      'sbac_resource_views_view_fields__resource_review__list_view__preprocess'
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view_unformatted__all_resource_review__list_view'] = array(
-    'template' => 'templates/all_resource_review/list_view/views-view-unformatted--all-resource-review--list-view',
-    'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
-    'original hook' => 'views_view_unformatted',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view_unformatted',
-    ),
-    'path' => drupal_get_path('module', 'sbac_resource')
-  );
-
-  $items['views_view__all_resource_review__list_view'] = array(
-    'template' => 'templates/all_resource_review/list_view/views-view--all-resource-review--list-view',
     'arguments' => array('view' => NULL),
     'original hook' => 'views_view',
     'preprocess functions' => array(

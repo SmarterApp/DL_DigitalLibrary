@@ -11,7 +11,7 @@
  * @param $query
  */
 function sbac_resource_views_query_alter(&$view, &$query) {
-  if ($view->name == 'resource_review' || $view->name == 'all_resource_review') {
+  if ($view->name == 'resource_review') {
     global $user;
 
     if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
