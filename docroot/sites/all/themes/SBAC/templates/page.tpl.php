@@ -246,6 +246,7 @@
   </div>
 </div>
 
+<?php if (user_is_logged_in()) : ?>
 <div style='display:none;'>
   <div id="helpmodal">
     <?php
@@ -282,3 +283,4 @@
     <?php print drupal_render($form);?>
   </div>
 </div>
+<?php endif; ?>
