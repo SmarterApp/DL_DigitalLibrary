@@ -154,7 +154,7 @@ function sbac_report_individual() {
  * @param $uid
  * @param $date_range
  */
-function sbac_report_build_resource_summary($uid, $date_range) {
+function sbac_report_build_resource_summary($uid, $date_range, $limit = 5) {
   $query = "SELECT node.nid AS nid,
             workbench_moderation_node_history.published AS workbench_moderation_node_history_published,
             node.sticky AS node_sticky
@@ -166,13 +166,31 @@ function sbac_report_build_resource_summary($uid, $date_range) {
             AND (((node.type IN ('resource'))
             AND (workbench_moderation_node_history.current <> '0')
             AND (workbench_moderation_node_history.state NOT IN  ('draft')))
-            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') = :date_range))))";
+            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))))";
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  if ($limit == -1) {
+    $results = db_query($query, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
+  }
+  else {
+    $results = db_query_range($query, 0, $limit, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
+  }
+
+  $data = array();
+  foreach ($results as $row) {
+    $data['one']++;
+    $data['two'] += $row->workbench_moderation_node_history_published;
+    $data['three'] += $row->node_sticky;
+  }
 
   $rows = array(array(0, 0, 0));
-  $results = db_query($query, array(':uid' => $uid, ':date_range' => $date_range));
-  foreach ($results as $row) {
-    $rows[] = $row;
+  if ($data) {
+    $rows = array(array($data['one'], $data['two'], $data['three']));
   }
+
   return theme('sbac_report_resource_summary', array('rows' => $rows));
 }
 
@@ -180,7 +198,7 @@ function sbac_report_build_resource_summary($uid, $date_range) {
  * @param $uid
  * @param $date_range
  */
-function sbac_report_build_resource_details($uid, $date_range) {
+function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   $query = "SELECT node.title AS node_title,
             node.created AS node_created,
             workbench_moderation_node_history.state AS workbench_moderation_node_history_state,
@@ -193,14 +211,109 @@ function sbac_report_build_resource_details($uid, $date_range) {
             AND (((node.type IN ('resource'))
             AND (workbench_moderation_node_history.current <> '0')
             AND (workbench_moderation_node_history.state NOT IN  ('draft')))
-            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') = :date_range))))";
+            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))))
+            ORDER BY node.created DESC";
 
-  $rows = array(array(0, 0, 0));
-  $results = db_query($query, array(':uid' => $uid, ':date_range' => $date_range));
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  if ($limit == -1) {
+    $results = db_query($query, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
+  }
+  else {
+    $results = db_query_range($query, 0, $limit, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
+  }
+
+  $rows = array();
   foreach ($results as $row) {
+    $state = $row->workbench_moderation_node_history_state;
+    $state_output = $state;
+    if ($state == 'needs_review') {
+      $state_output = t('Submitted');
+    }
+    elseif ($state == 'being_reviewed') {
+      $state_output = t('In Review');
+    }
+    elseif ($state == 'published') {
+      $state_output = t('Posted');
+      if ($row->node_sticky == 1) {
+        $state_output = t('Posted with Distinction');
+      }
+    }
+    $row->state = $state_output;
+    $row->title = truncate($row->node_title, 55, array('check_markup' => FALSE));
+    $row->contribution_date = date('m/d/Y h:i a', $row->node_created);
     $rows[] = $row;
   }
-  return theme('sbac_report_resource_details', array('rows' => $rows));
+
+  if (empty($rows)) {
+    $rows = array(array(0, 0, 0));
+  }
+
+  $form = drupal_get_form('sbac_report_resource_details_pager_form', array(
+    'uid' => $uid,
+    'date_range' => $date_range,
+    'limit' => $limit,
+  ));
+  $form_output = drupal_render($form);
+  return theme('sbac_report_resource_details', array('rows' => $rows, 'form' => $form_output));
+}
+
+/**
+ * Form to change the number of items displayed in the summation table.
+ *
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @param  [type] $data       [description]
+ * @return [type]             [description]
+ */
+function sbac_report_resource_details_pager_form($form, &$form_state, $data) {
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#value' => $data['uid'],
+  );
+
+  $form['date_range'] = array(
+    '#type' => 'hidden',
+    '#value' => $data['date_range'],
+  );
+
+  $form['limit'] = array(
+    '#title' => t('Display'),
+    '#title_display' => 'before',
+    '#attributes' => array('class' => array('form-items-per-page')),
+    '#type' => 'select',
+    '#options' => array(
+      5 => t('Up to 5'),
+      10 => t('Up to 10'),
+      15 => t('Up to 15'),
+      -1 => t('All'),
+    ),
+    '#ajax' => array(
+      'callback' => 'sbac_report_resource_details_pager_form_ajax',
+      'wrapper' => 'contributed-resources',
+      'method' => 'replace',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * AJAX submit handler for sbac_report_build_gk_table_display_form
+ *
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_report_resource_details_pager_form_ajax($form, &$form_state) {
+  $values = $form_state['values'];
+  $output = '<div id="contributed-resources">';
+  $output .= sbac_report_build_resource_summary($values['uid'], $values['date_range'], $values['limit']);
+  $output .= sbac_report_build_resource_details($values['uid'], $values['date_range'], $values['limit']);
+  $output .= '</div>';
+  return $output;
 }
 
 /**

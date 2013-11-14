@@ -15,8 +15,10 @@
   <?php print $sne_details; ?>
 
   <h2><?php print t('Contributed Resources'); ?></h2>
+  <div id="contributed-resources">
   <?php print $contributed_summary; ?>
   <?php print $contributed_details; ?>
+  </div>
   <div style="clear:both;"></div>
   <h2><?php print t('Resource Reviews'); ?></h2>
   <h3><?php print t('Gate-Keeping Reviews'); ?></h3>

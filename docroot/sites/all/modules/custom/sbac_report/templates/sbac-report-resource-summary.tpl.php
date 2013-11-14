@@ -10,12 +10,14 @@
       </thead>
       <tbody>
         <?php
+          $class = 'even';
           foreach ($rows as $row) {
-            echo '<tr class="odd views-row-first views-row-last">';
+            echo '<tr class="' . $class . '">';
             echo '<td class="views-field views-field-nid">' . $row[0] . '</td>';
             echo '<td class="views-field views-field-published">' . $row[1] . '</td>';
             echo '<td class="views-field views-field-sticky"> ' . $row[2] . '</td>';
             echo '</tr>';
+            ($class == 'even' ? $class = 'odd' : $class = 'even');
           }
         ?>
       </tbody>
