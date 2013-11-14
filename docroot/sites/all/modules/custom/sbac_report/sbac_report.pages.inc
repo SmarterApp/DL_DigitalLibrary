@@ -268,10 +268,6 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
     $rows[] = $row;
   }
 
-  if (empty($rows)) {
-    $rows = array(array(0, 0, 0));
-  }
-
   $form = drupal_get_form('sbac_report_resource_details_pager_form', array(
     'uid' => $uid,
     'date_range' => $date_range,
@@ -279,7 +275,10 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   ));
   $form_output = drupal_render($form);
 
-  return theme('sbac_report_resource_details', array('rows' => $rows, 'form' => $form_output, 'data' => $data));
+  if ($rows) {
+    return theme('sbac_report_resource_details', array('rows' => $rows, 'form' => $form_output, 'data' => $data));
+  }
+  return '';
 }
 
 /**
