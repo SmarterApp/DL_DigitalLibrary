@@ -80,6 +80,11 @@ function sbac_user_menu() {
   return $items;
 }
 
+/**
+ * Nice.
+ *
+ * @return bool
+ */
 function sbac_user_access_check() {
   return TRUE;
 }
@@ -155,23 +160,6 @@ function sbac_user_update_projects_alter(&$projects) {
 function sbac_user_theme() {
   return sbac_user_theme__theme();
 }
-
-// not sure what this is supposed to do, commenting it out @TODO remove
-// function sbac_user_profile_submit($form, &$form_state){
-//   global $user;
-
-//   $fname = $form_state['input']['fname'];
-//   $lname = $form_state['input']['lname'];
-//   $edit = array(
-//     'field_first_name_value' => $fname,
-//   );
-//   db_update('field_data_field_first_name')
-//     ->fields($edit)
-//     ->condition('entity_id', $user->uid,'=')
-//     ->execute();
-//   cache_clear_all();
-//   drupal_set_message(t('The changes have been saved.'));
-// }
 
 function sbac_user_user_pass_form_submit($form, &$form_state) {
   global $language;
@@ -917,19 +905,6 @@ function sbac_user_terms_page() {
  * Validation callback to check profanity
  */
 function sbac_user_profile_validate(&$form, &$form_state) {
-  // commented out as per Yuriy
-  // foreach($form_state['field'] as $key => $field) {
-  //   $lang = $form[$key]['#language'];
-  //   if(stripos($field[$lang]['field']['type'], 'text') !== FALSE && stripos($key, 'ldap') === FALSE) {
-  //     $text = $form_state['values'][$key][$lang][0]['value'];
-  //     $bad_words = profanity_validate_text($text);
-  //     if ($bad_words) {
-  //       $error = t('You must remove inappropriate language from :field_name to continue.', array(':field_name' => $form[$key][$lang]['#title']));
-  //       form_set_error($key, $error);
-  //     }
-  //   }
-  // }
-
   $errors = form_get_errors();
   if (isset($errors['legal_accept'])) {
     // Clear errors.

@@ -33,11 +33,9 @@
 
 		<div class="profile-title">
 			<?php
-			// @TODO this needs to be fixed and use drupal_render
 			if (isset($user_profile['field_position']['#access']) && $user_profile['field_position']['#access'] && isset($user_profile['field_position'][0]['#markup'])) {
 				echo $user_profile['field_position'][0]['#markup'];
 			}
-
 			if (isset($user_profile['field_retired'][0]['#markup'])) {
 				echo ' (Retired)';
 			}
@@ -75,6 +73,14 @@
 				}
 			?>
 		</div>
+
+    <div class="profile-email-address">
+      <?php
+        if (sbac_user_privacy_check('mail', $user_profile['field_subject_s_']['#object'])) {
+          echo "Email: " . $user->mail;
+        }
+      ?>
+    </div>
 
 		<div class="introduction">
 			<?php echo drupal_render($user_profile['field_introduction']); ?>
