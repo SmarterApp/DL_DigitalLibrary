@@ -131,7 +131,7 @@ function sbac_core_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => '',
-        'maxlength_js' => 300,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -178,7 +178,7 @@ function sbac_core_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => '',
-        'maxlength_js' => 300,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -225,7 +225,7 @@ function sbac_core_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => '',
-        'maxlength_js' => 300,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -272,7 +272,7 @@ function sbac_core_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => '',
-        'maxlength_js' => 300,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -361,7 +361,7 @@ function sbac_core_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => '',
-        'maxlength_js' => 300,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -455,7 +455,7 @@ function sbac_core_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Use the space below to provide your reasoning.',
-        'maxlength_js' => 300,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -530,7 +530,7 @@ function sbac_core_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Use the space below to provide your reasoning.',
-        'maxlength_js' => 300,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
