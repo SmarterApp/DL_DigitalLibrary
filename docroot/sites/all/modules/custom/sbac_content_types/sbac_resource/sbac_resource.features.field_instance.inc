@@ -172,7 +172,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Enter a descriptive summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -464,7 +464,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Identify how this resource addresses the Common Core State Standards (e.g., how it addresses particular claims, clusters, targets, and/or “standards”). Pay special attention to the interconnectedness of claims.',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -522,7 +522,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Identify how this includes, reflects, and addresses the formative assessment process.',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -580,7 +580,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Describe the likely context(s) in which the resource could be used (e.g. PLCs, individual, ongoing learning, small group, whole class).',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -1148,7 +1148,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Identify the learning goals associated with this resource. Learning goals can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -1543,7 +1543,7 @@ function sbac_resource_field_default_field_instances() {
 <ol type=\'A\'><li>the principles of adult learning or professional development reflected in the resource; and/or</li>
 <li>the literature, research, or widely accepted practices used to inform the content in the resource.</li>
 </ol>',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -1833,7 +1833,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Describe how this resource enables students to actively engage in the formative assessment process, if applicable.',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -2004,7 +2004,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
@@ -2062,7 +2062,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'text',
       'settings' => array(
         'label_help_description' => 'Include evidence that the resource has been tried successfully with educators (or students) and has resulted in a positive impact on educator practices (or student outcomes)',
-        'maxlength_js' => 600,
+        'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
         'maxlength_js_truncate_html' => 0,
