@@ -638,39 +638,6 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 }
 
 // Sets the Apache Solr Environment
-//if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-//  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
-//    case 'dev':
-//      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_dev';
-//      // do something on dev
-//      break;
-//
-//    case 'test':
-//      // do something on staging
-//      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_test';
-//      break;
-//
-//    case 'stage2':
-//      // do something on staging
-//      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_training';
-//      break;
-//
-//    case 'stage3':
-//      // do something on staging
-//      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_integration';
-//      break;
-//
-//    case 'prod':
-//      // do something on prod
-//      $conf['apachesolr_default_environment'] = 'amazon_apache_solr_prod';
-//      break;
-//  }
-//}
-//else {
-//  $conf['apachesolr_default_environment'] = 'amazon_apache_solr_environment_local';
-//}
-
-// Sets the Apache Solr Environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':
@@ -698,6 +665,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $conf['file_private_path'] = '/mnt/files/sbac/files-private';
       break;
   }
+}
+else {
+  $conf['apachesolr_read_only'] = '1';
 }
 
 error_reporting(E_ERROR);
