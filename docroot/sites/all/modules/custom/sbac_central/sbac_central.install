@@ -683,8 +683,8 @@ function sbac_central_update_7058() {
  */
 function sbac_central_update_7059() {
   $modules = array(
+    'acquia_search',
     'acquia_search_multi_subs',
-    'acquia_search',x
   );
   module_enable($modules);
 }
