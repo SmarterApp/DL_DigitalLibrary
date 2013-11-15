@@ -19,7 +19,7 @@
   			    $user_profile['user_picture']['#markup'] = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt));
   			  }
   			}
-        
+
 		    echo drupal_render($user_profile['user_picture']);
 			?>
 		</div>
@@ -57,8 +57,8 @@
         if(isset($user_profile['field_state'])) {
           $state = $user_profile['field_state'][0]['#title'];// always shown
         }
-        
-				if ($school && $district && $state) {
+
+         if ($school && $district && $state) {
 					echo t('!school in !district, !state', array(
 						'!school'    => $school,
 						'!district'  => $district,
@@ -77,7 +77,7 @@
     <div class="profile-email-address">
       <?php
         if (sbac_user_privacy_check('mail', $user_profile['field_subject_s_']['#object'])) {
-          echo "Email: " . $user->mail;
+          echo "Email: <a href=\"mailto:" . $user->mail . "\">" . $user->mail . "</a>";
         }
       ?>
     </div>

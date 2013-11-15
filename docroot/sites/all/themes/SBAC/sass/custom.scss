@@ -15,7 +15,7 @@
 :: Help Modal
 :: Digital Library Resources (DLR)
 :: Create
-   - Resource 
+   - Resource
 :: Legal
 :: Admin theme fixes
 */
@@ -32,7 +32,7 @@ $darkgreen: #246a34;
 
 /** Font Face **/
 
-@font-face { font-family: Franklin; src: url('../fonts/Franklin_Gothic_Medium.ttf'); } 
+@font-face { font-family: Franklin; src: url('../fonts/Franklin_Gothic_Medium.ttf'); }
 
 /* -----------------------------------------
    Shared Styles
@@ -62,7 +62,7 @@ html, body {
 body {
   background-color: #0684ad;
 
-  &#tinymce { 
+  &#tinymce {
     background-color: #fff;
   }
 }
@@ -123,7 +123,7 @@ dl {
         }
       }
     }
-    
+
     tr.alt, tr:nth-of-type(even){
       td {
         @include background-image(linear-gradient(#f8f8f8, #f6f6f6));
@@ -210,7 +210,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 @mixin global-button {
     @include text-shadow(0px 1px 0px #45613e);
     @include border-radius(6px);
-    @include box-shadow(inset 0px 1px 0px 0px #6DC088); 
+    @include box-shadow(inset 0px 1px 0px 0px #6DC088);
     display: inline-block;
     font-size: 16px;
     font-weight: normal;
@@ -348,7 +348,7 @@ html.js {
       a {
         background: #0085ad;
 
-        strong { 
+        strong {
           color: white;
         }
       }
@@ -516,7 +516,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
 
     .notifications {
-      span { 
+      span {
         display: inline-block;
         width: 27px;
         height: 40px;
@@ -669,7 +669,7 @@ nav.main-nav {
   ul {
     margin-left: 26px;
 
-    li { 
+    li {
       display: inline-block;
       margin: 0px;
       padding: 0px;
@@ -686,7 +686,7 @@ nav.main-nav {
         line-height: 40px;
         color: $header-text; // text color
 
-        &.active { 
+        &.active {
           background-color: #93d8f3; // color overlay
           color: #063e5f; // text color + color overlay
         }
@@ -763,7 +763,7 @@ nav.main-nav {
   }
 }
 
-.textify { 
+.textify {
   *, *:before, *:after {
     @include box-sizing(content-box);
   }
@@ -955,9 +955,14 @@ a.tabledrag-handle .handle {
   }
 
   .profile-school {
-    padding: 0 0 15px;
+    margin-bottom: 5px;
     font-size: 18px;
     color: #494949;
+  }
+
+  .profile-email-address {
+    margin-bottom: 5px;
+    font-size: 18px;
   }
 }
 
@@ -975,6 +980,7 @@ a.tabledrag-handle .handle {
   }
 
   .introduction {
+    margin-top: 10px;
     font-size: 14px;
     border-top: 1px #ccc solid;
     padding-top: 10px;
@@ -1306,7 +1312,7 @@ a.tabledrag-handle .handle {
     }
   }
 
-  //error message 
+  //error message
   .alert-box.alert {
     width: 95%;
     margin: 1em auto;
@@ -1462,7 +1468,7 @@ a.tabledrag-handle .handle {
       display: block !important;
     }
   }
-  
+
   .field-name-field-license-secondary {
     .form-item {
       .chzn-container {
@@ -2045,7 +2051,7 @@ a.tabledrag-handle .handle {
 
   &:before{
     right:15px;
-    left: auto!important; 
+    left: auto!important;
   }
 
   &:after {
@@ -2450,14 +2456,14 @@ a.tabledrag-handle .handle {
   }
 
   .more, .less {
-    @include border-radius(6px); 
+    @include border-radius(6px);
     padding: 1px 10px;
     display: inline-block;
     border: 1px solid #ccc;
     background: #eee;
     color: #333;
     color: inherit;
-  } 
+  }
 }
 
 
