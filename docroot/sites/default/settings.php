@@ -666,9 +666,6 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       break;
   }
 }
-else {
-  $conf['apachesolr_read_only'] = '1';
-}
 
 error_reporting(E_ERROR);
 ini_set('display_errors', TRUE);

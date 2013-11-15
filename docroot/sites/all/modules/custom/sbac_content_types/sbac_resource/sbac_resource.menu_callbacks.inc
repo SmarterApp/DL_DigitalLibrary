@@ -130,6 +130,12 @@ function sbac_resource_resource_review_page() {
   return theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
 }
 
+/**
+ * Yuriy's lack of comments ;)
+ *
+ * @param string $string
+ * @return string
+ */
 function sbac_resource_no_search_results($string = '') {
   $output = '';
   if ($string) {
@@ -145,7 +151,7 @@ function sbac_resource_no_search_results($string = '') {
   }
 
   $output .= '<p>' . t('Please try a different search term or browse any of the resources below that 
-    have been identified for you using the subject(s) and grade(s) in your profile.') . '</p>'; // <---- LIES!!
+    have been identified for you using the subject(s) and grade(s) in your profile.') . '</p>'; // <---- LIES!! LOL!
 
   return $output;
 }
