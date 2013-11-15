@@ -28,6 +28,7 @@ features[features_api][] = api:2
 features[user_permission][] = administer search
 features[user_permission][] = search content
 features[user_permission][] = use advanced search
+features[variable][] = acquia_search_edismax_default
 features[variable][] = apachesolr_attachments_excluded_extensions
 features[variable][] = apachesolr_attachments_excluded_mime
 features[variable][] = apachesolr_attachments_extract_using

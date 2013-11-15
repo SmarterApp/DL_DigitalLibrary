@@ -13,6 +13,13 @@ function sbac_search_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'acquia_search_edismax_default';
+  $strongarm->value = '1';
+  $export['acquia_search_edismax_default'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'apachesolr_attachments_excluded_extensions';
   $strongarm->value = 'aif art avi bmp gif ico jpg mov mp3 mp4 mpg oga ogv png psd ra ram rgb tif wmv';
   $export['apachesolr_attachments_excluded_extensions'] = $strongarm;
@@ -70,7 +77,7 @@ function sbac_search_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'apachesolr_cron_limit';
-  $strongarm->value = '50';
+  $strongarm->value = '200';
   $export['apachesolr_cron_limit'] = $strongarm;
 
   $strongarm = new stdClass();
