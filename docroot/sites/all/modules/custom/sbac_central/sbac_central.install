@@ -679,11 +679,12 @@ function sbac_central_update_7058() {
 }
 
 /**
- * Enables Air API
+ * Enables Acquia Search Multi Subs module
  */
 function sbac_central_update_7059() {
   $modules = array(
     'acquia_search_multi_subs',
+    'acquia_search',
   );
   module_enable($modules);
 }
