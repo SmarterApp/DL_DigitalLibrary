@@ -30,7 +30,13 @@ function sbac_search_apachesolr_environments() {
     'apachesolr_read_only' => '0',
     'apachesolr_soft_commit' => 0,
   );
-  $environment->index_bundles = array();
+  $environment->index_bundles = array(
+    'node' => array(
+      0 => 'alignment',
+      1 => 'help_page',
+      2 => 'resource',
+    ),
+  );
   $export['acquia_search_server_1'] = $environment;
 
   return $export;
