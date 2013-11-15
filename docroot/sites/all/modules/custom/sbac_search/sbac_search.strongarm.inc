@@ -77,7 +77,7 @@ function sbac_search_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'apachesolr_default_environment';
-  $strongarm->value = 'amazon_apache_solr_environment_local';
+  $strongarm->value = 'acquia_search_server_1';
   $export['apachesolr_default_environment'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -132,13 +132,6 @@ function sbac_search_strongarm() {
   $strongarm->name = 'apachesolr_site_hash';
   $strongarm->value = '25ki80';
   $export['apachesolr_site_hash'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'facetapi:block_cache:apachesolr@amazon_apache_solr_environment';
-  $strongarm->value = '-1';
-  $export['facetapi:block_cache:apachesolr@amazon_apache_solr_environment'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
