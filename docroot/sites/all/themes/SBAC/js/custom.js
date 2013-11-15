@@ -1,6 +1,10 @@
 (function ($) {
   Drupal.behaviors.sbac_custom = {
     attach: function (context, settings) {
+      setTimeout(function() {
+        $('.drupal-alert-box').fadeOut('fast');
+      }, 5000);
+
       $('#disable-feedback').click(function () {
         $.ajax({
           url: Drupal.settings.basePath + 'disable-feedback',

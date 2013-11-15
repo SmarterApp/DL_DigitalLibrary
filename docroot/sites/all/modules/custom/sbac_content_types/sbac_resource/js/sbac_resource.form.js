@@ -23,7 +23,7 @@
 
       setTimeout(function() {
         $('.sbac-alert-box').fadeOut('fast');
-      }, 6000);
+      }, 5000);
     }
   };
 

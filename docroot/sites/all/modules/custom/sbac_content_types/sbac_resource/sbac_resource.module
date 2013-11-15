@@ -637,7 +637,7 @@ function sbac_status_messages($variables) {
     if ($messages) {
       $type_output = '';
       if (isset($status_mapping[$type])) {
-        $type_output .= "<div class=\"alert-box $status_mapping[$type]\">\n";
+        $type_output .= "<div class=\"drupal-alert-box alert-box $status_mapping[$type]\">\n";
       }
       else {
         $type_output .= "<div class=\"sbac-alert-box alert-box\">\n";
