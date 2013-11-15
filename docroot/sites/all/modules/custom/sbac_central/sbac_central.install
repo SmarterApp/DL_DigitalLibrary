@@ -677,3 +677,13 @@ function sbac_central_update_7058() {
   );
   module_enable($modules);
 }
+
+/**
+ * Enables Air API
+ */
+function sbac_central_update_7059() {
+  $modules = array(
+    'acquia_search_multi_subs',
+  );
+  module_enable($modules);
+}
