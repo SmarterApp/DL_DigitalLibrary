@@ -84,7 +84,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_materials($form, $form_state);
     _sbac_resource_form_tags($form, $form_state);
     _sbac_resource_form_advanced($form, $form_state);
-    _sbac_resource_form_cancel_all_changes_button($form, $form_state);
+//    _sbac_resource_form_cancel_all_changes_button($form, $form_state);
     _sbac_resource_form_save_all_changes_button($form, $form_state);
     _sbac_resource_form_submit_button($form, $form_state);
     _sbac_resource_form_save_continue_button($form, $form_state);
@@ -156,17 +156,20 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
 
-  // If the save and close button was clicked via the modal, do the following.
+  // If the save button was clicked via the modal, do the following.
   if (isset($form_state['values']['additional_settings__active_tab']) &&
     $form_state['values']['additional_settings__active_tab'] == 'edit-group_advanced' &&
     isset($form_state['clicked_button']['#value']) &&
-    $form_state['clicked_button']['#value'] == 'Save and Close') {
+    $form_state['clicked_button']['#value'] == 'Save') {
 
     $original_posting_option = $_SESSION['sbac-original-posting-option'];
     $posting_option = $_SESSION['sbac-posting-option'];
     $chosen_option = $posting_option;
     if ($original_posting_option == $posting_option) {
       $chosen_option = 3;
+    }
+    if ($form_state['values']['workbench_moderation_state_current'] == 'draft') {
+      $chosen_option = 0;
     }
 
     switch ($chosen_option) {
@@ -224,11 +227,27 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
     $form_state['values']['field_html5']['und'][0]['value'] = 1;
   }
 
-  // save the node.
+  // Save the node.
   node_form_submit($form, $form_state);
 
-  $form_state['redirect'] = 'digital-library-resources';
-  drupal_redirect_form($form_state);
+  // Redirect the user to the correct place.
+  if (isset($_SESSION['post_resource_clicked']) && $_SESSION['post_resource_clicked']) {
+    unset($_SESSION['post_resource_clicked']);
+    drupal_custom_goto($form_state['redirect']);
+  }
+  else {
+    // Check for an active tab, there should always be one.
+    $active_tab = '';
+    if (isset($form_state['values']['additional_settings__active_tab'])){
+      $active_tab = $form_state['values']['additional_settings__active_tab'];
+    }
+
+    $form_state['redirect'] = '/node/' . $form['#node']->nid . '/edit#' . $active_tab;
+    if (isset($_GET['destination'])) {
+      unset($_GET['destination']);
+    }
+    drupal_custom_goto($form_state['redirect']);
+  }
 }
 
 
@@ -416,8 +435,8 @@ function sbac_resource_cancel_all_changes_submit(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_validate_form(&$form, &$form_state) {
-  if (isset($form_state['clicked_button']['#value']) && $form_state['clicked_button']['#value'] == 'Cancel') {
-    $form_state['redirect'] = 'digital-library-resources';
+  if (isset($form_state['clicked_button']['#value']) && $form_state['clicked_button']['#value'] == 'Close') {
+    $form_state['redirect'] = 'my-resources';
     drupal_redirect_form($form_state);
   }
   // Do not validate on ajax events like "Upload"
@@ -978,6 +997,9 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
     if ($original_posting_option == $posting_option) {
       $chosen_option = 3;
     }
+    if (isset($_GET['state']) && $_GET['state'] == 'draft') {
+      $chosen_option = 0;
+    }
 
     switch ($chosen_option) {
       case 0:
@@ -1000,6 +1022,7 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
       'title' => t($description),
       'ajax' => $js,
       'chosen_option' => $chosen_option,
+      'state' => $_GET['state'],
     );
 
     $output = ctools_modal_form_wrapper('sbac_resource_save_all_changes_form', $form_state);
@@ -1009,6 +1032,7 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         // All changes are saved in the save_and_close submit handler.
+        $_SESSION['post_resource_clicked'] = TRUE;
         switch ($chosen_option) {
           case 0: // post without distinction.
             $output[] = ajax_command_callback('save_and_close', 'click');
@@ -1827,7 +1851,7 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
   unset($form['#validate']);
   unset($form['actions']['submit']['#submit']);
   $form['actions']['submit']['#validate'][] = 'sbac_resource_validate_title';
-  $form['actions']['submit']['#value'] = t('Save and Close');
+  $form['actions']['submit']['#value'] = t('Save');
   $form['actions']['submit']['#submit'] = array('sbac_resource_save_and_close');
   $form['actions']['submit']['#prefix'] = '<div id="sbac-resource-save-continue">';
   $form['actions']['submit']['#suffix'] = '</div>';
@@ -1844,7 +1868,7 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
 function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
   $form['actions']['save_continue'] = array(
     '#type' => 'submit',
-    '#value' => 'Save and Continue',
+    '#value' => 'Continue',
     '#weight' => 2,
     '#validate' => array('sbac_resource_validate_form'),
     '#attributes' => array('id' => 'edit-save-continue'),
@@ -1865,25 +1889,26 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_cancel_button(&$form, &$form_state) {
-  if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'draft') {
-    return;
-  }
+//  if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'draft') {
+//    return;
+//  }
 
-  global $user;
-  if ($user->uid == 1 ||
-    in_array('DLRB member', $user->roles) ||
-    in_array('digital library administrator', $user->roles) ||
-    in_array('system administrator', $user->roles)) {
-
-    if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state != 'creation') {
-      return;
-    }
-  }
+//  global $user;
+//  if ($user->uid == 1 ||
+//    in_array('DLRB member', $user->roles) ||
+//    in_array('digital library administrator', $user->roles) ||
+//    in_array('system administrator', $user->roles)) {
+//
+//    if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state != 'creation') {
+//      return;
+//    }
+//  }
 
   $form['actions']['cancel'] = array(
     '#type' => 'submit',
-    '#value' => 'Cancel',
+    '#value' => 'Close',
     '#weight' => 0,
+    '#attributes' => array('class' => array('sbac-cancel-form-button')),
     '#validate' => array('sbac_resource_validate_form'),
     "#executes_submit_callback" => FALSE,
     '#limit_validation_errors' => array(),
@@ -1978,6 +2003,7 @@ function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
           'nid' => $form['#node']->nid,
           'posting_option' => $default_value,
           'original_posting_option' => $default_value,
+          'state' => $form['#node']->workbench_moderation['current']->state,
         )
       )),
       '#weight' => 4,

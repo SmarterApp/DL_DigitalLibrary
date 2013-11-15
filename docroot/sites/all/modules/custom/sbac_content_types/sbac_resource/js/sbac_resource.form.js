@@ -70,22 +70,15 @@
     var active_tab = $('.vertical-tab-button.selected a strong').html();
 
     submit_resource.hide();
-    cancel_button.hide();
     save_all_changes.hide();
-    if (active_tab == 'General' && resource_state == 'creation') {
-      cancel_button.show();
-    }
-    if (dlrb_member && resource_state == 'published') {
-      save_and_close.hide();
-    }
     if (active_tab == 'Tags' && dlrb_member == false) {
       $('#edit-save-continue').html('Submit Resource');
     }
     else if (active_tab == 'Advanced') {
-      $('#edit-save-continue').html('Save All Changes');
+      $('#edit-save-continue').html('Post Resource');
     }
     else {
-      $('#edit-save-continue').html('Save and Continue');
+      $('#edit-save-continue').html('Continue');
     }
   };
 
@@ -141,9 +134,14 @@
         return;
       }
 
+      var resource_state = Drupal.settings.resource_workbench_current_state;
       $(':input').change( function () {
-        if (!isDirty) {
-          isDirty = true;
+        if ($(this).attr('id') == 'edit-field-author-und-0-value' || $(this).attr('id') == 'edit-field-publisher-und-0-value') {
+        }
+        else {
+          if (!isDirty) {
+            isDirty = true;
+          }
         }
       });
 
@@ -152,6 +150,10 @@
           isDirty = true;
         }
       });
+
+      if (resource_state == 'creation') {
+        isDirty = false;
+      }
 
       $('#resource-help-box .backButton').click(function() {
         isDirty = false;
@@ -163,7 +165,7 @@
         }
       });
 
-      $('.form-submit').click(function () {
+      $('#sbac-resource-save-continue button').click(function () {
         isDirty = false;
       });
 
