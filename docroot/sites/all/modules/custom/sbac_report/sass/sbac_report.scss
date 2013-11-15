@@ -107,6 +107,18 @@ i.icon-info {
   }
 }
 
+.view-display-id-resources_details {
+  .form-type-select {
+    label {
+      display: inline-block;
+    }
+
+    select {
+      width: 85px;
+    }
+  }
+}
+
 .view-filters {
   float: right;
   text-align: right;
@@ -131,7 +143,7 @@ i.icon-info {
   .form-item-user-group-dropdown {
     clear: both;
   }
-  
+
 
 
   /* state container */
@@ -194,7 +206,7 @@ i.icon-info {
           width: 10px;
           height: 10px;
           float: right;
-          margin: 3px 3px 0 0;          
+          margin: 3px 3px 0 0;
         }
       }
     }
@@ -269,7 +281,7 @@ i.icon-info {
           background: none;
           margin: 0;
         }
-      } 
+      }
     }
   }
 }
@@ -322,9 +334,9 @@ i.icon-info {
 	          @include table-header();
 	        }
 
-          .cell-scroll { 
+          .cell-scroll {
             max-width: 52px;
-            overflow-x: scroll; 
+            overflow-x: scroll;
           }
 	      }
 	    }
