@@ -1,0 +1,16 @@
+name = Acquia Search Multi Subscription
+description = "Acquia Search UI for configuring separate Acquia Subscriptions per Search Environment."
+package = Acquia Network Connector
+core = 7.x
+
+dependencies[] = acquia_agent
+
+files[] = lib/Drupal/SearchApiSolr/SearchApiAcquiaSearchMultiService.php
+
+
+; Information added by drupal.org packaging script on 2013-10-17
+version = "7.x-1.0-beta2"
+core = "7.x"
+project = "acquia_search_multi_subs"
+datestamp = "1382043956"
+
