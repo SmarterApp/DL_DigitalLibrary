@@ -84,6 +84,11 @@
     else {
       $('#edit-save-continue').html('Continue');
     }
+
+    if (resource_state == 'published') {
+      save_and_close.hide();
+      $('#edit-save-continue').html('Apply Changes');
+    }
   };
 
   /**

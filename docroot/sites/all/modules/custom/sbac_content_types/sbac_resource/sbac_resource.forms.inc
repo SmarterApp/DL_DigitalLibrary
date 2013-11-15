@@ -84,7 +84,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_materials($form, $form_state);
     _sbac_resource_form_tags($form, $form_state);
     _sbac_resource_form_advanced($form, $form_state);
-//    _sbac_resource_form_cancel_all_changes_button($form, $form_state);
+    _sbac_resource_form_cancel_all_changes_button($form, $form_state);
     _sbac_resource_form_save_all_changes_button($form, $form_state);
     _sbac_resource_form_submit_button($form, $form_state);
     _sbac_resource_form_save_continue_button($form, $form_state);
@@ -233,7 +233,7 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   // Redirect the user to the correct place.
   if (isset($_SESSION['post_resource_clicked']) && $_SESSION['post_resource_clicked']) {
     unset($_SESSION['post_resource_clicked']);
-    drupal_custom_goto($form_state['redirect']);
+    drupal_goto($form_state['redirect']);
   }
   else {
     // Check for an active tab, there should always be one.
@@ -422,7 +422,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_cancel_all_changes_submit(&$form, &$form_state) {
-  if (isset($form_state['clicked_button']['#value']) && $form_state['clicked_button']['#value'] == 'Cancel All Changes') {
+  if (isset($form_state['clicked_button']['#value']) && $form_state['clicked_button']['#value'] == 'Close') {
     $form_state['redirect'] = 'digital-library-resources';
     drupal_redirect_form($form_state);
   }
@@ -1893,16 +1893,16 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
 //    return;
 //  }
 
-//  global $user;
-//  if ($user->uid == 1 ||
-//    in_array('DLRB member', $user->roles) ||
-//    in_array('digital library administrator', $user->roles) ||
-//    in_array('system administrator', $user->roles)) {
-//
-//    if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state != 'creation') {
-//      return;
-//    }
-//  }
+  global $user;
+  if ($user->uid == 1 ||
+    in_array('DLRB member', $user->roles) ||
+    in_array('digital library administrator', $user->roles) ||
+    in_array('system administrator', $user->roles)) {
+
+    if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'published') {
+      return;
+    }
+  }
 
   $form['actions']['cancel'] = array(
     '#type' => 'submit',
@@ -1965,7 +1965,7 @@ function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
 
     $form['actions']['cancel_all_changes'] = array(
       '#type' => 'submit',
-      '#value' => 'Cancel All Changes',
+      '#value' => 'Close',
       '#weight' => 0,
       '#validate' => array('sbac_resource_cancel_all_changes_submit'),
       "#executes_submit_callback" => FALSE,
