@@ -242,7 +242,7 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
       $active_tab = $form_state['values']['additional_settings__active_tab'];
     }
 
-    $form_state['redirect'] = '/node/' . $form['#node']->nid . '/edit#' . $active_tab;
+    $form_state['redirect'] = '/node/' . $form_state['node']->nid . '/edit#' . $active_tab;
     if (isset($_GET['destination'])) {
       unset($_GET['destination']);
     }

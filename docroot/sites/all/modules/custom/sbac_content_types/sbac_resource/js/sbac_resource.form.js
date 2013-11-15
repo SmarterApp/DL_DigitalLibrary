@@ -20,6 +20,10 @@
       $('.vertical-tabs-list li a').click(function () {
         control_form_buttons();
       });
+
+      setTimeout(function() {
+        $('.sbac-alert-box').fadeOut('fast');
+      }, 6000);
     }
   };
 

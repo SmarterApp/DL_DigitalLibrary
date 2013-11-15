@@ -640,7 +640,7 @@ function sbac_status_messages($variables) {
         $type_output .= "<div class=\"alert-box $status_mapping[$type]\">\n";
       }
       else {
-        $type_output .= "<div class=\"alert-box\">\n";
+        $type_output .= "<div class=\"sbac-alert-box alert-box\">\n";
       }
 
       if (!empty($status_heading[$type])) {
