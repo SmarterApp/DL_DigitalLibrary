@@ -7508,31 +7508,6 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 }
 
 /* line 259, ../sass/custom.scss */
-button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
-  text-shadow: 0px 1px 0px #0f546b;
-  -webkit-box-shadow: inset 0px 1px 0px 0px #22b3e3;
-  -moz-box-shadow: inset 0px 1px 0px 0px #22b3e3;
-  box-shadow: inset 0px 1px 0px 0px #22b3e3;
-  background: #0084b0;
-  border: 1px solid #0d6785;
-  color: #FFF;
-  padding: 8px 18px;
-  font-family: Arial, Helvetica, sans-serif;
-}
-/* line 253, ../sass/custom.scss */
-button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus, #edit-cancel:hover, #edit-cancel:focus, #edit-tags-cancel:hover, #edit-tags-cancel:focus, #sbac-search-close-button:hover, #sbac-search-close-button:focus, .button.devtools-dialog-close:hover, .button.devtools-dialog-close:focus, #gate-keeper-cancel:hover, #gate-keeper-cancel:focus, #review-cancel:hover, #review-cancel:focus, #edit-delete-overlay:hover, #edit-delete-overlay:focus, #edit-cancel-overlay:hover, #edit-cancel-overlay:focus, #post-cancel:hover, #post-cancel:focus, div.ctools-modal-content a.close:hover, div.ctools-modal-content a.close:focus, a.remove:hover, a.remove:focus, a.fake-cancel:hover, a.fake-cancel:focus {
-  -webkit-box-shadow: inset 0px 1px 0px 0px #006184;
-  -moz-box-shadow: inset 0px 1px 0px 0px #006184;
-  box-shadow: inset 0px 1px 0px 0px #006184;
-  background: #006184;
-}
-
-/* line 263, ../sass/custom.scss */
 button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-continue, button.disabled, button[disabled], .button.disabled, .button[disabled] {
   text-shadow: 0px 1px 0px #45613e;
   -webkit-border-radius: 6px;
@@ -7576,6 +7551,31 @@ button:focus:hover, .button:focus:hover, .button.form-submit:focus:hover, button
   transition: all 500ms ease;
   background: #0085ad;
   color: white;
+}
+
+/* line 263, ../sass/custom.scss */
+button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, button.sbac-cancel-blue, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  text-shadow: 0px 1px 0px #0f546b;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  -moz-box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  background: #0084b0;
+  border: 1px solid #0d6785;
+  color: #FFF;
+  padding: 8px 18px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* line 253, ../sass/custom.scss */
+button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus, #edit-cancel:hover, #edit-cancel:focus, #edit-tags-cancel:hover, #edit-tags-cancel:focus, #sbac-search-close-button:hover, #sbac-search-close-button:focus, button.sbac-cancel-blue:hover, button.sbac-cancel-blue:focus, .button.devtools-dialog-close:hover, .button.devtools-dialog-close:focus, #gate-keeper-cancel:hover, #gate-keeper-cancel:focus, #review-cancel:hover, #review-cancel:focus, #edit-delete-overlay:hover, #edit-delete-overlay:focus, #edit-cancel-overlay:hover, #edit-cancel-overlay:focus, #post-cancel:hover, #post-cancel:focus, div.ctools-modal-content a.close:hover, div.ctools-modal-content a.close:focus, a.remove:hover, a.remove:focus, a.fake-cancel:hover, a.fake-cancel:focus {
+  -webkit-box-shadow: inset 0px 1px 0px 0px #006184;
+  -moz-box-shadow: inset 0px 1px 0px 0px #006184;
+  box-shadow: inset 0px 1px 0px 0px #006184;
+  background: #006184;
 }
 
 /* line 267, ../sass/custom.scss */
