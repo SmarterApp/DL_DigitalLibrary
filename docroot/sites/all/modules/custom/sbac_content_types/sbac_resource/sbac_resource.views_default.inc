@@ -47,10 +47,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -227,18 +223,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['label'] = '';
-  $handler->display->display_options['fields']['field_file']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_file']['type'] = 'file_url_plain';
-  $handler->display->display_options['fields']['field_file']['group_column'] = 'entity_id';
-  $handler->display->display_options['fields']['field_file']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_file']['delta_offset'] = '0';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -342,17 +326,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['label'] = '';
-  $handler->display->display_options['fields']['field_file']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_file']['type'] = 'file_url_plain';
-  $handler->display->display_options['fields']['field_file']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_file']['delta_offset'] = '0';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -451,10 +424,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -711,10 +680,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -910,18 +875,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['label'] = '';
-  $handler->display->display_options['fields']['field_file']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_file']['type'] = 'file_url_plain';
-  $handler->display->display_options['fields']['field_file']['group_column'] = 'entity_id';
-  $handler->display->display_options['fields']['field_file']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_file']['delta_offset'] = '0';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -1019,17 +972,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['label'] = '';
-  $handler->display->display_options['fields']['field_file']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_file']['type'] = 'file_url_plain';
-  $handler->display->display_options['fields']['field_file']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_file']['delta_offset'] = '0';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -1122,10 +1064,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -1381,10 +1319,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -1730,18 +1664,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['label'] = '';
-  $handler->display->display_options['fields']['field_file']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_file']['type'] = 'file_url_plain';
-  $handler->display->display_options['fields']['field_file']['group_column'] = 'entity_id';
-  $handler->display->display_options['fields']['field_file']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_file']['delta_offset'] = '0';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -1839,17 +1761,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['label'] = '';
-  $handler->display->display_options['fields']['field_file']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_file']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_file']['type'] = 'file_url_plain';
-  $handler->display->display_options['fields']['field_file']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_file']['delta_offset'] = '0';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -1942,10 +1853,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Materials */
-  $handler->display->display_options['fields']['field_file']['id'] = 'field_file';
-  $handler->display->display_options['fields']['field_file']['table'] = 'field_data_field_file';
-  $handler->display->display_options['fields']['field_file']['field'] = 'field_file';
   /* Field: Content: Body */
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
@@ -2062,334 +1969,51 @@ function sbac_resource_views_default_views() {
   $export['resources'] = $view;
 
   $view = new view();
-  $view->name = 'search_resources';
+  $view->name = 'search_resource_keywords';
   $view->description = '';
   $view->tag = 'default';
-  $view->base_table = 'apachesolr__amazon_apache_solr_environment_local';
-  $view->human_name = 'Search Resources';
+  $view->base_table = 'apachesolr__acquia_search_server_1';
+  $view->human_name = 'Search Resource Keywords';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Search Resources';
+  $handler->display->display_options['title'] = 'Search Resource Keywords';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Field: Apache Solr: entity_id */
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_environment_local';
+  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['label'] = '';
   $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
   /* Field: Apache Solr: entity_type */
   $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_environment_local';
-  $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['label'] = '';
-  $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
-  /* Filter criterion: Apache Solr: entity_type */
-  $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_environment_local';
-  $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['value'] = 'node';
-  $handler->display->display_options['filters']['entity_type']['group'] = 1;
-  $handler->display->display_options['filters']['entity_type']['expose']['operator_id'] = 'entity_type_op';
-  $handler->display->display_options['filters']['entity_type']['expose']['label'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['expose']['operator'] = 'entity_type_op';
-  $handler->display->display_options['filters']['entity_type']['expose']['identifier'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  /* Filter criterion: Apache Solr: bundle */
-  $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_environment_local';
-  $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['value'] = 'resource';
-  $handler->display->display_options['filters']['bundle']['group'] = 1;
-  $handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
-  $handler->display->display_options['filters']['bundle']['expose']['label'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['expose']['operator'] = 'bundle_op';
-  $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-  /* Filter criterion: Apache Solr: Search */
-  $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_environment_local';
-  $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['group'] = 1;
-  $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
-  $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
-  $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-
-  /* Display: Search  */
-  $handler = $view->new_display('block', 'Search ', 'search');
-
-  /* Display: Page */
-  $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'resource/keyword/search';
-  $export['search_resources'] = $view;
-
-  $view = new view();
-  $view->name = 'search_resources_dev';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'apachesolr__amazon_apache_solr_dev';
-  $view->human_name = 'Search Resources - Dev';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Search Resources - Dev';
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Apache Solr: entity_id */
-  $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_dev';
-  $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['label'] = '';
-  $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
-  /* Field: Apache Solr: entity_type */
-  $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_dev';
-  $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['label'] = '';
-  $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
-  /* Filter criterion: Apache Solr: entity_type */
-  $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_dev';
-  $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['value'] = 'node';
-  /* Filter criterion: Apache Solr: bundle */
-  $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_dev';
-  $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['value'] = 'resource';
-  /* Filter criterion: Apache Solr: Search */
-  $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_dev';
-  $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
-  $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
-  $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-
-  /* Display: Search */
-  $handler = $view->new_display('block', 'Search', 'search');
-  $export['search_resources_dev'] = $view;
-
-  $view = new view();
-  $view->name = 'search_resources_integration';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'apachesolr__amazon_apache_solr_integration';
-  $view->human_name = 'Search Resources - Integration';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Search Resources - Test';
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Apache Solr: entity_id */
-  $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_integration';
-  $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['label'] = '';
-  $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
-  /* Field: Apache Solr: entity_type */
-  $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_integration';
-  $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['label'] = '';
-  $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
-  /* Filter criterion: Apache Solr: entity_type */
-  $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_integration';
-  $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['value'] = 'node';
-  $handler->display->display_options['filters']['entity_type']['expose']['operator_id'] = 'entity_type_op';
-  $handler->display->display_options['filters']['entity_type']['expose']['label'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['expose']['operator'] = 'entity_type_op';
-  $handler->display->display_options['filters']['entity_type']['expose']['identifier'] = 'entity_type';
-  /* Filter criterion: Apache Solr: bundle */
-  $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_integration';
-  $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['value'] = 'resource';
-  $handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
-  $handler->display->display_options['filters']['bundle']['expose']['label'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['expose']['operator'] = 'bundle_op';
-  $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
-  /* Filter criterion: Apache Solr: Search */
-  $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_integration';
-  $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
-  $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
-  $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-
-  /* Display: Search */
-  $handler = $view->new_display('block', 'Search', 'search');
-  $export['search_resources_integration'] = $view;
-
-  $view = new view();
-  $view->name = 'search_resources_prod';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'apachesolr__amazon_apache_solr_prod';
-  $view->human_name = 'Search Resources - Prod';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Search Resources - Prod';
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Apache Solr: entity_id */
-  $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_prod';
-  $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['label'] = '';
-  $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
-  /* Field: Apache Solr: entity_type */
-  $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_prod';
+  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
   $handler->display->display_options['fields']['entity_type']['label'] = '';
   $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
   /* Filter criterion: Apache Solr: bundle */
   $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_prod';
+  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
   $handler->display->display_options['filters']['bundle']['value'] = 'resource';
   /* Filter criterion: Apache Solr: entity_type */
   $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_prod';
+  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
   $handler->display->display_options['filters']['entity_type']['value'] = 'node';
   /* Filter criterion: Apache Solr: Search */
   $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_prod';
+  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
   $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
   $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
@@ -2414,175 +2038,9 @@ function sbac_resource_views_default_views() {
     26 => 0,
   );
 
-  /* Display: Search */
-  $handler = $view->new_display('block', 'Search', 'search');
-  $export['search_resources_prod'] = $view;
-
-  $view = new view();
-  $view->name = 'search_resources_test';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'apachesolr__amazon_apache_solr_test';
-  $view->human_name = 'Search Resources - Test';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Search Resources - Test';
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Apache Solr: entity_id */
-  $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_test';
-  $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['label'] = '';
-  $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
-  /* Field: Apache Solr: entity_type */
-  $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_test';
-  $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['label'] = '';
-  $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
-  /* Filter criterion: Apache Solr: entity_type */
-  $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_test';
-  $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['value'] = 'node';
-  $handler->display->display_options['filters']['entity_type']['expose']['operator_id'] = 'entity_type_op';
-  $handler->display->display_options['filters']['entity_type']['expose']['label'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['expose']['operator'] = 'entity_type_op';
-  $handler->display->display_options['filters']['entity_type']['expose']['identifier'] = 'entity_type';
-  /* Filter criterion: Apache Solr: bundle */
-  $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_test';
-  $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['value'] = 'resource';
-  $handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
-  $handler->display->display_options['filters']['bundle']['expose']['label'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['expose']['operator'] = 'bundle_op';
-  $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
-  /* Filter criterion: Apache Solr: Search */
-  $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_test';
-  $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
-  $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
-  $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-
-  /* Display: Search */
-  $handler = $view->new_display('block', 'Search', 'search');
-  $export['search_resources_test'] = $view;
-
-  $view = new view();
-  $view->name = 'search_resources_training';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'apachesolr__amazon_apache_solr_training';
-  $view->human_name = 'Search Resources - Training';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Search Resources - Test';
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Apache Solr: entity_id */
-  $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__amazon_apache_solr_training';
-  $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['label'] = '';
-  $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
-  /* Field: Apache Solr: entity_type */
-  $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_training';
-  $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['label'] = '';
-  $handler->display->display_options['fields']['entity_type']['element_label_colon'] = FALSE;
-  /* Filter criterion: Apache Solr: entity_type */
-  $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__amazon_apache_solr_training';
-  $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['value'] = 'node';
-  $handler->display->display_options['filters']['entity_type']['expose']['operator_id'] = 'entity_type_op';
-  $handler->display->display_options['filters']['entity_type']['expose']['label'] = 'entity_type';
-  $handler->display->display_options['filters']['entity_type']['expose']['operator'] = 'entity_type_op';
-  $handler->display->display_options['filters']['entity_type']['expose']['identifier'] = 'entity_type';
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__amazon_apache_solr_train';
-  $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['value'] = 'resource';
-  $handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
-  $handler->display->display_options['filters']['bundle']['expose']['label'] = 'bundle';
-  $handler->display->display_options['filters']['bundle']['expose']['operator'] = 'bundle_op';
-  $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
-  /* Filter criterion: Apache Solr: Search */
-  $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__amazon_apache_solr_training';
-  $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
-  $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
-  $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-  );
-
-  /* Display: Search */
-  $handler = $view->new_display('block', 'Search', 'search');
-  $export['search_resources_training'] = $view;
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'search');
+  $export['search_resource_keywords'] = $view;
 
   return $export;
 }

@@ -125,29 +125,7 @@ function sbac_resource_views_post_execute(&$view) {
   if ($view->name == 'resources' && ($view->current_display == 'grid_view' || $view->current_display == 'list_view')) {
     if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] != '') {
       // Search apache solr for keyword.
-      if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-        switch ($_ENV['AH_SITE_ENVIRONMENT']) {
-          case 'dev':
-            $sr_view = views_get_view('search_resources_dev', TRUE);
-            break;
-          case 'test':
-            $sr_view = views_get_view('search_resources_test', TRUE);
-            break;
-          case 'stage2':
-            $sr_view = views_get_view('search_resources_training', TRUE);
-            break;
-          case 'stage3':
-            $sr_view = views_get_view('search_resources_integration', TRUE);
-            break;
-          case 'prod':
-            $sr_view = views_get_view('search_resources_prod', TRUE);
-            break;
-        }
-      }
-      else {
-        $sr_view = views_get_view('search_resources', TRUE);
-      }
-
+      $sr_view = views_get_view('search_resource_keywords', TRUE);
       $sr_view->set_display('search');
       $view_filters = $sr_view->display_handler->get_option('filters');
       $view_filters['keyword']['value'] = apachesolr_clean_text($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]);
