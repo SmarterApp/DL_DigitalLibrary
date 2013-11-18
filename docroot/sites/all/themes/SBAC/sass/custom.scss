@@ -256,12 +256,12 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   }
 }
 
-button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
-  @include global-button-negative;
-}
-
 button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-continue, button.disabled, button[disabled], .button.disabled, .button[disabled] {
   @include global-button;
+}
+
+button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, button.sbac-cancel-blue, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
+  @include global-button-negative;
 }
 
 .alert-box {
