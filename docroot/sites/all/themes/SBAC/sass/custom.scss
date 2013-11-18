@@ -567,7 +567,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     }
 
     li {
-      border-left: 1px solid black;
+      float: right;
       padding: 0px;
       margin: 0px;
 
@@ -580,7 +580,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
         font-size: 0.75em;
         padding-left: 55px;
         padding-right: 25px;
-        background: url('../images/icons/terms-small.png') 20px center no-repeat;
+        background: url('../images/icons/terms-small.png') 33px center no-repeat;
 
         &.help {
           background-image: url('../images/icons/help-small.png');
