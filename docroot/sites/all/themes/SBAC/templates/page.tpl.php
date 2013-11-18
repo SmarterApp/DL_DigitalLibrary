@@ -193,6 +193,7 @@ global $user;
       <ul class="footer-links inline-list right">
         <li><a class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
         <li>
+          <?php if (user_is_logged_in()) : ?>
           <div class="footer-help">
             <a class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
             <ul id="drop2" class="f-dropdown" data-dropdown-content>
@@ -201,6 +202,7 @@ global $user;
               <li><a href="help-topics">Help Topics</a></li>
             </ul>
           </div>
+          <?php endif; ?>
         </li>
       </ul>
     </div>
