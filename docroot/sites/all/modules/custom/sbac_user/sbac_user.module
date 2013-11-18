@@ -204,18 +204,23 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_sne_member']['#access'] = TRUE;
       $form['field_state']['#access'] = TRUE;	
 	}
-  } 
-  
+  }
+
   if ($form_id == 'user_profile_form') {
     $is_edit_page = strpos($_GET['q'], '/edit');
-   	if ($is_edit_page !== FALSE) {
- 	  $form['field_first_name']['#disabled'] = TRUE;
+    $form['#validate'] = array();
+    $form['#validate'][] = 'sbac_user_email_validate';
+    $form['#validate'][] = 'user_validate_picture';
+    $form['#validate'][] = 'user_profile_form_validate';
+    if ($is_edit_page !== FALSE) {
+      $form['field_first_name']['#disabled'] = TRUE;
       $form['field_last_name']['#disabled'] = TRUE;
       // $form['account']['mail']['#disabled'] = TRUE; // primary email address
       $form['field_alternate_email_address']['#disabled'] = TRUE;
       $form['field_district_name']['#disabled'] = TRUE;
       $form['field_school_name']['#disabled'] = TRUE;
-    } else {
+    }
+    else {
       $form['account']['name']['#type'] = 'hidden';
       $form['account']['pass']['#type'] = 'hidden';
       $form['account']['current_pass']['#type'] = 'hidden';
@@ -223,7 +228,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['account']['status']['#type'] = 'hidden';
       //$form['account']['roles']['#type'] = 'hidden';
       $form['account']['notify']['#type'] = 'hidden';
-      
+
       //user fields
       $form['field_alternate_email_address']['#access'] = FALSE;
       $form['field_school_name']['#access'] = FALSE;
@@ -233,9 +238,6 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_state']['#access'] = FALSE;
       $form['field_feedback_flag']['#access'] = FALSE;
       $form['legal']['#access'] = FALSE;
-      
-      // add custom text for legal terms and conditions form item
-      // $form['legal_accept']['#element_validate'] = 'sbac_user_legal_validate';
 
       // remove user_profile_submit handler and then re-add so we can re-order the submit handlers
       $form['#submit'] = array_diff($form['#submit'], array('user_profile_form_submit'));
@@ -243,10 +245,14 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['#submit'][] = 'user_profile_form_submit';
       $form['#submit'][] = 'sbac_user_user_profile_default_tab_submit';
 
-      if(isset($form['picture']['picture']['#value'])) {
+      if (isset($form['picture']['picture']['#value'])) {
         $uid = $form_state['user']->entity_id;
         $form['picture']['picture_delete_link'] = array(
-          '#markup' => l(t('Remove Picture'), "custom/$uid/remove_picture", array('absolute' => TRUE, 'attributes' => array('class' =>'remove-picture'), 'query' => array('destination' => 'user/' . $uid)))
+          '#markup' => l(t('Remove Picture'), "custom/$uid/remove_picture", array(
+            'absolute' => TRUE,
+            'attributes' => array('class' => 'remove-picture'),
+            'query' => array('destination' => 'user/' . $uid)
+          ))
         );
       }
 
@@ -329,6 +335,21 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     );
 
     drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/legal.css');
+  }
+}
+
+/**
+ * Validates user's email.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_user_email_validate(&$form, &$form_state) {
+  $email= strtolower($form_state['values']['mail']);
+  //allow a-z, 0-9 and the special chars /+#~ in email addresses but not in domain names.
+  $regex = '/^[\/\+\#\~_a-z0-9-]+(\.[\/\+\#\~_a-z0-9-]+)*@[\/\+\#\~_a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/';
+  if (!preg_match($regex, $email)) {
+    form_set_error('', t('The email address :email is not valid.', array(':email' => $email)));
   }
 }
 
