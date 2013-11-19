@@ -811,12 +811,6 @@ function set_report_columns() {
           array('field_educational_use', 'Educational Use'),
           array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
           array('field_alignment_term', 'Common Core State Standards', 'accessor' => 'label'),
-          array(
-            'foreign',
-            'Common Core State Standards',
-            'field' => 'description',
-            'foreignkey' => array('field_alignment_term', '', 'accessor' => 'value'),
-          ),
           // non-wrapper fields:
           array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',),),
           // Gate Keeper
