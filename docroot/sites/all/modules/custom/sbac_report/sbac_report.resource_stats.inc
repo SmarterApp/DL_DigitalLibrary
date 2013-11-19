@@ -714,7 +714,7 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
       if (array_key_exists('primarykey', $fieldkey)) {
         $primarykey = $fieldkey['primarykey'];
       }
-      $value = get_field_value_using_schema($fieldkey, $data, $resource, $primarykey, $is_date);
+      $value = htmlspecialchars_decode(get_field_value_using_schema($fieldkey, $data, $resource, $primarykey, $is_date));
       if (array_key_exists('field', $fieldkey)) {
         format_metadata_value_field($row, $value, $csv_configuration, $is_date, $fieldkey['field']);
       }
