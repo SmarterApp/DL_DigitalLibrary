@@ -696,18 +696,39 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
 function _sbac_resource_my_resources_admin_links($fields) {
   $variables = array();
   $nid = $fields['nid']->raw;
-  $url = url('node/' . $nid, array('absolute' => TRUE));
-  $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-  $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-  $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-  $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-  $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-  $html5 = db_query("SELECT field_html5_value FROM {field_data_field_html5} WHERE entity_id = :entity_id", array(':entity_id' => $nid))->fetchField();
-  if ($html5) {
-    $variables['text'] = t('Draft Content Module');
+
+  if ($fields['state']->raw == 'published') {
+    $variables['sticky'] = FALSE;
+    if ($fields['sticky']->raw) {
+      $variables['sticky'] = TRUE;
+    }
+    $variables['views'] = '0 Views';
+    if (isset($fields['field_unique_views'])) {
+      $variables['views'] = $fields['field_unique_views']->content;
+    }
+    $variables['downloads'] = '0 Downloads';
+    if (isset($fields['field_asset_downloads'])) {
+      $variables['downloads'] = $fields['field_asset_downloads']->content;
+    }
+    $variables['collaborators'] = 'N Collaborations';
+    $variables['subject'] = $fields['field_subject']->content;
+    $variables['grades'] = $fields['field_grades']->content;
+    $variables['media_types'] = $fields['field_digital_media_type']->content;
   }
   else {
-    $variables['text'] = t('Draft Resource');
+    $url = url('node/' . $nid, array('absolute' => TRUE));
+    $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+    $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+    $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+    $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+    $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+    $html5 = db_query("SELECT field_html5_value FROM {field_data_field_html5} WHERE entity_id = :entity_id", array(':entity_id' => $nid))->fetchField();
+    if ($html5) {
+      $variables['text'] = t('Draft Content Module');
+    }
+    else {
+      $variables['text'] = t('Draft Resource');
+    }
   }
 
   return $variables;
