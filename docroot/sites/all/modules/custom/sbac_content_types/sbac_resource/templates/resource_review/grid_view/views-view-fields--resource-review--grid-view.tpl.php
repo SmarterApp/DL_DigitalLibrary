@@ -26,7 +26,7 @@
     ?>
 
     <h3 class='resource-name <?php print $class; ?>'>
-      <?php print $fields['title']->content; ?>
+      <?php print htmlspecialchars_decode($fields['title']->content); ?>
       <div class="shield-drop"><?php print $image; ?></div>
     </h3>
 
