@@ -160,7 +160,9 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   if (isset($form_state['values']['additional_settings__active_tab']) &&
     $form_state['values']['additional_settings__active_tab'] == 'edit-group_advanced' &&
     isset($form_state['clicked_button']['#value']) &&
-    $form_state['clicked_button']['#value'] == 'Save') {
+    $form_state['clicked_button']['#value'] == 'Save' &&
+    isset($_SESSION['post_resource_clicked'])
+    && $_SESSION['post_resource_clicked']) {
 
     $original_posting_option = $_SESSION['sbac-original-posting-option'];
     $posting_option = $_SESSION['sbac-posting-option'];
