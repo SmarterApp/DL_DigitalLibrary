@@ -576,7 +576,7 @@ SQL;
       try {
         $uid = $review->uid->value(); /// get's the actual user.
         $value = entity_metadata_wrapper('user', $uid);
-        if (is_obect($uid)) {
+        if (is_object($uid)) {
           $reviewers[$uid->uid] = $value;
         }
         else {
