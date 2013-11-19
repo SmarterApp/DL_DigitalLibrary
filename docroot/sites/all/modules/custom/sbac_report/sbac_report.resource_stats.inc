@@ -163,7 +163,11 @@ function sbac_report_resource_status_options() {
   // not a taxonomy term, these values come from the workbench moderation states.
   //$sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
   $sql = "SELECT name AS tid, label AS name FROM workbench_moderation_states WHERE name <> 'creation'";
-  return query_taxonomy_term($sql);
+  $options = query_taxonomy_term($sql);
+  if (isset($options['published'])) {
+    $options['published'] = 'Posted';
+  }
+  return $options;
 }
 
 /**
@@ -572,8 +576,14 @@ SQL;
       try {
         $uid = $review->uid->value(); /// get's the actual user.
         $value = entity_metadata_wrapper('user', $uid);
-        $reviewers[$uid] = $value;
-      } catch (EntityMetadataWrapperException $e) {
+        if (is_obect($uid)) {
+          $reviewers[$uid->uid] = $value;
+        }
+        else {
+          $reviewers[$uid] = $value;
+        }
+      }
+      catch (EntityMetadataWrapperException $e) {
         print $e->getMessage();
       }
     }
@@ -714,7 +724,7 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
       if (array_key_exists('primarykey', $fieldkey)) {
         $primarykey = $fieldkey['primarykey'];
       }
-      $value = htmlspecialchars_decode(get_field_value_using_schema($fieldkey, $data, $resource, $primarykey, $is_date));
+      $value = get_field_value_using_schema($fieldkey, $data, $resource, $primarykey, $is_date);
       if (array_key_exists('field', $fieldkey)) {
         format_metadata_value_field($row, $value, $csv_configuration, $is_date, $fieldkey['field']);
       }

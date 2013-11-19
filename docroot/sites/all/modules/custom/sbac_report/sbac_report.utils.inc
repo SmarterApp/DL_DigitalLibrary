@@ -2,8 +2,7 @@
 /**
  * Implements export of a csv file().
  */
-function _cex_download($output, $filename)
-{
+function _cex_download($output, $filename) {
   header("Pragma: public");
   header("Expires: 0");
   header("Cache-Control: private");
@@ -15,8 +14,7 @@ function _cex_download($output, $filename)
   exit;
 }
 
-function format_value_field(&$row, $field, $separator, $encloseer, $subseparator, $quote_arrays, $subquote, $is_date = false)
-{
+function format_value_field(&$row, $field, $separator, $encloseer, $subseparator, $quote_arrays, $subquote, $is_date = FALSE) {
   //reset($array); $first =  key($array);
   $count = count($field['und']);
   $ix = 0;
@@ -27,10 +25,14 @@ function format_value_field(&$row, $field, $separator, $encloseer, $subseparator
   foreach ($field['und'] as $array_value) {
     if (is_null($array_value['value'])) {
       $value = '';
-    } else if ($is_date) {
-      $value = format_date($array_value['value'], 'custom', 'Y-m-d');
-    } else {
-      $value = $array_value['value'];
+    }
+    else {
+      if ($is_date) {
+        $value = format_date($array_value['value'], 'custom', 'Y-m-d');
+      }
+      else {
+        $value = $array_value['value'];
+      }
     }
     $row .= str_replace("$encloseer", "$encloseer$encloseer", $value) . $subseparator; //subseparator removed later if at end of array.
     $ix++;
@@ -45,8 +47,7 @@ function format_value_field(&$row, $field, $separator, $encloseer, $subseparator
   $row .= $separator;
 }
 
-function format_value_property(&$resource_node, $fieldkey, $missing_string)
-{
+function format_value_property(&$resource_node, $fieldkey, $missing_string) {
   if (!property_exists($resource_node, $fieldkey)) {
     $resource_node->{$fieldkey} = array();
   }
@@ -66,8 +67,7 @@ function format_value_property(&$resource_node, $fieldkey, $missing_string)
   }
 }
 
-function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used_tids)
-{
+function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used_tids) {
   // todo: look up the actual value in the foreign table, replace the tid with the actual value in the value field.
   if (!property_exists($resource_node, $fieldkey)) {
     $resource_node->{$fieldkey} = array();
@@ -96,8 +96,7 @@ function format_tid_property(&$resource_node, $fieldkey, $missing_string, &$used
   }
 }
 
-function set_tid_property(&$resource_node, $fieldkey, &$tid_terms)
-{
+function set_tid_property(&$resource_node, $fieldkey, &$tid_terms) {
   $ix = 0;
   foreach ($resource_node->{$fieldkey}['und'] as &$field) {
     // look up the value in the foreign table.
@@ -107,17 +106,19 @@ function set_tid_property(&$resource_node, $fieldkey, &$tid_terms)
     $ix++;
   }
 }
-function get_from_array_or_object($accessor,$value)
-{
+
+function get_from_array_or_object($accessor, $value) {
   if (is_array($value)) {
     return $value[$accessor];
   }
-  else if (is_object($value)) {
-    return $value->{$accessor};
+  else {
+    if (is_object($value)) {
+      return $value->{$accessor};
+    }
   }
 }
 
-function value_or_field($value, $field_in_object=null) {
+function value_or_field($value, $field_in_object = NULL) {
   if (is_array($field_in_object)) {
     $return_value = '';
 //    if (array_key_exists(,'accessor',$field_in_object)) {
@@ -131,12 +132,12 @@ function value_or_field($value, $field_in_object=null) {
       else {
         if (is_array($field)) {
 
-          foreach($field as $key => $accessor) {
+          foreach ($field as $key => $accessor) {
             if ($key === 0) {
-              $object = get_from_array_or_object($accessor,$value);
+              $object = get_from_array_or_object($accessor, $value);
             }
             else {
-              $object = get_from_array_or_object($accessor,$object);
+              $object = get_from_array_or_object($accessor, $object);
             }
           }
           $return_value .= $object;
@@ -153,39 +154,44 @@ function value_or_field($value, $field_in_object=null) {
     return $value->{$field_in_object};
   }
   if (is_object($value) and (property_exists($value, 'name') or
-    method_exists($value, 'name'))) {
+      method_exists($value, 'name'))
+  ) {
     return $value->name;
   }
   return $value;
 }
-function grab_field_value($value, $field_in_object=null)
-{
+
+function grab_field_value($value, $field_in_object = NULL) {
   if (is_array($value)) {
     if (count($value) == 0) {
       $actual_value = '';
     }
-    else if (count($value) == 1) {
-      list($actual_value) = $value; // get first value.
-      $actual_value = value_or_field($actual_value, $field_in_object);
-    }
     else {
-      $actual_value = array();
-      foreach ($value as $v) {
-        array_push($actual_value, value_or_field($v, $field_in_object));
+      if (count($value) == 1) {
+        list($actual_value) = $value; // get first value.
+        $actual_value = value_or_field($actual_value, $field_in_object);
+      }
+      else {
+        $actual_value = array();
+        foreach ($value as $v) {
+          array_push($actual_value, value_or_field($v, $field_in_object));
+        }
       }
     }
     $return_value = $actual_value;
-  } else if (is_object($value)) {
-    $return_value = value_or_field($value, $field_in_object);
   }
   else {
-    $return_value = $value;
+    if (is_object($value)) {
+      $return_value = value_or_field($value, $field_in_object);
+    }
+    else {
+      $return_value = $value;
+    }
   }
   return $return_value;
 }
 
-function get_field_value_using_schema($schemakey, $data, $resource, $primary_key, &$is_date)
-{
+function get_field_value_using_schema($schemakey, $data, $resource, $primary_key, &$is_date) {
   if (array_key_exists('foreignkey', $schemakey)) {
     $value = '';
     $foreign_object = get_field_value_using_schema($schemakey['foreignkey'], $data, $resource, $primary_key, $is_date);
@@ -206,22 +212,22 @@ function get_field_value_using_schema($schemakey, $data, $resource, $primary_key
       }
     }
     return $value;
-  } else {
+  }
+  else {
     return get_field_value_using_key($schemakey, $data, $resource, $primary_key, $is_date);
   }
 }
 
-function set_debug_value($message)
-{
-  if (false) { // set this to true to see debug output.
+function set_debug_value($message) {
+  if (FALSE) { // set this to true to see debug output.
     return $message;
   }
   return '';
 }
-function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$is_date)
-{
+
+function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$is_date) {
   $value = '';
-  $is_date = false;
+  $is_date = FALSE;
   if (array_key_exists('fieldtype', $fieldkey)) {
     $is_date = $fieldkey['fieldtype'] == 'date';
   }
@@ -229,65 +235,72 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
   if (array_key_exists('function', $fieldkey)) {
     $value = $fieldkey['function']($fieldkey, $data, $resource);
   }
-  else if (array_key_exists('path', $fieldkey) and is_array($fieldkey['path'])) {
-    $value = $data[$fieldkey['datasource']][$resource->{$primary_key}->value()];
-    foreach ($fieldkey['path'] as $accessor => $type) {
-      try {
-        if ($type = 'class') {
-          $value = $value->{$accessor};
-        } else {
-          $value = $value[$accessor];
+  else {
+    if (array_key_exists('path', $fieldkey) and is_array($fieldkey['path'])) {
+      $value = $data[$fieldkey['datasource']][$resource->{$primary_key}->value()];
+      foreach ($fieldkey['path'] as $accessor => $type) {
+        try {
+          if ($type = 'class') {
+            $value = $value->{$accessor};
+          }
+          else {
+            $value = $value[$accessor];
+          }
+        } catch (EntityMetadataWrapperException $e) {
+          $value = set_debug_value("Unknown type/accessor: $type/$accessor");
+          $is_date = FALSE;
+          break;
         }
-      } catch (EntityMetadataWrapperException $e) {
-        $value = set_debug_value("Unknown type/accessor: $type/$accessor");
-        $is_date = false;
-        break;
       }
     }
-  }
-  else if (array_key_exists('datasource', $fieldkey)) {
-    if (array_key_exists('index', $fieldkey)) {
-      $primary_key_value = $resource->{$primary_key}->value();
-      if (array_key_exists($fieldkey['datasource'], $data) and
-        array_key_exists($primary_key_value, $data[$fieldkey['datasource']])
-      ) {
-        $values = $data[$fieldkey['datasource']][$primary_key_value];
-        if ($values and array_key_exists($fieldkey['index'], $values)) {
-            try {
-              $value = get_value_from_wrapper($fieldkey, $values[$fieldkey['index']]->{$fieldkey[0]});
-            } catch (EntityMetadataWrapperException $e) {
-              $value = set_debug_value("Unknown Index Field: $fieldkey[0]");
-              $is_date = false;
-            }
-        }
-      }
-
-    } else {
-      try {
-        if (array_key_exists(0, $fieldkey)) {
+    else {
+      if (array_key_exists('datasource', $fieldkey)) {
+        if (array_key_exists('index', $fieldkey)) {
           $primary_key_value = $resource->{$primary_key}->value();
-          if (array_key_exists($primary_key_value, $data[$fieldkey['datasource']])) {
-            if (array_key_exists('not_wrapper', $fieldkey)) {
-              $value = $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]};
-            }
-            else {
-              $value = get_value_from_wrapper($fieldkey, $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]});
+          if (array_key_exists($fieldkey['datasource'], $data) and
+            array_key_exists($primary_key_value, $data[$fieldkey['datasource']])
+          ) {
+            $values = $data[$fieldkey['datasource']][$primary_key_value];
+            if ($values and array_key_exists($fieldkey['index'], $values)) {
+              try {
+                $value = get_value_from_wrapper($fieldkey, $values[$fieldkey['index']]->{$fieldkey[0]});
+              } catch (EntityMetadataWrapperException $e) {
+                $value = set_debug_value("Unknown Index Field: $fieldkey[0]");
+                $is_date = FALSE;
+              }
             }
           }
+
         }
-      } catch (EntityMetadataWrapperException $e) {
-        $value = set_debug_value("Unknown Field");
-        $is_date = false;
+        else {
+          try {
+            if (array_key_exists(0, $fieldkey)) {
+              $primary_key_value = $resource->{$primary_key}->value();
+              if (array_key_exists($primary_key_value, $data[$fieldkey['datasource']])) {
+                if (array_key_exists('not_wrapper', $fieldkey)) {
+                  $value = $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]};
+                }
+                else {
+                  $value = get_value_from_wrapper($fieldkey, $data[$fieldkey['datasource']][$primary_key_value]->{$fieldkey[0]});
+                }
+              }
+            }
+          } catch (EntityMetadataWrapperException $e) {
+            $value = set_debug_value("Unknown Field");
+            $is_date = FALSE;
+          }
+        }
       }
-    }
-  } else {
-    try {
-      if (array_key_exists(0, $fieldkey)) {
-        $value = get_value_from_wrapper($fieldkey, $resource->{$fieldkey[0]});
+      else {
+        try {
+          if (array_key_exists(0, $fieldkey)) {
+            $value = get_value_from_wrapper($fieldkey, $resource->{$fieldkey[0]});
+          }
+        } catch (EntityMetadataWrapperException $e) {
+          $value = set_debug_value("Unknown Field");
+          $is_date = FALSE;
+        }
       }
-    } catch (EntityMetadataWrapperException $e) {
-      $value = set_debug_value("Unknown Field");
-      $is_date = false;
     }
   }
 //  if (array_key_exists('field',$fieldkey) and !is_array($value) and is_object($value)) {
@@ -297,9 +310,8 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
   return $value;
 }
 
-function get_value_from_wrapper($fieldkey, $source)
-{
-  if (array_key_exists('accessor',$fieldkey)) {
+function get_value_from_wrapper($fieldkey, $source) {
+  if (array_key_exists('accessor', $fieldkey)) {
     return $source->{$fieldkey['accessor']}();
   }
   else {
@@ -307,8 +319,7 @@ function get_value_from_wrapper($fieldkey, $source)
   }
 }
 
-function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date = false, $field_in_object = null)
-{
+function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date = FALSE, $field_in_object = NULL) {
   $separator = $csv_configuration['separator'];
   $encloseer = $csv_configuration['encloseer'];
   $subseparator = $csv_configuration['subseparator'];
@@ -318,9 +329,10 @@ function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date
   $field = grab_field_value($field, $field_in_object);
   $ix = 0;
   $row .= $encloseer;
-  if ($field == null) {
+  if ($field == NULL) {
     $row .= '';
-  } else if (is_array($field)) {
+  }
+  else if (is_array($field)) {
     $count = count($field);
     if ($count > 1 and $quote_arrays) {
       $row .= $subquote;
@@ -328,10 +340,11 @@ function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date
     foreach ($field as $array_value) {
       if ($is_date) {
         $value = date('Y-m-d', $array_value);
-      } else {
+      }
+      else {
         $value = $array_value;
       }
-      $row .= str_replace("$encloseer", "$encloseer$encloseer", $value) . $subseparator; //subseparator removed later if at end of array.
+      $row .= str_replace("$encloseer", "$encloseer$encloseer", htmlspecialchars_decode($value)) . $subseparator; //subseparator removed later if at end of array.
       $ix++;
       if ($ix == $count) {
         $row = substr($row, 0, -1);
@@ -340,13 +353,15 @@ function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date
     if ($count > 1 and $quote_arrays) {
       $row .= $subquote;
     }
-  } else {
+  }
+  else {
     if ($is_date) {
       $value = date('Y-m-d', intval($field));
-    } else {
+    }
+    else {
       $value = $field;
     }
-    $row .= str_replace("$encloseer", "$encloseer$encloseer", $value);
+    $row .= str_replace("$encloseer", "$encloseer$encloseer", htmlspecialchars_decode($value));
   }
   $row .= $encloseer;
   $row .= $separator;
