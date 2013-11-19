@@ -69,8 +69,9 @@ function sbac_search_menu() {
 function sbac_search_preprocess_page(&$vars) {
   if (strpos($_GET['q'], 'digital-library-resources') !== FALSE) {
     $search_term = '/search_results.php';
-    if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS])) {
+    if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) {
       $search_term = '/search_results.php?q=' . $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
+      $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
     }
 
     $js =  "<script type=\"text/javascript\">
