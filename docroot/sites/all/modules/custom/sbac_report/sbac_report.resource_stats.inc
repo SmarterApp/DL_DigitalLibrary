@@ -162,7 +162,7 @@ function sbac_report_default_resource_type_option() {
 function sbac_report_resource_status_options() {
   // not a taxonomy term, these values come from the workbench moderation states.
   //$sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
-  $sql = "select name as tid, label as name from workbench_moderation_states";
+  $sql = "SELECT name AS tid, label AS name FROM workbench_moderation_states WHERE name <> 'creation'";
   return query_taxonomy_term($sql);
 }
 
