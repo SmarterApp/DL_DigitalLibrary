@@ -86,6 +86,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
      * Local function to filter out resources that don't match a criteria
      */
     function set_resource_filter(&$resource_filters, $key, $form_value, $all_values) {
+      if (isset($all_values['removed'])) {
+        $all_values['removed'] = 'Removed';
+      }
       if (in_array('0', $form_value)) { // all.
         $resource_filters[$key] = $all_values;
       }
@@ -166,6 +169,9 @@ function sbac_report_resource_status_options() {
   $options = query_taxonomy_term($sql);
   if (isset($options['published'])) {
     $options['published'] = 'Posted';
+  }
+  if (isset($options['removed'])) {
+    $options['removed'] = 'Returned';
   }
   return $options;
 }
@@ -252,6 +258,7 @@ function build_resource_stats_csv($resource_filters) {
   $reviewers = NULL;
 
   ini_set('memory_limit', '512M');
+  ini_set('max_execution_time', 300);
 
   $resources = get_resources($resource_filters);
   if ($resources) {
@@ -357,23 +364,19 @@ function get_resources($resource_filters) {
   set_field_condition_filter_restrictive($entities, $resource_filters['subject'], 'field_subject');
   set_field_condition_filter_restrictive($entities, $resource_filters['grade'], 'field_grades');
   set_field_condition_filter_restrictive($entities, $resource_filters['attribute'], 'field_attributes');
-  $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-    ->execute();
+  $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->execute();
   $nids = array();
   if (array_key_exists('node', $entities) and $entities['node']) {
     $nids = array_keys($entities['node']);
   }
+
   // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
   if (isset($resource_filters['subject'][1]) || isset($resource_filters['grade'][1]) || isset($resource_filters['attribute'][1])) {
-    $entities = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'resource')
-      ->propertyCondition('status', 1);
+    $entities = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'resource')->propertyCondition('status', 1);
     set_field_condition_niether_filter($entities, $resource_filters['subject'], 'field_subject');
     set_field_condition_niether_filter($entities, $resource_filters['grade'], 'field_grades');
     set_field_condition_niether_filter($entities, $resource_filters['attribute'], 'field_attributes');
-
-    $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-      ->execute();
+    $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->addTag('WorkbenchModerationAssigned')->execute();
 
     if (array_key_exists('node', $entities) and $entities['node']) {
       $nids = array_merge($nids, $entities['node']);
@@ -427,14 +430,13 @@ function filter_resource_on_field($nodes, $field, $filter_values) {
  * @return array
  */
 function fitler_resource_status($nodes, $statuses) {
-
-  if (array_key_exists(0, $statuses)) {
-    return $nodes;
-  }
   $filtered_nodes = array();
   foreach ($nodes as $key => $node) {
-    if (in_array($node->workbench_moderation['current']->state, $statuses)) {
-      $filtered_nodes[$key] = $node;
+    if ($node->workbench_moderation['current']->state != 'creation') {
+      $state = ucwords(str_replace('_', ' ', $node->workbench_moderation['current']->state));
+      if (in_array($state, $statuses)) {
+        $filtered_nodes[$key] = $node;
+      }
     }
   }
   return $filtered_nodes;

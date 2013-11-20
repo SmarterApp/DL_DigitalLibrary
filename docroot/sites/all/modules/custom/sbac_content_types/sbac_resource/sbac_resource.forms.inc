@@ -1817,7 +1817,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   if ($form['field_posting_options']['und']['#default_value'] == 2) {
     $form['field_posting_options_comment']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   }
-  
+
   $default_value = 0;
   if (isset($form['#node']->workbench_moderation)) {
     if ($form['#node']->workbench_moderation['current']->state == 'published') {

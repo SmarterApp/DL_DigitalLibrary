@@ -257,7 +257,6 @@ function sbac_report_theme($existing, $type, $theme, $path) {
   return $themes;
 }
 
-
 /**
  * Build the date range dropdown for the filter form.
  *

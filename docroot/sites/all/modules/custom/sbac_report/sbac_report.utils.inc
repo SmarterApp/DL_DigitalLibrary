@@ -359,6 +359,9 @@ function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date
       $value = date('Y-m-d', intval($field));
     }
     else {
+      if ($field == 'Removed') {
+        $field = 'Returned';
+      }
       $value = $field;
     }
     $row .= str_replace("$encloseer", "$encloseer$encloseer", htmlspecialchars_decode($value));
