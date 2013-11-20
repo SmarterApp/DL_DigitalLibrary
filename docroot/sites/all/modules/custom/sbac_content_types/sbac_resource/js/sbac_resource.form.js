@@ -323,7 +323,10 @@
     var pos = href.indexOf('posting_option');
     if (pos > -1) {
       var new_href = href.substr(0, pos);
+      new_option = 'posting_option=' + posted_option;
       new_href += 'posting_option=' + posted_option;
+      new_href += href.substr(pos + new_option.length);
+      save_all_changes.attr('href', '');
       save_all_changes.attr('href', new_href);
     }
   };

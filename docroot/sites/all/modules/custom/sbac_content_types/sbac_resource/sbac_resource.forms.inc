@@ -171,7 +171,9 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
       $chosen_option = 3;
     }
     if ($form_state['values']['workbench_moderation_state_current'] == 'draft') {
-      $chosen_option = 0;
+      if ($chosen_option > 1) {
+        $chosen_option = 0;
+      }
     }
 
     switch ($chosen_option) {
@@ -1000,7 +1002,9 @@ function sbac_resource_save_all_changes_modal_callback($js = FALSE) {
       $chosen_option = 3;
     }
     if (isset($_GET['state']) && $_GET['state'] == 'draft') {
-      $chosen_option = 0;
+      if ($chosen_option > 1) {
+        $chosen_option = 0;
+      }
     }
 
     switch ($chosen_option) {
@@ -1808,7 +1812,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   unset($form['field_posting_options']['und']['#options']['_none']);
   $form['field_posting_options']['und']['#prefix'] = '<div id="sbac-posting-options">';
   $form['field_posting_options']['und']['#suffix'] = '</div>';
-  if ($form['#node']->workbench_moderation['current']->state != 'published') {
+  if (isset($form['#node']->workbench_moderation['current']->state) && $form['#node']->workbench_moderation['current']->state != 'published') {
     unset($form['field_posting_options']['und']['#options'][2]);
   }
 
