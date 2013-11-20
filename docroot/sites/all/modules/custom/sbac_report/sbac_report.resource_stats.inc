@@ -116,7 +116,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
   $csv_resource_stats_result = build_resource_stats_csv($resource_filters);
 
   if ($csv_resource_stats_result == NULL) {
-    $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
+    $_SESSION['messages']['error'][] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['first_time'] = 1;
     return; // report did not contain any data.
   }
