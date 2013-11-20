@@ -689,12 +689,12 @@ function sbac_central_update_7059() {
   module_enable($modules);
 }
 
-///**
-// * Enables Transliteration module.
-// */
-//function sbac_central_update_7060() {
-//  $modules = array(
-//    'transliteration',
-//  );
-//  module_enable($modules);
-//}
+/**
+ * Enables Transliteration module.
+ */
+function sbac_central_update_7060() {
+  $modules = array(
+    'transliteration',
+  );
+  module_enable($modules);
+}
