@@ -11,7 +11,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#title' => t('Choose resource type:'),
     '#options' => sbac_report_resource_type_options(),
     '#multiple' => TRUE,
-    '#default_value' => sbac_report_default_resource_type_option(),
+    '#default_value' => sbac_report_default_resource_type_option($form_state),
     '#required' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
   );
@@ -20,7 +20,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#title' => t('Choose resource status'),
     '#options' => sbac_report_resource_status_options(),
     '#multiple' => TRUE,
-    '#default_value' => sbac_report_default_resource_status_option(),
+    '#default_value' => sbac_report_default_resource_status_option($form_state),
     '#required' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
   );
@@ -29,7 +29,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#title' => t('Choose subject:'),
     '#options' => sbac_report_resource_subject_options(),
     '#multiple' => TRUE,
-    '#default_value' => sbac_report_default_resource_subject_option(),
+    '#default_value' => sbac_report_default_resource_subject_option($form_state),
     '#required' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
   );
@@ -38,7 +38,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#title' => t('Choose grade:'),
     '#options' => sbac_report_resource_grade_options(),
     '#multiple' => TRUE,
-    '#default_value' => sbac_report_default_resource_grade_option(),
+    '#default_value' => sbac_report_default_resource_grade_option($form_state),
     '#required' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
   );
@@ -47,7 +47,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#title' => t('Choose attribute of the formative assessment process:'),
     '#options' => sbac_report_resource_attribute_options(),
     '#multiple' => TRUE,
-    '#default_value' => sbac_report_default_resource_attribute_option(),
+    '#default_value' => sbac_report_default_resource_attribute_option($form_state),
     '#required' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
   );
@@ -113,22 +113,20 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
     set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_attribute_dropdown'], sbac_report_resource_attribute_options());
   }
 
+  $_SESSION['report_chosen_filters'] = $resource_filters;
   $csv_resource_stats_result = build_resource_stats_csv($resource_filters);
 
   if ($csv_resource_stats_result == NULL) {
-    $_SESSION['messages']['error'][] = SBAC_REPORT_FILTER_ERROR;
+    drupal_set_message(SBAC_REPORT_FILTER_ERROR, 'error');
     $_SESSION['sbac_report']['first_time'] = 1;
-    return; // report did not contain any data.
   }
-  $_SESSION['sbac_report']['error_message'] = '';
-  gc_enable();
-  gc_collect_cycles();
-  gc_disable();
-  // _cex exits and does not return.
-  _cex_download($csv_resource_stats_result, 'output.csv');
-  // can't get back to clear errors because fo the exit from _cex to force the
-  // download of the csv file. drupal_goto('/reports');
-  // _cex exits and does not return.
+  else {
+    gc_enable();
+    gc_collect_cycles();
+    gc_disable();
+    _cex_download($csv_resource_stats_result, 'output.csv');
+    $_SESSION['report_chosen_filters'] = '';
+  }
 }
 
 /**
@@ -158,7 +156,16 @@ function sbac_report_resource_type_options() {
 /**
  * Default options for the resource type option list
  */
-function sbac_report_default_resource_type_option() {
+function sbac_report_default_resource_type_option($form_state = array()) {
+  if (isset($_SESSION['report_chosen_filters']['types']) && $_SESSION['report_chosen_filters']['types']) {
+    $options = $_SESSION['report_chosen_filters']['types'];
+    if (in_array('All', $options)) {
+      return 0;
+    }
+    else {
+      return $options;
+    }
+  }
   return 0;
 }
 
@@ -182,7 +189,16 @@ function sbac_report_resource_status_options() {
 /**
  * Default options for the resource status option list
  */
-function sbac_report_default_resource_status_option() {
+function sbac_report_default_resource_status_option($form_state = array()) {
+  if (isset($_SESSION['report_chosen_filters']['status']) && $_SESSION['report_chosen_filters']['status']) {
+    $options = $_SESSION['report_chosen_filters']['status'];
+    if (in_array('All', $options)) {
+      return 0;
+    }
+    else {
+      return $options;
+    }
+  }
   return 0;
 }
 
@@ -203,7 +219,16 @@ function sbac_report_resource_subject_options() {
 /**
  * Default options for the resource subject option list
  */
-function sbac_report_default_resource_subject_option() {
+function sbac_report_default_resource_subject_option($form_state = array()) {
+  if (isset($_SESSION['report_chosen_filters']['subject']) && $_SESSION['report_chosen_filters']['subject']) {
+    $options = $_SESSION['report_chosen_filters']['subject'];
+    if (in_array('All', $options)) {
+      return 0;
+    }
+    else {
+      return $options;
+    }
+  }
   return 0;
 }
 
@@ -224,7 +249,16 @@ function sbac_report_resource_grade_options() {
 /**
  * Default options for the resource grade option list
  */
-function sbac_report_default_resource_grade_option() {
+function sbac_report_default_resource_grade_option($form_state = array()) {
+  if (isset($_SESSION['report_chosen_filters']['grade']) && $_SESSION['report_chosen_filters']['grade']) {
+    $options = $_SESSION['report_chosen_filters']['grade'];
+    if (in_array('All', $options)) {
+      return 0;
+    }
+    else {
+      return $options;
+    }
+  }
   return 0;
 }
 
@@ -244,7 +278,16 @@ function sbac_report_resource_attribute_options() {
 /**
  * Default options for the resource attributes option list
  */
-function sbac_report_default_resource_attribute_option() {
+function sbac_report_default_resource_attribute_option($form_state = array()) {
+  if (isset($_SESSION['report_chosen_filters']['attribute']) && $_SESSION['report_chosen_filters']['attribute']) {
+    $options = $_SESSION['report_chosen_filters']['attribute'];
+    if (in_array('All', $options)) {
+      return 0;
+    }
+    else {
+      return $options;
+    }
+  }
   return 0;
 }
 
