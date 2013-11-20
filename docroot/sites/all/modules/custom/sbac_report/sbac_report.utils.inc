@@ -362,6 +362,9 @@ function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date
       if ($field == 'Removed') {
         $field = 'Returned';
       }
+      if ($field == 'Published') {
+        $field = 'Posted';
+      }
       $value = $field;
     }
     $row .= str_replace("$encloseer", "$encloseer$encloseer", htmlspecialchars_decode($value));
