@@ -1808,13 +1808,16 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   unset($form['field_posting_options']['und']['#options']['_none']);
   $form['field_posting_options']['und']['#prefix'] = '<div id="sbac-posting-options">';
   $form['field_posting_options']['und']['#suffix'] = '</div>';
+  if ($form['#node']->workbench_moderation['current']->state != 'published') {
+    unset($form['field_posting_options']['und']['#options'][2]);
+  }
 
   $form['field_posting_options_comment']['und']['#prefix'] = '<div id="sbac-posting-options-comment">';
   $form['field_posting_options_comment']['und']['#suffix'] = '</div>';
   if ($form['field_posting_options']['und']['#default_value'] == 2) {
     $form['field_posting_options_comment']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   }
-
+  
   $default_value = 0;
   if (isset($form['#node']->workbench_moderation)) {
     if ($form['#node']->workbench_moderation['current']->state == 'published') {

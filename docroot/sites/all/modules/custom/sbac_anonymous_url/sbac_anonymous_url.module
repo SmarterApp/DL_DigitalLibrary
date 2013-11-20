@@ -7,63 +7,63 @@
 /**
  * Implementation of hook_menu().
  */
-function sbac_anonymous_url_menu() 
-{
-	//the menu call to generate the url.  
-	//sbac_anonymous_url_form posts here
-	$items['generate_url'] = array(
-		'title' => 'Generate a URL',
-		'description' => 'Generates an expiring URL',
-		'access callback' => TRUE,
-		'access arguments' => array('access content'),
-		'page callback' => 'generate_url',
-		'type' => MENU_CALLBACK
-	);
-	return $items;
+function sbac_anonymous_url_menu() {
+  //the menu call to generate the url.
+  //sbac_anonymous_url_form posts here
+  $items['generate_url'] = array(
+    'title' => 'Generate a URL',
+    'description' => 'Generates an expiring URL',
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'page callback' => 'generate_url',
+    'type' => MENU_CALLBACK
+  );
+  return $items;
 }
 
 /*
  * generates a url and return it to the user
  *
 */
-function generate_url()
-{
+function generate_url() {
   global $user;
-  $path='/';
-  if ($_REQUEST['nid']) 
-  {
-	$node=node_load($_REQUEST['nid']);
-	//get the path of the node 
-	$path=drupal_lookup_path('alias',"node/".$node->nid);
-	if ($node->status==1)
-	{
-		//generate the key
-		$key=md5(time() . $node->nid . $path);
-		//generate the new path
-		//$url=$path . "?key=" . $key;
-		$expire_date=time()+(60*60*24*$_REQUEST['ttl']);
-		//store the new path in the table
-		$query="insert into 
+  $path = '/';
+  if ($_REQUEST['nid']) {
+    $node = node_load($_REQUEST['nid']);
+    //get the path of the node
+    $path = drupal_lookup_path('alias', "node/" . $node->nid);
+    if ($node->status == 1) {
+      //generate the key
+      $key = md5(time() . $node->nid . $path);
+      //generate the new path
+      //$url=$path . "?key=" . $key;
+      $expire_date = time() + (60 * 60 * 24 * $_REQUEST['ttl']);
+      //store the new path in the table
+      $query = "insert into
 					node_anonymous_url(
 						nid,
 						uid,
 						`key`,
 						create_datetime,
 						expire_datetime)	
-					values ('" . 
-						$node->nid . "', '" . 
-						$user->uid . "', '" . 
-						$key . "', 
-						UNIX_TIMESTAMP(), " . $expire_date . 
-					")";
-		$result=db_query($query);
-		$message=t("This url : " . url($path, array('absolute' => true, 'query'=>array('key'=>$key))) . " : expires on " . date("F j, Y, g:i a",$expire_date));
-	}
-	else $message=t("Hey, this node ain't published.  You need to provide this only for published nodes!!");
+					values ('" .
+        $node->nid . "', '" .
+        $user->uid . "', '" .
+        $key . "',
+						UNIX_TIMESTAMP(), " . $expire_date .
+        ")";
+      $result = db_query($query);
+      $message = t("This url : " . url($path, array(
+          'absolute' => TRUE,
+          'query' => array('key' => $key)
+        )) . " : expires on " . date("F j, Y, g:i a", $expire_date));
+    }
+    else {
+      $message = t("Hey, this node ain't published.  You need to provide this only for published nodes!!");
+    }
   }
-  else
-  {
-	$message=t("Oops!  Something went a little wonky, please try again!");
+  else {
+    $message = t("Oops!  Something went a little wonky, please try again!");
   }
   drupal_set_message($message);
   drupal_goto($path);
@@ -73,74 +73,71 @@ function generate_url()
  * Build the generate a link form.
  */
 function sbac_anonymous_url_form($form, &$form_state) {
-	global $user;
-	//returns a generate url form 	
-	$form['ttl'] = array(
-		'#title' => t('Days to Live'),
-		'#type' => 'select',
-		'#options' => array(
-			'1' => 1,
-			'2' => 2,
-			'3' => 3,
-			'4' => 4,
-			'5' => 5,
-			'6' => 6,
-			'7' => 7,
-			'8' => 8,
-			'9' => 9,
-			'10' => 10,
-			'11' => 11,
-			'12' => 12,
-			'13' => 13,
-			'14' => 14,
-			'15' => 15,
-			'16' => 16,
-			'17' => 17,
-			'18' => 18,
-			'19' => 19,
-			'20' => 20,
-			'21' => 21,
-			'22' => 22,
-			'23' => 23,
-			'24' => 24,
-			'25' => 25,
-			'26' => 26,
-			'27' => 27,
-			'28' => 28,
-			'29' => 29,
-			'30' => 30,
-			'31' => 31
-		),
-		'#default_value' => 1,
-		'#required' => TRUE,
-		'#description' => t('Select the number of days to keep this link active'),
-	);
-	$form['nid'] = array(
-		'#type' => 'hidden',
-	);	
-	$form['#action'] = url('generate_url');
+  global $user;
+  //returns a generate url form
+  $form['ttl'] = array(
+    '#title' => t('Days to Live'),
+    '#type' => 'select',
+    '#options' => array(
+      '1' => 1,
+      '2' => 2,
+      '3' => 3,
+      '4' => 4,
+      '5' => 5,
+      '6' => 6,
+      '7' => 7,
+      '8' => 8,
+      '9' => 9,
+      '10' => 10,
+      '11' => 11,
+      '12' => 12,
+      '13' => 13,
+      '14' => 14,
+      '15' => 15,
+      '16' => 16,
+      '17' => 17,
+      '18' => 18,
+      '19' => 19,
+      '20' => 20,
+      '21' => 21,
+      '22' => 22,
+      '23' => 23,
+      '24' => 24,
+      '25' => 25,
+      '26' => 26,
+      '27' => 27,
+      '28' => 28,
+      '29' => 29,
+      '30' => 30,
+      '31' => 31
+    ),
+    '#default_value' => 1,
+    '#required' => TRUE,
+    '#description' => t('Select the number of days to keep this link active'),
+  );
+  $form['nid'] = array(
+    '#type' => 'hidden',
+  );
+  $form['#action'] = url('generate_url');
   // Submit
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Create Expiring URL', //this comes in as the $form->op value
   );
-	if (in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles) || $user->uid==1)
-	{
-		$form['ttl']['#options']['32']='Infinite';
-	}	
+  if (in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles) || $user->uid == 1) {
+    $form['ttl']['#options']['32'] = 'Infinite';
+  }
   return $form;
 }
 
-function getNodeByKey($key)
-{
-	$return=0;
-	$now=time();
-	$query="select * from node_anonymous_url where `key`='" . $_GET['key'] ."' and expire_datetime>" . $now . " limit 1";
-	$result=db_query($query);
-	$thisrow=$result->fetchAssoc();
-	if ($thisrow['key']==$_GET['key'])
-	{
-		$return = $thisrow['nid'];
-	}
-	return $return;
+function getNodeByKey($key) {
+  $return = 0;
+  $now = time();
+  $query = "select * from node_anonymous_url where `key`='" . $_GET['key'] . "' and expire_datetime>" . $now . " limit 1";
+  $result = db_query($query);
+  $thisrow = $result->fetchAssoc();
+  if ($thisrow['key'] == $_GET['key']) {
+    $return = $thisrow['nid'];
+  }
+  return $return;
 }
