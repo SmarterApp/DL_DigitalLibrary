@@ -85,6 +85,7 @@ class Hooks extends \devtools\Hooks {
         );
 
         if (in_array($node->workbench_moderation['current']->state, $states) && !user_access('administer nodes')) {
+          watchdog('SBAC HOOK', 'Yuriy');
           drupal_access_denied();
           exit();
         }
