@@ -252,7 +252,7 @@ function sbac_media_file_download($uri) {
     if ($file->status) {
       $headers = file_get_content_headers($file);
       if ($headers && isset($headers['Content-Type'])) {
-        return $headers['Content-Type'];
+        return $headers;
       }
       return $headers;
     }
