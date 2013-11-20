@@ -2324,13 +2324,17 @@ function sbac_resource_check_tags($form, $form_state) {
 function sbac_resource_save_all_changes_form($form, $form_state) {
   switch ($form_state['chosen_option']) {
     case 0:
-      $description = 'Posting this resource without distinction will display the resource in the Digital Library without the distinction badge. Notification
-                      will be sent to the contributor.';
+      $description = 'Posting this resource without distinction will display the resource in the Digital Library without the distinction badge.';
+      if ($form_state['state'] == 'published') {
+        $description .= ' Notification ´will be sent to the contributor.';
+      }
       $button_text = 'Post Resource';
       break;
     case 1:
-      $description = 'Posting this resource with distinction will display the resource in the Digital Library with the distinction badge. Notification
-                      will be sent to the contributor.';
+      $description = 'Posting this resource with distinction will display the resource in the Digital Library with the distinction badge.';
+      if ($form_state['state'] == 'published') {
+        $description .= ' Notification ´will be sent to the contributor.';
+      }
       $button_text = 'Post Resource with Distinction';
       break;
     case 2:

@@ -271,37 +271,46 @@
       // Resource actions
       $('#sbac-posting-options-comment').hide();
       $('#sbac-posting-options input:nth(0)').click(function() {
-        if ($('#sbac-posting-option-hidden').val() != 0) {
-          $('#sbac-posting-options-comment').show();
-          $('#sbac-posting-options-comment textarea').val('');
-          $('#sbac-posting-options-comment label').empty().append('To contributor'); // Remove required marker.
-        }
-        else {
-          $('#sbac-posting-options-comment').hide();
+        var resource_state = Drupal.settings.resource_workbench_current_state;
+        if (resource_state == 'published') {
+          if ($('#sbac-posting-option-hidden').val() != 0) {
+            $('#sbac-posting-options-comment').show();
+            $('#sbac-posting-options-comment textarea').val('');
+            $('#sbac-posting-options-comment label').empty().append('To contributor'); // Remove required marker.
+          }
+          else {
+            $('#sbac-posting-options-comment').hide();
+          }
         }
         save_all_changes_href($(this).val());
       });
 
       $('#sbac-posting-options input:nth(1)').click(function() {
-        if ($('#sbac-posting-option-hidden').val() != 1) {
-          $('#sbac-posting-options-comment').show();
-          $('#sbac-posting-options-comment textarea').val('');
-          $('#sbac-posting-options-comment label').empty().append('To contributor'); // Remove required marker.
-        }
-        else {
-          $('#sbac-posting-options-comment').hide();
+        var resource_state = Drupal.settings.resource_workbench_current_state;
+        if (resource_state == 'published') {
+          if ($('#sbac-posting-option-hidden').val() != 1) {
+            $('#sbac-posting-options-comment').show();
+            $('#sbac-posting-options-comment textarea').val('');
+            $('#sbac-posting-options-comment label').empty().append('To contributor'); // Remove required marker.
+          }
+          else {
+            $('#sbac-posting-options-comment').hide();
+          }
         }
         save_all_changes_href($(this).val());
       });
 
       $('#sbac-posting-options input:nth(2)').click(function() {
-        if ($('#sbac-posting-option-hidden').val() != 2) {
-          $('#sbac-posting-options-comment').show();
-          $('#sbac-posting-options-comment textarea').val('');
-          $('#sbac-posting-options-comment label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
-        }
-        else {
-          $('#sbac-posting-options-comment').hide();
+        var resource_state = Drupal.settings.resource_workbench_current_state;
+        if (resource_state == 'published') {
+          if ($('#sbac-posting-option-hidden').val() != 2) {
+            $('#sbac-posting-options-comment').show();
+            $('#sbac-posting-options-comment textarea').val('');
+            $('#sbac-posting-options-comment label').empty().append('To contributor <span class="form-required" title="This field is required.">*</span>');
+          }
+          else {
+            $('#sbac-posting-options-comment').hide();
+          }
         }
         save_all_changes_href($(this).val());
       });
