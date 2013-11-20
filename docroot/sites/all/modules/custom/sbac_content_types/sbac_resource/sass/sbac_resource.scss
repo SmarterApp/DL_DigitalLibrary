@@ -176,11 +176,17 @@ a.sbac-grid-layout {
 
 .block-sbac-resource-sbac-resource-create-button {
   float: left;
-  margin-top: -8px;
+  position: relative;
+
+  a.button {
+	vertical-align: top;
+	margin-top: -2px;
+   }
 
   .f-dropdown {
-    top: 55px !important;
-    left: 20px !important; 
+    top: 48px !important;
+    left: 10px !important; 
+	width: 150px;
   }
 }
 
