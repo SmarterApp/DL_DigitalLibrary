@@ -293,9 +293,12 @@ function build_resource_stats_csv($resource_filters) {
     $data['total_reviews_per_node'] = 0;
   }
 
-  // get the report configuration.
-  $report_configuration = set_report_columns();
-  $file_data = create_resource_stats_from_data($data, $report_configuration);
+  $file_data = NULL;
+  if ($resources) {
+    // get the report configuration.
+    $report_configuration = set_report_columns();
+    $file_data = create_resource_stats_from_data($data, $report_configuration);
+  }
 
   $data = NULL;
   unset($data); //memory management
