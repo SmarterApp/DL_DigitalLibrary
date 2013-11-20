@@ -86,6 +86,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
      * Local function to filter out resources that don't match a criteria
      */
     function set_resource_filter(&$resource_filters, $key, $form_value, $all_values) {
+      if (isset($all_values['published'])) {
+        $all_values['published'] = 'Published';
+      }
       if (isset($all_values['removed'])) {
         $all_values['removed'] = 'Removed';
       }
