@@ -305,7 +305,7 @@ function build_resource_stats_csv($resource_filters) {
   $authors = NULL;
   $reviewers = NULL;
 
-  ini_set('memory_limit', '512M');
+  ini_set('memory_limit', '1024M');
   ini_set('max_execution_time', 600);
 
   $resources = get_resources($resource_filters);
