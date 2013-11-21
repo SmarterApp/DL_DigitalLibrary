@@ -74,11 +74,9 @@ function sbac_search_preprocess_page(&$vars) {
       $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
     }
 
-    $js =  "<script type=\"text/javascript\">
-            var pageTracker = _gaq._getTracker(\"UA-27429193-1\");
+    $js =  'var pageTracker = _gaq._getTracker("UA-27429193-1");
             pageTracker._initData();
-            pageTracker._trackPageview(\"" . $search_term . "\");
-            </script>";
+            pageTracker._trackPageview("' . $search_term . '");';
     drupal_add_js($js, array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
   }
 }
