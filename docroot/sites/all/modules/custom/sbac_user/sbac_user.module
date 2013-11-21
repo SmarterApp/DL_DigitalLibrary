@@ -195,7 +195,12 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
   
   //when creating a new user, expose some additional fields that generally come from a csv import
   if ($form_id == 'user_register_form') {
-	$is_create_page = strpos($_GET['q'], '/create');
+    $form['#validate'] = array();
+    $form['#validate'][] = 'sbac_user_email_validate';
+    $form['#validate'][] = 'user_validate_picture';
+    $form['#validate'][] = 'user_register_validate';
+    $form['#validate'][] = 'ldap_user_form_register_form_validate';
+	  $is_create_page = strpos($_GET['q'], '/create');
     if ($is_create_page !==FALSE) {
       $form['field_alternate_email_address']['#access'] = TRUE;
       $form['field_school_name']['#access'] = TRUE;
@@ -575,7 +580,9 @@ function sbac_user_entity_presave($entity, $type) {
       // user edit page, allow picture change
     } else {
       // don't allow picture change
-      $entity->picture = $entity->original->picture;
+      if (isset($entity->original->picture)) {
+        $entity->picture = $entity->original->picture;
+      }
     }
 
     // display disabled fields by default for new users (field_privacy)
