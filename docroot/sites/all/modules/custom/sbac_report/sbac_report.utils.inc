@@ -303,9 +303,6 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
       }
     }
   }
-//  if (array_key_exists('field',$fieldkey) and !is_array($value) and is_object($value)) {
-//    $value = $value->{$fieldkey['field']};
-//  }
 
   return $value;
 }
@@ -319,7 +316,7 @@ function get_value_from_wrapper($fieldkey, $source) {
   }
 }
 
-function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date = FALSE, $field_in_object = NULL) {
+function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date = FALSE, $field_in_object = NULL, $resource) {
   $separator = $csv_configuration['separator'];
   $encloseer = $csv_configuration['encloseer'];
   $subseparator = $csv_configuration['subseparator'];
@@ -359,11 +356,15 @@ function format_metadata_value_field(&$row, $field, $csv_configuration, $is_date
       $value = date('Y-m-d', intval($field));
     }
     else {
-      if ($field == 'Removed') {
+      if ($field == 'Rejected') {
         $field = 'Returned';
       }
       if ($field == 'Published') {
         $field = 'Posted';
+        $sticky = $resource->sticky->raw();
+        if ($sticky) {
+          $field .= ' with Distinction';
+        }
       }
       $value = $field;
     }

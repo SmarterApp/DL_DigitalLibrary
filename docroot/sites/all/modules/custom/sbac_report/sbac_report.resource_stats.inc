@@ -89,8 +89,8 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
       if (isset($all_values['published'])) {
         $all_values['published'] = 'Published';
       }
-      if (isset($all_values['removed'])) {
-        $all_values['removed'] = 'Removed';
+      if (isset($all_values['rejected'])) {
+        $all_values['rejected'] = 'Rejected';
       }
       if (in_array('0', $form_value)) { // all.
         $resource_filters[$key] = $all_values;
@@ -180,9 +180,11 @@ function sbac_report_resource_status_options() {
   if (isset($options['published'])) {
     $options['published'] = 'Posted';
   }
-  if (isset($options['removed'])) {
-    $options['removed'] = 'Returned';
+  if (isset($options['rejected'])) {
+    $options['rejected'] = 'Returned';
   }
+  $options['posted_distinction'] = 'Posted with Distinction';
+  asort($options);
   return $options;
 }
 
@@ -480,9 +482,13 @@ function filter_resource_on_field($nodes, $field, $filter_values) {
  */
 function fitler_resource_status($nodes, $statuses) {
   $filtered_nodes = array();
+  $statuses = array_map('strtolower', $statuses);
   foreach ($nodes as $key => $node) {
     if ($node->workbench_moderation['current']->state != 'creation') {
-      $state = ucwords(str_replace('_', ' ', $node->workbench_moderation['current']->state));
+      $state = str_replace('_', ' ', $node->workbench_moderation['current']->state);
+      if (in_array('posted_distinction', $statuses) && $state == 'published' && $node->sticky == 1) {
+        $filtered_nodes[$key] = $node;
+      }
       if (in_array($state, $statuses)) {
         $filtered_nodes[$key] = $node;
       }
@@ -767,9 +773,6 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
   $ix = 0;
   foreach ($resources as $resource) {
     $row = '';
-    // go through the configuration array returned by set_report_columns() and create each line of the report.
-    //foreach ($schema as $row_schema) {
-    // go through each data source line item. (rows)
     foreach ($schema['fieldkeys'] as $fieldkey) { // (columns)
       $primarykey = $primary_data_key;
       if (array_key_exists('primarykey', $fieldkey)) {
@@ -777,16 +780,16 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
       }
       $value = get_field_value_using_schema($fieldkey, $data, $resource, $primarykey, $is_date);
       if (array_key_exists('field', $fieldkey)) {
-        format_metadata_value_field($row, $value, $csv_configuration, $is_date, $fieldkey['field']);
+        format_metadata_value_field($row, $value, $csv_configuration, $is_date, $fieldkey['field'], $resource);
       }
       else {
-        format_metadata_value_field($row, $value, $csv_configuration, $is_date);
+        format_metadata_value_field($row, $value, $csv_configuration, $is_date, NULL, $resource);
       }
     }
     if (++$ix == $count) {
       $row = substr($row, 0, -1);
-    } // reduce length by one removing the last separator
-    //}
+    }
+    // reduce length by one removing the last separator
     $csv .= $row . $csv_configuration['line_ending'];
   }
   return $csv;
