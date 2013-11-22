@@ -1110,8 +1110,7 @@ function sbac_report_preprocess_views_view_field(&$vars) {
 /**
  *  Get user groups from the role table, add 'all' option to the list.
  */
-function get_user_groups()
-{
+function get_user_groups() {
   $sql = <<<SQL
     SELECT *
     FROM role
@@ -1129,4 +1128,23 @@ SQL;
     $values[$record->rid] = $record->name;
   }
   return $values;
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Scan the CSV directory and delete
+ * any files older then one day.
+ */
+function sbac_report_cron() {
+  $directory = "private://resource_stats_csv/";
+  if ($handle = opendir($directory)) {
+    while (false !== ($file = readdir($handle))) {
+      $file_last_modified = filemtime($file);
+      if((time() - $file_last_modified) > 24*3600 && is_file($file)) { //24*3600 = 24 hours.
+        unlink($file);
+      }
+    }
+    closedir($handle);
+  }
 }

@@ -282,7 +282,7 @@ function sbac_report_resource_statistics_finished_batch($success, $results, $ope
 
     $web_url = file_create_url($directory);
     $download_link = l(t('click here to download the file'), $web_url, array('attributes' => array('class' => array('sbac-report-download-link'))));
-    $message = '<span class="sbac-report-download">' . t('The exported CSV file is now ready for download. Please !download_link.', array('!download_link' => $download_link)) . '</span>';
+    $message = '<span class="sbac-report-download">' . t('The resource statistics CSV report file is now ready for download. Please !download_link.', array('!download_link' => $download_link)) . '</span>';
 
     gc_enable();
     gc_collect_cycles();
