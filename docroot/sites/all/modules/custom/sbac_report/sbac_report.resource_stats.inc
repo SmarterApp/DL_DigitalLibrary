@@ -114,19 +114,159 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
   }
 
   $_SESSION['report_chosen_filters'] = $resource_filters;
-  $csv_resource_stats_result = build_resource_stats_csv($resource_filters);
-
-  if ($csv_resource_stats_result == NULL) {
+  $resources = get_resources($resource_filters);
+  if ($resources) {
+    batch_set(array(
+        'title' => t('Resource Statistics Report'),
+        'operations' => array(
+          array('sbac_report_resource_statistics_batch', array($resources, $resource_filters)),
+        ),
+        'finished' => 'sbac_report_resource_statistics_finished_batch', // Finished batch callback.
+      )
+    );
+    batch_process('reports');
+  }
+  else {
     drupal_set_message(SBAC_REPORT_FILTER_ERROR, 'error');
     $_SESSION['sbac_report']['first_time'] = 1;
   }
-  else {
+}
+
+/**
+ * @param $resource_filters
+ * @param $context
+ */
+function sbac_report_resource_statistics_batch($resources, $resource_filters, &$context) {
+  $limit = 500;
+  $context['sandbox']['finished'] = 0;
+
+  // First time through.
+  if (!isset($context['sandbox']['file'])) {
+    $columns = set_report_columns();
+    $context['sandbox']['report_configuration'] = $columns;
+
+    // CSV Headers.
+    $column_titles = array();
+    foreach ($columns as $configuration) {
+      foreach ($configuration['fieldkeys'] as $fieldkey) {
+        if (array_key_exists(1, $fieldkey)) {
+          $column_titles[] = $fieldkey[1];
+        }
+        else {
+          $column_titles[] = '';
+        }
+      }
+    }
+
+    // Create the file and print the labels in the header row.
+    $filename = 'resource_stats_' . time() . '.csv';
+    $file_path = file_directory_temp() . '/' . $filename;
+    $handle = fopen($file_path, 'w'); // Create the file.
+    fputcsv($handle, $column_titles); // Write the labels to the header row.
+    fclose($handle);
+
+    // Store info in sandbox during processing.
+    $context['sandbox']['file'] = $file_path;
+
+    // Store some values in the results array for processing when finshed.
+    $context['results']['filename'] = $filename;
+    $context['results']['file'] = $file_path;
+
+    if (file_exists($file_path)) {
+      $context['sandbox']['progress'] = 0;
+      $context['sandbox']['resources'] = $resources;
+      $context['sandbox']['resource_filters'] = $resource_filters;
+      $context['sandbox']['resources_total'] = count($context['sandbox']['resources']);
+    }
+  }
+
+  // Accounting.
+  if (!isset($context['results']['count'])) {
+    $context['results']['count'] = 0;
+  }
+
+  // Open the file for writing ('a' puts pointer at end of file).
+  $handle = fopen($context['sandbox']['file'], 'a');
+
+  // Loop until we hit the batch limit.
+  for ($i = 0; $i < $limit; $i++) {
+    if ($context['sandbox']['resources']) {
+      $nid = array_shift($context['sandbox']['resources']);
+      $node = node_load($nid);
+      $node = fitler_resource_status($node, $context['sandbox']['resource_filters']['status']);
+      if ($node) {
+        $entity_node = entity_metadata_wrapper('node', $node);
+        $resource_feedback = get_entities_for_resources($entity_node, 'feedback');
+        $workbench_moderation = get_workbench_moderation_history($entity_node);
+        $authors = NULL;
+        $reviewers = NULL;
+        list($authors, $reviewers) = get_users_for_resources_stats_report($entity_node, $resource_feedback);
+
+        ksort($resource_feedback);
+        ksort($workbench_moderation);
+
+        $data = array();
+        $data['resource_node'] = $entity_node;
+        $data['resource_feedback'] = $resource_feedback;
+        $data['workbench_moderation'] = $workbench_moderation;
+        $data['authors'] = $authors;
+        $data['reviewers'] = $reviewers;
+        get_counts_for_resource_stats($entity_node, $data);
+
+        $report_configuration = $context['sandbox']['report_configuration'];
+        $schema = $report_configuration['node_schema'];
+        $row = array();
+        foreach ($schema['fieldkeys'] as $field_key) { // (columns)
+          $primary_key = 'nid';
+          if (array_key_exists('primarykey', $field_key)) {
+            $primary_key = $field_key['primarykey'];
+          }
+          $value = get_field_value_using_schema($field_key, $data, $entity_node, $primary_key, $is_date);
+          if (array_key_exists('field', $field_key)) {
+            $final_value = format_metadata_value_field($value, $is_date, $field_key['field'], $entity_node);
+          }
+          else {
+            $final_value = format_metadata_value_field($value, $is_date, NULL, $entity_node);
+          }
+          $row[] = $final_value;
+        }
+        fputcsv($handle, $row);
+        $context['results']['count']++;
+        $context['finished'] = $context['results']['count'] / $context['sandbox']['resources_total'];
+      }
+    }
+  }
+
+  fclose($handle);
+
+  // Show message updating user on how many subscribers have been exported.
+  $context['message'] = t('Exported @count of @total resources.', array(
+    '@count' => $context['results']['count'],
+    '@total' => $context['sandbox']['resources_total'],
+  ));
+}
+
+/**
+ * @param $success
+ * @param $results
+ * @param $operations
+ */
+function sbac_report_resource_statistics_finished_batch($success, $results, $operations) {
+  if ($success) {
+    $message = format_plural(count($results), 'One resource exported', '@count resources exported.');
+    //$results['filename'] = 'filename.csv';
+    //$results['file'] = '/tmp/filename.csv';
+    //$results['count'] = 1931;
     gc_enable();
     gc_collect_cycles();
     gc_disable();
-    _cex_download($csv_resource_stats_result, 'output.csv');
+    //_cex_download($csv_resource_stats_result, 'output.csv');
     $_SESSION['report_chosen_filters'] = '';
   }
+  else {
+    $message = t('Finished with an error. Please try again.');
+  }
+  drupal_set_message($message);
 }
 
 /**
@@ -355,67 +495,45 @@ function build_resource_stats_csv($resource_filters) {
  * Returns an array of node ids to the resources.
  */
 function get_resources($resource_filters) {
-  /**
-   * Helper function to add a field condition based on a filter.   Resources that don't match the query criteria
-   * are included in the query result.
-   *
-   * @param $entities
-   * @param $resource_filter
-   * @param $field
-   */
-  function set_field_condition_niether_filter(&$entities, $resource_filter, $field) {
-    if (array_key_exists(1, $resource_filter)) {
-      unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
-      $entities->fieldCondition($field, 'tid', array_keys($resource_filter), 'NOT IN');
-    }
-  }
+//  $query = new EntityFieldQuery();
+//  $entities = $query->entityCondition('entity_type', 'node')
+//    ->entityCondition('bundle', 'resource')
+//    ->propertyCondition('status', 1)
+//    ->fieldCondition('field_focus', 'tid', array_keys($resource_filters['types']));
+//
+//  set_field_condition_filter_restrictive($entities, $resource_filters['subject'], 'field_subject');
+//  set_field_condition_filter_restrictive($entities, $resource_filters['grade'], 'field_grades');
+//  set_field_condition_filter_restrictive($entities, $resource_filters['attribute'], 'field_attributes');
+//  $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->execute();
+//  $nids = array();
+//  if (array_key_exists('node', $entities) and $entities['node']) {
+//    $nids = array_keys($entities['node']);
+//  }
+//
+//  // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
+//  if (isset($resource_filters['subject'][1]) || isset($resource_filters['grade'][1]) || isset($resource_filters['attribute'][1])) {
+//    $entities = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'resource')
+//      ->propertyCondition('status', 1);
+//    set_field_condition_niether_filter($entities, $resource_filters['subject'], 'field_subject');
+//    set_field_condition_niether_filter($entities, $resource_filters['grade'], 'field_grades');
+//    set_field_condition_niether_filter($entities, $resource_filters['attribute'], 'field_attributes');
+//    $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->addTag('WorkbenchModerationAssigned')->execute();
+//
+//    if (array_key_exists('node', $entities) and $entities['node']) {
+//      $nids = array_merge($nids, $entities['node']);
+//    }
+//  }
 
-  /**
-   * Helper function to add a field condition based on a filter.  Uses a list of filter values to define an inclusive
-   * filter where a resource with any of the given attributes is included in the query result.
-   *
-   * @param $entities
-   * @param $resource_filter
-   * @param $field
-   */
-  function set_field_condition_filter_additive(&$entities, $resource_filter, $field) {
-    if (!array_key_exists(0, $resource_filter)) {
-      if (array_key_exists(1, $resource_filter)) {
-        unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
-      }
-      $entities->fieldCondition($field, 'tid', array_keys($resource_filter));
-    }
-  }
-
-  /**
-   * Helper function to add a field condition based on a filter.  Uses each filter in the list to narrow the selection
-   * of the resource.  I.E the resource must have all attributes to be include in the result set.
-   *
-   * @param $entities
-   * @param $resource_filter
-   * @param $field
-   */
-  function set_field_condition_filter_restrictive(&$entities, $resource_filter, $field) {
-    if (!array_key_exists(0, $resource_filter)) {
-      if (array_key_exists(1, $resource_filter)) {
-        unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
-      }
-      foreach ($resource_filter as $key => $filter) {
-        $entities->fieldCondition($field, 'tid', $key, '=');
-      }
-    }
-  }
-
-  $query = new EntityFieldQuery();
-  $entities = $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'resource')
-    ->propertyCondition('status', 1)
-    ->fieldCondition('field_focus', 'tid', array_keys($resource_filters['types']));
-
-  set_field_condition_filter_restrictive($entities, $resource_filters['subject'], 'field_subject');
-  set_field_condition_filter_restrictive($entities, $resource_filters['grade'], 'field_grades');
-  set_field_condition_filter_restrictive($entities, $resource_filters['attribute'], 'field_attributes');
-  $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->execute();
+  $query = db_select('node', 'n');
+  $query->fields('n');
+  $query->join('field_focus', 'ff', 'n.nid = ff.nid AND n.vid = ff.vid');
+  $query->condition('type', 'resource');
+  $query->condition('status', 1);
+  $query->condition('field_focus', 'tid', array_keys($resource_filters['types']));
+  set_field_condition_filter_restrictive($query, $resource_filters['subject'], 'field_subject');
+  set_field_condition_filter_restrictive($query, $resource_filters['grade'], 'field_grades');
+  set_field_condition_filter_restrictive($query, $resource_filters['attribute'], 'field_attributes');
+  $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->execute();
   $nids = array();
   if (array_key_exists('node', $entities) and $entities['node']) {
     $nids = array_keys($entities['node']);
@@ -423,24 +541,71 @@ function get_resources($resource_filters) {
 
   // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
   if (isset($resource_filters['subject'][1]) || isset($resource_filters['grade'][1]) || isset($resource_filters['attribute'][1])) {
-    $entities = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'resource')->propertyCondition('status', 1);
-    set_field_condition_niether_filter($entities, $resource_filters['subject'], 'field_subject');
-    set_field_condition_niether_filter($entities, $resource_filters['grade'], 'field_grades');
-    set_field_condition_niether_filter($entities, $resource_filters['attribute'], 'field_attributes');
-    $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->addTag('WorkbenchModerationAssigned')->execute();
-
+    $query = db_select('node', 'n');
+    $query->fields('n');
+    $query->condition('type', 'resource');
+    $query->condition('status', 1);
+    set_field_condition_niether_filter($query, $resource_filters['subject'], 'field_subject');
+    set_field_condition_niether_filter($query, $resource_filters['grade'], 'field_grades');
+    set_field_condition_niether_filter($query, $resource_filters['attribute'], 'field_attributes');
+    $entities = $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->execute();
     if (array_key_exists('node', $entities) and $entities['node']) {
       $nids = array_merge($nids, $entities['node']);
     }
   }
-  $nodes = node_load_multiple($nids);
-  $nodes = fitler_resource_status($nodes, $resource_filters['status']);
 
-  $wrappers = array();
-  foreach ($nodes as $key => $value) {
-    $wrappers[$key] = entity_metadata_wrapper('node', $value);
+  return $nids;
+}
+
+/**
+ * Helper function to add a field condition based on a filter.  Uses each filter in the list to narrow the selection
+ * of the resource.  I.E the resource must have all attributes to be include in the result set.
+ *
+ * @param $entities
+ * @param $resource_filter
+ * @param $field
+ */
+function set_field_condition_filter_restrictive(&$entities, $resource_filter, $field) {
+  if (!array_key_exists(0, $resource_filter)) {
+    if (array_key_exists(1, $resource_filter)) {
+      unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+    }
+    foreach ($resource_filter as $key => $filter) {
+      $entities->condition($field, 'tid', $key, '=');
+    }
   }
-  return $wrappers;
+}
+
+/**
+ * Helper function to add a field condition based on a filter.   Resources that don't match the query criteria
+ * are included in the query result.
+ *
+ * @param $entities
+ * @param $resource_filter
+ * @param $field
+ */
+function set_field_condition_niether_filter(&$entities, $resource_filter, $field) {
+  if (array_key_exists(1, $resource_filter)) {
+    unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+    $entities->condition($field, 'tid', array_keys($resource_filter), 'NOT IN');
+  }
+}
+
+/**
+ * Helper function to add a field condition based on a filter.  Uses a list of filter values to define an inclusive
+ * filter where a resource with any of the given attributes is included in the query result.
+ *
+ * @param $entities
+ * @param $resource_filter
+ * @param $field
+ */
+function set_field_condition_filter_additive(&$entities, $resource_filter, $field) {
+  if (!array_key_exists(0, $resource_filter)) {
+    if (array_key_exists(1, $resource_filter)) {
+      unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
+    }
+    $entities->condition($field, 'tid', array_keys($resource_filter));
+  }
 }
 
 /**
@@ -480,21 +645,19 @@ function filter_resource_on_field($nodes, $field, $filter_values) {
  * @param $statuses
  * @return array
  */
-function fitler_resource_status($nodes, $statuses) {
-  $filtered_nodes = array();
+function fitler_resource_status($node, $statuses) {
+  $filtered_node = NULL;
   $statuses = array_map('strtolower', $statuses);
-  foreach ($nodes as $key => $node) {
-    if ($node->workbench_moderation['current']->state != 'creation') {
-      $state = str_replace('_', ' ', $node->workbench_moderation['current']->state);
-      if (in_array('posted_distinction', $statuses) && $state == 'published' && $node->sticky == 1) {
-        $filtered_nodes[$key] = $node;
-      }
-      if (in_array($state, $statuses)) {
-        $filtered_nodes[$key] = $node;
-      }
+  if ($node->workbench_moderation['current']->state != 'creation') {
+    $state = str_replace('_', ' ', $node->workbench_moderation['current']->state);
+    if (in_array('posted_distinction', $statuses) && $state == 'published' && $node->sticky == 1) {
+      $filtered_node = $node;
+    }
+    if (in_array($state, $statuses)) {
+      $filtered_node = $node;
     }
   }
-  return $filtered_nodes;
+  return $filtered_node;
 }
 
 /**
@@ -503,10 +666,10 @@ function fitler_resource_status($nodes, $statuses) {
  * @param $entity_type
  * @return array
  */
-function get_entities_for_resources($resources, $entity_type) {
+function get_entities_for_resources($resource, $entity_type) {
   $query = new EntityFieldQuery();
   $entities = $query->entityCondition('entity_type', $entity_type)
-    ->propertyCondition('node_id', array_keys($resources))
+    ->propertyCondition('node_id', $resource->nid->value())
     ->execute();
 
   $eids = array_keys($entities[$entity_type]);
@@ -558,7 +721,7 @@ function get_entities_for_resources($resources, $entity_type) {
  * @param $resources
  * @return array
  */
-function get_workbench_moderation_history($resources) {
+function get_workbench_moderation_history($resource) {
   $query = <<<SQL
     select * from workbench_moderation_states;
 SQL;
@@ -569,13 +732,13 @@ SQL;
   }
 
   $sql = <<<SQL
-    select * from workbench_moderation_node_history where nid in (%s) and current = 1
+    select * from workbench_moderation_node_history where nid = :nid and current = 1
 SQL;
-  $query = sprintf($sql, implode(',', array_keys($resources)));
+  $query = sprintf($sql);
   $sql = NULL;
   unset($sql); //memory management
 
-  $result = db_query($query);
+  $result = db_query($query, array(':nid' => $resource->nid->value()));
   $query = NULL;
   unset($query); //memory management
 
@@ -597,18 +760,16 @@ SQL;
  *   Reviewer 3
  *   Poster
  */
-function get_users_for_resources_stats_report($resources, $feedback_reviews) {
+function get_users_for_resources_stats_report($resource, $feedback_reviews) {
   // authors
   $authors = array();
-  foreach ($resources as $resource) {
-    try {
-      $value = $resource->field_author->value();
-      if (!is_null($value)) {
-        $authors[$value] = $value;
-      }
-    } catch (EntityMetadataWrapperException $e) {
-      print $e->getMessage();
+  try {
+    $value = $resource->field_author->value();
+    if (!is_null($value)) {
+      $authors[$value] = $value;
     }
+  } catch (EntityMetadataWrapperException $e) {
+    print $e->getMessage();
   }
   $sql = <<<SQL
     select * from users where name in (%s)
@@ -639,8 +800,7 @@ SQL;
         else {
           $reviewers[$uid] = $value;
         }
-      }
-      catch (EntityMetadataWrapperException $e) {
+      } catch (EntityMetadataWrapperException $e) {
         print $e->getMessage();
       }
     }
@@ -649,52 +809,48 @@ SQL;
 }
 
 /**
+ * Query helper function for nodes.
+ * @param $sql_template
+ * @param $nodes
+ *   A list of ids to be queried for.
+ * @param bool $merge_necessary
+ * @return array
+ */
+function count_with_nodes_query($sql, $node, $merge_necessary = TRUE) {
+  // done this way because the prepared statement didn't work passing array or comma separated string.
+  // TODO: make prepared statement work here, or escape string???
+  if ($merge_necessary) {
+    $result = db_query($sql, array(':nid' => $node->nid->value()));
+  }
+  else {
+    $result = db_query($sql);
+  }
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->nid] = $record;
+  }
+  ksort($values);
+  return $values;
+}
+
+/**
  * Takes a list of node ids for resources, retrieves various things about each resource in the list.
  * @param $nodes
  * @param $data
  */
-function get_counts_for_resource_stats($nodes, &$data) {
-  /**
-   * Query helper function for nodes.
-   * @param $sql_template
-   * @param $nodes
-   *   A list of ids to be queried for.
-   * @param bool $merge_necessary
-   * @return array
-   */
-  function count_with_nodes_query($sql_template, $nodes, $merge_necessary = TRUE) //$parameters=null)
-  {
-    // done this way because the prepared statement didn't work passing array or comma separated string.
-    // TODO: make prepared statement work here, or escape string???
-    if ($merge_necessary) {
-      $sql = sprintf($sql_template, $nodes);
-    }
-    else {
-      $sql = $sql_template;
-    }
-    $result = db_query($sql);
-    $values = array();
-    foreach ($result as $record) {
-      $values[$record->nid] = $record;
-    }
-    ksort($values);
-    return $values;
-  }
-
-  $nodes = implode(',', array_keys($nodes));
-
+function get_counts_for_resource_stats($node, &$data) {
   # Number of Uploaded Materials
-  $sql = "SELECT nid, count(id) as number_uploaded FROM eck_media where nid in (%s) group by nid";
-  $data['count_uploaded_materials'] = count_with_nodes_query($sql, $nodes);
+  $sql = "SELECT nid, count(id) as number_uploaded FROM eck_media where nid = :nid group by nid";
+  $data['count_uploaded_materials'] = count_with_nodes_query($sql, $node, TRUE);
 
   # Return date
   $sql = "SELECT nid, stamp FROM workbench_moderation_node_history where state = 'rejected' and
           nid not in (SELECT nid FROM workbench_moderation_node_history where state = 'approved')";
-  $data['return_date'] = count_with_nodes_query($sql, $nodes, FALSE);
+  $data['return_date'] = count_with_nodes_query($sql, $node, FALSE);
 
   # Review cycle number
   $sql = "SELECT nid, count(nid) as review_cycle FROM workbench_moderation_node_history where state = 'rejected' group by nid";
-  $data['review_cycle'] = count_with_nodes_query($sql, $nodes, FALSE);
+  $data['review_cycle'] = count_with_nodes_query($sql, $node, FALSE);
 
   # Current student learning rating (average)
   $sql = "select n.nid, AVG(sl.field_student_learning_rating) as average from
@@ -704,7 +860,7 @@ function get_counts_for_resource_stats($nodes, &$data) {
             on er.node_id = n.nid
             and sl.entity_id = er.id group by n.nid";
 
-  $data['student_learning_rating_average'] = count_with_nodes_query($sql, $nodes, FALSE);
+  $data['student_learning_rating_average'] = count_with_nodes_query($sql, $node, FALSE);
 
   # Current professional development rating (average)
   $sql = "select n.nid, AVG(sl.field_pro_dev_rating) as average from
@@ -714,7 +870,7 @@ function get_counts_for_resource_stats($nodes, &$data) {
             on er.node_id = n.nid
             and sl.entity_id = er.id group by n.nid";
 
-  $data['pro_dev_rating_average'] = count_with_nodes_query($sql, $nodes, FALSE);
+  $data['pro_dev_rating_average'] = count_with_nodes_query($sql, $node, FALSE);
 
   # Current ease of use rating (average)
   $sql = "select n.nid, AVG(sl.field_ease_use_rating) as average from
@@ -724,12 +880,11 @@ function get_counts_for_resource_stats($nodes, &$data) {
             on er.node_id = n.nid
             and sl.entity_id = er.id group by n.nid";
 
-  $data['ease_use_rating_average'] = count_with_nodes_query($sql, $nodes, FALSE);
+  $data['ease_use_rating_average'] = count_with_nodes_query($sql, $node, FALSE);
 
   # number of reviews per resource
   $sql = "select node_id as nid, count(node_id) as total_reviews From eck_feedback where status = 1 group by node_id";
-  $data['total_reviews_per_node'] = count_with_nodes_query($sql, $nodes, FALSE);
-
+  $data['total_reviews_per_node'] = count_with_nodes_query($sql, $node, FALSE);
 }
 
 /**
@@ -796,6 +951,30 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
 }
 
 /**
+ * Calculates the total number of tags applied to a given resource node.
+ * @param $fieldkey
+ * @param $data
+ * @param $resource
+ * @return string
+ */
+function get_total_tags($fieldkey, $data, $resource) {
+  // count of these fields:
+
+  $count = count($resource->field_grades->value());
+  $count += count($resource->field_subject->value());
+  $count += count($resource->field_intended_end_user->value());
+  $count += count($resource->field_intended_student->value());
+  $count += count($resource->field_geographical_settings->value());
+  $count += count($resource->field_smarter_balanced_keyword->value());
+  $count += count($resource->field_digital_media_type->value());
+  $count += count($resource->field_educational_use->value());
+  $count += count($resource->field_classroom_technologies->value());
+  $count += count($resource->field_alignment_tags->value());
+
+  return "$count";
+}
+
+/**
  *   Here is where the Resource Detail Statistics Report is defined.  The array created here defines where to find
  * the data for each column of the report within the queried data.
  *
@@ -803,30 +982,6 @@ function create_resource_stats_from_data($data, $report_configuration, $primary_
  */
 
 function set_report_columns() {
-  /**
-   * Calculates the total number of tags applied to a given resource node.
-   * @param $fieldkey
-   * @param $data
-   * @param $resource
-   * @return string
-   */
-  function get_total_tags($fieldkey, $data, $resource) {
-    // count of these fields:
-
-    $count = count($resource->field_grades->value());
-    $count += count($resource->field_subject->value());
-    $count += count($resource->field_intended_end_user->value());
-    $count += count($resource->field_intended_student->value());
-    $count += count($resource->field_geographical_settings->value());
-    $count += count($resource->field_smarter_balanced_keyword->value());
-    $count += count($resource->field_digital_media_type->value());
-    $count += count($resource->field_educational_use->value());
-    $count += count($resource->field_classroom_technologies->value());
-    $count += count($resource->field_alignment_tags->value());
-
-    return "$count";
-  }
-
   return
     array(
       'node_schema' => array( // sheet 1
