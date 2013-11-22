@@ -617,9 +617,7 @@ a.sbac-grid-layout {
   .category-filter-list {
     @include border-radius(6px); // border radius
     @include box-shadow(1px 1px 1px rgba(0,0,0,.3)); // drop shadow
-    max-height: 300px;
     width: 500px;
-    overflow: scroll;
     background: #edf3e0;
     border: 1px solid #fff; // stroke
 
@@ -636,6 +634,8 @@ a.sbac-grid-layout {
   ul {
     list-style-type: none;
     margin: 0;
+		max-height: 300px;
+		overflow-y: scroll;
 
     li {
       @include border-radius(0); // border radius
@@ -643,19 +643,25 @@ a.sbac-grid-layout {
       float: left;
       display: inline;
       margin: 1% 2%;
-      padding: 5px;
+      padding: 5px 0;
       background:none;
       color: #246a34;
       cursor: pointer;
 
       .highlight {
         display: inline-block;
-        float: left;
         width: 14px;
         height: 14px;
         background-color: white;
-        border: 1px solid
+        border: 1px solid;
+				vertical-align: top;
       }
+
+			.filter-name  { 
+				display: inline-block; 
+				width: 82%;
+				margin-top: -1px;
+			}
 
       &.current {
         .highlight {
@@ -728,6 +734,13 @@ a.sbac-grid-layout {
   }
 }
 
+/*Tooltip of categories filters*/
+.page-digital-library-resources, .page-resource-review, .page-my-resources {
+	.tooltip {
+		top: 150px !important;
+	}
+}
+
 /* -----------------------------------------
    Node Resource
    ----------------------------------------- */
@@ -739,6 +752,7 @@ a.sbac-grid-layout {
   width: 200px;
   margin-right: 1em;
   position: relative;
+	vertical-align: top;
 
   button {
     display: none !important;
@@ -747,10 +761,16 @@ a.sbac-grid-layout {
   .form-text, .form-text:focus {
     background: url('../images/search.png') 5% center no-repeat;
     border-radius: 20px;
-    top: 0;
+		position: absolute;
+    top: 8px;
     padding-left: 25px;
   }
 
+	.contextual-links-wrapper {
+		top: -2px;
+		right: -5px;
+	}
+	
   .sbac-clear-search {
     background: url('../images/icon-validation-fail.png') no-repeat center center;
     height: 15px;
@@ -758,8 +778,8 @@ a.sbac-grid-layout {
     display: block;
     float: right;
     position: absolute;
-    right: 10px;
-    top: 7px;
+    right: 13px;
+    top: 14px;
     cursor: pointer;
   }
 }
