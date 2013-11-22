@@ -6,6 +6,10 @@
 function sbac_csv_report_resource_stats_form($form, &$form_state) {
   $form = array();
 
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_report') . '/js/sbac_report.csv.js',
+  );
+
   $form['resource_type_dropdown'] = array(
     '#type' => 'select',
     '#title' => t('Choose resource type:'),
@@ -257,10 +261,29 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
  */
 function sbac_report_resource_statistics_finished_batch($success, $results, $operations) {
   if ($success) {
-    $message = format_plural($results['count'], 'One resource exported', '@count resources exported.');
-    //$results['filename'] = 'filename.csv';
-    //$results['file'] = '/tmp/filename.csv';
-    //$results['count'] = 1931;
+    $directory = "private://resource_stats_csv/";
+    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    $directory .= $results['filename'];
+    $directory_real_path = drupal_realpath($directory);
+    rename($results['file'], $directory_real_path);
+    $mime_type = file_get_mimetype($directory);
+
+    global $user;
+    $dir_file = new stdClass();
+    $dir_file->uid = $user->uid;
+    $dir_file->filename = $results['filename'];
+    $dir_file->uri = $directory;
+    $dir_file->filemime = $mime_type;
+    $dir_file->filesize = 0;
+    $dir_file->status = 1;
+    $dir_file->timestamp = time();
+    $dir_file->type = $mime_type;
+    drupal_write_record('file_managed', $dir_file);
+
+    $web_url = file_create_url($directory);
+    $download_link = l(t('click here to download the file'), $web_url, array('attributes' => array('class' => array('sbac-report-download-link'))));
+    $message = '<span class="sbac-report-download">' . t('The exported CSV file is now ready for download. Please !download_link.', array('!download_link' => $download_link)) . '</span>';
+
     gc_enable();
     gc_collect_cycles();
     gc_disable();
