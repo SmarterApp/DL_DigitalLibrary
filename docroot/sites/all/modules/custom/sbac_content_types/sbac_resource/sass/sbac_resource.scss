@@ -660,7 +660,8 @@ a.sbac-grid-layout {
 			.filter-name  { 
 				display: inline-block; 
 				width: 82%;
-				margin-top: -1px;
+				margin-top: -2px;
+				vertical-align: top;
 			}
 
       &.current {
