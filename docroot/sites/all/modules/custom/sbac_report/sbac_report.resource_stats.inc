@@ -137,8 +137,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
  * @param $context
  */
 function sbac_report_resource_statistics_batch($resources, $resource_filters, &$context) {
-  $limit = 500;
+  $limit = 200;
   $context['sandbox']['finished'] = 0;
+  ini_set('max_execution_time', 60);
 
   // First time through.
   if (!isset($context['sandbox']['file'])) {
@@ -193,46 +194,49 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
     if ($context['sandbox']['resources']) {
       $nid = array_shift($context['sandbox']['resources']);
       $node = node_load($nid);
-      $node = fitler_resource_status($node, $context['sandbox']['resource_filters']['status']);
+      // $node = fitler_resource_status($node, $context['sandbox']['resource_filters']['status']);
       if ($node) {
         $entity_node = entity_metadata_wrapper('node', $node);
-        $resource_feedback = get_entities_for_resources($entity_node, 'feedback');
-        $workbench_moderation = get_workbench_moderation_history($entity_node);
-        $authors = NULL;
-        $reviewers = NULL;
-        list($authors, $reviewers) = get_users_for_resources_stats_report($entity_node, $resource_feedback);
+        if ($entity_node) {
+          $resource_feedback = get_entities_for_resources($entity_node, 'feedback');
+          $workbench_moderation = get_workbench_moderation_history($entity_node);
+          $authors = NULL;
+          $reviewers = NULL;
+          list($authors, $reviewers) = get_users_for_resources_stats_report($entity_node, $resource_feedback);
 
-        ksort($resource_feedback);
-        ksort($workbench_moderation);
+          ksort($resource_feedback);
+          ksort($workbench_moderation);
 
-        $data = array();
-        $data['resource_node'] = $entity_node;
-        $data['resource_feedback'] = $resource_feedback;
-        $data['workbench_moderation'] = $workbench_moderation;
-        $data['authors'] = $authors;
-        $data['reviewers'] = $reviewers;
-        get_counts_for_resource_stats($entity_node, $data);
+          $data = array();
+          $data['resource_node'] = $entity_node;
+          $data['resource_feedback'] = $resource_feedback;
+          $data['workbench_moderation'] = $workbench_moderation;
+          $data['authors'] = $authors;
+          $data['reviewers'] = $reviewers;
+          get_counts_for_resource_stats($entity_node, $data);
 
-        $report_configuration = $context['sandbox']['report_configuration'];
-        $schema = $report_configuration['node_schema'];
-        $row = array();
-        foreach ($schema['fieldkeys'] as $field_key) { // (columns)
-          $primary_key = 'nid';
-          if (array_key_exists('primarykey', $field_key)) {
-            $primary_key = $field_key['primarykey'];
+          $report_configuration = $context['sandbox']['report_configuration'];
+          $schema = $report_configuration['node_schema'];
+          $row = array();
+          foreach ($schema['fieldkeys'] as $field_key) { // (columns)
+            $primary_key = 'nid';
+            if (array_key_exists('primarykey', $field_key)) {
+              $primary_key = $field_key['primarykey'];
+            }
+            $value = get_field_value_using_schema($field_key, $data, $entity_node, $primary_key, $is_date);
+            if (array_key_exists('field', $field_key)) {
+              $final_value = format_metadata_value_field($value, $is_date, $field_key['field'], $entity_node);
+            }
+            else {
+              $final_value = format_metadata_value_field($value, $is_date, NULL, $entity_node);
+            }
+            $row[] = $final_value;
           }
-          $value = get_field_value_using_schema($field_key, $data, $entity_node, $primary_key, $is_date);
-          if (array_key_exists('field', $field_key)) {
-            $final_value = format_metadata_value_field($value, $is_date, $field_key['field'], $entity_node);
-          }
-          else {
-            $final_value = format_metadata_value_field($value, $is_date, NULL, $entity_node);
-          }
-          $row[] = $final_value;
+
+          fputcsv($handle, $row);
+          $context['results']['count']++;
+          $context['finished'] = $context['results']['count'] / $context['sandbox']['resources_total'];
         }
-        fputcsv($handle, $row);
-        $context['results']['count']++;
-        $context['finished'] = $context['results']['count'] / $context['sandbox']['resources_total'];
       }
     }
   }
@@ -253,7 +257,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
  */
 function sbac_report_resource_statistics_finished_batch($success, $results, $operations) {
   if ($success) {
-    $message = format_plural(count($results), 'One resource exported', '@count resources exported.');
+    $message = format_plural($results['count'], 'One resource exported', '@count resources exported.');
     //$results['filename'] = 'filename.csv';
     //$results['file'] = '/tmp/filename.csv';
     //$results['count'] = 1931;
@@ -525,33 +529,59 @@ function get_resources($resource_filters) {
 //  }
 
   $query = db_select('node', 'n');
-  $query->fields('n');
-  $query->join('field_focus', 'ff', 'n.nid = ff.nid AND n.vid = ff.vid');
-  $query->condition('type', 'resource');
-  $query->condition('status', 1);
-  $query->condition('field_focus', 'tid', array_keys($resource_filters['types']));
-  set_field_condition_filter_restrictive($query, $resource_filters['subject'], 'field_subject');
-  set_field_condition_filter_restrictive($query, $resource_filters['grade'], 'field_grades');
-  set_field_condition_filter_restrictive($query, $resource_filters['attribute'], 'field_attributes');
-  $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->execute();
+  $query->fields('n', array('nid'));
+  $query->join('field_data_field_focus', 'f', 'n.nid = f.entity_id AND n.vid = f.revision_id');
+  $query->join('field_data_field_grades', 'g', 'n.nid = g.entity_id AND n.vid = g.revision_id');
+  $query->join('field_data_field_subject', 's', 'n.nid = s.entity_id AND n.vid = s.revision_id');
+  $query->join('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND n.vid = a.revision_id');
+  if (!isset($resource_filters['status'][0])) {
+    $query->join('workbench_moderation_node_history', 'w', 'n.nid = w.nid AND n.vid = w.vid');
+  }
+  $query->condition('n.type', 'resource');
+  $query->condition('n.status', 1);
+  $query->condition('f.field_focus_tid', array_keys($resource_filters['types']));
+  if (!isset($resource_filters['status'][0])) {
+    if (in_array('Posted with Distinction', $resource_filters['status'])) {
+      // ensure published is brought back, since posted with distinction is a published state with sticky = 1;
+      $resource_filters['status']['published'] = 'Published';
+      // remove the option that does not exist in the DB.
+      unset($resource_filters['status']['posted_distinction']);
+    }
+    $query->condition('w.state', array_keys($resource_filters['status']), 'IN');
+    $query->condition('w.current', 1);
+  }
+  set_field_condition_filter_restrictive($query, $resource_filters['subject'], 's.field_subject_tid');
+  set_field_condition_filter_restrictive($query, $resource_filters['grade'], 'g.field_grades_tid');
+  set_field_condition_filter_restrictive($query, $resource_filters['attribute'], 'a.field_attributes_tid');
+  $query->groupBy('n.nid');
+  $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
+  $result = $query->execute();
   $nids = array();
-  if (array_key_exists('node', $entities) and $entities['node']) {
-    $nids = array_keys($entities['node']);
+  foreach ($result as $row) {
+    $nids[] = $row->nid;
   }
 
   // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
   if (isset($resource_filters['subject'][1]) || isset($resource_filters['grade'][1]) || isset($resource_filters['attribute'][1])) {
     $query = db_select('node', 'n');
-    $query->fields('n');
-    $query->condition('type', 'resource');
-    $query->condition('status', 1);
-    set_field_condition_niether_filter($query, $resource_filters['subject'], 'field_subject');
-    set_field_condition_niether_filter($query, $resource_filters['grade'], 'field_grades');
-    set_field_condition_niether_filter($query, $resource_filters['attribute'], 'field_attributes');
-    $entities = $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->execute();
-    if (array_key_exists('node', $entities) and $entities['node']) {
-      $nids = array_merge($nids, $entities['node']);
+    $query->fields('n', array('nid'));
+    $query->join('field_data_field_grades', 'g', 'n.nid = g.entity_id AND n.vid = g.revision_id');
+    $query->join('field_data_field_subject', 's', 'n.nid = s.entity_id AND n.vid = s.revision_id');
+    $query->join('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND n.vid = a.revision_id');
+    $query->condition('n.type', 'resource');
+    $query->condition('n.status', 1);
+    set_field_condition_niether_filter($query, $resource_filters['subject'], 's.field_subject_tid');
+    set_field_condition_niether_filter($query, $resource_filters['grade'], 'g.field_grades_tid');
+    set_field_condition_niether_filter($query, $resource_filters['attribute'], 'a.field_attributes_tid');
+    $query->groupBy('n.nid');
+    $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
+
+    $result = $query->execute();
+    $separate_nids = array();
+    foreach ($result as $row) {
+      $separate_nids[] = $row->nid;
     }
+    $nids = array_merge($nids, $separate_nids);
   }
 
   return $nids;
@@ -571,7 +601,7 @@ function set_field_condition_filter_restrictive(&$entities, $resource_filter, $f
       unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
     }
     foreach ($resource_filter as $key => $filter) {
-      $entities->condition($field, 'tid', $key, '=');
+      $entities->condition($field, $key, '=');
     }
   }
 }
@@ -587,7 +617,7 @@ function set_field_condition_filter_restrictive(&$entities, $resource_filter, $f
 function set_field_condition_niether_filter(&$entities, $resource_filter, $field) {
   if (array_key_exists(1, $resource_filter)) {
     unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
-    $entities->condition($field, 'tid', array_keys($resource_filter), 'NOT IN');
+    $entities->condition($field, array_keys($resource_filter), 'NOT IN');
   }
 }
 
@@ -672,42 +702,43 @@ function get_entities_for_resources($resource, $entity_type) {
     ->propertyCondition('node_id', $resource->nid->value())
     ->execute();
 
-  $eids = array_keys($entities[$entity_type]);
-  $values = entity_load($entity_type, $eids);
   $wrappers = array();
-
-  foreach ($values as $value) {
-    if ($value->status === '0') {
-      continue;
-    }
-    $wrapper = entity_metadata_wrapper($entity_type, $value);
-    $node_id = $wrapper->node_id->value();
-    if ($wrapper and $node_id) {
-      if (!array_key_exists($node_id, $wrappers) or
-        is_null($wrappers[$node_id])
-      ) {
-        $wrappers[$node_id] = array();
+  if ($entities) {
+    $eids = array_keys($entities[$entity_type]);
+    $values = entity_load($entity_type, $eids);
+    foreach ($values as $value) {
+      if ($value->status === '0') {
+        continue;
       }
-      if ($value->type == 'qc') {
-        if (!array_key_exists('qc1', $wrappers[$node_id])) {
-          $wrappers[$node_id]['qc1'] = $wrapper;
+      $wrapper = entity_metadata_wrapper($entity_type, $value);
+      $node_id = $wrapper->node_id->value();
+      if ($wrapper and $node_id) {
+        if (!array_key_exists($node_id, $wrappers) or
+          is_null($wrappers[$node_id])
+        ) {
+          $wrappers[$node_id] = array();
         }
-        else {
-          if (!array_key_exists('qc2', $wrappers[$node_id])) {
-            $wrappers[$node_id]['qc2'] = $wrapper;
+        if ($value->type == 'qc') {
+          if (!array_key_exists('qc1', $wrappers[$node_id])) {
+            $wrappers[$node_id]['qc1'] = $wrapper;
           }
           else {
-            $wrappers[$node_id]['qc3'] = $wrapper;
+            if (!array_key_exists('qc2', $wrappers[$node_id])) {
+              $wrappers[$node_id]['qc2'] = $wrapper;
+            }
+            else {
+              $wrappers[$node_id]['qc3'] = $wrapper;
+            }
           }
         }
-      }
-      else {
-        if ($value->type == 'post') {
-          $wrappers[$node_id][$value->type] = $wrapper;
-        }
         else {
-          if ($value->type == 'gate_keeper') {
+          if ($value->type == 'post') {
             $wrappers[$node_id][$value->type] = $wrapper;
+          }
+          else {
+            if ($value->type == 'gate_keeper') {
+              $wrappers[$node_id][$value->type] = $wrapper;
+            }
           }
         }
       }
