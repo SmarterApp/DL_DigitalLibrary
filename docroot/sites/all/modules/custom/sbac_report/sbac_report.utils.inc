@@ -348,6 +348,9 @@ function format_metadata_value_field($field, $is_date = FALSE, $field_in_object 
           $field .= ' with Distinction';
         }
       }
+      if ($field == 'Approved') {
+        $field = 'Needs Posting';
+      }
       $value = $field;
     }
     $value = htmlspecialchars_decode($value);

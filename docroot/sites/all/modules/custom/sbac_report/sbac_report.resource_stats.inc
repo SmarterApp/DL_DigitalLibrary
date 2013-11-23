@@ -96,6 +96,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
       if (isset($all_values['rejected'])) {
         $all_values['rejected'] = 'Rejected';
       }
+      if (isset($all_values['approved'])) {
+        $all_values['approved'] = 'Approved';
+      }
       if (in_array('0', $form_value)) { // all.
         $resource_filters[$key] = $all_values;
       }
@@ -198,7 +201,6 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
     if ($context['sandbox']['resources']) {
       $nid = array_shift($context['sandbox']['resources']);
       $node = node_load($nid);
-      // $node = fitler_resource_status($node, $context['sandbox']['resource_filters']['status']);
       if ($node) {
         $entity_node = entity_metadata_wrapper('node', $node);
         if ($entity_node) {
@@ -265,7 +267,7 @@ function sbac_report_resource_statistics_finished_batch($success, $results, $ope
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $directory .= $results['filename'];
     $directory_real_path = drupal_realpath($directory);
-    rename($results['file'], $directory_real_path);
+    copy($results['file'], $directory_real_path);
     $mime_type = file_get_mimetype($directory);
 
     global $user;
@@ -274,7 +276,7 @@ function sbac_report_resource_statistics_finished_batch($success, $results, $ope
     $dir_file->filename = $results['filename'];
     $dir_file->uri = $directory;
     $dir_file->filemime = $mime_type;
-    $dir_file->filesize = 0;
+    $dir_file->filesize = filesize($directory_real_path);
     $dir_file->status = 1;
     $dir_file->timestamp = time();
     $dir_file->type = $mime_type;
@@ -349,6 +351,9 @@ function sbac_report_resource_status_options() {
   }
   if (isset($options['rejected'])) {
     $options['rejected'] = 'Returned';
+  }
+  if (isset($options['approved'])) {
+    $options['approved'] = 'Needs Posting';
   }
   $options['posted_distinction'] = 'Posted with Distinction';
   asort($options);
