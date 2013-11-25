@@ -155,12 +155,15 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   sbac_resource_clean_text($form_state);
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
+  $active_tab = NULL;
+  if (isset($form_state['values']['additional_settings__active_tab']) &&
+    $form_state['values']['additional_settings__active_tab']) {
+    $active_tab = $form_state['values']['additional_settings__active_tab'];
+  }
+
 
   // If the save button was clicked via the modal, do the following.
-  if (isset($form_state['values']['additional_settings__active_tab']) &&
-    $form_state['values']['additional_settings__active_tab'] == 'edit-group_advanced' &&
-    isset($form_state['clicked_button']['#value']) &&
-    $form_state['clicked_button']['#value'] == 'Save' &&
+  if ($active_tab == 'edit-group_advanced' &&
     isset($_SESSION['post_resource_clicked'])
     && $_SESSION['post_resource_clicked']) {
 
@@ -235,7 +238,7 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   node_form_submit($form, $form_state);
 
   // Redirect the user to the correct place.
-  if (isset($_SESSION['post_resource_clicked']) && $_SESSION['post_resource_clicked']) {
+  if ($active_tab == 'edit-group_advanced' && isset($_SESSION['post_resource_clicked']) && $_SESSION['post_resource_clicked']) {
     unset($_SESSION['post_resource_clicked']);
     drupal_goto($form_state['redirect']);
   }
@@ -272,6 +275,7 @@ function sbac_resource_after_build_resource_form(&$form, &$form_state) {
 
   return $form;
 }
+
 
 /**
  * Save and continue submit handler for resource node form.
@@ -380,20 +384,28 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     }
   }
 
+  $save_all_changes_modal = FALSE;
+  global $user;
+  if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'published') {
+    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+      $save_all_changes_modal = TRUE;
+    }
+  }
+
   // Cleans the text
   sbac_resource_clean_text($form_state);
   // Set path alias
   $form_state['values']['path']['pathauto'] = TRUE;
-
   // Set the HTML5 flag.
   if ($form_state['html5']) {
     $form_state['values']['field_html5']['und'][0]['value'] = 1;
   }
-
-  if ($active_tab != 'edit-group_advanced') {
+  // Only save if non modal version.
+  if (!$save_all_changes_modal) {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
   }
+  // Rebuild form.
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
   // Clear drupal messages.
   drupal_get_messages();
@@ -403,7 +415,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
     );
   }
-  else if ($active_tab != 'edit-group_advanced') {
+  else if (!$save_all_changes_modal) {
     // Add appropriate JS.
     drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
     if ($selector) {
@@ -418,7 +430,6 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
 
   return $form;
 }
-
 /**
  * Cancels the changes and redirects.
  *
