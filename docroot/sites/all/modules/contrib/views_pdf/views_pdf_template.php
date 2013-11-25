@@ -245,6 +245,8 @@ class PdfTemplate extends FPDI {
     $options['render'] += array(
       'eval_before' => '',
       'eval_after' => '',
+      'bypass_eval_before' => FALSE,
+      'bypass_eval_after' => FALSE,
     );
 
     $x = $y = 0;
@@ -386,7 +388,7 @@ class PdfTemplate extends FPDI {
 
     }
 
-    if ($key !== NULL && $view->field[$key]->theme($row)) {
+    if ($key !== NULL && $view->field[$key]->theme($row) || !empty($row)) {
       $this->SetX($x);
       $this->SetY($y);
       $this->renderRow($x, $y, $row, $options, $view, $key, $printLabels);
@@ -409,7 +411,7 @@ class PdfTemplate extends FPDI {
       return;
     }
 
-    if (!empty($view->field[$key]->options['exclude']) || (empty($content) && $view->field[$key]->options['hide_empty'])) {
+    if (empty($key) || !empty($view->field[$key]->options['exclude']) || (empty($content) && $view->field[$key]->options['hide_empty'])) {
       return '';
     }
 
@@ -493,7 +495,7 @@ class PdfTemplate extends FPDI {
     $fitcell = FALSE;
 
     // Run eval before.
-    if ($options['render']['bypass_eval_before'] && !empty($options['render']['eval_before'])) {
+    if (!empty($options['render']['bypass_eval_before']) && !empty($options['render']['eval_before'])) {
       eval($options['render']['eval_before']);
     }
     elseif (!empty($options['render']['eval_before']))  {
@@ -527,10 +529,10 @@ class PdfTemplate extends FPDI {
     $this->SetFont($this->defaultFontFamily, implode('', $this->defaultFontStyle), $this->defaultFontSize);
 
     // Run eval after.
-    if ($options['render']['bypass_eval_after'] && !empty($options['render']['eval_alter'])) {
+    if (!empty($options['render']['bypass_eval_after']) && !empty($options['render']['eval_after'])) {
       eval($options['render']['eval_after']);
     }
-    elseif (!empty($options['render']['eval_alter'])) {
+    elseif (!empty($options['render']['eval_after'])) {
       $content = php_eval($options['render']['eval_after']);
     }
 
@@ -813,7 +815,7 @@ class PdfTemplate extends FPDI {
   /**
    * This method adds a new page to the PDF.
    */
-  public function addPage($path = NULL, $reset = FALSE, $numbering = 'main') {
+  public function addPage($orientation = '', $format = '', $keepmargins = false, $tocpage = false, $path = NULL, $reset = FALSE, $numbering = 'main') {
 
     // Do not add any new page, if we are writing
     // in the footer or header.
