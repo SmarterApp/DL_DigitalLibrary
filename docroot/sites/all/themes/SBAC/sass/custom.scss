@@ -560,14 +560,13 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     }
 
     ul {
-      width: 305px;
+      width: 325px;
       height: 42px;
       margin: 0;
       padding: 0;
     }
 
     li {
-      float: right;
       padding: 0px;
       margin: 0px;
 
@@ -608,13 +607,17 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
     #drop2 {
       top: -98px !important;
-      left: 26px !important;
+      left: -5px !important;
       height: auto;
       display: none;
 
       &.open {
         display: block;
       }
+
+			&.f-dropdown {
+				max-width: 145px;
+			}
 
      li {
       color: $header-text;
@@ -642,6 +645,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
         border-bottom: 0;
         bottom: -8px;
         top: auto;
+				left: 40px;
       }
 
       &:after {
@@ -651,6 +655,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
         border-bottom: 0;
         bottom: -9px;
         top: auto;
+				left: 40px;
       }
     }
   }
