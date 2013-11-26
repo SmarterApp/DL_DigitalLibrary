@@ -700,7 +700,7 @@ function sbac_central_update_7060() {
 }
 
 /**
- * Enables Transliteration module.
+ * Enables SBAC Favorites module.
  */
 function sbac_central_update_7061() {
   $modules = array(
