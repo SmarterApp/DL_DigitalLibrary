@@ -74,7 +74,7 @@ global $user;
           'html' => TRUE,
           'fragment' => 'profile-favorites',
         ));
-        echo '<div class="sbac-favorites-menu-tooltip" style="display:none;">Added to Favorites</div>';
+        echo '<div class="sbac-favorites-menu-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
       ?>
       </div>
     </li>
