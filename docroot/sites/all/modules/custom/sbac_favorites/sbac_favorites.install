@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Implementation of hook_schema()
+ */
+function sbac_favorites_schema() {
+  $schema['sbac_favorites'] = array(
+    'description' => t('Stores data for a users favorite resources.'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the resource'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who viewed the resource'),
+      ),
+    ),
+    'primary key' => array('nid', 'uid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+    ),
+  );
+
+  return $schema;
+}

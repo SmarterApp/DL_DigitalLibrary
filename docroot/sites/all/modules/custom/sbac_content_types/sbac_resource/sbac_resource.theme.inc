@@ -303,6 +303,8 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  $vars['fields']['favorites_link'] = $variables['favorites_link'];
+  $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
 }
 
 /**
@@ -956,8 +958,8 @@ function _sbac_resource_digital_library_links($fields) {
     $state = $fields['state']->raw;
     switch ($state) {
       case 'published':
+        $nid = $fields['nid']->raw;
         if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
-          $nid = $fields['nid']->raw;
           $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
           $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
         }
@@ -966,6 +968,16 @@ function _sbac_resource_digital_library_links($fields) {
         if ($fields['sticky']->raw) {
           $variables['sticky'] = TRUE;
         }
+
+        // if the user has this entity as a favorite.
+        $favorites_class = 'sbac-favorites-link-no';
+        $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Add to Favorites</div>';
+        if ($fields['uid']->raw) {
+          $favorites_class = 'sbac-favorites-link-yes';
+          $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Added to Favorites</div>';
+        }
+        $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
+
         $variables['views'] = '0 Views';
         if (isset($fields['field_unique_views'])) {
           $variables['views'] = $fields['field_unique_views']->content;

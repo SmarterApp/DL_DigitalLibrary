@@ -63,6 +63,22 @@ global $user;
       </div>
     </li>
     <li>
+      <div class="sbac-favorites-menu">
+      <?php
+        $favorites_count = sbac_favorites_get_count($user->uid);
+        $text = t('Favorites');
+        if ($favorites_count) {
+          $text .= ' (<span>' . $favorites_count . '</span>)';
+        }
+        echo l($text, 'user', array(
+          'html' => TRUE,
+          'fragment' => 'favorites',
+        ));
+        echo '<div class="sbac-favorites-menu-tooltip" style="display:none;">Added to Favorites</div>';
+      ?>
+      </div>
+    </li>
+    <li>
       <?php if ($help_dropdown) :?>
         <?php print $help_dropdown; ?>
       <?php endif; ?>

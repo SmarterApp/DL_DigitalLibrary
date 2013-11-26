@@ -28,6 +28,10 @@
     <h3 class='resource-name <?php print $class; ?>'>
       <?php print htmlspecialchars_decode($fields['title']->content); ?>
       <div class="shield-drop"><?php print $image; ?></div>
+      <div class="favorites-link">
+        <?php echo $fields['favorites_link']; ?>
+        <?php echo $fields['favorites_tooltip']; ?>
+      </div>
     </h3>
 
     <?php if (isset($fields['image'])): ?>

@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function sbac_favorites_menu() {
+  $items = array();
+
+  $items['sbac-favorites-click'] = array(
+    'title' => 'SBAC Favorites',
+    'page callback' => 'sbac_favorites_ajax_click',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Adds or deletes the entry from the custom table.
+ */
+function sbac_favorites_ajax_click() {
+  if (!$_POST['nid'] || !$_POST['uid']) {
+    return;
+  }
+
+  $node = node_load($_POST['nid']);
+  $account = user_load($_POST['uid']);
+  $is_favorite = $_POST['is_favorite'];
+
+  if ($node && $account) {
+    // if is_favorite is false, that means, the user wants to add this to his/her favorites.
+    if (!$is_favorite) {
+      $entity = new stdClass();
+      $entity->nid = $node->nid;
+      $entity->uid = $account->uid;
+      drupal_write_record('sbac_favorites', $entity);
+    }
+    else {
+      db_delete('sbac_favorites')->condition('nid', $node->nid)->condition('uid', $account->uid)->execute();
+    }
+    $output = array();
+    return drupal_json_encode($output);
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Returns the count of favorites for the user.
+ *
+ * @param $uid
+ * @return array
+ */
+function sbac_favorites_get_count($uid) {
+  $favorites_count = array();
+  $sql = "SELECT count(*) AS count FROM {sbac_favorites} sf WHERE uid = :uid";
+  $result = db_query($sql, array(':uid' => $uid))->fetchObject();
+  if ($result) {
+    $favorites_count = $result->count;
+  }
+  return $favorites_count;
+}
+
+/**
+ * Implementation of hook_preprocess_page()
+ *
+ * @param $vars
+ */
+function sbac_favorites_preprocess_page(&$vars) {
+  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources') {
+    drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js');
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function sbac_favorites_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
+}
+
+/**
+ * Implements hook_views_data().
+ *
+ * @return mixed
+ */
+function sbac_favorites_views_data() {
+//  | sbac_favorites |
+//  CREATE TABLE `sbac_favorites` (
+//  `nid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The nid of the resource',
+//  `uid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The uid who modified the resource',
+//  PRIMARY KEY (`nid`,`uid`),
+
+  $data['sbac_favorites']['table']['group'] = t('SBAC Favorites');
+  // Base table.
+  $data['sbac_favorites']['table']['base'] = array(
+    'field' => 'nid', // This is the identifier field for the view.
+    'title' => t('SBAC Favorites'),
+    'help' => t('Custom data for user favorites.'),
+    'weight' => -10,
+  );
+  // Join.
+  $data['sbac_favorites']['table']['join'] = array(
+    'node' => array(
+      'left_field' => 'nid',
+      'field' => 'nid',
+    ),
+    'users' => array(
+      'left_field' => 'uid',
+      'field' => 'uid',
+    ),
+  );
+
+
+  // Node ID table field.
+  $data['sbac_favorites']['nid'] = array(
+    'title' => t('Resource NID'),
+    'help' => t('The resource nid.'),
+    'relationship' => array(
+      'base' => 'node', // The name of the table to join with.
+      'base field' => 'nid', // The name of the field on the joined table.
+      'handler' => 'views_handler_relationship',
+      'label' => t('Default label for the relationship'),
+      'title' => t('Title shown when adding the relationship'),
+      'help' => t('More information on this relationship'),
+    ),
+  );
+
+  // User ID field.
+  $data['sbac_favorites']['uid'] = array(
+    'title' => t('User ID'),
+    'help' => t('User ID.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  return $data;
+}
