@@ -26,10 +26,12 @@
       <h3 class='resource-name <?php print $class; ?>'>
         <?php print htmlspecialchars_decode($fields['title']->content); ?>
         <div class="shield-drop"><?php print $image; ?></div>
+        <?php if (isset($fields['favorites_link'])): ?>
         <div class="favorites-link">
           <?php echo $fields['favorites_link']; ?>
           <?php echo $fields['favorites_tooltip']; ?>
         </div>
+        <?php endif; ?>
       </h3>
 
       <div class="list-view-info">

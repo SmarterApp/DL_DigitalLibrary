@@ -719,6 +719,7 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
  */
 function _sbac_resource_my_resources_admin_links($fields) {
   $variables = array();
+  global $user;
   $nid = $fields['nid']->raw;
 
   if ($fields['state']->raw == 'published') {
@@ -778,6 +779,7 @@ function _sbac_resource_my_resources_admin_links($fields) {
  */
 function _sbac_resource_my_resources_links($fields) {
   $variables = array();
+  global $user;
   if (isset($fields['state']->raw)) {
     $nid = $fields['nid']->raw;
     $state = $fields['state']->raw;
