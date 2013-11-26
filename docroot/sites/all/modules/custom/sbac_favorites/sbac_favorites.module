@@ -19,6 +19,24 @@ function sbac_favorites_menu() {
 }
 
 /**
+ * Implements hook_theme().
+ *
+ * @param $existing
+ * @param $type
+ * @param $theme
+ * @param $path
+ * @return mixed
+ */
+function sbac_favorites_theme($existing, $type, $theme, $path) {
+  $items['sbac_favorites_no_favorites'] = array(
+    'path' => drupal_get_path('module', 'sbac_favorites') . '/templates',
+    'template' => 'no-favorites',
+  );
+
+  return $items;
+}
+
+/**
  * Adds or deletes the entry from the custom table.
  */
 function sbac_favorites_ajax_click() {
@@ -67,6 +85,22 @@ function sbac_favorites_get_count($uid) {
 }
 
 /**
+ * Gets the favorites for a given user.
+ *
+ * @param $uid
+ * @return array
+ */
+function sbac_favorites_get_favorites($uid) {
+  $favorites = array();
+  $sql = "SELECT * FROM {sbac_favorites} sf WHERE uid = :uid";
+  $result = db_query($sql, array(':uid' => $uid))->fetchObject();
+  foreach ($result as $row) {
+    $favorites[] = $row;
+  }
+  return $favorites;
+}
+
+/**
  * Implements hook_module_impelements_alter().
  *
  * @param $implementations
@@ -95,12 +129,14 @@ function sbac_favorites_user_view($account, $view_mode, $langcode) {
 
 //  drupal_add_js($this->_components_path . '/taskit/js/taskit.js');
 //  drupal_add_css($this->_components_path . '/taskit/css/taskit.css');
+  $favorites = sbac_favorites_get_favorites($account->uid);
+  $output = sbac_favorites_favorites_table($favorites);
 
   $favorites_content = '<div id="favorites">';
   $favorites_content .= '<div class="helpful-info">';
   $favorites_content .= 'Help Text';
   $favorites_content .= '</div>';
-  $favorites_content .= 'WHAT';
+  $favorites_content .= $output;
   $favorites_content .= '</div>';
 
   $account->content['sections']['favorites'] = array(
@@ -110,6 +146,25 @@ function sbac_favorites_user_view($account, $view_mode, $langcode) {
     'class' => 'section-favorites',
     'weight' => -100,
   );
+}
+
+/**
+ * Builds the favorites output.
+ *
+ * @param $favorites
+ * @return string
+ */
+function sbac_favorites_favorites_table($favorites) {
+  $output = '';
+
+//  if ($favorites) {
+//
+//  }
+//  else {
+    $output = theme('sbac_favorites_no_favorites');
+//  }
+
+  return $output;
 }
 
 /**
