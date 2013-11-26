@@ -698,3 +698,13 @@ function sbac_central_update_7060() {
   );
   module_enable($modules);
 }
+
+/**
+ * Enables Transliteration module.
+ */
+function sbac_central_update_7061() {
+  $modules = array(
+    'sbac_favorites',
+  );
+  module_enable($modules);
+}
