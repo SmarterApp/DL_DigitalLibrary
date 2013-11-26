@@ -729,10 +729,10 @@ function _sbac_resource_my_resources_admin_links($fields) {
     }
 
     $favorites_class = 'sbac-favorites-link-no';
-    $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Add to Favorites</div>';
+    $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
     if ($fields['uid']->raw) {
       $favorites_class = 'sbac-favorites-link-yes';
-      $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Added to Favorites</div>';
+      $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
     }
     $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
 
@@ -842,10 +842,10 @@ function _sbac_resource_my_resources_links($fields) {
         }
 
         $favorites_class = 'sbac-favorites-link-no';
-        $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Add to Favorites</div>';
+        $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
         if ($fields['uid']->raw) {
           $favorites_class = 'sbac-favorites-link-yes';
-          $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Added to Favorites</div>';
+          $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
         }
         $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
 
@@ -1014,10 +1014,10 @@ function _sbac_resource_digital_library_links($fields) {
 
         // if the user has this entity as a favorite.
         $favorites_class = 'sbac-favorites-link-no';
-        $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Add to Favorites</div>';
+        $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
         if ($fields['uid']->raw) {
           $favorites_class = 'sbac-favorites-link-yes';
-          $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Added to Favorites</div>';
+          $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
         }
         $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
 

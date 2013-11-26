@@ -33,6 +33,10 @@ function sbac_favorites_theme($existing, $type, $theme, $path) {
     'template' => 'no-favorites',
   );
 
+  $items['sbac_favorites_user_list'] = array(
+    'render element' => 'form',
+  );
+
   return $items;
 }
 
@@ -92,8 +96,8 @@ function sbac_favorites_get_count($uid) {
  */
 function sbac_favorites_get_favorites($uid) {
   $favorites = array();
-  $sql = "SELECT * FROM {sbac_favorites} sf WHERE uid = :uid";
-  $result = db_query($sql, array(':uid' => $uid))->fetchObject();
+  $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight FROM {sbac_favorites} sf WHERE sf.uid = :uid";
+  $result = db_query($sql, array(':uid' => $uid));
   foreach ($result as $row) {
     $favorites[] = $row;
   }
@@ -127,14 +131,12 @@ function sbac_favorites_user_view($account, $view_mode, $langcode) {
     return;
   }
 
-//  drupal_add_js($this->_components_path . '/taskit/js/taskit.js');
-//  drupal_add_css($this->_components_path . '/taskit/css/taskit.css');
   $favorites = sbac_favorites_get_favorites($account->uid);
   $output = sbac_favorites_favorites_table($favorites);
 
   $favorites_content = '<div id="favorites">';
   $favorites_content .= '<div class="helpful-info">';
-  $favorites_content .= 'Help Text';
+  $favorites_content .= 'Drag and drop items in the list to reorder your favorites';
   $favorites_content .= '</div>';
   $favorites_content .= $output;
   $favorites_content .= '</div>';
@@ -155,16 +157,101 @@ function sbac_favorites_user_view($account, $view_mode, $langcode) {
  * @return string
  */
 function sbac_favorites_favorites_table($favorites) {
-  $output = '';
-
-//  if ($favorites) {
-//
-//  }
-//  else {
+  if ($favorites) {
+    $form = drupal_get_form('sbac_favorites_user_list', $favorites);
+    $output = drupal_render($form);
+  }
+  else {
     $output = theme('sbac_favorites_no_favorites');
-//  }
+  }
 
   return $output;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ */
+function sbac_favorites_user_list($form, &$form_state, $favorites) {
+  $form['#theme'] = 'sbac_favorites_user_list';
+
+  foreach ($favorites as $favorite) {
+    $resource = node_load($favorite->nid);
+    $element = array();
+
+    $element['name'] = array(
+      '#markup' => l($resource->title, $resource->path['alias']),
+    );
+
+    $term = taxonomy_term_load($resource->field_focus['und'][0]['tid']);
+    $type_value = '';
+    switch ($term->name) {
+      case 'Combination of Instructional and Professional Learning Resource';
+        $type_value = 'Combination';
+        break;
+      case 'Professional Learning Resource';
+        $type_value = 'Professional Learning';
+        break;
+      case 'Instructional Resource';
+        $type_value = 'Instructional';
+        break;
+    }
+    $element['type'] = array(
+      '#markup' => $type_value,
+    );
+
+    $element['created'] = array(
+      '#markup' => date('M jS g:ia', $resource->created),
+    );
+
+    $element['delete'] = array(
+      '#markup' => '<a href="">Delete</a>',
+    );
+    $form['favorites'][] = $element;
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+}
+
+function sbac_favorites_user_list_submit($form, &$form_state) {
+  $var = '';
+}
+
+function theme_sbac_favorites_user_list($variables) {
+  $form = $variables['form'];
+
+  $header = array(
+    t('Resource Name'),
+    t('Resource Type'),
+    t('Date Added'),
+    '',
+  );
+
+  $rows = array();
+  foreach (element_children($form['favorites']) as $key) {
+    $element = &$form['favorites'][$key];
+    $row = array('data' => array());
+    $row['data']['name'] = drupal_render($element['name']);
+    $row['data']['type'] = drupal_render($element['type']);
+    $row['data']['created'] = drupal_render($element['created']);
+    $row['data']['delete'] = drupal_render($element['delete']);
+    $rows[] = $row;
+  }
+
+  $output = theme('table', array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array('class' => array('width-auto'))));
+
+  $output .= drupal_render_children($form);
+
+  return $output;
+
 }
 
 /**
@@ -191,12 +278,6 @@ function sbac_favorites_views_api($module = NULL, $api = NULL) {
  * @return mixed
  */
 function sbac_favorites_views_data() {
-//  | sbac_favorites |
-//  CREATE TABLE `sbac_favorites` (
-//  `nid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The nid of the resource',
-//  `uid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The uid who modified the resource',
-//  PRIMARY KEY (`nid`,`uid`),
-
   $data['sbac_favorites']['table']['group'] = t('SBAC Favorites');
   // Base table.
   $data['sbac_favorites']['table']['base'] = array(
@@ -236,6 +317,22 @@ function sbac_favorites_views_data() {
   $data['sbac_favorites']['uid'] = array(
     'title' => t('User ID'),
     'help' => t('User ID.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  // Weight fields
+  $data['sbac_favorites']['weight'] = array(
+    'title' => t('Weight'),
+    'help' => t('Weight'),
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
