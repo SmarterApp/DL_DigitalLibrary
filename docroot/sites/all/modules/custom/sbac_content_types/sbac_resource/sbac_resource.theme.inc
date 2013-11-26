@@ -353,6 +353,8 @@ function sbac_resource_views_view_fields__resources__list_view__preprocess(&$var
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  $vars['fields']['favorites_link'] = $variables['favorites_link'];
+  $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
 }
 
 /**
@@ -436,6 +438,8 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  $vars['fields']['favorites_link'] = $variables['favorites_link'];
+  $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
 }
 
 /**
@@ -490,6 +494,8 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  $vars['fields']['favorites_link'] = $variables['favorites_link'];
+  $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
 }
 
 /**
@@ -704,6 +710,16 @@ function _sbac_resource_my_resources_admin_links($fields) {
     if ($fields['sticky']->raw) {
       $variables['sticky'] = TRUE;
     }
+
+    $favorites_class = 'sbac-favorites-link-no';
+    $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Add to Favorites</div>';
+    if ($fields['uid']->raw) {
+      $favorites_class = 'sbac-favorites-link-yes';
+      $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Added to Favorites</div>';
+    }
+    $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
+
+
     $variables['views'] = '0 Views';
     if (isset($fields['field_unique_views'])) {
       $variables['views'] = $fields['field_unique_views']->content;
@@ -806,6 +822,15 @@ function _sbac_resource_my_resources_links($fields) {
         if ($fields['sticky']->raw) {
           $variables['sticky'] = TRUE;
         }
+
+        $favorites_class = 'sbac-favorites-link-no';
+        $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Add to Favorites</div>';
+        if ($fields['uid']->raw) {
+          $favorites_class = 'sbac-favorites-link-yes';
+          $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip" style="display:none;">Added to Favorites</div>';
+        }
+        $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
+
         $variables['views'] = '0 Views';
         if (isset($fields['field_unique_views'])) {
           $variables['views'] = $fields['field_unique_views']->content;
