@@ -36,6 +36,7 @@ function sbac_favorites_ajax_click() {
       $entity = new stdClass();
       $entity->nid = $node->nid;
       $entity->uid = $account->uid;
+      $entity->weight = 0;
       drupal_write_record('sbac_favorites', $entity);
     }
     else {
@@ -63,6 +64,52 @@ function sbac_favorites_get_count($uid) {
     $favorites_count = $result->count;
   }
   return $favorites_count;
+}
+
+/**
+ * Implements hook_module_impelements_alter().
+ *
+ * @param $implementations
+ * @param $hook
+ */
+function sbac_favorites_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'user_view') {
+    $group = $implementations['sbac_favorites'];
+    unset($implementations['sbac_favorites']);
+    $implementations['sbac_favorites'] = $group;
+  }
+}
+
+/**
+ * Implements hook_user_view().
+ *
+ * @param $account
+ * @param $view_mode
+ * @param $langcode
+ */
+function sbac_favorites_user_view($account, $view_mode, $langcode) {
+  // we don't want to add tabs on any other view modes
+  if ($view_mode !== 'full') {
+    return;
+  }
+
+//  drupal_add_js($this->_components_path . '/taskit/js/taskit.js');
+//  drupal_add_css($this->_components_path . '/taskit/css/taskit.css');
+
+  $favorites_content = '<div id="favorites">';
+  $favorites_content .= '<div class="helpful-info">';
+  $favorites_content .= 'Help Text';
+  $favorites_content .= '</div>';
+  $favorites_content .= 'WHAT';
+  $favorites_content .= '</div>';
+
+  $account->content['sections']['favorites'] = array(
+    'title' => t('Favorites'),
+    'content' => $favorites_content,
+    'disabled' => FALSE,
+    'class' => 'section-favorites',
+    'weight' => -100,
+  );
 }
 
 /**

@@ -9,25 +9,31 @@ function sbac_favorites_schema() {
     'fields' => array(
       'nid' => array(
         'type' => 'int',
-        'size' => 'big',
         'unsigned' => TRUE,
         'not null' => FALSE,
         'auto_increment' => FALSE,
-        'description' => t('The nid of the resource'),
+        'description' => t('The nid of the resource.'),
       ),
       'uid' => array(
         'type' => 'int',
-        'size' => 'big',
         'unsigned' => TRUE,
         'not null' => FALSE,
         'auto_increment' => FALSE,
-        'description' => t('The uid who viewed the resource'),
+        'description' => t('The uid who viewed the resource.'),
       ),
+      'weight' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The sorted weight of the resource.'),
+      )
     ),
     'primary key' => array('nid', 'uid'),
     'indexes' => array(
       'nid' => array('nid'),
       'uid' => array('uid'),
+      'weight' => array('weight'),
     ),
   );
 

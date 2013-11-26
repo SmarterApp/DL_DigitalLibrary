@@ -309,6 +309,13 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_html5']['field'] = 'field_html5';
   $handler->display->display_options['fields']['field_html5']['label'] = '';
   $handler->display->display_options['fields']['field_html5']['element_label_colon'] = FALSE;
+  /* Field: SBAC Favorites: User ID */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'sbac_favorites';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uid']['separator'] = '';
 
   /* Display: List View */
   $handler = $view->new_display('block', 'List View', 'list_view');
@@ -413,6 +420,13 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_html5']['field'] = 'field_html5';
   $handler->display->display_options['fields']['field_html5']['label'] = '';
   $handler->display->display_options['fields']['field_html5']['element_label_colon'] = FALSE;
+  /* Field: SBAC Favorites: User ID */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'sbac_favorites';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uid']['separator'] = '';
 
   /* Display: Load Data */
   $handler = $view->new_display('block', 'Load Data', 'load_data');

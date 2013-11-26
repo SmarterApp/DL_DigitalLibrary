@@ -303,8 +303,12 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
-  $vars['fields']['favorites_link'] = $variables['favorites_link'];
-  $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
+  if (isset($variables['favorites_link'])) {
+    $vars['fields']['favorites_link'] = $variables['favorites_link'];
+  }
+  if (isset($variables['favorites_tooltip'])) {
+    $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
+  }
 }
 
 /**
@@ -353,8 +357,12 @@ function sbac_resource_views_view_fields__resources__list_view__preprocess(&$var
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
-  $vars['fields']['favorites_link'] = $variables['favorites_link'];
-  $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
+  if (isset($variables['favorites_link'])) {
+    $vars['fields']['favorites_link'] = $variables['favorites_link'];
+  }
+  if (isset($variables['favorites_tooltip'])) {
+    $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
+  }
 }
 
 /**
@@ -438,8 +446,12 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
-  $vars['fields']['favorites_link'] = $variables['favorites_link'];
-  $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
+  if (isset($variables['favorites_link'])) {
+    $vars['fields']['favorites_link'] = $variables['favorites_link'];
+  }
+  if (isset($variables['favorites_tooltip'])) {
+    $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
+  }
 }
 
 /**
@@ -494,8 +506,12 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
-  $vars['fields']['favorites_link'] = $variables['favorites_link'];
-  $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
+  if (isset($variables['favorites_link'])) {
+    $vars['fields']['favorites_link'] = $variables['favorites_link'];
+  }
+  if (isset($variables['favorites_tooltip'])) {
+    $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
+  }
 }
 
 /**

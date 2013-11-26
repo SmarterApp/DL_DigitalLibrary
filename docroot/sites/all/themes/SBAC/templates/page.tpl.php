@@ -72,7 +72,7 @@ global $user;
         }
         echo l($text, 'user', array(
           'html' => TRUE,
-          'fragment' => 'favorites',
+          'fragment' => 'profile-favorites',
         ));
         echo '<div class="sbac-favorites-menu-tooltip" style="display:none;">Added to Favorites</div>';
       ?>
