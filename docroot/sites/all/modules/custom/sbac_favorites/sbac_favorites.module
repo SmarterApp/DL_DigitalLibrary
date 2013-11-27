@@ -266,6 +266,12 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
     $form['favorites'][$favorite->nid . ':' . $favorite->uid] = $element;
   }
 
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#attributes' => array('id' => 'sbac-favorites-cancel'),
+  );
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -282,16 +288,20 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
  * @param $form_state
  */
 function sbac_favorites_user_list_submit($form, &$form_state) {
-  foreach ($form_state['values']['favorites'] as $id => $item) {
-    $identifiers = explode(':', $id);
-    $nid = $identifiers[0];
-    $uid = $identifiers[1];
-    db_query("UPDATE {sbac_favorites} SET weight = :weight WHERE nid = :nid AND uid = :uid",
-      array(
-        ':weight' => $item['weight'],
-        ':nid' => $nid,
-        ':uid' => $uid)
-    );
+  if ($form_state['clicked_button']['#value'] == 'Cancel') {
+  }
+  else {
+    foreach ($form_state['values']['favorites'] as $id => $item) {
+      $identifiers = explode(':', $id);
+      $nid = $identifiers[0];
+      $uid = $identifiers[1];
+      db_query("UPDATE {sbac_favorites} SET weight = :weight WHERE nid = :nid AND uid = :uid",
+        array(
+          ':weight' => $item['weight'],
+          ':nid' => $nid,
+          ':uid' => $uid)
+      );
+    }
   }
   drupal_custom_goto('user#profile-favorites');
 }
