@@ -65,7 +65,7 @@ function sbac_favorites_ajax_click() {
       $entity = new stdClass();
       $entity->nid = $node->nid;
       $entity->uid = $account->uid;
-      $entity->weight = 0;
+      $entity->weight = -1000;
       $entity->created = time();
       drupal_write_record('sbac_favorites', $entity);
     }
@@ -132,7 +132,7 @@ function sbac_favorites_get_favorites($uid) {
   $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight, sf.created AS created
           FROM {sbac_favorites} sf
           WHERE sf.uid = :uid
-          ORDER BY sf.weight, sf.created";
+          ORDER BY sf.created DESC, sf.weight";
   $result = db_query($sql, array(':uid' => $uid));
   foreach ($result as $row) {
     $favorites[] = $row;
@@ -213,7 +213,6 @@ function sbac_favorites_favorites_table($favorites) {
  * @param $form_state
  */
 function sbac_favorites_user_list($form, &$form_state, $favorites) {
-  global $user;
   $form['#theme'] = 'sbac_favorites_user_list';
 
   $form['#attached']['js'] = array(
@@ -222,6 +221,8 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
   $form['#attached']['css'] = array(
     drupal_get_path('module','sbac_favorites').'/css/sbac_favorites.css',
   );
+
+  $form['favorites']['#tree'] = TRUE;
 
   foreach ($favorites as $favorite) {
     $resource = node_load($favorite->nid);
@@ -251,7 +252,7 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
       '#markup' => date('M jS g:ia', $favorite->created),
     );
     $element['delete'] = array(
-      '#markup' => '<a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $user->uid . '">Delete</a>',
+      '#markup' => '<a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $favorite->uid . '">Delete</a>',
     );
 
     $element['weight'] = array(
@@ -262,10 +263,9 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
       '#title_display' => 'invisible',
     );
 
-    $form['favorites'][] = $element;
+    $form['favorites'][$favorite->nid . ':' . $favorite->uid] = $element;
   }
 
-  $form['favorites']['#tree'] = TRUE;
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -275,10 +275,33 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
   return $form;
 }
 
+/**
+ * Submit handler, saves the new weight.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function sbac_favorites_user_list_submit($form, &$form_state) {
-  $var = '';
+  foreach ($form_state['values']['favorites'] as $id => $item) {
+    $identifiers = explode(':', $id);
+    $nid = $identifiers[0];
+    $uid = $identifiers[1];
+    db_query("UPDATE {sbac_favorites} SET weight = :weight WHERE nid = :nid AND uid = :uid",
+      array(
+        ':weight' => $item['weight'],
+        ':nid' => $nid,
+        ':uid' => $uid)
+    );
+  }
+  drupal_custom_goto('user#profile-favorites');
 }
 
+/**
+ * Themes the table.
+ *
+ * @param $variables
+ * @return string
+ */
 function theme_sbac_favorites_user_list($variables) {
   $form = $variables['form'];
 
