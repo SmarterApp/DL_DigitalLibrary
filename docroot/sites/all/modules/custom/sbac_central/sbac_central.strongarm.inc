@@ -222,7 +222,7 @@ function sbac_central_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'site_404';
-  $strongarm->value = '';
+  $strongarm->value = 'user';
   $export['site_404'] = $strongarm;
 
   $strongarm = new stdClass();
