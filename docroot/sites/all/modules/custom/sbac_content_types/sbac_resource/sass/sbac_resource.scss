@@ -440,7 +440,7 @@ a.sbac-grid-layout {
 			text-indent: -9999em;
 			display: block;
 			
-			&:hover {
+			&:hover, &.sbac-favorites-link-yes {
 				background: url(../images/icons/icon-favorite-on.png) no-repeat 0 0;
 			}
 		}
@@ -462,7 +462,7 @@ a.sbac-grid-layout {
     .views-row {
       margin-bottom: 10px;
     }
-
+		
     .resource-card {
       padding: 10px 25px 10px 10px;
       margin-bottom: 0;
@@ -479,7 +479,7 @@ a.sbac-grid-layout {
       }
 
     .distinction span a {
-      width: 95%;
+      width: 93%;
     }
 
       .button {
@@ -495,7 +495,13 @@ a.sbac-grid-layout {
         border-radius: 0 8px 8px 0; 
         background: transparent;
       }
-
+			
+			.shield-drop {
+				.f-dropdown.open {
+					right: 37px !important;
+				}
+			}
+			
       .list-view-info {
         font-size: 0.75em;
         color: $darkgreen;

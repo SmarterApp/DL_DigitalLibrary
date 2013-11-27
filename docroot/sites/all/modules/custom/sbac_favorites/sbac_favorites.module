@@ -252,7 +252,7 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
       '#markup' => date('M jS g:ia', $favorite->created),
     );
     $element['delete'] = array(
-      '#markup' => '<a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $favorite->uid . '">Delete</a>',
+      '#markup' => '<i class="general foundicon-trash" "=""></i><a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $favorite->uid . '">Delete</a>',
     );
 
     $element['weight'] = array(
@@ -264,18 +264,18 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
     );
 
     $form['favorites'][$favorite->nid . ':' . $favorite->uid] = $element;
-  }
-
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => t('Cancel'),
-    '#attributes' => array('id' => 'sbac-favorites-cancel'),
-  );
+  }  
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save'),
+    '#value' => t('Save Order'),
     '#attributes' => array('id' => 'sbac-favorites-submit'),
+  );
+
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#attributes' => array('id' => 'sbac-favorites-cancel'),
   );
 
   return $form;
