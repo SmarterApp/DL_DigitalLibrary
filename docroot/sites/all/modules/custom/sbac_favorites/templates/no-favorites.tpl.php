@@ -1,2 +1,4 @@
 <h2>You have no resource in your favorites</h2>
-<a href="digital-library-resources">Browse Digital Library</a> Resources and add them to the favorites by clicking <span class="star-icon">star</span> icon.
+<div class="instruction">
+	<a href="digital-library-resources">Browse Digital Library</a> Resources and add them to the favorites by clicking <span class="star-icon"></span> icon.
+</div>

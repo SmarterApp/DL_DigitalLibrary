@@ -540,7 +540,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       display: inline-block;
       background-size: contain;
 			vertical-align: middle;
-			margin-top: -1px;
     }
   }
 }
@@ -2542,3 +2541,57 @@ a.tabledrag-handle .handle {
       background-position: right -25px !important;
     }
   }
+
+/* -----------------------------------------
+	   Profile favorites tag
+	 ----------------------------------------- */
+.section-favorites {
+	.favorites-helpful-info {
+		height: 70px;
+		line-height: 70px;
+	}
+	
+	#sbac-favorites-table-drag-drop {
+		width: 100%;
+	}
+	
+	.foundicon-trash {
+		color: #aaa;
+		margin-right: -30px;
+	}
+	
+	.sbac-favorites-delete-favorite {
+		opacity: 0;
+	}
+	
+	#sbac-favorites-submit, #sbac-favorites-cancel {
+		float: right;
+		margin-left: 20px;
+	}
+	
+	#favorites-table {
+		h2, .instruction {
+			text-align: center;
+			margin: 20px 0;
+		}
+		
+		h2 {
+			margin-top: 30px;
+		}
+		
+		.instruction {
+			margin-bottom: 60px;
+		}
+		
+		.star-icon {
+			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
+			width: 16px;
+			height: 16px;
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+}	
+	
+	
+	
