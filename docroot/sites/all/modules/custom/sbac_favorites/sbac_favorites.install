@@ -23,9 +23,8 @@ function sbac_favorites_schema() {
       ),
       'weight' => array(
         'type' => 'int',
-        'unsigned' => TRUE,
         'not null' => FALSE,
-        'auto_increment' => FALSE,
+        'default' => NULL,
         'description' => t('The sorted weight of the resource.'),
       ),
       'created' => array(
