@@ -709,6 +709,32 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
+  // Exported field_base: 'field_permanent_link_settings'
+  $field_bases['field_permanent_link_settings'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_permanent_link_settings',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => 'Private - <span>Allow only Digital Library users to view this resource</span>',
+        1 => 'Public - <span>Allow public access to the resource by users outside of Digital Library',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_integer',
+  );
+
   // Exported field_base: 'field_pii'
   $field_bases['field_pii'] = array(
     'active' => 1,
@@ -1109,6 +1135,63 @@ function sbac_resource_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'list_boolean',
+  );
+
+  // Exported field_base: 'field_temporary_public_link'
+  $field_bases['field_temporary_public_link'] = array(
+    'active' => 1,
+    'cardinality' => 2,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_temporary_public_link',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        1 => 'Enable Temporary Public Link - <span>Allow Digital Library users to generate temporary public links to share with users outside of Digital Library</span>',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_integer',
+  );
+
+  // Exported field_base: 'field_temporary_public_link_time'
+  $field_bases['field_temporary_public_link_time'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_temporary_public_link_time',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        100 => '5 mins',
+        1 => '1 days',
+        2 => '2 days',
+        3 => '3 days',
+        4 => '4 days',
+        5 => '5 days',
+        6 => '6 days',
+        7 => '7 days',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_integer',
   );
 
   // Exported field_base: 'field_total_views'

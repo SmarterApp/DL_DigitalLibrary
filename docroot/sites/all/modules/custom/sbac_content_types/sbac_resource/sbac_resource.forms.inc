@@ -1824,6 +1824,28 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
     $form['field_resource_actions']['und']['#default_value'] = array(0, 1);
   }
 
+  // Sharing options
+  $form['resource_sharing_options'] = array(
+    '#type' => 'item',
+    '#markup' => '<h2>'.t('Sharing Options') . '</h2>',
+    '#description' => t('By default, all resources have permanent private link that could be shared only with other users of the Digital Library.'),
+    '#prefix' => '<div class="form-item-title resource-sharing-options">',
+    '#suffix' => '</div>',
+    '#weight' => 41,
+  );
+  $form['#group_children']['resource_sharing_options'] = "group_advanced";
+
+  // Permanent link settings
+  unset($form['field_permanent_link_settings']['und']['#options']['_none']);
+  if ($form['field_permanent_link_settings']['und']['#default_value'] == NULL) {
+    $form['field_permanent_link_settings']['und']['#default_value'] = 0;
+  }
+
+  // Temporary Link Time
+  $form['field_temporary_public_link_time']['und']['#title'] = t('Set the limit from the time of link generation');
+  $form['field_temporary_public_link_time']['#prefix'] = '<div class="sbac-temporary-link-time inactive">';
+  $form['field_temporary_public_link_time']['#suffix'] = '</div>';
+
   // Posting options.
   unset($form['field_posting_options']['und']['#options']['_none']);
   $form['field_posting_options']['und']['#prefix'] = '<div id="sbac-posting-options">';

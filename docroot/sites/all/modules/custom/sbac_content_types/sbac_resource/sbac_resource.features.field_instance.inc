@@ -1326,6 +1326,62 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_permanent_link_settings'
+  $field_instances['node-resource-field_permanent_link_settings'] = array(
+    'bundle' => 'resource',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 44,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_permanent_link_settings',
+    'label' => 'Permanent Link Settings',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 42,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_pii'
   $field_instances['node-resource-field_pii'] = array(
     'bundle' => 'resource',
@@ -1427,7 +1483,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_buttons',
-      'weight' => 42,
+      'weight' => 45,
     ),
   );
 
@@ -1485,7 +1541,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 43,
+      'weight' => 46,
     ),
     'xss' => 1,
   );
@@ -2131,6 +2187,111 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_temporary_public_link'
+  $field_instances['node-resource-field_temporary_public_link'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 45,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_temporary_public_link',
+    'label' => 'Temporary Public Link Settings',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 43,
+    ),
+  );
+
+  // Exported field_instance: 'node-resource-field_temporary_public_link_time'
+  $field_instances['node-resource-field_temporary_public_link_time'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 46,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_temporary_public_link_time',
+    'label' => 'Temporary Public Link Time',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 0,
+        'label_help_description' => '',
+        'maxlength_js_label' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 44,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_total_views'
   $field_instances['node-resource-field_total_views'] = array(
     'bundle' => 'resource',
@@ -2389,7 +2550,7 @@ function sbac_resource_field_default_field_instances() {
   t('Digital Media Type(s)');
   t('Document ID');
   t('Educational Use');
-  t('Enter a user-friendly summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).');
+  t('Enter a descriptive summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).');
   t('From the list, select the one choice that most closely describes the type of resource.');
   t('Geographical Setting(s)');
   t('Grade(s)');
@@ -2413,6 +2574,7 @@ function sbac_resource_field_default_field_instances() {
 </ol>');
   t('Owner');
   t('Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.');
+  t('Permanent Link Settings');
   t('Personally Identifiable Student Information');
   t('Posting Options');
   t('Principles');
@@ -2428,6 +2590,8 @@ function sbac_resource_field_default_field_instances() {
   t('Supporting Evidence');
   t('Technologies Required for Use in Classroom');
   t('Temp');
+  t('Temporary Public Link Settings');
+  t('Temporary Public Link Time');
   t('The Grade(s) in which the resource might be used, regardless of curriculum alignment. Select all that apply.');
   t('The Subject area(s) and domain(s) to which the learning resource applies. Select all that apply.');
   t('The license under which all the uploaded materials in this resource can be used in the Digital Library.');
