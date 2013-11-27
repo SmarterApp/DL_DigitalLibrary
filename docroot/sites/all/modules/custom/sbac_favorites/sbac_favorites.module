@@ -15,6 +15,13 @@ function sbac_favorites_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-favorites-delete-favorite'] = array(
+    'title' => 'SBAC Delete Favorites',
+    'page callback' => 'sbac_favorites_ajax_delete',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -59,6 +66,8 @@ function sbac_favorites_ajax_click() {
       $entity->nid = $node->nid;
       $entity->uid = $account->uid;
       $entity->weight = 0;
+      $time = time();
+      $entity->created = $time;
       drupal_write_record('sbac_favorites', $entity);
     }
     else {
@@ -70,6 +79,22 @@ function sbac_favorites_ajax_click() {
   else {
     return;
   }
+}
+
+/**
+ * Deletes the favorite entry from the database.
+ *
+ * @return string
+ */
+function sbac_favorites_ajax_delete() {
+  if (!$_POST['nid'] || !$_POST['uid']) {
+    return;
+  }
+
+  db_delete('sbac_favorites')->condition('nid', $_POST['nid'])->condition('uid', $_POST['uid'])->execute();
+  $count = sbac_favorites_get_count($_POST['uid']);
+  $output = array('total' => $count);
+  return drupal_json_encode($output);
 }
 
 /**
@@ -96,7 +121,7 @@ function sbac_favorites_get_count($uid) {
  */
 function sbac_favorites_get_favorites($uid) {
   $favorites = array();
-  $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight FROM {sbac_favorites} sf WHERE sf.uid = :uid";
+  $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight, sf.created AS created FROM {sbac_favorites} sf WHERE sf.uid = :uid";
   $result = db_query($sql, array(':uid' => $uid));
   foreach ($result as $row) {
     $favorites[] = $row;
@@ -173,7 +198,15 @@ function sbac_favorites_favorites_table($favorites) {
  * @param $form_state
  */
 function sbac_favorites_user_list($form, &$form_state, $favorites) {
+  global $user;
   $form['#theme'] = 'sbac_favorites_user_list';
+
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js',
+  );
+  $form['#attached']['css'] = array(
+    drupal_get_path('module','sbac_favorites').'/css/sbac_favorites.css',
+  );
 
   foreach ($favorites as $favorite) {
     $resource = node_load($favorite->nid);
@@ -199,14 +232,13 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
     $element['type'] = array(
       '#markup' => $type_value,
     );
-
     $element['created'] = array(
-      '#markup' => date('M jS g:ia', $resource->created),
+      '#markup' => date('M jS g:ia', $favorite->created),
+    );
+    $element['delete'] = array(
+      '#markup' => '<a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $user->uid . '">Delete</a>',
     );
 
-    $element['delete'] = array(
-      '#markup' => '<a href="">Delete</a>',
-    );
     $form['favorites'][] = $element;
   }
 
@@ -251,7 +283,6 @@ function theme_sbac_favorites_user_list($variables) {
   $output .= drupal_render_children($form);
 
   return $output;
-
 }
 
 /**

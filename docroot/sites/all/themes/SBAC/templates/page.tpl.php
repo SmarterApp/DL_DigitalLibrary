@@ -67,9 +67,10 @@ global $user;
       <?php
         $favorites_count = sbac_favorites_get_count($user->uid);
         $text = t('Favorites');
-        if ($favorites_count) {
-          $text .= ' (<span>' . $favorites_count . '</span>)';
+        if (!$favorites_count) {
+          $favorites_count = 0;
         }
+        $text .= ' (<span>' . $favorites_count . '</span>)';
         echo l($text, 'user', array(
           'html' => TRUE,
           'fragment' => 'profile-favorites',
@@ -207,7 +208,6 @@ global $user;
         }
       ?>
       <ul class="footer-links inline-list right">
-        <li><a class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
         <li>
           <?php if (user_is_logged_in()) : ?>
           <div class="footer-help">
@@ -220,6 +220,7 @@ global $user;
           </div>
           <?php endif; ?>
         </li>
+        <li><a class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
       </ul>
     </div>
   </div>

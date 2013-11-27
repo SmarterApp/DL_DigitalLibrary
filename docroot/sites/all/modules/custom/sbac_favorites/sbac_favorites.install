@@ -27,7 +27,13 @@ function sbac_favorites_schema() {
         'not null' => FALSE,
         'auto_increment' => FALSE,
         'description' => t('The sorted weight of the resource.'),
-      )
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the favorite was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('nid', 'uid'),
     'indexes' => array(

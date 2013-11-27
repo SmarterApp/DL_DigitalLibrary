@@ -67,4 +67,42 @@
     });
   };
 
+  Drupal.behaviors.sbac_favorites_delete = {
+    attach: function (context, settings) {
+      // on click, save as favorite.
+      $('.sbac-favorites-delete-favorite').click( function () {
+        var the_favorite_link = $(this);
+        var nid = the_favorite_link.attr('nid');
+        var uid = the_favorite_link.attr('uid');
+        delete_favorite(the_favorite_link, nid, uid);
+        return false;
+      });
+    }
+  };
+
+  /**
+   * Submits the request to drupal.
+   *
+   * @param the_favorite_link
+   * @param nid
+   * @param uid
+   */
+  delete_favorite = function (the_favorite_link, nid, uid) {
+    var ajax_delete_request = $.ajax({
+      type: 'POST',
+      url: the_favorite_link.attr('href'),
+      data: {'nid':nid, 'uid':uid},
+      success: function(data) {
+        ajax_delete_request = null;
+        the_favorite_link.closest('tr').remove();
+        var old_count = $('.sbac-favorites-menu span').html();
+        old_count--;
+        $('.sbac-favorites-menu span').html(old_count);
+      },
+      error: function(data) {
+
+      }
+    });
+  };
+
 })(jQuery);
