@@ -495,7 +495,7 @@ function sbac_resource_preprocess_page(&$vars) {
     if (isset($vars['page']['#type']) && $vars['page']['#type'] == 'page') {
       unset($vars['tabs']);
       $vars['title'] = $vars['node']->title;
-      if ($vars['node']->field_html5['und'][0]['value'] && arg(2) != 'edit') {
+      if (isset($vars['node']->field_html5['und'][0]['value']) && $vars['node']->field_html5['und'][0]['value'] && arg(2) != 'edit') {
         $vars['html5'] = TRUE;
       }
     }

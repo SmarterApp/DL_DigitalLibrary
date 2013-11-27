@@ -391,6 +391,11 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       $save_all_changes_modal = TRUE;
     }
   }
+  // if the user is on the advanced tab, means they are a DLRB Member
+  // or above, so pop the modal up when they click save.
+  if ($active_tab == 'edit-group_advanced') {
+    $save_all_changes_modal = TRUE;
+  }
 
   // Cleans the text
   sbac_resource_clean_text($form_state);

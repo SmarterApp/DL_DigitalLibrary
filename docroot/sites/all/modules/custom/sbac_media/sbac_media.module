@@ -474,7 +474,8 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
           'id' => 'sbac-media-modal-duplicates'
         ),
         'query' => array(
-          'nid' => $form['#node']->nid
+          'nid' => $form['#node']->nid,
+          'state' => $form_state['node']->workbench_moderation['current']->state,
         )
       )),
       '#weight' => 3,
@@ -1590,6 +1591,7 @@ function sbac_media_duplicates($js = FALSE) {
     ctools_modal_add_js();
 
     $nid = $_GET['nid'];
+    $state = $_GET['state'];
     if ($nid) {
       $media_items = sbac_media_load_items($nid);
       $count = sbac_media_count_duplicates($media_items);
@@ -1598,6 +1600,7 @@ function sbac_media_duplicates($js = FALSE) {
         'title' => t($title, array(':count' => count($count))),
         'ajax' => $js,
         'sbac-media-items' => $media_items,
+        'state' => $state,
       );
 
       $output = ctools_modal_form_wrapper('sbac_media_duplicates_form', $form_state);
@@ -1645,6 +1648,7 @@ function sbac_media_duplicates_form($form, &$form_state) {
     }
   }
 
+  $output = '';
   if ($duplicates) {
     $output = '<div class="sbac-media-duplicates-container">';
     foreach ($duplicates as $resource_nid => $media_items) {
@@ -1679,10 +1683,17 @@ function sbac_media_duplicates_form($form, &$form_state) {
     '#markup' => '<p>' . t('Please help us maintain the quality of the Digital Library by creating original resources.') . '</p>',
   );
 
+  $description = 'The following resources contain materials very similar to those you have uploaded.
+                  Click a resource title to view it in a new tab/window. You can cancel and adjust
+                  your resource materials or move forward to the next tab.';
+  if ($form_state['state'] == 'published') {
+    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+      $description .= ' Saving changes to this resource will make these changes visible to all users of the Digital Library.';
+    }
+  }
+  $description .= '</p>';
   $form['submit_description'] = array(
-    '#markup' => '<p>' . t('The following resources contain materials very similar to those you have uploaded.
-                            Click a resource title to view it in a new tab/window. You can cancel and adjust
-                            your resource materials or move forward to the next tab.') . '</p>',
+    '#markup' => '<p>' . t($description),
   );
 
   $form['duplicates'] = array(
