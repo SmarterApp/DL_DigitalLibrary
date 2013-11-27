@@ -48,6 +48,11 @@ function resource_feedback_page($node) {
           'post',   // quality criteria review (publisher) tab
         ),
       ),
+      'access share process' => array(
+        'feedback' => array(
+          'share',
+        )
+      ),
     );
 
     foreach ($tabs as $permission => $sources) {

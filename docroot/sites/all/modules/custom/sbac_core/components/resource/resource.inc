@@ -24,7 +24,6 @@ function resource_access($op, $node, $account = NULL) {
   if ($node->type == 'resource') {
     // TODO: maybe we should just load & statically cache all feedback records
     // for current node, instead of running individual queries?
-
     if (in_array($op, array('access about process', 'view about'))) {
       return TRUE;
     }
@@ -45,6 +44,10 @@ function resource_access($op, $node, $account = NULL) {
       ));
 
       return (bool) $qc_entities;
+    }
+
+    if ($op == 'access share process' || $op == 'view share') {
+      return TRUE;
     }
 
     if ($op == 'access quality criteria process') {
