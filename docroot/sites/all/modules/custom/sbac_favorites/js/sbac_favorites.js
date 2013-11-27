@@ -92,12 +92,17 @@
       type: 'POST',
       url: the_favorite_link.attr('href'),
       data: {'nid':nid, 'uid':uid},
-      success: function(data) {
+      success: function(data, textStatus, jqXHR) {
+        var response = jQuery.parseJSON(data);
         ajax_delete_request = null;
         the_favorite_link.closest('tr').remove();
-        var old_count = $('.sbac-favorites-menu span').html();
-        old_count--;
-        $('.sbac-favorites-menu span').html(old_count);
+        if (response.total > 0) {
+          $('.sbac-favorites-menu span').html(response.total);
+        }
+        else {
+          $('.favorites-helpful-info').remove();
+          $('#favorites-table').empty().append(response.no_results);
+        }
       },
       error: function(data) {
 

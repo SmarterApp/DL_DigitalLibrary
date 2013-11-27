@@ -52,7 +52,7 @@ function sbac_favorites_theme($existing, $type, $theme, $path) {
  */
 function sbac_favorites_ajax_click() {
   if (!$_POST['nid'] || !$_POST['uid']) {
-    return;
+    exit;
   }
 
   $node = node_load($_POST['nid']);
@@ -66,18 +66,18 @@ function sbac_favorites_ajax_click() {
       $entity->nid = $node->nid;
       $entity->uid = $account->uid;
       $entity->weight = 0;
-      $time = time();
-      $entity->created = $time;
+      $entity->created = time();
       drupal_write_record('sbac_favorites', $entity);
     }
     else {
       db_delete('sbac_favorites')->condition('nid', $node->nid)->condition('uid', $account->uid)->execute();
     }
     $output = array();
-    return drupal_json_encode($output);
+    print drupal_json_encode($output);
+    exit;
   }
   else {
-    return;
+    exit;
   }
 }
 
@@ -93,8 +93,16 @@ function sbac_favorites_ajax_delete() {
 
   db_delete('sbac_favorites')->condition('nid', $_POST['nid'])->condition('uid', $_POST['uid'])->execute();
   $count = sbac_favorites_get_count($_POST['uid']);
-  $output = array('total' => $count);
-  return drupal_json_encode($output);
+  $output = array();
+  if ($count) {
+    $output['total'] = $count;
+  }
+  else {
+    $output['total'] = 0;
+    $output['no_results'] = theme('sbac_favorites_no_favorites');
+  }
+  print drupal_json_encode($output);
+  exit;
 }
 
 /**
@@ -121,7 +129,10 @@ function sbac_favorites_get_count($uid) {
  */
 function sbac_favorites_get_favorites($uid) {
   $favorites = array();
-  $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight, sf.created AS created FROM {sbac_favorites} sf WHERE sf.uid = :uid";
+  $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight, sf.created AS created
+          FROM {sbac_favorites} sf
+          WHERE sf.uid = :uid
+          ORDER BY sf.weight, sf.created";
   $result = db_query($sql, array(':uid' => $uid));
   foreach ($result as $row) {
     $favorites[] = $row;
@@ -159,11 +170,15 @@ function sbac_favorites_user_view($account, $view_mode, $langcode) {
   $favorites = sbac_favorites_get_favorites($account->uid);
   $output = sbac_favorites_favorites_table($favorites);
 
-  $favorites_content = '<div id="favorites">';
-  $favorites_content .= '<div class="helpful-info">';
-  $favorites_content .= 'Drag and drop items in the list to reorder your favorites';
-  $favorites_content .= '</div>';
+  $favorites_content  = '<div id="favorites">';
+  if ($favorites) {
+    $favorites_content .= '<div class="favorites-helpful-info">';
+    $favorites_content .= 'Drag and drop items in the list to reorder your favorites';
+    $favorites_content .= '</div>';
+  }
+  $favorites_content .= '<div id="favorites-table">';
   $favorites_content .= $output;
+  $favorites_content .= '</div>';
   $favorites_content .= '</div>';
 
   $account->content['sections']['favorites'] = array(
@@ -239,12 +254,22 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
       '#markup' => '<a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $user->uid . '">Delete</a>',
     );
 
+    $element['weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight'),
+      '#default_value' => $favorite->weight,
+      '#delta' => 100,
+      '#title_display' => 'invisible',
+    );
+
     $form['favorites'][] = $element;
   }
 
+  $form['favorites']['#tree'] = TRUE;
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
+    '#attributes' => array('id' => 'sbac-favorites-submit'),
   );
 
   return $form;
@@ -261,26 +286,35 @@ function theme_sbac_favorites_user_list($variables) {
     t('Resource Name'),
     t('Resource Type'),
     t('Date Added'),
-    '',
+    t(''),
+    t('Weight'),
   );
 
   $rows = array();
   foreach (element_children($form['favorites']) as $key) {
     $element = &$form['favorites'][$key];
+    $element['weight']['#attributes']['class'] = array('favorite-item-weight');
+
     $row = array('data' => array());
     $row['data']['name'] = drupal_render($element['name']);
     $row['data']['type'] = drupal_render($element['type']);
     $row['data']['created'] = drupal_render($element['created']);
     $row['data']['delete'] = drupal_render($element['delete']);
-    $rows[] = $row;
+    $row['data']['weight'] = drupal_render($element['weight']);
+
+    $rows[$key] = $row;
+    $rows[$key]['class'] = array('draggable');
   }
 
+  $table_id = 'sbac-favorites-table-drag-drop';
   $output = theme('table', array(
     'header' => $header,
     'rows' => $rows,
-    'attributes' => array('class' => array('width-auto'))));
+    'attributes' => array('id' => $table_id, 'class' => array('width-auto'))));
 
   $output .= drupal_render_children($form);
+
+  drupal_add_tabledrag($table_id, 'order', 'sibling', 'favorite-item-weight');
 
   return $output;
 }

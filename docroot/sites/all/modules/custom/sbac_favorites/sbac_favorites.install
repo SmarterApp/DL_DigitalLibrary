@@ -31,8 +31,8 @@ function sbac_favorites_schema() {
       'created' => array(
         'description' => 'The Unix timestamp when the favorite was created.',
         'type' => 'int',
-        'not null' => TRUE,
         'default' => 0,
+        'not null' => TRUE,
       ),
     ),
     'primary key' => array('nid', 'uid'),
