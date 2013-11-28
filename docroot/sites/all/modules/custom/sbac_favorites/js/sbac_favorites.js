@@ -100,6 +100,7 @@
           $('.sbac-favorites-menu span').html(response.total);
         }
         else {
+          $('.sbac-favorites-menu span').html(0);
           $('.favorites-helpful-info').remove();
           $('#favorites-table').empty().append(response.no_results);
         }
