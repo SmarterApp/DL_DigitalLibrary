@@ -11,8 +11,7 @@ class Share extends Base {
    * @return [type] [description]
    */
   public function getContent() {
-    $output = 'HI SHARE TAB';
-
+    $output = sbac_share_resource_node_view($this->_node);
     return $output;
   }
 }

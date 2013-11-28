@@ -1,30 +1,10 @@
 <?php
-//$Id$
-
-/**
- * Implementation of hook_install()
- */
-
-function sbac_anonymous_url_install() {
-  if (db_table_exists('node_anonymous_url') == FALSE) {
-    drupal_install_schema('node_anonymous_url');
-  }
-}
-
-/**
- * Implementation of hook_uninstall()
- */
-
-function sbac_anonymous_url_uninstall() {
-  $delete = db_query("drop table if exists `node_anonymous_url`");
-}
 
 /**
  * Implementation of hook_schema()
  */
-
-function node_anonymous_url_schema() {
-  $schema['node_anonymous_url'] = array(
+function sbac_share_schema() {
+  $schema['sbac_share'] = array(
     'description' => t('Stores keys to generate an expiring anonymous url'),
     'fields' => array(
       'id' => array(
@@ -33,9 +13,9 @@ function node_anonymous_url_schema() {
         'unsigned' => TRUE,
         'not null' => FALSE,
         'auto_increment' => TRUE,
-        'description' => t('Blind primary key'),		
-	  ),
-	  'nid' => array(
+        'description' => t('Blind primary key'),
+	    ),
+	    'nid' => array(
         'type' => 'int',
         'size' => 'big',
         'unsigned' => TRUE,
@@ -67,12 +47,12 @@ function node_anonymous_url_schema() {
         'auto_increment' => FALSE,
         'description' => t('The unix_timestamp expiration date'),
       ),
- 	  'key'=>array(
-		'type'=>'varchar',
-		'length'=>'32', 
-		'not null'=>FALSE,
-		'description'=>t('contains a key to be shared with the anonymous user'),
-	  ),
+      'key'=>array(
+        'type'=>'varchar',
+        'length'=>'32',
+        'not null'=>FALSE,
+        'description'=>t('contains a key to be shared with the anonymous user'),
+	    ),
     ),
     'primary key' => array('id'),
     'indexes' => array(
@@ -82,5 +62,3 @@ function node_anonymous_url_schema() {
   );
   return $schema;
 }
-
-?>

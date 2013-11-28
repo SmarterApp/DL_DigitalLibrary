@@ -7,25 +7,24 @@
 /**
  * Implementation of hook_menu().
  */
-function sbac_anonymous_url_menu() {
+function sbac_share_menu() {
   //the menu call to generate the url.
-  //sbac_anonymous_url_form posts here
-  $items['generate_url'] = array(
+  //sbac_share_form posts here
+  $items['sbac-share/generate-url'] = array(
     'title' => 'Generate a URL',
     'description' => 'Generates an expiring URL',
     'access callback' => TRUE,
     'access arguments' => array('access content'),
-    'page callback' => 'generate_url',
+    'page callback' => 'sbac_share_generate_url',
     'type' => MENU_CALLBACK
   );
   return $items;
 }
 
-/*
- * generates a url and return it to the user
- *
-*/
-function generate_url() {
+/**
+ * Generates a URL and returns to the user.
+ */
+function sbac_share_generate_url() {
   global $user;
   $path = '/';
   if ($_REQUEST['nid']) {
@@ -36,23 +35,15 @@ function generate_url() {
       //generate the key
       $key = md5(time() . $node->nid . $path);
       //generate the new path
-      //$url=$path . "?key=" . $key;
       $expire_date = time() + (60 * 60 * 24 * $_REQUEST['ttl']);
       //store the new path in the table
-      $query = "insert into
-					node_anonymous_url(
-						nid,
-						uid,
-						`key`,
-						create_datetime,
-						expire_datetime)	
-					values ('" .
-        $node->nid . "', '" .
-        $user->uid . "', '" .
-        $key . "',
-						UNIX_TIMESTAMP(), " . $expire_date .
-        ")";
-      $result = db_query($query);
+      $entity = new stdClass();
+      $entity->nid = $node->nid;
+      $entity->uid = $user->uid;
+      $entity->key = $key;
+      $entity->create_datetime = time();
+      $entity->expire_datetime = $expire_date;
+      drupal_write_record('sbac_share', $entity);
       $message = t("This url : " . url($path, array(
           'absolute' => TRUE,
           'query' => array('key' => $key)
@@ -69,75 +60,60 @@ function generate_url() {
   drupal_goto($path);
 }
 
-/*
- * Build the generate a link form.
+/**
+ * Creates the form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
  */
-function sbac_anonymous_url_form($form, &$form_state) {
+function sbac_share_form($form, &$form_state) {
   global $user;
-  //returns a generate url form
+  $form['#action'] = url('generate_url');
+
+  // Returns a generate url form
   $form['ttl'] = array(
     '#title' => t('Days to Live'),
     '#type' => 'select',
-    '#options' => array(
-      '1' => 1,
-      '2' => 2,
-      '3' => 3,
-      '4' => 4,
-      '5' => 5,
-      '6' => 6,
-      '7' => 7,
-      '8' => 8,
-      '9' => 9,
-      '10' => 10,
-      '11' => 11,
-      '12' => 12,
-      '13' => 13,
-      '14' => 14,
-      '15' => 15,
-      '16' => 16,
-      '17' => 17,
-      '18' => 18,
-      '19' => 19,
-      '20' => 20,
-      '21' => 21,
-      '22' => 22,
-      '23' => 23,
-      '24' => 24,
-      '25' => 25,
-      '26' => 26,
-      '27' => 27,
-      '28' => 28,
-      '29' => 29,
-      '30' => 30,
-      '31' => 31
-    ),
+    '#options' => range(0, 31),
     '#default_value' => 1,
     '#required' => TRUE,
     '#description' => t('Select the number of days to keep this link active'),
   );
+  // Nid.
   $form['nid'] = array(
     '#type' => 'hidden',
   );
-  $form['#action'] = url('generate_url');
-  // Submit
+  // Submit.
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Create Expiring URL', //this comes in as the $form->op value
   );
+  // ? John K special.
   if (in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles) || $user->uid == 1) {
     $form['ttl']['#options']['32'] = 'Infinite';
   }
   return $form;
 }
 
-function getNodeByKey($key) {
+/**
+ * Grabs the node by key.
+ *
+ * @param $key
+ * @return int
+ */
+function sbac_share_get_node_by_key($key) {
   $return = 0;
   $now = time();
-  $query = "select * from node_anonymous_url where `key`='" . $_GET['key'] . "' and expire_datetime>" . $now . " limit 1";
-  $result = db_query($query);
-  $thisrow = $result->fetchAssoc();
-  if ($thisrow['key'] == $_GET['key']) {
-    $return = $thisrow['nid'];
+  $query = "SELECT * FROM {node_anonymous_url} WHERE key = :key AND expire_datetime > :time LIMIT 1";
+  $row = db_query($query, array(':key' => $_GET['key'], ':time' => $now))->fetchAssoc();
+  if ($row['key'] == $_GET['key']) {
+    $return = $row['nid'];
   }
   return $return;
+}
+
+
+function sbac_share_resource_node_view($node) {
+  return 'hi';
 }
