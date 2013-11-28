@@ -115,5 +115,9 @@ function sbac_share_get_node_by_key($key) {
 
 
 function sbac_share_resource_node_view($node) {
-  return 'hi';
+  $output = '';
+
+  $output .= '<h2>Share this Resource</h2>';
+
+  return $output;
 }

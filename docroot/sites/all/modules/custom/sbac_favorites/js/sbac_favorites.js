@@ -58,7 +58,6 @@
           var old_count = $('.sbac-favorites-menu span').html();
           old_count--;
           $('.sbac-favorites-menu span').html(old_count);
-          $('.sbac-favorites-menu-tooltip').show(0).delay(3000).hide(0);
         }
       },
       error: function(data) {
