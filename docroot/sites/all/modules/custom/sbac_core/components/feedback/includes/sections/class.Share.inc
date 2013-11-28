@@ -11,7 +11,8 @@ class Share extends Base {
    * @return [type] [description]
    */
   public function getContent() {
-    $output = sbac_share_resource_node_view($this->_node);
+    $form = drupal_get_form('sbac_share_resource_form', $this->_node);
+    $output = drupal_render($form);
     return $output;
   }
 }

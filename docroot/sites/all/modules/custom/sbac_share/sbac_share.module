@@ -113,11 +113,95 @@ function sbac_share_get_node_by_key($key) {
   return $return;
 }
 
+/**
+ * @param $form
+ * @param $form_state
+ * @param $node
+ * @return string
+ */
+function sbac_share_resource_form($form, $form_state, $node) {
+  // Sharing options
+  $form['sharing_options'] = array(
+    '#type' => 'item',
+    '#markup' => '<h2>'.t('Sharing Options') . '</h2>',
+    '#prefix' => '<div class="form-item-title resource-sharing-options">',
+    '#suffix' => '</div>',
+  );
 
-function sbac_share_resource_node_view($node) {
-  $output = '';
+  $title = 'Permanent Link - <span class="sbac-public">Public</span>';
+  if ($node->field_permanent_link_settings['und'][0]['value'] == 1) {
+    $title = 'Permanent Link - <span class="sbac-private">Private</span>';
+  }
+  $form['permanent_link_text'] = array(
+    '#type' => 'item',
+    '#markup' => t($title),
+    '#description' => t('Use the permanent link to share with people who have access to the Digital Library.'),
+    '#prefix' => '<div class="form-item-title sbac-permanent-link">',
+    '#suffix' => '</div>',
+  );
 
-  $output .= '<h2>Share this Resource</h2>';
+  $form['permanent_link'] = array(
+    '#type' => 'textfield',
+    '#default_value' => '',
+    '#attributes' => array('id' => 'sbac-permanent-link-text'),
+  );
 
-  return $output;
+  $form['permanent_link_button'] = array(
+    '#type' => 'button',
+    '#value' => 'Copy Link to Clipboard'
+  );
+
+  // Temporary Link
+  $title = 'Generate a temporary link to share with people outside the Digital Library.';
+  if (isset($node->field_temporary_public_link['und']['0']['value']) && $node->field_temporary_public_link['und']['0']['value']) {
+    $time = $node->field_temporary_public_link_time['und']['0']['value']; // value is 1, 2, 3, 4, 5, 6, 7 to represent days.
+    switch ($time) {
+      case 1:
+        $time_text = 'one';
+        break;
+      case 2:
+        $time_text = 'two';
+        break;
+      case 3:
+        $time_text = 'three';
+        break;
+      case 4:
+        $time_text = 'four';
+        break;
+      case 5:
+        $time_text = 'five';
+        break;
+      case 6:
+        $time_text = 'six';
+        break;
+      case 7:
+        $time_text = 'seven';
+        break;
+      case 100: //developer case to speed up testing.
+        $time_text = '5 mins';
+        break;
+    }
+    $title .= ' It will expire in ' . $time_text. ' (' . $time . ') days.';
+  }
+
+  $form['temporary_link_text'] = array(
+    '#type' => 'item',
+    '#markup' => '<h2>'.t('Temporary Public Link') . '</h2>',
+    '#description' => t($title),
+    '#prefix' => '<div class="form-item-title sbac-temporary-link">',
+    '#suffix' => '</div>',
+  );
+
+  $form['temporary_link'] = array(
+    '#type' => 'textfield',
+    '#default_value' => '',
+    '#attributes' => array('id' => 'sbac-temporary-link-text'),
+  );
+
+  $form['temporary_link_button'] = array(
+    '#type' => 'button',
+    '#value' => 'Generate Temporary Link'
+  );
+
+  return $form;
 }
