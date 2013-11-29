@@ -365,15 +365,20 @@ a.sbac-grid-layout {
 
       span a {
         color: #0085ad;
+				padding-right: 5px;
+				display: block;
+				float: left;
       }
+
+			span a {width: 92% \9\0; } /*for IE 9, 10*/
     }
 
     .distinction {
       span {
         a {
           display: block;
-          padding-right: 30px;
-          width: 90%;
+          padding-right: 5px;
+          width: 88%;
           float: left;
         }
       }
@@ -383,8 +388,12 @@ a.sbac-grid-layout {
         margin: 0;
       }
     }
+    
+		.distinction span a{ width: 83% \9\0; } /*for IE 9, 10*/
 
     .shield-drop {
+			 width: 25px;
+			display: inline-block;
       .f-dropdown.open {
         top: 36px !important;
         right: 25px !important;
@@ -401,8 +410,9 @@ a.sbac-grid-layout {
       }
 
       .f-dropdown:after, .f-dropdown:before {
-        left: 138px;
+        left: 141px;
       }
+			.f-dropdown:after, .f-dropdown:before {left: 147px \9\0; } /*for IE 9, 10*/      
     }
 
     h4 {
@@ -512,7 +522,7 @@ a.sbac-grid-layout {
       }
 
     .distinction span a {
-      width: 93%;
+      width: 92.1%;
     }
 
       .button {
@@ -586,7 +596,7 @@ a.sbac-grid-layout {
 }
 
 .no-ie8compat .digital-library .resource-card h3 {
-  padding-right: 10px;
+  /*padding-right: 10px;*/
 }
 
 /*star style with list view*/
