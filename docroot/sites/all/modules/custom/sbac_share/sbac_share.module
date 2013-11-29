@@ -213,7 +213,8 @@ function sbac_share_resource_form($form, $form_state, $node) {
 
   $form['temporary_link_button'] = array(
     '#type' => 'button',
-    '#value' => 'Generate Temporary Link'
+    '#value' => 'Generate Temporary Link',
+    '#submit' => array('sbac_share_resource_generate_link'),
   );
 
   $form['temporary-link-suffix'] = array(
@@ -221,4 +222,24 @@ function sbac_share_resource_form($form, $form_state, $node) {
   );
 
   return $form;
+}
+
+/**
+ * Submit handler.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_share_resource_form_submit($form, &$form_state) {
+  $var = '';
+}
+
+/**
+ * Submit handler to generate the temp link.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_share_resource_generate_link($form, &$form_state) {
+  $var = '';
 }

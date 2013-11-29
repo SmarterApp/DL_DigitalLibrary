@@ -1845,7 +1845,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
 
   // Temporary Link Time
   $class = 'inactive';
-  if ($form['field_permanent_link_settings']['und']['#default_value']) {
+  if (isset($form['field_temporary_public_link']['und']['#default_value'][0]) && $form['field_temporary_public_link']['und']['#default_value'][0] == 1) {
     $class = 'active';
   }
   $form['field_temporary_public_link_time']['und']['#title'] = t('Set the limit from the time of link generation');
