@@ -1841,9 +1841,15 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
     $form['field_permanent_link_settings']['und']['#default_value'] = 0;
   }
 
+  $form['field_temporary_public_link']['und']['#attributes']['class'][] = 'sbac-temporary-public-link';
+
   // Temporary Link Time
+  $class = 'inactive';
+  if ($form['field_permanent_link_settings']['und']['#default_value']) {
+    $class = 'active';
+  }
   $form['field_temporary_public_link_time']['und']['#title'] = t('Set the limit from the time of link generation');
-  $form['field_temporary_public_link_time']['#prefix'] = '<div class="sbac-temporary-link-time inactive">';
+  $form['field_temporary_public_link_time']['#prefix'] = '<div class="sbac-temporary-link-time ' . $class . '">';
   $form['field_temporary_public_link_time']['#suffix'] = '</div>';
 
   // Posting options.

@@ -120,7 +120,7 @@ function sbac_share_get_node_by_key($key) {
  * @return string
  */
 function sbac_share_resource_form($form, $form_state, $node) {
-  // Sharing options
+  // Sharing options header
   $form['sharing_options'] = array(
     '#type' => 'item',
     '#markup' => '<h2>'.t('Sharing Options') . '</h2>',
@@ -152,8 +152,10 @@ function sbac_share_resource_form($form, $form_state, $node) {
   );
 
   // Temporary Link
+  $active = FALSE;
   $title = 'Generate a temporary link to share with people outside the Digital Library.';
   if (isset($node->field_temporary_public_link['und']['0']['value']) && $node->field_temporary_public_link['und']['0']['value']) {
+    $active = TRUE;
     $time = $node->field_temporary_public_link_time['und']['0']['value']; // value is 1, 2, 3, 4, 5, 6, 7 to represent days.
     switch ($time) {
       case 1:
@@ -180,9 +182,20 @@ function sbac_share_resource_form($form, $form_state, $node) {
       case 100: //developer case to speed up testing.
         $time_text = '5 mins';
         break;
+      default:
+        $time_text = 'one';
+        break;
     }
     $title .= ' It will expire in ' . $time_text. ' (' . $time . ') days.';
   }
+
+  $class = 'inactive';
+  if ($active) {
+    $class = 'active';
+  }
+  $form['temporary-link-prefix'] = array(
+    '#markup' => '<div class="temporary-link-container ' . $class . '">',
+  );
 
   $form['temporary_link_text'] = array(
     '#type' => 'item',
@@ -201,6 +214,10 @@ function sbac_share_resource_form($form, $form_state, $node) {
   $form['temporary_link_button'] = array(
     '#type' => 'button',
     '#value' => 'Generate Temporary Link'
+  );
+
+  $form['temporary-link-suffix'] = array(
+    '#markup' => '</div>',
   );
 
   return $form;

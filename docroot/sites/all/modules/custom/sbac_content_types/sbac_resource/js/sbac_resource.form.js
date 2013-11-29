@@ -455,4 +455,22 @@
     }
   };
 
+  /**
+   * Submit resource button click behavior.
+   *
+   * @type {{attach: Function}}
+   */
+  Drupal.behaviors.advanced_options = {
+    attach: function (context, settings) {
+      $('.sbac-temporary-public-link').click( function() {
+        if ($('.sbac-temporary-link-time').hasClass('inactive')) {
+          $('.sbac-temporary-link-time').removeClass('inactive').addClass('active');
+        }
+        else {
+          $('.sbac-temporary-link-time').removeClass('active').addClass('inactive');
+        }
+      });
+    }
+  };
+
 })(jQuery);
