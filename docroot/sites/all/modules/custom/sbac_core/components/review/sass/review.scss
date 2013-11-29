@@ -61,6 +61,7 @@
       float: left;
       font-size: 1.3em;
       font-weight: bold;
+			line-height: 1.8em;
     }
   }
 
@@ -445,3 +446,69 @@
 .fivestar-widget {
   padding: 5px 0;
 }
+
+/* Tag of Sharing */
+#sbac-share-resource-form {
+	margin: 0 30px;
+	
+	#edit-sharing-options {
+		h2 {
+			font-size: 1.3em;
+			color: #5a5a5a;
+			border-bottom: #000 1px solid;
+			padding-bottom: 10px;
+		}
+	}
+	
+	#edit-permanent-link-text {
+		font-weight: bold;
+		
+		.foundicon-people {
+			font-size: 120%;
+			color: #aaa;
+			vertical-align: middle;
+		}
+		
+		.foundicon-lock {
+			color: #aaa;
+			vertical-align: middle;
+		}
+		
+		span {
+			font-weight: normal;
+		}
+		
+		.description {
+			margin-top: 10px;
+			font-weight: normal;
+		}
+	}
+	
+	#edit-temporary-link-text {
+		h2 {
+			color: #5a5a5a;
+			padding-bottom: 2px;
+		}
+	}
+	
+	input#sbac-permanent-link-text, input#sbac-temporary-link-text {
+		width: 65%; 
+		float: left;
+		margin-right: 30px;
+	}
+	
+	button#edit-permanent-link-button, button#edit-temporary-link-button {
+		width: 225px;
+		margin-top: -3px;
+	}
+	
+	.temporary-link-container.active {
+		opacity: 1;
+	}
+	
+	.temporary-link-container.inactive {
+		opacity: 0.5;
+	}
+}
+
+
