@@ -33,6 +33,68 @@ function sbac_share_menu() {
 }
 
 /**
+ * Implements hook_page_alter().
+ *
+ * @param $page
+ */
+function sbac_share_page_alter(&$page) {
+  global $user;
+  // if the user is trying to access a page they don't have access to.
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && !isset($_SESSION['sbac-share-not-found'])) {
+    $provided_key = NULL;
+    if (isset($_GET['key'])) {
+      $provided_key = $_GET['key'];
+    }
+    if (!$provided_key) {
+      $_SESSION['sbac-share-not-found'] = TRUE;
+      sbac_share_get_outta_here();
+      drupal_exit();
+    }
+  }
+  // clean up.
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && isset($_SESSION['sbac-share-not-found'])) {
+    $_SESSION['sbac-share-not-found'] = FALSE;
+  }
+}
+
+/**
+ * Packages and sends the result of a page callback to the browser as HTML.
+ *
+ * @param $page_callback_result
+ *   The result of a page callback. Can be one of:
+ *   - NULL: to indicate no content.
+ *   - An integer menu status constant: to indicate an error condition.
+ *   - A string of HTML content.
+ *   - A renderable array of content.
+ *
+ * @see drupal_deliver_page()
+ */
+function sbac_share_get_outta_here() {
+  // Emit the correct charset HTTP header, but not if the page callback
+  // result is NULL, since that likely indicates that it printed something
+  // in which case, no further headers may be sent, and not if code running
+  // for this page request has already set the content type header.
+  if (isset($page_callback_result) && is_null(drupal_get_http_header('Content-Type'))) {
+    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  }
+  // Send appropriate HTTP-Header for browsers and search engines.
+  global $language;
+  drupal_add_http_header('Content-Language', $language->language);
+  // Print a 404 page.
+  drupal_add_http_header('Status', '404 Not Found');
+  watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+  // Standard 404 handler.
+  drupal_set_title(t('Page not found'));
+  $return = t('The requested page "@path" could not be found.', array('@path' => request_uri()));
+  drupal_set_page_content($return);
+  $page = element_info('page');
+  print drupal_render_page($page);
+
+  // Perform end-of-request tasks.
+  drupal_page_footer();
+}
+
+/**
  * Login and redirect the guest user
  */
 function sbac_share_login_redirect_view($guest_link_slug) {

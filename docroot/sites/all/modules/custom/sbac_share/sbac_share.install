@@ -1,7 +1,5 @@
 <?php
 
-define('SBAC_SHARE_GUEST', 'guest');
-
 /**
  * Implementation of hook_schema()
  */

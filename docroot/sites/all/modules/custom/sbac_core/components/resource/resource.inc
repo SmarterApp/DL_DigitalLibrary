@@ -46,7 +46,7 @@ function resource_access($op, $node, $account = NULL) {
       return (bool) $qc_entities;
     }
 
-    if ($op == 'access share process' || $op == 'view share') {
+    if (!in_array(SBAC_SHARE_GUEST, $account->roles) && $op == 'access share process' || $op == 'view share') {
       return TRUE;
     }
 
@@ -56,7 +56,7 @@ function resource_access($op, $node, $account = NULL) {
     elseif ($op == 'access post process') {
       return (in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles)));
     }
-    elseif (in_array($op, array('access review process', 'view reviews'))) {
+    elseif (!in_array(SBAC_SHARE_GUEST, $account->roles) && in_array($op, array('access review process', 'view reviews'))) {
       $published = ($node->status && $node->workbench_moderation['current']->state == 'published');
       $role = in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
 

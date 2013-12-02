@@ -5,17 +5,27 @@ global $user;
 <div class="page-wrap">
 <nav class="top-bar main-top clearfix">
   <ul class="title-area">
-    <li class="name"><h1><a href="<?php echo url(''); ?>"><img src="<?php echo $logo; ?>" alt="Smarter Balanced ASsessment Consortium Logo" /></a></h1></li>
+    <li class="name"><h1>
+        <?php
+          global $base_url;
+          $home_url = $base_url;
+          if ($user->uid && in_array(SBAC_SHARE_GUEST, $user->roles)) {
+            $home_url = '#';
+          }
+        ?>
+        <a href="<?php echo $home_url; ?>">
+          <img src="<?php echo $logo; ?>" alt="Smarter Balanced ASsessment Consortium Logo" />
+        </a>
+      </h1></li>
     <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
   </ul>
   <h1 class="title left">Digital Library Beta</h1>
-  <?php if ($user->uid): ?>
+  <?php if ($user->uid && !in_array('guest', $user->roles)): ?>
   <ul class="inline-list right user-nav">
     <li class="user-info">
        <a data-dropdown="drop3" href="">
         <?php
           $user_item = user_load($user->uid);
-
           if (isset($user_item->picture->uri)) {
             echo theme('image_style', array(
               'path' => $user_item->picture->uri,
@@ -90,12 +100,12 @@ global $user;
 
 <div class="top-bar sub-top">
   <nav class="main-nav left">
-    <?php if ($main_menu_links) :?>
+    <?php if ($main_menu_links && !in_array(SBAC_SHARE_GUEST, $user->roles)) :?>
       <?php print $main_menu_links; ?>
     <?php endif; ?>
   </nav>
 </div>
-<?php if($page['sub-header'] || $page['search'] || $page['toggle']): ?>
+<?php if(!in_array(SBAC_SHARE_GUEST, $user->roles) && ($page['sub-header'] || $page['search'] || $page['toggle'])): ?>
 <div class="top-bar last-top">
   <div class="toggle right">
     <?php print render($page['toggle']); ?>
@@ -207,9 +217,10 @@ global $user;
           print render($page['bottom_menu']);
         }
       ?>
+      <?php if ($user && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
       <ul class="footer-links inline-list right">
         <li>
-          <?php if (user_is_logged_in()) : ?>
+          <?php if (user_is_logged_in() && !in_array('guest', $user->roles)) : ?>
           <div class="footer-help">
             <a class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
             <ul id="drop2" class="f-dropdown" data-dropdown-content>
@@ -222,6 +233,7 @@ global $user;
         </li>
         <li><a class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
       </ul>
+      <?php endif; ?>
     </div>
   </div>
 </div>
