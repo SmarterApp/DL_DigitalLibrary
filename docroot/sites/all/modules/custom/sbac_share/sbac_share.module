@@ -40,7 +40,7 @@ function sbac_share_menu() {
 function sbac_share_page_alter(&$page) {
   global $user;
   // if the user is trying to access a page they don't have access to.
-  if (in_array(SBAC_SHARE_GUEST, $user->roles) && !isset($_SESSION['sbac-share-not-found'])) {
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && (!isset($_SESSION['sbac-share-not-found']) || $_SESSION['sbac-share-not-found'] == FALSE)) {
     $provided_key = NULL;
     if (isset($_GET['key'])) {
       $provided_key = $_GET['key'];
@@ -50,10 +50,6 @@ function sbac_share_page_alter(&$page) {
       sbac_share_get_outta_here();
       drupal_exit();
     }
-  }
-  // clean up.
-  if (in_array(SBAC_SHARE_GUEST, $user->roles) && isset($_SESSION['sbac-share-not-found'])) {
-    $_SESSION['sbac-share-not-found'] = FALSE;
   }
 }
 
@@ -85,13 +81,19 @@ function sbac_share_get_outta_here() {
   watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
   // Standard 404 handler.
   drupal_set_title(t('Page not found'));
-  $return = t('The requested page "@path" could not be found.', array('@path' => request_uri()));
+  $return = '<div class="sbac-share-page-not-found">' . t('The requested page "@path" could not be found.', array('@path' => request_uri())) . '</div>';
   drupal_set_page_content($return);
   $page = element_info('page');
   print drupal_render_page($page);
 
   // Perform end-of-request tasks.
   drupal_page_footer();
+
+  // clean up.
+  global $user;
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && isset($_SESSION['sbac-share-not-found'])) {
+    unset($_SESSION['sbac-share-not-found']);
+  }
 }
 
 /**
