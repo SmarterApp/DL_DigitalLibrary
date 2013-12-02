@@ -341,11 +341,10 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   }
 
   // Submit node, everything is good to go.
+  $selector = NULL;
+  $valid = FALSE;
   if ($active_tab != 'edit-group_advanced') {
     ctools_include('ajax');
-    $selector = NULL;
-    $valid = FALSE;
-    $active_tab = $form_state['values']['additional_settings__active_tab'];
     switch ($active_tab) {
       case 'edit-group_materials':
         $selector = ".vertical-tabs-list li:nth-child(3) a";
@@ -415,22 +414,22 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   // Clear drupal messages.
   drupal_get_messages();
 
-  if ($duplicates) {
+  if ($save_all_changes_modal) {
+    $form['run_js'] = array(
+      '#markup' => '<script>jQuery("#sbac-resource-save-all-changes").click();</script>',
+    );
+  }
+  else if ($duplicates) {
     $form['run_js'] = array(
       '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
     );
   }
-  else if (!$save_all_changes_modal) {
+  else {
     // Add appropriate JS.
     drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
     if ($selector) {
       drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
     }
-  }
-  else {
-    $form['run_js'] = array(
-      '#markup' => '<script>jQuery("#sbac-resource-save-all-changes").click();</script>',
-    );
   }
 
   return $form;
