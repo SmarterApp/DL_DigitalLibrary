@@ -462,7 +462,7 @@
    */
   Drupal.behaviors.advanced_options = {
     attach: function (context, settings) {
-      $('.sbac-temporary-public-link').click( function() {
+      $('.sbac-temporary-public-link input').click( function() {
         if ($('.sbac-temporary-link-time').hasClass('inactive')) {
           $('.sbac-temporary-link-time').removeClass('inactive').addClass('active');
         }
