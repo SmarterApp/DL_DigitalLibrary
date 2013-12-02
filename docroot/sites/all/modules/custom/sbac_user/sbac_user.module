@@ -795,20 +795,26 @@ function sbac_user_user_login(&$edit, $account) {
     $account->field_feedback_flag['und'][0]['value'] = (int) 0;
     user_save($account);
   }
+  // guest account
+  if (isset($edit['sbac-share'])) {
+    $account->data['disable_help'] = TRUE;
+  }
 
   user_save($account, array());
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
-  if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
-  }
-  else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
-  }
-  else{
-    if (!isset($user->data['disable_help'])) {
-      drupal_goto('user');
+  if (!isset($edit['sbac-share'])) {
+    if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
     }
-    else {
-      drupal_goto('digital-library-resources');
+    else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
+    }
+    else{
+      if (!isset($user->data['disable_help'])) {
+        drupal_goto('user');
+      }
+      else {
+        drupal_goto('digital-library-resources');
+      }
     }
   }
 }
