@@ -22,6 +22,7 @@
           success: function(data) {
             var response = jQuery.parseJSON(data);
             $('#sbac-temporary-link-text').val(response.result);
+            $('#sbac-temp-link-button').html('Copy Link to Clipboard');
             ajax_request = null;
           },
           error: function(data) {
