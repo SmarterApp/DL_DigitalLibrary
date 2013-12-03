@@ -348,7 +348,7 @@ html.js {
       a {
         background: #0085ad;
 
-        strong {
+        strong, span {
           color: white;
         }
       }
@@ -2502,8 +2502,6 @@ a.tabledrag-handle .handle {
   }
 }
 
-
-
 /** Start Review Modal **/
 
 .gate-keeper-modal-intro {
@@ -2593,5 +2591,9 @@ a.tabledrag-handle .handle {
 		}
 	}
 }	
+
+
+
+
 
 

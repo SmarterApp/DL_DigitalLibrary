@@ -7667,7 +7667,7 @@ html.js input.throbbing {
   background: #0085ad;
 }
 /* line 351, ../sass/custom.scss */
-.vertical-tabs ul.vertical-tabs-list li.selected a strong {
+.vertical-tabs ul.vertical-tabs-list li.selected a strong, .vertical-tabs ul.vertical-tabs-list li.selected a span {
   color: white;
 }
 
@@ -10016,12 +10016,12 @@ a.tabledrag-handle .handle {
 }
 
 /** Start Review Modal **/
-/* line 2509, ../sass/custom.scss */
+/* line 2507, ../sass/custom.scss */
 .gate-keeper-modal-intro {
   margin-bottom: 20px;
 }
 
-/* line 2516, ../sass/custom.scss */
+/* line 2514, ../sass/custom.scss */
 #dialog-feedback_qc_form-wrapper button,
 #dialog-feedback_post_form-wrapper button {
   float: right;
@@ -10029,7 +10029,7 @@ a.tabledrag-handle .handle {
   background: #2aa549;
 }
 
-/* line 2523, ../sass/custom.scss */
+/* line 2521, ../sass/custom.scss */
 #edit-submit--3 {
   color: white;
   background: #2aa549;
@@ -10038,12 +10038,12 @@ a.tabledrag-handle .handle {
 /** --------------------------------------------
   People Page
   ______________________________________________ **/
-/* line 2534, ../sass/custom.scss */
+/* line 2532, ../sass/custom.scss */
 #sbac-user-admin-account .chzn-drop {
   width: 858px;
   background-color: white;
 }
-/* line 2538, ../sass/custom.scss */
+/* line 2536, ../sass/custom.scss */
 #sbac-user-admin-account .chzn-drop input {
   background-repeat: no-repeat !important;
   background-size: 67px 45px !important;
@@ -10053,43 +10053,43 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
 	   Profile favorites tag
 	 ----------------------------------------- */
-/* line 2550, ../sass/custom.scss */
+/* line 2548, ../sass/custom.scss */
 .section-favorites .favorites-helpful-info {
   height: 70px;
   line-height: 70px;
 }
-/* line 2555, ../sass/custom.scss */
+/* line 2553, ../sass/custom.scss */
 .section-favorites #sbac-favorites-table-drag-drop {
   width: 100%;
 }
-/* line 2559, ../sass/custom.scss */
+/* line 2557, ../sass/custom.scss */
 .section-favorites .foundicon-trash {
   color: #aaa;
   margin-right: -30px;
 }
-/* line 2564, ../sass/custom.scss */
+/* line 2562, ../sass/custom.scss */
 .section-favorites .sbac-favorites-delete-favorite {
   opacity: 0;
 }
-/* line 2568, ../sass/custom.scss */
+/* line 2566, ../sass/custom.scss */
 .section-favorites #sbac-favorites-submit, .section-favorites #sbac-favorites-cancel {
   float: right;
   margin-left: 20px;
 }
-/* line 2574, ../sass/custom.scss */
+/* line 2572, ../sass/custom.scss */
 .section-favorites #favorites-table h2, .section-favorites #favorites-table .instruction {
   text-align: center;
   margin: 20px 0;
 }
-/* line 2579, ../sass/custom.scss */
+/* line 2577, ../sass/custom.scss */
 .section-favorites #favorites-table h2 {
   margin-top: 30px;
 }
-/* line 2583, ../sass/custom.scss */
+/* line 2581, ../sass/custom.scss */
 .section-favorites #favorites-table .instruction {
   margin-bottom: 60px;
 }
-/* line 2587, ../sass/custom.scss */
+/* line 2585, ../sass/custom.scss */
 .section-favorites #favorites-table .star-icon {
   background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
   width: 16px;

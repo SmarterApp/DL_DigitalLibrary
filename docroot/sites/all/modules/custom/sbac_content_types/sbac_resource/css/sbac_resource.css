@@ -1307,3 +1307,17 @@ a.sbac-grid-layout {
     clear: left;
   }
 }
+/*Error MSG for sbac share page not found*/
+/* line 1265, ../sass/sbac_resource.scss */
+.sbac-share-page-not-found {
+  background-clip: padding-box;
+  background-color: #F9F9F9;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+  border-radius: 12px;
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.3);
+  margin: 1.5625em auto 4.6875em;
+  padding: 20px;
+}
