@@ -1,0 +1,11 @@
+{
+  "camelcase": true,
+  "indent": 2,
+  "strict": false,
+  "trailing": true,
+  "boss": true,
+  "browser": true,
+  "multistr": true,
+  "es3": true,
+  "es5": false
+}
