@@ -140,6 +140,7 @@ features[user_role][] = advanced end user
 features[user_role][] = basic end user
 features[user_role][] = digital library administrator
 features[user_role][] = facilitator
+features[user_role][] = guest
 features[user_role][] = help desk
 features[user_role][] = moderator
 features[user_role][] = on-boarding

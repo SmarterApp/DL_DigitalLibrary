@@ -40,6 +40,12 @@ function sbac_user_user_default_roles() {
     'weight' => 7,
   );
 
+  // Exported role: guest.
+  $roles['guest'] = array(
+    'name' => 'guest',
+    'weight' => 15,
+  );
+
   // Exported role: help desk.
   $roles['help desk'] = array(
     'name' => 'help desk',
