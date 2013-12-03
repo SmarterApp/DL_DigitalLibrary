@@ -166,7 +166,7 @@ i.icon-info {
 
         span {
           font-size: 14px;
-          line-height: 24px;
+          line-height: 30px;
         }
       }
     }
@@ -185,14 +185,14 @@ i.icon-info {
     .report-dropdown-toggle {
       color: #4d4d4d;
       height: 2.3125em;
+			line-height: 20px;
       border: 1px solid #aaa;
       width: 100%;
       display: inline-block;
-      padding: 5px;
+      padding: 5px 5px 5px 10px;
       font-size: 0.875em;
       @include border-radius (5px);
       @include background-image(linear-gradient(#ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%));
-      line-height: 1em;
 
       &:after {
         content: " ";
@@ -229,6 +229,12 @@ i.icon-info {
     width: 25%;
     float: left;
     margin-right: 10px;
+		padding-right: 20px;
+		
+		#autocomplete {
+			padding-left: 10px;
+			background: #fff;
+		}
   }
 
   button {
