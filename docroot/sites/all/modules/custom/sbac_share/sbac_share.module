@@ -5,6 +5,7 @@
  */
 
 define('SBAC_SHARE_GUEST', 'guest');
+define('SBAC_SHARE_CRON', 7200);
 
 /**
  * Implementation of hook_menu().
@@ -51,28 +52,25 @@ function sbac_share_page_alter(&$page) {
       drupal_exit();
     }
   }
+
+  if (isset($page['content']['system_main']['main']['#markup']) && strpos($page['content']['system_main']['main']['#markup'], 'sbac-share-page-not-found') !== FALSE) {
+    $_SESSION['sbac-share-not-found'] = FALSE;
+  }
 }
 
 /**
  * Packages and sends the result of a page callback to the browser as HTML.
  *
- * @param $page_callback_result
- *   The result of a page callback. Can be one of:
- *   - NULL: to indicate no content.
- *   - An integer menu status constant: to indicate an error condition.
- *   - A string of HTML content.
- *   - A renderable array of content.
- *
- * @see drupal_deliver_page()
+ * @see drupal_deliver_html_page()
  */
 function sbac_share_get_outta_here() {
   // Emit the correct charset HTTP header, but not if the page callback
   // result is NULL, since that likely indicates that it printed something
   // in which case, no further headers may be sent, and not if code running
   // for this page request has already set the content type header.
-  if (isset($page_callback_result) && is_null(drupal_get_http_header('Content-Type'))) {
-    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-  }
+  // if (is_null(drupal_get_http_header('Content-Type'))) {
+  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  // }
   // Send appropriate HTTP-Header for browsers and search engines.
   global $language;
   drupal_add_http_header('Content-Language', $language->language);
@@ -81,19 +79,12 @@ function sbac_share_get_outta_here() {
   watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
   // Standard 404 handler.
   drupal_set_title(t('Page not found'));
-  $return = '<div class="sbac-share-page-not-found">' . t('The requested page "@path" could not be found.', array('@path' => request_uri())) . '</div>';
+  $return = '<div class="sbac-share-page-not-found">' . t('You are unable to view this page as a guest. Please become a SBAC member to see all our content.') . '</div>';
   drupal_set_page_content($return);
   $page = element_info('page');
   print drupal_render_page($page);
-
   // Perform end-of-request tasks.
   drupal_page_footer();
-
-  // clean up.
-  global $user;
-  if (in_array(SBAC_SHARE_GUEST, $user->roles) && isset($_SESSION['sbac-share-not-found'])) {
-    unset($_SESSION['sbac-share-not-found']);
-  }
 }
 
 /**
@@ -437,4 +428,19 @@ function sbac_share_random_string($len = 16) {
     $string .= $characters[mt_rand(0, drupal_strlen($characters)-1)];
   }
   return $string;
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Deletes guest users whose accounts are older than 2 hours.
+ */
+function sbac_share_cron() {
+  $delta_time = SBAC_SHARE_CRON; // 2 hours.
+  $result = db_query("SELECT * FROM {users} WHERE name LIKE 'guest%' ORDER BY created")->fetchAll();
+  foreach ($result as $row) {
+    if ($row->created + $delta_time < time()) {
+      user_delete($row->uid);
+    }
+  }
 }

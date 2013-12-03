@@ -161,6 +161,12 @@ function sbac_user_admin_account() {
 
   $query = db_select('users', 'u');
   $query->condition('u.uid', 0, '<>');
+  $guest_role = user_role_load_by_name('guest');
+  if ($guest_role) {
+    $query->leftJoin('users_roles', 'ur', 'u.uid = ur.uid');
+    $query->condition('ur.rid', $guest_role->rid, '<>');
+    $query->groupBy('u.uid');
+  }
   
   // we join these tables so that the data can be displayed in the actual table, but we only do
   // a value restriction when the user filters by that
