@@ -55,6 +55,8 @@ function sbac_share_page_alter(&$page) {
 
   if (isset($page['content']['system_main']['main']['#markup']) && strpos($page['content']['system_main']['main']['#markup'], 'sbac-share-page-not-found') !== FALSE) {
     $_SESSION['sbac-share-not-found'] = FALSE;
+    // Destroy the current session, and reset $user to the anonymous user.
+    session_destroy();
   }
 }
 
