@@ -69,6 +69,7 @@ function sbac_user_user_default_permissions() {
       'basic end user' => 'basic end user',
       'digital library administrator' => 'digital library administrator',
       'facilitator' => 'facilitator',
+      'guest' => 'guest',
       'help desk' => 'help desk',
       'moderator' => 'moderator',
       'resource contributor' => 'resource contributor',

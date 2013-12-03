@@ -1,6 +1,12 @@
 <?php
 /**
  * @file
+ * Code for the SBAC Share feature.
+ */
+
+include_once 'sbac_share.features.inc';
+/**
+ * @file
  * Code for the SBAC Anonymous URL features.
  */
 
@@ -104,7 +110,7 @@ function sbac_share_get_outta_here() {
 /**
  * Login and redirect the guest user
  */
-function sbac_share_login_redirect_view($guest_link_slug) {
+function sbac_share_login_redirect_view() {
   if (isset($_GET['key']) && $_GET['key']) {
     global $user;
     $provided_key = $_GET['key'];

@@ -62,19 +62,3 @@ function sbac_share_schema() {
   );
   return $schema;
 }
-
-/**
- * Implements hook_install().
- */
-function sbac_share_install() {
-  $guest_role = new stdClass();
-  $guest_role->name = SBAC_SHARE_GUEST;
-  user_role_save($guest_role);
-}
-
-/**
- * Implements hook_uninstall().
- */
-function sbac_share_uninstall() {
-  user_role_delete(SBAC_SHARE_GUEST);
-}
