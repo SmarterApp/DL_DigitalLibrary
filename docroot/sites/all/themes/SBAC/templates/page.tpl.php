@@ -95,7 +95,14 @@ global $user;
       <?php endif; ?>
     </li>
   </ul>
-  <?php endif ; ?>
+  <?php endif; ?>
+  <?php if ($user->uid && in_array('guest', $user->roles)): ?>
+  <ul class="inline-list right user-nav">
+    <li class="user-info">
+      <a data-dropdown="drop3" href="/user">Sign In</a>
+    </li>
+  </ul>
+  <?php endif; ?>
 </nav>
 
 <div class="top-bar sub-top">
