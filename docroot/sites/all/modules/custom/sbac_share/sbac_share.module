@@ -26,6 +26,7 @@ function sbac_share_menu() {
     'title' => 'Generate a URL',
     'description' => 'Generates an expiring URL',
     'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'page callback' => 'sbac_share_generate_link_ajax_callback',
     'type' => MENU_CALLBACK,
   );

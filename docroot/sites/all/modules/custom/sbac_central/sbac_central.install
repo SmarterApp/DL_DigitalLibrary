@@ -710,7 +710,7 @@ function sbac_central_update_7061() {
 }
 
 /**
- * Enables SBAC Shareg module.
+ * Enables SBAC Share module.
  */
 function sbac_central_update_7062() {
   $modules = array(
