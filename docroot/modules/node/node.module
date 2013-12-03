@@ -3663,6 +3663,7 @@ function node_access_rebuild($batch_mode = FALSE) {
  *   An array of contextual key/value information for rebuild batch process.
  */
 function _node_access_rebuild_batch_operation(&$context) {
+  ini_set('memory_limit', '256M');
   if (empty($context['sandbox'])) {
     // Initiate multistep processing.
     $context['sandbox']['progress'] = 0;
