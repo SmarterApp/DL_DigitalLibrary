@@ -305,6 +305,7 @@ function sbac_share_resource_form($form, $form_state, $node) {
     '#markup' => t($title),
     '#description' => t('Use the permanent link to share with people who have access to the Digital Library.'),
     '#prefix' => '<div class="form-item-title sbac-permanent-link">',
+    '#attributes' => array('data-clipboard-text' => $node->path['alias']),
     '#suffix' => '</div>',
   );
 
@@ -315,7 +316,7 @@ function sbac_share_resource_form($form, $form_state, $node) {
   );
 
   $form['permanent_link_button'] = array(
-    '#markup' => '<a href="#" id="sbac-permanent-link-button" class="button medium" nid="' . $node->nid . '">Copy Link to Clipboard</a>',
+    '#markup' => '<div id="sbac-permanent-link-button" data-clipboard-text="' . $node->path['alias'] . '" class="button medium" nid="' . $node->nid . '">Copy Link to Clipboard</div>',
   );
 
   // Temporary Link
