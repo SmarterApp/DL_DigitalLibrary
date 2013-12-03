@@ -49,7 +49,7 @@ function sbac_share_schema() {
       ),
       'key'=>array(
         'type'=>'varchar',
-        'length'=>'32',
+        'length'=>'255',
         'not null'=>FALSE,
         'description'=>t('contains a key to be shared with the anonymous user'),
 	    ),
