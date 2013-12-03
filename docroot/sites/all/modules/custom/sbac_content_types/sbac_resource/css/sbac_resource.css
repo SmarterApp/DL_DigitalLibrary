@@ -1321,3 +1321,9 @@ a.sbac-grid-layout {
   margin: 1.5625em auto 4.6875em;
   padding: 20px;
 }
+
+/* Sharing Options- Copy Link to Clipboard button */
+/* line 1275, ../sass/sbac_resource.scss */
+#global-zeroclipboard-html-bridge {
+  margin-top: -28px;
+}
