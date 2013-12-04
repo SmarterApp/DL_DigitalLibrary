@@ -62,3 +62,16 @@ function sbac_share_schema() {
   );
   return $schema;
 }
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Adds the public flag to the table.
+ */
+function sbac_share_update_7001() {
+  $ret = array();
+
+  db_query("ALTER TABLE {sbac_share} ADD COLUMN public int not null default 0");
+
+  return $ret;
+}

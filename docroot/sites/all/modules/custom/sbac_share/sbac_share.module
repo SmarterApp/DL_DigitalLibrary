@@ -39,8 +39,30 @@ function sbac_share_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
 function sbac_share_form_alter(&$form, &$form_state, $form_id) {
-  $var = '';
+  if ($form_id == 'resource_node_form') {
+    $form['#submit'][] = 'sbac_share_submit_handler';
+  }
+}
+
+/**
+ * Submit handler.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_share_submit_handler($form, $form_state) {
+  if (isset($form_state['values']['field_permanent_link_settings']['und'][0]['value']) &&
+    $form_state['values']['field_permanent_link_settings']['und'][0]['value'] == 1) { // public
+    sbac_share_generate_url($form_state['values']['nid'], TRUE);
+  }
 }
 
 /**
@@ -207,24 +229,27 @@ function sbac_share_generate_link_ajax_callback() {
  * @param $nid
  * @return string
  */
-function sbac_share_generate_url($nid) {
+function sbac_share_generate_url($nid, $public = FALSE) {
   $key = NULL;
   global $user;
-
   $node = node_load($nid);
   if ($node) {
     //get the path of the node
     $path = drupal_lookup_path('alias', "node/" . $node->nid);
     $key = md5(time() . $node->nid . $path);
     //generate the new path
-    $expire_date = time() + (60 * 60 * 24 * $node->field_temporary_public_link_time['und'][0]['value']);
-    if ($node->field_temporary_public_link_time['und'][0]['value'] == 100) {
-      $expire_date = time() + (60 * 5); // developer, expire in 5 minutes.
+    if (!$public) {
+      $expire_date = time() + (60 * 60 * 24 * $node->field_temporary_public_link_time['und'][0]['value']);
+      if ($node->field_temporary_public_link_time['und'][0]['value'] == 100) {
+        $expire_date = time() + (60 * 5); // developer, expire in 5 minutes.
+      }
     }
-    $query = "INSERT INTO {sbac_share} (nid, uid, `key`, create_datetime, expire_datetime) values (" . $node->nid . ", " . $user->uid . ", '" . $key . "', " . time() . ", ". $expire_date . ")";
+    else {
+      $expire_date = time() + (60 * 60 * 24 * 3650); //3650 days = 10 years
+    }
+    $query = "INSERT INTO {sbac_share} (nid, uid, `key`, create_datetime, expire_datetime, public) values (" . $node->nid . ", " . $user->uid . ", '" . $key . "', " . time() . ", ". $expire_date . ", " . $public . ")";
     db_query($query);
   }
-
   return $key;
 }
 
@@ -282,6 +307,23 @@ function sbac_share_get_node_by_key($key) {
 }
 
 /**
+ * Gets the nid and retrieves a public url.
+ *
+ * @param $nid
+ * @return array
+ */
+function sbac_share_get_public_key($nid) {
+  $return = array();
+  $now = time();
+  $query = "SELECT * FROM {sbac_share} WHERE nid = :nid AND public = :public AND expire_datetime > :time LIMIT 1";
+  $row = db_query($query, array(':nid' => $nid, ':public' => 1, ':time' => $now))->fetchAssoc();
+  if ($row) {
+    $return = $row;
+  }
+  return $return;
+}
+
+/**
  * @param $form
  * @param $form_state
  * @param $node
@@ -317,9 +359,21 @@ function sbac_share_resource_form($form, $form_state, $node) {
   );
 
   global $base_url;
+  $url = $base_url . '/' . $node->path['alias'];
+  if ($node->field_permanent_link_settings['und'][0]['value']) {
+    // If its public, grab the public key and put that in the box.
+    $key = sbac_share_get_public_key($node->nid);
+    if ($key && isset($key['key'])) {
+      $url = $base_url . '/sbac-share?key=' . $key['key'];
+    }
+  }
+  else {
+    $url = $base_url . '/' . $node->path['alias'];
+  }
+
   $form['permanent_link'] = array(
     '#type' => 'textfield',
-    '#default_value' => $base_url . '/' . $node->path['alias'],
+    '#default_value' => $url,
     '#attributes' => array('id' => 'sbac-permanent-link-text', 'class' => array('clippable')),
   );
 
@@ -396,26 +450,6 @@ function sbac_share_resource_form($form, $form_state, $node) {
   );
 
   return $form;
-}
-
-/**
- * Submit handler.
- *
- * @param $form
- * @param $form_state
- */
-function sbac_share_resource_form_submit($form, &$form_state) {
-  $var = '';
-}
-
-/**
- * Submit handler to generate the temp link.
- *
- * @param $form
- * @param $form_state
- */
-function sbac_share_resource_generate_link($form, &$form_state) {
-  $var = '';
 }
 
 /**
