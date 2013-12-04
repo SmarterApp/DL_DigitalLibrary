@@ -470,6 +470,16 @@
           $('.sbac-temporary-link-time').removeClass('active').addClass('inactive');
         }
       });
+
+      $('.sbac-permanent-link-settings input:radio').click( function() {
+        if ($(this).val() == 0) {
+          $('#sbac-temp-container').removeClass('inactive').addClass('active');
+        }
+        else {
+          $('#sbac-temp-container').removeClass('active').addClass('inactive');
+          $('.sbac-temporary-public-link input').attr('checked', false);
+        }
+      });
     }
   };
 

@@ -1835,11 +1835,18 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['#group_children']['resource_sharing_options'] = "group_advanced";
 
   // Permanent link settings
+  $form['field_permanent_link_settings']['und']['#attributes']['class'][] = 'sbac-permanent-link-settings';
   unset($form['field_permanent_link_settings']['und']['#options']['_none']);
   if ($form['field_permanent_link_settings']['und']['#default_value'] == NULL) {
     $form['field_permanent_link_settings']['und']['#default_value'] = 0;
   }
 
+  $class = 'active';
+  if (isset($form['field_permanent_link_settings']['und']['#default_value']) && $form['field_permanent_link_settings']['und']['#default_value'] == 1) {
+    $class = 'inactive';
+  }
+  $form['field_temporary_public_link']['und']['#prefix'] = '<div id="sbac-temp-container" class="' . $class . '">';
+  $form['field_temporary_public_link']['und']['#suffix'] = '</div>';
   $form['field_temporary_public_link']['und']['#attributes']['class'][] = 'sbac-temporary-public-link';
 
   // Temporary Link Time
