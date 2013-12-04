@@ -399,7 +399,7 @@ a.sbac-grid-layout {
 			 width: 25px;
 			display: inline-block;
       .f-dropdown.open {
-        top: 36px !important;
+        top: 38px !important;
         right: 25px !important;
         left: auto !important;
         width: 170px;
@@ -481,14 +481,19 @@ a.sbac-grid-layout {
 		right: 5px;
 		top: 13px;
 		width: 20px;
+		height: 16px;
 		
 		a {
 			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 			text-indent: -9999em;
 			display: block;
+			height: 16px;
+			width: 16px;
 			
 			&:hover, &.sbac-favorites-link-yes {
 				background: url(../images/icons/icon-favorite-on.png) no-repeat 0 0;
+				height: 16px;
+				width: 16px;
 			}
 		}
 		
@@ -497,7 +502,7 @@ a.sbac-grid-layout {
 			font-size: 0.8em;
 			position: absolute;
 			z-index: 9999;
-			top: 23px;
+			top: 25px;
 			right: -5px;
 			text-align: center;
 			white-space:nowrap;
@@ -1275,10 +1280,7 @@ a.sbac-grid-layout {
 	 padding: 20px;
 }
 
-/* Sharing Options- Copy Link to Clipboard button */
-#global-zeroclipboard-html-bridge {
-	margin-top: -28px;
-}
+
 
 
 

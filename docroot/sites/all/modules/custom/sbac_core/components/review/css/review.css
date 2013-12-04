@@ -509,3 +509,9 @@
   top: 9px;
   width: 15px;
 }
+
+/* Sharing Options- Copy Link to Clipboard button */
+/* line 533, ../sass/review.scss */
+body.admin-menu #global-zeroclipboard-html-bridge {
+  margin-top: -28px;
+}
