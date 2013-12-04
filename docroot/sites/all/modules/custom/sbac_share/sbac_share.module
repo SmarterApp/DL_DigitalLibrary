@@ -46,6 +46,13 @@ function sbac_share_menu() {
  */
 function sbac_share_page_alter(&$page) {
   global $user;
+
+  // If the user is a guest and they clicked the 'sign in' link, send them there.
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && strpos($_GET['q'], 'user') !== FALSE) {
+    session_destroy();
+    drupal_goto('user');
+  }
+
   // if the user is trying to access a page they don't have access to.
   if (in_array(SBAC_SHARE_GUEST, $user->roles) && (!isset($_SESSION['sbac-share-not-found']) || $_SESSION['sbac-share-not-found'] == FALSE)) {
     $provided_key = NULL;
@@ -115,7 +122,7 @@ function sbac_share_login_redirect_view() {
     $provided_key = $_GET['key'];
     if (!$user->uid) {
       $stored_key = sbac_share_get_node_by_key($provided_key);
-      if ($stored_key['key'] == $provided_key) {
+      if ($stored_key && $stored_key['key'] == $provided_key) {
         // create the temp guest.
         $new_guest = sbac_share_create_guest_user($provided_key);
         // sign them up for the legal acceptance.
