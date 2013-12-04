@@ -7,33 +7,33 @@
         moviePath: 'http://' + location.hostname + '/sites/all/libraries/zeroclipboard/ZeroClipboard.swf'
       });
 
-      // clip.glue(document.getElementById('sbac-permanent-link-text'));
-
-      clip.on( 'load', function(client) {
-        alert( "movie is loaded" );
-      } );
-
-      clip.on( 'complete', function(client, args) {
-        alert("Copied text to clipboard: " + args.text );
-      } );
-
-      clip.on( 'mouseover', function(client) {
-        alert("mouse over");
-      } );
-
-      clip.on( 'mouseout', function(client) {
-        alert("mouse out");
-      } );
-
-      clip.on( 'mousedown', function(client) {
-        alert("mouse down");
-        return false;
-      } );
-
-      clip.on( 'mouseup', function(client) {
-        alert("mouse up");
-        return false;
-      } );
+//      // clip.glue(document.getElementById('sbac-permanent-link-text'));
+//
+//      clip.on( 'load', function(client) {
+//        alert( "movie is loaded" );
+//      } );
+//
+//      clip.on( 'complete', function(client, args) {
+//        alert("Copied text to clipboard: " + args.text );
+//      } );
+//
+//      clip.on( 'mouseover', function(client) {
+//        alert("mouse over");
+//      } );
+//
+//      clip.on( 'mouseout', function(client) {
+//        alert("mouse out");
+//      } );
+//
+//      clip.on( 'mousedown', function(client) {
+//        alert("mouse down");
+//        return false;
+//      } );
+//
+//      clip.on( 'mouseup', function(client) {
+//        alert("mouse up");
+//        return false;
+//      } );
 
 
       $('#sbac-temp-link-button').click( function() {
@@ -56,6 +56,12 @@
             var response = jQuery.parseJSON(data);
             $('#sbac-temporary-link-text').val(response.result);
             $('#sbac-temp-link-button').html('Copy Link to Clipboard');
+            var clipper = new ZeroClipboard(document.getElementById('sbac-temp-link-button'), {
+              moviePath: 'http://' + location.hostname + '/sites/all/libraries/zeroclipboard/ZeroClipboard.swf'
+            });
+            clipper.on( 'dataRequested', function (client, args) {
+              client.setText(response.result);
+            });
             ajax_request = null;
           },
           error: function(data) {

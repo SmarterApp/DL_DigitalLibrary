@@ -213,6 +213,9 @@ function sbac_share_generate_url($nid) {
     $key = md5(time() . $node->nid . $path);
     //generate the new path
     $expire_date = time() + (60 * 60 * 24 * $node->field_temporary_public_link_time['und'][0]['value']);
+    if ($node->field_temporary_public_link_time['und'][0]['value'] == 100) {
+      $expire_date = time() + (60 * 5); // developer, expire in 5 minutes.
+    }
     $query = "INSERT INTO {sbac_share} (nid, uid, `key`, create_datetime, expire_datetime) values (" . $node->nid . ", " . $user->uid . ", '" . $key . "', " . time() . ", ". $expire_date . ")";
     db_query($query);
   }
@@ -305,18 +308,18 @@ function sbac_share_resource_form($form, $form_state, $node) {
     '#markup' => t($title),
     '#description' => t('Use the permanent link to share with people who have access to the Digital Library.'),
     '#prefix' => '<div class="form-item-title sbac-permanent-link">',
-    '#attributes' => array('data-clipboard-text' => $node->path['alias']),
     '#suffix' => '</div>',
   );
 
+  global $base_url;
   $form['permanent_link'] = array(
     '#type' => 'textfield',
-    '#default_value' => $node->path['alias'],
+    '#default_value' => $base_url . '/' . $node->path['alias'],
     '#attributes' => array('id' => 'sbac-permanent-link-text', 'class' => array('clippable')),
   );
 
   $form['permanent_link_button'] = array(
-    '#markup' => '<div id="sbac-permanent-link-button" data-clipboard-text="' . $node->path['alias'] . '" class="button medium" nid="' . $node->nid . '">Copy Link to Clipboard</div>',
+    '#markup' => '<div id="sbac-permanent-link-button" data-clipboard-text="' . $base_url . '/' .  $node->path['alias'] . '" class="button medium" nid="' . $node->nid . '">Copy Link to Clipboard</div>',
   );
 
   // Temporary Link
