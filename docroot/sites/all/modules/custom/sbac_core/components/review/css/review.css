@@ -478,25 +478,26 @@
   width: 65%;
   float: left;
   margin-right: 30px;
+  padding-right: 30px;
 }
-/* line 500, ../sass/review.scss */
+/* line 501, ../sass/review.scss */
 #sbac-share-resource-form button#edit-permanent-link-button, #sbac-share-resource-form button#edit-temporary-link-button {
   width: 225px;
   margin-top: -3px;
 }
-/* line 505, ../sass/review.scss */
+/* line 506, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.active {
   opacity: 1;
 }
-/* line 509, ../sass/review.scss */
+/* line 510, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive {
   opacity: 0.5;
 }
-/* line 513, ../sass/review.scss */
+/* line 514, ../sass/review.scss */
 #sbac-share-resource-form .form-item-temporary-link {
   position: relative;
 }
-/* line 516, ../sass/review.scss */
+/* line 517, ../sass/review.scss */
 #sbac-share-resource-form .form-item-temporary-link .temp-link-clear {
   background: url("../images/icon-validation-fail.png") no-repeat 0 0;
   cursor: pointer;
@@ -511,7 +512,7 @@
 }
 
 /* Sharing Options- Copy Link to Clipboard button */
-/* line 533, ../sass/review.scss */
+/* line 534, ../sass/review.scss */
 body.admin-menu #global-zeroclipboard-html-bridge {
   margin-top: -28px;
 }
