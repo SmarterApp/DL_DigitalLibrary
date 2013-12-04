@@ -35,6 +35,7 @@
             clipper.on( 'dataRequested', function (client, args) {
               client.setText(response.result);
             });
+            $('#sbac-temporary-link-text').after('<span class="temp-link-clear"></span>');
             ajax_request = null;
           },
           error: function(data) {

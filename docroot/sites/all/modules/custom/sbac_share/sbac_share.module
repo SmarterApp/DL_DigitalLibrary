@@ -243,9 +243,11 @@ function sbac_share_generate_url($nid, $public = FALSE) {
       if ($node->field_temporary_public_link_time['und'][0]['value'] == 100) {
         $expire_date = time() + (60 * 5); // developer, expire in 5 minutes.
       }
+      $public = 0;
     }
     else {
       $expire_date = time() + (60 * 60 * 24 * 3650); //3650 days = 10 years
+      $public = 1;
     }
     $query = "INSERT INTO {sbac_share} (nid, uid, `key`, create_datetime, expire_datetime, public) values (" . $node->nid . ", " . $user->uid . ", '" . $key . "', " . time() . ", ". $expire_date . ", " . $public . ")";
     db_query($query);
