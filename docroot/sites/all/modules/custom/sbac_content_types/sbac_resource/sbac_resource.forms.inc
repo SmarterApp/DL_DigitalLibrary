@@ -1845,10 +1845,12 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   if (isset($form['field_permanent_link_settings']['und']['#default_value']) && $form['field_permanent_link_settings']['und']['#default_value'] == 1) {
     $class = 'inactive';
   }
-  $form['field_temporary_public_link']['und']['#prefix'] = '<div id="sbac-temp-container" class="' . $class . '">';
-  $form['field_temporary_public_link']['und']['#suffix'] = '</div>';
-  $form['field_temporary_public_link']['und']['#attributes']['class'][] = 'sbac-temporary-public-link';
 
+  $form['field_temp_container_open']['#markup'] = '<div id="sbac-temp-container" class="' . $class . '">';
+  $form['field_temp_container_open']['#weight'] = 42;
+  $form['#group_children']['field_temp_container_open'] = "group_advanced";
+
+  $form['field_temporary_public_link']['und']['#attributes']['class'][] = 'sbac-temporary-public-link';
   // Temporary Link Time
   $class = 'inactive';
   if (isset($form['field_temporary_public_link']['und']['#default_value'][0]) && $form['field_temporary_public_link']['und']['#default_value'][0] == 1) {
@@ -1857,6 +1859,10 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['field_temporary_public_link_time']['und']['#title'] = t('Set the limit from the time of link generation');
   $form['field_temporary_public_link_time']['#prefix'] = '<div class="sbac-temporary-link-time ' . $class . '">';
   $form['field_temporary_public_link_time']['#suffix'] = '</div>';
+
+  $form['field_temp_container_close']['#markup'] = '</div>';
+  $form['field_temp_container_close']['#weight'] = 45;
+  $form['#group_children']['field_temp_container_close'] = "group_advanced";
 
   // Posting options.
   unset($form['field_posting_options']['und']['#options']['_none']);
