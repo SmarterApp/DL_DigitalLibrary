@@ -1856,6 +1856,11 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   if (isset($form['field_temporary_public_link']['und']['#default_value'][0]) && $form['field_temporary_public_link']['und']['#default_value'][0] == 1) {
     $class = 'active';
   }
+
+  if (!isset($form['field_temporary_public_link_time']['und']['#default_value'][0])) {
+    $form['field_temporary_public_link_time']['und']['#default_value'][0] = 7; // 7 Days
+  }
+  unset($form['field_temporary_public_link_time']['und']['#options']['_none']);
   $form['field_temporary_public_link_time']['und']['#title'] = t('Set the limit from the time of link generation');
   $form['field_temporary_public_link_time']['#prefix'] = '<div class="sbac-temporary-link-time ' . $class . '">';
   $form['field_temporary_public_link_time']['#suffix'] = '</div>';
