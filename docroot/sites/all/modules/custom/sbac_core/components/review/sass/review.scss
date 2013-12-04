@@ -509,6 +509,24 @@
 	.temporary-link-container.inactive {
 		opacity: 0.5;
 	}
+	
+	.form-item-temporary-link {
+		position: relative;
+				
+		 .temp-link-clear {
+			
+				background: url("../images/icon-validation-fail.png") no-repeat 0 0;
+		    cursor: pointer;
+		    display: block;
+		    float: right;
+		    height: 15px;
+		    position: absolute;
+				z-index: 997;
+		    right: 302px;
+		    top: 9px;
+		    width: 15px;
+		}
+	}
 }
 
 

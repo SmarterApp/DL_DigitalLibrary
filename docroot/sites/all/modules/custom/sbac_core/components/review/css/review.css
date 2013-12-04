@@ -492,3 +492,20 @@
 #sbac-share-resource-form .temporary-link-container.inactive {
   opacity: 0.5;
 }
+/* line 513, ../sass/review.scss */
+#sbac-share-resource-form .form-item-temporary-link {
+  position: relative;
+}
+/* line 516, ../sass/review.scss */
+#sbac-share-resource-form .form-item-temporary-link .temp-link-clear {
+  background: url("../images/icon-validation-fail.png") no-repeat 0 0;
+  cursor: pointer;
+  display: block;
+  float: right;
+  height: 15px;
+  position: absolute;
+  z-index: 997;
+  right: 302px;
+  top: 9px;
+  width: 15px;
+}
