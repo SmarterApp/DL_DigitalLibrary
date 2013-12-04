@@ -138,11 +138,50 @@ function sbac_favorites_get_favorites($uid, $nid = FALSE) {
     $sql .= " AND sf.nid = :nid";
     $args[':nid'] = $nid;
   }
-  $sql .= " ORDER BY sf.weight";
+  $sql .= " ORDER BY sf.created DESC";
   $result = db_query($sql, $args);
   foreach ($result as $row) {
     $favorites[] = $row;
   }
+  return $favorites;
+}
+
+/**
+ * Gets the favorites for a given user.
+ *
+ * @param $uid
+ * @return array
+ */
+function sbac_favorites_get_favorites_list($uid) {
+  $favorites = array();
+  $args = array();
+  // get where weight = -1000;
+  $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight, sf.created AS created
+          FROM {sbac_favorites} sf
+          WHERE sf.uid = :uid AND sf.weight = :weight
+          ORDER BY sf.created DESC";
+  $args[':uid'] = $uid;
+  $args[':weight'] = -1000;
+  $result = db_query($sql, $args);
+  $count = 0;
+  foreach ($result as $row) {
+    $favorites[$count] = $row;
+    $count++;
+  }
+
+  // get where weight is not -1000
+  $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight, sf.created AS created
+          FROM {sbac_favorites} sf
+          WHERE sf.uid = :uid AND sf.weight <> :weight
+          ORDER BY sf.weight";
+  $args[':uid'] = $uid;
+  $args[':weight'] = -1000;
+  $result = db_query($sql, $args);
+  foreach ($result as $row) {
+    $favorites[$count] = $row;
+    $count++;
+  }
+
   return $favorites;
 }
 
@@ -173,7 +212,7 @@ function sbac_favorites_user_view($account, $view_mode, $langcode) {
     return;
   }
 
-  $favorites = sbac_favorites_get_favorites($account->uid);
+  $favorites = sbac_favorites_get_favorites_list($account->uid);
   $output = sbac_favorites_favorites_table($favorites);
 
   $favorites_content  = '<div id="favorites">';
