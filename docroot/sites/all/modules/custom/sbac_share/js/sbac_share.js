@@ -1,6 +1,8 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
 
+  var clipper = null;
+
   Drupal.behaviors.sbac_share = {
     attach: function (context, settings) {
       var clip = new ZeroClipboard(document.getElementById('sbac-permanent-link-button'), {
@@ -34,7 +36,7 @@
             var response = jQuery.parseJSON(data);
             $('#sbac-temporary-link-text').val(response.result);
             $('#sbac-temp-link-button').html('Copy Link to Clipboard');
-            var clipper = new ZeroClipboard(document.getElementById('sbac-temp-link-button'), {
+            clipper = new ZeroClipboard(document.getElementById('sbac-temp-link-button'), {
               moviePath: 'http://' + location.hostname + '/sites/all/libraries/zeroclipboard/ZeroClipboard.swf'
             });
             clipper.on( 'dataRequested', function (client, args) {
@@ -61,8 +63,10 @@
           url: "/sbac-share-remove-link",
           data: {'key': key},
           success: function(data) {
-            $('#sbac-temporary-link-text').val();
-            $('#sbac-temp-link-button').html('Generate Link');
+            $('#sbac-temporary-link-text').val('');
+            $('#sbac-temp-link-button').html('Generate Temporary Link');
+            $('.temp-link-clear').remove();
+            ZeroClipboard.destroy();
             ajax_request = null;
           },
           error: function(data) {

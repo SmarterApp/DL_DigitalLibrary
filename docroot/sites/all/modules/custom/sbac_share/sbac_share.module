@@ -238,9 +238,11 @@ function sbac_share_remove_link_ajax_callback() {
   $output = array();
   $key = $_POST['key'];
   if ($key) {
+    $pos = strpos($key, '?key=');
+    $key = substr($key, $pos + 5);
     $stored_key = sbac_share_get_node_by_key($key);
-    if ($stored_key) {
-      db_query("DELETE FROM {sbac_share} WHERE key = :key", array(':key' => $key));
+    if ($stored_key && isset($stored_key['key'])) {
+      db_query("DELETE FROM {sbac_share} WHERE `key` = :key", array(':key' => $key));
     }
   }
   print drupal_json_encode($output);
