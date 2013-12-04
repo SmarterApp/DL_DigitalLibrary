@@ -730,7 +730,8 @@ function _sbac_resource_my_resources_admin_links($fields) {
 
     $favorites_class = 'sbac-favorites-link-no';
     $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
-    if ($fields['uid']->raw) {
+    $favorites = sbac_favorites_get_favorites($user->uid, $nid);
+    if ($favorites) {
       $favorites_class = 'sbac-favorites-link-yes';
       $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
     }
@@ -843,7 +844,8 @@ function _sbac_resource_my_resources_links($fields) {
 
         $favorites_class = 'sbac-favorites-link-no';
         $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
-        if ($fields['uid']->raw) {
+        $favorites = sbac_favorites_get_favorites($user->uid, $nid);
+        if ($favorites) {
           $favorites_class = 'sbac-favorites-link-yes';
           $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
         }
@@ -1015,7 +1017,8 @@ function _sbac_resource_digital_library_links($fields) {
         // if the user has this entity as a favorite.
         $favorites_class = 'sbac-favorites-link-no';
         $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
-        if ($fields['uid']->raw) {
+        $favorites = sbac_favorites_get_favorites($user->uid, $nid);
+        if ($favorites) {
           $favorites_class = 'sbac-favorites-link-yes';
           $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
         }

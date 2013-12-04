@@ -127,13 +127,19 @@ function sbac_favorites_get_count($uid) {
  * @param $uid
  * @return array
  */
-function sbac_favorites_get_favorites($uid) {
+function sbac_favorites_get_favorites($uid, $nid = FALSE) {
   $favorites = array();
+  $args = array();
   $sql = "SELECT sf.nid AS nid, sf.uid AS uid, sf.weight AS weight, sf.created AS created
           FROM {sbac_favorites} sf
-          WHERE sf.uid = :uid
-          ORDER BY sf.weight";
-  $result = db_query($sql, array(':uid' => $uid));
+          WHERE sf.uid = :uid";
+  $args[':uid'] = $uid;
+  if ($nid) {
+    $sql .= " AND sf.nid = :nid";
+    $args[':nid'] = $nid;
+  }
+  $sql .= " ORDER BY sf.weight";
+  $result = db_query($sql, $args);
   foreach ($result as $row) {
     $favorites[] = $row;
   }
