@@ -8,8 +8,10 @@
       });
 
       $('#sbac-temp-link-button').click( function() {
-        var nid = $(this).attr('nid');
-        generate_link(nid);
+        if ($('.temporary-link-container').hasClass('active')) {
+          var nid = $(this).attr('nid');
+          generate_link(nid);
+        }
         return false;
       });
 
