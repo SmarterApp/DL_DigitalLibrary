@@ -406,7 +406,7 @@ function sbac_share_resource_form($form, $form_state, $node) {
   );
 
   $form['permanent_link_button'] = array(
-    '#markup' => '<div id="sbac-permanent-link-button" data-clipboard-text="' . $base_url . '/' .  $node->path['alias'] . '" class="button medium" nid="' . $node->nid . '">Copy Link to Clipboard</div>',
+    '#markup' => '<div id="sbac-permanent-link-button" data-clipboard-text="' . $url . '" class="button medium" nid="' . $node->nid . '">Copy Link to Clipboard</div>',
   );
 
   // Temporary Link
