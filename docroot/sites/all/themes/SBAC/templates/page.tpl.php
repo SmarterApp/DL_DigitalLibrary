@@ -27,13 +27,17 @@ global $user;
         <?php
           $user_item = user_load($user->uid);
           if (isset($user_item->picture->uri)) {
-            echo theme('image_style', array(
-              'path' => $user_item->picture->uri,
-              'style_name' => 'small',
-              'attributes' => array(
-                'class'=>'left'
-              )
-            ));
+            $uri = $user_item->picture->uri;
+            $path = drupal_realpath($uri);
+            if (file_exists($path)) {
+              echo theme('image_style', array(
+                'path' => $user_item->picture->uri,
+                'style_name' => 'small',
+                'attributes' => array(
+                  'class'=>'left'
+                )
+              ));
+            }
           }
           echo sbac_user_format_username($user);
         ?>
