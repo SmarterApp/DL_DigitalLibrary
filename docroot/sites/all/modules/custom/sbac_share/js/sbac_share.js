@@ -7,7 +7,7 @@
         moviePath: 'http://' + location.hostname + '/sites/all/libraries/zeroclipboard/ZeroClipboard.swf'
       });
 
-      $('#sbac-temp-link-button').click( function() {
+      $('#sbac-temp-link-button').one('click', function(event) {
         if ($('.temporary-link-container').hasClass('active')) {
           var nid = $(this).attr('nid');
           generate_link(nid);
@@ -15,7 +15,7 @@
         return false;
       });
 
-      $('.temp-link-clear').click( function() {
+      $('.temp-link-clear').one('click', function(event) {
         var key = $('#sbac-temporary-link-text').val();
         remove_link(key);
         return false;
