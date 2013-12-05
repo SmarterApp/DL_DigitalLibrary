@@ -46,7 +46,16 @@ function resource_access($op, $node, $account = NULL) {
       return (bool) $qc_entities;
     }
 
-    if (!in_array(SBAC_SHARE_GUEST, $account->roles) && isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published' && $op == 'access share process' || $op == 'view share') {
+    if (!in_array(SBAC_SHARE_GUEST, $account->roles) &&
+      isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state == 'published' &&
+      $op == 'access share process' || $op == 'view share') {
+      return TRUE;
+    }
+
+    if (isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state == 'published' &&
+      $op == 'access related resources' || $op == 'view related resources') {
       return TRUE;
     }
 

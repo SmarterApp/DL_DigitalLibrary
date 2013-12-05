@@ -53,6 +53,11 @@ function resource_feedback_page($node) {
           'share',
         )
       ),
+      'access related resources' => array(
+        'feedback' => array(
+          'related_resources',
+        ),
+      ),
     );
 
     foreach ($tabs as $permission => $sources) {
