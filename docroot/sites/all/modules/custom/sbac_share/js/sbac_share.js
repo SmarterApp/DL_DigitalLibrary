@@ -3,11 +3,17 @@
 
   var ajax_generate_request = null;
   var ajax_remove_request = null;
+  var ajax_increment_perm_copy_request = null;
 
   Drupal.behaviors.sbac_share = {
     attach: function (context, settings) {
       var clip = new ZeroClipboard(document.getElementById('sbac-permanent-link-button'), {
         moviePath: 'http://' + location.hostname + '/sites/all/libraries/zeroclipboard/ZeroClipboard.swf'
+      });
+
+      clip.on('complete', function (client, args) {
+        var nid = $('#sbac-permanent-link-button').attr('nid');
+        increment_permanent_link_copy_count(nid);
       });
 
       $('#sbac-temp-link-button').click( function() {
@@ -81,6 +87,26 @@
         }
       };
 
+      /**
+       * Copy count.
+       *
+       * @param nid
+       */
+      increment_permanent_link_copy_count = function (nid) {
+        if (ajax_increment_perm_copy_request == null) {
+          ajax_increment_perm_copy_request = $.ajax({
+            type: 'POST',
+            url: "/sbac-share-increment-permanent-copy-count",
+            data: {'nid': nid},
+            success: function(data) {
+              ajax_increment_perm_copy_request = null;
+            },
+            error: function(data) {
+              ajax_increment_perm_copy_request = null;
+            }
+          });
+        }
+      };
     }
   };
 

@@ -60,6 +60,54 @@ function sbac_share_schema() {
       'uid' => array('uid'),
     ),
   );
+
+  $schema['sbac_share_link_copy_count'] = array(
+    'description' => t('Saves the count of permanent or temporary links that are copied via button click'),
+    'fields' => array(
+      'id' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => TRUE,
+        'description' => t('Blind primary key.'),
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('The nid of the resource.'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('The uid who copied the link.'),
+      ),
+      'created' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The unix_timestamp create date.'),
+      ),
+      'type' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => t('The type of link (temp or permanent).'),
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+      'multi' => array('nid', 'uid', 'created'),
+    ),
+  );
+
   return $schema;
 }
 
@@ -73,5 +121,18 @@ function sbac_share_update_7001() {
 
   db_query("ALTER TABLE {sbac_share} ADD COLUMN public int not null default 0");
 
+  return $ret;
+}
+
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Adds the new table.
+ */
+function sbac_share_update_7002() {
+  $ret = array();
+  $schema = drupal_get_schema('sbac_share_link_copy_count', TRUE);
+  db_create_table('sbac_share_link_copy_count', $schema);
   return $ret;
 }

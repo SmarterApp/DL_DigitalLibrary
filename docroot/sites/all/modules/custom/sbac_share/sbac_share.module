@@ -11,6 +11,8 @@
 
 define('SBAC_SHARE_GUEST', 'guest');
 define('SBAC_SHARE_CRON', 7200);
+define('SBAC_SHARE_PERMANENT_LINK_TYPE', 0);
+define('SBAC_SHARE_TEMPORARY_LINK_TYPE', 1);
 
 /**
  * Implementation of hook_menu().
@@ -41,6 +43,14 @@ function sbac_share_menu() {
     'access callback' => TRUE,
     'access arguments' => array('access content'),
     'page callback' => 'sbac_share_remove_link_ajax_callback',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sbac-share-increment-permanent-copy-count'] = array(
+    'title' => 'Increments the permanent link copy count',
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'page callback' => 'sbac_share_increment_permanent_link_copy_count_ajax_callback',
     'type' => MENU_CALLBACK,
   );
 
@@ -244,6 +254,25 @@ function sbac_share_remove_link_ajax_callback() {
     if ($stored_key && isset($stored_key['key'])) {
       db_query("DELETE FROM {sbac_share} WHERE `key` = :key", array(':key' => $key));
     }
+  }
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Increments the permanent copy link count.
+ */
+function sbac_share_increment_permanent_link_copy_count_ajax_callback() {
+  $output = array();
+  $nid = $_POST['nid'];
+  if ($nid) {
+    global $user;
+    $entity = new stdClass();
+    $entity->nid = $nid;
+    $entity->uid = $user->uid;
+    $entity->created = time();
+    $entity->type = SBAC_SHARE_PERMANENT_LINK_TYPE;
+    drupal_write_record('sbac_share_link_copy_count', $entity);
   }
   print drupal_json_encode($output);
   exit;

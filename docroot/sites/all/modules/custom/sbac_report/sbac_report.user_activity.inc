@@ -88,7 +88,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
 function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_USER;
 
-  if (false) {
+  if (FALSE) {
     // TODO: validate csv form
   }
 }
@@ -103,7 +103,7 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
  */
 
 function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
-  ini_set('memory_limit','512M');
+  ini_set('memory_limit', '512M');
   // State.
   if ($form_state) {
 
@@ -130,7 +130,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
   $snefilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
-  if (count($usergroups)==0) {
+  if (count($usergroups) == 0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['active_tab'] = 1;
     return; // report did not contain any data.
@@ -138,12 +138,16 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   // dump the csv file here:
   $csv_activity_report_result = build_activity_report_csv($state_tid1, $date_range1, $usergroups, $snefilter);
   // output the csv for download.
-  $state_tid1 = null; unset($state_tid1); //memory management
-  $date_range1 = null; unset($date_range1); //memory management
-  $usergroups = null; unset($usergroups); //memory management
-  $snefilter = null; unset($snefilter); //memory management
+  $state_tid1 = NULL;
+  unset($state_tid1); //memory management
+  $date_range1 = NULL;
+  unset($date_range1); //memory management
+  $usergroups = NULL;
+  unset($usergroups); //memory management
+  $snefilter = NULL;
+  unset($snefilter); //memory management
 
-  if ($csv_activity_report_result == null) {
+  if ($csv_activity_report_result == NULL) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['first_time'] = 1;
     return; // report did not contain any data.
@@ -163,10 +167,9 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
  * properly with Drupals perpared statement support.
  *
  */
-function get_users_for_user_groups(&$usergroups_ids)
-{
+function get_users_for_user_groups(&$usergroups_ids) {
   // look for the aggregated admins option "admins"
-  if (array_key_exists (1, $usergroups_ids)) {
+  if (array_key_exists(1, $usergroups_ids)) {
     // get the admins:
     $admins = sbac_report_user_group_admins();
     unset($usergroups_ids[1]);
@@ -175,18 +178,20 @@ function get_users_for_user_groups(&$usergroups_ids)
     }
   }
   // look for the 'all' option being set:
-  else if (array_key_exists(0,$usergroups_ids)) {
-    $admins = sbac_report_user_group_admins();
-    foreach ($admins as $key => $value) {
-      $usergroups_ids[$key] = $key;
-    }
-    $all = sbac_report_user_group_options();
-    foreach ($all as $key=>$value) {
-      $usergroups_ids[$key] = $key;
+  else {
+    if (array_key_exists(0, $usergroups_ids)) {
+      $admins = sbac_report_user_group_admins();
+      foreach ($admins as $key => $value) {
+        $usergroups_ids[$key] = $key;
+      }
+      $all = sbac_report_user_group_options();
+      foreach ($all as $key => $value) {
+        $usergroups_ids[$key] = $key;
+      }
     }
   }
 
-  $usergroups = implode(',',$usergroups_ids);
+  $usergroups = implode(',', $usergroups_ids);
 
 // todo: get prepared statement to work with 'in (%s)'.
 
@@ -199,7 +204,8 @@ function get_users_for_user_groups(&$usergroups_ids)
 //  );
   // done this way because the prepared statement didn't work:
   $sql = "select * from users as u join users_roles as ur on u.uid = ur.uid where ur.rid in ($usergroups)";
-  $usergroups = null; unset($usergroups); //memory management
+  $usergroups = NULL;
+  unset($usergroups); //memory management
 
   $result = db_query($sql);
   $values = array();
@@ -209,38 +215,38 @@ function get_users_for_user_groups(&$usergroups_ids)
 
   return $values;
 }
+
 /*
  * Get the user activity on resources and reviews.  There are 12 different statistics that are retrieved by this
  * routine, each one a count of something.  This routine also gets the terms of service legal information.
  */
-function get_user_activity($users, $date_range)
-{
-    /*
-     * Local function that handles all the query logic for the count queries.  It injects the user list and optionally
-     * a from/to date into the query.  It then performs the query and returns the resulting records in a hash by user
-     * id (uid).
-    */
-    function count_with_users_query($sql_template, $users, $from_date=null, $to_date=null)//$parameters=null)
-    {
-      // done this way because the prepared statement didn't work passing array or comma separated string.
-      // TODO: make prepared statement work here, or escape string???
+function get_user_activity($users, $date_range) {
+  /*
+   * Local function that handles all the query logic for the count queries.  It injects the user list and optionally
+   * a from/to date into the query.  It then performs the query and returns the resulting records in a hash by user
+   * id (uid).
+  */
+  function count_with_users_query($sql_template, $users, $from_date = NULL, $to_date = NULL) //$parameters=null)
+  {
+    // done this way because the prepared statement didn't work passing array or comma separated string.
+    // TODO: make prepared statement work here, or escape string???
 
-      if ($from_date && $to_date) {
-        $sql = sprintf($sql_template,$users,'%Y%m%d',$from_date,$to_date);
-      }
-      else {
-        $sql = sprintf($sql_template,$users);
-      }
-      $result = db_query($sql);
-      $values = array();
-      foreach ($result as $record) {
-        $values[$record->uid] = $record;
-      }
-
-      return $values;
+    if ($from_date && $to_date) {
+      $sql = sprintf($sql_template, $users, '%Y%m%d', $from_date, $to_date);
+    }
+    else {
+      $sql = sprintf($sql_template, $users);
+    }
+    $result = db_query($sql);
+    $values = array();
+    foreach ($result as $record) {
+      $values[$record->uid] = $record;
     }
 
-  $users = implode(',',$users);  // make the users a comma separated list.
+    return $values;
+  }
+
+  $users = implode(',', $users); // make the users a comma separated list.
   // extract the date range into a from and to date
   $dates = explode('--', $date_range);
   $from_date = $dates[0];
@@ -331,13 +337,17 @@ function get_user_activity($users, $date_range)
   $sql = "SELECT la.uid,la.accepted as 'tos_accepted',lc.version as 'tos_version',lc.revision as 'tos_revision',lc.date as 'tos_revision_date'
           FROM legal_conditions as lc join legal_accepted as la on lc.version=la.version
           WHERE uid in (%s)";
-  $sql = sprintf($sql,$users);
+  $sql = sprintf($sql, $users);
   $result = db_query($sql);
   $values = array();
   foreach ($result as $record) {
     $values[$record->uid] = $record;
   }
   $user_activity['tos'] = $values;
+
+  # Unique Permanent Links Copied
+  $sql = "SELECT count(nid) AS count FROM {sbac_share_link_copy_count} WHERE uid IN (%s) AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['unique_permanent_links_copied'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   return $user_activity;
 }
@@ -350,65 +360,81 @@ function get_user_activity($users, $date_range)
  * @param $user_activity contains all the data for the report, basically, a list of users with various statistics
  * counted.  See 'get_user_activity()' for the queries to retreive this data.
  */
-function create_user_activity_from_data($user_activity)
-{
+function create_user_activity_from_data($user_activity) {
   $separator = ',';
   $encloseer = '"';
-  $quote_arrays = true;
+  $quote_arrays = TRUE;
   $subseparator = ';';
   $subquote = "";
   $line_ending = "\r\n";
 
   ksort($user_activity['user_profiles']);
 
-  $fieldkeys = array(); $foreignidkeys = array(); $stringkeys = array(); $uidcountkeys = array(); $toskeys = array();
+  $fieldkeys = array();
+  $foreignidkeys = array();
+  $stringkeys = array();
+  $uidcountkeys = array();
+  $toskeys = array();
 
   // get the fields for the report and clean up the data.
   validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys);
 
   $titles = '';
-  foreach ($fieldkeys as $fieldkey) { $titles .= $fieldkey[1].$separator; }
-  foreach ($foreignidkeys as $foreignidkey) { $titles .= $foreignidkey[1].$separator; }
-  foreach ($stringkeys as $stringkey) { $titles .= $stringkey[1].$separator; }
-  foreach ($uidcountkeys as $uidcountkey) { $titles .= $uidcountkey[1].$separator; }
+  foreach ($fieldkeys as $fieldkey) {
+    $titles .= $fieldkey[1] . $separator;
+  }
+  foreach ($foreignidkeys as $foreignidkey) {
+    $titles .= $foreignidkey[1] . $separator;
+  }
+  foreach ($stringkeys as $stringkey) {
+    $titles .= $stringkey[1] . $separator;
+  }
+  foreach ($uidcountkeys as $uidcountkey) {
+    $titles .= $uidcountkey[1] . $separator;
+  }
   foreach ($toskeys as $toskey) {
-    $titles .= $toskey[1].$separator;
+    $titles .= $toskey[1] . $separator;
   }
   $titles = substr($titles, 0, -1);
   $titles .= $line_ending;
 
   $csv = $titles;
-  $titles = null; unset($titles); //memory management
-  $count = count($user_activity['user_profiles']); $ix = 0;
+  $titles = NULL;
+  unset($titles); //memory management
+  $count = count($user_activity['user_profiles']);
+  $ix = 0;
 
   foreach ($user_activity['user_profiles'] as $user_profile) {
     $uid = $user_profile->{'uid'};
     $row = '';
     foreach ($fieldkeys as $fieldkey) {
-      $is_date = (array_key_exists(2,$fieldkey) ? $fieldkey[2]=='date' : false);
+      $is_date = (array_key_exists(2, $fieldkey) ? $fieldkey[2] == 'date' : FALSE);
       format_value_field($row, $user_profile->{$fieldkey[0]}, $separator, $encloseer,
         $subseparator, $quote_arrays, $subquote, $is_date);
     }
     foreach ($foreignidkeys as $foreignidkey) {
-      $is_date = (array_key_exists(2,$foreignidkey) ? $foreignidkey[2]=='date' : false);
+      $is_date = (array_key_exists(2, $foreignidkey) ? $foreignidkey[2] == 'date' : FALSE);
       // tid is replaced by the actual value in the value field.
       format_value_field($row, $user_profile->{$foreignidkey[0]}, $separator, $encloseer,
         $subseparator, $quote_arrays, $subquote, $is_date);
     }
 
     foreach ($stringkeys as $stringkey) {
-      $is_date = (array_key_exists(2,$stringkey) ? $stringkey[2]=='date' : false );
+      $is_date = (array_key_exists(2, $stringkey) ? $stringkey[2] == 'date' : FALSE);
       if (is_null($user_profile->{$stringkey[0]})) {
         $value = '';
       }
-      else if ($is_date) {
-        $value = format_date($user_profile->{$stringkey[0]}, 'custom', 'Y-m-d');
-      }
       else {
-        $value = $user_profile->{$stringkey[0]};
+        if ($is_date) {
+          $value = format_date($user_profile->{$stringkey[0]}, 'custom', 'Y-m-d');
+        }
+        else {
+          $value = $user_profile->{$stringkey[0]};
+        }
       }
       $row .= $value . $separator;
-      $value = null; unset($value); // memory management
+      $value = NULL;
+      unset($value); // memory management
     }
     foreach ($uidcountkeys as $uidcountkey) {
       $row .= $user_activity[$uidcountkey[0]][$uid]->count . $separator;
@@ -417,17 +443,20 @@ function create_user_activity_from_data($user_activity)
     $param['und'] = array();
     $param['und'][0] = array();
     foreach ($toskeys as $toskey) {
-      $is_date = (array_key_exists(2,$toskey) ? $toskey[2]=='date' : false);
+      $is_date = (array_key_exists(2, $toskey) ? $toskey[2] == 'date' : FALSE);
       $param['und'][0]['value'] = $user_activity['tos'][$uid]->{$toskey[0]};
       format_value_field($row, $param, $separator, $encloseer,
         $subseparator, $quote_arrays, $subquote, $is_date);
     }
 
-    if (++$ix == $count) { $row = substr($row, 0, -1); } // reduce length by one removing the last separator
+    if (++$ix == $count) {
+      $row = substr($row, 0, -1);
+    } // reduce length by one removing the last separator
 
-    $csv .= $row.$line_ending;
+    $csv .= $row . $line_ending;
 
-    $row = null; unset($row);//memory mangement
+    $row = NULL;
+    unset($row); //memory mangement
   }
   return $csv;
 }
@@ -447,8 +476,7 @@ function create_user_activity_from_data($user_activity)
  * toskey: the terms of service queries.
  *
  */
-function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys)
-{
+function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys) {
   array_push($fieldkeys, array('field_first_name', 'First Name'));
   array_push($fieldkeys, array('field_last_name', 'Last Name'));
   array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
@@ -462,26 +490,38 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($foreignidkeys, array('field_special_populations', 'School Population(s)'));
 
   array_push($stringkeys, array('mail', 'Email'));
-  array_push($stringkeys, array('created','Date Created','date'));
-  array_push($stringkeys, array('access','Last Access','date'));
-  array_push($stringkeys, array('login','Last Login','date'));
+  array_push($stringkeys, array('created', 'Date Created', 'date'));
+  array_push($stringkeys, array('access', 'Last Access', 'date'));
+  array_push($stringkeys, array('login', 'Last Login', 'date'));
 
-  array_push($uidcountkeys, array('resources_viewed','Resources Viewed'));
+  array_push($uidcountkeys, array('resources_viewed', 'Resources Viewed'));
   array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed/Rated'));
   array_push($uidcountkeys, array('resources_contributed', 'Resources Contributed'));
-  array_push($uidcountkeys, array('gc_reviews_accepted_on_contributed_resources', 'GK Reviews Accepted on Contributed Resources'));
-  array_push($uidcountkeys, array('gc_reviews_returned_on_contributed_resources', 'GK Reviews Returned on Contributed Resources'));
+  array_push($uidcountkeys, array(
+    'gc_reviews_accepted_on_contributed_resources',
+    'GK Reviews Accepted on Contributed Resources'
+  ));
+  array_push($uidcountkeys, array(
+    'gc_reviews_returned_on_contributed_resources',
+    'GK Reviews Returned on Contributed Resources'
+  ));
   array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
   array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
   array_push($uidcountkeys, array('poster_reviews_completed', 'Posting Reviews Completed'));
   array_push($uidcountkeys, array('contributed_resources_posted', 'Contributed Resources Posted'));
-  array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', 'Contributed Resources Posted with Distinction'));
-  array_push($uidcountkeys, array('contributed_resources_reviewed_and_returned', 'Contributed Resources Reviewed and Returned'));
+  array_push($uidcountkeys, array(
+    'contributed_resources_posted_with_distinction',
+    'Contributed Resources Posted with Distinction'
+  ));
+  array_push($uidcountkeys, array(
+    'contributed_resources_reviewed_and_returned',
+    'Contributed Resources Reviewed and Returned'
+  ));
 
-  array_push($toskeys, array('tos_accepted', 'Date of Terms of Service','date'));
+  array_push($toskeys, array('tos_accepted', 'Date of Terms of Service', 'date'));
   array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
   //array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
-  array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version','date'));
+  array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version', 'date'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';
@@ -500,15 +540,16 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
     }
 
     foreach ($stringkeys as $stringkey) {
-      if (!property_exists($user_profile,$stringkey[0])) {
+      if (!property_exists($user_profile, $stringkey[0])) {
         $user_profile->{$stringkey[0]} = $missing_string;
       }
     }
     foreach ($uidcountkeys as $uidcountkey) {
       if (!array_key_exists($uidcountkey[0], $user_activity) or
         !array_key_exists($uid, $user_activity[$uidcountkey[0]]) or
-        is_null($user_activity[$uidcountkey[0]][$uid])) {
-        if (!array_key_exists($uidcountkey[0], $user_activity) ) {
+        is_null($user_activity[$uidcountkey[0]][$uid])
+      ) {
+        if (!array_key_exists($uidcountkey[0], $user_activity)) {
           $user_activity[$uidcountkey[0]] = array();
         }
         $user_activity[$uidcountkey[0]][$uid] = new stdClass();
@@ -522,7 +563,8 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
         $user_activity['tos'] = array();
       }
       if (!array_key_exists($uid, $user_activity['tos']) or
-          is_null($user_activity['tos'][$uid])) {
+        is_null($user_activity['tos'][$uid])
+      ) {
 
         $user_activity['tos'][$uid] = new stdClass();
         $user_activity['tos'][$uid]->tos_accepted = '';
@@ -540,8 +582,8 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   // have all the tids, now get the term data and set the report values:
   # terms of service.
   if (count($used_tids) > 0) {
-    $sql = sprintf ("SELECT tid,name from taxonomy_term_data where tid in (%s)",
-      implode(',',array_keys($used_tids)));
+    $sql = sprintf("SELECT tid,name from taxonomy_term_data where tid in (%s)",
+      implode(',', array_keys($used_tids)));
     $result = db_query($sql);
     $values = array();
     foreach ($result as $record) {
@@ -562,27 +604,27 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
  * and by state, then gets the user activty statistics and legal terms of service data, then calls the routine
  * to create the report from the data.
  */
-function build_activity_report_csv($state_tid, $date_range, &$usergroups, $sne_slt_filter)
-{
+function build_activity_report_csv($state_tid, $date_range, &$usergroups, $sne_slt_filter) {
   $users = get_users_for_user_groups($usergroups);
 
   $user_profiles = user_load_multiple(array_keys($users));
   $user_profiles = filter_users_by_sne_slt($user_profiles, $sne_slt_filter);
   $user_profiles = filter_users_by_state($user_profiles, $state_tid);
   if (count($user_profiles) == 0) {
-    return null;
+    return NULL;
   }
 
   $user_activity = get_user_activity(array_keys($users), $date_range);
-  $user_activity['user_profiles']=$user_profiles;
-  if (count($user_activity)== 0 )
-  {
-    return null;
+  $user_activity['user_profiles'] = $user_profiles;
+  if (count($user_activity) == 0) {
+    return NULL;
   }
-  $user_profiles = null; unset($user_profiles); //memory management
+  $user_profiles = NULL;
+  unset($user_profiles); //memory management
 
   $file_data = create_user_activity_from_data($user_activity);
-  $user_activity = null; unset($user_activity); //memory management
+  $user_activity = NULL;
+  unset($user_activity); //memory management
 
   return $file_data;
 }
@@ -590,8 +632,7 @@ function build_activity_report_csv($state_tid, $date_range, &$usergroups, $sne_s
 /*
  * Fitler the users by the sne/slt value in the dropdown menu.
  */
-function filter_users_by_sne_slt($user_profiles, $sne_slt_filter)
-{
+function filter_users_by_sne_slt($user_profiles, $sne_slt_filter) {
   // sne filter: 0=>neither, 1=>sne, 2=>slt, 2=>both
   $filtered_user_profiles = array();
 // the all condition if it ever gets requested:
@@ -605,32 +646,34 @@ function filter_users_by_sne_slt($user_profiles, $sne_slt_filter)
 
   foreach ($user_profiles as $user_profile) {
     if ($look_for_both_sne_and_slt &&
-        ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
-        ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
-       )
-    { // both
-      $filtered_user_profiles[$user_profile->uid] = $user_profile;
-    }
-    else if ($look_for_slt &&
-      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '0') &&
-      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
-    )
-    { // slt only.
-      $filtered_user_profiles[$user_profile->uid] = $user_profile;
-    }
-    else if ($look_for_sne &&
       ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
-      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '0')
-    )
-    { // sne only.
+      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
+    ) { // both
       $filtered_user_profiles[$user_profile->uid] = $user_profile;
     }
-    else if ($look_for_neither &&
-      ((bool)!$user_profile->field_sne_member || $user_profile->field_sne_member['und'][0]['value'] == '0') &&
-      ((bool)!$user_profile->field_slt_member || $user_profile->field_slt_member['und'][0]['value'] == '0')
-      )
-    { // niether.
-      $filtered_user_profiles[$user_profile->uid] = $user_profile;
+    else {
+      if ($look_for_slt &&
+        ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '0') &&
+        ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
+      ) { // slt only.
+        $filtered_user_profiles[$user_profile->uid] = $user_profile;
+      }
+      else {
+        if ($look_for_sne &&
+          ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
+          ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '0')
+        ) { // sne only.
+          $filtered_user_profiles[$user_profile->uid] = $user_profile;
+        }
+        else {
+          if ($look_for_neither &&
+            ((bool) !$user_profile->field_sne_member || $user_profile->field_sne_member['und'][0]['value'] == '0') &&
+            ((bool) !$user_profile->field_slt_member || $user_profile->field_slt_member['und'][0]['value'] == '0')
+          ) { // niether.
+            $filtered_user_profiles[$user_profile->uid] = $user_profile;
+          }
+        }
+      }
     }
   }
   return $filtered_user_profiles;
@@ -639,8 +682,7 @@ function filter_users_by_sne_slt($user_profiles, $sne_slt_filter)
 /*
  * Filter out users by states.
  */
-function filter_users_by_state($user_profiles, $state_tid)
-{
+function filter_users_by_state($user_profiles, $state_tid) {
   // sne filter: 0=>sne, 1=>slt, 2=> both
   $filtered_user_profiles = array();
   if ($state_tid['all']) { // both, nothing to filter.
@@ -648,7 +690,8 @@ function filter_users_by_state($user_profiles, $state_tid)
   }
   foreach ($user_profiles as $user_profile) {
     if ($user_profile->field_state['und'] &&
-      in_array($user_profile->field_state['und'][0]['tid'],$state_tid)) {
+      in_array($user_profile->field_state['und'][0]['tid'], $state_tid)
+    ) {
       $filtered_user_profiles[$user_profile->uid] = $user_profile;
     }
   }
