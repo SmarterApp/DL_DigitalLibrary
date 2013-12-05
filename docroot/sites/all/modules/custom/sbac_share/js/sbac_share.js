@@ -27,7 +27,7 @@
        * @param nid
        */
       generate_link = function (nid) {
-        var ajax_request = $.ajax({
+        var ajax_generate_request = $.ajax({
           type: 'POST',
           url: "/sbac-share-generate-link",
           data: {'nid':nid},
@@ -43,7 +43,7 @@
             });
             $('#sbac-temporary-link-text').after('<span class="temp-link-clear"></span>');
             Drupal.attachBehaviors('.temp-link-clear');
-            ajax_request = null;
+            ajax_generate_request = null;
           },
           error: function(data) {
 
@@ -57,7 +57,7 @@
        * @param key
        */
       remove_link = function (key) {
-        var ajax_request = $.ajax({
+        var ajax_remove_request = $.ajax({
           type: 'POST',
           url: "/sbac-share-remove-link",
           data: {'key': key},
@@ -66,7 +66,7 @@
             $('#sbac-temp-link-button').html('Generate Temporary Link');
             $('.temp-link-clear').remove();
             ZeroClipboard.destroy();
-            ajax_request = null;
+            ajax_remove_request = null;
           },
           error: function(data) {
 
