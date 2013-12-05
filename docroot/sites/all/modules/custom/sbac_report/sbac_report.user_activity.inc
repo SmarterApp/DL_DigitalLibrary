@@ -217,35 +217,34 @@ function get_users_for_user_groups(&$usergroups_ids) {
 }
 
 /*
+ * Local function that handles all the query logic for the count queries.  It injects the user list and optionally
+ * a from/to date into the query.  It then performs the query and returns the resulting records in a hash by user
+ * id (uid).
+*/
+function count_with_users_query($sql_template, $users, $from_date = NULL, $to_date = NULL) {
+  // done this way because the prepared statement didn't work passing array or comma separated string.
+  // TODO: make prepared statement work here, or escape string???
+
+  if ($from_date && $to_date) {
+    $sql = sprintf($sql_template, $users, '%Y%m%d', $from_date, $to_date);
+  }
+  else {
+    $sql = sprintf($sql_template, $users);
+  }
+  $result = db_query($sql);
+  $values = array();
+  foreach ($result as $record) {
+    $values[$record->uid] = $record;
+  }
+
+  return $values;
+}
+
+/*
  * Get the user activity on resources and reviews.  There are 12 different statistics that are retrieved by this
  * routine, each one a count of something.  This routine also gets the terms of service legal information.
  */
 function get_user_activity($users, $date_range) {
-  /*
-   * Local function that handles all the query logic for the count queries.  It injects the user list and optionally
-   * a from/to date into the query.  It then performs the query and returns the resulting records in a hash by user
-   * id (uid).
-  */
-  function count_with_users_query($sql_template, $users, $from_date = NULL, $to_date = NULL) //$parameters=null)
-  {
-    // done this way because the prepared statement didn't work passing array or comma separated string.
-    // TODO: make prepared statement work here, or escape string???
-
-    if ($from_date && $to_date) {
-      $sql = sprintf($sql_template, $users, '%Y%m%d', $from_date, $to_date);
-    }
-    else {
-      $sql = sprintf($sql_template, $users);
-    }
-    $result = db_query($sql);
-    $values = array();
-    foreach ($result as $record) {
-      $values[$record->uid] = $record;
-    }
-
-    return $values;
-  }
-
   $users = implode(',', $users); // make the users a comma separated list.
   // extract the date range into a from and to date
   $dates = explode('--', $date_range);
@@ -346,8 +345,19 @@ function get_user_activity($users, $date_range) {
   $user_activity['tos'] = $values;
 
   # Unique Permanent Links Copied
-  $sql = "SELECT count(nid) AS count FROM {sbac_share_link_copy_count} WHERE uid IN (%s) AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $sql = "SELECT count(nid) AS count, uid FROM {sbac_share_link_copy_count} WHERE uid IN (%s)
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
   $user_activity['unique_permanent_links_copied'] = count_with_users_query($sql, $users, $from_date, $to_date);
+
+  # Temporary Links Generated
+  $sql = "SELECT count(nid) AS count, uid FROM {sbac_share} WHERE uid IN (%s)
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL create_datetime SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
+  $user_activity['temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date);
+
+  # Unique Temporary Links Generated
+  $sql = "SELECT nid, uid FROM {sbac_share} WHERE uid IN (%s)
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL create_datetime SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   return $user_activity;
 }
