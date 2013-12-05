@@ -1,8 +1,6 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
 
-  var clipper = null;
-
   Drupal.behaviors.sbac_share = {
     attach: function (context, settings) {
       var clip = new ZeroClipboard(document.getElementById('sbac-permanent-link-button'), {
@@ -20,6 +18,7 @@
       $('.temp-link-clear').click( function() {
         var key = $('#sbac-temporary-link-text').val();
         remove_link(key);
+        return false;
       });
 
       /**
@@ -36,7 +35,7 @@
             var response = jQuery.parseJSON(data);
             $('#sbac-temporary-link-text').val(response.result);
             $('#sbac-temp-link-button').html('Copy Link to Clipboard');
-            clipper = new ZeroClipboard(document.getElementById('sbac-temp-link-button'), {
+            var clipper = new ZeroClipboard(document.getElementById('sbac-temp-link-button'), {
               moviePath: 'http://' + location.hostname + '/sites/all/libraries/zeroclipboard/ZeroClipboard.swf'
             });
             clipper.on( 'dataRequested', function (client, args) {
