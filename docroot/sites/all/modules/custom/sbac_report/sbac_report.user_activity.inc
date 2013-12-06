@@ -221,7 +221,7 @@ function get_users_for_user_groups(&$usergroups_ids) {
  * a from/to date into the query.  It then performs the query and returns the resulting records in a hash by user
  * id (uid).
 */
-function count_with_users_query($sql_template, $users, $from_date = NULL, $to_date = NULL) {
+function count_with_users_query($sql_template, $users, $from_date = NULL, $to_date = NULL, $special_case = NULL) {
   // done this way because the prepared statement didn't work passing array or comma separated string.
   // TODO: make prepared statement work here, or escape string???
 
@@ -232,9 +232,17 @@ function count_with_users_query($sql_template, $users, $from_date = NULL, $to_da
     $sql = sprintf($sql_template, $users);
   }
   $result = db_query($sql);
-  $values = array();
-  foreach ($result as $record) {
-    $values[$record->uid] = $record;
+  if ($special_case == 'unique_temp_links') {
+    $values = array();
+    foreach ($result as $record) {
+      $values[$record->uid]++;
+    }
+  }
+  else {
+    $values = array();
+    foreach ($result as $record) {
+      $values[$record->uid] = $record;
+    }
   }
 
   return $values;
@@ -357,7 +365,7 @@ function get_user_activity($users, $date_range) {
   # Unique Temporary Links Generated
   $sql = "SELECT count(nid) as count, uid FROM {sbac_share} WHERE uid IN (%s)
           AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL create_datetime SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
-  $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date);
+  $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date, 'unique_temp_links');
 
   return $user_activity;
 }
@@ -464,11 +472,14 @@ function create_user_activity_from_data($user_activity) {
     }
 
     foreach ($countkeys as $countkey) {
-      if (is_null($user_activity[$countkey[0]][$uid]->count)) {
-        $value = 0;
+      if (!is_null($user_activity[$countkey[0]][$uid]->count)) {
+        $value = $user_activity[$countkey[0]][$uid]->count;
+      }
+      else if (!is_null($user_activity[$countkey[0]][$uid])) {
+        $value = $user_activity[$countkey[0]][$uid];
       }
       else {
-        $value = $user_activity[$countkey[0]][$uid]->count;
+        $value = 0;
       }
       $row .= $value . $separator;
     }
