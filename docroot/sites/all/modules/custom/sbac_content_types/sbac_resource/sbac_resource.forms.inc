@@ -1805,6 +1805,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   if ($form['field_subscription_package_type']['und']['#default_value'] == NULL) {
     $form['field_subscription_package_type']['und']['#default_value'] = 0;
   }
+  $form['field_subscription_package_type']['#weight'] = 37;
 
   // Permissions field.
   if ($form['field_view_permissions']['und']['#default_value'] == NULL) {
@@ -1812,16 +1813,19 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   }
   $form['field_view_permissions']['und']['#prefix'] = '<div id="sbac-permissions-per-state">';
   $form['field_view_permissions']['und']['#suffix'] = '</div>';
+  $form['field_subscription_package_type']['#weight'] = 38;
 
   // View permissions per state.
   $form['field_view_permissions_per_state']['und']['#title'] = '';
   $form['field_view_permissions_per_state']['und']['#prefix'] = '<div id="sbac-permissions-state">';
   $form['field_view_permissions_per_state']['und']['#suffix'] = '</div>';
+  $form['field_view_permissions_per_state']['#weight'] = 39;
 
   // Resource Actions.
   if ($form['field_resource_actions']['und']['#default_value'] == NULL) {
     $form['field_resource_actions']['und']['#default_value'] = array(0, 1);
   }
+  $form['field_resource_actions']['#weight'] = 40;
 
   // Sharing options
   $form['resource_sharing_options'] = array(
