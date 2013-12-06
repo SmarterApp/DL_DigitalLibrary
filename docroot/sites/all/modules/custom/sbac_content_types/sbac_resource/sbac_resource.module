@@ -121,13 +121,13 @@ function sbac_resource_related_resources($nid) {
     if ($resource_node) {
       $output = '<div class="related-resources-container">' . t('Related resources are displayed below based on their relationship to this resource. Factors used to identify related resources include similar
                    subjects, grade levels and attributes of a formative assessment process. Resources that have better reviews or more views are displayed first.') . '</div>';
-      $related_resources = sbac_resource_get_related_resources($resource_node);
-      if ($related_resources) {
-        $output .= theme('sbac_resource_related_resources');
-      }
-      else {
+//      $related_resources = sbac_resource_get_related_resources($resource_node);
+//      if ($related_resources) {
+//        $output .= theme('sbac_resource_related_resources');
+//      }
+//      else {
         $output .= theme('sbac_resource_no_related_resources');
-      }
+//      }
     }
   }
 
