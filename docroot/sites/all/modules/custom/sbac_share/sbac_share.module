@@ -92,28 +92,28 @@ function sbac_share_page_alter(&$page) {
   global $user;
 
   // If the user is a guest and they clicked the 'sign in' link, send them there.
-  if (in_array(SBAC_SHARE_GUEST, $user->roles) && strpos($_GET['q'], 'user') !== FALSE) {
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && !isset($_GET['key'])) {
     session_destroy();
     drupal_goto('user');
   }
 
   // if the user is trying to access a page they don't have access to.
-  if (in_array(SBAC_SHARE_GUEST, $user->roles) && (!isset($_SESSION['sbac-share-not-found']) || $_SESSION['sbac-share-not-found'] == FALSE)) {
-    $provided_key = NULL;
-    if (isset($_GET['key'])) {
-      $provided_key = $_GET['key'];
-    }
-    if (!$provided_key) {
-      $_SESSION['sbac-share-not-found'] = TRUE;
-      sbac_share_get_outta_here();
-      drupal_exit();
-    }
-  }
-
-  if (isset($page['content']['system_main']['main']['#markup']) && strpos($page['content']['system_main']['main']['#markup'], 'sbac-share-page-not-found') !== FALSE) {
-    // set this parameter when condition above is met.
-    $_SESSION['sbac-share-log-user-out'] = TRUE;
-  }
+//  if (in_array(SBAC_SHARE_GUEST, $user->roles) && (!isset($_SESSION['sbac-share-not-found']) || $_SESSION['sbac-share-not-found'] == FALSE)) {
+//    $provided_key = NULL;
+//    if (isset($_GET['key'])) {
+//      $provided_key = $_GET['key'];
+//    }
+//    if (!$provided_key) {
+//      $_SESSION['sbac-share-not-found'] = TRUE;
+//      sbac_share_get_outta_here();
+//      drupal_exit();
+//    }
+//  }
+//
+//  if (isset($page['content']['system_main']['main']['#markup']) && strpos($page['content']['system_main']['main']['#markup'], 'sbac-share-page-not-found') !== FALSE) {
+//    // set this parameter when condition above is met.
+//    $_SESSION['sbac-share-log-user-out'] = TRUE;
+//  }
 }
 
 /**
@@ -123,9 +123,9 @@ function sbac_share_page_alter(&$page) {
  */
 function sbac_share_exit($destination = NULL) {
   // delete session (logout) when session variable is found.
-  if (isset($_SESSION['sbac-share-log-user-out']) && $_SESSION['sbac-share-log-user-out'] == TRUE) {
-    session_destroy();
-  }
+//  if (isset($_SESSION['sbac-share-log-user-out']) && $_SESSION['sbac-share-log-user-out'] == TRUE) {
+//    session_destroy();
+//  }
 }
 
 /**
@@ -431,7 +431,7 @@ function sbac_share_resource_form($form, $form_state, $node) {
   $form['permanent_link'] = array(
     '#type' => 'textfield',
     '#default_value' => $url,
-    '#attributes' => array('id' => 'sbac-permanent-link-text', 'class' => array('clippable')),
+    '#attributes' => array('id' => 'sbac-permanent-link-text', 'class' => array('clippable'), 'readonly' => 'readonly'),
   );
 
   $form['permanent_link_button'] = array(
@@ -495,7 +495,7 @@ function sbac_share_resource_form($form, $form_state, $node) {
   $form['temporary_link'] = array(
     '#type' => 'textfield',
     '#default_value' => '',
-    '#attributes' => array('id' => 'sbac-temporary-link-text'),
+    '#attributes' => array('id' => 'sbac-temporary-link-text', 'readonly' => 'readonly'),
   );
 
   $form['temporary_link_button'] = array(
