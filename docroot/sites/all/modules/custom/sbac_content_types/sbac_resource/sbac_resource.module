@@ -119,8 +119,7 @@ function sbac_resource_related_resources($nid) {
   if ($nid) {
     $resource_node = node_load($nid);
     if ($resource_node) {
-      $output = '<div class="related-resources-container">' . t('Related resources are displayed below based on their relationship to this resource. Factors used to identify related resources include similar
-                   subjects, grade levels and attributes of a formative assessment process. Resources that have better reviews or more views are displayed first.') . '</div>';
+      $output = theme('sbac_resource_related_resources_header');
       $related_resources = sbac_resource_get_related_resources($resource_node);
       if ($related_resources) {
         $output .= theme('sbac_resource_related_resources');
@@ -159,6 +158,19 @@ function sbac_resource_get_related_resources($baseline_node) {
       $baseline_attributes[] = $term['tid'];
     }
   }
+
+  // Check against baseline subjects.
+  $query = "SELECT n.nid FROM {node} n JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid WHERE n.type = 'resource' AND w.state = 'published' AND w.current = 1 LIMIT 3";
+  $result = db_query($query);
+  foreach ($result as $row) {
+    $related_resources[] = $row;
+  }
+
+  // If subjects, check against grades
+
+  // If subject, grades check against attributes
+
+
 
   $query = "SELECT n.nid FROM {node} n WHERE n.type = 'resource' LIMIT 3";
   $result = db_query($query);

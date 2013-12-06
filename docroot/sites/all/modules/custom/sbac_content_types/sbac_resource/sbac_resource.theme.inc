@@ -15,8 +15,13 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['sbac_resource_related_resources_header'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates/related_resources',
+    'template' => 'related-resources-header',
+  );
+
   $items['sbac_resource_no_related_resources'] = array(
-    'path' => drupal_get_path('module', 'sbac_resource') . '/templates',
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates/related_resources',
     'template' => 'no-related-resources',
   );
 
