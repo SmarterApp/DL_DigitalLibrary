@@ -1844,23 +1844,28 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   if ($form['field_permanent_link_settings']['und']['#default_value'] == NULL) {
     $form['field_permanent_link_settings']['und']['#default_value'] = 0;
   }
-
   $class = 'active';
+  $disabled = FALSE;
   if (isset($form['field_permanent_link_settings']['und']['#default_value']) && $form['field_permanent_link_settings']['und']['#default_value'] == 1) {
     $class = 'inactive';
+    $disabled = TRUE;
   }
 
+  // Open a container
   $form['field_temp_container_open']['#markup'] = '<div id="sbac-temp-container" class="' . $class . '">';
   $form['field_temp_container_open']['#weight'] = 42;
   $form['#group_children']['field_temp_container_open'] = "group_advanced";
 
+  // Temporary Link
   $form['field_temporary_public_link']['und']['#attributes']['class'][] = 'sbac-temporary-public-link';
+  if ($disabled) {
+    $form['field_temporary_public_link']['und']['#attributes']['disabled'] = 'disabled';
+  }
   // Temporary Link Time
   $class = 'inactive';
   if (isset($form['field_temporary_public_link']['und']['#default_value'][0]) && $form['field_temporary_public_link']['und']['#default_value'][0] == 1) {
     $class = 'active';
   }
-
   if (!isset($form['field_temporary_public_link_time']['und']['#default_value'][0])) {
     $form['field_temporary_public_link_time']['und']['#default_value'][0] = 7; // 7 Days
   }
@@ -1869,6 +1874,9 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['field_temporary_public_link_time']['#prefix'] = '<div class="sbac-temporary-link-time ' . $class . '">';
   $form['field_temporary_public_link_time']['#suffix'] = '</div>';
   $form['field_temporary_public_link_time']['#attributes']['class'][] = 'sbac-temp-link-list';
+  if ($disabled) {
+    $form['field_temporary_public_link_time']['und']['#attributes']['disabled'] = 'disabled';
+  }
 
   $form['field_temp_container_close']['#markup'] = '</div>';
   $form['field_temp_container_close']['#weight'] = 45;
