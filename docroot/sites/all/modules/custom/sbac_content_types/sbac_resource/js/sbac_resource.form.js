@@ -465,21 +465,25 @@
       $('.sbac-temporary-public-link input').click( function() {
         if ($('.sbac-temporary-link-time').hasClass('inactive')) {
           $('.sbac-temporary-link-time').removeClass('inactive').addClass('active');
+          $('.sbac-temporary-link-time select').removeAttr('disabled');
         }
         else {
           $('.sbac-temporary-link-time').removeClass('active').addClass('inactive');
+          $('.sbac-temporary-link-time select').attr('disabled', 'disabled');
         }
       });
 
       $('.sbac-permanent-link-settings input:radio').click( function() {
-        alert($(this).val());
         if ($(this).val() == 0) {
           $('#sbac-temp-container').removeClass('inactive').addClass('active');
           $('.sbac-temporary-link-time').addClass('inactive');
+          $('.sbac-temporary-public-link input').removeAttr('disabled');
         }
         else {
           $('#sbac-temp-container').removeClass('active').addClass('inactive');
           $('.sbac-temporary-public-link input').attr('checked', false);
+          $('.sbac-temporary-public-link input').attr('disabled', 'disabled');
+          $('.sbac-temporary-link-time select').attr('disabled', 'disabled');
         }
       });
     }

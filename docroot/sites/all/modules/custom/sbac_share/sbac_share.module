@@ -93,27 +93,28 @@ function sbac_share_page_alter(&$page) {
 
   // If the user is a guest and they clicked the 'sign in' link, send them there.
   if (in_array(SBAC_SHARE_GUEST, $user->roles) && !isset($_GET['key'])) {
-    session_destroy();
+    //session_destroy();
     drupal_goto('user');
   }
 
   // if the user is trying to access a page they don't have access to.
-//  if (in_array(SBAC_SHARE_GUEST, $user->roles) && (!isset($_SESSION['sbac-share-not-found']) || $_SESSION['sbac-share-not-found'] == FALSE)) {
-//    $provided_key = NULL;
-//    if (isset($_GET['key'])) {
-//      $provided_key = $_GET['key'];
-//    }
-//    if (!$provided_key) {
-//      $_SESSION['sbac-share-not-found'] = TRUE;
-//      sbac_share_get_outta_here();
-//      drupal_exit();
-//    }
-//  }
-//
-//  if (isset($page['content']['system_main']['main']['#markup']) && strpos($page['content']['system_main']['main']['#markup'], 'sbac-share-page-not-found') !== FALSE) {
-//    // set this parameter when condition above is met.
-//    $_SESSION['sbac-share-log-user-out'] = TRUE;
-//  }
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && (!isset($_SESSION['sbac-share-not-found']) || $_SESSION['sbac-share-not-found'] == FALSE)) {
+    $provided_key = NULL;
+    if (isset($_GET['key'])) {
+      $provided_key = $_GET['key'];
+    }
+    if (!$provided_key) {
+      drupal_goto('user');
+      $_SESSION['sbac-share-not-found'] = TRUE;
+      sbac_share_get_outta_here();
+      drupal_exit();
+    }
+  }
+
+  if (isset($page['content']['system_main']['main']['#markup']) && strpos($page['content']['system_main']['main']['#markup'], 'sbac-share-page-not-found') !== FALSE) {
+    // set this parameter when condition above is met.
+    $_SESSION['sbac-share-log-user-out'] = TRUE;
+  }
 }
 
 /**

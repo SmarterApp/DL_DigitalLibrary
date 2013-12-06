@@ -1868,6 +1868,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['field_temporary_public_link_time']['und']['#title'] = t('Set the limit from the time of link generation');
   $form['field_temporary_public_link_time']['#prefix'] = '<div class="sbac-temporary-link-time ' . $class . '">';
   $form['field_temporary_public_link_time']['#suffix'] = '</div>';
+  $form['field_temporary_public_link_time']['#attributes']['class'][] = 'sbac-temp-link-list';
 
   $form['field_temp_container_close']['#markup'] = '</div>';
   $form['field_temp_container_close']['#weight'] = 45;
