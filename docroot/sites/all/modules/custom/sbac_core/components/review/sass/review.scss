@@ -509,6 +509,17 @@
 	
 	.temporary-link-container.inactive {
 		opacity: 0.5;
+		
+		a {
+			cursor: default;
+		}
+		a:hover {
+			color: #FFF;
+	    background: #2aa549;
+	    border: 1px solid #268a16;
+			@include text-shadow(0px 1px 0px #45613e);
+	    @include box-shadow(inset 0px 1px 0px 0px #6DC088);
+		}
 	}
 	
 	.form-item-temporary-link {
