@@ -108,6 +108,68 @@ function sbac_resource_menu() {
 }
 
 /**
+ * Returns the related resources for a given nid.
+ *
+ * @param $nid
+ * @return string
+ */
+function sbac_resource_related_resources($nid) {
+  $output = '';
+
+  if ($nid) {
+    $resource_node = node_load($nid);
+    if ($resource_node) {
+      $output = '<div class="related-resources-container">' . t('Related resources are displayed below based on their relationship to this resource. Factors used to identify related resources include similar
+                   subjects, grade levels and attributes of a formative assessment process. Resources that have better reviews or more views are displayed first.') . '</div>';
+      $related_resources = sbac_resource_get_related_resources($resource_node);
+      if ($related_resources) {
+        $output .= theme('sbac_resource_related_resources');
+      }
+      else {
+        $output .= theme('sbac_resource_no_related_resources');
+      }
+    }
+  }
+
+  return $output;
+}
+
+/**
+ * @param $node
+ * @return array
+ */
+function sbac_resource_get_related_resources($baseline_node) {
+  // create baseline, then create query, then weight/sort, then return array list.
+  $related_resources = array();
+  $baseline_subjects = array();
+  if (isset($baseline_node->field_subject['und'][0]['tid'])) {
+    foreach ($baseline_node->field_subject['und'] as $key => $term) {
+      $baseline_subjects[] = $term['tid'];
+    }
+  }
+  $baseline_grades = array();
+  if (isset($baseline_node->field_grades['und'][0]['tid'])) {
+    foreach ($baseline_node->field_grades['und'] as $key => $term) {
+      $baseline_grades[] = $term['tid'];
+    }
+  }
+  $baseline_attributes = array();
+  if (isset($baseline_node->field_attributes['und'][0]['tid'])) {
+    foreach ($baseline_node->field_attributes['und'] as $key => $term) {
+      $baseline_attributes[] = $term['tid'];
+    }
+  }
+
+  $query = "SELECT n.nid FROM {node} n WHERE n.type = 'resource' LIMIT 3";
+  $result = db_query($query);
+  foreach ($result as $row) {
+    $related_resources[] = $row;
+  }
+
+  return $related_resources;
+}
+
+/**
  * Implements hook_user_operations().
  *
  * @return mixed

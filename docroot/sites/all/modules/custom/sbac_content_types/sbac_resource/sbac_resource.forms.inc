@@ -44,16 +44,6 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
       drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
     }
 
-    // Hide the Advanced fieldset if not DLRB member.
-    global $user;
-    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
-      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
-    }
-    else {
-      field_group_hide_field_groups($form, array('group_advanced'));
-      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
-    }
-
     // Setup the form
     $generate = FALSE;
     if (isset($form_state['triggering_element']) && $form_state['triggering_element']['#value'] != 'Upload') {
@@ -92,6 +82,16 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_submit_resource($form, $form_state);
     _sbac_resource_form_required_fields($form, $form_state);
     _sbac_resource_form_remove_elements($form, $form_state);
+
+    // Hide the Advanced fieldset if not DLRB member.
+    global $user;
+    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
+    }
+    else {
+      field_group_hide_field_groups($form, array('group_advanced'));
+      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
+    }
   }
 }
 

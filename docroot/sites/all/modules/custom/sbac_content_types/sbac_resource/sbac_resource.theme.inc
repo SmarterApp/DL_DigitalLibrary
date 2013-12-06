@@ -15,6 +15,11 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['sbac_resource_no_related_resources'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates',
+    'template' => 'no-related-resources',
+  );
+
   $items['resource_node_form'] = array(
     'file' => 'sbac_resource.forms.inc',
     'render element' => 'form',
