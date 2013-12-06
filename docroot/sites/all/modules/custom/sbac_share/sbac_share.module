@@ -93,7 +93,7 @@ function sbac_share_page_alter(&$page) {
 
   // If the user is a guest and they clicked the 'sign in' link, send them there.
   if (in_array(SBAC_SHARE_GUEST, $user->roles) && !isset($_GET['key'])) {
-    //session_destroy();
+    session_destroy();
     drupal_goto('user');
   }
 
@@ -124,9 +124,9 @@ function sbac_share_page_alter(&$page) {
  */
 function sbac_share_exit($destination = NULL) {
   // delete session (logout) when session variable is found.
-//  if (isset($_SESSION['sbac-share-log-user-out']) && $_SESSION['sbac-share-log-user-out'] == TRUE) {
-//    session_destroy();
-//  }
+  if (isset($_SESSION['sbac-share-log-user-out']) && $_SESSION['sbac-share-log-user-out'] == TRUE) {
+    session_destroy();
+  }
 }
 
 /**
