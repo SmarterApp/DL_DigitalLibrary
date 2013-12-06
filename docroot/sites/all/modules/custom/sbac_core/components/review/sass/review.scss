@@ -541,6 +541,36 @@
 	}
 }
 
+/* Tag of Related resources */
+.related-resources {
+	margin: 0 30px;
+	
+		h2 {
+			font-size: 1.3em;
+			color: #5a5a5a;
+			padding-bottom: 10px;
+		}
+		
+		p {
+			font-size: 1em;
+			border-bottom: 1px solid #CCCCCC;
+		}
+}
+
+.no-related-resources {
+	padding: 50px 30px;
+	
+	h2{
+		text-align: center;
+		color: #000;
+	}
+	.instruction {
+		text-align: center;
+	}
+}
+	
+
+
 /* Sharing Options- Copy Link to Clipboard button */
 body.admin-menu #global-zeroclipboard-html-bridge {
 	margin-top: -28px;

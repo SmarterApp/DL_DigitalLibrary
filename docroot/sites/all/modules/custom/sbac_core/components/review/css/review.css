@@ -525,8 +525,39 @@
   width: 15px;
 }
 
-/* Sharing Options- Copy Link to Clipboard button */
+/* Tag of Related resources */
 /* line 545, ../sass/review.scss */
+.related-resources {
+  margin: 0 30px;
+}
+/* line 548, ../sass/review.scss */
+.related-resources h2 {
+  font-size: 1.3em;
+  color: #5a5a5a;
+  padding-bottom: 10px;
+}
+/* line 554, ../sass/review.scss */
+.related-resources p {
+  font-size: 1em;
+  border-bottom: 1px solid #CCCCCC;
+}
+
+/* line 560, ../sass/review.scss */
+.no-related-resources {
+  padding: 50px 30px;
+}
+/* line 563, ../sass/review.scss */
+.no-related-resources h2 {
+  text-align: center;
+  color: #000;
+}
+/* line 567, ../sass/review.scss */
+.no-related-resources .instruction {
+  text-align: center;
+}
+
+/* Sharing Options- Copy Link to Clipboard button */
+/* line 575, ../sass/review.scss */
 body.admin-menu #global-zeroclipboard-html-bridge {
   margin-top: -28px;
 }
