@@ -472,8 +472,10 @@
       });
 
       $('.sbac-permanent-link-settings input:radio').click( function() {
+        alert($(this).val());
         if ($(this).val() == 0) {
           $('#sbac-temp-container').removeClass('inactive').addClass('active');
+          $('.sbac-temporary-link-time').addClass('inactive');
         }
         else {
           $('#sbac-temp-container').removeClass('active').addClass('inactive');
