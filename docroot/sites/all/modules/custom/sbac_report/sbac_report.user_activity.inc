@@ -355,7 +355,7 @@ function get_user_activity($users, $date_range) {
   $user_activity['temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Unique Temporary Links Generated
-  $sql = "SELECT nid, uid FROM {sbac_share} WHERE uid IN (%s)
+  $sql = "SELECT count(nid) as count, uid FROM {sbac_share} WHERE uid IN (%s)
           AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL create_datetime SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
   $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
@@ -385,9 +385,10 @@ function create_user_activity_from_data($user_activity) {
   $stringkeys = array();
   $uidcountkeys = array();
   $toskeys = array();
+  $countkeys = array();
 
   // get the fields for the report and clean up the data.
-  validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys);
+  validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys, $countkeys);
 
   $titles = '';
   foreach ($fieldkeys as $fieldkey) {
@@ -404,6 +405,9 @@ function create_user_activity_from_data($user_activity) {
   }
   foreach ($toskeys as $toskey) {
     $titles .= $toskey[1] . $separator;
+  }
+  foreach ($countkeys as $countkey) {
+    $titles .= $countkey[1] . $separator;
   }
   $titles = substr($titles, 0, -1);
   $titles .= $line_ending;
@@ -459,6 +463,16 @@ function create_user_activity_from_data($user_activity) {
         $subseparator, $quote_arrays, $subquote, $is_date);
     }
 
+    foreach ($countkeys as $countkey) {
+      if (is_null($user_activity[$countkey[0]][$uid]->count)) {
+        $value = 0;
+      }
+      else {
+        $value = $user_activity[$countkey[0]][$uid]->count;
+      }
+      $row .= $value . $separator;
+    }
+
     if (++$ix == $count) {
       $row = substr($row, 0, -1);
     } // reduce length by one removing the last separator
@@ -486,7 +500,7 @@ function create_user_activity_from_data($user_activity) {
  * toskey: the terms of service queries.
  *
  */
-function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys) {
+function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys, &$countkeys) {
   array_push($fieldkeys, array('field_first_name', 'First Name'));
   array_push($fieldkeys, array('field_last_name', 'Last Name'));
   array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
@@ -532,6 +546,10 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
   //array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
   array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version', 'date'));
+
+  array_push($countkeys, array('unique_permanent_links_copied', 'Unique Permanent Links Copied'));
+  array_push($countkeys, array('temporary_link_generated', 'Temporary Links Generated'));
+  array_push($countkeys, array('unique_temporary_link_generated', 'Unique Temporary Links Generated'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';
