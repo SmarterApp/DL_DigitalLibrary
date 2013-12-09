@@ -122,6 +122,9 @@ function sbac_resource_related_resources($nid) {
       $output = theme('sbac_resource_related_resources_header');
       $related_resources = sbac_resource_get_related_resources($resource_node);
       if ($related_resources) {
+        if (count($related_resources) > 3) {
+          drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.related_resources.js');
+        }
         $output .= sbac_share_create_resource_card($related_resources);
       }
       else {
@@ -290,6 +293,7 @@ function sbac_resource_get_related_resources($baseline_node) {
  */
 function sbac_share_create_resource_card(&$related_resources) {
   $output = '<div class="resources-container">';
+  $output .= '<ul class="slides">';
   foreach ($related_resources as $nid => $score) {
     $node = node_load($nid);
     if ($node) {
@@ -304,7 +308,8 @@ function sbac_share_create_resource_card(&$related_resources) {
       $fields['image'] = $variables['image'];
       $fields['file-type-icon'] = $variables['file-type-icon'];
       $fields['field_alt_body'] = new stdClass;
-      $fields['field_alt_body']->content = (isset($node->field_alt_body['und'][0]['value']) ? $node->field_alt_body['und'][0]['value'] : '');
+      $body = (isset($node->field_alt_body['und'][0]['value']) ? $node->field_alt_body['und'][0]['value'] : '');
+      $fields['field_alt_body']->content = sbac_resource_truncate($body, 140);
       $fields['state'] = new stdClass;
       $fields['state']->raw = 'published';
       $fields['views'] = (isset($node->field_unique_views['und'][0]['values']) ? $node->field_unique_views['und'][0]['values'] : 0);
@@ -313,9 +318,10 @@ function sbac_share_create_resource_card(&$related_resources) {
       $fields['subject'] = sbac_share_get_field_terms($node->field_subject);
       $fields['grades'] = sbac_share_get_field_terms($node->field_grades);
       $fields['media_types'] = sbac_share_get_field_terms($node->field_digital_media_type);
-      $output .= theme('sbac_resource_card', array('fields' => $fields));
+      $output .= '<li>' . theme('sbac_resource_card', array('fields' => $fields)) . '</li>';
     }
   }
+  $output .= '</ul>';
   $output .= '</div>';
   return $output;
 }
