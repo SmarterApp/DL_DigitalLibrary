@@ -289,7 +289,7 @@ function sbac_resource_get_related_resources($baseline_node) {
  * @return string
  */
 function sbac_share_create_resource_card(&$related_resources) {
-  $output = '';
+  $output = '<div class="resources-container">';
   foreach ($related_resources as $nid => $score) {
     $node = node_load($nid);
     if ($node) {
@@ -316,6 +316,7 @@ function sbac_share_create_resource_card(&$related_resources) {
       $output .= theme('sbac_resource_card', array('fields' => $fields));
     }
   }
+  $output .= '</div>';
   return $output;
 }
 
