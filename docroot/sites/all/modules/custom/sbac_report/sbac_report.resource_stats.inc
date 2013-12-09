@@ -758,7 +758,9 @@ function get_entities_for_resources($resource, $entity_type) {
  * @return mixed
  */
 function get_share_data_for_resource($resource) {
+  // Type
   $share_data['permanent_link_type'] = $resource->field_permanent_link_settings->value();
+
   // # Unique Permanent Links Copied
   $sql = "SELECT nid FROM {sbac_share_link_copy_count} WHERE nid = :nid GROUP BY nid";
   $result = db_query($sql, array(':nid' => $resource->nid->value()));
@@ -767,16 +769,24 @@ function get_share_data_for_resource($resource) {
     $perm_links_copied++;
   }
   $share_data['permanent_links_copied'] = $perm_links_copied;
+
+  // Link Status
   $temp_link_status = $resource->field_temporary_link_settings->value();
   $share_data['temp_public_link_status'] = $temp_link_status;
+
+  // Link Expiration Time.  
   $temp_link_expiration = $resource->field_temporary_link_time->value();
   $share_data['temp_public_link_expiration'] = $temp_link_expiration;
+
   // # Temp Links Generated.
   $sql = "SELECT count(nid) AS count FROM {sbac_share} WHERE nid = :nid";
   $temp_links_generated = db_query($sql, array(':nid' => $resource->nid->value()))->fetchField();
   $share_data['temp_public_links_generated'] = $temp_links_generated;
+
   // # Temp Links Accessed
-  $share_data['temp_public_link_accesses'] = 0;
+  $sql = "SELECT access_count FROM {sbac_share} WHERE nid = :nid";
+  $temp_link_accesses = db_query($sql, array(':nid' => $resource->nid->value()))->fetchField();
+  $share_data['temp_public_link_accesses'] = $temp_link_accesses;
 
   return $share_data;
 }
