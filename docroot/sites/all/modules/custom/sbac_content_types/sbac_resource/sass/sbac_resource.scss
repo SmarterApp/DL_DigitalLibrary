@@ -1282,8 +1282,10 @@ a.sbac-grid-layout {
 
 /*Related Resources*/
 .node-resource {
+	.section-container {
+		.content {background: none !important; }
+	}
 	.resources-container {
-		background-color: #fff;
 		margin: 0 auto;
 		width: 820px;
 		padding-bottom: 20px;
@@ -1296,6 +1298,8 @@ a.sbac-grid-layout {
 				.resource-card{
 					max-width: 260px;
 					margin: 0 10px;
+					
+					a {color: #0085AD;}
 				}
 
 				p{
@@ -1314,7 +1318,9 @@ a.sbac-grid-layout {
 		}
 		
 		.flex-control-nav {
-			padding-bottom: 20px;
+			padding-top: 15px;
+			bottom: -10px;
+			border-top: 1px solid #CCCCCC;
 		}
 		
 		.flex-direction-nav {
@@ -1323,6 +1329,18 @@ a.sbac-grid-layout {
 			}
 		}
 	}
+	
+	.section-container {
+		section:last-child {
+			padding-bottom: 50px;
+		}
+	}	
+}
+
+@-moz-document url-prefix() {
+.section-container.auto > section.active > .title a {
+	font-size: 0.95em !important;
+}
 }
  
 

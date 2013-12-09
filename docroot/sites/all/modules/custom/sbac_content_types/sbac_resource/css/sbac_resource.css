@@ -1333,41 +1333,61 @@ a.sbac-grid-layout {
 }
 
 /*Related Resources*/
-/* line 1285, ../sass/sbac_resource.scss */
+/* line 1286, ../sass/sbac_resource.scss */
+.node-resource .section-container .content {
+  background: none !important;
+}
+/* line 1288, ../sass/sbac_resource.scss */
 .node-resource .resources-container {
-  background-color: #fff;
   margin: 0 auto;
   width: 820px;
   padding-bottom: 20px;
 }
-/* line 1292, ../sass/sbac_resource.scss */
+/* line 1294, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li {
   float: left;
   width: 280px;
 }
-/* line 1296, ../sass/sbac_resource.scss */
+/* line 1298, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li .resource-card {
   max-width: 260px;
   margin: 0 10px;
 }
-/* line 1301, ../sass/sbac_resource.scss */
+/* line 1302, ../sass/sbac_resource.scss */
+.node-resource .resources-container ul.slides li .resource-card a {
+  color: #0085AD;
+}
+/* line 1305, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li p {
   font-size: 14px;
 }
-/* line 1305, ../sass/sbac_resource.scss */
+/* line 1309, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li .paradata-info {
   font-size: 11px;
   line-height: 1.6em;
 }
-/* line 1310, ../sass/sbac_resource.scss */
+/* line 1314, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li .shield-drop {
   width: auto;
 }
-/* line 1316, ../sass/sbac_resource.scss */
+/* line 1320, ../sass/sbac_resource.scss */
 .node-resource .resources-container .flex-control-nav {
-  padding-bottom: 20px;
+  padding-top: 15px;
+  bottom: -10px;
+  border-top: 1px solid #CCCCCC;
 }
-/* line 1321, ../sass/sbac_resource.scss */
+/* line 1327, ../sass/sbac_resource.scss */
 .node-resource .resources-container .flex-direction-nav .flex-next, .node-resource .resources-container .flex-direction-nav .flex-prev {
   opacity: 1;
+}
+/* line 1334, ../sass/sbac_resource.scss */
+.node-resource .section-container section:last-child {
+  padding-bottom: 50px;
+}
+
+@-moz-document url-prefix() {
+  /* line 1341, ../sass/sbac_resource.scss */
+  .section-container.auto > section.active > .title a {
+    font-size: 0.95em !important;
+  }
 }
