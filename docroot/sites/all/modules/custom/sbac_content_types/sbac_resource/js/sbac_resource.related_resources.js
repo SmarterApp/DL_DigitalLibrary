@@ -7,7 +7,7 @@
   SBAC_Related_Resource.related_resources = {
     slider: '.section-5 .resources-container',
     slider_child: '.slides li',
-    slider_width: 413,
+    slider_width: 270,
 
     init_flexslider : function() {
       if ((slider = $(SBAC_Related_Resource.related_resources.slider)).length) {
