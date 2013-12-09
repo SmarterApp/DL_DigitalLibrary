@@ -25,8 +25,10 @@
       });
 
       $('.temp-link-clear').one('click', function() {
-        var key = $('#sbac-temporary-link-text').val();
-        remove_link(key);
+        $('#sbac-temporary-link-text').val('');
+        $('#sbac-temp-link-button').html('Generate Temporary Link');
+        $('.temp-link-clear').remove();
+        ZeroClipboard.destroy();
         return false;
       });
 
@@ -62,30 +64,30 @@
         }
       };
 
-      /**
-       * Submits the request to drupal.
-       *
-       * @param key
-       */
-      remove_link = function (key) {
-        if (ajax_remove_request == null) {
-          ajax_remove_request = $.ajax({
-            type: 'POST',
-            url: "/sbac-share-remove-link",
-            data: {'key': key},
-            success: function(data) {
-              $('#sbac-temporary-link-text').val('');
-              $('#sbac-temp-link-button').html('Generate Temporary Link');
-              $('.temp-link-clear').remove();
-              ZeroClipboard.destroy();
-              ajax_remove_request = null;
-            },
-            error: function(data) {
-              ajax_remove_request = null;
-            }
-          });
-        }
-      };
+//      /**
+//       * Submits the request to drupal.
+//       *
+//       * @param key
+//       */
+//      remove_link = function (key) {
+//        if (ajax_remove_request == null) {
+//          ajax_remove_request = $.ajax({
+//            type: 'POST',
+//            url: "/sbac-share-remove-link",
+//            data: {'key': key},
+//            success: function(data) {
+//              $('#sbac-temporary-link-text').val('');
+//              $('#sbac-temp-link-button').html('Generate Temporary Link');
+//              $('.temp-link-clear').remove();
+//              ZeroClipboard.destroy();
+//              ajax_remove_request = null;
+//            },
+//            error: function(data) {
+//              ajax_remove_request = null;
+//            }
+//          });
+//        }
+//      };
 
       /**
        * Copy count.
