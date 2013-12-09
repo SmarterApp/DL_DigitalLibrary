@@ -250,7 +250,7 @@ a.sbac-grid-layout {
   }
 }
 
-.digital-library, .page-digital-library-resources {
+.digital-library, .page-digital-library-resources, .node-resource {
   #dialog button {
     float: right;
   }
@@ -1280,7 +1280,35 @@ a.sbac-grid-layout {
 	 padding: 20px;
 }
 
-
+/*Related Resources*/
+.node-resource {
+	.content {
+		float: left;
+	}
+	
+	.resource-card {
+		float: left;
+		max-width: 266px;
+		margin-right: 20px;
+		
+		p{
+			font-size: 14px;
+		}
+		
+		.paradata-info {
+			font-size: 11px;
+			line-height: 1.6em;
+		}
+		
+		.shield-drop  {
+			width: auto;
+		}
+	}
+	.resource-card:nth-child(1){
+		margin-left: 30px;
+	}
+}
+ 
 
 
 

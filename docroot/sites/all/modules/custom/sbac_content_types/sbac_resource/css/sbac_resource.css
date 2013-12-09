@@ -270,42 +270,42 @@ a.sbac-grid-layout {
 }
 
 /* line 253, ../sass/sbac_resource.scss */
-.digital-library, .page-digital-library-resources {
+.digital-library, .page-digital-library-resources, .node-resource {
   /* Search Results */
 }
 /* line 254, ../sass/sbac_resource.scss */
-.digital-library #dialog button, .page-digital-library-resources #dialog button {
+.digital-library #dialog button, .page-digital-library-resources #dialog button, .node-resource #dialog button {
   float: right;
 }
 /* line 258, ../sass/sbac_resource.scss */
-.digital-library .ajax-progress, .page-digital-library-resources .ajax-progress {
+.digital-library .ajax-progress, .page-digital-library-resources .ajax-progress, .node-resource .ajax-progress {
   display: none;
 }
 /* line 262, ../sass/sbac_resource.scss */
-.digital-library .gate-keeper-modal-intro, .page-digital-library-resources .gate-keeper-modal-intro {
+.digital-library .gate-keeper-modal-intro, .page-digital-library-resources .gate-keeper-modal-intro, .node-resource .gate-keeper-modal-intro {
   font-size: 0.875em;
   margin-bottom: 20px;
 }
 /* line 268, ../sass/sbac_resource.scss */
-.digital-library .refine-results ul, .page-digital-library-resources .refine-results ul {
+.digital-library .refine-results ul, .page-digital-library-resources .refine-results ul, .node-resource .refine-results ul {
   list-style: none;
 }
 /* line 272, ../sass/sbac_resource.scss */
-.digital-library .refine-results .filter, .page-digital-library-resources .refine-results .filter {
+.digital-library .refine-results .filter, .page-digital-library-resources .refine-results .filter, .node-resource .refine-results .filter {
   border-top: 1px solid #eee;
   padding: 20px 0 0;
 }
 /* line 276, ../sass/sbac_resource.scss */
-.digital-library .refine-results .filter .heading, .page-digital-library-resources .refine-results .filter .heading {
+.digital-library .refine-results .filter .heading, .page-digital-library-resources .refine-results .filter .heading, .node-resource .refine-results .filter .heading {
   font-weight: bold;
 }
 /* line 282, ../sass/sbac_resource.scss */
-.digital-library .refine-results li span, .page-digital-library-resources .refine-results li span {
+.digital-library .refine-results li span, .page-digital-library-resources .refine-results li span, .node-resource .refine-results li span {
   display: inline-block;
   float: right;
 }
 /* line 289, ../sass/sbac_resource.scss */
-.digital-library .resource-card, .page-digital-library-resources .resource-card {
+.digital-library .resource-card, .page-digital-library-resources .resource-card, .node-resource .resource-card {
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   -ms-border-radius: 8px;
@@ -319,7 +319,7 @@ a.sbac-grid-layout {
   /*for IE 9, 10*/
 }
 /* line 297, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom, .page-digital-library-resources .resource-card .resoruce-bottom {
+.digital-library .resource-card .resoruce-bottom, .page-digital-library-resources .resource-card .resoruce-bottom, .node-resource .resource-card .resoruce-bottom {
   -webkit-border-radius: 0 0 8px 8px;
   -moz-border-radius: 0 0 8px 8px;
   -ms-border-radius: 0 0 8px 8px;
@@ -331,20 +331,20 @@ a.sbac-grid-layout {
   font-size: 12px;
 }
 /* line 304, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom.rejected, .page-digital-library-resources .resource-card .resoruce-bottom.rejected {
+.digital-library .resource-card .resoruce-bottom.rejected, .page-digital-library-resources .resource-card .resoruce-bottom.rejected, .node-resource .resource-card .resoruce-bottom.rejected {
   background-color: #eee2e5;
   color: #8a1538;
 }
 /* line 309, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom.approved, .page-digital-library-resources .resource-card .resoruce-bottom.approved {
+.digital-library .resource-card .resoruce-bottom.approved, .page-digital-library-resources .resource-card .resoruce-bottom.approved, .node-resource .resource-card .resoruce-bottom.approved {
   background-color: #edf3e0;
 }
 /* line 313, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom .button, .page-digital-library-resources .resource-card .resoruce-bottom .button {
+.digital-library .resource-card .resoruce-bottom .button, .page-digital-library-resources .resource-card .resoruce-bottom .button, .node-resource .resource-card .resoruce-bottom .button {
   margin-right: 10px;
 }
 /* line 317, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom .paradata-numbers, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-numbers {
+.digital-library .resource-card .resoruce-bottom .paradata-numbers, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-numbers, .node-resource .resource-card .resoruce-bottom .paradata-numbers {
   border-bottom: 1px solid white;
   margin: 0 -10px;
   padding: 10px;
@@ -352,15 +352,15 @@ a.sbac-grid-layout {
   font-size: 11px;
 }
 /* line 324, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom .paradata-numbers .field-content, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-numbers .field-content {
+.digital-library .resource-card .resoruce-bottom .paradata-numbers .field-content, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-numbers .field-content, .node-resource .resource-card .resoruce-bottom .paradata-numbers .field-content {
   display: inline-block;
 }
 /* line 329, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom .paradata-info, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-info {
+.digital-library .resource-card .resoruce-bottom .paradata-info, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-info, .node-resource .resource-card .resoruce-bottom .paradata-info {
   padding: 10px 0 0;
 }
 /* line 332, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom .paradata-info label, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-info label {
+.digital-library .resource-card .resoruce-bottom .paradata-info label, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-info label, .node-resource .resource-card .resoruce-bottom .paradata-info label {
   float: left;
   display: inline;
   margin-right: 5px;
@@ -371,21 +371,21 @@ a.sbac-grid-layout {
   clear: left;
 }
 /* line 343, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom .paradata-info .field-content, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-info .field-content {
+.digital-library .resource-card .resoruce-bottom .paradata-info .field-content, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-info .field-content, .node-resource .resource-card .resoruce-bottom .paradata-info .field-content {
   font-size: 11px;
 }
 /* line 350, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resource-state-description p, .page-digital-library-resources .resource-card .resource-state-description p {
+.digital-library .resource-card .resource-state-description p, .page-digital-library-resources .resource-card .resource-state-description p, .node-resource .resource-card .resource-state-description p {
   font-size: 18px;
   margin-bottom: 0.5em;
   padding: 0;
 }
 /* line 357, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resource-top, .page-digital-library-resources .resource-card .resource-top {
+.digital-library .resource-card .resource-top, .page-digital-library-resources .resource-card .resource-top, .node-resource .resource-card .resource-top {
   padding: 10px;
 }
 /* line 361, ../sass/sbac_resource.scss */
-.digital-library .resource-card h3, .digital-library .resource-card h4, .page-digital-library-resources .resource-card h3, .page-digital-library-resources .resource-card h4 {
+.digital-library .resource-card h3, .digital-library .resource-card h4, .page-digital-library-resources .resource-card h3, .page-digital-library-resources .resource-card h4, .node-resource .resource-card h3, .node-resource .resource-card h4 {
   margin: 0;
   padding: 0;
   font-size: 1em;
@@ -396,42 +396,42 @@ a.sbac-grid-layout {
   /*for IE 9, 10*/
 }
 /* line 370, ../sass/sbac_resource.scss */
-.digital-library .resource-card h3 span a, .digital-library .resource-card h4 span a, .page-digital-library-resources .resource-card h3 span a, .page-digital-library-resources .resource-card h4 span a {
+.digital-library .resource-card h3 span a, .digital-library .resource-card h4 span a, .page-digital-library-resources .resource-card h3 span a, .page-digital-library-resources .resource-card h4 span a, .node-resource .resource-card h3 span a, .node-resource .resource-card h4 span a {
   color: #0085ad;
   padding-right: 5px;
   display: block;
   float: left;
 }
 /* line 377, ../sass/sbac_resource.scss */
-.digital-library .resource-card h3 span a, .digital-library .resource-card h4 span a, .page-digital-library-resources .resource-card h3 span a, .page-digital-library-resources .resource-card h4 span a {
+.digital-library .resource-card h3 span a, .digital-library .resource-card h4 span a, .page-digital-library-resources .resource-card h3 span a, .page-digital-library-resources .resource-card h4 span a, .node-resource .resource-card h3 span a, .node-resource .resource-card h4 span a {
   width: 92% \9\0;
 }
 /* line 382, ../sass/sbac_resource.scss */
-.digital-library .resource-card .distinction span a, .page-digital-library-resources .resource-card .distinction span a {
+.digital-library .resource-card .distinction span a, .page-digital-library-resources .resource-card .distinction span a, .node-resource .resource-card .distinction span a {
   display: block;
   padding-right: 5px;
   width: 88%;
   float: left;
 }
 /* line 390, ../sass/sbac_resource.scss */
-.digital-library .resource-card .distinction img, .page-digital-library-resources .resource-card .distinction img {
+.digital-library .resource-card .distinction img, .page-digital-library-resources .resource-card .distinction img, .node-resource .resource-card .distinction img {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
   margin: 0;
 }
 /* line 396, ../sass/sbac_resource.scss */
-.digital-library .resource-card .distinction span a, .page-digital-library-resources .resource-card .distinction span a {
+.digital-library .resource-card .distinction span a, .page-digital-library-resources .resource-card .distinction span a, .node-resource .resource-card .distinction span a {
   width: 83% \9\0;
 }
 /* line 398, ../sass/sbac_resource.scss */
-.digital-library .resource-card .shield-drop, .page-digital-library-resources .resource-card .shield-drop {
+.digital-library .resource-card .shield-drop, .page-digital-library-resources .resource-card .shield-drop, .node-resource .resource-card .shield-drop {
   width: 25px;
   display: inline-block;
   /*for IE 9, 10*/
 }
 /* line 401, ../sass/sbac_resource.scss */
-.digital-library .resource-card .shield-drop .f-dropdown.open, .page-digital-library-resources .resource-card .shield-drop .f-dropdown.open {
+.digital-library .resource-card .shield-drop .f-dropdown.open, .page-digital-library-resources .resource-card .shield-drop .f-dropdown.open, .node-resource .resource-card .shield-drop .f-dropdown.open {
   top: 38px !important;
   right: 25px !important;
   left: auto !important;
@@ -439,43 +439,43 @@ a.sbac-grid-layout {
   text-align: center;
 }
 /* line 408, ../sass/sbac_resource.scss */
-.digital-library .resource-card .shield-drop .f-dropdown.open li, .page-digital-library-resources .resource-card .shield-drop .f-dropdown.open li {
+.digital-library .resource-card .shield-drop .f-dropdown.open li, .page-digital-library-resources .resource-card .shield-drop .f-dropdown.open li, .node-resource .resource-card .shield-drop .f-dropdown.open li {
   padding: 10px;
   cursor: default;
   font-size: 0.8em;
   line-height: 1.4;
 }
 /* line 416, ../sass/sbac_resource.scss */
-.digital-library .resource-card .shield-drop .f-dropdown:after, .digital-library .resource-card .shield-drop .f-dropdown:before, .page-digital-library-resources .resource-card .shield-drop .f-dropdown:after, .page-digital-library-resources .resource-card .shield-drop .f-dropdown:before {
+.digital-library .resource-card .shield-drop .f-dropdown:after, .digital-library .resource-card .shield-drop .f-dropdown:before, .page-digital-library-resources .resource-card .shield-drop .f-dropdown:after, .page-digital-library-resources .resource-card .shield-drop .f-dropdown:before, .node-resource .resource-card .shield-drop .f-dropdown:after, .node-resource .resource-card .shield-drop .f-dropdown:before {
   left: 141px;
 }
 /* line 419, ../sass/sbac_resource.scss */
-.digital-library .resource-card .shield-drop .f-dropdown:after, .digital-library .resource-card .shield-drop .f-dropdown:before, .page-digital-library-resources .resource-card .shield-drop .f-dropdown:after, .page-digital-library-resources .resource-card .shield-drop .f-dropdown:before {
+.digital-library .resource-card .shield-drop .f-dropdown:after, .digital-library .resource-card .shield-drop .f-dropdown:before, .page-digital-library-resources .resource-card .shield-drop .f-dropdown:after, .page-digital-library-resources .resource-card .shield-drop .f-dropdown:before, .node-resource .resource-card .shield-drop .f-dropdown:after, .node-resource .resource-card .shield-drop .f-dropdown:before {
   left: 147px \9\0;
 }
 /* line 422, ../sass/sbac_resource.scss */
-.digital-library .resource-card h4, .page-digital-library-resources .resource-card h4 {
+.digital-library .resource-card h4, .page-digital-library-resources .resource-card h4, .node-resource .resource-card h4 {
   font-size: emCalc(14px);
 }
 /* line 426, ../sass/sbac_resource.scss */
-.digital-library .resource-card i, .page-digital-library-resources .resource-card i {
+.digital-library .resource-card i, .page-digital-library-resources .resource-card i, .node-resource .resource-card i {
   position: absolute;
   top: 10px;
   right: 5px;
 }
 /* line 431, ../sass/sbac_resource.scss */
-.digital-library .resource-card i.sbac-select, .page-digital-library-resources .resource-card i.sbac-select {
+.digital-library .resource-card i.sbac-select, .page-digital-library-resources .resource-card i.sbac-select, .node-resource .resource-card i.sbac-select {
   background: url("../images/icon-dropdown.png") center no-repeat;
   width: 15px;
   height: 15px;
   text-indent: -9999em;
 }
 /* line 438, ../sass/sbac_resource.scss */
-.digital-library .resource-card i:hover, .page-digital-library-resources .resource-card i:hover {
+.digital-library .resource-card i:hover, .page-digital-library-resources .resource-card i:hover, .node-resource .resource-card i:hover {
   cursor: pointer;
 }
 /* line 443, ../sass/sbac_resource.scss */
-.digital-library .resource-card img, .page-digital-library-resources .resource-card img {
+.digital-library .resource-card img, .page-digital-library-resources .resource-card img, .node-resource .resource-card img {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
@@ -487,33 +487,33 @@ a.sbac-grid-layout {
   margin: 10px 0 0;
 }
 /* line 449, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resource-stats, .page-digital-library-resources .resource-card .resource-stats {
+.digital-library .resource-card .resource-stats, .page-digital-library-resources .resource-card .resource-stats, .node-resource .resource-card .resource-stats {
   padding: 10px 0;
   font-size: 14px;
   clear: both;
 }
 /* line 455, ../sass/sbac_resource.scss */
-.digital-library .resource-card .views-label-field-age-range, .page-digital-library-resources .resource-card .views-label-field-age-range {
+.digital-library .resource-card .views-label-field-age-range, .page-digital-library-resources .resource-card .views-label-field-age-range, .node-resource .resource-card .views-label-field-age-range {
   float: left;
   margin-right: 5px;
 }
 /* line 461, ../sass/sbac_resource.scss */
-.digital-library .resource-card .dropdowns .f-dropdown.open, .page-digital-library-resources .resource-card .dropdowns .f-dropdown.open {
+.digital-library .resource-card .dropdowns .f-dropdown.open, .page-digital-library-resources .resource-card .dropdowns .f-dropdown.open, .node-resource .resource-card .dropdowns .f-dropdown.open {
   top: 35px !important;
   right: -5px !important;
   left: auto !important;
   width: 200px;
 }
 /* line 467, ../sass/sbac_resource.scss */
-.digital-library .resource-card .dropdowns .f-dropdown.open li, .page-digital-library-resources .resource-card .dropdowns .f-dropdown.open li {
+.digital-library .resource-card .dropdowns .f-dropdown.open li, .page-digital-library-resources .resource-card .dropdowns .f-dropdown.open li, .node-resource .resource-card .dropdowns .f-dropdown.open li {
   padding: 5px;
 }
 /* line 472, ../sass/sbac_resource.scss */
-.digital-library .resource-card .dropdowns .f-dropdown:after, .digital-library .resource-card .dropdowns .f-dropdown:before, .page-digital-library-resources .resource-card .dropdowns .f-dropdown:after, .page-digital-library-resources .resource-card .dropdowns .f-dropdown:before {
+.digital-library .resource-card .dropdowns .f-dropdown:after, .digital-library .resource-card .dropdowns .f-dropdown:before, .page-digital-library-resources .resource-card .dropdowns .f-dropdown:after, .page-digital-library-resources .resource-card .dropdowns .f-dropdown:before, .node-resource .resource-card .dropdowns .f-dropdown:after, .node-resource .resource-card .dropdowns .f-dropdown:before {
   left: 175px;
 }
 /* line 479, ../sass/sbac_resource.scss */
-.digital-library .favorites-link, .page-digital-library-resources .favorites-link {
+.digital-library .favorites-link, .page-digital-library-resources .favorites-link, .node-resource .favorites-link {
   position: absolute;
   right: 5px;
   top: 13px;
@@ -521,7 +521,7 @@ a.sbac-grid-layout {
   height: 16px;
 }
 /* line 486, ../sass/sbac_resource.scss */
-.digital-library .favorites-link a, .page-digital-library-resources .favorites-link a {
+.digital-library .favorites-link a, .page-digital-library-resources .favorites-link a, .node-resource .favorites-link a {
   background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
   text-indent: -9999em;
   display: block;
@@ -529,13 +529,13 @@ a.sbac-grid-layout {
   width: 16px;
 }
 /* line 493, ../sass/sbac_resource.scss */
-.digital-library .favorites-link a:hover, .digital-library .favorites-link a.sbac-favorites-link-yes, .page-digital-library-resources .favorites-link a:hover, .page-digital-library-resources .favorites-link a.sbac-favorites-link-yes {
+.digital-library .favorites-link a:hover, .digital-library .favorites-link a.sbac-favorites-link-yes, .page-digital-library-resources .favorites-link a:hover, .page-digital-library-resources .favorites-link a.sbac-favorites-link-yes, .node-resource .favorites-link a:hover, .node-resource .favorites-link a.sbac-favorites-link-yes {
   background: url(../images/icons/icon-favorite-on.png) no-repeat 0 0;
   height: 16px;
   width: 16px;
 }
 /* line 500, ../sass/sbac_resource.scss */
-.digital-library .favorites-link .sbac-favorites-tooltip, .page-digital-library-resources .favorites-link .sbac-favorites-tooltip {
+.digital-library .favorites-link .sbac-favorites-tooltip, .page-digital-library-resources .favorites-link .sbac-favorites-tooltip, .node-resource .favorites-link .sbac-favorites-tooltip {
   width: 142px;
   font-size: 0.8em;
   position: absolute;
@@ -546,75 +546,75 @@ a.sbac-grid-layout {
   white-space: nowrap;
 }
 /* line 514, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .views-row, .page-digital-library-resources .view-display-id-list_view .views-row {
+.digital-library .view-display-id-list_view .views-row, .page-digital-library-resources .view-display-id-list_view .views-row, .node-resource .view-display-id-list_view .views-row {
   margin-bottom: 10px;
 }
 /* line 518, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card, .page-digital-library-resources .view-display-id-list_view .resource-card {
+.digital-library .view-display-id-list_view .resource-card, .page-digital-library-resources .view-display-id-list_view .resource-card, .node-resource .view-display-id-list_view .resource-card {
   padding: 10px 25px 10px 10px;
   margin-bottom: 0;
 }
 /* line 522, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .resource-name, .page-digital-library-resources .view-display-id-list_view .resource-card .resource-name {
+.digital-library .view-display-id-list_view .resource-card .resource-name, .page-digital-library-resources .view-display-id-list_view .resource-card .resource-name, .node-resource .view-display-id-list_view .resource-card .resource-name {
   border-bottom: 1px solid #aaaaaa;
   padding-bottom: 5px;
   margin-top: 10px;
 }
 /* line 528, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card h3, .page-digital-library-resources .view-display-id-list_view .resource-card h3 {
+.digital-library .view-display-id-list_view .resource-card h3, .page-digital-library-resources .view-display-id-list_view .resource-card h3, .node-resource .view-display-id-list_view .resource-card h3 {
   font-size: 16px;
   max-width: 100%;
 }
 /* line 533, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .distinction span a, .page-digital-library-resources .view-display-id-list_view .resource-card .distinction span a {
+.digital-library .view-display-id-list_view .resource-card .distinction span a, .page-digital-library-resources .view-display-id-list_view .resource-card .distinction span a, .node-resource .view-display-id-list_view .resource-card .distinction span a {
   width: 92.1%;
 }
 /* line 537, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .button, .page-digital-library-resources .view-display-id-list_view .resource-card .button {
+.digital-library .view-display-id-list_view .resource-card .button, .page-digital-library-resources .view-display-id-list_view .resource-card .button, .node-resource .view-display-id-list_view .resource-card .button {
   margin-right: 10px;
 }
 /* line 541, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card img, .page-digital-library-resources .view-display-id-list_view .resource-card img {
+.digital-library .view-display-id-list_view .resource-card img, .page-digital-library-resources .view-display-id-list_view .resource-card img, .node-resource .view-display-id-list_view .resource-card img {
   margin: 0;
 }
 /* line 545, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .resoruce-bottom, .page-digital-library-resources .view-display-id-list_view .resource-card .resoruce-bottom {
+.digital-library .view-display-id-list_view .resource-card .resoruce-bottom, .page-digital-library-resources .view-display-id-list_view .resource-card .resoruce-bottom, .node-resource .view-display-id-list_view .resource-card .resoruce-bottom {
   margin: -10px;
   border-radius: 0 8px 8px 0;
   background: transparent;
 }
 /* line 552, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .shield-drop .f-dropdown.open, .page-digital-library-resources .view-display-id-list_view .resource-card .shield-drop .f-dropdown.open {
+.digital-library .view-display-id-list_view .resource-card .shield-drop .f-dropdown.open, .page-digital-library-resources .view-display-id-list_view .resource-card .shield-drop .f-dropdown.open, .node-resource .view-display-id-list_view .resource-card .shield-drop .f-dropdown.open {
   right: 37px !important;
 }
 /* line 557, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .list-view-info, .page-digital-library-resources .view-display-id-list_view .resource-card .list-view-info {
+.digital-library .view-display-id-list_view .resource-card .list-view-info, .page-digital-library-resources .view-display-id-list_view .resource-card .list-view-info, .node-resource .view-display-id-list_view .resource-card .list-view-info {
   font-size: 0.75em;
   color: #246a34;
   margin-top: 10px;
   font-weight: bold;
 }
 /* line 563, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .list-view-info .field-content, .page-digital-library-resources .view-display-id-list_view .resource-card .list-view-info .field-content {
+.digital-library .view-display-id-list_view .resource-card .list-view-info .field-content, .page-digital-library-resources .view-display-id-list_view .resource-card .list-view-info .field-content, .node-resource .view-display-id-list_view .resource-card .list-view-info .field-content {
   display: inline-block;
 }
 /* line 568, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .resource-state-description, .page-digital-library-resources .view-display-id-list_view .resource-card .resource-state-description {
+.digital-library .view-display-id-list_view .resource-card .resource-state-description, .page-digital-library-resources .view-display-id-list_view .resource-card .resource-state-description, .node-resource .view-display-id-list_view .resource-card .resource-state-description {
   margin: 0;
   text-align: left;
 }
 /* line 572, ../sass/sbac_resource.scss */
-.digital-library .view-display-id-list_view .resource-card .resource-state-description p, .page-digital-library-resources .view-display-id-list_view .resource-card .resource-state-description p {
+.digital-library .view-display-id-list_view .resource-card .resource-state-description p, .page-digital-library-resources .view-display-id-list_view .resource-card .resource-state-description p, .node-resource .view-display-id-list_view .resource-card .resource-state-description p {
   font-size: 18px;
   color: #246a34;
   margin-bottom: 10px;
 }
 /* line 582, ../sass/sbac_resource.scss */
-.digital-library .pager .button, .page-digital-library-resources .pager .button {
+.digital-library .pager .button, .page-digital-library-resources .pager .button, .node-resource .pager .button {
   margin-top: 2em;
 }
 /* line 589, ../sass/sbac_resource.scss */
-.digital-library .no-results, .page-digital-library-resources .no-results {
+.digital-library .no-results, .page-digital-library-resources .no-results, .node-resource .no-results {
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
@@ -626,12 +626,12 @@ a.sbac-grid-layout {
   margin: 0 auto 2em;
 }
 /* line 596, ../sass/sbac_resource.scss */
-.digital-library .no-results h3, .page-digital-library-resources .no-results h3 {
+.digital-library .no-results h3, .page-digital-library-resources .no-results h3, .node-resource .no-results h3 {
   font-size: 1.5em;
   font-family: Arial, Helvetica, sans-serif;
 }
 /* line 601, ../sass/sbac_resource.scss */
-.digital-library .no-results p, .page-digital-library-resources .no-results p {
+.digital-library .no-results p, .page-digital-library-resources .no-results p, .node-resource .no-results p {
   font-size: 1em;
 }
 
@@ -1330,4 +1330,33 @@ a.sbac-grid-layout {
   box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.3);
   margin: 1.5625em auto 4.6875em;
   padding: 20px;
+}
+
+/*Related Resources*/
+/* line 1285, ../sass/sbac_resource.scss */
+.node-resource .content {
+  float: left;
+}
+/* line 1289, ../sass/sbac_resource.scss */
+.node-resource .resource-card {
+  float: left;
+  max-width: 266px;
+  margin-right: 20px;
+}
+/* line 1294, ../sass/sbac_resource.scss */
+.node-resource .resource-card p {
+  font-size: 14px;
+}
+/* line 1298, ../sass/sbac_resource.scss */
+.node-resource .resource-card .paradata-info {
+  font-size: 11px;
+  line-height: 1.6em;
+}
+/* line 1303, ../sass/sbac_resource.scss */
+.node-resource .resource-card .shield-drop {
+  width: auto;
+}
+/* line 1307, ../sass/sbac_resource.scss */
+.node-resource .resource-card:nth-child(1) {
+  margin-left: 30px;
 }
