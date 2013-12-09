@@ -232,7 +232,7 @@ function count_with_users_query($sql_template, $users, $from_date = NULL, $to_da
     $sql = sprintf($sql_template, $users);
   }
   $result = db_query($sql);
-  if ($special_case == 'unique_temp_links') {
+  if ($special_case == 'unique_temp_links' || $special_case == 'unique_perm_copied') {
     $values = array();
     foreach ($result as $record) {
       $values[$record->uid]++;
@@ -353,9 +353,9 @@ function get_user_activity($users, $date_range) {
   $user_activity['tos'] = $values;
 
   # Unique Permanent Links Copied
-  $sql = "SELECT count(nid) AS count, uid FROM {sbac_share_link_copy_count} WHERE uid IN (%s)
-          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
-  $user_activity['unique_permanent_links_copied'] = count_with_users_query($sql, $users, $from_date, $to_date);
+  $sql = "SELECT nid, uid FROM {sbac_share_link_copy_count} WHERE uid IN (%s)
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $user_activity['unique_permanent_links_copied'] = count_with_users_query($sql, $users, $from_date, $to_date, 'unique_perm_copied');
 
   # Temporary Links Generated
   $sql = "SELECT count(nid) AS count, uid FROM {sbac_share} WHERE uid IN (%s)

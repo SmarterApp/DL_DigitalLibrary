@@ -1,5 +1,4 @@
 <div class='resource-card'>
-
   <div class="resource-top">
     <?php if (isset($fields['links'])): ?>
     <div class="dropdowns">

@@ -122,7 +122,7 @@ function sbac_resource_related_resources($nid) {
       $output = theme('sbac_resource_related_resources_header');
       $related_resources = sbac_resource_get_related_resources($resource_node);
       if ($related_resources) {
-        $output .= theme('sbac_resource_related_resources');
+        $output .= sbac_share_create_resource_card($related_resources);
       }
       else {
         $output .= theme('sbac_resource_no_related_resources');
@@ -159,26 +159,178 @@ function sbac_resource_get_related_resources($baseline_node) {
     }
   }
 
-  // Check against baseline subjects.
-  $query = "SELECT n.nid FROM {node} n JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid WHERE n.type = 'resource' AND w.state = 'published' AND w.current = 1 LIMIT 3";
-  $result = db_query($query);
-  foreach ($result as $row) {
-    $related_resources[] = $row;
-  }
+  /**
+   *  Baseline Resource:  Subjects A, B, C; Grades 1, 2; Formative Assessment X, Y
+   *
+   *  To determine the nine (9) related resources, the system undergoes a layered comparison:
+   *
+   *  Subjects A OR Subjects B OR Subjects C AND
+   *  Grades 1 OR Grades 2 AND
+   *  Formative Assessment X OR Formative Assessment Y
+   *
+   *  If a resource does not match any of the subject tags (A, B, C) it is not subjected to the other filters.
+  */
+  // Compare baseline subjects against all other resource nodes.
+  if ($baseline_subjects) {
+    $baseline_subjects_string = implode(',', $baseline_subjects);
+    // Check against baseline subjects.
+    $query = "
+            SELECT
+              n.nid,
+              s.field_subject_tid AS subject
+            FROM {node} n
+            JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid
+            JOIN {field_data_field_subject} s ON n.nid = s.entity_id AND n.vid = s.revision_id
+            WHERE n.type = 'resource'
+            AND w.state = 'published'
+            AND w.current = 1
+            AND field_subject_tid IN (" . $baseline_subjects_string . ")
+            AND n.nid <> " . $baseline_node->nid;
 
-  // If subjects, check against grades
+    $result = db_query($query);
+    $subject_related_resources = array();
+    $subject_nids = array();
+    foreach ($result as $row) {
+      $subject_nids[$row->nid] = $row->nid;
+      $subject_related_resources[] = $row;
+    }
 
-  // If subject, grades check against attributes
+    // Compare baseline subjects against all other resource nodes that had the same baseline grades
+    if ($subject_related_resources) {
+      $baseline_grades_string = implode(',', $baseline_grades);
+      if ($baseline_grades_string) {
+        $subject_nids = implode(',', $subject_nids);
+        $query = "
+            SELECT
+              n.nid,
+              g.field_grades_tid AS subject
+            FROM {node} n
+            JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid
+            JOIN {field_data_field_grades} g ON n.nid = g.entity_id AND n.vid = g.revision_id
+            WHERE n.type = 'resource'
+            AND w.state = 'published'
+            AND w.current = 1
+            AND n.nid IN (" . $subject_nids . ")
+            AND field_grades_tid IN (" . $baseline_grades_string . ")
+            AND n.nid <> " . $baseline_node->nid;
+        $result = db_query($query);
+        $grades_related_resources = array();
+        $grade_nids = array();
+        foreach ($result as $row) {
+          $grade_nids[$row->nid] = $row->nid;
+          $grades_related_resources[] = $row;
+        }
 
+        // Compare baseline attributes against all other resource nodes that had the same baseline grades and subjects.
+        if ($grades_related_resources) {
+          $baseline_attributes_string = implode(',', $baseline_attributes);
+          if ($baseline_attributes_string) {
+            $grade_nids = implode(',', $grade_nids);
+            $query = "
+              SELECT
+                n.nid,
+                a.field_attributes_tid AS subject
+              FROM {node} n
+              JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid
+              JOIN {field_data_field_attributes} a ON n.nid = a.entity_id AND n.vid = a.revision_id
+              WHERE n.type = 'resource'
+              AND w.state = 'published'
+              AND w.current = 1
+              AND n.nid IN (" . $grade_nids . ")
+              AND field_attributes_tid IN (" . $baseline_attributes_string . ")
+              AND n.nid <> " . $baseline_node->nid;
+            $result = db_query($query);
+            $attributes_related_resources = array();
+            $attributes_nids = array();
+            foreach ($result as $row) {
+              $attributes_nids[$row->nid] = $row->nid;
+              $attributes_related_resources[] = $row;
+            }
 
-
-  $query = "SELECT n.nid FROM {node} n WHERE n.type = 'resource' LIMIT 3";
-  $result = db_query($query);
-  foreach ($result as $row) {
-    $related_resources[] = $row;
+            /**
+            * Use the first four metadata elements strictly as filters to create the pool of n resources
+            * (meaning that all are equally valid and the only rule is that a related resource has at least one
+            * match on each of the three attributes), then sort that pool by ratings to get an overall order
+            * In this scenario, the ultimate display order is R5, R1 and no other resources
+            * Reasoning: both R1 and R5 have at least one match in each category, and R5 has a higher total
+            * ratings than R1 since R1 has no reviews.
+            */
+            // This is the resource pool of nodes.
+            if ($attributes_nids) {
+              foreach ($attributes_nids as $nid) {
+                $query = "SELECT sl.field_student_learning_rating AS learning,
+                          pd.field_pro_dev_rating AS pro_dev,
+                          eu.field_ease_use_rating AS ease_use
+                          FROM {eck_review} r
+                          JOIN {field_data_field_student_learning} sl ON r.id = sl.entity_id
+                          JOIN {field_data_field_pro_dev} pd ON r.id = pd.entity_id
+                          JOIN {field_data_field_ease_use} eu ON r.id = eu.entity_id
+                          WHERE r.node_id = " . $nid;
+                $result = db_query($query);
+                foreach ($result as $row) {
+                  $total = $row->learning + $row->pro_dev + $row->ease_use;
+                  $related_resources[$nid] = $total;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   return $related_resources;
+}
+
+/**
+ * Builds out the resource card.
+ *
+ * @param $related_resources
+ * @return string
+ */
+function sbac_share_create_resource_card(&$related_resources) {
+  $output = '';
+  foreach ($related_resources as $nid => $score) {
+    $node = node_load($nid);
+    if ($node) {
+      $fields = array();
+      $fields['nid'] = new stdClass;
+      $fields['nid']->raw = $nid;
+      $fields['sticky'] = new stdClass;
+      $fields['sticky']->raw = $node->sticky;
+      $fields['title'] = new stdClass;
+      $fields['title']->content = $node->title;
+      $variables = _sbac_resource_grid_image($fields);
+      $fields['image'] = $variables['image'];
+      $fields['file-type-icon'] = $variables['file-type-icon'];
+      $fields['field_alt_body'] = new stdClass;
+      $fields['field_alt_body']->content = (isset($node->field_alt_body['und'][0]['value']) ? $node->field_alt_body['und'][0]['value'] : '');
+      $fields['state'] = new stdClass;
+      $fields['state']->raw = 'published';
+      $fields['views'] = (isset($node->field_unique_views['und'][0]['values']) ? $node->field_unique_views['und'][0]['values'] : 0);
+      $fields['downloads'] = (isset($node->field_asset_downloads['und'][0]['values']) ? $node->field_asset_downloads['und'][0]['values'] : 0);
+      $fields['collaborators'] = 'N Collaborations';
+      $fields['subject'] = sbac_share_get_field_terms($node->field_subject);
+      $fields['grades'] = sbac_share_get_field_terms($node->field_grades);
+      $fields['media_types'] = sbac_share_get_field_terms($node->field_digital_media_type);
+      $output .= theme('sbac_resource_card', array('fields' => $fields));
+    }
+  }
+  return $output;
+}
+
+function sbac_share_get_field_terms($field) {
+  $term_names = array();
+  foreach ($field['und'] as $key => $tid) {
+    $term = taxonomy_term_load($tid['tid']);
+    $term_names[] = $term->name;
+  }
+
+  $terms = '';
+  if ($term_names) {
+    $terms = implode(', ', $term_names);
+  }
+  return $terms;
 }
 
 /**

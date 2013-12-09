@@ -20,6 +20,12 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'template' => 'related-resources-header',
   );
 
+  $items['sbac_resource_card'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates/related_resources',
+    'template' => 'resource-card',
+    'variables' => array('fields' => NULL),
+  );
+
   $items['sbac_resource_no_related_resources'] = array(
     'path' => drupal_get_path('module', 'sbac_resource') . '/templates/related_resources',
     'template' => 'no-related-resources',
