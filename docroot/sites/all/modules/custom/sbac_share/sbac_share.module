@@ -173,6 +173,10 @@ function sbac_share_login_redirect_view() {
         user_login_submit(array(), $form_state);
         $node = node_load($stored_key['nid']);
         if ($node) {
+          // increment access count
+          $access_count = db_query("SELECT access_count FROM {sbac_share} WHERE nid = :nid AND `key` = :key", array(':nid' => $node->nid, ':key' => $stored_key['key']))->fetchField();
+          $access_count++;
+          db_query("UPDATE {sbac_share} SET access_count = :access_count WHERE nid = :nid AND `key` = :key", array(':access_count' => $access_count, ':nid' => $node->nid, ':key' => $stored_key['key']));
           // redirect to correct page.
           drupal_custom_goto($node->path['alias'] . '?key=' . $stored_key['key']);
         }
@@ -305,7 +309,7 @@ function sbac_share_generate_url($nid, $public = FALSE) {
       $expire_date = time() + (60 * 60 * 24 * 3650); //3650 days = 10 years
       $public = 1;
     }
-    $query = "INSERT INTO {sbac_share} (nid, uid, `key`, create_datetime, expire_datetime, public) values (" . $node->nid . ", " . $user->uid . ", '" . $key . "', " . time() . ", ". $expire_date . ", " . $public . ")";
+    $query = "INSERT INTO {sbac_share} (nid, uid, `key`, create_datetime, expire_datetime, public, access_count) values (" . $node->nid . ", " . $user->uid . ", '" . $key . "', " . time() . ", ". $expire_date . ", " . $public . ", 0)";
     db_query($query);
   }
   return $key;

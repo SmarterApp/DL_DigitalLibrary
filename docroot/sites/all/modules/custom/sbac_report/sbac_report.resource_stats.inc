@@ -206,6 +206,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
         if ($entity_node) {
           $resource_feedback = get_entities_for_resources($entity_node, 'feedback');
           $workbench_moderation = get_workbench_moderation_history($entity_node);
+          $share_data = get_share_data_for_resource($entity_node);
           $authors = NULL;
           $reviewers = NULL;
           list($authors, $reviewers) = get_users_for_resources_stats_report($entity_node, $resource_feedback);
@@ -219,6 +220,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
           $data['workbench_moderation'] = $workbench_moderation;
           $data['authors'] = $authors;
           $data['reviewers'] = $reviewers;
+          $data['share'] = $share_data;
           get_counts_for_resource_stats($entity_node, $data);
 
           $report_configuration = $context['sandbox']['report_configuration'];
@@ -527,35 +529,6 @@ function build_resource_stats_csv($resource_filters) {
  * Returns an array of node ids to the resources.
  */
 function get_resources($resource_filters) {
-//  $query = new EntityFieldQuery();
-//  $entities = $query->entityCondition('entity_type', 'node')
-//    ->entityCondition('bundle', 'resource')
-//    ->propertyCondition('status', 1)
-//    ->fieldCondition('field_focus', 'tid', array_keys($resource_filters['types']));
-//
-//  set_field_condition_filter_restrictive($entities, $resource_filters['subject'], 'field_subject');
-//  set_field_condition_filter_restrictive($entities, $resource_filters['grade'], 'field_grades');
-//  set_field_condition_filter_restrictive($entities, $resource_filters['attribute'], 'field_attributes');
-//  $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->execute();
-//  $nids = array();
-//  if (array_key_exists('node', $entities) and $entities['node']) {
-//    $nids = array_keys($entities['node']);
-//  }
-//
-//  // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
-//  if (isset($resource_filters['subject'][1]) || isset($resource_filters['grade'][1]) || isset($resource_filters['attribute'][1])) {
-//    $entities = $query->entityCondition('entity_type', 'node')->entityCondition('bundle', 'resource')
-//      ->propertyCondition('status', 1);
-//    set_field_condition_niether_filter($entities, $resource_filters['subject'], 'field_subject');
-//    set_field_condition_niether_filter($entities, $resource_filters['grade'], 'field_grades');
-//    set_field_condition_niether_filter($entities, $resource_filters['attribute'], 'field_attributes');
-//    $entities = $entities->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')->addTag('WorkbenchModerationAssigned')->execute();
-//
-//    if (array_key_exists('node', $entities) and $entities['node']) {
-//      $nids = array_merge($nids, $entities['node']);
-//    }
-//  }
-
   $query = db_select('node', 'n');
   $query->fields('n', array('nid'));
   $query->join('field_data_field_focus', 'f', 'n.nid = f.entity_id AND n.vid = f.revision_id');
@@ -776,6 +749,36 @@ function get_entities_for_resources($resource, $entity_type) {
     }
   }
   return $wrappers;
+}
+
+/**
+ * Returns the share data for the resource.
+ *
+ * @param $resource
+ * @return mixed
+ */
+function get_share_data_for_resource($resource) {
+  $share_data['permanent_link_type'] = $resource->field_permanent_link_settings->value();
+  // # Unique Permanent Links Copied
+  $sql = "SELECT nid FROM {sbac_share_link_copy_count} WHERE nid = :nid GROUP BY nid";
+  $result = db_query($sql, array(':nid' => $resource->nid->value()));
+  $perm_links_copied = 0;
+  foreach ($result as $row) {
+    $perm_links_copied++;
+  }
+  $share_data['permanent_links_copied'] = $perm_links_copied;
+  $temp_link_status = $resource->field_temporary_link_settings->value();
+  $share_data['temp_public_link_status'] = $temp_link_status;
+  $temp_link_expiration = $resource->field_temporary_link_time->value();
+  $share_data['temp_public_link_expiration'] = $temp_link_expiration;
+  // # Temp Links Generated.
+  $sql = "SELECT count(nid) AS count FROM {sbac_share} WHERE nid = :nid";
+  $temp_links_generated = db_query($sql, array(':nid' => $resource->nid->value()))->fetchField();
+  $share_data['temp_public_links_generated'] = $temp_links_generated;
+  // # Temp Links Accessed
+  $share_data['temp_public_link_accesses'] = 0;
+
+  return $share_data;
 }
 
 /**
@@ -1034,6 +1037,41 @@ function get_total_tags($fieldkey, $data, $resource) {
   $count += count($resource->field_alignment_tags->value());
 
   return "$count";
+}
+
+/**
+ * Returns the value for the share data.
+ *
+ * @param $fieldkey
+ * @param $data
+ * @param $resource
+ * @return null
+ */
+function get_share_data($fieldkey, $data, $resource) {
+  $value = NULL;
+  if (isset($fieldkey[0])) {
+    switch ($fieldkey[0]) {
+      case 'permanent_link_type':
+        $value = $data['share'][$fieldkey[0]];
+        break;
+      case 'permanent_links_copied':
+        $value = $data['share'][$fieldkey[0]];
+        break;
+      case 'temp_public_link_status':
+        $value = $data['share'][$fieldkey[0]];
+        break;
+      case 'temp_public_link_expiration':
+        $value = $data['share'][$fieldkey[0]];
+        break;
+      case 'temp_public_links_generated':
+        $value = $data['share'][$fieldkey[0]];
+        break;
+      case 'temp_public_link_accesses';
+        $value = $data['share'][$fieldkey[0]];
+        break;
+    }
+  }
+  return $value;
 }
 
 /**
@@ -1359,7 +1397,6 @@ function set_report_columns() {
             'not_wrapper' => TRUE
           ),
           // gk
-
           array('field_total_views', 'Views'),
           array('field_unique_views', 'Unique Views'),
           array(
@@ -1367,7 +1404,12 @@ function set_report_columns() {
             'Total Number of Tag(s)',
             'function' => 'get_total_tags'
           ),
-
+          array('permanent_link_type', 'Type of Permanent Link', 'function' => 'get_share_data'),
+          array('permanent_links_copied', 'Permanent Links Copied', 'function' => 'get_share_data'),
+          array('temp_public_link_status', 'Temporary Public Link Status', 'function' => 'get_share_data'),
+          array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data'),
+          array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data'),
+          array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data'),
         ),
       ),
     );
