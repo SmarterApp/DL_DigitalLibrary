@@ -759,7 +759,11 @@ function get_entities_for_resources($resource, $entity_type) {
  */
 function get_share_data_for_resource($resource) {
   // Type
-  $share_data['permanent_link_type'] = $resource->field_permanent_link_settings->value();
+  $type = $resource->field_permanent_link_settings->value();
+  if (!$type) {
+    $type = 0;
+  }
+  $share_data['permanent_link_type'] = $type;
 
   // # Unique Permanent Links Copied
   $sql = "SELECT nid FROM {sbac_share_link_copy_count} WHERE nid = :nid GROUP BY nid";
@@ -771,21 +775,34 @@ function get_share_data_for_resource($resource) {
   $share_data['permanent_links_copied'] = $perm_links_copied;
 
   // Link Status
-  $temp_link_status = $resource->field_temporary_link_settings->value();
-  $share_data['temp_public_link_status'] = $temp_link_status;
+  $temp_link_status = $resource->field_temporary_public_link->value();
+  if (!$temp_link_status) {
+    $temp_link_status[0] = 0;
+  }
+  $share_data['temp_public_link_status'] = $temp_link_status[0];
 
-  // Link Expiration Time.  
-  $temp_link_expiration = $resource->field_temporary_link_time->value();
+  // Link Expiration Time.
+  $temp_link_expiration = $resource->field_temporary_public_link_time->value();
+  if (!$temp_link_expiration) {
+    $temp_link_expiration = 0;
+  }
   $share_data['temp_public_link_expiration'] = $temp_link_expiration;
 
   // # Temp Links Generated.
   $sql = "SELECT count(nid) AS count FROM {sbac_share} WHERE nid = :nid";
   $temp_links_generated = db_query($sql, array(':nid' => $resource->nid->value()))->fetchField();
+  if (!$temp_links_generated) {
+    $temp_links_generated = 0;
+  }
   $share_data['temp_public_links_generated'] = $temp_links_generated;
 
   // # Temp Links Accessed
   $sql = "SELECT access_count FROM {sbac_share} WHERE nid = :nid";
-  $temp_link_accesses = db_query($sql, array(':nid' => $resource->nid->value()))->fetchField();
+  $result = db_query($sql, array(':nid' => $resource->nid->value()));
+  $temp_link_accesses = 0;
+  foreach ($result as $row) {
+    $temp_link_accesses += $row->access_count;
+  }
   $share_data['temp_public_link_accesses'] = $temp_link_accesses;
 
   return $share_data;
@@ -1063,15 +1080,23 @@ function get_share_data($fieldkey, $data, $resource) {
     switch ($fieldkey[0]) {
       case 'permanent_link_type':
         $value = $data['share'][$fieldkey[0]];
+        ($value == 0 ? $value = 'private' : $value = 'public');
         break;
       case 'permanent_links_copied':
         $value = $data['share'][$fieldkey[0]];
         break;
       case 'temp_public_link_status':
         $value = $data['share'][$fieldkey[0]];
+        ($value == 0 ? $value = 'disabled' : $value = 'enabled');
         break;
       case 'temp_public_link_expiration':
         $value = $data['share'][$fieldkey[0]];
+        if ($value == 100) {
+          $value = '5 mins';
+        }
+        else {
+          $value .= ' days';
+        }
         break;
       case 'temp_public_links_generated':
         $value = $data['share'][$fieldkey[0]];
@@ -1414,12 +1439,12 @@ function set_report_columns() {
             'Total Number of Tag(s)',
             'function' => 'get_total_tags'
           ),
-          array('permanent_link_type', 'Type of Permanent Link', 'function' => 'get_share_data'),
-          array('permanent_links_copied', 'Permanent Links Copied', 'function' => 'get_share_data'),
-          array('temp_public_link_status', 'Temporary Public Link Status', 'function' => 'get_share_data'),
-          array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data'),
-          array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data'),
-          array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data'),
+          array('permanent_link_type', 'Type of Permanent Link', 'function' => 'get_share_data', 'field' => 'share'),
+          array('permanent_links_copied', 'Permanent Links Copied', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_status', 'Temporary Public Link Status', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data', 'field' => 'share'),
         ),
       ),
     );

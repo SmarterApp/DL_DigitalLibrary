@@ -318,6 +318,10 @@ function get_value_from_wrapper($fieldkey, $source) {
 
 function format_metadata_value_field($field, $is_date = FALSE, $field_in_object = NULL, $resource) {
   $field = grab_field_value($field, $field_in_object);
+  if ($field_in_object == 'share') {
+    return $field;
+  }
+
   $value = NULL;
   if ($field == NULL) {
     return $value;
