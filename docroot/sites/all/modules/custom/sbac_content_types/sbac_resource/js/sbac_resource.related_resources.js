@@ -7,11 +7,11 @@
   SBAC_Related_Resource.related_resources = {
     slider: '.section-5 .resources-container',
     slider_child: '.slides li',
-    slider_width: 270,
+    slider_width: 280,
 
     init_flexslider : function() {
       if ((slider = $(SBAC_Related_Resource.related_resources.slider)).length) {
-        $(slider).css('width', '820px');
+        $(slider).css('width', '840px');
         slider.flexslider({
           animation: "slide",
           animationLoop: false,
