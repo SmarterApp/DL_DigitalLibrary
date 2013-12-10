@@ -1384,9 +1384,16 @@ a.sbac-grid-layout {
 .node-resource .section-container section:last-child {
   padding-bottom: 50px;
 }
+/* line 1339, ../sass/sbac_resource.scss */
+.node-resource .resources-container.static {
+  width: 840px;
+  border-bottom: 1px solid #CCCCCC;
+  padding-bottom: 30px !important;
+}
 
+/*Fixed tag of Related Resource in Firefox */
 @-moz-document url-prefix() {
-  /* line 1341, ../sass/sbac_resource.scss */
+  /* line 1348, ../sass/sbac_resource.scss */
   .section-container.auto > section.active > .title a {
     font-size: 0.95em !important;
   }
