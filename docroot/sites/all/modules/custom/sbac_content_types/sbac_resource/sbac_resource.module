@@ -137,6 +137,9 @@ function sbac_resource_related_resources($nid) {
 }
 
 /**
+ * Takes the baseline resource node and compares the subject,
+ * grade and attributes to find related resources.
+ *
  * @param $node
  * @return array
  */
