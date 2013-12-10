@@ -1335,12 +1335,19 @@ a.sbac-grid-layout {
 			padding-bottom: 50px;
 		}
 	}	
+	
+	.resources-container.static {
+		width: 840px;
+		border-bottom: 1px solid #CCCCCC;
+		padding-bottom: 30px !important;
+	}
 }
 
+/*Fixed tag of Related Resource in Firefox */
 @-moz-document url-prefix() {
-.section-container.auto > section.active > .title a {
-	font-size: 0.95em !important;
-}
+	.section-container.auto > section.active > .title a {
+		font-size: 0.95em !important;
+	}
 }
  
 
