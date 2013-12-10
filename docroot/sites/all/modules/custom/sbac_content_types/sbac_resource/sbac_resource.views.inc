@@ -33,6 +33,10 @@ function sbac_resource_views_query_alter(&$view, &$query) {
       }
     }
 
+    /**
+     * Since the values displayed to the user are not the values displayed in the database (information is dependant on who is viewing it),
+     * we must manipulate the provided values so that the correct database values are searched.
+     */
     if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
       $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
       $filters = explode('::', $current_filters);
@@ -421,97 +425,6 @@ function sbac_resource_resource_review_apply_filters(&$view) {
 
     if (in_array(FEEDBACK_REVIEWER_RID, array_keys($user->roles))) {
       sbac_resource_filter_user_tags($view, $user);
-    }
-  }
-}
-
-/**
- * Determines the view output when filters are selected.
- *
- * @param $view
- * @param $filter_terms
- * @param $roles
- */
-function sbac_resource_determine_view_output(&$view, $filter_terms, $roles) {
-  if ($filter_terms) {
-    global $user;
-    foreach ($view->result as $key => $result) {
-      // To remove rows that should not be displayed because of the filter option.
-      if (isset($result->workbench_moderation_node_history_state)) {
-        switch ($result->workbench_moderation_node_history_state) {
-          case 'being_reviewed':
-            if ($completed = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single')) {
-              // check for an active Review by the current user to continue review
-              if ($active = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 0, 1, 'single')) {
-                $view->result[$key]->state_label = 'Being Reviewed';
-              }
-              else {
-                $view->result[$key]->state_label = 'Needs Review';
-              }
-            }
-            else {
-              // check for an active GK by the current user to continue review
-              if ($active = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'single')) {
-                $view->result[$key]->state_label = 'Being Reviewed';
-              }
-              else {
-                $view->result[$key]->state_label = 'Needs Review';
-              }
-            }
-            break;
-          case 'needs_review':
-            if ($completed = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single')) {
-              // check for an active Review by the current user to continue review
-              if ($active = _sbac_resource_determine_feedback($result->nid, 'qc', $user->uid, 1, 0, 1, 'single')) {
-                $view->result[$key]->state_label = 'Being Reviewed';
-              }
-              else {
-                $view->result[$key]->state_label = 'Needs Review';
-              }
-            }
-            else {
-              // check for an active GK by the current user to continue review
-              if ($active = _sbac_resource_determine_feedback($result->nid, 'gate_keeper', $user->uid, 1, 0, 1, 'single')) {
-                $view->result[$key]->state_label = 'Being Reviewed';
-              }
-              else {
-                $view->result[$key]->state_label = 'Needs Review';
-              }
-            }
-            break;
-          case 'approved':
-            $feedback = _sbac_resource_determine_feedback($result->nid, 'post', $user->uid, 1, 0, 1, 'single');
-            if ($feedback) {
-              $view->result[$key]->state_label = 'Being Reviewed';
-            }
-            else {
-              $view->result[$key]->state_label = 'Needs Posting';
-            }
-        }
-      }
-    }
-
-    // Loop around results. Determine if the filter(s) chosen are in the
-    // results. If not, remove the items that are not part of the filter
-    // criteria. Else, keep the result as it is part of the return set.
-    foreach ($view->result as $key => $result) {
-      switch ($result->state_label) {
-        case 'Being Reviewed':
-          if (!in_array($result->state_label, $filter_terms)) {
-            unset($view->result[$key]);
-          }
-          break;
-        case 'Needs Review':
-          if (!in_array($result->state_label, $filter_terms)) {
-            unset($view->result[$key]);
-          }
-          break;
-        case 'Needs Posting':
-          if (!in_array($result->state_label, $filter_terms)) {
-            unset($view->result[$key]);
-          }
-          break;
-      }
     }
   }
 }
