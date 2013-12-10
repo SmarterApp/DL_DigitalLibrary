@@ -5,7 +5,7 @@
   }
 
   SBAC_Related_Resource.related_resources = {
-    slider: '.section-5 .resources-container',
+    slider: '.resources-container',
     slider_child: '.slides li',
     slider_width: 280,
 
