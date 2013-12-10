@@ -766,7 +766,7 @@ function get_share_data_for_resource($resource) {
   $share_data['permanent_link_type'] = $type;
 
   // # Unique Permanent Links Copied
-  $sql = "SELECT nid FROM {sbac_share_link_copy_count} WHERE nid = :nid GROUP BY nid";
+  $sql = "SELECT uid FROM {sbac_share_link_copy_count} WHERE nid = :nid GROUP BY uid";
   $result = db_query($sql, array(':nid' => $resource->nid->value()));
   $perm_links_copied = 0;
   foreach ($result as $row) {
@@ -784,6 +784,9 @@ function get_share_data_for_resource($resource) {
   // Link Expiration Time.
   $temp_link_expiration = $resource->field_temporary_public_link_time->value();
   if (!$temp_link_expiration) {
+    $temp_link_expiration = 0;
+  }
+  if ($temp_link_status[0] == 0) {
     $temp_link_expiration = 0;
   }
   $share_data['temp_public_link_expiration'] = $temp_link_expiration;
@@ -1091,11 +1094,16 @@ function get_share_data($fieldkey, $data, $resource) {
         break;
       case 'temp_public_link_expiration':
         $value = $data['share'][$fieldkey[0]];
-        if ($value == 100) {
-          $value = '5 mins';
+        if ($value != 0) {
+          if ($value == 100) {
+            $value = '5 mins';
+          }
+          else {
+            $value .= ' days';
+          }
         }
         else {
-          $value .= ' days';
+          $value = NULL;
         }
         break;
       case 'temp_public_links_generated':

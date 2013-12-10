@@ -297,6 +297,9 @@ function sbac_share_create_resource_card(&$related_resources) {
   foreach ($related_resources as $nid => $score) {
     $node = node_load($nid);
     if ($node) {
+      // hacked all this up into "fields" and some are "classes",
+      // did this so i wouldn't have to modify the TPL that much
+      // since it was just a copy of the view template.
       $fields = array();
       $fields['nid'] = new stdClass;
       $fields['nid']->raw = $nid;
