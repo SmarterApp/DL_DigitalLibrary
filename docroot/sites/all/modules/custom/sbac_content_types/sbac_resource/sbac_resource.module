@@ -191,15 +191,13 @@ function sbac_resource_get_related_resources($baseline_node) {
             AND n.nid <> " . $baseline_node->nid;
 
     $result = db_query($query);
-    $subject_related_resources = array();
     $subject_nids = array();
     foreach ($result as $row) {
       $subject_nids[$row->nid] = $row->nid;
-      $subject_related_resources[] = $row;
     }
 
     // Compare baseline subjects against all other resource nodes that had the same baseline grades
-    if ($subject_related_resources) {
+    if ($subject_nids) {
       $baseline_grades_string = implode(',', $baseline_grades);
       if ($baseline_grades_string) {
         $subject_nids = implode(',', $subject_nids);
@@ -217,15 +215,13 @@ function sbac_resource_get_related_resources($baseline_node) {
             AND field_grades_tid IN (" . $baseline_grades_string . ")
             AND n.nid <> " . $baseline_node->nid;
         $result = db_query($query);
-        $grades_related_resources = array();
         $grade_nids = array();
         foreach ($result as $row) {
           $grade_nids[$row->nid] = $row->nid;
-          $grades_related_resources[] = $row;
         }
 
         // Compare baseline attributes against all other resource nodes that had the same baseline grades and subjects.
-        if ($grades_related_resources) {
+        if ($grade_nids) {
           $baseline_attributes_string = implode(',', $baseline_attributes);
           if ($baseline_attributes_string) {
             $grade_nids = implode(',', $grade_nids);
@@ -243,11 +239,9 @@ function sbac_resource_get_related_resources($baseline_node) {
               AND field_attributes_tid IN (" . $baseline_attributes_string . ")
               AND n.nid <> " . $baseline_node->nid;
             $result = db_query($query);
-            $attributes_related_resources = array();
             $attributes_nids = array();
             foreach ($result as $row) {
               $attributes_nids[$row->nid] = $row->nid;
-              $attributes_related_resources[] = $row;
             }
 
             /**
