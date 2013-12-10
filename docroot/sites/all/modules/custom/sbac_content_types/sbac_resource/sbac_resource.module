@@ -289,7 +289,7 @@ function sbac_resource_get_related_resources($baseline_node) {
 
   // sort related resources by score.
   if ($related_resources) {
-
+    asort($related_resources);
   }
 
   return $related_resources;
