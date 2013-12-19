@@ -273,7 +273,7 @@ function get_user_activity($users, $date_range) {
 
   # resources contributed:
   $sql = "select count(distinct(n.nid)) as count, n.uid, n.created from node as n join workbench_moderation_node_history as wmnh on n.nid = wmnh.nid
-    where n.type = 'resource' and n.uid in (%s) and wmnh.state!='draft' and
+    where n.type = 'resource' and n.uid in (%s) and wmnh.state!='draft' and wmnh.current <> '0' and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.uid";
   $user_activity['resources_contributed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
