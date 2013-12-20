@@ -275,7 +275,9 @@ function get_user_activity($users, $date_range) {
   # resources contributed:
   $sql = "SELECT node.created AS created,
             node.uid as uid,
-            COUNT(DISTINCT(node.nid)) as count
+            COUNT(DISTINCT(node.nid)) as count,
+            workbench_moderation_node_history.published AS workbench_moderation_node_history_published,
+            node.sticky AS node_sticky
             FROM
             {node} node
             LEFT JOIN {node_revision} node_revision ON node.vid = node_revision.vid
