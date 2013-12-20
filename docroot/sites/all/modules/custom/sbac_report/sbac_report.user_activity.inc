@@ -253,6 +253,7 @@ function count_with_users_query($sql_template, $users, $from_date = NULL, $to_da
  * routine, each one a count of something.  This routine also gets the terms of service legal information.
  */
 function get_user_activity($users, $date_range) {
+  $temp_users = $users;
   $users = implode(',', $users); // make the users a comma separated list.
   // extract the date range into a from and to date
   $dates = explode('--', $date_range);
@@ -272,10 +273,21 @@ function get_user_activity($users, $date_range) {
   $user_activity['resources_reviewed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # resources contributed:
-  $sql = "select count(distinct(n.nid)) as count, n.uid, n.created from node as n join workbench_moderation_node_history as wmnh on n.nid = wmnh.nid
-    where n.type = 'resource' and n.uid in (%s) and wmnh.state!='draft' and wmnh.current <> '0' and
-    DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.uid";
-  $user_activity['resources_contributed'] = count_with_users_query($sql, $users, $from_date, $to_date);
+  $sql = "SELECT node.created AS created,
+            node.uid as uid,
+            COUNT(DISTINCT(node.nid)) as count
+            FROM
+            {node} node
+            LEFT JOIN {node_revision} node_revision ON node.vid = node_revision.vid
+            INNER JOIN {workbench_moderation_node_history} workbench_moderation_node_history ON node_revision.vid = workbench_moderation_node_history.vid
+            WHERE (((node.uid IN (:uids)))
+            AND (((node.type IN ('resource'))
+            AND (workbench_moderation_node_history.current <> '0')
+            AND (workbench_moderation_node_history.state NOT IN  ('draft')))
+            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))))
+            GROUP BY node.uid";
+  $results = db_query($sql, array(':uids' => $temp_users, ':from_date' => $from_date, ':to_date' => $to_date));
+  $user_activity['resources_contributed'] = $results->fetchAll();
 
   # Resources Viewed:
   $sql = "select count(id) as count, uid,created from eck_feedback where
