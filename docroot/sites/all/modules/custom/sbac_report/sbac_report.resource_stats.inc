@@ -867,15 +867,16 @@ function get_users_for_resources_stats_report($resource, $feedback_reviews) {
     print $e->getMessage();
   }
   $sql = <<<SQL
-    select * from users where name in (%s)
+    select * from users where name in (:authors)
 SQL;
-  $query = sprintf($sql, "'" . implode("','", array_keys($authors)) . "'");
-  $sql = NULL;
-  unset($sql); //memory management
+  // $query = sprintf($sql, "'" . implode("','", array_keys($authors)) . "'");
 
-  $result = db_query($query);
+  $result = db_query($sql, array(':authors' => array_keys($authors)));
   $query = NULL;
   unset($query); //memory management
+
+  $sql = NULL;
+  unset($sql); //memory management
 
   $authors = array();
   foreach ($result as $record) {
