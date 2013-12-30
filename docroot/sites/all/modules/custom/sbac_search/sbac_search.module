@@ -416,7 +416,7 @@ function sbac_search_resource_review_form() {
     '#type' => 'submit',
     '#value' => 'Close',
     '#attributes' => array('id' => 'sbac-search-close-button'),
-    '#prefix' => '<div class="category-buttons">',
+    '#prefix' => '<div class="category-buttons slideable">',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
