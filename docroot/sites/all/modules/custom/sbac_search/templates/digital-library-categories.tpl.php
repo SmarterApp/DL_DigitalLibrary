@@ -13,7 +13,7 @@
     }
     ?>
   </div>
-  <div class="categories-filter clearfix">
+  <div class="categories-filter clearfix slideable">
     <?php
     $count = 1;
     $total_cols = 3;
