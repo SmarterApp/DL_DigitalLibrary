@@ -1321,7 +1321,6 @@ function sbac_resource_node_access_records($node) {
           // Ensure we're not removing the original.
           if ($temp_grant['realm'] == 'able_to_review_qc' && $temp_grant['gid'] == $uid && $j != $key) {
             unset($grants[$j]);
-            drush_print('We are removing uid: ' . $uid);
           }
         }
       }
