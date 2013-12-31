@@ -1310,7 +1310,22 @@ function sbac_resource_node_access_records($node) {
         }
       }
     }
-
+    // @FIXME
+    // This is a workaround since the above code is adding the same UID multiple
+    // times for a given grant realm and nid. The {node_access} table
+    // has a compund key of nid, gid, and realm, hence the SQL constraint error.
+    foreach ($grants as $key => $grant) {
+      if ($grant['realm'] == 'able_to_review_qc') {
+        $uid = $grant['gid'];
+        foreach ($grants as $j => $temp_grant) {
+          // Ensure we're not removing the original.
+          if ($temp_grant['realm'] == 'able_to_review_qc' && $temp_grant['gid'] == $uid && $j != $key) {
+            unset($grants[$j]);
+            drush_print('We are removing uid: ' . $uid);
+          }
+        }
+      }
+    }
     // This is so the resource contributor can view his own nodes regardless of state.
     if ($restricted) {
       $grants[] = array(
