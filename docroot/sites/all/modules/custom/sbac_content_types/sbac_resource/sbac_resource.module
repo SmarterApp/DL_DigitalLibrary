@@ -190,7 +190,7 @@ function sbac_resource_get_related_resources($baseline_node) {
             WHERE n.type = 'resource'
             AND w.state = 'published'
             AND w.current = 1
-            AND field_subject_tid IN (" . $baseline_subjects_string . ")
+            AND s.field_subject_tid IN (" . $baseline_subjects_string . ")
             AND n.nid <> " . $baseline_node->nid;
 
     $result = db_query($query);
@@ -202,7 +202,7 @@ function sbac_resource_get_related_resources($baseline_node) {
     // Compare baseline subjects against all other resource nodes that had the same baseline grades
     if ($subject_nids) {
       $baseline_grades_string = implode(',', $baseline_grades);
-      if ($baseline_grades_string) {
+      if ($baseline_grades) {
         $subject_nids = implode(',', $subject_nids);
         $query = "
             SELECT
@@ -215,7 +215,7 @@ function sbac_resource_get_related_resources($baseline_node) {
             AND w.state = 'published'
             AND w.current = 1
             AND n.nid IN (" . $subject_nids . ")
-            AND field_grades_tid IN (" . $baseline_grades_string . ")
+            AND g.field_grades_tid IN (" . $baseline_grades_string . ")
             AND n.nid <> " . $baseline_node->nid;
         $result = db_query($query);
         $grade_nids = array();
@@ -226,7 +226,7 @@ function sbac_resource_get_related_resources($baseline_node) {
         // Compare baseline attributes against all other resource nodes that had the same baseline grades and subjects.
         if ($grade_nids) {
           $baseline_attributes_string = implode(',', $baseline_attributes);
-          if ($baseline_attributes_string) {
+          if ($baseline_attributes) {
             $grade_nids = implode(',', $grade_nids);
             $query = "
               SELECT
@@ -239,7 +239,7 @@ function sbac_resource_get_related_resources($baseline_node) {
               AND w.state = 'published'
               AND w.current = 1
               AND n.nid IN (" . $grade_nids . ")
-              AND field_attributes_tid IN (" . $baseline_attributes_string . ")
+              AND a.field_attributes_tid IN (" . $baseline_attributes_string . ")
               AND n.nid <> " . $baseline_node->nid;
             $result = db_query($query);
             $attributes_nids = array();
@@ -257,7 +257,12 @@ function sbac_resource_get_related_resources($baseline_node) {
             */
             // This is the resource pool of nodes.
             if ($attributes_nids) {
+              $count = 0;
               foreach ($attributes_nids as $nid) {
+                if ($count >= 8) {
+                  break;
+                }
+
                 $query = "SELECT sl.field_student_learning_rating AS learning,
                           pd.field_pro_dev_rating AS pro_dev,
                           eu.field_ease_use_rating AS ease_use
@@ -276,6 +281,7 @@ function sbac_resource_get_related_resources($baseline_node) {
                 else {
                   $related_resources[$nid] = 0;
                 }
+                $count++;
               }
             }
           }
@@ -285,7 +291,7 @@ function sbac_resource_get_related_resources($baseline_node) {
   }
 
   // sort related resources by score.
-  if ($related_resources) {
+  if (count($related_resources) > 0) {
     asort($related_resources);
   }
 
