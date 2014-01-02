@@ -19,6 +19,9 @@
       if ($('#sbac-search-current-filters').val() != '') {
         $('#edit-reset-filters').removeClass('js-hide');
       }
+      else {
+        jQuery('.category-hide').removeClass('js-hide');
+      }
 
       // Add filter to current filters
       $('.category-filter').click(function () {
@@ -42,6 +45,7 @@
             current_filters.val(filter_tids);
           }
           reset_filters.removeClass('js-hide');
+          jQuery('.category-hide').addClass('js-hide');
         }
         else {
           var last_filter = $('.categories-current-filters .current-filter:last');
@@ -99,6 +103,13 @@
 
       // Close the filter list.
       $('.category-hide').click( function () {
+        var slideableItems = $('.slideable');
+        if (slideableItems.is(':visible')) {
+          jQuery(this).text(Drupal.t('Show Categories'));
+        }
+        else {
+          jQuery(this).text(Drupal.t('Hide Categories'));
+        }
         close_categories_list();
         $('.selectedDiv').hide();
         return false;
@@ -161,6 +172,7 @@
           if (current_filters.val() == '') {
             $('.categories-current-filters').addClass('noshow');
             reset_filters.addClass('js-hide');
+            jQuery('.category-hide').removeClass('js-hide');
           }
         }
         return false;
@@ -187,6 +199,7 @@
       $('.category-filter-list ul li').removeClass('current');
       current_filters.val('');
       $('.selectedDiv').hide();
+      jQuery('.category-hide').removeClass('js-hide');
       window.location.href = 'sbac-search/clear-all?location=digital-library-resources';
       return false;
     }
