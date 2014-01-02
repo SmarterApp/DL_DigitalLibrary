@@ -90,6 +90,20 @@
         return false;
       });
 
+      // Close the filter list.
+      $('.category-hide').click( function () {
+        var slideableItems = $('.slideable');
+        if (slideableItems.is(':visible')) {
+          jQuery(this).text(Drupal.t('Show Categories'));
+        }
+        else {
+          jQuery(this).text(Drupal.t('Hide Categories'));
+        }
+        close_categories_list();
+        $('.selectedDiv').hide();
+        return false;
+      });
+
       // Open / Close the filter list.
       close_categories_list = function () {
         var slideableItems = $('.slideable');

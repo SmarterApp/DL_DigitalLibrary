@@ -90,6 +90,13 @@
         return false;
       });
 
+      // Close the filter list.
+      $('.category-hide').click( function () {
+        close_categories_list();
+        $('.selectedDiv').hide();
+        return false;
+      });
+
       // Open / Close the filter list.
       close_categories_list = function () {
         var slideableItems = $('.slideable');

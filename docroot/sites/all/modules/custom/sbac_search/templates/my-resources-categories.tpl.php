@@ -1,18 +1,5 @@
 <div class="categories-container clearfix">
   <?php ($cf_value ? $class = '' : $class = 'noshow'); ?>
-  <div class="categories-current-filters clearfix <?php echo $class; ?>" id="sbac-category-current-filters">
-    <div class="categories-clear-all noshow right">
-      <a class="categories-clear-all-button button tiny">Clear All</a>
-    </div>    
-    <h3>Selected Categories</h3>
-    <?php
-    if ($cf_html) {
-      foreach ($cf_html as $current_filter_html) {
-        echo $current_filter_html;
-      }
-    }
-    ?>
-  </div>
   <div class="categories-filter clearfix slideable">
     <?php
     $count = 1;
@@ -67,6 +54,20 @@
       }
     }
 
+    ?>
+  </div>
+  <?php ($cf_value ? $class = '' : $class = 'noshow'); ?>
+  <div class="categories-current-filters clearfix <?php echo $class; ?>" id="sbac-category-current-filters">
+    <div class="categories-clear-all noshow right">
+      <a class="categories-clear-all-button button tiny">Clear All</a>
+    </div>
+    <h3>Selected Categories</h3>
+    <?php
+    if ($cf_html) {
+      foreach ($cf_html as $current_filter_html) {
+        echo $current_filter_html;
+      }
+    }
     ?>
   </div>
 </div>
