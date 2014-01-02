@@ -365,6 +365,14 @@ function sbac_search_my_resources_form() {
     ),
   );
 
+  $form['reset_filters'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset Filters'),
+    '#attributes' => array(
+      'class' => array('js-hide'),
+    ),
+  );
+
   $form['filter'] = array(
     '#type' => 'submit',
     '#value' => 'Apply Filters',
@@ -422,6 +430,14 @@ function sbac_search_resource_review_form() {
       'wrapper' => '',
       'method' => 'replace',
       'effect' => 'fade'
+    ),
+  );
+
+  $form['reset_filters'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset Filters'),
+    '#attributes' => array(
+      'class' => array('js-hide'),
     ),
   );
 
@@ -492,6 +508,14 @@ function sbac_search_digital_library_resources_form() {
       'wrapper' => '',
       'method' => 'replace',
       'effect' => 'fade'
+    ),
+  );
+
+  $form['reset_filters'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset Filters'),
+    '#attributes' => array(
+      'class' => array('js-hide'),
     ),
   );
 
