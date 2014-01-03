@@ -124,9 +124,11 @@
         var slideableItems = $('.slideable');
         if (slideableItems.is(':visible')) {
           jQuery(this).text(Drupal.t('Show Categories'));
+          jQuery(this).toggleClass('active');
         }
         else {
           jQuery(this).text(Drupal.t('Hide Categories'));
+          jQuery(this).toggleClass('active');
         }
         close_categories_list();
         $('.selectedDiv').hide();
