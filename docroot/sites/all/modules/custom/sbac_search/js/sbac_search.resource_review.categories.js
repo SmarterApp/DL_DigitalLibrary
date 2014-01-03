@@ -22,7 +22,7 @@
         // The button is in edit state.
         if (isEdit) {
           $('.categories-filter.slideable').slideDown('fast');
-          $(this).text(Drupal.t('Apply Filters'));
+          $(this).text(Drupal.t('Apply Filters')).removeClass('is-edit');
           Drupal.settings.sbac_search.isEdit = 0;
           return false;
         }
