@@ -16,6 +16,23 @@
         }
       });
 
+      $('#sbac-search-filter-button').click(function() {
+        var isEdit = Drupal.settings.sbac_search.isEdit;
+
+        // The button is in edit state.
+        if (isEdit) {
+          $('.categories-filter.slideable').slideDown('fast');
+          $(this).text(Drupal.t('Apply Filters'));
+          Drupal.settings.sbac_search.isEdit = 0;
+          return false;
+        }
+        else {
+          $('.categories-filter.slideable').slideUp('slow');
+          $(this).text(Drupal.t('Edit Filters')).addClass('is-edit');
+          Drupal.settings.sbac_search.isEdit = 1;
+        }
+      });
+
       if ($('#sbac-search-current-filters').val() != '') {
         $('#edit-reset-filters').removeClass('js-hide');
       }
@@ -106,9 +123,11 @@
         var slideableItems = $('.slideable');
         if (slideableItems.is(':visible')) {
           jQuery(this).text(Drupal.t('Show Categories'));
+          jQuery(this).toggleClass('active');
         }
         else {
           jQuery(this).text(Drupal.t('Hide Categories'));
+          jQuery(this).toggleClass('active');
         }
         close_categories_list();
         $('.selectedDiv').hide();
