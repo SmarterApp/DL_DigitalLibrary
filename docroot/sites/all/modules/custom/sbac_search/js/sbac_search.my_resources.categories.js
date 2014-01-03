@@ -108,6 +108,7 @@
       $('#sbac-search-cat-button').click( function () {
         // allow open/close category if not on no results page
         close_categories_list();
+        $('.filters.sbac-filter-cat-area').show();
         $('.selectedDiv').hide();
         return false;
       });

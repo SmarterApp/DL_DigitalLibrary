@@ -988,3 +988,12 @@ function sbac_resource_update_7043() {
   db_query($query, array(':visibility' => 0, ':module' => 'sbac_search', ':delta' => 'sbac_search_categories_button'));
   cache_clear_all();
 }
+
+/**
+ * Add back categories block to certain pages.
+ */
+function sbac_resource_update_7044() {
+  $query = "UPDATE {block} SET visibility = :visibility WHERE module = :module AND delta = :delta";
+  db_query($query, array(':visibility' => 1, ':module' => 'sbac_search', ':delta' => 'sbac_search_categories_button'));
+  cache_clear_all();
+}
