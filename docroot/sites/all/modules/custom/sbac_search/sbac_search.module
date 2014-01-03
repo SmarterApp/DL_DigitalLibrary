@@ -342,7 +342,7 @@ function sbac_search_my_resources_form() {
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide" href="#">Hide Categories</a>',
+	'#prefix' => '<a class="category-hide js-hide" href="#">Hide Categories</a>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),
@@ -411,7 +411,7 @@ function sbac_search_resource_review_form() {
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide" href="#">Hide Categories</a>',
+	'#prefix' => '<a class="category-hide js-hide" href="#">Hide Categories</a>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),
@@ -480,7 +480,7 @@ function sbac_search_digital_library_resources_form() {
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide" href="#">Hide Categories</a>',
+	'#prefix' => '<a class="category-hide js-hide" href="#">Hide Categories</a>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),
