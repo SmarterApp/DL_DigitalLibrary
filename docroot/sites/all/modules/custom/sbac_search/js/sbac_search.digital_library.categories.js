@@ -99,6 +99,8 @@
         $('.category-filter-list').hide();
         $('.category-filter-list-' + vid).show();
         $('.category-filter-list-' + vid).addClass('selectedDiv');
+        // Added to remove the overflow issue on Chrome and Safari.
+        $('.categories-filter.slideable').removeAttr('style');
         e.stopPropagation();
         return false;
       });
