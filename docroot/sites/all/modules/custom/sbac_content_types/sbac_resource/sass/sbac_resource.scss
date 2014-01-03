@@ -620,7 +620,7 @@ a.sbac-grid-layout {
 .filters {
   background: #c9eaf8;
   color: #0684ad;
-  padding: 20px 0;
+  padding: 45px 0 0;
   border-top: 2px solid #0684ad;
   border-bottom: 1px solid #94d8f3;
 
@@ -696,6 +696,7 @@ a.sbac-grid-layout {
 
   .category-buttons {
     padding-right: 5px;
+		padding-bottom: 20px;
     text-align: right;
 
     button {
@@ -776,12 +777,15 @@ a.sbac-grid-layout {
       display: none;
     }
 
-    margin: 10px 20px 20px;
-    padding: 0 0 10px;
-    color: white;
-    border: 1px solid white;
-    border-width: 0 0 1px;
-
+    margin: 10px 20px 10px;
+    padding: 10px 0 10px;
+    /*color: white;
+        border: 1px solid white;
+        border-width: 0 0 1px; 
+    */
+		border-top: 1px solid rgba(255, 255, 255, 0.9);
+	  box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
+	
     h3 {
       color: #063e5f;
       font-size: 18px;
@@ -1352,5 +1356,75 @@ a.sbac-grid-layout {
 }
  
 
+/*Resources search filter button*/
+#sbac-search-filter-button:before {
+    background-image: url("../images/icon-buttonAccept.png");
+    background-position: center center;
+    content: " ";
+    display: inline-block;
+    height: 18px;
+    margin-right: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 18px;
+}
+
+#edit-reset-filters {
+	background-color: #8A1538;
+  border: 1px solid #793348;
+}
+
+#edit-reset-filters:hover {
+	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+}
+   	
+#edit-reset-filters:before {
+    background-image: url("../images/icon-buttonReset.png");
+    background-position: center center;
+    content: " ";
+    display: inline-block;
+    height: 18px;
+    margin-right: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 17px;
+} 
+
+/*Categories toggle*/
+.sbac-filter-cat-area {
+	.category-hide {
+			position: absolute;
+			right: 20px;
+			top: -32px;
+			fone-size: 13px;
+		 	color: #006082;
+	}
+	a.category-hide:hover {
+		text-decoration: underline;
+		color: #006082;
+	}
+
+	.category-hide:after {
+	    background-image: url("../images/icon-toggle-up.png");
+	    background-position: center center;
+	    content: " ";
+	    display: inline-block;
+	    height: 12px;
+	    margin-left: 5px;
+	    vertical-align: baseline;
+	    width: 10px;
+	}
+}
+
+.sbac-filter-cat-area.active {
+
+	.category-hide:after {
+	    background-image: url("../images/icon-toggle-down.png");
+			/*transform: scaleY(-1);*/
+	}
+}
 
 
+	
+	
+	
