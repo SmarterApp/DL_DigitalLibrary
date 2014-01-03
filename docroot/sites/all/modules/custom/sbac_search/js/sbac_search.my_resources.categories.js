@@ -16,15 +16,41 @@
         }
       });
 
+      $('#sbac-search-filter-button').click(function() {
+        var isEdit = Drupal.settings.sbac_search.isEdit;
+
+        // The button is in edit state.
+        if (isEdit) {
+          $('.categories-filter.slideable').slideDown('fast');
+          $(this).text(Drupal.t('Apply Filters')).removeClass('is-edit');
+          Drupal.settings.sbac_search.isEdit = 0;
+          return false;
+        }
+        else {
+          $('.categories-filter.slideable').slideUp('slow');
+          $(this).text(Drupal.t('Edit Filters')).addClass('is-edit');
+          Drupal.settings.sbac_search.isEdit = 1;
+        }
+      });
+
+      if ($('#sbac-search-current-filters').val() != '') {
+        $('#edit-reset-filters').removeClass('js-hide');
+      }
+      else {
+        jQuery('.category-hide').removeClass('js-hide');
+      }
+
       // Add filter to current filters
       $('.category-filter').click(function () {
         var filter_name = $(this).children('.filter-name');
         var current_filters = $('#sbac-search-current-filters');
+        var reset_filters = $('#edit-reset-filters');
         if (!filter_name.hasClass('current')) {
           var last_filter = $('.categories-current-filters');
           last_filter.append('<div class="current-filter"><span vid="' + filter_name.attr('vid') + '" tid="' + filter_name.attr('tid') + '" class="filter-name">' + filter_name.html() + '</span></div>');
           filter_name.addClass('current');
           filter_name.parent().addClass('current');
+
           Drupal.behaviors.sbac_my_resources_remove.attach(context, settings);
           // Add the tid to the filter list
           if (current_filters.val() == '') {
@@ -36,6 +62,8 @@
             filter_tids += '::' + filter_name.attr('vid') + ':' + filter_name.attr('tid');
             current_filters.val(filter_tids);
           }
+          reset_filters.removeClass('js-hide');
+          jQuery('.category-hide').addClass('js-hide');
         }
         else {
           var last_filter = $('.categories-current-filters .current-filter:last');
@@ -52,6 +80,7 @@
           }
           else {
             $('.categories-current-filters').addClass('noshow');
+            reset_filters.addClass('js-hide');
             current_filters.val('');
           }
         }
@@ -79,6 +108,7 @@
       $('#sbac-search-cat-button').click( function () {
         // allow open/close category if not on no results page
         close_categories_list();
+        $('.filters.sbac-filter-cat-area').show();
         $('.selectedDiv').hide();
         return false;
       });
@@ -90,17 +120,33 @@
         return false;
       });
 
+      // Close the filter list.
+      $('.category-hide').click( function () {
+        var slideableItems = $('.slideable');
+        if (slideableItems.is(':visible')) {
+          jQuery(this).text(Drupal.t('Show Categories'));
+          jQuery(this).toggleClass('active');
+        }
+        else {
+          jQuery(this).text(Drupal.t('Hide Categories'));
+          jQuery(this).toggleClass('active');
+        }
+        close_categories_list();
+        $('.selectedDiv').hide();
+        return false;
+      });
+
       // Open / Close the filter list.
       close_categories_list = function () {
-        var filter_container = $('.sbac-filter-cat-area');
-        if (filter_container.is(':visible')) {
+        var slideableItems = $('.slideable');
+        if (slideableItems.is(':visible')) {
           $.cookie("sbac-my-resources-filters-closed", 1);
-          filter_container.slideUp('slow');
+          slideableItems.slideUp('slow');
           $('.sbac-filter-cat-area').removeClass("active");
         }
         else{
           $.cookie("sbac-my-resources-filters-closed", 0);
-          filter_container.slideDown('fast');
+          slideableItems.slideDown('fast');
           $('.sbac-filter-cat-area').addClass("active");
         }
       }
@@ -118,6 +164,7 @@
       // Remove's the individual filters.
       $('#sbac-category-current-filters .current-filter').click( function() {
         $('.selectedDiv').hide();
+        var reset_filters = $('#edit-reset-filters');
         var current_filters = $('#sbac-search-current-filters');
         var vid = $(this).children().attr('vid');
         var tid = $(this).children().attr('tid');
@@ -145,6 +192,8 @@
 
           if (current_filters.val() == '') {
             $('.categories-current-filters').addClass('noshow');
+            reset_filters.addClass('js-hide');
+            jQuery('.category-hide').removeClass('js-hide');
           }
         }
         return false;
@@ -160,16 +209,20 @@
   Drupal.behaviors.sbac_my_resources_clear_all = {
     attach: function (context, settings) {
       // Removes all individual filters.
-      $('.categories-clear-all-button').click( function() {
-        var current_filters = $('#sbac-search-current-filters');
-        $('.categories-current-filters').addClass('noshow');
-        $('#sbac-category-current-filters .current-filter').remove();
-        $('.category-filter-list ul li').removeClass('current');
-        current_filters.val('');
-        $('.selectedDiv').hide();
-        window.location.href = 'sbac-search/clear-all?location=my-resources';
-        return false;
-      });
+      $('.categories-clear-all-button').click(this.clearAllCategories);
+      $('#edit-reset-filters').click(this.clearAllCategories);
+    },
+
+    clearAllCategories: function() {
+      var current_filters = $('#sbac-search-current-filters');
+      $('.categories-current-filters').addClass('noshow');
+      $('#sbac-category-current-filters .current-filter').remove();
+      $('.category-filter-list ul li').removeClass('current');
+      current_filters.val('');
+      $('.selectedDiv').hide();
+      jQuery('.category-hide').removeClass('js-hide');
+      window.location.href = 'sbac-search/clear-all?location=my-resources';
+      return false;
     }
   };
 
