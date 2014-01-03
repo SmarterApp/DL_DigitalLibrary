@@ -10097,3 +10097,33 @@ a.tabledrag-handle .handle {
   display: inline-block;
   vertical-align: middle;
 }
+
+/*Links that Open in a New Window for Glossary of Terms*/
+/* line 2596, ../sass/custom.scss */
+.glossary-link-container {
+  text-align: right;
+  padding-bottom: 15px;
+  margin-right: 35px;
+}
+/* line 2601, ../sass/custom.scss */
+.glossary-link-container a {
+  border-bottom: 1px solid #0583AC;
+  color: #0583AC;
+  font-size: 13px;
+}
+/* line 2607, ../sass/custom.scss */
+.glossary-link-container a:hover {
+  border-bottom: 1px solid #8A1538;
+  color: #8A1538;
+}
+/* line 2612, ../sass/custom.scss */
+.glossary-link-container .glossary-link:after {
+  background-image: url("../images/icon-newWindow.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 12px;
+  margin-left: 5px;
+  vertical-align: baseline;
+  width: 12px;
+}
