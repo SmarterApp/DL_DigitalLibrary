@@ -1418,18 +1418,24 @@ a.sbac-grid-layout {
   width: 18px;
 }
 
-/* line 1372, ../sass/sbac_resource.scss */
+/* line 1371, ../sass/sbac_resource.scss */
+#sbac-search-filter-button.is-edit:before {
+  background-image: url("../images/icon-buttonEdit.png");
+  width: 17px;
+}
+
+/* line 1375, ../sass/sbac_resource.scss */
 #edit-reset-filters {
   background-color: #8A1538;
   border: 1px solid #793348;
 }
 
-/* line 1377, ../sass/sbac_resource.scss */
+/* line 1380, ../sass/sbac_resource.scss */
 #edit-reset-filters:hover {
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
-/* line 1381, ../sass/sbac_resource.scss */
+/* line 1384, ../sass/sbac_resource.scss */
 #edit-reset-filters:before {
   background-image: url("../images/icon-buttonReset.png");
   background-position: center center;
@@ -1443,21 +1449,23 @@ a.sbac-grid-layout {
 }
 
 /*Categories toggle*/
-/* line 1395, ../sass/sbac_resource.scss */
-.sbac-filter-cat-area .category-hide {
+/* line 1397, ../sass/sbac_resource.scss */
+.category-hide {
   position: absolute;
   right: 20px;
   top: -32px;
   fone-size: 13px;
   color: #006082;
 }
-/* line 1402, ../sass/sbac_resource.scss */
-.sbac-filter-cat-area a.category-hide:hover {
+
+/* line 1405, ../sass/sbac_resource.scss */
+a.category-hide:hover {
   text-decoration: underline;
   color: #006082;
 }
-/* line 1407, ../sass/sbac_resource.scss */
-.sbac-filter-cat-area .category-hide:after {
+
+/* line 1410, ../sass/sbac_resource.scss */
+.category-hide.active:after {
   background-image: url("../images/icon-toggle-up.png");
   background-position: center center;
   content: " ";
@@ -1469,7 +1477,14 @@ a.sbac-grid-layout {
 }
 
 /* line 1421, ../sass/sbac_resource.scss */
-.sbac-filter-cat-area.active .category-hide:after {
+.category-hide:after {
   background-image: url("../images/icon-toggle-down.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 12px;
+  margin-left: 5px;
+  vertical-align: baseline;
+  width: 10px;
   /*transform: scaleY(-1);*/
 }
