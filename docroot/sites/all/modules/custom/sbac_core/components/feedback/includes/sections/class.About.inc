@@ -25,8 +25,8 @@ class About extends Base {
   public function getContent() {
     drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_about.js');
 
-    $output = '';
     $teaser = node_view($this->_node, 'secondary_teaser');
+    $output = '<div class="glossary-link-container"><a href="/glossary" class="glossary-link" target="_blank">Glossary Of Terms</a></div>';
     $output .= drupal_render($teaser);
 
     return $output;
