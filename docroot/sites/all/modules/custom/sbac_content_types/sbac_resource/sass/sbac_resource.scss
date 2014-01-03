@@ -696,7 +696,7 @@ a.sbac-grid-layout {
 
   .category-buttons {
     padding-right: 5px;
-		padding-bottom: 20px;
+		padding-bottom: 10px;
     text-align: right;
 
     button {
@@ -777,8 +777,8 @@ a.sbac-grid-layout {
       display: none;
     }
 
-    margin: 10px 20px 10px;
-    padding: 10px 0 10px;
+    margin: 10px 20px 5px;
+    padding: 10px 0 0;
     /*color: white;
         border: 1px solid white;
         border-width: 0 0 1px; 
@@ -1394,16 +1394,20 @@ a.sbac-grid-layout {
 } 
 
 /*Categories toggle*/
-.category-hide {
+a.category-hide {
 		position: absolute;
 		right: 20px;
-		top: -32px;
+		top: -30px;
 		fone-size: 13px;
 	 	color: #006082;
 }
 
 a.category-hide:hover {
 	text-decoration: underline;
+	color: #006082;
+}
+
+a.category-hide:focus {
 	color: #006082;
 }
 
@@ -1427,7 +1431,6 @@ a.category-hide:hover {
     margin-left: 5px;
     vertical-align: baseline;
     width: 10px;
-		/*transform: scaleY(-1);*/
 }
 
 

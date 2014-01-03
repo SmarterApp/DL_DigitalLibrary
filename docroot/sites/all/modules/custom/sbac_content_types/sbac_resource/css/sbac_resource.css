@@ -724,7 +724,7 @@ a.sbac-grid-layout {
 /* line 697, ../sass/sbac_resource.scss */
 .filters .category-buttons {
   padding-right: 5px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   text-align: right;
 }
 /* line 702, ../sass/sbac_resource.scss */
@@ -814,8 +814,8 @@ a.sbac-grid-layout {
 
 /* line 775, ../sass/sbac_resource.scss */
 .categories-current-filters {
-  margin: 10px 20px 10px;
-  padding: 10px 0 10px;
+  margin: 10px 20px 5px;
+  padding: 10px 0 0;
   /*color: white;
       border: 1px solid white;
       border-width: 0 0 1px; 
@@ -1450,10 +1450,10 @@ a.sbac-grid-layout {
 
 /*Categories toggle*/
 /* line 1397, ../sass/sbac_resource.scss */
-.category-hide {
+a.category-hide {
   position: absolute;
   right: 20px;
-  top: -32px;
+  top: -30px;
   fone-size: 13px;
   color: #006082;
 }
@@ -1465,6 +1465,11 @@ a.category-hide:hover {
 }
 
 /* line 1410, ../sass/sbac_resource.scss */
+a.category-hide:focus {
+  color: #006082;
+}
+
+/* line 1414, ../sass/sbac_resource.scss */
 .category-hide.active:after {
   background-image: url("../images/icon-toggle-up.png");
   background-position: center center;
@@ -1476,7 +1481,7 @@ a.category-hide:hover {
   width: 10px;
 }
 
-/* line 1421, ../sass/sbac_resource.scss */
+/* line 1425, ../sass/sbac_resource.scss */
 .category-hide:after {
   background-image: url("../images/icon-toggle-down.png");
   background-position: center center;
@@ -1486,5 +1491,4 @@ a.category-hide:hover {
   margin-left: 5px;
   vertical-align: baseline;
   width: 10px;
-  /*transform: scaleY(-1);*/
 }
