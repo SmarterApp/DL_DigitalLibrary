@@ -244,9 +244,8 @@ function sbac_search_block_info() {
 
   $blocks['sbac_search_categories_button'] = array(
     'info' => t('Categories'),
-    'region' => 'search',
     'visibility' => BLOCK_VISIBILITY_LISTED,
-    'status' => 1,
+    'status' => 0,
     'cache' => DRUPAL_NO_CACHE,
     'weight' => 1,
   );
