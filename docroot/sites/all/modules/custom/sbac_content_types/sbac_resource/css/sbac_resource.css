@@ -1450,6 +1450,11 @@ a.sbac-grid-layout {
 
 /*Categories toggle*/
 /* line 1397, ../sass/sbac_resource.scss */
+#sbac-search-digital-library-resources-form {
+  position: relative;
+}
+
+/* line 1401, ../sass/sbac_resource.scss */
 a.category-hide {
   position: absolute;
   right: 20px;
@@ -1458,18 +1463,18 @@ a.category-hide {
   color: #006082;
 }
 
-/* line 1405, ../sass/sbac_resource.scss */
+/* line 1409, ../sass/sbac_resource.scss */
 a.category-hide:hover {
   text-decoration: underline;
   color: #006082;
 }
 
-/* line 1410, ../sass/sbac_resource.scss */
+/* line 1414, ../sass/sbac_resource.scss */
 a.category-hide:focus {
   color: #006082;
 }
 
-/* line 1414, ../sass/sbac_resource.scss */
+/* line 1418, ../sass/sbac_resource.scss */
 .category-hide.active:after {
   background-image: url("../images/icon-toggle-up.png");
   background-position: center center;
@@ -1481,7 +1486,7 @@ a.category-hide:focus {
   width: 10px;
 }
 
-/* line 1425, ../sass/sbac_resource.scss */
+/* line 1429, ../sass/sbac_resource.scss */
 .category-hide:after {
   background-image: url("../images/icon-toggle-down.png");
   background-position: center center;
