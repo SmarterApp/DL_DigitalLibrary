@@ -1,6 +1,7 @@
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
 sites/*/files
+sites/*.dev
 # Ignore paths that contain user-generated content.
 
 #ignore sass-cache
@@ -29,6 +30,7 @@ atlassian-ide-plugin.xml
 # ignore dev module
 sites/all/modules/contrib/masquerade
 sites/all/modules/contrib/coder
+sites/all/modules/contrib/stage_file_proxy
 
 #ignore sample data set
 #sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ela.*.json
