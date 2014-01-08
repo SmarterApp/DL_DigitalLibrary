@@ -1415,6 +1415,12 @@ a.category-hide:focus {
 	color: #006082;
 }
 
+.page-my-resources {
+	a.category-hide {
+			top: 15px;
+	}
+}
+
 .category-hide.active:after {
     background-image: url("../images/icon-toggle-up.png");
     background-position: center center;

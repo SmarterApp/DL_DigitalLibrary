@@ -1474,7 +1474,12 @@ a.category-hide:focus {
   color: #006082;
 }
 
-/* line 1418, ../sass/sbac_resource.scss */
+/* line 1419, ../sass/sbac_resource.scss */
+.page-my-resources a.category-hide {
+  top: 15px;
+}
+
+/* line 1424, ../sass/sbac_resource.scss */
 .category-hide.active:after {
   background-image: url("../images/icon-toggle-up.png");
   background-position: center center;
@@ -1486,7 +1491,7 @@ a.category-hide:focus {
   width: 10px;
 }
 
-/* line 1429, ../sass/sbac_resource.scss */
+/* line 1435, ../sass/sbac_resource.scss */
 .category-hide:after {
   background-image: url("../images/icon-toggle-down.png");
   background-position: center center;
