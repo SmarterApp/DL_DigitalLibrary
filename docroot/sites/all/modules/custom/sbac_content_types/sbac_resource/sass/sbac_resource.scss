@@ -1394,7 +1394,7 @@ a.sbac-grid-layout {
 } 
 
 /*Categories toggle*/
-#sbac-search-digital-library-resources-form {
+#sbac-search-digital-library-resources-form, #sbac-search-my-resources-form {
 	position: relative;
 }
 
@@ -1413,12 +1413,6 @@ a.category-hide:hover {
 
 a.category-hide:focus {
 	color: #006082;
-}
-
-.page-my-resources {
-	a.category-hide {
-			top: 15px;
-	}
 }
 
 .category-hide.active:after {
