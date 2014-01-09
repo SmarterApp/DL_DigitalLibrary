@@ -607,6 +607,9 @@ function _sbac_resource_preview_content(&$vars) {
     $media = $vars['document'][0];
     $type = _sbac_resource_determine_type($media);
     $viewer['viewer_filename'] = $media->filename;
+    if ($media->transcript) {
+      $viewer['viewer_filename'] .= ' (Transcipt Included)';
+    }
     if ($media->fid) {
       $file = file_load($media->fid);
       $url = file_create_url($file->uri);
@@ -690,15 +693,20 @@ function _sbac_resource_preview_materials(&$vars) {
           $url = sbac_media_create_embed_url($media);
         }
 
+        $transcript = 0;
+        if ($media->transcript) {
+          $transcript = 1;
+        }
+
         // check to see whether its public scheme or not, if so not external
         if ($media->fid) {
-          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type)));
+          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript)));
         }
         else { // embedded media
           if (strpos($media->embed_url, 'youtube')) {
             $url .= '?rel=0';
           }
-          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type), 'absolute' => TRUE, 'external' => TRUE));
+          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript), 'absolute' => TRUE, 'external' => TRUE));
         }
       }
     }

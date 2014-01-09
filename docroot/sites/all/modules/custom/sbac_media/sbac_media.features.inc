@@ -68,6 +68,11 @@ $items = array(
       'type' => 'text',
       'behavior' => 'textfield',
     ),
+    'transcript' => array(
+      'label' => 'transcript',
+      'type' => 'text',
+      'behavior' => 'textfield',
+    ),
   ),
 ),
   );

@@ -63,7 +63,12 @@
 
         var doc_type = $('#sbac-resource-doc-type');
         var filename = $('#sbac-filename');
-        filename.empty().append($(this).html());
+        var transcript = $(this).attr('transcript');
+        var filename_output = $(this).html();
+        if (transcript == 1) {
+          filename_output = $(this).html() + " (Transcript Included)";
+        }
+        filename.empty().append(filename_output);
         doc_type.removeClass();
         doc_type.addClass(type);
         doc_type.empty().append(type);

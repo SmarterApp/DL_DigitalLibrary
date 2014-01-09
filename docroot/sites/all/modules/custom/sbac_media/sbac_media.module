@@ -650,6 +650,20 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
       }
     }
   }
+
+  // Clear previous transcript flags for this node.
+  if ($form_state['node']->nid) {
+    $nid = $form_state['node']->nid;
+    db_query("UPDATE {eck_media} SET transcript = 0 WHERE nid = :nid", array(':nid' => $nid));
+  }
+
+  // Set the transcript flag for each media item.
+  if (isset($form_state['input']['transcript']) && $form_state['input']['transcript']) {
+    $transcripts = $form_state['input']['transcript'];
+    foreach ($transcripts as $media_id => $value) {
+      db_query('UPDATE {eck_media} SET transcript = 1 WHERE id = :id', array(':id' => $media_id));
+    }
+  }
 }
 
 /**
@@ -671,13 +685,13 @@ function _sbac_media_create_list($media_items, $form_state) {
 
     $count = 0;
     foreach ($media_items as $key => $media_item) {
-
       // Open.
       $output .= '<tr id="' . $media_item->id . '">';
 
       // Image.
       $type = _sbac_resource_determine_type($media_item, TRUE);
       $output .= '<td class="' . $type . ' ui-icon"></td>';
+
 
       // Filename.
       $output .= '<td>' . $media_item->filename;
@@ -688,6 +702,14 @@ function _sbac_media_create_list($media_items, $form_state) {
         else {
           $output .= ' (' . gmdate("i:s", $media_item->filesize) . ')';
         }
+      }
+      // Checkbox
+      if ($type != 'image' && $type != 'document') {
+        $checked = '';
+        if ($media_item->transcript) {
+          $checked = 'checked=checked';
+        }
+        $output .= '<br /><input type="checkbox" ' . $checked . ' media="' . $media_item->id . '" value="1" name="transcript[' . $media_item->id . ']">I have uploaded a separate transcript for this material';
       }
       $output .= '</td>';
 
@@ -1283,6 +1305,7 @@ function sbac_media_load_items($nid) {
       $media_item->weight = $row->weight;
       $media_item->document_id = $row->document_id;
       $media_item->embed_url = $row->embed_url;
+      $media_item->transcript = $row->transcript;
       $media_items[] = $media_item;
     }
   }
