@@ -10099,45 +10099,33 @@ a.tabledrag-handle .handle {
 }
 
 /* ----------------------------------------
-    Narrow + Wide & half + half Columns
+    Narrow + Wide & Half + Half Columns
   _________________________________________ */
-/* line 2599, ../sass/custom.scss */
+/* line 2598, ../sass/custom.scss */
 .col {
   display: block;
   position: relative;
   float: left;
 }
 
-/* line 2604, ../sass/custom.scss */
+/* line 2603, ../sass/custom.scss */
 .col + .col {
   margin-left: 40px;
 }
 
-/* line 2607, ../sass/custom.scss */
+/* line 2606, ../sass/custom.scss */
 .col.narrow {
   /*width:260px;*/
   width: 250px;
 }
 
-/* line 2611, ../sass/custom.scss */
+/* line 2610, ../sass/custom.scss */
 .col.wide {
   /*width:560px;*/
   width: 550px;
 }
 
-/* line 2615, ../sass/custom.scss */
+/* line 2614, ../sass/custom.scss */
 .col.half {
   width: 410px;
-}
-
-/* line 2618, ../sass/custom.scss */
-.right {
-  overflow: auto;
-}
-
-/* line 2621, ../sass/custom.scss */
-.right * {
-  float: right;
-  margin-right: 0;
-  margin-left: 20px;
 }

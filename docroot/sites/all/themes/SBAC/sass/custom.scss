@@ -2592,9 +2592,8 @@ a.tabledrag-handle .handle {
 	}
 }	
 
-
 /* ----------------------------------------
-    Narrow + Wide & half + half Columns
+    Narrow + Wide & Half + Half Columns
   _________________________________________ */
 .col {
 	display:block;
@@ -2615,12 +2614,7 @@ a.tabledrag-handle .handle {
 .col.half {
 	width:410px;
 }
-.right {
-	overflow:auto;
-}
-.right * {
-	float:right;
-	margin-right:0;
-	margin-left:20px;
-}
+
+
+
 
