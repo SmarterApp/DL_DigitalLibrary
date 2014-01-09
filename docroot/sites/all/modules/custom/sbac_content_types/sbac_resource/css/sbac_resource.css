@@ -1448,13 +1448,43 @@ a.sbac-grid-layout {
   width: 17px;
 }
 
+/*Links that Open in a New Window for Glossary of Terms*/
+/* line 1398, ../sass/sbac_resource.scss */
+.glossary-link-container {
+  text-align: right;
+  padding-bottom: 5px;
+  margin-right: 35px;
+}
+/* line 1403, ../sass/sbac_resource.scss */
+.glossary-link-container a {
+  border-bottom: 1px solid #0583AC;
+  color: #0583AC;
+  font-size: 13px;
+}
+/* line 1409, ../sass/sbac_resource.scss */
+.glossary-link-container a:hover {
+  border-bottom: 1px solid #8A1538;
+  color: #8A1538;
+}
+/* line 1414, ../sass/sbac_resource.scss */
+.glossary-link-container .glossary-link:after {
+  background-image: url("../images/icon-newWindow.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 12px;
+  margin-left: 5px;
+  vertical-align: baseline;
+  width: 12px;
+}
+
 /*Categories toggle*/
-/* line 1397, ../sass/sbac_resource.scss */
+/* line 1427, ../sass/sbac_resource.scss */
 #sbac-search-digital-library-resources-form, #sbac-search-my-resources-form {
   position: relative;
 }
 
-/* line 1401, ../sass/sbac_resource.scss */
+/* line 1431, ../sass/sbac_resource.scss */
 a.category-hide {
   position: absolute;
   right: 20px;
@@ -1463,18 +1493,18 @@ a.category-hide {
   color: #006082;
 }
 
-/* line 1409, ../sass/sbac_resource.scss */
+/* line 1439, ../sass/sbac_resource.scss */
 a.category-hide:hover {
   text-decoration: underline;
   color: #006082;
 }
 
-/* line 1414, ../sass/sbac_resource.scss */
+/* line 1444, ../sass/sbac_resource.scss */
 a.category-hide:focus {
   color: #006082;
 }
 
-/* line 1418, ../sass/sbac_resource.scss */
+/* line 1448, ../sass/sbac_resource.scss */
 .category-hide.active:after {
   background-image: url("../images/icon-toggle-up.png");
   background-position: center center;
@@ -1486,7 +1516,7 @@ a.category-hide:focus {
   width: 10px;
 }
 
-/* line 1429, ../sass/sbac_resource.scss */
+/* line 1459, ../sass/sbac_resource.scss */
 .category-hide:after {
   background-image: url("../images/icon-toggle-down.png");
   background-position: center center;
@@ -1496,4 +1526,45 @@ a.category-hide:focus {
   margin-left: 5px;
   vertical-align: baseline;
   width: 10px;
+}
+
+/*About This Resource*/
+/* line 1471, ../sass/sbac_resource.scss */
+#profile-wrap {
+  margin: 0 30px;
+  padding-bottom: 20px;
+  float: left;
+}
+/* line 1476, ../sass/sbac_resource.scss */
+#profile-wrap .title-tags {
+  display: block;
+  margin: 0;
+  padding: 5px 0 3px 0;
+  border-radius: 0;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 12px;
+  line-height: normal;
+  background: transparent;
+  color: #04384e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #CECECE;
+}
+/* line 1491, ../sass/sbac_resource.scss */
+#profile-wrap .item-list {
+  margin-bottom: 20px;
+}
+/* line 1495, ../sass/sbac_resource.scss */
+#profile-wrap ul {
+  margin: 0;
+}
+/* line 1498, ../sass/sbac_resource.scss */
+#profile-wrap ul li {
+  background-color: #F2F2F2;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 24px;
+  margin: 7px 4px 0 0;
+  padding: 0 7px;
 }

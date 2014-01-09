@@ -2592,35 +2592,35 @@ a.tabledrag-handle .handle {
 	}
 }	
 
-/*Links that Open in a New Window for Glossary of Terms*/
-.glossary-link-container {
-	text-align: right;
-	padding-bottom: 15px;
-	margin-right: 35px;
-	
-	a {
-		border-bottom: 1px solid #0583AC;
-		color: #0583AC;
-		font-size: 13px;
-	}
-	
-	 a:hover {
-	    border-bottom: 1px solid #8A1538;
-	    color: #8A1538;
-	}
-	
-	.glossary-link:after {
-		background-image: url("../images/icon-newWindow.png");
-		background-position: center center;
-    content: " ";
-    display: inline-block;
-    height: 12px;
-    margin-left: 5px;
-    vertical-align: baseline;
-    width: 12px;
-	}
+
+/* ----------------------------------------
+    Narrow + Wide & half + half Columns
+  _________________________________________ */
+.col {
+	display:block;
+	position:relative;
+	float:left;
 }
-
-
-
+.col + .col {
+	margin-left:40px;
+}
+.col.narrow {
+	/*width:260px;*/
+	width: 250px;
+}
+.col.wide {
+	/*width:560px;*/
+	width: 550px;
+}
+.col.half {
+	width:410px;
+}
+.right {
+	overflow:auto;
+}
+.right * {
+	float:right;
+	margin-right:0;
+	margin-left:20px;
+}
 
