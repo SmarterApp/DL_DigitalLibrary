@@ -171,13 +171,13 @@ function sbac_resource_profile_fields(&$node) {
 
   // License for primary material
   if (isset($resource_node->field_license['und']['0'])) {
-    $resource_node->resource_profile_left['primary']['title'] = 'Primary';
+    $resource_node->resource_profile_left['primary']['title'] = 'License For Primary Material';
     $resource_node->resource_profile_left['primary']['content'] = $resource_node->field_license;
   }
 
   // License for a secondary material
   if (isset($resource_node->field_license_secondary['und']['0'])) {
-    $resource_node->resource_profile_left['secondary']['title'] = 'Secondary';
+    $resource_node->resource_profile_left['secondary']['title'] = 'License For Secondary Material';
     $resource_node->resource_profile_left['secondary']['content'] = $resource_node->field_license_secondary;
   }
 
