@@ -289,7 +289,9 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   if ($errors) {
     $selector = NULL;
     foreach ($errors AS $field_name => $error_message) {
-      if ($field_name == 'title' || $field_name == 'field_attributes' || $field_name == 'field_focus' || $field_name == 'field_student_agency') {
+      if ($field_name == 'title' || $field_name == 'field_attributes' ||
+        $field_name == 'field_focus' || $field_name == 'field_student_agency' ||
+        $field_name == 'field_alt_body' || $field_name == 'field_connection_to_fap') {
         $selector = ".vertical-tabs-list li:nth-child(1) a";
         break;
       }
@@ -297,13 +299,13 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $selector = ".vertical-tabs-list li:nth-child(2) a";
         break;
       }
-      if ($field_name == 'field_alt_body' || $field_name == 'field_contexts' || $field_name == 'field_connection_to_ccss' || $field_name == 'field_connection_to_fap' ||
-        $field_name == 'field_learning_goals' || $field_name == 'field_success_criteria' || $field_name == 'field_supporting_evidence' || $field_name == 'field_principles'
-      ) {
+      if ($field_name == 'field_contexts' || $field_name == 'field_connection_to_ccss' || $field_name == 'field_learning_goals' ||
+        $field_name == 'field_success_criteria' || $field_name == 'field_supporting_evidence' || $field_name == 'field_principles' ||
+        $field_name == 'field_subject' || $field_name == 'field_grades') {
         $selector = ".vertical-tabs-list li:nth-child(3) a";
         break;
       }
-      if ($field_name == 'field_subject' || $field_name == 'field_grades') {
+      if ($field_name == 'something') {
         $selector = ".vertical-tabs-list li:nth-child(4) a";
         break;
       }
@@ -571,14 +573,6 @@ function sbac_resource_validate_general(&$form, &$form_state) {
       drupal_set_message('general:title:group:' . $error, 'sbac_resource_error');
     }
   }
-
-  if (!$form_state['values']['field_attributes']['und'][0]['tid']) {
-    $error = 'Please indicate at least one attribute to continue';
-    form_set_error('field_attributes', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('general:field_attributes:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('general:field_attributes:group:Please indicate at least one attribute to continue', 'sbac_resource_error');
-  }
   if (!$form_state['values']['field_focus']['und'][0]['tid']) {
     $error = 'You must select the resource type of this resource to continue';
     form_set_error('field_focus', $error);
@@ -586,7 +580,20 @@ function sbac_resource_validate_general(&$form, &$form_state) {
     drupal_set_message('general:field_focus:single:' . $error, 'sbac_resource_error');
     drupal_set_message('general:field_focus:group:Select the resource type', 'sbac_resource_error');
   }
-
+  if (!$form_state['values']['field_intended_end_user']['und'][0]['tid']) {
+    $error = 'Please select an end user tag to continue';
+    form_set_error('field_intended_end_user', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:field_intended_end_user:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:field_intended_end_user:group:Please select an end user tag to continue', 'sbac_resource_error');
+  }
+  if (!$form_state['values']['field_attributes']['und'][0]['tid']) {
+    $error = 'Please indicate at least one attribute to continue';
+    form_set_error('field_attributes', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:field_attributes:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:field_attributes:group:Please indicate at least one attribute to continue', 'sbac_resource_error');
+  }
   if ($form_state['values']['field_student_agency']['und'][0]['value'] == NULL) {
     $error = 'You must explain how the resource enables students to actively engage in the formative assessment process to continue';
     form_set_error('field_student_agency', $error);
@@ -605,6 +612,42 @@ function sbac_resource_validate_general(&$form, &$form_state) {
       drupal_set_message('general:field_student_agency:group:Remove inappropriate language from student engagement', 'sbac_resource_error');
     }
   }
+  if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
+    $error = 'Please add a connection to the formative assessment process to continue';
+    form_set_error('field_connection_to_fap', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:field_connection_to_fap:group:Add the connection to a connection to the formative assessment process', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_connection_to_fap']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the connection to the formative assessment process to continue';
+      form_set_error('field_connection_to_fap', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:field_connection_to_fap:group:Remove inappropriate language from connection to the formative assesment process', 'sbac_resource_error');
+    }
+  }
+  if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
+    $error = 'Please add a resource summary to continue';
+    form_set_error('field_alt_body', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('general:field_alt_body:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('general:field_alt_body:group:Please add a resource summary to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_alt_body']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the resource summary to continue';
+      form_set_error('field_alt_body', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('general:field_alt_body:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('general:field_alt_body:group:Remove inappropriate language from the resource summary', 'sbac_resource_error');
+    }
+  }
 }
 
 /**
@@ -614,22 +657,72 @@ function sbac_resource_validate_general(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_validate_summary(&$form, &$form_state) {
-  if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
-    $error = 'Please add a resource summary to continue';
-    form_set_error('field_alt_body', $error);
+  if (!$form_state['values']['field_subject']['und'][0]['tid']) {
+    $error = 'Please select a subject and domain tag to continue';
+    form_set_error('field_subject', $error);
     _sbac_resource_remove_error_message($error);
-    drupal_set_message('summary:field_alt_body:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_alt_body:group:Please add a resource summary to continue', 'sbac_resource_error');
+    drupal_set_message('summary:field_subject:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_subject:group:Please select a subject and domain tag to continue', 'sbac_resource_error');
+  }
+  if (!$form_state['values']['field_grades']['und'][0]['tid']) {
+    $error = 'Please select a grade tag to continue';
+    form_set_error('field_grades', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_grades:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_grades:group:Please select a grade tag to continue', 'sbac_resource_error');
+  }
+  if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
+    $error = 'Add a connection to the Common Core State Standards';
+    form_set_error('field_connection_to_ccss', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_connection_to_ccss:group:Add a connection to the Common Core State Standards', 'sbac_resource_error');
   }
   else {
-    $text = $form_state['values']['field_alt_body']['und'][0]['value'];
+    $text = $form_state['values']['field_connection_to_ccss']['und'][0]['value'];
     $bad_words = profanity_validate_text($text);
     if ($bad_words) {
-      $error = 'You must remove inappropriate language from the resource summary to continue';
-      form_set_error('field_alt_body', $error);
+      $error = 'You must remove inappropriate language from the Specific Connection to the Common Core State Standards to continue';
+      form_set_error('field_connection_to_ccss', $error);
       _sbac_resource_remove_error_message($error);
-      drupal_set_message('summary:field_alt_body:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('summary:field_alt_body:group:Remove inappropriate language from the resource summary', 'sbac_resource_error');
+      drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_connection_to_ccss:group:Remove inappropriate language from the Common Core Standards', 'sbac_resource_error');
+    }
+  }
+  if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
+    $error = 'Please add learning goals to continue';
+    form_set_error('field_learning_goals', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_learning_goals:group:Please add learning goals to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_learning_goals']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the learning goals to continue';
+      form_set_error('field_learning_goals', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_learning_goals:group:Remove inappropriate language from the learning goals', 'sbac_resource_error');
+    }
+  }
+  if (!$form_state['values']['field_success_criteria']['und'][0]['value']) {
+    $error = 'Please add success criteria to continue';
+    form_set_error('field_success_criteria', $error);
+    _sbac_resource_remove_error_message($error);
+    drupal_set_message('summary:field_success_criteria:single:' . $error, 'sbac_resource_error');
+    drupal_set_message('summary:field_success_criteria:group:Please add success criteria to continue', 'sbac_resource_error');
+  }
+  else {
+    $text = $form_state['values']['field_success_criteria']['und'][0]['value'];
+    $bad_words = profanity_validate_text($text);
+    if ($bad_words) {
+      $error = 'You must remove inappropriate language from the success criteria to continue';
+      form_set_error('field_success_criteria', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('summary:field_success_criteria:single:' . $error, 'sbac_resource_error');
+      drupal_set_message('summary:field_success_criteria:group:Remove inappropriate language from the sucess criteria', 'sbac_resource_error');
     }
   }
   if (!$form_state['values']['field_contexts']['und'][0]['value']) {
@@ -650,83 +743,6 @@ function sbac_resource_validate_summary(&$form, &$form_state) {
       drupal_set_message('summary:field_contexts:group:Remove inappropriate language from context(s) within which the resource could be used', 'sbac_resource_error');
     }
   }
-
-  if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
-    $error = 'Add a connection to the Common Core State Standards';
-    form_set_error('field_connection_to_ccss', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_connection_to_ccss:group:Add a connection to the Common Core State Standards', 'sbac_resource_error');
-  }
-  else {
-    $text = $form_state['values']['field_connection_to_ccss']['und'][0]['value'];
-    $bad_words = profanity_validate_text($text);
-    if ($bad_words) {
-      $error = 'You must remove inappropriate language from the Specific Connection to the Common Core State Standards to continue';
-      form_set_error('field_connection_to_ccss', $error);
-      _sbac_resource_remove_error_message($error);
-      drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('summary:field_connection_to_ccss:group:Remove inappropriate language from the Common Core Standards', 'sbac_resource_error');
-    }
-  }
-
-  if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
-    $error = 'Please add a connection to the formative assessment process to continue';
-    form_set_error('field_connection_to_fap', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('summary:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_connection_to_fap:group:Add the connection to a connection to the formative assessment process', 'sbac_resource_error');
-  }
-  else {
-    $text = $form_state['values']['field_connection_to_fap']['und'][0]['value'];
-    $bad_words = profanity_validate_text($text);
-    if ($bad_words) {
-      $error = 'You must remove inappropriate language from the connection to the formative assessment process to continue';
-      form_set_error('field_connection_to_fap', $error);
-      _sbac_resource_remove_error_message($error);
-      drupal_set_message('summary:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('summary:field_connection_to_fap:group:Remove inappropriate language from connection to the formative assesment process', 'sbac_resource_error');
-    }
-  }
-
-  if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
-    $error = 'Please add learning goals to continue';
-    form_set_error('field_learning_goals', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_learning_goals:group:Please add learning goals to continue', 'sbac_resource_error');
-  }
-  else {
-    $text = $form_state['values']['field_learning_goals']['und'][0]['value'];
-    $bad_words = profanity_validate_text($text);
-    if ($bad_words) {
-      $error = 'You must remove inappropriate language from the learning goals to continue';
-      form_set_error('field_learning_goals', $error);
-      _sbac_resource_remove_error_message($error);
-      drupal_set_message('summary:field_learning_goals:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('summary:field_learning_goals:group:Remove inappropriate language from the learning goals', 'sbac_resource_error');
-    }
-  }
-
-  if (!$form_state['values']['field_success_criteria']['und'][0]['value']) {
-    $error = 'Please add success criteria to continue';
-    form_set_error('field_success_criteria', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('summary:field_success_criteria:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_success_criteria:group:Please add success criteria to continue', 'sbac_resource_error');
-  }
-  else {
-    $text = $form_state['values']['field_success_criteria']['und'][0]['value'];
-    $bad_words = profanity_validate_text($text);
-    if ($bad_words) {
-      $error = 'You must remove inappropriate language from the success criteria to continue';
-      form_set_error('field_success_criteria', $error);
-      _sbac_resource_remove_error_message($error);
-      drupal_set_message('summary:field_success_criteria:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('summary:field_success_criteria:group:Remove inappropriate language from the sucess criteria', 'sbac_resource_error');
-    }
-  }
-
   if (!$form_state['values']['field_supporting_evidence']['und'][0]['value']) {
     $error = 'Please add supporting evidence to continue';
     form_set_error('field_supporting_evidence', $error);
@@ -868,28 +884,6 @@ function sbac_resource_validate_materials(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_validate_tags(&$form, &$form_state) {
-  // Select all alignments with this nid
-  if (!$form_state['values']['field_subject']['und'][0]['tid']) {
-    $error = 'Please select a subject and domain tag to continue';
-    form_set_error('field_subject', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('tags:field_subject:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('tags:field_subject:group:Please select a subject and domain tag to continue', 'sbac_resource_error');
-  }
-  if (!$form_state['values']['field_grades']['und'][0]['tid']) {
-    $error = 'Please select a grade tag to continue';
-    form_set_error('field_grades', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('tags:field_grades:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('tags:field_grades:group:Please select a grade tag to continue', 'sbac_resource_error');
-  }
-  if (!$form_state['values']['field_intended_end_user']['und'][0]['tid']) {
-    $error = 'Please select an end user tag to continue';
-    form_set_error('field_intended_end_user', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('tags:field_intended_end_user:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('tags:field_intended_end_user:group:Please select an end user tag to continue', 'sbac_resource_error');
-  }
   if (!$form_state['values']['field_digital_media_type']['und'][0]['tid']) {
     $error = 'Please select a media type to continue';
     form_set_error('field_digital_media_type', $error);
@@ -1485,9 +1479,20 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
   // Student Engagement
   $form['field_student_agency']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
 
+  $form['field_intended_end_user']['und']['#title'] = t('Intended End User(s)') . ' ' . theme('form_required_marker');
+  if (isset($form['field_intended_end_user']['und']['#options']['_none'])) {
+    unset($form['field_intended_end_user']['und']['#options']['_none']);
+  }
+
   // Focus
   unset($form['field_focus']['und']['#options']['_none']);
   $form['field_focus']['und']['#title'] = t('Resource Type') . ' ' . theme('form_required_marker');
+
+  // Connection to FAP
+  $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process') . ' ' . theme('form_required_marker');
+
+  // Body
+  $form['field_alt_body']['und'][0]['value']['#title'] = t('Resource Summary') . ' ' . theme('form_required_marker');
 }
 
 
@@ -1498,21 +1503,55 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_summary(&$form, $form_state) {
-  // Resource Summary.
-  $form['field_resource_summary'] = array(
-    '#type' => 'item',
-    '#markup' => '<p>'.t('The following fields represent an abstract of the resource that includes the topics covered by the resource and how the resource should be used. Please enter information into each of the following sub-sections.').'</p>',
-    '#weight' => 1,
+  $form['field_subject']['und']['#title'] = t('Subjects and Domains') . ' ' . theme('form_required_marker');
+  if (isset($form['field_subject']['und']['#options']['_none'])) {
+    unset($form['field_subject']['und']['#options']['_none']);
+  }
+  $form['field_grades']['und']['#title'] = t('Grade(s)') . ' ' . theme('form_required_marker');
+  if (isset($form['field_grades']['und']['#options']['_none'])) {
+    unset($form['field_grades']['und']['#options']['_none']);
+  }
+
+  // Title
+  $form['alignment_tag_title'] = array(
+    '#markup' => '<h2>'.t('Common Core State Standard(s)').'</h2>',
+    '#prefix' => '<div class="form-item-title alignment-tag-title">',
+    '#suffix' => '</div>',
+    '#weight' => 22,
   );
-  $form['#group_children']['field_resource_summary'] = "group_summary";
-  // Body
-  $form['field_alt_body']['und'][0]['value']['#title'] = t('Resource Summary') . ' ' . theme('form_required_marker');
+  $form['#group_children']['alignment_tag_title'] = "group_summary";
+  // Description
+  $form['alignment_tag_description'] = array(
+    '#markup' => '<p>'.t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards and Mathematical Practices are included alongside content standards for all grades.').'</p>',
+    '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
+    '#suffix' => '</div>',
+    '#weight' => 23,
+  );
+  $form['#group_children']['alignment_tag_description'] = "group_summary";
+  // Alignment View -> The initial load of the form does not have an nid.
+  if (isset($form['#node']->nid)) {
+    $form['alignment_tag_view'] = array(
+      '#markup' => views_embed_view('alignment', 'resource_admin_view', $form['#node']->nid),
+      '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
+      '#suffix' => '</div>',
+      '#weight' => 23.5,
+    );
+    $form['#group_children']['alignment_tag_view'] = "group_summary";
+
+    // Alignment Button
+    $form['add_alignment_tag_button'] = array(
+      '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
+        'attributes' => array('class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
+        'query' => array('nid' => $form['#node']->nid))),
+      '#weight' => 23.6,
+    );
+    $form['#group_children']['add_alignment_tag_button'] = "group_summary";
+  }
+
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
   // Connection to CCSS
   $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards') . ' ' . theme('form_required_marker');
-  // Connection to FAP
-  $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process') . ' ' . theme('form_required_marker');
   // Learning Goals
   $form['field_learning_goals']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   // Success Critieria
@@ -1698,18 +1737,6 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   );
   $form['#group_children']['tag_wrapper'] = "group_tags";
 
-  $form['field_subject']['und']['#title'] = t('Subjects and Domains') . ' ' . theme('form_required_marker');
-  if (isset($form['field_subject']['und']['#options']['_none'])) {
-    unset($form['field_subject']['und']['#options']['_none']);
-  }
-  $form['field_grades']['und']['#title'] = t('Grade(s)') . ' ' . theme('form_required_marker');
-  if (isset($form['field_grades']['und']['#options']['_none'])) {
-    unset($form['field_grades']['und']['#options']['_none']);
-  }
-  $form['field_intended_end_user']['und']['#title'] = t('Intended End User(s)') . ' ' . theme('form_required_marker');
-  if (isset($form['field_intended_end_user']['und']['#options']['_none'])) {
-    unset($form['field_intended_end_user']['und']['#options']['_none']);
-  }
   if (isset($form['field_intended_student']['und']['#options']['_none'])) {
     unset($form['field_intended_student']['und']['#options']['_none']);
   }
@@ -1734,9 +1761,6 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   }
   $form['field_classroom_technologies']['und']['#title'] = t('Technologies Required for Use in Classroom');
 
-  $form['tag_wrapper']['field_subject'] = $form['field_subject'];
-  $form['tag_wrapper']['field_grades'] = $form['field_grades'];
-  $form['tag_wrapper']['field_intended_end_user'] = $form['field_intended_end_user'];
   $form['tag_wrapper']['field_intended_student'] = $form['field_intended_student'];
   $form['tag_wrapper']['field_geographical_settings'] = $form['field_geographical_settings'];
   $form['tag_wrapper']['field_smarter_balanced_keyword'] = $form['field_smarter_balanced_keyword'];
@@ -1744,53 +1768,12 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   $form['tag_wrapper']['field_classroom_technologies'] = $form['field_classroom_technologies'];
   $form['tag_wrapper']['field_digital_media_type'] = $form['field_digital_media_type'];
 
-  unset($form['field_subject']);
-  unset($form['field_grades']);
-  unset($form['field_intended_end_user']);
   unset($form['field_intended_student']);
   unset($form['field_geographical_settings']);
   unset($form['field_smarter_balanced_keyword']);
   unset($form['field_educational_use']);
   unset($form['field_classroom_technologies']);
   unset($form['field_digital_media_type']);
-
-  // Title
-  $form['alignment_tag_title'] = array(
-    '#markup' => '<h2>'.t('Common Core State Standard(s)').'</h2>',
-    '#prefix' => '<div class="form-item-title alignment-tag-title">',
-    '#suffix' => '</div>',
-    '#weight' => 100,
-  );
-  $form['#group_children']['alignment_tag_title'] = "group_tags";
-
-  // Description
-  $form['alignment_tag_description'] = array(
-    '#markup' => '<p>'.t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards and Mathematical Practices are included alongside content standards for all grades.').'</p>',
-    '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
-    '#suffix' => '</div>',
-    '#weight' => 101,
-  );
-  $form['#group_children']['alignment_tag_description'] = "group_tags";
-  // Alignment View -> The initial load of the form does not have an nid.
-  if (isset($form['#node']->nid)) {
-    $form['alignment_tag_view'] = array(
-      '#markup' => views_embed_view('alignment', 'resource_admin_view', $form['#node']->nid),
-      '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
-      '#suffix' => '</div>',
-      '#weight' => 102,
-    );
-    $form['#group_children']['alignment_tag_view'] = "group_tags";
-
-    // Alignment Button
-    $form['add_alignment_tag_button'] = array(
-      '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
-        'attributes' => array('class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
-        'query' => array('nid' => $form['#node']->nid))),
-      '#weight' => 103,
-    );
-    $form['#group_children']['add_alignment_tag_button'] = "group_tags";
-  }
-
 }
 
 /**
@@ -2196,6 +2179,15 @@ function sbac_resource_check_general($form, $form_state) {
     if (!$form_state['values']['field_focus']['und'][0]['tid']) {
       $valid = FALSE;
     }
+    if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_intended_end_user']['und'][0]['tid']) {
+      $valid = FALSE;
+    }
   }
   else {
     if (empty($form['title']['#default_value'])) {
@@ -2208,6 +2200,15 @@ function sbac_resource_check_general($form, $form_state) {
       $valid = FALSE;
     }
     if (empty($form['field_focus']['und']['#default_value'])) {
+      $valid = FALSE;
+    }
+    if (!$form['field_alt_body']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_connection_to_fap']['und'][0]['value']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_intended_end_user']['und']['#default_value']) {
       $valid = FALSE;
     }
   }
@@ -2224,16 +2225,16 @@ function sbac_resource_check_summary($form, $form_state) {
   $valid = TRUE;
 
   if(isset($form_state['values'])) {
-    if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
+    if (!$form_state['values']['field_subject']['und'][0]['tid']) {
+      $valid = FALSE;
+    }
+    if (!$form_state['values']['field_grades']['und'][0]['tid']) {
       $valid = FALSE;
     }
     if (!$form_state['values']['field_contexts']['und'][0]['value']) {
       $valid = FALSE;
     }
     if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
-      $valid = FALSE;
-    }
-    if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
       $valid = FALSE;
     }
     if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
@@ -2248,18 +2249,19 @@ function sbac_resource_check_summary($form, $form_state) {
     if (!$form_state['values']['field_principles']['und'][0]['value']) {
       $valid = FALSE;
     }
+
   }
   else {
-    if (!$form['field_alt_body']['und'][0]['value']['#default_value']) {
+    if (!$form['field_subject']['und']['#default_value']) {
+      $valid = FALSE;
+    }
+    if (!$form['field_grades']['und']['#default_value']) {
       $valid = FALSE;
     }
     if (!$form['field_contexts']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
     }
     if (!$form['field_connection_to_ccss']['und'][0]['value']['#default_value']) {
-      $valid = FALSE;
-    }
-    if (!$form['field_connection_to_fap']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
     }
     if (!$form['field_learning_goals']['und'][0]['value']['#default_value']) {
@@ -2360,29 +2362,11 @@ function sbac_resource_check_tags($form, $form_state) {
   $valid = TRUE;
 
   if (isset($form_state['values'])) {
-    if (!$form_state['values']['field_subject']['und'][0]['tid']) {
-      $valid = FALSE;
-    }
-    if (!$form_state['values']['field_grades']['und'][0]['tid']) {
-      $valid = FALSE;
-    }
-    if (!$form_state['values']['field_intended_end_user']['und'][0]['tid']) {
-      $valid = FALSE;
-    }
     if (!$form_state['values']['field_digital_media_type']['und'][0]['tid']) {
       $valid = FALSE;
     }
   }
   else {
-    if (!$form['field_subject']['und']['#default_value']) {
-      $valid = FALSE;
-    }
-    if (!$form['field_grades']['und']['#default_value']) {
-      $valid = FALSE;
-    }
-    if (!$form['field_intended_end_user']['und']['#default_value']) {
-      $valid = FALSE;
-    }
     if (!$form['field_digital_media_type']['und']['#default_value']) {
       $valid = FALSE;
     }

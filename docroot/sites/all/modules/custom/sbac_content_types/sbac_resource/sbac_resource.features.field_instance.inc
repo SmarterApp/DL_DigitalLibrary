@@ -60,7 +60,7 @@ function sbac_resource_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 29,
+      'weight' => 22,
     ),
   );
 
@@ -120,7 +120,7 @@ function sbac_resource_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 30,
+      'weight' => 23,
     ),
   );
 
@@ -179,7 +179,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 2,
+      'weight' => 7,
     ),
     'xss' => 0,
   );
@@ -297,7 +297,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 2,
+      'weight' => 4,
     ),
   );
 
@@ -412,7 +412,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
-      'weight' => 28,
+      'weight' => 30,
     ),
   );
 
@@ -471,7 +471,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 4,
+      'weight' => 24,
     ),
   );
 
@@ -587,7 +587,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 27,
     ),
   );
 
@@ -699,7 +699,7 @@ function sbac_resource_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 8,
     ),
   );
 
@@ -756,7 +756,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 27,
+      'weight' => 29,
     ),
   );
 
@@ -811,7 +811,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 4,
+      'weight' => 2,
     ),
   );
 
@@ -868,7 +868,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
-      'weight' => 24,
+      'weight' => 28,
     ),
   );
 
@@ -1039,7 +1039,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
-      'weight' => 22,
+      'weight' => 3,
     ),
   );
 
@@ -1096,7 +1096,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
-      'weight' => 23,
+      'weight' => 27,
     ),
   );
 
@@ -1155,7 +1155,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 6,
+      'weight' => 25,
     ),
     'xss' => 0,
   );
@@ -1606,7 +1606,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 10,
+      'weight' => 29,
     ),
   );
 
@@ -1837,7 +1837,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 25,
+      'weight' => 31,
     ),
   );
 
@@ -1896,7 +1896,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 6,
     ),
   );
 
@@ -2067,7 +2067,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 7,
+      'weight' => 26,
     ),
   );
 
@@ -2125,7 +2125,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 9,
+      'weight' => 28,
     ),
   );
 
