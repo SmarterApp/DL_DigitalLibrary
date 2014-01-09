@@ -107,6 +107,102 @@ function sbac_resource_menu() {
   return $items;
 }
 
+function sbac_resource_profile_fields(&$node) {
+  $resource_node = $node['node'];
+  // Subjects and Domains
+  if (isset($resource_node->field_subject['und']['0'])) {
+    $resource_node->resource_profile_left['subjects']['title'] = 'Subjects and Domains';
+    $resource_node->resource_profile_left['subjects']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_subject);
+  }
+
+  // Common Core State Standards
+  if (isset($resource_node->ccss['und']['0'])) {
+    $resource_node->resource_profile_left['ccss']['title'] = 'Subjects and Domains';
+    $resource_node->resource_profile_left['ccss']['content'] = sbac_resource_get_taxonomy_terms($resource_node->ccss);
+  }
+
+  // Grades
+  if (isset($resource_node->field_grades['und']['0'])) {
+    $resource_node->resource_profile_left['grades']['title'] = 'Grades';
+    $resource_node->resource_profile_left['grades']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_grades);
+  }
+
+  // Intended End Use
+  if (isset($resource_node->field_intended_end_user['und']['0'])) {
+    $resource_node->resource_profile_left['end_use']['title'] = 'Intended End Use';
+    $resource_node->resource_profile_left['end_use']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_intended_end_user);
+  }
+
+  // Intended Student Populations
+  if (isset($resource_node->field_intended_student['und']['0'])) {
+    $resource_node->resource_profile_left['student_pop']['title'] = 'Intended Student Populations';
+    $resource_node->resource_profile_left['student_pop']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_intended_student);
+  }
+
+  // Media Types
+  if (isset($resource_node->field_digital_media_type['und']['0'])) {
+    $resource_node->resource_profile_left['media']['title'] = 'Digital Media Type';
+    $resource_node->resource_profile_left['media']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_digital_media_type);
+  }
+
+  // Educational Use
+  if (isset($resource_node->field_educational_use['und']['0'])) {
+    $resource_node->resource_profile_left['educational']['title'] = 'Educational Use';
+    $resource_node->resource_profile_left['educational']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_educational_use);
+  }
+
+  // Technologies for use in classroom
+  if (isset($resource_node->field_classroom_technologies['und']['0'])) {
+    $resource_node->resource_profile_left['classroom']['title'] = 'Technologies for use in Classroom';
+    $resource_node->resource_profile_left['classroom']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_classroom_technologies);
+  }
+
+  // Geographics Settings
+  if (isset($resource_node->field_geographical_settings['und']['0'])) {
+    $resource_node->resource_profile_left['geo']['title'] = 'Geographics Settings';
+    $resource_node->resource_profile_left['geo']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_geographical_settings);
+  }
+
+  // Smarter Balanced Keywords
+  if (isset($resource_node->field_smarter_balanced_keyword['und']['0'])) {
+    $resource_node->resource_profile_left['smarter']['title'] = 'Subjects and Domains';
+    $resource_node->resource_profile_left['smarter']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_smarter_balanced_keyword);
+  }
+
+  // License for primary material
+  if (isset($resource_node->field_license['und']['0'])) {
+    $resource_node->resource_profile_left['primary']['title'] = 'Primary';
+    $resource_node->resource_profile_left['primary']['content'] = $resource_node->field_license;
+  }
+
+  // License for a secondary material
+  if (isset($resource_node->field_license_secondary['und']['0'])) {
+    $resource_node->resource_profile_left['secondary']['title'] = 'Secondary';
+    $resource_node->resource_profile_left['secondary']['content'] = $resource_node->field_license_secondary;
+  }
+
+  // Focus
+  if (isset($resource_node->field_focus['und']['0'])) {
+    $resource_node->resource_profile_right['focus']['title'] = 'Attributes of the Formative Assessment Process';
+    $resource_node->resource_profile_right['focus']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_focus);
+  }
+
+  $node['node'] = $resource_node;
+}
+
+/**
+ * @param $field
+ * @return string
+ */
+function sbac_resource_get_taxonomy_terms($field) {
+  $terms = array();
+  foreach ($field['und'] as $key => $term) {
+    $terms[] = $term['taxonomy_term']->name;
+  }
+  $list = theme('item_list', array('items' => $terms, 'title' => '', 'type' => 'ul', 'attributes' => array('class' => 'field-content')));
+  return $list;
+}
+
 /**
  * Returns the related resources for a given nid.
  *
