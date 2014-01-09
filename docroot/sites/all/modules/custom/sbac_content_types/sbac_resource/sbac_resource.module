@@ -107,6 +107,11 @@ function sbac_resource_menu() {
   return $items;
 }
 
+/**
+ * Outputs the profile fields.
+ *
+ * @param $node
+ */
 function sbac_resource_profile_fields(&$node) {
   $resource_node = $node['node'];
   // Subjects and Domains
@@ -116,9 +121,9 @@ function sbac_resource_profile_fields(&$node) {
   }
 
   // Common Core State Standards
-  if (isset($resource_node->ccss['und']['0'])) {
-    $resource_node->resource_profile_left['ccss']['title'] = 'Subjects and Domains';
-    $resource_node->resource_profile_left['ccss']['content'] = sbac_resource_get_taxonomy_terms($resource_node->ccss);
+  if (isset($resource_node->field_alignment_term['und']['0'])) {
+    $resource_node->resource_profile_left['ccss']['title'] = 'Common Core State Standards';
+    $resource_node->resource_profile_left['ccss']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_alignment_term, TRUE);
   }
 
   // Grades
@@ -194,11 +199,17 @@ function sbac_resource_profile_fields(&$node) {
  * @param $field
  * @return string
  */
-function sbac_resource_get_taxonomy_terms($field) {
+function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
   $terms = array();
   foreach ($field['und'] as $key => $term) {
-    $terms[] = $term['taxonomy_term']->name;
+    if ($ccss) {
+      $terms[] = $term['taxonomy_term']->field_alignment_shortname['und'][0]['value'];
+    }
+    else {
+      $terms[] = $term['taxonomy_term']->name;
+    }
   }
+
   $list = theme('item_list', array('items' => $terms, 'title' => '', 'type' => 'ul', 'attributes' => array('class' => 'field-content')));
   return $list;
 }
