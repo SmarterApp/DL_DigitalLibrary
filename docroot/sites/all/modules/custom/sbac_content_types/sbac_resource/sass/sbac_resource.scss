@@ -1446,65 +1446,98 @@ a.category-hide:focus {
 }
 
 .category-hide.active:after {
-    background-image: url("../images/icon-toggle-up.png");
-    background-position: center center;
-    content: " ";
-    display: inline-block;
-    height: 12px;
-    margin-left: 5px;
-    vertical-align: baseline;
-    width: 10px;
+   background-image: url("../images/icon-toggle-up.png");
+   background-position: center center;
+   content: " ";
+   display: inline-block;
+   height: 12px;
+   margin-left: 5px;
+   vertical-align: baseline;
+   width: 10px;
 }
 
 .category-hide:after {
-    background-image: url("../images/icon-toggle-down.png");
-		background-position: center center;
-    content: " ";
-    display: inline-block;
-    height: 12px;
-    margin-left: 5px;
-    vertical-align: baseline;
-    width: 10px;
+   background-image: url("../images/icon-toggle-down.png");
+	 background-position: center center;
+   content: " ";
+   display: inline-block;
+   height: 12px;
+   margin-left: 5px;
+   vertical-align: baseline;
+   width: 10px;
 }
 
 /*About This Resource*/
 #profile-wrap {
-    margin: 0 30px;
-    padding-bottom: 20px;
-		float: left;
+  margin: 0 30px;
+  padding-bottom: 20px;
+	float: left;
 
-		.title-tags {
-			display:block;
-			margin:0;
-			padding:5px 0 3px 0;
-			border-radius:0;
-			font-family:Verdana, Geneva, sans-serif;
-			font-size:12px;
-			line-height:normal;
-			background:transparent;
-			color:#04384e;
-			text-transform:uppercase;
-			letter-spacing:1px;
-			border-bottom:1px solid #CECECE;
-		}
-		
-		.item-list {
-			margin-bottom: 20px;
-		}
-		
-		ul {
-			margin: 0;
-			
-			li {
-				background-color: #F2F2F2;
-				border-radius: 2px;
-		    display: inline-block;
-		    font-size: 12px;
-		    line-height: 24px;
-				margin: 7px 4px 0 0;
-		    padding: 0 7px;
-			}
-		}
-}	
+	.title-tags {
+		display:block;
+		margin:0;
+		padding:5px 0 3px 0;
+		border-radius:0;
+		font-family:Verdana, Geneva, sans-serif;
+		font-size:12px;
+		line-height:normal;
+		background:transparent;
+		color:#04384e;
+		text-transform:uppercase;
+		letter-spacing:1px;
+		border-bottom:1px solid #CECECE;
+	}
 	
+	.item-list {
+		margin-bottom: 20px;
+	}
+	
+	ul {
+		margin: 0;
+		
+		li {
+			background-color: #F2F2F2;
+			border-radius: 2px;
+	    display: inline-block;
+	    font-size: 12px;
+	    line-height: 24px;
+			margin: 7px 4px 0 0;
+	    padding: 0 7px;
+		}
+	}
+}	
+
+/*Adjust the cover profile */
+.sbac-resource-container {
+	.more-less {
+		.more, .less {
+			background-color: #63666A;
+			border-radius: 5px;
+	    color: #FFFFFF;
+	    display: inline-block;
+	    font-size: 15px;
+	    line-height: 1.75;
+	    margin-top: 12px;
+	    padding: 0 12px;
+	    text-align: center;
+		}
+		
+		.more:after, .less:after {
+		    background-image: url("../images/arrowDown.svg");
+		    background-position: center center;
+		    background-repeat: no-repeat;
+		    background-size: contain;
+		    content: " ";
+		    display: inline-block;
+		    height: 10px;
+		    margin-left: 7px;
+		    vertical-align: middle;
+		    width: 10px;
+		}
+		
+		.less:after {
+		    background-image: url("../images/arrowUp.svg");
+		}
+	}
+}	
 	
