@@ -203,7 +203,8 @@
             jQuery('.category-hide').removeClass('active');
             jQuery('.category-hide').removeClass('js-hide');
             jQuery('.slideable').hide();
-            jQuery('#sbac-search-filter-button').removeClass('isEdit').text(Drupal.t('Apply Filters'));
+            Drupal.settings.sbac_search.isEdit = 0;
+            jQuery('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
           }
         }
         return false;
