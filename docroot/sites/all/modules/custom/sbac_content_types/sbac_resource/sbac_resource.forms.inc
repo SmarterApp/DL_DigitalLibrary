@@ -305,7 +305,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $selector = ".vertical-tabs-list li:nth-child(3) a";
         break;
       }
-      if ($field_name == 'something') {
+      if ($field_name == 'field_digital_media') {
         $selector = ".vertical-tabs-list li:nth-child(4) a";
         break;
       }
@@ -2140,6 +2140,10 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   (isset($form['actions']['preview_changes']) ? $form['actions']['preview_changes']['#access'] = FALSE : '');
   (isset($form['actions']['delete']) ? $form['actions']['delete']['#access'] = FALSE : '');
 
+  $form['comment_settings']['#access'] = FALSE;
+  $form['menu']['#access'] = FALSE;
+  $form['path']['#access'] = FALSE;
+  $form['print']['#access'] = FALSE;
   $form['revision_information']['#access'] = FALSE;
   $form['author']['#access'] = FALSE;
   $form['options']['#access'] = FALSE;

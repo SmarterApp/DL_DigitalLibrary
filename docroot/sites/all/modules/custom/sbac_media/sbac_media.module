@@ -692,7 +692,6 @@ function _sbac_media_create_list($media_items, $form_state) {
       $type = _sbac_resource_determine_type($media_item, TRUE);
       $output .= '<td class="' . $type . ' ui-icon"></td>';
 
-
       // Filename.
       $output .= '<td>' . $media_item->filename;
       if (!$media_item->fid && $media_item->filesize) {
@@ -703,6 +702,7 @@ function _sbac_media_create_list($media_items, $form_state) {
           $output .= ' (' . gmdate("i:s", $media_item->filesize) . ')';
         }
       }
+      
       // Checkbox
       if ($type != 'image' && $type != 'document') {
         $checked = '';
