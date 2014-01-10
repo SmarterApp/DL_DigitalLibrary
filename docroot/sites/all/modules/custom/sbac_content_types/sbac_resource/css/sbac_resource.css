@@ -1480,7 +1480,7 @@ a.sbac-grid-layout {
 
 /*Categories toggle*/
 /* line 1427, ../sass/sbac_resource.scss */
-#sbac-search-digital-library-resources-form, #sbac-search-my-resources-form {
+#sbac-search-digital-library-resources-form, #sbac-search-my-resources-form, #sbac-search-resource-review-form {
   position: relative;
 }
 
