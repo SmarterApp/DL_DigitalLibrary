@@ -333,7 +333,7 @@ html.js {
 /* -----------------------------------------
   Vertical Tabs
   ------------------------------------------ */
-.vertical-tabs ul.vertical-tabs-list {
+/*.vertical-tabs ul.vertical-tabs-list {
   li {
     a {
       &:hover{
@@ -354,8 +354,98 @@ html.js {
       }
     }
   }
+}*/
+.vertical-tabs ul.vertical-tabs-list {
+	overflow: hidden;
+	position: relative;
+	border-top: 0;
+	padding-left: 10px;
+	
+	li {
+		border: none;
+		
+		a {
+	    background: none repeat scroll 0 0 #FAFAFA;
+	    border: 1px solid #CECECE;
+			border-top: 1px solid #fff;
+	    display: block;
+	    font-size: 15px;
+	    font-weight: bold;
+	    line-height: 1;
+	    padding: 20px 40px 20px 20px;
+	    text-align: right;
+			color: #0583AC;
+			
+			&:hover {
+				background-color: #FAFAFA;
+			  background-image: -moz-linear-gradient(left center , rgba(0, 95, 130, 0.024) 10%, rgba(0, 95, 130, 0.05) 98%);
+		    text-shadow: 0 1px 0 #FFFFFF;
+				border: 1px solid #CECECE;
+				border-top: 1px solid #fff;
+				padding: 20px 40px 20px 20px;
+				/*cursor: pointer !important;*/
+			}
+			&:hover strong {
+				text-decoration: none;
+			}
+			&:after {
+			    background: none repeat scroll 0 0 #FFFFFF;
+			    box-shadow: 1px 0 6px 0 rgba(0, 95, 130, 0.75);
+			    content: " ";
+			    display: block;
+			    height: 100%;
+			    right: -12px;
+			    position: absolute;
+			    top: 0;
+			    width: 10px;
+			    z-index: 1;
+			}
+		}
+		a span {
+		    color: #464B54;
+		    display: block;
+		    font-size: 13px;
+		    font-weight: normal;
+		    padding-top: 6px;
+		}
+	}
+	
+	li.selected {
+		a {
+			background: none repeat scroll 0 0 #FFFFFF;
+			/*border: 1px solid #CECECE;*/
+	    box-shadow: 0 1px 4px 0 rgba(0, 95, 130, 0.5);
+	    color: #464B54;
+	    position: relative;
+		}
+		a:after {
+		    background: none repeat scroll 0 0 #FFFFFF;
+				box-shadow: none;
+		    content: " ";
+		    display: block;
+		    height: 100%;
+		    position: absolute;
+		    right: -1px;
+		    top: -1px;
+		    width: 15px;
+		    z-index: 2;
+		}
+	}
+  
+	li:first-child {
+	    border-top: 1px solid #CECECE;
+	    margin-top: 10px;
+	}
 }
 
+.vertical-tabs {
+	border: none;
+}
+
+div.vertical-tabs {
+		border-radius:5px;
+		background-color: #FFFFFF;	
+}
 /* -----------------------------------------
    Forms
    ----------------------------------------- */
@@ -386,10 +476,10 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     cursor: default !important;
     color: $lightgrey;
     font-weight: normal;
-    background-color: #fff;
+    /*background-color: #fff;*/
 
     &:hover {
-      border: none;
+      /*border: none;*/
       outline: none;
 
       strong {
@@ -1291,10 +1381,19 @@ a.tabledrag-handle .handle {
 }
 
 .sbac-resource-container {
-  padding: 5px 10px 10px;
-  background-color: #F6F6F6;
-  border: 1px solid #ddd;
-  margin-bottom: 20px;
+  /*padding: 5px 10px 10px;
+    background-color: #F6F6F6;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;*/
+
+		/*apply new style from feddle*/
+		background-color: #F2F2F2;
+		border: 7px solid #FFFFFF;
+    box-shadow: 0 1px 4px 0 rgba(4, 56, 78, 0.3);
+    color: #464B54;
+    margin-top: 15px;
+    padding: 10px 20px 15px;
+    position: relative;
 
   .title-of-resource {
     @include hyphenation;
