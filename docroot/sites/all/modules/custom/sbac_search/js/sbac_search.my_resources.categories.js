@@ -200,7 +200,11 @@
           if (current_filters.val() == '') {
             $('.categories-current-filters').addClass('noshow');
             reset_filters.addClass('js-hide');
+            jQuery('.category-hide').text(Drupal.t('Show Categories'));
+            jQuery('.category-hide').removeClass('active');
             jQuery('.category-hide').removeClass('js-hide');
+            jQuery('.slideable').hide();
+            jQuery('#sbac-search-filter-button').removeClass('isEdit').text(Drupal.t('Apply Filters'));
           }
         }
         return false;

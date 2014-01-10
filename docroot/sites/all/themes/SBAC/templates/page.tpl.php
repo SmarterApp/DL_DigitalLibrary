@@ -65,7 +65,7 @@ global $user;
     <li><a id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
       <?php
       // set $class_feedback open if variable enable_feedback is on and the user hasn't disabled feedback flag on their profile yet, otherwise empty
-      $class_feedback = (variable_get('enable_feedback') == 1 && !$user_item->field_feedback_flag['und'][0]['value'] ? ' open' : ''); 
+      $class_feedback = (variable_get('enable_feedback') == 1 && !$user_item->field_feedback_flag['und'][0]['value'] ? ' open' : '');
       ?>
       <div id="feedback-dropdown" class="f-dropdown content small<?php print $class_feedback; ?>">
         <a id="disable-feedback" class="small right"> x </a>
@@ -133,7 +133,7 @@ global $user;
   <div><?php print render($page['sub-header']); ?></div>
 </div>
 <?php if($page['filter']): ?>
-<div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie */ print sbac_search_hide_category_style(); ?>>
+<div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
       <?php print render($page['filter']); ?>
 </div>
 <?php endif; ?>
