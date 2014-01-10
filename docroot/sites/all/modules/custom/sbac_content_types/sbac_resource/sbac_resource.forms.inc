@@ -2098,7 +2098,7 @@ function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
  */
 function _sbac_resource_form_required_fields(&$form, &$form_state) {
   $form['required_fields_basic'] = array (
-    '#markup'   => '* Required Information',
+    '#markup'   => 'Required Information',
     '#prefix'   => '<p class="sbac-resource-required">',
     '#suffix'   => '</p>',
     '#weight'   => 150,
@@ -2106,7 +2106,7 @@ function _sbac_resource_form_required_fields(&$form, &$form_state) {
   $form['#group_children']['required_fields_basic'] = "group_basic";
 
   $form['required_fields_summary'] = array (
-    '#markup'   => '* Required Information',
+    '#markup'   => 'Required Information',
     '#prefix'   => '<p class="sbac-resource-required">',
     '#suffix'   => '</p>',
     '#weight'   => 150,
@@ -2114,7 +2114,7 @@ function _sbac_resource_form_required_fields(&$form, &$form_state) {
   $form['#group_children']['required_fields_summary'] = "group_summary";
 
   $form['required_fields_materials'] = array (
-    '#markup'   => '* Required Information',
+    '#markup'   => 'Required Information',
     '#prefix'   => '<p class="sbac-resource-required">',
     '#suffix'   => '</p>',
     '#weight'   => 150,
@@ -2122,7 +2122,7 @@ function _sbac_resource_form_required_fields(&$form, &$form_state) {
   $form['#group_children']['required_fields_materials'] = "group_materials";
 
   $form['required_fields_tags'] = array (
-    '#markup'   => '* Required Information',
+    '#markup'   => 'Required Information',
     '#prefix'   => '<p class="sbac-resource-required">',
     '#suffix'   => '</p>',
     '#weight'   => 150,

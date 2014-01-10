@@ -1599,3 +1599,20 @@ a.category-hide:focus {
 .sbac-resource-container .more-less .less:after {
   background-image: url("../images/arrowUp.svg");
 }
+
+/* line 1544, ../sass/sbac_resource.scss */
+p.sbac-resource-required {
+  margin-top: 25px;
+  border-top: 1px #ddd solid;
+  padding-top: 5px;
+  clear: both;
+}
+
+/* line 1550, ../sass/sbac_resource.scss */
+p.sbac-resource-required:before {
+  font-size: 150%;
+  color: red;
+  content: "*";
+  vertical-align: middle;
+  margin-right: 5px;
+}

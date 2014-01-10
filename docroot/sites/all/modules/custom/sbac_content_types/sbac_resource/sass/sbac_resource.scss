@@ -1540,4 +1540,18 @@ a.category-hide:focus {
 		}
 	}
 }	
+
+p.sbac-resource-required {
+	margin-top: 25px;
+	border-top: 1px #ddd solid;
+	padding-top: 5px;
+	clear: both;
+}
+p.sbac-resource-required:before {
+	font-size: 150%;
+	color: red;
+	content: "*";
+	vertical-align: middle;
+	margin-right: 5px;
+}
 	
