@@ -14,6 +14,8 @@
 
 #sbac-media-list {
 	width: 100%;
+	
+	table {margin-bottom: 0;}
 
 	thead {
 		th {
@@ -68,19 +70,34 @@
 
 	    	&.delete-media {
 	    		text-align: right;
+					display: block;
+					width: 30px;
+					float: right;
+					margin: 10px 20px 0 0;
 
 	    		.foundicon-trash {
 	    			color: #aaa;
 	    			font-size: 1em;
-	    			margin-right: -30px;
+	    			/*margin-right: -30px;*/
 	    		}
 
 	    		.ctools-modal-sbac-media-modal-delete-media {
 	    			opacity: 0;
 	    			width: 20px;
 	    			height: 20px;
+						font-size: 0;
 	    		}
 	    	}
+				&:nth-child(2) {
+					white-space:nowrap;
+					
+					input[type="checkbox"] {
+						margin-left: 0;
+					}
+				}
+				&:nth-child(3) {
+					white-space:nowrap;
+				}
     	}
     }
 
