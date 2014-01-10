@@ -2725,7 +2725,11 @@ a.tabledrag-handle .handle {
 	width: 100% !important;
 	
 	ul {
-		margin: 0;
+		margin: 0 !important;
 	}
 }
-
+#edit-group_summary, #edit-group_basic {
+	.chzn-choices input[type="text"] {
+		width: 607px !important;
+	}
+}

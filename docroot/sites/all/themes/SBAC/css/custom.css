@@ -10251,5 +10251,10 @@ a.tabledrag-handle .handle {
 }
 /* line 2727, ../sass/custom.scss */
 .chzn-container ul {
-  margin: 0;
+  margin: 0 !important;
+}
+
+/* line 2732, ../sass/custom.scss */
+#edit-group_summary .chzn-choices input[type="text"], #edit-group_basic .chzn-choices input[type="text"] {
+  width: 607px !important;
 }
