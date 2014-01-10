@@ -146,12 +146,12 @@
       close_categories_list = function () {
         var slideableItems = $('.slideable');
         if (slideableItems.is(':visible')) {
-          $.cookie("sbac-my-resources-filters-closed", 1);
+          $.cookie("sbac-digital-library-filters-closed", 1);
           slideableItems.slideUp('slow');
           $('.sbac-filter-cat-area').removeClass("active");
         }
         else{
-          $.cookie("sbac-my-resources-filters-closed", 0);
+          $.cookie("sbac-digital-library-filters-closed", 0);
           slideableItems.slideDown('fast');
           $('.sbac-filter-cat-area').addClass("active");
         }
