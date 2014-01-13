@@ -6,7 +6,7 @@
  */
 ?>
 <div id="edit-user-group-dropdown" class="user-group-container">
-  <label>
+  <label for="edit-state--3">
   <?php print t('Choose a user group'); ?>
   <span class="form-required" title="This field is required.">*</span>
   </label>

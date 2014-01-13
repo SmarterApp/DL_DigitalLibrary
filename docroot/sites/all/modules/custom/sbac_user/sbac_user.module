@@ -310,7 +310,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     $form['legal'] = array(
       '#title'  => t('Terms and Conditions of Use'),
       '#weight' => 29,
-      '#prefix' => '<div id="terms-and-conditions-body"><br>',
+      '#prefix' => '<div id="terms-and-conditions-body"><br />',
       '#suffix' => '</a></div>',
     );
 

@@ -100,7 +100,7 @@ function sbac_help_disable_help() {
 
   $form['disable_help'] = array (
     '#type'           => 'checkbox',
-    '#title'          => t('Do not show this screen after next Log in') . '<br><i>' . t('View this screen again by selecting Welcome Tutorial from Help on top menu') . '</i>',
+    '#title'          => t('Do not show this screen after next Log in') . '<br /><i>' . t('View this screen again by selecting Welcome Tutorial from Help on top menu') . '</i>',
   );
 
   $form['submit'] = array (
