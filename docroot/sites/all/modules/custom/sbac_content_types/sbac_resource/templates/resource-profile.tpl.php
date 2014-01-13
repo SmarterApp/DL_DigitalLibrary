@@ -22,6 +22,11 @@
 	    <div class="item-list"><?php echo $node->field_connection_to_fap['und'][0]['value']; ?></div>
 	  <?php endif; ?>
 
+    <?php if (isset($node->field_student_agency['und'][0])): ?>
+      <h2 class="about">Student Engagement To The Formative Assessment Process</h2>
+      <div class="item-list"><?php echo $node->field_student_agency['und'][0]['value']; ?></div>
+    <?php endif; ?>
+
 	  <?php if (isset($node->field_connection_to_ccss['und'][0])): ?>
 	    <h2 class="about">Specific Connection To The Common Core State Standards</h2>
 	    <div class="item-list"><?php echo $node->field_connection_to_ccss['und'][0]['value']; ?></div>
@@ -47,9 +52,9 @@
 	    <div class="item-list"><?php echo $node->field_supporting_evidence['und'][0]['value']; ?></div>
 	  <?php endif; ?>
 
-	  <?php if (isset($node->principles['und'][0])): ?>
+	  <?php if (isset($node->field_principles['und'][0])): ?>
 	    <h2 class="about">Principles, Literature, or Research</h2>
-	    <div class="item-list"><?php echo $node->principles['und'][0]['value']; ?></div>
+	    <div class="item-list"><?php echo $node->field_principles['und'][0]['value']; ?></div>
 	  <?php endif; ?>
 	</div>
 </div>
