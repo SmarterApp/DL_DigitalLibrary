@@ -496,7 +496,7 @@ function sbac_resource_validate_form(&$form, &$form_state) {
     else {
       $check = $form['#node']->created;
     }
-    
+
     $form_state['values']['changed'] = $check + 120;
   }
 }
@@ -981,9 +981,46 @@ function sbac_resource_modal_callback($js = FALSE) {
     $output[] = ctools_modal_command_dismiss();
     $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
     $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
-    
+
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
     $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
+
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Modal callback
+ *
+ * @param bool $js
+ * @return array|mixed
+ */
+function sbac_resource_filter_modal_callback($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    drupal_add_js(drupal_get_path("module", "sbac_alignment") . "/js/sbac_filter_alignment.js");
+
+    drupal_add_js(array(
+      'ctools-ccss-style' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 800,
+          'height' => 580,
+        ),
+      ),
+    ), 'setting');
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
+    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
+
+    module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
+    $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_filter_alignment_page());
 
     print ajax_render($output);
     exit();

@@ -26,6 +26,32 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
 }
 
 /**
+ * Page Callback
+ * Outputs the alignment tagger UI.
+ */
+function sbac_alignment_ajax_filter_alignment_page($ref_node = NULL) {
+  drupal_add_js(libraries_get_path('jquery.more') . '/jquery.more.js');
+  drupal_add_css(libraries_get_path('jquery.more') . '/jquery.more.css');
+  drupal_add_js(drupal_get_path('theme', 'sbac') . '/js/custom.js');
+  drupal_add_css(drupal_get_path('module', 'sbac_alignment') . '/css/alignment.css');
+
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
+
+  $output = '<div id="alignment-page"><input id="ref_node" style="display:none" value="' . $ref_node . '"> ';
+  $output .= '<div class="alignment-breadcrumb"></div>';
+  $output .= '<div id="alignment-msg"></div>';
+  $output .= '<div class="alignment-filter">';
+  $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject Area'));
+  $output .= '</div><div class="alignment-form"></div>';
+  $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add Selections</a><a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
+  $output .= '</div></div>';
+
+  return $output;
+}
+
+
+/**
  * AJAX Callback
  */
 function sbac_alignment_ajax_terms_callback() {

@@ -40,6 +40,13 @@ function sbac_alignment_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'sbac_alignment.ajax.inc',
   );
+  $items['ajax-alignment-filter-page'] = array(
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_filter_alignment_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
+  );
   $items['ajax-alignment-form'] = array(
     'title' => 'AJAX',
     'page callback' => 'sbac_alignment_ajax_alignment_form_callback',

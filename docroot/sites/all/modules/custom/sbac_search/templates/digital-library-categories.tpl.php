@@ -13,26 +13,31 @@
         echo '<div class="category-filter-name column large-4">';
         echo '<ul>';
       }
-      echo '<li><div class="sbac-search-filter-name" vid="' . $category['vocabulary']->vid . '">' . $category['display_name'];
 
-      // The choices per vocabulary.
-      echo '<div class="categories-filter-choices">';
-      $category_vid = $category['vocabulary']->vid;
-      echo '<div vid="' . $category_vid . '" class="clearfix category-filter-list category-filter-list-' . $category_vid . ' ' . strtolower($category['display_name']) . '">';
-      echo '<h2 class="category-filter-header">' . $category['display_name'] . '<i class="gen-enclosed foundicon-remove right"></i></h2>';
-      echo '<ul>';
-      foreach ($category['terms'] as $key => $term) {
-        $class = '';
-        if (strpos($cf_value, $category_vid . ':' . $term->tid) !== FALSE) {
-          $class = ' current ';
+      // Added a different type of entry.
+      if (isset($category['link']) && empty($category['vocabulary'])) {
+        echo '<li><div class="sbac-search-filter-custom-link">' . $category['link'] .'</div></li>';
+      }else {
+        echo '<li><div class="sbac-search-filter-name" vid="' . $category['vocabulary']->vid . '">' . $category['display_name'];
+        // The choices per vocabulary.
+        echo '<div class="categories-filter-choices">';
+        $category_vid = $category['vocabulary']->vid;
+        echo '<div vid="' . $category_vid . '" class="clearfix category-filter-list category-filter-list-' . $category_vid . ' ' . strtolower($category['display_name']) . '">';
+        echo '<h2 class="category-filter-header">' . $category['display_name'] . '<i class="gen-enclosed foundicon-remove right"></i></h2>';
+        echo '<ul>';
+        foreach ($category['terms'] as $key => $term) {
+          $class = '';
+          if (strpos($cf_value, $category_vid . ':' . $term->tid) !== FALSE) {
+            $class = ' current ';
+          }
+          echo '<li class="category-filter category-filter-' . $category_vid . '-' . $term->tid . ' ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '"><span class="highlight"></span><span class="filter-name ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '">' . $term->name . '</span></li>';
         }
-        echo '<li class="category-filter category-filter-' . $category_vid . '-' . $term->tid . ' ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '"><span class="highlight"></span><span class="filter-name ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '">' . $term->name . '</span></li>';
-      }
 
-      echo '</ul>';
-      echo '</div>';
-      echo '</div>';
-      echo '</div></li>';
+        echo '</ul>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div></li>';
+      }
 
 
       // Close of the loop.
