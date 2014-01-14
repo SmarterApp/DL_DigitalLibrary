@@ -552,6 +552,11 @@ function sbac_resource_filter_user_tags(&$view, $account = NULL) {
 
   if ($subjects = field_get_items('user', $account, 'field_subject_s_')) {
     $subjects = array_map($get_tid, $subjects);
+    foreach ($subjects as $key => $value) {
+      if ($value == NULL) {
+        unset($subjects[$key]);
+      }
+    }
 
     // not subject specific - remove filters
     if (in_array($subject_tid_all, $subjects)) {
@@ -573,6 +578,11 @@ function sbac_resource_filter_user_tags(&$view, $account = NULL) {
 
   if ($grades = field_get_items('user', $account, 'field_grade_level_s_')) {
     $grades = array_map($get_tid, $grades);
+    foreach ($grades as $key => $value) {
+      if ($value == NULL) {
+        unset($grades[$key]);
+      }
+    }
 
     // not grade specific - remove filters
     if (in_array($grade_tid_all, $grades)) {
