@@ -377,8 +377,12 @@ html.js {
 			color: #0583AC;
 			
 			&:hover {
-				background-color: #FAFAFA;
-			  background-image: -moz-linear-gradient(left center , rgba(0, 95, 130, 0.024) 10%, rgba(0, 95, 130, 0.05) 98%);
+				background-color: rgba(250,250,250,1);
+				background-image: -webkit-linear-gradient(left, rgba(0,95,130,0.025) 10%,rgba(0,95,130,0.05) 98%);
+				background-image:    -moz-linear-gradient(left, rgba(0,95,130,0.025) 10%,rgba(0,95,130,0.05) 98%);
+				background-image:     -ms-linear-gradient(left, rgba(0,95,130,0.025) 10%,rgba(0,95,130,0.05) 98%);
+				background-image:      -o-linear-gradient(left, rgba(0,95,130,0.025) 10%,rgba(0,95,130,0.05) 98%);
+				background-image:         linear-gradient(left, rgba(0,95,130,0.025) 10%,rgba(0,95,130,0.05) 98%);
 		    text-shadow: 0 1px 0 #FFFFFF;
 				border: 1px solid #CECECE;
 				border-top: 1px solid #fff;
@@ -484,7 +488,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
       strong {
         color: $lightgrey;
-        text-decoration: none !important;
+        /*text-decoration: none !important;*/
       }
     }
   }
@@ -1879,7 +1883,7 @@ a.tabledrag-handle .handle {
 
       .field-widget-options-select {
         float: left;
-        width: 40%;
+        width: 45%;
         margin-right: 5%;
 
         &:nth-child(odd) {
@@ -2693,7 +2697,7 @@ a.tabledrag-handle .handle {
 
 /* ----------------------------------------
     Narrow + Wide & Half + Half Columns
-  _________________________________________ */
+  ----------------------------------------- */
 .col {
 	display:block;
 	position:relative;
@@ -2714,6 +2718,18 @@ a.tabledrag-handle .handle {
 	width:410px;
 }
 
-
-
-
+/* -----------------------------------------------
+    Option select list needs to span entire width
+  ------------------------------------------------ */
+.chzn-container {
+	width: 100% !important;
+	
+	ul {
+		margin: 0 !important;
+	}
+}
+#edit-group_summary, #edit-group_basic {
+	.chzn-choices input[type="text"] {
+		width: 607px !important;
+	}
+}

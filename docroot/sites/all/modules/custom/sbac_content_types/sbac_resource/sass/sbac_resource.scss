@@ -1429,7 +1429,7 @@ a.sbac-grid-layout {
 }
 
 /*Categories toggle*/
-#sbac-search-digital-library-resources-form, #sbac-search-my-resources-form {
+#sbac-search-digital-library-resources-form, #sbac-search-my-resources-form, #sbac-search-resource-review-form {
 	position: relative;
 }
 
@@ -1544,5 +1544,20 @@ a.category-hide:focus {
 		    background-image: url("../images/arrowUp.svg");
 		}
 	}
+
+}
+
+p.sbac-resource-required {
+	margin-top: 25px;
+	border-top: 1px #ddd solid;
+	padding-top: 5px;
+	clear: both;
+}
+p.sbac-resource-required:before {
+	font-size: 150%;
+	color: red;
+	content: "*";
+	vertical-align: middle;
+	margin-right: 5px;
 }
 

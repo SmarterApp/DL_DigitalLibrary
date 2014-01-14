@@ -5,7 +5,7 @@
  */
 ?>
 <div id="edit-date-range-dropdown<?php print $which ?>" class="date-range-container">
-  <label>
+  <label for="date-selected">
   <?php print t('Choose a time period'); ?>
   <span class="form-required" title="This field is required.">*</span>
   </label>

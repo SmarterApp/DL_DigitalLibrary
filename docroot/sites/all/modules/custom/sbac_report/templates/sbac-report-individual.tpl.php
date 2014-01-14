@@ -6,7 +6,7 @@
 ?>
 <h2 class="report-title"><?php print t('Individual Contributor and Reviewer Report'); ?></h2>
 <div class="report-form-container"><?php print drupal_render($form); ?></div>
-<hr>
+<hr />
 <?php if ($error_message) : ?>
 <?php print $error_message; ?>
 <?php endif ?>

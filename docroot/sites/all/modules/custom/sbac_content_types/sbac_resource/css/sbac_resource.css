@@ -1486,8 +1486,8 @@ a.sbac-grid-layout {
 }
 
 /*Categories toggle*/
-/* line 1432, ../sass/sbac_resource.scss */
-#sbac-search-digital-library-resources-form, #sbac-search-my-resources-form {
+/* line 1427, ../sass/sbac_resource.scss */
+#sbac-search-digital-library-resources-form, #sbac-search-my-resources-form, #sbac-search-resource-review-form {
   position: relative;
 }
 
@@ -1605,4 +1605,21 @@ a.category-hide:focus {
 /* line 1543, ../sass/sbac_resource.scss */
 .sbac-resource-container .more-less .less:after {
   background-image: url("../images/arrowUp.svg");
+}
+
+/* line 1544, ../sass/sbac_resource.scss */
+p.sbac-resource-required {
+  margin-top: 25px;
+  border-top: 1px #ddd solid;
+  padding-top: 5px;
+  clear: both;
+}
+
+/* line 1550, ../sass/sbac_resource.scss */
+p.sbac-resource-required:before {
+  font-size: 150%;
+  color: red;
+  content: "*";
+  vertical-align: middle;
+  margin-right: 5px;
 }

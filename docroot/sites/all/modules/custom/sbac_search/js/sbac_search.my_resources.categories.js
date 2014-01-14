@@ -200,7 +200,12 @@
           if (current_filters.val() == '') {
             $('.categories-current-filters').addClass('noshow');
             reset_filters.addClass('js-hide');
+            jQuery('.category-hide').text(Drupal.t('Show Categories'));
+            jQuery('.category-hide').removeClass('active');
             jQuery('.category-hide').removeClass('js-hide');
+            jQuery('.slideable').hide();
+            Drupal.settings.sbac_search.isEdit = 0;
+            jQuery('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
           }
         }
         return false;

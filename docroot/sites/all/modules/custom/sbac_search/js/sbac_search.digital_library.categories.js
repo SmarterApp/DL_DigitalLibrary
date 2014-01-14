@@ -146,12 +146,12 @@
       close_categories_list = function () {
         var slideableItems = $('.slideable');
         if (slideableItems.is(':visible')) {
-          $.cookie("sbac-my-resources-filters-closed", 1);
+          $.cookie("sbac-digital-library-filters-closed", 1);
           slideableItems.slideUp('slow');
           $('.sbac-filter-cat-area').removeClass("active");
         }
         else{
-          $.cookie("sbac-my-resources-filters-closed", 0);
+          $.cookie("sbac-digital-library-filters-closed", 0);
           slideableItems.slideDown('fast');
           $('.sbac-filter-cat-area').addClass("active");
         }
@@ -199,7 +199,12 @@
           if (current_filters.val() == '') {
             $('.categories-current-filters').addClass('noshow');
             reset_filters.addClass('js-hide');
+            jQuery('.category-hide').text(Drupal.t('Show Categories'));
+            jQuery('.category-hide').removeClass('active');
             jQuery('.category-hide').removeClass('js-hide');
+            jQuery('.slideable').hide();
+            Drupal.settings.sbac_search.isEdit = 0;
+            jQuery('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
           }
         }
         return false;
