@@ -108,8 +108,6 @@
 
               $('#ccss-cancel').click(function () {
                 closeCtoolsModal();
-                // $('#modalBackdrop').hide();
-                // $('#modalContent').hide();
               });
 
               $('#ccss-submit').click(function () {
@@ -140,26 +138,33 @@
 
                   var closeModal = function (data) {
                     var obj = jQuery.parseJSON(data);
-                    $('#sbac-resource-alignment-tag-view').html(obj.html);
-                    closeCtoolsModal();
-                    // $('#modalBackdrop').hide();
-                    // $('#modalContent').hide();
-                    Drupal.attachBehaviors('.ccss-term-delete');
 
-                    var field = $('.node-resource-form .field-name-field-alignment-term input[type=text]');
-                    var vals = [];
-                    if (field.val() != '') {
-                      vals.push(field.val());
+                    var currentActiveFilters = $('#sbac-category-current-filters').html();
+                    $('#sbac-category-current-filters').html(currentActiveFilters+obj.html);
+
+                    var current_filters = $('#sbac-search-current-filters');
+                    if (current_filters.val() == '') {
+                    $('#sbac-category-current-filters').removeClass('noshow');
+                      current_filters.val(obj.filters);
                     }
-                    vals = $.merge(vals, obj.terms);
-                    field.val(vals.join());
+                    else {
+                      var filter_tids = current_filters.val();
+                      filter_tids += '::' + obj.filters;
+                      current_filters.val(filter_tids);
+                    }
+
+                    $('#edit-reset-filters').removeClass('js-hide');
+                    $('.category-hide').addClass('js-hide');
+
+                    closeCtoolsModal();
+                    Drupal.attachBehaviors('.ccss-term-delete');
                   }
 
                   $.ajax({
                     type: "POST",
-                    url: "/ajax-alignment-crud",
+                    url: "/ajax-filter-alignment-finish-set",
                     success: closeModal,
-                    data: 'op=create&alignment_type=' + alignmentType + '&alignment_ref=' + alignmentRef + '&alignment_standards=' + alignmentStandards,
+                    data: 'alignment_standards=' + alignmentStandards,
                   });
                 }
                 else {
@@ -171,13 +176,13 @@
                 }
                 return false;
               });
-            }
+            } // end submit.
 
             var refNode = $('input#ref_node').val();
 
             $.ajax({
               type: "POST",
-              url: "/ajax-alignment-form",
+              url: "/ajax-alignment-filter-form",
               success: update_form,
               data: 'tid=' + parentId + '&ref_node=' + refNode
             });
@@ -194,7 +199,7 @@
           }
 
           //reattached the behaviors
-          Drupal.attachBehaviors('.sbac-custom-term');
+          // Drupal.attachBehaviors('.sbac-custom-term');
         }
 
         $.ajax({
@@ -220,7 +225,8 @@
 
 
         return false;
-      });
+      }); // End clicking on the term name.
+
     }
   };
 })(jQuery);

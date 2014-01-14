@@ -40,13 +40,6 @@ function sbac_alignment_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'sbac_alignment.ajax.inc',
   );
-  $items['ajax-alignment-filter-page'] = array(
-    'title' => 'AJAX',
-    'page callback' => 'sbac_alignment_ajax_filter_alignment_page',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'sbac_alignment.ajax.inc',
-  );
   $items['ajax-alignment-form'] = array(
     'title' => 'AJAX',
     'page callback' => 'sbac_alignment_ajax_alignment_form_callback',
@@ -57,6 +50,29 @@ function sbac_alignment_menu() {
   $items['ajax-alignment-crud'] = array(
     'title' => 'AJAX',
     'page callback' => 'sbac_alignment_ajax_alignment_crud_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
+  );
+
+  // AJAX for Filter dialog. Mimics Ajax callbacks ^
+  $items['ajax-alignment-filter-page'] = array(
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_filter_alignment_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
+  );
+  $items['ajax-alignment-filter-form'] = array(
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_filter_alignment_form_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_alignment.ajax.inc',
+  );
+  $items['ajax-filter-alignment-finish-set'] = array(
+    'title' => 'AJAX',
+    'page callback' => 'sbac_alignment_ajax_filter_alignment_finish_set_callback',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'sbac_alignment.ajax.inc',
@@ -187,6 +203,98 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
 
   return $form;
 }
+
+/**
+ * Form Callback
+ * Alignment form.
+ */
+function sbac_alignment_filter_alignment_form($form, $form_state, $tid = 0) {
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_alignment') . '/js/sbac_filter_alignment.js',
+  );
+
+  $ref_node = 0;
+  if (isset($_GET['tid'])) {
+    $tid = $_GET['tid'];
+  }
+
+  if (isset($_POST['ref_node'])) {
+    $ref_node = $_POST['ref_node'];
+  }
+
+  $form['alignment_ref'] = array(
+    '#type' => 'hidden',
+    '#value' => $ref_node,
+    '#default_value' => $ref_node,
+    '#attributes' => array(
+      'id' => 'alignment_ref',
+    ),
+  );
+
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  $terms = taxonomy_get_tree($vocab->vid, $tid, SBAC_ALIGNMENT_MAX_DEPTH);
+
+  if (!empty($terms)) {
+    foreach ($terms as $term) {
+      $form['term-' . $term->tid] = array(
+        '#type' => 'checkbox',
+        '#title' => $term->name,
+        '#title_display' => 'none',
+      );
+    }
+  }
+  else {
+    $form['noterm'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="form-item large-12 columns"><div class="standard">',
+      '#suffix' => '</div></div>',
+      '#markup' => t('No Common Core Standard Available'),
+    );
+  }
+
+  //@TODO KS- change to terms
+  $form['alignment_type'] = array(
+    '#type' => 'hidden',
+    '#title' => 'Choose Alignment Type',
+    '#default_value' => 'Teaches',
+    '#attributes' => array('id' => 'edit-alignment-type'),
+  );
+
+  $form['ccss-submit'] = array(
+    '#markup' => l(t('Add Selection'), '#',
+      array(
+        'attributes' => array(
+          'class' => array('form-submit', 'button'),
+          'id' => 'ccss-submit',
+        ),
+        'external' => TRUE,
+      )
+    )
+  );
+  $form['ccss-cancel'] = array(
+    '#markup' => l(t('Cancel'), '#',
+      array(
+        'attributes' => array(
+          'class' => 'button ctools-close-modal close',
+          'id' => 'ccss-cancel',
+        ),
+        'external' => TRUE,
+      )
+    )
+  );
+
+  $form['#attached'] = array(
+    'css' => array(
+      SBAC_ALIGNMENT_MOD_PATH . '/css/alignment.css',
+    ),
+    'js' => array(
+      drupal_get_path('theme', 'sbac') . '/js/custom.js',
+    ),
+  );
+
+  return $form;
+}
+
 
 /**
  * Custom override

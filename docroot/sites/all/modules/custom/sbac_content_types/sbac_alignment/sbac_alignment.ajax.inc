@@ -216,6 +216,54 @@ function sbac_alignment_ajax_alignment_crud_callback() {
 
 /**
  * AJAX Callback
+ * CRUD for Alignment nodes.
+ */
+function sbac_alignment_ajax_filter_alignment_finish_set_callback() {
+  global $user;
+  $op = 'none';
+  if (isset($_POST['op'])) {
+    $op = $_POST['op'];
+  }
+
+  if (isset($_POST['alignment_standards'])) {
+    $standards = explode('|', $_POST['alignment_standards']);
+    array_shift($standards);
+  }
+
+  $types = array();
+  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  $terms = taxonomy_get_tree($vocab->vid, 0);
+
+  foreach ($terms as $term) {
+    $types[$term->tid] = $term->name;
+  }
+
+  $standards_terms = array();
+  $filter_markup = array();
+  $filter_hidden = array();
+  foreach ($standards as $tid) {
+    $filter_text = '<div class="current-filter">';
+    $filter_text .= '<span class="filter-name" tid="'.$tid.'" vid="'.$vocab->vid.'">';
+    $filter_text .= $types[$tid];
+    $filter_text .= '</span></div>';
+    $filter_markup[] = $filter_text;
+
+    $filter_hidden[] = $vocab->vid . ':' . $tid;
+  }
+
+  $html = implode('',$filter_markup);
+  $filters = implode('::',$filter_hidden);
+  $data = array(
+    'html' => $html,
+    'filters' => $filters,
+  );
+
+  print drupal_json_encode($data);
+  exit;
+}
+
+/**
+ * AJAX Callback
  * Lazy-loading the form.
  */
 function sbac_alignment_ajax_alignment_form_callback() {
@@ -224,6 +272,17 @@ function sbac_alignment_ajax_alignment_form_callback() {
   print drupal_json_encode($output);
   exit;
 }
+/**
+ * AJAX Callback - filter dialog for ccss
+ * Lazy-loading the form.
+ */
+function sbac_alignment_ajax_filter_alignment_form_callback() {
+  $tid = $_POST['tid'];
+  $output['html'] = drupal_render(drupal_get_form('sbac_alignment_filter_alignment_form', $tid));
+  print drupal_json_encode($output);
+  exit;
+}
+
 
 /**
  * AJAX Callback
