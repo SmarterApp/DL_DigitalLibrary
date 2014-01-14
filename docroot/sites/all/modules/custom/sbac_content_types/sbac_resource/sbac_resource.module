@@ -134,7 +134,7 @@ function sbac_resource_profile_fields(&$node) {
 
   // Intended End Use
   if (isset($resource_node->field_intended_end_user['und']['0'])) {
-    $resource_node->resource_profile_left['end_use']['title'] = 'Intended End Use';
+    $resource_node->resource_profile_left['end_use']['title'] = 'Intended End Users';
     $resource_node->resource_profile_left['end_use']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_intended_end_user);
   }
 
