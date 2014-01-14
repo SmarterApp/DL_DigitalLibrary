@@ -3,7 +3,7 @@
 <nav class="top-bar main-top clearfix">
   <ul class="title-area">
     <li class="name"><h1><img src="<?php echo $logo; ?>" /></h1></li>
-    <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   </ul>
   <h1 class="title left">Digital Library Beta</h1>
 </nav>

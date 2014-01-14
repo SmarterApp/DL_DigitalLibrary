@@ -2,7 +2,7 @@
 <nav class="top-bar">
   <ul class="title-area">
     <li class="name"><h1><?php print $linked_site_name; ?></h1></li>
-    <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   </ul>
   <section class="top-bar-section">
     <?php if ($main_menu_links) :?>

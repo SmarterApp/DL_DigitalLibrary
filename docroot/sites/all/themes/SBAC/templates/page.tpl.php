@@ -17,7 +17,7 @@ global $user;
           <img src="<?php echo $logo; ?>" alt="Smarter Balanced ASsessment Consortium Logo" />
         </a>
       </h1></li>
-    <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   </ul>
   <h1 class="title left">Digital Library Beta</h1>
   <?php if ($user->uid && !in_array('guest', $user->roles)): ?>
@@ -256,19 +256,14 @@ global $user;
       if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
       <div class="sort-link"><a href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>
     <?php endif; ?>
-    <center>
-      <h2>Welcome to the Smarter Balanced Digital Library</h2>
-      <p>The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate resources and collaborate. To learn more, click through the various welcome tutorials provided below:</p>
-    </center>
+      <h2 class="helpmodal-title">Welcome to the Smarter Balanced Digital Library</h2>
+      <p class="helpmodal-desc">The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate resources and collaborate. To learn more, click through the various welcome tutorials provided below:</p>
     <?php print views_embed_view('help_topics','block'); ?>
     <?php $form = drupal_get_form('sbac_help_disable_help');?>
     <?php print drupal_render($form);?>
-    </ul>
   </div>
   <div id="resource-help-box">
-    <center>
-      <h2>You're About to Create a Resource</h2>
-    </center>
+      <h2 class="resource-help-box-title">You're About to Create a Resource</h2>
     <div id= "resource-help-body">
     <?php print views_embed_view('resource_tutorial','resource_tutorial'); ?>
     </div>
@@ -277,9 +272,7 @@ global $user;
   </div>
   <div id="current-help-topic-modal">
     <a class= "helpBack small button left" >Back</a>
-    <center>
       <h2><span id="sbac-help-title">Welcome to the Smarter Balanced Digital Library</span></h2>
-    </center>
     <div id= "current-help-topic">
     </div>
     <?php $form = drupal_get_form('sbac_help_disable_help');?>
