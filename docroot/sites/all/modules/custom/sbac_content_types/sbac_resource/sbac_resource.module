@@ -187,9 +187,9 @@ function sbac_resource_profile_fields(&$node) {
   }
 
   // Focus
-  if (isset($resource_node->field_focus['und']['0'])) {
-    $resource_node->resource_profile_right['focus']['title'] = 'Attributes of the Formative Assessment Process';
-    $resource_node->resource_profile_right['focus']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_focus);
+  if (isset($resource_node->field_attributes['und']['0'])) {
+    $resource_node->resource_profile_right['attributes']['title'] = 'Attributes of the Formative Assessment Process';
+    $resource_node->resource_profile_right['attributes']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_attributes);
   }
 
   $node['node'] = $resource_node;

@@ -13,8 +13,8 @@
 	  <?php endif; ?>
 
 	  <?php if (isset($node->resource_profile_right)): ?>
-	    <div class="title-tags"><?php echo $node->resource_profile_right['focus']['title']; ?></div>
-	    <?php echo $node->resource_profile_right['focus']['content']; ?>
+	    <div class="title-tags"><?php echo $node->resource_profile_right['attributes']['title']; ?></div>
+	    <?php echo $node->resource_profile_right['attributes']['content']; ?>
 	  <?php endif; ?>
 
 	  <?php if (isset($node->field_connection_to_fap['und'][0])): ?>
