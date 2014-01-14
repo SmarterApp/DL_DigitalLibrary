@@ -466,7 +466,7 @@ class Hooks extends \devtools\Hooks {
     // disable feedback entities which have reached the expiry time
       // don't simply subtract seconds from the current timestamp - that'll get messed up
       // during daylight time changes
-      $expiry_time = strtotime('-' . FEEDBACK_REVIEW_TIMEOUT . ' hours');
+      $expiry_time = strtotime('- 2 minutes');
 
       $args = array(
         ':time' => $expiry_time,
@@ -489,7 +489,17 @@ class Hooks extends \devtools\Hooks {
           // review entities, because to have one of those in the system, the resource must
           // have a completed gate keeper, meaning we don't need to change any node workflow
           // properties
-          workbench_moderation_moderate($node, 'draft');
+          // We were putting the resource back in draft state. Not wanted by client.
+          // workbench_moderation_moderate($node, 'draft');
+          $query = "  UPDATE  eck_feedback
+                  SET     status = 0
+                  WHERE   status = 1
+                  AND     completed = 0
+                  AND     created <= :time
+                  AND     node_id = :nid
+               ";
+
+          db_query($query, array(':time' => $expiry_time, ':nid' => $node->nid));
         }
       }
 

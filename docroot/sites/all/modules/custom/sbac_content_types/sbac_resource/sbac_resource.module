@@ -550,7 +550,14 @@ function sbac_resource_preprocess_node(&$vars) {
     drupal_set_title($vars['title']);
     drupal_add_js(libraries_get_path('jwplayer') . '/jwplayer.js');
     drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.node.js');
-    $vars['author'] = ''; $vars['license'] = ''; $vars['owner'] = '';
+    $vars['author'] = ''; $vars['license'] = ''; $vars['owner'] = ''; $vars['resource_type'] = '';
+    if (isset($vars['field_focus'][0]['tid'])) {
+      $resource_types = array();
+      foreach ($vars['field_focus'] as $key => $term) {
+        $resource_types[] = $term['taxonomy_term']->name;
+      }
+      $vars['resource_type'] = implode(', ', $resource_types);
+    }
     if (isset($vars['field_author'][0]['safe_value'])) {
       $vars['author'] = $vars['field_author'][0]['safe_value'];
     }

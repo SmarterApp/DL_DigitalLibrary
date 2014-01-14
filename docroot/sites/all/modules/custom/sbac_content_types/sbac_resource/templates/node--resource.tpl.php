@@ -77,6 +77,9 @@
 
   drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
 ?>
+<?php if (isset($resource_type) && $resource_type): ?>
+  <span class="resource-type"><?php print $resource_type; ?></span>
+<?php endif; ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <div class="resource-attributes">
     <?php if (isset($author) && $author): ?>
