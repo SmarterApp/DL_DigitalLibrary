@@ -199,7 +199,7 @@
           }
 
           //reattached the behaviors
-          // Drupal.attachBehaviors('.sbac-custom-term');
+          Drupal.attachBehaviors('.sbac-custom-term');
         }
 
         $.ajax({

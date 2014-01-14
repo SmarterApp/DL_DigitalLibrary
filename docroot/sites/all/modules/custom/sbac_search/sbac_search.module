@@ -816,10 +816,10 @@ function sbac_search_digital_library_categories() {
     ),
   );
   $llink = l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
-  $categories['ccss']['display_name'] = 'Common Core State Standards';
-  $categories['ccss']['vocabulary'] = array();
-  $categories['ccss']['terms'] = array();
-  $categories['ccss']['link'] = $llink;
+  $categories['education_alignment']['display_name'] = 'Common Core State Standards';
+  $categories['education_alignment']['vocabulary'] = array();
+  $categories['education_alignment']['terms'] = array();
+  $categories['education_alignment']['link'] = $llink;
 
   $cf_value = NULL;
   $cf_html = array();
