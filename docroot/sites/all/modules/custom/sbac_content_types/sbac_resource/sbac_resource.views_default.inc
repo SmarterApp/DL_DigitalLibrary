@@ -1644,6 +1644,37 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_attributes_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_attributes_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_attributes_tid']['vocabulary'] = 'attributes';
+  /* Filter criterion: Content: Common Core Standard(s) (field_alignment_term) */
+  $handler->display->display_options['filters']['field_alignment_term_tid']['id'] = 'field_alignment_term_tid';
+  $handler->display->display_options['filters']['field_alignment_term_tid']['table'] = 'field_data_field_alignment_term';
+  $handler->display->display_options['filters']['field_alignment_term_tid']['field'] = 'field_alignment_term_tid';
+  $handler->display->display_options['filters']['field_alignment_term_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['operator_id'] = 'field_alignment_term_tid_op';
+  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['label'] = 'Common Core Standard(s) (field_alignment_term)';
+  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['operator'] = 'field_alignment_term_tid_op';
+  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['identifier'] = 'field_alignment_term_tid';
+  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    27 => 0,
+  );
+  $handler->display->display_options['filters']['field_alignment_term_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_alignment_term_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_alignment_term_tid']['vocabulary'] = 'education_alignment';
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
