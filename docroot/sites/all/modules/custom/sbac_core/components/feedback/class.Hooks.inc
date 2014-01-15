@@ -436,9 +436,9 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_cron() {
     // send out reminder notifications for resources which are approaching expiry time
-      $notification_time = strtotime('-' . FEEDBACK_REVIEW_NOTIFICATION . ' hours');
+    $notification_time = strtotime('-' . FEEDBACK_REVIEW_NOTIFICATION . ' hours');
 
-      $query =  " SELECT    id, uid, node_id
+    $query = " SELECT    id, uid, node_id
                   FROM      eck_feedback
                   WHERE     status = 1
                   AND       completed = 0
@@ -447,51 +447,50 @@ class Hooks extends \devtools\Hooks {
                   AND       reminder = 0
                 ";
 
-      $args = array(
-        ':time' => $notification_time,
-      );
+    $args = array(
+      ':time' => $notification_time,
+    );
 
-      $result = db_query($query, $args);
+    $result = db_query($query, $args);
 
-      foreach ($result as $row) {
-        $task = taskit_get_object('review_reminder');
-        $task->addVisibility($task::VISIBILITY_USER);
-        $task->addEntity('node', $row->node_id);
-        $task->addEntity('feedback', $row->id);
-        $task->addOwningUser($row->uid);
-        $task->addTriggeringUser(1);
-        $task->save();
-      }
+    foreach ($result as $row) {
+      $task = taskit_get_object('review_reminder');
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('node', $row->node_id);
+      $task->addEntity('feedback', $row->id);
+      $task->addOwningUser($row->uid);
+      $task->addTriggeringUser(1);
+      $task->save();
+    }
 
-      // disable feedback entities which have reached the expiry time
-      // don't simply subtract seconds from the current timestamp - that'll get messed up
-      // during daylight time changes
-      $expiry_time = strtotime('-' . FEEDBACK_REVIEW_TIMEOUT . ' minutes');
+    // disable feedback entities which have reached the expiry time
+    // don't simply subtract seconds from the current timestamp - that'll get messed up
+    // during daylight time changes
+    $expiry_time = strtotime('-' . FEEDBACK_REVIEW_TIMEOUT . ' minutes');
 
-      $args = array(
-        ':time' => $expiry_time,
-      );
+    $args = array(
+      ':time' => $expiry_time,
+    );
 
-      // pull up active, yet incomplete gate keeper entities which are past the time limitation
-      $query = "  SELECT    id, node_id
+    // pull up active, yet incomplete gate keeper entities which are past the time limitation
+    $query = "  SELECT    id, node_id
                   FROM      eck_feedback
                   WHERE     status = 1
                   AND       completed = 0
                   AND       created <= :time 
-                  AND       type = 'gate_keeper'
                ";
 
-      $result = db_query($query, $args)->fetchAll();
-      foreach ($result as $row) {
-        if ($node = node_load($row->node_id)) {
-          // if this is an incomplete gate keeper, then the resource won't have any reviews
-          // and we can safely bump it back to draft; we don't need to worry about
-          // review entities, because to have one of those in the system, the resource must
-          // have a completed gate keeper, meaning we don't need to change any node workflow
-          // properties
-          // We were putting the resource back in draft state. Not wanted by client.
-          // workbench_moderation_moderate($node, 'draft');
-          $query = "  UPDATE  eck_feedback
+    $result = db_query($query, $args)->fetchAll();
+    foreach ($result as $row) {
+      if ($node = node_load($row->node_id)) {
+        // if this is an incomplete gate keeper, then the resource won't have any reviews
+        // and we can safely bump it back to draft; we don't need to worry about
+        // review entities, because to have one of those in the system, the resource must
+        // have a completed gate keeper, meaning we don't need to change any node workflow
+        // properties
+        // We were putting the resource back in draft state. Not wanted by client.
+        // workbench_moderation_moderate($node, 'draft');
+        $query = "  UPDATE  eck_feedback
                   SET     status = 0
                   WHERE   status = 1
                   AND     completed = 0
@@ -499,19 +498,12 @@ class Hooks extends \devtools\Hooks {
                   AND     node_id = :nid
                ";
 
-          db_query($query, array(':time' => $expiry_time, ':nid' => $node->nid));
-        }
+        db_query($query, array(':time' => $expiry_time, ':nid' => $node->nid));
+
+        // rebuild permissions
+        node_access_acquire_grants($node, TRUE);
       }
-
-      // now disable all incomplete feedback entities
-      $query = "  UPDATE  eck_feedback
-                  SET     status = 0
-                  WHERE   status = 1
-                  AND     completed = 0
-                  AND     created <= :time
-               ";
-
-      db_query($query, $args);
+    }
   }
 
   /**
