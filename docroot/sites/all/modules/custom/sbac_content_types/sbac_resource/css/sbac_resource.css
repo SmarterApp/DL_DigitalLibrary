@@ -1012,20 +1012,35 @@ a.sbac-grid-layout {
 
 /* line 964, ../sass/sbac_resource.scss */
 .node-type-resource #page-title {
-  font-size: 2.375em;
-  font-family: Arial, sans-serif;
-  font-weight: normal;
-  color: #0085ad;
-  margin: 35px 0 10px;
-  padding: 0 25px;
-  word-wrap: break-word;
+  /*font-size: 2.375em;
+      font-family: Arial, sans-serif;
+      font-weight: normal;
+      color: $teal;
+      margin: 35px 0 10px;
+      padding: 0 25px;
+      word-wrap: break-word;*/
+  border-bottom: 1px solid #62676E;
+  color: #04384E;
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0 25px 5px 25px;
+  padding: 20px 0 0;
+  text-transform: capitalize;
 }
-/* line 974, ../sass/sbac_resource.scss */
+/* line 983, ../sass/sbac_resource.scss */
+.node-type-resource .resource-type {
+  margin-left: 25px;
+  font-size: 13px;
+  color: #62676E;
+}
+/* line 989, ../sass/sbac_resource.scss */
 .node-type-resource .main-container {
   padding-bottom: 0;
+  background-color: #fff;
 }
 
-/* line 979, ../sass/sbac_resource.scss */
+/* line 995, ../sass/sbac_resource.scss */
 .node-resource {
   -ms-word-break: break-all;
   word-break: break-all;
@@ -1035,56 +1050,65 @@ a.sbac-grid-layout {
   hyphens: auto;
   padding: 0 25px;
 }
-/* line 983, ../sass/sbac_resource.scss */
+/* line 999, ../sass/sbac_resource.scss */
 .node-resource #review {
   background: transparent;
   margin: 0 -15px;
   padding: 0 20px;
 }
-/* line 989, ../sass/sbac_resource.scss */
+/* line 1005, ../sass/sbac_resource.scss */
 .node-resource .section-container.auto > section .content {
   border: none;
   border-top: 1px solid #aaaaaa;
   margin: 0 -45px;
 }
-/* line 995, ../sass/sbac_resource.scss */
+/* line 1011, ../sass/sbac_resource.scss */
 .node-resource .section-container.auto > section:last-child .title, .node-resource .section-container.auto > .section:last-child .title {
   border-right: none;
 }
-/* line 999, ../sass/sbac_resource.scss */
+/* line 1015, ../sass/sbac_resource.scss */
 .node-resource .f-dropdown.open {
   top: 40px !important;
   left: 15px !important;
 }
-/* line 1004, ../sass/sbac_resource.scss */
+/* line 1020, ../sass/sbac_resource.scss */
 .node-resource .f-dropdown {
   top: -9999px !important;
   font-size: emCalc(12px);
   word-wrap: break-word;
 }
-/* line 1010, ../sass/sbac_resource.scss */
+/* line 1026, ../sass/sbac_resource.scss */
 .node-resource .resource-attributes {
   margin-bottom: 1em;
+  margin-top: 1.5em;
+  float: left;
 }
-/* line 1013, ../sass/sbac_resource.scss */
+/* line 1031, ../sass/sbac_resource.scss */
 .node-resource .resource-attributes p {
-  margin-bottom: 0;
-  font-size: 1em;
+  color: #101010;
+  font-size: 13px;
+  line-height: 1.5;
+  list-style-type: none;
+  margin: 0;
+  padding: 0 0 5px;
+  float: left;
+  clear: both;
 }
-/* line 1018, ../sass/sbac_resource.scss */
+/* line 1041, ../sass/sbac_resource.scss */
+.node-resource .resource-attributes p.divider {
+  border-top: 1px #CECECE solid;
+}
+/* line 1046, ../sass/sbac_resource.scss */
 .node-resource .resource-attributes span {
-  color: #494949;
-  font-size: 1.125em;
+  color: #62676E;
+  font-size: 13px;
+  font-weight: bold;
 }
-/* line 1023, ../sass/sbac_resource.scss */
-.node-resource .resource-attributes strong {
-  color: #246a34;
+/* line 1052, ../sass/sbac_resource.scss */
+.node-resource .resource-attributes .edit-link a {
+  margin-bottom: 0;
 }
-/* line 1027, ../sass/sbac_resource.scss */
-.node-resource .resource-attributes .license {
-  font-size: .75em;
-}
-/* line 1033, ../sass/sbac_resource.scss */
+/* line 1057, ../sass/sbac_resource.scss */
 .node-resource #resource-element img {
   -webkit-border-radius: 12px 12px 0 0;
   -moz-border-radius: 12px 12px 0 0;
@@ -1093,25 +1117,25 @@ a.sbac-grid-layout {
   border-radius: 12px 12px 0 0;
 }
 
-/* line 1039, ../sass/sbac_resource.scss */
+/* line 1063, ../sass/sbac_resource.scss */
 .section-container.auto > section > .title, .section-container.auto > section > .title a {
   font-size: emCalc(16px);
   background: none;
   color: #717880;
   border: none;
 }
-/* line 1046, ../sass/sbac_resource.scss */
+/* line 1070, ../sass/sbac_resource.scss */
 .section-container.auto > section > .title:hover, .section-container.auto > section > .title a:hover {
   background: none;
 }
 
-/* line 1052, ../sass/sbac_resource.scss */
+/* line 1076, ../sass/sbac_resource.scss */
 .node-resource .section-container.auto > section > .title a {
   padding: 10px 20px;
   border-right: 1px solid #ccc;
 }
 
-/* line 1058, ../sass/sbac_resource.scss */
+/* line 1082, ../sass/sbac_resource.scss */
 .section-container.auto > section.active > .title a {
   background: #0085ad;
   color: white;
@@ -1119,48 +1143,48 @@ a.sbac-grid-layout {
 }
 
 /* Modal */
-/* line 1067, ../sass/sbac_resource.scss */
+/* line 1091, ../sass/sbac_resource.scss */
 .ui-dialog .ajax-progress .throbber {
   background-position: 0px -24px;
 }
 
-/* line 1075, ../sass/sbac_resource.scss */
+/* line 1099, ../sass/sbac_resource.scss */
 #dialog-resource_gate_keeper_form-wrapper .gate-keeper-modal-intro,
 #dialog-resource_gate_keeper_form-wrapper .gate-keeper-modal-intro {
   margin-bottom: 15px;
 }
-/* line 1079, ../sass/sbac_resource.scss */
+/* line 1103, ../sass/sbac_resource.scss */
 #dialog-resource_gate_keeper_form-wrapper button,
 #dialog-resource_gate_keeper_form-wrapper button {
   float: right;
 }
-/* line 1083, ../sass/sbac_resource.scss */
+/* line 1107, ../sass/sbac_resource.scss */
 #dialog-resource_gate_keeper_form-wrapper .button, #dialog-resource_gate_keeper_form-wrapper button,
 #dialog-resource_gate_keeper_form-wrapper .button,
 #dialog-resource_gate_keeper_form-wrapper button {
   margin-bottom: 0;
 }
-/* line 1087, ../sass/sbac_resource.scss */
+/* line 1111, ../sass/sbac_resource.scss */
 #dialog-resource_gate_keeper_form-wrapper .close-dialog,
 #dialog-resource_gate_keeper_form-wrapper .close-dialog {
   text-align: right;
 }
-/* line 1090, ../sass/sbac_resource.scss */
+/* line 1114, ../sass/sbac_resource.scss */
 #dialog-resource_gate_keeper_form-wrapper .close-dialog .button,
 #dialog-resource_gate_keeper_form-wrapper .close-dialog .button {
   margin-right: 10px;
 }
 
-/* line 1097, ../sass/sbac_resource.scss */
+/* line 1121, ../sass/sbac_resource.scss */
 .view-resource-tutorial ul {
   list-style: none;
 }
 
-/* line 1102, ../sass/sbac_resource.scss */
+/* line 1126, ../sass/sbac_resource.scss */
 .page-node-edit.node-type-resource #modalContent {
   overflow: none !important;
 }
-/* line 1105, ../sass/sbac_resource.scss */
+/* line 1129, ../sass/sbac_resource.scss */
 .page-node-edit.node-type-resource #modalContent #modal-title {
   white-space: pre-wrap;
   overflow: visible;
@@ -1168,12 +1192,12 @@ a.sbac-grid-layout {
   padding-bottom: 20px;
   height: auto !important;
 }
-/* line 1113, ../sass/sbac_resource.scss */
+/* line 1137, ../sass/sbac_resource.scss */
 .page-node-edit.node-type-resource #modalContent .sbac-dup {
   font-size: 18px;
 }
 
-/* line 1118, ../sass/sbac_resource.scss */
+/* line 1142, ../sass/sbac_resource.scss */
 .sbac-media-duplicates-container {
   border: 1px solid silver;
   border-width: 0 0 1px;
@@ -1181,7 +1205,7 @@ a.sbac-grid-layout {
   padding: 10px;
 }
 
-/* line 1125, ../sass/sbac_resource.scss */
+/* line 1149, ../sass/sbac_resource.scss */
 .dup-btns {
   margin-top: 20px;
 }
@@ -1189,7 +1213,7 @@ a.sbac-grid-layout {
 /* -----------------------------------------
    Node
    ----------------------------------------- */
-/* line 1133, ../sass/sbac_resource.scss */
+/* line 1157, ../sass/sbac_resource.scss */
 .dialog-trigger-about,
 .dialog-trigger-gk {
   -webkit-border-radius: 6px;
@@ -1215,7 +1239,7 @@ a.sbac-grid-layout {
 /** ------------------------------------------
   html5
   ____________________________________________ */
-/* line 1152, ../sass/sbac_resource.scss */
+/* line 1176, ../sass/sbac_resource.scss */
 #sbac-content-module-container .form-item-files-field-content-module-picker,
 #sbac-content-module-container #edit-field-content-module-picker,
 #sbac-content-module-container .form-item.form-type-file {
@@ -1224,12 +1248,12 @@ a.sbac-grid-layout {
   background-position: center right !important;
 }
 
-/* line 1160, ../sass/sbac_resource.scss */
+/* line 1184, ../sass/sbac_resource.scss */
 .sbac-html5-uploader {
   float: right;
 }
 
-/* line 1165, ../sass/sbac_resource.scss */
+/* line 1189, ../sass/sbac_resource.scss */
 #display-container:after {
   content: ".";
   display: block;
@@ -1239,25 +1263,25 @@ a.sbac-grid-layout {
   width: 100%;
 }
 
-/* line 1175, ../sass/sbac_resource.scss */
+/* line 1199, ../sass/sbac_resource.scss */
 #sbac-content-module-subcontainer {
   padding-top: 15px;
   border: 1px solid #ccc;
   border-width: 1px 0;
   margin: 0 5px;
 }
-/* line 1181, ../sass/sbac_resource.scss */
+/* line 1205, ../sass/sbac_resource.scss */
 #sbac-content-module-subcontainer a {
   color: #333;
   text-shadow: none;
 }
-/* line 1184, ../sass/sbac_resource.scss */
+/* line 1208, ../sass/sbac_resource.scss */
 #sbac-content-module-subcontainer a i {
   text-shadow: none;
   font-size: 18px;
 }
 
-/* line 1192, ../sass/sbac_resource.scss */
+/* line 1216, ../sass/sbac_resource.scss */
 .html5-identifier span {
   background-color: #ddd;
   display: inline-block;
@@ -1265,17 +1289,17 @@ a.sbac-grid-layout {
   line-height: normal;
   font-size: 14px;
 }
-/* line 1199, ../sass/sbac_resource.scss */
+/* line 1223, ../sass/sbac_resource.scss */
 .html5-identifier span i:before {
   position: relative;
   top: 2px;
 }
 
-/* line 1206, ../sass/sbac_resource.scss */
+/* line 1230, ../sass/sbac_resource.scss */
 #html5-identifier-node {
   margin-top: -15px;
 }
-/* line 1208, ../sass/sbac_resource.scss */
+/* line 1232, ../sass/sbac_resource.scss */
 #html5-identifier-node p {
   margin-bottom: 0;
 }
@@ -1283,16 +1307,16 @@ a.sbac-grid-layout {
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
-/* line 1219, ../sass/sbac_resource.scss */
+/* line 1243, ../sass/sbac_resource.scss */
 .grid-view .grid-library {
   margin: 0;
   padding: 0;
 }
-/* line 1223, ../sass/sbac_resource.scss */
+/* line 1247, ../sass/sbac_resource.scss */
 .grid-view .grid-library .resource-card {
   max-width: 290px;
 }
-/* line 1227, ../sass/sbac_resource.scss */
+/* line 1251, ../sass/sbac_resource.scss */
 .grid-view .grid-library li {
   list-style-type: none;
   float: left;
@@ -1300,37 +1324,37 @@ a.sbac-grid-layout {
 }
 
 @media all and (min-width: 1271px) {
-  /* line 1237, ../sass/sbac_resource.scss */
+  /* line 1261, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 1270px;
   }
-  /* line 1243, ../sass/sbac_resource.scss */
+  /* line 1267, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(4n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 1270px) and (min-width: 961px) {
-  /* line 1253, ../sass/sbac_resource.scss */
+  /* line 1277, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 960px;
   }
-  /* line 1259, ../sass/sbac_resource.scss */
+  /* line 1283, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(3n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 960px) {
-  /* line 1269, ../sass/sbac_resource.scss */
+  /* line 1293, ../sass/sbac_resource.scss */
   .grid-view .main-row {
     max-width: 656px;
   }
-  /* line 1275, ../sass/sbac_resource.scss */
+  /* line 1299, ../sass/sbac_resource.scss */
   .grid-view .grid-library li:nth-child(2n + 1) {
     clear: left;
   }
 }
 /*Error MSG for sbac share page not found*/
-/* line 1284, ../sass/sbac_resource.scss */
+/* line 1308, ../sass/sbac_resource.scss */
 .sbac-share-page-not-found {
   background-clip: padding-box;
   background-color: #F9F9F9;
@@ -1345,58 +1369,58 @@ a.sbac-grid-layout {
 }
 
 /*Related Resources*/
-/* line 1296, ../sass/sbac_resource.scss */
+/* line 1320, ../sass/sbac_resource.scss */
 .node-resource .section-container .content {
   background: none !important;
 }
-/* line 1298, ../sass/sbac_resource.scss */
+/* line 1322, ../sass/sbac_resource.scss */
 .node-resource .resources-container {
   margin: 0 auto;
   width: 820px;
   padding-bottom: 20px;
 }
-/* line 1304, ../sass/sbac_resource.scss */
+/* line 1328, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li {
   float: left;
   width: 280px;
 }
-/* line 1308, ../sass/sbac_resource.scss */
+/* line 1332, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li .resource-card {
   max-width: 260px;
   margin: 0 10px;
 }
-/* line 1312, ../sass/sbac_resource.scss */
+/* line 1336, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li .resource-card a {
   color: #0085AD;
 }
-/* line 1315, ../sass/sbac_resource.scss */
+/* line 1339, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li p {
   font-size: 14px;
 }
-/* line 1319, ../sass/sbac_resource.scss */
+/* line 1343, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li .paradata-info {
   font-size: 11px;
   line-height: 1.6em;
 }
-/* line 1324, ../sass/sbac_resource.scss */
+/* line 1348, ../sass/sbac_resource.scss */
 .node-resource .resources-container ul.slides li .shield-drop {
   width: auto;
 }
-/* line 1330, ../sass/sbac_resource.scss */
+/* line 1354, ../sass/sbac_resource.scss */
 .node-resource .resources-container .flex-control-nav {
   padding-top: 15px;
   bottom: -10px;
   border-top: 1px solid #CCCCCC;
 }
-/* line 1337, ../sass/sbac_resource.scss */
+/* line 1361, ../sass/sbac_resource.scss */
 .node-resource .resources-container .flex-direction-nav .flex-next, .node-resource .resources-container .flex-direction-nav .flex-prev {
   opacity: 1;
 }
-/* line 1344, ../sass/sbac_resource.scss */
+/* line 1368, ../sass/sbac_resource.scss */
 .node-resource .section-container section:last-child {
   padding-bottom: 50px;
 }
-/* line 1349, ../sass/sbac_resource.scss */
+/* line 1373, ../sass/sbac_resource.scss */
 .node-resource .resources-container.static {
   width: 840px;
   border-bottom: 1px solid #CCCCCC;
@@ -1405,14 +1429,14 @@ a.sbac-grid-layout {
 
 /*Fixed tag of Related Resource in Firefox */
 @-moz-document url-prefix() {
-  /* line 1358, ../sass/sbac_resource.scss */
+  /* line 1382, ../sass/sbac_resource.scss */
   .section-container.auto > section.active > .title a {
     font-size: 0.95em !important;
   }
 }
 
 /*Resources search filter button*/
-/* line 1365, ../sass/sbac_resource.scss */
+/* line 1389, ../sass/sbac_resource.scss */
 #sbac-search-filter-button:before {
   background-image: url("../images/icon-buttonAccept.png");
   background-position: center center;
@@ -1425,24 +1449,24 @@ a.sbac-grid-layout {
   width: 18px;
 }
 
-/* line 1376, ../sass/sbac_resource.scss */
+/* line 1400, ../sass/sbac_resource.scss */
 #sbac-search-filter-button.is-edit:before {
   background-image: url("../images/icon-buttonEdit.png");
   width: 17px;
 }
 
-/* line 1380, ../sass/sbac_resource.scss */
+/* line 1404, ../sass/sbac_resource.scss */
 #edit-reset-filters {
   background-color: #8A1538;
   border: 1px solid #793348;
 }
 
-/* line 1385, ../sass/sbac_resource.scss */
+/* line 1409, ../sass/sbac_resource.scss */
 #edit-reset-filters:hover {
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
-/* line 1389, ../sass/sbac_resource.scss */
+/* line 1413, ../sass/sbac_resource.scss */
 #edit-reset-filters:before {
   background-image: url("../images/icon-buttonReset.png");
   background-position: center center;
@@ -1456,24 +1480,24 @@ a.sbac-grid-layout {
 }
 
 /*Links that Open in a New Window for Glossary of Terms*/
-/* line 1403, ../sass/sbac_resource.scss */
+/* line 1427, ../sass/sbac_resource.scss */
 .glossary-link-container {
   text-align: right;
   padding-bottom: 5px;
   margin-right: 35px;
 }
-/* line 1408, ../sass/sbac_resource.scss */
+/* line 1432, ../sass/sbac_resource.scss */
 .glossary-link-container a {
   border-bottom: 1px solid #0583AC;
   color: #0583AC;
   font-size: 13px;
 }
-/* line 1414, ../sass/sbac_resource.scss */
+/* line 1438, ../sass/sbac_resource.scss */
 .glossary-link-container a:hover {
   border-bottom: 1px solid #8A1538;
   color: #8A1538;
 }
-/* line 1419, ../sass/sbac_resource.scss */
+/* line 1443, ../sass/sbac_resource.scss */
 .glossary-link-container .glossary-link:after {
   background-image: url("../images/icon-newWindow.png");
   background-position: center center;
@@ -1486,12 +1510,12 @@ a.sbac-grid-layout {
 }
 
 /*Categories toggle*/
-/* line 1427, ../sass/sbac_resource.scss */
+/* line 1456, ../sass/sbac_resource.scss */
 #sbac-search-digital-library-resources-form, #sbac-search-my-resources-form, #sbac-search-resource-review-form {
   position: relative;
 }
 
-/* line 1436, ../sass/sbac_resource.scss */
+/* line 1460, ../sass/sbac_resource.scss */
 a.category-hide {
   position: absolute;
   right: 20px;
@@ -1500,18 +1524,18 @@ a.category-hide {
   color: #006082;
 }
 
-/* line 1444, ../sass/sbac_resource.scss */
+/* line 1468, ../sass/sbac_resource.scss */
 a.category-hide:hover {
   text-decoration: underline;
   color: #006082;
 }
 
-/* line 1449, ../sass/sbac_resource.scss */
+/* line 1473, ../sass/sbac_resource.scss */
 a.category-hide:focus {
   color: #006082;
 }
 
-/* line 1453, ../sass/sbac_resource.scss */
+/* line 1477, ../sass/sbac_resource.scss */
 .category-hide.active:after {
   background-image: url("../images/icon-toggle-up.png");
   background-position: center center;
@@ -1523,7 +1547,7 @@ a.category-hide:focus {
   width: 10px;
 }
 
-/* line 1464, ../sass/sbac_resource.scss */
+/* line 1488, ../sass/sbac_resource.scss */
 .category-hide:after {
   background-image: url("../images/icon-toggle-down.png");
   background-position: center center;
@@ -1536,13 +1560,24 @@ a.category-hide:focus {
 }
 
 /*About This Resource*/
-/* line 1476, ../sass/sbac_resource.scss */
+/* line 1500, ../sass/sbac_resource.scss */
 #profile-wrap {
   margin: 0 30px;
   padding-bottom: 20px;
   float: left;
 }
-/* line 1481, ../sass/sbac_resource.scss */
+/* line 1505, ../sass/sbac_resource.scss */
+#profile-wrap h2 {
+  color: #000000;
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  max-width: 560px;
+  padding: 0 0 10px;
+  text-transform: capitalize;
+}
+/* line 1516, ../sass/sbac_resource.scss */
 #profile-wrap .title-tags {
   display: block;
   margin: 0;
@@ -1557,15 +1592,16 @@ a.category-hide:focus {
   letter-spacing: 1px;
   border-bottom: 1px solid #CECECE;
 }
-/* line 1496, ../sass/sbac_resource.scss */
+/* line 1531, ../sass/sbac_resource.scss */
 #profile-wrap .item-list {
   margin-bottom: 20px;
+  line-height: 1.6;
 }
-/* line 1500, ../sass/sbac_resource.scss */
+/* line 1536, ../sass/sbac_resource.scss */
 #profile-wrap ul {
   margin: 0;
 }
-/* line 1503, ../sass/sbac_resource.scss */
+/* line 1539, ../sass/sbac_resource.scss */
 #profile-wrap ul li {
   background-color: #F2F2F2;
   border-radius: 2px;
@@ -1577,7 +1613,7 @@ a.category-hide:focus {
 }
 
 /*Adjust the cover profile */
-/* line 1518, ../sass/sbac_resource.scss */
+/* line 1554, ../sass/sbac_resource.scss */
 .sbac-resource-container .more-less .more, .sbac-resource-container .more-less .less {
   background-color: #63666A;
   border-radius: 5px;
@@ -1589,7 +1625,7 @@ a.category-hide:focus {
   padding: 0 12px;
   text-align: center;
 }
-/* line 1530, ../sass/sbac_resource.scss */
+/* line 1566, ../sass/sbac_resource.scss */
 .sbac-resource-container .more-less .more:after, .sbac-resource-container .more-less .less:after {
   background-image: url("../images/arrowDown.svg");
   background-position: center center;
@@ -1602,12 +1638,12 @@ a.category-hide:focus {
   vertical-align: middle;
   width: 10px;
 }
-/* line 1543, ../sass/sbac_resource.scss */
+/* line 1579, ../sass/sbac_resource.scss */
 .sbac-resource-container .more-less .less:after {
   background-image: url("../images/arrowUp.svg");
 }
 
-/* line 1544, ../sass/sbac_resource.scss */
+/* line 1586, ../sass/sbac_resource.scss */
 p.sbac-resource-required {
   margin-top: 25px;
   border-top: 1px #ddd solid;
@@ -1615,7 +1651,7 @@ p.sbac-resource-required {
   clear: both;
 }
 
-/* line 1550, ../sass/sbac_resource.scss */
+/* line 1592, ../sass/sbac_resource.scss */
 p.sbac-resource-required:before {
   font-size: 150%;
   color: red;

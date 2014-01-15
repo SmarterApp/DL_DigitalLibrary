@@ -962,17 +962,33 @@ a.sbac-grid-layout {
 
 .node-type-resource {
   #page-title {
-    font-size: 2.375em;
-    font-family: Arial, sans-serif;
-    font-weight: normal;
-    color: $teal;
-    margin: 35px 0 10px;
-    padding: 0 25px;
-    word-wrap: break-word;
+    /*font-size: 2.375em;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+        color: $teal;
+        margin: 35px 0 10px;
+        padding: 0 25px;
+        word-wrap: break-word;*/
+
+		border-bottom: 1px solid #62676E;
+    color: #04384E;
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 25px 5px 25px;
+    padding: 20px 0 0;
+    text-transform: capitalize;
   }
+
+	.resource-type {
+		margin-left: 25px;
+		font-size: 13px;
+		color: #62676E;
+	}
 
   .main-container {
     padding-bottom: 0;
+		background-color: #fff;
   }
 }
 
@@ -1009,24 +1025,32 @@ a.sbac-grid-layout {
 
   .resource-attributes {
     margin-bottom: 1em;
-
+		margin-top: 1.5em;
+		float: left;
+		
     p {
-      margin-bottom: 0;
-      font-size: 1em;
+      color: #101010;
+	    font-size: 13px;
+	    line-height: 1.5;
+	    list-style-type: none;
+	    margin: 0;
+	    padding: 0 0 5px;
+			float: left;
+			clear: both;
+			
+			&.divider {
+				border-top: 1px #CECECE solid;
+			}
     }
 
     span {
-      color: #494949;
-      font-size: 1.125em;
-    }
-
-    strong {
-      color: $darkgreen;
-    }
-
-    .license {
-      font-size: .75em;
-    }
+		  color: #62676E;
+	    font-size: 13px;
+	    font-weight: bold;
+		}
+		.edit-link {
+			a { margin-bottom: 0;}
+		}
   }
 
   #resource-element {
@@ -1477,6 +1501,17 @@ a.category-hide:focus {
   margin: 0 30px;
   padding-bottom: 20px;
 	float: left;
+	
+	h2 {
+		color: #000000;
+		display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    max-width: 560px;
+    padding: 0 0 10px;
+    text-transform: capitalize;
+	}
 
 	.title-tags {
 		display:block;
@@ -1495,6 +1530,7 @@ a.category-hide:focus {
 
 	.item-list {
 		margin-bottom: 20px;
+		line-height: 1.6;
 	}
 
 	ul {

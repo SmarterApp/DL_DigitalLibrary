@@ -83,15 +83,15 @@
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <div class="resource-attributes">
     <?php if (isset($author) && $author): ?>
-      <p><span class="author"><strong>Author: </strong><?php print $author; ?></span></p>
+      <p><span class="author">Author: </span><?php print $author; ?></p>
     <?php endif; ?>
 
     <?php if (isset($field_publisher[0]['safe_value']) && $field_publisher[0]['safe_value']): ?>
-      <p><span class="publisher"><strong>Owner: </strong><?php print $field_publisher[0]['safe_value']; ?></span><p>
+      <p class="divider"><span class="publisher">Owner: </span><?php print $field_publisher[0]['safe_value']; ?><p>
     <?php endif; ?>
 
     <?php if (isset($license) && $license): ?>
-      <p><span class="license"><strong><?php echo t('License for Primary Material') ?>: </strong><?php print $license; ?></span></p>
+      <p class="divider"><span class="license"><?php echo t('License for Primary Material') ?>: </span><?php print $license; ?></p>
     <?php endif; ?>
 
     <?php
