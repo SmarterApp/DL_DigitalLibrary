@@ -1027,6 +1027,7 @@ a.sbac-grid-layout {
     margin-bottom: 1em;
 		margin-top: 1.5em;
 		float: left;
+		clear: both;
 		
     p {
       color: #101010;
@@ -1052,6 +1053,10 @@ a.sbac-grid-layout {
 			a { margin-bottom: 0;}
 		}
   }
+
+	#resource-element-wrapper {
+		clear: both;
+	}
 
   #resource-element {
     img {
