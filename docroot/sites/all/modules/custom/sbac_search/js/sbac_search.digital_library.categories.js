@@ -16,21 +16,23 @@
         }
       });
 
-      $('#sbac-search-filter-button').click(function() {
-        var isEdit = Drupal.settings.sbac_search.isEdit;
+      $('#sbac-search-filter-button').once('searchfilterbutton', function(){
+        $('#sbac-search-filter-button').click(function() {
+          var isEdit = Drupal.settings.sbac_search.isEdit;
 
-        // The button is in edit state.
-        if (isEdit) {
-          $('.categories-filter.slideable').slideDown('fast');
-          $(this).text(Drupal.t('Apply Filters')).removeClass('is-edit');
-          Drupal.settings.sbac_search.isEdit = 0;
-          return false;
-        }
-        else {
-          $('.categories-filter.slideable').slideUp('slow');
-          $(this).text(Drupal.t('Edit Filters')).addClass('is-edit');
-          Drupal.settings.sbac_search.isEdit = 1;
-        }
+          // The button is in edit state.
+          if (isEdit) {
+            $('.categories-filter.slideable').slideDown('fast');
+            $(this).text(Drupal.t('Apply Filters')).removeClass('is-edit');
+            Drupal.settings.sbac_search.isEdit = 0;
+            return false;
+          }
+          else {
+            $('.categories-filter.slideable').slideUp('slow');
+            $(this).text(Drupal.t('Edit Filters')).addClass('is-edit');
+            Drupal.settings.sbac_search.isEdit = 1;
+          }
+        });
       });
 
       if ($('#sbac-search-current-filters').val() != '') {

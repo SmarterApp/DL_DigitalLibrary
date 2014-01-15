@@ -34,6 +34,11 @@ function sbac_alignment_theme($existing, $type, $theme, $path) {
     'template' => 'alignment-form',
     'render element' => 'form',
   );
+  $items['sbac_alignment_filter_alignment_form'] = array(
+    'path' => drupal_get_path('module', 'sbac_alignment') . '/templates',
+    'template' => 'alignment-form',
+    'render element' => 'form',
+  );
 
   $items['views_view_table__alignment__resource_admin_view'] = array(
     'template' => 'templates/alignment/resource_admin_view/views-view-table--alignment--resource-admin-view',

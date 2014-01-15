@@ -367,6 +367,10 @@ function sbac_resource_digital_library_apply_filters(&$view) {
                   $view_filters['field_classroom_technologies_tid']['value'][] = $tid;
                   $view_filters['field_classroom_technologies_tid']['operator'] = 'and';
                   break;
+                case 'education_alignment':
+                  $view_filters['field_alignment_term_tid']['value'][] = $tid;
+                  $view_filters['field_alignment_term_tid']['operator'] = 'and';
+                  break;
               }
             }
           }
@@ -600,7 +604,7 @@ function sbac_resource_filter_user_tags(&$view, $account = NULL) {
       1 => 'AND',
     ),
   );
-  
+
   if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
     $groups['groups'][2] = 'AND';
   }

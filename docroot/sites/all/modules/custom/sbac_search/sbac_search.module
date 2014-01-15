@@ -809,6 +809,18 @@ function sbac_search_digital_library_categories() {
   $categories['geographical_settings']['vocabulary'] = $geographical_settings;
   $categories['geographical_settings']['terms'] = taxonomy_get_tree($geographical_settings->vid);
 
+  $attrs = array(
+    'attributes' => array(
+      'class' => 'ctools-use-modal ctools-modal-ctools-ccss-style',
+      'id' => 'sbac-resource-modal-alignment2',
+    ),
+  );
+  $llink = l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
+  $categories['education_alignment']['display_name'] = 'Common Core State Standards';
+  $categories['education_alignment']['vocabulary'] = array();
+  $categories['education_alignment']['terms'] = array();
+  $categories['education_alignment']['link'] = $llink;
+
   $cf_value = NULL;
   $cf_html = array();
   if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS])) {
@@ -837,6 +849,7 @@ function sbac_search_digital_library_categories() {
   if ($categories) {
     $output = theme('sbac_digital_library_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
   }
+
   return $output;
 }
 

@@ -42,6 +42,13 @@ function sbac_resource_menu() {
     'file' => 'sbac_resource.forms.inc',
   );
 
+  $items['sbac_resource/%ctools_js/filter-by-alignment'] = array(
+    'page callback' => 'sbac_resource_filter_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
   $items['sbac_resource/%ctools_js/submit-resource'] = array(
     'page callback' => 'sbac_resource_submit_resource_modal_callback',
     'page arguments' => array(1),
@@ -654,7 +661,7 @@ function _sbac_resource_preview_content(&$vars) {
     else if ($type == 'youtube') {
       $url .= '?rel=0'; // Disable related videos.
       $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen></iframe></div>';
-    }      
+    }
     else {
       $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       $viewer['viewer'] = theme('image', array('path' => $url));
@@ -1125,7 +1132,7 @@ function sbac_resource_node_delete($node) {
  * The state of the revision before the transition occurred.
  * @param $node, $i = file index
  */
-function sbac_resource_delete_file_from_cmis($document_id, $i) 
+function sbac_resource_delete_file_from_cmis($document_id, $i)
 {
   module_load_include('api.inc', 'cmis');
   try {
@@ -1139,7 +1146,7 @@ function sbac_resource_delete_file_from_cmis($document_id, $i)
     $difference = $end - $start;
 
     watchdog('sbac', 'did delete in: ' . $difference . ' seconds');
-  } 
+  }
   catch (CMISException $e) {
     // cmis_error_handler('sbac_documents_delete_document', $e);
   }

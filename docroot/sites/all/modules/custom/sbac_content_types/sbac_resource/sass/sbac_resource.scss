@@ -136,7 +136,7 @@ $body-font-family: Arial, Helvetica, sans-serif;
 		.description {
 			display: block;
 		}
-	}	
+	}
 }
 
 #sbac-temp-container.inactive {
@@ -145,14 +145,14 @@ $body-font-family: Arial, Helvetica, sans-serif;
 
 .sbac-temporary-link-time {
 	opacity: 1;
-	
+
 	&.inactive {opacity: 0.5;}
-	
+
 	label {
 		font-weight: normal;
 		display: inline-block;
 	}
-	
+
 	select#edit-field-temporary-public-link-time-und {
 		width: 100px;
 		display: inline-block;
@@ -160,7 +160,7 @@ $body-font-family: Arial, Helvetica, sans-serif;
 		color: #777;
 		padding: 3px 5px;
 	}
-	
+
 }
 
 /* -----------------------------------------
@@ -222,7 +222,7 @@ a.sbac-grid-layout {
 
   .f-dropdown {
     top: 48px !important;
-    left: 10px !important; 
+    left: 10px !important;
 	width: 150px;
   }
 }
@@ -232,7 +232,7 @@ a.sbac-grid-layout {
 .page-resource-review  {
   #page-title {
     display: none;
-  } 
+  }
 
   .main-container {
     @include box-shadow(none);
@@ -293,7 +293,7 @@ a.sbac-grid-layout {
     position: relative;
     padding: 0px;
     margin-bottom: 2em;
-    
+
     .resoruce-bottom {
       @include border-radius(0 0 8px 8px);
     	background-color: #eaeaea;
@@ -392,7 +392,7 @@ a.sbac-grid-layout {
         margin: 0;
       }
     }
-    
+
 		.distinction span a{ width: 83% \9\0; } /*for IE 9, 10*/
 
     .shield-drop {
@@ -416,7 +416,7 @@ a.sbac-grid-layout {
       .f-dropdown:after, .f-dropdown:before {
         left: 141px;
       }
-			.f-dropdown:after, .f-dropdown:before {left: 147px \9\0; } /*for IE 9, 10*/      
+			.f-dropdown:after, .f-dropdown:before {left: 147px \9\0; } /*for IE 9, 10*/
     }
 
     h4 {
@@ -427,7 +427,7 @@ a.sbac-grid-layout {
       position: absolute;
       top: 10px;
       right: 5px;
-     
+
       &.sbac-select {
     	background: url('../images/icon-dropdown.png') center no-repeat;
     	width: 15px;
@@ -482,21 +482,21 @@ a.sbac-grid-layout {
 		top: 13px;
 		width: 20px;
 		height: 16px;
-		
+
 		a {
 			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 			text-indent: -9999em;
 			display: block;
 			height: 16px;
 			width: 16px;
-			
+
 			&:hover, &.sbac-favorites-link-yes {
 				background: url(../images/icons/icon-favorite-on.png) no-repeat 0 0;
 				height: 16px;
 				width: 16px;
 			}
 		}
-		
+
 		.sbac-favorites-tooltip {
 			width: 142px;
 			font-size: 0.8em;
@@ -508,13 +508,13 @@ a.sbac-grid-layout {
 			white-space:nowrap;
 		}
 	}
-	
-  //List View 
+
+  //List View
   .view-display-id-list_view {
     .views-row {
       margin-bottom: 10px;
     }
-		
+
     .resource-card {
       padding: 10px 25px 10px 10px;
       margin-bottom: 0;
@@ -544,16 +544,16 @@ a.sbac-grid-layout {
 
       .resoruce-bottom {
         margin: -10px;
-        border-radius: 0 8px 8px 0; 
+        border-radius: 0 8px 8px 0;
         background: transparent;
       }
-			
+
 			.shield-drop {
 				.f-dropdown.open {
 					right: 37px !important;
 				}
 			}
-			
+
       .list-view-info {
         font-size: 0.75em;
         color: $darkgreen;
@@ -615,7 +615,7 @@ a.sbac-grid-layout {
 	}
 }
 
-//Resource Dropdown 
+//Resource Dropdown
 
 .filters {
   background: #c9eaf8;
@@ -674,7 +674,8 @@ a.sbac-grid-layout {
       color: $white;
     }
 
-  .sbac-search-filter-name {
+  .sbac-search-filter-name,
+  .sbac-search-filter-custom-link {
       margin: 0;
       font-weight: bold;
       font-size: 1.1em;
@@ -682,6 +683,10 @@ a.sbac-grid-layout {
 
       li {
         font-weight: normal;
+      }
+
+      a {
+        color:#0684AD;
       }
     }
 
@@ -755,8 +760,8 @@ a.sbac-grid-layout {
 				vertical-align: top;
       }
 
-			.filter-name  { 
-				display: inline-block; 
+			.filter-name  {
+				display: inline-block;
 				width: 82%;
 				margin-top: -2px;
 				vertical-align: top;
@@ -781,11 +786,11 @@ a.sbac-grid-layout {
     padding: 10px 0 0;
     /*color: white;
         border: 1px solid white;
-        border-width: 0 0 1px; 
+        border-width: 0 0 1px;
     */
 		border-top: 1px solid rgba(255, 255, 255, 0.9);
 	  box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
-	
+
     h3 {
       color: #063e5f;
       font-size: 18px;
@@ -829,7 +834,7 @@ a.sbac-grid-layout {
     color: #333;
     border:1px solid #94d8f3;
     border-width: 0 1px;
-    
+
     &.active, #hover {
       background-color: #c9eaf8;
       color: #063e5f;
@@ -873,7 +878,7 @@ a.sbac-grid-layout {
 		top: -2px;
 		right: -5px;
 	}
-	
+
   .sbac-clear-search {
     background: url('../images/icon-validation-fail.png') no-repeat center center;
     height: 15px;
@@ -939,7 +944,7 @@ a.sbac-grid-layout {
   .arrow {
     span {
       background: url('../images/icons/icon-arrow-up.png') no-repeat right center;
-      padding: 0px 5px 2px 10px;    
+      padding: 0px 5px 2px 10px;
     }
   }
 
@@ -1066,7 +1071,7 @@ a.sbac-grid-layout {
 
 #dialog-resource_gate_keeper_form-wrapper,
 #dialog-resource_gate_keeper_form-wrapper {
-  
+
   .gate-keeper-modal-intro {
     margin-bottom: 15px;
   }
@@ -1124,7 +1129,7 @@ a.sbac-grid-layout {
 /* -----------------------------------------
    Node
    ----------------------------------------- */
-.dialog-trigger-about, 
+.dialog-trigger-about,
 .dialog-trigger-gk  {
   @include border-radius(6px); // border radius
   @include background-clip(padding-box); // prevents bg color from leaking outside the border
@@ -1214,11 +1219,11 @@ a.sbac-grid-layout {
   .grid-library {
     margin: 0;
     padding: 0;
-    
+
     .resource-card {
       max-width: 290px;
     }
-    
+
     li {
       list-style-type: none;
       float: left;
@@ -1255,7 +1260,7 @@ a.sbac-grid-layout {
           clear:left;
         }
       }
-    } 
+    }
   }
 }
 
@@ -1271,7 +1276,7 @@ a.sbac-grid-layout {
           clear:left;
         }
       }
-    } 
+    }
   }
 }
 
@@ -1294,7 +1299,7 @@ a.sbac-grid-layout {
 		margin: 0 auto;
 		width: 820px;
 		padding-bottom: 20px;
-		
+
 		ul.slides {
 			li {
 				float: left;
@@ -1303,7 +1308,7 @@ a.sbac-grid-layout {
 				.resource-card{
 					max-width: 260px;
 					margin: 0 10px;
-					
+
 					a {color: #0085AD;}
 				}
 
@@ -1321,26 +1326,26 @@ a.sbac-grid-layout {
 				}
 			}
 		}
-		
+
 		.flex-control-nav {
 			padding-top: 15px;
 			bottom: -10px;
 			border-top: 1px solid #CCCCCC;
 		}
-		
+
 		.flex-direction-nav {
 			.flex-next, .flex-prev {
 				opacity: 1;
 			}
 		}
 	}
-	
+
 	.section-container {
 		section:last-child {
 			padding-bottom: 50px;
 		}
-	}	
-	
+	}
+
 	.resources-container.static {
 		width: 840px;
 		border-bottom: 1px solid #CCCCCC;
@@ -1354,7 +1359,7 @@ a.sbac-grid-layout {
 		font-size: 0.95em !important;
 	}
 }
- 
+
 
 /*Resources search filter button*/
 #sbac-search-filter-button:before {
@@ -1380,7 +1385,7 @@ a.sbac-grid-layout {
 #edit-reset-filters:hover {
 	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
-   	
+
 #edit-reset-filters:before {
     background-image: url("../images/icon-buttonReset.png");
     background-position: center center;
@@ -1391,7 +1396,7 @@ a.sbac-grid-layout {
     margin-top: -2px;
     vertical-align: middle;
     width: 17px;
-} 
+}
 
 
 /*Links that Open in a New Window for Glossary of Terms*/
@@ -1399,18 +1404,18 @@ a.sbac-grid-layout {
 	text-align: right;
 	padding-bottom: 5px;
 	margin-right: 35px;
-	
+
 	a {
 		border-bottom: 1px solid #0583AC;
 		color: #0583AC;
 		font-size: 13px;
 	}
-	
+
 	 a:hover {
 	    border-bottom: 1px solid #8A1538;
 	    color: #8A1538;
 	}
-	
+
 	.glossary-link:after {
 		background-image: url("../images/icon-newWindow.png");
 		background-position: center center;
@@ -1487,14 +1492,14 @@ a.category-hide:focus {
 		letter-spacing:1px;
 		border-bottom:1px solid #CECECE;
 	}
-	
+
 	.item-list {
 		margin-bottom: 20px;
 	}
-	
+
 	ul {
 		margin: 0;
-		
+
 		li {
 			background-color: #F2F2F2;
 			border-radius: 2px;
@@ -1505,7 +1510,7 @@ a.category-hide:focus {
 	    padding: 0 7px;
 		}
 	}
-}	
+}
 
 /*Adjust the cover profile */
 .sbac-resource-container {
@@ -1521,7 +1526,7 @@ a.category-hide:focus {
 	    padding: 0 12px;
 	    text-align: center;
 		}
-		
+
 		.more:after, .less:after {
 		    background-image: url("../images/arrowDown.svg");
 		    background-position: center center;
@@ -1534,12 +1539,13 @@ a.category-hide:focus {
 		    vertical-align: middle;
 		    width: 10px;
 		}
-		
+
 		.less:after {
 		    background-image: url("../images/arrowUp.svg");
 		}
 	}
-}	
+
+}
 
 p.sbac-resource-required {
 	margin-top: 25px;
@@ -1554,4 +1560,4 @@ p.sbac-resource-required:before {
 	vertical-align: middle;
 	margin-right: 5px;
 }
-	
+

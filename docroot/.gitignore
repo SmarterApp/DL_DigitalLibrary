@@ -31,7 +31,7 @@ atlassian-ide-plugin.xml
 sites/all/modules/contrib/masquerade
 sites/all/modules/contrib/coder
 sites/all/modules/contrib/stage_file_proxy
-
+*FirePHPCore
 #ignore sample data set
 #sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ela.*.json
 #sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ma.*.json
