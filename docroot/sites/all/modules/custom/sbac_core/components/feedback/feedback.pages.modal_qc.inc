@@ -24,7 +24,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
     $form['state_start']['intro'] = array(
       '#markup' => '
                     <div class="gate-keeper-modal-intro">
-                      ' . t('If you continue, you will have !hours hours to complete the review. You can always save your
+                      ' . t('If you continue, you will have !hours mins to complete the review. You can always save your
                         work and complete the review before the alloted time expires.', array(
                           '!hours' => FEEDBACK_REVIEW_TIMEOUT,
                         )) . '
@@ -34,7 +34,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 
     $form['state_start']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
+      '#value' => t('Start Review (!hours mins)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
     );
 
   // cancel state

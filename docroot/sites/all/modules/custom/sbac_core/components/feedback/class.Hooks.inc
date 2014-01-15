@@ -466,7 +466,7 @@ class Hooks extends \devtools\Hooks {
       // disable feedback entities which have reached the expiry time
       // don't simply subtract seconds from the current timestamp - that'll get messed up
       // during daylight time changes
-      $expiry_time = strtotime('-' . FEEDBACK_REVIEW_TIMEOUT . ' hours');
+      $expiry_time = strtotime('-' . FEEDBACK_REVIEW_TIMEOUT . ' minutes');
 
       $args = array(
         ':time' => $expiry_time,
