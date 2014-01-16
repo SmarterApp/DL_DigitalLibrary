@@ -68,7 +68,6 @@
           reset_filters.removeClass('js-hide');
           search_button.removeClass('js-hide');
           $('.category-hide').addClass('js-hide');
-          $('#sbac-search-filter-button').addClass('js-hide');
         }
         else {
           var last_filter = $('.categories-current-filters .current-filter:last');
