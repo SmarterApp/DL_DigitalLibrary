@@ -836,7 +836,12 @@ function sbac_search_digital_library_categories() {
             if ($vid && $tid) {
               $term = taxonomy_term_load($tid);
               if ($term) {
-                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+                $term_label = $term->name;
+                if (isset($term->field_alignment_shortname)) {
+                  $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+                  $term_label = $term_wrapper->field_alignment_shortname->value();
+                }
+                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term_label . '</span></div>';
               }
             }
           }
