@@ -164,7 +164,7 @@ function _feedback_start_review_link($node, $type) {
   $trigger_id = $stub . '-trigger-' . $count;
 
   drupal_add_library('dialog', 'dialog');
-  $link_text = t('Start Review (!hours hours)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT));
+  $link_text = t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT));
   $content = l($link_text, 'node/' . $node->nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
     'attributes' => array(
       'class' => array(

@@ -34,7 +34,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 
     $form['state_start']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Start Review (!hours hours)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
+      '#value' => t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
     );
 
   // cancel state
