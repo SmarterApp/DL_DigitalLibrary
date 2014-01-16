@@ -44,7 +44,7 @@
       }
 
       // Add filter to current filters. Wrap in 'once' so ctools modal dosnt attach click handler multiple times.
-      $('.category-filter').once('cmod-catfilter', function() {
+      // $('.category-filter').once('cmod-catfilter', function() {
         $('.category-filter').click(function () {
           var filter_name = $(this).children('.filter-name');
           var current_filters = $('#sbac-search-current-filters');
@@ -92,7 +92,7 @@
           }
           return false;
         });
-      });
+      // });
 
       // Close the individual filter list.
       $('.category-filter-header').once('cmod-catfilterheader', function() {
@@ -186,51 +186,49 @@
   Drupal.behaviors.sbac_remove_categories = {
     attach: function (context, settings) {
       // Remove's the individual filters.
-      $('#sbac-category-current-filters .current-filter').once('cmod-catcurrentfilters-currentfilter', function() {
-        $('#sbac-category-current-filters .current-filter').click( function() {
-          $('.selectedDiv').hide();
-          var reset_filters = $('#edit-reset-filters');
-          var search_button = $('#sbac-search-filter-button');
-          var current_filters = $('#sbac-search-current-filters');
-          var vid = $(this).children().attr('vid');
-          var tid = $(this).children().attr('tid');
-          var first_try = '::' + vid + ':' + tid;
-          var second_try = vid + ':' + tid;
-          if (current_filters.val() != '') {
-            var current_filters_string = current_filters.val();
-            var pos = current_filters_string.indexOf(first_try);
+      $('#sbac-category-current-filters .current-filter').click( function() {
+        $('.selectedDiv').hide();
+        var reset_filters = $('#edit-reset-filters');
+        var search_button = $('#sbac-search-filter-button');
+        var current_filters = $('#sbac-search-current-filters');
+        var vid = $(this).children().attr('vid');
+        var tid = $(this).children().attr('tid');
+        var first_try = '::' + vid + ':' + tid;
+        var second_try = vid + ':' + tid;
+        if (current_filters.val() != '') {
+          var current_filters_string = current_filters.val();
+          var pos = current_filters_string.indexOf(first_try);
 
-            if (pos >= 0) {
-              var newvalue = current_filters_string.replace(first_try, '');
+          if (pos >= 0) {
+            var newvalue = current_filters_string.replace(first_try, '');
+            current_filters.val(newvalue);
+            $(this).remove();
+            $('.category-filter-' + vid + '-' + tid).removeClass('current');
+          }
+          else {
+            var pos2 = current_filters_string.indexOf(second_try);
+            if (pos2 >= 0) {
+              var newvalue = current_filters_string.replace(second_try, '');
               current_filters.val(newvalue);
               $(this).remove();
               $('.category-filter-' + vid + '-' + tid).removeClass('current');
             }
-            else {
-              var pos2 = current_filters_string.indexOf(second_try);
-              if (pos2 >= 0) {
-                var newvalue = current_filters_string.replace(second_try, '');
-                current_filters.val(newvalue);
-                $(this).remove();
-                $('.category-filter-' + vid + '-' + tid).removeClass('current');
-              }
-            }
-
-            if (current_filters.val() == '') {
-              $('.categories-current-filters').addClass('noshow');
-              reset_filters.addClass('js-hide');
-              search_button.addClass('js-hide');
-              $('.category-hide').text(Drupal.t('Show Categories'));
-              $('.category-hide').removeClass('active');
-              $('.category-hide').removeClass('js-hide');
-              $('.slideable').hide();
-              Drupal.settings.sbac_search.isEdit = 0;
-              $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
-            }
           }
-          return false;
-        });
-      }); // End once.
+
+          if (current_filters.val() == '') {
+            $('.categories-current-filters').addClass('noshow');
+            reset_filters.addClass('js-hide');
+            search_button.addClass('js-hide');
+            $('.category-hide').text(Drupal.t('Show Categories'));
+            $('.category-hide').removeClass('active');
+            $('.category-hide').removeClass('js-hide');
+            $('.slideable').hide();
+            Drupal.settings.sbac_search.isEdit = 0;
+            $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
+          }
+        }
+        return false;
+      });
     }
   };
 
@@ -242,13 +240,8 @@
   Drupal.behaviors.sbac_clear_all_categories = {
     attach: function (context, settings) {
       // Removes all individual filters.
-      $('.categories-clear-all-button').once('cmod-catclearallbutton', function() {
-        $('.categories-clear-all-button').click(this.clearAllCategories);
-      });
-
-      $('#edit-reset-filters').once('cmod-editresetfilters', function() {
-        $('#edit-reset-filters').click(this.clearAllCategories);
-      });
+      $('.categories-clear-all-button').click(this.clearAllCategories);
+      $('#edit-reset-filters').click(this.clearAllCategories);
     },
 
     clearAllCategories: function() {
@@ -272,21 +265,20 @@
   Drupal.behaviors.sbac_search_textbox = {
     attach: function (context, settings) {
       // Moves the text into the hidden field.
-      $('#sbac-search-textbox').once('cmod-searchtextbox', function() {
-        $('#sbac-search-textbox').keypress( function(event) {
-          var keypressed = event.which;
-          if(keypressed == 13){
-            $('#sbac-search-keywords').val($(this).val());
-            $('#sbac-search-filter-button').click();
-            return false;
-          }
-        });
-
-        // Moves the text into the hidden field.
-        $('#sbac-search-textbox').change( function(event) {
+      $('#sbac-search-textbox').keypress( function(event) {
+        var keypressed = event.which;
+        if(keypressed == 13){
           $('#sbac-search-keywords').val($(this).val());
-        });
+          $('#sbac-search-filter-button').click();
+          return false;
+        }
       });
+
+      // Moves the text into the hidden field.
+      $('#sbac-search-textbox').change( function(event) {
+        $('#sbac-search-keywords').val($(this).val());
+      });
+
       // Hide the Keyword field.
       $('#views-exposed-form-resources-grid-view').hide();
       $('#views-exposed-form-resources-list-view').hide();
