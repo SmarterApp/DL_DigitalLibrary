@@ -75,7 +75,7 @@
 #sbac-media-list tbody tr td.delete-media {
   text-align: right;
   display: table-cell;
-  width: 30px;
+  width: 5%;
   margin: 10px 20px 0 0;
   vertical-align: middle;
 }
@@ -94,62 +94,64 @@
 /* line 90, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td:nth-child(2) {
   width: auto;
+  line-height: 1.5;
 }
-/* line 93, ../sass/sbac_media.scss */
+/* line 94, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td:nth-child(2) input[type="checkbox"] {
   margin-left: 0;
 }
-/* line 97, ../sass/sbac_media.scss */
+/* line 98, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td:nth-child(3) {
   white-space: nowrap;
+  width: 20%;
 }
-/* line 103, ../sass/sbac_media.scss */
+/* line 105, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr:nth-child(2) td {
   padding-top: 45px;
 }
-/* line 107, ../sass/sbac_media.scss */
+/* line 109, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr:nth-child(2).ui-sortable-helper td {
   padding-top: 20px;
   height: auto;
 }
 
-/* line 114, ../sass/sbac_media.scss */
+/* line 116, ../sass/sbac_media.scss */
 .media-table {
   position: relative;
 }
 
-/* line 120, ../sass/sbac_media.scss */
+/* line 122, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video {
   width: 55%;
   margin-right: 2%;
   float: left;
 }
-/* line 125, ../sass/sbac_media.scss */
+/* line 127, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video .description {
   display: block;
 }
-/* line 130, ../sass/sbac_media.scss */
+/* line 132, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-file {
   width: 50%;
   float: left;
   clear: both;
 }
-/* line 136, ../sass/sbac_media.scss */
+/* line 138, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-submit {
   float: right;
 }
-/* line 140, ../sass/sbac_media.scss */
+/* line 142, ../sass/sbac_media.scss */
 #sbac-field-file-container .video-embed-button {
   margin-top: 3em;
 }
 
 /* overlay cancel button */
-/* line 146, ../sass/sbac_media.scss */
+/* line 148, ../sass/sbac_media.scss */
 #edit-cancel-media-overlay {
   margin-right: 10px;
 }
 
-/* line 150, ../sass/sbac_media.scss */
+/* line 152, ../sass/sbac_media.scss */
 .dup-btns {
   text-align: right;
 }

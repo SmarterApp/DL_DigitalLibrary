@@ -71,7 +71,7 @@
 	    	&.delete-media {
 	    		text-align: right;
 					display: table-cell;
-					width: 30px;
+					width: 5%;
 					margin: 10px 20px 0 0;
 					vertical-align: middle;
 
@@ -89,6 +89,7 @@
 	    	}
 				&:nth-child(2) {
 					width: auto;
+					line-height: 1.5;
 					
 					input[type="checkbox"] {
 						margin-left: 0;
@@ -96,6 +97,7 @@
 				}
 				&:nth-child(3) {
 					white-space:nowrap;
+					width: 20%;
 				}
     	}
     }
