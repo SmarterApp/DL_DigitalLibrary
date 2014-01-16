@@ -367,6 +367,7 @@ function sbac_search_my_resources_form() {
       'id' => 'sbac-search-filter-button',
       'class' => array(
         ($current_filters != NULL) ? 'is-edit': 'is-apply',
+        ($current_filters == NULL) ? 'js-hide': ''
       ),
     ),
     '#prefix' => '<div class="category-buttons slideable" '. $should_hide_categories .'>',
@@ -447,6 +448,7 @@ function sbac_search_resource_review_form() {
       'id' => 'sbac-search-filter-button',
       'class' => array(
         ($current_filters != NULL) ? 'is-edit': 'is-apply',
+        ($current_filters == NULL) ? 'js-hide': ''
       ),
     ),
     '#prefix' => '<div class="category-buttons slideable" '. $should_hide_categories .'>',
@@ -537,6 +539,7 @@ function sbac_search_digital_library_resources_form() {
       'id' => 'sbac-search-filter-button',
       'class' => array(
         ($current_filters != NULL) ? 'is-edit': 'is-apply',
+        ($current_filters == NULL) ? 'js-hide': ''
       ),
     ),
     '#prefix' => '<div class="category-buttons slideable" '. $should_hide_categories .'>',
