@@ -28,7 +28,7 @@ abstract class Base extends \sbac_core\components\sections\Base {
     $trigger_id = $stub . '-trigger-' . $counter++;
 
     drupal_add_library('dialog', 'dialog');
-    $link_text = t('Start Review (!hours mins)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT));
+    $link_text = t('Start Review (!hours hours)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT));
     $content = l($link_text, 'node/' . $this->_node->nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
       'attributes' => array(
         'class' => array(
