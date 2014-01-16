@@ -153,7 +153,7 @@ function sbac_resource_profile_fields(&$node) {
 
   // Media Types
   if (isset($resource_node->field_digital_media_type['und']['0'])) {
-    $resource_node->resource_profile_left['media']['title'] = 'Digital Media Type';
+    $resource_node->resource_profile_left['media']['title'] = 'Media Types';
     $resource_node->resource_profile_left['media']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_digital_media_type);
   }
 
@@ -165,7 +165,7 @@ function sbac_resource_profile_fields(&$node) {
 
   // Technologies for use in classroom
   if (isset($resource_node->field_classroom_technologies['und']['0'])) {
-    $resource_node->resource_profile_left['classroom']['title'] = 'Technologies for use in Classroom';
+    $resource_node->resource_profile_left['classroom']['title'] = 'Technologies Required for use in Classroom';
     $resource_node->resource_profile_left['classroom']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_classroom_technologies);
   }
 
@@ -177,20 +177,20 @@ function sbac_resource_profile_fields(&$node) {
 
   // Smarter Balanced Keywords
   if (isset($resource_node->field_smarter_balanced_keyword['und']['0'])) {
-    $resource_node->resource_profile_left['smarter']['title'] = 'Subjects and Domains';
+    $resource_node->resource_profile_left['smarter']['title'] = 'Smarter Balanced Keywords';
     $resource_node->resource_profile_left['smarter']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_smarter_balanced_keyword);
   }
 
   // License for primary material
   if (isset($resource_node->field_license['und']['0'])) {
     $resource_node->resource_profile_left['primary']['title'] = 'License For Primary Material';
-    $resource_node->resource_profile_left['primary']['content'] = $resource_node->field_license;
+    $resource_node->resource_profile_left['primary']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_license);
   }
 
   // License for a secondary material
   if (isset($resource_node->field_license_secondary['und']['0'])) {
     $resource_node->resource_profile_left['secondary']['title'] = 'License For Secondary Material';
-    $resource_node->resource_profile_left['secondary']['content'] = $resource_node->field_license_secondary;
+    $resource_node->resource_profile_left['secondary']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_license_secondary);
   }
 
   // Focus
