@@ -41,7 +41,7 @@
 }
 /* line 41, ../sass/sbac_media.scss */
 #sbac-media-list tbody .ui-icon {
-  width: 8%;
+  width: 5%;
   font-family: "GeneralFoundicons";
   font-size: 1em;
 }
@@ -74,10 +74,10 @@
 /* line 71, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media {
   text-align: right;
-  display: block;
+  display: table-cell;
   width: 30px;
-  float: right;
   margin: 10px 20px 0 0;
+  vertical-align: middle;
 }
 /* line 78, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media .foundicon-trash {
@@ -93,7 +93,7 @@
 }
 /* line 90, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td:nth-child(2) {
-  white-space: nowrap;
+  width: auto;
 }
 /* line 93, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td:nth-child(2) input[type="checkbox"] {

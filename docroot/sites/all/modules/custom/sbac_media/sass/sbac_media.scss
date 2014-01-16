@@ -39,7 +39,7 @@
     }
 
     .ui-icon {
-    	width: 8%;
+    	width: 5%;
     	font-family: "GeneralFoundicons";
     	font-size: 1em;
 
@@ -70,10 +70,10 @@
 
 	    	&.delete-media {
 	    		text-align: right;
-					display: block;
+					display: table-cell;
 					width: 30px;
-					float: right;
 					margin: 10px 20px 0 0;
+					vertical-align: middle;
 
 	    		.foundicon-trash {
 	    			color: #aaa;
@@ -88,7 +88,7 @@
 	    		}
 	    	}
 				&:nth-child(2) {
-					white-space:nowrap;
+					width: auto;
 					
 					input[type="checkbox"] {
 						margin-left: 0;
