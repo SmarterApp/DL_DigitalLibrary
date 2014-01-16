@@ -312,6 +312,7 @@ function sbac_resource_digital_library_apply_filters(&$view) {
   if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] != '') {
     $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS];
     $filters = explode('::', $current_filters);
+    $ccss_filters = array();
     if ($filters) {
       foreach ($filters as $filter) {
         $filter_info = explode(':', $filter);
@@ -368,14 +369,21 @@ function sbac_resource_digital_library_apply_filters(&$view) {
                   $view_filters['field_classroom_technologies_tid']['operator'] = 'and';
                   break;
                 case 'education_alignment':
-                  $view_filters['field_alignment_term_tid']['value'][] = $tid;
-                  $view_filters['field_alignment_term_tid']['operator'] = 'and';
+                  $ccss_filters[] = $tid;
                   break;
               }
             }
           }
         }
       }
+    }
+    // Have to accommodate for ccss contextual filter.
+    if (!empty($ccss_filters)) {
+      $ccss_terms = implode(',', $ccss_filters);
+      $view->set_arguments(array($ccss_terms));
+    } else  {
+      // If no filter is set for this, you have to pass "all" so its ignored.
+      $view->set_arguments(array('all'));
     }
     $view->display_handler->set_option('filters', $view_filters);
   }
