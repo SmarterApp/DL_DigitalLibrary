@@ -604,9 +604,7 @@ function set_field_condition_filter_restrictive(&$entities, $resource_filter, $f
     if (array_key_exists(1, $resource_filter)) {
       unset($resource_filter[1]); //remove niether option so that the other half of the query is correct below
     }
-    foreach ($resource_filter as $key => $filter) {
-      $entities->condition($field, $key, '=');
-    }
+    $entities->condition($field, $resource_filter, 'IN');
   }
 }
 

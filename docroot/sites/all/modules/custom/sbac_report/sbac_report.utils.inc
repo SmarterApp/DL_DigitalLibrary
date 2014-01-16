@@ -327,7 +327,7 @@ function format_metadata_value_field($field, $is_date = FALSE, $field_in_object 
     return $value;
   }
   else if (is_array($field)) {
-    foreach ($field as $array_value) {
+    foreach ($field as $key => $array_value) {
       if ($is_date) {
         $value = date('Y-m-d', $array_value);
       }
@@ -335,7 +335,9 @@ function format_metadata_value_field($field, $is_date = FALSE, $field_in_object 
         $value = $array_value;
       }
       $value = htmlspecialchars_decode($value);
+      $field[$key] = $value;
     }
+    $value = implode(', ', $field);
   }
   else {
     if ($is_date) {

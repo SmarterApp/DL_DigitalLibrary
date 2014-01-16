@@ -472,7 +472,8 @@ class Hooks extends \devtools\Hooks {
       ':time' => $expiry_time,
     );
 
-    // pull up active, yet incomplete gate keeper entities which are past the time limitation
+    // get incomplete reviews (gk, qc or post) and set them to inactive to allow for other people
+    // to
     $query = "  SELECT    id, node_id
                   FROM      eck_feedback
                   WHERE     status = 1
