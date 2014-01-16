@@ -34,7 +34,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 
     $form['state_start']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Start Review (!hours hours)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
+      '#value' => t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
     );
 
   // cancel state
