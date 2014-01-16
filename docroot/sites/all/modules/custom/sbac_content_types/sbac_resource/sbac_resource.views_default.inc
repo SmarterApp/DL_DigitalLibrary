@@ -1328,6 +1328,16 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Contextual filter: Content: Has taxonomy term ID */
+  $handler->display->display_options['arguments']['tid']['id'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_index';
+  $handler->display->display_options['arguments']['tid']['field'] = 'tid';
+  $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['tid']['break_phrase'] = TRUE;
+  $handler->display->display_options['arguments']['tid']['reduce_duplicates'] = TRUE;
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
@@ -1644,37 +1654,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_attributes_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_attributes_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_attributes_tid']['vocabulary'] = 'attributes';
-  /* Filter criterion: Content: Common Core Standard(s) (field_alignment_term) */
-  $handler->display->display_options['filters']['field_alignment_term_tid']['id'] = 'field_alignment_term_tid';
-  $handler->display->display_options['filters']['field_alignment_term_tid']['table'] = 'field_data_field_alignment_term';
-  $handler->display->display_options['filters']['field_alignment_term_tid']['field'] = 'field_alignment_term_tid';
-  $handler->display->display_options['filters']['field_alignment_term_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['operator_id'] = 'field_alignment_term_tid_op';
-  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['label'] = 'Common Core Standard(s) (field_alignment_term)';
-  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['operator'] = 'field_alignment_term_tid_op';
-  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['identifier'] = 'field_alignment_term_tid';
-  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_alignment_term_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-    27 => 0,
-  );
-  $handler->display->display_options['filters']['field_alignment_term_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_alignment_term_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_alignment_term_tid']['vocabulary'] = 'education_alignment';
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');

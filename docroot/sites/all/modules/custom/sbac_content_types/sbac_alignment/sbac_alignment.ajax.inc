@@ -232,19 +232,23 @@ function sbac_alignment_ajax_filter_alignment_finish_set_callback() {
 
   $types = array();
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
-  $terms = taxonomy_get_tree($vocab->vid, 0);
-
-  foreach ($terms as $term) {
-    $types[$term->tid] = $term->name;
-  }
 
   $standards_terms = array();
   $filter_markup = array();
   $filter_hidden = array();
+
+  $term_information = taxonomy_term_load_multiple($standards);
   foreach ($standards as $tid) {
+    $label = '';
+    $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term_information[$tid]);
+    if (isset($term_wrapper->field_alignment_shortname)) {
+      $label = $term_wrapper->field_alignment_shortname->value();
+    } else {
+      $label = $term_wrapper->name->value();
+    }
     $filter_text = '<div class="current-filter">';
     $filter_text .= '<span class="filter-name" tid="'.$tid.'" vid="'.$vocab->vid.'">';
-    $filter_text .= $types[$tid];
+    $filter_text .= $label;
     $filter_text .= '</span></div>';
     $filter_markup[] = $filter_text;
 

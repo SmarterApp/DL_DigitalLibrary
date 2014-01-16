@@ -1017,7 +1017,7 @@ function sbac_resource_filter_modal_callback($js = FALSE) {
     $output = array();
     $output[] = ctools_modal_command_dismiss();
     $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
-    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
+    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', 0));
 
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
     $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_filter_alignment_page());
