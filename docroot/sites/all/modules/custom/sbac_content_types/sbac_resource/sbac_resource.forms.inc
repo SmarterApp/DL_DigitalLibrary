@@ -1003,6 +1003,8 @@ function sbac_resource_filter_modal_callback($js = FALSE) {
   if ($js) {
     ctools_include('ajax');
     ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
     drupal_add_js(drupal_get_path("module", "sbac_alignment") . "/js/sbac_filter_alignment.js");
 
     drupal_add_js(array(
@@ -1020,7 +1022,7 @@ function sbac_resource_filter_modal_callback($js = FALSE) {
     $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', 0));
 
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
-    $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_filter_alignment_page());
+    $output[] = ctools_modal_command_display('Select Common Core Standards', sbac_alignment_ajax_filter_alignment_page());
 
     print ajax_render($output);
     exit();

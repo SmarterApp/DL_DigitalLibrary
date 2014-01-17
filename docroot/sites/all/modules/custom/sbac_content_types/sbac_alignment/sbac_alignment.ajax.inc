@@ -44,7 +44,8 @@ function sbac_alignment_ajax_filter_alignment_page($ref_node = NULL) {
   $output .= '<div class="alignment-filter">';
   $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject Area'));
   $output .= '</div><div class="alignment-form"></div>';
-  $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add Selections</a><a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
+  $output .= '<div class="alignment-buttons"><a href="" id="edit-submit" class="button disabled">Add Selections</a>';
+  $output .= '<a href="" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
   $output .= '</div></div>';
 
   return $output;

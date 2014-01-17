@@ -261,7 +261,7 @@ function sbac_alignment_filter_alignment_form($form, $form_state, $tid = 0) {
   );
 
   $form['ccss-submit'] = array(
-    '#markup' => l(t('Add Selection'), '#',
+    '#markup' => l(t('Add Selections'), '#',
       array(
         'attributes' => array(
           'class' => array('form-submit', 'button'),
@@ -276,7 +276,7 @@ function sbac_alignment_filter_alignment_form($form, $form_state, $tid = 0) {
       array(
         'attributes' => array(
           'class' => 'button ctools-close-modal close',
-          'id' => 'ccss-cancel',
+          'id' => 'ccss-cancel2',
         ),
         'external' => TRUE,
       )
