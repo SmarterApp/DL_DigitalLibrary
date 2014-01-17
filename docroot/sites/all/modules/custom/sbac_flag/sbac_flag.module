@@ -125,6 +125,8 @@ function sbac_flag_resource_form($form, $form_state, $node) {
       ),
       'query' => array(
         'nid' => $node->nid,
+        'flag' => 'SBAC-FLAG',
+        'flag_comment' => 'SBAC-FLAG-COMMENT',
       )
     )),
     '#weight' => 4,
@@ -210,6 +212,19 @@ function sbac_flag_modal_content($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         // Notify moderator and save a flag in the resource table.
+        // remember to save option and message if provided.
+        // then redirect user to the same page with new message.
+
+        // create notificaton for resource author
+//        if ($task = taskit_get_object('resource_submitted')) {
+//          global $user;
+//
+//          $task->addVisibility($task::VISIBILITY_USER);
+//          $task->addEntity('node', $node->nid);
+//          $task->addOwningUser($node->uid);
+//          $task->addTriggeringUser($user->uid);
+//          $task->save();
+//        }
       }
     }
     print ajax_render($output);

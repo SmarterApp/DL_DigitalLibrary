@@ -3,66 +3,63 @@
 /**
  * Implementation of hook_schema()
  */
-//function sbac_flag_schema() {
-//  $schema['sbac_share'] = array(
-//    'description' => t('Stores keys to generate an expiring anonymous url'),
-//    'fields' => array(
-//      'id' => array(
-//        'type' => 'int',
-//        'size' => 'big',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//        'auto_increment' => TRUE,
-//        'description' => t('Blind primary key'),
-//	    ),
-//	    'nid' => array(
-//        'type' => 'int',
-//        'size' => 'big',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//        'auto_increment' => FALSE,
-//        'description' => t('The nid of the resource'),
-//      ),
-//      'uid' => array(
-//        'type' => 'int',
-//        'size' => 'big',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//        'auto_increment' => FALSE,
-//        'description' => t('The uid who viewed the resource'),
-//      ),
-//      'create_datetime' => array(
-//        'type' => 'int',
-//        'size' => 'big',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//        'auto_increment' => FALSE,
-//        'description' => t('The unix_timestamp create date'),
-//      ),
-//      'expire_datetime' => array(
-//        'type' => 'int',
-//        'size' => 'big',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//        'auto_increment' => FALSE,
-//        'description' => t('The unix_timestamp expiration date'),
-//      ),
-//      'key'=>array(
-//        'type'=>'varchar',
-//        'length'=>'255',
-//        'not null'=>FALSE,
-//        'description'=>t('contains a key to be shared with the anonymous user'),
-//	    ),
-//    ),
-//    'primary key' => array('id'),
-//    'indexes' => array(
-//      'nid' => array('nid','key'),
-//      'uid' => array('uid'),
-//    ),
-//  );
-//
-//  return $schema;
-//}
+function sbac_flag_schema() {
+  $schema['sbac_flag'] = array(
+    'description' => t('Stores flag info'),
+    'fields' => array(
+      'id' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => TRUE,
+        'description' => t('Blind primary key'),
+	    ),
+	    'nid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('The nid of the resource'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('The uid who flagged the resource'),
+      ),
+      'created' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('The unix_timestamp create date'),
+      ),
+      'flag' => array(
+        'type'=>'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('The flag term that was selected.'),
+	    ),
+      'flag_comment' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => t('The flag comment if provided.'),
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+      'combo' => array('nid', 'uid'),
+    ),
+  );
+
+  return $schema;
+}
 
 /**
  * Implements of hook_update_N().
