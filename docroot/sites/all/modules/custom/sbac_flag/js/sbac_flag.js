@@ -3,6 +3,8 @@
 
   Drupal.behaviors.sbac_flag = {
     attach: function (context, settings) {
+      $('#sbac-flag-resource-modal').hide();
+
       if ($('input[name=flag_options]:radio:checked')) {
         var radio = $('input[name=flag_options]:radio:checked');
         radio.click();

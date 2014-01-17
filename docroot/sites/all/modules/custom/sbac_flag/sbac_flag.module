@@ -6,6 +6,27 @@
 
 include_once 'sbac_flag.features.inc';
 
+/**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
+function sbac_flag_menu() {
+  $items = array();
+
+  $items['sbac-flag/%ctools_js/flag-resource'] = array(
+    'page callback' => 'sbac_flag_modal_content',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * @param $node
+ * @return array|string
+ */
 function sbac_flag_resource($node) {
   global $user;
   $output = array();
@@ -96,6 +117,31 @@ function sbac_flag_resource_form($form, $form_state, $node) {
     ),
   );
 
+  $form['actions']['submit_modal'] = array(
+    '#markup' => l(t('Submit (Modal)'), 'sbac-flag/nojs/flag-resource', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-resource-modal',
+        'id' => 'sbac-flag-resource-modal'
+      ),
+      'query' => array(
+        'nid' => $node->nid,
+      )
+    )),
+    '#weight' => 4,
+  );
+
+  // JS to properly size the modal when submit resource is clicked.
+  $js_settings = array(
+    'sbac-flag-resource-modal' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 600,
+        'height' => 160,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting');
+
   return $form;
 }
 
@@ -135,9 +181,75 @@ function sbac_flag_resource_form_submit(&$form, &$form_state) {
   }
 
   $form['run_js'] = array(
-    '#markup' => '<script>jQuery("#sbac-resource-save-all-changes").click();</script>',
+    '#markup' => '<script>jQuery("#sbac-flag-resource-modal").click();</script>',
   );
 
   return $form;
 }
 
+/**
+ * The sbac flag modal
+ *
+ * @param bool $js
+ */
+function sbac_flag_modal_content($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    $form_state = array(
+      'title' => t('You are about to flag this resource'),
+      'ajax' => TRUE,
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_flag_resource_modal_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        // Notify moderator and save a flag in the resource table.
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_flag_resource_modal_form() {
+  $form = array();
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => arg(0),
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t("
+    If you proceed the Digital Library moderators will be notified.
+    They will review this resource based on your input, so please be
+    sure any comments you've provided are clear and actionable.") . '</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('cancel'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Flag Resource',
+  );
+
+  return $form;
+}
