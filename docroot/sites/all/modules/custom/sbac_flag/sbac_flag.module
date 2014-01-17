@@ -1,0 +1,143 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Flag feature.
+ */
+
+include_once 'sbac_flag.features.inc';
+
+function sbac_flag_resource($node) {
+  global $user;
+  $output = array();
+
+  // if the user has flagged already, display message, else display form.
+  if ($flag = sbac_flag_get_user_flag($user->uid)) {
+
+  }
+  else {
+    $form = drupal_get_form('sbac_flag_resource_form', $node);
+    $output = drupal_render($form);
+  }
+
+  return $output;
+}
+
+/**
+ * Gets the flag a user has submitted.
+ *
+ * @param $uid
+ * @return bool
+ */
+function sbac_flag_get_user_flag($uid) {
+  return FALSE;
+}
+
+/**
+ * The flag form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_flag_resource_form($form, $form_state, $node) {
+  // Sharing options header
+  $form['header'] = array(
+    '#type' => 'item',
+    '#markup' => '<h2>'.t('Flag this Resource') . '</h2>',
+    '#prefix' => '<div class="form-item-title">',
+    '#suffix' => '</div>',
+  );
+
+  // Optional comment
+  $form['optional_comment'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Details',
+    '#prefix' => '<div id="sbac-flag-optional-comment" style="display:none">',
+    '#suffix' => '</div>',
+    '#maxlength' => 600,
+    '#maxlength_js' => TRUE,
+    '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
+  );
+
+  $vocabulary = taxonomy_vocabulary_machine_name_load('resource_flags');
+  $terms = taxonomy_get_tree($vocabulary->vid);
+  $options = array();
+  foreach ($terms as $term) {
+    $options[] = $term->name;
+  }
+  $form['flag_options'] = array(
+    '#type' => 'radios',
+    '#title' => 'What issue did you find with this Resource?' . theme('form_required_marker'),
+    '#options' => $options,
+    '#prefix' => '<div id="sbac-flag-options">',
+    '#suffix' => '</div>',
+  );
+
+  $form['footer'] = array(
+    '#type' => 'item',
+    '#markup' => 'Flagged resources and users are reviewed by Smarter Balanced Assessment
+                  Consortium moderators to determine whether they violate the Terms of Service.
+                  Accounts are penalized for violations and serious or repeated violations can
+                  lead to account termination.',
+    '#prefix' => '<div class="form-item-footer">',
+    '#suffix' => '</div>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Flag Resource'),
+    '#attributes' => array('class' => array('button')),
+    '#validate' => array('sbac_flag_resource_form_validate'),
+    '#ajax' => array(
+      'wrapper' => 'sbac-flag-resource-form',
+      'callback' => 'sbac_flag_resource_form_submit',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Validation on the flag submission.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_resource_form_validate(&$form, &$form_state) {
+  if ($form_state['values']['flag_options'] == NULL) {
+    form_set_error('flag_options', 'Please select a reason to flag resource.');
+  }
+
+  if ($form_state['values']['optional_comment'] != NULL) {
+    $bad_words = profanity_validate_text($form_state['values']['optional_comment']);
+    if ($bad_words) {
+      $error_message = 'Please remove any inappropriate language.';
+      form_set_error('optional_comment', $error_message);
+    }
+  }
+
+  $node = menu_get_object();
+  $check = node_last_changed($node->nid);
+  $form_state['values']['changed'] = $check + 120;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_flag_resource_form_submit(&$form, &$form_state) {
+  $errors = form_get_errors();
+  if ($errors) {
+    return $form;
+  }
+
+  $form['run_js'] = array(
+    '#markup' => '<script>jQuery("#sbac-resource-save-all-changes").click();</script>',
+  );
+
+  return $form;
+}
+
