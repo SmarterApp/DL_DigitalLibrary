@@ -269,17 +269,21 @@ function sbac_flag_modal_content($js = FALSE) {
         global $user;
         $node = node_load($form_state['values']['nid']);
 
-        // Determine if the user has access to review the node.
-        // This is determined by all users with role of "moderator"
-        // and the nodes view permissions field.
-        $accounts = sbac_flag_determine_access($node);
-        foreach ($accounts as $uid => $account) {
-          if ($task = taskit_get_object('resource_flagged')) {
-            $task->addVisibility($task::VISIBILITY_USER);
-            $task->addEntity('node', $node->nid);
-            $task->addOwningUser($account->uid);
-            $task->addTriggeringUser($user->uid);
-            $task->save();
+        // determine if the user selected an urgent flag.
+        $urgent = sbac_flag_determine_urgent($form_state['values']['flag_option']);
+        if ($urgent) {
+          // Determine if the user has access to review the node.
+          // This is determined by all users with role of "moderator"
+          // and the nodes view permissions field.
+          $accounts = sbac_flag_determine_access($node);
+          foreach ($accounts as $uid => $account) {
+            if ($task = taskit_get_object('resource_flagged')) {
+              $task->addVisibility($task::VISIBILITY_USER);
+              $task->addEntity('node', $node->nid);
+              $task->addOwningUser($account->uid);
+              $task->addTriggeringUser($user->uid);
+              $task->save();
+            }
           }
         }
 
@@ -398,4 +402,27 @@ function sbac_flag_determine_access($node) {
   }
 
   return $users;
+}
+
+/**
+ * Some convaluted way of determining "urgency"
+ *
+ * @param $flag_option
+ * @return bool
+ */
+function sbac_flag_determine_urgent($flag_option) {
+  $urgent = FALSE;
+  $term = taxonomy_term_load($flag_option);
+  if ($term) {
+    if ($term->name == 'Contains personally identifiable information (PII)') {
+      $urgent = TRUE;
+    }
+    if ($term->name == 'May be in violation of intellectual property rights') {
+      $urgent = TRUE;
+    }
+    if ($term->name == "Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>") {
+      $urgent = TRUE;
+    }
+  }
+  return $urgent;
 }
