@@ -45,7 +45,7 @@ function sbac_flag_schema() {
 	    ),
       'flag_comment' => array(
         'type' => 'text',
-        'not null' => TRUE,
+        'not null' => FALSE,
         'size' => 'big',
         'description' => t('The flag comment if provided.'),
       ),
