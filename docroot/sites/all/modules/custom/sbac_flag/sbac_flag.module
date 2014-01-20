@@ -1,0 +1,509 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Flag feature.
+ */
+
+include_once 'sbac_flag.features.inc';
+
+/**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
+function sbac_flag_menu() {
+  $items = array();
+
+  $items['sbac-flag/%ctools_js/flag-resource'] = array(
+    'page callback' => 'sbac_flag_modal_content',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+  );
+
+  $items['moderation'] = array(
+    'title' => 'Moderation',
+    'page callback' => 'sbac_flag_moderation',
+    'access callback' => array('sbac_flag_moderation_access'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -50,
+    'file' => 'sbac_flag.moderation.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Determine moderation menu access.
+ *
+ * @return bool
+ */
+function sbac_flag_moderation_access() {
+  global $user;
+  if (in_array('moderator', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @param $existing
+ * @param $type
+ * @param $theme
+ * @param $path
+ * @return mixed
+ */
+function sbac_flag_theme($existing, $type, $theme, $path) {
+  $items['sbac_flag_confirmation'] = array(
+    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'template' => 'flag-confirmation',
+    'variables' => array('radio_selected' => NULL),
+  );
+
+  return $items;
+}
+
+/**
+ * @param $node
+ * @return array|string
+ */
+function sbac_flag_resource($node) {
+  global $user;
+
+  // if the user has flagged already, display message, else display form.
+  if ($flag = sbac_flag_get_user_flag($node->nid, $user->uid)) {
+    $output = sbac_flag_confirmation($flag);
+  }
+  else {
+    $form = drupal_get_form('sbac_flag_resource_form', $node);
+    $output = drupal_render($form);
+  }
+
+  return $output;
+}
+
+/**
+ * Creates confirmation message;
+ *
+ * @param $flag
+ * @return string
+ */
+function sbac_flag_confirmation($flag) {
+  $radio_selected = taxonomy_term_load($flag['flag_selected']);
+  $output = theme('sbac_flag_confirmation', array('radio_selected' => $radio_selected));
+  return $output;
+}
+
+/**
+ * Gets the flag a user has submitted.
+ *
+ * @param $uid
+ * @return bool
+ */
+function sbac_flag_get_user_flag($nid, $uid) {
+  $flag = array();
+
+  $sql = "SELECT * FROM {eck_flag} WHERE nid = :nid AND uid = :uid";
+  $result = db_query($sql, array(':nid' => $nid, ':uid' => $uid))->fetchAssoc();
+  if ($result) {
+    $flag = $result;
+  }
+
+  return $flag;
+}
+
+/**
+ * The flag form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_flag_resource_form($form, $form_state, $node) {
+  // Sharing options header
+  $form['header'] = array(
+    '#type' => 'item',
+    '#markup' => '<h2>'.t('Flag this Resource') . '</h2>',
+    '#prefix' => '<div class="form-item-title">',
+    '#suffix' => '</div>',
+  );
+
+  // Hidden nid.
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $node->nid,
+    '#attributes' => array('id' => 'sbac-hidden-nid'),
+  );
+
+  // Optional comment
+  $form['optional_comment'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Details',
+    '#prefix' => '<div id="sbac-flag-optional-comment" style="display:none">',
+    '#suffix' => '</div>',
+    '#maxlength' => 600,
+    '#maxlength_js' => TRUE,
+    '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
+  );
+
+  $vocabulary = taxonomy_vocabulary_machine_name_load('resource_flags');
+  $terms = taxonomy_get_tree($vocabulary->vid);
+  $options = array();
+  foreach ($terms as $term) {
+    $options[$term->tid] = $term->name;
+  }
+  $form['flag_options'] = array(
+    '#type' => 'radios',
+    '#title' => 'What issue did you find with this Resource?' . theme('form_required_marker'),
+    '#options' => $options,
+    '#prefix' => '<div id="sbac-flag-options">',
+    '#suffix' => '</div>',
+  );
+
+  $form['footer'] = array(
+    '#type' => 'item',
+    '#markup' => 'Flagged resources and users are reviewed by Smarter Balanced Assessment
+                  Consortium moderators to determine whether they violate the Terms of Service.
+                  Accounts are penalized for violations and serious or repeated violations can
+                  lead to account termination.',
+    '#prefix' => '<div class="form-item-footer">',
+    '#suffix' => '</div>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Flag Resource'),
+    '#attributes' => array('class' => array('button', 'flag-resource-submit')),
+    '#validate' => array('sbac_flag_resource_form_validate'),
+    '#ajax' => array(
+      'wrapper' => 'sbac-flag-resource-form',
+      'callback' => 'sbac_flag_resource_form_submit',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  $form['actions']['submit_modal'] = array(
+    '#markup' => l(t('Submit (Modal)'), 'sbac-flag/nojs/flag-resource', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-resource-modal',
+        'id' => 'sbac-flag-resource-modal'
+      ),
+      'query' => array(
+        'nid' => $node->nid,
+        'flag' => '',
+        'flag_comment' => '',
+      )
+    )),
+    '#weight' => 4,
+  );
+
+  // JS to properly size the modal when submit resource is clicked.
+  $js_settings = array(
+    'sbac-flag-resource-modal' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 600,
+        'height' => 160,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting');
+
+  return $form;
+}
+
+/**
+ * Validation on the flag submission.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_resource_form_validate(&$form, &$form_state) {
+  if ($form_state['values']['flag_options'] == NULL) {
+    form_set_error('flag_options', 'Please select a reason to flag resource.');
+  }
+
+  if ($form_state['values']['optional_comment'] != NULL) {
+    $bad_words = profanity_validate_text($form_state['values']['optional_comment']);
+    if ($bad_words) {
+      $error_message = 'Please remove any inappropriate language.';
+      form_set_error('optional_comment', $error_message);
+    }
+  }
+
+  $node = menu_get_object();
+  $check = node_last_changed($node->nid);
+  $form_state['values']['changed'] = $check + 120;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_flag_resource_form_submit(&$form, &$form_state) {
+  $errors = form_get_errors();
+  if ($errors) {
+    return $form;
+  }
+
+  $_SESSION['sbac-flag']['optional_comment'] = $form_state['values']['optional_comment'];
+  $_SESSION['sbac-flag']['flag_options'] = $form_state['values']['flag_options'];
+  $_SESSION['sbac-flag']['nid'] = $form_state['values']['nid'];
+  $form['run_js'] = array(
+    '#markup' => '<script>jQuery("#sbac-flag-resource-modal").click();</script>',
+  );
+
+  return $form;
+}
+
+/**
+ * The sbac flag modal
+ *
+ * @param bool $js
+ */
+function sbac_flag_modal_content($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    $form_state = array(
+      'title' => t('You are about to flag this resource'),
+      'ajax' => TRUE,
+      'flag_option' => $_SESSION['sbac-flag']['flag_options'],
+      'flag_comment' => $_SESSION['sbac-flag']['optional_comment'],
+      'nid' => $_SESSION['sbac-flag']['nid'],
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_flag_resource_modal_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        // Notify moderator and save a flag in the resource table.
+        // remember to save option and message if provided.
+        // then redirect user to the same page with new message.
+        $flag = sbac_flag_save_flag($form_state['values']['flag_option'], $form_state['values']['flag_comment'], $form_state['values']['nid']);
+        if ($flag['urgent']) {
+          global $user;
+          $node = node_load($form_state['values']['nid']);
+          // Determine if the user has access to review the node.
+          // This is determined by all users with role of "moderator"
+          // and the nodes view permissions field.
+          $accounts = sbac_flag_determine_access($node);
+          foreach ($accounts as $uid => $account) {
+            if ($task = taskit_get_object('resource_flagged')) {
+              $task->addVisibility($task::VISIBILITY_USER);
+              $task->addEntity('node', $node->nid);
+              $task->addOwningUser($account->uid);
+              $task->addTriggeringUser($user->uid);
+              $task->save();
+            }
+          }
+        }
+
+        $output[] = ajax_command_invoke('.section-flag .content', 'empty');
+        $content = sbac_flag_confirmation($flag);
+        $output[] = ajax_command_append('.section-flag .content', $content);
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_flag_resource_modal_form($form, $form_state) {
+  $form = array();
+
+  $form['flag_option'] = array(
+    '#type' => 'hidden',
+    '#value' => $form_state['flag_option'],
+  );
+
+  $form['flag_comment'] = array(
+    '#type' => 'hidden',
+    '#value' => $form_state['flag_comment'],
+  );
+
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $form_state['nid'],
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t("
+    If you proceed the Digital Library moderators will be notified.
+    They will review this resource based on your input, so please be
+    sure any comments you've provided are clear and actionable.") . '</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Flag Resource',
+  );
+
+  return $form;
+}
+
+/**
+ * Saves the flag.
+ *
+ * @param $flag
+ * @param $comment
+ * @param $nid
+ */
+function sbac_flag_save_flag($flag, $comment, $nid) {
+  global $user;
+
+  $entity = new stdClass();
+  $entity->type = 'resource';
+  $entity->uid = $user->uid;
+  $entity->created = time();
+  $entity->changed = time();
+  $entity->target_type = 'resource';
+  $entity->target_id = $nid;
+  $entity->nid = $nid;
+  $entity->flag_selected = $flag;
+  $entity->flag_comment = $comment;
+  $urgent = sbac_flag_determine_urgent($flag);
+  $entity->urgent = $urgent;
+  drupal_write_record('eck_flag', $entity);
+
+  $entity = get_object_vars($entity);
+  return $entity;
+}
+
+/**
+ * Determine if the user has access to review flags on the node.
+ * This is determined by all users with role of "moderator"
+ * and the nodes view permissions field.
+ *
+ * @param $node
+ * @return array
+ */
+function sbac_flag_determine_access($node) {
+  $all_states = array();
+
+  if (isset($node->field_view_permissions['und'][0]['value'])) {
+    // 0 is all states, 1 is specific states
+    $view_permissions = $node->field_view_permissions['und'][0]['value'];
+    if ($view_permissions == 0) {
+      $all_states = array();
+    }
+    else {
+      if (isset($node->field_view_permissions_per_state['und'])) {
+        foreach ($node->field_view_permissions_per_state['und'] as $key => $tid) {
+          $all_states[] = $tid['tid'];
+        }
+      }
+    }
+  }
+
+  // if the array is empty, get all users who are moderator.
+  if (empty($all_states)) {
+    $role = user_role_load_by_name('moderator');
+    $users = sbac_central_get_users_with_roles($role->rid);
+  }
+  else {
+    // only get users with moderator role and these states.
+    $role = user_role_load_by_name('moderator');
+    $users = sbac_central_get_users_with_roles_and_state($role->rid, $all_states);
+  }
+
+  return $users;
+}
+
+/**
+ * Some convaluted way of determining "urgency"
+ *
+ * @param $flag_option
+ * @return bool
+ */
+function sbac_flag_determine_urgent($flag_option) {
+  $urgent = FALSE;
+  $term = taxonomy_term_load($flag_option);
+  if ($term) {
+    if ($term->name == 'Contains personally identifiable information (PII)') {
+      $urgent = TRUE;
+    }
+    if ($term->name == 'May be in violation of intellectual property rights') {
+      $urgent = TRUE;
+    }
+    if ($term->name == "Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>") {
+      $urgent = TRUE;
+    }
+  }
+  return $urgent;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ */
+function sbac_flag_block_info() {
+  $blocks['moderation_count'] = array(
+    'info' => t('Flagged Items'),
+    'region' => 'sub-header',
+    'pages' => "moderation*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -23,
+    'status' => 1,
+  );
+
+  $blocks['moderation_category'] = array(
+    'info' => t('Category'),
+    'region' => 'sub-header',
+    'pages' => "moderation*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -22,
+    'status' => 1,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *
+ * @return array
+ */
+function sbac_flag_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'moderation_count':
+      $count = 0;
+      $block['subject'] = NULL;
+      $block['content'] = '<h3 class="left">' . t('Flagged Items (' . $count . ')') . '</h3>';
+      break;
+
+    case 'moderation_category':
+      $block['subject'] = t('');
+      $content = '<a href="#" data-tooltip title="Categories allow you to filter results using specific attributes. Click to see the available options." id="sbac-search-cat-button" class="active">' . t('Categories') . '</a>';
+      $block['content'] = $content;
+      break;
+  }
+  return $block;
+}

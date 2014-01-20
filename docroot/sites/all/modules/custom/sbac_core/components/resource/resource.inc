@@ -55,6 +55,12 @@ function resource_access($op, $node, $account = NULL) {
 
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state == 'published' &&
+      $op == 'access flag' || $op == 'view flag') {
+      return TRUE;
+    }
+
+    if (isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state == 'published' &&
       $op == 'access related resources' || $op == 'view related resources') {
       return TRUE;
     }

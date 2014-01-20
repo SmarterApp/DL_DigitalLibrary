@@ -115,6 +115,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Posting Action.'),
         'class' => 'PostingAction',
       ),
+      // resource is flagged
+      array(
+        'name' => 'resource_flagged',
+        'description' => t('Resource has been flagged for review.'),
+        'class' => 'ResourceFlagged',
+      ),
     );
 
     foreach ($types as &$type) {

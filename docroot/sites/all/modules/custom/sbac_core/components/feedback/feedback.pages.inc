@@ -58,6 +58,11 @@ function resource_feedback_page($node) {
           'related_resources',
         ),
       ),
+      'access flag' => array(
+        'feedback' => array(
+          'flag',
+        ),
+      ),
     );
 
     foreach ($tabs as $permission => $sources) {

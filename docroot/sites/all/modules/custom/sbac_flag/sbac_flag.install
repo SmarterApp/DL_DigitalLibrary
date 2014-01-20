@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Creates taxonomy terms.
+ */
+function sbac_flag_update_7002() {
+  $return = array();
+  $flags = array(
+    'name' => array(
+      0 => 'Outdated',
+      1 => 'Inaccurate / misleading',
+      2 => 'Unintelligible / not viewable / technology does not function properly',
+      3 => 'Accessibility and accommodation issues',
+      4 => 'Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>',
+      5 => 'Contains personally identifiable information (PII)',
+      6 => 'Summary information does not match the resource',
+      7 => 'May be in violation of intellectual property rights',
+      8 => 'Does not support implementation of Common Core Standards and/or formative assessment process',
+      9 => 'Resource is not available free of charge'
+    ),
+    'weight' => array(
+      0 => -10,
+      1 => -9,
+      2 => -8,
+      3 => -7,
+      4 => -6,
+      5 => -5,
+      6 => -4,
+      7 => -3,
+      8 => -2,
+      9 => -1,
+    ),
+  );
+  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'resource_flags'))->fetchAssoc();
+  if ($vocab) {
+    foreach ($flags['name'] as $index => $flag) {
+      taxonomy_term_save((object) array(
+        'name' => $flag,
+        'description' => '',
+        'weight' => $flags['weight'][$index],
+        'vid' => $vocab['vid'],
+      ));
+    }
+  }
+
+  return $return;
+}
+
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Alter's table from varchar(255) to varchar(650)
+ */
+function sbac_flag_update_7003() {
+  db_query('ALTER TABLE eck_flag MODIFY flag_comment VARCHAR(650)');
+  return array();
+}

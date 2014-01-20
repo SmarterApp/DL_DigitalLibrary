@@ -191,6 +191,46 @@ function sbac_central_user_roles() {
 }
 
 /**
+ * Gets all users with specific role(s).
+ *
+ * @param $roles
+ * @return mixed
+ */
+function sbac_central_get_users_with_roles($roles) {
+  $uids = array();
+  $query = 'SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid IN (:rids)';
+  $result = db_query($query, array(':rids' => $roles));
+  foreach ($result as $row) {
+    $uids[] = $row->uid;
+  }
+  $users = user_load_multiple($uids);
+  return $users;
+}
+
+/**
+ * Gets all users with specific roles and states.
+ *
+ * @param $roles
+ * @param $all_states
+ * @return mixed
+ */
+function sbac_central_get_users_with_roles_and_state($rids, $states) {
+  $uids = array();
+  $query = 'SELECT ur.uid
+            FROM {users_roles} AS ur
+            JOIN {field_data_field_state} s
+              ON ur.uid = s.entity_id
+            WHERE ur.rid IN (:rids)
+              AND s.field_state_tid IN (:states)';
+  $result = db_query($query, array(':rids' => $rids, ':states' => $states));
+  foreach ($result as $row) {
+    $uids[$row->uid] = $row->uid;
+  }
+  $users = user_load_multiple($uids);
+  return $users;
+}
+
+/**
  * Implements hook_form_alter().
  *
  * @param $form

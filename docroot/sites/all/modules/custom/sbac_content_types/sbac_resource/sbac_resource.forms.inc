@@ -161,7 +161,6 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
     $active_tab = $form_state['values']['additional_settings__active_tab'];
   }
 
-
   // If the save button was clicked via the modal, do the following.
   if ($active_tab == 'edit-group_advanced' &&
     isset($_SESSION['post_resource_clicked'])
