@@ -150,6 +150,26 @@ $items = array(
       'type' => 'integer',
       'behavior' => 'textfield',
     ),
+    'nid' => array(
+      'label' => 'Node ID',
+      'type' => 'integer',
+      'behavior' => 'textfield',
+    ),
+    'flag_selected' => array(
+      'label' => 'Flag Selected',
+      'type' => 'integer',
+      'behavior' => 'textfield',
+    ),
+    'flag_comment' => array(
+      'label' => 'Flag Comment',
+      'type' => 'text',
+      'behavior' => 'textfield',
+    ),
+    'urgent' => array(
+      'label' => 'Urgent',
+      'type' => 'integer',
+      'behavior' => 'textfield',
+    ),
   ),
 ),
        'review' => array(
