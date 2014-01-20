@@ -5,7 +5,7 @@
  *
  * Creates taxonomy terms.
  */
-function sbac_flag_update_7002() {
+function sbac_flag_update_7004() {
   $return = array();
   $flags = array(
     'name' => array(
@@ -54,7 +54,7 @@ function sbac_flag_update_7002() {
  *
  * Alter's table from varchar(255) to varchar(650)
  */
-function sbac_flag_update_7003() {
+function sbac_flag_update_7005() {
   db_query('ALTER TABLE eck_flag MODIFY flag_comment VARCHAR(650)');
   return array();
 }
