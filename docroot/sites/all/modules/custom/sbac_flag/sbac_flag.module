@@ -20,7 +20,30 @@ function sbac_flag_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['moderation'] = array(
+    'title' => 'Moderation',
+    'page callback' => 'sbac_flag_moderation',
+    'access callback' => array('sbac_flag_moderation_access'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -50,
+    'file' => 'sbac_flag.moderation.inc',
+  );
+
   return $items;
+}
+
+/**
+ * Determine moderation menu access.
+ *
+ * @return bool
+ */
+function sbac_flag_moderation_access() {
+  global $user;
+  if (in_array('moderator', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**
@@ -68,7 +91,7 @@ function sbac_flag_resource($node) {
  * @return string
  */
 function sbac_flag_confirmation($flag) {
-  $radio_selected = taxonomy_term_load($flag['flag']);
+  $radio_selected = taxonomy_term_load($flag['flag_selected']);
   $output = theme('sbac_flag_confirmation', array('radio_selected' => $radio_selected));
   return $output;
 }
@@ -82,7 +105,7 @@ function sbac_flag_confirmation($flag) {
 function sbac_flag_get_user_flag($nid, $uid) {
   $flag = array();
 
-  $sql = "SELECT * FROM {sbac_flag} WHERE nid = :nid AND uid = :uid";
+  $sql = "SELECT * FROM {eck_flag} WHERE nid = :nid AND uid = :uid";
   $result = db_query($sql, array(':nid' => $nid, ':uid' => $uid))->fetchAssoc();
   if ($result) {
     $flag = $result;
@@ -265,13 +288,10 @@ function sbac_flag_modal_content($js = FALSE) {
         // Notify moderator and save a flag in the resource table.
         // remember to save option and message if provided.
         // then redirect user to the same page with new message.
-        sbac_flag_save_flag($form_state['values']['flag_option'], $form_state['values']['flag_comment'], $form_state['values']['nid']);
-        global $user;
-        $node = node_load($form_state['values']['nid']);
-
-        // determine if the user selected an urgent flag.
-        $urgent = sbac_flag_determine_urgent($form_state['values']['flag_option']);
-        if ($urgent) {
+        $flag = sbac_flag_save_flag($form_state['values']['flag_option'], $form_state['values']['flag_comment'], $form_state['values']['nid']);
+        if ($flag['urgent']) {
+          global $user;
+          $node = node_load($form_state['values']['nid']);
           // Determine if the user has access to review the node.
           // This is determined by all users with role of "moderator"
           // and the nodes view permissions field.
@@ -287,10 +307,9 @@ function sbac_flag_modal_content($js = FALSE) {
           }
         }
 
-        $output[] = ajax_command_invoke('.section-6 .content', 'empty');
-        $flag = sbac_flag_get_user_flag($node->nid, $user->uid);
+        $output[] = ajax_command_invoke('.section-flag .content', 'empty');
         $content = sbac_flag_confirmation($flag);
-        $output[] = ajax_command_append('.section-6 .content', $content);
+        $output[] = ajax_command_append('.section-flag .content', $content);
       }
     }
     print ajax_render($output);
@@ -334,7 +353,7 @@ function sbac_flag_resource_modal_form($form, $form_state) {
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
-    '#attributes' => array('class' => array('cancel'))
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
   $form['submit'] = array(
@@ -356,12 +375,21 @@ function sbac_flag_save_flag($flag, $comment, $nid) {
   global $user;
 
   $entity = new stdClass();
-  $entity->nid = $nid;
+  $entity->type = 'resource';
   $entity->uid = $user->uid;
   $entity->created = time();
-  $entity->flag = $flag;
+  $entity->changed = time();
+  $entity->target_type = 'resource';
+  $entity->target_id = $nid;
+  $entity->nid = $nid;
+  $entity->flag_selected = $flag;
   $entity->flag_comment = $comment;
-  drupal_write_record('sbac_flag', $entity);
+  $urgent = sbac_flag_determine_urgent($flag);
+  $entity->urgent = $urgent;
+  drupal_write_record('eck_flag', $entity);
+
+  $entity = get_object_vars($entity);
+  return $entity;
 }
 
 /**
@@ -425,4 +453,57 @@ function sbac_flag_determine_urgent($flag_option) {
     }
   }
   return $urgent;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ */
+function sbac_flag_block_info() {
+  $blocks['moderation_count'] = array(
+    'info' => t('Flagged Items'),
+    'region' => 'sub-header',
+    'pages' => "moderation*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -23,
+    'status' => 1,
+  );
+
+  $blocks['moderation_category'] = array(
+    'info' => t('Category'),
+    'region' => 'sub-header',
+    'pages' => "moderation*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -22,
+    'status' => 1,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *
+ * @return array
+ */
+function sbac_flag_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'moderation_count':
+      $count = 0;
+      $block['subject'] = NULL;
+      $block['content'] = '<h3 class="left">' . t('Flagged Items (' . $count . ')') . '</h3>';
+      break;
+
+    case 'moderation_category':
+      $block['subject'] = t('');
+      $content = '<a href="#" data-tooltip title="Categories allow you to filter results using specific attributes. Click to see the available options." id="sbac-search-cat-button" class="active">' . t('Categories') . '</a>';
+      $block['content'] = $content;
+      break;
+  }
+  return $block;
 }

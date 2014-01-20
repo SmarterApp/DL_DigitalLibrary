@@ -19,7 +19,7 @@ function sections_preprocess(&$vars) {
     }
 
     $class = '';
-
+    $class .= 'section-' . strtolower(str_replace(' ', '-', $section['title']));
     if (isset($section['class'])) {
       $class = $section['class'];
     }
