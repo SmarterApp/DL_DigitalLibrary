@@ -718,3 +718,13 @@ function sbac_central_update_7062() {
   );
   module_enable($modules);
 }
+
+/**
+ * Enables SBAC Flag module.
+ */
+function sbac_central_update_7063() {
+  $modules = array(
+    'sbac_flag',
+  );
+  module_enable($modules);
+}
