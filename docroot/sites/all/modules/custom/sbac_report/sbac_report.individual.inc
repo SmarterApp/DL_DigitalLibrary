@@ -49,8 +49,6 @@ function sbac_report_individual_form($form, &$form_state) {
     $date_display = sbac_report_format_date_range($session_date_range);
   }
 
-  sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options, '');
-
   $form['sne'] = array(
     '#type' => 'textfield',
     '#title' => t('Choose a SNE'),
@@ -59,6 +57,8 @@ function sbac_report_individual_form($form, &$form_state) {
     '#size' => 30,
     '#default_value' => sbac_report_get_session_value('sne', 'name'),
   );
+
+  sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options, '');
 
   // Hidden field to store the selected uid.
   // When the autocomplete suggetion is selected,
@@ -91,6 +91,10 @@ function sbac_report_individual_form_validate($form, &$form_state) {
   
   if (empty($form_state['values']['uid']) || !is_numeric($form_state['values']['uid'])) {
     form_set_error('sne', t('Please type and select an existing SNE'));
+  }
+
+  if (empty($form_state['values']['date_range'])) {
+    form_set_error('date_range', t('Choose a time period field is required.'));
   }
 }
 
