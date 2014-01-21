@@ -63,6 +63,11 @@ function resource_feedback_page($node) {
           'flag',
         ),
       ),
+      'access moderate flag' => array(
+        'feedback' => array(
+          'moderate_flag',
+        )
+      ),
     );
 
     foreach ($tabs as $permission => $sources) {

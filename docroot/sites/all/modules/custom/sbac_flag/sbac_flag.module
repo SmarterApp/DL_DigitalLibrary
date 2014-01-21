@@ -87,6 +87,17 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
 }
 
 /**
+ * Implementation of hook_preprocess_node()
+ *
+ * @param $vars
+ */
+function sbac_flag_preprocess_node(&$vars) {
+  if ($vars['type'] == 'resource') {
+    $var = '';
+  }
+}
+
+/**
  * @param $node
  * @return array|string
  */

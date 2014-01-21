@@ -19,7 +19,7 @@ function sbac_flag_moderation() {
   $query->orderBy('ef.urgent', 'DESC');
   $query->orderBy('ef.created', 'ASC');
   $query->groupBy('ef.target_id');
-  $query->condition('ef.being_moderated', 0);
+  $query->condition(db_or()->condition('ef.being_moderated', $user->uid)->condition('ef.being_moderated', 0));
   $result = $query->execute();
   $count = 0;
   foreach ($result as $row) {
@@ -118,7 +118,7 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
   $node->eck_flag->button = $moderation_button;
   if ($row->being_moderated) {
     $node->eck_flag->display_status = 'Being Moderated';
-    $node->eck_flag->button = '<a href="">Continue Moderation</a>';
+    $node->eck_flag->button = '<a href="" class="button">Continue Moderation</a>';
   }
   return $node;
 }
@@ -153,12 +153,12 @@ function sbac_flag_start_moderation($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
         $node = node_load($form_state['values']['nid']);
-        $output[] = ctools_ajax_command_redirect($node->path['alias']);
+        $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-flag')));
       }
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
         $eck_flag = entity_load_single('flag', $form_state['values']['eck_flag_id']);
         $eck_flag = entity_metadata_wrapper('flag', $eck_flag);
-        $eck_flag->being_moderated->set(1);
+        $eck_flag->being_moderated->set($user->uid);
         $eck_flag->save();
         $node = node_load($form_state['values']['nid']);
         $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('fragment' => 'resolve-flags'));

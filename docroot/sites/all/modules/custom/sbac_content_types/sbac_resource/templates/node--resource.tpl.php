@@ -120,9 +120,6 @@
   </div>
   <?php endif; ?>
 
-
-
-
   <?php if (isset($content['review']) && $content['review']): ?>
     <div id="review"><?php print render($content['review']); ?></div>
   <?php endif; ?>
