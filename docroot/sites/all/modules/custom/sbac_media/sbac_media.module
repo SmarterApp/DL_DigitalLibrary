@@ -246,6 +246,10 @@ function sbac_media_download_contents($node) {
  * @return array
  */
 function sbac_media_file_download($uri) {
+  global $user;
+  if (!$user->uid) {
+    return -1;
+  }
   $files = file_load_multiple(array(), array('uri' => $uri));
   if (count($files)) {
     $file = reset($files);
@@ -702,7 +706,7 @@ function _sbac_media_create_list($media_items, $form_state) {
           $output .= ' (' . gmdate("i:s", $media_item->filesize) . ')';
         }
       }
-      
+
       // Checkbox
       if ($type != 'image' && $type != 'document') {
         $checked = '';
@@ -811,13 +815,18 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   }
   else {
     $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
+    $allowed_size = array(104857600, 104857600); //104857600 = 100MB in bytes
     $directory = "private://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     if ($writable) {
-      $file = file_save_upload('field_file_upload', array('file_validate_extensions' => $allowed_file_types), $directory, FILE_EXISTS_REPLACE);
+      $validators = array(
+        'file_validate_extensions' => $allowed_file_types,
+        'file_validate_size' => $allowed_size,
+      );
+      $file = file_save_upload('field_file_upload', $validators, $directory, FILE_EXISTS_REPLACE);
 
       // Yuriy: I've removed the and'ed !$form_state['executed'] condition because it
-      // was preventing file uploads, and I don't see a reason for it to be here. 
+      // was preventing file uploads, and I don't see a reason for it to be here.
       if ($file) {
         $file->status = FILE_STATUS_PERMANENT;
         file_save($file);
@@ -869,11 +878,16 @@ function sbac_media_html5_element_upload($form, $form_state) {
 
   drupal_get_messages(); // clear messages if they were some from before.
   $allowed_file_types = array('zip');
+  $allowed_size = array(26214400, 26214400); //26214400 = 25MB in bytes
   $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
   $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
   if ($writable) {
+    $validators = array(
+      'file_validate_extensions' => $allowed_file_types,
+      'file_validate_size' => $allowed_size,
+    );
     // File is temporarily saved.
-    $file = file_save_upload('field_content_module_picker', array('file_validate_extensions' => $allowed_file_types), $directory, FILE_EXISTS_REPLACE);
+    $file = file_save_upload('field_content_module_picker', $validators, $directory, FILE_EXISTS_REPLACE);
     if ($file) {
       // Open the zip and save the file.
       $real_path = drupal_realpath($file->uri);
