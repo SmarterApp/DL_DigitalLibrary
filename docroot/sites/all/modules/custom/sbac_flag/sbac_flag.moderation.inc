@@ -21,7 +21,7 @@ function sbac_flag_moderation() {
   $query->groupBy('ef.target_id');
   $query->condition('ef.being_moderated', 0);
   $result = $query->execute();
-  $count = $query->countQuery()->execute()->fetchField();
+  $count = 0;
   foreach ($result as $row) {
     $node = FALSE;
     $eck_review = FALSE;
@@ -42,16 +42,17 @@ function sbac_flag_moderation() {
     if ($node) {
       $access = sbac_flag_determine_access_for_user($node, $user->uid);
       if ($access) {
-        $display_node = sbac_flag_list_content($row, $node, $eck_flag, $eck_review);
-        $list_output .= theme('sbac_flag_list_card', array('node' => $display_node));
-        $display_nodes[] = $display_node;
+        $count++;
+        if (count($display_nodes) <= SBAC_FLAG_MODERATION_COUNT) {
+          $display_node = sbac_flag_list_content($row, $node, $eck_flag, $eck_review);
+          $list_output .= theme('sbac_flag_list_card', array('node' => $display_node));
+          $display_nodes[] = $display_node;
+        }
       }
     }
-
-    if (count($display_nodes) == SBAC_FLAG_MODERATION_COUNT) {
-      break;
-    }
   }
+
+  $_SESSION['sbac-flag']['count'] = $count;
 
   if ($display_nodes) {
     ctools_include('modal');
