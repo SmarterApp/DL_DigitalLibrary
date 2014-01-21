@@ -55,3 +55,89 @@
   line-height: normal;
   text-align: left;
 }
+
+/*Flag tab on the resource profile page*/
+/* line 68, ../sass/flag.scss */
+#sbac-flag-resource-form {
+  margin: 0 30px;
+}
+/* line 71, ../sass/flag.scss */
+#sbac-flag-resource-form h2 {
+  border-bottom: 1px solid #62676E;
+  color: #04384E;
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0;
+  text-transform: capitalize;
+}
+/* line 81, ../sass/flag.scss */
+#sbac-flag-resource-form .form-type-radios {
+  padding-top: 8px;
+}
+/* line 84, ../sass/flag.scss */
+#sbac-flag-resource-form .form-type-radios > label {
+  font-size: 16px;
+}
+/* line 89, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options {
+  margin-top: 20px;
+}
+/* line 92, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options .form-type-radio {
+  clear: both;
+}
+/* line 95, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea {
+  margin: 10px 0	10px 30px;
+}
+/* line 98, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea label {
+  margin-bottom: 10px;
+}
+/* line 102, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper {
+  position: relative;
+}
+/* line 105, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper #edit-optional-comment {
+  width: 100%;
+  border-radius: 5px;
+  background-color: #F2F2F2;
+}
+/* line 111, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper #edit-optional-comment-counter {
+  position: absolute;
+  right: 24%;
+  top: -20px;
+  font-size: 13px;
+}
+/* line 121, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options input {
+  float: left;
+  vertical-align: top;
+}
+/* line 126, ../sass/flag.scss */
+#sbac-flag-resource-form #edit-flag-options label.option {
+  margin-left: 30px;
+  margin-top: 10px;
+  display: block;
+  font-size: 16px;
+  line-height: 1.6;
+}
+/* line 135, ../sass/flag.scss */
+#sbac-flag-resource-form .form-item-footer {
+  font-size: 13px;
+  line-height: 1.4;
+  border-bottom: 1px solid #CECECE;
+  margin: 30px  0  20px;
+  padding-bottom: 10px;
+}
+/* line 142, ../sass/flag.scss */
+#sbac-flag-resource-form .form-item-footer .form-item {
+  margin-bottom: 0;
+}
+/* line 147, ../sass/flag.scss */
+#sbac-flag-resource-form .flag-resource-submit {
+  float: right;
+}
