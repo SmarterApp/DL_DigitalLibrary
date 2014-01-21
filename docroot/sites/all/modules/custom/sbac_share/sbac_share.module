@@ -408,9 +408,9 @@ function sbac_share_resource_form($form, $form_state, $node) {
     '#suffix' => '</div>',
   );
 
-  $title = 'Permanent Link - <i class="general foundicon-lock" "=""></i> <span class="sbac-private">Private</span>';
+  $title = 'Permanent Link <span class="sbac-private"> - Private</span><i class="general foundicon-lock" "=""></i>';
   if ($node->field_permanent_link_settings['und'][0]['value']) {
-    $title = 'Permanent Link - <i class="general foundicon-people" "=""></i> <span class="sbac-public">Public</span>';
+    $title = 'Permanent Link <span class="sbac-public"> - Public</span><i class="general foundicon-people" "=""></i>';
   }
   $form['permanent_link_text'] = array(
     '#type' => 'item',

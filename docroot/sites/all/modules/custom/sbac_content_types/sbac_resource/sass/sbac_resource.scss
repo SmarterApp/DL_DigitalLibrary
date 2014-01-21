@@ -993,7 +993,7 @@ a.sbac-grid-layout {
 }
 
 .node-resource {
-  @include hyphenation;
+ /* @include hyphenation;*/
   padding: 0 25px;
 
   #review {
@@ -1002,15 +1002,15 @@ a.sbac-grid-layout {
     padding: 0 20px;
   }
 
-  .section-container.auto > section .content {
-    border: none;
-    border-top: 1px solid #aaaaaa;
-    margin: 0 -45px;
-  }
+ .section-container.auto > section .content {
+     /*border: none;
+          border-top: 1px solid #aaaaaa;*/
+     margin: 0 -45px;
+   }
 
-  .section-container.auto > section:last-child .title, .section-container.auto > .section:last-child .title {
-    border-right: none;
-  }
+/*   .section-container.auto > section:last-child .title, .section-container.auto > .section:last-child .title {
+     border-right: none;
+   }*/
 
   .f-dropdown.open {
     top: 40px !important;
@@ -1065,7 +1065,7 @@ a.sbac-grid-layout {
   }
 }
 
-.section-container.auto > section > .title, .section-container.auto > section > .title a {
+/*.section-container.auto > section > .title, .section-container.auto > section > .title a {
   //font-family: $body-font-family;
   font-size: emCalc(16px);
   background: none;
@@ -1089,7 +1089,7 @@ a.sbac-grid-layout {
   color: $white;
   font-size: emCalc(16px);
 }
-
+*/
 /* Modal */
 
 .ui-dialog {
@@ -1162,7 +1162,7 @@ a.sbac-grid-layout {
 .dialog-trigger-gk  {
   @include border-radius(6px); // border radius
   @include background-clip(padding-box); // prevents bg color from leaking outside the border
-  @include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%)); // gradient overlay
+ /* @include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%));*/ // gradient overlay
   @include text-shadow(1px, 1px, rgba(white,0.5));
   border: 1px solid #e0e0e0; // stroke
   background-color: #6fb9d5; // layer fill content
@@ -1383,11 +1383,11 @@ a.sbac-grid-layout {
 }
 
 /*Fixed tag of Related Resource in Firefox */
-@-moz-document url-prefix() {
+/*@-moz-document url-prefix() {
 	.section-container.auto > section.active > .title a {
 		font-size: 0.95em !important;
 	}
-}
+}*/
 
 
 /*Resources search filter button*/

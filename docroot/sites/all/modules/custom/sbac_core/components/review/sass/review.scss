@@ -453,15 +453,27 @@
 	
 	#edit-sharing-options {
 		h2 {
-			font-size: 1.3em;
-			color: #5a5a5a;
-			border-bottom: #000 1px solid;
-			padding-bottom: 10px;
+		  border-bottom: 1px solid #62676E;
+	    color: #04384E;
+	    display: block;
+	    font-size: 22px;
+	    font-weight: bold;
+	    margin: 0;
+	    text-transform: capitalize;
 		}
 	}
 	
 	#edit-permanent-link-text {
 		font-weight: bold;
+		font-size: 18px;
+		color: #000;
+		padding-top: 20px;
+		
+		.sbac-private {
+			color: #62676E;
+			font-weight: normal;
+			margin-right: 10px;
+		}
 		
 		.foundicon-people {
 			font-size: 120%;
@@ -481,6 +493,9 @@
 		.description {
 			margin-top: 10px;
 			font-weight: normal;
+			color: #464B54;
+			font-size: 13px;
+			line-height: 1.2;
 		}
 	}
 	
