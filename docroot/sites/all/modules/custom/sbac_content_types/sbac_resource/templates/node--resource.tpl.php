@@ -120,6 +120,14 @@
   </div>
   <?php endif; ?>
 
+  <?php if (isset($flag) && count($flag) > 0): ?>
+    <div class="resource-flag-information">
+      <div class="flag-status"><?php echo $flag['status']; ?></div>
+      <div class="flag-count"><?php echo $flag['count_message']; ?></div>
+      <div class="flag-button"><?php echo $flag['button']; ?></div>
+    </div>
+  <?php endif; ?>
+
   <?php if (isset($content['review']) && $content['review']): ?>
     <div id="review"><?php print render($content['review']); ?></div>
   <?php endif; ?>

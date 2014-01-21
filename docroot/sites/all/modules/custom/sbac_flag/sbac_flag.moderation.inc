@@ -18,7 +18,8 @@ function sbac_flag_moderation() {
   $query->fields('ef');
   $query->orderBy('ef.urgent', 'DESC');
   $query->orderBy('ef.created', 'ASC');
-  $query->groupBy('ef.target_id');
+  $query->groupBy('ef.target_type');
+  $query->groupBy('ef.nid');
   $query->condition(db_or()->condition('ef.being_moderated', $user->uid)->condition('ef.being_moderated', 0));
   $result = $query->execute();
   $count = 0;
@@ -43,7 +44,7 @@ function sbac_flag_moderation() {
       $access = sbac_flag_determine_access_for_user($node, $user->uid);
       if ($access) {
         $count++;
-        if (count($display_nodes) <= SBAC_FLAG_MODERATION_COUNT) {
+        if (count($display_nodes) < SBAC_FLAG_MODERATION_COUNT) {
           $display_node = sbac_flag_list_content($row, $node, $eck_flag, $eck_review);
           $list_output .= theme('sbac_flag_list_card', array('node' => $display_node));
           $display_nodes[] = $display_node;
@@ -53,6 +54,10 @@ function sbac_flag_moderation() {
   }
 
   $_SESSION['sbac-flag']['count'] = $count;
+  if ($count > SBAC_FLAG_MODERATION_COUNT) {
+    // create load more button.
+    $var = '';
+  }
 
   if ($display_nodes) {
     ctools_include('modal');
@@ -99,7 +104,6 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
     ),
     'query' => array(
       'nid' => $node->nid,
-      'eck_flag_id' => $row->id,
       'eck_review' => ($eck_review ? 1 : 0),
     ),
   ));
@@ -134,8 +138,13 @@ function sbac_flag_start_moderation($js = FALSE) {
     ctools_modal_add_js();
 
     $title = 'You are about to start resource moderation';
-    if ($_GET['eck_review']) {
+    if (isset($_GET['eck_review'])) {
       $title = 'You are about to start resource review moderation';
+    }
+
+    $goto_edit = FALSE;
+    if (isset($_GET['goto_edit'])) {
+      $goto_edit = TRUE;
     }
 
     $form_state = array(
@@ -143,7 +152,7 @@ function sbac_flag_start_moderation($js = FALSE) {
       'ajax' => TRUE,
       'nid' => $_GET['nid'],
       'eck_review' => $_GET['eck_review'],
-      'eck_flag_id' => $_GET['eck_flag_id'],
+      'goto_edit' => $goto_edit,
     );
 
     $output = ctools_modal_form_wrapper('sbac_flag_start_moderation_form', $form_state);
@@ -153,14 +162,16 @@ function sbac_flag_start_moderation($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
         $node = node_load($form_state['values']['nid']);
-        $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-flag')));
+        if (isset($form_state['values']['goto_edit'])) {
+          $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'moderate-flags'), 'fragment' => 'moderate-flags'));
+        }
+        else {
+          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-resource-flags'), 'fragment' => 'review-Moderate_flag'));
+        }
       }
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
-        $eck_flag = entity_load_single('flag', $form_state['values']['eck_flag_id']);
-        $eck_flag = entity_metadata_wrapper('flag', $eck_flag);
-        $eck_flag->being_moderated->set($user->uid);
-        $eck_flag->save();
         $node = node_load($form_state['values']['nid']);
+        sbac_flag_set_being_moderated($node, $form_state['eck_review']);
         $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('fragment' => 'resolve-flags'));
       }
     }
@@ -187,14 +198,14 @@ function sbac_flag_start_moderation_form($form, $form_state) {
     '#value' => $form_state['eck_review'],
   );
 
+  $form['goto_edit'] = array(
+    '#type' => 'hidden',
+    '#value' => $form_state['goto_edit'],
+  );
+
   $form['nid'] = array(
     '#type' => 'hidden',
     '#value' => $form_state['nid'],
-  );
-
-  $form['eck_flag_id'] = array(
-    '#type' => 'hidden',
-    '#value' => $form_state['eck_flag_id'],
   );
 
   $form['submit_description'] = array(

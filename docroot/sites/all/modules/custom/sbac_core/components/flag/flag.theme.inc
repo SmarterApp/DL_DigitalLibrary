@@ -22,6 +22,7 @@ function theme_flagging_form($variables) {
     $flag = entity_create($entity_type->name, array('type' => $bundle->name));
     $flag->target_type = 'review';
     $flag->target_id = $entity->id;
+    $flag->nid = $entity->node_id;
 
     $form = drupal_get_form('eck__entity__form_add_' . $entity_type_name . '_' . $bundle_name, $flag);
 

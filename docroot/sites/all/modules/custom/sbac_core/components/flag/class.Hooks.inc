@@ -87,6 +87,26 @@ class Hooks extends \devtools\Hooks {
         $form['target_id']['#weight'] = -99;
         $form['target_id']['#access'] = FALSE;
 
+        $form['nid']['#value'] = $flag->nid;
+        $form['nid']['#weight'] = -99;
+        $form['nid']['#access'] = FALSE;
+
+        $form['being_moderated']['#value'] = 0;
+        $form['being_moderated']['#weight'] = -99;
+        $form['being_moderated']['#access'] = FALSE;
+
+        $form['flag_selected']['#value'] = 0;
+        $form['flag_selected']['#weight'] = -99;
+        $form['flag_selected']['#access'] = FALSE;
+
+        $form['flag_comment']['#value'] = '';
+        $form['flag_comment']['#weight'] = -99;
+        $form['flag_comment']['#access'] = FALSE;
+
+        $form['urgent']['#value'] = 0;
+        $form['urgent']['#weight'] = -99;
+        $form['urgent']['#access'] = FALSE;
+
         $form['action'] = array(
           '#type' => 'select',
           '#options' => array(

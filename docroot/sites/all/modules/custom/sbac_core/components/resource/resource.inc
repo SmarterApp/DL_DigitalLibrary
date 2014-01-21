@@ -24,7 +24,7 @@ function resource_access($op, $node, $account = NULL) {
   if ($node->type == 'resource') {
     // TODO: maybe we should just load & statically cache all feedback records
     // for current node, instead of running individual queries?
-    if (isset($_GET['flag']) && $_GET['flag'] == 'view-flag') {
+    if (isset($_GET['flag']) && $_GET['flag'] == 'view-resource-flags') {
       if (in_array($op, array('access about process', 'view about'))) {
         return TRUE;
       }
