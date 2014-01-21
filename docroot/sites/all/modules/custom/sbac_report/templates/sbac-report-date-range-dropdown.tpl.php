@@ -4,23 +4,12 @@
  * Date range dropdown template.
  */
 ?>
-<div id="edit-date-range-dropdown<?php print $which ?>" class="date-range-container">
-  <label for="date-selected">
-  <?php print t('Choose a time period'); ?>
-  <span class="form-required" title="This field is required.">*</span>
-  </label>
-  <a href="#" id="date-selected<?php print $which ?>" class="report-dropdown-toggle"><?php print $date_display; ?></a>
-  <div id="date-range-dropdown<?php print $which ?>" class="report-dropdown hide">
-    <ul>
-      <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_30; ?>">
-              <?php print t('Last 30 Days'); ?>
-      </a></li>
-      <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_60; ?>">
-              <?php print t('Last 60 Days'); ?>
-      </a></li>
-      <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_90; ?>">
-              <?php print t('Last 90 Days'); ?>
-      </a></li>
-    </ul>
-    <div><?php print t('Custom Date'); ?></div>
+<fieldset class="form-wrapper" id="edit-date-range<?php print $which?>">
+    <legend><?php print t('Choose a time period'); ?> <span class="form-required" title="This field is required.">*</span></legend>
+    <form>
+        <input type="radio" name="date-select" value="<?php print $ago_30; ?>" <?php print $date_display == t('Last 30 Days') ? 'checked' : ''; ?>><?php print t('Last 30 Days'); ?><br />
+        <input type="radio" name="date-select" value="<?php print $ago_60; ?>" <?php print $date_display == t('Last 60 Days') ? 'checked' : ''; ?>><?php print t('Last 60 Days'); ?><br />
+        <input type="radio" name="date-select" value="<?php print $ago_90; ?>" <?php print $date_display == t('Last 90 Days') ? 'checked' : ''; ?>><?php print t('Last 90 Days'); ?><br />
+        <input type="radio" name="date-select" value="custom" <?php print $date_display == t('Custom Date') ? 'checked' : ''; ?>><?php print t('Custom Date'); ?><br />
+            <fieldset class="form-wrapper">
 <?php // The closing tags are attached to the date popup form element. ?>

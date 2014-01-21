@@ -88,6 +88,10 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
 function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_USER;
 
+  if (empty($form_state['values']['date_range1'])) {
+    form_set_error('date_range', t('Choose a time period field is required.'));
+  }
+
   if (FALSE) {
     // TODO: validate csv form
   }

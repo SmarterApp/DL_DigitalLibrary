@@ -75,21 +75,48 @@ DateDropDown = (function($, $which) {
     return year + month + date;
   }
 
+  function hideCustomDateFieldset(elm) {
+      var selected = $(elm).find('input[name=date-select]:checked');
+      if (selected.val() == 'custom') {
+          $(elm).find('fieldset').show();
+      } else {
+          $(elm).find('fieldset').hide();
+      }
+  }
+
+  function updatCustomoDateRangeField() {
+      var toInput = getInput($to_date_input + " input");
+      var fromInput = getInput($from_date_input + " input");
+      var $dateRangeField = $($date_range_field_id);
+      //var $dateSelected = $($selected_id);
+
+      if (fromInput && toInput) {
+        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
+        $dateRangeField.val(value);
+      } else {
+        $dateRangeField.val('');
+      }
+  };
+
   // DOM ready.
   $(function() {
-    var $dateRangeField = $($date_range_field_id);
-    var $dateSelected = $($selected_id);
+    var fieldset = '#edit-date-range' + $which;
+    hideCustomDateFieldset(fieldset);
+    $(fieldset).change(function(e) {
+        // Hide custom date fields if Custom Date option is not selected.
+        hideCustomDateFieldset(e.currentTarget);
+
+        // Update the hidden date range field when an item is selected.
+        var selected = $(e.currentTarget).find('input[name=date-select]:checked');
+        if (selected.val() == 'custom') { 
+            updatCustomoDateRangeField();
+        } else {
+            $('#date-range-field' + $which).val(selected.val());
+        }
+    });
+
     //var dropdownId = '#date-range-dropdown';
     var $dropdown = $($drop_down_id);
-
-    // Update the text when an item is selected.
-    $($date_range_item).click(function() {
-      var value = $(this).data('value');
-      var text = $(this).text();
-      $dateRangeField.text(value);
-      $dateRangeField.val(value);
-      $dateSelected.text(text);
-    });
 
     $($report_dropdown_toggle).click(function(e) {
       e.preventDefault();
@@ -117,28 +144,10 @@ DateDropDown = (function($, $which) {
     });
 
     // Update the dropdown text, when the user enters a custom date.
-    $($to_date_input+" input").on('change', function() {
-      var toInput = getInput(this);
-      var fromInput = getInput($from_date_input+" input");
-      if (fromInput && toInput) {
-        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
-        $dateRangeField.text(value);
-        $dateRangeField.val(value);
-        $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
-      }
-    });
+    $($to_date_input + " input").on('change', updatCustomoDateRangeField);
 
     // Update the dropdown text, when the user enters a custom date.
-    $($from_date_input+" input").on('change', function() {
-      var fromInput = getInput(this);
-      var toInput = getInput($to_date_input+" input");
-      if (fromInput && toInput) {
-        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
-        $dateRangeField.text(value);
-        $dateRangeField.val(value);
-        $dateSelected.text(fromInput + ' ' + Drupal.t('to') + ' ' + toInput);
-      }
-    });
+    $($from_date_input + " input").on('change', updatCustomoDateRangeField);
 
   });
 });
