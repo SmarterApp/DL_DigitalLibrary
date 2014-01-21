@@ -170,6 +170,11 @@ $items = array(
       'type' => 'integer',
       'behavior' => 'textfield',
     ),
+    'being_moderated' => array(
+      'label' => 'Being Moderated',
+      'type' => 'integer',
+      'behavior' => 'textfield',
+    ),
   ),
 ),
        'review' => array(

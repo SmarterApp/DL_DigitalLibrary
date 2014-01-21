@@ -231,6 +231,29 @@ function sbac_central_get_users_with_roles_and_state($rids, $states) {
 }
 
 /**
+ * Gets the states that this user has access to.
+ *
+ * @param $roles
+ * @param $all_states
+ * @return mixed
+ */
+function sbac_central_get_user_with_roles_and_state($rids, $states, $uid) {
+  $account = array();
+  $query = 'SELECT ur.uid
+            FROM {users_roles} AS ur
+            JOIN {field_data_field_state} s
+              ON ur.uid = s.entity_id
+            WHERE ur.rid IN (:rids)
+              AND s.field_state_tid IN (:states)
+              AND ur.uid = :uid';
+  $result = db_query($query, array(':rids' => $rids, ':states' => $states, ':uid' => $uid));
+  foreach ($result as $row) {
+    $account = user_load($row->uid);
+  }
+  return $account;
+}
+
+/**
  * Implements hook_form_alter().
  *
  * @param $form

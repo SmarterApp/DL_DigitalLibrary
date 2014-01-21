@@ -6,6 +6,8 @@
 
 include_once 'sbac_flag.features.inc';
 
+define('SBAC_FLAG_MODERATION_COUNT', 10);
+
 /**
  * Implements hook_menu().
  *
@@ -18,6 +20,13 @@ function sbac_flag_menu() {
     'page callback' => 'sbac_flag_modal_content',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
+  );
+
+  $items['sbac-flag/%ctools_js/start-moderation'] = array(
+    'page callback' => 'sbac_flag_start_moderation',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_flag.moderation.inc',
   );
 
   $items['moderation'] = array(
@@ -60,6 +69,18 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
     'template' => 'flag-confirmation',
     'variables' => array('radio_selected' => NULL),
+  );
+
+  $items['sbac_flag_list_card'] = array(
+    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'template' => 'flag-list-card',
+    'variables' => array('node' => NULL),
+  );
+
+  $items['sbac_flag_moderation'] = array(
+    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'template' => 'flag-moderation',
+    'variables' => array('list_output' => NULL),
   );
 
   return $items;
@@ -295,7 +316,7 @@ function sbac_flag_modal_content($js = FALSE) {
           // Determine if the user has access to review the node.
           // This is determined by all users with role of "moderator"
           // and the nodes view permissions field.
-          $accounts = sbac_flag_determine_access($node);
+          $accounts = sbac_flag_get_users_with_node_access($node);
           foreach ($accounts as $uid => $account) {
             if ($task = taskit_get_object('resource_flagged')) {
               $task->addVisibility($task::VISIBILITY_USER);
@@ -400,7 +421,7 @@ function sbac_flag_save_flag($flag, $comment, $nid) {
  * @param $node
  * @return array
  */
-function sbac_flag_determine_access($node) {
+function sbac_flag_get_users_with_node_access($node) {
   $all_states = array();
 
   if (isset($node->field_view_permissions['und'][0]['value'])) {
@@ -430,6 +451,49 @@ function sbac_flag_determine_access($node) {
   }
 
   return $users;
+}
+
+/**
+ * Determines if the user has access to the node.
+ *
+ * @param $node
+ * @param $uid
+ * @return bool
+ */
+function sbac_flag_determine_access_for_user($node, $uid) {
+  $all_states = array();
+  $access = FALSE;
+
+  if (isset($node->field_view_permissions['und'][0]['value'])) {
+    // 0 is all states, 1 is specific states
+    $view_permissions = $node->field_view_permissions['und'][0]['value'];
+    if ($view_permissions == 0) {
+      $all_states = array();
+    }
+    else {
+      if (isset($node->field_view_permissions_per_state['und'])) {
+        foreach ($node->field_view_permissions_per_state['und'] as $key => $tid) {
+          $all_states[] = $tid['tid'];
+        }
+      }
+    }
+  }
+
+  // if the array is empty, then the user has access.
+  if (empty($all_states)) {
+    $access = TRUE;
+    return $access;
+  }
+  else {
+    // only get users with moderator role and these states.
+    $role = user_role_load_by_name('moderator');
+    $user = sbac_central_get_user_with_roles_and_state($role->rid, $all_states, $uid);
+    if ($user) {
+      $access = TRUE;
+    }
+  }
+
+  return $access;
 }
 
 /**
