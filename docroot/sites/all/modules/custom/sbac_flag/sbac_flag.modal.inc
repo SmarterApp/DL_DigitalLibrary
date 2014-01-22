@@ -274,21 +274,21 @@ function sbac_flag_start_moderation_form($form, $form_state) {
     When you are ready to resolve all the flags, you can start moderation.") . '</p>',
   );
 
-  $form['cancel'] = array(
+	$form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
+    '#value' => 'Start Moderation',
   );
 
   $form['review_flags'] = array(
     '#type' => 'submit',
     '#value' => 'Review Flags',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
+    '#attributes' => array('class' => array('button', 'blue', 'cancel'))
   );
 
-  $form['submit'] = array(
+  $form['cancel'] = array(
     '#type' => 'submit',
-    '#value' => 'Start Moderation',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
   return $form;

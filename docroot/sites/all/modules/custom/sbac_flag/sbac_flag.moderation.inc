@@ -116,7 +116,7 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
       'modalSize' => array(
         'type' => 'fixed',
         'width' => 600,
-        'height' => 160,
+        'height' => 210,
       ),
     ),
   );

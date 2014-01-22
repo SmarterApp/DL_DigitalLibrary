@@ -63,6 +63,7 @@
 		    right: 0;
 		    text-shadow: 0 1px 0 #FFFFFF;
 		    top: 0;
+		    width: 280px;
 		
 				.flag-status {
 					padding: 15px 60px 30px 10px;
@@ -77,6 +78,12 @@
 }
 
 /*Confirmation modal*/
+.page-moderation {
+	.modal-content {
+		overflow-y: hidden !important;
+	}
+}
+
 #sbac-flag-start-moderation-form {
 	.button, .form-submit {
 		float: right;
