@@ -1026,8 +1026,6 @@ a.sbac-grid-layout {
   .resource-attributes {
     margin-bottom: 1em;
 		margin-top: 1.5em;
-		float: left;
-		clear: both;
 		
     p {
       color: #101010;
@@ -1035,12 +1033,14 @@ a.sbac-grid-layout {
 	    line-height: 1.5;
 	    list-style-type: none;
 	    margin: 0;
-	    padding: 0 0 5px;
-			float: left;
+	    padding: 0 0 7px;
 			clear: both;
+			display: block;
 			
 			&.divider {
 				border-top: 1px #CECECE solid;
+				max-width: 510px;
+				padding-top: 7px;
 			}
     }
 
@@ -1358,8 +1358,8 @@ a.sbac-grid-layout {
 
 		.flex-control-nav {
 			padding-top: 15px;
-			bottom: -10px;
 			border-top: 1px solid #CCCCCC;
+			width: 840px;
 		}
 
 		.flex-direction-nav {
@@ -1382,12 +1382,9 @@ a.sbac-grid-layout {
 	}
 }
 
-/*Fixed tag of Related Resource in Firefox */
-/*@-moz-document url-prefix() {
-	.section-container.auto > section.active > .title a {
-		font-size: 0.95em !important;
-	}
-}*/
+.section-related-resources {
+	padding-bottom: 20px;
+}
 
 
 /*Resources search filter button*/

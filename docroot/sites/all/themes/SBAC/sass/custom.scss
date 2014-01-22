@@ -1381,10 +1381,12 @@ a.tabledrag-handle .handle {
 
 .flex-direction-nav a.flex-prev {
   background: url('../images/icons/arrow-left-large.png') no-repeat center center;
+	left: 0;
 }
 
 .flex-direction-nav a.flex-next {
   background: url('../images/icons/arrow-right-large.png') no-repeat 0 0;
+	right: 0;
 }
 
 .field-name-resource-slideshow .flexslider .flex-viewport ul li label {

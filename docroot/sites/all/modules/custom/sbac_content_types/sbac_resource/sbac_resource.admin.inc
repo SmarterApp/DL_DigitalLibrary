@@ -62,6 +62,15 @@ function sbac_resource_form_messages() {
     '#format' => 'full_html',
   );
 
+  $form['sbac_resource_flag_guide'] = array(
+    '#type' => 'text_format',
+    '#base_type' => 'textarea',
+    '#title' => t('Flag Submission Guidelines'),
+    '#default_value' => variable_get('sbac_resource_flag_guide', NULL),
+    '#description' => t('These guidelines will be displayed on the Flag tab of the Resource creation screen.'),
+    '#format' => 'full_html',
+  );
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Submit',
@@ -84,4 +93,5 @@ function sbac_resource_form_messages_submit(&$form, &$form_state) {
   variable_set('sbac_resource_summary_guide', $form_state['values']['sbac_resource_summary_guide']['value']);
   variable_set('sbac_resource_tags_guide', $form_state['values']['sbac_resource_tags_guide']['value']);
   variable_set('sbac_resource_advanced_guide', $form_state['values']['sbac_resource_advanced_guide']['value']);
+  variable_set('sbac_resource_flag_guide', $form_state['values']['sbac_resource_flag_guide']['value']);
 }

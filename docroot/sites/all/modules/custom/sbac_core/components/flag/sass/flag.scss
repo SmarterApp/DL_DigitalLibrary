@@ -86,7 +86,7 @@
 		}
 	}	
 	
-	#edit-flag-options {
+	#sbac-flag-options {
 		margin-top: 20px;
 		
 		.form-type-radio {
@@ -102,13 +102,13 @@
 				.form-textarea-wrapper {
 					position: relative;
 					
-					#edit-optional-comment {
+					.form-textarea {
 						width: 100%;
 						border-radius: 5px;
 						background-color: #F2F2F2;
 					}
 						
-					#edit-optional-comment-counter {
+					.counter {
 						position: absolute;
 						right: 24%;
 						top: -20px;
@@ -149,3 +149,34 @@
 	}
 }
 
+.section-flag {
+	.reason {
+		padding: 30px;
+		color: #000000;
+		display: block;
+		font-size: 18px;
+		line-height: 1.6;
+		font-weight: bold;
+		text-transform: capitalize;
+		text-align: center;
+		margin-top: 40px;
+	}
+	
+	.reviewing-message {
+		padding: 5px 30px;
+		max-width: 800px;
+		margin: 0 auto;
+		font-size: 16px;
+		line-height: 1.6;
+		text-align: center;
+	}		
+}
+
+#sbac-flag-resource-modal-form .form-submit {
+	float: right;
+	margin-left: 30px;
+}
+
+.node-type-resource  #modal-content {
+	overflow-y: hidden !important;
+}

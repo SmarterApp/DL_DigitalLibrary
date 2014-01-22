@@ -11,11 +11,26 @@ class Moderate_flag extends Base {
    * @return [type] [description]
    */
   public function getContent() {
-    $flags = sbac_flag_get_all_flags_for_node($this->_node, 'resource');
     $output = '';
-    if ($flags) {
-      $output = sbac_flag_resource_profile_view($flags);
+
+    if ($_GET['flag'] == 'view-resource-review-flags') {
+      $review = TRUE;
+      $flags = sbac_flag_get_all_flags_for_node($this->_node, 'review', $_GET['review']);
     }
+    else {
+      $review = FALSE;
+      $flags = sbac_flag_get_all_flags_for_node($this->_node, 'resource');
+    }
+
+    if ($flags) {
+      if ($review) {
+        $output = sbac_flag_resource_review_profile_view($flags);
+      }
+      else {
+        $output = sbac_flag_resource_profile_view($flags);
+      }
+    }
+
     return $output;
   }
 }

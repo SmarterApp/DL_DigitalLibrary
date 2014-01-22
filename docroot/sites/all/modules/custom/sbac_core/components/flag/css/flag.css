@@ -80,45 +80,45 @@
   font-size: 16px;
 }
 /* line 89, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options {
+#sbac-flag-resource-form #sbac-flag-options {
   margin-top: 20px;
 }
 /* line 92, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options .form-type-radio {
+#sbac-flag-resource-form #sbac-flag-options .form-type-radio {
   clear: both;
 }
 /* line 95, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea {
+#sbac-flag-resource-form #sbac-flag-options .form-type-radio .form-type-textarea {
   margin: 10px 0	10px 30px;
 }
 /* line 98, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea label {
+#sbac-flag-resource-form #sbac-flag-options .form-type-radio .form-type-textarea label {
   margin-bottom: 10px;
 }
 /* line 102, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper {
+#sbac-flag-resource-form #sbac-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper {
   position: relative;
 }
 /* line 105, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper #edit-optional-comment {
+#sbac-flag-resource-form #sbac-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper .form-textarea {
   width: 100%;
   border-radius: 5px;
   background-color: #F2F2F2;
 }
 /* line 111, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper #edit-optional-comment-counter {
+#sbac-flag-resource-form #sbac-flag-options .form-type-radio .form-type-textarea .form-textarea-wrapper .counter {
   position: absolute;
   right: 24%;
   top: -20px;
   font-size: 13px;
 }
 /* line 121, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options input {
+#sbac-flag-resource-form #sbac-flag-options input {
   float: left;
   vertical-align: top;
 }
 /* line 126, ../sass/flag.scss */
-#sbac-flag-resource-form #edit-flag-options label.option {
+#sbac-flag-resource-form #sbac-flag-options label.option {
   margin-left: 30px;
   margin-top: 10px;
   display: block;
@@ -140,4 +140,37 @@
 /* line 147, ../sass/flag.scss */
 #sbac-flag-resource-form .flag-resource-submit {
   float: right;
+}
+
+/* line 153, ../sass/flag.scss */
+.section-flag .reason {
+  padding: 30px;
+  color: #000000;
+  display: block;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: bold;
+  text-transform: capitalize;
+  text-align: center;
+  margin-top: 40px;
+}
+/* line 165, ../sass/flag.scss */
+.section-flag .reviewing-message {
+  padding: 5px 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* line 175, ../sass/flag.scss */
+#sbac-flag-resource-modal-form .form-submit {
+  float: right;
+  margin-left: 30px;
+}
+
+/* line 180, ../sass/flag.scss */
+.node-type-resource #modal-content {
+  overflow-y: hidden !important;
 }
