@@ -63,16 +63,16 @@
 	    display: block;
 	    font-size: 22px;
 	    font-weight: bold;
-	    margin: 0;
-	    padding: 30px 0 0;
+	    margin: 0 0 20px;
+	    padding: 20px 0 5px;
 	    text-transform: capitalize;
     }
   }
 
   .review-form-trigger {
-    float: right;
+    float: left;
     display: inline; 
-    margin: 0;
+    margin: 0 0 10px;
   }
 
   #review-end-use-wrap {
@@ -85,7 +85,10 @@
       }
 
       .intro {
-        padding: 10px 0;
+        padding: 0 0 10px;
+				font-size: 16px;
+				line-height: 1.6;
+				max-width: 560px;
       }
 
       .form-item-title {
@@ -123,31 +126,39 @@
       
       .field-name-field-pro-dev {
         @include mid_col;
+				border-left: none;
+				padding-left: 0;
 
         label {
           margin-bottom: 10px;
         }
 
         .fivestar-form-item {
-          padding: 0 10px;
+          padding-right: 10px;
         }
       }
 
       .field-name-field-ease-use {
         @include right_col;
+				border-left: none;
+				padding-left: 0;
 
         label {
           margin-bottom: 10px;
         }
 
         .fivestar-form-item {
-          padding-left: 10px;
+          padding-left: 0;
         }
       }
 
       .field-name-field-appropriate-for {
         clear: both;
         padding: 10px 0;
+								
+				input[type="checkbox"] {
+					margin-left: 0;
+				}
 
         .form-checkboxes {
           .form-item {
@@ -164,11 +175,15 @@
             /* second column */
             &:nth-child(3n+1) {
               @include mid_col;
+							border-left: none;
+							padding-left: 0;
             }
 
             /* third column */
             &:nth-child(3n+0) {
               @include right_col;
+							border-left: none;
+							padding-left: 0;
             }
           }
         }
@@ -192,22 +207,41 @@
   }
 
   .review-section-header {
-    border-bottom: 1px #000 solid;
-    border-top: 1px #000 solid;
-    font-size: 1em;
-    margin: 10px 0;
-    padding: 10px 0;
+    border-bottom: 1px solid #62676E;
+		color: #04384E;
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 10px;
+    padding: 10px 0 5px;
+    text-transform: capitalize;
 
     .section-title {
       font-weight: bold;
 
       .secondary {
-        font-weight: normal;
+        color: #62676E;
+				font-size: 15px;
+		    font-weight: normal;
+		    text-transform: none;
       }
     }
 
     .sorting-order {
       float: right;
+		  font-size: 16px;
+		  line-height: 15px;
+			margin-top: 4px;
+			
+			a {
+				 color: #464B54;
+					padding: 0 10px;
+				
+				&:last-child {
+					color: #0583AC;
+					padding-right: 0;
+				}
+			}
     }
 
     .summary-content {
@@ -223,11 +257,11 @@
     .appropriate-for {
       margin-top: 15px;
       padding-top: 10px;
-      border-top:1px solid #eee;
+     /* border-top:1px solid #eee;*/
 
       .term {
         font-size: 0.8em;
-        padding: 10px;
+        padding: 5px 0;
 
         &.highlight {
           font-weight: bold;
@@ -236,9 +270,13 @@
     }
 
     .item-title {
-      font-size: 0.9em;
-      font-weight: bold;
-      margin-bottom: 10px;
+			color: #464B54;
+			font-size: 13px;
+	    font-weight: bold;
+	    line-height: 1.2;
+	    margin: 0;
+	    max-width: 560px;
+	    padding: 0 0 10px 0;
     }
 
     .left-col {
@@ -247,15 +285,19 @@
 
     .mid-col {
       @include mid_col;
+			border-left: none;
+			padding-left: 0;
     } 
 
     .right-col {
       @include right_col;
+			border-left: none;
+			padding-left: 0;
     } 
   }
 
   #individual-reviews {
-
+		margin: 20px 0 0;
   }
 }
 
@@ -275,6 +317,8 @@
 
   .field-label {
     margin-bottom: 5px;
+		font-weight: normal;
+		padding: 5px 0;
   }
 
   .group-header {
@@ -285,10 +329,21 @@
 
     .field-name-review-author {
       float: left;
+			color: #464B54;
+			font-size: 13px;
+	    font-weight: bold;
+	    line-height: 1.2;
+	    margin: 0;
+	    max-width: 560px;
+	
+			a.devtools-tooltip-trigger {
+				color: #0583AC;
+			}
     }
 
     .field-name-review-helpfulness {
       float: right;
+			font-weight: bold;
     }
   }
 
@@ -340,18 +395,20 @@
 
     .field-name-field-appropriate-for {
       padding-top: 0px;
-      border-top:1px solid #eee;
+      /*border-top:1px solid #eee;*/
       font-size: 0.95em;
 
       .field-label {
         color: inherit;
         font-size: 0.8em;
+				font-weight: bold;
       }
 
       ul {
         font-size: 0.8em;
         margin:0 0 20px 0;
         padding:0;
+				max-width: 560px;
 
         li {
           list-style-type: none;
@@ -520,6 +577,13 @@
 	button#edit-permanent-link-button, button#edit-temporary-link-button {
 		width: 225px;
 		margin-top: -3px;
+	}
+	
+	.temporary-link-container {
+		.description {
+			font-size: 13px;
+			line-height: 1.2;
+		}
 	}
 	
 	.temporary-link-container.active {
