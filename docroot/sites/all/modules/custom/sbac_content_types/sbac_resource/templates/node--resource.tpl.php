@@ -128,6 +128,13 @@
     </div>
   <?php endif; ?>
 
+  <?php if (isset($flag['review'])): ?>
+    <div class="resource-review-information">
+      Review
+      <?php echo $flag['review']; ?>
+    </div>
+  <?php endif; ?>
+
   <?php if (isset($content['review']) && $content['review']): ?>
     <div id="review"><?php print render($content['review']); ?></div>
   <?php endif; ?>
