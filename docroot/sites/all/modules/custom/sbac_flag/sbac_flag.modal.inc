@@ -277,13 +277,13 @@ function sbac_flag_start_moderation_form($form, $form_state) {
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
   );
 
   $form['review_flags'] = array(
     '#type' => 'submit',
     '#value' => 'Review Flags',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
   );
 
   $form['submit'] = array(
