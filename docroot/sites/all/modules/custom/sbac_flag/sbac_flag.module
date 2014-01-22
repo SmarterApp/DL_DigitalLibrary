@@ -193,6 +193,7 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
  * @param $flags
  */
 function sbac_flag_create_resource_view_output(&$vars, $flags) {
+  $vars['flag']['resource'] = TRUE;
   $vars['flag']['total'] = count($flags);
   $vars['flag']['count_message'] = count($flags);
   (count($flags) == 1 ? $vars['flag']['count_message'] .= ' flag' : $vars['flag']['count_message'] .= ' flags');

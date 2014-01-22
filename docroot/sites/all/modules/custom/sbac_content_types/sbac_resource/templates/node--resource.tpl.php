@@ -120,7 +120,7 @@
   </div>
   <?php endif; ?>
 
-  <?php if (isset($flag) && count($flag) > 0): ?>
+  <?php if (isset($flag['resource']) && count($flag) > 0): ?>
     <div class="resource-flag-information">
       <div class="flag-status"><?php echo $flag['status']; ?></div>
       <div class="flag-count"><?php echo $flag['count_message']; ?></div>
