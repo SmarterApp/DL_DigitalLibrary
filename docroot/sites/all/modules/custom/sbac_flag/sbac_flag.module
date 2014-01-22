@@ -52,7 +52,7 @@ function sbac_flag_menu() {
   );
 
   $items['moderation'] = array(
-    'title' => 'Moderation',
+    'title' => t(''),
     'page callback' => 'sbac_flag_moderation',
     'access callback' => array('sbac_flag_moderation_access'),
     'type' => MENU_NORMAL_ITEM,
