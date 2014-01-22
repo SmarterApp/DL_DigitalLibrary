@@ -124,105 +124,14 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
   $node->eck_flag->button = $moderation_button;
   if ($row->being_moderated) {
     $node->eck_flag->display_status = 'Being Moderated';
-    $node->eck_flag->button = '<a href="" class="button">Continue Moderation</a>';
+    if ($eck_review) {
+      $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags'), 'fragment' => 'something-Moderate_flag'));
+      $node->eck_flag->button = $url;
+    }
+    else {
+      $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'something-Moderate_flag'));
+      $node->eck_flag->button = $url;
+    }
   }
   return $node;
-}
-
-/**
- * @param bool $js
- */
-function sbac_flag_start_moderation($js = FALSE) {
-  if ($js) {
-    ctools_include('ajax');
-    ctools_include('modal');
-    ctools_add_js('ajax-responder');
-    ctools_modal_add_js();
-
-    $title = 'You are about to start resource moderation';
-    if (isset($_GET['eck_review'])) {
-      $title = 'You are about to start resource review moderation';
-    }
-
-    $goto_edit = FALSE;
-    if (isset($_GET['goto_edit'])) {
-      $goto_edit = TRUE;
-    }
-
-    $form_state = array(
-      'title' => $title,
-      'ajax' => TRUE,
-      'nid' => $_GET['nid'],
-      'eck_review' => $_GET['eck_review'],
-      'goto_edit' => $goto_edit,
-    );
-
-    $output = ctools_modal_form_wrapper('sbac_flag_start_moderation_form', $form_state);
-    // This means the form has been executed
-    if (!empty($form_state['executed'])) {
-      $output = array();
-      $output[] = ctools_modal_command_dismiss();
-      if ($form_state['triggering_element']['#value'] == 'Review Flags') {
-        $node = node_load($form_state['nid']);
-        if (isset($form_state['goto_edit']) && $form_state['goto_edit'] == TRUE) {
-          $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'moderate-flags'), 'fragment' => 'moderate-flags'));
-        }
-        else if ($form_state['eck_review']) {
-          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-resource-review-flags', 'review' => $form_state['eck_review']), 'fragment' => 'review-Moderate_flag'));
-        }
-        else {
-          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-resource-flags'), 'fragment' => 'review-Moderate_flag'));
-        }
-      }
-      if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
-        $node = node_load($form_state['nid']);
-        sbac_flag_set_being_moderated($node, $form_state['eck_review']);
-        $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('fragment' => 'resolve-flags'));
-      }
-    }
-    print ajax_render($output);
-    exit();
-  }
-  else {
-    return;
-  }
-}
-
-/**
- * Start moderation form.
- *
- * @param $form
- * @param $form_state
- * @return mixed
- */
-function sbac_flag_start_moderation_form($form, $form_state) {
-  $form = array();
-
-  $form['submit_description'] = array(
-    '#markup' => '<p>' . t("
-    If you start moderation, you will have to resolve the flags in one session.
-    You will not be able to save your work or continue later.
-
-    If you aren't ready to resolve all flags, you can select to review flags.
-    When you are ready to resolve all the flags, you can start moderation.") . '</p>',
-  );
-
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
-  );
-
-  $form['review_flags'] = array(
-    '#type' => 'submit',
-    '#value' => 'Review Flags',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
-  );
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Start Moderation',
-  );
-
-  return $form;
 }

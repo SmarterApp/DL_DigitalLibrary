@@ -1970,6 +1970,10 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
+  if (isset($_GET['flag'])) {
+    return;
+  }
+
   $form['actions']['save_continue'] = array(
     '#type' => 'submit',
     '#value' => 'Continue',
@@ -1993,9 +1997,9 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_cancel_button(&$form, &$form_state) {
-//  if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'draft') {
-//    return;
-//  }
+  if (isset($_GET['flag'])) {
+    return;
+  }
 
   global $user;
   if ($user->uid == 1 ||
