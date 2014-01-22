@@ -6,6 +6,8 @@
  * @return string
  */
 function sbac_flag_moderation() {
+  drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
+
   global $user;
   $display_nodes = array();
   $list_output = '';
