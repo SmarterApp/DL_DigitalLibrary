@@ -29,6 +29,13 @@ function sbac_flag_menu() {
     'file' => 'sbac_flag.moderation.inc',
   );
 
+  $items['sbac-flag/nojs/start-resource-review-moderation'] = array(
+    'page callback' => 'sbac_flag_start_resource_review_moderation_modal',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_flag.modal.inc',
+  );
+
   $items['moderation'] = array(
     'title' => 'Moderation',
     'page callback' => 'sbac_flag_moderation',
@@ -153,15 +160,13 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
       $vars['flag']['count_message'] .= ' (' . count($urgent_flags) . ' urgent)';
     }
     // button
-    $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
+    $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-resource-review-moderation', array(
       'attributes' => array(
-        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-moderation',
-        'id' => 'sbac-flag-start-moderation'
+        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-resource-review-moderation',
+        'id' => 'sbac-flag-start-resource-review-moderation'
       ),
       'query' => array(
         'nid' => $vars['node']->nid,
-        'eck_review' => 0,
-        'goto_edit' => 1,
       ),
     ));
 

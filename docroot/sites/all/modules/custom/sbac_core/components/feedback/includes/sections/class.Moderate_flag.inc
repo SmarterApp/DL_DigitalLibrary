@@ -30,6 +30,7 @@ class Moderate_flag extends Base {
         $output = sbac_flag_resource_profile_view($flags);
       }
     }
+
     return $output;
   }
 }
