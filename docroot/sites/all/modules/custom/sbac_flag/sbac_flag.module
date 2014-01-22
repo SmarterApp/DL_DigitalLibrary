@@ -86,7 +86,7 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
   $items['flag_category'] = array(
     'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
     'template' => 'flag-category',
-    'variables' => array('term' => NULL, 'count_message' => NULL)
+    'variables' => array('category' => NULL, 'count_message' => NULL)
   );
 
   $items['flag_category_row'] = array(
@@ -818,7 +818,7 @@ function sbac_flag_resource_profile_view($flags) {
       $count_message .= 's';
     }
     $list_output .= "<div class='flag-category-row-container'>";
-    $list_output .= theme('flag_category', array('term' => $term, 'count_message' => $count_message));
+    $list_output .= theme('flag_category', array('category' => $term->name, 'count_message' => $count_message));
     foreach ($flags as $flag) {
       $account = user_load($flag->uid);
       $created = date('M d, Y', $flag->created);
@@ -857,26 +857,42 @@ function sbac_flag_resource_review_profile_view($flags, $review = NULL) {
   foreach ($flags as $flag) {
     $eck_flag = entity_load_single('flag', $flag->id);
     $eck_flag_wrapper = entity_metadata_wrapper('flag', $eck_flag);
-    $flag_categories[$eck_flag_wrapper->field_issue_type->value()][] = $eck_flag;
+    $type = $eck_flag_wrapper->field_issue_type->value();
+    switch ($type) {
+      case 'inaccurate':
+        $category_label = 'Inaccurate / misleading';
+        break;
+      case 'unintelligible':
+        $category_label = 'Unintelligible';
+        break;
+      case 'biased':
+        $category_label = 'Biased and objectionable or culturally insensitive <p class="new-line">(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>';
+        break;
+      case 'pii':
+        $category_label = 'Contains personally identifiable information (PII)';
+        break;
+      case 'spam':
+        $category_label = 'Appears to be spam';
+        break;
+    }
+    $flag_categories[$category_label][] = $eck_flag_wrapper;
   }
 
   foreach ($flag_categories as $category => $flags) {
     // create category
-    $term = taxonomy_term_load($category);
     $count_message = count($flags) . ' flag';
     if (count($flags) > 1) {
       $count_message .= 's';
     }
     $list_output .= "<div class='flag-category-row-container'>";
-    $list_output .= theme('flag_category', array('term' => $term, 'count_message' => $count_message));
+    $list_output .= theme('flag_category', array('category' => $category, 'count_message' => $count_message));
     foreach ($flags as $flag) {
-      $account = user_load($flag->uid);
-      $created = date('M d, Y', $flag->created);
-      $flag_comment = $flag->flag_comment;
+      $account = $flag->uid->value();
+      $created = date('M d, Y', $flag->created->value());
+      $flag_comment = $flag->field_details->value();
       if (!$flag_comment) {
         $flag_comment = 'No Comment Provided';
       }
-      //create each flag row
       $user_name = $account->name;
       if (!empty($account->field_first_name)) {
         $user_name = $account->field_first_name['und'][0]['value'];
