@@ -24,7 +24,7 @@
 @mixin maxlength {
   .counter {
     position: absolute;
-    right: 0px;
+    right: 300px;
     top: 0px;
     font-size: 12px;
 
@@ -95,16 +95,32 @@
         position: relative;
 
         @include maxlength;
+
+				label {
+					font-size: 14px;
+					color: #101010;
+				}
+				
+				input#edit-title {
+					max-width: 560px;
+          width: 560px;
+				}
       }
 
       .field-name-field-details {
         position: relative;
+				padding-bottom: 5px;
 
         @include maxlength;
-
+				
+				label {
+					font-size: 14px;
+					color: #101010;
+				}
+				
         textarea {
-          max-width: 100%;
-          width: 100%;
+          max-width: 560px;
+          width: 560px;
 
           &.error {
             width: 92%;
