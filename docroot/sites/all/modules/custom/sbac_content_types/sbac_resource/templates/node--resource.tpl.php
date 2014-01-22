@@ -133,6 +133,9 @@
       Review
       <?php echo $flag['review']; ?>
     </div>
+    <div class="flag-status"><?php echo $flag['status']; ?></div>
+    <div class="flag-count"><?php echo $flag['count_message']; ?></div>
+    <div class="flag-button"><?php echo $flag['button']; ?></div>
   <?php endif; ?>
 
   <?php if (isset($content['review']) && $content['review']): ?>
