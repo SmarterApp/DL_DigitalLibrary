@@ -1358,7 +1358,6 @@ a.sbac-grid-layout {
 
 		.flex-control-nav {
 			padding-top: 15px;
-			bottom: -10px;
 			border-top: 1px solid #CCCCCC;
 			width: 840px;
 		}
@@ -1383,12 +1382,9 @@ a.sbac-grid-layout {
 	}
 }
 
-/*Fixed tag of Related Resource in Firefox */
-/*@-moz-document url-prefix() {
-	.section-container.auto > section.active > .title a {
-		font-size: 0.95em !important;
-	}
-}*/
+.section-related-resources {
+	padding-bottom: 20px;
+}
 
 
 /*Resources search filter button*/
