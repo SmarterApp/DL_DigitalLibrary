@@ -102,7 +102,7 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
 
   $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
     'attributes' => array(
-      'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-moderation',
+      'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
       'id' => 'sbac-flag-start-moderation'
     ),
     'query' => array(
