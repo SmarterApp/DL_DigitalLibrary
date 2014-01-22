@@ -77,6 +77,7 @@ features[field_base][] = field_view_permissions
 features[field_base][] = field_view_permissions_per_state
 features[field_group][] = group_advanced|node|resource|form
 features[field_group][] = group_basic|node|resource|form
+features[field_group][] = group_flag|node|resource|form
 features[field_group][] = group_materials|node|resource|form
 features[field_group][] = group_summary|node|resource|form
 features[field_group][] = group_tags|node|resource|form

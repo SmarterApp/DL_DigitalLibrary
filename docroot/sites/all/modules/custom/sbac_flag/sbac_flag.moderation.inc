@@ -163,8 +163,8 @@ function sbac_flag_start_moderation($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
-        $node = node_load($form_state['values']['nid']);
-        if (isset($form_state['values']['goto_edit']) && $form_state['values']['goto_edit'] == TRUE) {
+        $node = node_load($form_state['nid']);
+        if (isset($form_state['goto_edit']) && $form_state['goto_edit'] == TRUE) {
           $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'moderate-flags'), 'fragment' => 'moderate-flags'));
         }
         else if ($form_state['eck_review']) {
@@ -175,7 +175,7 @@ function sbac_flag_start_moderation($js = FALSE) {
         }
       }
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
-        $node = node_load($form_state['values']['nid']);
+        $node = node_load($form_state['nid']);
         sbac_flag_set_being_moderated($node, $form_state['eck_review']);
         $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('fragment' => 'resolve-flags'));
       }
@@ -197,21 +197,6 @@ function sbac_flag_start_moderation($js = FALSE) {
  */
 function sbac_flag_start_moderation_form($form, $form_state) {
   $form = array();
-
-  $form['eck_review'] = array(
-    '#type' => 'hidden',
-    '#value' => $form_state['eck_review'],
-  );
-
-  $form['goto_edit'] = array(
-    '#type' => 'hidden',
-    '#value' => $form_state['goto_edit'],
-  );
-
-  $form['nid'] = array(
-    '#type' => 'hidden',
-    '#value' => $form_state['nid'],
-  );
 
   $form['submit_description'] = array(
     '#markup' => '<p>' . t("

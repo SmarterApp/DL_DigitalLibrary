@@ -21,7 +21,7 @@ function sbac_resource_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Advanced',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(
       0 => 'field_view_permissions_per_state',
       1 => 'field_posting_options',
@@ -57,7 +57,7 @@ function sbac_resource_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'General',
-    'weight' => '0',
+    'weight' => '1',
     'children' => array(
       0 => 'field_document_id',
       1 => 'field_alt_body',
@@ -84,6 +84,39 @@ function sbac_resource_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_flag|node|resource|form';
+  $field_group->group_name = 'group_flag';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'resource';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Flag',
+    'weight' => '0',
+    'children' => array(
+      0 => 'field_temp',
+      1 => 'field_asset_downloads',
+      2 => 'field_total_views',
+      3 => 'field_unique_views',
+      4 => 'field_resource_state',
+      5 => 'field_html5',
+    ),
+    'format_type' => 'tab',
+    'format_settings' => array(
+      'label' => 'Flag',
+      'instance_settings' => array(
+        'required_fields' => 0,
+        'classes' => 'group-flag field-group-tab',
+        'description' => '',
+      ),
+      'formatter' => 'closed',
+    ),
+  );
+  $export['group_flag|node|resource|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_materials|node|resource|form';
   $field_group->group_name = 'group_materials';
   $field_group->entity_type = 'node';
@@ -92,7 +125,7 @@ function sbac_resource_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Materials',
-    'weight' => '1',
+    'weight' => '2',
     'children' => array(
       0 => 'field_author',
       1 => 'field_license_information',
@@ -125,7 +158,7 @@ function sbac_resource_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Details',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_alignment_tags',
       1 => 'field_subject',
@@ -162,7 +195,7 @@ function sbac_resource_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Tags',
-    'weight' => '3',
+    'weight' => '4',
     'children' => array(
       0 => 'field_digital_media_type',
       1 => 'field_educational_use',

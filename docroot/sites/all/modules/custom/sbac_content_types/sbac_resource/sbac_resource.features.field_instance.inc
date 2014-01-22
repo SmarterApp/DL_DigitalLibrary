@@ -982,7 +982,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_onoff',
-      'weight' => 45,
+      'weight' => 10,
     ),
   );
 
@@ -1780,7 +1780,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
-      'weight' => 44,
+      'weight' => 9,
     ),
   );
 
@@ -2183,7 +2183,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -2354,7 +2354,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 13,
+      'weight' => 8,
     ),
   );
 
@@ -2420,7 +2420,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 12,
+      'weight' => 7,
     ),
   );
 

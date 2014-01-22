@@ -29,8 +29,15 @@ function sbac_flag_menu() {
     'file' => 'sbac_flag.moderation.inc',
   );
 
-  $items['sbac-flag/nojs/start-resource-review-moderation'] = array(
+  $items['sbac-flag/%ctools_js/start-resource-review-moderation'] = array(
     'page callback' => 'sbac_flag_start_resource_review_moderation_modal',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_flag.modal.inc',
+  );
+
+  $items['sbac-flag/%ctools_js/start-resource-moderation'] = array(
+    'page callback' => 'sbac_flag_start_resource_moderation_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
     'file' => 'sbac_flag.modal.inc',
@@ -60,6 +67,47 @@ function sbac_flag_moderation_access() {
     return TRUE;
   }
   return FALSE;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'resource_node_form') {
+    if (!isset($_GET['flag'])) {
+      field_group_hide_field_groups($form, array('group_flag'));
+    }
+
+    $form['resource_flag_container_open'] = array(
+      '#markup' => '<div class="sbac-resource-container">',
+    );
+    $form['#group_children']['resource_flag_container_open'] = "group_flag";
+
+    $default_value = $form['title']['#default_value'];
+    $form['title_of_resource_basic'] = array(
+      '#markup' => $default_value,
+      '#prefix' => '<h2 class="title-of-resource">',
+      '#suffix' => '</h2>'
+    );
+    $form['#group_children']['title_of_resource_basic'] = "group_flag";
+
+    $submission_flag_guidelines = variable_get('sbac_resource_flag_guide');
+    $form['submisison_flag_guidelines'] = array (
+      '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_flag_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_flag_guidelines .'<a href="#" class="less">Read Less</a></div>',
+      '#prefix'   => '<div id="submission-flag-guidelines">',
+      '#suffix'   => '</div>'
+    );
+    $form['#group_children']['submisison_flag_guidelines'] = "group_flag";
+
+    $form['resource_flag_container_close'] = array(
+      '#markup' => '</div>',
+    );
+    $form['#group_children']['resource_flag_container_close'] = "group_flag";
+  }
 }
 
 /**
@@ -135,6 +183,36 @@ function sbac_flag_preprocess_node(&$vars) {
 }
 
 /**
+ * Implements preprocess page.s
+ *
+ * @param $vars
+ */
+function sbac_flag_preprocess_page(&$vars) {
+  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'edit' && isset($_GET['flag']) && $_GET['flag'] == 'resolve-resource-flags') {
+    $node = menu_get_object();
+    if ($node && $node->type == 'resource') {
+      $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
+      if ($flags) {
+        $vars['flag']['resource'] = TRUE;
+        $vars['flag']['total'] = count($flags);
+        $vars['flag']['count_message'] = count($flags);
+        (count($flags) == 1 ? $vars['flag']['count_message'] .= ' flag' : $vars['flag']['count_message'] .= ' flags');
+        // determine urgent flags
+        $urgent_flags = sbac_flag_get_all_urgent_flags($flags);
+        if ($urgent_flags) {
+          $vars['flag']['urgent_total'] = count($urgent_flags);
+          $vars['flag']['count_message'] .= ' (' . count($urgent_flags) . ' urgent)';
+        }
+        // determine status of resource
+        $status = sbac_flag_determine_status_for_resource($flags);
+        $vars['flag']['status'] = $status;
+        $vars['flag']['button'] = "<a href='/" . $node->path['alias'] . "' class='button' >Open Resource Preview</a>";
+      }
+    }
+  }
+}
+
+/**
  * Creates the resource review view output.
  *
  * @param $vars
@@ -171,7 +249,7 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
     ));
 
     $js_settings = array(
-      'sbac-flag-start-moderation' => array(
+      'sbac-flag-start-resource-review-moderation' => array(
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
@@ -212,20 +290,18 @@ function sbac_flag_create_resource_view_output(&$vars, $flags) {
   $status = sbac_flag_determine_status_for_resource($flags);
   $vars['flag']['status'] = $status;
   // button
-  $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
+  $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-resource-moderation', array(
     'attributes' => array(
-      'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-moderation',
-      'id' => 'sbac-flag-start-moderation'
+      'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-resource-moderation',
+      'id' => 'sbac-flag-start-resource-moderation'
     ),
     'query' => array(
       'nid' => $vars['node']->nid,
-      'eck_review' => 0,
-      'goto_edit' => 1,
     ),
   ));
 
   $js_settings = array(
-    'sbac-flag-start-moderation' => array(
+    'sbac-flag-start-resource-moderation' => array(
       'modalSize' => array(
         'type' => 'fixed',
         'width' => 600,
