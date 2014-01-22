@@ -1,0 +1,86 @@
+/* line 3, ../sass/sbac_flag.scss */
+.page-moderation .block-sbac-flag-moderation-count {
+  float: left;
+}
+/* line 5, ../sass/sbac_flag.scss */
+.page-moderation .block-sbac-flag-moderation-count h3 {
+  line-height: 45px;
+  margin: 0 20px;
+}
+/* line 8, ../sass/sbac_flag.scss */
+.page-moderation .block-sbac-flag-moderation-category {
+  vertical-align: top;
+  float: left;
+}
+/* line 13, ../sass/sbac_flag.scss */
+.page-moderation .main-container {
+  background-clip: padding-box;
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 1.5625em auto 4.6875em;
+  padding: 15px 0;
+}
+/* line 21, ../sass/sbac_flag.scss */
+.page-moderation .main-container .resource-card {
+  -moz-box-sizing: border-box;
+  background: none repeat scroll 0 0 #FFFFFF;
+  border-radius: 6px;
+  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
+  display: block;
+  margin: 0 0 15px;
+  overflow: hidden;
+  padding: 15px 114px 15px 15px;
+  position: relative;
+  height: 110px;
+}
+/* line 33, ../sass/sbac_flag.scss */
+.page-moderation .main-container .resource-card .row {
+  margin-left: 0;
+}
+/* line 37, ../sass/sbac_flag.scss */
+.page-moderation .main-container .resource-card .resource-title a, .page-moderation .main-container .resource-card .review-title a {
+  color: #04384E;
+  font-size: 15px;
+  font-weight: bold;
+}
+/* line 43, ../sass/sbac_flag.scss */
+.page-moderation .main-container .resource-card .resource-title {
+  font-size: 13px;
+  line-height: 1.2;
+  max-width: 560px;
+  padding-top: 9px;
+  font-style: italic;
+}
+/* line 51, ../sass/sbac_flag.scss */
+.page-moderation .main-container .resource-card .row-right {
+  -moz-box-sizing: border-box;
+  background-color: #F2F2F2;
+  border-left: 1px solid #FFFFFF;
+  border-radius: 0 6px 6px 0;
+  box-shadow: -1px 0 0 0 #CECECE;
+  color: #464B54;
+  display: block;
+  height: 100%;
+  list-style-type: none;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  text-shadow: 0 1px 0 #FFFFFF;
+  top: 0;
+}
+/* line 67, ../sass/sbac_flag.scss */
+.page-moderation .main-container .resource-card .row-right .flag-status {
+  padding: 15px 60px 30px 10px;
+}
+/* line 71, ../sass/sbac_flag.scss */
+.page-moderation .main-container .resource-card .row-right a {
+  margin-left: 10px;
+}
+
+/*Confirmation modal*/
+/* line 81, ../sass/sbac_flag.scss */
+#sbac-flag-start-moderation-form .button, #sbac-flag-start-moderation-form .form-submit {
+  float: right;
+  margin-left: 30px;
+}

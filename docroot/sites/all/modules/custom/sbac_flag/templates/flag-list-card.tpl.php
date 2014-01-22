@@ -11,9 +11,11 @@
         <a href="<?php echo $node->path['alias']; ?>" ><?php echo htmlspecialchars_decode($node->title); ?></a>
       </div>
     <?php endif; ?>
-    <div class="flag-status">
-      <?php echo $node->eck_flag->display_status; ?>
-    </div>
-    <?php echo $node->eck_flag->button; ?>
+		<div class="row-right">
+    		<div class="flag-status">
+		      <?php echo $node->eck_flag->display_status; ?>
+		    </div>
+		    <?php echo $node->eck_flag->button; ?>
+		</div>
   </div>
 </div>
