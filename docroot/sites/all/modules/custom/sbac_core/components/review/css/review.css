@@ -439,65 +439,80 @@
 }
 /* line 455, ../sass/review.scss */
 #sbac-share-resource-form #edit-sharing-options h2 {
-  font-size: 1.3em;
-  color: #5a5a5a;
-  border-bottom: #000 1px solid;
-  padding-bottom: 10px;
-}
-/* line 463, ../sass/review.scss */
-#sbac-share-resource-form #edit-permanent-link-text {
+  border-bottom: 1px solid #62676E;
+  color: #04384E;
+  display: block;
+  font-size: 22px;
   font-weight: bold;
+  margin: 0;
+  text-transform: capitalize;
 }
 /* line 466, ../sass/review.scss */
+#sbac-share-resource-form #edit-permanent-link-text {
+  font-weight: bold;
+  font-size: 18px;
+  color: #000;
+  padding-top: 20px;
+}
+/* line 472, ../sass/review.scss */
+#sbac-share-resource-form #edit-permanent-link-text .sbac-private {
+  color: #62676E;
+  font-weight: normal;
+  margin-right: 10px;
+}
+/* line 478, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .foundicon-people {
   font-size: 120%;
   color: #aaa;
   vertical-align: middle;
 }
-/* line 472, ../sass/review.scss */
+/* line 484, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .foundicon-lock {
   color: #aaa;
   vertical-align: middle;
 }
-/* line 477, ../sass/review.scss */
+/* line 489, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text span {
   font-weight: normal;
 }
-/* line 481, ../sass/review.scss */
+/* line 493, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .description {
   margin-top: 10px;
   font-weight: normal;
+  color: #464B54;
+  font-size: 13px;
+  line-height: 1.2;
 }
-/* line 488, ../sass/review.scss */
+/* line 503, ../sass/review.scss */
 #sbac-share-resource-form #edit-temporary-link-text h2 {
   color: #5a5a5a;
   padding-bottom: 2px;
 }
-/* line 494, ../sass/review.scss */
+/* line 509, ../sass/review.scss */
 #sbac-share-resource-form input#sbac-permanent-link-text, #sbac-share-resource-form input#sbac-temporary-link-text {
   width: 65%;
   float: left;
   margin-right: 30px;
   padding-right: 30px;
 }
-/* line 501, ../sass/review.scss */
+/* line 516, ../sass/review.scss */
 #sbac-share-resource-form button#edit-permanent-link-button, #sbac-share-resource-form button#edit-temporary-link-button {
   width: 225px;
   margin-top: -3px;
 }
-/* line 506, ../sass/review.scss */
+/* line 521, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.active {
   opacity: 1;
 }
-/* line 510, ../sass/review.scss */
+/* line 525, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive {
   opacity: 0.5;
 }
-/* line 513, ../sass/review.scss */
+/* line 528, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive a {
   cursor: default;
 }
-/* line 516, ../sass/review.scss */
+/* line 531, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive a:hover {
   color: #FFF;
   background: #2aa549;
@@ -507,11 +522,11 @@
   -moz-box-shadow: inset 0px 1px 0px 0px #6dc088;
   box-shadow: inset 0px 1px 0px 0px #6dc088;
 }
-/* line 525, ../sass/review.scss */
+/* line 540, ../sass/review.scss */
 #sbac-share-resource-form .form-item-temporary-link {
   position: relative;
 }
-/* line 528, ../sass/review.scss */
+/* line 543, ../sass/review.scss */
 #sbac-share-resource-form .form-item-temporary-link .temp-link-clear {
   background: url("../images/icon-validation-fail.png") no-repeat 0 0;
   cursor: pointer;
@@ -526,38 +541,43 @@
 }
 
 /* Tag of Related resources */
-/* line 545, ../sass/review.scss */
+/* line 560, ../sass/review.scss */
 .related-resources {
   margin: 0 30px;
 }
-/* line 548, ../sass/review.scss */
+/* line 563, ../sass/review.scss */
 .related-resources h2 {
-  font-size: 1.3em;
-  color: #5a5a5a;
-  padding-bottom: 10px;
+  border-bottom: 1px solid #62676E;
+  color: #04384E;
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0;
+  text-transform: capitalize;
+  margin: 16px 0 15px;
 }
-/* line 554, ../sass/review.scss */
+/* line 574, ../sass/review.scss */
 .related-resources p {
-  font-size: 1em;
-  border-bottom: 1px solid #CCCCCC;
+  font-size: 16px;
+  margin-bottom: 30px;
 }
 
-/* line 560, ../sass/review.scss */
+/* line 580, ../sass/review.scss */
 .no-related-resources {
   padding: 50px 30px;
 }
-/* line 563, ../sass/review.scss */
+/* line 583, ../sass/review.scss */
 .no-related-resources h2 {
   text-align: center;
   color: #000;
 }
-/* line 567, ../sass/review.scss */
+/* line 587, ../sass/review.scss */
 .no-related-resources .instruction {
   text-align: center;
 }
 
 /* Sharing Options- Copy Link to Clipboard button */
-/* line 575, ../sass/review.scss */
+/* line 595, ../sass/review.scss */
 body.admin-menu #global-zeroclipboard-html-bridge {
   margin-top: -28px;
 }

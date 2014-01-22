@@ -993,7 +993,7 @@ a.sbac-grid-layout {
 }
 
 .node-resource {
-  @include hyphenation;
+ /* @include hyphenation;*/
   padding: 0 25px;
 
   #review {
@@ -1002,15 +1002,15 @@ a.sbac-grid-layout {
     padding: 0 20px;
   }
 
-  .section-container.auto > section .content {
-    border: none;
-    border-top: 1px solid #aaaaaa;
-    margin: 0 -45px;
-  }
+ .section-container.auto > section .content {
+     /*border: none;
+          border-top: 1px solid #aaaaaa;*/
+     margin: 0 -45px;
+   }
 
-  .section-container.auto > section:last-child .title, .section-container.auto > .section:last-child .title {
-    border-right: none;
-  }
+/*   .section-container.auto > section:last-child .title, .section-container.auto > .section:last-child .title {
+     border-right: none;
+   }*/
 
   .f-dropdown.open {
     top: 40px !important;
@@ -1026,8 +1026,6 @@ a.sbac-grid-layout {
   .resource-attributes {
     margin-bottom: 1em;
 		margin-top: 1.5em;
-		float: left;
-		clear: both;
 		
     p {
       color: #101010;
@@ -1035,12 +1033,14 @@ a.sbac-grid-layout {
 	    line-height: 1.5;
 	    list-style-type: none;
 	    margin: 0;
-	    padding: 0 0 5px;
-			float: left;
+	    padding: 0 0 7px;
 			clear: both;
+			display: block;
 			
 			&.divider {
 				border-top: 1px #CECECE solid;
+				max-width: 510px;
+				padding-top: 7px;
 			}
     }
 
@@ -1065,7 +1065,7 @@ a.sbac-grid-layout {
   }
 }
 
-.section-container.auto > section > .title, .section-container.auto > section > .title a {
+/*.section-container.auto > section > .title, .section-container.auto > section > .title a {
   //font-family: $body-font-family;
   font-size: emCalc(16px);
   background: none;
@@ -1089,7 +1089,7 @@ a.sbac-grid-layout {
   color: $white;
   font-size: emCalc(16px);
 }
-
+*/
 /* Modal */
 
 .ui-dialog {
@@ -1162,7 +1162,7 @@ a.sbac-grid-layout {
 .dialog-trigger-gk  {
   @include border-radius(6px); // border radius
   @include background-clip(padding-box); // prevents bg color from leaking outside the border
-  @include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%)); // gradient overlay
+ /* @include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%));*/ // gradient overlay
   @include text-shadow(1px, 1px, rgba(white,0.5));
   border: 1px solid #e0e0e0; // stroke
   background-color: #6fb9d5; // layer fill content
@@ -1358,8 +1358,8 @@ a.sbac-grid-layout {
 
 		.flex-control-nav {
 			padding-top: 15px;
-			bottom: -10px;
 			border-top: 1px solid #CCCCCC;
+			width: 840px;
 		}
 
 		.flex-direction-nav {
@@ -1382,11 +1382,8 @@ a.sbac-grid-layout {
 	}
 }
 
-/*Fixed tag of Related Resource in Firefox */
-@-moz-document url-prefix() {
-	.section-container.auto > section.active > .title a {
-		font-size: 0.95em !important;
-	}
+.section-related-resources {
+	padding-bottom: 20px;
 }
 
 

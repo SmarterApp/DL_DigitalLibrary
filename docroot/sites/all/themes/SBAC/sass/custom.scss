@@ -208,23 +208,34 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   }
 
 @mixin global-button {
-    @include text-shadow(0px 1px 0px #45613e);
-    @include border-radius(6px);
-    @include box-shadow(inset 0px 1px 0px 0px #6DC088);
-    display: inline-block;
-    font-size: 16px;
-    font-weight: normal;
-    color: #FFF;
-    background: #2aa549;
-    border: 1px solid #268a16;
-    padding: 8px 18px;
-    text-align: center;
+ /*@include text-shadow(0px 1px 0px #45613e);
+   @include border-radius(6px);
+   @include box-shadow(inset 0px 1px 0px 0px #6DC088);
+   display: inline-block;
+   font-size: 16px;
+   font-weight: normal;
+   color: #FFF;
+   background: #2aa549;
+   border: 1px solid #268a16;
+   padding: 8px 18px;
+   text-align: center;*/
+	@include border-radius(6px);
+	box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+	color: #FFFFFF;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: normal;
+	height: 34px;
+	line-height: 34px;
+	/*margin: 15px 30px 0 0;
+		min-width: 125px;*/
+	padding: 0 18px;
+	text-align: center;
 
-    &:hover {
-      @include transition(all 500ms ease);
-      background: #317f47;
-      color: white;
-  }
+  &:hover:not(.disabled) {
+    background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+	}
 
   &:focus {
     background: rgba(191, 216, 229, 1);
@@ -247,7 +258,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   background: #0084b0;
   border: 1px solid #0d6785;
   color: #FFF;
-  padding: 8px 18px;
+  /*padding: 8px 18px;*/
   font-family: $body-font-family;
 
   &:hover, &:focus  {
@@ -262,6 +273,30 @@ button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-co
 
 button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, button.sbac-cancel-blue, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
   @include global-button-negative;
+}
+
+button.green {
+    background-color: #2AA549;
+    border: 1px solid #268A16;
+}
+
+button.blue {
+    background-color: #0084B0;
+    border: 1px solid #0D6785;
+}
+
+button.red {
+    background-color: #8A1538;
+    border: 1px solid #793348;
+}
+
+button.gray {
+    background-color: #6E7379;
+    border: 1px solid #4D5457;
+}
+
+button.small, .button.small {
+	padding-top: 0;
 }
 
 .alert-box {
@@ -548,7 +583,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       top: 0;
       right: -32px;
     }
-
   }
 
   .button {
@@ -1244,31 +1278,100 @@ a.tabledrag-handle .handle {
   }
 }
 
-.section-container.auto > section > .title, .section-container.auto > section > .title a {
-  font-family: $body-font-family;
-  font-size: emCalc(16px);
-  font-weight: bold;
-  background: none;
-  color: #717880;
-  border: none;
-  border-right: 1px #ccc solid;
 
-  &:hover {
-    background: #b0e6f4;
-  }
+/* -----------------------------------------
+  Horizontal Tabs
+  ------------------------------------------ */
+.section-container.auto {
+	position: relative;
 }
 
-.section-container.auto > section > .title {
-  a {
-    padding: 15px 20px;
-    border-right: 1px solid #ccc;
+.section-container.auto:before {
+	background: none repeat scroll 0 0 #FFFFFF;
+	top: 45px;
+  box-shadow: 0 1px 6px 0 rgba(0, 95, 130, 0.75);
+  content: " ";
+  display: block;
+  height: 10px;
+  width: 100%;
+  left: -45px;
+  position: absolute;
+  width: 100%;
+	width: 930px;
+  z-index: 1;
+}
+
+.section-container.auto > section > .title a {
+  font-family: $body-font-family;
+  /*font-size: emCalc(16px);*/
+	font-size: 15px;
+  font-weight: bold;
+	color: #0583AC;
+	height: 48px;
+  line-height: 45px;
+  padding: 0 30px;
+  background: none repeat scroll 0 0 #FAFAFA;
+	border-left: 1px solid #FFFFFF;
+  border-right: 1px solid #CECECE;
+  border-top: 1px solid #CECECE;
+	white-space: nowrap;
+	cursor: pointer;
+
+  &:hover {
+		background-color: #FAFAFA;
+		background-image: -moz-linear-gradient(center top , rgba(0, 95, 130, 0) 20%, rgba(0, 95, 130, 0.1) 70%);
+    text-shadow: 0 1px 0 #FFFFFF
   }
+  
+	&:focus {
+		outline: 0;
+	}
 }
 
 .section-container.auto > section.active > .title a {
-  background: $teal;
-  color: $white;
-  font-size: emCalc(16px);
+		/*font-size: emCalc(16px);*/
+		background: none repeat scroll 0 0 #FFFFFF;
+		border-left: 1px solid #CECECE;
+    box-shadow: 0 1px 5px 0 rgba(0, 95, 130, 0.75);
+    color: #464B54;
+		height: 43px;
+    position: relative;
+    z-index: 2;
+}
+
+.section-container.auto > section.active > .title a:after {
+	background: none repeat scroll 0 0 #FFFFFF;
+	bottom: -6px;
+  content: " ";
+  display: block;
+  height: 10px;
+  left: 0;
+  padding: 0 20px;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+.section-container.auto > section.section-about-this-resource > .title a {
+    border-left: 1px solid #CECECE;
+}
+
+/* overwrite foundation/components/_section.scss */
+.section-container.auto > section > .title, .section-container.auto > .section > .title {
+	background-color: none;
+  border: none;	
+}
+
+.section-container.auto > section.active { 
+	display: block;
+}
+
+.section-container.auto > section > .content {
+	position: relative;
+	border: none;
+	top: 2px;
+	background-color: #fff !important;
+	z-index: 3;
 }
 
 /* Slider */
@@ -1278,10 +1381,12 @@ a.tabledrag-handle .handle {
 
 .flex-direction-nav a.flex-prev {
   background: url('../images/icons/arrow-left-large.png') no-repeat center center;
+	left: 0;
 }
 
 .flex-direction-nav a.flex-next {
   background: url('../images/icons/arrow-right-large.png') no-repeat 0 0;
+	right: 0;
 }
 
 .field-name-resource-slideshow .flexslider .flex-viewport ul li label {

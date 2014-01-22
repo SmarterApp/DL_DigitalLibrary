@@ -1042,13 +1042,11 @@ a.sbac-grid-layout {
 
 /* line 995, ../sass/sbac_resource.scss */
 .node-resource {
-  -ms-word-break: break-all;
-  word-break: break-all;
-  word-break: break-word;
-  -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  hyphens: auto;
+  /* @include hyphenation;*/
   padding: 0 25px;
+  /*   .section-container.auto > section:last-child .title, .section-container.auto > .section:last-child .title {
+       border-right: none;
+     }*/
 }
 /* line 999, ../sass/sbac_resource.scss */
 .node-resource #review {
@@ -1058,13 +1056,9 @@ a.sbac-grid-layout {
 }
 /* line 1005, ../sass/sbac_resource.scss */
 .node-resource .section-container.auto > section .content {
-  border: none;
-  border-top: 1px solid #aaaaaa;
+  /*border: none;
+       border-top: 1px solid #aaaaaa;*/
   margin: 0 -45px;
-}
-/* line 1011, ../sass/sbac_resource.scss */
-.node-resource .section-container.auto > section:last-child .title, .node-resource .section-container.auto > .section:last-child .title {
-  border-right: none;
 }
 /* line 1015, ../sass/sbac_resource.scss */
 .node-resource .f-dropdown.open {
@@ -1081,23 +1075,23 @@ a.sbac-grid-layout {
 .node-resource .resource-attributes {
   margin-bottom: 1em;
   margin-top: 1.5em;
-  float: left;
-  clear: both;
 }
-/* line 1032, ../sass/sbac_resource.scss */
+/* line 1030, ../sass/sbac_resource.scss */
 .node-resource .resource-attributes p {
   color: #101010;
   font-size: 13px;
   line-height: 1.5;
   list-style-type: none;
   margin: 0;
-  padding: 0 0 5px;
-  float: left;
+  padding: 0 0 7px;
   clear: both;
+  display: block;
 }
-/* line 1042, ../sass/sbac_resource.scss */
+/* line 1040, ../sass/sbac_resource.scss */
 .node-resource .resource-attributes p.divider {
   border-top: 1px #CECECE solid;
+  max-width: 510px;
+  padding-top: 7px;
 }
 /* line 1047, ../sass/sbac_resource.scss */
 .node-resource .resource-attributes span {
@@ -1122,31 +1116,31 @@ a.sbac-grid-layout {
   border-radius: 12px 12px 0 0;
 }
 
-/* line 1068, ../sass/sbac_resource.scss */
-.section-container.auto > section > .title, .section-container.auto > section > .title a {
+/*.section-container.auto > section > .title, .section-container.auto > section > .title a {
+  //font-family: $body-font-family;
   font-size: emCalc(16px);
   background: none;
   color: #717880;
   border: none;
-}
-/* line 1075, ../sass/sbac_resource.scss */
-.section-container.auto > section > .title:hover, .section-container.auto > section > .title a:hover {
-  background: none;
+
+  &:hover {
+    background: none;
+  }
 }
 
-/* line 1081, ../sass/sbac_resource.scss */
-.node-resource .section-container.auto > section > .title a {
-  padding: 10px 20px;
-  border-right: 1px solid #ccc;
+.node-resource {
+  .section-container.auto > section > .title a {
+    padding: 10px 20px;
+    border-right: 1px solid #ccc;
+  }
 }
 
-/* line 1087, ../sass/sbac_resource.scss */
 .section-container.auto > section.active > .title a {
-  background: #0085ad;
-  color: white;
+  background: $teal;
+  color: $white;
   font-size: emCalc(16px);
 }
-
+*/
 /* Modal */
 /* line 1096, ../sass/sbac_resource.scss */
 .ui-dialog .ajax-progress .throbber {
@@ -1229,11 +1223,7 @@ a.sbac-grid-layout {
   -webkit-background-clip: padding;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #c9c9c9), color-stop(26.46%, #cfcfcf), color-stop(49.51%, #e1e1e1), color-stop(75%, #f1f1f1), color-stop(99%, #fbfbfb), color-stop(100%, #fbfbfb));
-  background-image: -webkit-linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%);
-  background-image: -moz-linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%);
-  background-image: -o-linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%);
-  background-image: linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%);
+  /* @include background-image(linear-gradient(bottom, #c9c9c9 0%, #cfcfcf 26.46%, #e1e1e1 49.51%, #f1f1f1 75%, #fbfbfb 99%, #fbfbfb 100%));*/
   text-shadow: 1px, 1px, rgba(255, 255, 255, 0.5);
   border: 1px solid #e0e0e0;
   background-color: #6fb9d5;
@@ -1414,8 +1404,8 @@ a.sbac-grid-layout {
 /* line 1359, ../sass/sbac_resource.scss */
 .node-resource .resources-container .flex-control-nav {
   padding-top: 15px;
-  bottom: -10px;
   border-top: 1px solid #CCCCCC;
+  width: 840px;
 }
 /* line 1366, ../sass/sbac_resource.scss */
 .node-resource .resources-container .flex-direction-nav .flex-next, .node-resource .resources-container .flex-direction-nav .flex-prev {
@@ -1432,16 +1422,13 @@ a.sbac-grid-layout {
   padding-bottom: 30px !important;
 }
 
-/*Fixed tag of Related Resource in Firefox */
-@-moz-document url-prefix() {
-  /* line 1387, ../sass/sbac_resource.scss */
-  .section-container.auto > section.active > .title a {
-    font-size: 0.95em !important;
-  }
+/* line 1385, ../sass/sbac_resource.scss */
+.section-related-resources {
+  padding-bottom: 20px;
 }
 
 /*Resources search filter button*/
-/* line 1394, ../sass/sbac_resource.scss */
+/* line 1391, ../sass/sbac_resource.scss */
 #sbac-search-filter-button:before {
   background-image: url("../images/icon-buttonAccept.png");
   background-position: center center;
@@ -1454,24 +1441,24 @@ a.sbac-grid-layout {
   width: 18px;
 }
 
-/* line 1405, ../sass/sbac_resource.scss */
+/* line 1402, ../sass/sbac_resource.scss */
 #sbac-search-filter-button.is-edit:before {
   background-image: url("../images/icon-buttonEdit.png");
   width: 17px;
 }
 
-/* line 1409, ../sass/sbac_resource.scss */
+/* line 1406, ../sass/sbac_resource.scss */
 #edit-reset-filters {
   background-color: #8A1538;
   border: 1px solid #793348;
 }
 
-/* line 1414, ../sass/sbac_resource.scss */
+/* line 1411, ../sass/sbac_resource.scss */
 #edit-reset-filters:hover {
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
-/* line 1418, ../sass/sbac_resource.scss */
+/* line 1415, ../sass/sbac_resource.scss */
 #edit-reset-filters:before {
   background-image: url("../images/icon-buttonReset.png");
   background-position: center center;
@@ -1485,24 +1472,24 @@ a.sbac-grid-layout {
 }
 
 /*Links that Open in a New Window for Glossary of Terms*/
-/* line 1432, ../sass/sbac_resource.scss */
+/* line 1429, ../sass/sbac_resource.scss */
 .glossary-link-container {
   text-align: right;
   padding-bottom: 5px;
   margin-right: 35px;
 }
-/* line 1437, ../sass/sbac_resource.scss */
+/* line 1434, ../sass/sbac_resource.scss */
 .glossary-link-container a {
   border-bottom: 1px solid #0583AC;
   color: #0583AC;
   font-size: 13px;
 }
-/* line 1443, ../sass/sbac_resource.scss */
+/* line 1440, ../sass/sbac_resource.scss */
 .glossary-link-container a:hover {
   border-bottom: 1px solid #8A1538;
   color: #8A1538;
 }
-/* line 1448, ../sass/sbac_resource.scss */
+/* line 1445, ../sass/sbac_resource.scss */
 .glossary-link-container .glossary-link:after {
   background-image: url("../images/icon-newWindow.png");
   background-position: center center;
@@ -1515,12 +1502,12 @@ a.sbac-grid-layout {
 }
 
 /*Categories toggle*/
-/* line 1461, ../sass/sbac_resource.scss */
+/* line 1458, ../sass/sbac_resource.scss */
 #sbac-search-digital-library-resources-form, #sbac-search-my-resources-form, #sbac-search-resource-review-form {
   position: relative;
 }
 
-/* line 1465, ../sass/sbac_resource.scss */
+/* line 1462, ../sass/sbac_resource.scss */
 a.category-hide {
   position: absolute;
   right: 20px;
@@ -1529,18 +1516,18 @@ a.category-hide {
   color: #006082;
 }
 
-/* line 1473, ../sass/sbac_resource.scss */
+/* line 1470, ../sass/sbac_resource.scss */
 a.category-hide:hover {
   text-decoration: underline;
   color: #006082;
 }
 
-/* line 1478, ../sass/sbac_resource.scss */
+/* line 1475, ../sass/sbac_resource.scss */
 a.category-hide:focus {
   color: #006082;
 }
 
-/* line 1482, ../sass/sbac_resource.scss */
+/* line 1479, ../sass/sbac_resource.scss */
 .category-hide.active:after {
   background-image: url("../images/icon-toggle-up.png");
   background-position: center center;
@@ -1552,7 +1539,7 @@ a.category-hide:focus {
   width: 10px;
 }
 
-/* line 1493, ../sass/sbac_resource.scss */
+/* line 1490, ../sass/sbac_resource.scss */
 .category-hide:after {
   background-image: url("../images/icon-toggle-down.png");
   background-position: center center;
@@ -1565,13 +1552,13 @@ a.category-hide:focus {
 }
 
 /*About This Resource*/
-/* line 1505, ../sass/sbac_resource.scss */
+/* line 1502, ../sass/sbac_resource.scss */
 #profile-wrap {
   margin: 0 30px;
   padding-bottom: 20px;
   float: left;
 }
-/* line 1510, ../sass/sbac_resource.scss */
+/* line 1507, ../sass/sbac_resource.scss */
 #profile-wrap h2 {
   color: #000000;
   display: block;
@@ -1582,7 +1569,7 @@ a.category-hide:focus {
   padding: 0 0 10px;
   text-transform: capitalize;
 }
-/* line 1521, ../sass/sbac_resource.scss */
+/* line 1518, ../sass/sbac_resource.scss */
 #profile-wrap .title-tags {
   display: block;
   margin: 0;
@@ -1597,16 +1584,16 @@ a.category-hide:focus {
   letter-spacing: 1px;
   border-bottom: 1px solid #CECECE;
 }
-/* line 1536, ../sass/sbac_resource.scss */
+/* line 1533, ../sass/sbac_resource.scss */
 #profile-wrap .item-list {
   margin-bottom: 20px;
   line-height: 1.6;
 }
-/* line 1541, ../sass/sbac_resource.scss */
+/* line 1538, ../sass/sbac_resource.scss */
 #profile-wrap ul {
   margin: 0;
 }
-/* line 1544, ../sass/sbac_resource.scss */
+/* line 1541, ../sass/sbac_resource.scss */
 #profile-wrap ul li {
   background-color: #F2F2F2;
   border-radius: 2px;
@@ -1618,7 +1605,7 @@ a.category-hide:focus {
 }
 
 /*Adjust the cover profile */
-/* line 1559, ../sass/sbac_resource.scss */
+/* line 1556, ../sass/sbac_resource.scss */
 .sbac-resource-container .more-less .more, .sbac-resource-container .more-less .less {
   background-color: #63666A;
   border-radius: 5px;
@@ -1630,7 +1617,7 @@ a.category-hide:focus {
   padding: 0 12px;
   text-align: center;
 }
-/* line 1571, ../sass/sbac_resource.scss */
+/* line 1568, ../sass/sbac_resource.scss */
 .sbac-resource-container .more-less .more:after, .sbac-resource-container .more-less .less:after {
   background-image: url("../images/arrowDown.svg");
   background-position: center center;
@@ -1643,12 +1630,12 @@ a.category-hide:focus {
   vertical-align: middle;
   width: 10px;
 }
-/* line 1584, ../sass/sbac_resource.scss */
+/* line 1581, ../sass/sbac_resource.scss */
 .sbac-resource-container .more-less .less:after {
   background-image: url("../images/arrowUp.svg");
 }
 
-/* line 1591, ../sass/sbac_resource.scss */
+/* line 1588, ../sass/sbac_resource.scss */
 p.sbac-resource-required {
   margin-top: 25px;
   border-top: 1px #ddd solid;
@@ -1656,7 +1643,7 @@ p.sbac-resource-required {
   clear: both;
 }
 
-/* line 1597, ../sass/sbac_resource.scss */
+/* line 1594, ../sass/sbac_resource.scss */
 p.sbac-resource-required:before {
   font-size: 150%;
   color: red;
