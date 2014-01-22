@@ -547,32 +547,37 @@
 }
 /* line 563, ../sass/review.scss */
 .related-resources h2 {
-  font-size: 1.3em;
-  color: #5a5a5a;
-  padding-bottom: 10px;
+  border-bottom: 1px solid #62676E;
+  color: #04384E;
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0;
+  text-transform: capitalize;
+  margin: 16px 0 15px;
 }
-/* line 569, ../sass/review.scss */
+/* line 574, ../sass/review.scss */
 .related-resources p {
-  font-size: 1em;
-  border-bottom: 1px solid #CCCCCC;
+  font-size: 16px;
+  margin-bottom: 30px;
 }
 
-/* line 575, ../sass/review.scss */
+/* line 580, ../sass/review.scss */
 .no-related-resources {
   padding: 50px 30px;
 }
-/* line 578, ../sass/review.scss */
+/* line 583, ../sass/review.scss */
 .no-related-resources h2 {
   text-align: center;
   color: #000;
 }
-/* line 582, ../sass/review.scss */
+/* line 587, ../sass/review.scss */
 .no-related-resources .instruction {
   text-align: center;
 }
 
 /* Sharing Options- Copy Link to Clipboard button */
-/* line 590, ../sass/review.scss */
+/* line 595, ../sass/review.scss */
 body.admin-menu #global-zeroclipboard-html-bridge {
   margin-top: -28px;
 }
