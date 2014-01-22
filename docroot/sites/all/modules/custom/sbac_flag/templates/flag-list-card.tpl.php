@@ -12,7 +12,11 @@
       </div>
     <?php endif; ?>
 		<div class="row-right">
-    		<div class="flag-status">
+        <?php $class = ''; ?>
+        <?php if (isset($node->eck_flag->display_status_css)): ?>
+          <?php $class = 'urgent'; ?>
+        <?php endif; ?>
+    		<div class="flag-status <?php echo $class; ?>">
 		      <?php echo $node->eck_flag->display_status; ?>
 		    </div>
 		    <?php echo $node->eck_flag->button; ?>

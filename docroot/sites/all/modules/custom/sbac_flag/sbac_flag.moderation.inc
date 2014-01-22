@@ -94,6 +94,7 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
 
   if ($node->eck_flag->urgent) {
     $node->eck_flag->display_status = 'Needs Urgent Moderation';
+    $node->eck_flag->display_status_css = 'urgent';
   }
   else {
     $node->eck_flag->display_status = 'Needs Moderation';
