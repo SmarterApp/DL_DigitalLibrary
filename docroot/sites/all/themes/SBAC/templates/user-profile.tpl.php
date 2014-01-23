@@ -90,21 +90,21 @@
         $grade = $subject = $sp = '';
         if(isset($user_profile['field_grade_level_s_']['#items']) && $user_profile['field_grade_level_s_']['#items']) {
           foreach ($user_profile['field_grade_level_s_']['#items'] as $key => $grade) {
-            $grades[] = str_replace("&nbsp;", '', drupal_render($user_profile['field_grade_level_s_'][$key]));
+            $grades[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_grade_level_s_'][$key])) . '</span>';
             //print_r($key);
           }
           $grade = implode(', ', $grades);
         }
         if(isset($user_profile['field_subject_s_']['#items']) && $user_profile['field_subject_s_']['#items']) {
           foreach ($user_profile['field_subject_s_']['#items'] as $key1 => $subject) {
-            $subjects[] = str_replace("&nbsp;", '', drupal_render($user_profile['field_subject_s_'][$key1]));
+            $subjects[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_subject_s_'][$key1])) . '</span>';
             //print_r($key);
           }
           $subject = implode(', ', $subjects);
         }
         if(isset($user_profile['field_special_populations']['#items']) && $user_profile['field_special_populations']['#items']) {
           foreach ($user_profile['field_special_populations']['#items'] as $key2 => $sp) {
-            $sps[] = str_replace("&nbsp;", '', drupal_render($user_profile['field_special_populations'][$key2]));
+            $sps[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_special_populations'][$key2])) . '</span>';
             //print_r($key);
           }
           $sp = implode(', ', $sps);
