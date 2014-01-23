@@ -2595,22 +2595,53 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
   $form = array();
   // Get default values from sessions
   // ======== ======== ======== ======== ======== ========
-  $default = array('dl-most-viewed');
+  $default = 'dl-most-viewed';
   //   code goes here.
   // ======== ======== ======== ======== ======== ========
 
   $options = array(
-    'dl-newest' => t('Newest'),
-    'dl-most-viewed' => t('Most Viewed'),
-    'dl-highest-rated' => t('Highest Rated'),
+    'dl-newest'         => t('Newest'),
+    'dl-most-viewed'    => t('Most Viewed'),
+    'dl-highest-rated'  => t('Highest Rated'),
   );
 
-  $form['sort_order'] = array(
-    '#type' => 'select',
-    '#title' => t(''),
-    '#options' => $options,
-    '#default_value' => $default,
+  // Ajax submitted. Set Text if selected.
+  if (isset($form_state['values']['dl_sort_order'])) {
+    $new_value_key = $form_state['values']['dl_sort_order'];
+    $old_value_text = $options[$new_value_key];
+    $options[$new_value_key] = t('Sort by: ' . $old_value_text);
+  } else {
+    $options[$default] = t('Sort by: ' . $options[$default]);
+  }
+
+  // Needs to ajax submit to set the session variable that tracks default state.
+  $form['dl_sort_order'] = array(
+    '#prefix'         => '<div id="form-wrapper-dl-sort-element">',
+    '#suffix'         => '</div>',
+    '#type'           => 'select',
+    '#title'          => t(''),
+    '#required'       => FALSE,
+    '#options'        => $options,
+    '#default_value'  => $default,
+    '#ajax'           => array(
+      'callback'  => '_sbac_resource_digital_library_sort_form__ajax__change',
+      'event'     => 'change',
+      'wrapper'   => 'form-wrapper-dl-sort-element',
+      'progress'  => array('type' => 'none'),
+    )
   );
 
   return $form;
+}
+
+function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_state) {
+  // Set session variable here.
+  return $form['dl_sort_order'];
+
+  // Ctools ajax implementation using commands.
+  // ctools_include('ajax');
+  // $commands = array();
+  // $commands[] = ctools_ajax_command_reload();
+  // print ajax_render($commands);
+  // exit;
 }

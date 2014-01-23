@@ -1975,7 +1975,7 @@ function sbac_resource_block_view($delta = '') {
       break;
     case 'sbac_resource_dl_sort_form':
       $block['subject'] = NULL;
-      $block['content'] = sbac_resource_digital_library_sort_form();
+      $block['content'] = drupal_get_form('sbac_resource_digital_library_sort_form');
       break;
   }
   return $block;
