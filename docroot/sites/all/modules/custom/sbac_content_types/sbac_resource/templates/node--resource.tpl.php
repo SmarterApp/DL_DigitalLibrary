@@ -121,7 +121,7 @@
   <?php endif; ?>
 
   <?php if (isset($flag['resource']) && count($flag) > 0): ?>
-    <div class="resource-flag-information">
+    <div class="resource-flag-information <?php echo $flag['urgent_css']; ?>">
       <div class="flag-status"><?php echo $flag['status']; ?></div>
       <div class="flag-count"><?php echo $flag['count_message']; ?></div>
       <div class="flag-button"><?php echo $flag['button']; ?></div>
@@ -133,9 +133,11 @@
       Review
       <?php echo $flag['review']; ?>
     </div>
-    <div class="flag-status"><?php echo $flag['status']; ?></div>
-    <div class="flag-count"><?php echo $flag['count_message']; ?></div>
-    <div class="flag-button"><?php echo $flag['button']; ?></div>
+    <div class="resource-flag-information <?php echo $flag['urgent_css']; ?>">
+      <div class="flag-status"><?php echo $flag['status']; ?></div>
+      <div class="flag-count"><?php echo $flag['count_message']; ?></div>
+      <div class="flag-button"><?php echo $flag['button']; ?></div>
+    </div>
   <?php endif; ?>
 
   <?php if (isset($content['review']) && $content['review']): ?>

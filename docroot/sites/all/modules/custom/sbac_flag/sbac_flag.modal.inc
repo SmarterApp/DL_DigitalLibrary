@@ -287,13 +287,15 @@ function sbac_flag_resolve_all_flags_modal($js = FALSE) {
         // resolve all the flags
         sbac_flag_resolve_all_flags($node);
 
-        // notify contributor of the resource
-        if ($task = taskit_get_object('resolved_all_flags')) {
-          $task->addVisibility($task::VISIBILITY_USER);
-          $task->addEntity('node', $node->nid);
-          $task->addOwningUser($node->uid);
-          $task->addTriggeringUser($user->uid);
-          $task->save();
+        if ($form_state['changes-made'] == TRUE) {
+          // notify contributor of the resource
+          if ($task = taskit_get_object('resolved_all_flags')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addEntity('node', $node->nid);
+            $task->addOwningUser($node->uid);
+            $task->addTriggeringUser($user->uid);
+            $task->save();
+          }
         }
 
         $output[] = ctools_ajax_command_redirect('moderation');

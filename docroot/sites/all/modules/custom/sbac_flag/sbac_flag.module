@@ -356,9 +356,11 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
     (count($flags) == 1 ? $vars['flag']['count_message'] .= ' flag' : $vars['flag']['count_message'] .= ' flags');
     // determine urgent flags.
     $urgent_flags = sbac_flag_get_all_urgent_flags($flags);
+    $vars['flag']['urgent_css'] = '';
     if ($urgent_flags) {
       $vars['flag']['urgent_total'] = count($urgent_flags);
       $vars['flag']['count_message'] .= ' (' . count($urgent_flags) . ' urgent)';
+      $vars['flag']['urgent_css'] = 'urgent';
     }
 
     if ($_GET['flag'] != 'resolve-resource-review-flags') {
@@ -408,9 +410,11 @@ function sbac_flag_create_resource_view_output(&$vars, $flags) {
   (count($flags) == 1 ? $vars['flag']['count_message'] .= ' flag' : $vars['flag']['count_message'] .= ' flags');
   // determine urgent flags
   $urgent_flags = sbac_flag_get_all_urgent_flags($flags);
+  $vars['flag']['urgent_css'] = '';
   if ($urgent_flags) {
     $vars['flag']['urgent_total'] = count($urgent_flags);
     $vars['flag']['count_message'] .= ' (' . count($urgent_flags) . ' urgent)';
+    $vars['flag']['urgent_css'] = 'urgent';
   }
   // determine status of resource
   $status = sbac_flag_determine_status_for_resource($flags);
