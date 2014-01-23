@@ -795,7 +795,7 @@ function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_sta
   $node = node_load($_GET['nid']);
   $categories = array();
   if ($node) {
-    $flags = sbac_flag_get_all_flags_for_node($node, 'review');
+    $flags = sbac_flag_get_all_flags_for_node($node, 'review', $form_state['review']);
     $categories = sbac_flag_list_flag_categories($flags, 'review');
   }
 
@@ -881,7 +881,7 @@ function sbac_flag_remove_resource_review_form_validate(&$form, &$form_state) {
 function sbac_flag_remove_resource_review_form_submit(&$form, &$form_state) {
   $node = node_load($form_state['nid']);
   if ($node) {
-    $flags = sbac_flag_get_all_flags_for_node($node, 'review');
+    $flags = sbac_flag_get_all_flags_for_node($node, 'review', $form_state['review']);
     if ($flags) {
       foreach ($flags as $flag) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
