@@ -1026,7 +1026,7 @@ a.sbac-grid-layout {
   .resource-attributes {
     margin-bottom: 1em;
 		margin-top: 1.5em;
-		
+
     p {
       color: #101010;
 	    font-size: 13px;
@@ -1036,7 +1036,7 @@ a.sbac-grid-layout {
 	    padding: 0 0 7px;
 			clear: both;
 			display: block;
-			
+
 			&.divider {
 				border-top: 1px #CECECE solid;
 				max-width: 510px;
@@ -1503,7 +1503,7 @@ a.category-hide:focus {
   margin: 0 30px;
   padding-bottom: 20px;
 	float: left;
-	
+
 	h2 {
 		color: #000000;
 		display: block;
@@ -1599,3 +1599,9 @@ p.sbac-resource-required:before {
 	margin-right: 5px;
 }
 
+div.block-sbac-resource-sbac-resource-dl-sort-form {
+  float:left;
+  height:60px;
+  margin-top:-16px;
+  margin-left:26px;
+}

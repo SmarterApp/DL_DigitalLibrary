@@ -1907,6 +1907,16 @@ function sbac_resource_block_info() {
     'status' => 1,
   );
 
+  $blocks['sbac_resource_dl_sort_form'] = array(
+    'info' => t('Sort'),
+    'region' => 'sub-header',
+    'pages' => "digital-library-resources*\n",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -21,
+    'status' => 1,
+  );
+
   return $blocks;
 }
 
@@ -1962,6 +1972,10 @@ function sbac_resource_block_view($delta = '') {
         $previous_url = str_replace($base_url, '', $previous_url);
       }
       $block['content'] = '<a onclick="window.history.back(); return false;" href="' . $previous_url . '" class="button">Back</a>';
+      break;
+    case 'sbac_resource_dl_sort_form':
+      $block['subject'] = NULL;
+      $block['content'] = sbac_resource_digital_library_sort_form();
       break;
   }
   return $block;

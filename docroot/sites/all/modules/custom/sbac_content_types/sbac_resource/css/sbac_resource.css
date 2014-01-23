@@ -1651,3 +1651,11 @@ p.sbac-resource-required:before {
   vertical-align: middle;
   margin-right: 5px;
 }
+
+/* line 1602, ../sass/sbac_resource.scss */
+div.block-sbac-resource-sbac-resource-dl-sort-form {
+  float: left;
+  height: 60px;
+  margin-top: -16px;
+  margin-left: 26px;
+}

@@ -2590,3 +2590,27 @@ function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
 
   return $duplicates;
 }
+
+function sbac_resource_digital_library_sort_form($form, $form_state) {
+  $form = array();
+  // Get default values from sessions
+  // ======== ======== ======== ======== ======== ========
+  $default = array('dl-most-viewed');
+  //   code goes here.
+  // ======== ======== ======== ======== ======== ========
+
+  $options = array(
+    'dl-newest' => t('Newest'),
+    'dl-most-viewed' => t('Most Viewed'),
+    'dl-highest-rated' => t('Highest Rated'),
+  );
+
+  $form['sort_order'] = array(
+    '#type' => 'select',
+    '#title' => t(''),
+    '#options' => $options,
+    '#default_value' => $default,
+  );
+
+  return $form;
+}
