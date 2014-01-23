@@ -34,6 +34,12 @@
         $('#edit-save-continue').mousedown();
         return false;
       });
+
+      $('.sbac-flag-remove-resource').click( function() {
+        $('#chosen-flag-option').val(2);
+        $('#edit-save-continue').mousedown();
+        return false;
+      });
     }
   };
 

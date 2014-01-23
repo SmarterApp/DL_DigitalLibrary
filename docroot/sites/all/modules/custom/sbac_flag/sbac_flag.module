@@ -925,6 +925,17 @@ function sbac_flag_resolve_all_flags($node) {
 }
 
 /**
+ * Removes the flags for this resource.
+ *
+ * Doesn't actually remove, just sets to resolved.
+ *
+ * @param $node
+ */
+function sbac_flag_remove_resource($node) {
+  db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 2, ':nid' => $node->nid, ':type' => 'resource'));
+}
+
+/**
  * Returns the status of the resource.
  *
  * @param $flags

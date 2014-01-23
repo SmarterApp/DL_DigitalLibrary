@@ -437,7 +437,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     );
   }
   else if ($sbac_flag) {
-    if ($chosen_option == 1) {
+    if ($chosen_option == 1) { // resolve all flags.
       $form['run_js'] = array(
         '#markup' => '<script>jQuery("#sbac-flag-resolve-all-flags").click();</script>',
       );
