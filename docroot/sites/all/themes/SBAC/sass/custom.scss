@@ -311,6 +311,10 @@ button.small, .button.small {
 	padding-top: 0;
 }
 
+button:hover, button:focus, .button:hover, .button:focus {
+	background-color: #0084B0 !important;
+}
+
 .alert-box {
   @include border-radius (12px);
   padding: 30px;
@@ -614,10 +618,12 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     height: auto;
 
     &:hover, &:focus, &.form-submit.ajax-processed {
-      color: rgba(255, 255, 255, 1);
-      background: rgba(0, 133, 173, 1);
-      text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
-    }
+			 background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+		} /*{
+          color: rgba(255, 255, 255, 1);
+          background: rgba(0, 133, 173, 1);
+          text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+        }*/
   }
 
   .user-nav {
