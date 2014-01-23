@@ -67,6 +67,8 @@
 		
 				.flag-status {
 					padding: 15px 60px 30px 10px;
+					
+					&.urgent {color: #ff0000;}
 				}
 				
 				a {
@@ -91,7 +93,95 @@
 	}
 }
 
+/*Moderation resource detail view page*/
+.node-type-resource {
+	
+	.flag-resource-container {
+		margin: 0 30px;
+		
+		.resource-flag-category {
+			border-bottom: 1px solid #62676E;
+			padding: 20px 0 5px;
+			margin-bottom: 10px;
+			
+			.resource-category {
+				color: #04384E;
+		    display: block;
+		    font-size: 22px;
+		    font-weight: bold;
+		    margin: 0;
+		    padding: 0;
+		    text-transform: capitalize;
+				display: inline-block;
+			}
+			
+			.resource-count {
+				display: inline-block;
+				margin-left: 10px;
+				font-size: 13px;
+				font-style: italic;
+		    color:  #909398;			
+			}
+		}
+		
+		.flag-row {
+			padding: 10px 0 20px;
+			border-bottom: 1px #cecece solid;
+			margin-bottom: 20px;
+			
+			.flag-user {
+				padding-bottom: 15px;
+			}
+		}
+	}
+	
+	.resource-flag-information {
+	  background-color: #F2F2F2;
+    border: 7px solid #FFFFFF;
+    box-shadow: 0 1px 4px 0 rgba(4, 56, 78, 0.3);
+    color: #464B54;
+    margin-top: 15px;
+    padding: 10px 20px 15px;
+    position: relative;
+		font-size: 16px;
+		line-height: 1.5;
+		margin-bottom: 30px;
+		position: relative;
 
+		.flag-status {
+			color: #006082;
+		 	font-weight: bold;
+	    padding-top: 0px;
+			font-size: 16px;
+		}
+		
+		.flag-count {padding-top: 3px;}
+		
+		.flag-button {
+			position: absolute;
+			top: 22px;
+			right: 20px;
+			a {
+				margin-bottom: 0;
+				
+			}
+		} 
+	}
+	
+	.resource-flag-information.urgent {
+	    background-color: #FDF2B1;
+	    color: #101010;
+	
+			.flag-status {color: #8A1538;}
+	}
+}
 
+.node-type-resource {
+	
+	.entity-review.view-mode-full {
+	  border-bottom: none;
+		padding-top: 0;
+	}
+}
 
 	 
