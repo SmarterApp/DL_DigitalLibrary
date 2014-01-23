@@ -287,6 +287,7 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
 function sbac_flag_preprocess_node(&$vars) {
   if ($vars['type'] == 'resource') {
     if (isset($_GET['flag']) && $_GET['flag'] == 'view-resource-flags') {
+      drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.css');
       // get status, get amount of flags, get urgent amount of flags, produce start moderation button
       $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'resource');
       if ($flags) {
@@ -295,6 +296,7 @@ function sbac_flag_preprocess_node(&$vars) {
     }
 
     if (isset($_GET['flag']) && ($_GET['flag'] == 'view-resource-review-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
+      drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.css');
       $review = $_GET['review'];
       $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'review', $_GET['review']);
       sbac_flag_create_resource_review_view_output($vars, $flags, $review);
@@ -313,6 +315,7 @@ function sbac_flag_preprocess_page(&$vars) {
     if ($node && $node->type == 'resource') {
       $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
       if ($flags) {
+        drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.css');
         $vars['flag']['resource'] = TRUE;
         $vars['flag']['total'] = count($flags);
         $vars['flag']['count_message'] = count($flags);
