@@ -10435,3 +10435,48 @@ a.tabledrag-handle .handle {
 #sbac-help-title {
   text-align: center;
 }
+
+/*Add Selected Standards - comfirmation modal*/
+/* line 2890, ../sass/custom.scss */
+#alignment-page .standards-browser .confirm-buttons {
+  padding-bottom: 25px;
+}
+/* line 2894, ../sass/custom.scss */
+#alignment-page .standards-browser #cmod-confirm-cancel.button, #alignment-page .standards-browser #cmod-confirm-submit.button {
+  width: auto !important;
+  margin: 0 10px;
+  background: none;
+  border-radius: 6px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: normal;
+  height: 34px;
+  line-height: 34px;
+  margin: 0 30px 0 0;
+  min-width: 125px;
+  padding: 0 18px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+/* line 2913, ../sass/custom.scss */
+#alignment-page .standards-browser #cmod-confirm-cancel.button {
+  background-color: #8A1538;
+  border: 1px solid #793348;
+}
+/* line 2917, ../sass/custom.scss */
+#alignment-page .standards-browser #cmod-confirm-cancel.button:hover {
+  background-color: #8A1538 !important;
+  background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+}
+/* line 2923, ../sass/custom.scss */
+#alignment-page .standards-browser #cmod-confirm-submit.button {
+  background-color: #0084B0;
+  border: 1px solid #0D6785;
+}
+/* line 2927, ../sass/custom.scss */
+#alignment-page .standards-browser #cmod-confirm-submit.button:hover {
+  background-color: #0084B0 !important;
+  background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+}
