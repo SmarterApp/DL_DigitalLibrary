@@ -100,6 +100,12 @@ DateDropDown = (function($, $which) {
 
   // DOM ready.
   $(function() {
+    // Move the entire From Date and To Date label into one label so that screen readers speak the entire label.
+    $('label[for=from-date' + $which + ']').remove();
+    $('label[for=to-date' + $which + ']').remove();
+    $('label[for=from-date' + $which + '-datepicker-popup-0]').text('From Date');
+    $('label[for=to-date' + $which + '-datepicker-popup-0]').text('To Date');
+
     var fieldset = '#edit-date-range' + $which;
     hideCustomDateFieldset(fieldset);
     $(fieldset).change(function(e) {

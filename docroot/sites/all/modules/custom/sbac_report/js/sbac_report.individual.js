@@ -49,6 +49,14 @@
 
   Drupal.behaviors.sbac_report_individual = {
     attach: function (context, settings) {
+      // Associate the "Choose a state" label with the text field so that screen readers speak the label.
+      var state_label = $('label[for=edit-state]');
+      var state_textfield = $('#edit_state_chzn input[type=text]');
+      if (state_label.length && state_textfield.length) {
+        state_label.attr('for', 'edit_state_chzn_text');
+        state_textfield.attr('id', 'edit_state_chzn_text');
+      }
+
       var dialog = $('.dialog_sbac_report_individual_modal_form');
       if (dialog.length) {
         var slider_width = 572;
