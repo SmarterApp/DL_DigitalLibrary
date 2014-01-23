@@ -19,7 +19,6 @@
         });
       }
 
-
       // Associate the "Choose a state" label with the text field so that screen readers speak the label.
       updateLabel('edit-state--2', 'edit_state__2_chzn');
       // Associate the "Choose User Groups" label with the text field so that screen readers speak the label.
@@ -27,13 +26,18 @@
       // Associate the "Filter for SNE or SLT Members" label with the text field so that screen readers speak the label.
       updateLabel('edit-sne-slt-filter', 'edit_sne_slt_filter_chzn');
 
-      // Add a title attribute to the delete tags on the User Activity tab.
-      $.each(['#edit_state__2_chzn', '#edit_user_group_dropdown_chzn', '#edit_sne_slt_filter_chzn'], function(i, v) {
+      $.each(['#edit_state__2_chzn', '#edit_user_group_dropdown_chzn', '#edit_sne_slt_filter_chzn',
+              '#edit_resource_type_dropdown_chzn', '#edit_resource_status_dropdown_chzn', '#edit_resource_subject_dropdown_chzn',
+              '#edit_resource_grade_dropdown_chzn', '#edit_resource_attribute_dropdown_chzn'], function(i, v) {
+
+          // Add a title attribute to the delete tags on the User Activity and Detailed Resource tabs.
+          addDeleteButtonTitles(v);
           $(v + ' ul.chzn-choices').bind('DOMSubtreeModified', function(e) {
               addDeleteButtonTitles(v);
           });
 
-          addDeleteButtonTitles(v);
+          // Add aria-required attribute to required fields.
+          $(v + ' input[type=text').attr('aria-required', 'true');
       });
 
 //      setTimeout(function(){ $('.sbac-report-download-link').click(); }, 5000);

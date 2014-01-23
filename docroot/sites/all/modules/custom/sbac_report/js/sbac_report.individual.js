@@ -57,6 +57,9 @@
         state_textfield.attr('id', 'edit_state_chzn_text');
       }
 
+      // Add aria-required attribute to required fields
+      $('#edit_state_chzn_text').attr('aria-required', 'true');
+
       var dialog = $('.dialog_sbac_report_individual_modal_form');
       if (dialog.length) {
         var slider_width = 572;
