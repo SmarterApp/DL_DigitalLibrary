@@ -121,7 +121,9 @@
 
       .field-name-field-details {
         position: relative;
-				padding-bottom: 5px;
+				font-size: 13px;
+				line-height: 1.2;
+				padding-bottom: 15px;
 
         @include maxlength;
 				
@@ -135,7 +137,7 @@
           width: 560px;
 
           &.error {
-            width: 92%;
+            width: 560px;
           }
         }
       }
@@ -220,11 +222,10 @@
       .actions-wrapper  {
         clear: both;
         padding: 10px 0 0;
-        text-align: right;
 
         .button,
         button {
-          margin-left: 10px;
+          margin-right: 30px;
         }
 
         .final-submit {
@@ -329,9 +330,14 @@
   }
 }
 
-.preview .entity-review.view-mode-full {
-  border-top: 1px #cecece solid;
-}
+.preview {
+	padding-top: 0 !important;
+	
+	.entity-review.view-mode-full {
+	  border-top: 1px #cecece solid;
+		padding-top: 10px;
+	}
+} 
 
 .entity-review.view-mode-full{
   //background: #eee;
@@ -405,7 +411,7 @@
 
   .group-footer {
     clear: both;
-    padding-top: 10px;
+    padding-top: 20px;
 
     .rate-widget {
       padding: 15px 0;
@@ -419,6 +425,10 @@
       }
     }
 
+		.field-name-field-details {
+			margin-top: 15px;
+		}
+			
     .field-name-field-appropriate-for {
       padding-top: 0px;
       /*border-top:1px solid #eee;*/
@@ -453,8 +463,13 @@
     }
 
     h2 {
-      font-size: 18px;
-      margin-top: 10px
+      color: #464B54;
+			font-size: 13px;
+	    font-weight: bold;
+	    line-height: 1.2;
+	    margin: 0;
+	    max-width: 560px;
+	    padding: 0;
     }
 
     .field-name-review-vote {
@@ -475,10 +490,22 @@
   }
 }
 
-
 .footer-title {
+  color: #000000;
+	display: block;
+  font-size: 18px;
   font-weight: bold;
-  margin: 10px 0;
+  margin: 0;
+  max-width: 560px;
+  padding: 30px 0 15px;
+  text-transform: capitalize;
+}
+
+.footer-body {
+	font-size: 16px;
+	line-height: 1.6;
+  margin: 0;
+  max-width: 560px;
 }
 
 /* modals */
@@ -487,9 +514,10 @@
     border-bottom: 1px solid silver;
     padding-bottom: 1em;
     border-bottom: 1em; 
-    font-size: 0.8em;
-    line-height: normal;
+    font-size: 16px;
+    line-height: 1.6;
     text-align: left; 
+		 color: #464B54;
   }
 
   form {
@@ -498,6 +526,7 @@
 
   .form-submit {
     display: inline;
+		margin-bottom: 0;
     /*float: none;*/
   }
 
@@ -512,6 +541,9 @@
   }
 }
 
+#dialog .devtools-dialog-content .button {
+	margin-bottom: 0 !important;
+}
 
 .rating-label {
   font-size: 12px;
@@ -691,3 +723,6 @@ body.admin-menu #global-zeroclipboard-html-bridge {
 	margin-top: -28px;
 }
 
+#review-end-use-form {
+	margin-bottom: 0;
+}

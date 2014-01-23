@@ -269,10 +269,22 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 
 button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-continue, button.disabled, button[disabled], .button.disabled, .button[disabled] {
   @include global-button;
+	background-color: #0084B0;
+  border: 1px solid #0D6785;
 }
 
 button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, button.sbac-cancel-blue, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
   @include global-button-negative;
+/*	@include global-button;
+  border: 1px solid #4D5457;
+	margin-bottom: 10px;
+	margin-right: 30px !important;
+	padding-left: 40px;
+	background: #6E7379 url(../images/buttonCancel.png) no-repeat 15px 8px;
+	
+	&:hover {
+		 background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+	}*/
 }
 
 button.green {
@@ -969,17 +981,20 @@ a.tabledrag-handle .handle {
    ----------------------------------------- */
 .ui-dialog {
   @include border-radius(0);
+	padding: 10px 15px !important;
 
   .ui-widget-header {
     @include border-radius(0);
     background: none;
     border: none;
+		font-size: 18px;
+		color: #000;
   }
 
   .button, button, .button.radius {
     @include border-radius (6px);
     font-size: 16px;
-    padding: 8px 18px;
+    padding: 0 18px;
   }
 
   .ui-resizable-handle {
