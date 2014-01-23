@@ -393,6 +393,7 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
         ),
         'query' => array(
           'nid' => $vars['node']->nid,
+          'eck_review' => $_GET['review'],
         ),
       ));
 
@@ -401,7 +402,7 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
           'modalSize' => array(
             'type' => 'fixed',
             'width' => 600,
-            'height' => 160,
+            'height' => 260,
           ),
         ),
       );
@@ -456,7 +457,7 @@ function sbac_flag_create_resource_view_output(&$vars, $flags) {
       'modalSize' => array(
         'type' => 'fixed',
         'width' => 600,
-        'height' => 160,
+        'height' => 260,
       ),
     ),
   );
