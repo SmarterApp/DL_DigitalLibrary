@@ -180,9 +180,9 @@
               });
 
               // Remove initial click handler. Needs to check what type of behavior happens.
-              $( ".sbac-custom-term-remove-last-crumb").unbind( "click" );
+              $( ".sbac-custom-term-remove").unbind( "click" );
               // Add custom behavior to last breadcrumb X if this is the last form.
-              $('.sbac-custom-term-remove-last-crumb').click(function(event) {
+              $('.sbac-custom-term-remove').click(function(event) {
                 // Check if anythings been selected.
                 var countStandard = 0;
                 $('input[id^=edit-term-]').each(function () {
