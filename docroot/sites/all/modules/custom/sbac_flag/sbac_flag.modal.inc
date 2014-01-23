@@ -266,12 +266,10 @@ function sbac_flag_start_moderation_form($form, $form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<p>' . t("
-    If you start moderation, you will have to resolve the flags in one session.
-    You will not be able to save your work or continue later.
-
-    If you aren't ready to resolve all flags, you can select to review flags.
-    When you are ready to resolve all the flags, you can start moderation.") . '</p>',
+    '#markup' => "<p>If you start moderation, you will have to resolve the flags in one session.
+    You will not be able to save your work or continue later.</p>
+    <p>If you aren't ready to resolve all flags, you can select to review flags.
+    When you are ready to resolve all the flags, you can start moderation.</p>"
   );
 
 	$form['submit'] = array(

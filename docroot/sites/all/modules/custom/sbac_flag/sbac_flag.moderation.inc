@@ -7,6 +7,7 @@
  */
 function sbac_flag_moderation() {
   drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
+  drupal_set_title('');
 
   global $user;
   $display_nodes = array();
@@ -126,11 +127,11 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
   if ($row->being_moderated) {
     $node->eck_flag->display_status = 'Being Moderated';
     if ($eck_review) {
-      $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags'), 'fragment' => 'something-Moderate_flag'));
+      $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id), 'fragment' => 'review-Moderate_flag'));
       $node->eck_flag->button = $url;
     }
     else {
-      $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'something-Moderate_flag'));
+      $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
       $node->eck_flag->button = $url;
     }
   }
