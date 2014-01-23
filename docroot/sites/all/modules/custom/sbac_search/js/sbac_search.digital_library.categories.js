@@ -44,55 +44,58 @@
       }
 
       // Add filter to current filters. Wrap in 'once' so ctools modal dosnt attach click handler multiple times.
-      // $('.category-filter').once('cmod-catfilter', function() {
-        $('.category-filter').click(function () {
-          var filter_name = $(this).children('.filter-name');
-          var current_filters = $('#sbac-search-current-filters');
-          var reset_filters = $('#edit-reset-filters');
-          var search_button = $('#sbac-search-filter-button');
-          if (!filter_name.hasClass('current')) {
-            var last_filter = $('.categories-current-filters');
-            last_filter.append('<div class="current-filter"><span vid="' + filter_name.attr('vid') + '" tid="' + filter_name.attr('tid') + '" class="filter-name">' + filter_name.html() + '</span></div>');
-            filter_name.addClass('current');
-            filter_name.parent().addClass('current');
-            Drupal.behaviors.sbac_remove_categories.attach(context, settings);
-            // Add the tid to the filter list
-            if (current_filters.val() == '') {
-              last_filter.removeClass('noshow');
-              current_filters.val(filter_name.attr('vid') + ':' + filter_name.attr('tid'));
+      $('.category-filter').each(function() {
+        $(this).once('cmod-catfilter', function() {
+          $(this).click(function () {
+            var filter_name = $(this).children('.filter-name');
+            var current_filters = $('#sbac-search-current-filters');
+            var reset_filters = $('#edit-reset-filters');
+            var search_button = $('#sbac-search-filter-button');
+            if (!filter_name.hasClass('current')) {
+              var last_filter = $('.categories-current-filters');
+              last_filter.append('<div class="current-filter"><span vid="' + filter_name.attr('vid') + '" tid="' + filter_name.attr('tid') + '" class="filter-name">' + filter_name.html() + '</span></div>');
+              filter_name.addClass('current');
+              filter_name.parent().addClass('current');
+              Drupal.behaviors.sbac_remove_categories.attach(context, settings);
+              // Add the tid to the filter list
+              if (current_filters.val() == '') {
+                last_filter.removeClass('noshow');
+                current_filters.val(filter_name.attr('vid') + ':' + filter_name.attr('tid'));
+              }
+              else {
+                var filter_tids = current_filters.val();
+                filter_tids += '::' + filter_name.attr('vid') + ':' + filter_name.attr('tid');
+                current_filters.val(filter_tids);
+              }
+              reset_filters.removeClass('js-hide');
+              search_button.removeClass('js-hide');
+              $('.category-hide').addClass('js-hide');
             }
             else {
-              var filter_tids = current_filters.val();
-              filter_tids += '::' + filter_name.attr('vid') + ':' + filter_name.attr('tid');
-              current_filters.val(filter_tids);
-            }
-            reset_filters.removeClass('js-hide');
-            search_button.removeClass('js-hide');
-            $('.category-hide').addClass('js-hide');
-          }
-          else {
-            var last_filter = $('.categories-current-filters .current-filter:last');
-            last_filter.remove();
-            filter_name.removeClass('current');
-            filter_name.parent().removeClass('current');
+              var last_filter = $('.categories-current-filters .current-filter:last');
+              last_filter.remove();
+              filter_name.removeClass('current');
+              filter_name.parent().removeClass('current');
 
-            // Remove the tid to the filter list
-            var filters = current_filters.val();
-            var pos = filters.lastIndexOf("::");
-            if (pos != -1) {
-              var new_filters = filters.substr(0, pos);
-              current_filters.val(new_filters);
+              // Remove the tid to the filter list
+              var filters = current_filters.val();
+              var pos = filters.lastIndexOf("::");
+              if (pos != -1) {
+                var new_filters = filters.substr(0, pos);
+                current_filters.val(new_filters);
+              }
+              else {
+                $('.categories-current-filters').addClass('noshow');
+                reset_filters.addClass('js-hide');
+                search_button.addClass('js-hide');
+                current_filters.val('');
+              }
             }
-            else {
-              $('.categories-current-filters').addClass('noshow');
-              reset_filters.addClass('js-hide');
-              search_button.addClass('js-hide');
-              current_filters.val('');
-            }
-          }
-          return false;
-        });
-      // });
+            return false;
+          }); // End click
+        }); // End once
+      }); // End each
+
 
       // Close the individual filter list.
       $('.category-filter-header').once('cmod-catfilterheader', function() {

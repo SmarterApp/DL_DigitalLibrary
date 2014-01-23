@@ -142,7 +142,7 @@
 /* line 137, ../sass/alignment.scss */
 #alignment-page .standards-browser .button {
   width: 100%;
-  padding: 0 40px 20px 20px;
+  padding: 10px 40px 10px 20px;
   background: white url("../images/caret-blue-right.png") no-repeat 95% center;
   border: 1px solid #AED9E5;
   position: relative;
@@ -164,18 +164,20 @@
   text-shadow: none;
   color: #0785AD;
   font-weight: bold;
+  height: auto;
+  line-height: 1.3;
 }
-/* line 153, ../sass/alignment.scss */
+/* line 155, ../sass/alignment.scss */
 #alignment-page .standards-browser .button:hover {
   background: #0085ad url("../images/caret-right.png") no-repeat 95% center;
   color: #FFF !important;
 }
-/* line 156, ../sass/alignment.scss */
+/* line 158, ../sass/alignment.scss */
 #alignment-page .standards-browser .button:hover .tooltip-b {
   opacity: 1;
   display: block;
 }
-/* line 164, ../sass/alignment.scss */
+/* line 166, ../sass/alignment.scss */
 #alignment-page .standards-browser .tooltip-b {
   opacity: 0;
   display: none;
@@ -196,12 +198,12 @@
   z-index: 999;
   border: 1px solid #3C7646;
 }
-/* line 184, ../sass/alignment.scss */
+/* line 186, ../sass/alignment.scss */
 #alignment-page .standards-browser .tooltip-b p {
   font-size: inherit;
   margin: 0;
 }
-/* line 189, ../sass/alignment.scss */
+/* line 191, ../sass/alignment.scss */
 #alignment-page .standards-browser .tooltip-b:after {
   content: ' ';
   position: absolute;
@@ -214,7 +216,7 @@
   height: 0;
   z-index: 99;
 }
-/* line 202, ../sass/alignment.scss */
+/* line 204, ../sass/alignment.scss */
 #alignment-page .standards-browser .tooltip-b:before {
   content: ' ';
   position: absolute;
@@ -227,13 +229,13 @@
   height: 0;
   z-index: 97;
 }
-/* line 216, ../sass/alignment.scss */
+/* line 218, ../sass/alignment.scss */
 #alignment-page .standards-browser .arrow_box {
   position: absolute;
   background: #DFE5CC;
   border: 1px solid #3C7646;
 }
-/* line 222, ../sass/alignment.scss */
+/* line 224, ../sass/alignment.scss */
 #alignment-page .standards-browser .standard {
   padding: 10px;
   border: 1px solid silver;
@@ -244,16 +246,16 @@
   border-radius: 5px;
   background-color: white;
 }
-/* line 228, ../sass/alignment.scss */
+/* line 230, ../sass/alignment.scss */
 #alignment-page .standards-browser .standard p {
   font-size: 16px;
   color: #8d9297;
 }
-/* line 233, ../sass/alignment.scss */
+/* line 235, ../sass/alignment.scss */
 #alignment-page .standards-browser .standard .checkbox-more-less {
   color: #8d9297;
 }
-/* line 237, ../sass/alignment.scss */
+/* line 239, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info {
   display: block;
   cursor: pointer;
@@ -261,11 +263,11 @@
   width: 100px;
   height: 15px;
 }
-/* line 244, ../sass/alignment.scss */
+/* line 246, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info a {
   display: block;
 }
-/* line 248, ../sass/alignment.scss */
+/* line 250, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info .more {
   display: none;
   transition-property: opacity;
@@ -285,12 +287,12 @@
   z-index: 999;
   border: 1px solid #3C7646;
 }
-/* line 267, ../sass/alignment.scss */
+/* line 269, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info .more p {
   font-size: inherit;
   margin: 0;
 }
-/* line 272, ../sass/alignment.scss */
+/* line 274, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info .more:after {
   content: ' ';
   position: absolute;
@@ -303,7 +305,7 @@
   height: 0;
   z-index: 99;
 }
-/* line 284, ../sass/alignment.scss */
+/* line 286, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info .more:before {
   content: ' ';
   position: absolute;
@@ -316,11 +318,11 @@
   height: 0;
   z-index: 97;
 }
-/* line 299, ../sass/alignment.scss */
+/* line 301, ../sass/alignment.scss */
 #alignment-page .standards-browser .more-info:hover .more {
   display: block;
 }
-/* line 306, ../sass/alignment.scss */
+/* line 308, ../sass/alignment.scss */
 #alignment-page .form-type-checkbox label {
   color: #0085AD;
   font-size: 16px;
@@ -328,40 +330,40 @@
   cursor: default;
 }
 
-/* line 314, ../sass/alignment.scss */
+/* line 316, ../sass/alignment.scss */
 #edit-field-education-alignment {
   display: none;
 }
 
-/* line 319, ../sass/alignment.scss */
+/* line 321, ../sass/alignment.scss */
 .form-item-alignment-type select {
   width: 200px;
   display: inline-block;
 }
-/* line 324, ../sass/alignment.scss */
+/* line 326, ../sass/alignment.scss */
 .form-item-alignment-type label {
   width: 120px !important;
   float: left !important;
   display: inline-block;
 }
 
-/* line 331, ../sass/alignment.scss */
+/* line 333, ../sass/alignment.scss */
 .alignment-buttons {
   text-align: right;
   margin-right: 20px;
 }
-/* line 335, ../sass/alignment.scss */
+/* line 337, ../sass/alignment.scss */
 .alignment-buttons a.button {
   display: inline-block;
   margin-left: 10px;
 }
-/* line 340, ../sass/alignment.scss */
+/* line 342, ../sass/alignment.scss */
 .alignment-buttons #edit-submit {
   float: right;
   margin-left: 10px;
 }
 
-/* line 346, ../sass/alignment.scss */
+/* line 348, ../sass/alignment.scss */
 #ccss-submit {
   margin-left: 10px;
   margin-right: 20px;

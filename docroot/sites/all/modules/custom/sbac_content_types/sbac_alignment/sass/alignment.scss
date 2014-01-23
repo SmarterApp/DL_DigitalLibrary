@@ -136,7 +136,7 @@
 
     .button {
       width: 100%;
-      padding: 0 40px 20px 20px;
+      padding: 10px 40px 10px 20px;
       background: #FFF url("../images/caret-blue-right.png") no-repeat 95% center;
       border:1px solid #AED9E5;
       position: relative;
@@ -149,6 +149,8 @@
       @include text-shadow(none);
       color: #0785AD;
       font-weight: bold;
+			height: auto;
+			line-height: 1.3;
 
       &:hover {
         background: #0085AD url("../images/caret-right.png") no-repeat 95% center;
