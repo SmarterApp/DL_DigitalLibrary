@@ -135,6 +135,9 @@
               $('#ccss-cancel').click(function () {
                 closeCtoolsModal();
               });
+              $('#ccss-cancel2').click(function () {
+                closeCtoolsModal();
+              });
 
               $('#ccss-submit').click(function () {
                 var countType = countStandard = 0;
