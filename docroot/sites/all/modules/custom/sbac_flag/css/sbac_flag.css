@@ -74,19 +74,114 @@
 .page-moderation .main-container .resource-card .row-right .flag-status {
   padding: 15px 60px 30px 10px;
 }
-/* line 72, ../sass/sbac_flag.scss */
+/* line 71, ../sass/sbac_flag.scss */
+.page-moderation .main-container .resource-card .row-right .flag-status.urgent {
+  color: #ff0000;
+}
+/* line 74, ../sass/sbac_flag.scss */
 .page-moderation .main-container .resource-card .row-right a {
   margin-left: 10px;
 }
 
 /*Confirmation modal*/
-/* line 82, ../sass/sbac_flag.scss */
+/* line 84, ../sass/sbac_flag.scss */
 .page-moderation .modal-content {
   overflow-y: hidden !important;
 }
 
-/* line 88, ../sass/sbac_flag.scss */
+/* line 90, ../sass/sbac_flag.scss */
 #sbac-flag-start-moderation-form .button, #sbac-flag-start-moderation-form .form-submit {
   float: right;
   margin-left: 30px;
+}
+
+/*Moderation resource detail view page*/
+/* line 99, ../sass/sbac_flag.scss */
+.node-type-resource .flag-resource-container {
+  margin: 0 30px;
+}
+/* line 102, ../sass/sbac_flag.scss */
+.node-type-resource .flag-resource-container .resource-flag-category {
+  border-bottom: 1px solid #62676E;
+  padding: 20px 0 5px;
+  margin-bottom: 10px;
+}
+/* line 107, ../sass/sbac_flag.scss */
+.node-type-resource .flag-resource-container .resource-flag-category .resource-category {
+  color: #04384E;
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  text-transform: capitalize;
+  display: inline-block;
+}
+/* line 118, ../sass/sbac_flag.scss */
+.node-type-resource .flag-resource-container .resource-flag-category .resource-count {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 13px;
+  font-style: italic;
+  color: #909398;
+}
+/* line 127, ../sass/sbac_flag.scss */
+.node-type-resource .flag-resource-container .flag-row {
+  padding: 10px 0 20px;
+  border-bottom: 1px #cecece solid;
+  margin-bottom: 20px;
+}
+/* line 132, ../sass/sbac_flag.scss */
+.node-type-resource .flag-resource-container .flag-row .flag-user {
+  padding-bottom: 15px;
+}
+/* line 138, ../sass/sbac_flag.scss */
+.node-type-resource .resource-flag-information {
+  background-color: #F2F2F2;
+  border: 7px solid #FFFFFF;
+  box-shadow: 0 1px 4px 0 rgba(4, 56, 78, 0.3);
+  color: #464B54;
+  margin-top: 15px;
+  padding: 10px 20px 15px;
+  position: relative;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+  position: relative;
+}
+/* line 151, ../sass/sbac_flag.scss */
+.node-type-resource .resource-flag-information .flag-status {
+  color: #006082;
+  font-weight: bold;
+  padding-top: 0px;
+  font-size: 16px;
+}
+/* line 158, ../sass/sbac_flag.scss */
+.node-type-resource .resource-flag-information .flag-count {
+  padding-top: 3px;
+}
+/* line 160, ../sass/sbac_flag.scss */
+.node-type-resource .resource-flag-information .flag-button {
+  position: absolute;
+  top: 22px;
+  right: 20px;
+}
+/* line 164, ../sass/sbac_flag.scss */
+.node-type-resource .resource-flag-information .flag-button a {
+  margin-bottom: 0;
+}
+/* line 171, ../sass/sbac_flag.scss */
+.node-type-resource .resource-flag-information.urgent {
+  background-color: #FDF2B1;
+  color: #101010;
+}
+/* line 175, ../sass/sbac_flag.scss */
+.node-type-resource .resource-flag-information.urgent .flag-status {
+  color: #8A1538;
+}
+
+/* line 181, ../sass/sbac_flag.scss */
+.node-type-resource .entity-review.view-mode-full {
+  border-bottom: none;
+  padding-top: 0;
 }
