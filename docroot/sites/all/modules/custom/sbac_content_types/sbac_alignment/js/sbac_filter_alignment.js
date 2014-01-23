@@ -32,6 +32,32 @@
         $('#modalBackdrop').remove();
       }
 
+      // Function that the submit buttons call to cleanup.
+      var closeModal = function (data) {
+        var obj = jQuery.parseJSON(data);
+
+        var currentActiveFilters = $('#sbac-category-current-filters').html();
+        $('#sbac-category-current-filters').html(currentActiveFilters+obj.html);
+
+        var current_filters = $('#sbac-search-current-filters');
+        if (current_filters.val() == '') {
+        $('#sbac-category-current-filters').removeClass('noshow');
+          current_filters.val(obj.filters);
+        }
+        else {
+          var filter_tids = current_filters.val();
+          filter_tids += '::' + obj.filters;
+          current_filters.val(filter_tids);
+        }
+
+        $('#edit-reset-filters').removeClass('js-hide');
+        $('.category-hide').addClass('js-hide');
+
+        closeCtoolsModal();
+        Drupal.attachBehaviors('.ccss-term-delete');
+      }
+
+
       // Move and resize the modalBackdrop and modalContent on resize of the window
       modalContentResize = function(){
         // Get our heights
@@ -136,30 +162,6 @@
                     }
                   });
 
-                  var closeModal = function (data) {
-                    var obj = jQuery.parseJSON(data);
-
-                    var currentActiveFilters = $('#sbac-category-current-filters').html();
-                    $('#sbac-category-current-filters').html(currentActiveFilters+obj.html);
-
-                    var current_filters = $('#sbac-search-current-filters');
-                    if (current_filters.val() == '') {
-                    $('#sbac-category-current-filters').removeClass('noshow');
-                      current_filters.val(obj.filters);
-                    }
-                    else {
-                      var filter_tids = current_filters.val();
-                      filter_tids += '::' + obj.filters;
-                      current_filters.val(filter_tids);
-                    }
-
-                    $('#edit-reset-filters').removeClass('js-hide');
-                    $('.category-hide').addClass('js-hide');
-
-                    closeCtoolsModal();
-                    Drupal.attachBehaviors('.ccss-term-delete');
-                  }
-
                   $.ajax({
                     type: "POST",
                     url: "/ajax-filter-alignment-finish-set",
@@ -176,6 +178,77 @@
                 }
                 return false;
               });
+
+              // Remove initial click handler. Needs to check what type of behavior happens.
+              $( ".sbac-custom-term-remove-last-crumb").unbind( "click" );
+              // Add custom behavior to last breadcrumb X if this is the last form.
+              $('.sbac-custom-term-remove-last-crumb').click(function(event) {
+                // Check if anythings been selected.
+                var countStandard = 0;
+                $('input[id^=edit-term-]').each(function () {
+                  if ($(this).is(':checked')) {
+                    countStandard++;
+                  }
+                });
+
+                // If no standards are met then behave as normal. Rebind everything.
+                if (countStandard == 0) {
+                  $(this).unbind( "click" );
+                  Drupal.attachBehaviors('.sbac-custom-term-remove');
+                  $(this).click();
+                } else { // Get, show and attach behaviors for confirm dialog.
+                  var parentTerm = $(this);
+                  var parentId = $(this).attr("tid");
+                  var confirmDialogForm = function (data) {
+                    var obj = jQuery.parseJSON(data);
+                    $('.alignment-filter').html(obj.html);
+                    $('.alignment-form').hide(); // Hide main form.
+
+                    $('#cmod-confirm-cancel').click(function() {
+                      // Reuse the click handler for the initial breadcrumb.
+                      $(parentTerm).unbind("click");
+                      Drupal.attachBehaviors('.sbac-custom-term-remove');
+                      $(parentTerm).click();
+                      return false;
+                    }); // End click.
+
+                    // If confirm, add the selected filters.
+                    $('#cmod-confirm-submit').click(function() {
+                      var alignmentStandards = '';
+                      var alignmentType = $('#edit-alignment-type').val();
+
+                      //get ref
+                      var alignmentRef = $('input[id=alignment_ref]').val();
+                      //count standards
+                      $('input[id^=edit-term-]').each(function () {
+                        if ($(this).is(':checked')) {
+                          var temp = $(this).attr('id');
+                          var id = temp.split('-');
+                          id = id[2];
+                          alignmentStandards += '|' + id;
+                        }
+                      });
+
+                      $.ajax({
+                        type: "POST",
+                        url: "/ajax-filter-alignment-finish-set",
+                        success: closeModal,
+                        data: 'alignment_standards=' + alignmentStandards,
+                      });
+                      return false;
+                    }); // End click.
+                  }
+                  // Do the custom ajax thing.
+                  $.ajax({
+                    type: "POST",
+                    url: "/ajax-filter-alignment-confirm-remove",
+                    success: confirmDialogForm,
+                    data: 'empty=0',
+                  });
+                }
+
+              });
+
             } // end submit.
 
             var refNode = $('input#ref_node').val();

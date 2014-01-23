@@ -125,6 +125,13 @@ function sbac_alignment_ajax_terms_callback() {
   exit;
 }
 
+function sbac_alignment_ajax_filter_alignment_confirm_remove_callback() {
+  $output = theme('alignment_modal_confirm', array('terms' => array()));
+  $output_array['html'] = $output;
+  print drupal_json_encode($output_array);
+  exit;
+}
+
 /**
  * AJAX Callback
  * CRUD for Alignment nodes.

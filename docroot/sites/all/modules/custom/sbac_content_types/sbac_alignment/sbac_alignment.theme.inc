@@ -28,6 +28,13 @@ function sbac_alignment_theme($existing, $type, $theme, $path) {
       'element' => NULL,
     ),
   );
+  $items['alignment_modal_confirm'] = array(
+    'path' => drupal_get_path('module', 'sbac_alignment') . '/templates',
+    'template' => 'alignment-modal-confirm',
+    'variables' => array(
+      'term' => NULL,
+    ),
+  );
 
   $items['sbac_alignment_alignment_form'] = array(
     'path' => drupal_get_path('module', 'sbac_alignment') . '/templates',
