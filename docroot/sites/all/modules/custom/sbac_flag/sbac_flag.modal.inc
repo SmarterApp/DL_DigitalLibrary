@@ -297,7 +297,7 @@ function sbac_flag_resolve_all_flags_modal($js = FALSE) {
             $task->save();
           }
         }
-
+        // redirect
         $output[] = ctools_ajax_command_redirect('moderation');
       }
     }
@@ -330,13 +330,31 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
     );
 
     module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
-    $output = ctools_modal_form_wrapper('sbac_flag_cancel_resource_moderation_form', $form_state);
+    $output = ctools_modal_form_wrapper('sbac_flag_remove_resource_form', $form_state);
     // This means the form has been executed
     if (!empty($form_state['executed'])) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
-      if ($form_state['triggering_element']['#value'] == 'Cancel Moderation') {
-
+      if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
+        $node = node_load($form_state['nid']);
+        // remove resource, rebuild permissions.
+        workbench_moderation_moderate($node, 'removed');
+        node_access_acquire_grants($node, TRUE);
+        sbac_resource_save_current_state($node);
+        // send notification
+        // notify contributor of the resource
+        if ($task = taskit_get_object('removed_resource')) {
+          global $user;
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $node->nid);
+          $task->addOwningUser($node->uid);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+        }
+        // dismiss all flags
+        sbac_flag_remove_resource($node);
+        // redirect to moderation
+        $output[] = ctools_ajax_command_redirect('moderation');
       }
     }
     print ajax_render($output);
@@ -354,7 +372,7 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
  * @param $form_state
  * @return mixed
  */
-function sbac_flag_start_moderation_form($form, $form_state) {
+function sbac_flag_start_moderation_form($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
@@ -391,7 +409,7 @@ function sbac_flag_start_moderation_form($form, $form_state) {
  * @param $form_state
  * @return array
  */
-function sbac_flag_cancel_resource_moderation_form($form, $form_state) {
+function sbac_flag_cancel_resource_moderation_form($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
@@ -419,7 +437,7 @@ function sbac_flag_cancel_resource_moderation_form($form, $form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_flag_resolve_all_flags_form($form, $form_state) {
+function sbac_flag_resolve_all_flags_form($form, &$form_state) {
   $form = array();
 
   $changes_made = FALSE;
@@ -482,14 +500,103 @@ function sbac_flag_resolve_all_flags_form($form, $form_state) {
  * @param $form_state
  */
 function sbac_flag_resolve_all_flags_form_validate(&$form, &$form_state) {
-  $changes_made = FALSE;
-  if ($_SESSION['sbac-flag']['changes-made']) {
-    $changes_made = TRUE;
-  }
+  if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
+    $changes_made = FALSE;
+    if ($_SESSION['sbac-flag']['changes-made']) {
+      $changes_made = TRUE;
+    }
 
-  if ($changes_made) {
+    if ($changes_made) {
+      if (empty($form_state['values']['contributor_message'])) {
+        form_set_error('contributor_message', 'Please leave a message for the contributor to continue');
+      }
+    }
+  }
+}
+
+/**
+ * Form submit handler.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_resolve_all_flags_form_submit(&$form, &$form_state) {
+  $node = node_load($form_state['nid']);
+  if ($node) {
+    $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
+    if ($flags) {
+      foreach ($flags as $flag) {
+        db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
+      }
+    }
+  }
+}
+
+/**
+ * Remove resource form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_flag_remove_resource_form($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => 'If you continue, the resource will no longer be available in the
+    Digital Library Resource will be returned to the contributor in the locked state. The
+    message will be send to the contributor, all the flags will be dismissed and all the
+    changes will be discarded.',
+  );
+
+  $form['contributor_message'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Please leave a message for contributor' . theme('form_required_marker'),
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['finish_moderation'] = array(
+    '#type' => 'submit',
+    '#value' => 'Finish Moderation',
+    '#attributes' => array('class' => array('button'))
+  );
+
+  return $form;
+}
+
+/**
+ * Validates form.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_remove_resource_form_validate(&$form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
     if (empty($form_state['values']['contributor_message'])) {
       form_set_error('contributor_message', 'Please leave a message for the contributor to continue');
+    }
+  }
+}
+
+/**
+ * Form submit handler.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_remove_resource_form_submit(&$form, &$form_state) {
+  $node = node_load($form_state['nid']);
+  if ($node) {
+    $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
+    if ($flags) {
+      foreach ($flags as $flag) {
+        db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
+      }
     }
   }
 }

@@ -56,17 +56,22 @@ function sbac_flag_update_7004() {
  */
 function sbac_flag_update_7005() {
   db_query('ALTER TABLE eck_flag MODIFY flag_comment VARCHAR(650)');
-  return array();
 }
 
 /**
  * Implements hook_update_N().
  *
  * Adds node ID's to eck_flag table as well.
- *
- * @return array
  */
 function sbac_flag_update_7006() {
-  db_query('UPDATE eck_flag ef SET ef.nid = (SELECT er.node_id FROM eck_review er WHERE er.id = ef.target_id AND ef.target_type = `review`)');
-  return array();
+  return db_query('UPDATE {eck_flag} ef SET ef.nid = (SELECT er.node_id FROM eck_review er WHERE er.id = ef.target_id AND ef.target_type = `review`)');
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Alter's table from varchar(255) to varchar(650)
+ */
+function sbac_flag_update_7007() {
+  return db_query('ALTER TABLE {eck_flag} MODIFY moderation_comment VARCHAR(1000)');
 }

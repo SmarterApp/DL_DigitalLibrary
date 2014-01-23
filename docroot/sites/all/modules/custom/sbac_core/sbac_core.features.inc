@@ -180,6 +180,11 @@ $items = array(
       'type' => 'integer',
       'behavior' => 'textfield',
     ),
+    'moderation_comment' => array(
+      'label' => 'Moderation Comment',
+      'type' => 'text',
+      'behavior' => 'textfield',
+    ),
   ),
 ),
        'review' => array(

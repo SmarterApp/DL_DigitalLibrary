@@ -326,20 +326,20 @@
   padding-top: 10px;
 }
 
-/* line 342, ../sass/review.scss */
+/* line 343, ../sass/review.scss */
 .entity-review.view-mode-full {
   margin: 10px 0;
   padding: 10px 0;
   font-size: 18px;
   border-bottom: 1px solid silver;
 }
-/* line 350, ../sass/review.scss */
+/* line 351, ../sass/review.scss */
 .entity-review.view-mode-full .field-label {
   margin-bottom: 5px;
   font-weight: normal;
   padding: 5px 0;
 }
-/* line 356, ../sass/review.scss */
+/* line 357, ../sass/review.scss */
 .entity-review.view-mode-full .group-header {
   margin-bottom: 10px;
   text-align: right;
@@ -353,7 +353,7 @@
 .entity-review.view-mode-full .group-header:after {
   clear: both;
 }
-/* line 362, ../sass/review.scss */
+/* line 363, ../sass/review.scss */
 .entity-review.view-mode-full .group-header .field-name-review-author {
   float: left;
   color: #464B54;
@@ -363,99 +363,99 @@
   margin: 0;
   max-width: 560px;
 }
-/* line 371, ../sass/review.scss */
+/* line 372, ../sass/review.scss */
 .entity-review.view-mode-full .group-header .field-name-review-author a.devtools-tooltip-trigger {
   color: #0583AC;
 }
-/* line 376, ../sass/review.scss */
+/* line 377, ../sass/review.scss */
 .entity-review.view-mode-full .group-header .field-name-review-helpfulness {
   float: right;
   font-weight: bold;
 }
-/* line 382, ../sass/review.scss */
+/* line 383, ../sass/review.scss */
 .entity-review.view-mode-full .group-left {
   clear: both;
   width: 33%;
 }
-/* line 387, ../sass/review.scss */
+/* line 388, ../sass/review.scss */
 .entity-review.view-mode-full .group-middle {
   width: 33%;
 }
-/* line 390, ../sass/review.scss */
+/* line 391, ../sass/review.scss */
 .entity-review.view-mode-full .group-middle .field-name-field-pro-dev {
   padding-left: 10px;
 }
-/* line 395, ../sass/review.scss */
+/* line 396, ../sass/review.scss */
 .entity-review.view-mode-full .group-right {
   width: 33%;
 }
-/* line 398, ../sass/review.scss */
+/* line 399, ../sass/review.scss */
 .entity-review.view-mode-full .group-right .field-name-field-ease-use {
   padding-left: 10px;
 }
-/* line 403, ../sass/review.scss */
+/* line 404, ../sass/review.scss */
 .entity-review.view-mode-full .average-rating {
   margin-top: 10px;
 }
-/* line 407, ../sass/review.scss */
+/* line 408, ../sass/review.scss */
 .entity-review.view-mode-full .fivestar-summary {
   display: none;
   /*margin-top: 5px;*/
 }
-/* line 412, ../sass/review.scss */
+/* line 413, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer {
   clear: both;
   padding-top: 20px;
 }
-/* line 416, ../sass/review.scss */
+/* line 417, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .rate-widget {
   padding: 15px 0;
 }
-/* line 419, ../sass/review.scss */
+/* line 420, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .rate-widget .vote {
   padding: 0 10px;
 }
-/* line 422, ../sass/review.scss */
+/* line 423, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .rate-widget .vote .action-triggers {
   display: none;
 }
-/* line 428, ../sass/review.scss */
+/* line 429, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-details {
   margin-top: 15px;
 }
-/* line 432, ../sass/review.scss */
+/* line 433, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for {
   padding-top: 0px;
   /*border-top:1px solid #eee;*/
   font-size: 0.95em;
 }
-/* line 437, ../sass/review.scss */
+/* line 438, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .field-label {
   color: inherit;
   font-size: 0.8em;
   font-weight: bold;
 }
-/* line 443, ../sass/review.scss */
+/* line 444, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for ul {
   font-size: 0.8em;
   margin: 0 0 20px 0;
   padding: 0;
   max-width: 560px;
 }
-/* line 449, ../sass/review.scss */
+/* line 450, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for ul li {
   list-style-type: none;
   padding: 5px 0;
 }
-/* line 456, ../sass/review.scss */
+/* line 457, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .term {
   padding: 10px;
 }
-/* line 459, ../sass/review.scss */
+/* line 460, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .term.highlight {
   font-weight: bold;
 }
-/* line 465, ../sass/review.scss */
+/* line 466, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer h2 {
   color: #464B54;
   font-size: 13px;
@@ -465,24 +465,24 @@
   max-width: 560px;
   padding: 0;
 }
-/* line 475, ../sass/review.scss */
+/* line 476, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-review-vote {
   float: left;
   width: 740px;
 }
-/* line 480, ../sass/review.scss */
+/* line 481, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-review-delete {
   float: right;
   padding-top: 5px;
   text-align: right;
   width: 90px;
 }
-/* line 487, ../sass/review.scss */
+/* line 488, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-flagging-form {
   clear: both;
 }
 
-/* line 493, ../sass/review.scss */
+/* line 494, ../sass/review.scss */
 .footer-title {
   color: #000000;
   display: block;
@@ -494,7 +494,7 @@
   text-transform: capitalize;
 }
 
-/* line 504, ../sass/review.scss */
+/* line 505, ../sass/review.scss */
 .footer-body {
   font-size: 16px;
   line-height: 1.6;
@@ -503,7 +503,7 @@
 }
 
 /* modals */
-/* line 513, ../sass/review.scss */
+/* line 514, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -513,58 +513,58 @@
   text-align: left;
   color: #464B54;
 }
-/* line 523, ../sass/review.scss */
+/* line 524, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 527, ../sass/review.scss */
+/* line 528, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   margin-bottom: 0;
   /*float: none;*/
 }
-/* line 533, ../sass/review.scss */
+/* line 534, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
-/* line 539, ../sass/review.scss */
+/* line 540, ../sass/review.scss */
 .dialog_review_end_use_form_delete #dialog .form-submit {
   float: right;
 }
 
-/* line 544, ../sass/review.scss */
+/* line 545, ../sass/review.scss */
 #dialog .devtools-dialog-content .button {
   margin-bottom: 0 !important;
 }
 
-/* line 548, ../sass/review.scss */
+/* line 549, ../sass/review.scss */
 .rating-label {
   font-size: 12px;
   margin-top: 10px;
 }
 
 /* user tooltips */
-/* line 555, ../sass/review.scss */
+/* line 556, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }
-/* line 559, ../sass/review.scss */
+/* line 560, ../sass/review.scss */
 .account-tooltip .line {
   display: none;
 }
 
-/* line 565, ../sass/review.scss */
+/* line 566, ../sass/review.scss */
 .fivestar-widget {
   padding: 5px 0;
 }
 
 /* Tag of Sharing */
-/* line 570, ../sass/review.scss */
+/* line 571, ../sass/review.scss */
 #sbac-share-resource-form {
   margin: 0 30px;
 }
-/* line 574, ../sass/review.scss */
+/* line 575, ../sass/review.scss */
 #sbac-share-resource-form #edit-sharing-options h2 {
   border-bottom: 1px solid #62676E;
   color: #04384E;
@@ -574,35 +574,35 @@
   margin: 0;
   text-transform: capitalize;
 }
-/* line 585, ../sass/review.scss */
+/* line 586, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text {
   font-weight: bold;
   font-size: 18px;
   color: #000;
   padding-top: 20px;
 }
-/* line 591, ../sass/review.scss */
+/* line 592, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .sbac-private {
   color: #62676E;
   font-weight: normal;
   margin-right: 10px;
 }
-/* line 597, ../sass/review.scss */
+/* line 598, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .foundicon-people {
   font-size: 120%;
   color: #aaa;
   vertical-align: middle;
 }
-/* line 603, ../sass/review.scss */
+/* line 604, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .foundicon-lock {
   color: #aaa;
   vertical-align: middle;
 }
-/* line 608, ../sass/review.scss */
+/* line 609, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text span {
   font-weight: normal;
 }
-/* line 612, ../sass/review.scss */
+/* line 613, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .description {
   margin-top: 10px;
   font-weight: normal;
@@ -610,41 +610,41 @@
   font-size: 13px;
   line-height: 1.2;
 }
-/* line 622, ../sass/review.scss */
+/* line 623, ../sass/review.scss */
 #sbac-share-resource-form #edit-temporary-link-text h2 {
   color: #5a5a5a;
   padding-bottom: 2px;
 }
-/* line 628, ../sass/review.scss */
+/* line 629, ../sass/review.scss */
 #sbac-share-resource-form input#sbac-permanent-link-text, #sbac-share-resource-form input#sbac-temporary-link-text {
   width: 65%;
   float: left;
   margin-right: 30px;
   padding-right: 30px;
 }
-/* line 635, ../sass/review.scss */
+/* line 636, ../sass/review.scss */
 #sbac-share-resource-form button#edit-permanent-link-button, #sbac-share-resource-form button#edit-temporary-link-button {
   width: 225px;
   margin-top: -3px;
 }
-/* line 641, ../sass/review.scss */
+/* line 642, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container .description {
   font-size: 13px;
   line-height: 1.2;
 }
-/* line 647, ../sass/review.scss */
+/* line 648, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.active {
   opacity: 1;
 }
-/* line 651, ../sass/review.scss */
+/* line 652, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive {
   opacity: 0.5;
 }
-/* line 654, ../sass/review.scss */
+/* line 655, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive a {
   cursor: default;
 }
-/* line 657, ../sass/review.scss */
+/* line 658, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive a:hover {
   color: #FFF;
   background: #2aa549;
@@ -654,11 +654,11 @@
   -moz-box-shadow: inset 0px 1px 0px 0px #6dc088;
   box-shadow: inset 0px 1px 0px 0px #6dc088;
 }
-/* line 666, ../sass/review.scss */
+/* line 667, ../sass/review.scss */
 #sbac-share-resource-form .form-item-temporary-link {
   position: relative;
 }
-/* line 669, ../sass/review.scss */
+/* line 670, ../sass/review.scss */
 #sbac-share-resource-form .form-item-temporary-link .temp-link-clear {
   background: url("../images/icon-validation-fail.png") no-repeat 0 0;
   cursor: pointer;
@@ -673,11 +673,11 @@
 }
 
 /* Tag of Related resources */
-/* line 686, ../sass/review.scss */
+/* line 687, ../sass/review.scss */
 .related-resources {
   margin: 0 30px;
 }
-/* line 689, ../sass/review.scss */
+/* line 690, ../sass/review.scss */
 .related-resources h2 {
   border-bottom: 1px solid #62676E;
   color: #04384E;
@@ -688,34 +688,34 @@
   text-transform: capitalize;
   margin: 16px 0 15px;
 }
-/* line 700, ../sass/review.scss */
+/* line 701, ../sass/review.scss */
 .related-resources p {
   font-size: 16px;
   margin-bottom: 30px;
   max-width: 560px;
 }
 
-/* line 707, ../sass/review.scss */
+/* line 708, ../sass/review.scss */
 .no-related-resources {
   padding: 50px 30px;
 }
-/* line 710, ../sass/review.scss */
+/* line 711, ../sass/review.scss */
 .no-related-resources h2 {
   text-align: center;
   color: #000;
 }
-/* line 714, ../sass/review.scss */
+/* line 715, ../sass/review.scss */
 .no-related-resources .instruction {
   text-align: center;
 }
 
 /* Sharing Options- Copy Link to Clipboard button */
-/* line 722, ../sass/review.scss */
+/* line 723, ../sass/review.scss */
 body.admin-menu #global-zeroclipboard-html-bridge {
   margin-top: -28px;
 }
 
-/* line 726, ../sass/review.scss */
+/* line 727, ../sass/review.scss */
 #review-end-use-form {
   margin-bottom: 0;
 }
