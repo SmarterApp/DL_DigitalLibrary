@@ -91,7 +91,7 @@ function sbac_resource_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Flag',
+    'label' => 'Flags',
     'weight' => '0',
     'children' => array(
       0 => 'field_temp',

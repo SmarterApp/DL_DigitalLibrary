@@ -344,7 +344,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   // Submit node, everything is good to go.
   $selector = NULL;
   $valid = FALSE;
-  if ($active_tab != 'edit-group_advanced') {
+  if ($active_tab != 'edit-group_advanced' && $active_tab != 'edit-group_flag') {
     ctools_include('ajax');
     switch ($active_tab) {
       case 'edit-group_materials':
@@ -415,6 +415,17 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   // Clear drupal messages.
   drupal_get_messages();
 
+  // handle the flag moderation.
+  $sbac_flag = FALSE;
+  $chosen_option = FALSE;
+  if (isset($form_state['sbac-flag']) && $form_state['sbac-flag']) {
+    $sbac_flag = TRUE;
+    $chosen_option = $form_state['input']['chosen_flag_option'];
+    if ($form_state['input']['changes_made'] == 1) {
+      $_SESSION['sbac-flag']['changes-made'] = TRUE;
+    }
+  }
+
   if ($save_all_changes_modal) {
     $form['run_js'] = array(
       '#markup' => '<script>jQuery("#sbac-resource-save-all-changes").click();</script>',
@@ -424,6 +435,18 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     $form['run_js'] = array(
       '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
     );
+  }
+  else if ($sbac_flag) {
+    if ($chosen_option == 1) {
+      $form['run_js'] = array(
+        '#markup' => '<script>jQuery("#sbac-flag-resolve-all-flags").click();</script>',
+      );
+    }
+    else {
+      $form['run_js'] = array(
+        '#markup' => '<script>jQuery("#sbac-flag-remove-resource").click();</script>',
+      );
+    }
   }
   else {
     // Add appropriate JS.
@@ -1970,10 +1993,6 @@ function _sbac_resource_form_submit_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
-  if (isset($_GET['flag'])) {
-    return;
-  }
-
   $form['actions']['save_continue'] = array(
     '#type' => 'submit',
     '#value' => 'Continue',
@@ -1997,10 +2016,6 @@ function _sbac_resource_form_save_continue_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_cancel_button(&$form, &$form_state) {
-  if (isset($_GET['flag'])) {
-    return;
-  }
-
   global $user;
   if ($user->uid == 1 ||
     in_array('DLRB member', $user->roles) ||
@@ -2016,7 +2031,7 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Close',
     '#weight' => 0,
-    '#attributes' => array('class' => array('sbac-cancel-blue')),
+    '#attributes' => array('class' => array('sbac-cancel-blue', 'sbac-resource-cancel-button')),
     '#validate' => array('sbac_resource_validate_form'),
     "#executes_submit_callback" => FALSE,
     '#limit_validation_errors' => array(),

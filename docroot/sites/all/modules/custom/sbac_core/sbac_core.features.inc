@@ -175,6 +175,11 @@ $items = array(
       'type' => 'integer',
       'behavior' => 'textfield',
     ),
+    'resolved' => array(
+      'label' => 'Resolved',
+      'type' => 'integer',
+      'behavior' => 'textfield',
+    ),
   ),
 ),
        'review' => array(

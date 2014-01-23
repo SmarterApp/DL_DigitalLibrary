@@ -256,6 +256,84 @@ function sbac_flag_cancel_resource_moderation_modal($js = FALSE) {
 }
 
 /**
+ * Resolve all flags modal.
+ *
+ * @param bool $js
+ */
+function sbac_flag_resolve_all_flags_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $title = 'You are about to make changes to the resource and resolve all flags';
+
+    $form_state = array(
+      'title' => $title,
+      'ajax' => TRUE,
+      'nid' => $_GET['nid'],
+    );
+
+    module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
+    $output = ctools_modal_form_wrapper('sbac_flag_resolve_all_flags_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
+        $node = node_load($form_state['nid']);
+        sbac_flag_resolve_all_flags($node);
+        $output[] = ctools_ajax_command_redirect('moderation');
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The remove resource modal
+ *
+ * @param bool $js
+ */
+function sbac_flag_remove_resource_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $title = 'You are about to remove this resource';
+
+    $form_state = array(
+      'title' => $title,
+      'ajax' => TRUE,
+      'nid' => $_GET['nid'],
+    );
+
+    module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
+    $output = ctools_modal_form_wrapper('sbac_flag_cancel_resource_moderation_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] == 'Cancel Moderation') {
+
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
  * Start moderation form.
  *
  * @param $form
@@ -321,4 +399,81 @@ function sbac_flag_cancel_resource_moderation_form($form, $form_state) {
   );
 
   return $form;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_resolve_all_flags_form($form, $form_state) {
+  $form = array();
+
+  $changes_made = FALSE;
+  if ($_SESSION['sbac-flag']['changes-made']) {
+    $changes_made = TRUE;
+  }
+
+  // Get all flags that will be resolved.
+  $node = node_load($_GET['nid']);
+  $categories = array();
+  if ($node) {
+    $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
+    $categories = sbac_flag_list_flag_categories($flags);
+  }
+
+  $form['categories'] = array(
+    '#markup' => $categories,
+  );
+
+  if ($changes_made) {
+    $form['submit_description'] = array(
+      '#markup' => 'If you continue, the resource will no longer be available in your moderation queue.
+      All of your changes will be saved and applied to the resource. The message will be sent to the
+      contributor and all the flags will be dismissed.',
+    );
+
+    $form['contributor_message'] = array(
+      '#type' => 'textarea',
+      '#title' => 'Since you have edited this resource, please leave a message for contributor' . theme('form_required_marker'),
+    );
+  }
+  else {
+    $form['submit_description'] = array(
+      '#markup' => 'If you continue, the resource will no longer be available in your
+      moderation queue and all flags will be dismissed.',
+    );
+  }
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['finish_moderation'] = array(
+    '#type' => 'submit',
+    '#value' => 'Finish Moderation',
+    '#attributes' => array('class' => array('button'))
+  );
+
+  return $form;
+}
+
+/**
+ * Validates form.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_resolve_all_flags_form_validate(&$form, &$form_state) {
+  $changes_made = FALSE;
+  if ($_SESSION['sbac-flag']['changes-made']) {
+    $changes_made = TRUE;
+  }
+
+  if ($changes_made) {
+    if (empty($form_state['values']['contributor_message'])) {
+      form_set_error('contributor_message', 'Please leave a message for the contributor to continue');
+    }
+  }
 }

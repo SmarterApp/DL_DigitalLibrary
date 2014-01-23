@@ -121,6 +121,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Resource has been flagged for review.'),
         'class' => 'ResourceFlagged',
       ),
+      // resolved all flags
+      array(
+        'name' => 'resolved_all_flags',
+        'description' => t('Resolved all resource flags.'),
+        'class' => 'ResolvedAllFlags',
+      ),
     );
 
     foreach ($types as &$type) {

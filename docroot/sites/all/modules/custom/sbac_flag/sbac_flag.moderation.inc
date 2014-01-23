@@ -24,6 +24,7 @@ function sbac_flag_moderation() {
   $query->groupBy('ef.target_id');
   $query->groupBy('ef.nid');
   $query->condition(db_or()->condition('ef.being_moderated', $user->uid)->condition('ef.being_moderated', 0));
+  $query->condition('ef.resolved', 0);
   $result = $query->execute();
   $count = 0;
   foreach ($result as $row) {
@@ -99,6 +100,7 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
   }
   else {
     $node->eck_flag->display_status = 'Needs Moderation';
+    $node->eck_flag->display_status_css = '';
   }
 
   $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
@@ -126,6 +128,7 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
   $node->eck_flag->button = $moderation_button;
   if ($row->being_moderated) {
     $node->eck_flag->display_status = 'Being Moderated';
+    $node->eck_flag->display_status_css = '';
     if ($eck_review) {
       $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id), 'fragment' => 'review-Moderate_flag'));
       $node->eck_flag->button = $url;

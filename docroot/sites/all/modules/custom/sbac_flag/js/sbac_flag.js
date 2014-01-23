@@ -4,7 +4,9 @@
   Drupal.behaviors.sbac_flag = {
     attach: function (context, settings) {
       // Hide modal button.
-      $('#sbac-flag-resource-modal').hide();
+      if ($('#sbac-flag-resource-modal').length) {
+        $('#sbac-flag-resource-modal').hide();
+      }
 
       // If there is an error, click the radio button so that the
       // textarea moves to the right location.

@@ -51,6 +51,20 @@ function sbac_flag_menu() {
     'file' => 'sbac_flag.modal.inc',
   );
 
+  $items['sbac-flag/%ctools_js/resolve-all-flags'] = array(
+    'page callback' => 'sbac_flag_resolve_all_flags_modal',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_flag.modal.inc',
+  );
+
+  $items['sbac-flag/%ctools_js/remove-resource'] = array(
+    'page callback' => 'sbac_flag_remove_resource_modal',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_flag.modal.inc',
+  );
+
   $items['moderation'] = array(
     'title' => t('Moderation'),
     'page callback' => 'sbac_flag_moderation',
@@ -86,9 +100,29 @@ function sbac_flag_moderation_access() {
  */
 function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'resource_node_form') {
-    if (!isset($_GET['flag'])) {
+    if (!isset($_GET['flag']) && !isset($form_state['sbac-flag'])) {
       field_group_hide_field_groups($form, array('group_flag'));
+      return;
     }
+
+    drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.form.js');
+    drupal_add_css(drupal_get_path('module','sbac_flag'). '/css/sbac_flag.css');
+    drupal_add_js(array('flag_moderation' => 1), 'setting');
+    $form_state['sbac-flag'] = TRUE;
+
+    $form['chosen_flag_option'] = array(
+      '#type' => 'hidden',
+      '#value' => 0,
+      '#attributes' => array('id' => 'chosen-flag-option'),
+    );
+    $form['#group_children']['chosen_flag_option'] = "group_flag";
+
+    $form['changes_made'] = array(
+      '#type' => 'hidden',
+      '#value' => 0,
+      '#attributes' => array('id' => 'changes-made'),
+    );
+    $form['#group_children']['chosen_flag_option'] = "group_flag";
 
     $form['resource_flag_container_open'] = array(
       '#markup' => '<div class="sbac-resource-container">',
@@ -139,20 +173,41 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
       '#weight' => 3,
     );
 
-    // JS to properly size the modal when submit resource is clicked.
-    $js_settings = array(
-      'sbac-flag-cancel-moderation' => array(
-        'modalSize' => array(
-          'type' => 'fixed',
-          'width' => 600,
-          'height' => 160,
+    $form['actions']['resolve_all_flags'] = array(
+      '#markup' => l(t('Resolve All Flags (modal)'), 'sbac-flag/nojs/resolve-all-flags', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-resolve-all-flags',
+          'id' => 'sbac-flag-resolve-all-flags'
         ),
-      ),
+        'query' => array(
+          'nid' => $form['#node']->nid
+        )
+      )),
+      '#weight' => 3,
     );
+
+    $form['actions']['remove_resource'] = array(
+      '#markup' => l(t('Remove Resource (modal)'), 'sbac-flag/nojs/remove-resource', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-remove-resource',
+          'id' => 'sbac-flag-remove-resource'
+        ),
+        'query' => array(
+          'nid' => $form['#node']->nid
+        )
+      )),
+      '#weight' => 3,
+    );
+
+    $js_settings = array('sbac-flag-cancel-moderation' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 160)));
+    drupal_add_js($js_settings, 'setting');
+    $js_settings = array('sbac-flag-resolve-all-flags' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
+    drupal_add_js($js_settings, 'setting');
+    $js_settings = array('sbac-flag-remove-resource' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 160)));
     drupal_add_js($js_settings, 'setting');
 
-    $create_urls[] = l('Resolve All Flags', 'node/add/resource', array('attributes' => array('class' => array('resolve-all-flags')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resolve-all')));
-    $create_urls[] = l('Remove Resource', 'node/add/resource', array('attributes' => array('class' => array('remove-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'remove')));
+    $create_urls[] = l('Resolve All Flags', '#', array('attributes' => array('class' => array('sbac-flag-resolve-all-flags')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resolve-all')));
+    $create_urls[] = l('Remove Resource', '#', array('attributes' => array('class' => array('sbac-flag-remove-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'remove')));
     $finish_moderation_button = '<a class="button small arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
     $finish_moderation_button .= theme('item_list', array(
       'items' => $create_urls,
@@ -271,7 +326,7 @@ function sbac_flag_preprocess_page(&$vars) {
         // determine status of resource
         $status = sbac_flag_determine_status_for_resource($flags);
         $vars['flag']['status'] = $status;
-        $vars['flag']['button'] = "<a href='/" . $node->path['alias'] . "' class='button' >Open Resource Preview</a>";
+        $vars['flag']['button'] = "<a href='/" . $node->path['alias'] . "' class='button' target='_blank' >Open Resource Preview</a>";
       }
     }
   }
@@ -854,6 +909,15 @@ function sbac_flag_unset_being_moderated($node, $eck_review = FALSE) {
 }
 
 /**
+ * Resolves all resource flags for a given node.
+ *
+ * @param $node
+ */
+function sbac_flag_resolve_all_flags($node) {
+  db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 1, ':nid' => $node->nid, ':type' => 'resource'));
+}
+
+/**
  * Returns the status of the resource.
  *
  * @param $flags
@@ -1039,6 +1103,31 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
   $output = theme('flag_category_container', array('list_output' => $list_output));
 
   return $output;
+}
+
+/**
+ * @param $flags
+ */
+function sbac_flag_list_flag_categories($flags) {
+  $flag_categories = array();
+  foreach ($flags as $flag) {
+    $flag_categories[$flag->flag_selected][] = $flag;
+  }
+
+  $list_output = '';
+  foreach ($flag_categories as $category_tid => $flags) {
+    // create category
+    $term = taxonomy_term_load($category_tid);
+    $count_message = count($flags) . ' flag';
+    if (count($flags) > 1) {
+      $count_message .= 's';
+    }
+    $category_output[] = $term->name . ' - ' . $count_message;
+  }
+
+  $list_output = theme('item_list', array('items' => $category_output, 'title' => 'You are resolving the following flags', 'type' => 'ul', 'attributes' => array('class' => 'category-output')));
+
+  return $list_output;
 }
 
 /**
