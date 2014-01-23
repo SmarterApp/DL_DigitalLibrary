@@ -133,6 +133,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Removed Resource'),
         'class' => 'RemovedResource',
       ),
+      // removed resource review
+      array(
+        'name' => 'removed_resource_review',
+        'description' => t('Removed Resource Review'),
+        'class' => 'RemovedResourceReview',
+      ),
     );
 
     foreach ($types as &$type) {

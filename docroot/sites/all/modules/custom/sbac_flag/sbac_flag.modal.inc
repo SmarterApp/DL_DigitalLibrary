@@ -342,7 +342,6 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
         node_access_acquire_grants($node, TRUE);
         sbac_resource_save_current_state($node);
         // send notification
-        // notify contributor of the resource
         if ($task = taskit_get_object('removed_resource')) {
           global $user;
           $task->addVisibility($task::VISIBILITY_USER);
@@ -353,6 +352,150 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
         }
         // dismiss all flags
         sbac_flag_remove_resource($node);
+        // redirect to moderation
+        $output[] = ctools_ajax_command_redirect('moderation');
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Displays the start resource review moderation modal.
+ *
+ * @param bool $js
+ */
+function sbac_flag_cancel_resource_review_moderation_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $title = 'You are about to cancel moderation of this resource review';
+
+    $form_state = array(
+      'title' => $title,
+      'ajax' => TRUE,
+      'nid' => $_GET['nid'],
+      'review' => $_GET['review'],
+    );
+
+    module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
+    $output = ctools_modal_form_wrapper('sbac_flag_cancel_resource_review_moderation_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] == 'Cancel Moderation') {
+        $node = node_load($form_state['nid']);
+        $eck_review = $form_state['review'];
+        sbac_flag_unset_being_moderated($node, $eck_review);
+        // redirect to moderation
+        $output[] = ctools_ajax_command_redirect('moderation');
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The Resolve All Resource Review Flags modal.
+ *
+ * @param bool $js
+ */
+function sbac_flag_resolve_all_resource_review_flags_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $title = 'You are about to resolve all flags';
+
+    $form_state = array(
+      'title' => $title,
+      'ajax' => TRUE,
+      'nid' => $_GET['nid'],
+      'review' => $_GET['review'],
+    );
+
+    module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
+    $output = ctools_modal_form_wrapper('sbac_flag_resolve_all_resource_review_moderation_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
+        // resolve all flags
+        $node = node_load($form_state['nid']);
+        $eck_review = $form_state['review'];
+        sbac_flag_resolve_all_flags($node, $eck_review);
+        // redirect
+        $output[] = ctools_ajax_command_redirect('moderation');
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Remove resource review modal
+ *
+ * @param bool $js
+ */
+function sbac_flag_remove_resource_review_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $title = 'You are about to delete resource review';
+
+    $form_state = array(
+      'title' => $title,
+      'ajax' => TRUE,
+      'nid' => $_GET['nid'],
+      'review' => $_GET['review'],
+    );
+
+    module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
+    $output = ctools_modal_form_wrapper('sbac_flag_remove_resource_review_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] == 'Delete Resource Review') {
+        $node = node_load($form_state['nid']);
+        // remove resource review
+        $entity = entity_load_single('review', $form_state['review']);
+        $entity_wrapper = entity_metadata_wrapper('review', $entity);
+        $entity_wrapper->status->set(0);
+        $entity_wrapper->save();
+        // send notification
+        if ($task = taskit_get_object('removed_resource_review')) {
+          global $user;
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $node->nid);
+          $task->addOwningUser($node->uid);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+        }
+        // dismiss all flags
+        sbac_flag_resolve_all_flags($node, $form_state['review']);
         // redirect to moderation
         $output[] = ctools_ajax_command_redirect('moderation');
       }
@@ -593,6 +736,152 @@ function sbac_flag_remove_resource_form_submit(&$form, &$form_state) {
   $node = node_load($form_state['nid']);
   if ($node) {
     $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
+    if ($flags) {
+      foreach ($flags as $flag) {
+        db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
+      }
+    }
+  }
+}
+
+/**
+ * Resource review cancel form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_flag_cancel_resource_review_moderation_form($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => 'If you continue, the resource review will be
+    returned to the moderation queue in its original state',
+  );
+
+  $form['continue'] = array(
+    '#type' => 'submit',
+    '#value' => 'Continue Moderation',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel Moderation',
+    '#attributes' => array('class' => array('button'))
+  );
+
+  return $form;
+}
+
+/**
+ * Resolve all resource review form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_state) {
+  $form = array();
+
+  $changes_made = FALSE;
+  $form_state['changes-made'] = $changes_made;
+  if ($_SESSION['sbac-flag']['changes-made']) {
+    $changes_made = TRUE;
+    $form_state['changes-made'] = $changes_made;
+  }
+
+  // Get all flags that will be resolved.
+  $node = node_load($_GET['nid']);
+  $categories = array();
+  if ($node) {
+    $flags = sbac_flag_get_all_flags_for_node($node, 'review');
+    $categories = sbac_flag_list_flag_categories($flags, 'review');
+  }
+
+  $form['categories'] = array(
+    '#markup' => $categories,
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => 'If you continue, the resource review will
+    no longer be available in your moderation queue and all flags will be dismissed.',
+  );
+
+  $form['continue'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Finish Moderation',
+    '#attributes' => array('class' => array('button'))
+  );
+
+  return $form;
+}
+
+/**
+ * Remove resource review form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_flag_remove_resource_review_form($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => 'If you continue, the resource review will no longer
+    be available in your moderation queue and will be removed from the resource.',
+  );
+
+  $form['contributor_message'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Please leave a message for review contributor' . theme('form_required_marker'),
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['finish_moderation'] = array(
+    '#type' => 'submit',
+    '#value' => 'Delete Resource Review',
+    '#attributes' => array('class' => array('button'))
+  );
+
+  return $form;
+}
+
+/**
+ * Validates form.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_remove_resource_review_form_validate(&$form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Delete Resource Review') {
+    if (empty($form_state['values']['contributor_message'])) {
+      form_set_error('contributor_message', 'Please leave a message for the review contributor to continue');
+    }
+  }
+}
+
+/**
+ * Form submit handler.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_flag_remove_resource_review_form_submit(&$form, &$form_state) {
+  $node = node_load($form_state['nid']);
+  if ($node) {
+    $flags = sbac_flag_get_all_flags_for_node($node, 'review');
     if ($flags) {
       foreach ($flags as $flag) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));

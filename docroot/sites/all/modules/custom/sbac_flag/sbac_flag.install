@@ -64,7 +64,7 @@ function sbac_flag_update_7005() {
  * Adds node ID's to eck_flag table as well.
  */
 function sbac_flag_update_7006() {
-  return db_query('UPDATE {eck_flag} ef SET ef.nid = (SELECT er.node_id FROM eck_review er WHERE er.id = ef.target_id AND ef.target_type = `review`)');
+  return db_query("UPDATE {eck_flag} ef SET ef.nid = (SELECT er.node_id FROM eck_review er WHERE er.id = ef.target_id AND ef.target_type = 'review')");
 }
 
 /**
