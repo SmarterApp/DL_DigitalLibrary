@@ -182,6 +182,10 @@
         isDirty = false;
         clicked = true;
       });
+
+      $('#edit-finish-moderation').click( function () {
+        isDirty = false;
+      });
     }
   };
 
