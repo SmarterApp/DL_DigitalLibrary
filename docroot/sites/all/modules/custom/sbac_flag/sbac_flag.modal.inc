@@ -282,8 +282,20 @@ function sbac_flag_resolve_all_flags_modal($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
+        global $user;
         $node = node_load($form_state['nid']);
+        // resolve all the flags
         sbac_flag_resolve_all_flags($node);
+
+        // notify contributor of the resource
+        if ($task = taskit_get_object('resolved_all_flags')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $node->nid);
+          $task->addOwningUser($node->uid);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+        }
+
         $output[] = ctools_ajax_command_redirect('moderation');
       }
     }
@@ -409,8 +421,10 @@ function sbac_flag_resolve_all_flags_form($form, $form_state) {
   $form = array();
 
   $changes_made = FALSE;
+  $form_state['changes-made'] = $changes_made;
   if ($_SESSION['sbac-flag']['changes-made']) {
     $changes_made = TRUE;
+    $form_state['changes-made'] = $changes_made;
   }
 
   // Get all flags that will be resolved.

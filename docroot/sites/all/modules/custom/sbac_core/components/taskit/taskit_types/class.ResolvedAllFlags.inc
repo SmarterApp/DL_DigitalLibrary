@@ -11,10 +11,11 @@ class ResolvedAllFlags extends \taskit\sbac_core\BaseTask {
     if ($node && $account) {
       $this->setTaskUrl('node/' . $node->nid);
       $output = array();
-      $output[] = t('The resource !title has been flagged as urgent and needs moderation.', array(
+      $output[] = t('All flags have been resolved for the resource titled !title.', array(
         '!title' => '<span class="taskit-title">' . $node->title . '</span>',
       ));
       $output[] = '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format). '</span> ';
+      $output[] = '<div class="taskit-content-toggle">' . $details . '</div>';
       return $this->linkDisplay($output);
     }
 
