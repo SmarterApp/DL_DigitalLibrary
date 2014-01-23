@@ -56,6 +56,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#required' => TRUE,
     '#size' => 30,
     '#default_value' => sbac_report_get_session_value('sne', 'name'),
+    '#attributes' => array('aria-required' => "true"),
   );
 
   sbac_report_build_date_range_dropdown($form, $session_date_range, $date_display, $date_options, '');
