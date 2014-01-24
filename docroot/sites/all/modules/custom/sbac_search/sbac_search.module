@@ -98,6 +98,7 @@ function sbac_resource_clear_library_page() {
       case 'digital-library-resources':
         $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
         $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
+        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = '';
         drupal_goto($location);
         break;
       case 'my-resources':

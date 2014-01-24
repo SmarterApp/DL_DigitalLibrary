@@ -395,7 +395,7 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
   if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
       $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
 
-    $current_sorting = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS];
+    $current_sorting = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
     $sort_field_key = 'created';
     switch ($current_sorting) {
       case 'dl-newest':
@@ -418,7 +418,6 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
     if (!empty($new_sorts)) {
       $view->display_handler->set_option('sorts', $new_sorts);
     }
-
   }
 }
 
