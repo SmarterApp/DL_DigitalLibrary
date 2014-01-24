@@ -599,9 +599,9 @@ function sbac_flag_resolve_all_flags_form($form, &$form_state) {
 
   if ($changes_made) {
     $form['submit_description'] = array(
-      '#markup' => 'If you continue, the resource will no longer be available in your moderation queue.
+      '#markup' => '<p>If you continue, the resource will no longer be available in your moderation queue.
       All of your changes will be saved and applied to the resource. The message will be sent to the
-      contributor and all the flags will be dismissed.',
+      contributor and all the flags will be dismissed.</p>',
     );
 
     $form['contributor_message'] = array(
@@ -611,21 +611,21 @@ function sbac_flag_resolve_all_flags_form($form, &$form_state) {
   }
   else {
     $form['submit_description'] = array(
-      '#markup' => 'If you continue, the resource will no longer be available in your
-      moderation queue and all flags will be dismissed.',
+      '#markup' => '<p>If you continue, the resource will no longer be available in your
+      moderation queue and all flags will be dismissed.</p>',
     );
   }
-
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
-  );
 
   $form['finish_moderation'] = array(
     '#type' => 'submit',
     '#value' => 'Finish Moderation',
     '#attributes' => array('class' => array('button'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
   return $form;

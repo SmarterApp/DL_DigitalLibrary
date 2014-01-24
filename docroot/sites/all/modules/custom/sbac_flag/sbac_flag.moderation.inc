@@ -128,7 +128,7 @@ function sbac_flag_get_flags() {
 
   $query = db_select('eck_flag', 'ef');
   $query->fields('ef');
-  $query->orderBy('ef.urgent', 'DESC');
+//  $query->orderBy('ef.urgent', 'DESC');
   $query->orderBy('ef.created', 'ASC');
   $query->groupBy('ef.target_id');
   $query->groupBy('ef.nid');
@@ -181,8 +181,43 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
     if ($node) {
       $access = sbac_flag_determine_access_for_user($node, $user->uid);
       if ($access) {
+        // determine urgency
+        $urgent = sbac_flag_is_urgent($row, $node, $eck_flag, $eck_review);
+        if ($urgent) {
+          $sorted_flags['urgent'][] = $row;
+        }
+        else {
+          $sorted_flags['y_urgent'][] = $row;
+        }
         $count++;
-        if ($count > $start && $count <= $end) {
+      }
+    }
+  }
+
+  $count = 0;
+  ksort($sorted_flags);
+  foreach ($sorted_flags as $type => $rows) {
+    foreach ($rows as $row) {
+      $count++;
+      if ($count > $start && $count <= $end) {
+        $node = FALSE;
+        $eck_review = FALSE;
+        $eck_flag = entity_load_single('flag', $row->id);
+
+        if ($row->type == 'resource') {
+          // resource node flag
+          $node = node_load($row->nid);
+        }
+        else {
+          // review flag
+          $eck_review = entity_load_single('review', $row->target_id);
+          if ($eck_review) {
+            $nid = field_entity_value($eck_review, 'node_id');
+            $node = node_load($nid);
+          }
+        }
+
+        if ($node) {
           $display_node = sbac_flag_list_content($row, $node, $eck_flag, $eck_review);
           $list_output .= theme('sbac_flag_list_card', array('node' => $display_node));
           $display_nodes[] = $display_node;
@@ -197,4 +232,41 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
   $return['list_output'] = $list_output;
 
   return $return;
+}
+
+/**
+ * Determine if this row is urgent or not.
+ *
+ * @param $row
+ * @param $node
+ * @param $eck_flag
+ * @param $eck_review
+ * @return bool
+ */
+function sbac_flag_is_urgent($row, &$node, $eck_flag, $eck_review) {
+  $urgent = FALSE;
+
+  $node->eck_flag = $row;
+  if ($eck_review) {
+    $node->eck_review = $eck_review;
+    $title = field_entity_value($eck_review, 'title');
+    $node->eck_review_title = $title;
+    $issue_type = field_entity_value($eck_flag, 'field_issue_type');
+    if ($issue_type == 'pii') {
+      $urgent = TRUE;
+      $node->eck_flag->urgent = 1;
+    }
+  }
+
+  if ($node->eck_flag->urgent) {
+    $node->eck_flag->display_status = 'Needs Urgent Moderation';
+    $node->eck_flag->display_status_css = 'urgent';
+    $urgent = TRUE;
+  }
+  else {
+    $node->eck_flag->display_status = 'Needs Moderation';
+    $node->eck_flag->display_status_css = '';
+  }
+
+  return $urgent;
 }
