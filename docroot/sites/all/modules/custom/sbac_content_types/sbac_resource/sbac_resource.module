@@ -2173,3 +2173,47 @@ function sbac_resource_truncate($html, $maxLength = 100) {
 
   return $newContent;
 }
+
+function sbac_resource_update_average_rating_score($nid) {
+  // Initialize variables.
+  $entity_type = 'review';
+  $all_reviews = array();
+  $scores = array();
+
+  // Query all reviews for the node.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', $entity_type)
+    ->entityCondition('bundle', 'end_use')
+    ->propertyCondition('node_id', $nid, '=');
+  $result = $query->execute();
+  if ($result[$entity_type]) {
+    $review_ids = array_keys($result[$entity_type]);
+    $all_reviews = entity_load($entity_type, $review_ids);
+  }
+
+  // Loop through results and pull the avg score value for each review.
+  if (!empty($all_reviews)) {
+    foreach ($all_reviews as $ent_id => $review) {
+      $review_data = entity_metadata_wrapper($entity_type, $review);
+      if (isset($review_data->field_avg_rating)) {
+        $scores[$ent_id] = $review_data->field_avg_rating->value();
+      }
+    }
+  }
+
+  $overall_avg = 0;
+  if (!empty($scores)) {
+    $overall_total = 0;
+    foreach ($scores as $score) {
+      $overall_total += $score;
+    }
+    $overall_avg = $overall_total / count($scores);
+  }
+
+  $resource_node = node_load($nid);
+  if (!empty($resource_node)) {
+    // Cant do full node save, workbench moderation doesnt like it.
+    $resource_node->field_node_avg_rating[LANGUAGE_NONE][0]['value'] = $overall_avg;
+    entity_save_field(array('field_node_avg_rating'), $resource_node, 'node', $nid);
+  }
+}

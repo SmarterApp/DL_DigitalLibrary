@@ -148,7 +148,7 @@ function review_form_submit($form, &$form_state) {
       foreach ($score_storage as $score) {
         $total_score += $score;
       }
-      $avg_score = $total_score / count($rating_fields);
+      $avg_score = $total_score / count($score_storage);
       $result[LANGUAGE_NONE][0]['value'] = $avg_score;
       $entity->{$avg_field_key} = $result;
     } else {
@@ -157,6 +157,9 @@ function review_form_submit($form, &$form_state) {
     }
 
     entity_save('review', $entity);
+
+    // Ensure the parent node gets its total avg rating recalculated.
+    sbac_resource_update_average_rating_score($node->nid);
 
     drupal_set_message(t('Your review posted successfully.'));
 
