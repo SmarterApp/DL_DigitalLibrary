@@ -100,6 +100,7 @@ function sbac_resource_field_group_info() {
       3 => 'field_unique_views',
       4 => 'field_resource_state',
       5 => 'field_html5',
+      6 => 'field_node_avg_rating',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
