@@ -7,69 +7,28 @@
  */
 function sbac_flag_moderation() {
   drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
+  drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.js');
   drupal_set_title('');
 
-  global $user;
-  $display_nodes = array();
-  $list_output = '';
-  $output = '';
-
-  //loop through all flags in eck_flag, determine access, display results.
-  // only display 7, count all.
-  // list view only.
-  $query = db_select('eck_flag', 'ef');
-  $query->fields('ef');
-  $query->orderBy('ef.urgent', 'DESC');
-  $query->orderBy('ef.created', 'ASC');
-  $query->groupBy('ef.target_id');
-  $query->groupBy('ef.nid');
-  $query->condition(db_or()->condition('ef.being_moderated', $user->uid)->condition('ef.being_moderated', 0));
-  $query->condition('ef.resolved', 0);
-  $result = $query->execute();
+  $result = sbac_flag_get_flags();
   $count = 0;
-  foreach ($result as $row) {
-    $node = FALSE;
-    $eck_review = FALSE;
-    $eck_flag = entity_load_single('flag', $row->id);
-    if ($row->type == 'resource') {
-      // resource node flag
-      $node = node_load($row->nid);
-    }
-    else {
-      // review flag
-      $eck_review = entity_load_single('review', $row->target_id);
-      if ($eck_review) {
-        $nid = field_entity_value($eck_review, 'node_id');
-        $node = node_load($nid);
-      }
-    }
-
-    if ($node) {
-      $access = sbac_flag_determine_access_for_user($node, $user->uid);
-      if ($access) {
-        $count++;
-        if (count($display_nodes) < SBAC_FLAG_MODERATION_COUNT) {
-          $display_node = sbac_flag_list_content($row, $node, $eck_flag, $eck_review);
-          $list_output .= theme('sbac_flag_list_card', array('node' => $display_node));
-          $display_nodes[] = $display_node;
-        }
-      }
-    }
-  }
-
+  $offset = 0;
+  $list_output = sbac_flag_moderation_output($result, $count, $offset);
   $_SESSION['sbac-flag']['count'] = $count;
-  if ($count > SBAC_FLAG_MODERATION_COUNT) {
+  $load_more_button = NULL;
+  if ($count > SBAC_FLAG_MODERATION_COUNT && !isset($list_output['remove_button'])) {
     // create load more button.
-    $var = '';
+    $load_more_button = '<a href="#" offset="' . $offset . '" class="load-more button green" id="sbac-load-more">Load More</a>';
   }
 
-  if ($display_nodes) {
+  $output = '';
+  if ($list_output) {
     ctools_include('modal');
     ctools_include('ajax');
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
     drupal_add_library('system', 'drupal.ajax');
-    $output = theme('sbac_flag_moderation', array('list_output' => $list_output));
+    $output = theme('sbac_flag_moderation', array('list_output' => $list_output['list_output'], 'load_more' => $load_more_button));
   }
 
   return $output;
@@ -139,4 +98,103 @@ function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
     }
   }
   return $node;
+}
+
+/**
+ * Loads more flag content into the moderation page.
+ */
+function sbac_flag_load_more() {
+  $list_output = '';
+  $offset = $_POST['offset'];
+  $remove_button = FALSE;
+  if ($offset) {
+    $result = sbac_flag_get_flags();
+    $count = 0;
+    $list_output = sbac_flag_moderation_output($result, $count, $offset);
+    if (isset($list_output['remove_button'])) {
+      $remove_button = TRUE;
+    }
+  }
+  $output = array('list_output' => $list_output['list_output'], 'offset' => $offset, 'remove_button' => $remove_button);
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Gets a set of flags.
+ */
+function sbac_flag_get_flags() {
+  global $user;
+
+  $query = db_select('eck_flag', 'ef');
+  $query->fields('ef');
+  $query->orderBy('ef.urgent', 'DESC');
+  $query->orderBy('ef.created', 'ASC');
+  $query->groupBy('ef.target_id');
+  $query->groupBy('ef.nid');
+  $query->condition(db_or()->condition('ef.being_moderated', $user->uid)->condition('ef.being_moderated', 0));
+  $query->condition('ef.resolved', 0);
+  $result = $query->execute();
+  return $result;
+}
+
+/**
+ * Returns moderation output.
+ *
+ * @param $result
+ * @param $count
+ * @return string
+ */
+function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
+  global $user;
+  $display_nodes = array();
+  $list_output = '';
+
+  if ($offset) {
+    $start = SBAC_FLAG_MODERATION_COUNT * $offset;
+    $end = $start + SBAC_FLAG_MODERATION_COUNT;
+    $offset++;
+  }
+  else {
+    $start = 0;
+    $end = SBAC_FLAG_MODERATION_COUNT;
+    $offset = 1;
+  }
+
+  foreach ($result as $row) {
+    $node = FALSE;
+    $eck_review = FALSE;
+    $eck_flag = entity_load_single('flag', $row->id);
+    if ($row->type == 'resource') {
+      // resource node flag
+      $node = node_load($row->nid);
+    }
+    else {
+      // review flag
+      $eck_review = entity_load_single('review', $row->target_id);
+      if ($eck_review) {
+        $nid = field_entity_value($eck_review, 'node_id');
+        $node = node_load($nid);
+      }
+    }
+
+    if ($node) {
+      $access = sbac_flag_determine_access_for_user($node, $user->uid);
+      if ($access) {
+        $count++;
+        if ($count > $start && $count <= $end) {
+          $display_node = sbac_flag_list_content($row, $node, $eck_flag, $eck_review);
+          $list_output .= theme('sbac_flag_list_card', array('node' => $display_node));
+          $display_nodes[] = $display_node;
+        }
+      }
+    }
+  }
+
+  if ($count < $end) {
+    $return['remove_button'] = TRUE;
+  }
+  $return['list_output'] = $list_output;
+
+  return $return;
 }

@@ -96,6 +96,12 @@ function sbac_flag_menu() {
     'file' => 'sbac_flag.moderation.inc',
   );
 
+  $items['sbac-flag/load-more'] = array(
+    'page callback' => 'sbac_flag_load_more',
+    'access arguments' => array('access content'),
+    'file' => 'sbac_flag.moderation.inc',
+  );
+
   return $items;
 }
 
@@ -270,7 +276,7 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
   $items['sbac_flag_moderation'] = array(
     'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
     'template' => 'flag-moderation',
-    'variables' => array('list_output' => NULL),
+    'variables' => array('list_output' => NULL, 'load_more' => NULL),
   );
 
   $items['flag_category'] = array(

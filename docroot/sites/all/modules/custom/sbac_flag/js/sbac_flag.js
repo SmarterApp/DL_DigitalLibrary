@@ -23,4 +23,33 @@
     }
   };
 
+  var ajax_request = null;
+  Drupal.behaviors.sbac_flag_load_more = {
+    attach: function (context, settings) {
+      $('#sbac-load-more').click( function() {
+        if (ajax_request == null) {
+          var offset = $(this).attr('offset');
+          ajax_request = $.ajax({
+            type: 'POST',
+            url: "/sbac-flag/load-more",
+            data: {'offset' : offset},
+            success: function(data) {
+              ajax_request = null;
+              var response = jQuery.parseJSON(data);
+              $('#sbac-flag-mod-cont').append(response.list_output);
+              $('#sbac-load-more').attr('offset', response.offset);
+              if (response.remove_button == true) {
+                $('#sbac-load-more').hide();
+              }
+            },
+            error: function(data) {
+
+            }
+          });
+        }
+        return false;
+      });
+    }
+  };
+
 })(jQuery);
