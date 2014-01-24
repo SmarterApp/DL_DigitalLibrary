@@ -8522,82 +8522,77 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    User Profile
    ----------------------------------------- */
-/* line 1115, ../sass/custom.scss */
-.user-profile h2 {
-  margin: 0;
-  padding-bottom: 0;
-}
-/* line 1120, ../sass/custom.scss */
-.user-profile .profile-title {
-  font-size: 18px;
-  color: #494949;
-}
-/* line 1124, ../sass/custom.scss */
-.user-profile .profile-details {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  margin: 15px 0;
-  padding: 5px 0;
-}
-/* line 1128, ../sass/custom.scss */
-.user-profile .profile-details .field {
-  margin: 0 0 10px;
-}
-/* line 1136, ../sass/custom.scss */
-.user-profile .name {
-  font-size: 38px;
-  font-weight: normal;
-  color: #0085ad;
-}
-/* line 1142, ../sass/custom.scss */
-.user-profile .profile-school {
-  margin-bottom: 5px;
-  font-size: 18px;
-  color: #494949;
-}
-/* line 1148, ../sass/custom.scss */
-.user-profile .profile-email-address {
-  margin-bottom: 5px;
-  font-size: 18px;
+/*.user-profile {
+  h2 {
+    margin: 0;
+    padding-bottom: 0;
+  }
+
+  .profile-title {
+    font-size: 18px;
+    color: #494949;
+  }
+  .profile-details {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+
+    .field {
+      margin: 0 0 10px;
+    }
+
+    margin: 15px 0;
+    padding: 5px 0;
+  }
+
+  .name {
+    font-size: 38px;
+    font-weight: normal;
+    color: #0085ad;
+  }
+
+  .profile-school {
+    margin-bottom: 5px;
+    font-size: 18px;
+    color: #494949;
+  }
+
+  .profile-email-address {
+    margin-bottom: 5px;
+    font-size: 18px;
+  }
 }
 
-/* line 1154, ../sass/custom.scss */
 .row.first {
-  padding: 40px;
-}
-/* line 1157, ../sass/custom.scss */
-.row.first .user-picture {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-  text-align: center;
-  overflow: hidden;
-}
-/* line 1162, ../sass/custom.scss */
-.row.first .user-picture img {
-  width: 100%;
-}
-/* line 1167, ../sass/custom.scss */
-.row.first .introduction {
-  margin-top: 10px;
-  font-size: 14px;
-  border-top: 1px #ccc solid;
-  padding-top: 10px;
-}
-/* line 1174, ../sass/custom.scss */
-.row.first .profile-details {
-  font-size: 14px;
-  padding: 10px 0;
-}
-/* line 1178, ../sass/custom.scss */
-.row.first .profile-details .title {
-  font-weight: bold;
-  color: #246a34;
+  padding: 25px 35px;
+
+  .user-picture {
+    @include border-radius(5px);
+    text-align: center;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .introduction {
+    margin-top: 10px;
+    font-size: 14px;
+    border-top: 1px #ccc solid;
+    padding-top: 10px;
+  }
+
+  .profile-details {
+    font-size: 14px;
+    padding: 10px 0;
+
+    .title {
+      font-weight: bold;
+      color: #246a34;
+    }
+  }
 }
 
-/* line 1185, ../sass/custom.scss */
 .line {
   position: relative;
   width: 930px;
@@ -8605,7 +8600,7 @@ a.tabledrag-handle .handle {
   top: 55px;
   border-bottom: 1px #ccc solid;
 }
-
+*/
 /* -----------------------------------------
    Help Modal
    ----------------------------------------- */
