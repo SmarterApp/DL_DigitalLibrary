@@ -186,8 +186,9 @@ h3, h4, h5, h6 {
 }
 
 button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus, button.disabled.secondary, button[disabled].secondary, .button.disabled.secondary, .button[disabled].secondary {
-  background: rgba(191, 216, 229, 0.9);
-  border: 1px rgba(0, 98, 152, .5) solid;
+  /*background: rgba(191, 216, 229, 0.9);
+    border: 1px rgba(0, 98, 152, .5) solid;*/
+	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
   .button {
@@ -240,15 +241,17 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 	}
 
   &:focus {
-    background: rgba(191, 216, 229, 1);
-    color: rgba(0, 98, 152, 1);
+    /*background: rgba(191, 216, 229, 1);
+        color: rgba(0, 98, 152, 1);*/
     outline: none;
+		background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 
     &:hover {
-      @include text-shadow(0px 1px 0px rgba(0,0,0,.5));
-      @include transition(all 500ms ease);
-      background: rgba(0, 133, 173, 1);
-      color: white;
+      /*@include text-shadow(0px 1px 0px rgba(0,0,0,.5));
+            @include transition(all 500ms ease);
+            background: rgba(0, 133, 173, 1);
+            color: white;*/
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
     }
   }
 }

@@ -233,3 +233,27 @@
   bottom: 10px;
   right: 0;
 }
+
+/*button*/
+/* line 238, ../sass/sbac_flag.scss */
+.flag-category-review-buttons {
+  text-align: center;
+  padding-top: 15px;
+}
+/* line 242, ../sass/sbac_flag.scss */
+.flag-category-review-buttons .cancel, .flag-category-review-buttons .finish {
+  display: inline-block;
+  margin: 0 15px;
+  position: relative;
+}
+/* line 247, ../sass/sbac_flag.scss */
+.flag-category-review-buttons .cancel .item-list, .flag-category-review-buttons .finish .item-list {
+  position: absolute;
+  top: 6px;
+  right: 40px;
+}
+/* line 252, ../sass/sbac_flag.scss */
+.flag-category-review-buttons .cancel .item-list ul, .flag-category-review-buttons .finish .item-list ul {
+  width: 190px;
+  text-align: left;
+}
