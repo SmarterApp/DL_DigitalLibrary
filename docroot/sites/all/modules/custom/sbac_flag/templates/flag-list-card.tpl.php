@@ -13,7 +13,7 @@
     <?php endif; ?>
 		<div class="row-right">
         <?php $class = ''; ?>
-        <?php if (isset($node->eck_flag->display_status_css)): ?>
+        <?php if (isset($node->eck_flag->display_status_css) && $node->eck_flag->display_status_css == 'urgent'): ?>
           <?php $class = 'urgent'; ?>
         <?php endif; ?>
     		<div class="flag-status <?php echo $class; ?>">
