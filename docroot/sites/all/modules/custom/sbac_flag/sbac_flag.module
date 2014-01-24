@@ -376,7 +376,8 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
     $entity_renderable['review'][$review]['review_vote']['#access'] = FALSE;
     $vars['flag']['review'] = render($entity_renderable);
     // determine message
-    $vars['flag']['status'] = sbac_flag_determine_status_for_resource_review($flags);
+    $status = sbac_flag_determine_status_for_resource_review($flags);
+    $vars['flag']['status'] = $status;
     // determine flags
     $vars['flag']['total'] = count($flags);
     $vars['flag']['count_message'] = count($flags);
@@ -391,34 +392,40 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
     }
 
     if ($_GET['flag'] != 'resolve-resource-review-flags') {
-      // button
-      $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-resource-review-moderation', array(
-        'attributes' => array(
-          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-resource-review-moderation',
-          'id' => 'sbac-flag-start-resource-review-moderation'
-        ),
-        'query' => array(
-          'nid' => $vars['node']->nid,
-          'eck_review' => $_GET['review'],
-        ),
-      ));
-
-      $js_settings = array(
-        'sbac-flag-start-resource-review-moderation' => array(
-          'modalSize' => array(
-            'type' => 'fixed',
-            'width' => 600,
-            'height' => 260,
+      if ($status == 'Resource Review is Being Moderated') {
+        $moderation_button = l('Continue Moderation', $vars['node']->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $review), 'fragment' => 'review-Moderate_flag'));
+      }
+      else {
+        // button
+        $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-resource-review-moderation', array(
+          'attributes' => array(
+            'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-resource-review-moderation',
+            'id' => 'sbac-flag-start-resource-review-moderation'
           ),
-        ),
-      );
-      drupal_add_js($js_settings, 'setting');
+          'query' => array(
+            'nid' => $vars['node']->nid,
+            'eck_review' => $_GET['review'],
+          ),
+        ));
 
-      ctools_include('modal');
-      ctools_include('ajax');
-      ctools_add_js('ajax-responder');
-      ctools_modal_add_js();
-      drupal_add_library('system', 'drupal.ajax');
+        $js_settings = array(
+          'sbac-flag-start-resource-review-moderation' => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 600,
+              'height' => 260,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings, 'setting');
+
+        ctools_include('modal');
+        ctools_include('ajax');
+        ctools_add_js('ajax-responder');
+        ctools_modal_add_js();
+        drupal_add_library('system', 'drupal.ajax');
+      }
+
 
       $vars['flag']['button'] = $moderation_button;
     }
@@ -447,33 +454,39 @@ function sbac_flag_create_resource_view_output(&$vars, $flags) {
   // determine status of resource
   $status = sbac_flag_determine_status_for_resource($flags);
   $vars['flag']['status'] = $status;
-  // button
-  $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-resource-moderation', array(
-    'attributes' => array(
-      'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-resource-moderation',
-      'id' => 'sbac-flag-start-resource-moderation'
-    ),
-    'query' => array(
-      'nid' => $vars['node']->nid,
-    ),
-  ));
 
-  $js_settings = array(
-    'sbac-flag-start-resource-moderation' => array(
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 600,
-        'height' => 260,
+  if ($status == 'Resource is Being Moderated') {
+    $moderation_button = l('Continue Moderation', 'node/' . $vars['node']->nid . '/edit', array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
+  }
+  else {
+    // button
+    $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-resource-moderation', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-resource-moderation',
+        'id' => 'sbac-flag-start-resource-moderation'
       ),
-    ),
-  );
-  drupal_add_js($js_settings, 'setting');
+      'query' => array(
+        'nid' => $vars['node']->nid,
+      ),
+    ));
 
-  ctools_include('modal');
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  ctools_modal_add_js();
-  drupal_add_library('system', 'drupal.ajax');
+    $js_settings = array(
+      'sbac-flag-start-resource-moderation' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 260,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
+
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    drupal_add_library('system', 'drupal.ajax');
+  }
 
   $vars['flag']['button'] = $moderation_button;
 }
@@ -1166,7 +1179,8 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
     $js_settings = array('sbac-flag-remove-resource-review' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
     drupal_add_js($js_settings, 'setting');
 
-    $finish_moderation_button = '<a class="button arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
+    $finish_moderation_button = '<div class="finish">';
+    $finish_moderation_button .= '<a class="button arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
     $finish_moderation_button .= theme('item_list', array(
       'items' => $create_urls,
       'attributes' => array(
@@ -1174,8 +1188,9 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
         'id' => 'sbac-flag-finish-moderation'
       )
     ));
+    $finish_moderation_button .= '</div>';
 
-    $list_output .= theme('flag_category_review_buttons', array('cancel' => $cancel_button, 'resolve' => $resolve_all_flags_button, 'delete' => $delete_resource_review_button, 'finish' => $finish_moderation_button));
+    $list_output .= theme('flag_category_review_buttons', array('cancel' => $cancel_button, 'finish' => $finish_moderation_button));
   }
 
   // encompassing tpl

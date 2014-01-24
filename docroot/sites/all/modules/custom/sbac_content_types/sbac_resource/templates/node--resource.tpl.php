@@ -136,7 +136,9 @@
     <div class="resource-flag-information <?php echo $flag['urgent_css']; ?>">
       <div class="flag-status"><?php echo $flag['status']; ?></div>
       <div class="flag-count"><?php echo $flag['count_message']; ?></div>
-      <div class="flag-button"><?php echo $flag['button']; ?></div>
+      <?php if (isset($flag['button'])): ?>
+        <div class="flag-button"><?php echo $flag['button']; ?></div>
+      <?php endif; ?>
     </div>
   <?php endif; ?>
 
