@@ -1111,7 +1111,7 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
    User Profile
    ----------------------------------------- */
-.user-profile {
+/*.user-profile {
   h2 {
     margin: 0;
     padding-bottom: 0;
@@ -1152,7 +1152,7 @@ a.tabledrag-handle .handle {
 }
 
 .row.first {
-  padding: 40px;
+  padding: 25px 35px;
 
   .user-picture {
     @include border-radius(5px);
@@ -1189,7 +1189,7 @@ a.tabledrag-handle .handle {
   top: 55px;
   border-bottom: 1px #ccc solid;
 }
-
+*/
 /* -----------------------------------------
    Help Modal
    ----------------------------------------- */
