@@ -2593,12 +2593,8 @@ function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
 
 function sbac_resource_digital_library_sort_form($form, $form_state) {
   $form = array();
-  // Get default values from sessions
-  // ======== ======== ======== ======== ======== ========
-  $default = 'dl-most-viewed';
-  //   code goes here.
-  // ======== ======== ======== ======== ======== ========
 
+  $default = 'dl-newest';
   $options = array(
     'dl-newest'         => t('Newest'),
     'dl-most-viewed'    => t('Most Viewed'),
@@ -2610,9 +2606,12 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
     $new_value_key = $form_state['values']['dl_sort_order'];
     $old_value_text = $options[$new_value_key];
     $options[$new_value_key] = t('Sort by: ' . $old_value_text);
+    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = $new_value_key;
   } else {
     $options[$default] = t('Sort by: ' . $options[$default]);
+    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = $default;
   }
+
 
   // Needs to ajax submit to set the session variable that tracks default state.
   $form['dl_sort_order'] = array(

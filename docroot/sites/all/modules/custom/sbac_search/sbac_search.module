@@ -10,6 +10,10 @@ define('SBAC_SEARCH_MY_RESOURCES_FILTERS', 'sbac-my-resources-filters');
 define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS', 'sbac-digital-library-filters');
 define('SBAC_SEARCH_RESOURCE_REVIEW_FILTERS', 'sbac-resource-review-filters');
 
+define('SBAC_SEARCH_MY_RESOURCES_SORTS', 'sbac-my-resources-sorts');
+define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS', 'sbac-digital-library-sorts');
+define('SBAC_SEARCH_RESOURCE_REVIEW_SORTS', 'sbac-resource-review-sorts');
+
 define('SBAC_SEARCH_MY_RESOURCES_COUNT', 'sbac-my-resources-count');
 define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT', 'sbac-digital-library-count');
 define('SBAC_SEARCH_RESOURCE_REVIEW_COUNT', 'sbac-resource-review-count');
