@@ -157,12 +157,12 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
     $form['#group_children']['resource_flag_container_open'] = "group_flag";
 
     $default_value = $form['title']['#default_value'];
-    $form['title_of_resource_basic'] = array(
+    $form['title_of_resource_flag'] = array(
       '#markup' => $default_value,
       '#prefix' => '<h2 class="title-of-resource">',
       '#suffix' => '</h2>'
     );
-    $form['#group_children']['title_of_resource_basic'] = "group_flag";
+    $form['#group_children']['title_of_resource_flag'] = "group_flag";
 
     $submission_flag_guidelines = variable_get('sbac_resource_flag_guide');
     $form['submisison_flag_guidelines'] = array (
