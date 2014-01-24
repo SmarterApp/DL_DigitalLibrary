@@ -593,6 +593,10 @@ function sbac_flag_resolve_all_flags_form($form, &$form_state) {
     $categories = sbac_flag_list_flag_categories($flags);
   }
 
+  $form['container_prefix'] = array(
+    '#prefix' => '<div class="flag-modal-cont">',
+  );
+
   $form['categories'] = array(
     '#markup' => $categories,
   );
@@ -615,6 +619,10 @@ function sbac_flag_resolve_all_flags_form($form, &$form_state) {
       moderation queue and all flags will be dismissed.</p>',
     );
   }
+
+  $form['container_suffix'] = array(
+    '#suffix' => '</div>',
+  );
 
   $form['finish_moderation'] = array(
     '#type' => 'submit',

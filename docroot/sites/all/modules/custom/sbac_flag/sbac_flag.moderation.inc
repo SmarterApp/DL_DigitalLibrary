@@ -42,26 +42,6 @@ function sbac_flag_moderation() {
  * @param $eck_review
  */
 function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
-  $node->eck_flag = $row;
-  if ($eck_review) {
-    $node->eck_review = $eck_review;
-    $title = field_entity_value($eck_review, 'title');
-    $node->eck_review_title = $title;
-    $issue_type = field_entity_value($eck_flag, 'field_issue_type');
-    if ($issue_type == 'pii') {
-      $node->eck_flag->urgent = 1;
-    }
-  }
-
-  if ($node->eck_flag->urgent) {
-    $node->eck_flag->display_status = 'Needs Urgent Moderation';
-    $node->eck_flag->display_status_css = 'urgent';
-  }
-  else {
-    $node->eck_flag->display_status = 'Needs Moderation';
-    $node->eck_flag->display_status_css = '';
-  }
-
   $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
     'attributes' => array(
       'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
@@ -168,6 +148,9 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
     if ($row->type == 'resource') {
       // resource node flag
       $node = node_load($row->nid);
+      unset($node->eck_flag);
+      unset($node->eck_review);
+      unset($node->eck_review_title);
     }
     else {
       // review flag
@@ -184,14 +167,21 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
         // determine urgency
         $urgent = sbac_flag_is_urgent($row, $node, $eck_flag, $eck_review);
         if ($urgent) {
-          $sorted_flags['urgent'][] = $row;
+          $sorted_flags['urgent'][$count]['row'] = $row;
+          $sorted_flags['urgent'][$count]['node'] = $node;
+          $sorted_flags['urgent'][$count]['eck_flag'] = $eck_flag;
+          $sorted_flags['urgent'][$count]['eck_review'] = $eck_review;
         }
         else {
-          $sorted_flags['y_urgent'][] = $row;
+          $sorted_flags['y_urgent'][$count]['row'] = $row;
+          $sorted_flags['y_urgent'][$count]['node'] = $node;
+          $sorted_flags['y_urgent'][$count]['eck_flag'] = $eck_flag;
+          $sorted_flags['y_urgent'][$count]['eck_review'] = $eck_review;
         }
         $count++;
       }
     }
+    unset($node);
   }
 
   $count = 0;
@@ -200,23 +190,10 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
     foreach ($rows as $row) {
       $count++;
       if ($count > $start && $count <= $end) {
-        $node = FALSE;
-        $eck_review = FALSE;
-        $eck_flag = entity_load_single('flag', $row->id);
-
-        if ($row->type == 'resource') {
-          // resource node flag
-          $node = node_load($row->nid);
-        }
-        else {
-          // review flag
-          $eck_review = entity_load_single('review', $row->target_id);
-          if ($eck_review) {
-            $nid = field_entity_value($eck_review, 'node_id');
-            $node = node_load($nid);
-          }
-        }
-
+        $node = $row['node'];
+        $eck_review = $row['eck_review'];
+        $eck_flag = $row['eck_flag'];
+        $row = $row['row'];
         if ($node) {
           $display_node = sbac_flag_list_content($row, $node, $eck_flag, $eck_review);
           $list_output .= theme('sbac_flag_list_card', array('node' => $display_node));

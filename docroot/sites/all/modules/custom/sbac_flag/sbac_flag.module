@@ -1248,7 +1248,7 @@ function sbac_flag_list_flag_categories($flags, $type = 'resource') {
     if (count($flags) > 1) {
       $count_message .= 's';
     }
-    $category_output[] = $name . ' - ' . $count_message;
+    $category_output[] = $name . ' - <span>' . $count_message . '</span>';
   }
 
   $list_output = theme('item_list', array('items' => $category_output, 'title' => 'You are resolving the following flags', 'type' => 'ul', 'attributes' => array('class' => 'category-output')));
