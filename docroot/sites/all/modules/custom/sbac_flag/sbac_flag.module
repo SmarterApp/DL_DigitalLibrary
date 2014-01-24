@@ -235,7 +235,7 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
 
     $create_urls[] = l('Resolve All Flags', '#', array('attributes' => array('class' => array('sbac-flag-resolve-all-flags')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resolve-all')));
     $create_urls[] = l('Remove Resource', '#', array('attributes' => array('class' => array('sbac-flag-remove-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'remove')));
-    $finish_moderation_button = '<a class="button small arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
+    $finish_moderation_button = '<a class="button arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
     $finish_moderation_button .= theme('item_list', array(
       'items' => $create_urls,
       'attributes' => array(
@@ -1166,7 +1166,7 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
     $js_settings = array('sbac-flag-remove-resource-review' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
     drupal_add_js($js_settings, 'setting');
 
-    $finish_moderation_button = '<a class="button small arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
+    $finish_moderation_button = '<a class="button arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
     $finish_moderation_button .= theme('item_list', array(
       'items' => $create_urls,
       'attributes' => array(
