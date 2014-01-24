@@ -232,6 +232,8 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 		min-width: 125px;*/
 	padding: 0 18px;
 	text-align: center;
+	background-color: #2AA549;
+  border: 1px solid #268A16;
 
   &:hover:not(.disabled) {
     background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
@@ -263,14 +265,16 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 
   &:hover, &:focus  {
     @include box-shadow(inset 0px 1px 0px 0px #006184);
-    background: #006184;
+    /*background: #006184;*/
+		/*background: #0084B0;*/
+		background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
   }
 }
 
 button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-continue, button.disabled, button[disabled], .button.disabled, .button[disabled] {
   @include global-button;
-	background-color: #0084B0;
-  border: 1px solid #0D6785;
+	/*background-color: #0084B0;
+	  border: 1px solid #0D6785;*/
 }
 
 button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, button.sbac-cancel-blue, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
@@ -312,7 +316,9 @@ button.small, .button.small {
 }
 
 button:hover, button:focus, .button:hover, .button:focus {
-	background-color: #0084B0 !important;
+	/*background-color: #0084B0 !important;*/
+	/*background-color: #2AA549 !important;*/
+	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
 .alert-box {

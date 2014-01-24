@@ -103,7 +103,9 @@ h2.name {
   }
 
   .section-container.auto > section.active > .content .helpful-info,
-  .section-container.auto > .section.active > .content .helpful-info {
+  .section-container.auto > .section.active > .content .helpful-info,
+  #notifications .helpful-info {
+	
     background-color: #F2F2F2;
 	 	border: 7px solid #FFFFFF;
     box-shadow: 0 1px 4px 0 rgba(4, 56, 78, 0.3);
@@ -162,20 +164,20 @@ h2.name {
   .section-container.auto .content h2 {
     color: rgb(99, 102, 106);
   }
-  #notifications .helpful-info {
-    margin-top: 30px;
-    margin-bottom: 40px;
-    background: rgba(237, 243, 224, 1);
-    padding: 10px 30px;
-    border: 1px rgba(99, 102, 106, 1) solid;
-    color: rgba(99, 102, 106, 1);
-    a {
-      color: #006298;
-      &:hover {
-        color: #04384e;
+  /*#notifications .helpful-info {
+      margin-top: 30px;
+      margin-bottom: 40px;
+      background: rgba(237, 243, 224, 1);
+      padding: 10px 30px;
+      border: 1px rgba(99, 102, 106, 1) solid;
+      color: rgba(99, 102, 106, 1);
+      a {
+        color: #006298;
+        &:hover {
+          color: #04384e;
+        }
       }
-    }
-  }
+    }*/
   .section-container.auto > section:first-child > .title a {
 		border-left: 1px solid #cecece;
 	}
@@ -379,7 +381,7 @@ h2.name {
     #edit-actions {
       text-align: right;
 			float: right;
-      border-top: 1px #aaa solid;
+      /*border-top: 1px #aaa solid;*/
       padding-top: 20px;
 			width: 67%;
     }
