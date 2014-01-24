@@ -624,16 +624,24 @@ function sbac_flag_resolve_all_flags_form($form, &$form_state) {
     '#suffix' => '</div>',
   );
 
+  $form['button_prefix'] = array(
+    '#prefix' => '<div class="flag-button-cont">',
+  );
+
   $form['finish_moderation'] = array(
     '#type' => 'submit',
     '#value' => 'Finish Moderation',
-    '#attributes' => array('class' => array('button'))
+    '#attributes' => array('class' => array('button')),
   );
 
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['button_suffix'] = array(
+    '#suffix' => '</div>',
   );
 
   return $form;
