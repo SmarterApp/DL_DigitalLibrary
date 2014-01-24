@@ -7,7 +7,7 @@
  * @return [type]             [description]
  */
 function review_form_validate($form, &$form_state) {
-  switch ($form_state['current_state']) { 
+  switch ($form_state['current_state']) {
     case 'create':
       // perform profanity validation on title
       if (profanity_validate_text($form_state['values']['title'])) {
@@ -33,9 +33,9 @@ function review_form_validate($form, &$form_state) {
         unset($form_state['values']['field_appropriate_for']);
       }
 
-      break;  
-  
-    case 'preview': 
+      break;
+
+    case 'preview':
     default:
       // no validation necessary
       break;
@@ -112,19 +112,48 @@ function review_form_submit($form, &$form_state) {
       'entity_type' => 'review',
     ));
 
+    // Added array values to track field info.
+    //  TRUE = fivestar rating field
+    //  FALSE = Not fivestar field.
     $fields = array(
-      'title',
-      'field_details',
-      'field_student_learning',
-      'field_pro_dev',
-      'field_ease_use',
-      'field_appropriate_for',
+      'title'                   => FALSE,
+      'field_details'           => FALSE,
+      'field_student_learning'  => TRUE,
+      'field_pro_dev'           => TRUE,
+      'field_ease_use'          => TRUE,
+      'field_appropriate_for'   => FALSE,
     );
 
-    foreach ($fields as $field_key) {
+    $score_storage = array();
+    foreach ($fields as $field_key => $is_rating_field) {
       if (isset($form_state['create_values'][$field_key])) {
         $entity->{$field_key} = $form_state['create_values'][$field_key];
+
+        // Check if the field stores node ratings.
+        if($is_rating_field) { //if (in_array($field_key, $rating_fields)) { // Need to compute averages.
+          $current_rating = 0;
+          if (!empty($form_state['create_values'][$field_key])) {
+            $current_rating = $form_state['create_values'][$field_key][LANGUAGE_NONE][0]['rating'];
+          }
+          $score_storage[] = $current_rating;
+        }
       }
+    }
+
+    // Compute the average rating. Save it into the field.
+    $total_score = 0;
+    $avg_field_key = 'field_avg_rating';
+    $result = array();
+    if (!empty($score_storage)) {
+      foreach ($score_storage as $score) {
+        $total_score += $score;
+      }
+      $avg_score = $total_score / count($rating_fields);
+      $result[LANGUAGE_NONE][0]['value'] = $avg_score;
+      $entity->{$avg_field_key} = $result;
+    } else {
+      $result[LANGUAGE_NONE][0]['value'] = 0;
+      $entity->{$avg_field_key} = $result;
     }
 
     entity_save('review', $entity);

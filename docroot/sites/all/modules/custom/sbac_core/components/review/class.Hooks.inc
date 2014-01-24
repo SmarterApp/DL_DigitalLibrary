@@ -61,8 +61,8 @@ class Hooks extends \devtools\Hooks {
 
   /**
    * Extends hook_init().
-   * 
-   * Don't remove this empty method!! We must have this in order for this class 
+   *
+   * Don't remove this empty method!! We must have this in order for this class
    * to get instantiated (and thus the postInit() method called) before Display
    * Suite's hooks fire and collect field data, otherwise the DS fields from
    * the postInit() method will be added *after* DS collects field data, neve
@@ -119,18 +119,18 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_form_alter(&$form, &$form_state, $form_id) {
     $args = func_get_args();
-    
+
     // feedback add/edit form
     if (preg_match('/^eck__entity__form_(edit|add)_review_(' . implode('|', $this->_bundles) . ')$/', $form_id, $matches)) {
       // wrap in a selector that'll be targeted for AJAX replacement on form submissions
         $form['#prefix'] = '<div id="' . $this::FORM_WRAPPER . '">';
         $form['#suffix'] = '</div>';
-        
+
       // prep structure for multi-step functionality
         if (!isset($form_state['current_state'])) {
           $form_state['current_state'] = 'create';
         }
-        
+
       // we store the node in state because it won't always be available for grabs (ex. ajax requests, which have
       // a non-node URI)
         if (!isset($form_state['node_object'])) {
@@ -139,7 +139,7 @@ class Hooks extends \devtools\Hooks {
           }
           elseif ($node = node_load($form['#entity']->node_id)) {
             $form_state['node_object'] = $node;
-          } 
+          }
           else {
             drupal_set_message(t('Could not find resource associated with this review.'), 'error');
           }
@@ -177,7 +177,7 @@ class Hooks extends \devtools\Hooks {
 
         // remove default submit button
         unset($form['submit']);
-        
+
         // add our validation handler in addition to existing ECK one
         $form['#validate'][] = 'review_form_validate';
 
@@ -193,8 +193,8 @@ class Hooks extends \devtools\Hooks {
 
       // handle state
         foreach ($form as $key => $item) {
-          if (  $key{0} != '#' && 
-                strpos($key, 'state_') === 0 && 
+          if (  $key{0} != '#' &&
+                strpos($key, 'state_') === 0 &&
                 $key != 'state_' . $form_state['current_state']) {
             $form[$key]['#access'] = FALSE;
           }
@@ -268,7 +268,7 @@ class Hooks extends \devtools\Hooks {
     $values = array();
     if (isset($form_state[$form_state['current_state'] . '_values'])) {
       $values = $form_state[$form_state['current_state'] . '_values'];
-    
+
       form_set_defaults($this->_fields, $values, $form);
     }
 
@@ -286,6 +286,7 @@ class Hooks extends \devtools\Hooks {
     // disable access to properties
     $form['status']['#access'] = FALSE;
     $form['node_id']['#access'] = FALSE;
+    $form['field_avg_rating']['#access'] = FALSE;
 
     // ensure node_id property is always populated
     $form['node_id']['#default_value'] = $form_state['node_object']->nid;
@@ -326,9 +327,11 @@ class Hooks extends \devtools\Hooks {
     if (!isset($form_state['create_values'])) {
       return;
     }
+    // Hide the field that stores average score.
+    $form['field_avg_rating']['#access'] = FALSE;
 
     $form['state_preview']['intro']['#markup'] = t('
-      This is your review as it will appear to others. Your profile card will be included adjacent to 
+      This is your review as it will appear to others. Your profile card will be included adjacent to
       your review (accessible by hovering your mouse over the link). You can adjust your !link to control
       what others see.', array(
         '!link' => l(t('privacy settings'), 'user')
@@ -370,7 +373,7 @@ class Hooks extends \devtools\Hooks {
     );
 
     $form['state_preview']['footer_body'] = array(
-      '#markup' => '  
+      '#markup' => '
                       <div class="footer-body">
                       ' . t('If so, submit it for everyone to see. If not, click edit to make changes.') . '
                       ' . t('Note: Smarter Balanced reserves the right to remove reviews that do not adhere to the
@@ -403,7 +406,7 @@ class Hooks extends \devtools\Hooks {
 
     // submit button (modal)
     drupal_add_library('dialog', 'dialog');
-    
+
     $trigger_id = 'review-submit';
     $url = 'node/' . $node->nid . '/review/end_use/submit/' . $trigger_id;
 
