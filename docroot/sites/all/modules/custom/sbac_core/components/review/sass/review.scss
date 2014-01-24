@@ -274,13 +274,17 @@
     }
 
     .summary-content {
-      margin-top: 10px;
+      margin-top: 15px;
     }
   }
 
   #summary {
-    .summary-widgets {
+	
+		.summary-content {
+      padding-top: 10px;
+    }
 
+    .summary-widgets {
     }
 
     .appropriate-for {

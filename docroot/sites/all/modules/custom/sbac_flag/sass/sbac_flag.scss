@@ -245,21 +245,28 @@
 	text-align: center;
 	padding-top: 15px;
 	
-	.cancel, .finish, #sbac-flag-cancel-moderation, .sbac-flag-finish-moderation-dropdown {
+	.cancel, .finish {
 		display: inline-block;
 		margin: 0 15px;
 		position: relative;
 		
 		.item-list {
 			position: absolute;
-			top: 6px;
-			right: 40px;
+			top: 40px;
+			right: 30px;
 			
 			ul {
 				width: 190px;
 				text-align: left;
+				top: 0 !important;
+				left: 0 !important;
 			}
 		}
+	}
+	
+	#sbac-flag-cancel-moderation {
+		display: inline-block;
+		margin: 0 15px;
 	}
 }
 
