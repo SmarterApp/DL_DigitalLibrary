@@ -404,8 +404,8 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
       case 'dl-most-viewed':
         $sort_field_key = 'field_unique_views_value';
         break;
-      case 'dl_highest-rated':
-        $sort_field_key = 'field_review_rating_avg';
+      case 'dl-highest-rated':
+        $sort_field_key = 'field_node_avg_rating_value';
         break;
     }
 
