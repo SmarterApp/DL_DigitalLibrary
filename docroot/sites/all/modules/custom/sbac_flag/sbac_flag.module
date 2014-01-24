@@ -1179,7 +1179,8 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
     $js_settings = array('sbac-flag-remove-resource-review' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
     drupal_add_js($js_settings, 'setting');
 
-    $finish_moderation_button = '<a class="button arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
+    $finish_moderation_button = '<div class="finish">';
+    $finish_moderation_button .= '<a class="button arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
     $finish_moderation_button .= theme('item_list', array(
       'items' => $create_urls,
       'attributes' => array(
@@ -1187,8 +1188,9 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
         'id' => 'sbac-flag-finish-moderation'
       )
     ));
+    $finish_moderation_button .= '</div>';
 
-    $list_output .= theme('flag_category_review_buttons', array('cancel' => $cancel_button, 'resolve' => $resolve_all_flags_button, 'delete' => $delete_resource_review_button, 'finish' => $finish_moderation_button));
+    $list_output .= theme('flag_category_review_buttons', array('cancel' => $cancel_button, 'finish' => $finish_moderation_button));
   }
 
   // encompassing tpl
