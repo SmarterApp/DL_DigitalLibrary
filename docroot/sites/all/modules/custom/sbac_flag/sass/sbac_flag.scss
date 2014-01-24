@@ -103,6 +103,7 @@
 			border-bottom: 1px solid #62676E;
 			padding: 20px 0 5px;
 			margin-bottom: 10px;
+			position: relative;
 			
 			.resource-category {
 				color: #04384E;
@@ -113,6 +114,8 @@
 		    padding: 0;
 		    text-transform: capitalize;
 				display: inline-block;
+				line-height: 1.4;
+				width: 90%;
 			}
 			
 			.resource-count {
@@ -120,7 +123,10 @@
 				margin-left: 10px;
 				font-size: 13px;
 				font-style: italic;
-		    color:  #909398;			
+		    color:  #909398;
+				position: absolute;
+				bottom: 10px;
+				right: 0;
 			}
 		}
 		
@@ -235,11 +241,11 @@
 }
 	
 /*button*/ 
-.flag-category-review-buttons {
+.flag-category-review-buttons, #edit-actions {
 	text-align: center;
 	padding-top: 15px;
 	
-	.cancel, .finish {
+	.cancel, .finish, #sbac-flag-cancel-moderation, .sbac-flag-finish-moderation-dropdown {
 		display: inline-block;
 		margin: 0 15px;
 		position: relative;
