@@ -212,30 +212,29 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
       $variables['eck_flag']['button'] = $url;
     }
   }
-
-  $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
-    'attributes' => array(
-      'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
-      'id' => 'sbac-flag-start-moderation'
-    ),
-    'query' => array(
-      'nid' => $node->nid,
-      'eck_review' => ($eck_review ? $eck_review->id : 0),
-    ),
-  ));
-
-  $js_settings = array(
-    'sbac-flag-start-moderation' => array(
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 600,
-        'height' => 230,
+  else {
+    $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
+        'id' => 'sbac-flag-start-moderation'
       ),
-    ),
-  );
-  drupal_add_js($js_settings, 'setting');
-
-  $variables['eck_flag']['button'] = $moderation_button;
+      'query' => array(
+        'nid' => $node->nid,
+        'eck_review' => ($eck_review ? $eck_review->id : 0),
+      ),
+    ));
+    $js_settings = array(
+      'sbac-flag-start-moderation' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 230,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
+    $variables['eck_flag']['button'] = $moderation_button;
+  }
 
   return $urgent;
 }
