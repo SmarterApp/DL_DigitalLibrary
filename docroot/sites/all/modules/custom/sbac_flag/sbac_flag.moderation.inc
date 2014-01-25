@@ -35,52 +35,6 @@ function sbac_flag_moderation() {
 }
 
 /**
- * Creates the content necassary for the card output.
- *
- * @param $row
- * @param $node
- * @param $eck_review
- */
-function sbac_flag_list_content($row, $node, $eck_flag, $eck_review) {
-  $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
-    'attributes' => array(
-      'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
-      'id' => 'sbac-flag-start-moderation'
-    ),
-    'query' => array(
-      'nid' => $node->nid,
-      'eck_review' => ($eck_review ? $eck_review->id : 0),
-    ),
-  ));
-
-  $js_settings = array(
-    'sbac-flag-start-moderation' => array(
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 600,
-        'height' => 230,
-      ),
-    ),
-  );
-  drupal_add_js($js_settings, 'setting');
-
-  $node->eck_flag->button = $moderation_button;
-  if ($row->being_moderated) {
-    $node->eck_flag->display_status = 'Being Moderated';
-    $node->eck_flag->display_status_css = '';
-    if ($eck_review) {
-      $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id), 'fragment' => 'review-Moderate_flag'));
-      $node->eck_flag->button = $url;
-    }
-    else {
-      $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
-      $node->eck_flag->button = $url;
-    }
-  }
-  return $node;
-}
-
-/**
  * Loads more flag content into the moderation page.
  */
 function sbac_flag_load_more() {
@@ -108,7 +62,7 @@ function sbac_flag_get_flags() {
 
   $query = db_select('eck_flag', 'ef');
   $query->fields('ef');
-//  $query->orderBy('ef.urgent', 'DESC');
+  $query->orderBy('ef.being_moderated', 'DESC');
   $query->orderBy('ef.created', 'ASC');
   $query->groupBy('ef.target_id');
   $query->groupBy('ef.nid');
@@ -127,7 +81,6 @@ function sbac_flag_get_flags() {
  */
 function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
   global $user;
-  $display_nodes = array();
   $list_output = '';
 
   if ($offset) {
@@ -141,47 +94,51 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
     $offset = 1;
   }
 
+  // Loop through all flags, determine access,
+  // determine urgency then create output.
   foreach ($result as $row) {
     $node = FALSE;
     $eck_review = FALSE;
-    $eck_flag = entity_load_single('flag', $row->id);
+    $eck_review_wrapper = FALSE;
     if ($row->type == 'resource') {
       // resource node flag
       $node = node_load($row->nid);
-      unset($node->eck_flag);
-      unset($node->eck_review);
-      unset($node->eck_review_title);
     }
     else {
       // review flag
       $eck_review = entity_load_single('review', $row->target_id);
+      $eck_review_wrapper = entity_metadata_wrapper('review', $row->target_id);
       if ($eck_review) {
-        $nid = field_entity_value($eck_review, 'node_id');
+        $nid = $eck_review_wrapper->node_id->value();
         $node = node_load($nid);
       }
     }
 
     if ($node) {
+      unset($node->eck_flag);
+      unset($node->eck_review);
+      unset($node->eck_review_title);
       $access = sbac_flag_determine_access_for_user($node, $user->uid);
       if ($access) {
         // determine urgency
-        $urgent = sbac_flag_is_urgent($row, $node, $eck_flag, $eck_review);
-        if ($urgent) {
-          $sorted_flags['urgent'][$count]['row'] = $row;
-          $sorted_flags['urgent'][$count]['node'] = $node;
-          $sorted_flags['urgent'][$count]['eck_flag'] = $eck_flag;
-          $sorted_flags['urgent'][$count]['eck_review'] = $eck_review;
+        $variables = array();
+        $urgent = sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wrapper, $variables);
+        if ($row->being_moderated) {
+          $key = 'being_moderated';
         }
         else {
-          $sorted_flags['y_urgent'][$count]['row'] = $row;
-          $sorted_flags['y_urgent'][$count]['node'] = $node;
-          $sorted_flags['y_urgent'][$count]['eck_flag'] = $eck_flag;
-          $sorted_flags['y_urgent'][$count]['eck_review'] = $eck_review;
+          if ($urgent) {
+            $key = 'urgent';
+          }
+          else {
+            $key = 'y_urgent';
+          }
         }
+        $sorted_flags[$key][$row->id]['node'] = $node;
+        $sorted_flags[$key][$row->id]['variables'] = $variables;
         $count++;
       }
     }
-    unset($node);
   }
 
   $count = 0;
@@ -191,13 +148,9 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
       $count++;
       if ($count > $start && $count <= $end) {
         $node = $row['node'];
-        $eck_review = $row['eck_review'];
-        $eck_flag = $row['eck_flag'];
-        $row = $row['row'];
-        if ($node) {
-          $display_node = sbac_flag_list_content($row, $node, $eck_flag, $eck_review);
-          $list_output .= theme('sbac_flag_list_card', array('node' => $display_node));
-          $display_nodes[] = $display_node;
+        $variables = $row['variables'];
+        if ($node && $variables) {
+          $list_output .= theme('sbac_flag_list_card', array('node' => $node, 'flag_content' => $variables));
         }
       }
     }
@@ -220,30 +173,69 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
  * @param $eck_review
  * @return bool
  */
-function sbac_flag_is_urgent($row, &$node, $eck_flag, $eck_review) {
+function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wrapper, &$variables) {
   $urgent = FALSE;
 
-  $node->eck_flag = $row;
-  if ($eck_review) {
-    $node->eck_review = $eck_review;
-    $title = field_entity_value($eck_review, 'title');
-    $node->eck_review_title = $title;
+  $variables['eck_flag'] = (array) $row;
+  $variables['eck_flag']['urgent'] = $row->urgent;
+  $eck_flag = entity_load_single('flag', $row->id);
+  if ($eck_flag) {
     $issue_type = field_entity_value($eck_flag, 'field_issue_type');
     if ($issue_type == 'pii') {
-      $urgent = TRUE;
-      $node->eck_flag->urgent = 1;
+      $variables['eck_flag']['urgent'] = 1;
     }
   }
 
-  if ($node->eck_flag->urgent) {
-    $node->eck_flag->display_status = 'Needs Urgent Moderation';
-    $node->eck_flag->display_status_css = 'urgent';
+  if ($eck_review) {
+    $variables['eck_review']['title'] = $eck_review_wrapper->title->value();
+  }
+
+  if ($variables['eck_flag']['urgent']) {
+    $variables['eck_flag']['display_status'] = 'Needs Urgent Moderation';
+    $variables['eck_flag']['display_status_css'] = 'urgent';
     $urgent = TRUE;
   }
   else {
-    $node->eck_flag->display_status = 'Needs Moderation';
-    $node->eck_flag->display_status_css = '';
+    $variables['eck_flag']['display_status'] = 'Needs Moderation';
+    $variables['eck_flag']['display_status_css'] = '';
   }
+
+  if ($row->being_moderated) {
+    $variables['eck_flag']['display_status'] = 'Being Moderated';
+    $variables['eck_flag']['display_status_css'] = '';
+    if ($eck_review) {
+      $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id), 'fragment' => 'review-Moderate_flag'));
+      $variables['eck_flag']['button'] = $url;
+    }
+    else {
+      $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
+      $variables['eck_flag']['button'] = $url;
+    }
+  }
+
+  $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
+    'attributes' => array(
+      'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
+      'id' => 'sbac-flag-start-moderation'
+    ),
+    'query' => array(
+      'nid' => $node->nid,
+      'eck_review' => ($eck_review ? $eck_review->id : 0),
+    ),
+  ));
+
+  $js_settings = array(
+    'sbac-flag-start-moderation' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 600,
+        'height' => 230,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting');
+
+  $variables['eck_flag']['button'] = $moderation_button;
 
   return $urgent;
 }

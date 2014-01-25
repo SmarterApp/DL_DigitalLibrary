@@ -272,7 +272,7 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
   $items['sbac_flag_list_card'] = array(
     'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
     'template' => 'flag-list-card',
-    'variables' => array('node' => NULL),
+    'variables' => array('node' => NULL, 'flag_content' => NULL),
   );
 
   $items['sbac_flag_moderation'] = array(
