@@ -93,6 +93,93 @@
 	}
 }
 
+#sbac-flag-resolve-all-flags-form {
+	
+	.flag-modal-cont {
+		height: 200px;
+		overflow-y: scroll;
+		padding: 0 40px;
+		background-color: #F2F2F2;
+		
+		h3 {
+			font-size: 18px;
+			color: #000;
+			padding-top: 10px;
+		}
+		
+		.category-output {
+			font-size: 16px;
+			
+			span {
+				color: #62676E;
+				font-style: italic;
+			}
+		}
+		
+		label {
+			font-size: 18px;
+			color: #000;
+		}
+		
+		.form-textarea-wrapper textarea {
+			width: 100% !important;
+			max-width: 100%;
+			margin-bottom: 15px;
+		}
+	}
+	
+	.flag-button-cont {
+		-moz-box-sizing: border-box;
+    border-top: 1px solid #F2F2F2;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+    display: block;
+    padding: 15px 40px;
+    position: relative;
+    width: 100%;
+    z-index: 4;
+		height: 65px;
+	}
+	
+	button {float: right; margin-left: 30px;}
+}
+
+.node-type-resource {
+	
+	#modalContent {
+		
+		.ctools-modal-content {
+			padding: 0;
+			width: 850px !important;
+			height: 340px !important;
+			
+			.modal-content {
+				overflow-y:	hidden !important;
+				height: auto !important;
+				padding: 0 !important;
+			}
+		}
+		
+		.modal-header {
+			-moz-box-sizing: border-box;
+		  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+	    padding: 20px 40px 20px !important;
+	    position: relative;
+	    z-index: 3;
+		}
+		
+		.modal-title {
+			color: #04384E !important;
+			display: block;
+	    font-size: 22px !important;
+	    font-weight: bold;
+	    margin: 0;
+	    text-transform: capitalize;
+			padding: 0 !important;
+		}
+	}	
+}
+	
+
 /*Moderation resource detail view page*/
 .node-type-resource {
 	
@@ -241,8 +328,8 @@
 }
 	
 /*button*/ 
-.flag-category-review-buttons, #edit-actions {
-	text-align: center;
+.flag-category-review-buttons, .form-actions {
+	text-align: center !important;
 	padding-top: 15px;
 	
 	.cancel, .finish {
@@ -270,5 +357,24 @@
 	}
 }
 
+button.gray.cancel {
+	background-color: #6E7379;
+  border: 1px solid #4D5457;
+	padding-left: 40px;
+	position: relative;
+
+	&:hover {
+		background-color: #6E7379;
+	  border: 1px solid #4D5457;
+		background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+	}
+}
+button.gray.cancel:before {
+	content: url(../images/buttonCancel.png);
+	position: absolute;
+	left: 15px;
+	top: 4px;
+}
+.throbber { display: none !important;}
 
 
