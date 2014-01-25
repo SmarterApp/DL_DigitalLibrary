@@ -79,107 +79,6 @@
 	}
 }
 
-/*Confirmation modal*/
-.page-moderation {
-	.modal-content {
-		overflow-y: hidden !important;
-	}
-}
-
-#sbac-flag-start-moderation-form {
-	.button, .form-submit {
-		float: right;
-		margin-left: 30px;
-	}
-}
-
-#sbac-flag-resolve-all-flags-form {
-	
-	.flag-modal-cont {
-		height: 200px;
-		overflow-y: scroll;
-		padding: 0 40px;
-		background-color: #F2F2F2;
-		
-		h3 {
-			font-size: 18px;
-			color: #000;
-			padding-top: 10px;
-		}
-		
-		.category-output {
-			font-size: 16px;
-			
-			span {
-				color: #62676E;
-				font-style: italic;
-			}
-		}
-		
-		label {
-			font-size: 18px;
-			color: #000;
-		}
-		
-		.form-textarea-wrapper textarea {
-			width: 100% !important;
-			max-width: 100%;
-			margin-bottom: 15px;
-		}
-	}
-	
-	.flag-button-cont {
-		-moz-box-sizing: border-box;
-    border-top: 1px solid #F2F2F2;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-    display: block;
-    padding: 15px 40px;
-    position: relative;
-    width: 100%;
-    z-index: 4;
-		height: 65px;
-	}
-	
-	button {float: right; margin-left: 30px;}
-}
-
-.node-type-resource {
-	
-	#modalContent {
-		
-		.ctools-modal-content {
-			padding: 0;
-			width: 850px !important;
-			height: 340px !important;
-			
-			.modal-content {
-				overflow-y:	hidden !important;
-				height: auto !important;
-				padding: 0 !important;
-			}
-		}
-		
-		.modal-header {
-			-moz-box-sizing: border-box;
-		  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-	    padding: 20px 40px 20px !important;
-	    position: relative;
-	    z-index: 3;
-		}
-		
-		.modal-title {
-			color: #04384E !important;
-			display: block;
-	    font-size: 22px !important;
-	    font-weight: bold;
-	    margin: 0;
-	    text-transform: capitalize;
-			padding: 0 !important;
-		}
-	}	
-}
-	
-
 /*Moderation resource detail view page*/
 .node-type-resource {
 	
@@ -326,7 +225,127 @@
 		}
 	}	
 }
+
+/*Confirmation modal for edit page*/
+.page-node-edit.node-type-resource {
+	.page-moderation {
+		.modal-content {
+			overflow-y: hidden !important;
+		}
+	}
+
+	#sbac-flag-start-moderation-form {
+		.button, .form-submit {
+			float: right;
+			margin-left: 30px;
+		}
+	}
+
+	#sbac-flag-resolve-all-flags-form {
 	
+		.flag-modal-cont {
+			height: 200px;
+			overflow-y: scroll;
+			padding: 0 40px;
+			background-color: #F2F2F2;
+		
+			h3 {
+				font-size: 18px;
+				color: #000;
+				padding-top: 10px;
+			}
+		
+			.category-output {
+				font-size: 16px;
+			
+				span {
+					color: #62676E;
+					font-style: italic;
+				}
+			}
+		
+			label {
+				font-size: 18px;
+				color: #000;
+			}
+		
+			.form-textarea-wrapper textarea {
+				width: 100% !important;
+				max-width: 100%;
+				margin-bottom: 15px;
+			}
+		}
+	
+		.flag-button-cont {
+			-moz-box-sizing: border-box;
+	    border-top: 1px solid #F2F2F2;
+	    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+	    display: block;
+	    padding: 15px 40px;
+	    position: relative;
+	    width: 100%;
+	    z-index: 4;
+			height: 65px;
+		}
+	
+		button {float: right; margin-left: 30px;}
+	}
+}
+
+.page-node-edit.node-type-resource {
+	
+	#modalContent {
+		
+		.ctools-modal-content {
+			padding: 0;
+			width: 850px !important;
+			height: 340px !important;
+			
+			.modal-content {
+				overflow-y:	hidden !important;
+				height: auto !important;
+				padding: 0 !important;
+			}
+		}
+		
+		.modal-header {
+			-moz-box-sizing: border-box;
+		  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+	    padding: 20px 40px 20px !important;
+	    position: relative;
+	    z-index: 3;
+		}
+		
+		.modal-title {
+			color: #04384E !important;
+			display: block;
+	    font-size: 22px !important;
+	    font-weight: bold;
+	    margin: 0;
+	    text-transform: capitalize;
+			padding: 0 !important;
+		}
+	}	
+}
+
+/*Modal - sbac-flag-start-moderation-form*/	
+#sbac-flag-start-moderation-form{
+	button{
+		float: right;
+		margin-left: 30px;
+	}
+}
+
+/*Modal - sbac-flag-resolve-all-resource-review-moderation-form*/
+#sbac-flag-resolve-all-resource-review-moderation-form {
+	button{
+		float: right;
+		margin-left: 30px;
+	}
+}
+
+
+
 /*button*/ 
 .flag-category-review-buttons, .form-actions {
 	text-align: center !important;
@@ -375,6 +394,8 @@ button.gray.cancel:before {
 	left: 15px;
 	top: 4px;
 }
-.throbber { display: none !important;}
 
+.ajax-progress-throbber {
+  display: none;
+}
 

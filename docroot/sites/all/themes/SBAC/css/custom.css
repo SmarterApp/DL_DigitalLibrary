@@ -9564,13 +9564,13 @@ a.tabledrag-handle .handle {
 /* line 2089, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-header {
   background: none;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
 }
 /* line 2093, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-header #modal-title {
   display: inline-block;
   color: #000;
-  padding: 15px 0;
+  padding: 15px 0 20px;
   height: 35px;
   font-size: 18px;
   line-height: 1.5;

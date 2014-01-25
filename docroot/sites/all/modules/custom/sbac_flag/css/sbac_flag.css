@@ -83,113 +83,19 @@
   margin-left: 10px;
 }
 
-/*Confirmation modal*/
-/* line 84, ../sass/sbac_flag.scss */
-.page-moderation .modal-content {
-  overflow-y: hidden !important;
-}
-
-/* line 90, ../sass/sbac_flag.scss */
-#sbac-flag-start-moderation-form .button, #sbac-flag-start-moderation-form .form-submit {
-  float: right;
-  margin-left: 30px;
-}
-
-/* line 98, ../sass/sbac_flag.scss */
-#sbac-flag-resolve-all-flags-form .flag-modal-cont {
-  height: 200px;
-  overflow-y: scroll;
-  padding: 0 40px;
-  background-color: #F2F2F2;
-}
-/* line 104, ../sass/sbac_flag.scss */
-#sbac-flag-resolve-all-flags-form .flag-modal-cont h3 {
-  font-size: 18px;
-  color: #000;
-  padding-top: 10px;
-}
-/* line 110, ../sass/sbac_flag.scss */
-#sbac-flag-resolve-all-flags-form .flag-modal-cont .category-output {
-  font-size: 16px;
-}
-/* line 113, ../sass/sbac_flag.scss */
-#sbac-flag-resolve-all-flags-form .flag-modal-cont .category-output span {
-  color: #62676E;
-  font-style: italic;
-}
-/* line 119, ../sass/sbac_flag.scss */
-#sbac-flag-resolve-all-flags-form .flag-modal-cont label {
-  font-size: 18px;
-  color: #000;
-}
-/* line 124, ../sass/sbac_flag.scss */
-#sbac-flag-resolve-all-flags-form .flag-modal-cont .form-textarea-wrapper textarea {
-  width: 100% !important;
-  max-width: 100%;
-  margin-bottom: 15px;
-}
-/* line 131, ../sass/sbac_flag.scss */
-#sbac-flag-resolve-all-flags-form .flag-button-cont {
-  -moz-box-sizing: border-box;
-  border-top: 1px solid #F2F2F2;
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-  display: block;
-  padding: 15px 40px;
-  position: relative;
-  width: 100%;
-  z-index: 4;
-  height: 65px;
-}
-/* line 143, ../sass/sbac_flag.scss */
-#sbac-flag-resolve-all-flags-form button {
-  float: right;
-  margin-left: 30px;
-}
-
-/* line 150, ../sass/sbac_flag.scss */
-.node-type-resource #modalContent .ctools-modal-content {
-  padding: 0;
-  width: 850px !important;
-  height: 340px !important;
-}
-/* line 155, ../sass/sbac_flag.scss */
-.node-type-resource #modalContent .ctools-modal-content .modal-content {
-  overflow-y: hidden !important;
-  height: auto !important;
-  padding: 0 !important;
-}
-/* line 162, ../sass/sbac_flag.scss */
-.node-type-resource #modalContent .modal-header {
-  -moz-box-sizing: border-box;
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-  padding: 20px 40px 20px !important;
-  position: relative;
-  z-index: 3;
-}
-/* line 170, ../sass/sbac_flag.scss */
-.node-type-resource #modalContent .modal-title {
-  color: #04384E !important;
-  display: block;
-  font-size: 22px !important;
-  font-weight: bold;
-  margin: 0;
-  text-transform: capitalize;
-  padding: 0 !important;
-}
-
 /*Moderation resource detail view page*/
-/* line 186, ../sass/sbac_flag.scss */
+/* line 85, ../sass/sbac_flag.scss */
 .node-type-resource .flag-resource-container {
   margin: 0 30px;
 }
-/* line 189, ../sass/sbac_flag.scss */
+/* line 88, ../sass/sbac_flag.scss */
 .node-type-resource .flag-resource-container .resource-flag-category {
   border-bottom: 1px solid #62676E;
   padding: 20px 0 5px;
   margin-bottom: 10px;
   position: relative;
 }
-/* line 195, ../sass/sbac_flag.scss */
+/* line 94, ../sass/sbac_flag.scss */
 .node-type-resource .flag-resource-container .resource-flag-category .resource-category {
   color: #04384E;
   display: block;
@@ -202,7 +108,7 @@
   line-height: 1.4;
   width: 90%;
 }
-/* line 208, ../sass/sbac_flag.scss */
+/* line 107, ../sass/sbac_flag.scss */
 .node-type-resource .flag-resource-container .resource-flag-category .resource-count {
   display: inline-block;
   margin-left: 10px;
@@ -213,17 +119,17 @@
   bottom: 10px;
   right: 0;
 }
-/* line 220, ../sass/sbac_flag.scss */
+/* line 119, ../sass/sbac_flag.scss */
 .node-type-resource .flag-resource-container .flag-row {
   padding: 10px 0 20px;
   border-bottom: 1px #cecece solid;
   margin-bottom: 20px;
 }
-/* line 225, ../sass/sbac_flag.scss */
+/* line 124, ../sass/sbac_flag.scss */
 .node-type-resource .flag-resource-container .flag-row .flag-user {
   padding-bottom: 15px;
 }
-/* line 231, ../sass/sbac_flag.scss */
+/* line 130, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information {
   background-color: #F2F2F2;
   border: 7px solid #FFFFFF;
@@ -237,54 +143,54 @@
   margin-bottom: 30px;
   position: relative;
 }
-/* line 244, ../sass/sbac_flag.scss */
+/* line 143, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information .flag-status {
   color: #006082;
   font-weight: bold;
   padding-top: 0px;
   font-size: 16px;
 }
-/* line 251, ../sass/sbac_flag.scss */
+/* line 150, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information .flag-count {
   padding-top: 3px;
 }
-/* line 253, ../sass/sbac_flag.scss */
+/* line 152, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information .flag-button {
   position: absolute;
   top: 22px;
   right: 20px;
 }
-/* line 257, ../sass/sbac_flag.scss */
+/* line 156, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information .flag-button a {
   margin-bottom: 0;
 }
-/* line 264, ../sass/sbac_flag.scss */
+/* line 163, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information.urgent {
   background-color: #FDF2B1;
   color: #101010;
 }
-/* line 268, ../sass/sbac_flag.scss */
+/* line 167, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information.urgent .flag-status {
   color: #8A1538;
 }
 
-/* line 274, ../sass/sbac_flag.scss */
+/* line 173, ../sass/sbac_flag.scss */
 .node-type-resource .entity-review.view-mode-full {
   border-bottom: none;
   padding-top: 0;
 }
 
 /*Edit page*/
-/* line 283, ../sass/sbac_flag.scss */
+/* line 182, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #page-title {
   border-bottom: none;
   float: left;
 }
-/* line 288, ../sass/sbac_flag.scss */
+/* line 187, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-preview {
   margin-top: 18px;
 }
-/* line 292, ../sass/sbac_flag.scss */
+/* line 191, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .flag-information {
   clear: both;
   background-color: #F2F2F2;
@@ -296,78 +202,184 @@
   font-size: 18px;
   position: relative;
 }
-/* line 303, ../sass/sbac_flag.scss */
+/* line 202, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .flag-information .flag-status {
   color: #006082;
   font-weight: bold;
   padding: 0 0 15px;
 }
-/* line 310, ../sass/sbac_flag.scss */
+/* line 209, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .flag-resource-container {
   margin: 0;
 }
-/* line 314, ../sass/sbac_flag.scss */
+/* line 213, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category {
   position: relative;
 }
-/* line 317, ../sass/sbac_flag.scss */
+/* line 216, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category .resource-category {
   width: 90%;
   line-height: 1.4;
 }
-/* line 322, ../sass/sbac_flag.scss */
+/* line 221, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category .resource-count {
   position: absolute;
   bottom: 10px;
   right: 0;
 }
 
+/*Confirmation modal for edit page*/
+/* line 232, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource .page-moderation .modal-content {
+  overflow-y: hidden !important;
+}
+/* line 238, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-start-moderation-form .button, .page-node-edit.node-type-resource #sbac-flag-start-moderation-form .form-submit {
+  float: right;
+  margin-left: 30px;
+}
+/* line 246, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-resolve-all-flags-form .flag-modal-cont {
+  height: 200px;
+  overflow-y: scroll;
+  padding: 0 40px;
+  background-color: #F2F2F2;
+}
+/* line 252, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-resolve-all-flags-form .flag-modal-cont h3 {
+  font-size: 18px;
+  color: #000;
+  padding-top: 10px;
+}
+/* line 258, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-resolve-all-flags-form .flag-modal-cont .category-output {
+  font-size: 16px;
+}
+/* line 261, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-resolve-all-flags-form .flag-modal-cont .category-output span {
+  color: #62676E;
+  font-style: italic;
+}
+/* line 267, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-resolve-all-flags-form .flag-modal-cont label {
+  font-size: 18px;
+  color: #000;
+}
+/* line 272, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-resolve-all-flags-form .flag-modal-cont .form-textarea-wrapper textarea {
+  width: 100% !important;
+  max-width: 100%;
+  margin-bottom: 15px;
+}
+/* line 279, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-resolve-all-flags-form .flag-button-cont {
+  -moz-box-sizing: border-box;
+  border-top: 1px solid #F2F2F2;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+  display: block;
+  padding: 15px 40px;
+  position: relative;
+  width: 100%;
+  z-index: 4;
+  height: 65px;
+}
+/* line 291, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #sbac-flag-resolve-all-flags-form button {
+  float: right;
+  margin-left: 30px;
+}
+
+/* line 299, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #modalContent .ctools-modal-content {
+  padding: 0;
+  width: 850px !important;
+  height: 340px !important;
+}
+/* line 304, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #modalContent .ctools-modal-content .modal-content {
+  overflow-y: hidden !important;
+  height: auto !important;
+  padding: 0 !important;
+}
+/* line 311, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #modalContent .modal-header {
+  -moz-box-sizing: border-box;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+  padding: 20px 40px 20px !important;
+  position: relative;
+  z-index: 3;
+}
+/* line 319, ../sass/sbac_flag.scss */
+.page-node-edit.node-type-resource #modalContent .modal-title {
+  color: #04384E !important;
+  display: block;
+  font-size: 22px !important;
+  font-weight: bold;
+  margin: 0;
+  text-transform: capitalize;
+  padding: 0 !important;
+}
+
+/*Modal - sbac-flag-start-moderation-form*/
+/* line 333, ../sass/sbac_flag.scss */
+#sbac-flag-start-moderation-form button {
+  float: right;
+  margin-left: 30px;
+}
+
+/*Modal - sbac-flag-resolve-all-resource-review-moderation-form*/
+/* line 341, ../sass/sbac_flag.scss */
+#sbac-flag-resolve-all-resource-review-moderation-form button {
+  float: right;
+  margin-left: 30px;
+}
+
 /*button*/
-/* line 331, ../sass/sbac_flag.scss */
+/* line 350, ../sass/sbac_flag.scss */
 .flag-category-review-buttons, .form-actions {
   text-align: center !important;
   padding-top: 15px;
 }
-/* line 335, ../sass/sbac_flag.scss */
+/* line 354, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel, .flag-category-review-buttons .finish, .form-actions .cancel, .form-actions .finish {
   display: inline-block;
   margin: 0 15px;
   position: relative;
 }
-/* line 340, ../sass/sbac_flag.scss */
+/* line 359, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel .item-list, .flag-category-review-buttons .finish .item-list, .form-actions .cancel .item-list, .form-actions .finish .item-list {
   position: absolute;
   top: 40px;
   right: 30px;
 }
-/* line 345, ../sass/sbac_flag.scss */
+/* line 364, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel .item-list ul, .flag-category-review-buttons .finish .item-list ul, .form-actions .cancel .item-list ul, .form-actions .finish .item-list ul {
   width: 190px;
   text-align: left;
   top: 0 !important;
   left: 0 !important;
 }
-/* line 354, ../sass/sbac_flag.scss */
+/* line 373, ../sass/sbac_flag.scss */
 .flag-category-review-buttons #sbac-flag-cancel-moderation, .form-actions #sbac-flag-cancel-moderation {
   display: inline-block;
   margin: 0 15px;
 }
 
-/* line 360, ../sass/sbac_flag.scss */
+/* line 379, ../sass/sbac_flag.scss */
 button.gray.cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   padding-left: 40px;
   position: relative;
 }
-/* line 366, ../sass/sbac_flag.scss */
+/* line 385, ../sass/sbac_flag.scss */
 button.gray.cancel:hover {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
-/* line 372, ../sass/sbac_flag.scss */
+/* line 391, ../sass/sbac_flag.scss */
 button.gray.cancel:before {
   content: url(../images/buttonCancel.png);
   position: absolute;
@@ -375,7 +387,7 @@ button.gray.cancel:before {
   top: 4px;
 }
 
-/* line 378, ../sass/sbac_flag.scss */
-.throbber {
-  display: none !important;
+/* line 398, ../sass/sbac_flag.scss */
+.ajax-progress-throbber {
+  display: none;
 }
