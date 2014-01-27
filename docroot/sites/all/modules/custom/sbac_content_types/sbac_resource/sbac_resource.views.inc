@@ -389,6 +389,39 @@ function sbac_resource_digital_library_apply_filters(&$view) {
   }
 }
 
+function sbac_resource_digital_library_apply_sorts(&$view) {
+  $view_sorts = $view->display_handler->get_option('sorts');
+
+  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
+
+    $current_sorting = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
+    $sort_field_key = 'created';
+    switch ($current_sorting) {
+      case 'dl-newest':
+        $sort_field_key = 'created';
+        break;
+      case 'dl-most-viewed':
+        $sort_field_key = 'field_unique_views_value';
+        break;
+      case 'dl-highest-rated':
+        $sort_field_key = 'field_node_avg_rating_value';
+        break;
+    }
+
+    $new_sorts = array();
+    foreach ($view_sorts as $key => $value) {
+      if ($key == $sort_field_key) {
+        $new_sorts[$key] = $value;
+      }
+    }
+    if (!empty($new_sorts)) {
+      $view->display_handler->set_option('sorts', $new_sorts);
+    }
+  }
+}
+
+
 /**
  * Populates contextual filters with data if provided.
  *

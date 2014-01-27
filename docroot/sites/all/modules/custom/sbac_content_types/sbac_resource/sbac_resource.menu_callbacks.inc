@@ -17,6 +17,7 @@ function sbac_resource_digital_library_page() {
   $view = views_get_view('resources');
   $view->set_display($display);
   sbac_resource_digital_library_apply_filters($view);
+  sbac_resource_digital_library_apply_sorts($view);
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
@@ -91,7 +92,7 @@ function sbac_resource_my_resources_page() {
     drupal_get_messages();
     $no_results = sbac_resource_no_search_results();
   }
-  
+
   menu_set_active_item('my-resources');
   return theme('my_resources', array('my_resources_output' => $my_resources_output, 'no_results' => $no_results));
 }
@@ -153,7 +154,7 @@ function sbac_resource_no_search_results($string = '') {
     $output .= '<h3>' . t('Your search returned no results') . '</h3>';
   }
 
-  $output .= '<p>' . t('Please try a different search term or browse any of the resources below that 
+  $output .= '<p>' . t('Please try a different search term or browse any of the resources below that
     have been identified for you using the subject(s) and grade(s) in your profile.') . '</p>'; // <---- LIES!! LOL!
 
   return $output;

@@ -706,6 +706,59 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'review-end_use-field_avg_rating'
+  $field_instances['review-end_use-field_avg_rating'] = array(
+    'bundle' => 'end_use',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 8,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'review',
+    'field_name' => 'field_avg_rating',
+    'label' => 'Avg Rating',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 5,
+    ),
+  );
+
   // Exported field_instance: 'review-end_use-field_details'
   $field_instances['review-end_use-field_details'] = array(
     'bundle' => 'end_use',
@@ -916,6 +969,7 @@ function sbac_core_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Add some details');
   t('Appropriate For');
+  t('Avg Rating');
   t('Comments');
   t('Details');
   t('Flagged reviews and users are reviewed by the Smarter Balanced Assessment Consortium to determine whether they violate the terms of service. Violations can lead to account termination.');

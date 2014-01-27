@@ -1328,6 +1328,22 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['created']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['created']['expose']['label'] = 'Post date';
+  /* Sort criterion: Content: Unique Views (field_unique_views) */
+  $handler->display->display_options['sorts']['field_unique_views_value']['id'] = 'field_unique_views_value';
+  $handler->display->display_options['sorts']['field_unique_views_value']['table'] = 'field_data_field_unique_views';
+  $handler->display->display_options['sorts']['field_unique_views_value']['field'] = 'field_unique_views_value';
+  $handler->display->display_options['sorts']['field_unique_views_value']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['field_unique_views_value']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['field_unique_views_value']['expose']['label'] = 'Number of Views';
+  /* Sort criterion: Content: Node Avg Rating (field_node_avg_rating) */
+  $handler->display->display_options['sorts']['field_node_avg_rating_value']['id'] = 'field_node_avg_rating_value';
+  $handler->display->display_options['sorts']['field_node_avg_rating_value']['table'] = 'field_data_field_node_avg_rating';
+  $handler->display->display_options['sorts']['field_node_avg_rating_value']['field'] = 'field_node_avg_rating_value';
+  $handler->display->display_options['sorts']['field_node_avg_rating_value']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['field_node_avg_rating_value']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['field_node_avg_rating_value']['expose']['label'] = 'Node Avg Rating (field_node_avg_rating)';
   /* Contextual filter: Content: Has taxonomy term ID */
   $handler->display->display_options['arguments']['tid']['id'] = 'tid';
   $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_index';

@@ -2209,6 +2209,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_asset_downloads']['#access'] = FALSE;
   $form['field_total_views']['#access'] = FALSE;
   $form['field_unique_views']['#access'] = FALSE;
+  $form['field_node_avg_rating']['#access'] = FALSE;
   $form['field_alignment_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
   $form['field_document_information']['#access'] = FALSE;
@@ -2589,4 +2590,66 @@ function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
   }
 
   return $duplicates;
+}
+
+function sbac_resource_digital_library_sort_form($form, $form_state) {
+  $form = array();
+  $default = 'dl-newest'; // Hardcoded default. Change?
+
+  // If session var is set, make it the default.
+  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
+    $default = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
+  }
+
+  $options = array(
+    'dl-newest'         => t('Newest'),
+    'dl-most-viewed'    => t('Most Viewed'),
+    'dl-highest-rated'  => t('Highest Rated'),
+  );
+
+  // Ajax submitted. Set Text if selected.
+  if (isset($form_state['values']['dl_sort_order'])) {
+    $new_value_key = $form_state['values']['dl_sort_order'];
+    $old_value_text = $options[$new_value_key];
+    $options[$new_value_key] = t('Sort by: ' . $old_value_text);
+  } else {
+    $options[$default] = t('Sort by: ' . $options[$default]);
+  }
+
+
+  // Needs to ajax submit to set the session variable that tracks default state.
+  $form['dl_sort_order'] = array(
+    '#prefix'         => '<div id="form-wrapper-dl-sort-element">',
+    '#suffix'         => '</div>',
+    '#type'           => 'select',
+    '#title'          => t(''),
+    '#required'       => FALSE,
+    '#options'        => $options,
+    '#default_value'  => $default,
+    '#ajax'           => array(
+      'callback'  => '_sbac_resource_digital_library_sort_form__ajax__change',
+      'event'     => 'change',
+      'wrapper'   => 'form-wrapper-dl-sort-element',
+      'progress'  => array('type' => 'none'),
+    )
+  );
+
+  return $form;
+}
+
+function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_state) {
+  // Set session variable here. Session only gets set when form submits a change.
+  $new_value_key = $form_state['values']['dl_sort_order'];
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = $new_value_key;
+
+  // Just return the form, dont force page refresh.
+  // return $form['dl_sort_order'];
+
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
 }
