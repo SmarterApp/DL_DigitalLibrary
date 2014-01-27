@@ -683,6 +683,7 @@ function sbac_flag_resolve_all_flags_form_submit(&$form, &$form_state) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
       }
     }
+    unset($_SESSION['sbac-flag']);
   }
 }
 
@@ -752,6 +753,7 @@ function sbac_flag_remove_resource_form_submit(&$form, &$form_state) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
       }
     }
+    unset($_SESSION['sbac-flag']);
   }
 }
 
@@ -898,5 +900,6 @@ function sbac_flag_remove_resource_review_form_submit(&$form, &$form_state) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
       }
     }
+    unset($_SESSION['sbac-flag']);
   }
 }
