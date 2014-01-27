@@ -1271,16 +1271,6 @@ function sbac_flag_block_info() {
     'status' => 1,
   );
 
-  $blocks['moderation_category'] = array(
-    'info' => t('Category'),
-    'region' => 'sub-header',
-    'pages' => "moderation*",
-    'visibility' => BLOCK_VISIBILITY_LISTED,
-    'cache' => DRUPAL_NO_CACHE,
-    'weight' => -22,
-    'status' => 1,
-  );
-
   return $blocks;
 }
 
@@ -1301,12 +1291,6 @@ function sbac_flag_block_view($delta = '') {
       }
       $block['subject'] = NULL;
       $block['content'] = '<h3 class="left">' . t('Flagged Items (' . $count . ')') . '</h3>';
-      break;
-
-    case 'moderation_category':
-      $block['subject'] = t('');
-      $content = '<a href="#" data-tooltip title="Categories allow you to filter results using specific attributes. Click to see the available options." id="sbac-search-cat-button" class="active">' . t('Categories') . '</a>';
-      $block['content'] = $content;
       break;
   }
   return $block;
