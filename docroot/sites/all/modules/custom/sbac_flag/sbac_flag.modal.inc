@@ -294,6 +294,8 @@ function sbac_flag_resolve_all_flags_modal($js = FALSE) {
         }
         // redirect
         $output[] = ctools_ajax_command_redirect('moderation');
+        // remove session variables
+        unset($_SESSION['sbac-flag']);
       }
     }
     print ajax_render($output);
@@ -349,6 +351,8 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
         sbac_flag_remove_resource($node);
         // redirect to moderation
         $output[] = ctools_ajax_command_redirect('moderation');
+        // remove session variables
+        unset($_SESSION['sbac-flag']);
       }
     }
     print ajax_render($output);
@@ -436,6 +440,8 @@ function sbac_flag_resolve_all_resource_review_flags_modal($js = FALSE) {
         sbac_flag_resolve_all_flags($node, $eck_review);
         // redirect
         $output[] = ctools_ajax_command_redirect('moderation');
+        // remove session variables
+        unset($_SESSION['sbac-flag']);
       }
     }
     print ajax_render($output);
@@ -493,6 +499,8 @@ function sbac_flag_remove_resource_review_modal($js = FALSE) {
         sbac_flag_resolve_all_flags($node, $form_state['review']);
         // redirect to moderation
         $output[] = ctools_ajax_command_redirect('moderation');
+        // remove session variables
+        unset($_SESSION['sbac-flag']);
       }
     }
     print ajax_render($output);
@@ -683,7 +691,6 @@ function sbac_flag_resolve_all_flags_form_submit(&$form, &$form_state) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
       }
     }
-    unset($_SESSION['sbac-flag']);
   }
 }
 
@@ -768,7 +775,6 @@ function sbac_flag_remove_resource_form_submit(&$form, &$form_state) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
       }
     }
-    unset($_SESSION['sbac-flag']);
   }
 }
 
@@ -915,6 +921,5 @@ function sbac_flag_remove_resource_review_form_submit(&$form, &$form_state) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
       }
     }
-    unset($_SESSION['sbac-flag']);
   }
 }
