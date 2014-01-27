@@ -815,20 +815,20 @@ function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_sta
   );
 
   $form['submit_description'] = array(
-    '#markup' => 'If you continue, the resource review will
-    no longer be available in your moderation queue and all flags will be dismissed.',
-  );
-
-  $form['continue'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+    '#markup' => '<p>If you continue, the resource review will
+    no longer be available in your moderation queue and all flags will be dismissed.</p>',
   );
 
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Finish Moderation',
     '#attributes' => array('class' => array('button'))
+  );
+
+  $form['continue'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
   return $form;
