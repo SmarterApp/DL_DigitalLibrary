@@ -559,13 +559,13 @@ function sbac_flag_cancel_resource_moderation_form($form, &$form_state) {
   $form['continue'] = array(
     '#type' => 'submit',
     '#value' => 'Continue Moderation',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+    '#attributes' => array('class' => array('button'))
   );
 
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel Moderation',
-    '#attributes' => array('class' => array('button'))
+    '#attributes' => array('class' => array('button', 'gray'))
   );
 
   return $form;
