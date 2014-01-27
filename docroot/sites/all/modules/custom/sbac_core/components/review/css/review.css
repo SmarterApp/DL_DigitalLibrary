@@ -453,17 +453,25 @@
 /* line 458, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for ul li {
   list-style-type: none;
-  padding: 5px 0;
+  /*padding: 5px 0;*/
+  background-color: #F2F2F2;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 22px;
+  margin-right: 7px;
+  margin-top: 7px;
+  padding: 0 5px;
 }
-/* line 465, ../sass/review.scss */
+/* line 472, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .term {
   padding: 10px;
 }
-/* line 468, ../sass/review.scss */
+/* line 475, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .term.highlight {
   font-weight: bold;
 }
-/* line 474, ../sass/review.scss */
+/* line 481, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer h2 {
   color: #464B54;
   font-size: 13px;
@@ -473,24 +481,24 @@
   max-width: 560px;
   padding: 0;
 }
-/* line 484, ../sass/review.scss */
+/* line 491, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-review-vote {
   float: left;
   width: 740px;
 }
-/* line 489, ../sass/review.scss */
+/* line 496, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-review-delete {
   float: right;
   padding-top: 5px;
   text-align: right;
   width: 90px;
 }
-/* line 496, ../sass/review.scss */
+/* line 503, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-flagging-form {
   clear: both;
 }
 
-/* line 502, ../sass/review.scss */
+/* line 509, ../sass/review.scss */
 .footer-title {
   color: #000000;
   display: block;
@@ -502,7 +510,7 @@
   text-transform: capitalize;
 }
 
-/* line 513, ../sass/review.scss */
+/* line 520, ../sass/review.scss */
 .footer-body {
   font-size: 16px;
   line-height: 1.6;
@@ -511,7 +519,7 @@
 }
 
 /* modals */
-/* line 522, ../sass/review.scss */
+/* line 529, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .intro {
   border-bottom: 1px solid silver;
   padding-bottom: 1em;
@@ -521,58 +529,58 @@
   text-align: left;
   color: #464B54;
 }
-/* line 532, ../sass/review.scss */
+/* line 539, ../sass/review.scss */
 .dialog_review_end_use_form #dialog form {
   text-align: right;
 }
-/* line 536, ../sass/review.scss */
+/* line 543, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .form-submit {
   display: inline;
   margin-bottom: 0;
   /*float: none;*/
 }
-/* line 542, ../sass/review.scss */
+/* line 549, ../sass/review.scss */
 .dialog_review_end_use_form #dialog .close-dialog {
   display: inline;
 }
 
-/* line 548, ../sass/review.scss */
+/* line 555, ../sass/review.scss */
 .dialog_review_end_use_form_delete #dialog .form-submit {
   float: right;
 }
 
-/* line 553, ../sass/review.scss */
+/* line 560, ../sass/review.scss */
 #dialog .devtools-dialog-content .button {
   margin-bottom: 0 !important;
 }
 
-/* line 557, ../sass/review.scss */
+/* line 564, ../sass/review.scss */
 .rating-label {
   font-size: 12px;
   margin-top: 10px;
 }
 
 /* user tooltips */
-/* line 564, ../sass/review.scss */
+/* line 571, ../sass/review.scss */
 .account-tooltip .row.first {
   padding: 10px;
 }
-/* line 568, ../sass/review.scss */
+/* line 575, ../sass/review.scss */
 .account-tooltip .line {
   display: none;
 }
 
-/* line 574, ../sass/review.scss */
+/* line 581, ../sass/review.scss */
 .fivestar-widget {
   padding: 5px 0;
 }
 
 /* Tag of Sharing */
-/* line 579, ../sass/review.scss */
+/* line 586, ../sass/review.scss */
 #sbac-share-resource-form {
   margin: 0 30px;
 }
-/* line 583, ../sass/review.scss */
+/* line 590, ../sass/review.scss */
 #sbac-share-resource-form #edit-sharing-options h2 {
   border-bottom: 1px solid #62676E;
   color: #04384E;
@@ -582,35 +590,35 @@
   margin: 0;
   text-transform: capitalize;
 }
-/* line 594, ../sass/review.scss */
+/* line 601, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text {
   font-weight: bold;
   font-size: 18px;
   color: #000;
   padding-top: 20px;
 }
-/* line 600, ../sass/review.scss */
+/* line 607, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .sbac-private {
   color: #62676E;
   font-weight: normal;
   margin-right: 10px;
 }
-/* line 606, ../sass/review.scss */
+/* line 613, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .foundicon-people {
   font-size: 120%;
   color: #aaa;
   vertical-align: middle;
 }
-/* line 612, ../sass/review.scss */
+/* line 619, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .foundicon-lock {
   color: #aaa;
   vertical-align: middle;
 }
-/* line 617, ../sass/review.scss */
+/* line 624, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text span {
   font-weight: normal;
 }
-/* line 621, ../sass/review.scss */
+/* line 628, ../sass/review.scss */
 #sbac-share-resource-form #edit-permanent-link-text .description {
   margin-top: 10px;
   font-weight: normal;
@@ -618,41 +626,41 @@
   font-size: 13px;
   line-height: 1.2;
 }
-/* line 631, ../sass/review.scss */
+/* line 638, ../sass/review.scss */
 #sbac-share-resource-form #edit-temporary-link-text h2 {
   color: #5a5a5a;
   padding-bottom: 2px;
 }
-/* line 637, ../sass/review.scss */
+/* line 644, ../sass/review.scss */
 #sbac-share-resource-form input#sbac-permanent-link-text, #sbac-share-resource-form input#sbac-temporary-link-text {
   width: 65%;
   float: left;
   margin-right: 30px;
   padding-right: 30px;
 }
-/* line 644, ../sass/review.scss */
+/* line 651, ../sass/review.scss */
 #sbac-share-resource-form button#edit-permanent-link-button, #sbac-share-resource-form button#edit-temporary-link-button {
   width: 225px;
   margin-top: -3px;
 }
-/* line 650, ../sass/review.scss */
+/* line 657, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container .description {
   font-size: 13px;
   line-height: 1.2;
 }
-/* line 656, ../sass/review.scss */
+/* line 663, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.active {
   opacity: 1;
 }
-/* line 660, ../sass/review.scss */
+/* line 667, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive {
   opacity: 0.5;
 }
-/* line 663, ../sass/review.scss */
+/* line 670, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive a {
   cursor: default;
 }
-/* line 666, ../sass/review.scss */
+/* line 673, ../sass/review.scss */
 #sbac-share-resource-form .temporary-link-container.inactive a:hover {
   color: #FFF;
   background: #2aa549;
@@ -662,11 +670,11 @@
   -moz-box-shadow: inset 0px 1px 0px 0px #6dc088;
   box-shadow: inset 0px 1px 0px 0px #6dc088;
 }
-/* line 675, ../sass/review.scss */
+/* line 682, ../sass/review.scss */
 #sbac-share-resource-form .form-item-temporary-link {
   position: relative;
 }
-/* line 678, ../sass/review.scss */
+/* line 685, ../sass/review.scss */
 #sbac-share-resource-form .form-item-temporary-link .temp-link-clear {
   background: url("../images/icon-validation-fail.png") no-repeat 0 0;
   cursor: pointer;
@@ -681,11 +689,11 @@
 }
 
 /* Tag of Related resources */
-/* line 695, ../sass/review.scss */
+/* line 702, ../sass/review.scss */
 .related-resources {
   margin: 0 30px;
 }
-/* line 698, ../sass/review.scss */
+/* line 705, ../sass/review.scss */
 .related-resources h2 {
   border-bottom: 1px solid #62676E;
   color: #04384E;
@@ -696,34 +704,34 @@
   text-transform: capitalize;
   margin: 16px 0 15px;
 }
-/* line 709, ../sass/review.scss */
+/* line 716, ../sass/review.scss */
 .related-resources p {
   font-size: 16px;
   margin-bottom: 30px;
   max-width: 560px;
 }
 
-/* line 716, ../sass/review.scss */
+/* line 723, ../sass/review.scss */
 .no-related-resources {
   padding: 50px 30px;
 }
-/* line 719, ../sass/review.scss */
+/* line 726, ../sass/review.scss */
 .no-related-resources h2 {
   text-align: center;
   color: #000;
 }
-/* line 723, ../sass/review.scss */
+/* line 730, ../sass/review.scss */
 .no-related-resources .instruction {
   text-align: center;
 }
 
 /* Sharing Options- Copy Link to Clipboard button */
-/* line 731, ../sass/review.scss */
+/* line 738, ../sass/review.scss */
 body.admin-menu #global-zeroclipboard-html-bridge {
   margin-top: -28px;
 }
 
-/* line 735, ../sass/review.scss */
+/* line 742, ../sass/review.scss */
 #review-end-use-form {
   margin-bottom: 0;
 }

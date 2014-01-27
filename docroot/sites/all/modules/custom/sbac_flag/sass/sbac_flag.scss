@@ -289,6 +289,12 @@
 		}
 	
 		button {float: right; margin-left: 30px;}
+		
+		button#edit-finish-moderation {
+			background-color: #0084B0;
+			border: 1px solid #0D6785;
+			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+		}
 	}
 }
 
@@ -334,6 +340,12 @@
 		float: right;
 		margin-left: 30px;
 	}
+	
+	#edit-cancel {
+		background-color: #6E7379;
+	  border: 1px solid #4D5457;
+		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+	}
 }
 
 /*Modal - sbac-flag-resolve-all-resource-review-moderation-form, sbac-flag-cancel-resource-review-moderation-form*/
@@ -353,6 +365,12 @@
 	button{
 		float: right;
 		margin-left: 30px;
+	}
+	
+	button#edit-continue {
+		background-color: #0084B0;
+		border: 1px solid #0D6785;
+		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 	}
 }
 
@@ -416,4 +434,8 @@ button.gray.cancel:before {
 
 div.ctools-modal-content .modal-title {
 	height: auto !important;
+}
+
+.section-moderation #modalContent .ctools-modal-content .modal-content {
+	overflow-y: hidden !important;
 }

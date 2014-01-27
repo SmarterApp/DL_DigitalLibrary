@@ -457,8 +457,15 @@
 
         li {
           list-style-type: none;
-          padding: 5px 0;
-
+          /*padding: 5px 0;*/
+					background-color: #F2F2F2;
+				  border-radius: 2px;
+			    display: inline-block;
+			    font-size: 12px;
+			    line-height: 22px;
+			    margin-right: 7px;
+			    margin-top: 7px;
+			    padding: 0 5px;
         }
       }
 

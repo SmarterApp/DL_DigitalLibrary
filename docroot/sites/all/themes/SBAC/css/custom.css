@@ -7607,7 +7607,7 @@ button.green {
 }
 
 /* line 302, ../sass/custom.scss */
-button.blue {
+button.blue, .button.blue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
 }
@@ -7619,7 +7619,7 @@ button.red {
 }
 
 /* line 312, ../sass/custom.scss */
-button.gray {
+button.gray, .button.gray {
   background-color: #6E7379;
   border: 1px solid #4D5457;
 }
@@ -9564,7 +9564,7 @@ a.tabledrag-handle .handle {
 /* line 2089, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-header {
   background: none;
-  padding-bottom: 20px;
+  /*padding-bottom: 20px;*/
 }
 /* line 2093, ../sass/custom.scss */
 #modalContent .ctools-modal-content .modal-header #modal-title {
