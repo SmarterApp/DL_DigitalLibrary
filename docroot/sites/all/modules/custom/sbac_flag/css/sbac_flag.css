@@ -396,38 +396,39 @@
 }
 
 /* line 408, ../sass/sbac_flag.scss */
-button.gray.cancel {
+button.gray.cancel, .button.gray.cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   padding-left: 40px;
   position: relative;
+  margin: 0;
 }
-/* line 414, ../sass/sbac_flag.scss */
-button.gray.cancel:hover {
+/* line 415, ../sass/sbac_flag.scss */
+button.gray.cancel:hover, .button.gray.cancel:hover {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
-/* line 420, ../sass/sbac_flag.scss */
-button.gray.cancel:before {
+/* line 421, ../sass/sbac_flag.scss */
+button.gray.cancel:before, .button.gray.cancel:before {
   content: url(../images/buttonCancel.png);
   position: absolute;
   left: 15px;
   top: 4px;
 }
 
-/* line 431, ../sass/sbac_flag.scss */
+/* line 432, ../sass/sbac_flag.scss */
 .ajax-progress-throbber {
   display: none;
 }
 
-/* line 435, ../sass/sbac_flag.scss */
+/* line 436, ../sass/sbac_flag.scss */
 div.ctools-modal-content .modal-title {
   height: auto !important;
 }
 
-/* line 439, ../sass/sbac_flag.scss */
+/* line 440, ../sass/sbac_flag.scss */
 .section-moderation #modalContent .ctools-modal-content .modal-content {
   overflow-y: hidden !important;
 }

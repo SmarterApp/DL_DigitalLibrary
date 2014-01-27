@@ -405,11 +405,12 @@
 	}
 }
 
-button.gray.cancel {
+button.gray.cancel, .button.gray.cancel {
 	background-color: #6E7379;
   border: 1px solid #4D5457;
 	padding-left: 40px;
 	position: relative;
+	margin: 0;
 
 	&:hover {
 		background-color: #6E7379;
@@ -417,7 +418,7 @@ button.gray.cancel {
 		background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 	}
 }
-button.gray.cancel:before {
+button.gray.cancel:before, .button.gray.cancel:before {
 	content: url(../images/buttonCancel.png);
 	position: absolute;
 	left: 15px;

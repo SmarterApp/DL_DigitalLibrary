@@ -1143,7 +1143,7 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
   if ($_GET['flag'] == 'resolve-resource-review-flags') {
     $cancel_button = l(t('Cancel Moderation'), 'sbac-flag/nojs/cancel-resource-review-moderation', array(
       'attributes' => array(
-        'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-cancel-resource-review-moderation',
+        'class' => 'ctools-use-modal button gray cancel use-ajax ctools-modal-sbac-flag-cancel-resource-review-moderation',
         'id' => 'sbac-flag-cancel-resource-review-moderation'
       ),
       'query' => array(
@@ -1181,7 +1181,7 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
     $js_settings = array('sbac-flag-remove-resource-review' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
     drupal_add_js($js_settings, 'setting');
 
-    $finish_moderation_button = '<a class="button arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
+    $finish_moderation_button = '<a class="button blue arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
     $finish_moderation_button .= theme('item_list', array(
       'items' => $create_urls,
       'attributes' => array(
