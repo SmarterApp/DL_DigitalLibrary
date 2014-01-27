@@ -697,6 +697,10 @@ function sbac_flag_resolve_all_flags_form_submit(&$form, &$form_state) {
 function sbac_flag_remove_resource_form($form, &$form_state) {
   $form = array();
 
+  $form['container_prefix'] = array(
+    '#prefix' => '<div class="flag-modal-cont">',
+  );
+
   $form['submit_description'] = array(
     '#markup' => '<p>If you continue, the resource will no longer be available in the
     Digital Library Resource will be returned to the contributor in the locked state. The
@@ -707,6 +711,14 @@ function sbac_flag_remove_resource_form($form, &$form_state) {
   $form['contributor_message'] = array(
     '#type' => 'textarea',
     '#title' => 'Please leave a message for contributor' . theme('form_required_marker'),
+  );
+
+  $form['container_suffix'] = array(
+    '#suffix' => '</div>',
+  );
+
+  $form['button_prefix'] = array(
+    '#prefix' => '<div class="flag-button-cont">',
   );
 
   $form['finish_moderation'] = array(
@@ -721,6 +733,9 @@ function sbac_flag_remove_resource_form($form, &$form_state) {
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
+  $form['button_suffix'] = array(
+    '#suffix' => '</div>',
+  );
   return $form;
 }
 
