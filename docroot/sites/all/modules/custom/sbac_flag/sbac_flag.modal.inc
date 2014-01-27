@@ -822,7 +822,7 @@ function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_sta
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Finish Moderation',
-    '#attributes' => array('class' => array('button'))
+    '#attributes' => array('class' => array('button', 'blue'))
   );
 
   $form['continue'] = array(

@@ -395,13 +395,13 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
 
     if ($_GET['flag'] != 'resolve-resource-review-flags') {
       if ($status == 'Resource Review is Being Moderated') {
-        $moderation_button = l('Continue Moderation', $vars['node']->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $review), 'fragment' => 'review-Moderate_flag'));
+        $moderation_button = l('Continue Moderation', $vars['node']->path['alias'], array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $review), 'fragment' => 'review-Moderate_flag'));
       }
       else {
         // button
         $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-resource-review-moderation', array(
           'attributes' => array(
-            'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-start-resource-review-moderation',
+            'class' => 'ctools-use-modal button blue use-ajax ctools-modal-sbac-flag-start-resource-review-moderation',
             'id' => 'sbac-flag-start-resource-review-moderation'
           ),
           'query' => array(
