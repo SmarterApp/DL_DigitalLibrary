@@ -5,7 +5,10 @@
 
   Drupal.behaviors.sbac_flag_form = {
     attach: function (context, settings) {
-      var flag_moderation = null;
+      if ($('.drupal-alert-box').length && $('#modal-content').length && $('.flag-modal-cont').length) {
+          $('.flag-modal-cont').prepend($('.drupal-alert-box'));
+      }
+
       flag_moderation = Drupal.settings.flag_moderation;
       if (flag_moderation) {
         var save_button = $('#sbac-resource-save-continue');
