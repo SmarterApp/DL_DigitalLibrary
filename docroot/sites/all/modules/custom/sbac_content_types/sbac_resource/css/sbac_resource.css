@@ -1652,8 +1652,10 @@ p.sbac-resource-required:before {
   margin-right: 5px;
 }
 
-/* line 1602, ../sass/sbac_resource.scss */
-div.block-sbac-resource-sbac-resource-dl-sort-form {
+/* line 1604, ../sass/sbac_resource.scss */
+div.block-sbac-resource-sbac-resource-dl-sort-form,
+div.block-sbac-resource-sbac-resource-mr-sort-form,
+div.block-sbac-resource-sbac-resource-rr-sort-form {
   float: left;
   height: 60px;
   margin-top: -16px;
