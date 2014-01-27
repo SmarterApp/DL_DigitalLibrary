@@ -528,7 +528,7 @@ function sbac_flag_start_moderation_form($form, &$form_state) {
   $form['review_flags'] = array(
     '#type' => 'submit',
     '#value' => 'Review Flags',
-    '#attributes' => array('class' => array('button', 'blue', 'cancel'))
+    '#attributes' => array('class' => array('button', 'blue'))
   );
 
   $form['cancel'] = array(
@@ -631,7 +631,7 @@ function sbac_flag_resolve_all_flags_form($form, &$form_state) {
   $form['finish_moderation'] = array(
     '#type' => 'submit',
     '#value' => 'Finish Moderation',
-    '#attributes' => array('class' => array('button')),
+    '#attributes' => array('class' => array('button', 'blue')),
   );
 
   $form['cancel'] = array(
@@ -711,7 +711,7 @@ function sbac_flag_remove_resource_form($form, &$form_state) {
   $form['finish_moderation'] = array(
     '#type' => 'submit',
     '#value' => 'Finish Moderation',
-    '#attributes' => array('class' => array('button'))
+    '#attributes' => array('class' => array('button', 'blue'))
   );
 
 	$form['cancel'] = array(
@@ -773,7 +773,7 @@ function sbac_flag_cancel_resource_review_moderation_form($form, &$form_state) {
   $form['continue'] = array(
     '#type' => 'submit',
     '#value' => 'Continue Moderation',
-    '#attributes' => array('class' => array('button'))
+    '#attributes' => array('class' => array('button', 'blue'))
   );
 
   $form['cancel'] = array(
@@ -863,7 +863,7 @@ function sbac_flag_remove_resource_review_form($form, &$form_state) {
   $form['finish_moderation'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Resource Review',
-    '#attributes' => array('class' => array('button'))
+    '#attributes' => array('class' => array('button', 'red'))
   );
 
   return $form;

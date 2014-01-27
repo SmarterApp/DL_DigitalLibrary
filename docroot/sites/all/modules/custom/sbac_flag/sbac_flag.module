@@ -190,7 +190,7 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
     $form['actions']['cancel_moderation'] = array(
       '#markup' => l(t('Cancel Moderation'), 'sbac-flag/nojs/cancel-resource-moderation', array(
         'attributes' => array(
-          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-cancel-moderation',
+          'class' => 'ctools-use-modal button gray cancel use-ajax ctools-modal-sbac-flag-cancel-moderation',
           'id' => 'sbac-flag-cancel-moderation'
         ),
         'query' => array(
@@ -203,7 +203,7 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
     $form['actions']['resolve_all_flags'] = array(
       '#markup' => l(t('Resolve All Flags (modal)'), 'sbac-flag/nojs/resolve-all-flags', array(
         'attributes' => array(
-          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-resolve-all-flags',
+          'class' => 'ctools-use-modal button blue use-ajax ctools-modal-sbac-flag-resolve-all-flags',
           'id' => 'sbac-flag-resolve-all-flags'
         ),
         'query' => array(
@@ -216,7 +216,7 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
     $form['actions']['remove_resource'] = array(
       '#markup' => l(t('Remove Resource (modal)'), 'sbac-flag/nojs/remove-resource', array(
         'attributes' => array(
-          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-flag-remove-resource',
+          'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-flag-remove-resource',
           'id' => 'sbac-flag-remove-resource'
         ),
         'query' => array(
@@ -236,7 +236,7 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
     $create_urls[] = l('Resolve All Flags', '#', array('attributes' => array('class' => array('sbac-flag-resolve-all-flags')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resolve-all')));
     $create_urls[] = l('Remove Resource', '#', array('attributes' => array('class' => array('sbac-flag-remove-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'remove')));
     $finish_moderation_button = '<div class="finish">';
-    $finish_moderation_button .= '<a class="button arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
+    $finish_moderation_button .= '<a class="button blue arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
     $finish_moderation_button .= theme('item_list', array(
       'items' => $create_urls,
       'attributes' => array(
