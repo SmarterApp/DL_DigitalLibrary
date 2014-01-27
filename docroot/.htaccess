@@ -74,7 +74,7 @@ AddType video/mp4 .mov
   RewriteCond %{HTTP_HOST} ^integration.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$
   RewriteCond %{HTTPS} off
-  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  # RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   
   # Block access to "hidden" directories whose names begin with a period. This
