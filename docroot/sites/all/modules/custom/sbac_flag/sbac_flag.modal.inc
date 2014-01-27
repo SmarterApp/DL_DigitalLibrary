@@ -565,7 +565,7 @@ function sbac_flag_cancel_resource_moderation_form($form, &$form_state) {
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel Moderation',
-    '#attributes' => array('class' => array('button', 'gray'))
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
   return $form;
@@ -697,10 +697,10 @@ function sbac_flag_remove_resource_form($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => 'If you continue, the resource will no longer be available in the
+    '#markup' => '<p>If you continue, the resource will no longer be available in the
     Digital Library Resource will be returned to the contributor in the locked state. The
     message will be send to the contributor, all the flags will be dismissed and all the
-    changes will be discarded.',
+    changes will be discarded.</p>',
   );
 
   $form['contributor_message'] = array(
@@ -708,16 +708,16 @@ function sbac_flag_remove_resource_form($form, &$form_state) {
     '#title' => 'Please leave a message for contributor' . theme('form_required_marker'),
   );
 
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
-  );
-
   $form['finish_moderation'] = array(
     '#type' => 'submit',
     '#value' => 'Finish Moderation',
     '#attributes' => array('class' => array('button'))
+  );
+
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
   return $form;
@@ -766,20 +766,20 @@ function sbac_flag_cancel_resource_review_moderation_form($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => 'If you continue, the resource review will be
-    returned to the moderation queue in its original state',
+    '#markup' => '<p>If you continue, the resource review will be
+    returned to the moderation queue in its original state.</p>',
   );
 
   $form['continue'] = array(
     '#type' => 'submit',
     '#value' => 'Continue Moderation',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+    '#attributes' => array('class' => array('button'))
   );
 
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel Moderation',
-    '#attributes' => array('class' => array('button'))
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
   return $form;
@@ -845,8 +845,8 @@ function sbac_flag_remove_resource_review_form($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => 'If you continue, the resource review will no longer
-    be available in your moderation queue and will be removed from the resource.',
+    '#markup' => '<p>If you continue, the resource review will no longer
+    be available in your moderation queue and will be removed from the resource.</p>',
   );
 
   $form['contributor_message'] = array(

@@ -336,14 +336,25 @@
 	}
 }
 
-/*Modal - sbac-flag-resolve-all-resource-review-moderation-form*/
-#sbac-flag-resolve-all-resource-review-moderation-form {
+/*Modal - sbac-flag-resolve-all-resource-review-moderation-form, sbac-flag-cancel-resource-review-moderation-form*/
+#sbac-flag-resolve-all-resource-review-moderation-form, #sbac-flag-cancel-resource-review-moderation-form {
 	button{
 		float: right;
 		margin-left: 30px;
 	}
 }
 
+/*Modal - sbac-flag-cancel-resource-moderation-form*/
+#sbac-flag-cancel-resource-moderation-form {
+	
+	padding: 0 40px;
+	margin-top: 30px;
+	
+	button{
+		float: right;
+		margin-left: 30px;
+	}
+}
 
 
 /*button*/ 
@@ -395,7 +406,14 @@ button.gray.cancel:before {
 	top: 4px;
 }
 
+
+
+
+
 .ajax-progress-throbber {
   display: none;
 }
 
+div.ctools-modal-content .modal-title {
+	height: auto !important;
+}
