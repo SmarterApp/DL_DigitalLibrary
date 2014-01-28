@@ -507,6 +507,35 @@ function sbac_resource_resource_review_apply_filters(&$view) {
   }
 }
 
+function sbac_resource_resource_review_apply_sorts(&$view) {
+  $view_sorts = $view->display_handler->get_option('sorts');
+
+  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != '') {
+
+    $current_sorting = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS];
+    $sort_field_key = 'stamp';
+    switch ($current_sorting) {
+      case 'rr-oldest':
+        $sort_field_key = 'stamp';
+        break;
+      case 'rr-newest':
+        $sort_field_key = 'stamp_1';
+        break;
+    }
+
+    $new_sorts = array();
+    foreach ($view_sorts as $key => $value) {
+      if ($key == $sort_field_key) {
+        $new_sorts[$key] = $value;
+      }
+    }
+    if (!empty($new_sorts)) {
+      $view->display_handler->set_option('sorts', $new_sorts);
+    }
+  }
+}
+
 function sbac_resource_views_data() {
 //  | sbac_node_resource_state |
 //  CREATE TABLE `sbac_node_resource_state` (

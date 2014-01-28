@@ -2655,6 +2655,68 @@ function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_sta
 }
 
 
+function sbac_resource_resource_review_sort_form($form, $form_state) {
+  $form = array();
+  $default = 'rr-oldest'; // Hardcoded default. Change?
+
+  // If session var is set, make it the default.
+  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != '') {
+    $default = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS];
+  }
+
+  $options = array(
+    'rr-oldest'         => t('Oldest'),
+    'rr-newest'         => t('Newest'),
+  );
+
+  // Ajax submitted. Set Text if selected.
+  if (isset($form_state['values']['rr_sort_order'])) {
+    $new_value_key = $form_state['values']['rr_sort_order'];
+    $old_value_text = $options[$new_value_key];
+    $options[$new_value_key] = t('Sort by: ' . $old_value_text);
+  } else {
+    $options[$default] = t('Sort by: ' . $options[$default]);
+  }
+
+
+  // Needs to ajax submit to set the session variable that tracks default state.
+  $form['rr_sort_order'] = array(
+    '#prefix'         => '<div id="form-wrapper-rr-sort-element">',
+    '#suffix'         => '</div>',
+    '#type'           => 'select',
+    '#title'          => t(''),
+    '#required'       => FALSE,
+    '#options'        => $options,
+    '#default_value'  => $default,
+    '#ajax'           => array(
+      'callback'  => '_sbac_resource_resource_review_sort_form__ajax__change',
+      'event'     => 'change',
+      'wrapper'   => 'form-wrapper-rr-sort-element',
+      'progress'  => array('type' => 'none'),
+    )
+  );
+
+  return $form;
+}
+
+function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_state) {
+  // Set session variable here. Session only gets set when form submits a change.
+  $new_value_key = $form_state['values']['rr_sort_order'];
+  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = $new_value_key;
+
+  // Just return the form, dont force page refresh.
+  // return $form['rr_sort_order'];
+
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
+}
+
+
 function sbac_resource_my_resources_sort_form($form, $form_state) {
   $form = array();
   $default = 'mr-newest'; // Hardcoded default. Change?

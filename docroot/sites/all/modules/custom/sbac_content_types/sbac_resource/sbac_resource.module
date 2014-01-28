@@ -1917,6 +1917,16 @@ function sbac_resource_block_info() {
     'status' => 1,
   );
 
+  $blocks['sbac_resource_rr_sort_form'] = array(
+    'info' => t('Sort'),
+    'region' => 'sub-header',
+    'pages' => "resource-review*\n",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -21,
+    'status' => 1,
+  );
+
   $blocks['sbac_resource_mr_sort_form'] = array(
     'info' => t('Sort'),
     'region' => 'sub-header',
@@ -1986,6 +1996,10 @@ function sbac_resource_block_view($delta = '') {
     case 'sbac_resource_dl_sort_form':
       $block['subject'] = NULL;
       $block['content'] = drupal_get_form('sbac_resource_digital_library_sort_form');
+      break;
+    case 'sbac_resource_rr_sort_form':
+      $block['subject'] = NULL;
+      $block['content'] = drupal_get_form('sbac_resource_resource_review_sort_form');
       break;
     case 'sbac_resource_mr_sort_form':
       $block['subject'] = NULL;
