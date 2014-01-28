@@ -839,6 +839,10 @@ function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_sta
     $categories = sbac_flag_list_flag_categories($flags, 'review');
   }
 
+  $form['container_prefix'] = array(
+    '#prefix' => '<div class="flag-modal-cont">',
+  );
+
   $form['categories'] = array(
     '#markup' => $categories,
   );
@@ -846,6 +850,14 @@ function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_sta
   $form['submit_description'] = array(
     '#markup' => '<p>If you continue, the resource review will
     no longer be available in your moderation queue and all flags will be dismissed.</p>',
+  );
+
+  $form['container_suffix'] = array(
+    '#suffix' => '</div>',
+  );
+
+  $form['button_prefix'] = array(
+    '#prefix' => '<div class="flag-button-cont">',
   );
 
   $form['cancel'] = array(
@@ -858,6 +870,10 @@ function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_sta
     '#type' => 'submit',
     '#value' => 'Cancel',
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['button_suffix'] = array(
+    '#suffix' => '</div>',
   );
 
   return $form;
