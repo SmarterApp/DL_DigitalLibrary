@@ -698,11 +698,19 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['field'] = 'field_alt_body';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Sort criterion: Workbench Moderation: Timestamp */
+  $handler->display->display_options['sorts']['stamp']['id'] = 'stamp';
+  $handler->display->display_options['sorts']['stamp']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['sorts']['stamp']['field'] = 'stamp';
+  $handler->display->display_options['sorts']['stamp']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['stamp']['expose']['label'] = 'Timestamp (Oldest)';
+  /* Sort criterion: Workbench Moderation: Timestamp */
+  $handler->display->display_options['sorts']['stamp_1']['id'] = 'stamp_1';
+  $handler->display->display_options['sorts']['stamp_1']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['sorts']['stamp_1']['field'] = 'stamp';
+  $handler->display->display_options['sorts']['stamp_1']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['stamp_1']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['stamp_1']['expose']['label'] = 'Timestamp (Newest)';
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
