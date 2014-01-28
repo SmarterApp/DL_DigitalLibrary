@@ -2592,6 +2592,15 @@ function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
   return $duplicates;
 }
 
+/**
+ * Digital Library page/tab - form for sorting the view.
+ *
+ *  Uses session variable to track user selected status. Defaults to "Newest"
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function sbac_resource_digital_library_sort_form($form, $form_state) {
   $form = array();
   $default = 'dl-newest'; // Hardcoded default. Change?
@@ -2638,6 +2647,15 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
   return $form;
 }
 
+/**
+ * Ajax Callback - Digital library sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['dl_sort_order'];
@@ -2654,7 +2672,16 @@ function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_sta
   exit;
 }
 
-
+/**
+ * Resource Review page/tab - form for sorting the view.
+ *
+ *  Uses session variable to track user selected status. Defaults to "Oldest".
+ *  Uses workbench moderation history timestamp as sorting.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function sbac_resource_resource_review_sort_form($form, $form_state) {
   $form = array();
   $default = 'rr-oldest'; // Hardcoded default. Change?
@@ -2700,6 +2727,15 @@ function sbac_resource_resource_review_sort_form($form, $form_state) {
   return $form;
 }
 
+/**
+ * Ajax Callback - Resource Review sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['rr_sort_order'];
@@ -2716,7 +2752,15 @@ function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_sta
   exit;
 }
 
-
+/**
+ * My Resources page/tab - form for sorting the view.
+ *
+ *  Uses session variable to track user selected status. Defaults to "Newest"
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function sbac_resource_my_resources_sort_form($form, $form_state) {
   $form = array();
   $default = 'mr-newest'; // Hardcoded default. Change?
@@ -2763,6 +2807,15 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
   return $form;
 }
 
+/**
+ * Ajax Callback - My Resources sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['mr_sort_order'];
@@ -2778,3 +2831,4 @@ function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state)
   print ajax_render($commands);
   exit;
 }
+

@@ -208,6 +208,7 @@ function sbac_resource_views_default_views_alter(&$views) {
   }
 }
 
+
 /**
  * Populates contextual filters with data if provided.
  *
@@ -298,7 +299,13 @@ function sbac_resource_my_resource_apply_filters(&$view) {
   }
 }
 
-
+/**
+ * Populates sort options with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
 function sbac_resource_my_resource_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
 
@@ -422,6 +429,13 @@ function sbac_resource_digital_library_apply_filters(&$view) {
   }
 }
 
+/**
+ * Populates sort options with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
 function sbac_resource_digital_library_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
 
@@ -453,7 +467,6 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
     }
   }
 }
-
 
 /**
  * Populates contextual filters with data if provided.
@@ -507,6 +520,13 @@ function sbac_resource_resource_review_apply_filters(&$view) {
   }
 }
 
+/**
+ * Populates sort options with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
 function sbac_resource_resource_review_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
 
