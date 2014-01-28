@@ -860,13 +860,13 @@ function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_sta
     '#prefix' => '<div class="flag-button-cont">',
   );
 
-  $form['cancel'] = array(
+  $form['continue'] = array(
     '#type' => 'submit',
     '#value' => 'Finish Moderation',
     '#attributes' => array('class' => array('button', 'blue'))
   );
 
-  $form['continue'] = array(
+  $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
