@@ -2592,6 +2592,15 @@ function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
   return $duplicates;
 }
 
+/**
+ * Digital Library page/tab - form for sorting the view.
+ *
+ *  Uses session variable to track user selected status. Defaults to "Newest"
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function sbac_resource_digital_library_sort_form($form, $form_state) {
   $form = array();
   $default = 'dl-newest'; // Hardcoded default. Change?
@@ -2638,6 +2647,15 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
   return $form;
 }
 
+/**
+ * Ajax Callback - Digital library sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['dl_sort_order'];
@@ -2653,3 +2671,164 @@ function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_sta
   print ajax_render($commands);
   exit;
 }
+
+/**
+ * Resource Review page/tab - form for sorting the view.
+ *
+ *  Uses session variable to track user selected status. Defaults to "Oldest".
+ *  Uses workbench moderation history timestamp as sorting.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_resource_resource_review_sort_form($form, $form_state) {
+  $form = array();
+  $default = 'rr-oldest'; // Hardcoded default. Change?
+
+  // If session var is set, make it the default.
+  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != '') {
+    $default = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS];
+  }
+
+  $options = array(
+    'rr-oldest'         => t('Oldest'),
+    'rr-newest'         => t('Newest'),
+  );
+
+  // Ajax submitted. Set Text if selected.
+  if (isset($form_state['values']['rr_sort_order'])) {
+    $new_value_key = $form_state['values']['rr_sort_order'];
+    $old_value_text = $options[$new_value_key];
+    $options[$new_value_key] = t('Sort by: ' . $old_value_text);
+  } else {
+    $options[$default] = t('Sort by: ' . $options[$default]);
+  }
+
+
+  // Needs to ajax submit to set the session variable that tracks default state.
+  $form['rr_sort_order'] = array(
+    '#prefix'         => '<div id="form-wrapper-rr-sort-element">',
+    '#suffix'         => '</div>',
+    '#type'           => 'select',
+    '#title'          => t(''),
+    '#required'       => FALSE,
+    '#options'        => $options,
+    '#default_value'  => $default,
+    '#ajax'           => array(
+      'callback'  => '_sbac_resource_resource_review_sort_form__ajax__change',
+      'event'     => 'change',
+      'wrapper'   => 'form-wrapper-rr-sort-element',
+      'progress'  => array('type' => 'none'),
+    )
+  );
+
+  return $form;
+}
+
+/**
+ * Ajax Callback - Resource Review sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_state) {
+  // Set session variable here. Session only gets set when form submits a change.
+  $new_value_key = $form_state['values']['rr_sort_order'];
+  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = $new_value_key;
+
+  // Just return the form, dont force page refresh.
+  // return $form['rr_sort_order'];
+
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
+}
+
+/**
+ * My Resources page/tab - form for sorting the view.
+ *
+ *  Uses session variable to track user selected status. Defaults to "Newest"
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_resource_my_resources_sort_form($form, $form_state) {
+  $form = array();
+  $default = 'mr-newest'; // Hardcoded default. Change?
+
+  // If session var is set, make it the default.
+  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != '') {
+    $default = $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS];
+  }
+
+  $options = array(
+    'mr-newest'         => t('Newest'),
+    'mr-oldest'         => t('Oldest'),
+    'mr-alpha'          => t('Alphabetical (A-Z)'),
+  );
+
+  // Ajax submitted. Set Text if selected.
+  if (isset($form_state['values']['mr_sort_order'])) {
+    $new_value_key = $form_state['values']['mr_sort_order'];
+    $old_value_text = $options[$new_value_key];
+    $options[$new_value_key] = t('Sort by: ' . $old_value_text);
+  } else {
+    $options[$default] = t('Sort by: ' . $options[$default]);
+  }
+
+
+  // Needs to ajax submit to set the session variable that tracks default state.
+  $form['mr_sort_order'] = array(
+    '#prefix'         => '<div id="form-wrapper-mr-sort-element">',
+    '#suffix'         => '</div>',
+    '#type'           => 'select',
+    '#title'          => t(''),
+    '#required'       => FALSE,
+    '#options'        => $options,
+    '#default_value'  => $default,
+    '#ajax'           => array(
+      'callback'  => '_sbac_resource_my_resources_sort_form__ajax__change',
+      'event'     => 'change',
+      'wrapper'   => 'form-wrapper-mr-sort-element',
+      'progress'  => array('type' => 'none'),
+    )
+  );
+
+  return $form;
+}
+
+/**
+ * Ajax Callback - My Resources sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state) {
+  // Set session variable here. Session only gets set when form submits a change.
+  $new_value_key = $form_state['values']['mr_sort_order'];
+  $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = $new_value_key;
+
+  // Just return the form, dont force page refresh.
+  // return $form['mr_sort_order'];
+
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
+}
+

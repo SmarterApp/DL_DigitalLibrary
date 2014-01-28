@@ -76,11 +76,12 @@ function sbac_resource_my_resources_page() {
   $view = views_get_view('my_resources');
   $view->set_display($display);
   sbac_resource_my_resource_apply_filters($view);
+  sbac_resource_my_resource_apply_sorts($view);
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
   $my_resources_output = $view->preview();
-//  dpq($view->build_info['query']);
+  //  dpq($view->build_info['query']);
   $view->destroy();
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
 
@@ -113,6 +114,7 @@ function sbac_resource_resource_review_page() {
   $view = views_get_view('resource_review');
   $view->set_display($display);
   sbac_resource_resource_review_apply_filters($view);
+  sbac_resource_resource_review_apply_sorts($view);
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
