@@ -183,7 +183,8 @@
         clicked = true;
       });
 
-      $('#edit-finish-moderation').click( function () {
+      //$('#edit-finish-moderation').click( function () {
+      $("[id^=edit-finish-moderation]").click( function () {
         isDirty = false;
       });
     }
