@@ -277,14 +277,26 @@
 			}
 		
 			label {
-				font-size: 18px;
+				font-size: 16px;
 				color: #000;
 			}
 		
-			.form-textarea-wrapper textarea {
-				width: 100% !important;
-				max-width: 100%;
-				margin-bottom: 15px;
+			.form-textarea-wrapper {
+				position: relative;
+				
+				textarea {
+					width: 100% !important;
+					max-width: 100%;
+					margin-bottom: 15px;
+				}
+				
+				.counter {
+					font-size: 13px;
+			    position: absolute;
+			    right: 1%;
+			    top: -20px;
+					color: #5A5A5A;
+				}
 			}
 		}
 	
@@ -293,11 +305,11 @@
 	    border-top: 1px solid #F2F2F2;
 	    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
 	    display: block;
-	    padding: 15px 40px;
+	    padding: 17px 40px;
 	    position: relative;
 	    width: 100%;
 	    z-index: 4;
-			height: 65px;
+			height: 69px;
 		}
 	
 		button {float: right; margin-left: 30px;}
@@ -334,7 +346,7 @@
 		.modal-header {
 			-moz-box-sizing: border-box;
 		  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-	    padding: 20px 40px 20px !important;
+	    padding: 18px 40px !important;
 	    position: relative;
 	    z-index: 3;
 		}
