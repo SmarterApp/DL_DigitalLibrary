@@ -119,6 +119,32 @@ function sbac_flag_moderation_access() {
 }
 
 /**
+ * Implementation of hook_fivestar_widgets().
+ *
+ * This hook allows other modules to create additional custom widgets for
+ * the fivestar module.
+ *
+ * @return array
+ *   An array of key => value pairs suitable for inclusion as the #options in a
+ *   select or radios form element. Each key must be the location of a css
+ *   file for a fivestar widget. Each value should be the name of the widget.
+ *
+ * @see fivestar_fivestar_widgets()
+ */
+//function sbac_flag_fivestar_widgets() {
+//  $widgets_directory = drupal_get_path('module', 'sbac_flag') .'/widgets';
+//  $files = file_scan_directory($widgets_directory, '\.css$');
+//  $widgets = array();
+//  foreach ($files as $file) {
+//    if (strpos($file->filename, '-rtl.css') === FALSE) {
+//      $widgets[$file->filename] = drupal_ucfirst($file->name);
+//    }
+//  }
+//
+//  return $widgets;
+//}
+
+/**
  * Implements hook_form_alter().
  *
  * @param $form

@@ -968,7 +968,7 @@ function sbac_core_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Add some details');
-  t('Appropriate For');
+  t('Appropriate For:');
   t('Avg Rating');
   t('Comments');
   t('Details');

@@ -41,6 +41,7 @@
               if (response.remove_button == true) {
                 $('#sbac-load-more').hide();
               }
+              Drupal.attachBehaviors();
             },
             error: function(data) {
 
