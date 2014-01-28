@@ -204,11 +204,11 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
     $variables['eck_flag']['display_status'] = 'Being Moderated';
     $variables['eck_flag']['display_status_css'] = '';
     if ($eck_review) {
-      $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id), 'fragment' => 'review-Moderate_flag'));
+      $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id), 'fragment' => 'review-Moderate_flag'));
       $variables['eck_flag']['button'] = $url;
     }
     else {
-      $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
+      $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
       $variables['eck_flag']['button'] = $url;
     }
   }
