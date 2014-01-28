@@ -1,3 +1,14 @@
+/**
+ * This is the HTML output for the modal.
+ *
+ * sbac_flag.module, function hook_form_alter, line 255
+ * this is where I add the modalTheme which declares this
+ * theme output for that modal.
+ *
+ * @returns {string}
+ * @constructor
+ */
+
 Drupal.theme.prototype.CtoolSbacFlagCancelModeration = function () {
   var html = ''
   html += '  <div id="ctools-modal" class="small">'

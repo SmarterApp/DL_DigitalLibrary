@@ -1207,7 +1207,7 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
     drupal_add_js($js_settings, 'setting');
     $js_settings = array('sbac-flag-resolve-all-resource-review-flags' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
     drupal_add_js($js_settings, 'setting');
-    $js_settings = array('sbac-flag-remove-resource-review' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
+    $js_settings = array('sbac-flag-remove-resource-review' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 350)));
     drupal_add_js($js_settings, 'setting');
 
     $finish_moderation_button = '<a class="button blue arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
