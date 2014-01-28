@@ -513,18 +513,22 @@ button.gray.cancel:before, .button.gray.cancel:before {
   text-align: center;
   margin-top: 30px;
 }
+/* line 523, ../sass/sbac_flag.scss */
+.sbac-flag-load-more-button a {
+  width: 480px;
+}
 
-/* line 526, ../sass/sbac_flag.scss */
+/* line 528, ../sass/sbac_flag.scss */
 .ajax-progress-throbber {
   display: none;
 }
 
-/* line 530, ../sass/sbac_flag.scss */
+/* line 532, ../sass/sbac_flag.scss */
 div.ctools-modal-content .modal-title {
   height: auto !important;
 }
 
-/* line 534, ../sass/sbac_flag.scss */
+/* line 536, ../sass/sbac_flag.scss */
 .section-moderation #modalContent .ctools-modal-content .modal-content {
   overflow-y: hidden !important;
 }
