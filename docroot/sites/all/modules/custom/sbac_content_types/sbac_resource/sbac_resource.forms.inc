@@ -2660,10 +2660,10 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
   $default = 'mr-newest'; // Hardcoded default. Change?
 
   // If session var is set, make it the default.
-  // if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
-  //     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
-  //   $default = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
-  // }
+  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != '') {
+    $default = $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS];
+  }
 
   $options = array(
     'mr-newest'         => t('Newest'),
@@ -2704,15 +2704,15 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
 function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['mr_sort_order'];
-  // $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = $new_value_key;
+  $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = $new_value_key;
 
   // Just return the form, dont force page refresh.
-  return $form['mr_sort_order'];
+  // return $form['mr_sort_order'];
 
   // Ctools ajax implementation using commands to refresh page.
-  // ctools_include('ajax');
-  // $commands = array();
-  // $commands[] = ctools_ajax_command_reload();
-  // print ajax_render($commands);
-  // exit;
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
 }

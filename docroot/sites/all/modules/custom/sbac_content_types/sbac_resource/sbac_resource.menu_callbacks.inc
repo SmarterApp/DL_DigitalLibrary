@@ -76,6 +76,7 @@ function sbac_resource_my_resources_page() {
   $view = views_get_view('my_resources');
   $view->set_display($display);
   sbac_resource_my_resource_apply_filters($view);
+  sbac_resource_my_resource_apply_sorts($view);
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();

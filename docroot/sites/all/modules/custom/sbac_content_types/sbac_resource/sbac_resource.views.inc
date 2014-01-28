@@ -298,6 +298,39 @@ function sbac_resource_my_resource_apply_filters(&$view) {
   }
 }
 
+
+function sbac_resource_my_resource_apply_sorts(&$view) {
+  $view_sorts = $view->display_handler->get_option('sorts');
+
+  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != '') {
+
+    $current_sorting = $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS];
+    $sort_field_key = 'created';
+    switch ($current_sorting) {
+      case 'mr-newest':
+        $sort_field_key = 'created';
+        break;
+      case 'mr-oldest':
+        $sort_field_key = 'created_1';
+        break;
+      case 'mr-alpha':
+        $sort_field_key = 'title';
+        break;
+    }
+
+    $new_sorts = array();
+    foreach ($view_sorts as $key => $value) {
+      if ($key == $sort_field_key) {
+        $new_sorts[$key] = $value;
+      }
+    }
+    if (!empty($new_sorts)) {
+      $view->display_handler->set_option('sorts', $new_sorts);
+    }
+  }
+}
+
 /**
  * Populates contextual filters with data if provided.
  *
