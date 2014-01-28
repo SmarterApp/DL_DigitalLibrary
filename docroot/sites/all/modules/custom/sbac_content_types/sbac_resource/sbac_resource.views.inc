@@ -208,6 +208,7 @@ function sbac_resource_views_default_views_alter(&$views) {
   }
 }
 
+
 /**
  * Populates contextual filters with data if provided.
  *
@@ -295,6 +296,45 @@ function sbac_resource_my_resource_apply_filters(&$view) {
       }
     }
     $view->display_handler->set_option('filters', $view_filters);
+  }
+}
+
+/**
+ * Populates sort options with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
+function sbac_resource_my_resource_apply_sorts(&$view) {
+  $view_sorts = $view->display_handler->get_option('sorts');
+
+  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != '') {
+
+    $current_sorting = $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS];
+    $sort_field_key = 'created';
+    switch ($current_sorting) {
+      case 'mr-newest':
+        $sort_field_key = 'created';
+        break;
+      case 'mr-oldest':
+        $sort_field_key = 'created_1';
+        break;
+      case 'mr-alpha':
+        $sort_field_key = 'title';
+        break;
+    }
+
+    $new_sorts = array();
+    foreach ($view_sorts as $key => $value) {
+      if ($key == $sort_field_key) {
+        $new_sorts[$key] = $value;
+      }
+    }
+    if (!empty($new_sorts)) {
+      $view->display_handler->set_option('sorts', $new_sorts);
+    }
   }
 }
 
@@ -389,6 +429,13 @@ function sbac_resource_digital_library_apply_filters(&$view) {
   }
 }
 
+/**
+ * Populates sort options with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
 function sbac_resource_digital_library_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
 
@@ -420,7 +467,6 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
     }
   }
 }
-
 
 /**
  * Populates contextual filters with data if provided.
@@ -470,6 +516,42 @@ function sbac_resource_resource_review_apply_filters(&$view) {
 
     if (in_array(FEEDBACK_REVIEWER_RID, array_keys($user->roles))) {
       sbac_resource_filter_user_tags($view, $user);
+    }
+  }
+}
+
+/**
+ * Populates sort options with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
+function sbac_resource_resource_review_apply_sorts(&$view) {
+  $view_sorts = $view->display_handler->get_option('sorts');
+
+  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS]) &&
+      $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != '') {
+
+    $current_sorting = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS];
+    $sort_field_key = 'stamp';
+    switch ($current_sorting) {
+      case 'rr-oldest':
+        $sort_field_key = 'stamp';
+        break;
+      case 'rr-newest':
+        $sort_field_key = 'stamp_1';
+        break;
+    }
+
+    $new_sorts = array();
+    foreach ($view_sorts as $key => $value) {
+      if ($key == $sort_field_key) {
+        $new_sorts[$key] = $value;
+      }
+    }
+    if (!empty($new_sorts)) {
+      $view->display_handler->set_option('sorts', $new_sorts);
     }
   }
 }

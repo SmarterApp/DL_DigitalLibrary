@@ -1599,7 +1599,9 @@ p.sbac-resource-required:before {
 	margin-right: 5px;
 }
 
-div.block-sbac-resource-sbac-resource-dl-sort-form {
+div.block-sbac-resource-sbac-resource-dl-sort-form,
+div.block-sbac-resource-sbac-resource-mr-sort-form,
+div.block-sbac-resource-sbac-resource-rr-sort-form  {
   float:left;
   height:60px;
   margin-top:-16px;
