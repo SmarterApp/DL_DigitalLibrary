@@ -711,7 +711,7 @@ function sbac_flag_remove_resource_form($form, &$form_state) {
   $form['submit_description'] = array(
     '#markup' => '<p>If you continue, the resource will no longer be available in the
     Digital Library Resource will be returned to the contributor in the locked state. The
-    message will be send to the contributor, all the flags will be dismissed and all the
+    message will be sent to the contributor, all the flags will be dismissed and all the
     changes will be discarded.</p>',
   );
 
