@@ -2,7 +2,18 @@
 	
 	.block-sbac-flag-moderation-count {
 		float: left;
-		h3 {line-height: 45px; margin: 0 20px;}
+		margin-left: 26px;
+		margin-right: 10px;
+		
+		h3 {
+			color: #0085AD;
+	    font-size: 1.2rem;
+	    font-weight: normal;
+	    height: 45px;
+	    line-height: 45px;
+	    margin: 0;
+	    padding: 0;
+		}
 	}
 	
 	.block-sbac-flag-moderation-category {
@@ -303,6 +314,7 @@
 	}
 }
 
+/*Modal with scrolling content*/
 .page-node-edit.node-type-resource {
 	
 	#modalContent {
@@ -339,8 +351,39 @@
 	}	
 }
 
+/*Modal with small content*/
+.page-node-edit.node-type-resource {
+	
+	#modalContent {
+		
+		.ctools-modal-content.small {
+			width: 600px !important;
+			height: 200px !important;
+			
+			.modal-header {
+				-moz-box-sizing: none;
+			  box-shadow: none;
+			}
+			
+			.modal-title {
+				/*color: #04384E !important;*/
+				display: block;
+		    font-size: 18px !important;
+		    font-weight: bold;
+		    margin: 0;
+		    text-transform: capitalize;
+				padding: 0 !important;
+			}
+			
+			form {
+				margin-top: 0;
+			}
+		}
+	}
+}
+
 /*Modal - sbac-flag-start-moderation-form*/	
-#sbac-flag-start-moderation-form{
+#sbac-flag-start-moderation-form {
 	button{
 		float: right;
 		margin-left: 30px;

@@ -175,6 +175,27 @@
 #sbac-flag-resource-modal-form .form-submit {
 	float: right;
 	margin-left: 30px;
+	
+	button.gray.cancel {
+		background-color: #6E7379;
+	  border: 1px solid #4D5457;
+		padding-left: 40px;
+		position: relative;
+		margin: 0;
+
+		&:hover {
+			background-color: #6E7379;
+		  border: 1px solid #4D5457;
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+		}
+	}
+	button.gray.cancel:before, .button.gray.cancel:before {
+		content: url(../images/buttonCancel.png);
+		position: absolute;
+		left: 15px;
+		top: 4px;
+	}
+	
 }
 
 .node-type-resource  #modal-content {

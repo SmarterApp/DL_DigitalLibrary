@@ -169,8 +169,29 @@
   float: right;
   margin-left: 30px;
 }
+/* line 179, ../sass/flag.scss */
+#sbac-flag-resource-modal-form .form-submit button.gray.cancel {
+  background-color: #6E7379;
+  border: 1px solid #4D5457;
+  padding-left: 40px;
+  position: relative;
+  margin: 0;
+}
+/* line 186, ../sass/flag.scss */
+#sbac-flag-resource-modal-form .form-submit button.gray.cancel:hover {
+  background-color: #6E7379;
+  border: 1px solid #4D5457;
+  background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+}
+/* line 192, ../sass/flag.scss */
+#sbac-flag-resource-modal-form .form-submit button.gray.cancel:before, #sbac-flag-resource-modal-form .form-submit .button.gray.cancel:before {
+  content: url(../images/buttonCancel.png);
+  position: absolute;
+  left: 15px;
+  top: 4px;
+}
 
-/* line 180, ../sass/flag.scss */
+/* line 201, ../sass/flag.scss */
 .node-type-resource #modal-content {
   overflow-y: hidden !important;
 }
