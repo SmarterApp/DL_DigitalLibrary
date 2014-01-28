@@ -619,6 +619,9 @@ function sbac_flag_resolve_all_flags_form($form, &$form_state) {
     $form['contributor_message'] = array(
       '#type' => 'textarea',
       '#title' => 'Since you have edited this resource, please leave a message for contributor' . theme('form_required_marker'),
+      '#maxlength' => 1000,
+      '#maxlength_js' => TRUE,
+      '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
     );
   }
   else {
@@ -718,6 +721,9 @@ function sbac_flag_remove_resource_form($form, &$form_state) {
   $form['contributor_message'] = array(
     '#type' => 'textarea',
     '#title' => 'Please leave a message for contributor' . theme('form_required_marker'),
+    '#maxlength' => 1000,
+    '#maxlength_js' => TRUE,
+    '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
   );
 
   $form['container_suffix'] = array(
@@ -875,6 +881,9 @@ function sbac_flag_remove_resource_review_form($form, &$form_state) {
   $form['contributor_message'] = array(
     '#type' => 'textarea',
     '#title' => 'Please leave a message for review contributor' . theme('form_required_marker'),
+    '#maxlength' => 1000,
+    '#maxlength_js' => TRUE,
+    '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
   );
 
   $form['cancel'] = array(
