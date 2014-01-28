@@ -238,7 +238,7 @@
 }
 
 /*Confirmation modal for edit page*/
-.page-node-edit.node-type-resource {
+.page-node-edit.node-type-resource, .node-type-resource.section-content {
 	.page-moderation {
 		.modal-content {
 			overflow-y: hidden !important;
@@ -281,7 +281,7 @@
 				color: #000;
 			}
 		
-			.form-textarea-wrapper {
+			.form-textarea-wrapper, .form-item-contributor-message {
 				position: relative;
 				
 				textarea {
@@ -475,6 +475,53 @@
 		background-color: #0084B0;
 		border: 1px solid #0D6785;
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+	}
+}
+
+/*Confirmation modal for sbac-flag-remove-resource-review-form page*/
+.node-type-resource {
+
+	form[id*="sbac-flag-remove-resource-review-form"] {
+		.button, .form-submit {
+			float: right;
+			margin-left: 30px;
+		}
+		
+		label {
+			font-size: 16px;
+			color: #000;
+		}
+	
+		.form-item-contributor-message {
+			position: relative;
+			
+			textarea {
+				width: 100% !important;
+				max-width: 100%;
+				margin-bottom: 15px;
+			}
+			
+			.counter {
+				font-size: 13px;
+		    position: absolute;
+		    right: 1%;
+		    top: 3px;
+				color: #5A5A5A;
+			}
+		}
+		
+		button[id*="edit-cancel"] {
+			background-color: #6E7379;
+		  border: 1px solid #4D5457;
+			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+			padding-left: 40px;
+		}
+	
+		button[id*="edit-finish-moderation"] {
+			background-color: #8A1538;
+	    border: 1px solid #793348;
+			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+		}
 	}
 }
 
