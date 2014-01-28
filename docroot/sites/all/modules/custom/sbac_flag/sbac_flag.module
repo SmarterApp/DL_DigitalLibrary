@@ -1117,6 +1117,7 @@ function sbac_flag_resource_profile_view($flags) {
 function sbac_flag_resource_review_profile_view($node, $flags) {
   $list_output = '';
   $flag_categories = array();
+  drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.node.js');
 
   foreach ($flags as $flag) {
     $eck_flag = entity_load_single('flag', $flag->id);
