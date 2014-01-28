@@ -241,12 +241,13 @@
 		}
 	}
 
-	#sbac-flag-resolve-all-flags-form {
+  form[id*="sbac-flag-resolve-all-flags-form"],
+	form[id*="sbac-flag-remove-resource-form"] {
 	
 		.flag-modal-cont {
 			height: 200px;
 			overflow-y: scroll;
-			padding: 0 40px;
+			padding: 15px 40px 0;
 			background-color: #F2F2F2;
 		
 			h3 {
@@ -295,6 +296,10 @@
 			border: 1px solid #0D6785;
 			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 		}
+	}
+	
+	.form-item-error-holder.error + .form-item {
+	  background: url("../images/icon-validation-fail.png") no-repeat right 10px top 40px;
 	}
 }
 
@@ -381,7 +386,7 @@
 	}
 }
 
-/*sbac-flag-cancel-resource-review-moderation-form*/
+/*Modal - sbac-flag-cancel-resource-review-moderation-form*/
 #sbac-flag-cancel-resource-review-moderation-form {
 	button{
 		float: right;
@@ -417,7 +422,6 @@
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 	}
 }
-
 
 /*button*/ 
 .flag-category-review-buttons, .form-actions {
@@ -469,7 +473,10 @@ button.gray.cancel:before, .button.gray.cancel:before {
 	top: 4px;
 }
 
-
+.sbac-flag-load-more-button {
+	text-align: center;
+	margin-top: 30px;
+}
 
 
 

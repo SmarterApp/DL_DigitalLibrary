@@ -440,7 +440,7 @@
 /* line 446, ../sass/review.scss */
 .entity-review.view-mode-full .group-footer .field-name-field-appropriate-for .field-label {
   color: inherit;
-  font-size: 0.8em;
+  font-size: 13px;
   font-weight: bold;
 }
 /* line 452, ../sass/review.scss */
@@ -477,7 +477,7 @@
   font-size: 13px;
   font-weight: bold;
   line-height: 1.2;
-  margin: 0;
+  margin: 0 0 8px;
   max-width: 560px;
   padding: 0;
 }
