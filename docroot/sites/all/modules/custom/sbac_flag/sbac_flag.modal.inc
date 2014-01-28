@@ -898,16 +898,16 @@ function sbac_flag_remove_resource_review_form($form, &$form_state) {
     '#prefix' => '<div class="flag-button-cont">',
   );
 
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
-  );
-
   $form['finish_moderation'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Resource Review',
     '#attributes' => array('class' => array('button', 'red'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
   $form['button_suffix'] = array(
