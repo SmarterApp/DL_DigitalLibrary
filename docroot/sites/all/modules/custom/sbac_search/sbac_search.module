@@ -103,10 +103,12 @@ function sbac_resource_clear_library_page() {
         break;
       case 'my-resources':
         $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = '';
+        $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = '';
         drupal_goto($location);
         break;
       case 'resource-review':
         $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+        $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = '';
         drupal_goto($location);
         break;
     }
