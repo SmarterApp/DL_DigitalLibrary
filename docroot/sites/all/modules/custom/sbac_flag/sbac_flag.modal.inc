@@ -873,6 +873,10 @@ function sbac_flag_resolve_all_resource_review_moderation_form($form, &$form_sta
 function sbac_flag_remove_resource_review_form($form, &$form_state) {
   $form = array();
 
+  $form['container_prefix'] = array(
+    '#prefix' => '<div class="flag-modal-cont">',
+  );
+
   $form['submit_description'] = array(
     '#markup' => '<p>If you continue, the resource review will no longer
     be available in your moderation queue and will be removed from the resource.</p>',
@@ -886,6 +890,14 @@ function sbac_flag_remove_resource_review_form($form, &$form_state) {
     '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
   );
 
+  $form['container_suffix'] = array(
+    '#suffix' => '</div>',
+  );
+
+  $form['button_prefix'] = array(
+    '#prefix' => '<div class="flag-button-cont">',
+  );
+
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
@@ -896,6 +908,10 @@ function sbac_flag_remove_resource_review_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Delete Resource Review',
     '#attributes' => array('class' => array('button', 'red'))
+  );
+
+  $form['button_suffix'] = array(
+    '#suffix' => '</div>',
   );
 
   return $form;
