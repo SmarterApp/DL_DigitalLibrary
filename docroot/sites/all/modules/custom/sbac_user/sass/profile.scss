@@ -469,6 +469,18 @@ h2.name {
           border: 1px #bbb solid;
           border-top: none;
           background: #f7f7f7;
+					padding: 0.5em 0.6em;
+					text-align: left;
+					line-height: 1.6;
+					
+						span {
+							display: inline-block; 
+							
+					 		&.form-required {
+						    color: #FF0000;
+							}
+						}
+					
           &:hover {
             outline: none;
             strong {
@@ -646,7 +658,41 @@ h2.name {
 		padding: 10px 50px;
 }
 
-
+/*overwrite from global*/
+#user-profile-form {
+	
+	.vertical-tabs ul.vertical-tabs-list {
+		padding-left: 0;
+	}
+	
+	.vertical-tabs ul.vertical-tabs-list li.selected a:after {
+	    background: none repeat scroll 0 0 #FFFFFF;
+	    box-shadow: none;
+	    content: " ";
+	    display: block;
+	    height: 100%;
+	    position: relative;
+	    right: 0;
+	    top: 0;
+	    width: 0;
+	    z-index: 2;
+	}
+	.vertical-tabs ul.vertical-tabs-list li a:after {
+	    background: none repeat scroll 0 0 #FFFFFF;
+	    box-shadow: none;
+	    content: " ";
+	    display: block;
+	    height: 100%;
+	    position: relative;
+	    right: 0;
+	    top: 0;
+	    width: 0;
+	    z-index: 1;
+	}
+	.vertical-tabs ul.vertical-tabs-list li.selected a {
+			box-shadow: none;
+	}
+}
 
 
 
