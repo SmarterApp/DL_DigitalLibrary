@@ -378,17 +378,19 @@
 }
 
 /*Modal with small content*/
-.page-node-edit.node-type-resource {
+.page-node-edit.node-type-resource, .node-type-resource.section-content {
 	
 	#modalContent {
 		
 		.ctools-modal-content.small {
-			width: 600px !important;
+			width: 620px !important;
 			height: 200px !important;
 			
 			.modal-header {
 				-moz-box-sizing: none;
 			  box-shadow: none;
+				font-size: 18px !important;
+				color: #000;
 			}
 			
 			.modal-title {
@@ -403,6 +405,7 @@
 			
 			form {
 				margin-top: 0;
+				padding: 0 40px;
 			}
 		}
 	}
