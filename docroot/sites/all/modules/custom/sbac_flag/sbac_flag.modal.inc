@@ -686,12 +686,14 @@ function sbac_flag_resolve_all_flags_form_validate(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_flag_resolve_all_flags_form_submit(&$form, &$form_state) {
-  $node = node_load($form_state['nid']);
-  if ($node) {
-    $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
-    if ($flags) {
-      foreach ($flags as $flag) {
-        db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
+  if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
+    $node = node_load($form_state['nid']);
+    if ($node) {
+      $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
+      if ($flags) {
+        foreach ($flags as $flag) {
+          db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
+        }
       }
     }
   }
