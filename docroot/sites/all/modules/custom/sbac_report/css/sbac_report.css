@@ -436,18 +436,18 @@ i.icon-info {
   padding: 0;
 }
 /* line 446, ../sass/sbac_report.scss */
-.page-reports fieldset#edit-date-range .form-wrapper .form-type-textfield label, .page-reports fieldset#edit-date-range .form-wrapper .form-type-textfield .description {
+.page-reports fieldset#edit-date-range .form-wrapper .form-type-textfield .description {
   display: none;
 }
 /* line 452, ../sass/sbac_report.scss */
-.page-reports .container-inline-date label, .page-reports .container-inline-date #from-date, .page-reports .container-inline-date #to-date {
+.page-reports .container-inline-date label, .page-reports .container-inline-date input {
   display: block;
   float: left;
 }
 /* line 457, ../sass/sbac_report.scss */
 .page-reports .container-inline-date label {
   margin-right: 10px;
-  margin-top: 18px;
+  margin-top: 10px;
 }
 /* line 463, ../sass/sbac_report.scss */
 .page-reports hr {
