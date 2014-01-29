@@ -444,7 +444,7 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
             'modalSize' => array(
               'type' => 'fixed',
               'width' => 600,
-              'height' => 260,
+              'height' => 305,
             ),
             'modalTheme' => 'CtoolSbacFlagCancelModeration',
           ),
@@ -509,7 +509,7 @@ function sbac_flag_create_resource_view_output(&$vars, $flags) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 260,
+          'height' => 305,
         ),
         'modalTheme' => 'CtoolSbacFlagCancelModeration',
       ),
