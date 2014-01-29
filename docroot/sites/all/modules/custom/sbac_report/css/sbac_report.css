@@ -414,29 +414,29 @@ i.icon-info {
   margin: 0;
 }
 
-/*SNE tab*/
+/*SNE tab, CSV tab*/
 /* line 427, ../sass/sbac_report.scss */
 .page-reports ul.vertical-tabs-list {
   margin-left: 0;
 }
 /* line 431, ../sass/sbac_report.scss */
-.page-reports fieldset#edit-date-range {
+.page-reports fieldset[id*="edit-date-range"] {
   clear: left;
   border: none;
   padding: 10px 0 0;
   margin-bottom: 0;
 }
 /* line 437, ../sass/sbac_report.scss */
-.page-reports fieldset#edit-date-range input[type="radio"] {
+.page-reports fieldset[id*="edit-date-range"] input[type="radio"] {
   margin-bottom: 15px;
 }
 /* line 441, ../sass/sbac_report.scss */
-.page-reports fieldset#edit-date-range .form-wrapper {
+.page-reports fieldset[id*="edit-date-range"] .form-wrapper {
   border: none;
   padding: 0;
 }
 /* line 446, ../sass/sbac_report.scss */
-.page-reports fieldset#edit-date-range .form-wrapper .form-type-textfield .description {
+.page-reports fieldset[id*="edit-date-range"] .form-wrapper .form-type-textfield .description {
   display: none;
 }
 /* line 452, ../sass/sbac_report.scss */
