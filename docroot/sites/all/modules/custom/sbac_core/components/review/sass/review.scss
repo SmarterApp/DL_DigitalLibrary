@@ -78,6 +78,10 @@
   #review-end-use-wrap {
     form {
       clear: both;
+			
+			label {
+				font-size: 13px;
+		  }
 
       /* this will only hide the initial form, while still showing it upon form submissions/state changes */
       &#eck-entity-form-add-review-end-use {
@@ -121,7 +125,6 @@
 
       .field-name-field-details {
         position: relative;
-				font-size: 13px;
 				line-height: 1.2;
 				padding-bottom: 15px;
 
@@ -297,7 +300,8 @@
      /* border-top:1px solid #eee;*/
 
       .term {
-        font-size: 0.8em;
+        /*font-size: 0.8em;*/
+				font-size: 13px;
         padding: 5px 0;
 
         &.highlight {
