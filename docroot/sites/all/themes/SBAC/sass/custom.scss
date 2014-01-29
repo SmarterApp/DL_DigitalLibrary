@@ -464,7 +464,7 @@ html.js {
 			    width: 10px;
 			    z-index: 1;
 			}
-			/*&:focus { border: 2px solid #BFD8E5; } */
+			&:focus {background-color:#BFD8E5; /*border: 2px solid #BFD8E5; */ }
 		}
 		a span {
 		    color: #464B54;
@@ -495,6 +495,7 @@ html.js {
 		    width: 15px;
 		    z-index: 2;
 		}
+		&:focus {background-color:#BFD8E5; /*border: 2px solid #BFD8E5; */ }
 	}
   
 	li:first-child {
