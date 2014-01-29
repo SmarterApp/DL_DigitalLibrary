@@ -184,7 +184,11 @@
 
       .field-name-field-appropriate-for {
         clear: both;
-        padding: 10px 0;
+        padding: 15px 0;
+
+				label {
+					padding: 8px 0;
+				}
 								
 				input[type="checkbox"] {
 					margin-left: 0;
@@ -221,7 +225,7 @@
 
       .actions-wrapper  {
         clear: both;
-        padding: 10px 0 0;
+        padding: 20px 0 10px;
 
         .button,
         button {
@@ -491,11 +495,12 @@
     .field-name-review-vote {
       float: left;
       width: 740px;
+			margin-top: 30px;
     }
 
     .field-name-review-delete {
       float: right;
-      padding-top: 5px;
+      padding-top: 35px;
       text-align: right;
       width: 90px;
     }
@@ -741,4 +746,10 @@ body.admin-menu #global-zeroclipboard-html-bridge {
 
 #review-end-use-form {
 	margin-bottom: 0;
+}
+
+
+/*Rate info*/
+.rate-info {
+	font-size: 13px;
 }
