@@ -943,13 +943,6 @@ SQL;
     $completed[] = $row;
   }
 
-  foreach ($completed as $key => $user_completed_review) {
-    $feedback = _sbac_resource_determine_feedback($user_completed_review->node_id, 'qc', $uid, 1, FALSE, 1, 'set', TRUE);
-    if (count($feedback) != 2) { // two other reviewers
-      unset($completed[$key]);
-    }
-  }
-
   return $completed;
 }
 
