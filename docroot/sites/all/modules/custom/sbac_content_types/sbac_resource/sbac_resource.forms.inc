@@ -405,6 +405,21 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   if ($form_state['html5']) {
     $form_state['values']['field_html5']['und'][0]['value'] = 1;
   }
+
+  // Handle the flag moderation.
+  $sbac_flag = FALSE;
+  $chosen_option = FALSE;
+  if (isset($form_state['sbac-flag']) && $form_state['sbac-flag']) {
+    $sbac_flag = TRUE;
+    $chosen_option = $form_state['input']['chosen_flag_option'];
+    if ($form_state['input']['changes_made'] == 1) {
+      $_SESSION['sbac-flag']['changes-made'] = TRUE;
+    }
+    $form_state['values']['workbench_moderation_state_current'] = 'published';
+    // Set state to Draft.
+    $form_state['values']['workbench_moderation_state_new'] = 'published';
+  }
+
   // Only save if non modal version.
   if (!$save_all_changes_modal) {
     // Save node and rebuild form.
@@ -414,17 +429,6 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
   // Clear drupal messages.
   drupal_get_messages();
-
-  // handle the flag moderation.
-  $sbac_flag = FALSE;
-  $chosen_option = FALSE;
-  if (isset($form_state['sbac-flag']) && $form_state['sbac-flag']) {
-    $sbac_flag = TRUE;
-    $chosen_option = $form_state['input']['chosen_flag_option'];
-    if ($form_state['input']['changes_made'] == 1) {
-      $_SESSION['sbac-flag']['changes-made'] = TRUE;
-    }
-  }
 
   if ($save_all_changes_modal) {
     $form['run_js'] = array(
@@ -1737,6 +1741,12 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   $form['field_pii']['und']['#title'] .= ' ' . theme('form_required_marker');
   unset($form['field_pii']['und']['#options'][0]);
+
+  if ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'view-resource-flags') {
+    if (isset($form['field_pii']['und'])) {
+      $form['field_pii']['und']['#attributes']['disabled'] = 'disabled';
+    }
+  }
 }
 
 /**

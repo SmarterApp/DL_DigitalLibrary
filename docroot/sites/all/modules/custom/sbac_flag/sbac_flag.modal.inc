@@ -686,7 +686,7 @@ function sbac_flag_resolve_all_flags_form_validate(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_flag_resolve_all_flags_form_submit(&$form, &$form_state) {
-  if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
+  if ($form_state['triggering_element']['#value'] == 'Finish Moderation' && isset($form_state['values']['contributor_message'])) {
     $node = node_load($form_state['nid']);
     if ($node) {
       $flags = sbac_flag_get_all_flags_for_node($node, 'resource');

@@ -568,8 +568,8 @@ function sbac_flag_confirmation($flag) {
 function sbac_flag_get_user_flag($nid, $uid) {
   $flag = array();
 
-  $sql = "SELECT * FROM {eck_flag} WHERE nid = :nid AND uid = :uid";
-  $result = db_query($sql, array(':nid' => $nid, ':uid' => $uid))->fetchAssoc();
+  $sql = "SELECT * FROM {eck_flag} WHERE nid = :nid AND uid = :uid AND resolved = :resolved";
+  $result = db_query($sql, array(':nid' => $nid, ':uid' => $uid, ':resolved' => 0))->fetchAssoc();
   if ($result) {
     $flag = $result;
   }
