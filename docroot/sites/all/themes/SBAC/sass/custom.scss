@@ -464,7 +464,10 @@ html.js {
 			    width: 10px;
 			    z-index: 1;
 			}
-			&:focus {background-color:#BFD8E5; /*border: 2px solid #BFD8E5; */ }
+			&:focus {
+				/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */ 
+				background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+			}
 		}
 		a span {
 		    color: #464B54;
@@ -495,7 +498,10 @@ html.js {
 		    width: 15px;
 		    z-index: 2;
 		}
-		&:focus {background-color:#BFD8E5; /*border: 2px solid #BFD8E5; */ }
+		&:focus {
+			/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */ 
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+		}
 	}
   
 	li:first-child {
