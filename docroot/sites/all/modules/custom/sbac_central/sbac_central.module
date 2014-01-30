@@ -23,11 +23,10 @@ function sbac_central_menu() {
   $items['admin/test'] = array(
     'title'            => t('Admin Test'),
     'page callback'    => 'sbac_central_dev_test',
-    'access arguments' => array(),
-    'access callback'  => array('administer content'),
+    'access arguments' => array('administer content'),
     'type'             => MENU_CALLBACK,
   );
-  
+
   return $items;
 }
 
