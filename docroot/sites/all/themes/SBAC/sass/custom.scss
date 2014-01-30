@@ -2943,3 +2943,37 @@ a.tabledrag-handle .handle {
 	}
 }
 
+/*Global sort select box*/
+.block-sbac-resource-sbac-resource-dl-sort-form, 
+.block-sbac-resource-sbac-resource-rr-sort-form,
+.block-sbac-resource-sbac-resource-mr-sort-form  {
+	
+	select {
+			background: url(../images/icons/icon-arrow-down.png) no-repeat top 12px right 6px;
+			color: #464B54;
+	    font-size: 15px;
+			line-height:1.2em;
+	    margin: 0 0 10px;
+	    padding: 6px; /* use this to set a specific height for your dropdown (DO NOT use the attribute 'height') */
+	    cursor: pointer;
+	    text-indent: 0.01px;
+	    text-overflow: "";
+	    background-color: #F2F2F2;
+			border: 1px solid #006082;
+			border-radius: 6px;
+	}
+	
+	select > option {
+		color: #464B54;
+    font-size: 15px;
+ 	}
+}
+
+
+
+
+
+
+
+
+

@@ -10494,3 +10494,30 @@ a.tabledrag-handle .handle {
   background-color: #0084B0 !important;
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
+
+/*Global sort select box*/
+/* line 2951, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-dl-sort-form select,
+.block-sbac-resource-sbac-resource-rr-sort-form select,
+.block-sbac-resource-sbac-resource-mr-sort-form select {
+  background: url(../images/icons/icon-arrow-down.png) no-repeat top 12px right 6px;
+  color: #464B54;
+  font-size: 15px;
+  line-height: 1.2em;
+  margin: 0 0 10px;
+  padding: 6px;
+  /* use this to set a specific height for your dropdown (DO NOT use the attribute 'height') */
+  cursor: pointer;
+  text-indent: 0.01px;
+  text-overflow: "";
+  background-color: #F2F2F2;
+  border: 1px solid #006082;
+  border-radius: 6px;
+}
+/* line 2966, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-dl-sort-form select > option,
+.block-sbac-resource-sbac-resource-rr-sort-form select > option,
+.block-sbac-resource-sbac-resource-mr-sort-form select > option {
+  color: #464B54;
+  font-size: 15px;
+}
