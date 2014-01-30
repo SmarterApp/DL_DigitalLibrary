@@ -10496,6 +10496,14 @@ a.tabledrag-handle .handle {
 }
 
 /*Global sort select box*/
+/* line 2949, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-dl-sort-form,
+.block-sbac-resource-sbac-resource-rr-sort-form,
+.block-sbac-resource-sbac-resource-mr-sort-form {
+  /*Remove the outline*/
+  /*for Chrome*/
+  /*for IE9, IE10*/
+}
 /* line 2951, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form select,
 .block-sbac-resource-sbac-resource-rr-sort-form select,
@@ -10503,9 +10511,9 @@ a.tabledrag-handle .handle {
   background: url(../images/icons/icon-arrow-down.png) no-repeat top 12px right 6px;
   color: #464B54;
   font-size: 15px;
-  line-height: 1.2em;
-  margin: 0 0 10px;
-  padding: 6px;
+  line-height: 1;
+  margin: 6px 0 0;
+  padding: 6px 3px 0;
   /* use this to set a specific height for your dropdown (DO NOT use the attribute 'height') */
   cursor: pointer;
   text-indent: 0.01px;
@@ -10513,11 +10521,43 @@ a.tabledrag-handle .handle {
   background-color: #F2F2F2;
   border: 1px solid #006082;
   border-radius: 6px;
+  width: 210px;
+  vertical-align: top;
+  -webkit-appearance: none;
 }
-/* line 2966, ../sass/custom.scss */
-.block-sbac-resource-sbac-resource-dl-sort-form select > option,
-.block-sbac-resource-sbac-resource-rr-sort-form select > option,
-.block-sbac-resource-sbac-resource-mr-sort-form select > option {
+/* line 2969, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-dl-sort-form option,
+.block-sbac-resource-sbac-resource-rr-sort-form option,
+.block-sbac-resource-sbac-resource-mr-sort-form option {
   color: #464B54;
   font-size: 15px;
+  padding: 3px;
+}
+/* line 2976, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-dl-sort-form select:-moz-focusring,
+.block-sbac-resource-sbac-resource-rr-sort-form select:-moz-focusring,
+.block-sbac-resource-sbac-resource-mr-sort-form select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  /* line 2983, ../sass/custom.scss */
+  .block-sbac-resource-sbac-resource-dl-sort-form select, .block-sbac-resource-sbac-resource-dl-sort-form option,
+  .block-sbac-resource-sbac-resource-rr-sort-form select,
+  .block-sbac-resource-sbac-resource-rr-sort-form option,
+  .block-sbac-resource-sbac-resource-mr-sort-form select,
+  .block-sbac-resource-sbac-resource-mr-sort-form option {
+    padding: 8px 6px;
+  }
+}
+@media screen and (min-width: 0 \0) {
+  /* line 2990, ../sass/custom.scss */
+  .block-sbac-resource-sbac-resource-dl-sort-form select, .block-sbac-resource-sbac-resource-dl-sort-form option,
+  .block-sbac-resource-sbac-resource-rr-sort-form select,
+  .block-sbac-resource-sbac-resource-rr-sort-form option,
+  .block-sbac-resource-sbac-resource-mr-sort-form select,
+  .block-sbac-resource-sbac-resource-mr-sort-form option {
+    padding: 6px;
+    width: 220px;
+  }
 }
