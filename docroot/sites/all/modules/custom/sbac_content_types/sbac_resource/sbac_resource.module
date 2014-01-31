@@ -696,12 +696,12 @@ function _sbac_resource_preview_materials(&$vars) {
     foreach ($vars['document'] as $key => $media) {
       if (is_numeric($key)) {
         $type = _sbac_resource_determine_type($media);
-        if ($media->fid) {
+        if ($type == 'none') {
+          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+        }
+        else if ($media->fid) {
           $file = file_load($media->fid);
           $url = file_create_url($file->uri);
-        }
-        else if ($type == 'none') {
-          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
         }
         else {
           $url = sbac_media_create_embed_url($media);
