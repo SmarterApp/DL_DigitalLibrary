@@ -161,3 +161,23 @@ DateDropDown = (function($, $which) {
 // instantiate the drop downs for reports.
 DateDropDown(jQuery, '');
 DateDropDown(jQuery, '1');
+
+// Open the date popup on focus when navigating with the keyboard.
+(function($) {
+  Drupal.behaviors.date_popup_focus = {
+    attach: function (context) {
+        for (var id in Drupal.settings.datePopup) {
+            $('#'+ id).bind('focus', Drupal.settings.datePopup[id], function(e) {
+                $(this).unbind(e);
+
+                window.date_popup_init_interval = setInterval(function() {
+                    if ($(e.currentTarget).hasClass('date-popup-init')) {
+                        $(e.currentTarget).focus();
+                        clearInterval(window.date_popup_init_interval);
+                    }
+                }, 25);
+            });
+        }
+    }
+  };
+})(jQuery);
