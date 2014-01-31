@@ -34,6 +34,15 @@ function resource_access($op, $node, $account = NULL) {
       return FALSE;
     }
 
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
+      if (($op == 'access about process' || $op == 'view about') || ($op == 'access review process' || $op == 'view reviews') || ($op == 'access share process' || $op == 'view share') || $op == 'access related resources' || $op == 'access flag') {
+        return TRUE;
+      }
+      else {
+        return FALSE;
+      }
+    }
+
     if (in_array($op, array('access about process', 'view about'))) {
       return TRUE;
     }

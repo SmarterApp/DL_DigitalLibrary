@@ -23,16 +23,17 @@ function sbac_central_menu() {
   $items['admin/test'] = array(
     'title'            => t('Admin Test'),
     'page callback'    => 'sbac_central_dev_test',
-    'access arguments' => array(),
-    'access callback'  => FALSE, // Change to TRUE when using.
+    'access arguments' => array('administer content'),
     'type'             => MENU_CALLBACK,
   );
+
   return $items;
 }
 
 function sbac_central_dev_test() {
-  $output = 'test';
-  return $output;
+  global $drupal_hash_salt;
+  print $drupal_hash_salt;
+  return;
 }
 
 /**

@@ -421,14 +421,15 @@ i.icon-info {
 }
 
 
-/*SNE tab*/
+/*SNE tab, CSV tab*/
 .page-reports {
 	
 	ul.vertical-tabs-list {
 		margin-left: 0;
+		padding-bottom: 5px;
 	}
 		
-	fieldset#edit-date-range {
+	fieldset[id*="edit-date-range"] {
 			clear: left;
 			border: none;
 			padding:10px 0 0;
@@ -443,20 +444,20 @@ i.icon-info {
 				padding: 0;
 
 				.form-type-textfield {
-					label, .description {display: none;}
+					.description {display: none;}
 				}
 			}	
 	}
 	
 	.container-inline-date {
-		label, #from-date, #to-date {
+		label, input {
 			display: block;
 			float: left;
 		}
 		
 		label {
 			margin-right: 10px;
-			margin-top: 18px;
+			margin-top: 10px;
 		}
 	}
 

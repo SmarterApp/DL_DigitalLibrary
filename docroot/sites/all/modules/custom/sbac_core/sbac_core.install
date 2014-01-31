@@ -5,6 +5,34 @@
 ----------------------------------------------------------------------------*/
 
 /**
+ * Implementation of hook_requirements
+ *
+ *   Used if encryption is required for storing password field values.
+ */
+// function sbac_core_requirements($phase) {
+//   $t = get_t();
+
+//   $requirements = array();
+
+//   $requirements['mcrypt'] = array(
+//     'title' => $t('mcrypt'),
+//   );
+
+//   // Check for mcrypt extension.
+//   if (function_exists('mcrypt_encrypt')) {
+//     $requirements['mcrypt']['value'] = $t('Installed');
+//     $requirements['mcrypt']['severity'] = REQUIREMENT_OK;
+//   }
+//   else {
+//     $requirements['mcrypt']['value'] = $t('Not installed');
+//     $requirements['mcrypt']['description'] = $t('SBAC Core requires mcrypt Library');
+//     $requirements['mcrypt']['severity'] = REQUIREMENT_ERROR;
+//   }
+
+//   return $requirements;
+// }
+
+/**
  * Implementation of hook_update_N().
  *
  * Enables the taskit module.
@@ -143,7 +171,7 @@ function sbac_core_update_7011() {
 
     $vocab = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'applied_category'")->fetch();
   }
-  
+
   if ($vocab) {
     $terms = array(
       'Elementary School',

@@ -464,6 +464,10 @@ html.js {
 			    width: 10px;
 			    z-index: 1;
 			}
+			&:focus {
+				/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */ 
+				background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+			}
 		}
 		a span {
 		    color: #464B54;
@@ -493,6 +497,10 @@ html.js {
 		    top: -1px;
 		    width: 15px;
 		    z-index: 2;
+		}
+		&:focus {
+			/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */ 
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 		}
 	}
   
@@ -2182,6 +2190,10 @@ a.tabledrag-handle .handle {
       }
     }
   }
+
+	.ajax-progress-throbber {
+	  display: none;
+	}
 }
 
 #sbac-resource-delete-resource-form {
@@ -2771,6 +2783,10 @@ a.tabledrag-handle .handle {
   //float: right;
   color: white;
   background: #2aa549;
+ 
+  &:hover, &:focus {
+		background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+	}
 }
 
 
@@ -2925,8 +2941,8 @@ a.tabledrag-handle .handle {
 		border: 1px solid #793348;
 		
 		&:hover {
-				background-color: #8A1538 !important;
-		    background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+			background-color: #8A1538 !important;
+	    background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 		}
 	}
 		
@@ -2935,9 +2951,68 @@ a.tabledrag-handle .handle {
 	  border: 1px solid #0D6785;
 	
 		&:hover {
-				background-color: #0084B0 !important;
-		    background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+			background-color: #0084B0 !important;
+	    background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 		}
 	}
 }
+
+/*Global sort select box*/
+.block-sbac-resource-sbac-resource-dl-sort-form, 
+.block-sbac-resource-sbac-resource-rr-sort-form,
+.block-sbac-resource-sbac-resource-mr-sort-form  {
+	
+	select {
+		background: url(../images/icons/icon-arrow-down.png) no-repeat top 12px right 6px;
+		color: #464B54;
+    font-size: 15px;
+		line-height:1;
+    margin: 6px 0 0;
+    padding: 6px 3px 0; /* use this to set a specific height for your dropdown (DO NOT use the attribute 'height') */
+    cursor: pointer;
+    text-indent: 0.01px;
+    text-overflow: "";
+    background-color: #F2F2F2;
+		border: 1px solid #006082;
+		border-radius: 6px;
+		width: 210px;
+		vertical-align: top;
+		-webkit-appearance:none;
+	}
+	
+	option {
+		color: #464B54;
+		font-size: 15px;
+		padding: 3px;
+ 	}
+	
+	/*Remove the outline*/
+	select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+	}
+	
+	/*for Chrome*/
+	@media screen and (-webkit-min-device-pixel-ratio:0) { 
+		select, option {
+			padding: 8px 6px;
+	  }
+	}
+	
+	/*for IE9, IE10*/
+	@media screen and (min-width:0\0) { 
+	   select, option {
+			padding: 6px;
+			width: 220px;
+	  }
+	}
+}
+
+
+
+
+
+
+
+
 

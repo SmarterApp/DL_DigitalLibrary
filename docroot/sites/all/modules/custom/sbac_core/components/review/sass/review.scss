@@ -78,6 +78,10 @@
   #review-end-use-wrap {
     form {
       clear: both;
+			
+			label {
+				font-size: 13px;
+		  }
 
       /* this will only hide the initial form, while still showing it upon form submissions/state changes */
       &#eck-entity-form-add-review-end-use {
@@ -121,7 +125,6 @@
 
       .field-name-field-details {
         position: relative;
-				font-size: 13px;
 				line-height: 1.2;
 				padding-bottom: 15px;
 
@@ -184,7 +187,11 @@
 
       .field-name-field-appropriate-for {
         clear: both;
-        padding: 10px 0;
+        padding: 15px 0;
+
+				label {
+					padding: 8px 0;
+				}
 								
 				input[type="checkbox"] {
 					margin-left: 0;
@@ -194,7 +201,7 @@
           .form-item {
             float: left;
             margin: 0;
-            padding: 0.4em 0;
+            padding: 1px 0;
             width: 33.3%;
 
             /* first column */
@@ -221,7 +228,7 @@
 
       .actions-wrapper  {
         clear: both;
-        padding: 10px 0 0;
+        padding: 20px 0 10px;
 
         .button,
         button {
@@ -293,7 +300,8 @@
      /* border-top:1px solid #eee;*/
 
       .term {
-        font-size: 0.8em;
+        /*font-size: 0.8em;*/
+				font-size: 13px;
         padding: 5px 0;
 
         &.highlight {
@@ -338,12 +346,12 @@
 	padding-top: 0 !important;
 	
 	.entity-review-wrap {
-		padding-top: 10px;
+		padding-top: 5px;
 	}
 	
 	.entity-review.view-mode-full {
 	  border-top: 1px #cecece solid;
-		padding-top: 10px;
+		padding-top: 20px;
 	}
 } 
 
@@ -491,11 +499,12 @@
     .field-name-review-vote {
       float: left;
       width: 740px;
+			margin-top: 30px;
     }
 
     .field-name-review-delete {
       float: right;
-      padding-top: 5px;
+      padding-top: 35px;
       text-align: right;
       width: 90px;
     }
@@ -741,4 +750,17 @@ body.admin-menu #global-zeroclipboard-html-bridge {
 
 #review-end-use-form {
 	margin-bottom: 0;
+}
+
+
+/*Rate info*/
+.rate-info {
+	font-size: 13px;
+}
+
+/*Preview*/
+.node-type-resource {
+	.preview {
+		margin-top: 0 !important;
+	}
 }

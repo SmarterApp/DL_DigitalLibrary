@@ -356,7 +356,7 @@ function sbac_flag_preprocess_node(&$vars) {
     if (isset($_GET['flag']) && ($_GET['flag'] == 'view-resource-review-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
       drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
       $review = $_GET['review'];
-      $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'review', $_GET['review']);
+      $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'review', $review);
       sbac_flag_create_resource_review_view_output($vars, $flags, $review);
     }
   }
@@ -444,11 +444,14 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
             'modalSize' => array(
               'type' => 'fixed',
               'width' => 600,
-              'height' => 260,
+              'height' => 305,
             ),
+            'modalTheme' => 'CtoolSbacFlagCancelModeration',
           ),
         );
         drupal_add_js($js_settings, 'setting');
+
+        drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.ctools.js');
 
         ctools_include('modal');
         ctools_include('ajax');
@@ -506,11 +509,14 @@ function sbac_flag_create_resource_view_output(&$vars, $flags) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 260,
+          'height' => 305,
         ),
+        'modalTheme' => 'CtoolSbacFlagCancelModeration',
       ),
     );
     drupal_add_js($js_settings, 'setting');
+
+    drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.ctools.js');
 
     ctools_include('modal');
     ctools_include('ajax');
@@ -562,8 +568,8 @@ function sbac_flag_confirmation($flag) {
 function sbac_flag_get_user_flag($nid, $uid) {
   $flag = array();
 
-  $sql = "SELECT * FROM {eck_flag} WHERE nid = :nid AND uid = :uid";
-  $result = db_query($sql, array(':nid' => $nid, ':uid' => $uid))->fetchAssoc();
+  $sql = "SELECT * FROM {eck_flag} WHERE nid = :nid AND uid = :uid AND resolved = :resolved";
+  $result = db_query($sql, array(':nid' => $nid, ':uid' => $uid, ':resolved' => 0))->fetchAssoc();
   if ($result) {
     $flag = $result;
   }
@@ -878,20 +884,28 @@ function sbac_flag_determine_access_for_user($node, $uid) {
  * @param $flag_option
  * @return bool
  */
-function sbac_flag_determine_urgent($flag_option) {
+function sbac_flag_determine_urgent($flag_option, $type = 'resource') {
   $urgent = FALSE;
-  $term = taxonomy_term_load($flag_option);
-  if ($term) {
-    if ($term->name == 'Contains personally identifiable information (PII)') {
-      $urgent = TRUE;
+  if ($type == 'resource') {
+    $term = taxonomy_term_load($flag_option);
+    if ($term) {
+      if ($term->name == 'Contains personally identifiable information (PII)') {
+        $urgent = TRUE;
+      }
+      if ($term->name == 'May be in violation of intellectual property rights') {
+        $urgent = TRUE;
+      }
+      if ($term->name == "Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>") {
+        $urgent = TRUE;
+      }
     }
-    if ($term->name == 'May be in violation of intellectual property rights') {
-      $urgent = TRUE;
-    }
-    if ($term->name == "Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>") {
+  }
+  else {
+    if ($flag_option == 'pii') {
       $urgent = TRUE;
     }
   }
+
   return $urgent;
 }
 
@@ -1117,6 +1131,7 @@ function sbac_flag_resource_profile_view($flags) {
 function sbac_flag_resource_review_profile_view($node, $flags) {
   $list_output = '';
   $flag_categories = array();
+  drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.node.js');
 
   foreach ($flags as $flag) {
     $eck_flag = entity_load_single('flag', $flag->id);
@@ -1203,12 +1218,14 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
       )
     ));
 
-    $js_settings = array('sbac-flag-cancel-resource-review-moderation' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 160)));
+    $js_settings = array('sbac-flag-cancel-resource-review-moderation' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 160), 'modalTheme' => 'CtoolSbacFlagCancelModeration'));
     drupal_add_js($js_settings, 'setting');
     $js_settings = array('sbac-flag-resolve-all-resource-review-flags' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
     drupal_add_js($js_settings, 'setting');
-    $js_settings = array('sbac-flag-remove-resource-review' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260)));
+    $js_settings = array('sbac-flag-remove-resource-review' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 350)));
     drupal_add_js($js_settings, 'setting');
+
+    drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.ctools.js');
 
     $finish_moderation_button = '<a class="button blue arrow sbac-flag-finish-moderation-dropdown" data-dropdown="sbac-flag-finish-moderation">'. t('Finish Moderation'). '<span></span></a>';
     $finish_moderation_button .= theme('item_list', array(
