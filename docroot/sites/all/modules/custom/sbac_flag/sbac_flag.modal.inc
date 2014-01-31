@@ -539,7 +539,7 @@ function sbac_flag_session_expire_modal($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Continue Moderation') {
         // refresh the user session somehow.
-        drupal_session_regenerate();
+        sbac_flag_regenerate_user_session();
       }
       else {
         // cancel was clicked.

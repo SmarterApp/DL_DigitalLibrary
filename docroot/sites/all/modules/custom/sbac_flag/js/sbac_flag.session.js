@@ -4,8 +4,9 @@
   $(document).ready(function() {
     $('#sbac-flag-session-expire').hide();
 
-    var session_lifetime = Drupal.settings.sbac_flag_lifetime * 1000;
-    var php_session_lifetime = session_lifetime + 10000;
+    var php_cookie_lifetime = Drupal.settings.sbac_flag_lifetime;
+    var session_lifetime = (php_cookie_lifetime - 10) * 1000; // - 10 seconds to give the user time to make a decision.
+    var php_session_lifetime = session_lifetime + 10000; // add 10 seconds to the session life time to wait for a user decision.
     setInterval(display_modal, session_lifetime);
     setTimeout(redirectToLogin, php_session_lifetime);
   });
