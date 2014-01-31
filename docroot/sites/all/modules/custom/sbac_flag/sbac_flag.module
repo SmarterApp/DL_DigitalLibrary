@@ -163,6 +163,9 @@ function sbac_flag_init() {
   }
 }
 
+/**
+ * Regenerate a user session.
+ */
 function sbac_flag_regenerate_user_session() {
   global $is_https;
   // Nothing to do if we are not allowed to change the session.
