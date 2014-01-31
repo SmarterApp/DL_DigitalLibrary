@@ -1742,7 +1742,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_pii']['und']['#title'] .= ' ' . theme('form_required_marker');
   unset($form['field_pii']['und']['#options'][0]);
 
-  if ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'view-resource-flags') {
+  if (isset($_GET['flag']) && ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'view-resource-flags')) {
     if (isset($form['field_pii']['und'])) {
       $form['field_pii']['und']['#attributes']['disabled'] = 'disabled';
     }
