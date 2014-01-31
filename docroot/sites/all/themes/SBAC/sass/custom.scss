@@ -2783,6 +2783,10 @@ a.tabledrag-handle .handle {
   //float: right;
   color: white;
   background: #2aa549;
+ 
+  &:hover, &:focus {
+		background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+	}
 }
 
 

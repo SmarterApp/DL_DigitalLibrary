@@ -10322,16 +10322,20 @@ a.tabledrag-handle .handle {
   color: white;
   background: #2aa549;
 }
+/* line 2787, ../sass/custom.scss */
+#edit-submit--3:hover, #edit-submit--3:focus {
+  background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+}
 
 /** --------------------------------------------
   People Page
   ______________________________________________ **/
-/* line 2793, ../sass/custom.scss */
+/* line 2797, ../sass/custom.scss */
 #sbac-user-admin-account .chzn-drop {
   width: 858px;
   background-color: white;
 }
-/* line 2797, ../sass/custom.scss */
+/* line 2801, ../sass/custom.scss */
 #sbac-user-admin-account .chzn-drop input {
   background-repeat: no-repeat !important;
   background-size: 67px 45px !important;
@@ -10341,43 +10345,43 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
 	   Profile favorites tag
 	 ----------------------------------------- */
-/* line 2809, ../sass/custom.scss */
+/* line 2813, ../sass/custom.scss */
 .section-favorites .favorites-helpful-info {
   height: 70px;
   line-height: 70px;
 }
-/* line 2814, ../sass/custom.scss */
+/* line 2818, ../sass/custom.scss */
 .section-favorites #sbac-favorites-table-drag-drop {
   width: 100%;
 }
-/* line 2818, ../sass/custom.scss */
+/* line 2822, ../sass/custom.scss */
 .section-favorites .foundicon-trash {
   color: #aaa;
   margin-right: -30px;
 }
-/* line 2823, ../sass/custom.scss */
+/* line 2827, ../sass/custom.scss */
 .section-favorites .sbac-favorites-delete-favorite {
   opacity: 0;
 }
-/* line 2827, ../sass/custom.scss */
+/* line 2831, ../sass/custom.scss */
 .section-favorites #sbac-favorites-submit, .section-favorites #sbac-favorites-cancel {
   float: right;
   margin-left: 20px;
 }
-/* line 2833, ../sass/custom.scss */
+/* line 2837, ../sass/custom.scss */
 .section-favorites #favorites-table h2, .section-favorites #favorites-table .instruction {
   text-align: center;
   margin: 20px 0;
 }
-/* line 2838, ../sass/custom.scss */
+/* line 2842, ../sass/custom.scss */
 .section-favorites #favorites-table h2 {
   margin-top: 30px;
 }
-/* line 2842, ../sass/custom.scss */
+/* line 2846, ../sass/custom.scss */
 .section-favorites #favorites-table .instruction {
   margin-bottom: 60px;
 }
-/* line 2846, ../sass/custom.scss */
+/* line 2850, ../sass/custom.scss */
 .section-favorites #favorites-table .star-icon {
   background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
   width: 16px;
@@ -10389,31 +10393,31 @@ a.tabledrag-handle .handle {
 /* ----------------------------------------
     Narrow + Wide & Half + Half Columns
   ----------------------------------------- */
-/* line 2859, ../sass/custom.scss */
+/* line 2863, ../sass/custom.scss */
 .col {
   display: block;
   position: relative;
   float: left;
 }
 
-/* line 2864, ../sass/custom.scss */
+/* line 2868, ../sass/custom.scss */
 .col + .col {
   margin-left: 40px;
 }
 
-/* line 2867, ../sass/custom.scss */
+/* line 2871, ../sass/custom.scss */
 .col.narrow {
   /*width:260px;*/
   width: 250px;
 }
 
-/* line 2871, ../sass/custom.scss */
+/* line 2875, ../sass/custom.scss */
 .col.wide {
   /*width:560px;*/
   width: 550px;
 }
 
-/* line 2875, ../sass/custom.scss */
+/* line 2879, ../sass/custom.scss */
 .col.half {
   width: 410px;
 }
@@ -10421,16 +10425,16 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------------
     Option select list needs to span entire width
   ------------------------------------------------ */
-/* line 2882, ../sass/custom.scss */
+/* line 2886, ../sass/custom.scss */
 .chzn-container {
   width: 100% !important;
 }
-/* line 2885, ../sass/custom.scss */
+/* line 2889, ../sass/custom.scss */
 .chzn-container ul {
   margin: 0 !important;
 }
 
-/* line 2890, ../sass/custom.scss */
+/* line 2894, ../sass/custom.scss */
 #edit-group_summary .chzn-choices input[type="text"], #edit-group_basic .chzn-choices input[type="text"] {
   width: 607px !important;
 }
@@ -10438,28 +10442,28 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------------
     Help modal
   ------------------------------------------------ */
-/* line 2899, ../sass/custom.scss */
+/* line 2903, ../sass/custom.scss */
 #helpmodal .helpmodal-title,
 #helpmodal .helpmodal-desc {
   text-align: center;
 }
 
-/* line 2902, ../sass/custom.scss */
+/* line 2906, ../sass/custom.scss */
 #resource-help-box .resource-help-box-title {
   text-align: center;
 }
 
-/* line 2905, ../sass/custom.scss */
+/* line 2909, ../sass/custom.scss */
 #sbac-help-title {
   text-align: center;
 }
 
 /*Add Selected Standards - comfirmation modal*/
-/* line 2912, ../sass/custom.scss */
+/* line 2916, ../sass/custom.scss */
 #alignment-page .standards-browser .confirm-buttons {
   padding-bottom: 25px;
 }
-/* line 2916, ../sass/custom.scss */
+/* line 2920, ../sass/custom.scss */
 #alignment-page .standards-browser #cmod-confirm-cancel.button, #alignment-page .standards-browser #cmod-confirm-submit.button {
   width: auto !important;
   margin: 0 10px;
@@ -10478,29 +10482,29 @@ a.tabledrag-handle .handle {
   text-align: center;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 }
-/* line 2935, ../sass/custom.scss */
+/* line 2939, ../sass/custom.scss */
 #alignment-page .standards-browser #cmod-confirm-cancel.button {
   background-color: #8A1538;
   border: 1px solid #793348;
 }
-/* line 2939, ../sass/custom.scss */
+/* line 2943, ../sass/custom.scss */
 #alignment-page .standards-browser #cmod-confirm-cancel.button:hover {
   background-color: #8A1538 !important;
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
-/* line 2945, ../sass/custom.scss */
+/* line 2949, ../sass/custom.scss */
 #alignment-page .standards-browser #cmod-confirm-submit.button {
   background-color: #0084B0;
   border: 1px solid #0D6785;
 }
-/* line 2949, ../sass/custom.scss */
+/* line 2953, ../sass/custom.scss */
 #alignment-page .standards-browser #cmod-confirm-submit.button:hover {
   background-color: #0084B0 !important;
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
 /*Global sort select box*/
-/* line 2959, ../sass/custom.scss */
+/* line 2963, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form,
 .block-sbac-resource-sbac-resource-rr-sort-form,
 .block-sbac-resource-sbac-resource-mr-sort-form {
@@ -10508,7 +10512,7 @@ a.tabledrag-handle .handle {
   /*for Chrome*/
   /*for IE9, IE10*/
 }
-/* line 2961, ../sass/custom.scss */
+/* line 2965, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form select,
 .block-sbac-resource-sbac-resource-rr-sort-form select,
 .block-sbac-resource-sbac-resource-mr-sort-form select {
@@ -10529,7 +10533,7 @@ a.tabledrag-handle .handle {
   vertical-align: top;
   -webkit-appearance: none;
 }
-/* line 2979, ../sass/custom.scss */
+/* line 2983, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form option,
 .block-sbac-resource-sbac-resource-rr-sort-form option,
 .block-sbac-resource-sbac-resource-mr-sort-form option {
@@ -10537,7 +10541,7 @@ a.tabledrag-handle .handle {
   font-size: 15px;
   padding: 3px;
 }
-/* line 2986, ../sass/custom.scss */
+/* line 2990, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form select:-moz-focusring,
 .block-sbac-resource-sbac-resource-rr-sort-form select:-moz-focusring,
 .block-sbac-resource-sbac-resource-mr-sort-form select:-moz-focusring {
@@ -10545,7 +10549,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0 0 0 #000;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  /* line 2993, ../sass/custom.scss */
+  /* line 2997, ../sass/custom.scss */
   .block-sbac-resource-sbac-resource-dl-sort-form select, .block-sbac-resource-sbac-resource-dl-sort-form option,
   .block-sbac-resource-sbac-resource-rr-sort-form select,
   .block-sbac-resource-sbac-resource-rr-sort-form option,
@@ -10555,7 +10559,7 @@ a.tabledrag-handle .handle {
   }
 }
 @media screen and (min-width: 0 \0) {
-  /* line 3000, ../sass/custom.scss */
+  /* line 3004, ../sass/custom.scss */
   .block-sbac-resource-sbac-resource-dl-sort-form select, .block-sbac-resource-sbac-resource-dl-sort-form option,
   .block-sbac-resource-sbac-resource-rr-sort-form select,
   .block-sbac-resource-sbac-resource-rr-sort-form option,
