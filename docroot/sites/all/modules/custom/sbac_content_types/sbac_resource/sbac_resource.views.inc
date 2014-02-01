@@ -116,7 +116,7 @@ function sbac_resource_views_query_alter(&$view, &$query) {
 /**
  * Implements hook_views_post_execute();
  *
- * This hook is implement to combine two view results into one.
+ * This hook is implemented to combine two view results into one.
  * When the user searches via keyword, the results are retrieved
  * from the apache solr view. Those are then jammed into the results
  * of the resource view and displayed. I chose to do this in order
@@ -147,7 +147,8 @@ function sbac_resource_views_post_execute(&$view) {
           $nids[] = $sr_result->entity_id;
         }
         // Load up all the local data structure needed for display since all i have is a set of nids. used views again.
-        $data_results = views_get_view_result('resources', 'load_data', implode('+', $nids));
+        $args = implode('+', $nids);
+        $data_results = views_get_view_result('resources', 'load_data', $args);
         if ($data_results) {
           if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] != '') {
             // Category filters are set, append the keyword view results into the resource view.
