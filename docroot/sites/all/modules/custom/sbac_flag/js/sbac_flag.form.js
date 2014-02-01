@@ -9,7 +9,7 @@
           $('.flag-modal-cont').prepend($('.drupal-alert-box'));
       }
 
-      flag_moderation = Drupal.settings.flag_moderation;
+      var flag_moderation = Drupal.settings.flag_moderation;
       if (flag_moderation) {
         var save_button = $('#sbac-resource-save-continue');
         save_button.hide();
