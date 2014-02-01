@@ -14,6 +14,16 @@
         once = true;
       }
     },
+    detach: function (context, settings, trigger) {
+      // if interval exists, reset it.
+      if (display_modal_timer != null) {
+        clearInterval(display_modal_timer);
+      }
+      // if timeout exists, reset it.
+      if (redirect_to_login != null) {
+        clearTimeout(redirect_to_login);
+      }
+    },
     reset_timers: function () {
       // if interval exists, reset it.
       if (display_modal_timer != null) {
@@ -25,9 +35,11 @@
       }
 
       // 600 seconds = 10 minutes, warn at 5 mins.
-      var php_cookie_lifetime = Drupal.settings.sbac_flag_lifetime; // cookie lifetime set by PHP session timeout.
-      var session_lifetime = (php_cookie_lifetime - 10) * 1000; // - 10 seconds to give the user time to make a decision.
-      var php_session_lifetime = php_cookie_lifetime * 1000; // add 10 seconds to the session life time to wait for a user decision.
+      // cookie lifetime set by PHP session timeout.
+      var php_cookie_lifetime = Drupal.settings.sbac_flag_lifetime;
+      // - 5 minutes to give the user time to make a decision.
+      var session_lifetime = (php_cookie_lifetime - 300) * 1000;
+      var php_session_lifetime = php_cookie_lifetime * 1000 - 10; // minus 10 seconds to the session life time to wait for a user decision.
       display_modal_timer = setInterval(Drupal.behaviors.sbac_node_form.display_modal, session_lifetime);
       redirect_to_login = setTimeout(Drupal.behaviors.sbac_node_form.redirectToLogin, php_session_lifetime);
     },

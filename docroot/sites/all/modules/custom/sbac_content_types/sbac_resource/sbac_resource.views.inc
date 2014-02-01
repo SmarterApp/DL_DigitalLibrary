@@ -121,7 +121,8 @@ function sbac_resource_views_query_alter(&$view, &$query) {
  * from the apache solr view. Those are then jammed into the results
  * of the resource view and displayed. I chose to do this in order
  * to make the resource view react on local DB data instead of
- * getting the data from apache solr.
+ * getting the data from apache solr all the time over the network
+ * which I believe to be slower then local DB calls.
  *
  * @param $view
  */
@@ -145,7 +146,7 @@ function sbac_resource_views_post_execute(&$view) {
         foreach ($sr_results as $sr_result) {
           $nids[] = $sr_result->entity_id;
         }
-        // Load up all the local data needed for display since all i have is a nid. used views again.
+        // Load up all the local data structure needed for display since all i have is a set of nids. used views again.
         $data_results = views_get_view_result('resources', 'load_data', implode('+', $nids));
         if ($data_results) {
           if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] != '') {
@@ -153,9 +154,9 @@ function sbac_resource_views_post_execute(&$view) {
             $combined_results = array();
             foreach ($view->result as $result) {
               foreach ($data_results as $key => $data_result) {
-                  if ($result->nid == $data_result->nid) {
-                    $combined_results[] = $data_result;
-                  }
+                if ($result->nid == $data_result->nid) {
+                  $combined_results[] = $data_result;
+                }
               }
             }
 
