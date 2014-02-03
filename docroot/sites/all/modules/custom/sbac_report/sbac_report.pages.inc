@@ -32,7 +32,8 @@ function sbac_report_individual() {
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
     $sne_details = sbac_report_build_sne_details($uid, $state_tid);
     if (!empty($sne_details)) {
-      $contributed_summary = sbac_report_build_resource_summary($uid, $date_range);
+      // Pass -1 as limit, summary should be "number of items per page" independent.
+      $contributed_summary = sbac_report_build_resource_summary($uid, $date_range, -1);
       $contributed_details = sbac_report_build_resource_details($uid, $date_range);
 
       // Gate-Keeping Reviews.
@@ -331,7 +332,8 @@ function sbac_report_resource_details_pager_form($form, &$form_state, $data) {
 function sbac_report_resource_details_pager_form_ajax($form, &$form_state) {
   $values = $form_state['values'];
   $output = '<div id="contributed-resources">';
-  $output .= sbac_report_build_resource_summary($values['uid'], $values['date_range'], $values['limit']);
+  // Pass -1 as limit, summary should be "number of items per page" independent.
+  $output .= sbac_report_build_resource_summary($values['uid'], $values['date_range'], -1);
   $output .= sbac_report_build_resource_details($values['uid'], $values['date_range'], $values['limit']);
   $output .= '</div>';
   return $output;
@@ -510,7 +512,7 @@ function sbac_report_sne_autocomplete($string = '') {
     users.name AS name,
     field_last_name.field_last_name_value AS 'last_name',
     field_first_name.field_first_name_value AS 'first_name'
-    
+
   FROM {users} users
 
   INNER JOIN {field_data_field_state} AS field_state
@@ -722,7 +724,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       'colspan' => $core_column_count,
       'class' => 'empty',
     ),
-  ); 
+  );
 
   foreach ($focus_map as $focus_data) {
     if ($focus_data['tid'] == 86) {
@@ -739,7 +741,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       $title = variable_get('qc_' . $focus_data['tid'] . '_criteria_' . $i . '_title');
       $desc  = variable_get('qc_' . $focus_data['tid'] . '_criteria_' . $i . '_description');
 
-      $cell = ' 
+      $cell = '
                 <span class="devtools-tooltip report-qc-tooltip">
                   <a href="#" class="devtools-tooltip-trigger">' . $i . '</a>
                   <div class="devtools-tooltip-body">
@@ -776,10 +778,10 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
                           IF(qc.created IS NULL, gk.created, qc.created) AS review_date
 
               FROM        eck_feedback gk
-              
+
               INNER JOIN  node n
                 ON        n.nid = gk.node_id
-              
+
               LEFT JOIN   eck_feedback qc
                 ON        qc.type = 'qc'
                 AND       qc.node_id = gk.node_id
@@ -797,7 +799,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
               AND         DATE_FORMAT(
                             (
                               DATE_ADD('19700101', INTERVAL IF(qc.created IS NULL, gk.created, qc.created) SECOND)
-                               + 
+                               +
                               INTERVAL -25200 SECOND
                             ),
                             '%Y%m%d'
@@ -836,7 +838,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       'data' => '<div class="cell-scroll">' . $row->node_title . '</div>',
       'class' => 'cell title',
     );
-    
+
     $resource = node_load($row->nid);
 
     // review date
@@ -844,7 +846,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       'data' => format_date($row->review_date, 'custom', 'm/d/y'),
       'class' => 'cell date',
     );
-    
+
     // gate keeper decision
     if ($row->gk_uid == $uid) {
       $gk_decision = $row->met_criteria ? 'Y' : 'N';
@@ -942,7 +944,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
               $item[] = $empty;
               continue;
             }
-            
+
             $current_value = field_entity_value($current_qc_questions[$i], 'field_level');
 
             if (sizeof($entities) == 2) {
@@ -966,7 +968,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
             // other reviews aren't completed, so we don't show consistency percentages
             else {
               $item[] = $fill;
-            } 
+            }
           }
           else {
             $item[] = $fill;
@@ -1028,7 +1030,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
 /**
  * Form to change the number of items displayed in the summation table.
- * 
+ *
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]
  * @param  [type] $data       [description]
@@ -1145,7 +1147,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
       }
     }
 
-    // if we still didn't find a QC, then the user must have a GK, and it'll be the one we 
+    // if we still didn't find a QC, then the user must have a GK, and it'll be the one we
     // already loaded
     if (!$user_review) {
       $user_review = $gk;
@@ -1162,7 +1164,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
     }
 
     // prepare header/intro
-      $output .=  '  
+      $output .=  '
                     <div class="intro">
                       <div class="review-date">
                         ' . $date . '
@@ -1214,13 +1216,13 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
               '!state' => $term->name
             ));
           }
-          
+
           $qc_rec_slide .= '
                             <div class="qc-item">
                               <div class="qc-rec-name">
                                 ' . $location . '
                               </div>
-                              
+
                               <div class="qc-rec-value">
                                <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
                               </div>
@@ -1231,7 +1233,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
                               </div>
 
                               <div class="qc-rec-rationale">
-                                <span>' . t('Rationale:') . '</span> ' . 
+                                <span>' . t('Rationale:') . '</span> ' .
                                 field_entity_value($qc, 'field_rec_rationale') . '
                               </div>
                             </div>
@@ -1276,7 +1278,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
       if ($qc_entities) {
         $questions = field_entity_value(reset($qc_entities), 'field_review_set');
         $questions_count = sizeof($questions);
-        
+
         for ($i = 0; $i < $questions_count; $i++) {
           $qc_title = variable_get('qc_' . field_entity_value($node, 'field_focus')->tid . '_criteria_' . ($i + 1) . '_title', '');
 
@@ -1310,7 +1312,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
 
           $slide .= '<div class="qc-question-levels">' . t('- Level: ') . implode(' / ', $levels) . '</div>';
           $slide .= $comments;
-          
+
           $items[] = $slide;
         }
       }
