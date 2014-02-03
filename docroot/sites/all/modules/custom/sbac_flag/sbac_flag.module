@@ -1007,8 +1007,10 @@ function sbac_flag_get_all_flags_for_node($node, $type = NULL, $review_id = NULL
 
   $sql = 'SELECT ef.*
           FROM {eck_flag} ef
-          WHERE ef.nid = :nid';
+          WHERE ef.nid = :nid
+          AND ef.resolved = :resolved';
   $args[':nid'] = $node->nid;
+  $args[':resolved'] = 0;
   if ($type) {
     $sql .= ' AND ef.target_type = :type';
     $args[':type'] = $type;
