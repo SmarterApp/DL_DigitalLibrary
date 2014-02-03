@@ -50,7 +50,7 @@ function resource_access($op, $node, $account = NULL) {
       if ($node->workbench_moderation['current']->state == 'rejected' && $node->uid == $account->uid) {
         return TRUE;
       }
- 
+
       return FALSE;
     }
     elseif ($op == 'access qc review comments') {
@@ -146,6 +146,7 @@ function resource_access($op, $node, $account = NULL) {
     }
 
     if (in_array($op, array('view gate keeper', 'start gate keeper', 'edit gate keeper'))) {
+
       // read-only access
       // users can view the GK if:
       //  1. there are no existing GK entities, AND
@@ -177,7 +178,6 @@ function resource_access($op, $node, $account = NULL) {
                     AND     uid = :uid
                     AND     status = 1
                  ";
-
         return (bool) !($id = db_query($query, $args)->fetchField());
       }
       // user has read-only access, but wants to edit
@@ -202,12 +202,22 @@ function resource_access($op, $node, $account = NULL) {
 
         return (bool) (!$completed = db_query($query, $args)->fetchField());
       }
+      elseif ($op == 'view gate keeper') {
+        if ($node->uid == $account->uid) {
+          return FALSE;
+        }
+      }
 
       // default read-only access
       return TRUE;
     }
     elseif (in_array($op, array('view quality criteria', 'edit quality criteria'))) {
       $access = FALSE;
+
+      // If this node belongs to the user looking at it. Deny access.
+      if ($node->uid == $account->uid) {
+        return $access;
+      }
 
       // first of all, if there's no completed & met criteria Gate Keeper, we deny access
       // right off the bat
@@ -360,7 +370,7 @@ function resource_access($op, $node, $account = NULL) {
         $id = db_query($query, $args)->fetchField();
         if ($id) {
           return FALSE;
-        } 
+        }
 
         return TRUE;
       }
