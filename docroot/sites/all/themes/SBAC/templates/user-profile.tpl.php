@@ -48,13 +48,13 @@
 				//$district = drupal_render($user_profile['field_district_name']);
 				//$state = drupal_render($user_profile['field_state']);
         $school = $district = $state = '';
-        if (isset($user_profile['field_state']) && sbac_user_privacy_check('field_school_name', $user_profile['field_school_name']['#object'])) {
+        if (isset($user_profile['field_state']) && isset($user_profile['field_school_name']['#items'][0]['value']) && sbac_user_privacy_check('field_school_name', $user_profile['field_school_name']['#object'])) {
           $school = $user_profile['field_school_name']['#items'][0]['value'];
         }
         if (isset($user_profile['field_district_name']) && sbac_user_privacy_check('field_district_name', $user_profile['field_district_name']['#object'])) {
           $district = $user_profile['field_district_name']['#items'][0]['value'];
         }
-        if(isset($user_profile['field_state'])) {
+        if (isset($user_profile['field_state'])) {
           $state = $user_profile['field_state'][0]['#title'];// always shown
         }
 
