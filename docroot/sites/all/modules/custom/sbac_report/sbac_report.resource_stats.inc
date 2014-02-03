@@ -222,6 +222,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
           $data['reviewers'] = $reviewers;
           $data['share'] = $share_data;
           get_counts_for_resource_stats($entity_node, $data);
+          get_counts_for_flags($entity_node, $data);
 
           $report_configuration = $context['sandbox']['report_configuration'];
           $schema = $report_configuration['node_schema'];
@@ -910,7 +911,7 @@ SQL;
  * @param bool $merge_necessary
  * @return array
  */
-function count_with_nodes_query($sql, $node, $merge_necessary = TRUE) {
+function count_with_nodes_query($sql, $node, $merge_necessary = TRUE, $increment_array = FALSE) {
   // done this way because the prepared statement didn't work passing array or comma separated string.
   // TODO: make prepared statement work here, or escape string???
   if ($merge_necessary) {
@@ -921,7 +922,12 @@ function count_with_nodes_query($sql, $node, $merge_necessary = TRUE) {
   }
   $values = array();
   foreach ($result as $record) {
-    $values[$record->nid] = $record;
+    if ($increment_array) {
+      $values[] = $record;
+    }
+    else {
+      $values[$record->nid] = $record;
+    }
   }
   ksort($values);
   return $values;
@@ -979,6 +985,30 @@ function get_counts_for_resource_stats($node, &$data) {
   # number of reviews per resource
   $sql = "select node_id as nid, count(node_id) as total_reviews From eck_feedback where status = 1 group by node_id";
   $data['total_reviews_per_node'] = count_with_nodes_query($sql, $node, FALSE);
+}
+
+/**
+ * Gets the eck flag information for the node.
+ *
+ * @param $node
+ * @param $data
+ */
+function get_counts_for_flags($node, &$data) {
+  # Is Flagged
+  $sql = "SELECT ef.id FROM {eck_flag} ef WHERE ef.type = 'resource' AND ef.nid = :nid";
+  $data['is_flagged'] = count_with_nodes_query($sql, $node, TRUE);
+
+  # Resource Flag Reason(s)
+  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'resource' AND ef.nid = :nid";
+  $data['resource_flag_reasons'] = count_with_nodes_query($sql, $node, TRUE, TRUE);
+
+  # Has Flagged Reviews
+  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'review_end_use' AND ef.nid = :nid";
+  $data['has_flagged_reviews'] = count_with_nodes_query($sql, $node, TRUE);
+
+  # Resource Review Flag Reason(s)
+  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'review_end_use' AND ef.nid = :nid";
+  $data['resource_review_flag_reasons'] = count_with_nodes_query($sql, $node, TRUE, TRUE);
 }
 
 /**
@@ -1110,6 +1140,72 @@ function get_share_data($fieldkey, $data, $resource) {
         break;
       case 'temp_public_link_accesses';
         $value = $data['share'][$fieldkey[0]];
+        break;
+    }
+  }
+  return $value;
+}
+
+/**
+ * Helper function to retrieve the Flag data.
+ *
+ * @param $fieldkey
+ * @param $data
+ * @param $resource
+ * @return null|string
+ */
+function get_eck_flag_data($fieldkey, $data, $resource) {
+  $value = NULL;
+  if (isset($fieldkey[0])) {
+    switch ($fieldkey[0]) {
+      case 'is_flagged':
+        $value = $data[$fieldkey[0]];
+        ($value ? $value = 'Yes' : $value = 'No');
+        break;
+      case 'resource_flag_reasons':
+        $flag_reasons = array();
+        foreach ($data[$fieldkey[0]] as $flag) {
+          $term = taxonomy_term_load($flag->flag_selected);
+          if ($term) {
+            $flag_reasons[] = strip_tags($term->name);
+          }
+        }
+        if ($flag_reasons) {
+          $value = implode(', ', $flag_reasons);
+        }
+        break;
+      case 'has_flagged_reviews':
+        $value = $data[$fieldkey[0]];
+        ($value ? $value = 'Yes' : $value = 'No');
+        break;
+      case 'resource_review_flag_reasons':
+        $flag_review_reasons = array();
+        foreach ($data[$fieldkey[0]] as $flag) {
+          $entity_flag = entity_load_single('flag', $flag->id);
+          if ($entity_flag) {
+            $issue_type = field_entity_value($entity_flag, 'field_issue_type');
+            switch ($issue_type) {
+              case 'inaccurate':
+                $flag_review_reasons[] = 'Inaccurate / misleading';
+                break;
+              case 'unintelligible':
+                $flag_review_reasons[] = 'Unintelligible';
+                break;
+              case 'biased':
+                $flag_review_reasons[] = strip_tags('Biased and objectionable or culturally insensitive <p class="new-line">(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>');
+                break;
+              case 'pii':
+                $flag_review_reasons[] = 'Contains personally identifiable information (PII)';
+                break;
+              case 'spam':
+                $flag_review_reasons[] = 'Appears to be spam';
+                break;
+            }
+          }
+        }
+        if ($flag_review_reasons) {
+          $value = implode(', ', $flag_review_reasons);
+        }
         break;
     }
   }
@@ -1452,6 +1548,10 @@ function set_report_columns() {
           array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data', 'field' => 'share'),
           array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data', 'field' => 'share'),
           array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data', 'field' => 'share'),
+          array('is_flagged', 'Is Flagged', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('has_flagged_reviews', 'Has Flagged Reviews', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
         ),
       ),
     );
