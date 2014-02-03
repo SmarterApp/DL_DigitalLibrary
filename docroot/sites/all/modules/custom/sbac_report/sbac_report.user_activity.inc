@@ -110,16 +110,8 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   ini_set('memory_limit', '512M');
   // State.
   if ($form_state) {
-
     $state_tid = $form_state['values']['state'];
     $_SESSION['sbac_report']['state']['tid'] = $state_tid;
-//    if (!is_numeric($state_tid) && !is_array($state_tid) && $state_tid == 'all') {
-//      $_SESSION['sbac_report']['state']['name'] = 'all';
-//    }
-//    else {
-//      $state_options = $form['state']['#options'];
-//      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
-//    }
 
     // Time range.
     $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
@@ -236,7 +228,7 @@ function count_with_users_query($sql_template, $users, $from_date = NULL, $to_da
     $sql = sprintf($sql_template, $users);
   }
   $result = db_query($sql);
-  if ($special_case == 'unique_temp_links' || $special_case == 'unique_perm_copied') {
+  if ($special_case) {
     $values = array();
     foreach ($result as $record) {
       $values[$record->uid]++;
@@ -359,7 +351,7 @@ function get_user_activity($users, $date_range) {
   # Unique Permanent Links Copied
   $sql = "SELECT nid, uid FROM {sbac_share_link_copy_count} WHERE uid IN (%s)
           AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
-  $user_activity['unique_permanent_links_copied'] = count_with_users_query($sql, $users, $from_date, $to_date, 'unique_perm_copied');
+  $user_activity['unique_permanent_links_copied'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 
   # Temporary Links Generated
   $sql = "SELECT count(nid) AS count, uid FROM {sbac_share} WHERE uid IN (%s)
@@ -369,7 +361,37 @@ function get_user_activity($users, $date_range) {
   # Unique Temporary Links Generated
   $sql = "SELECT count(nid) as count, uid FROM {sbac_share} WHERE uid IN (%s)
           AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL create_datetime SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
-  $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date, 'unique_temp_links');
+  $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
+
+  # Resources with Pending Flags
+  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'resource' AND being_moderated = 0 AND resolved = 0
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $user_activity['resource_with_pending_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
+
+  # Resources with Resolved Flags
+  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'resource' AND being_moderated > 0 AND resolved = 1
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $user_activity['resource_with_resolved_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
+
+  # Resource reviews with Pending Flags
+  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'review_end_use' AND being_moderated = 0 AND resolved = 0
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $user_activity['resource_reviews_with_pending_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
+
+  # Resource reviews with Resolved Flags
+  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'review_end_use' AND being_moderated > 0 AND resolved = 1
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $user_activity['resource_reviews_with_resolved_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
+
+  # Resources Flagged
+  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'resource'
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $user_activity['resources_flagged'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
+
+  # Resource Reviews Flagged
+  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'review_end_use'
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $user_activity['resource_reviews_flagged'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 
   return $user_activity;
 }
@@ -398,9 +420,10 @@ function create_user_activity_from_data($user_activity) {
   $uidcountkeys = array();
   $toskeys = array();
   $countkeys = array();
+  $flagkeys = array();
 
   // get the fields for the report and clean up the data.
-  validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys, $countkeys);
+  validate_and_fill_out_user_activity($user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys, $countkeys, $flagkeys);
 
   $titles = '';
   foreach ($fieldkeys as $fieldkey) {
@@ -420,6 +443,9 @@ function create_user_activity_from_data($user_activity) {
   }
   foreach ($countkeys as $countkey) {
     $titles .= $countkey[1] . $separator;
+  }
+  foreach ($flagkeys as $flagkey) {
+    $titles .= $flagkey[1] . $separator;
   }
   $titles = substr($titles, 0, -1);
   $titles .= $line_ending;
@@ -488,6 +514,19 @@ function create_user_activity_from_data($user_activity) {
       $row .= $value . $separator;
     }
 
+    foreach ($flagkeys as $flagkey) {
+      if (!is_null($user_activity[$flagkey[0]][$uid]->count)) {
+        $value = $user_activity[$flagkey[0]][$uid]->count;
+      }
+      else if (!is_null($user_activity[$flagkey[0]][$uid])) {
+        $value = $user_activity[$flagkey[0]][$uid];
+      }
+      else {
+        $value = 0;
+      }
+      $row .= $value . $separator;
+    }
+
     if (++$ix == $count) {
       $row = substr($row, 0, -1);
     } // reduce length by one removing the last separator
@@ -515,7 +554,7 @@ function create_user_activity_from_data($user_activity) {
  * toskey: the terms of service queries.
  *
  */
-function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys, &$countkeys) {
+function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$foreignidkeys, &$stringkeys, &$uidcountkeys, &$toskeys, &$countkeys, &$flagkeys) {
   array_push($fieldkeys, array('field_first_name', 'First Name'));
   array_push($fieldkeys, array('field_last_name', 'Last Name'));
   array_push($fieldkeys, array('field_sne_member', 'Is SNE Member'));
@@ -565,6 +604,13 @@ function validate_and_fill_out_user_activity(&$user_activity, &$fieldkeys, &$for
   array_push($countkeys, array('unique_permanent_links_copied', 'Unique Permanent Links Copied'));
   array_push($countkeys, array('temporary_link_generated', 'Temporary Links Generated'));
   array_push($countkeys, array('unique_temporary_link_generated', 'Unique Temporary Links Generated'));
+
+  array_push($flagkeys, array('resource_with_pending_flags', 'Resources with Pending Flags'));
+  array_push($flagkeys, array('resource_with_resolved_flags', 'Resources with Resolved Flags'));
+  array_push($flagkeys, array('resource_reviews_with_pending_flags', 'Resource Reviews with Pending Flags'));
+  array_push($flagkeys, array('resource_reviews_with_resolved_flags', 'Resource Reviews with Resolved Flags'));
+  array_push($flagkeys, array('resources_flagged', 'Resources Flagged'));
+  array_push($flagkeys, array('resource_reviews_flagged', 'Resource Reviews Flagged'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';
