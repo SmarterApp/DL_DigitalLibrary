@@ -1141,9 +1141,11 @@ function sbac_report_cron() {
   $directory = "private://resource_stats_csv/";
   if ($handle = opendir($directory)) {
     while (false !== ($file = readdir($handle))) {
-      $file_last_modified = filemtime($file);
-      if((time() - $file_last_modified) > 24*3600 && is_file($file)) { //24*3600 = 24 hours.
-        unlink($file);
+      if ($file != '.' && $file != '..' && file_exists($file)) {
+        $file_last_modified = filemtime($file);
+        if((time() - $file_last_modified) > 24*3600 && is_file($file)) { //24*3600 = 24 hours.
+          unlink($file);
+        }
       }
     }
     closedir($handle);

@@ -463,7 +463,7 @@ class Hooks extends \devtools\Hooks {
       $task->save();
 
       // set the reminder flag for this feedback so that its only sent
-      // once at the 24 hour mark. 
+      // once at the 24 hour mark.
       $query = 'UPDATE {eck_feedback} SET reminder = 1 WHERE id = :id';
       db_query($query, array(':id' => $row->id));
     }
