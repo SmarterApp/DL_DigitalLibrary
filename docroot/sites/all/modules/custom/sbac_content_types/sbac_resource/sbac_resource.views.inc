@@ -133,7 +133,9 @@ function sbac_resource_views_post_execute(&$view) {
       $sr_view = views_get_view('search_resource_keywords', TRUE);
       $sr_view->set_display('search');
       $view_filters = $sr_view->display_handler->get_option('filters');
-      $view_filters['keyword']['value'] = apachesolr_clean_text($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]);
+      $keyword = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
+      $keyword = str_replace('-', ' ', $keyword);
+      $view_filters['keyword']['value'] = apachesolr_clean_text($keyword);
       $view_filters['keyword']['operator'] = 'LIKE';
       $sr_view->display_handler->set_option('filters', $view_filters);
       $sr_view->pre_execute();
