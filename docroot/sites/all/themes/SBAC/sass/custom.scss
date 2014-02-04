@@ -2216,8 +2216,13 @@ a.tabledrag-handle .handle {
 
 #sbac-resource-submit-resource-form {
   #edit-cancel-overlay {
-    margin-left: 250px;
+   /* margin-left: 250px;*/
+		margin-right: 30px;
+		float: right;
   }
+}
+.page-node-add-resource #modalContent .ctools-modal-content .modal-content {
+	overflow-y: hidden !important;
 }
 
 /* -----------------------------------------
