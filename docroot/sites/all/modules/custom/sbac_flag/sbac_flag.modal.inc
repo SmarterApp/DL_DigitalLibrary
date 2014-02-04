@@ -1031,18 +1031,18 @@ function sbac_flag_session_expire_form($form, &$form_state) {
     session will timeout and the resource review will be returned to
     moderation queue in its initial state."
   );
+	
+	$form['continue'] = array(
+    '#type' => 'submit',
+    '#value' => 'Continue Moderation',
+    '#attributes' => array('class' => array('button', 'blue'))
+  );
 
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel Moderation',
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
-  );
-
-  $form['continue'] = array(
-    '#type' => 'submit',
-    '#value' => 'Continue Moderation',
-    '#attributes' => array('class' => array('button', 'red'))
-  );
+  );  
 
   $form['button_suffix'] = array(
     '#suffix' => '</div>',

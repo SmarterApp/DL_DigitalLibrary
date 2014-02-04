@@ -20,7 +20,7 @@ class Qc extends Base {
 
     if ($focus = field_entity_value($this->_resource, 'field_focus')) {
       $this->_prefix = 'qc_' . $focus->tid . '_';
- 
+
       // total number of sets
       $this->_set_total = $this->getVar('criteria_num', FEEDBACK_DEFAULT_SET_COUNT, FALSE);
     }
@@ -61,7 +61,7 @@ class Qc extends Base {
   public function process() {
     parent::process();
 
-    // remove the N/A option 
+    // remove the N/A option
     unset($this->_form['field_rec_options'][$this->_lang]['#options']['_none']);
 
     // add 'required field' asterisks
@@ -159,12 +159,14 @@ class Qc extends Base {
     $result = db_query($query, array(':node_id' => $this->_resource->nid));
 
     $i = 0;
+    $counter = 1;
     foreach ($result as $row) {
       $entity = entity_load_single('feedback', $row->id);
 
-      $author = theme('username', array(
-        'account' => user_load($entity->uid)
-      ));
+      // No longer need the username of the user.
+      // $author = theme('username', array(
+      //   'account' => user_load($entity->uid)
+      // ));
 
       $created = format_date($entity->created, 'full');
 
@@ -172,12 +174,13 @@ class Qc extends Base {
 
       $form['feedback_' . $entity->id]['#markup'] = theme('qc_teaser', array(
         'id'          => $entity->id,
-        'author'      => $author,
+        'author'      => 'Reviewer '. $counter,//$author,
         'created'     => $created,
         'headline'    => $headline,
         'comments'    => more_less_text($comments, 140),
       ));
 
+      $counter++;
       if (++$i == 3) { // 3 = total number of reviews
         $this->clearFapi($form['feedback_' . $entity->id]);
       }

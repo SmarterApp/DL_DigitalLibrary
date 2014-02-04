@@ -569,6 +569,26 @@
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
 
+/*Modal - sbac-flag-session-expire-form*/
+/* line 501, ../sass/sbac_flag.scss */
+#sbac-flag-session-expire-form button {
+  float: right;
+  margin-left: 30px;
+  margin-top: 30px;
+}
+/* line 506, ../sass/sbac_flag.scss */
+#sbac-flag-session-expire-form button#edit-continue {
+  background-color: #0084B0;
+  border: 1px solid #0D6785;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+}
+/* line 512, ../sass/sbac_flag.scss */
+#sbac-flag-session-expire-form button#edit-cancel {
+  background-color: #6E7379;
+  border: 1px solid #4D5457;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+}
+
 /*Confirmation modal for sbac-flag-remove-resource-review-form page*/
 /*.node-type-resource {
 
@@ -616,37 +636,37 @@
 	}
 }*/
 /*button*/
-/* line 547, ../sass/sbac_flag.scss */
+/* line 569, ../sass/sbac_flag.scss */
 .flag-category-review-buttons, .form-actions {
   text-align: center !important;
   padding-top: 15px;
 }
-/* line 551, ../sass/sbac_flag.scss */
+/* line 573, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel, .flag-category-review-buttons .finish, .form-actions .cancel, .form-actions .finish {
   display: inline-block;
   margin: 0 15px;
   position: relative;
 }
-/* line 556, ../sass/sbac_flag.scss */
+/* line 578, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel .item-list, .flag-category-review-buttons .finish .item-list, .form-actions .cancel .item-list, .form-actions .finish .item-list {
   position: absolute;
   top: 40px;
   right: 30px;
 }
-/* line 561, ../sass/sbac_flag.scss */
+/* line 583, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel .item-list ul, .flag-category-review-buttons .finish .item-list ul, .form-actions .cancel .item-list ul, .form-actions .finish .item-list ul {
   width: 190px;
   text-align: left;
   top: 0 !important;
   left: 0 !important;
 }
-/* line 570, ../sass/sbac_flag.scss */
+/* line 592, ../sass/sbac_flag.scss */
 .flag-category-review-buttons #sbac-flag-cancel-moderation, .form-actions #sbac-flag-cancel-moderation {
   display: inline-block;
   margin: 0 15px;
 }
 
-/* line 576, ../sass/sbac_flag.scss */
+/* line 598, ../sass/sbac_flag.scss */
 button.gray.cancel, .button.gray.cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
@@ -654,14 +674,14 @@ button.gray.cancel, .button.gray.cancel {
   position: relative;
   margin: 0;
 }
-/* line 583, ../sass/sbac_flag.scss */
+/* line 605, ../sass/sbac_flag.scss */
 button.gray.cancel:hover, .button.gray.cancel:hover {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
-/* line 589, ../sass/sbac_flag.scss */
+/* line 611, ../sass/sbac_flag.scss */
 button.gray.cancel:before, .button.gray.cancel:before {
   content: url(../images/buttonCancel.png);
   position: absolute;
@@ -669,27 +689,27 @@ button.gray.cancel:before, .button.gray.cancel:before {
   top: 4px;
 }
 
-/* line 596, ../sass/sbac_flag.scss */
+/* line 618, ../sass/sbac_flag.scss */
 .sbac-flag-load-more-button {
   text-align: center;
   margin-top: 30px;
 }
-/* line 600, ../sass/sbac_flag.scss */
+/* line 622, ../sass/sbac_flag.scss */
 .sbac-flag-load-more-button a {
   width: 480px;
 }
 
-/* line 605, ../sass/sbac_flag.scss */
+/* line 625, ../sass/sbac_flag.scss */
 .ajax-progress-throbber {
   display: none;
 }
 
-/* line 609, ../sass/sbac_flag.scss */
+/* line 629, ../sass/sbac_flag.scss */
 div.ctools-modal-content .modal-title {
   height: auto !important;
 }
 
-/* line 613, ../sass/sbac_flag.scss */
+/* line 633, ../sass/sbac_flag.scss */
 .section-moderation #modalContent .ctools-modal-content .modal-content {
   overflow-y: hidden !important;
 }
