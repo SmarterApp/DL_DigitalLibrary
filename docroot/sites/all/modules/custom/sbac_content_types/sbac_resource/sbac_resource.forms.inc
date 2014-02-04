@@ -1665,13 +1665,13 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_author']['#states']['visible'] = $state_license_either;
   $form['field_author']['#states']['required'] = $state_license_either;
   // $form['field_author']['#states']['invisible'] = $state_license_2;
-  $form['field_author']['und'][0]['value']['#maxlength'] = 75;
+  $form['field_author']['und'][0]['value']['#maxlength'] = 150;
 
   //Show this when field_license_information option 0 or 1 is selected
   $form['field_publisher']['#states']['visible'] = $state_license_either;
   $form['field_publisher']['#states']['required'] = $state_license_either;
   // $form['field_publisher']['#states']['invisible'] = $state_license_2;
-  $form['field_publisher']['und'][0]['value']['#maxlength'] = 75;
+  $form['field_publisher']['und'][0]['value']['#maxlength'] = 150;
 
   /*
   //Show this when field_license_information option 0  is selected
