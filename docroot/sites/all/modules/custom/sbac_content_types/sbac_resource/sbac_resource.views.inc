@@ -114,80 +114,6 @@ function sbac_resource_views_query_alter(&$view, &$query) {
 }
 
 /**
- * Implements hook_views_post_execute();
- *
- * This hook is implemented to combine two view results into one.
- * When the user searches via keyword, the results are retrieved
- * from the apache solr view. Those are then jammed into the results
- * of the resource view and displayed. I chose to do this in order
- * to make the resource view react on local DB data instead of
- * getting the data from apache solr all the time over the network
- * which I believe to be slower then local DB calls.
- *
- * @param $view
- */
-function sbac_resource_views_post_execute(&$view) {
-  if ($view->name == 'resources' && ($view->current_display == 'grid_view' || $view->current_display == 'list_view')) {
-    if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] != '') {
-      // Search apache solr for keyword.
-      $sr_view = views_get_view('search_resource_keywords', TRUE);
-      $sr_view->set_display('search');
-      $view_filters = $sr_view->display_handler->get_option('filters');
-      $keyword = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
-      $keyword = str_replace('-', ' ', $keyword);
-      $view_filters['keyword']['value'] = apachesolr_clean_text($keyword);
-      $view_filters['keyword']['operator'] = 'LIKE';
-      $sr_view->display_handler->set_option('filters', $view_filters);
-      $sr_view->pre_execute();
-      $sr_view->execute();
-      $sr_results = $sr_view->result;
-      $sr_view->destroy();
-
-      // Collect nids.
-      if ($sr_results) {
-        $nids = array();
-        foreach ($sr_results as $sr_result) {
-          $nids[] = $sr_result->entity_id;
-        }
-        // Load up all the local data structure needed for display since all i have is a set of nids. used views again.
-        $args = implode('+', $nids);
-        $data_results = views_get_view_result('resources', 'load_data', $args);
-        if ($data_results) {
-          if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] != '') {
-            // Category filters are set, append the keyword view results into the resource view.
-            $combined_results = array();
-            foreach ($view->result as $result) {
-              foreach ($data_results as $key => $data_result) {
-                if ($result->nid == $data_result->nid) {
-                  $combined_results[] = $data_result;
-                }
-              }
-            }
-            $view->result = $combined_results;
-            $view->total_rows = count($view->result);
-          }
-          else {
-            // Category filters are not set, remove results and only use the keyword view results.
-            $view->result = array();
-            $view->result = $data_results;
-            $view->total_rows = count($data_results);
-          }
-        }
-      }
-      else {
-        if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] != '') {
-          // if there are filters, return whatever the view found.
-        }
-        else {
-          // if no filters, just a keyword, return 0 results.
-          $view->result = array();
-        }
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_views_default_views_alter().
  *
  * @param $views
@@ -429,6 +355,14 @@ function sbac_resource_digital_library_apply_filters(&$view) {
       // If no filter is set for this, you have to pass "all" so its ignored.
       $view->set_arguments(array('all'));
     }
+    $view->display_handler->set_option('filters', $view_filters);
+  }
+
+  // if keywords are entered, set the filter.
+  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) && $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] != '') {
+    $view_filters = $view->display_handler->get_option('filters');
+    $keyword = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
+    $view_filters['keys']['value'] = apachesolr_clean_text($keyword);
     $view->display_handler->set_option('filters', $view_filters);
   }
 }

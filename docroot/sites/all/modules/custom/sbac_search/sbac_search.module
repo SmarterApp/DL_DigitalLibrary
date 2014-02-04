@@ -78,9 +78,6 @@ function sbac_search_preprocess_page(&$vars) {
       $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
     }
 
-//    var pageTracker = _gat._getTracker(\"UA-27429193-1\");
-//    pageTracker._initData();
-//    pageTracker._trackPageview(\"" . $search_term . "\");
     $js =  "var pageTracker1 = _gat._getTracker(\"UA-27429193-1\");
             pageTracker1._initData();
             pageTracker1._trackPageview(\"" . $search_term . "\");";
