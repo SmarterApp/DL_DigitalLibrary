@@ -2075,7 +2075,7 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 160,
+          'height' => 180,
         ),
       ),
     );
