@@ -631,6 +631,13 @@ function _sbac_resource_preview_content(&$vars) {
     else {
       $url = sbac_media_create_embed_url($media);
     }
+
+    if (!file_exists($url)) {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      $viewer['viewer'] = theme('image', array('path' => $url));
+      return $viewer;
+    }
+
     if ($type == 'document') {
       $google_url = 'http://docs.google.com/viewer';
       if (isset($_SERVER['HTTPS'])) {
@@ -705,6 +712,11 @@ function _sbac_resource_preview_materials(&$vars) {
         }
         else {
           $url = sbac_media_create_embed_url($media);
+        }
+
+        if (!file_exists($url)) {
+          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+          $type = 'not-found';
         }
 
         $transcript = 0;
