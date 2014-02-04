@@ -291,6 +291,9 @@
       }
 
       $('.pager-next a').html('Load More Resources').addClass('button');
+      if ($('#sbac-search-textbox').val() != '') {
+        $('.pager-next a').hide();
+      }
     }
   };
 
