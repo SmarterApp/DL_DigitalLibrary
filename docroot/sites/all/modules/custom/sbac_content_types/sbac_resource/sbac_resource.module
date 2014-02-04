@@ -554,6 +554,7 @@ function sbac_resource_form_messages_access($node_type) {
  * @return bool
  */
 function sbac_resource_url_exist($url){
+  // Using the current session, check if the user can access the url.
   $strCookie = session_name()."=".session_id()."; path=".session_save_path();
   // session_write_close();
   $ch = curl_init($url);
