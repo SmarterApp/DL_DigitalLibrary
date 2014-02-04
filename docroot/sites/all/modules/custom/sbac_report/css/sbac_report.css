@@ -454,3 +454,9 @@ i.icon-info {
 .page-reports hr {
   display: none;
 }
+
+/* line 471, ../sass/sbac_report.scss */
+.page-reports .report-form-container button:focus {
+  border-color: #9ecaed !important;
+  box-shadow: 0 0 10px #9ecaed !important;
+}
