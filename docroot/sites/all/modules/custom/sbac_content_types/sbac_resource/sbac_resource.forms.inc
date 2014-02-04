@@ -2075,7 +2075,7 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 180,
+          'height' => 190,
         ),
       ),
     );
@@ -2513,16 +2513,16 @@ function sbac_resource_submit_resource_form() {
     Submitting this resource may make it accessible to Smarter Balanced Digital Library resource reviewers. You cannot edit your resource once it is submitted unless a reviewer returns it to you.').'</p>',
   );
 
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('id' => array('edit-cancel-overlay'))
-  );
-
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Submit Resource',
     '#attributes' => array('id' => array('edit-submit-overlay'))
+  );
+
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-overlay'))
   );
 
   return $form;
