@@ -548,6 +548,31 @@ function sbac_resource_form_messages_access($node_type) {
 }
 
 /**
+ * Checks if the URL is accessible.
+ *
+ * @param $url
+ * @return bool
+ */
+function sbac_resource_url_exist($url){
+  $strCookie = session_name()."=".session_id()."; path=".session_save_path();
+  // session_write_close();
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt( $ch, CURLOPT_COOKIE, $strCookie );
+  curl_exec($ch);
+  $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  curl_close($ch);
+
+  if($code == 200){
+    $status = TRUE;
+  }
+  else{
+    $status = FALSE;
+  }
+  return $status;
+}
+
+/**
  * Implementation of hook_preprocess_node()
  *
  * @param $vars
@@ -625,23 +650,18 @@ function _sbac_resource_preview_content(&$vars) {
       $viewer['viewer_filename'] .= ' (Transcipt Included)';
     }
 
-    $uri = NULL;
     if ($media->fid) {
       $file = file_load($media->fid);
       $url = file_create_url($file->uri);
-      $uri = $file->uri;
     }
     else {
       $url = sbac_media_create_embed_url($media);
     }
 
-    if ($uri) {
-      $real_path = drupal_realpath($uri);
-      if (!file_exists($real_path)) {
-        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-        $viewer['viewer'] = theme('image', array('path' => $url));
-        return $viewer;
-      }
+    if (!sbac_resource_url_exist($url)) {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      $viewer['viewer'] = theme('image', array('path' => $url));
+      return $viewer;
     }
 
     if ($type == 'document') {
@@ -709,25 +729,20 @@ function _sbac_resource_preview_materials(&$vars) {
     foreach ($vars['document'] as $key => $media) {
       if (is_numeric($key)) {
         $type = _sbac_resource_determine_type($media);
-        $uri = NULL;
         if ($type == 'none') {
           $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
         }
         else if ($media->fid) {
           $file = file_load($media->fid);
           $url = file_create_url($file->uri);
-          $uri = $file->uri;
         }
         else {
           $url = sbac_media_create_embed_url($media);
         }
 
-        if ($uri) {
-          $real_path = drupal_realpath($uri);
-          if (!file_exists($real_path)) {
-            $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-            $type = 'not-found';
-          }
+        if (!sbac_resource_url_exist($url)) {
+          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+          $type = 'not-found';
         }
 
         $transcript = 0;
