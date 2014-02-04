@@ -815,7 +815,8 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
   }
   else {
     $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
-    $allowed_size = array(104857600, 104857600); //104857600 = 100MB in bytes
+    // First param is file limit. second param is limit for total size for all uploads for user.
+    $allowed_size = array(104857600, 0); //104857600 = 100MB in bytes
     $directory = "private://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     if ($writable) {
