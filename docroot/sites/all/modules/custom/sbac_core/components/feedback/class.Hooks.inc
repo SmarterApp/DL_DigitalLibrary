@@ -436,7 +436,7 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_cron() {
     // send out reminder notifications for resources which are approaching expiry time
-    $notification_time = strtotime('-' . FEEDBACK_REVIEW_NOTIFICATION . ' hours');
+    $notification_time = strtotime('-' . FEEDBACK_REVIEW_NOTIFICATION . ' hours'); // - 52 hours
 
     $query = " SELECT    id, uid, node_id
                   FROM      eck_feedback
@@ -461,6 +461,11 @@ class Hooks extends \devtools\Hooks {
       $task->addOwningUser($row->uid);
       $task->addTriggeringUser(1);
       $task->save();
+
+      // set the reminder flag for this feedback so that its only sent
+      // once at the 24 hour mark. 
+      $query = 'UPDATE {eck_feedback} SET reminder = 1 WHERE id = :id';
+      db_query($query, array(':id' => $row->id));
     }
 
     // disable feedback entities which have reached the expiry time
