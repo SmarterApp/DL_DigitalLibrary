@@ -145,6 +145,7 @@ function sbac_resource_views_post_execute(&$view) {
 
       // Collect nids.
       if ($sr_results) {
+        $nids = array();
         foreach ($sr_results as $sr_result) {
           $nids[] = $sr_result->entity_id;
         }
@@ -162,7 +163,6 @@ function sbac_resource_views_post_execute(&$view) {
                 }
               }
             }
-
             $view->result = $combined_results;
             $view->total_rows = count($view->result);
           }
