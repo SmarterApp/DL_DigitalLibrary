@@ -624,13 +624,26 @@ function _sbac_resource_preview_content(&$vars) {
     if ($media->transcript) {
       $viewer['viewer_filename'] .= ' (Transcipt Included)';
     }
+
+    $uri = NULL;
     if ($media->fid) {
       $file = file_load($media->fid);
       $url = file_create_url($file->uri);
+      $uri = $file->uri;
     }
     else {
       $url = sbac_media_create_embed_url($media);
     }
+
+    if ($uri) {
+      $real_path = drupal_realpath($uri);
+      if (!file_exists($real_path)) {
+        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+        $viewer['viewer'] = theme('image', array('path' => $url));
+        return $viewer;
+      }
+    }
+
     if ($type == 'document') {
       $google_url = 'http://docs.google.com/viewer';
       if (isset($_SERVER['HTTPS'])) {
@@ -696,15 +709,25 @@ function _sbac_resource_preview_materials(&$vars) {
     foreach ($vars['document'] as $key => $media) {
       if (is_numeric($key)) {
         $type = _sbac_resource_determine_type($media);
+        $uri = NULL;
         if ($type == 'none') {
           $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
         }
         else if ($media->fid) {
           $file = file_load($media->fid);
           $url = file_create_url($file->uri);
+          $uri = $file->uri;
         }
         else {
           $url = sbac_media_create_embed_url($media);
+        }
+
+        if ($uri) {
+          $real_path = drupal_realpath($uri);
+          if (!file_exists($real_path)) {
+            $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+            $type = 'not-found';
+          }
         }
 
         $transcript = 0;
