@@ -798,32 +798,33 @@ function _sbac_resource_determine_extension($ext) {
   $media = 'document';
 
   switch (strtolower($ext)) {
-    case 'txt';
-    case 'doc';
-    case 'docx';
-    case 'pdf';
-    case 'xls';
-    case 'xlsx';
-    case 'pptx';
-    case 'ppt';
-    case 'odt';
-    case 'odp';
-    case 'ods';
+    case 'txt':
+    case 'doc':
+    case 'docx':
+    case 'pdf':
+    case 'xls':
+    case 'xlsx':
+    case 'pptx':
+    case 'ppt':
+    case 'odt':
+    case 'odp':
+    case 'ods':
       $media = 'document';
       break;
-    case 'mp4';
-    case 'mov';
-    case 'mp3';
-    case 'aac';
+    case 'mp4':
+    case 'mov':
+    case 'mp3':
+    case 'aac':
       $media = 'video';
       break;
-    case 'png';
-    case 'jpg';
-    case 'jpeg';
+    case 'png':
+    case 'jpg':
+    case 'jpeg':
       $media = 'image';
       break;
-    case 'mpg';
-    case 'avi';
+    case 'mpg':
+    case 'avi':
+    default:
       $media = 'none';
       break;
   }
