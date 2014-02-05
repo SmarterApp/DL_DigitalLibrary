@@ -8,7 +8,7 @@
    * @type {{attach: Function}}
    */
   Drupal.behaviors.sbac_resource_load_media = {
-    check: function (local_url) {
+    check: function (resource, local_url) {
       if (ajax_request == null){
         ajax_request = $.ajax({
           type: 'POST',
@@ -48,7 +48,7 @@
         var resource = $('#resource-element');
         if (type == 'document') {
           $('.infobar .ajax-progress').show();
-          Drupal.behaviors.sbac_resource_load_media.check(local_url);
+          Drupal.behaviors.sbac_resource_load_media.check(resource, local_url);
         }
         else if (type == 'html5') {
           resource.empty().append('<iframe src="' + $(this).attr('href') + '" width="850" height="600" style="border: none;"></iframe>');
