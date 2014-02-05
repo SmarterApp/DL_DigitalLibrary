@@ -690,9 +690,13 @@ function _sbac_resource_preview_content(&$vars) {
 
     if ($media->fid) {
       $file = file_load($media->fid);
-      //$url = file_create_url($file->uri);
-      global $base_url;
-      $url = $base_url . '/sbac-media/file-stream?fid=' . $file->fid . '&session=' . session_id();
+      if ($type == 'document') {
+        global $base_url;
+        $url = $base_url . '/sbac-media/file-stream?fid=' . $file->fid . '&session=' . session_id();
+      }
+      else {
+        $url = file_create_url($file->uri);
+      }
     }
     else {
       $url = sbac_media_create_embed_url($media);
@@ -774,9 +778,13 @@ function _sbac_resource_preview_materials(&$vars) {
         }
         else if ($media->fid) {
           $file = file_load($media->fid);
-          $url = file_create_url($file->uri);
-          global $base_url;
-          $url = $base_url . '/sbac-media/file-stream?fid=' . $file->fid . '&session=' . session_id();
+          if ($type == 'document') {
+            global $base_url;
+            $url = $base_url . '/sbac-media/file-stream?fid=' . $file->fid . '&session=' . session_id();
+          }
+          else {
+            $url = file_create_url($file->uri);
+          }
         }
         else {
           $url = sbac_media_create_embed_url($media);
