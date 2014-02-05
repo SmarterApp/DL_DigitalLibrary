@@ -600,7 +600,6 @@ function sbac_resource_url_exist($url){
   curl_setopt($curl, CURLOPT_TIMEOUT, 30);
   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
   $response = curl_exec($curl);
-  error_log($response);
   curl_close($curl);
 
   $status = FALSE;

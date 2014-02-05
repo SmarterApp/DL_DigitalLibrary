@@ -105,6 +105,7 @@
     <div class="row">
       <div class="column large-3">
         <?php print $materials; ?>
+        <div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>
       </div>
       <div class="column large-7">
         <p><span id="sbac-filename"><?php print $viewer_filename; ?></span></p>

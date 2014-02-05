@@ -8,42 +8,47 @@
    * @type {{attach: Function}}
    */
   Drupal.behaviors.sbac_resource_load_media = {
+    check: function (local_url) {
+      if (ajax_request == null){
+        ajax_request = $.ajax({
+          type: 'POST',
+          url: "/sbac-resource/url-exists",
+          data: {'url' : local_url},
+          success: function(data) {
+            var response = jQuery.parseJSON(data);
+            if (response.result == true) {
+              var google_url = 'http://docs.google.com/viewer';
+              if (window.location.protocol == 'https:') {
+                google_url = 'https://docs.google.com/viewer';
+              }
+              var google_viewer = '<iframe src="' + google_url + '?url=' + local_url + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+              resource.empty().append(google_viewer);
+              $('.infobar .ajax-progress').hide();
+            }
+            else {
+              var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
+              var img = $('<img>');
+              img.attr('src', url);
+              img.attr('height', 400);
+              img.attr('width', 850);
+              resource.empty().append(img);
+              $('.infobar .ajax-progress').hide();
+            }
+            ajax_request = null;
+          }
+        });
+      }
+    },
     attach: function (context, settings) {
       $('#sbac-materials li a').click( function (event) {
         event.stopPropagation();
         event.preventDefault();
         var local_url = $(this).attr('href');
-
         var type = $(this).attr('sbac-type');
         var resource = $('#resource-element');
         if (type == 'document') {
-          if (ajax_request == null){
-            ajax_request = $.ajax({
-              type: 'POST',
-              url: "/sbac-resource/url-exists",
-              data: {'url' : $(this).attr('href')},
-              success: function(data) {
-                var response = jQuery.parseJSON(data);
-                if (response.result == true) {
-                  var google_url = 'http://docs.google.com/viewer';
-                  if (window.location.protocol == 'https:') {
-                    google_url = 'https://docs.google.com/viewer';
-                  }
-                  var google_viewer = '<iframe src="' + google_url + '?url=' + local_url + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
-                  resource.empty().append(google_viewer);
-                }
-                else {
-                  var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
-                  var img = $('<img>');
-                  img.attr('src', url);
-                  img.attr('height', 400);
-                  img.attr('width', 850);
-                  resource.empty().append(img);
-                }
-                ajax_request = null;
-              }
-            });
-          }
+          $('.infobar .ajax-progress').show();
+          Drupal.behaviors.sbac_resource_load_media.check(local_url);
         }
         else if (type == 'html5') {
           resource.empty().append('<iframe src="' + $(this).attr('href') + '" width="850" height="600" style="border: none;"></iframe>');
