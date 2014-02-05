@@ -425,7 +425,7 @@ function sbac_central_update_7037() {
     'media_internet',
     'emfield',
   );
-  
+
   module_enable($modules);
 }
 
@@ -437,7 +437,7 @@ function sbac_central_update_7038() {
     'media_vimeo',
     'media_youtube',
   );
-  
+
   module_enable($modules);
 }
 
@@ -727,4 +727,15 @@ function sbac_central_update_7063() {
     'sbac_flag',
   );
   module_enable($modules);
+}
+
+/**
+ * Enables Filter Perms module.
+ */
+function sbac_central_update_7064() {
+  $modules = array(
+    'filter_perms',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
 }
