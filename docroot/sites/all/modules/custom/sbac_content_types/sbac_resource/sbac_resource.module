@@ -554,15 +554,37 @@ function sbac_resource_form_messages_access($node_type) {
  * @return bool
  */
 function sbac_resource_url_exist($url){
-  // Using the current session, check if the user can access the url.
-  $strCookie = session_name()."=".session_id()."; path=".session_save_path();
-  // session_write_close();
-  $ch = curl_init($url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt( $ch, CURLOPT_COOKIE, $strCookie );
-  curl_exec($ch);
-  $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-  curl_close($ch);
+  // Curl the google docs viewer url
+  // if response contains the wrong message
+  // then return false and output the no-preview image.
+
+  $google_url = 'http://docs.google.com/viewer';
+  if (isset($_SERVER['HTTPS'])) {
+    $google_url = 'https://docs.google.com/viewer';
+  }
+  $question_url = $google_url . '?url=' . $url . '&embedded=true';
+
+  $header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
+  $header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+  $header[] = "Cache-Control: max-age=0";
+  $header[] = "Connection: keep-alive";
+  $header[] = "Keep-Alive: 300";
+  $header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+  $header[] = "Accept-Language: en-us,en;q=0.5";
+  $header[] = "Pragma: ";
+
+  $curl = curl_init($question_url);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+  curl_setopt($curl, CURLOPT_REFERER, "http://sbac.dev");
+  curl_setopt($curl, CURLOPT_ENCODING, "gzip,deflate");
+  curl_setopt($curl, CURLOPT_AUTOREFERER, true);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+  $response = curl_exec($curl);
+  error_log($response);
+  $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  curl_close($curl);
 
   if($code == 200){
     $status = TRUE;
@@ -661,11 +683,11 @@ function _sbac_resource_preview_content(&$vars) {
       $url = sbac_media_create_embed_url($media);
     }
 
-//    if ($type == 'document' && !sbac_resource_url_exist($url)) {
-//      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-//      $viewer['viewer'] = theme('image', array('path' => $url));
-//      return $viewer;
-//    }
+    if ($type == 'document' && !sbac_resource_url_exist($url)) {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      $viewer['viewer'] = theme('image', array('path' => $url));
+      return $viewer;
+    }
 
     if ($type == 'document') {
       $google_url = 'http://docs.google.com/viewer';
