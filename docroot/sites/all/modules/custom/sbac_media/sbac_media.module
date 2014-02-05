@@ -901,6 +901,27 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
 }
 
 /**
+ * Implements hook_file_validate
+ */
+function sbac_media_file_validate($file) {
+  if (($file->source == 'field_file_upload') ||
+      ($file->source == 'field_content_module_picker')){
+    global $user;
+    $file_limit = 104857600; // 104857600 Bytes == 100MB
+    if ($file->source == 'field_content_module_picker') { // HTML5 field.
+      $file_limit = 26214400; //26214400 = 25MB in bytes
+    }
+    // Have to create custom validator for user1. Standard file_validate_size exempts user1.
+    if ($user->uid == 1) {
+      if ($file->filesize > $file_limit) {
+        $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($file->filesize), '%maxsize' => format_size($file_limit)));
+        return $errors;
+      }
+    }
+  }
+}
+
+/**
  * @param $form
  * @param $form_state
  * @return mixed
@@ -912,7 +933,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
 
   drupal_get_messages(); // clear messages if they were some from before.
   $allowed_file_types = array('zip');
-  $allowed_size = array(26214400, 26214400); //26214400 = 25MB in bytes
+  $allowed_size = array(26214400, 0); //26214400 = 25MB in bytes
   $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
   $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
   if ($writable) {
