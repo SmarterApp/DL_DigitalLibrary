@@ -12,6 +12,7 @@
       $('#sbac-materials li a').click( function (event) {
         event.stopPropagation();
         event.preventDefault();
+        var local_url = $(this).attr('href');
 
         var type = $(this).attr('sbac-type');
         var resource = $('#resource-element');
@@ -28,7 +29,7 @@
                   if (window.location.protocol == 'https:') {
                     google_url = 'https://docs.google.com/viewer';
                   }
-                  var google_viewer = '<iframe src="' + google_url + '?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+                  var google_viewer = '<iframe src="' + google_url + '?url=' + local_url + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
                   resource.empty().append(google_viewer);
                 }
                 else {

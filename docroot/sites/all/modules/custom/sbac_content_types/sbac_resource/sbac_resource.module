@@ -590,9 +590,10 @@ function sbac_resource_url_exist($url){
   $header[] = "Accept-Language: en-us,en;q=0.5";
   $header[] = "Pragma: ";
 
+  global $base_url;
   $curl = curl_init($question_url);
   curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-  curl_setopt($curl, CURLOPT_REFERER, "http://sbac.dev");
+  curl_setopt($curl, CURLOPT_REFERER, $base_url);
   curl_setopt($curl, CURLOPT_ENCODING, "gzip,deflate");
   curl_setopt($curl, CURLOPT_AUTOREFERER, true);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
