@@ -738,15 +738,17 @@ function _sbac_resource_preview_materials(&$vars) {
         else if ($media->fid) {
           $file = file_load($media->fid);
           $url = file_create_url($file->uri);
+          global $base_url;
+          $url = $base_url . '/sbac-media/file-stream?fid=' . $file->fid . '&session=' . session_id();
         }
         else {
           $url = sbac_media_create_embed_url($media);
         }
 
-        if ($type == 'docuemnt' && !sbac_resource_url_exist($url)) {
-          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-          $type = 'not-found';
-        }
+//        if ($type == 'document' && !sbac_resource_url_exist($url)) {
+//          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+//          $type = 'not-found';
+//        }
 
         $transcript = 0;
         if ($media->transcript) {
