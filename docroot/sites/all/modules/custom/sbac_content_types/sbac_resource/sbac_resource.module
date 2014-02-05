@@ -583,15 +583,13 @@ function sbac_resource_url_exist($url){
   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
   $response = curl_exec($curl);
   error_log($response);
-  $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
   curl_close($curl);
 
-  if($code == 200){
+  $status = FALSE;
+  if (strpos($response, "gviewApp.displayError('BAD_REQUEST'") === FALSE) {
     $status = TRUE;
   }
-  else{
-    $status = FALSE;
-  }
+
   return $status;
 }
 
@@ -767,10 +765,10 @@ function _sbac_resource_preview_materials(&$vars) {
           $url = sbac_media_create_embed_url($media);
         }
 
-//        if ($type == 'document' && !sbac_resource_url_exist($url)) {
-//          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-//          $type = 'not-found';
-//        }
+        if ($type == 'document' && !sbac_resource_url_exist($url)) {
+          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+          $type = 'not-found';
+        }
 
         $transcript = 0;
         if ($media->transcript) {
