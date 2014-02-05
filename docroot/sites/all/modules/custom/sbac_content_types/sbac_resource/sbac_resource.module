@@ -808,11 +808,9 @@ function _sbac_resource_determine_extension($ext) {
     case 'ppt':
     case 'odt':
     case 'odp':
-    case 'ods':
       $media = 'document';
       break;
     case 'mp4':
-    case 'mov':
     case 'mp3':
     case 'aac':
       $media = 'video';
@@ -822,9 +820,10 @@ function _sbac_resource_determine_extension($ext) {
     case 'jpeg':
       $media = 'image';
       break;
-    case 'mpg':
     case 'avi':
-    default:
+    case 'mov':
+    case 'mpg':
+    case 'ods':
       $media = 'none';
       break;
   }
