@@ -1,6 +1,6 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
-
+  var ajax_request = null;
   /**
    * If the material is a doc, load google,
    * else load JwPlayer
@@ -16,12 +16,33 @@
         var type = $(this).attr('sbac-type');
         var resource = $('#resource-element');
         if (type == 'document') {
-          var google_url = 'http://docs.google.com/viewer';
-          if (window.location.protocol == 'https:') {
-            google_url = 'https://docs.google.com/viewer';
+          if (ajax_request == null){
+            ajax_request = $.ajax({
+              type: 'POST',
+              url: "/sbac-resource/url-exists",
+              data: {'url' : $(this).attr('href')},
+              success: function(data) {
+                var response = jQuery.parseJSON(data);
+                if (response.result == true) {
+                  var google_url = 'http://docs.google.com/viewer';
+                  if (window.location.protocol == 'https:') {
+                    google_url = 'https://docs.google.com/viewer';
+                  }
+                  var google_viewer = '<iframe src="' + google_url + '?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+                  resource.empty().append(google_viewer);
+                }
+                else {
+                  var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
+                  var img = $('<img>');
+                  img.attr('src', url);
+                  img.attr('height', 400);
+                  img.attr('width', 850);
+                  resource.empty().append(img);
+                }
+                ajax_request = null;
+              }
+            });
           }
-          var google_viewer = '<iframe src="' + google_url + '?url=' + $(this).attr('href') + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
-          resource.empty().append(google_viewer);
         }
         else if (type == 'html5') {
           resource.empty().append('<iframe src="' + $(this).attr('href') + '" width="850" height="600" style="border: none;"></iframe>');
