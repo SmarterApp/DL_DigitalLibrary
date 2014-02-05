@@ -89,15 +89,13 @@ function sbac_media_file_stream() {
   header('Content-Transfer-Encoding: binary');
   header('Cache-Control: no-cache private');
   header('Content-Description: File Transfer');
-  header('Content-Disposition: attachment, ' . $file->filename);
+  header('Content-Disposition: attachment, filename=' . $file->filename);
   header('Content-Length: ' . $file->filesize);
   header('Content-Type: ' . $file->filemime);
 
   $real_path = drupal_realpath($file->uri);
   if (file_exists($real_path)) {
-    ob_start();
     $file_stream = file_get_contents($real_path);
-    ob_end_flush();
   }
 
   echo $file_stream;
