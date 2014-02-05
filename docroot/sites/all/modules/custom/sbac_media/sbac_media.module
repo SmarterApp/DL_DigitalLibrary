@@ -89,7 +89,6 @@ function sbac_media_file_stream() {
   header('Content-Transfer-Encoding: binary');
   header('Cache-Control: no-cache private');
   header('Content-Description: File Transfer');
-  header('Content-Disposition: attachment, filename=' . $file->filename);
   header('Content-Length: ' . $file->filesize);
   header('Content-Type: ' . $file->filemime);
 
