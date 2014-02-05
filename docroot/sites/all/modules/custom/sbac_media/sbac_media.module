@@ -89,7 +89,7 @@ function sbac_media_file_stream() {
   header('Cache-Control: no-cache private');
   header('Content-Description: File Transfer');
   header('Content-Length: ' . $file->filesize);
-  header('Content-Type: application/octet-stream');
+  header('Content-Type: ' . $file->filemime);
 
   $real_path = drupal_realpath($file->uri);
   if (file_exists($real_path)) {
