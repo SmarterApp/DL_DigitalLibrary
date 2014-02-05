@@ -67,7 +67,40 @@ function sbac_media_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-media/file-stream'] = array(
+    'page callback' => 'sbac_media_file_stream',
+    'access callback' => TRUE,
+    'title' => 'File Stream',
+  );
+
   return $items;
+}
+
+/**
+ * @param $fid
+ * @param null $session_id
+ */
+function sbac_media_file_stream() {
+  $file_stream = FALSE;
+  $fid = $_GET['fid'];
+  $session = $_GET['session'];
+  $file = file_load($fid);
+
+  header('Content-Transfer-Encoding: binary');
+  header('Cache-Control: no-cache private');
+  header('Content-Description: File Transfer');
+  header('Content-Disposition: attachment, ' . $file->filename);
+  header('Content-Length: ' . $file->filesize);
+  header('Content-Type: ' . $file->filemime);
+
+  $real_path = drupal_realpath($file->uri);
+  if (file_exists($real_path)) {
+    ob_start();
+    $file_stream = file_get_contents($real_path);
+    ob_end_flush();
+  }
+
+  echo $file_stream;
 }
 
 /**
