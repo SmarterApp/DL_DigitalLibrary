@@ -143,13 +143,7 @@ function sbac_user_user_default_permissions() {
   $permissions['access workbench'] = array(
     'name' => 'access workbench',
     'roles' => array(
-      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
-      'digital library administrator' => 'digital library administrator',
-      'resource contributor' => 'resource contributor',
-      'resource publisher' => 'resource publisher',
-      'resource reviewer' => 'resource reviewer',
-      'system administrator' => 'system administrator',
     ),
     'module' => 'workbench',
   );
