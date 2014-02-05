@@ -263,6 +263,9 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
         $state_output = t('Posted with Distinction');
       }
     }
+    elseif ($state == 'rejected') {
+      $state_output = t('Returned');
+    }
     $row->state = $state_output;
     $row->title = truncate($row->node_title, 55, array('check_markup' => FALSE));
     $row->contribution_date = date('m/d/Y h:i a', $row->node_created);
