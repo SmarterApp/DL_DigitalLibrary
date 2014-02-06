@@ -367,7 +367,7 @@ function get_user_activity($users, $date_range) {
   $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 
   # Resources with Pending Flags
-  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'resource' AND being_moderated = 0 AND resolved = 0
+  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'resource' AND resolved = 0
           AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
   $user_activity['resource_with_pending_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 
@@ -377,7 +377,7 @@ function get_user_activity($users, $date_range) {
   $user_activity['resource_with_resolved_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 
   # Resource reviews with Pending Flags
-  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'review_end_use' AND being_moderated = 0 AND resolved = 0
+  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'review_end_use' AND resolved = 0
           AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
   $user_activity['resource_reviews_with_pending_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 

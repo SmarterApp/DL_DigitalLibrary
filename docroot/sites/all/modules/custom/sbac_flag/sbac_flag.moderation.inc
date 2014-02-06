@@ -80,6 +80,7 @@ function sbac_flag_get_flags() {
 function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
   global $user;
   $list_output = '';
+  $sorted_flags = array();
 
   if ($offset) {
     $start = SBAC_FLAG_MODERATION_COUNT * $offset;

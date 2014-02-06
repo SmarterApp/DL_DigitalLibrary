@@ -297,6 +297,10 @@ function sbac_flag_resolve_all_flags_modal($js = FALSE) {
         // remove session variables
         unset($_SESSION['sbac-flag']);
       }
+
+      if ($form_state['triggering_element']['#value'] == 'Cancel') {
+        unset($_SESSION['sbac-flag']);
+      }
     }
     print ajax_render($output);
     exit();
@@ -354,6 +358,10 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
         // remove session variables
         unset($_SESSION['sbac-flag']);
       }
+
+      if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
+        unset($_SESSION['sbac-flag']);
+      }
     }
     print ajax_render($output);
     exit();
@@ -396,6 +404,7 @@ function sbac_flag_cancel_resource_review_moderation_modal($js = FALSE) {
         sbac_flag_unset_being_moderated($node, $eck_review);
         // redirect to moderation
         $output[] = ctools_ajax_command_redirect('moderation');
+        unset($_SESSION['sbac-flag']);
       }
     }
     print ajax_render($output);
