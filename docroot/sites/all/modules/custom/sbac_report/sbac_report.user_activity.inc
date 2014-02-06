@@ -231,7 +231,12 @@ function count_with_users_query($sql_template, $users, $from_date = NULL, $to_da
   if ($special_case) {
     $values = array();
     foreach ($result as $record) {
-      $values[$record->uid]++;
+      if (!isset($values[$record->uid])) {
+        $values[$record->uid] = 1;
+      }
+      else {
+        $values[$record->uid]++;
+      }
     }
   }
   else {
