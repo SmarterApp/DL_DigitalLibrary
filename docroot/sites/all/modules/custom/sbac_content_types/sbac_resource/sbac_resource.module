@@ -383,23 +383,42 @@ function sbac_resource_get_related_resources($baseline_node) {
                   break;
                 }
 
-                $query = "SELECT sl.field_student_learning_rating AS learning,
-                          pd.field_pro_dev_rating AS pro_dev,
-                          eu.field_ease_use_rating AS ease_use
-                          FROM {eck_review} r
-                          JOIN {field_data_field_student_learning} sl ON r.id = sl.entity_id
-                          JOIN {field_data_field_pro_dev} pd ON r.id = pd.entity_id
-                          JOIN {field_data_field_ease_use} eu ON r.id = eu.entity_id
-                          WHERE r.node_id = " . $nid;
-                $result = db_query($query);
-                if ($result->rowCount()) {
-                  foreach ($result as $row) {
-                    $total = $row->learning + $row->pro_dev + $row->ease_use;
-                    $related_resources[$nid] = $total;
+                $related_views = TRUE;
+                $query = "SELECT v.field_unique_views_value AS views
+                          FROM {field_data_field_unique_views} v
+                          WHERE v.entity_id = " . $nid;
+                $result = db_query($query)->fetchObject();
+                if ($result !== FALSE) {
+                  if ($result->views == 0) {
+                    $related_views = FALSE;
+                  }
+                  else{
+                    $related_resources[$nid] = $result->views;
                   }
                 }
-                else {
-                  $related_resources[$nid] = 0;
+                else{
+                  $related_views = FALSE;
+                }
+
+                if (!$related_views) {
+                  $query = "SELECT sl.field_student_learning_rating AS learning,
+                            pd.field_pro_dev_rating AS pro_dev,
+                            eu.field_ease_use_rating AS ease_use
+                            FROM {eck_review} r
+                            JOIN {field_data_field_student_learning} sl ON r.id = sl.entity_id
+                            JOIN {field_data_field_pro_dev} pd ON r.id = pd.entity_id
+                            JOIN {field_data_field_ease_use} eu ON r.id = eu.entity_id
+                            WHERE r.node_id = " . $nid;
+                  $result = db_query($query);
+                  if ($result->rowCount()) {
+                    foreach ($result as $row) {
+                      $total = $row->learning + $row->pro_dev + $row->ease_use;
+                      $related_resources[$nid] += $total;
+                    }
+                  }
+                  else {
+                    $related_resources[$nid] = 0;
+                  }
                 }
                 $count++;
               }
@@ -412,7 +431,7 @@ function sbac_resource_get_related_resources($baseline_node) {
 
   // sort related resources by score.
   if (count($related_resources) > 0) {
-    asort($related_resources);
+    arsort($related_resources);
   }
 
   return $related_resources;
