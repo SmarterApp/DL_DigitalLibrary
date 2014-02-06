@@ -956,7 +956,7 @@ a.sbac-grid-layout {
 
   #sbac-filename {
     display: block;
-    margin-top: 6px;
+    margin-top: 9px;
   }
 }
 
@@ -1607,3 +1607,19 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
   margin-top:-16px;
   margin-left:26px;
 }
+
+.node-resource {
+	.ajax-progress {
+		position: relative;
+		
+		.throbber {
+			background: url("../images/throbber-3.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+			position: absolute;
+			right: 0;
+			width: 15px;
+			height: 15px;
+			top: -25px;
+		}
+	}
+}
+
