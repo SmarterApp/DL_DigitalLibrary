@@ -505,10 +505,10 @@ function create_user_activity_from_data($user_activity) {
     }
 
     foreach ($countkeys as $countkey) {
-      if (!is_null($user_activity[$countkey[0]][$uid]->count)) {
+      if (isset($user_activity[$countkey[0]][$uid]->count) && !is_null($user_activity[$countkey[0]][$uid]->count)) {
         $value = $user_activity[$countkey[0]][$uid]->count;
       }
-      else if (!is_null($user_activity[$countkey[0]][$uid])) {
+      else if (isset($user_activity[$countkey[0]][$uid]) && !is_null($user_activity[$countkey[0]][$uid])) {
         $value = $user_activity[$countkey[0]][$uid];
       }
       else {
@@ -518,10 +518,7 @@ function create_user_activity_from_data($user_activity) {
     }
 
     foreach ($flagkeys as $flagkey) {
-      if (!is_null($user_activity[$flagkey[0]][$uid]->count)) {
-        $value = $user_activity[$flagkey[0]][$uid]->count;
-      }
-      else if (!is_null($user_activity[$flagkey[0]][$uid])) {
+      if (isset($user_activity[$flagkey[0]][$uid]) && !is_null($user_activity[$flagkey[0]][$uid])) {
         $value = $user_activity[$flagkey[0]][$uid];
       }
       else {
