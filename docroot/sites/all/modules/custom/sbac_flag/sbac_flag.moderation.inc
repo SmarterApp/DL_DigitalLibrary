@@ -147,7 +147,7 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
     foreach ($rows as $flag_type => $nodes) {
       foreach ($nodes as $nid => $element) {
         $node = $element['node'];
-        if (!in_array($type . '::' . $flag_type . '::' . $node->nid, $outputted)) {
+        if (!in_array($type . '::' . $node->nid, $outputted)) {
           $count++;
           if ($count > $start && $count <= $end) {
             $variables = $element['variables'];
@@ -156,7 +156,7 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
             }
           }
         }
-        $outputted[] = $type . '::' . $flag_type . '::' . $node->nid;
+        $outputted[] = $type . '::' . $node->nid;
       }
     }
   }

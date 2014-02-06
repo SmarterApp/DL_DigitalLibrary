@@ -1569,6 +1569,7 @@ function sbac_resource_node_access_records($node) {
     $grants = array();
     $restricted = FALSE;
 
+    // If the state is any of the following, allow the node author to see it.
     if (isset($node->workbench_moderation['current']->state) &&
         ($node->workbench_moderation['current']->state == 'creation' ||
          $node->workbench_moderation['current']->state == 'draft' ||
