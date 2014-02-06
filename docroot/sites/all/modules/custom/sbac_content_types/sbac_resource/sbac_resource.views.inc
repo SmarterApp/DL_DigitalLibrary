@@ -381,10 +381,10 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
       $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
 
     $current_sorting = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
-    $sort_field_key = 'created';
+    $sort_field_key = 'timestamp';
     switch ($current_sorting) {
       case 'dl-newest':
-        $sort_field_key = 'created';
+        $sort_field_key = 'timestamp';
         break;
       case 'dl-most-viewed':
         $sort_field_key = 'field_unique_views_value';
