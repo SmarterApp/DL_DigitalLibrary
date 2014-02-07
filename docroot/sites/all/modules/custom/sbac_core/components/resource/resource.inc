@@ -3,7 +3,7 @@
 define('FEEDBACK_DEFAULT_SET_COUNT',    2);  // default number of gate keeper items;
 define('FEEDBACK_REVIEW_TIMEOUT',       72); // value in hours;
 define('FEEDBACK_REVIEW_REMINDER',      24); // value in hours
-define('FEEDBACK_REVIEW_NOTIFICATION',  FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
+define('FEEDBACK_REVIEW_NOTIFICATION',  1); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
 define('FEEDBACK_REVIEWER_RID',         17); // id of the 'resource reviewer' role;
 define('FEEDBACK_PUBLISHER_RID',        16); // id of the 'resource publisher' role;
 define('FEEDBACK_AUTHENTICATED_RID',    2);  // id of the 'authenticated' role;
