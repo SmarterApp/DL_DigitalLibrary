@@ -82,21 +82,21 @@ function sbac_media_menu() {
  */
 function sbac_media_file_stream() {
   error_log("FIDa: " . $_GET['fid']);
-  error_log("SESSIONa: " . $_GET['session']);
+  error_log("SESSIONa: " . $_GET['hash']);
   error_log("FIDb: " . $_POST['fid']);
-  error_log("SESSIONb: " . $_POST['session']);
+  error_log("SESSIONb: " . $_POST['hash']);
   $file_stream = FALSE;
   $fid = $_GET['fid'];
-  $session = $_GET['session'];
+  $session = $_GET['hash'];
   $file = file_load($fid);
   error_log("SESSION1: " . $session);
-  error_log("File1: " . $file);
+  error_log("File1: " . $file->fid);
   if ($session == NULL || !$file) {
     return;
   }
 
-  error_log("SESSION2: " . session_id());
-  if ($session == session_id()) {
+  error_log("SESSION2: " . session_name());
+  if ($session == session_name()) {
     header('Cache-Control: no-cache private');
     header('Content-Description: File Transfer');
     header('Content-Length: ' . $file->filesize);
