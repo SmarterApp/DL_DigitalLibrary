@@ -2417,7 +2417,7 @@ function sbac_resource_check_materials($form, $form_state) {
         $valid = FALSE;
       }
     }
-    if (!$form['field_pii']['und']['#default_value']) {
+    if (!isset($_GET['flag']) && !$form['field_pii']['und']['#default_value']) {
       $valid = FALSE;
     }
   }
