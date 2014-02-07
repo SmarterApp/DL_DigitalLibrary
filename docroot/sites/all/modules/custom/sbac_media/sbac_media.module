@@ -81,6 +81,10 @@ function sbac_media_menu() {
  * @param null $session_id
  */
 function sbac_media_file_stream() {
+  error_log("FIDa: " . $_GET['fid']);
+  error_log("SESSIONa: " . $_GET['session']);
+  error_log("FIDb: " . $_POST['fid']);
+  error_log("SESSIONb: " . $_POST['session']);
   $file_stream = FALSE;
   $fid = $_GET['fid'];
   $session = $_GET['session'];
