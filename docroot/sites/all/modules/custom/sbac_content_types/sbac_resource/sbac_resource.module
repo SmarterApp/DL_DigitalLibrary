@@ -2285,7 +2285,7 @@ function sbac_resource_truncate($html, $maxLength = 100) {
   return $newContent;
 }
 
-function sbac_resource_update_average_rating_score($nid) {
+function sbac_resource_update_average_rating_score($nid, $exclude = NULL) {
   // Initialize variables.
   $entity_type = 'review';
   $all_reviews = array();
@@ -2296,6 +2296,12 @@ function sbac_resource_update_average_rating_score($nid) {
   $query->entityCondition('entity_type', $entity_type)
     ->entityCondition('bundle', 'end_use')
     ->propertyCondition('node_id', $nid, '=');
+
+  // Compute the totals without this id. Used for when deleting a review.
+  if (!empty($exclude)) {
+    $query->propertyCondition('id', $exclude, '!=');
+  }
+
   $result = $query->execute();
   if ($result[$entity_type]) {
     $review_ids = array_keys($result[$entity_type]);
@@ -2326,5 +2332,18 @@ function sbac_resource_update_average_rating_score($nid) {
     // Cant do full node save, workbench moderation doesnt like it.
     $resource_node->field_node_avg_rating[LANGUAGE_NONE][0]['value'] = $overall_avg;
     entity_save_field(array('field_node_avg_rating'), $resource_node, 'node', $nid);
+  }
+}
+
+/**
+ * Implements hook_entity_delete
+ */
+function sbac_resource_entity_delete($entity, $type) {
+  if ($type == 'review') {
+    // Ensure the average rating for the node gets recalculated when a review is deleted.
+    $entity_wrapper = entity_metadata_wrapper($type, $entity);
+    $nid = $entity_wrapper->node_id->value();
+    $eid = $entity_wrapper->id->value();
+    sbac_resource_update_average_rating_score($nid, $eid);
   }
 }
