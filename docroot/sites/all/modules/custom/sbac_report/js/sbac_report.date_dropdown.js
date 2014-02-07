@@ -1,5 +1,7 @@
 // Open the date popup on focus when navigating with the keyboard.
 (function ($) {
+  Drupal.behaviors = Drupal.behaviors || {};
+
   Drupal.behaviors.date_popup_focus = {
     attach: function (context) {
       for (var id in Drupal.settings.datePopup) {
