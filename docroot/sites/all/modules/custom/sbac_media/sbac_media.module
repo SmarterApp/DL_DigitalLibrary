@@ -85,10 +85,13 @@ function sbac_media_file_stream() {
   $fid = $_GET['fid'];
   $session = $_GET['session'];
   $file = file_load($fid);
+  error_log("SESSION1: " . $session);
+  error_log("File1: " . $file);
   if ($session == NULL || !$file) {
     return;
   }
 
+  error_log("SESSION2: " . session_id());
   if ($session == session_id()) {
     header('Cache-Control: no-cache private');
     header('Content-Description: File Transfer');
@@ -96,6 +99,7 @@ function sbac_media_file_stream() {
     header('Content-Type: ' . $file->filemime);
 
     $real_path = drupal_realpath($file->uri);
+    error_log("path: " . $real_path);
     if (file_exists($real_path)) {
       $file_stream = file_get_contents($real_path);
     }
