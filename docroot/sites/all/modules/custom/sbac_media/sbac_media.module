@@ -81,17 +81,12 @@ function sbac_media_menu() {
  * @param null $session_id
  */
 function sbac_media_file_stream() {
-  error_log("SERVER: " . $_SERVER['REQUEST_URI']);
-//  error_log("FIDa: " . $_GET['fid']);
-//  error_log("SESSIONa: " . $_GET['hash']);
-//  error_log("FIDb: " . $_POST['fid']);
-//  error_log("SESSIONb: " . $_POST['hash']);
   $file_stream = FALSE;
-  $fid = $_GET['fid'];
-  $session = $_GET['hash'];
+  $fid = arg(2);
+  $session = arg(3);
   $file = file_load($fid);
-//  error_log("SESSION1: " . $session);
-//  error_log("File1: " . $file->fid);
+  error_log("SESSION1: " . $session);
+  error_log("File1: " . $file->fid);
   if ($session == NULL || !$file) {
     return;
   }
