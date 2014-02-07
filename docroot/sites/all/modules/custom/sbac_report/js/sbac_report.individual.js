@@ -1,13 +1,13 @@
 /**
  * Individual Report.
  */
-(function($) {
+(function ($) {
   // DOM ready.
-  $(function() {
+  $(function () {
     var $uidField = $('#sne-uid-field');
 
     // Individual Report: Get the id from the autocomplete suggestion.
-    $(document).on('click', '#autocomplete li', function() {
+    $(document).on('click', '#autocomplete li', function () {
       var uid = $(this).find('.autocomplete-suggestion').data('uid');
       $uidField.text(uid);
       $uidField.val(uid);
@@ -38,13 +38,12 @@
     }
 
     // Individual Report: clear the id on event "input".
-    $('#edit-sne').bind('input', function(e) {
+    $('#edit-sne').bind('input', function (e) {
       if ($uidField.val() != '') {
         $uidField.text('');
         $uidField.val('');
       }
     });
-
   });
 
   Drupal.behaviors.sbac_report_individual = {
@@ -73,20 +72,16 @@
         });
 
         $('.flexslider .slides li', dialog).css('width', slider_width + 'px');
-
-        $('.flexslider-continue', dialog).click(function(e) {
+        $('.flexslider-continue', dialog).click(function (e) {
           e.preventDefault();
-
           var next = $('.flex-next', dialog);
           var first = $('.flex-control-paging li:first-child a', dialog);
-
           if (!next.hasClass('flex-disabled')) {
             next.click();
           }
           else {
             first.click();
           }
-
           return false;
         });
       }

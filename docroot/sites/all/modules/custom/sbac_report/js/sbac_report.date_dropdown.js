@@ -2,16 +2,19 @@
  * Date range dropdown.
  */
 // TODO: make this a more general purpose class and pull out of the scope of reports.
-DateDropDown = (function($, $which) {
+DateDropDown = (function ($, $which) {
 
   // class attributes
   // ? Do I need to individualize class attributes ?
-  var $date_range_item='.date-range-item',//+$which,
-      $report_dropdown_toggle='.report-dropdown-toggle'; //+$which;
-    // id attributes
-  var $drop_down_id='#date-range-dropdown'+$which, $selected_id='#date-selected'+$which,
-      $date_range_field_id='#date-range-field'+$which, $from_date_input='#from-date'+$which,
-      $to_date_input='#to-date'+$which, $ui_datepicker_div='#ui-datepicker-div';//+$which;
+  var $date_range_item = '.date-range-item';
+  var $report_dropdown_toggle = '.report-dropdown-toggle';
+  // id attributes
+  var $drop_down_id = '#date-range-dropdown' + $which;
+  var $selected_id = '#date-selected' + $which;
+  var $date_range_field_id = '#date-range-field' + $which;
+  var $from_date_input = '#from-date' + $which;
+  var $to_date_input = '#to-date' + $which;
+  var $ui_datepicker_div = '#ui-datepicker-div';
 
   /**
    * Action on the dropdown.
@@ -76,30 +79,30 @@ DateDropDown = (function($, $which) {
   }
 
   function hideCustomDateFieldset(elm) {
-      var selected = $(elm).find('input[name=date-select]:checked');
-      if (selected.val() == 'custom') {
-          $(elm).find('fieldset').show();
-      } else {
-          $(elm).find('fieldset').hide();
-      }
+    var selected = $(elm).find('input[name=date-select]:checked');
+    if (selected.val() == 'custom') {
+      $(elm).find('fieldset').show();
+    }
+    else {
+      $(elm).find('fieldset').hide();
+    }
   }
 
   function updatCustomoDateRangeField() {
-      var toInput = getInput($to_date_input + " input");
-      var fromInput = getInput($from_date_input + " input");
-      var $dateRangeField = $($date_range_field_id);
-      //var $dateSelected = $($selected_id);
-
-      if (fromInput && toInput) {
-        var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
-        $dateRangeField.val(value);
-      } else {
-        $dateRangeField.val('');
-      }
-  };
+    var toInput = getInput($to_date_input + " input");
+    var fromInput = getInput($from_date_input + " input");
+    var $dateRangeField = $($date_range_field_id);
+    if (fromInput && toInput) {
+      var value = parseDateInput(fromInput) + '--' + parseDateInput(toInput);
+      $dateRangeField.val(value);
+    }
+    else {
+      $dateRangeField.val('');
+    }
+  }
 
   // DOM ready.
-  $(function() {
+  $(function () {
     // Move the entire From Date and To Date label into one label so that screen readers speak the entire label.
     $('label[for=from-date' + $which + ']').remove();
     $('label[for=to-date' + $which + ']').remove();
@@ -108,31 +111,32 @@ DateDropDown = (function($, $which) {
 
     var fieldset = '#edit-date-range' + $which;
     hideCustomDateFieldset(fieldset);
-    $(fieldset).change(function(e) {
-        // Hide custom date fields if Custom Date option is not selected.
-        hideCustomDateFieldset(e.currentTarget);
+    $(fieldset).change(function (e) {
+      // Hide custom date fields if Custom Date option is not selected.
+      hideCustomDateFieldset(e.currentTarget);
 
-        // Update the hidden date range field when an item is selected.
-        var selected = $(e.currentTarget).find('input[name=date-select]:checked');
-        if (selected.val() == 'custom') { 
-            updatCustomoDateRangeField();
-        } else {
-            $('#date-range-field' + $which).val(selected.val());
-        }
+      // Update the hidden date range field when an item is selected.
+      var selected = $(e.currentTarget).find('input[name=date-select]:checked');
+      if (selected.val() == 'custom') {
+        updatCustomoDateRangeField();
+      }
+      else {
+        $('#date-range-field' + $which).val(selected.val());
+      }
     });
 
     //var dropdownId = '#date-range-dropdown';
     var $dropdown = $($drop_down_id);
 
-    $($report_dropdown_toggle).click(function(e) {
+    $($report_dropdown_toggle).click(function (e) {
       e.preventDefault();
       e.stopPropagation();
       toggleDropdown($dropdown, $selected_id);
     });
 
     // On "show" event.
-    $dropdown.on('show', function(e) {
-      $(document).on('click keydown', function(e) {
+    $dropdown.on('show', function (e) {
+      $(document).on('click keydown', function (e) {
         // ESC closes the dropdown.
         if (e.keyCode === 27) {
           dropdown($dropdown, 'hide', $selected_id);
@@ -140,10 +144,9 @@ DateDropDown = (function($, $which) {
         // Clicking outside the dropdown will close the dropdown.
         // todo: make the detection of a click on the prev and next month buttons more robust.
         if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0 &&
-            $($ui_datepicker_div).has(e.target).length === 0 &&
-            e.target.className!=="ui-icon ui-icon-circle-triangle-w" &&
-            e.target.className!=="ui-icon ui-icon-circle-triangle-e")
-          {
+          $($ui_datepicker_div).has(e.target).length === 0 &&
+          e.target.className !== "ui-icon ui-icon-circle-triangle-w" &&
+          e.target.className !== "ui-icon ui-icon-circle-triangle-e") {
           dropdown($dropdown, 'hide', $selected_id);
         }
       });
@@ -163,21 +166,21 @@ DateDropDown(jQuery, '');
 DateDropDown(jQuery, '1');
 
 // Open the date popup on focus when navigating with the keyboard.
-(function($) {
+(function ($) {
   Drupal.behaviors.date_popup_focus = {
     attach: function (context) {
-        for (var id in Drupal.settings.datePopup) {
-            $('#'+ id).bind('focus', Drupal.settings.datePopup[id], function(e) {
-                $(this).unbind(e);
+      for (var id in Drupal.settings.datePopup) {
+        $('#' + id).bind('focus', Drupal.settings.datePopup[id], function (e) {
+          $(this).unbind(e);
 
-                window.date_popup_init_interval = setInterval(function() {
-                    if ($(e.currentTarget).hasClass('date-popup-init')) {
-                        $(e.currentTarget).focus();
-                        clearInterval(window.date_popup_init_interval);
-                    }
-                }, 25);
-            });
-        }
+          window.date_popup_init_interval = setInterval(function () {
+            if ($(e.currentTarget).hasClass('date-popup-init')) {
+              $(e.currentTarget).focus();
+              clearInterval(window.date_popup_init_interval);
+            }
+          }, 25);
+        });
+      }
     }
   };
 })(jQuery);
