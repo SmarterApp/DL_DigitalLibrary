@@ -144,19 +144,20 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
   ksort($sorted_flags);
   $outputted = array();
   foreach ($sorted_flags as $type => $rows) {
-    foreach ($rows as $flag_type => $row) {
-      $element = array_shift($row);
-      $node = $element['node'];
-      if (!in_array($flag_type . '::' . $node->nid, $outputted)) {
-        $count++;
-        if ($count > $start && $count <= $end) {
-          $variables = $element['variables'];
-          if ($node && $variables) {
-            $list_output .= theme('sbac_flag_list_card', array('node' => $node, 'flag_content' => $variables));
+    foreach ($rows as $flag_type => $nodes) {
+      foreach ($nodes as $nid => $element) {
+        $node = $element['node'];
+        if (!in_array($type . '::' . $node->nid, $outputted)) {
+          $count++;
+          if ($count > $start && $count <= $end) {
+            $variables = $element['variables'];
+            if ($node && $variables) {
+              $list_output .= theme('sbac_flag_list_card', array('node' => $node, 'flag_content' => $variables));
+            }
           }
         }
+        $outputted[] = $type . '::' . $node->nid;
       }
-      $outputted[] = $flag_type . '::' . $node->nid;
     }
   }
 
