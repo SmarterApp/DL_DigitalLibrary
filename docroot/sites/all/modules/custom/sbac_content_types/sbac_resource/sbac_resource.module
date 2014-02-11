@@ -18,6 +18,9 @@ define('SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE', 'sbac-dl-view-mode')
 define('SBAC_RESOURCE_MY_RESOURCES_VIEW_MODE', 'sbac-mr-view-mode');
 define('SBAC_RESOURCE_RESOURCE_REVIEW_VIEW_MODE', 'sbac-rr-view-mode');
 
+define('SBAC_RESOURCE_ALL_NODE_FLAG', 0);
+define('SBAC_RESOURCE_ALL_USER_FLAG', 0);
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -1287,6 +1290,13 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
  */
 function sbac_resource_save_current_state($node) {
   if ($node->type == 'resource') {
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'draft') {
+      $entity = NULL;
+      $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
+      $entity->state = 'author';
+      sbac_resource_save_resource_state($entity, $new_record);
+    }
+
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
       sbac_resource_save_resource_state_for_all_role($node, 'resource reviewer', 'needs_review');
     }
@@ -1296,10 +1306,10 @@ function sbac_resource_save_current_state($node) {
       $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
       if ($gate_keeper) {
         $entity = NULL;
-        $new_record = sbac_resource_get_state($node->nid, $gate_keeper['uid'], $entity);
+        $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid']);
         $entity->state = 'gk_being_reviewed';
         sbac_resource_save_resource_state($entity, $new_record);
-        sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', $gate_keeper['uid']);
+        sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'gk_being_reviewed');
       }
       else {
         // if there is no completed feedback and no current feedback, then its in gk_need_review status
@@ -1312,10 +1322,10 @@ function sbac_resource_save_current_state($node) {
           // if there is no current review, or completed reviews is less then 3
           if (count($completed_feedback) == 2 && $current_review) {
             $entity = NULL;
-            $new_record = sbac_resource_get_state($node->nid, $current_review['uid'], $entity);
+            $new_record = sbac_resource_get_state($entity, $node->nid, $current_review['uid']);
             $entity->state = 'qc_being_reviewed';
             sbac_resource_save_resource_state($entity, $new_record);
-            sbac_resource_delete_resource_state_for_all_role($node->nid, 'resource reviewer', $current_review['uid']);
+            sbac_resource_delete_resource_state_for_all_role($node->nid, 'resource reviewer', 'qc_being_reviewed');
           }
           else {
             // everyone has access and is set to needs review
@@ -1324,7 +1334,7 @@ function sbac_resource_save_current_state($node) {
             $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
             foreach ($current_reviews as $current_review) {
               $entity = NULL;
-              $new_record = sbac_resource_get_state($node->nid, $current_review->uid, $entity);
+              $new_record = sbac_resource_get_state($entity, $node->nid, $current_review->uid);
               $entity->state = 'qc_being_reviewed';
               sbac_resource_save_resource_state($entity, $new_record);
             }
@@ -1333,7 +1343,7 @@ function sbac_resource_save_current_state($node) {
           // if there are completed reviews, delete the records, the user can not see it anymore.
           foreach ($completed_feedback as $complete_feedback) {
             $entity = NULL;
-            $new_record = sbac_resource_get_state($node->nid, $complete_feedback->uid, $entity);
+            $new_record = sbac_resource_get_state($entity, $node->nid, $complete_feedback->uid);
             sbac_resource_delete_resource_state($entity);
           }
         }
@@ -1344,33 +1354,41 @@ function sbac_resource_save_current_state($node) {
       $post_review_in_progress = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
       if ($post_review_in_progress) {
         $entity = NULL;
-        $new_record = sbac_resource_get_state($node->nid, $post_review_in_progress['uid'], $entity);
+        $new_record = sbac_resource_get_state($entity, $node->nid, $post_review_in_progress['uid']);
         $entity->state = 'post_being_reviewed';
         sbac_resource_save_resource_state($entity, $new_record);
-        sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', $post_review_in_progress['uid']);
+        sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', 'post_being_reviewed');
       }
       else {
         sbac_resource_save_resource_state_for_all_role($node, 'resource publisher', 'post_needs_review');
       }
     }
 
-    if (isset($node->workbench_moderation['current']->state) &&
-      $node->workbench_moderation['current']->state != 'needs_review') {
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', NULL, array('needs_review'));
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
+      sbac_resource_save_resource_state_for_all_role($node, 'all', 'published');
     }
 
-    // if the node is in neither state, delete all records associated to this role and node.
-    if (isset($node->workbench_moderation['current']->state) &&
-      $node->workbench_moderation['current']->state != 'being_reviewed' &&
-      $node->workbench_moderation['current']->state != 'needs_review') {
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', NULL, array('gk_being_reviewed', 'gk_needs_review', 'qc_being_reviewed', 'qc_needs_review'));
-    }
 
-    // if the node is in neither state, delete all records associated to this role and node.
-    if (isset($node->workbench_moderation['current']->state) &&
-      $node->workbench_moderation['current']->state != 'approved') {
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', NULL, array('post_being_reviewed', 'post_needs_review'));
-    }
+    /**
+     * Clean up the table.
+     */
+//    if (isset($node->workbench_moderation['current']->state) &&
+//      $node->workbench_moderation['current']->state != 'needs_review') {
+//      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', NULL, array('needs_review'));
+//    }
+//
+//    // if the node is in neither state, delete all records associated to this role and node.
+//    if (isset($node->workbench_moderation['current']->state) &&
+//      $node->workbench_moderation['current']->state != 'being_reviewed' &&
+//      $node->workbench_moderation['current']->state != 'needs_review') {
+//      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', NULL, array('gk_being_reviewed', 'gk_needs_review', 'qc_being_reviewed', 'qc_needs_review'));
+//    }
+//
+//    // if the node is in neither state, delete all records associated to this role and node.
+//    if (isset($node->workbench_moderation['current']->state) &&
+//      $node->workbench_moderation['current']->state != 'approved') {
+//      sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', NULL, array('post_being_reviewed', 'post_needs_review'));
+//    }
   }
 }
 
@@ -1431,26 +1449,14 @@ function sbac_resource_save_resource_state($entity, $new_record) {
  * @param $node
  * @param $role_name
  * @param $new_state
- * @param null $skip_uids
  */
-function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_state, $skip_uids = NULL) {
-  $accounts = sbac_resource_get_users_by_role($role_name);
-  foreach ($accounts as $account) {
-    if ($skip_uids != NULL) {
-      if (is_array($skip_uids) && !in_array($account->uid, $skip_uids)) {
-        $entity = NULL;
-        $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-        $entity->state = $new_state;
-        sbac_resource_save_resource_state($entity, $new_record);
-      }
-    }
-    else {
-      $entity = NULL;
-      $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-      $entity->state = $new_state;
-      sbac_resource_save_resource_state($entity, $new_record);
-    }
-  }
+function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_state) {
+  $entity = NULL;
+  $flag = $role_name . '::' . $new_state . '::' . $node->nid;
+  $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $new_state, $flag);
+  $entity->state = $new_state;
+  $entity->flag = $flag;
+  sbac_resource_save_resource_state($entity, $new_record);
 }
 
 /**
@@ -1460,53 +1466,65 @@ function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_
  * @param $node
  * @param $role_name
  * @param null $keep_uid
+ *
+ * $keep_uid = NULL, $states_to_delete = array()
  */
-function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $keep_uid = NULL, $states_to_delete = array()) {
+function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $old_state) {
   // Sometimes we get an nid string.
   if (!is_object($node)) {
     $node = node_load($node);
   }
 
-  // Remove all other users
-  $accounts = sbac_resource_get_users_by_role($role_name);
-  foreach ($accounts as $account) {
-    if ($keep_uid != NULL) { // if there is uid(s) to keep.
-      if (is_array($keep_uid)) { // if the uid(s) is an array
-        if (!in_array($account->uid, $keep_uid)) {
-          $entity = NULL;
-          $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-          if ($states_to_delete && in_array($entity->state, $states_to_delete)) { // valid states to delete
-            sbac_resource_delete_resource_state($entity, $new_record);
-          }
-          else if (!$states_to_delete) { // delete all states.
-            sbac_resource_delete_resource_state($entity, $new_record);
-          }
-        }
-      }
-      else{
-        if ($account->uid != $keep_uid) {
-          $entity = NULL;
-          $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-          if ($states_to_delete && in_array($entity->state, $states_to_delete)) {
-            sbac_resource_delete_resource_state($entity, $new_record);
-          }
-          else if (!$states_to_delete) {
-            sbac_resource_delete_resource_state($entity, $new_record);
-          }
-        }
-      }
-    }
-    else {
-      $entity = NULL;
-      $new_record = sbac_resource_get_state($node->nid, $account->uid, $entity);
-      if ($states_to_delete && isset($entity->state) && in_array($entity->state, $states_to_delete)) {
-        sbac_resource_delete_resource_state($entity, $new_record);
-      }
-      else if (!$states_to_delete) {
-        sbac_resource_delete_resource_state($entity, $new_record);
-      }
-    }
+  // sbac_resource_delete_resource_state_for_all_role($node->nid, 'resource reviewer', $current_review['uid']);
+
+  $entity = NULL;
+  $flag = $role_name . '::' . $old_state . '::' . $node->nid;
+  $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $old_state, $flag);
+  if (!$new_record) {
+    sbac_resource_delete_resource_state($entity, $new_record);
   }
+
+
+  // Remove all other users
+//  $accounts = sbac_resource_get_users_by_role($role_name);
+//  foreach ($accounts as $account) {
+//    if ($keep_uid != NULL) { // if there is uid(s) to keep.
+//      if (is_array($keep_uid)) { // if the uid(s) is an array
+//        if (!in_array($account->uid, $keep_uid)) {
+//          $entity = NULL;
+//          $new_record = sbac_resource_get_state($entity, $node->nid, $account->uid);
+//          if ($states_to_delete && in_array($entity->state, $states_to_delete)) { // valid states to delete
+//            sbac_resource_delete_resource_state($entity, $new_record);
+//          }
+//          else if (!$states_to_delete) { // delete all states.
+//            sbac_resource_delete_resource_state($entity, $new_record);
+//          }
+//        }
+//      }
+//      else{
+//        if ($account->uid != $keep_uid) {
+//          $entity = NULL;
+//          $new_record = sbac_resource_get_state($entity, $node->nid, $account->uid);
+//          if ($states_to_delete && in_array($entity->state, $states_to_delete)) {
+//            sbac_resource_delete_resource_state($entity, $new_record);
+//          }
+//          else if (!$states_to_delete) {
+//            sbac_resource_delete_resource_state($entity, $new_record);
+//          }
+//        }
+//      }
+//    }
+//    else {
+//      $entity = NULL;
+//      $new_record = sbac_resource_get_state($entity, $node->nid, $account->uid);
+//      if ($states_to_delete && isset($entity->state) && in_array($entity->state, $states_to_delete)) {
+//        sbac_resource_delete_resource_state($entity, $new_record);
+//      }
+//      else if (!$states_to_delete) {
+//        sbac_resource_delete_resource_state($entity, $new_record);
+//      }
+//    }
+//  }
 }
 
 /**
@@ -1539,11 +1557,17 @@ function sbac_resource_delete_resource_state($entity) {
  * @param $entity
  * @return bool
  */
-function sbac_resource_get_state($nid, $uid, &$entity){
+function sbac_resource_get_state(&$entity, $nid, $uid, $state = NULL, $flag = NULL){
   $query = db_select('sbac_node_resource_state', 'snrs');
   $query->fields('snrs');
   $query->condition('nid', $nid);
   $query->condition('uid', $uid);
+  if ($state != NULL) {
+    $query->condition('state', $state);
+  }
+  if ($flag != NULL) {
+    $query->condition('flag', $flag);
+  }
   $result = $query->execute()->fetchObject();
   if (!$result) {
     $entity = new stdClass();
@@ -1564,275 +1588,275 @@ function sbac_resource_get_state($nid, $uid, &$entity){
  *
  * @param $node
  */
-function sbac_resource_node_access_records($node) {
-  if ($node->type == 'resource') {
-    $grants = array();
-    $restricted = FALSE;
-
-    // If the state is any of the following, allow the node author to see it.
-    if (isset($node->workbench_moderation['current']->state) &&
-        ($node->workbench_moderation['current']->state == 'creation' ||
-         $node->workbench_moderation['current']->state == 'draft' ||
-         $node->workbench_moderation['current']->state == 'removed')) {
-      $restricted = TRUE;
-    }
-
-    // Needs review node access perms.
-    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
-      $accounts = sbac_resource_get_users_by_role('resource reviewer');
-      foreach ($accounts as $account) {
-        if ($account->uid != $node->uid) { // a reviewer is not able to review the nodes they created.
-          $restricted = TRUE;
-          $grants[] = array(
-            'realm' => 'able_to_review',
-            'gid' => $account->uid,
-            'grant_view' => 1,
-            'grant_update' => 0,
-            'grant_delete' => 0,
-            'priority' => 0,
-          );
-        }
-      }
-    }
-
-    // Being reviewed node access perms.
-    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
-      $accounts = sbac_resource_get_users_by_role('resource reviewer');
-      if ($accounts) {
-        $completed_gk = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
-        if ($completed_gk) {
-          $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
-          $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
-          // everyone has access when no completed or current review
-          if (!$completed_feedback && !$current_reviews) {
-            foreach ($accounts as $account) {
-              $restricted = TRUE;
-              $grants[] = array(
-                'realm' => 'able_to_review_qc',
-                'gid' => $account->uid,
-                'grant_view' => 1,
-                'grant_update' => 0,
-                'grant_delete' => 0,
-                'priority' => 0,
-              );
-            }
-          }
-
-          // everyone has access when the completed = 0 and current reviews <= 3.
-          if (!$completed_feedback && $current_reviews && count($current_reviews) <= 3) {
-            // if current reviews is less then 3, give access to everyone.
-            if (count($current_reviews) < 3) {
-              foreach ($accounts as $account) {
-                $restricted = TRUE;
-                $grants[] = array(
-                  'realm' => 'able_to_review_qc',
-                  'gid' => $account->uid,
-                  'grant_view' => 1,
-                  'grant_update' => 0,
-                  'grant_delete' => 0,
-                  'priority' => 0,
-                );
-              }
-            }
-
-            // if current reviews is 3, give access to only those 3 reviewers.
-            if (count($current_reviews) == 3) {
-              foreach ($current_reviews as $current_review) {
-                $restricted = TRUE;
-                $grants[] = array(
-                  'realm' => 'able_to_review_qc',
-                  'gid' => $current_review->uid,
-                  'grant_view' => 1,
-                  'grant_update' => 0,
-                  'grant_delete' => 0,
-                  'priority' => 0,
-                );
-              }
-            }
-          }
-
-          // everyone has access except when completed = 3
-          if ($completed_feedback && count($completed_feedback) < 3) {
-            if ($current_reviews) {
-              // everyone has access except when the completed = 1 and current reviews = 2
-              if (count($completed_feedback) == 1 && count($current_reviews) == 2) {
-                foreach ($current_reviews as $current_review) {
-                  $restricted = TRUE;
-                  $grants[] = array(
-                    'realm' => 'able_to_review_qc',
-                    'gid' => $current_review->uid,
-                    'grant_view' => 1,
-                    'grant_update' => 0,
-                    'grant_delete' => 0,
-                    'priority' => 0,
-                  );
-                }
-              }
-              // everyone has access except when the completed = 2 and current reviews = 1
-              else if (count($completed_feedback) == 2 && count($current_reviews) == 1) {
-                foreach ($current_reviews as $current_review) {
-                  $restricted = TRUE;
-                  $grants[] = array(
-                    'realm' => 'able_to_review_qc',
-                    'gid' => $current_review->uid,
-                    'grant_view' => 1,
-                    'grant_update' => 0,
-                    'grant_delete' => 0,
-                    'priority' => 0,
-                  );
-                }
-              }
-              else {
-                $not_allowed_to_view = array();
-                foreach ($completed_feedback as $feedback) {
-                  $not_allowed_to_view[] = $feedback->uid;
-                }
-
-                foreach ($accounts as $account) {
-                  if (!in_array($account->uid, $not_allowed_to_view)) {
-                    $restricted = TRUE;
-                    $grants[] = array(
-                      'realm' => 'able_to_review_qc',
-                      'gid' => $account->uid,
-                      'grant_view' => 1,
-                      'grant_update' => 0,
-                      'grant_delete' => 0,
-                      'priority' => 0,
-                    );
-                  }
-                }
-              }
-            }
-            else {
-              $not_allowed_to_view = array();
-              foreach ($completed_feedback as $feedback) {
-                $not_allowed_to_view[] = $feedback->uid;
-              }
-
-              foreach ($accounts as $account) {
-                if (!in_array($account->uid, $not_allowed_to_view)) {
-                  $restricted = TRUE;
-                  $grants[] = array(
-                    'realm' => 'able_to_review_qc',
-                    'gid' => $account->uid,
-                    'grant_view' => 1,
-                    'grant_update' => 0,
-                    'grant_delete' => 0,
-                    'priority' => 0,
-                  );
-                }
-              }
-            }
-          }
-
-          // give access to the user who completed the gate keeper too. only if he has not completed the QC though.
-          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
-          if ($gate_keeper) {
-            $current_review = _sbac_resource_determine_feedback($node->nid, 'qc', $gate_keeper['uid'], 1, 1, 1, 'single');
-            if (!$current_review) {
-              $restricted = TRUE;
-              $grants[] = array(
-                'realm' => 'completed_gk',
-                'gid' => $gate_keeper['uid'],
-                'grant_view' => 1,
-                'grant_update' => 0,
-                'grant_delete' => 0,
-                'priority' => 0,
-              );
-            }
-          }
-        }
-        else {
-          // new one, if gate keeping in progress, give access to that user, no one else
-          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
-          if ($gate_keeper) {
-            $restricted = TRUE;
-            $grants[] = array(
-              'realm' => 'gk_review_in_progress',
-              'gid' => $gate_keeper['uid'],
-              'grant_view' => 1,
-              'grant_update' => 0,
-              'grant_delete' => 0,
-              'priority' => 0,
-            );
-          }
-          else {
-            foreach ($accounts as $account) {
-              $restricted = TRUE;
-              $grants[] = array(
-                'realm' => 'able_to_review_qc',
-                'gid' => $account->uid,
-                'grant_view' => 1,
-                'grant_update' => 0,
-                'grant_delete' => 0,
-                'priority' => 0,
-              );
-            }
-          }
-        }
-      }
-    }
-
-    // Approved node access perms.
-    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
-      // check for in progress feedback.
-      $in_progress_feedback = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
-      if ($in_progress_feedback) {
-        $restricted = TRUE;
-        $grants[] = array(
-          'realm' => 'able_to_review_post',
-          'gid' => $in_progress_feedback['uid'],
-          'grant_view' => 1,
-          'grant_update' => 0,
-          'grant_delete' => 0,
-          'priority' => 0,
-        );
-      }
-      else {
-        $accounts = sbac_resource_get_users_by_role('resource publisher');
-        foreach ($accounts as $account) {
-          $restricted = TRUE;
-          $grants[] = array(
-            'realm' => 'able_to_review_post',
-            'gid' => $account->uid,
-            'grant_view' => 1,
-            'grant_update' => 0,
-            'grant_delete' => 0,
-            'priority' => 0,
-          );
-        }
-      }
-    }
-    // @FIXME
-    // This is a workaround since the above code is adding the same UID multiple
-    // times for a given grant realm and nid. The {node_access} table
-    // has a compund key of nid, gid, and realm, hence the SQL constraint error.
-    foreach ($grants as $key => $grant) {
-      if ($grant['realm'] == 'able_to_review_qc') {
-        $uid = $grant['gid'];
-        foreach ($grants as $j => $temp_grant) {
-          // Ensure we're not removing the original.
-          if ($temp_grant['realm'] == 'able_to_review_qc' && $temp_grant['gid'] == $uid && $j != $key) {
-            unset($grants[$j]);
-          }
-        }
-      }
-    }
-    // This is so the resource contributor can view his own nodes regardless of state.
-    if ($restricted) {
-      $grants[] = array(
-        'realm' => 'node_author',
-        'gid' => $node->uid,
-        'grant_view' => 1,
-        'grant_update' => 0,
-        'grant_delete' => 0,
-        'priority' => 0,
-      );
-
-      return $grants;
-    }
-  }
-}
+//function sbac_resource_node_access_records($node) {
+//  if ($node->type == 'resource') {
+//    $grants = array();
+//    $restricted = FALSE;
+//
+//    // If the state is any of the following, allow the node author to see it.
+//    if (isset($node->workbench_moderation['current']->state) &&
+//        ($node->workbench_moderation['current']->state == 'creation' ||
+//         $node->workbench_moderation['current']->state == 'draft' ||
+//         $node->workbench_moderation['current']->state == 'removed')) {
+//      $restricted = TRUE;
+//    }
+//
+//    // Needs review node access perms.
+//    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
+//      $accounts = sbac_resource_get_users_by_role('resource reviewer');
+//      foreach ($accounts as $account) {
+//        if ($account->uid != $node->uid) { // a reviewer is not able to review the nodes they created.
+//          $restricted = TRUE;
+//          $grants[] = array(
+//            'realm' => 'able_to_review',
+//            'gid' => $account->uid,
+//            'grant_view' => 1,
+//            'grant_update' => 0,
+//            'grant_delete' => 0,
+//            'priority' => 0,
+//          );
+//        }
+//      }
+//    }
+//
+//    // Being reviewed node access perms.
+//    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
+//      $accounts = sbac_resource_get_users_by_role('resource reviewer');
+//      if ($accounts) {
+//        $completed_gk = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+//        if ($completed_gk) {
+//          $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
+//          $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
+//          // everyone has access when no completed or current review
+//          if (!$completed_feedback && !$current_reviews) {
+//            foreach ($accounts as $account) {
+//              $restricted = TRUE;
+//              $grants[] = array(
+//                'realm' => 'able_to_review_qc',
+//                'gid' => $account->uid,
+//                'grant_view' => 1,
+//                'grant_update' => 0,
+//                'grant_delete' => 0,
+//                'priority' => 0,
+//              );
+//            }
+//          }
+//
+//          // everyone has access when the completed = 0 and current reviews <= 3.
+//          if (!$completed_feedback && $current_reviews && count($current_reviews) <= 3) {
+//            // if current reviews is less then 3, give access to everyone.
+//            if (count($current_reviews) < 3) {
+//              foreach ($accounts as $account) {
+//                $restricted = TRUE;
+//                $grants[] = array(
+//                  'realm' => 'able_to_review_qc',
+//                  'gid' => $account->uid,
+//                  'grant_view' => 1,
+//                  'grant_update' => 0,
+//                  'grant_delete' => 0,
+//                  'priority' => 0,
+//                );
+//              }
+//            }
+//
+//            // if current reviews is 3, give access to only those 3 reviewers.
+//            if (count($current_reviews) == 3) {
+//              foreach ($current_reviews as $current_review) {
+//                $restricted = TRUE;
+//                $grants[] = array(
+//                  'realm' => 'able_to_review_qc',
+//                  'gid' => $current_review->uid,
+//                  'grant_view' => 1,
+//                  'grant_update' => 0,
+//                  'grant_delete' => 0,
+//                  'priority' => 0,
+//                );
+//              }
+//            }
+//          }
+//
+//          // everyone has access except when completed = 3
+//          if ($completed_feedback && count($completed_feedback) < 3) {
+//            if ($current_reviews) {
+//              // everyone has access except when the completed = 1 and current reviews = 2
+//              if (count($completed_feedback) == 1 && count($current_reviews) == 2) {
+//                foreach ($current_reviews as $current_review) {
+//                  $restricted = TRUE;
+//                  $grants[] = array(
+//                    'realm' => 'able_to_review_qc',
+//                    'gid' => $current_review->uid,
+//                    'grant_view' => 1,
+//                    'grant_update' => 0,
+//                    'grant_delete' => 0,
+//                    'priority' => 0,
+//                  );
+//                }
+//              }
+//              // everyone has access except when the completed = 2 and current reviews = 1
+//              else if (count($completed_feedback) == 2 && count($current_reviews) == 1) {
+//                foreach ($current_reviews as $current_review) {
+//                  $restricted = TRUE;
+//                  $grants[] = array(
+//                    'realm' => 'able_to_review_qc',
+//                    'gid' => $current_review->uid,
+//                    'grant_view' => 1,
+//                    'grant_update' => 0,
+//                    'grant_delete' => 0,
+//                    'priority' => 0,
+//                  );
+//                }
+//              }
+//              else {
+//                $not_allowed_to_view = array();
+//                foreach ($completed_feedback as $feedback) {
+//                  $not_allowed_to_view[] = $feedback->uid;
+//                }
+//
+//                foreach ($accounts as $account) {
+//                  if (!in_array($account->uid, $not_allowed_to_view)) {
+//                    $restricted = TRUE;
+//                    $grants[] = array(
+//                      'realm' => 'able_to_review_qc',
+//                      'gid' => $account->uid,
+//                      'grant_view' => 1,
+//                      'grant_update' => 0,
+//                      'grant_delete' => 0,
+//                      'priority' => 0,
+//                    );
+//                  }
+//                }
+//              }
+//            }
+//            else {
+//              $not_allowed_to_view = array();
+//              foreach ($completed_feedback as $feedback) {
+//                $not_allowed_to_view[] = $feedback->uid;
+//              }
+//
+//              foreach ($accounts as $account) {
+//                if (!in_array($account->uid, $not_allowed_to_view)) {
+//                  $restricted = TRUE;
+//                  $grants[] = array(
+//                    'realm' => 'able_to_review_qc',
+//                    'gid' => $account->uid,
+//                    'grant_view' => 1,
+//                    'grant_update' => 0,
+//                    'grant_delete' => 0,
+//                    'priority' => 0,
+//                  );
+//                }
+//              }
+//            }
+//          }
+//
+//          // give access to the user who completed the gate keeper too. only if he has not completed the QC though.
+//          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+//          if ($gate_keeper) {
+//            $current_review = _sbac_resource_determine_feedback($node->nid, 'qc', $gate_keeper['uid'], 1, 1, 1, 'single');
+//            if (!$current_review) {
+//              $restricted = TRUE;
+//              $grants[] = array(
+//                'realm' => 'completed_gk',
+//                'gid' => $gate_keeper['uid'],
+//                'grant_view' => 1,
+//                'grant_update' => 0,
+//                'grant_delete' => 0,
+//                'priority' => 0,
+//              );
+//            }
+//          }
+//        }
+//        else {
+//          // new one, if gate keeping in progress, give access to that user, no one else
+//          $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
+//          if ($gate_keeper) {
+//            $restricted = TRUE;
+//            $grants[] = array(
+//              'realm' => 'gk_review_in_progress',
+//              'gid' => $gate_keeper['uid'],
+//              'grant_view' => 1,
+//              'grant_update' => 0,
+//              'grant_delete' => 0,
+//              'priority' => 0,
+//            );
+//          }
+//          else {
+//            foreach ($accounts as $account) {
+//              $restricted = TRUE;
+//              $grants[] = array(
+//                'realm' => 'able_to_review_qc',
+//                'gid' => $account->uid,
+//                'grant_view' => 1,
+//                'grant_update' => 0,
+//                'grant_delete' => 0,
+//                'priority' => 0,
+//              );
+//            }
+//          }
+//        }
+//      }
+//    }
+//
+//    // Approved node access perms.
+//    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
+//      // check for in progress feedback.
+//      $in_progress_feedback = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
+//      if ($in_progress_feedback) {
+//        $restricted = TRUE;
+//        $grants[] = array(
+//          'realm' => 'able_to_review_post',
+//          'gid' => $in_progress_feedback['uid'],
+//          'grant_view' => 1,
+//          'grant_update' => 0,
+//          'grant_delete' => 0,
+//          'priority' => 0,
+//        );
+//      }
+//      else {
+//        $accounts = sbac_resource_get_users_by_role('resource publisher');
+//        foreach ($accounts as $account) {
+//          $restricted = TRUE;
+//          $grants[] = array(
+//            'realm' => 'able_to_review_post',
+//            'gid' => $account->uid,
+//            'grant_view' => 1,
+//            'grant_update' => 0,
+//            'grant_delete' => 0,
+//            'priority' => 0,
+//          );
+//        }
+//      }
+//    }
+//    // @FIXME
+//    // This is a workaround since the above code is adding the same UID multiple
+//    // times for a given grant realm and nid. The {node_access} table
+//    // has a compund key of nid, gid, and realm, hence the SQL constraint error.
+//    foreach ($grants as $key => $grant) {
+//      if ($grant['realm'] == 'able_to_review_qc') {
+//        $uid = $grant['gid'];
+//        foreach ($grants as $j => $temp_grant) {
+//          // Ensure we're not removing the original.
+//          if ($temp_grant['realm'] == 'able_to_review_qc' && $temp_grant['gid'] == $uid && $j != $key) {
+//            unset($grants[$j]);
+//          }
+//        }
+//      }
+//    }
+//    // This is so the resource contributor can view his own nodes regardless of state.
+//    if ($restricted) {
+//      $grants[] = array(
+//        'realm' => 'node_author',
+//        'gid' => $node->uid,
+//        'grant_view' => 1,
+//        'grant_update' => 0,
+//        'grant_delete' => 0,
+//        'priority' => 0,
+//      );
+//
+//      return $grants;
+//    }
+//  }
+//}
 
 /**
  * Implements hook_node_grants().
@@ -1840,28 +1864,28 @@ function sbac_resource_node_access_records($node) {
  * @param $account
  * @param $op
  */
-function sbac_resource_node_grants($account, $op) {
-  if (arg(0) == 'resource-review') {
-    if (!in_array('resource contributor', $account->roles)) {
-      $grants['node_author'] = array($account->uid);
-    }
-  }
-  else {
-    $grants['node_author'] = array($account->uid);
-  }
-
-  if (in_array('resource reviewer', $account->roles)) {
-    $grants['gk_review_in_progress'] = array($account->uid);
-    $grants['able_to_review_qc'] = array($account->uid);
-    $grants['completed_gk'] = array($account->uid);
-    $grants['able_to_review'] = array($account->uid);
-  }
-
-  if (in_array('resource publisher', $account->roles)) {
-    $grants['able_to_review_post'] = array($account->uid);
-  }
-  return $grants;
-}
+//function sbac_resource_node_grants($account, $op) {
+//  if (arg(0) == 'resource-review') {
+//    if (!in_array('resource contributor', $account->roles)) {
+//      $grants['node_author'] = array($account->uid);
+//    }
+//  }
+//  else {
+//    $grants['node_author'] = array($account->uid);
+//  }
+//
+//  if (in_array('resource reviewer', $account->roles)) {
+//    $grants['gk_review_in_progress'] = array($account->uid);
+//    $grants['able_to_review_qc'] = array($account->uid);
+//    $grants['completed_gk'] = array($account->uid);
+//    $grants['able_to_review'] = array($account->uid);
+//  }
+//
+//  if (in_array('resource publisher', $account->roles)) {
+//    $grants['able_to_review_post'] = array($account->uid);
+//  }
+//  return $grants;
+//}
 
 /**
  * Implements hook_node_update();
@@ -2366,4 +2390,8 @@ function sbac_resource_entity_delete($entity, $type) {
     $eid = $entity_wrapper->id->value();
     sbac_resource_update_average_rating_score($nid, $eid);
   }
+}
+
+function sbac_resource_determine_access($nid, $uid) {
+  return TRUE;
 }

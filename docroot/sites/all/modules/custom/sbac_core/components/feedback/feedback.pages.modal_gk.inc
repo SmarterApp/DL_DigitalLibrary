@@ -175,7 +175,7 @@ function feedback_gate_keeper_form_submit($form, &$form_state) {
 
       if ($node->workbench_moderation['current']->state == 'being_reviewed') {
         // rebuild permissions
-        node_access_acquire_grants($node, TRUE);
+        // node_access_acquire_grants($node, TRUE);
 
         sbac_resource_save_current_state($node);
       }
@@ -188,7 +188,7 @@ function feedback_gate_keeper_form_submit($form, &$form_state) {
         entity_save('feedback', $entity);
 
         // rebuild permissions
-        node_access_acquire_grants($node, TRUE);
+        // node_access_acquire_grants($node, TRUE);
 
         sbac_resource_save_current_state($node);
       }

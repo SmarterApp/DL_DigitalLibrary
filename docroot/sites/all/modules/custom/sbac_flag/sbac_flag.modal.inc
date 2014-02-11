@@ -340,7 +340,7 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
         $node = node_load($form_state['nid']);
         // remove resource, rebuild permissions.
         workbench_moderation_moderate($node, 'removed');
-        node_access_acquire_grants($node, TRUE);
+        // node_access_acquire_grants($node, TRUE);
         sbac_resource_save_current_state($node);
         // send notification
         if ($task = taskit_get_object('removed_resource')) {

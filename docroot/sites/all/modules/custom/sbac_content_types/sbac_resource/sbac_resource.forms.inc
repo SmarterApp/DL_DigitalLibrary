@@ -1168,7 +1168,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
           $node = node_load($_GET['nid']);
           if ($node) {
             workbench_moderation_moderate($node, 'needs_review');
-            node_access_acquire_grants($node, TRUE);
+//            node_access_acquire_grants($node, TRUE);
             $output[] = ctools_ajax_command_redirect('my-resources');
 
             // create notificaton for resource author

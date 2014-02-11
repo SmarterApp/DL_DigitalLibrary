@@ -80,12 +80,22 @@ function sbac_resource_schema() {
         'not null' => TRUE,
         'description' => t('The actual resource state'),
       ),
+      'flag' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('A flag to flag an entire role'),
+      ),
     ),
-    'primary key' => array('nid', 'uid'),
+    'primary key' => array('nid', 'uid', 'state'),
     'indexes' => array(
       'nid' => array('nid'),
       'uid' => array('uid'),
+      'state' => array('state'),
       'both' => array('nid', 'uid'),
+      'three' => array('nid', 'uid', 'state'),
+      'all' => array('nid', 'uid', 'state', 'flag'),
     ),
   );
   return $schema;
@@ -1005,6 +1015,7 @@ function sbac_resource_update_7045() {
   // Running 43 again.
   sbac_resource_update_7043();
 }
+
 /**
  * Remove categories block from certain pages.
  */
@@ -1012,3 +1023,47 @@ function sbac_resource_update_7046() {
   // Running 43 again.
   sbac_resource_update_7043();
 }
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Uninstall and re-install db table.
+ */
+function sbac_resource_update_7047() {
+  $ret = array();
+
+  // Uninstall table.
+  $schema = drupal_get_schema_unprocessed('sbac_resource');
+  _drupal_schema_initialize($schema, 'sbac_resource', FALSE);
+
+  foreach ($schema as $table) {
+    if ($table['name'] == 'sbac_node_resource_state' && db_table_exists($table['name'])) {
+      db_drop_table($table['name']);
+    }
+  }
+
+  // Install table
+  $schema = drupal_get_schema_unprocessed('sbac_resource');
+  _drupal_schema_initialize($schema, 'sbac_resource', FALSE);
+
+  foreach ($schema as $name => $table) {
+    if ($table['name'] == 'sbac_node_resource_state') {
+      db_create_table($name, $table);
+    }
+  }
+
+  return $ret;
+}
+
+/**
+ * Creates states for each user / node in the system.
+ */
+//function sbac_resource_update_7048() {
+//  $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
+//  foreach ($results as $row) {
+//    $node = node_load($row->nid);
+//    if ($node) {
+//      sbac_resource_save_current_state($node);
+//    }
+//  }
+//}

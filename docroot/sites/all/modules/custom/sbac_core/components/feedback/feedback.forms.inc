@@ -250,7 +250,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       $task = taskit_get_object('resource_rejected');
 
       // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
+//      node_access_acquire_grants($node, TRUE);
 
       sbac_resource_save_current_state($node);
 
@@ -280,7 +280,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       entity_save('feedback', $qc);
 
       // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
+//      node_access_acquire_grants($node, TRUE);
 
       sbac_resource_save_current_state($node);
 
@@ -414,7 +414,7 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
         }
 
         // rebuild permissions
-        node_access_acquire_grants($node, TRUE);
+//        node_access_acquire_grants($node, TRUE);
 
         send_review_notifications($task, $node, $reviews);
 
@@ -422,7 +422,7 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
       }
 
       // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
+//      node_access_acquire_grants($node, TRUE);
 
       sbac_resource_save_current_state($node);
 
@@ -482,7 +482,7 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       $task = taskit_get_object('resource_rejected');
 
       // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
+//      node_access_acquire_grants($node, TRUE);
 
       sbac_resource_save_current_state($node);
 
@@ -497,7 +497,7 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       $task = taskit_get_object('resource_published');
 
       // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
+//      node_access_acquire_grants($node, TRUE);
 
       sbac_resource_save_current_state($node);
 
@@ -515,7 +515,7 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       $task = taskit_get_object('resource_published');
 
       // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
+//      node_access_acquire_grants($node, TRUE);
 
       sbac_resource_save_current_state($node);
 

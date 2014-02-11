@@ -189,7 +189,7 @@ function feedback_post_form_submit($form, &$form_state) {
       }
 
       // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
+      // node_access_acquire_grants($node, TRUE);
 
       sbac_resource_save_current_state($node);
 
@@ -201,7 +201,7 @@ function feedback_post_form_submit($form, &$form_state) {
         entity_save('feedback', $entity);
 
         // rebuild permissions
-        node_access_acquire_grants($node, TRUE);
+        // node_access_acquire_grants($node, TRUE);
 
         sbac_resource_save_current_state($node);
       }

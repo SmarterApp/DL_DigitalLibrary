@@ -13,18 +13,45 @@ function sbac_resource_digital_library_page() {
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
 
-  // Load up the view.
   $view = views_get_view('resources');
   $view->set_display($display);
   sbac_resource_digital_library_apply_filters($view);
   sbac_resource_digital_library_apply_sorts($view);
-  $view->pre_execute();
-  $view->execute();
-  $view->_post_execute();
+
+  global $user;
+  $offset = 0;
+  $per_page = 10;
+  $results = array();
+
+  while (count($results) < 12) {
+    if ($offset !== 0) {
+      $final_offset = $offset * $per_page;
+    }
+    else {
+      $final_offset = 0;
+    }
+
+    $view->set_offset($final_offset);
+    $view->set_items_per_page(10);
+    $view->pre_execute();
+    $view->execute();
+    $temp_results = $view->result;
+    foreach ($temp_results as $result) {
+      $nid = $result->nid;
+      $uid = $user->uid;
+      $access = sbac_resource_determine_access($nid, $uid);
+      if ($access) {
+        $results[] = $result;
+        if (count($results) == 12) {
+          break;
+        }
+      }
+    }
+    $offset++;
+  }
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
   // dpq($view->build_info['query']);
-
   $count = count($view->result);
   $view->destroy();
 
@@ -32,7 +59,6 @@ function sbac_resource_digital_library_page() {
   if (!$count && ($search_string != '' || $current_filters != '')) {
     // Reset variables
     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
-    // $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = ''; // moved to sbac_search_preprocess_page();
     $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED] = TRUE;
 
     // Load up the view.
