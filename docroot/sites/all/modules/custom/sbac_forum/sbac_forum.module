@@ -1,0 +1,8 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Forum feature.
+ */
+
+include_once 'sbac_forum.features.inc';
+

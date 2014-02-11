@@ -739,3 +739,14 @@ function sbac_central_update_7064() {
   module_enable($modules);
   drupal_flush_all_caches();
 }
+
+/**
+ * Enables SBAC_Forum module.
+ */
+function sbac_central_update_7065() {
+  $modules = array(
+    'sbac_forum',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
