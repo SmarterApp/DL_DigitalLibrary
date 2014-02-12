@@ -1309,7 +1309,7 @@ function sbac_resource_save_current_state($node) {
         $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid']);
         $entity->state = 'gk_being_reviewed';
         sbac_resource_save_resource_state($entity, $new_record);
-        sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'gk_being_reviewed');
+        sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'needs_review');
       }
       else {
         // if there is no completed feedback and no current feedback, then its in gk_need_review status
@@ -1350,6 +1350,17 @@ function sbac_resource_save_current_state($node) {
       }
     }
 
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'rejected') {
+      $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+      if ($gate_keeper) {
+        $entity = NULL;
+        $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid'], 'gk_being_reviewed');
+        if (!$new_record) {
+          sbac_resource_delete_resource_state($entity);
+        }
+      }
+    }
+
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
       $post_review_in_progress = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
       if ($post_review_in_progress) {
@@ -1372,23 +1383,27 @@ function sbac_resource_save_current_state($node) {
     /**
      * Clean up the table.
      */
-//    if (isset($node->workbench_moderation['current']->state) &&
-//      $node->workbench_moderation['current']->state != 'needs_review') {
-//      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', NULL, array('needs_review'));
-//    }
-//
-//    // if the node is in neither state, delete all records associated to this role and node.
-//    if (isset($node->workbench_moderation['current']->state) &&
-//      $node->workbench_moderation['current']->state != 'being_reviewed' &&
-//      $node->workbench_moderation['current']->state != 'needs_review') {
-//      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', NULL, array('gk_being_reviewed', 'gk_needs_review', 'qc_being_reviewed', 'qc_needs_review'));
-//    }
-//
-//    // if the node is in neither state, delete all records associated to this role and node.
-//    if (isset($node->workbench_moderation['current']->state) &&
-//      $node->workbench_moderation['current']->state != 'approved') {
-//      sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', NULL, array('post_being_reviewed', 'post_needs_review'));
-//    }
+    if (isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state != 'needs_review') {
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'needs_review');
+    }
+
+    // if the node is in neither state, delete all records associated to this role and node.
+    if (isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state != 'being_reviewed' &&
+      $node->workbench_moderation['current']->state != 'needs_review') {
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'gk_being_reviewed');
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'gk_needs_review');
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'qc_being_reviewed');
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'qc_needs_review');
+    }
+
+    // if the node is in neither state, delete all records associated to this role and node.
+    if (isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state != 'approved') {
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', 'post_being_reviewed');
+      sbac_resource_delete_resource_state_for_all_role($node, 'resource publisher', 'post_needs_review');
+    }
   }
 }
 
@@ -1536,17 +1551,28 @@ function sbac_resource_delete_resource_state($entity) {
   if (!isset($entity->nid) || !$entity->nid) {
     return;
   }
-  if (!isset($entity->uid) || !$entity->uid) {
+  if (!isset($entity->uid) || $entity->uid === FALSE) {
     return;
   }
   if (!isset($entity->state) || !$entity->state) {
     return;
   }
-  db_delete('sbac_node_resource_state')
-    ->condition('nid', $entity->nid)
-    ->condition('uid', $entity->uid)
-    ->condition('state', $entity->state)
-    ->execute();
+
+  if ($entity->uid == 0) {
+    db_delete('sbac_node_resource_state')
+      ->condition('nid', $entity->nid)
+      ->condition('uid', $entity->uid)
+      ->condition('state', $entity->state)
+      ->condition('flag', $entity->flag)
+      ->execute();
+  }
+  else {
+    db_delete('sbac_node_resource_state')
+      ->condition('nid', $entity->nid)
+      ->condition('uid', $entity->uid)
+      ->condition('state', $entity->state)
+      ->execute();
+  }
 }
 
 /**
