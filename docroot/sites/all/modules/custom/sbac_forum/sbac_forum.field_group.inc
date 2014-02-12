@@ -21,7 +21,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Who Can View and Join This Forum?',
-    'weight' => '6',
+    'weight' => '7',
     'children' => array(
       0 => 'field_state',
       1 => 'field_forum_access_states',
@@ -57,7 +57,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Members',
-    'weight' => '8',
+    'weight' => '9',
     'children' => array(
       0 => 'field_fc_forum_members',
     ),
@@ -84,7 +84,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Facilitators',
-    'weight' => '7',
+    'weight' => '8',
     'children' => array(
       0 => 'field_forum_facilitators',
     ),
