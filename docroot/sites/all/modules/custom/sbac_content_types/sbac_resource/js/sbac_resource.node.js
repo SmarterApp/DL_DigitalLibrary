@@ -23,6 +23,7 @@
               }
               var google_viewer = '<iframe src="' + google_url + '?url=' + local_url + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
               resource.empty().append(google_viewer);
+              resource.addClass('google-doc');
               $('.infobar .ajax-progress').hide();
             }
             else {
@@ -52,11 +53,13 @@
         }
         else if (type == 'html5') {
           resource.empty().append('<iframe src="' + $(this).attr('href') + '" width="850" height="600" style="border: none;"></iframe>');
+          resource.removeClass('google-doc');
         }
         else if (type == 'video') { // includes youtube
           resource.empty().append('<div id="sbac-jwplayer"></div>');
           jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850, primary: "flash" });
           jwplayer('sbac-jwplayer').play();
+          resource.removeClass('google-doc');
         }
         else if (type == 'image') {
           var img = $('<img>');
@@ -64,21 +67,27 @@
           img.attr('height', 400);
           img.attr('width', 850);
           resource.empty().append(img);
+          resource.removeClass('google-doc');
         }
         else if (type == 'schooltube') {
           resource.empty().append('<div class="flex-video"><iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>');
+          resource.removeClass('google-doc');
         }
         else if (type == 'teachertube') {
           resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe>');
+          resource.removeClass('google-doc');
         } 
         else if (type == 'slideshare') {
           resource.empty().append('<div class="flex-video"><iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>');
+          resource.removeClass('google-doc');
         }
         else if (type == 'vimeo') {
           resource.empty().append('<div class="flex-video"><iframe src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>');
+          resource.removeClass('google-doc');
         }
         else if (type == 'youtube') {
           resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>');
+          resource.removeClass('google-doc');
         }        
         else {
           var img = $('<img>');
@@ -86,6 +95,7 @@
           img.attr('height', 400);
           img.attr('width', 850);
           resource.empty().append(img);
+          resource.removeClass('google-doc');
         }
 
         var doc_type = $('#sbac-resource-doc-type');

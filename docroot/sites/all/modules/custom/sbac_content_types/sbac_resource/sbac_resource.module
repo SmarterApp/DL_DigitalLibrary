@@ -672,6 +672,7 @@ function sbac_resource_preprocess_node(&$vars) {
       }
       $vars['viewer'] = $viewer['viewer'];
       $vars['viewer_filename'] = $viewer['viewer_filename'];
+      $vars['viewer_class'] = $viewer['viewer_class'];
       $vars['materials'] = $materials;
     }
   }
@@ -724,6 +725,7 @@ function _sbac_resource_preview_content(&$vars) {
     if ($type == 'document' && !sbac_resource_url_exist($url)) {
       $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       $viewer['viewer'] = theme('image', array('path' => $url));
+      $viewer['viewer_class'] = '';
       return $viewer;
     }
 
@@ -733,34 +735,43 @@ function _sbac_resource_preview_content(&$vars) {
         $google_url = 'https://docs.google.com/viewer';
       }
       $viewer['viewer'] = '<iframe src="' . $google_url . '?url=' . $url . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+      $viewer['viewer_class'] = 'google-doc';
     }
     else if ($type == 'video') {
       $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 850});});';
       drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999));
       $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
+      $viewer['viewer_class'] = '';
     }
     else if ($type == 'image') {
       $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400));
+      $viewer['viewer_class'] = '';
     }
     else if ($type == 'schooltube') {
       $viewer['viewer'] = '<div class="flex-video"><iframe width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>';
+      $viewer['viewer_class'] = '';
     }
     else if ($type == 'teachertube') {
       $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/></iframe></div>';
+      $viewer['viewer_class'] = '';
     }
     else if ($type == 'slideshare') {
       $viewer['viewer'] = '<div class="flex-video"><iframe src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>';
+      $viewer['viewer_class'] = '';
     }
     else if ($type == 'vimeo') {
       $viewer['viewer'] = '<div class="flex-video"><iframe src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>';
+      $viewer['viewer_class'] = '';
     }
     else if ($type == 'youtube') {
       $url .= '?rel=0'; // Disable related videos.
       $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen></iframe></div>';
+      $viewer['viewer_class'] = '';
     }
     else {
       $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       $viewer['viewer'] = theme('image', array('path' => $url));
+      $viewer['viewer_class'] = '';
     }
   }
   return $viewer;
