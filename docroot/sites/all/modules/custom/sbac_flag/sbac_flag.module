@@ -275,6 +275,8 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
     $form['#group_children']['resource_flag_container_close'] = "group_flag";
 
     $node = $form['#node'];
+    drupal_add_js(array('sbac_flag_node' => $node->nid), 'setting');
+    drupal_add_js(array('sbac_flag_resource_review_id' => 0), 'setting');
     $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
     $flag_content = sbac_flag_resource_profile_view($flags);
     $form['flag_content'] = array(
@@ -483,10 +485,12 @@ function sbac_flag_preprocess_page(&$vars) {
  * @param $vars
  * @param $flags
  */
-function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
+function  sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
   $entity_review = entity_load_single('review', $review);
   if ($entity_review) {
     $entity_renderable = entity_view('review', array($entity_review));
+    drupal_add_js(array('sbac_flag_node' => $vars['node']->nid), 'setting');
+    drupal_add_js(array('sbac_flag_resource_review_id' => $_GET['review']), 'setting');
 
     // Hide voting and flagging options.
     $entity_renderable['review'][$review]['review_vote']['#access'] = FALSE;
@@ -512,7 +516,7 @@ function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
 
     if ($_GET['flag'] != 'resolve-resource-review-flags') {
       if ($status == 'Resource Review is Being Moderated') {
-        $moderation_button = l('Continue Moderation', $vars['node']->path['alias'], array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $review), 'fragment' => 'review-Moderate_flag'));
+        $moderation_button = l('Continue Moderation', $vars['node']->path['alias'], array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $review, 'node' => $vars['node']->nid), 'fragment' => 'review-Moderate_flag'));
       }
       else {
         // button
@@ -576,7 +580,7 @@ function sbac_flag_create_resource_view_output(&$vars, $flags) {
   $vars['flag']['status'] = $status;
 
   if ($status == 'Resource is Being Moderated') {
-    $moderation_button = l('Continue Moderation', 'node/' . $vars['node']->nid . '/edit', array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
+    $moderation_button = l('Continue Moderation', 'node/' . $vars['node']->nid . '/edit', array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-flags', 'node' => $vars['node']->nid), 'fragment' => 'review-Moderate_flag'));
   }
   else {
     // button
@@ -1454,6 +1458,13 @@ function sbac_flag_block_view($delta = '') {
  */
 function sbac_flag_logout_user() {
   global $user;
+
+  $node = node_load($_POST['nid']);
+  $eck_review = $_POST['eck_review'];
+  if ($node) {
+    sbac_flag_unset_being_moderated($node, $eck_review);
+  }
+
   watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
   module_invoke_all('user_logout', $user);
   // Destroy the current session, and reset $user to the anonymous user.
@@ -1461,4 +1472,67 @@ function sbac_flag_logout_user() {
   $output = array('result' => TRUE);
   print drupal_json_encode($output);
   exit;
+}
+
+/**
+ * Implements hook_logout().
+ *
+ * @param $account
+ */
+function sbac_flag_user_logout($account) {
+  if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
+    global $base_url;
+    $url = $_SERVER['HTTP_REFERER'];
+    $url = str_replace($base_url . '/', '', $url);
+    if (strpos($url, 'resolve-resource-review') !== FALSE) {
+      $url_params = parse_url($url);
+      $url_query = explode('&', $url_params['query']);
+      $eck_review = FALSE;
+      $nid = FALSE;
+      if (isset($url_query['1']) && $url_query['1']) {
+        $eck_review = str_replace('review=', '', $url_query['1']);
+      }
+      if (isset($url_query['2']) && $url_query['2']) {
+        $nid = str_replace('node=', '', $url_query['2']);
+      }
+
+      if ($nid && $eck_review) {
+        $node = node_load($nid);
+        if ($node) {
+          sbac_flag_unset_being_moderated($node, $eck_review);
+        }
+      }
+    }
+    else if (strpos($url, 'resolve-resource') !== FALSE) {
+      $nid = sbac_arg(1, $url);
+      if ($nid && is_numeric($nid)) {
+        $node = node_load($nid);
+        if ($node) {
+          sbac_flag_unset_being_moderated($node, FALSE);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * SBAC version of arg().
+ *
+ * @param null $index
+ * @param null $path
+ * @return mixed
+ */
+function sbac_arg($index = NULL, $path = NULL) {
+  if (!isset($path)) {
+    $path = $_GET['q'];
+  }
+  if (!isset($arguments[$path])) {
+    $arguments[$path] = explode('/', $path);
+  }
+  if (!isset($index)) {
+    return $arguments[$path];
+  }
+  if (isset($arguments[$path][$index])) {
+    return $arguments[$path][$index];
+  }
 }

@@ -52,9 +52,18 @@
     },
     // redirect the user to the main page.
     redirectToLogin: function() {
+      var temp_url = window.location.href;
+      var nid = Drupal.settings.sbac_flag_node;
+      var review = Drupal.settings.sbac_flag_resource_review_id;
+
+      var type = 'resource';
+      if (temp_url.indexOf('resource-review')) {
+        type = 'resource-review';
+      }
       ajax_request = $.ajax({
         type: 'POST',
         url: "/sbac-flag/logout-user",
+        data: {'type' : type, 'nid' : nid, 'eck_review': review},
         success: function(data) {
           var url = location.protocol + '//' + location.hostname;
           window.location.assign(url);

@@ -104,11 +104,11 @@ function sbac_flag_start_moderation($js = FALSE) {
         $node = node_load($form_state['nid']);
         if ($form_state['eck_review']) {
           sbac_flag_set_being_moderated($node, $form_state['eck_review']);
-          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review']), 'fragment' => 'review-Moderate_flag'));
+          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review'], 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
         }
         else {
           sbac_flag_set_being_moderated($node);
-          $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'something-Moderate_flag'));
+          $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'resolve-resource-flags', 'node' => $node->nid), 'fragment' => 'something-Moderate_flag'));
         }
       }
     }
@@ -155,7 +155,7 @@ function sbac_flag_start_resource_review_moderation_modal($js = FALSE) {
         // start moderation and send to resource review page
         $node = node_load($form_state['nid']);
         sbac_flag_set_being_moderated($node, $form_state['eck_review']);
-        $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review']), 'fragment' => 'review-Moderate_flag'));
+        $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review'], 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
       }
     }
     print ajax_render($output);
@@ -199,7 +199,7 @@ function sbac_flag_start_resource_moderation_modal($js = FALSE) {
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
         $node = node_load($form_state['nid']);
         sbac_flag_set_being_moderated($node);
-        $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
+        $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'resolve-resource-flags', 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
       }
     }
     print ajax_render($output);
