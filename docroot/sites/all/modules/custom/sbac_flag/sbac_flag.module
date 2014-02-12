@@ -1480,34 +1480,16 @@ function sbac_flag_logout_user() {
  * @param $account
  */
 function sbac_flag_user_logout($account) {
-  if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']) {
-    global $base_url;
-    $url = $_SERVER['HTTP_REFERER'];
-    $url = str_replace($base_url . '/', '', $url);
-    if (strpos($url, 'resolve-resource-review') !== FALSE) {
-      $url_params = parse_url($url);
-      $url_query = explode('&', $url_params['query']);
-      $eck_review = FALSE;
-      $nid = FALSE;
-      if (isset($url_query['1']) && $url_query['1']) {
-        $eck_review = str_replace('review=', '', $url_query['1']);
-      }
-      if (isset($url_query['2']) && $url_query['2']) {
-        $nid = str_replace('node=', '', $url_query['2']);
-      }
-
-      if ($nid && $eck_review) {
-        $node = node_load($nid);
-        if ($node) {
-          sbac_flag_unset_being_moderated($node, $eck_review);
+  if (in_array('moderator', $account->roles)) {
+    $query = "SELECT * FROM {eck_flag} WHERE being_moderated = :uid AND resolved = 0";
+    $result = db_query($query, array(':uid' => $account->uid));
+    foreach ($result as $row) {
+      $node = node_load($row->nid);
+      if ($node) {
+        if ($row->type == 'review_end_use') {
+          sbac_flag_unset_being_moderated($node, $row->target_id);
         }
-      }
-    }
-    else if (strpos($url, 'resolve-resource') !== FALSE) {
-      $nid = sbac_arg(1, $url);
-      if ($nid && is_numeric($nid)) {
-        $node = node_load($nid);
-        if ($node) {
+        else {
           sbac_flag_unset_being_moderated($node, FALSE);
         }
       }
