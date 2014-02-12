@@ -154,7 +154,8 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   gc_collect_cycles();
   gc_disable();
   // _cex exits and does not return in order to force a download by the browser.
-  _cex_download($csv_activity_report_result, 'output.csv');
+  $filename = 'User_Activity_' . date('M_d_y_g_i_s') . '.csv';
+  _cex_download($csv_activity_report_result, $filename);
   // _cex exits and does not return.
 }
 
