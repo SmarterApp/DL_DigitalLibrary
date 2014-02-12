@@ -1675,3 +1675,26 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   height: 15px;
   top: -25px;
 }
+
+/* line 1626, ../sass/sbac_resource.scss */
+#resource-element.google-doc {
+  position: relative;
+  z-index: 0;
+}
+
+/* line 1631, ../sass/sbac_resource.scss */
+#resource-element.google-doc:after {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  z-index: 99;
+  right: 0;
+  top: 1px;
+  content: '';
+  background-color: #F5F5F5;
+}
+
+/* line 1641, ../sass/sbac_resource.scss */
+#openInViewerButtonIcon {
+  display: none;
+}

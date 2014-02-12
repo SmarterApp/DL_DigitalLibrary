@@ -1623,3 +1623,21 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	}
 }
 
+#resource-element.google-doc {
+	position: relative;
+	z-index: 0;
+}
+
+#resource-element.google-doc:after {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	z-index: 99;
+	right: 0;
+	top: 1px;
+	content: '';
+	background-color: #F5F5F5;
+}
+#openInViewerButtonIcon {
+	display: none;
+}
