@@ -70,6 +70,7 @@ function sbac_forum_category_forum_form() {
       'class' => array('js-hide'),
     ),
     '#suffix' => '</div>',
+    '#submit' => array('sbac_forum_category_forum_form_reset_submit'),
   );
 
   return $form;
@@ -129,4 +130,25 @@ function _sbac_forum_filter_categories() {
     $output = theme('sbac_forum_filter_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
   }
   return $output;
+}
+
+/**
+ * Submit handler for categories.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_forum_category_forum_form_submit(&$form, &$form_state) {
+  $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = $form_state['input']['current_filters'];
+}
+
+/**
+ * Submit handler for category reset.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
+  $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
+  $form_state['redirect'] = 'forums';
 }

@@ -219,31 +219,6 @@
     }
   };
 
-  /**
-   * Clears all current filters.
-   *
-   * @type {{attach: Function}}
-   */
-  Drupal.behaviors.sbac_forum_js_clear_all = {
-    attach: function (context, settings) {
-      // Removes all individual filters.
-      $('.categories-clear-all-button').click(this.clearAllCategories);
-      $('#edit-reset-filters').click(this.clearAllCategories);
-    },
-
-    clearAllCategories: function() {
-      var current_filters = $('#sbac-forum-current-filters');
-      $('.categories-current-filters').addClass('noshow');
-      $('#sbac-category-current-filters .current-filter').remove();
-      $('.category-filter-list ul li').removeClass('current');
-      current_filters.val('');
-      $('.selectedDiv').hide();
-      $('.category-hide').removeClass('js-hide');
-      window.location.href = 'forums';
-      return false;
-    }
-  };
-
   // /**
   //  * Clears all current filters.
   //  *
