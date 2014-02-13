@@ -90,10 +90,11 @@ function sbac_media_file_stream() {
   }
 
   if ($session == session_name()) {
+    error_log("Mime: " . $file->filemime);
     header('Cache-Control: no-cache private');
     header('Content-Description: File Transfer');
     header('Content-Length: ' . $file->filesize);
-    header('Content-Type: application/octet-stream');
+    header('Content-Type: ' . $file->filemime);
 
     $real_path = drupal_realpath($file->uri);
     error_log("path: " . $real_path);
