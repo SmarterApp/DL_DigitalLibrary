@@ -3,6 +3,7 @@
  * Implements export of a csv file().
  */
 function _cex_download($output, $filename) {
+  drupal_get_messages();
   header("Pragma: public");
   header("Expires: 0");
   header("Cache-Control: private");

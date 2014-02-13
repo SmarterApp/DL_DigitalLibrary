@@ -368,23 +368,27 @@ function get_user_activity($users, $date_range) {
   $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 
   # Resources with Pending Flags
-  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'resource' AND being_moderated > 0 AND resolved = 0
-          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
-  $user_activity['resource_with_pending_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
+  $sql = "SELECT count(n.nid) as count, n.uid FROM {node} n JOIN {eck_flag} ef ON n.nid = ef.nid
+          WHERE n.uid IN (%s) AND n.type = 'resource' AND ef.type = 'resource' AND ef.being_moderated = 0 AND ef.resolved = 0
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL ef.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.nid, n.uid";
+  $user_activity['resource_with_pending_flags'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Resources with Resolved Flags
-  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'resource' AND being_moderated > 0 AND resolved = 1
-          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
-  $user_activity['resource_with_resolved_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
+  $sql = "SELECT count(n.nid) as count, n.uid FROM {node} n JOIN {eck_flag} ef ON n.nid = ef.nid
+          WHERE n.uid IN (%s) AND n.type = 'resource' AND ef.type = 'resource' AND ef.being_moderated > 0 AND ef.resolved = 1
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL ef.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.nid, n.uid";
+  $user_activity['resource_with_resolved_flags'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Resource reviews with Pending Flags
-  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'review_end_use' AND being_moderated > 0 AND resolved = 0
-          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $sql = "SELECT count(er.node_id) AS count, er.uid FROM {eck_flag} ef JOIN {eck_review} er ON ef.target_id = er.id
+          WHERE er.uid IN (%s) AND ef.type = 'review_end_use' AND ef.being_moderated = 0 AND ef.resolved = 0
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL ef.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by er.node_id, er.uid";
   $user_activity['resource_reviews_with_pending_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 
   # Resource reviews with Resolved Flags
-  $sql = "SELECT count(nid) as count, uid FROM {eck_flag} WHERE uid IN (%s) AND type = 'review_end_use' AND being_moderated > 0 AND resolved = 1
-          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
+  $sql = "SELECT count(er.node_id) AS count, er.uid FROM {eck_flag} ef JOIN {eck_review} er ON ef.target_id = er.id
+          WHERE er.uid IN (%s) AND ef.type = 'review_end_use' AND ef.being_moderated > 0 AND ef.resolved = 1
+          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL ef.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by er.node_id, er.uid";
   $user_activity['resource_reviews_with_resolved_flags'] = count_with_users_query($sql, $users, $from_date, $to_date, TRUE);
 
   # Resources Flagged
@@ -519,7 +523,10 @@ function create_user_activity_from_data($user_activity) {
     }
 
     foreach ($flagkeys as $flagkey) {
-      if (isset($user_activity[$flagkey[0]][$uid]) && !is_null($user_activity[$flagkey[0]][$uid])) {
+      if (isset($user_activity[$flagkey[0]][$uid]->count) && !is_null($user_activity[$flagkey[0]][$uid]->count)) {
+        $value = $user_activity[$flagkey[0]][$uid]->count;
+      }
+      else if (isset($user_activity[$flagkey[0]][$uid]) && !is_null($user_activity[$flagkey[0]][$uid])) {
         $value = $user_activity[$flagkey[0]][$uid];
       }
       else {
