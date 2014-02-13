@@ -438,7 +438,7 @@ function sbac_report_build_sne_output($user) {
           if (isset($user->field_grade_level_s_['und'][0])) {
             foreach ($user->field_grade_level_s_['und'] as $key => $term) {
               $term = taxonomy_term_load($term['tid']);
-              $user_output['grade_level'][] = $term->name;
+              $user_output['grade_level'][$term->tid] = $term->name;
             }
           }
           break;
@@ -446,7 +446,7 @@ function sbac_report_build_sne_output($user) {
           if (isset($user->field_subject_s_['und'][0])) {
             foreach ($user->field_subject_s_['und'] as $key => $term) {
               $term = taxonomy_term_load($term['tid']);
-              $user_output['subjects'][] = $term->name;
+              $user_output['subjects'][$term->tid] = $term->name;
             }
           }
           break;
@@ -454,7 +454,7 @@ function sbac_report_build_sne_output($user) {
           if (isset($user->field_special_populations['und'][0])) {
             foreach ($user->field_special_populations['und'] as $key => $term) {
               $term = taxonomy_term_load($term['tid']);
-              $user_output['populations'][] = $term->name;
+              $user_output['populations'][$term->tid] = $term->name;
             }
           }
           break;
