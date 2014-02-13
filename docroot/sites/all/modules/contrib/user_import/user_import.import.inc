@@ -311,13 +311,14 @@ function _user_import_errors_display_save($import_id, $data, $email, $errors) {
 
   $data['email'] = $email;
 
-  $id = db_insert('user_import_errors')
-    ->fields(array(
-    'import_id' => $import_id,
-    'data'      => serialize($data),
-    'errors'    => serialize($errors),
-  ))
-    ->execute();
+//  $id = db_insert('user_import_errors')
+//    ->fields(array(
+//    'import_id' => $import_id,
+//    'data'      => serialize($data),
+//    'errors'    => serialize($errors),
+//  ))
+//  ->execute();
+//  watchdog('user_import_errors', 'Error Occurred', array($data, $errors));
 
   return;
 }
