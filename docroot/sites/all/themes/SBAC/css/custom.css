@@ -7585,10 +7585,7 @@ button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-sear
   	margin-right: 30px !important;
   	padding-left: 40px;
   	background: #6E7379 url(../images/buttonCancel.png) no-repeat 15px 8px;
-  	
-  	&:hover {
-  		 background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
-  	}*/
+  	*/
 }
 /* line 269, ../sass/custom.scss */
 button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus, #edit-cancel:hover, #edit-cancel:focus, #edit-tags-cancel:hover, #edit-tags-cancel:focus, #sbac-search-close-button:hover, #sbac-search-close-button:focus, button.sbac-cancel-blue:hover, button.sbac-cancel-blue:focus, .button.devtools-dialog-close:hover, .button.devtools-dialog-close:focus, #gate-keeper-cancel:hover, #gate-keeper-cancel:focus, #review-cancel:hover, #review-cancel:focus, #edit-delete-overlay:hover, #edit-delete-overlay:focus, #edit-cancel-overlay:hover, #edit-cancel-overlay:focus, #post-cancel:hover, #post-cancel:focus, div.ctools-modal-content a.close:hover, div.ctools-modal-content a.close:focus, a.remove:hover, a.remove:focus, a.fake-cancel:hover, a.fake-cancel:focus {
@@ -7598,6 +7595,14 @@ button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button
   /*background: #006184;*/
   /*background: #0084B0;*/
   /*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(30%, rgba(0, 0, 0, 0.075)), color-stop(100%, rgba(0, 0, 0, 0.1)));
+  background-image: -webkit-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+  background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+  background-image: -o-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+  background-image: linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+}
+/* line 293, ../sass/custom.scss */
+button.secondary:hover, .button.secondary:hover, #edit-cancel:hover, #edit-tags-cancel:hover, #sbac-search-close-button:hover, button.sbac-cancel-blue:hover, .button.devtools-dialog-close:hover, #gate-keeper-cancel:hover, #review-cancel:hover, #edit-delete-overlay:hover, #edit-cancel-overlay:hover, #post-cancel:hover, div.ctools-modal-content a.close:hover, a.remove:hover, a.fake-cancel:hover {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(30%, rgba(0, 0, 0, 0.075)), color-stop(100%, rgba(0, 0, 0, 0.1)));
   background-image: -webkit-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);

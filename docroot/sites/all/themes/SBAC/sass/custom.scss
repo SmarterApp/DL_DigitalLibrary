@@ -271,7 +271,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
     /*background: #006184;*/
 		/*background: #0084B0;*/
 		/*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
-		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
+		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));		
   }
 }
 
@@ -289,10 +289,10 @@ button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-sear
 	margin-right: 30px !important;
 	padding-left: 40px;
 	background: #6E7379 url(../images/buttonCancel.png) no-repeat 15px 8px;
-	
+	*/
 	&:hover {
-		 background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
-	}*/
+		 @include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
+	}
 }
 
 button.green {

@@ -1698,3 +1698,8 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
 #openInViewerButtonIcon {
   display: none;
 }
+
+/* line 1645, ../sass/sbac_resource.scss */
+.button.secondary.backButton:hover {
+  background-color: #0084B0 !important;
+}
