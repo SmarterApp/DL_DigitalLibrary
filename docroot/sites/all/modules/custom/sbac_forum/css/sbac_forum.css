@@ -1,0 +1,103 @@
+/* -----------------------------------------
+    Variables
+   ----------------------------------------- */
+/* -----------------------------------------
+   Forms
+   ----------------------------------------- */
+/* line 17, ../sass/sbac_forum.scss */
+.category-filter-list {
+  display: none;
+}
+
+/* line 23, ../sass/sbac_forum.scss */
+.filters {
+  background: #c9eaf8;
+  color: #0684ad;
+  padding: 45px 0 0;
+  border-top: 2px solid #0684ad;
+  border-bottom: 1px solid #94d8f3;
+  position: relative;
+}
+/* line 32, ../sass/sbac_forum.scss */
+.filters.active {
+  overflow: visible !important;
+}
+/* line 38, ../sass/sbac_forum.scss */
+.filters .column:first-child .categories-filter-choices {
+  left: 20px;
+}
+/* line 44, ../sass/sbac_forum.scss */
+.filters .column:last-child .categories-filter-choices {
+  left: auto;
+  right: 20px;
+}
+/* line 51, ../sass/sbac_forum.scss */
+.filters ul {
+  font-size: 1em;
+  list-style-type: none;
+  margin: 0;
+}
+/* line 56, ../sass/sbac_forum.scss */
+.filters ul h3 {
+  color: white;
+  font-size: emCalc(16px);
+  margin-bottom: 10px;
+  position: relative;
+}
+/* line 64, ../sass/sbac_forum.scss */
+.filters li {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  background: white url("../images/icon-drop.png") no-repeat 97% center;
+  padding: 5px 10px;
+  margin: 0 0 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+/* line 72, ../sass/sbac_forum.scss */
+.filters li.active {
+  background: #0085ad;
+}
+/* line 76, ../sass/sbac_forum.scss */
+.filters li a {
+  color: white;
+}
+/* line 81, ../sass/sbac_forum.scss */
+.filters li .sbac-forum-filter-name,
+.filters li .sbac-forum-filter-custom-link {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.1em;
+  position: relative;
+}
+/* line 87, ../sass/sbac_forum.scss */
+.filters li .sbac-forum-filter-name li,
+.filters li .sbac-forum-filter-custom-link li {
+  font-weight: normal;
+}
+/* line 91, ../sass/sbac_forum.scss */
+.filters li .sbac-forum-filter-name a,
+.filters li .sbac-forum-filter-custom-link a {
+  color: #0684AD;
+}
+/* line 96, ../sass/sbac_forum.scss */
+.filters li span {
+  margin-right: 10px;
+}
+/* line 101, ../sass/sbac_forum.scss */
+.filters form {
+  margin: 0;
+}
+/* line 105, ../sass/sbac_forum.scss */
+.filters .category-buttons {
+  padding-right: 5px;
+  padding-bottom: 10px;
+  text-align: right;
+}
+/* line 110, ../sass/sbac_forum.scss */
+.filters .category-buttons button {
+  margin: 10px;
+}

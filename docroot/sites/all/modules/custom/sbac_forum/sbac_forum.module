@@ -84,6 +84,23 @@ function sbac_forum_block_view($delta = '') {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function sbac_forum_theme($existing, $type, $theme, $path) {
+  $items['sbac_forum_filter_categories'] = array(
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates',
+    'template' => 'forum-filter-categories',
+    'variables' => array(
+      'categories' => NULL,
+      'cf_value' => NULL,
+      'cf_html' => NULL,
+    ),
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_form_alter
  */
 function sbac_forum_form_alter(&$form, $form_state, $form_id) {

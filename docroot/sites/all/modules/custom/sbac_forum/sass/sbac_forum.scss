@@ -1,0 +1,114 @@
+@import "compass/css3/";
+
+/* -----------------------------------------
+    Variables
+   ----------------------------------------- */
+$white: #FFF;
+$text: #5a5a5a;
+$header: #18577e;
+$teal: #0085ad;
+$darkgreen: #246a34;
+
+
+/* -----------------------------------------
+   Forms
+   ----------------------------------------- */
+
+.category-filter-list {
+    display:none;
+}
+
+//Resource Dropdown
+
+.filters {
+  background: #c9eaf8;
+  color: #0684ad;
+  padding: 45px 0 0;
+  border-top: 2px solid #0684ad;
+  border-bottom: 1px solid #94d8f3;
+
+  position: relative;
+
+  &.active{
+    overflow:visible !important;
+  }
+
+  .column {
+    &:first-child {
+      .categories-filter-choices {
+        left:20px;
+      }
+    }
+
+    &:last-child {
+      .categories-filter-choices {
+        left:auto;
+        right: 20px;
+      }
+    }
+  }
+
+  ul {
+    font-size: 1em;
+    list-style-type: none;
+    margin: 0;
+
+    h3 {
+      color: $white;
+      font-size: emCalc(16px);
+      margin-bottom: 10px;
+      position: relative;
+    }
+  }
+
+  li {
+    @include border-radius(3px);
+    background: #FFF url('../images/icon-drop.png') no-repeat 97% center;
+    padding: 5px 10px;
+    margin:0 0 10px;
+    font-size: 12px;
+    cursor: pointer;
+
+    &.active {
+      background: $teal;
+    }
+
+    a {
+      color: $white;
+    }
+
+  .sbac-forum-filter-name,
+  .sbac-forum-filter-custom-link {
+      margin: 0;
+      font-weight: bold;
+      font-size: 1.1em;
+      position: relative;
+
+      li {
+        font-weight: normal;
+      }
+
+      a {
+        color:#0684AD;
+      }
+    }
+
+    span {
+      margin-right: 10px;
+    }
+  }
+
+  form{
+    margin: 0;
+  }
+
+  .category-buttons {
+    padding-right: 5px;
+    padding-bottom: 10px;
+    text-align: right;
+
+    button {
+      margin: 10px;
+    }
+  }
+}
