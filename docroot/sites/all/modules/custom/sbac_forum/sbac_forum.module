@@ -16,6 +16,72 @@ include_once 'includes/sbac_forum.component_alter.inc';
  * =============================================================================
  */
 
+/**
+ * Implements hook_menu().
+ */
+function sbac_forum_menu() {
+  $items['forums'] = array(
+    'title' => 'Forums',
+    'file' => 'includes/sbac_forum.pages.inc',
+    'page callback' => 'sbac_forum_main_landing_page',
+    'access callback' => '_sbac_forum_user_access',
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -10,
+  );
+  return $items;
+}
+
+/**
+ * Access callback for Forums page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to view this page.
+ */
+function _sbac_forum_user_access() {
+  global $user;
+  $access = FALSE;
+  if (!empty($user->uid)) {
+    $access = TRUE;
+  }
+  return $access;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ * @return mixed
+ */
+function sbac_forum_block_info() {
+  $blocks['sbac_forum_categories'] = array(
+    'info' => t('Categories'),
+    'region' => 'filter',
+    'pages' => "forums",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *
+ * @return array
+ */
+function sbac_forum_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'sbac_forum_categories':
+      module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+      $block['subject'] = t('');
+      $block['content'] = drupal_get_form('sbac_forum_category_forum_form');
+      break;
+  }
+  return $block;
+}
 
 /**
  * Implements hook_form_alter
