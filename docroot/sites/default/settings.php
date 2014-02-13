@@ -595,7 +595,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 error_reporting(E_ERROR);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
-ini_set('memory_limit', '196M');
+ini_set('memory_limit', '512M'); // haha
 
 /**
  * Fast 404 settings:
