@@ -38,9 +38,9 @@
       // cookie lifetime set by PHP session timeout.
       var php_cookie_lifetime = Drupal.settings.sbac_flag_lifetime;
       // - 5 minutes to give the user time to make a decision.
-      var session_lifetime = (php_cookie_lifetime - 10) * 1000;
+      var session_lifetime = (php_cookie_lifetime - 300) * 1000;
       // minus 10 seconds to the session life time to give the system time to kick the user out completely.
-      var php_session_lifetime = php_cookie_lifetime * 1000 - 5;
+      var php_session_lifetime = php_cookie_lifetime * 1000 - 6;
       display_modal_timer = setInterval(Drupal.behaviors.sbac_node_form.display_modal, session_lifetime);
       redirect_to_login = setTimeout(Drupal.behaviors.sbac_node_form.redirectToLogin, php_session_lifetime);
     },

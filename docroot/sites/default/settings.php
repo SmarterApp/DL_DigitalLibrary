@@ -299,7 +299,7 @@ ini_set('session.gc_maxlifetime', 7200);
  * created to the cookie expires, i.e. when the browser is expected to discard
  * the cookie. The value 0 means "until the browser is closed".
  */
-ini_set('session.cookie_lifetime', 30);
+ini_set('session.cookie_lifetime', 7200);
 
 /**
  * If you encounter a situation where users post a large amount of text, and

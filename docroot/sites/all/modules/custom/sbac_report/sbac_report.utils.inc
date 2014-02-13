@@ -28,7 +28,7 @@ function format_value_field(&$row, $field, $separator, $encloseer, $subseparator
       $value = '';
     }
     else {
-      if ($is_date) {
+      if ($is_date && $array_value['value'] != '') {
         $value = format_date($array_value['value'], 'custom', 'Y-m-d');
       }
       else {

@@ -926,7 +926,9 @@ function count_with_nodes_query($sql, $node, $merge_necessary = TRUE, $increment
       $values[] = $record;
     }
     else {
-      $values[$record->nid] = $record;
+      if (isset($record->nid)) {
+        $values[$record->nid] = $record;
+      }
     }
   }
   ksort($values);
