@@ -21,6 +21,8 @@ define('SBAC_RESOURCE_RESOURCE_REVIEW_VIEW_MODE', 'sbac-rr-view-mode');
 define('SBAC_RESOURCE_ALL_NODE_FLAG', 0);
 define('SBAC_RESOURCE_ALL_USER_FLAG', 0);
 
+define('SBAC_RESOURCE_REVIEWER_ROLE', 'resource_reviewer');
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -1290,15 +1292,17 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
  */
 function sbac_resource_save_current_state($node) {
   if ($node->type == 'resource') {
+    global $user;
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'draft') {
       $entity = NULL;
       $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
       $entity->state = 'author';
       sbac_resource_save_resource_state($entity, $new_record);
+      sbac_resource_delete_resource_state_except($node->nid, $entity->state);
     }
 
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
-      sbac_resource_save_resource_state_for_all_role($node, 'resource reviewer', 'needs_review');
+      sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
     }
 
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
@@ -1309,14 +1313,14 @@ function sbac_resource_save_current_state($node) {
         $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid']);
         $entity->state = 'gk_being_reviewed';
         sbac_resource_save_resource_state($entity, $new_record);
-        sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'needs_review');
+        sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
       }
       else {
         // if there is no completed feedback and no current feedback, then its in gk_need_review status
         $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
         $current_review = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'single');
         if (!$completed_feedback && !$current_review) {
-          sbac_resource_save_resource_state_for_all_role($node, 'resource reviewer', 'gk_needs_review');
+          sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
         }
         else {
           // if there is no current review, or completed reviews is less then 3
@@ -1325,31 +1329,50 @@ function sbac_resource_save_current_state($node) {
             $new_record = sbac_resource_get_state($entity, $node->nid, $current_review['uid']);
             $entity->state = 'qc_being_reviewed';
             sbac_resource_save_resource_state($entity, $new_record);
-            sbac_resource_delete_resource_state_for_all_role($node->nid, 'resource reviewer', 'qc_being_reviewed');
+            sbac_resource_delete_resource_state_for_all_role($node->nid, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_being_reviewed');
           }
           else {
             // everyone has access and is set to needs review
-            sbac_resource_save_resource_state_for_all_role($node, 'resource reviewer', 'qc_needs_review');
+            sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
             // if there is current reviews, tag them correctly
-            $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'set');
+            $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1);
             foreach ($current_reviews as $current_review) {
               $entity = NULL;
               $new_record = sbac_resource_get_state($entity, $node->nid, $current_review->uid);
               $entity->state = 'qc_being_reviewed';
               sbac_resource_save_resource_state($entity, $new_record);
             }
+
           }
 
           // if there are completed reviews, delete the records, the user can not see it anymore.
           foreach ($completed_feedback as $complete_feedback) {
             $entity = NULL;
             $new_record = sbac_resource_get_state($entity, $node->nid, $complete_feedback->uid);
-            sbac_resource_delete_resource_state($entity);
+            if (!$new_record) {
+              sbac_resource_delete_resource_state($entity);
+            }
+          }
+        }
+
+        //check for "cancelled" review and clean up.
+        $cancelled_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 0, 0, 1);
+        foreach ($cancelled_reviews as $cancelled_review) {
+          $active_review = _sbac_resource_determine_feedback($node->nid, 'qc', $cancelled_review->uid, 1, 0, 1, 'single');
+          $completed_review = _sbac_resource_determine_feedback($node->nid, 'qc', $cancelled_review->uid, 1, 1, 1, 'single');
+          if (!$active_review && !$completed_review) {
+            $entity = NULL;
+            $new_record = sbac_resource_get_state($entity, $node->nid, $cancelled_review->uid);
+            if (!$new_record) {
+              sbac_resource_delete_resource_state($entity);
+            }
           }
         }
       }
     }
 
+    // if the user rejected the resource, delete the previous state and add a state that does allow
+    // them to see the resource as a read only param.
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'rejected') {
       $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
       if ($gate_keeper) {
@@ -1357,6 +1380,12 @@ function sbac_resource_save_current_state($node) {
         $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid'], 'gk_being_reviewed');
         if (!$new_record) {
           sbac_resource_delete_resource_state($entity);
+        }
+        $entity = NULL;
+        $new_record = sbac_resource_get_state($entity, $node->nid, $user->uid);
+        if ($new_record) {
+          $entity->state = 'gk_view_rejected';
+          sbac_resource_save_resource_state($entity, $new_record);
         }
       }
     }
@@ -1385,17 +1414,17 @@ function sbac_resource_save_current_state($node) {
      */
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state != 'needs_review') {
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'needs_review');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
     }
 
     // if the node is in neither state, delete all records associated to this role and node.
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state != 'being_reviewed' &&
       $node->workbench_moderation['current']->state != 'needs_review') {
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'gk_being_reviewed');
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'gk_needs_review');
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'qc_being_reviewed');
-      sbac_resource_delete_resource_state_for_all_role($node, 'resource reviewer', 'qc_needs_review');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_being_reviewed');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_being_reviewed');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
     }
 
     // if the node is in neither state, delete all records associated to this role and node.
@@ -1490,7 +1519,7 @@ function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $ol
     $node = node_load($node);
   }
 
-  // sbac_resource_delete_resource_state_for_all_role($node->nid, 'resource reviewer', $current_review['uid']);
+  // sbac_resource_delete_resource_state_for_all_role($node->nid, SBAC_RESOURCE_REVIEWER_ROLE, $current_review['uid']);
 
   $entity = NULL;
   $flag = $role_name . '::' . $old_state . '::' . $node->nid;
@@ -1543,6 +1572,19 @@ function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $ol
 }
 
 /**
+ * Remove all resource states related to this NID except the given state.
+ *
+ * @param $nid
+ * @param $state
+ */
+function sbac_resource_delete_resource_state_except($nid, $state) {
+  db_delete('sbac_node_resource_state')
+    ->condition('nid', $nid)
+    ->condition('state', $state, '<>')
+    ->execute();
+}
+
+/**
  * Deletes the resource state for the given UID and NID.
  *
  * @param $entity
@@ -1583,11 +1625,13 @@ function sbac_resource_delete_resource_state($entity) {
  * @param $entity
  * @return bool
  */
-function sbac_resource_get_state(&$entity, $nid, $uid, $state = NULL, $flag = NULL){
+function sbac_resource_get_state(&$entity, $nid, $uid = NULL, $state = NULL, $flag = NULL){
   $query = db_select('sbac_node_resource_state', 'snrs');
   $query->fields('snrs');
   $query->condition('nid', $nid);
-  $query->condition('uid', $uid);
+  if ($uid != NULL) {
+    $query->condition('uid', $uid);
+  }
   if ($state != NULL) {
     $query->condition('state', $state);
   }
@@ -1629,7 +1673,7 @@ function sbac_resource_get_state(&$entity, $nid, $uid, $state = NULL, $flag = NU
 //
 //    // Needs review node access perms.
 //    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
-//      $accounts = sbac_resource_get_users_by_role('resource reviewer');
+//      $accounts = sbac_resource_get_users_by_role(SBAC_RESOURCE_REVIEWER_ROLE);
 //      foreach ($accounts as $account) {
 //        if ($account->uid != $node->uid) { // a reviewer is not able to review the nodes they created.
 //          $restricted = TRUE;
@@ -1647,7 +1691,7 @@ function sbac_resource_get_state(&$entity, $nid, $uid, $state = NULL, $flag = NU
 //
 //    // Being reviewed node access perms.
 //    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
-//      $accounts = sbac_resource_get_users_by_role('resource reviewer');
+//      $accounts = sbac_resource_get_users_by_role(SBAC_RESOURCE_REVIEWER_ROLE);
 //      if ($accounts) {
 //        $completed_gk = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
 //        if ($completed_gk) {
@@ -1900,7 +1944,7 @@ function sbac_resource_get_state(&$entity, $nid, $uid, $state = NULL, $flag = NU
 //    $grants['node_author'] = array($account->uid);
 //  }
 //
-//  if (in_array('resource reviewer', $account->roles)) {
+//  if (in_array(SBAC_RESOURCE_REVIEWER_ROLE, $account->roles)) {
 //    $grants['gk_review_in_progress'] = array($account->uid);
 //    $grants['able_to_review_qc'] = array($account->uid);
 //    $grants['completed_gk'] = array($account->uid);

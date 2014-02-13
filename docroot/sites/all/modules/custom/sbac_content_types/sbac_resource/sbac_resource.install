@@ -82,9 +82,8 @@ function sbac_resource_schema() {
       ),
       'flag' => array(
         'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 0,
+        'length' => 1000,
+        'default' => '',
         'description' => t('A flag to flag an entire role'),
       ),
     ),
@@ -1052,6 +1051,17 @@ function sbac_resource_update_7047() {
     }
   }
 
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Alter the table column type.
+ */
+function sbac_resource_update_7048() {
+  $ret = array();
+  db_query('ALTER TABLE {sbac_node_resource_state} MODIFY flag VARCHAR(1000) DEFAULT ""');
   return $ret;
 }
 
