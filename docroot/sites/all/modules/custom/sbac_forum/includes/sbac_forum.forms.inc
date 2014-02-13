@@ -78,7 +78,7 @@ function sbac_forum_category_forum_form() {
 
 function _sbac_forum_filter_categories() {
   $categories = array();
-  // drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_forum.filter_categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.filter_categories.js');
 
   $subject = taxonomy_vocabulary_machine_name_load('subject');
   $categories['subject']['display_name'] = 'Subjects';

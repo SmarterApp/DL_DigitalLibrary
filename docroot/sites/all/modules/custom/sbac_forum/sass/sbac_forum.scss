@@ -9,6 +9,13 @@ $header: #18577e;
 $teal: #0085ad;
 $darkgreen: #246a34;
 
+/* -----------------------------------------
+   Page Elements
+   ----------------------------------------- */
+.page-forums #page-title {
+  display:none;
+}
+
 
 /* -----------------------------------------
    Forms
@@ -18,7 +25,7 @@ $darkgreen: #246a34;
     display:none;
 }
 
-//Resource Dropdown
+//---------- Resource Dropdown -----------
 
 .filters {
   background: #c9eaf8;
@@ -112,3 +119,189 @@ $darkgreen: #246a34;
     }
   }
 }
+
+// ------- Popup container for taxonomy terms aka filter choices. --------
+
+.categories-filter-choices {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  margin: -100px 0 0 0;
+  z-index: 9999;
+
+  .category-filter-list {
+    @include border-radius(6px); // border radius
+    @include box-shadow(1px 1px 1px rgba(0,0,0,.3)); // drop shadow
+    width: 500px;
+    background: #edf3e0;
+    border: 1px solid #fff; // stroke
+
+    h2 {
+      @include border-radius(6px 6px 0 0); // border radius
+      background-color: white;
+      padding: 5px;
+      margin: 0;
+      cursor: pointer;
+      font-weight: normal;
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: scroll;
+
+    li {
+      @include border-radius(0); // border radius
+      width: 46%;
+      float: left;
+      display: inline;
+      margin: 1% 2%;
+      padding: 5px 0;
+      background:none;
+      color: #246a34;
+      cursor: pointer;
+
+      .highlight {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background-color: white;
+        border: 1px solid;
+        vertical-align: top;
+      }
+
+      .filter-name  {
+        display: inline-block;
+        width: 82%;
+        margin-top: -2px;
+        vertical-align: top;
+      }
+
+      &.current {
+        .highlight {
+          background-color: #0085ad;
+          border-color: #0085ad;
+        }
+      }
+    }
+  }
+}
+
+// ---------- Filters that have been selected already. -------------
+
+.categories-current-filters {
+  &.noshow {
+    display: none;
+  }
+
+  margin: 10px 20px 5px;
+  padding: 10px 0 0;
+  /*color: white;
+      border: 1px solid white;
+      border-width: 0 0 1px;
+  */
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
+
+  h3 {
+    color: #063e5f;
+    font-size: 18px;
+  }
+
+  .current-filter {
+    @include border-radius(50px);
+    cursor:pointer;
+    float: left;
+    margin:10px 10px 10px 0;
+    font-size: 0.8em;
+    padding: 10px 40px 10px 10px;
+    background: #fff url('../images/icon-close.png') no-repeat right center;
+    border-right: 10px solid transparent;
+    color: #7d8a95;
+  }
+}
+
+// --------- Hide Categories and Show Categories link toggle. -------------
+
+a.category-hide {
+    position: absolute;
+    right: 20px;
+    top: -30px;
+    fone-size: 13px;
+    color: #006082;
+}
+
+a.category-hide:hover {
+  text-decoration: underline;
+  color: #006082;
+}
+
+a.category-hide:focus {
+  color: #006082;
+}
+
+.category-hide.active:after {
+   background-image: url("../images/icon-toggle-up.png");
+   background-position: center center;
+   content: " ";
+   display: inline-block;
+   height: 12px;
+   margin-left: 5px;
+   vertical-align: baseline;
+   width: 10px;
+}
+
+.category-hide:after {
+   background-image: url("../images/icon-toggle-down.png");
+   background-position: center center;
+   content: " ";
+   display: inline-block;
+   height: 12px;
+   margin-left: 5px;
+   vertical-align: baseline;
+   width: 10px;
+}
+
+
+// --------- Main button styling, Apply and Reset -------------------------
+
+#sbac-forum-filter-button:before {
+    background-image: url("../images/icon-buttonAccept.png");
+    background-position: center center;
+    content: " ";
+    display: inline-block;
+    height: 18px;
+    margin-right: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 18px;
+}
+
+#sbac-forum-filter-button.is-edit:before {
+    background-image: url("../images/icon-buttonEdit.png");
+    width: 17px;
+}
+
+#edit-reset-filters {
+  background-color: #8A1538;
+  border: 1px solid #793348;
+}
+
+#edit-reset-filters:hover {
+  background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+#edit-reset-filters:before {
+    background-image: url("../images/icon-buttonReset.png");
+    background-position: center center;
+    content: " ";
+    display: inline-block;
+    height: 18px;
+    margin-right: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 17px;
+}
+

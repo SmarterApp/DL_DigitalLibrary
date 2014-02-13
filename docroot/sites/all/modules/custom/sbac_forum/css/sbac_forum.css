@@ -2,14 +2,22 @@
     Variables
    ----------------------------------------- */
 /* -----------------------------------------
+   Page Elements
+   ----------------------------------------- */
+/* line 15, ../sass/sbac_forum.scss */
+.page-forums #page-title {
+  display: none;
+}
+
+/* -----------------------------------------
    Forms
    ----------------------------------------- */
-/* line 17, ../sass/sbac_forum.scss */
+/* line 24, ../sass/sbac_forum.scss */
 .category-filter-list {
   display: none;
 }
 
-/* line 23, ../sass/sbac_forum.scss */
+/* line 30, ../sass/sbac_forum.scss */
 .filters {
   background: #c9eaf8;
   color: #0684ad;
@@ -18,33 +26,33 @@
   border-bottom: 1px solid #94d8f3;
   position: relative;
 }
-/* line 32, ../sass/sbac_forum.scss */
+/* line 39, ../sass/sbac_forum.scss */
 .filters.active {
   overflow: visible !important;
 }
-/* line 38, ../sass/sbac_forum.scss */
+/* line 45, ../sass/sbac_forum.scss */
 .filters .column:first-child .categories-filter-choices {
   left: 20px;
 }
-/* line 44, ../sass/sbac_forum.scss */
+/* line 51, ../sass/sbac_forum.scss */
 .filters .column:last-child .categories-filter-choices {
   left: auto;
   right: 20px;
 }
-/* line 51, ../sass/sbac_forum.scss */
+/* line 58, ../sass/sbac_forum.scss */
 .filters ul {
   font-size: 1em;
   list-style-type: none;
   margin: 0;
 }
-/* line 56, ../sass/sbac_forum.scss */
+/* line 63, ../sass/sbac_forum.scss */
 .filters ul h3 {
   color: white;
   font-size: emCalc(16px);
   margin-bottom: 10px;
   position: relative;
 }
-/* line 64, ../sass/sbac_forum.scss */
+/* line 71, ../sass/sbac_forum.scss */
 .filters li {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -57,15 +65,15 @@
   font-size: 12px;
   cursor: pointer;
 }
-/* line 72, ../sass/sbac_forum.scss */
+/* line 79, ../sass/sbac_forum.scss */
 .filters li.active {
   background: #0085ad;
 }
-/* line 76, ../sass/sbac_forum.scss */
+/* line 83, ../sass/sbac_forum.scss */
 .filters li a {
   color: white;
 }
-/* line 81, ../sass/sbac_forum.scss */
+/* line 88, ../sass/sbac_forum.scss */
 .filters li .sbac-forum-filter-name,
 .filters li .sbac-forum-filter-custom-link {
   margin: 0;
@@ -73,31 +81,235 @@
   font-size: 1.1em;
   position: relative;
 }
-/* line 87, ../sass/sbac_forum.scss */
+/* line 94, ../sass/sbac_forum.scss */
 .filters li .sbac-forum-filter-name li,
 .filters li .sbac-forum-filter-custom-link li {
   font-weight: normal;
 }
-/* line 91, ../sass/sbac_forum.scss */
+/* line 98, ../sass/sbac_forum.scss */
 .filters li .sbac-forum-filter-name a,
 .filters li .sbac-forum-filter-custom-link a {
   color: #0684AD;
 }
-/* line 96, ../sass/sbac_forum.scss */
+/* line 103, ../sass/sbac_forum.scss */
 .filters li span {
   margin-right: 10px;
 }
-/* line 101, ../sass/sbac_forum.scss */
+/* line 108, ../sass/sbac_forum.scss */
 .filters form {
   margin: 0;
 }
-/* line 105, ../sass/sbac_forum.scss */
+/* line 112, ../sass/sbac_forum.scss */
 .filters .category-buttons {
   padding-right: 5px;
   padding-bottom: 10px;
   text-align: right;
 }
-/* line 110, ../sass/sbac_forum.scss */
+/* line 117, ../sass/sbac_forum.scss */
 .filters .category-buttons button {
   margin: 10px;
+}
+
+/* line 125, ../sass/sbac_forum.scss */
+.categories-filter-choices {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  margin: -100px 0 0 0;
+  z-index: 9999;
+}
+/* line 132, ../sass/sbac_forum.scss */
+.categories-filter-choices .category-filter-list {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  width: 500px;
+  background: #edf3e0;
+  border: 1px solid #fff;
+}
+/* line 139, ../sass/sbac_forum.scss */
+.categories-filter-choices .category-filter-list h2 {
+  -webkit-border-radius: 6px 6px 0 0;
+  -moz-border-radius: 6px 6px 0 0;
+  -ms-border-radius: 6px 6px 0 0;
+  -o-border-radius: 6px 6px 0 0;
+  border-radius: 6px 6px 0 0;
+  background-color: white;
+  padding: 5px;
+  margin: 0;
+  cursor: pointer;
+  font-weight: normal;
+}
+/* line 149, ../sass/sbac_forum.scss */
+.categories-filter-choices ul {
+  list-style-type: none;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+/* line 155, ../sass/sbac_forum.scss */
+.categories-filter-choices ul li {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  width: 46%;
+  float: left;
+  display: inline;
+  margin: 1% 2%;
+  padding: 5px 0;
+  background: none;
+  color: #246a34;
+  cursor: pointer;
+}
+/* line 166, ../sass/sbac_forum.scss */
+.categories-filter-choices ul li .highlight {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-color: white;
+  border: 1px solid;
+  vertical-align: top;
+}
+/* line 175, ../sass/sbac_forum.scss */
+.categories-filter-choices ul li .filter-name {
+  display: inline-block;
+  width: 82%;
+  margin-top: -2px;
+  vertical-align: top;
+}
+/* line 183, ../sass/sbac_forum.scss */
+.categories-filter-choices ul li.current .highlight {
+  background-color: #0085ad;
+  border-color: #0085ad;
+}
+
+/* line 194, ../sass/sbac_forum.scss */
+.categories-current-filters {
+  margin: 10px 20px 5px;
+  padding: 10px 0 0;
+  /*color: white;
+      border: 1px solid white;
+      border-width: 0 0 1px;
+  */
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
+}
+/* line 195, ../sass/sbac_forum.scss */
+.categories-current-filters.noshow {
+  display: none;
+}
+/* line 208, ../sass/sbac_forum.scss */
+.categories-current-filters h3 {
+  color: #063e5f;
+  font-size: 18px;
+}
+/* line 213, ../sass/sbac_forum.scss */
+.categories-current-filters .current-filter {
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
+  cursor: pointer;
+  float: left;
+  margin: 10px 10px 10px 0;
+  font-size: 0.8em;
+  padding: 10px 40px 10px 10px;
+  background: white url("../images/icon-close.png") no-repeat right center;
+  border-right: 10px solid transparent;
+  color: #7d8a95;
+}
+
+/* line 228, ../sass/sbac_forum.scss */
+a.category-hide {
+  position: absolute;
+  right: 20px;
+  top: -30px;
+  fone-size: 13px;
+  color: #006082;
+}
+
+/* line 236, ../sass/sbac_forum.scss */
+a.category-hide:hover {
+  text-decoration: underline;
+  color: #006082;
+}
+
+/* line 241, ../sass/sbac_forum.scss */
+a.category-hide:focus {
+  color: #006082;
+}
+
+/* line 245, ../sass/sbac_forum.scss */
+.category-hide.active:after {
+  background-image: url("../images/icon-toggle-up.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 12px;
+  margin-left: 5px;
+  vertical-align: baseline;
+  width: 10px;
+}
+
+/* line 256, ../sass/sbac_forum.scss */
+.category-hide:after {
+  background-image: url("../images/icon-toggle-down.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 12px;
+  margin-left: 5px;
+  vertical-align: baseline;
+  width: 10px;
+}
+
+/* line 270, ../sass/sbac_forum.scss */
+#sbac-forum-filter-button:before {
+  background-image: url("../images/icon-buttonAccept.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 18px;
+  margin-right: 12px;
+  margin-top: -2px;
+  vertical-align: middle;
+  width: 18px;
+}
+
+/* line 282, ../sass/sbac_forum.scss */
+#sbac-forum-filter-button.is-edit:before {
+  background-image: url("../images/icon-buttonEdit.png");
+  width: 17px;
+}
+
+/* line 287, ../sass/sbac_forum.scss */
+#edit-reset-filters {
+  background-color: #8A1538;
+  border: 1px solid #793348;
+}
+
+/* line 292, ../sass/sbac_forum.scss */
+#edit-reset-filters:hover {
+  background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+/* line 296, ../sass/sbac_forum.scss */
+#edit-reset-filters:before {
+  background-image: url("../images/icon-buttonReset.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 18px;
+  margin-right: 12px;
+  margin-top: -2px;
+  vertical-align: middle;
+  width: 17px;
 }
