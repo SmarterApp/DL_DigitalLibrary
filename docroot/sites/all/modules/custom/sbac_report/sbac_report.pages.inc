@@ -161,8 +161,7 @@ function sbac_report_build_resource_summary($uid, $date_range, $limit = 5) {
             node.sticky AS node_sticky
             FROM
             {node} node
-            LEFT JOIN {node_revision} node_revision ON node.vid = node_revision.vid
-            INNER JOIN {workbench_moderation_node_history} workbench_moderation_node_history ON node_revision.vid = workbench_moderation_node_history.vid
+            JOIN {workbench_moderation_node_history} workbench_moderation_node_history ON node.nid = workbench_moderation_node_history.nid AND node.vid = workbench_moderation_node_history.vid
             WHERE (((node.uid = :uid ))
             AND (((node.type IN ('resource'))
             AND (workbench_moderation_node_history.current <> '0')
@@ -180,11 +179,15 @@ function sbac_report_build_resource_summary($uid, $date_range, $limit = 5) {
     $results = db_query_range($query, 0, $limit, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
   }
 
-  $data = array();
+  $data = array('one' => 0, 'two' => 0, 'three' => 0);
   foreach ($results as $row) {
     $data['one']++;
-    $data['two'] += $row->workbench_moderation_node_history_published;
-    $data['three'] += $row->node_sticky;
+    if ($row->workbench_moderation_node_history_published == 1 && $row->node_sticky == 0) {
+      $data['two'] += $row->workbench_moderation_node_history_published;
+    }
+    if ($row->workbench_moderation_node_history_published == 1 && $row->node_sticky == 1) {
+      $data['three'] += $row->node_sticky;
+    }
   }
 
   $rows = array(array(0, 0, 0));
@@ -496,7 +499,7 @@ function sbac_report_sne_autocomplete($string = '') {
   $state_condition = '';
   $state_tid = sbac_report_get_default_state_tid();
 
-  if ($state_tid == 'all') {
+  if (isset($state_tid['all']) && $state_tid['all'] == 'all') {
     $state_condition = '';
   }
   elseif (!empty($state_tid)) {

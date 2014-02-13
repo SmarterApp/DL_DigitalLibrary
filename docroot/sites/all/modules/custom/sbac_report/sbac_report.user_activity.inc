@@ -274,7 +274,8 @@ function get_user_activity($users, $date_range) {
   $user_activity['resources_reviewed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # resources contributed:
-  $sql = "select count(distinct(n.nid)) as count, n.uid, n.created from node as n join workbench_moderation_node_history as wmnh on n.nid = wmnh.nid
+  $sql = "select count(distinct(n.nid)) as count, n.uid, n.created from node as n
+    join workbench_moderation_node_history as wmnh on n.nid = wmnh.nid AND n.vid = wmnh.vid
     where n.type = 'resource' and n.uid in (%s) and wmnh.state!='draft' and wmnh.current <> '0' and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.uid";
   $user_activity['resources_contributed'] = count_with_users_query($sql, $users, $from_date, $to_date);
@@ -323,14 +324,14 @@ function get_user_activity($users, $date_range) {
   $user_activity['gc_reviews_returned_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Contributed resources posted
-  $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and nid in (select nid from workbench_moderation_node_history where
-    state = 'published') and
+  $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and sticky = 0 and nid in (select nid from workbench_moderation_node_history where
+    state = 'published' AND published = 1 AND current = 1) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
   $user_activity['contributed_resources_posted'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Contributed resources posted with distinction
   $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and sticky = 1 and nid in (select nid from workbench_moderation_node_history
-    where state = 'published') and
+    where state = 'published' AND published = 1 AND current = 1) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
   $user_activity['contributed_resources_posted_with_distinction'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
