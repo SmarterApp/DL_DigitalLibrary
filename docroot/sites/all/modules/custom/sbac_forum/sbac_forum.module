@@ -40,6 +40,19 @@ function sbac_forum_menu() {
     'menu_name' => 'main-menu',
     'weight' => -10,
   );
+
+  // Create own menu callback for adding a term. Dont need to mess with menu_alter.
+  $items['forums/%taxonomy_vocabulary_machine_name/add'] = array(
+    'title' => 'Start A Forum',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_form_term', array(), 1),
+    'access callback' => '_sbac_forum_add_forum_user_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+    'file path' => drupal_get_path('module', 'taxonomy'),
+    'file' => 'taxonomy.admin.inc',
+  );
+
   return $items;
 }
 
@@ -56,6 +69,33 @@ function _sbac_forum_user_access() {
   }
   return $access;
 }
+
+/**
+ * Access callback for Add Forum page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to add a forum.
+ */
+function _sbac_forum_add_forum_user_access($vocabulary) {
+  global $user;
+  $access = FALSE;
+
+  // If user is trying to url hack to add terms to other vocabs,
+  //   return false immediately.
+  if ($vocabulary->machine_name != 'forum') {
+    return $access;
+  }
+
+  // Anon users should not have access.
+  if (!empty($user->uid)) {
+    // Facilitators or users with "administer taxonomy" perms can add forums
+    if (in_array('facilitator', $user->roles) ||
+        user_access('administer taxonomy') ) {
+      $access = TRUE;
+    }
+  }
+  return $access;
+}
+
 
 /**
  * Implements hook_block_info().

@@ -258,8 +258,13 @@ function sbac_forum_sub_nav_form($form, &$form_state) {
     '#size'           => 30,
   );
 
+  $link_options = array(
+    'attributes' => array(
+      'class'=> 'new-forum-link',
+    ),
+  );
   $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
-  $new_forum_link_text .= l('+ Start a Forum', '#', array('attributes' => array('class'=> 'new-forum-link')));
+  $new_forum_link_text .= l('+ Start a Forum', 'forums/forum/add', $link_options);
   $new_forum_link_text .= '</div>';
   $form['forum_start'] = array(
     '#markup' => $new_forum_link_text,
