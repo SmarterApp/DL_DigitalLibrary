@@ -226,7 +226,7 @@ function sbac_user_admin_account() {
 
   // the count query only cares about the total number of results, so we clone the
   // original query before fields are added
-  $count_query = clone $query;
+  $count_query = $query;
   $count_query->addExpression('COUNT(u.uid)');
 
   // now that the query has been cloned for the count, we add fields and options 
