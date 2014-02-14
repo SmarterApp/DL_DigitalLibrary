@@ -6,8 +6,18 @@
 
 include_once 'sbac_forum.features.inc';
 include_once 'includes/sbac_forum.component_alter.inc';
+include_once 'includes/sbac_forum.api.inc';
+
+define('SBAC_FORUM_CATEGORY_FILTERS', 'sbac-forum-category-filters');
+define('SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS', 'sbac-forum-my-forum-category-filters');
+
+define('SBAC_FORUM_SUBNAV_ACTIVE', 'sbac-forum-sub-nav-active');
+define('SBAC_FORUM_SUBNAV_ALL', 'all-forums');
+define('SBAC_FORUM_SUBNAV_OWN', 'my-forum');
+define('SBAC_FORUM_SUBNAV_KEYWORD', 'keyword-search');
 
 define('SBAC_FORUM_FILTERS_CLOSED', 'sbac-forum-filters-closed');
+define('SBAC_FORUM_MY_FORUM_FILTERS_CLOSED', 'sbac-forum-my-forum-filters-closed');
 
 /**
  * =============================================================================

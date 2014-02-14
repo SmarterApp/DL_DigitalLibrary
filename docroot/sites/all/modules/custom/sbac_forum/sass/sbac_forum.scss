@@ -8,6 +8,8 @@ $text: #5a5a5a;
 $header: #18577e;
 $teal: #0085ad;
 $darkgreen: #246a34;
+$darkblue: #006082;
+
 
 /* -----------------------------------------
    Page Elements
@@ -16,6 +18,10 @@ $darkgreen: #246a34;
   display:none;
 }
 
+.sbac-forum-main-container{
+  float:left;
+  width:100%
+}
 
 /* -----------------------------------------
    Forms
@@ -305,3 +311,57 @@ a.category-hide:focus {
     width: 17px;
 }
 
+// --------------------- Forum Subnav ------------------------------
+#sbac-forum-sub-nav-form {
+
+  float:left;
+  width:100%;
+
+  .forum-subnav-primary-wrapper{
+    float:left;
+    width:30%;
+
+    button {
+      background-image: -moz-linear-gradient(top, rgba(0,0,0,0) 50%,rgba(0,0,0,.2) 100%);
+      background-color: $white;
+      color: $darkblue;
+      border: 1px solid #000;
+    }
+
+    button.is-pressed {
+      background-color: $darkblue;
+      color: $white;
+      background-image:none;
+      box-shadow:1px 2px 4px 0px rgba(0,0,0,.3) inset;
+      border: 1px solid #000;
+      border-right:1px solid rgba(255,255,255,.6);
+      border-bottom:1px solid rgba(255,255,255,.6);
+    }
+
+  }
+
+  .forum-subnav-sort-wrapper{
+    float:left;
+    width:23%;
+    margin-top:-15px;
+  }
+
+  .forum-subnav-keyword-wrapper {
+    float:left;
+    width:25%;
+    margin-top:-15px;
+    margin-left:18px;
+  }
+
+  .forum-subnav-start-link-wrapper {
+    float:left;
+    width:20%;
+
+    a.new-forum-link {
+      float:right;
+    }
+
+  }
+
+
+}

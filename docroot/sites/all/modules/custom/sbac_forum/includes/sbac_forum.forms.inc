@@ -2,11 +2,18 @@
 
 
 /**
+ * =============================================================================
+ *    Forum Category Filter form
+ * =============================================================================
+ */
+
+
+/**
  * Form for submitting the forum category filters.
  *
  * @return array
  */
-function sbac_forum_category_forum_form() {
+function sbac_forum_category_forum_form($form, &$form_state) {
   $form = array();
 
   $hide_categories_text = t('Hide Categories');
@@ -138,7 +145,7 @@ function _sbac_forum_filter_categories() {
  * @param $form
  * @param $form_state
  */
-function sbac_forum_category_forum_form_submit(&$form, &$form_state) {
+function sbac_forum_category_forum_form_submit($form, &$form_state) {
   $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = $form_state['input']['current_filters'];
 }
 
@@ -151,4 +158,120 @@ function sbac_forum_category_forum_form_submit(&$form, &$form_state) {
 function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
   $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
   $form_state['redirect'] = 'forums';
+}
+
+
+/**
+ * =============================================================================
+ *    Forum Sub-Nav form
+ * =============================================================================
+ */
+
+function sbac_forum_sub_nav_form($form, &$form_state) {
+  $form = array();
+
+  $all_forums_classes = '';
+  $my_forums_classes = '';
+  $active_tab = sbac_forum__api__get_active_subnav();
+  switch($active_tab) {
+    case SBAC_FORUM_SUBNAV_ALL:
+      $all_forums_classes = 'is-pressed';
+      break;
+    case SBAC_FORUM_SUBNAV_OWN:
+      $my_forums_classes = 'is-pressed';
+      break;
+    case SBAC_FORUM_SUBNAV_KEYWORD:
+      // both should be off. Keyword search was performed.
+      break;
+    default:
+      // set all forums if it ends up empty.
+      $all_forums_classes = 'is-pressed';
+      break;
+  }
+
+  $form['all_forums'] = array(
+    '#prefix'       => '<div class="forum-subnav-primary-wrapper">',
+    '#type'         => 'submit',
+    '#value'        => t('All Forums'),
+    '#attributes'   => array(
+      'class'   => array($all_forums_classes),
+    ),
+    '#submit' => array('_sbac_forum_sub_nav__set_all__submit'),
+  );
+  $form['my_forum'] = array(
+    '#type'         => 'submit',
+    '#value'        => t('My Forums'),
+    '#attributes'   => array(
+      'class' => array($my_forums_classes),
+    ),
+    '#submit' => array('_sbac_forum_sub_nav__set_own__submit'),
+    '#suffix'       => '</div>',
+  );
+
+  $default = 'forum-most-active';
+  // // If session var is set, make it the default.
+  // if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
+  //     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
+  //   $default = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
+  // }
+
+  $options = array(
+    'forum-most-active'   => t('Most Active'),
+    'forum-newest'        => t('Newest'),
+    'forum-most-members'  => t('Most Members'),
+  );
+
+  // Ajax submitted. Set Text if selected.
+  if (isset($form_state['values']['forum_sort_order'])) {
+    $new_value_key = $form_state['values']['forum_sort_order'];
+    $old_value_text = $options[$new_value_key];
+    $options[$new_value_key] = t('Sort by: ' . $old_value_text);
+  } else {
+    $options[$default] = t('Sort by: ' . $options[$default]);
+  }
+
+
+  // Needs to ajax submit to set the session variable that tracks default state.
+  $form['forum_sort_order'] = array(
+    '#prefix'         => '<div class="forum-subnav-sort-wrapper">',
+    '#suffix'         => '</div>',
+    '#type'           => 'select',
+    '#title'          => t(''),
+    '#required'       => FALSE,
+    '#options'        => $options,
+    '#default_value'  => $default,
+    // '#ajax'           => array(
+    //   'callback'  => '_sbac_resource_digital_library_sort_form__ajax__change',
+    //   'event'     => 'change',
+    //   'wrapper'   => 'form-wrapper-dl-sort-element',
+    //   'progress'  => array('type' => 'none'),
+    // )
+  );
+
+
+  $form['forum_keyword'] = array(
+    '#prefix'         => '<div class="forum-subnav-keyword-wrapper">',
+    '#suffix'         => '</div>',
+    '#type'           => 'textfield',
+    '#title'          => t(''),
+    '#default_value'  => 'Search Forums',
+    '#size'           => 30,
+  );
+
+  $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
+  $new_forum_link_text .= l('Start a Forum', '#', array('attributes' => array('class'=> 'new-forum-link')));
+  $new_forum_link_text .= '</div>';
+  $form['forum_start'] = array(
+    '#markup' => $new_forum_link_text,
+  );
+
+  return $form;
+}
+
+function _sbac_forum_sub_nav__set_all__submit($form, &$form_state) {
+  sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+}
+
+function _sbac_forum_sub_nav__set_own__submit($form, &$form_state) {
+  sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_OWN);
 }
