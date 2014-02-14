@@ -375,6 +375,44 @@ a.category-hide:focus {
       background-color:$teal;
     }
   }
+}
+
+// --------------------- Add Forum Form ------------------------------
+.page-forums-forum-add {
+
+  #page-title {
+    display:block !important;
+  }
+
+  .chzn-container-multi .chzn-choices .search-field input {
+    height:2.3125em;
+  }
+
+  #taxonomy_term_forum_form_group_forum_access {
+    height:220px;
+  }
+
+  .forum-tags-left,
+  .forum-tags-right {
+    float:left;
+    width:50%;
+    padding-right:50px;
+  }
 
 
+  .forum-add-access-left,
+  .forum-add-access-right {
+    float:left;
+    width:50%;
+    padding-right:50px;
+  }
+
+  #edit-field-state label,
+  #edit-field-forum-access-role-list label {
+    display:none;
+  }
+
+  .sbac-forum-add-forum-buttons {
+    text-align:right;
+  }
 }

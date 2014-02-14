@@ -382,3 +382,39 @@ a.category-hide:focus {
 #sbac-forum-sub-nav-form .forum-subnav-start-link-wrapper a.new-forum-link:hover {
   background-color: #0085ad;
 }
+
+/* line 383, ../sass/sbac_forum.scss */
+.page-forums-forum-add #page-title {
+  display: block !important;
+}
+/* line 387, ../sass/sbac_forum.scss */
+.page-forums-forum-add .chzn-container-multi .chzn-choices .search-field input {
+  height: 2.3125em;
+}
+/* line 391, ../sass/sbac_forum.scss */
+.page-forums-forum-add #taxonomy_term_forum_form_group_forum_access {
+  height: 220px;
+}
+/* line 396, ../sass/sbac_forum.scss */
+.page-forums-forum-add .forum-tags-left,
+.page-forums-forum-add .forum-tags-right {
+  float: left;
+  width: 50%;
+  padding-right: 50px;
+}
+/* line 404, ../sass/sbac_forum.scss */
+.page-forums-forum-add .forum-add-access-left,
+.page-forums-forum-add .forum-add-access-right {
+  float: left;
+  width: 50%;
+  padding-right: 50px;
+}
+/* line 411, ../sass/sbac_forum.scss */
+.page-forums-forum-add #edit-field-state label,
+.page-forums-forum-add #edit-field-forum-access-role-list label {
+  display: none;
+}
+/* line 415, ../sass/sbac_forum.scss */
+.page-forums-forum-add .sbac-forum-add-forum-buttons {
+  text-align: right;
+}

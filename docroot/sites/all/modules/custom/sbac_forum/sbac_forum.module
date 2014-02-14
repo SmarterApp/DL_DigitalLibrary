@@ -167,6 +167,78 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
       // Hide the description field that comes with the taxonomy term entity.
       //   Use our own descrition field, more control.
       $form['description']['#access'] = FALSE;
+
+      global $user;
+      if ($user->uid != 1) { // Only super admin can see these fields.
+        $can_see = FALSE;
+
+        // Membership fields.
+        $form['field_forum_facilitators']['#access'] = $can_see;
+        $form['field_fc_forum_members']['#access'] = $can_see;
+
+        // Stats fields.
+        $form['field_forum_topic_count']['#access'] = $can_see;
+        $form['field_forum_topic_comment_count']['#access'] = $can_see;
+        $form['field_forum_member_count']['#access'] = $can_see;
+        $form['field_forum_last_activity']['#access'] = $can_see;
+      }
+
+      $path_to_css_file = drupal_get_path('module', 'sbac_forum');
+      $path_to_css_file .= '/css/sbac_forum.css';
+      $form['#attached']['css'][] = $path_to_css_file;
+
+      $form['name']['#title'] = 'Forum Title';
+
+      // Tags fields. Add wrapper to group them
+      $form['field_subject']['#prefix'] = '<div class="forum-tags-left">';
+      $form['field_intended_end_user']['#suffix'] = '</div>';
+      $form['field_grades']['#prefix'] = '<div class="forum-tags-right">';
+      $form['field_intended_student']['#suffix'] = '</div><div class="clearfix"></div>';
+
+      // Access fields. Modify behaviour.
+      $form['field_forum_access_states']['#prefix'] = '<div class="forum-add-access-left">';
+      $form['field_state']['#suffix'] = '</div>';
+      // $form['field_state']['#suffix'] = '';
+      $state_field_state = array(
+      'visible' => array(
+        ':input[name="field_forum_access_states[und]"]' => array('value' => 0),
+        )
+      );
+      $form['field_state']['#states'] = $state_field_state;
+
+      $form['field_forum_access_user_roles']['#prefix'] = '<div class="forum-add-access-right">';
+      $form['field_forum_access_role_list']['#suffix'] = '</div><div class="clearfix"></div>';
+      $role_field_state = array(
+      'visible' => array(
+        ':input[name="field_forum_access_user_roles[und]"]' => array('value' => 0),
+        )
+      );
+      $form['field_forum_access_role_list']['#states'] = $role_field_state;
+
+
+      // Modify submit buttons
+      $cancel_button_classes = 'sbac-forum-add-forum-cancel-button';
+      $form['actions']['cancel_add'] = array(
+        '#type'         => 'submit',
+        '#value'        => t('Cancel'),
+        '#weight' => 4,
+        '#limit_validation_errors' => array(),
+        '#attributes'   => array(
+          'class' => array($cancel_button_classes),
+        ),
+        '#submit' => array('_sbac_forum__add_forum_form_redirect_submit'),
+        '#prefix'       => '<div class="sbac-forum-add-forum-buttons">',
+      );
+      $form['actions']['submit']['#value'] = 'Start Forum';
+      $form['actions']['submit']['#suffix'] = '</div>';
+
+      // Redirect on successful completion.
+      $form['#submit'][] = '_sbac_forum__add_forum_form_redirect_submit';
+
     }
   }
+}
+
+function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
+  $form_state['redirect'] = 'forums';
 }
