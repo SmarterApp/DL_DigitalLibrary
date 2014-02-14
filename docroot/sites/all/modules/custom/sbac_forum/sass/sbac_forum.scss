@@ -7,6 +7,7 @@ $white: #FFF;
 $text: #5a5a5a;
 $header: #18577e;
 $teal: #0085ad;
+$lightblue: #00b5e2;
 $darkgreen: #246a34;
 $darkblue: #006082;
 
@@ -359,8 +360,20 @@ a.category-hide:focus {
 
     a.new-forum-link {
       float:right;
+      background-color:$lightblue;
+      color:$white;
+      height:34px;
+      width:85%;
+      padding:8px;
+      text-align:right;
+      border-radius: 6px;
+      border: 1px solid #000;
+      text-shadow:0 1px 0 rgba(0, 0, 0, 0.4);
     }
 
+    a.new-forum-link:hover {
+      background-color:$teal;
+    }
   }
 
 
