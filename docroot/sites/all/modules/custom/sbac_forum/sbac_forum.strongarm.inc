@@ -122,7 +122,7 @@ function sbac_forum_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'path' => array(
-          'weight' => '10',
+          'weight' => '11',
         ),
         'name' => array(
           'weight' => '0',

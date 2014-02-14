@@ -21,7 +21,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Who Can View and Join This Forum?',
-    'weight' => '7',
+    'weight' => '8',
     'children' => array(
       0 => 'field_state',
       1 => 'field_forum_access_states',
@@ -57,7 +57,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Members',
-    'weight' => '9',
+    'weight' => '10',
     'children' => array(
       0 => 'field_fc_forum_members',
     ),
@@ -84,7 +84,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Facilitators',
-    'weight' => '8',
+    'weight' => '9',
     'children' => array(
       0 => 'field_forum_facilitators',
     ),
@@ -112,7 +112,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Administrative (hidden)',
-    'weight' => '16',
+    'weight' => '12',
     'children' => array(
       0 => 'field_forum_topic_count',
       1 => 'field_forum_topic_comment_count',
@@ -130,6 +130,42 @@ function sbac_forum_field_group_info() {
     ),
   );
   $export['group_forum_stats|taxonomy_term|forum|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_forum_tags|taxonomy_term|forum|form';
+  $field_group->group_name = 'group_forum_tags';
+  $field_group->entity_type = 'taxonomy_term';
+  $field_group->bundle = 'forum';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Add Tags',
+    'weight' => '3',
+    'children' => array(
+      0 => 'field_grades',
+      1 => 'field_intended_end_user',
+      2 => 'field_intended_student',
+      3 => 'field_subject',
+    ),
+    'format_type' => 'div',
+    'format_settings' => array(
+      'label' => 'Add Tags',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-forum-tags field-group-div',
+        'description' => 'Add tags that best describe the purpose of your forum and make it easily discoverable',
+        'show_label' => '1',
+        'label_element' => 'h3',
+        'effect' => 'none',
+        'speed' => 'fast',
+      ),
+      'formatter' => 'open',
+    ),
+  );
+  $export['group_forum_tags|taxonomy_term|forum|form'] = $field_group;
 
   return $export;
 }
