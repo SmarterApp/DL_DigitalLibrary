@@ -11,6 +11,16 @@
  * @param $query
  */
 function sbac_resource_views_query_alter(&$view, &$query) {
+  if ($view->name == 'resource') {
+    global $user;
+    $var = '';
+  }
+
+  if ($view->name == 'my_resources') {
+    global $user;
+    $var = '';
+  }
+
   if ($view->name == 'resource_review') {
     global $user;
 
@@ -494,89 +504,6 @@ function sbac_resource_resource_review_apply_sorts(&$view) {
   }
 }
 
-function sbac_resource_views_data() {
-//  | sbac_node_resource_state |
-//  CREATE TABLE `sbac_node_resource_state` (
-//  `nid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The nid of the resource',
-//  `uid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The uid who modified the resource',
-//  `state` varchar(255) NOT NULL COMMENT 'The actual resource state',
-//  PRIMARY KEY (`nid`,`uid`),
-//  KEY `nid` (`nid`),
-//  KEY `uid` (`uid`)
-
-  $data['sbac_node_resource_state']['table']['group'] = t('SBAC Resource Node State');
-  // Base table.
-  $data['sbac_node_resource_state']['table']['base'] = array(
-    'field' => 'nid', // This is the identifier field for the view.
-    'title' => t('SBAC Resource Node Table'),
-    'help' => t('Custom data for the resource states.'),
-    'weight' => -10,
-  );
-  // Join.
-  $data['sbac_node_resource_state']['table']['join'] = array(
-    'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
-    ),
-    'users' => array(
-      'left_field' => 'uid',
-      'field' => 'uid',
-    ),
-  );
-
-
-  // Node ID table field.
-  $data['sbac_node_resource_state']['nid'] = array(
-    'title' => t('Resource NID'),
-    'help' => t('Custom data for the resource states.'),
-    'relationship' => array(
-      'base' => 'node', // The name of the table to join with.
-      'base field' => 'nid', // The name of the field on the joined table.
-      'handler' => 'views_handler_relationship',
-      'label' => t('Default label for the relationship'),
-      'title' => t('Title shown when adding the relationship'),
-      'help' => t('More information on this relationship'),
-    ),
-  );
-
-  // User ID field.
-  $data['sbac_node_resource_state']['uid'] = array(
-    'title' => t('User ID'),
-    'help' => t('User ID.'),
-    'field' => array(
-      'handler' => 'views_handler_field_numeric',
-      'click sortable' => TRUE,
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-  );
-
-  // State field.
-  $data['sbac_node_resource_state']['state'] = array(
-    'title' => t('State field.'),
-    'help' => t('State field.'),
-    'field' => array(
-      'handler' => 'views_handler_field',
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_in_operator',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_string',
-    ),
-  );
-
-  return $data;
-}
-
 /**
  * Applies filtering options on View which restrict resources displayed to ones
  * matching the user's Subject & Grade values
@@ -672,4 +599,112 @@ function sbac_resource_filter_user_tags(&$view, $account = NULL) {
 
   $view->display_handler->set_option('filter_groups', $groups);
   $view->display_handler->set_option('filters', $view_filters);
+}
+
+/**
+ * Implements hook_views_data().
+ *
+ * @return mixed
+ */
+function sbac_resource_views_data() {
+//  | sbac_node_resource_state |
+//  CREATE TABLE `sbac_node_resource_state` (
+//  `nid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The nid of the resource',
+//  `uid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The uid who modified the resource',
+//  `state` varchar(255) NOT NULL COMMENT 'The actual resource state',
+//  `flag` varchar(1000) NOT NULL DEFAULT '0' COMMENT 'The flag on the resource',
+//  PRIMARY KEY (`nid`,`uid`),
+//  KEY `nid` (`nid`),
+//  KEY `uid` (`uid`)
+
+  $data['sbac_node_resource_state']['table']['group'] = t('SBAC Resource Node State');
+  // Base table.
+  $data['sbac_node_resource_state']['table']['base'] = array(
+    'field' => 'nid', // This is the identifier field for the view.
+    'title' => t('SBAC Resource Node Table'),
+    'help' => t('Custom data for the resource states.'),
+    'weight' => -10,
+  );
+  // Join.
+  $data['sbac_node_resource_state']['table']['join'] = array(
+    'node' => array(
+      'left_field' => 'nid',
+      'field' => 'nid',
+    ),
+    'users' => array(
+      'left_field' => 'uid',
+      'field' => 'uid',
+    ),
+  );
+
+
+  // Node ID table field.
+  $data['sbac_node_resource_state']['nid'] = array(
+    'title' => t('Resource NID'),
+    'help' => t('Custom data for the resource states.'),
+    'relationship' => array(
+      'base' => 'node', // The name of the table to join with.
+      'base field' => 'nid', // The name of the field on the joined table.
+      'handler' => 'views_handler_relationship',
+      'label' => t('Default label for the relationship'),
+      'title' => t('Nid'),
+      'help' => t('More information on this relationship'),
+    ),
+  );
+
+  // User ID field.
+  $data['sbac_node_resource_state']['uid'] = array(
+    'title' => t('User ID'),
+    'help' => t('User ID.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  // State field.
+  $data['sbac_node_resource_state']['state'] = array(
+    'title' => t('State field.'),
+    'help' => t('State field.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_in_operator',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  // Flag field.
+  $data['sbac_node_resource_state']['flag'] = array(
+    'title' => t('Flag field.'),
+    'help' => t('Flag field.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_in_operator',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  return $data;
 }

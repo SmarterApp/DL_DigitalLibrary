@@ -1060,20 +1060,19 @@ function sbac_resource_update_7047() {
  * Alter the table column type.
  */
 function sbac_resource_update_7048() {
-  $ret = array();
-  db_query('ALTER TABLE {sbac_node_resource_state} MODIFY flag VARCHAR(1000) DEFAULT ""');
-  return $ret;
+  db_query("ALTER TABLE {sbac_node_resource_state} MODIFY flag VARCHAR(1000) DEFAULT ''");
+  return "Increased size of column flag";
 }
 
 /**
  * Creates states for each user / node in the system.
  */
-//function sbac_resource_update_7048() {
-//  $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
-//  foreach ($results as $row) {
-//    $node = node_load($row->nid);
-//    if ($node) {
-//      sbac_resource_save_current_state($node);
-//    }
-//  }
-//}
+function sbac_resource_update_7049() {
+  $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
+  foreach ($results as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      sbac_resource_save_current_state($node);
+    }
+  }
+}
