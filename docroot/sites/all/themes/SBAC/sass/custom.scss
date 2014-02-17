@@ -2981,16 +2981,19 @@ a.tabledrag-handle .handle {
     font-size: 15px;
 		line-height:1;
     margin: 6px 0 0;
-    padding: 6px 3px 0; /* use this to set a specific height for your dropdown (DO NOT use the attribute 'height') */
+    padding: 6px 3px 0 3px; /* use this to set a specific height for your dropdown (DO NOT use the attribute 'height') */
     cursor: pointer;
-    text-indent: 0.01px;
-    text-overflow: "";
+    /*for firefox*/
+		-moz-appearance: none;
+	  /*for chrome*/
+	  -webkit-appearance:none;
+		text-indent: 3px;
+		text-overflow: '';
     background-color: #F2F2F2;
 		border: 1px solid #006082;
 		border-radius: 6px;
 		width: 210px;
 		vertical-align: top;
-		-webkit-appearance:none;
 	}
 	
 	option {

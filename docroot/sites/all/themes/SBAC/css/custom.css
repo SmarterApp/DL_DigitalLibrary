@@ -10573,19 +10573,22 @@ a.tabledrag-handle .handle {
   font-size: 15px;
   line-height: 1;
   margin: 6px 0 0;
-  padding: 6px 3px 0;
+  padding: 6px 3px 0 3px;
   /* use this to set a specific height for your dropdown (DO NOT use the attribute 'height') */
   cursor: pointer;
-  text-indent: 0.01px;
-  text-overflow: "";
+  /*for firefox*/
+  -moz-appearance: none;
+  /*for chrome*/
+  -webkit-appearance: none;
+  text-indent: 3px;
+  text-overflow: '';
   background-color: #F2F2F2;
   border: 1px solid #006082;
   border-radius: 6px;
   width: 210px;
   vertical-align: top;
-  -webkit-appearance: none;
 }
-/* line 2996, ../sass/custom.scss */
+/* line 2999, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form option,
 .block-sbac-resource-sbac-resource-rr-sort-form option,
 .block-sbac-resource-sbac-resource-mr-sort-form option {
@@ -10593,7 +10596,7 @@ a.tabledrag-handle .handle {
   font-size: 15px;
   padding: 3px;
 }
-/* line 3003, ../sass/custom.scss */
+/* line 3006, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form select:-moz-focusring,
 .block-sbac-resource-sbac-resource-rr-sort-form select:-moz-focusring,
 .block-sbac-resource-sbac-resource-mr-sort-form select:-moz-focusring {
@@ -10601,7 +10604,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0 0 0 #000;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  /* line 3010, ../sass/custom.scss */
+  /* line 3013, ../sass/custom.scss */
   .block-sbac-resource-sbac-resource-dl-sort-form select, .block-sbac-resource-sbac-resource-dl-sort-form option,
   .block-sbac-resource-sbac-resource-rr-sort-form select,
   .block-sbac-resource-sbac-resource-rr-sort-form option,
@@ -10611,7 +10614,7 @@ a.tabledrag-handle .handle {
   }
 }
 @media screen and (min-width: 0 \0) {
-  /* line 3017, ../sass/custom.scss */
+  /* line 3020, ../sass/custom.scss */
   .block-sbac-resource-sbac-resource-dl-sort-form select, .block-sbac-resource-sbac-resource-dl-sort-form option,
   .block-sbac-resource-sbac-resource-rr-sort-form select,
   .block-sbac-resource-sbac-resource-rr-sort-form option,
