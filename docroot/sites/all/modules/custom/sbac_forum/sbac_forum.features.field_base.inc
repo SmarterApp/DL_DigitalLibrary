@@ -225,8 +225,8 @@ function sbac_forum_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        1 => 'All States',
-        0 => 'Only Some States',
+        1 => '<span class="forum-access-state-val">All States</span><p>Allow all Smarter Balanced member states to view and join this forum</p>',
+        0 => '<span class="forum-access-state-val">Only Some States</span><p>Allow only certain Smarter Balanced states to view and join this forum</p>',
       ),
       'allowed_values_function' => '',
     ),
@@ -251,8 +251,8 @@ function sbac_forum_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        1 => 'All Users',
-        0 => 'Only Some Users',
+        1 => '<span class="forum-access-role-val">All Users</span><p>Allow all Digital Library members to view and join this forum</p>',
+        0 => '<span class="forum-access-role-val">Only Some Users</span><p>Allow only Digital Library members with certain user roles to view and join this forum</p>',
       ),
       'allowed_values_function' => '',
     ),

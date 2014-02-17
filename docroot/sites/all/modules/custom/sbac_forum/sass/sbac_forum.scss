@@ -378,7 +378,8 @@ a.category-hide:focus {
 }
 
 // --------------------- Add Forum Form ------------------------------
-.page-forums-forum-add {
+.page-forums-forum-add,
+.page-taxonomy-term-edit {
 
   #page-title {
     display:block !important;
@@ -390,6 +391,10 @@ a.category-hide:focus {
 
   #taxonomy_term_forum_form_group_forum_access {
     height:220px;
+
+    .error {
+      border:2px solid #FF0000;
+    }
   }
 
   .forum-tags-left,

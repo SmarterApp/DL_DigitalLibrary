@@ -195,25 +195,28 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
       $form['field_grades']['#prefix'] = '<div class="forum-tags-right">';
       $form['field_intended_student']['#suffix'] = '</div><div class="clearfix"></div>';
 
+
       // Access fields. Modify behaviour.
       $form['field_forum_access_states']['#prefix'] = '<div class="forum-add-access-left">';
       $form['field_state']['#suffix'] = '</div>';
       // $form['field_state']['#suffix'] = '';
       $state_field_state = array(
-      'visible' => array(
-        ':input[name="field_forum_access_states[und]"]' => array('value' => 0),
-        )
+        'visible' => array(
+          ':input[name="field_forum_access_states[und]"]' => array('value' => 0),
+        ),
       );
       $form['field_state']['#states'] = $state_field_state;
+      unset($form['field_state'][LANGUAGE_NONE]['#options']['_none']); // remove none option
 
       $form['field_forum_access_user_roles']['#prefix'] = '<div class="forum-add-access-right">';
       $form['field_forum_access_role_list']['#suffix'] = '</div><div class="clearfix"></div>';
       $role_field_state = array(
-      'visible' => array(
-        ':input[name="field_forum_access_user_roles[und]"]' => array('value' => 0),
-        )
+        'visible' => array(
+          ':input[name="field_forum_access_user_roles[und]"]' => array('value' => 0),
+        ),
       );
       $form['field_forum_access_role_list']['#states'] = $role_field_state;
+      unset($form['field_forum_access_role_list'][LANGUAGE_NONE]['#options']['_none']); // remove none option
 
 
       // Modify submit buttons
@@ -229,8 +232,15 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
         '#submit' => array('_sbac_forum__add_forum_form_redirect_submit'),
         '#prefix'       => '<div class="sbac-forum-add-forum-buttons">',
       );
-      $form['actions']['submit']['#value'] = 'Start Forum';
-      $form['actions']['submit']['#suffix'] = '</div>';
+      if (isset($form['actions']['delete'])) { // Edit form
+        $form['actions']['delete']['#suffix'] = '</div>';
+      } else { // Add forum forum
+        $form['actions']['submit']['#value'] = 'Start Forum';
+        $form['actions']['submit']['#suffix'] = '</div>';
+      }
+
+
+      $form['#validate'][] = '_sbac_forum__forum_form__access_field_validate';
 
       // Redirect on successful completion.
       $form['#submit'][] = '_sbac_forum__add_forum_form_redirect_submit';
@@ -241,4 +251,31 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
 
 function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
   $form_state['redirect'] = 'forums';
+}
+
+function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
+  $values = $form_state['values'];
+
+  $states_field_value = $values['field_forum_access_states'][LANGUAGE_NONE][0]['value'];
+  if (!$states_field_value) {
+    $selected_states = $values['field_state'];
+    if (count($selected_states[LANGUAGE_NONE]) == 1) { // There will be one entry even if empty. Check value.
+      $selected_value = array_shift($selected_states[LANGUAGE_NONE]);
+      if (empty($selected_value['tid'])) {
+        form_set_error('field_state', 'At least one State must be selected');
+      }
+    }
+  }
+
+  $roles_field_value = $values['field_forum_access_user_roles'][LANGUAGE_NONE][0]['value'];
+  if (!$roles_field_value) {
+    $selected_roles = $values['field_forum_access_role_list'];
+    if (count($selected_roles[LANGUAGE_NONE]) == 1) { // There will be one entry even if empty. Check value.
+      $selected_value = array_shift($selected_roles[LANGUAGE_NONE]);
+      if (empty($selected_value['value'])) {
+        form_set_error('field_forum_access_role_list', 'At least one Role must be selected');
+      }
+    }
+  }
+
 }

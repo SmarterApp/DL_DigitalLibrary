@@ -383,38 +383,53 @@ a.category-hide:focus {
   background-color: #0085ad;
 }
 
-/* line 383, ../sass/sbac_forum.scss */
-.page-forums-forum-add #page-title {
+/* line 384, ../sass/sbac_forum.scss */
+.page-forums-forum-add #page-title,
+.page-taxonomy-term-edit #page-title {
   display: block !important;
 }
-/* line 387, ../sass/sbac_forum.scss */
-.page-forums-forum-add .chzn-container-multi .chzn-choices .search-field input {
+/* line 388, ../sass/sbac_forum.scss */
+.page-forums-forum-add .chzn-container-multi .chzn-choices .search-field input,
+.page-taxonomy-term-edit .chzn-container-multi .chzn-choices .search-field input {
   height: 2.3125em;
 }
-/* line 391, ../sass/sbac_forum.scss */
-.page-forums-forum-add #taxonomy_term_forum_form_group_forum_access {
+/* line 392, ../sass/sbac_forum.scss */
+.page-forums-forum-add #taxonomy_term_forum_form_group_forum_access,
+.page-taxonomy-term-edit #taxonomy_term_forum_form_group_forum_access {
   height: 220px;
 }
-/* line 396, ../sass/sbac_forum.scss */
+/* line 395, ../sass/sbac_forum.scss */
+.page-forums-forum-add #taxonomy_term_forum_form_group_forum_access .error,
+.page-taxonomy-term-edit #taxonomy_term_forum_form_group_forum_access .error {
+  border: 2px solid #FF0000;
+}
+/* line 401, ../sass/sbac_forum.scss */
 .page-forums-forum-add .forum-tags-left,
-.page-forums-forum-add .forum-tags-right {
+.page-forums-forum-add .forum-tags-right,
+.page-taxonomy-term-edit .forum-tags-left,
+.page-taxonomy-term-edit .forum-tags-right {
   float: left;
   width: 50%;
   padding-right: 50px;
 }
-/* line 404, ../sass/sbac_forum.scss */
+/* line 409, ../sass/sbac_forum.scss */
 .page-forums-forum-add .forum-add-access-left,
-.page-forums-forum-add .forum-add-access-right {
+.page-forums-forum-add .forum-add-access-right,
+.page-taxonomy-term-edit .forum-add-access-left,
+.page-taxonomy-term-edit .forum-add-access-right {
   float: left;
   width: 50%;
   padding-right: 50px;
 }
-/* line 411, ../sass/sbac_forum.scss */
+/* line 416, ../sass/sbac_forum.scss */
 .page-forums-forum-add #edit-field-state label,
-.page-forums-forum-add #edit-field-forum-access-role-list label {
+.page-forums-forum-add #edit-field-forum-access-role-list label,
+.page-taxonomy-term-edit #edit-field-state label,
+.page-taxonomy-term-edit #edit-field-forum-access-role-list label {
   display: none;
 }
-/* line 415, ../sass/sbac_forum.scss */
-.page-forums-forum-add .sbac-forum-add-forum-buttons {
+/* line 420, ../sass/sbac_forum.scss */
+.page-forums-forum-add .sbac-forum-add-forum-buttons,
+.page-taxonomy-term-edit .sbac-forum-add-forum-buttons {
   text-align: right;
 }
