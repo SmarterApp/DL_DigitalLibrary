@@ -17,41 +17,9 @@ function sbac_resource_digital_library_page() {
   $view->set_display($display);
   sbac_resource_digital_library_apply_filters($view);
   sbac_resource_digital_library_apply_sorts($view);
-
-  global $user;
-  $offset = 0;
-  $per_page = 10;
-  $results = array();
-
-  while (count($results) < 12) {
-    if ($offset !== 0) {
-      $final_offset = $offset * $per_page;
-    }
-    else {
-      $final_offset = 0;
-    }
-
-    $view->set_offset($final_offset);
-    $view->set_items_per_page(10);
-    $view->pre_execute();
-    $view->execute();
-    $temp_results = $view->result;
-    foreach ($temp_results as $result) {
-      $nid = $result->nid;
-      $uid = $user->uid;
-      $access = sbac_resource_determine_access($nid, $uid);
-      if ($access) {
-        $results[] = $result;
-        if (count($results) == 12) {
-          break;
-        }
-      }
-    }
-    $offset++;
-  }
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
-  // dpq($view->build_info['query']);
+  dpq($view->build_info['query']);
   $count = count($view->result);
   $view->destroy();
 
@@ -70,9 +38,9 @@ function sbac_resource_digital_library_page() {
     clear_views_exposed_filter_cache($view->name, $display);
     sbac_resource_filter_user_tags($view);
 
-    $view->pre_execute();
-    $view->execute();
-    $view->_post_execute();
+//    $view->pre_execute();
+//    $view->execute();
+//    $view->_post_execute();
 
     $digital_library_output = $view->preview();
     $view->destroy();
@@ -103,13 +71,10 @@ function sbac_resource_my_resources_page() {
   $view->set_display($display);
   sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
-  $view->pre_execute();
-  $view->execute();
-  $view->_post_execute();
   $my_resources_output = $view->preview();
-  //  dpq($view->build_info['query']);
-  $view->destroy();
+  dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
+  $view->destroy();
 
   if (!$view->total_rows && $current_filters != '') {
     // Reset variables
@@ -141,13 +106,10 @@ function sbac_resource_resource_review_page() {
   $view->set_display($display);
   sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);
-  $view->pre_execute();
-  $view->execute();
-  $view->_post_execute();
   $resource_review_output = $view->preview();
-//  dpq($view->build_info['query']);
-  $view->destroy();
+  dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
+  $view->destroy();
 
   if (!$view->total_rows && $current_filters != '') {
     // Reset variables

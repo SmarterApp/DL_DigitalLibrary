@@ -36,10 +36,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Relationship: Content: Author */
-  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -76,13 +72,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'resource' => 'resource',
-  );
-  /* Filter criterion: Content: Temp (field_temp) */
-  $handler->display->display_options['filters']['field_temp_value']['id'] = 'field_temp_value';
-  $handler->display->display_options['filters']['field_temp_value']['table'] = 'field_data_field_temp';
-  $handler->display->display_options['filters']['field_temp_value']['field'] = 'field_temp_value';
-  $handler->display->display_options['filters']['field_temp_value']['value'] = array(
-    0 => '0',
   );
   /* Filter criterion: Workbench Moderation: Current */
   $handler->display->display_options['filters']['current']['id'] = 'current';
@@ -124,12 +113,6 @@ function sbac_resource_views_default_views() {
     23 => 0,
     26 => 0,
   );
-  /* Filter criterion: User: Current */
-  $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['table'] = 'users';
-  $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid';
-  $handler->display->display_options['filters']['uid_current']['value'] = '1';
   /* Filter criterion: Content: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
@@ -217,6 +200,11 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_focus_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
+  /* Filter criterion: Content: Author uid */
+  $handler->display->display_options['filters']['uid']['id'] = 'uid';
+  $handler->display->display_options['filters']['uid']['table'] = 'node';
+  $handler->display->display_options['filters']['uid']['field'] = 'uid';
+  $handler->display->display_options['filters']['uid']['value'] = '';
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
@@ -683,10 +671,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Relationship: Content: Author */
-  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -711,29 +695,12 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['sorts']['stamp_1']['order'] = 'DESC';
   $handler->display->display_options['sorts']['stamp_1']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['stamp_1']['expose']['label'] = 'Timestamp (Newest)';
-  /* Contextual filter: Content: Author uid */
-  $handler->display->display_options['arguments']['uid']['id'] = 'uid';
-  $handler->display->display_options['arguments']['uid']['table'] = 'node';
-  $handler->display->display_options['arguments']['uid']['field'] = 'uid';
-  $handler->display->display_options['arguments']['uid']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['uid']['default_argument_type'] = 'current_user';
-  $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['uid']['not'] = TRUE;
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'resource' => 'resource',
-  );
-  /* Filter criterion: Content: Temp (field_temp) */
-  $handler->display->display_options['filters']['field_temp_value']['id'] = 'field_temp_value';
-  $handler->display->display_options['filters']['field_temp_value']['table'] = 'field_data_field_temp';
-  $handler->display->display_options['filters']['field_temp_value']['field'] = 'field_temp_value';
-  $handler->display->display_options['filters']['field_temp_value']['value'] = array(
-    0 => '0',
   );
   /* Filter criterion: Workbench Moderation: Current */
   $handler->display->display_options['filters']['current']['id'] = 'current';
@@ -1389,13 +1356,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'resource' => 'resource',
-  );
-  /* Filter criterion: Content: Temp (field_temp) */
-  $handler->display->display_options['filters']['field_temp_value']['id'] = 'field_temp_value';
-  $handler->display->display_options['filters']['field_temp_value']['table'] = 'field_data_field_temp';
-  $handler->display->display_options['filters']['field_temp_value']['field'] = 'field_temp_value';
-  $handler->display->display_options['filters']['field_temp_value']['value'] = array(
-    0 => '0',
   );
   /* Filter criterion: Workbench Moderation: Current */
   $handler->display->display_options['filters']['current']['id'] = 'current';

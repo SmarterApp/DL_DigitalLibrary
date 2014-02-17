@@ -11,28 +11,52 @@
  * @param $query
  */
 function sbac_resource_views_query_alter(&$view, &$query) {
-  if ($view->name == 'resource') {
-    global $user;
-    $var = '';
+  if ($view->name == 'resources') {
+    $view->query->add_table('sbac_node_resource_state');
+    $all_condition = db_and()->condition('sbac_node_resource_state.state', "published")->condition('sbac_node_resource_state.uid', 0);
+    $view->query->add_where('AND', $all_condition);
   }
 
   if ($view->name == 'my_resources') {
     global $user;
-    $var = '';
+    $view->query->add_table('sbac_node_resource_state');
+    //$all_condition = db_and()->condition('sbac_node_resource_state.state', "FRUIT")->condition('sbac_node_resource_state.uid', 0);
+    $user_condition = db_and()->condition('sbac_node_resource_state.state', "author")->condition('sbac_node_resource_state.uid', $user->uid);
+    //$view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
+    $view->query->add_where('AND', $user_condition);
+    $node_condition = db_or()->condition('node.uid', $user->uid);
+    $view->query->add_where('AND', $node_condition);
   }
 
   if ($view->name == 'resource_review') {
     global $user;
+    // dont allow the node author to see / review own nodes.
+    $node_condition = db_or()->condition('node.uid', $user->uid, '<>');
+    $view->query->add_where('AND', $node_condition);
 
+    // only allow the user to see nodes if they are in the following states.
+    // (gk_need_review, gk_being_reviewed, qc_needs_review, qc_being_reviewed, qc_reviewed, gk_view_rejected, post_being_reviewed, post_needs_review)
+    $view->query->add_table('sbac_node_resource_state');
     if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
       // do nothing, roles can be combined to see all states.
       $roles['both'] = TRUE;
+      $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
+      $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'qc_reviewed', 'gk_view_rejected', 'post_being_reviewed');
+      $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+      $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+      $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
     }
     else {
       if (in_array('resource reviewer', $user->roles)) {
         // Can see needs review, being reviewed
         unset($query->where[1]['conditions'][3]['value'][2]);
         $roles['rr'] = TRUE;
+
+        $all_states = array('gk_needs_review', 'qc_needs_review');
+        $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'qc_reviewed', 'gk_view_rejected');
+        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+        $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+        $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
       }
 
       if (in_array('resource publisher', $user->roles)) {
@@ -40,6 +64,12 @@ function sbac_resource_views_query_alter(&$view, &$query) {
         unset($query->where[1]['conditions'][3]['value'][0]);
         unset($query->where[1]['conditions'][3]['value'][1]);
         $roles['rp'] = TRUE;
+
+        $all_states = array('post_needs_review');
+        $user_states = array('post_being_reviewed');
+        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+        $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+        $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
       }
     }
 
