@@ -5,6 +5,7 @@ function sbac_forum_main_landing_page() {
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
   $current_filters = '';
+  $forum_list_output = 'Forum Content';
 
   // Get correct set of category filters based on subnav.
   if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
@@ -24,10 +25,147 @@ function sbac_forum_main_landing_page() {
     $output = 'THERE ARE FILTERS!! ';
   }
 
+  // $view = views_get_view('forum_list');
+  // $view->set_display('block');
+  // // Set filters here.
+  // $view->pre_execute();
+  // $view->execute();
+  // $view->_post_execute();
+  // $forum_list_output = $view->preview();
+
 
   $output .= '<div class="sbac-forum-main-container">';
-  $output .= 'Forum contents';
+  $output .= $forum_list_output;
   $output .= '</div>';
 
   return $output;
+}
+
+
+function sbac_forum_view_forum_page($term) {
+  $output = '';
+
+  // Load up forum data.
+  $forum_data = entity_metadata_wrapper('taxonomy_term', $term);
+  // $test = $forum_data->getPropertyInfo();
+  // dsm($test);
+
+  $description_text = '';
+  if (isset($forum_data->field_forum_description)) {
+    $description_text = $forum_data->field_forum_description->value();
+  }
+
+  $facilitator_text = '';
+  $faci_details;
+  if (isset($forum_data->field_forum_facilitators)) {
+    $facilitators = $forum_data->field_forum_facilitators->value();
+    if (!empty($facilitators)) {
+      $item_list = array();
+      foreach ($facilitators as $faci) {
+        $faci_data = entity_metadata_wrapper('user', $faci);
+        $fn = $faci_data->field_first_name->value();
+        $ln = $faci_data->field_last_name->value();
+        $full_name = $fn . ' ' . $ln;
+        $link = 'forum-auth-pane/'. $faci->uid;
+        $link_ops = array('attributes' => array('class' => 'vp-auth-pane-item'));
+        $item_list[] = l($full_name, $link, $link_ops);
+      }
+
+      $list_args = array(
+        'type'  => 'ul',
+        'items' => $item_list,
+        'attributes' => array('class' => 'vp-auth-pane'),
+      );
+      $facilitator_text = theme('item_list', $list_args);
+
+      // Have to add markup for faci information for popup as well.
+      // ******** TODO **********
+    }
+  }
+
+
+  $subject_text = '';
+  if (isset($forum_data->field_subject)) {
+    $subjects = $forum_data->field_subject->value();
+    if (!empty($subjects)) {
+      $item_list = array();
+      foreach ($subjects as $subject) {
+        $item_list[] = $subject->name;
+      }
+      $list_args = array(
+        'type'  => 'ul',
+        'items' => $item_list,
+        'attributes' => array('class' => 'vp-subject-list'),
+      );
+      $subject_text = theme('item_list', $list_args);
+    }
+  }
+
+
+  $grades_text = '';
+  if (isset($forum_data->field_grades)) {
+    $grades = $forum_data->field_grades->value();
+    if (!empty($grades)) {
+      $item_list = array();
+      foreach ($grades as $grade) {
+        $item_list[] = $grade->name;
+      }
+      $list_args = array(
+        'type'  => 'ul',
+        'items' => $item_list,
+        'attributes' => array('class' => 'vp-grades-list'),
+      );
+      $grades_text = theme('item_list', $list_args);
+    }
+  }
+
+
+  $end_user_text = '';
+  if (isset($forum_data->field_intended_end_user)) {
+    $end_users = $forum_data->field_intended_end_user->value();
+    if (!empty($end_users)) {
+      $item_list = array();
+      foreach ($end_users as $end_user) {
+        $item_list[] = $end_user->name;
+      }
+      $list_args = array(
+        'type'  => 'ul',
+        'items' => $item_list,
+        'attributes' => array('class' => 'vp-grades-list'),
+      );
+      $end_user_text = theme('item_list', $list_args);
+    }
+  }
+
+
+  $student_text = '';
+  if (isset($forum_data->field_intended_student)) {
+    $students = $forum_data->field_intended_student->value();
+    if (!empty($students)) {
+      $item_list = array();
+      foreach ($students as $student) {
+        $item_list[] = $student->name;
+      }
+      $list_args = array(
+        'type'  => 'ul',
+        'items' => $item_list,
+        'attributes' => array('class' => 'vp-grades-list'),
+      );
+      $student_text = theme('item_list', $list_args);
+    }
+  }
+
+  $fields = array(
+    'description'          => $description_text ,
+    'facilitators'         => $facilitator_text,
+    'faciliatator_details' => $faci_details,
+    'grades'               => $grades_text,
+    'subjects'             => $subject_text,
+    'end_users'            => $end_user_text,
+    'students'             => $student_text,
+  );
+
+  $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );
+  return $output;
+
 }
