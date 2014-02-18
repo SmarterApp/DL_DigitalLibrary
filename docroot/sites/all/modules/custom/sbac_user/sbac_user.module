@@ -94,6 +94,13 @@ function sbac_user_access_check() {
  */
 function sbac_user_init() {
   global $user;
+  if (!user_is_logged_in()) {
+    variable_set('site_404', 'user');
+  }
+  else {
+    variable_set('site_404', '');
+  }
+
   // Intercept page request to user/uid/edit with pass-reset-token query value and send to change-password instead.
   // Is this the best place to do this? Can't seem to use hook_user_login() because there is no way to
   // retrieve the pass-reset-token value.

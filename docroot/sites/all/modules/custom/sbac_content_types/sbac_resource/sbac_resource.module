@@ -1294,11 +1294,13 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
 function sbac_resource_save_current_state($node) {
   if ($node->type == 'resource') {
     global $user;
+
+    // Always save the state for the author.
+    $entity = NULL;
+    $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
+    $entity->state = 'author';
+    sbac_resource_save_resource_state($entity, $new_record);
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'draft') {
-      $entity = NULL;
-      $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
-      $entity->state = 'author';
-      sbac_resource_save_resource_state($entity, $new_record);
       sbac_resource_delete_resource_state_except($node->nid, $entity->state);
     }
 
@@ -2153,6 +2155,231 @@ function sbac_resource_entity_delete($entity, $type) {
   }
 }
 
-function sbac_resource_determine_access($nid, $uid) {
-  return TRUE;
+/**
+ * Implements hook_node_access.
+ *
+ * @param $node
+ * @param $op
+ * @param $account
+ */
+function sbac_resource_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+  if ($type == 'resource') {
+    $access = sbac_resource_determine_access($node, $account, $op);
+    if (!$access) {
+      variable_set('site_404', '');
+      return NODE_ACCESS_DENY;
+    }
+    else {
+      return NODE_ACCESS_ALLOW;
+    }
+  }
+}
+
+/**
+ * Determines access to the node. Currently state and workflow determine this.
+ *
+ * @param $nid
+ * @param $uid
+ * @param $op
+ * @return bool
+ */
+function sbac_resource_determine_access($node, $account, $op) {
+  // state access
+  $access = _sbac_resource_determine_state_access($node, $account, $op);
+  if ($access) {
+    // workflow access
+    $access = _sbac_resource_determine_workflow_access($node, $account, $op);
+  }
+  return $access;
+}
+
+/**
+ * Determine workflow access.
+ *
+ * @param $node
+ * @param $account
+ * @param $op
+ * @return bool
+ */
+function _sbac_resource_determine_workflow_access($node, $account, $op) {
+  $access = FALSE;
+  //create, update, delete, view
+
+  if (isset($node->workbench_moderation['current']->state)) {
+    $state = $node->workbench_moderation['current']->state;
+    $query = db_select('sbac_node_resource_state', 's');
+    $query->fields('s');
+    $query->condition('s.nid', $node->nid);
+    switch ($state) {
+      case 'draft':
+        // author has access view/edit
+        $query->condition('s.uid', $account->uid);
+        $query->condition('s.state', 'author');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if ($account->uid == $node->uid && ($op == 'create' || $op == 'update' || $op == 'delete' || $op == 'view')) {
+            $access = TRUE;
+          }
+        }
+      break;
+      case 'needs_review':
+        // author has view
+        // resource reviewer has view/edit
+        $query->condition('s.uid', 0);
+        $query->condition('s.state', 'gk_need_review');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
+            $access = TRUE;
+          }
+          if ($account->uid == $node->uid && $op == 'view') {
+            $access = TRUE;
+          }
+        }
+      break;
+      case 'being_reviewed':
+        // author has view
+        // resource reviewer has view/edit
+        $all_condition = db_and()->condition('s.state', array('gk_needs_review', 'qc_needs_review'), 'IN')->condition('s.uid', 0);
+        $user_condition = db_and()->condition('s.state', array('gk_being_reviewed', 'qc_being_reviewed', 'qc_reviewed'), 'IN')->condition('s.uid', $account->uid);
+        $query->condition(db_or()->condition($all_condition)->condition($user_condition));
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
+            $access = TRUE;
+          }
+          if ($account->uid == $node->uid && $op == 'view') {
+            $access = TRUE;
+          }
+        }
+      break;
+      case 'approved':
+        // author has view
+        // resource publisher has view/edit
+        $all_condition = db_and()->condition('s.state', 'post_needs_review')->condition('s.uid', 0);
+        $user_condition = db_and()->condition('s.state', 'post_being_reviewed')->condition('s.uid', $account->uid);
+        $query->condition(db_or()->condition($all_condition)->condition($user_condition));
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if (in_array('resource publisher', $account->roles) && ($op == 'view' || $op == 'update')) {
+            $access = TRUE;
+          }
+          if ($account->uid == $node->uid && $op == 'view') {
+            $access = TRUE;
+          }
+        }
+      break;
+      case 'published':
+        // everyone has view
+        // author has view
+        // admin/dlrb member/moderator have view/edit
+        $query->condition('s.uid', 0);
+        $query->condition('s.state', 'published');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if ($op == 'view') {
+            $access = TRUE;
+          }
+          if ($account->uid == $node->uid && $op == 'view') {
+            $access = TRUE;
+          }
+          if ((in_array('admininstrator', $account->roles) ||
+               in_array('DLRB member', $account->roles) ||
+               in_array('moderator', $account->roles)) && (
+               $op == 'view' || $op == 'update' || $op == 'delete')) {
+            $access = TRUE;
+          }
+        }
+      break;
+      case 'returned':
+        // author has view/edit
+        // resource reviewer has view
+        // resource puslisher has view
+        $query->condition('s.uid', 0);
+        $query->condition('s.state', 'returned');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if ($account->uid == $node->uid && $op == 'view') {
+            $access = TRUE;
+          }
+          if (in_array('resource reviewer', $account->roles) && $op == 'view') {
+            $access = TRUE;
+          }
+          if (in_array('resource publisher', $account->roles) && $op == 'view') {
+            $access = TRUE;
+          }
+        }
+      break;
+      case 'rejected':
+        // author has view/edit
+        // resource reviewer has view
+        // resource publisher has view
+        $query->condition('s.uid', 0);
+        $query->condition('s.state', 'rejected');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if ($account->uid == $node->uid && $op == 'view') {
+            $access = TRUE;
+          }
+          if (in_array('resource reviewer', $account->roles) && $op == 'view') {
+            $access = TRUE;
+          }
+          if (in_array('resource publisher', $account->roles) && $op == 'view') {
+            $access = TRUE;
+          }
+        }
+      break;
+    }
+  }
+
+  return $access;
+}
+
+/**
+ * Given the node and account, see if the user has access
+ * to view given the state of the node.
+ *
+ * @param $node
+ * @param $account
+ * @param $op
+ * @return bool
+ */
+function _sbac_resource_determine_state_access($node, $account, $op) {
+  $all_states = array();
+  $access = FALSE;
+  if (isset($node->field_view_permissions['und'][0]['value'])) {
+    // 0 is all states, 1 is specific states
+    $view_permissions = $node->field_view_permissions['und'][0]['value'];
+    if ($view_permissions == 0) {
+      $all_states = array();
+    }
+    else {
+      if (isset($node->field_view_permissions_per_state['und'])) {
+        foreach ($node->field_view_permissions_per_state['und'] as $key => $tid) {
+          $all_states[] = $tid['tid'];
+        }
+      }
+    }
+  }
+  // if the array is empty, then the user has access.
+  if (empty($all_states)) {
+    $access = TRUE;
+    return $access;
+  }
+  else {
+    // only get users with moderator role and these states.
+    $user = sbac_central_get_user_with_states($all_states, $account->uid);
+    if ($user) {
+      $access = TRUE;
+    }
+  }
+  return $access;
 }
