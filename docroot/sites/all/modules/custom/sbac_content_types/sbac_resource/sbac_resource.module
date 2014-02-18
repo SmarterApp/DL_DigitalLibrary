@@ -2092,6 +2092,12 @@ function sbac_resource_truncate($html, $maxLength = 100) {
   return $newContent;
 }
 
+/**
+ * Updates the average rating score.
+ *
+ * @param $nid
+ * @param null $exclude
+ */
 function sbac_resource_update_average_rating_score($nid, $exclude = NULL) {
   // Initialize variables.
   $entity_type = 'review';
@@ -2143,7 +2149,10 @@ function sbac_resource_update_average_rating_score($nid, $exclude = NULL) {
 }
 
 /**
- * Implements hook_entity_delete
+ * Implements hook_entity_delete().
+ *
+ * @param $entity
+ * @param $type
  */
 function sbac_resource_entity_delete($entity, $type) {
   if ($type == 'review') {
@@ -2156,7 +2165,7 @@ function sbac_resource_entity_delete($entity, $type) {
 }
 
 /**
- * Implements hook_node_access.
+ * Implements hook_node_access().
  *
  * @param $node
  * @param $op
@@ -2199,12 +2208,11 @@ function sbac_resource_determine_access($node, $account, $op) {
  *
  * @param $node
  * @param $account
- * @param $op
+ * @param $op = create, update, delete, view
  * @return bool
  */
 function _sbac_resource_determine_workflow_access($node, $account, $op) {
   $access = FALSE;
-  //create, update, delete, view
 
   if (isset($node->workbench_moderation['current']->state)) {
     $state = $node->workbench_moderation['current']->state;
