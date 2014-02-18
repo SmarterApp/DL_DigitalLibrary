@@ -220,7 +220,7 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
 
 
       // Modify submit buttons
-      $cancel_button_classes = 'sbac-forum-add-forum-cancel-button';
+      $cancel_button_classes = 'sbac-forum-add-forum-cancel-button gray';
       $form['actions']['cancel_add'] = array(
         '#type'         => 'submit',
         '#value'        => t('Cancel'),

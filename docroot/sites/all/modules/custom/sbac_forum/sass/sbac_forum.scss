@@ -19,9 +19,27 @@ $darkblue: #006082;
   display:none;
 }
 
-.sbac-forum-main-container{
+.sbac-forum-main-container {
   float:left;
   width:100%
+}
+
+.page-forums {
+	.main-container {
+		background: none repeat scroll 0 0 #FFFFFF;
+		border-radius: 15px;
+	  box-shadow: 0 0 10px 0 rgba(4, 56, 78, 0.75);
+	  display: block;
+	  margin: 50px auto;
+	  min-height: 60px;
+	  padding: 40px 50px;
+	  position: relative;
+	  width: 960px;
+		
+		#main {
+			padding: 0;
+		}
+	}
 }
 
 /* -----------------------------------------
@@ -383,41 +401,189 @@ a.category-hide:focus {
 
   #page-title {
     display:block !important;
+		border-bottom: 1px solid #62676E;
+		color: #04384E;
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 25px;
+    padding: 0;
+    text-transform: capitalize;
   }
 
+	label  {
+		color: #101010;
+		font-size: 14px;
+		font-weight: bold;
+	}
+	
+	input#edit-name, .form-textarea {
+		width: 410px;
+		margin: 15px 0 25px;
+	}
+
+	.form-textarea {
+		height: 80px;
+	}
+	
+	.form-type-textarea {
+		width: 410px;
+		position: relative;
+		
+		.counter {
+			display: block;
+			font-size: 12px;
+	    font-weight: normal;
+	    position: absolute;
+	    right: 0;
+	    top: 3px;
+	
+			> span {
+				font-weight: bold;
+			}
+		}
+	}
+	
+	.forum-tags-left,
+  .forum-tags-right, 
+	.forum-add-access-left,
+  .forum-add-access-right {
+    float:left;
+    width:50%;
+
+		.form-item {
+			margin-bottom: 0;
+		}
+  }
+
+	.form-type-select, 
+	.chzn-container,
+	.form-type-radios {
+		width: 410px !important;
+	}
+	
+	.forum-tags-right,
+	.forum-add-access-right {
+		
+		.form-type-select,
+		.form-type-radios {
+			margin-left: 20px;
+		}
+	} 
+	
+	.group-forum-tags, 
+	#taxonomy_term_forum_form_group_forum_access {
+		
+		h3 {
+			border-top: 1px solid #CECECE;
+			margin-top: 40px;
+			max-width: none;
+			padding-top: 40px;
+			width: 100%;
+			color: #000000;
+			display: block;
+			font-size: 18px;
+			font-weight: bold;
+		}
+		
+		.description {
+			font-size: 13px;
+			line-height: 1.2;
+	    max-width: 560px;
+		}
+		
+		label {
+			font-size: 13px;
+			margin-bottom: 10px;
+			padding-top: 10px;
+		}
+	} 
+	
+	#taxonomy_term_forum_form_group_forum_access {
+		
+		label {
+			border-bottom: 1px solid #CECECE;
+	    font-size: 12px;
+	    margin: 0 0 15px;
+	    padding: 20px 0 6px;
+	    text-transform: uppercase;
+			font-family: Verdana,Geneva,sans-serif;
+		}
+		
+		label.option {
+			font-size: 13px;
+			border-bottom: none;
+			padding: 0;
+			text-transform: none;
+			font-family: Arial,Helvetica,sans-serif;
+			
+			p {
+				font-size: 13px;
+				line-height: 1.2;
+				color: #464B54;
+				margin-left: 28px;
+			}
+		}
+	}
+	
   .chzn-container-multi .chzn-choices .search-field input {
     height:2.3125em;
   }
 
   #taxonomy_term_forum_form_group_forum_access {
-    height:220px;
+   /* height:220px;*/
 
     .error {
       border:2px solid #FF0000;
     }
   }
 
-  .forum-tags-left,
-  .forum-tags-right {
-    float:left;
-    width:50%;
-    padding-right:50px;
-  }
+	.form-wrapper {
+		table {
+			width: 100%;
+			
+			th.field-label {
+				padding-left: 10px;
+			}
+		}
+	}
 
-
-  .forum-add-access-left,
-  .forum-add-access-right {
-    float:left;
-    width:50%;
-    padding-right:50px;
-  }
-
+	.form-item-path-alias {
+		.description {
+			line-height: 1.2;
+		}
+	}
+	
   #edit-field-state label,
   #edit-field-forum-access-role-list label {
     display:none;
   }
-
+	
+	/*button*/
   .sbac-forum-add-forum-buttons {
     text-align:right;
+		
+		button {
+			margin-left: 30px;
+		}
   }
+	
+	button.gray.sbac-forum-add-forum-cancel-button, .button.form-submit {
+	    padding-left: 40px !important;
+	    position: relative;
+	}
+	
+	button.gray.sbac-forum-add-forum-cancel-button:before {
+	 content: url("../images/icon-buttonCancel.png");
+   left: 15px;
+   position: absolute;
+   top: 4px;
+	}
+	
+	.button.form-submit:before {
+	 content: url("../images/icon-buttonAccept.png");
+   left: 15px;
+   position: absolute;
+   top: 4px;
+	}
 }
