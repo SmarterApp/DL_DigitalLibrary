@@ -17,7 +17,7 @@ function sbac_ldap_default_ldap_servers() {
   $ldap_servers_conf->name = 'SBAC';
   $ldap_servers_conf->status = TRUE;
   $ldap_servers_conf->ldap_type = 'default';
-  $ldap_servers_conf->address = '54.234.139.223';
+  $ldap_servers_conf->address = '54.221.250.90';
   $ldap_servers_conf->port = 389;
   $ldap_servers_conf->tls = FALSE;
   $ldap_servers_conf->followrefs = FALSE;
