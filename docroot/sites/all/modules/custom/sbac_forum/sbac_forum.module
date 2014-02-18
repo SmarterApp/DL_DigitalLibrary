@@ -53,6 +53,17 @@ function sbac_forum_menu() {
     'file' => 'taxonomy.admin.inc',
   );
 
+  $items['forums/term/%taxonomy_term'] = array(
+    'title' => 'Taxonomy term',
+    'title callback' => 'taxonomy_term_title',
+    'title arguments' => array(2),
+    'page callback' => 'sbac_forum_view_forum_page',
+    'page arguments' => array(2),
+    'access callback' => '_sbac_forum_view_forum_user_access',
+    'access arguments' => array(2),
+    'file' => 'includes/sbac_forum.pages.inc',
+  );
+
   return $items;
 }
 
@@ -96,6 +107,21 @@ function _sbac_forum_add_forum_user_access($vocabulary) {
   return $access;
 }
 
+/**
+ * Access callback for Forum View page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to view a forum.
+ */
+function _sbac_forum_view_forum_user_access($term) {
+  global $user;
+  // Allow superadmin bypass
+  if ($user->uid == 1) {
+    return TRUE;
+  }
+
+  $access = sbac_forum__api__check_forum_view_access($user, $term);
+  return $access;
+}
 
 /**
  * Implements hook_block_info().
