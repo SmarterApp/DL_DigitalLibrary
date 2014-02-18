@@ -221,29 +221,31 @@ function sbac_resource_my_resource_apply_filters(&$view) {
                 case 'resource_states':
                   switch($term->name) {
                     case 'Draft':
-                      $state = 'draft';
+                      $state['draft'] = 'draft';
                       break;
                     case 'In Review':
-                      $state = 'being_reviewed';
+                      $state['being_reviewed'] = 'being_reviewed';
+                      $state['needs_review'] = 'needs_review';
+                      $state['approved'] = 'approved';
                       break;
                     case 'Posted':
-                      $state = 'published';
+                      $state['published'] = 'published';
                       break;
                     case 'Returned':
-                      $state = 'rejected';
+                      $state['rejected'] = 'rejected';
                       break;
                     case 'Submitted':
-                      $state = 'needs_review';
+                      $state['needs_review'] = 'needs_review';
                       break;
                     case 'Removed':
-                      $state = 'removed';
+                      $state['removed'] = 'removed';
                       break;
                     default:
-                      $state = 'draft';
+                      $state['draft'] = 'draft';
                       break;
                   }
 
-                  $resource_states[$state] = $state;
+                  $resource_states = $state;
                   break;
               }
             }

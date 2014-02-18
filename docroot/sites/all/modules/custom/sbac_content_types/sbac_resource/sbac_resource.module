@@ -2214,6 +2214,10 @@ function sbac_resource_determine_access($node, $account, $op) {
 function _sbac_resource_determine_workflow_access($node, $account, $op) {
   $access = FALSE;
 
+  if ($op == 'create') {
+    $access = TRUE;
+  }
+
   if (isset($node->workbench_moderation['current']->state)) {
     $state = $node->workbench_moderation['current']->state;
     $query = db_select('sbac_node_resource_state', 's');
