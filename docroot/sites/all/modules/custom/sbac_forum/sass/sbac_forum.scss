@@ -10,6 +10,7 @@ $teal: #0085ad;
 $lightblue: #00b5e2;
 $darkgreen: #246a34;
 $darkblue: #006082;
+$gray: #464B54;
 
 
 /* -----------------------------------------
@@ -24,7 +25,8 @@ $darkblue: #006082;
   width:100%
 }
 
-.page-forums {
+.page-forums-forum-add,
+.page-taxonomy-term-edit {
 	.main-container {
 		background: none repeat scroll 0 0 #FFFFFF;
 		border-radius: 15px;
@@ -337,32 +339,86 @@ a.category-hide:focus {
   width:100%;
 
   .forum-subnav-primary-wrapper{
-    float:left;
-    width:30%;
 
-    button {
-      background-image: -moz-linear-gradient(top, rgba(0,0,0,0) 50%,rgba(0,0,0,.2) 100%);
-      background-color: $white;
-      color: $darkblue;
-      border: 1px solid #000;
+   	button {
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 100%);
+			background-color: #F7F7F7;
+			border-color: #FFFFFF #62676E #62676E;
+			border-image: none;
+	    border-style: solid;
+	    border-width: 1px;
+	    color: $gray;
+	    display: inline-block;
+	    font-size: 15px;
+	    height: 34px;
+	    line-height: 32px;
+	    padding: 0 20px;
+	    text-shadow: 0 1px 0 #FFFFFF;
+			float: left;
     }
 
+		button#edit-all-forums {
+			border-radius: 6px 0 0 6px;
+		}
+		
+		button#edit-my-forum {
+			border-radius: 0 6px 6px 0;
+		}
+		
     button.is-pressed {
-      background-color: $darkblue;
-      color: $white;
-      background-image:none;
-      box-shadow:1px 2px 4px 0px rgba(0,0,0,.3) inset;
-      border: 1px solid #000;
-      border-right:1px solid rgba(255,255,255,.6);
-      border-bottom:1px solid rgba(255,255,255,.6);
+      -moz-border-bottom-colors: none;
+			-moz-border-left-colors: none;
+	    -moz-border-right-colors: none;
+	    -moz-border-top-colors: none;
+	    background-color: $darkblue;
+	    background-image: none;
+	    border-color: #003142 rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.6) #003142;
+	    border-image: none;
+	    border-style: solid;
+	    border-width: 1px;
+	    box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, 0.3) inset;
+	    color: #FFFFFF;
+	    cursor: default;
+	    text-shadow: 0 1px 0 #000000;
     }
 
+		button#edit-all-forums.is-pressed {
+			border-color: #003142 #003142 rgba(255, 255, 255, 0.6) #003142;
+		}
   }
 
   .forum-subnav-sort-wrapper{
     float:left;
-    width:23%;
-    margin-top:-15px;
+		border-left: 1px solid rgba(255, 255, 255, 0.4);
+		box-shadow: -1px 0 0 0 #006082;
+    display: block;
+    float: left;
+    height: 34px;
+    margin: 0 0 0 15px;
+    padding: 0 0 0 15px;
+		
+		.form-item {
+			margin: 0;
+		}
+
+		select {
+		  background: url("../images/icon-arrow-down.png") no-repeat scroll right 6px top 12px #F2F2F2;
+	    border: 1px solid #006082;
+			background-color: #F2F2F2;
+	    border-radius: 0;
+	    color: $gray;
+	    cursor: pointer;
+	    font-size: 15px;
+	    line-height: 1;
+	    margin: 0;
+	    padding: 7px 3px 4px;
+	    text-indent: 0.01px;
+	    text-overflow: "";
+	    vertical-align: top;
+	    width: 180px;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+		}
   }
 
   .forum-subnav-keyword-wrapper {
@@ -373,21 +429,44 @@ a.category-hide:focus {
   }
 
   .forum-subnav-start-link-wrapper {
-    float:left;
-    width:20%;
-
+    float:right;
+    
     a.new-forum-link {
       float:right;
+			border-radius: 6px;
       background-color:$lightblue;
       color:$white;
-      height:34px;
-      width:85%;
-      padding:8px;
-      text-align:right;
-      border-radius: 6px;
-      border: 1px solid #000;
-      text-shadow:0 1px 0 rgba(0, 0, 0, 0.4);
+			-moz-border-bottom-colors: none;
+	    -moz-border-left-colors: none;
+	    -moz-border-right-colors: none;
+	    -moz-border-top-colors: none;
+	    border-color: rgba(255, 255, 255, 0.7) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);
+	    border-image: none;
+	    border-right: 1px solid rgba(0, 0, 0, 0.4);
+	    border-style: solid;
+	    border-width: 1px;
+	    box-shadow: none;
+	    margin: 0;
+	    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+			cursor: pointer;
+			font-size: 16px;
+	    font-weight: normal;
+	    height: 34px;
+			line-height: 34px;
+	    min-width: 125px;
+	    padding: 0 18px;
+	    text-align: center;
+			vertical-align: middle;
     }
+		
+		a.new-forum-link:before {
+		    content: "+";
+		    display: inline;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		}
 
     a.new-forum-link:hover {
       background-color:$teal;
@@ -471,6 +550,12 @@ a.category-hide:focus {
 		}
 	} 
 	
+	#edit_field_state_und_chzn.chzn-container,
+	#edit_field_forum_access_role_list_und_chzn.chzn-container {
+		width: 390px !important;
+		margin-left: 28px;
+	}
+	
 	.group-forum-tags, 
 	#taxonomy_term_forum_form_group_forum_access {
 		
@@ -531,8 +616,6 @@ a.category-hide:focus {
   }
 
   #taxonomy_term_forum_form_group_forum_access {
-   /* height:220px;*/
-
     .error {
       border:2px solid #FF0000;
     }
