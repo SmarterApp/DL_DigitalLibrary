@@ -194,12 +194,7 @@ function feedback_qc_form_submit($form, &$form_state) {
       $entity->node_id = $node->nid;
 
       drupal_set_message(t('Quality criteria review process started.'));
-
       entity_save('feedback', $entity);
-
-      // rebuild permissions
-      node_access_acquire_grants($node, TRUE);
-
       sbac_resource_save_current_state($node);
 
       break;
@@ -208,10 +203,6 @@ function feedback_qc_form_submit($form, &$form_state) {
       if ($entity = entity_load_single('feedback', $form_state['build_info']['args'][3])) {
         $entity->status = 0;
         entity_save('feedback', $entity);
-
-        // rebuild permissions
-        node_access_acquire_grants($node, TRUE);
-
         sbac_resource_save_current_state($node);
       }
 

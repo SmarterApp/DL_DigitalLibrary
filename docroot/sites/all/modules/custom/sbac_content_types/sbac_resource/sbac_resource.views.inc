@@ -11,18 +11,54 @@
  * @param $query
  */
 function sbac_resource_views_query_alter(&$view, &$query) {
+  if ($view->name == 'resources') {
+    $view->query->add_table('sbac_node_resource_state');
+    $all_condition = db_and()->condition('sbac_node_resource_state.state', "published")->condition('sbac_node_resource_state.uid', 0);
+    $view->query->add_where('AND', $all_condition);
+  }
+
+  if ($view->name == 'my_resources') {
+    global $user;
+    $view->query->add_table('sbac_node_resource_state');
+    //$all_condition = db_and()->condition('sbac_node_resource_state.state', "FRUIT")->condition('sbac_node_resource_state.uid', 0);
+    $user_condition = db_and()->condition('sbac_node_resource_state.state', "author")->condition('sbac_node_resource_state.uid', $user->uid);
+    //$view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
+    $view->query->add_where('AND', $user_condition);
+    $node_condition = db_or()->condition('node.uid', $user->uid);
+    $view->query->add_where('AND', $node_condition);
+  }
+
   if ($view->name == 'resource_review') {
     global $user;
+    // dont allow the node author to see / review own nodes.
+    $node_condition = db_or()->condition('node.uid', $user->uid, '<>');
+    $view->query->add_where('AND', $node_condition);
 
+    // only allow the user to see nodes if they are in the following states.
+    // (gk_need_review, gk_being_reviewed, qc_needs_review, qc_being_reviewed, qc_reviewed, gk_view_rejected, post_being_reviewed, post_needs_review)
+    $view->query->add_table('sbac_node_resource_state');
     if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
       // do nothing, roles can be combined to see all states.
       $roles['both'] = TRUE;
+      $not_like = "qc_reviewed::" . $user->uid;
+      $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
+      $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected', 'post_being_reviewed');
+      $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+      $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+      $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
     }
     else {
       if (in_array('resource reviewer', $user->roles)) {
         // Can see needs review, being reviewed
         unset($query->where[1]['conditions'][3]['value'][2]);
         $roles['rr'] = TRUE;
+
+        $not_like = "qc_reviewed::" . $user->uid;
+        $all_states = array('gk_needs_review', 'qc_needs_review');
+        $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected');
+        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+        $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+        $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
       }
 
       if (in_array('resource publisher', $user->roles)) {
@@ -30,6 +66,12 @@ function sbac_resource_views_query_alter(&$view, &$query) {
         unset($query->where[1]['conditions'][3]['value'][0]);
         unset($query->where[1]['conditions'][3]['value'][1]);
         $roles['rp'] = TRUE;
+
+        $all_states = array('post_needs_review');
+        $user_states = array('post_being_reviewed');
+        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+        $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+        $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
       }
     }
 
@@ -181,29 +223,31 @@ function sbac_resource_my_resource_apply_filters(&$view) {
                 case 'resource_states':
                   switch($term->name) {
                     case 'Draft':
-                      $state = 'draft';
+                      $state['draft'] = 'draft';
                       break;
                     case 'In Review':
-                      $state = 'being_reviewed';
+                      $state['being_reviewed'] = 'being_reviewed';
+                      $state['needs_review'] = 'needs_review';
+                      $state['approved'] = 'approved';
                       break;
                     case 'Posted':
-                      $state = 'published';
+                      $state['published'] = 'published';
                       break;
                     case 'Returned':
-                      $state = 'rejected';
+                      $state['rejected'] = 'rejected';
                       break;
                     case 'Submitted':
-                      $state = 'needs_review';
+                      $state['needs_review'] = 'needs_review';
                       break;
                     case 'Removed':
-                      $state = 'removed';
+                      $state['removed'] = 'removed';
                       break;
                     default:
-                      $state = 'draft';
+                      $state['draft'] = 'draft';
                       break;
                   }
 
-                  $resource_states[$state] = $state;
+                  $resource_states = $state;
                   break;
               }
             }
@@ -494,89 +538,6 @@ function sbac_resource_resource_review_apply_sorts(&$view) {
   }
 }
 
-function sbac_resource_views_data() {
-//  | sbac_node_resource_state |
-//  CREATE TABLE `sbac_node_resource_state` (
-//  `nid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The nid of the resource',
-//  `uid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The uid who modified the resource',
-//  `state` varchar(255) NOT NULL COMMENT 'The actual resource state',
-//  PRIMARY KEY (`nid`,`uid`),
-//  KEY `nid` (`nid`),
-//  KEY `uid` (`uid`)
-
-  $data['sbac_node_resource_state']['table']['group'] = t('SBAC Resource Node State');
-  // Base table.
-  $data['sbac_node_resource_state']['table']['base'] = array(
-    'field' => 'nid', // This is the identifier field for the view.
-    'title' => t('SBAC Resource Node Table'),
-    'help' => t('Custom data for the resource states.'),
-    'weight' => -10,
-  );
-  // Join.
-  $data['sbac_node_resource_state']['table']['join'] = array(
-    'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
-    ),
-    'users' => array(
-      'left_field' => 'uid',
-      'field' => 'uid',
-    ),
-  );
-
-
-  // Node ID table field.
-  $data['sbac_node_resource_state']['nid'] = array(
-    'title' => t('Resource NID'),
-    'help' => t('Custom data for the resource states.'),
-    'relationship' => array(
-      'base' => 'node', // The name of the table to join with.
-      'base field' => 'nid', // The name of the field on the joined table.
-      'handler' => 'views_handler_relationship',
-      'label' => t('Default label for the relationship'),
-      'title' => t('Title shown when adding the relationship'),
-      'help' => t('More information on this relationship'),
-    ),
-  );
-
-  // User ID field.
-  $data['sbac_node_resource_state']['uid'] = array(
-    'title' => t('User ID'),
-    'help' => t('User ID.'),
-    'field' => array(
-      'handler' => 'views_handler_field_numeric',
-      'click sortable' => TRUE,
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-  );
-
-  // State field.
-  $data['sbac_node_resource_state']['state'] = array(
-    'title' => t('State field.'),
-    'help' => t('State field.'),
-    'field' => array(
-      'handler' => 'views_handler_field',
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_in_operator',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_string',
-    ),
-  );
-
-  return $data;
-}
-
 /**
  * Applies filtering options on View which restrict resources displayed to ones
  * matching the user's Subject & Grade values
@@ -672,4 +633,112 @@ function sbac_resource_filter_user_tags(&$view, $account = NULL) {
 
   $view->display_handler->set_option('filter_groups', $groups);
   $view->display_handler->set_option('filters', $view_filters);
+}
+
+/**
+ * Implements hook_views_data().
+ *
+ * @return mixed
+ */
+function sbac_resource_views_data() {
+//  | sbac_node_resource_state |
+//  CREATE TABLE `sbac_node_resource_state` (
+//  `nid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The nid of the resource',
+//  `uid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'The uid who modified the resource',
+//  `state` varchar(255) NOT NULL COMMENT 'The actual resource state',
+//  `flag` varchar(1000) NOT NULL DEFAULT '0' COMMENT 'The flag on the resource',
+//  PRIMARY KEY (`nid`,`uid`),
+//  KEY `nid` (`nid`),
+//  KEY `uid` (`uid`)
+
+  $data['sbac_node_resource_state']['table']['group'] = t('SBAC Resource Node State');
+  // Base table.
+  $data['sbac_node_resource_state']['table']['base'] = array(
+    'field' => 'nid', // This is the identifier field for the view.
+    'title' => t('SBAC Resource Node Table'),
+    'help' => t('Custom data for the resource states.'),
+    'weight' => -10,
+  );
+  // Join.
+  $data['sbac_node_resource_state']['table']['join'] = array(
+    'node' => array(
+      'left_field' => 'nid',
+      'field' => 'nid',
+    ),
+    'users' => array(
+      'left_field' => 'uid',
+      'field' => 'uid',
+    ),
+  );
+
+
+  // Node ID table field.
+  $data['sbac_node_resource_state']['nid'] = array(
+    'title' => t('Resource NID'),
+    'help' => t('Custom data for the resource states.'),
+    'relationship' => array(
+      'base' => 'node', // The name of the table to join with.
+      'base field' => 'nid', // The name of the field on the joined table.
+      'handler' => 'views_handler_relationship',
+      'label' => t('Default label for the relationship'),
+      'title' => t('Nid'),
+      'help' => t('More information on this relationship'),
+    ),
+  );
+
+  // User ID field.
+  $data['sbac_node_resource_state']['uid'] = array(
+    'title' => t('User ID'),
+    'help' => t('User ID.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  // State field.
+  $data['sbac_node_resource_state']['state'] = array(
+    'title' => t('State field.'),
+    'help' => t('State field.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_in_operator',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  // Flag field.
+  $data['sbac_node_resource_state']['flag'] = array(
+    'title' => t('Flag field.'),
+    'help' => t('Flag field.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_in_operator',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  return $data;
 }

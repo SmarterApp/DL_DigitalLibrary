@@ -13,18 +13,13 @@ function sbac_resource_digital_library_page() {
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
 
-  // Load up the view.
   $view = views_get_view('resources');
   $view->set_display($display);
   sbac_resource_digital_library_apply_filters($view);
   sbac_resource_digital_library_apply_sorts($view);
-  $view->pre_execute();
-  $view->execute();
-  $view->_post_execute();
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
   // dpq($view->build_info['query']);
-
   $count = count($view->result);
   $view->destroy();
 
@@ -32,7 +27,6 @@ function sbac_resource_digital_library_page() {
   if (!$count && ($search_string != '' || $current_filters != '')) {
     // Reset variables
     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
-    // $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = ''; // moved to sbac_search_preprocess_page();
     $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED] = TRUE;
 
     // Load up the view.
@@ -43,18 +37,11 @@ function sbac_resource_digital_library_page() {
     // clear these in order to make sure out new filters kick in
     clear_views_exposed_filter_cache($view->name, $display);
     sbac_resource_filter_user_tags($view);
-
-    $view->pre_execute();
-    $view->execute();
-    $view->_post_execute();
-
     $digital_library_output = $view->preview();
     $view->destroy();
-
     drupal_get_messages();
     $no_results = sbac_resource_no_search_results($search_string);
   }
-
   menu_set_active_item('digital-library-resources');
   return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results));
 }
@@ -77,13 +64,10 @@ function sbac_resource_my_resources_page() {
   $view->set_display($display);
   sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
-  $view->pre_execute();
-  $view->execute();
-  $view->_post_execute();
   $my_resources_output = $view->preview();
-  //  dpq($view->build_info['query']);
-  $view->destroy();
+  // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
+  $view->destroy();
 
   if (!$view->total_rows && $current_filters != '') {
     // Reset variables
@@ -93,7 +77,6 @@ function sbac_resource_my_resources_page() {
     drupal_get_messages();
     $no_results = sbac_resource_no_search_results();
   }
-
   menu_set_active_item('my-resources');
   return theme('my_resources', array('my_resources_output' => $my_resources_output, 'no_results' => $no_results));
 }
@@ -115,13 +98,10 @@ function sbac_resource_resource_review_page() {
   $view->set_display($display);
   sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);
-  $view->pre_execute();
-  $view->execute();
-  $view->_post_execute();
   $resource_review_output = $view->preview();
-//  dpq($view->build_info['query']);
-  $view->destroy();
+  // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
+  $view->destroy();
 
   if (!$view->total_rows && $current_filters != '') {
     // Reset variables
@@ -131,7 +111,6 @@ function sbac_resource_resource_review_page() {
     // Set error message
     $no_results = sbac_resource_no_search_results();
   }
-
   menu_set_active_item('resource-review');
   return theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
 }
