@@ -2,9 +2,9 @@
 <div class="sbac-forum-vp-controls">
   Forum Settings
 </div>
-<div class="sbac-forum-vp-top">
+<div class="sbac-forum-vp-top clearfix">
 
-  <div class="top-left">
+  <div class="col narrow">
 
     <?php if ( !empty($fields['description']) ): ?>
       <div class="vp-desc-field">
@@ -14,7 +14,7 @@
 
     <?php if (!empty($fields['facilitators']) ): ?>
       <div class="vp-faci-field">
-        <div class="title-tags"><?php print t('Facilitator(s)'); ?></div>
+        <div class="title-tags"><?php print t('Facilitator(s):'); ?></div>
         <?php print $fields['facilitators'];?>
       </div>
     <?php endif;?>
@@ -22,7 +22,7 @@
   </div> <!-- End top-left-->
 
 
-  <div class="top-center">
+  <div class="col narrow">
 
     <?php if (!empty($fields['grades'])):?>
       <div class="vp-grades-field">
@@ -41,7 +41,7 @@
   </div> <!-- End top-center-->
 
 
-  <div class="top-right">
+  <div class="col narrow">
 
     <?php if (!empty($fields['end_users'])):?>
       <div class="vp-end-users-field">
