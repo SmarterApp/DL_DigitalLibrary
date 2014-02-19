@@ -514,26 +514,6 @@ function sbac_share_get_field_terms($field) {
 }
 
 /**
- * Implements hook_user_operations().
- *
- * @return mixed
- */
-function sbac_resource_user_operations() {
-  $operations['sbac_resource_rebuild_permssions'] = array(
-    'label' => t('Rebuild User Permissions'),
-    'callback' => 'sbac_resource_rebuild_node_permissions',
-  );
-  return $operations;
-}
-
-/**
- * Rebuilds the node access permissions.
- */
-function sbac_resource_rebuild_node_permissions() {
-  node_access_rebuild(TRUE);
-}
-
-/**
  * Access callback for my resources menu item.
  *
  * @return bool

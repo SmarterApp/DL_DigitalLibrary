@@ -948,7 +948,7 @@ function sbac_resource_update_7038() {
  */
 function sbac_resource_update_7039() {
   $ret = array();
-  node_access_rebuild(TRUE);
+  // node_access_rebuild(TRUE);
   return $ret;
 }
 

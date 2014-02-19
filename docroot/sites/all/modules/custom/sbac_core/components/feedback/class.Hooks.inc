@@ -505,9 +505,7 @@ class Hooks extends \devtools\Hooks {
                ";
 
         db_query($query, array(':time' => $expiry_time, ':nid' => $node->nid));
-
-        // rebuild permissions
-//        node_access_acquire_grants($node, TRUE);
+        sbac_resource_save_current_state($node);
       }
     }
   }
@@ -686,9 +684,7 @@ class Hooks extends \devtools\Hooks {
 
     if ($state == 'needs_review' && $node = node_load($review->node_id)) {
       workbench_moderation_moderate($node, 'being_reviewed');
-
-      // rebuild permissions
-//      node_access_acquire_grants($node, TRUE);
+      sbac_resource_save_current_state($node);
     }
   }  
 }
