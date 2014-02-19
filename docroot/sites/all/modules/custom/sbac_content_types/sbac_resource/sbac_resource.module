@@ -1391,6 +1391,8 @@ function sbac_resource_save_current_state($node) {
             sbac_resource_delete_resource_state($entity);
           }
         }
+        // delete all qc_reviewed if they exist.
+        sbac_resource_delete_resource_state_given_state($node, 'qc_reviewed');
 
         $entity = NULL;
         $new_record = sbac_resource_get_state($entity, $node->nid, $user->uid);
@@ -1554,10 +1556,8 @@ function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $ol
     $node = node_load($node);
   }
 
-
   $entity = NULL;
-  $flag = $role_name . '::' . $old_state . '::' . $node->nid;
-  $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $old_state, $flag);
+  $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $old_state);
   if (!$new_record) {
     sbac_resource_delete_resource_state($entity);
   }
@@ -1571,7 +1571,7 @@ function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $ol
  */
 function sbac_resource_delete_resource_state_given_state($node, $old_state) {
   $entity = NULL;
-  $new_record = sbac_resource_get_state($entity, $node->nid, NULL, $old_state, 0);
+  $new_record = sbac_resource_get_state($entity, $node->nid, NULL, $old_state);
   if (!$new_record) {
     db_delete('sbac_node_resource_state')
       ->condition('nid', $node->nid)
@@ -2347,19 +2347,19 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         // resource reviewer has view
         // resource publisher has view
         $query->condition('s.uid', 0);
-        $query->condition('s.state', 'rejected');
+        $query->condition('s.state', 'gk_view_rejected');
         $result = $query->execute();
         $count = $result->rowCount();
         if ($count) {
-          if ($account->uid == $node->uid && $op == 'view') {
-            $access = TRUE;
-          }
           if (in_array('resource reviewer', $account->roles) && $op == 'view') {
             $access = TRUE;
           }
           if (in_array('resource publisher', $account->roles) && $op == 'view') {
             $access = TRUE;
           }
+        }
+        if ($account->uid == $node->uid && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
         }
       break;
     }
