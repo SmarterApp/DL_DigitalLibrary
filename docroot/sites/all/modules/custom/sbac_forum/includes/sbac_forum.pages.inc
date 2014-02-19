@@ -7,22 +7,34 @@ function sbac_forum_main_landing_page() {
   $current_filters = '';
   $forum_list_output = 'Forum Content';
 
-  // Get correct set of category filters based on subnav.
-  if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
-    $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
-  }
-
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
     sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
   }
+  // Get correct set of category filters based on subnav.
+  switch($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_ALL:
+      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_OWN:
+      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_KEYWORD:
+      break;
+  }
+
+
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   $subnav = drupal_get_form('sbac_forum_sub_nav_form');
   $output .= drupal_render($subnav);
 
 
   if (!empty($current_filters)) {
-    $output = 'THERE ARE FILTERS!! ';
+    $output .= 'THERE ARE FILTERS!! ';
   }
 
   $view = views_get_view('forum_list');

@@ -149,14 +149,23 @@
 
       // Open / Close the filter list.
       close_categories_list = function () {
+        var allForumsActive = $('#sbac-forum-sub-nav-form #edit-all-forums').hasClass('is-pressed');
         var slideableItems = $('.slideable');
         if (slideableItems.is(':visible')) {
-          $.cookie("sbac-forum-filters-closed", 1);
+          if (allForumsActive) {
+            $.cookie("sbac-forum-filters-closed", 1);
+          }else {
+            $.cookie("sbac-forum-my-forum-filters-closed", 1);
+          }
           slideableItems.slideUp('slow');
           $('.sbac-filter-cat-area').removeClass("active");
         }
         else{
-          $.cookie("sbac-forum-filters-closed", 0);
+          if (allForumsActive) {
+            $.cookie("sbac-forum-filters-closed", 0);
+          }else {
+            $.cookie("sbac-forum-my-forum-filters-closed", 0);
+          }
           slideableItems.slideDown('fast');
           $('.sbac-filter-cat-area').addClass("active");
         }

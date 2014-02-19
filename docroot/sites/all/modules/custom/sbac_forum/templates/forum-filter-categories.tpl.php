@@ -1,7 +1,27 @@
 <div class="categories-container clearfix">
   <?php ($cf_value ? $class = '' : $class = 'noshow'); ?>
   <?php ($cf_value ? $hide_filters = 'js-hide' : $hide_filters = 'js-show'); ?>
-  <div class="categories-filter clearfix slideable <?php print $hide_filters; ?>" <?php if (isset($_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) { print 'style="display:none;"';}?> >
+  <div class="categories-filter clearfix slideable <?php print $hide_filters; ?>" <?php
+  $active_tab = sbac_forum__api__get_active_subnav();
+  if (empty($active_tab)) {
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+  }
+
+  // Get correct set of category filters based on subnav.
+  switch($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_ALL:
+      if (isset($_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) {
+        print 'style="display:none;"';
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_OWN:
+      if (isset($_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED]) {
+        print 'style="display:none;"';
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_KEYWORD:
+      break;
+  }?> >
     <?php
     $count = 1;
     $total_cols = 3;

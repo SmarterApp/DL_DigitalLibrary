@@ -19,13 +19,33 @@ function sbac_forum_category_forum_form($form, &$form_state) {
   $hide_categories_text = t('Hide Categories');
   $hide_categories_class = 'active';
   $should_hide_categories = '';
-  if (isset($_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) {
-    $should_hide_categories = ' style="display:none;"';
+
+  $active_tab = sbac_forum__api__get_active_subnav();
+  if (empty($active_tab)) {
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
   }
 
   $current_filters = NULL;
-  if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
-    $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+  // Get correct set of category filters based on subnav.
+  switch($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_ALL:
+      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) {
+        $should_hide_categories = ' style="display:none;"';
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_OWN:
+      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED]) {
+        $should_hide_categories = ' style="display:none;"';
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_KEYWORD:
+      break;
   }
 
   if ($should_hide_categories) {
@@ -110,21 +130,41 @@ function _sbac_forum_filter_categories() {
 
   $cf_value = NULL;
   $cf_html = array();
-  if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
-    $cf_value = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
-    if ($cf_value) {
-      $filters = explode('::', $cf_value);
-      if ($filters) {
-        foreach ($filters as $filter) {
-          $filter_info = explode(':', $filter);
-          if ($filter_info && sizeof($filter_info) == 2) {
-            $vid = $filter_info[0];
-            $tid = $filter_info[1];
-            if ($vid && $tid) {
-              $term = taxonomy_term_load($tid);
-              if ($term) {
-                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
-              }
+
+  $active_tab = sbac_forum__api__get_active_subnav();
+  if (empty($active_tab)) {
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+  }
+
+  $current_filters = NULL;
+  // Get correct set of category filters based on subnav.
+  switch($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_ALL:
+      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
+        $cf_value = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_OWN:
+      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
+        $cf_value = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_KEYWORD:
+      break;
+  }
+
+  if ($cf_value) {
+    $filters = explode('::', $cf_value);
+    if ($filters) {
+      foreach ($filters as $filter) {
+        $filter_info = explode(':', $filter);
+        if ($filter_info && sizeof($filter_info) == 2) {
+          $vid = $filter_info[0];
+          $tid = $filter_info[1];
+          if ($vid && $tid) {
+            $term = taxonomy_term_load($tid);
+            if ($term) {
+              $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
             }
           }
         }
@@ -146,7 +186,24 @@ function _sbac_forum_filter_categories() {
  * @param $form_state
  */
 function sbac_forum_category_forum_form_submit($form, &$form_state) {
-  $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = $form_state['input']['current_filters'];
+  $current_cat_filters = $form_state['input']['current_filters'];
+
+  $active_tab = sbac_forum__api__get_active_subnav();
+  if (empty($active_tab)) {
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+  }
+
+  // Get correct set of category filters based on subnav.
+  switch($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_ALL:
+      $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
+      break;
+    case SBAC_FORUM_SUBNAV_OWN:
+      $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
+      break;
+    case SBAC_FORUM_SUBNAV_KEYWORD:
+      break;
+  }
 }
 
 /**
@@ -156,7 +213,22 @@ function sbac_forum_category_forum_form_submit($form, &$form_state) {
  * @param $form_state
  */
 function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
-  $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
+  $active_tab = sbac_forum__api__get_active_subnav();
+  if (empty($active_tab)) {
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+  }
+
+  // Get correct set of category filters based on subnav.
+  switch($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_ALL:
+      $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
+      break;
+    case SBAC_FORUM_SUBNAV_OWN:
+      $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
+      break;
+    case SBAC_FORUM_SUBNAV_KEYWORD:
+      break;
+  }
   $form_state['redirect'] = 'forums';
 }
 
