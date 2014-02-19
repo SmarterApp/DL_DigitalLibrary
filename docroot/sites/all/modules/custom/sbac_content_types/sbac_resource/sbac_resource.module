@@ -1414,11 +1414,11 @@ function sbac_resource_save_current_state($node) {
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
       $post_review_in_progress = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
       if ($post_review_in_progress) {
+        sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_needs_review');
         $entity = NULL;
         $new_record = sbac_resource_get_state($entity, $node->nid, $post_review_in_progress['uid']);
         $entity->state = 'post_being_reviewed';
         sbac_resource_save_resource_state($entity, $new_record);
-        sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_being_reviewed');
       }
       else {
         $entity = NULL;
@@ -1576,7 +1576,6 @@ function sbac_resource_delete_resource_state_given_state($node, $old_state) {
     db_delete('sbac_node_resource_state')
       ->condition('nid', $node->nid)
       ->condition('state', $old_state)
-      ->condition('flag', 0)
       ->execute();
   }
 }
