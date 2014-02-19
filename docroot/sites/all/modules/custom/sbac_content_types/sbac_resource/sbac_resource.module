@@ -1336,14 +1336,6 @@ function sbac_resource_save_current_state($node) {
         else {
           $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1);
           $total_count = count($current_reviews) + count($completed_feedback);
-          if ($total_count < 3) {
-            // everyone has access and is set to needs review
-            sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
-          }
-          else {
-            sbac_resource_delete_resource_state_for_all_role($node->nid, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
-          }
-
           // if there is current reviews, tag them correctly
           foreach ($current_reviews as $current_review) {
             $entity = NULL;
@@ -1360,6 +1352,14 @@ function sbac_resource_save_current_state($node) {
               $entity->state = 'qc_reviewed';
               sbac_resource_save_resource_state($entity, $new_record);
             }
+          }
+
+          if ($total_count < 3) {
+            // everyone has access and is set to needs review
+            sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review', TRUE);
+          }
+          else {
+            sbac_resource_delete_resource_state_for_all_role($node->nid, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
           }
         }
 
@@ -1516,10 +1516,23 @@ function sbac_resource_save_resource_state($entity, $new_record) {
  * @param $role_name
  * @param $new_state
  */
-function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_state) {
+function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_state, $flag_param = FALSE) {
+  $qc_reviewed = NULL;
+  if ($flag_param) {
+    $result = db_query('SELECT s.* FROM {sbac_node_resource_state} s WHERE s.nid = :nid AND s.state = :state', array(':nid' => $node->nid, ':state' => 'qc_reviewed'));
+    foreach ($result as $row) {
+      $qc_reviewed[] = 'qc_reviewed::' . $row->uid;
+    }
+    if (count($qc_reviewed) > 0) {
+      $qc_reviewed = implode('::', $qc_reviewed);
+    }
+  }
   $entity = NULL;
   $flag = $role_name . '::' . $new_state . '::' . $node->nid;
-  $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $new_state, $flag);
+  if ($qc_reviewed) {
+    $flag .= '::' . $qc_reviewed;
+  }
+  $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $new_state);
   $entity->state = $new_state;
   $entity->flag = $flag;
   sbac_resource_save_resource_state($entity, $new_record);

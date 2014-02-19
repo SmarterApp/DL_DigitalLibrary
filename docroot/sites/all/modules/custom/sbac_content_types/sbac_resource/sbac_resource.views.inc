@@ -40,9 +40,10 @@ function sbac_resource_views_query_alter(&$view, &$query) {
     if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
       // do nothing, roles can be combined to see all states.
       $roles['both'] = TRUE;
+      $not_like = "qc_reviewed::" . $user->uid;
       $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
-      $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'qc_reviewed', 'gk_view_rejected', 'post_being_reviewed');
-      $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+      $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected', 'post_being_reviewed');
+      $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
       $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
       $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
     }
@@ -52,9 +53,10 @@ function sbac_resource_views_query_alter(&$view, &$query) {
         unset($query->where[1]['conditions'][3]['value'][2]);
         $roles['rr'] = TRUE;
 
+        $not_like = "qc_reviewed::" . $user->uid;
         $all_states = array('gk_needs_review', 'qc_needs_review');
-        $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'qc_reviewed', 'gk_view_rejected');
-        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+        $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected');
+        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
         $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
         $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
       }
