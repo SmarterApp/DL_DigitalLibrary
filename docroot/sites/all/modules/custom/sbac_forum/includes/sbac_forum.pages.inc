@@ -25,13 +25,13 @@ function sbac_forum_main_landing_page() {
     $output = 'THERE ARE FILTERS!! ';
   }
 
-  // $view = views_get_view('forum_list');
-  // $view->set_display('block');
-  // // Set filters here.
-  // $view->pre_execute();
-  // $view->execute();
-  // $view->_post_execute();
-  // $forum_list_output = $view->preview();
+  $view = views_get_view('forum_list');
+  $view->set_display('block');
+  // Set filters here.
+  $view->pre_execute();
+  $view->execute();
+  $view->_post_execute();
+  $forum_list_output = $view->preview();
 
 
   $output .= '<div class="sbac-forum-main-container">';
@@ -155,6 +155,46 @@ function sbac_forum_view_forum_page($term) {
     }
   }
 
+  $tabs = array();
+  $tabs[] = array(
+    'vid' => 'forum_topic_list',
+    'display' => 'block',
+    'args' => $term->tid,
+    'title' => t('Topics ()'),
+    'weight' => -99,
+    'type' => 'view',
+  );
+
+  $tabs[] = array(
+    'vid' => 'forum_member_list',
+    'display' => 'block',
+    'args' => $term->tid,
+    'title' => t('Members ()'),
+    'weight' => -98,
+    'type' => 'view',
+  );
+
+  $tabs[] = array(
+    'vid' => 'forum_member_list',
+    'display' => 'block_1',
+    'args' => $term->tid,
+    'title' => t('Removed Members ()'),
+    'weight' => -97,
+    'type' => 'view',
+  );
+
+
+  $qtname = 'forum_content';
+  $default_tab = 0;
+  $overrides = array(
+    'style' => 'Navlist', // Style available, none/zen/etc.
+    'sorted' => TRUE, // TRUE or FALSE.
+    'ajax' => FALSE, // TRUE or FALSE.
+    'default_tab' => $default_tab // Id of the tab - 0/1/2/etc.
+  );
+  $taxonomy_tabs = quicktabs_build_quicktabs($qtname, $overrides, $tabs);
+  $tab_output = drupal_render($taxonomy_tabs);
+
   $fields = array(
     'description'          => $description_text ,
     'facilitators'         => $facilitator_text,
@@ -163,6 +203,7 @@ function sbac_forum_view_forum_page($term) {
     'subjects'             => $subject_text,
     'end_users'            => $end_user_text,
     'students'             => $student_text,
+    'tabs'                 => $tab_output,
   );
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );

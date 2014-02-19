@@ -62,5 +62,5 @@
 </div> <!--End top container -->
 
 <div class="sbac-forum-vp-tabs">
-
+  <?php print $fields['tabs']; ?>
 </div>
