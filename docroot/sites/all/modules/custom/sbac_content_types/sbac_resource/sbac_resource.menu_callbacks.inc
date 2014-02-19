@@ -19,7 +19,7 @@ function sbac_resource_digital_library_page() {
   sbac_resource_digital_library_apply_sorts($view);
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
-  dpq($view->build_info['query']);
+  // dpq($view->build_info['query']);
   $count = count($view->result);
   $view->destroy();
 
@@ -37,18 +37,11 @@ function sbac_resource_digital_library_page() {
     // clear these in order to make sure out new filters kick in
     clear_views_exposed_filter_cache($view->name, $display);
     sbac_resource_filter_user_tags($view);
-
-//    $view->pre_execute();
-//    $view->execute();
-//    $view->_post_execute();
-
     $digital_library_output = $view->preview();
     $view->destroy();
-
     drupal_get_messages();
     $no_results = sbac_resource_no_search_results($search_string);
   }
-
   menu_set_active_item('digital-library-resources');
   return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results));
 }
@@ -72,7 +65,7 @@ function sbac_resource_my_resources_page() {
   sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
   $my_resources_output = $view->preview();
-  dpq($view->build_info['query']);
+  // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
   $view->destroy();
 
@@ -84,7 +77,6 @@ function sbac_resource_my_resources_page() {
     drupal_get_messages();
     $no_results = sbac_resource_no_search_results();
   }
-
   menu_set_active_item('my-resources');
   return theme('my_resources', array('my_resources_output' => $my_resources_output, 'no_results' => $no_results));
 }
@@ -107,7 +99,7 @@ function sbac_resource_resource_review_page() {
   sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();
-  dpq($view->build_info['query']);
+  // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
   $view->destroy();
 
@@ -119,7 +111,6 @@ function sbac_resource_resource_review_page() {
     // Set error message
     $no_results = sbac_resource_no_search_results();
   }
-
   menu_set_active_item('resource-review');
   return theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
 }
