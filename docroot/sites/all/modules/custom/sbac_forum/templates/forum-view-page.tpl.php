@@ -2,6 +2,9 @@
 <div class="sbac-forum-vp-controls">
   Forum Settings
 </div>
+<div class="sbac-forum-confirm-message-region">
+</div>
+
 <div class="sbac-forum-vp-top">
 
   <div class="top-left">

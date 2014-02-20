@@ -352,3 +352,39 @@ function _sbac_forum_sub_nav__set_all__submit($form, &$form_state) {
 function _sbac_forum_sub_nav__set_own__submit($form, &$form_state) {
   sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_OWN);
 }
+
+
+/**
+ * =============================================================================
+ *    Forum Join Button Form
+ * =============================================================================
+ */
+
+function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
+  $form = array();
+
+  // Store these values for the ajax handler.
+  $form['forum_id'] = array(
+    '#type' => 'value',
+    '#value' => $forum_id,
+  );
+  $form['target_user_id'] = array(
+    '#type' => 'value',
+    '#value' => $user_id,
+  );
+
+  $form['join_forum'] = array(
+    '#type' => 'submit',
+    '#value' => t('Join Forum'),
+    '#prefix' => '<div id="join-forum-button-wrapper">',
+    '#suffix' => '</div>',
+    '#executes_submit_callback' => TRUE,
+    '#ajax' => array(
+      'effect' => 'fade',
+      'wrapper' => 'join-forum-button-wrapper',
+      'callback' => 'sbac_forum__ajax__join_button_form_execute',
+    ),
+  );
+  return $form;
+}
+

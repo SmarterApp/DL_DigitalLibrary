@@ -45,6 +45,12 @@
     </div>
   <?php endif; ?>
 
+  <?php if ($join_button): ?>
+    <div id="join-forum-form-wrapper">
+      <?php print $join_button; ?>
+    </div>
+  <?php endif; ?>
+
   <?php if ($attachment_before): ?>
     <div class="attachment attachment-before">
       <?php print $attachment_before; ?>
