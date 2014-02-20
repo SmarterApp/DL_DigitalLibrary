@@ -169,6 +169,7 @@ function sbac_forum_view_forum_page($term) {
   }
 
   $tabs = array();
+  $tab_classes = array();
   $tabs[] = array(
     'vid' => 'forum_topic_list',
     'display' => 'block',
@@ -177,15 +178,22 @@ function sbac_forum_view_forum_page($term) {
     'weight' => -99,
     'type' => 'view',
   );
+  $tab_classes[] = 'sbac-qt-show';
 
+  $current_member_count = $forum_data->field_forum_member_count->value();
+  $member_count_text = '';
+  if ($current_member_count) {
+    $member_count_text = '(' .$current_member_count .')';
+  }
   $tabs[] = array(
     'vid' => 'forum_member_list',
     'display' => 'block',
     'args' => $term->tid,
-    'title' => t('Members ()'),
+    'title' => t('Members '.$member_count_text),
     'weight' => -98,
     'type' => 'view',
   );
+  $tab_classes[] = 'sbac-qt-show';
 
   $tabs[] = array(
     'vid' => 'forum_member_list',
@@ -195,15 +203,16 @@ function sbac_forum_view_forum_page($term) {
     'weight' => -97,
     'type' => 'view',
   );
-
+  $tab_classes[] = 'sbac-qt-show';
 
   $qtname = 'forum_content';
   $default_tab = 0;
   $overrides = array(
-    'style' => 'Navlist', // Style available, none/zen/etc.
+    'style' => 'sbac-forum', // Style available, none/zen/etc.
     'sorted' => TRUE, // TRUE or FALSE.
     'ajax' => FALSE, // TRUE or FALSE.
-    'default_tab' => $default_tab // Id of the tab - 0/1/2/etc.
+    'default_tab' => $default_tab, // Id of the tab - 0/1/2/etc.
+    'list_classes' => $tab_classes,
   );
   $taxonomy_tabs = quicktabs_build_quicktabs($qtname, $overrides, $tabs);
   $tab_output = drupal_render($taxonomy_tabs);

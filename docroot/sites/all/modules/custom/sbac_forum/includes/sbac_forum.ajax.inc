@@ -24,6 +24,37 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   $date = strtotime('today');
   $new_member_data->field_fc_forum_member_joined->set($date);
   $new_member_data->save(TRUE);
+
+  // Need to update fields on forum entity
+  $forum_term_data = entity_metadata_wrapper('taxonomy_term', $forum_term);
+
+  // Update member counter field.
+  if (isset($forum_term_data->field_forum_member_count)) {
+    $current_member_count = $forum_term_data->field_forum_member_count->value();
+    $current_member_count++;
+    $forum_term_data->field_forum_member_count->set($current_member_count);
+  }
+
+  $user_obj = user_load($target_user_id); // If user is facilitator, add them to the list of facis
+  if (in_array('facilitator', $user_obj->roles)) {
+    if (isset($forum_term_data->field_forum_facilitators)) {
+      $forum_term_data->field_forum_facilitators[] = $target_user_id;
+
+      // Update facilitator field list.
+      $faci_data = entity_metadata_wrapper('user', $user_obj);
+      $fn = $faci_data->field_first_name->value();
+      $ln = $faci_data->field_last_name->value();
+      $full_name = $fn . ' ' . $ln;
+      $faci_list_selector = '.vp-faci-field ul.vp-auth-pane';
+      $link = 'forum-auth-pane/'. $user_obj->uid;
+      $link_ops = array('attributes' => array('class' => 'vp-auth-pane-item'));
+      $faci_link = l($full_name, $link, $link_ops);
+      $new_faci = '<li>' .$faci_link. '</li>';
+      $commands[] = ajax_command_append($faci_list_selector, $new_faci);
+
+    }
+  }
+  $forum_term_data->save(TRUE);
   taxonomy_term_save($forum_term);
 
   // invlidate memberlist cache when a new user joins.
@@ -33,6 +64,7 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   }
   sbac_forum__api__check_user_is_forum_member($forum_id, $target_user_id);
 
+  // Ajax/js fancy behaviour.
   $message_selector = '.sbac-forum-confirm-message-region';
   $message = 'Welcome to ' . $forum_name;
   $commands[] = ajax_command_html($message_selector, $message);
