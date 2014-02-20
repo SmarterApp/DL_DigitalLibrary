@@ -55,7 +55,8 @@ function sbac_forum_main_landing_page() {
 
 
 function sbac_forum_view_forum_page($term) {
-	drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
+	global $user;
+  drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
 
   // Load up forum data.
@@ -68,6 +69,7 @@ function sbac_forum_view_forum_page($term) {
     $description_text = $forum_data->field_forum_description->value();
   }
 
+  $is_facilitator = FALSE;
   $facilitator_text = '';
   $faci_details;
   if (isset($forum_data->field_forum_facilitators)) {
@@ -75,6 +77,9 @@ function sbac_forum_view_forum_page($term) {
     if (!empty($facilitators)) {
       $item_list = array();
       foreach ($facilitators as $faci) {
+        if ($faci->uid == $user->uid) {
+          $is_facilitator = TRUE;
+        }
         $faci_data = entity_metadata_wrapper('user', $faci);
         $fn = $faci_data->field_first_name->value();
         $ln = $faci_data->field_last_name->value();
@@ -180,30 +185,49 @@ function sbac_forum_view_forum_page($term) {
   );
   $tab_classes[] = 'sbac-qt-show';
 
-  $current_member_count = $forum_data->field_forum_member_count->value();
-  $member_count_text = '';
-  if ($current_member_count) {
-    $member_count_text = '(' .$current_member_count .')';
-  }
-  $tabs[] = array(
-    'vid' => 'forum_member_list',
-    'display' => 'block',
-    'args' => $term->tid,
-    'title' => t('Members '.$member_count_text),
-    'weight' => -98,
-    'type' => 'view',
-  );
-  $tab_classes[] = 'sbac-qt-show';
 
-  $tabs[] = array(
-    'vid' => 'forum_member_list',
-    'display' => 'block_1',
-    'args' => $term->tid,
-    'title' => t('Removed Members ()'),
-    'weight' => -97,
-    'type' => 'view',
-  );
-  $tab_classes[] = 'sbac-qt-show';
+  $is_member = sbac_forum__api__check_user_is_forum_member($term->tid, $user->uid);
+  if ($is_member === TRUE) {
+    $show_members = 'sbac-qt-show';
+  } elseif ($is_member === FALSE) {
+    $show_members = 'sbac-qt-hide';
+  } elseif ($is_member == 'removed') {
+    $show_members = '';
+  }
+
+  if (!empty($show_members)) {
+    $current_member_count = $forum_data->field_forum_member_count->value();
+    $member_count_text = '';
+    if ($current_member_count) {
+      $member_count_text = '(' .$current_member_count .')';
+    }
+    $tabs[] = array(
+      'vid' => 'forum_member_list',
+      'display' => 'block',
+      'args' => $term->tid,
+      'title' => t('Members '.$member_count_text),
+      'weight' => -98,
+      'type' => 'view',
+    );
+    $tab_classes[] = 'sbac-forum-vp-member-tab-item ' . $show_members;
+  }
+
+
+  if (in_array('facilitator', $user->roles)) { // User is a facilitator
+    if (($is_member === TRUE) ||
+        ($is_member === FALSE) ){ // Show tab as long as user is not removed.
+      $tabs[] = array(
+        'vid' => 'forum_member_list',
+        'display' => 'block_1',
+        'args' => $term->tid,
+        'title' => t('Removed Members ()'),
+        'weight' => -97,
+        'type' => 'view',
+      );
+      $tab_classes[] = 'sbac-forum-vp-rem-members-tab-item ' . $show_members;
+    }
+  }
+
 
   $qtname = 'forum_content';
   $default_tab = 0;

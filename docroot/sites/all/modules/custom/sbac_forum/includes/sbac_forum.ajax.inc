@@ -5,6 +5,7 @@
  */
 function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   // ctools_include('ajax');
+  $commands = array();
   $values = $form_state['values'];
 
   $forum_id = $values['forum_id'];
@@ -33,6 +34,11 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
     $current_member_count = $forum_term_data->field_forum_member_count->value();
     $current_member_count++;
     $forum_term_data->field_forum_member_count->set($current_member_count);
+    $member_tab_selector = 'li.sbac-forum-vp-member-tab-item';
+    $commands[] = ajax_command_invoke($member_tab_selector, 'addClass', array('sbac-qt-show'));
+    $commands[] = ajax_command_invoke($member_tab_selector, 'removeClass', array('sbac-qt-hide'));
+    $new_member_count_text = 'Members (' . $current_member_count . ')';
+    $commands[] = ajax_command_invoke($member_tab_selector.' a', 'html', array($new_member_count_text));
   }
 
   $user_obj = user_load($target_user_id); // If user is facilitator, add them to the list of facis
@@ -51,6 +57,10 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
       $faci_link = l($full_name, $link, $link_ops);
       $new_faci = '<li>' .$faci_link. '</li>';
       $commands[] = ajax_command_append($faci_list_selector, $new_faci);
+
+      $removed_member_tab_selector = 'li.sbac-forum-vp-rem-members-tab-item';
+      $commands[] = ajax_command_invoke($removed_member_tab_selector, 'addClass', array('sbac-qt-show'));
+      $commands[] = ajax_command_invoke($removed_member_tab_selector, 'removeClass', array('sbac-qt-hide'));
 
     }
   }
