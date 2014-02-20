@@ -55,6 +55,7 @@ function sbac_forum_main_landing_page() {
 
 
 function sbac_forum_view_forum_page($term) {
+	drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
 
   // Load up forum data.
