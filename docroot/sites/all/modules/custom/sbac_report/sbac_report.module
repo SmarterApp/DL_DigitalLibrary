@@ -720,7 +720,7 @@ function sbac_report_get_ind_accepted_gate_keeper($uid, $date_range) {
   WHERE
     type = :type AND
     uid = :uid AND
-    status = :status AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
     completed = :completed AND
     met_criteria = :met_criteria AND
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
@@ -763,7 +763,7 @@ function sbac_report_get_ind_returned_gate_keeper($uid, $date_range) {
   WHERE
     type = :type AND
     uid = :uid AND
-    status = :status AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
     completed = :completed AND
     met_criteria = :met_criteria AND
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
@@ -803,7 +803,7 @@ function sbac_report_get_all_accepted_gate_keeper($date_range) {
   FROM {eck_feedback}
   WHERE
     type = :type AND
-    status = :status AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
     completed = :completed AND
     met_criteria = :met_criteria AND
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
@@ -843,7 +843,7 @@ function sbac_report_get_all_returned_gate_keeper($date_range) {
   FROM {eck_feedback}
   WHERE
     type = :type AND
-    status = :status AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
     completed = :completed AND
     met_criteria = :met_criteria AND
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
@@ -885,7 +885,7 @@ function sbac_report_get_in_reviews($uid, $date_range) {
   WHERE
     type = :type AND
     uid = :uid AND
-    status = :status AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
     completed = :completed AND
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
 
@@ -927,7 +927,7 @@ function sbac_report_get_completed_reviews($uid, $date_range) {
   WHERE
     type = :type AND
     uid = :uid AND
-    status = :status AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
     completed = :completed AND
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
 

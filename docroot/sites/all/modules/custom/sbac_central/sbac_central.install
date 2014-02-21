@@ -739,3 +739,111 @@ function sbac_central_update_7064() {
   module_enable($modules);
   drupal_flush_all_caches();
 }
+
+/**
+ * Script to flag the new archive
+ */
+function sbac_central_update_7065() {
+  /**
+   * select all workbench_moderation_node_history for a node;
+  if there is a state of rejected in the "state" field, then keep looping ahead,
+  then, if you find a state of "needs review" in the "state" field,
+  then you need to loop back through the previous states, finding each user
+  load the user, then load the related eck_feedback
+  set the archived flag to 1.
+   */
+
+  $the_changed_ones = array();
+  $count = 0;
+  $sql = "SELECT * FROM {node} WHERE type = 'resource'";
+  $result = db_query($sql);
+  foreach ($result as $row) {
+    $sql = "SELECT * FROM {workbench_moderation_node_history} WHERE nid = :nid";
+    $records = db_query($sql, array(':nid' => $row->nid));
+    $all_node_states = array();
+    $possible = FALSE;
+    foreach ($records as $record) {
+      $all_node_states[$record->hid] = $record;
+      if ($record->state == 'rejected') {
+        $possible = TRUE;
+      }
+    }
+
+    if ($possible) {
+      if ($row->nid == 90051) {
+        $var = '';
+      }
+      // reverse the array so that we start at the bottom. loop back up through the list.
+      // once you find rejected, start on that review and load it up, then set the archive flag.
+      $all_node_states = array_reverse($all_node_states);
+      foreach ($all_node_states as $node_state) {
+        if ($node_state->state == 'rejected' || $node_state->state == 'needs_review' || $node_state->state == 'being_reviewed') {
+          // load all eck_feedback for this node and this user id.
+          // the user could have more then one review, how to determine your setting the right one?????
+          // no relationship between the two.
+          $query = "SELECT * FROM {eck_feedback} WHERE node_id = :nid AND uid = :uid";
+          $eck_feedback_results = db_query($query, array(':nid' => $node_state->nid, ':uid' => $node_state->uid));
+          foreach ($eck_feedback_results as $eck_feedback) {
+            if ($eck_feedback->status == 0 ) {
+              // get stamp from workbench moderation, minus 30 seconds of it to get the start time
+              // 30 seconds adding to get the end time, thats your range to check if the record your looking
+              // at is the record created by the workbench moderation event firing, cause when it fires
+              // the record got updated.
+              $stamp = $node_state->stamp;
+              $start_time = $stamp - 30;
+              $end_time = $stamp + 30;
+              if ($eck_feedback->changed >= $start_time && $eck_feedback->changed <= $end_time) {
+                $the_changed_ones[$node_state->hid]['eck_entity'] = $eck_feedback;
+                $the_changed_ones[$node_state->hid]['workbench_moderation'] = $node_state;
+                $count++;
+                db_query('UPDATE {eck_feedback} SET archived = 1 WHERE id = :id', array(':id' => $eck_feedback->id));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Ended
+  $entities = array();
+  $users_data = array();
+  $user_count = array();
+  foreach($the_changed_ones as $id => $records) {
+    $e_output = "The eck_feedback entity with the ID of " . $records['eck_entity']->id . " was archived because it was suspected ";
+    $e_output .= "of being set to inactive because the node with ID of " . $records['eck_entity']->node_id . " was rejected but, ";
+    $e_output .= "then the user resubmitted the draft causing the inactive status on the eck entity.";
+    $entities[] = $e_output;
+    $user = user_load($records['eck_entity']->uid);
+    if ($user) {
+      $user_output = "Which means the user (uid: " . $user->uid . "), ";
+      if (isset($user->field_first_name['und'][0]['value']) && $user->field_first_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_first_name['und'][0]['value']) . " ";
+      }
+      if (isset($user->field_last_name['und'][0]['value']) && $user->field_last_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_last_name['und'][0]['value']) . " ";
+      }
+      $user_output .= "now should have his/her ";
+      if ($records['eck_entity']->type == 'qc') {
+        $user_output .= "resource review contributed ";
+      }
+      else if ($records['eck_entity']->type == 'gate_keeper') {
+        $user_output .= "gate keeper contributed ";
+      }
+      $user_output .= "count incremented by one";
+      $users_data[] = $user_output;
+      if (isset($user_count[$user->uid]['count'])) {
+        $user_count[$user->uid]++;
+      }
+      else {
+        $user_count[$user->uid] = 1;
+      }
+    }
+  }
+
+  $data = "There was a total of " . count($the_changed_ones) . " eck entities effected by this script\n\n";
+  $entity_output = implode("\n", $entities);
+  $users_output = implode("\n", $users_data);
+  $output = $data . "\n\n" . $entity_output . "\n\n" . $users_output;
+  file_save_data($output, 'private://results_from_update.txt');
+}
