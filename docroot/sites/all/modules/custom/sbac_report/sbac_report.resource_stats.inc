@@ -985,7 +985,7 @@ function get_counts_for_resource_stats($node, &$data) {
   $data['ease_use_rating_average'] = count_with_nodes_query($sql, $node, FALSE);
 
   # number of reviews per resource
-  $sql = "select node_id as nid, count(node_id) as total_reviews From eck_feedback where status = 1 group by node_id";
+  $sql = "select node_id as nid, count(node_id) as total_reviews From eck_feedback where ((status = 1) OR (status = 0 AND archived = 1)) group by node_id";
   $data['total_reviews_per_node'] = count_with_nodes_query($sql, $node, FALSE);
 }
 

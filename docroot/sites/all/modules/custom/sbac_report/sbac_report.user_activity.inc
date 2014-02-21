@@ -287,14 +287,14 @@ function get_user_activity($users, $date_range) {
   $user_activity['resources_viewed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # GK Reviews completed:
-  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and ((status = 1) OR (status = 0 AND archive = 1)) and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and ((status = 1) OR (status = 0 AND archived = 1)) and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
   $user_activity['gc_reviews_completed'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # QC Reviews completed:
-  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'qc' and ((status = 1) OR (status = 0 AND archive = 1)) and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'qc' and ((status = 1) OR (status = 0 AND archived = 1)) and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
@@ -302,7 +302,7 @@ function get_user_activity($users, $date_range) {
   //    array(':from_date' => $from_date, ':to_date' => $to_date));
 
   # Poster Reviews completed:
-  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'post' and status = 1 and completed = 1 and
+  $sql = "select count(id) as count, uid,created from eck_feedback where type = 'post' and ((status = 1) OR (status = 0 AND archived = 1)) and completed = 1 and
     uid in (%s) and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s group by uid";
@@ -311,14 +311,14 @@ function get_user_activity($users, $date_range) {
 
   # Resources with GK Review accepted on contributed resource:
   $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and nid in (
-    select node_id from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1 and
+    select node_id from eck_feedback where type = 'gate_keeper' and ((status = 1) OR (status = 0 AND archived = 1)) and completed = 1 and met_criteria = 1 and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s) group by uid";
   $user_activity['gc_reviews_accepted_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
 
   # Resources with GK Review returned on contributed resource:
   $sql = "select count(nid) as count, uid, created from node where uid in (%s) and type = 'resource' and nid in (
-    select node_id from eck_feedback where type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 0 and
+    select node_id from eck_feedback where type = 'gate_keeper' and ((status = 1) OR (status = 0 AND archived = 1)) and completed = 1 and met_criteria = 0 and
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s')
     BETWEEN %s AND %s) group by uid";
   $user_activity['gc_reviews_returned_on_contributed_resources'] = count_with_users_query($sql, $users, $from_date, $to_date);
