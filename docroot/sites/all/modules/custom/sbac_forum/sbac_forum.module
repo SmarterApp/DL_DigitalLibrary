@@ -117,9 +117,13 @@ function _sbac_forum_add_forum_user_access($vocabulary) {
  */
 function _sbac_forum_view_forum_user_access($term) {
   global $user;
-  // Allow superadmin bypass
-  if ($user->uid == 1) {
+
+  if ($user->uid == 1) { // Allow superadmin bypass
     return TRUE;
+  }
+
+  if ($user->uid == 0) { // Anon users have no access.
+    return FALSE;
   }
 
   $access = sbac_forum__api__check_forum_view_access($user, $term);
@@ -336,6 +340,7 @@ function sbac_forum_form_alter(&$form, $form_state, $form_id) {
 function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'taxonomy_form_term') {
     if ((isset($form['#term'])) &&
+        (!isset($form['delete'])) &&
         ($form['#term']['vocabulary_machine_name'] == 'forum') ){
       // Hide the description field that comes with the taxonomy term entity.
       //   Use our own descrition field, more control.
@@ -419,7 +424,15 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
       // Redirect on successful completion.
       $form['#submit'][] = '_sbac_forum__add_forum_form_redirect_submit';
 
+    } elseif ((isset($form['#term'])) &&
+        (isset($form['delete'])) &&
+        ($form['#term']->vocabulary_machine_name == 'forum') ) {
+      // This is the delete confirm form
+      $forum_path = 'forums/term/' . $form['#term']->tid;
+      $form['actions']['cancel']['#href'] = $forum_path;
+      $form['actions']['cancel']['#options']['path'] = $forum_path;
     }
+
   }
 }
 

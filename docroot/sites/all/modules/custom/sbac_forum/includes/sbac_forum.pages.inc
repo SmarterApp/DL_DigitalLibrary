@@ -71,7 +71,7 @@ function sbac_forum_view_forum_page($term) {
 
   $is_facilitator = FALSE;
   $facilitator_text = '';
-  $faci_details;
+  $faci_details = '';
   if (isset($forum_data->field_forum_facilitators)) {
     $facilitators = $forum_data->field_forum_facilitators->value();
     if (!empty($facilitators)) {
