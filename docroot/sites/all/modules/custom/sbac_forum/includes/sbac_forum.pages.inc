@@ -255,12 +255,12 @@ function sbac_forum_view_forum_page($term) {
       );
 
       $link_text = t('Edit Forum');
-      $link_url = 'taxonomy/term/' . $term->tid . 'edit';
+      $link_url = 'taxonomy/term/' . $term->tid . '/edit';
       $link = l($link_text, $link_url, $link_ops);
       $forum_control_links[] = $link;
 
       $link_text = t('Delete Forum');
-      $link_url = '#TODO';
+      $link_url = 'forums/term/' . $term->tid . '/delete';;
       $link = l($link_text, $link_url, $link_ops);
       $forum_control_links[] = $link;
 
@@ -301,5 +301,23 @@ function sbac_forum_view_forum_page($term) {
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );
   return $output;
+}
 
+
+function sbac_forum_delete_forum_page($term) {
+  $output = 'Delete term';
+  $name = $term->name;
+  $delete = taxonomy_term_delete($term->tid);
+  if ($delete) {
+    $message = 'Forum: "'. $name .'" has been deleted successfully';
+    $type = 'status';
+  } else {
+    $message = 'There was a problem deleting forum '. $name .'. Contact Administrator';
+    $type = 'error';
+  }
+
+  drupal_set_message($message, $type);
+  drupal_goto('forums');
+
+  return $output;
 }

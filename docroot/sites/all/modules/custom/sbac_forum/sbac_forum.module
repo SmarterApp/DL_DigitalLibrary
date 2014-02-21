@@ -67,6 +67,15 @@ function sbac_forum_menu() {
     'file' => 'includes/sbac_forum.pages.inc',
   );
 
+  $items['forums/term/%taxonomy_term/delete'] = array(
+    'title' => 'Delete Forum',
+    'page callback' => 'sbac_forum_delete_forum_page',
+    'page arguments' => array(2),
+    'access callback' => '_sbac_forum_delete_forum_user_access',
+    'access arguments' => array(2),
+    'file' => 'includes/sbac_forum.pages.inc',
+  );
+
   return $items;
 }
 
@@ -127,6 +136,25 @@ function _sbac_forum_view_forum_user_access($term) {
   }
 
   $access = sbac_forum__api__check_forum_view_access($user, $term);
+  return $access;
+}
+
+/**
+ * Access callback for Forum Delete page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to view a forum.
+ */
+function _sbac_forum_delete_forum_user_access($term) {
+  global $user;
+  $access = FALSE;
+
+  if ($term->vocabulary_machine_name != 'forum') {
+    return $access; // Someone trying to delete a taxonomy term not from forums
+  }
+
+  $vocab_id = $term->vid;
+  $delete_perm = 'delete terms in ' . $vocab_id;
+  $access = user_access($delete_perm);
   return $access;
 }
 
