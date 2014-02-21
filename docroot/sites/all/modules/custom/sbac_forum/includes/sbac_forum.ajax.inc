@@ -42,6 +42,7 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   }
 
   $user_obj = user_load($target_user_id); // If user is facilitator, add them to the list of facis
+  $is_facilitator = FALSE;
   if (in_array('facilitator', $user_obj->roles)) {
     if (isset($forum_term_data->field_forum_facilitators)) {
       $forum_term_data->field_forum_facilitators[] = $target_user_id;
@@ -61,11 +62,20 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
       $removed_member_tab_selector = 'li.sbac-forum-vp-rem-members-tab-item';
       $commands[] = ajax_command_invoke($removed_member_tab_selector, 'addClass', array('sbac-qt-show'));
       $commands[] = ajax_command_invoke($removed_member_tab_selector, 'removeClass', array('sbac-qt-hide'));
-
+      $is_facilitator = TRUE;
     }
   }
   $forum_term_data->save(TRUE);
   taxonomy_term_save($forum_term);
+
+  $forum_controls = sbac_forum__api__create_forum_controls(TRUE, $is_facilitator, $forum_id);
+  if (!empty($forum_controls)) {
+    $controls_selector = '.sbac-forum-vp-controls-wrapper';
+    $forum_controls_text = '<div class="sbac-forum-vp-controls"> Forum Settings</div>';
+    $forum_controls_text .= '<div class="sbac-forum-vp-controls-popup">';
+    $forum_controls_text .= $forum_controls . '</div>';
+    $commands[] = ajax_command_invoke($controls_selector, 'html', array($forum_controls_text));
+  }
 
   // invlidate memberlist cache when a new user joins.
   $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME. $forum_id;

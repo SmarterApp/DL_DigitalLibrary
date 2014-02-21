@@ -213,3 +213,58 @@ function sbac_forum__api__create_start_new_topic_link() {
 
   return $link_text;
 }
+
+/**
+ * Function to create list element for the forum settings. Used on View page and ajax callback
+ *   when a user becomes a member of the forum.
+ *
+ * @param Mixed $is_member should be TRUE for this function to return anything
+ * @param Boolean $is_facilitator facilitator users get different set of links
+ * @param INT $term_id the forum these settings are for.
+ *
+ * @return string themed list elements or empty string.
+ */
+function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term_id) {
+  global $user;
+  $forum_control_link_list = '';
+  if ($is_member === TRUE) {
+    if (($is_facilitator) ||
+        ($user->uid == 1) ) { // Edit and delete
+      $link_ops = array(
+        'attributes' => array(
+          'class' => 'vp-control-link',
+        ),
+      );
+
+      $link_text = t('Edit Forum');
+      $link_url = 'taxonomy/term/' . $term->tid . '/edit';
+      $link = l($link_text, $link_url, $link_ops);
+      $forum_control_links[] = $link;
+
+      $link_text = t('Delete Forum');
+      $link_url = 'forums/term/' . $term->tid . '/delete';;
+      $link = l($link_text, $link_url, $link_ops);
+      $forum_control_links[] = $link;
+
+    } else { // leave forum
+      $link_text = t('Leave this Forum');
+      $link_url = '#TODO';
+      $link_ops = array(
+        'attributes' => array(
+          'class' => 'vp-control-link',
+        ),
+      );
+      $link = l($link_text, $link_url, $link_ops);
+      $forum_control_links[] = $link;
+    }
+  }
+  if (!empty($forum_control_links)) {
+    $list_args = array(
+      'type'  => 'ul',
+      'items' => $forum_control_links,
+      'attributes' => array('class' => 'vp-control-links'),
+    );
+    $forum_control_link_list = theme('item_list', $list_args);
+  }
+  return $forum_control_link_list;
+}

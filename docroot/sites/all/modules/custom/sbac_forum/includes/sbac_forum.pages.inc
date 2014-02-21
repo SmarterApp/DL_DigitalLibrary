@@ -243,47 +243,8 @@ function sbac_forum_view_forum_page($term) {
 
   // Controls.
   $forum_control_links = array();
-  $forum_control_link_list = '';
-  if ($is_member === TRUE) {
-    drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.view_page.js");
-    if (($is_facilitator) ||
-        ($user->uid == 1) ) { // Edit and delete
-      $link_ops = array(
-        'attributes' => array(
-          'class' => 'vp-control-link',
-        ),
-      );
-
-      $link_text = t('Edit Forum');
-      $link_url = 'taxonomy/term/' . $term->tid . '/edit';
-      $link = l($link_text, $link_url, $link_ops);
-      $forum_control_links[] = $link;
-
-      $link_text = t('Delete Forum');
-      $link_url = 'forums/term/' . $term->tid . '/delete';;
-      $link = l($link_text, $link_url, $link_ops);
-      $forum_control_links[] = $link;
-
-    } else { // leave forum
-      $link_text = t('Leave this Forum');
-      $link_url = '#TODO';
-      $link_ops = array(
-        'attributes' => array(
-          'class' => 'vp-control-link',
-        ),
-      );
-      $link = l($link_text, $link_url, $link_ops);
-      $forum_control_links[] = $link;
-    }
-  }
-  if (!empty($forum_control_links)) {
-    $list_args = array(
-      'type'  => 'ul',
-      'items' => $forum_control_links,
-      'attributes' => array('class' => 'vp-control-links'),
-    );
-    $forum_control_link_list = theme('item_list', $list_args);
-  }
+  $forum_control_link_list = sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term->tid);
+  drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.view_page.js");
 
 
   // Add all the markup to variable for tpl.
