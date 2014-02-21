@@ -508,52 +508,12 @@ a.new-topic-link:hover {
 
   .forum-subnav-start-link-wrapper {
     float:right;
-
-    a.new-forum-link {
-      float:right;
-			border-radius: 6px;
-      background-color:$lightblue;
-      color:$white;
-			-moz-border-bottom-colors: none;
-	    -moz-border-left-colors: none;
-	    -moz-border-right-colors: none;
-	    -moz-border-top-colors: none;
-	    border-color: rgba(255, 255, 255, 0.7) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);
-	    border-image: none;
-	    border-right: 1px solid rgba(0, 0, 0, 0.4);
-	    border-style: solid;
-	    border-width: 1px;
-	    box-shadow: none;
-	    margin: 0;
-	    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
-			cursor: pointer;
-			font-size: 16px;
-	    font-weight: normal;
-	    height: 34px;
-			line-height: 34px;
-	    min-width: 125px;
-	    padding: 0 18px;
-	    text-align: center;
-			vertical-align: middle;
-    }
-
-		a.new-forum-link:before {
-		    content: "+";
-		    display: inline;
-		    font-family: 'sbac';
-		    font-size: 20px;
-		    font-weight: normal;
-		    margin-right: 7px;
-		}
-
-    a.new-forum-link:hover {
-      background-color:$teal;
-    }
   }
 }
 
 // --------------------- Forum Landing ------------------------------
 .sbac-forum-browse-page {
+	
 	.main-container {
 	  background-color: transparent;
     border-radius: 0;
@@ -563,6 +523,8 @@ a.new-topic-link:hover {
 		.columns {
 			padding: 0;
 		}
+		
+		.sbac-forum-main-container {}
 	}
 }
 
@@ -842,7 +804,7 @@ a.new-topic-link:hover {
 				display: inline-block;
 
 				ul.vp-auth-pane {
-					margin: 10px 0;
+					margin: 0;
 					list-style-type: none;
 
 					li {
@@ -1023,20 +985,32 @@ a.new-topic-link:hover {
 /*Topic's tab*/
 .page-forums-term {
 	
+	.sbac-forum-confirm-message-region > div {
+		background-color: #F2F2F2;
+	  border: 5px solid #FFFFFF;
+    box-shadow: 0 0 3px 0 rgba(4, 56, 78, 0.3), 0 1px 0 0 rgba(0, 0, 0, 0.1);
+    color: #464B54;
+    margin: 5px 0 25px;
+    padding: 20px 20px 18px;
+    position: relative;
+		font-size: 18px;
+		line-height: 1.2;
+	}
+	
 	.view-forum-topic-list  {
 		
 		margin-top: 10px;
 		
-		.sbac-forum-confirm-message-region > div {
-			background-color: #F2F2F2;
-		  border: 5px solid #FFFFFF;
-	    box-shadow: 0 0 3px 0 rgba(4, 56, 78, 0.3), 0 1px 0 0 rgba(0, 0, 0, 0.1);
-	    color: #464B54;
-	    margin: 5px 0 25px;
-	    padding: 20px 20px 18px;
-	    position: relative;
-			font-size: 18px;
-			line-height: 1.2;
+		#join-forum-button-wrapper {
+			float: right;
+			
+			button {
+				padding: 0 30px;
+			}
+			
+			.ajax-progress-throbber {
+			  display: none;
+			}
 		}
 
 		.join-forum-start-topic-wrapper {
