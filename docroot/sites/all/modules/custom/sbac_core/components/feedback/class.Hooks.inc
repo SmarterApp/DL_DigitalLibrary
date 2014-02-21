@@ -661,7 +661,7 @@ class Hooks extends \devtools\Hooks {
   function hook_workbench_moderation_transition($node, $previous_state, $new_state) {
     if ($node->type == 'resource' && $new_state == 'needs_review') {
       $query = "  UPDATE    eck_feedback
-                  SET       archive = 1,
+                  SET       archived = 1,
                             current = 0,
                             status = 0
                   WHERE     node_id = :node_id
