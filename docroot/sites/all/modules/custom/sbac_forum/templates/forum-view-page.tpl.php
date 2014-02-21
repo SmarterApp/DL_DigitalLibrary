@@ -1,8 +1,13 @@
-
-<div class="sbac-forum-vp-controls">
-  Forum Settings
+<div class="sbac-forum-vp-controls-wrapper">
+  <?php if (!empty($fields['controls_link_list']) ): ?>
+    <div class="sbac-forum-vp-controls">
+      <?php print t('Forum Settings');?>
+    </div>
+    <div class="sbac-forum-vp-controls-popup">
+      <?php print $fields['controls_link_list']; ?>
+    </div>
+  <?php endif;?>
 </div>
-
 <div class="sbac-forum-confirm-message-region">
 </div>
 

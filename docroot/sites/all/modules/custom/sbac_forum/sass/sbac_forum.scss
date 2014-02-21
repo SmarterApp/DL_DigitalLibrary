@@ -49,6 +49,10 @@ $gray: #464B54;
   display:none !important;
 }
 
+.sbac-forum-vp-controls-popup {
+  display:none;
+}
+
 /* -----------------------------------------
    Forms
    ----------------------------------------- */
@@ -355,8 +359,8 @@ a.category-hide:focus {
 }
 
 
-/* Button of Start a Forum , Start a Topic */	
-a.new-forum-link, 
+/* Button of Start a Forum , Start a Topic */
+a.new-forum-link,
 a.new-topic-link {
   float:right;
 	border-radius: 6px;
@@ -408,7 +412,7 @@ a.new-topic-link:hover {
 
 // --------------------- Forum Subnav ------------------------------
 #sbac-forum-sub-nav-form {
- 
+
   float:left;
   width:100%;
 
@@ -947,13 +951,13 @@ a.new-topic-link:hover {
 				  border-left: 1px solid #CECECE;
 				}
 			}
-			
+
 			li a:hover {
 			  background-color: #FAFAFA;
 		    background-image: -moz-linear-gradient(center top , rgba(0, 95, 130, 0) 20%, rgba(0, 95, 130, 0.1) 70%);
 		    text-shadow: 0 1px 0 #FFFFFF;
 			}
-			
+
 			li.active a {
 			  background: none repeat scroll 0 0 #FFFFFF;
 		    border-left: 1px solid #CECECE;
@@ -962,7 +966,7 @@ a.new-topic-link:hover {
 		    position: relative;
 		    z-index: 2;
 			}
-			
+
 			li.active a:after {
 			  background: none repeat scroll 0 0 #FFFFFF;
 		    bottom: -7px;
@@ -1003,7 +1007,7 @@ a.new-topic-link:hover {
 				}
 			}
 		}
-		
+
 		.quicktabs-tabs:after {
 		   background: none repeat scroll 0 0 #FFFFFF;
 	    bottom: 0;
@@ -1022,11 +1026,11 @@ a.new-topic-link:hover {
 
 /*Topic's tab*/
 .page-forums-term {
-	
+
 	.view-forum-topic-list  {
-		
+
 		margin-top: 10px;
-		
+
 		.sbac-forum-confirm-message-region > div {
 			background-color: #F2F2F2;
 		  border: 5px solid #FFFFFF;
@@ -1051,7 +1055,7 @@ a.new-topic-link:hover {
 			clear: both;
 			padding-top: 30px;
 		}
-		
+
 		.views-row {
 			-moz-box-sizing: border-box;
 		  background: none repeat scroll 0 0 #FFFFFF;
@@ -1063,27 +1067,27 @@ a.new-topic-link:hover {
 	    overflow: hidden;
 	    padding: 15px 114px 15px 15px;
 	    position: relative;
-	
+
 			.views-field.views-field-title {
 				display: block;
 				margin-bottom: 15px;
-				
+
 				a {
 					color: #04384E;
 					font-size: 15px;
 			    font-weight: bold;
 			    line-height: 1;
-					
+
 					&:hover {text-decoration: underline;}
 				}
 			}
-			
+
 			.views-field {
 				display: inline-block;
 				font-size: 13px;
 			}
 		}
-		
+
 		.views-field-nothing {
 			border-right: 1px solid #62676E;
 		  color: #70757E;
@@ -1101,11 +1105,11 @@ a.new-topic-link:hover {
 
 /*Members's tab*/
 .page-forums-term {
-	
+
 	.view-forum-member-list {
-		
+
 		padding-top: 10px;
-		
+
 		.views-row {
 			-moz-box-sizing: border-box;
 			border-radius: 6px;
@@ -1117,7 +1121,7 @@ a.new-topic-link:hover {
 	    padding: 15px;
 	    position: relative;
 	    width: 260px;
-		
+
 			.views-field-picture {
 				background-image: url("../images/avatar.png");
 				background-size: contain;
@@ -1128,33 +1132,33 @@ a.new-topic-link:hover {
 		    padding: 0;
 		    width: 60px;
 			}
-			
+
 			.views-field-nothing {
 				color: #0583AC;
 				font-size: 13px;
 				font-weight: bold;
 				margin: 0 0 6px;
 			}
-			
-			.views-field-field-state, 
+
+			.views-field-field-state,
 			.views-field-field-fc-forum-member-joined {
 				display: block;
 				font-size: 13px;
 		    line-height: 1;
 		    margin: 0 0 6px;
 		    padding: 0;
-				
+
 				.views-label, .field-content {
 					display: inline-block;
 				}
 			}
 		}
-			
+
 		.views-row:nth-child(3n+1) {
 			clear:left;
 			margin-left: 0;
 		}
-		
+
 		.views-row:after {
 		  content: "\f000";
 	    display: inline-block;
