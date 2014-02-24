@@ -28,6 +28,7 @@ $gray: #464B54;
 .page-forums-forum-add,
 .page-taxonomy-term-edit,
 .page-forums-term {
+	
 	.main-container {
 		background: none repeat scroll 0 0 #FFFFFF;
 		border-radius: 15px;
@@ -121,7 +122,7 @@ $gray: #464B54;
     }
 
   .sbac-forum-filter-name,
-  .sbac-forum-filter-custom-link {
+  .sbac-forum-filter-custom-link {	
       margin: 0;
       font-weight: bold;
       font-size: 1.1em;
@@ -412,7 +413,6 @@ a.new-topic-link:hover {
 
 // --------------------- Forum Subnav ------------------------------
 #sbac-forum-sub-nav-form {
-
   float:left;
   width:100%;
 
@@ -500,6 +500,7 @@ a.new-topic-link:hover {
   }
 
   .forum-subnav-keyword-wrapper {
+	
      input {
 		  -moz-box-sizing: border-box;
 	    border: 1px solid #006082;
@@ -528,7 +529,73 @@ a.new-topic-link:hover {
 			padding: 0;
 		}
 		
-		.sbac-forum-main-container {}
+		.sbac-forum-main-container {
+			.views-field {
+				font-size: 13px;
+				line-height: 20px;
+				color: #70757E;
+			}
+			
+			.views-field-name {
+				a {
+					color: #04384E;
+					font-size: 15px;
+					font-weight: bold;
+					line-height: 1;
+					
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+			}
+			
+			.views-field-field-forum-last-activity {				
+				margin-top: 15px;
+				
+				.views-label,
+				.field-content {
+					display: inline-block;
+				}
+			}
+			
+			.views-field-field-forum-topic-count,
+			.views-field-field-forum-member-count,
+			.views-field-field-forum-topic-comment-count {
+				-moz-box-sizing: border-box;
+				background-color: #F2F2F2;
+		    border-left: 1px solid #FFFFFF;
+		    box-shadow: -1px 0 0 0 #CECECE;
+		    color: #464B54;
+		    display: block;
+				width: 110px;
+		    height: 100%;
+		    list-style-type: none;
+		    padding: 0;
+		    position: absolute;
+		    right: 0;
+		    text-shadow: 0 1px 0 #FFFFFF;
+		    top: 0;
+			}
+			
+			.views-field-field-forum-topic-count {
+				right: 220px;
+			}
+			
+			.views-field-field-forum-topic-comment-count {
+				right: 110px;
+			}
+			
+			.views-field-field-forum-member-count {
+				border-radius: 0 6px 6px 0;
+				
+				.field-content {
+					margin-top: 25px;
+					font-size: 15px;
+					font-weight: bold;
+					text-align: center;
+				}
+			}
+		}
 	}
 }
 
@@ -800,9 +867,7 @@ a.new-topic-link:hover {
 	    left: 50%;
 			z-index: 1000;
 			margin-left: -10px;
-		}
-		
-		
+		}				
 	}
 	
 	.sbac-forum-vp-controls {
@@ -832,6 +897,7 @@ a.new-topic-link:hover {
 
 	/*sbac forum top*/
 	.sbac-forum-vp-top {
+		
 		.col {
 		  display: block;
 	    float: left;
@@ -855,6 +921,7 @@ a.new-topic-link:hover {
 		}
 
 		.vp-faci-field {
+			
 			.title-tags {
 				font-size: 13px;
 			  line-height: 1.2;
@@ -892,6 +959,7 @@ a.new-topic-link:hover {
 		.vp-subjects-field,
 		.vp-end-users-field,
 		.vp-students-field {
+			
 			.title-tags {
 				-moz-border-bottom-colors: none;
 				-moz-border-left-colors: none;
@@ -1141,7 +1209,6 @@ a.new-topic-link:hover {
 .page-forums-term {
 
 	.view-forum-member-list {
-
 		padding-top: 10px;
 
 		.views-row {
