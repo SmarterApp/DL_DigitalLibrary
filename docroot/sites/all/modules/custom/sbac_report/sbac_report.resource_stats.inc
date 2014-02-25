@@ -144,7 +144,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
  * @param $context
  */
 function sbac_report_resource_statistics_batch($resources, $resource_filters, &$context) {
-  $limit = 200;
+  $limit = 100;
 
   // First time through.
   if (!isset($context['sandbox']['file'])) {
