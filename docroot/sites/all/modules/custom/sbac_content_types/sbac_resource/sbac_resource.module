@@ -2343,7 +2343,7 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         // author has view/edit
         // resource reviewer has view
         // resource publisher has view
-        $query->condition('s.uid', 0);
+        $query->condition('s.uid', $account->uid);
         $condition = db_or()->condition('s.state', 'gk_view_rejected')->condition('s.state', 'post_view_rejected');
         $query->condition($condition);
         $result = $query->execute();
