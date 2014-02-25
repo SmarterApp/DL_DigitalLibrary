@@ -73,7 +73,17 @@ function sbac_media_menu() {
     'title' => 'File Stream',
   );
 
+  $items['sbac-media/check-youtube'] = array(
+    'page callback' => 'sbac_media_check_youtube',
+    'access callback' => TRUE,
+    'title' => 'File Stream',
+  );
+
   return $items;
+}
+
+function sbac_media_check_youtube() {
+  $var = '';
 }
 
 /**
