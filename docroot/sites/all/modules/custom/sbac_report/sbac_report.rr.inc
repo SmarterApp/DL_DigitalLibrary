@@ -37,9 +37,10 @@ function sbac_report_rr_report() {
 function sbac_report_rr_batch_process($resource_reviewers, &$context) {
   module_load_include('inc', 'sbac_report', 'sbac_report.pages');
   $limit = 500;
-  $context['sandbox']['finished'] = 0;
 
   if (!isset($context['sandbox']['file'])) {
+    $context['sandbox']['finished'] = 0;
+
     $column_titles = array(
       'Reviewer Name',
       'Reviewer State',

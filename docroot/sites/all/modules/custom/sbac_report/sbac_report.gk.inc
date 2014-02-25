@@ -36,9 +36,10 @@ function sbac_report_gk_report() {
  */
 function sbac_report_gk_batch_process($resource_nodes, &$context) {
   $limit = 500;
-  $context['sandbox']['finished'] = 0;
 
   if (!isset($context['sandbox']['file'])) {
+    $context['sandbox']['finished'] = 0;
+
     $column_titles = array(
       'Title',
       'Return Date',
