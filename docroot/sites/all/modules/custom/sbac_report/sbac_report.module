@@ -15,6 +15,7 @@ include_once('sbac_report.individual.inc');
 include_once('sbac_report.user_activity.inc');
 include_once('sbac_report.resource_stats.inc');
 include_once 'sbac_report.gk.inc';
+include_once 'sbac_report.rr.inc';
 include_once 'sbac_report.preprocess.inc';
 
 /**
@@ -90,9 +91,9 @@ function sbac_report_menu() {
   );
 
   $items['reports/rr-report'] = array(
-    'title' => 'GK Report',
-    'file' => 'sbac_report.gk.inc',
-    'page callback' => 'sbac_report_gk_report',
+    'title' => 'RR Report',
+    'file' => 'sbac_report.rr.inc',
+    'page callback' => 'sbac_report_rr_report',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );

@@ -7,9 +7,11 @@ function sbac_report_rr_report() {
   $resource_reviewers = array();
   $sql = "SELECT u.* FROM {users} u
           JOIN {users_roles} ur ON u.uid = ur.uid
-          WHERE ur.rid = :rid";
-  $rid = user_role_load_by_name('resource reviewer');
-  $result = db_query($sql, array(':rid' => $rid));
+          JOIN {eck_feedback} f ON u.uid = f.uid
+          WHERE ur.rid = :rid AND u.uid > 1
+          GROUP BY u.uid";
+  $role = user_role_load_by_name('resource reviewer');
+  $result = db_query($sql, array(':rid' => $role->rid));
   foreach ($result as $row) {
     $resource_reviewers[$row->uid] = $row;
   }
@@ -33,17 +35,17 @@ function sbac_report_rr_report() {
  * @param $resource_nodes
  */
 function sbac_report_rr_batch_process($resource_reviewers, &$context) {
-  $limit = 200;
+  module_load_include('inc', 'sbac_report', 'sbac_report.pages');
+  $limit = 500;
   $context['sandbox']['finished'] = 0;
   ini_set('max_execution_time', 60);
 
   if (!isset($context['sandbox']['file'])) {
     $column_titles = array(
-      'Title',
-      'Return Date',
-      'GK Reviewer Name',
-      'GK Reviewer State',
-      'GK 1 Quality Criteria Level',
+      'Reviewer Name',
+      'Reviewer State',
+      'Resource Title',
+      'Rec.Consistency Rate',
     );
     $context['sandbox']['report_configuration'] = $column_titles;
 
@@ -64,7 +66,7 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
     if (file_exists($file_path)) {
       $context['sandbox']['progress'] = 0;
       $context['sandbox']['reviewers'] = $resource_reviewers;
-      $context['sandbox']['reviewers_total'] = count($resource_reviewers);
+      $context['sandbox']['reviewers_total'] = 433;
     }
   }
 
@@ -78,44 +80,62 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
 
   // Loop until we hit the batch limit.
   for ($i = 0; $i < $limit; $i++) {
-    if ($context['sandbox']['resources']) {
-      $account = array_shift($context['sandbox']['resources']);
+    if ($context['sandbox']['reviewers']) {
+      // initialize
+      $csv_column = array();
+      $review_columns = array();
+      $valid = FALSE;
+      // get account
+      $account = array_shift($context['sandbox']['reviewers']);
       $account = user_load($account->uid);
-      $csv_column[] = $account->field_first_name['und'][0]['value'] . ' ' . $account->field_last_name['und'][0]['value'];
-      // gk reviewer state
-      $state = taxonomy_term_load($account->field_state['und'][0]['tid']);
-      if ($state) {
-        $csv_column[] = $state->name;
-      }
-      else {
-        $csv_column[] = 'State not found';
-      }
-      // get all feedback for this user
-      // loop around them,
+      // get feedback
       $sql = "SELECT f.* FROM {eck_feedback} f
               WHERE f.uid = :uid AND f.type = 'qc'
               AND f.completed = 1
-              AND ((f.status = 1) OR (f.status = 0 AND f.archived = 1))";
+              AND f.status = 1";
       $eck_results = db_query($sql, array(':uid' => $account->uid));
       foreach ($eck_results as $eck_record) {
-        $consistency_rate = 0;
-        $other_sql = "SELECT f.* FROM {eck_feedback} f
-                      WHERE f.uid <> :uid AND f.type = 'qc'
-                      AND f.completed = 1
-                      AND ((f.status = 1) OR (f.status = 0 AND f.archived = 1))";
-        $other_eck_results = db_query($other_sql, array(':uid' => $account->uid));
+        $eck_entity = entity_load_single('feedback', $eck_record->id);
+        $other_qc_sql = "SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND status = 1 AND completed = 1 AND uid <> :uid";
+        $other_qc_results = db_query($other_qc_sql, array(':nid' => $eck_record->node_id, ':uid' => $account->uid));
+        $other_qcs = array();
+        foreach ($other_qc_results as $qc_result) {
+          $qc_entity = entity_load_single('feedback', $qc_result->id);
+          $other_qcs[] = $qc_entity;
+        }
+        $consistency_rate = "100%";
+        if (count($other_qcs) > 1) {
+          $consistency_rate = rec_consistency_rate($other_qcs, $eck_entity);
+        }
+
         // think i have to loop around all and call this function. rec_consistency_rate($all, $current);
         $title = db_query("SELECT title FROM {node} WHERE nid = :nid", array(':nid' => $eck_record->node_id))->fetchField();
-        // resource title
-        $csv_column[] = $title;
-        // consistency rate
-        $csv_column[] = $consistency_rate;
+        if ($title) {
+          // resource title
+          $review_columns[] = $title;
+          // consistency rate
+          $review_columns[] = $consistency_rate;
+        }
       }
 
-      // write the record to csv.
-      fputcsv($handle, $csv_column);
-      $context['results']['count']++;
-      $context['finished'] = $context['results']['count'] / $context['sandbox']['reviewers_total'];
+      if ($review_columns) {
+        // first / last name
+        $csv_column[] = $account->field_first_name['und'][0]['value'] . ' ' . $account->field_last_name['und'][0]['value'];
+        // state
+        $state = taxonomy_term_load($account->field_state['und'][0]['tid']);
+        if ($state) {
+          $csv_column[] = $state->name;
+        }
+        else {
+          $csv_column[] = 'State not found';
+        }
+        $csv_column = array_merge($csv_column, $review_columns);
+
+        // write the record to csv.
+        fputcsv($handle, $csv_column);
+        $context['results']['count']++;
+        $context['finished'] = $context['results']['count'] / $context['sandbox']['reviewers_total'];
+      }
     }
   }
 
