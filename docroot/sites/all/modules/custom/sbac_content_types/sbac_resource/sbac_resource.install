@@ -1075,4 +1075,5 @@ function sbac_resource_update_7049() {
       sbac_resource_save_current_state($node);
     }
   }
+  return "Added states for each node";
 }

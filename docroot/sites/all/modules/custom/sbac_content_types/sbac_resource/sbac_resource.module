@@ -1399,6 +1399,13 @@ function sbac_resource_save_current_state($node) {
         if (!$new_record) {
           sbac_resource_delete_resource_state($entity);
         }
+
+        $entity = NULL;
+        $new_record = sbac_resource_get_state($entity, $node->nid, $user->uid);
+        if ($new_record) {
+          $entity->state = 'post_view_rejected';
+          sbac_resource_save_resource_state($entity, $new_record);
+        }
       }
     }
 
@@ -2337,7 +2344,8 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         // resource reviewer has view
         // resource publisher has view
         $query->condition('s.uid', 0);
-        $query->condition('s.state', 'gk_view_rejected');
+        $condition = db_or()->condition('s.state', 'gk_view_rejected')->condition('s.state', 'post_view_rejected');
+        $query->condition($condition);
         $result = $query->execute();
         $count = $result->rowCount();
         if ($count) {
