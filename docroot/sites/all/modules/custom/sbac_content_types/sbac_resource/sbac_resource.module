@@ -2250,16 +2250,16 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         // author has view
         // resource reviewer has view/edit
         $query->condition('s.uid', 0);
-        $query->condition('s.state', 'gk_need_review');
+        $query->condition('s.state', 'gk_needs_review');
         $result = $query->execute();
         $count = $result->rowCount();
         if ($count) {
           if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
             $access = TRUE;
           }
-          if ($account->uid == $node->uid && $op == 'view') {
-            $access = TRUE;
-          }
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
         }
       break;
       case 'being_reviewed':
@@ -2274,9 +2274,9 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
           if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
             $access = TRUE;
           }
-          if ($account->uid == $node->uid && $op == 'view') {
-            $access = TRUE;
-          }
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
         }
       break;
       case 'approved':
@@ -2291,9 +2291,9 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
           if (in_array('resource publisher', $account->roles) && ($op == 'view' || $op == 'update')) {
             $access = TRUE;
           }
-          if ($account->uid == $node->uid && $op == 'view') {
-            $access = TRUE;
-          }
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
         }
       break;
       case 'published':
@@ -2308,15 +2308,15 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
           if ($op == 'view') {
             $access = TRUE;
           }
-          if ($account->uid == $node->uid && $op == 'view') {
-            $access = TRUE;
-          }
           if ((in_array('admininstrator', $account->roles) ||
                in_array('DLRB member', $account->roles) ||
                in_array('moderator', $account->roles)) && (
                $op == 'view' || $op == 'update' || $op == 'delete')) {
             $access = TRUE;
           }
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
         }
       break;
       case 'returned':
@@ -2328,15 +2328,15 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         $result = $query->execute();
         $count = $result->rowCount();
         if ($count) {
-          if ($account->uid == $node->uid && $op == 'view') {
-            $access = TRUE;
-          }
           if (in_array('resource reviewer', $account->roles) && $op == 'view') {
             $access = TRUE;
           }
           if (in_array('resource publisher', $account->roles) && $op == 'view') {
             $access = TRUE;
           }
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
         }
       break;
       case 'rejected':
