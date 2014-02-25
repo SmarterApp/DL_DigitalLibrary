@@ -2,9 +2,11 @@
 
 
 function sbac_forum_main_landing_page() {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.views');
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
   $current_filters = '';
+  $active_display = 'block';
   $forum_list_output = 'Forum Content';
 
   $active_tab = sbac_forum__api__get_active_subnav();
@@ -14,11 +16,14 @@ function sbac_forum_main_landing_page() {
   // Get correct set of category filters based on subnav.
   switch($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_ALL:
+      $active_display = 'block';
       if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
         $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+
       }
       break;
     case SBAC_FORUM_SUBNAV_OWN:
+      $active_display = 'block_1';
       if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
         $current_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
       }
@@ -32,14 +37,9 @@ function sbac_forum_main_landing_page() {
   $subnav = drupal_get_form('sbac_forum_sub_nav_form');
   $output .= drupal_render($subnav);
 
-
-  if (!empty($current_filters)) {
-    $output .= 'THERE ARE FILTERS!! ';
-  }
-
   $view = views_get_view('forum_list');
-  $view->set_display('block');
-  // Set filters here.
+  $view->set_display($active_display);
+  sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();

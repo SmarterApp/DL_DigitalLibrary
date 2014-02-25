@@ -196,6 +196,38 @@ function sbac_forum_block_view($delta = '') {
 }
 
 /**
+ * Implements hook_date_formats
+ */
+function sbac_forum_date_formats() {
+  $formats = array();
+
+  $new_formats = array(
+    'forum_listing'  => 'M jS, Y g:i a',
+  );
+
+  foreach ($new_formats as $key => $value) {
+    $formats[] = array(
+      'type' => $key,
+      'format' => $value,
+      'locales' => array(),
+    );
+    variable_set('date_format_'. $key, $value);
+  };
+
+  return $formats;
+}
+
+/**
+ * Implements hook_date_format_types
+ */
+function sbac_forum_date_format_types() {
+  return array(
+    'forum_listing' => t('Forum - Listing Page View'),
+  );
+}
+
+
+/**
  * Implementation of hook_theme()
  */
 function sbac_forum_theme($existing, $type, $theme, $path) {

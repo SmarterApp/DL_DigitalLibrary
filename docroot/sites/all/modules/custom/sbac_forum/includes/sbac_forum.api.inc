@@ -237,12 +237,12 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
       );
 
       $link_text = t('Edit Forum');
-      $link_url = 'taxonomy/term/' . $term->tid . '/edit';
+      $link_url = 'taxonomy/term/' . $term_id . '/edit';
       $link = l($link_text, $link_url, $link_ops);
       $forum_control_links[] = $link;
 
       $link_text = t('Delete Forum');
-      $link_url = 'forums/term/' . $term->tid . '/delete';;
+      $link_url = 'forums/term/' . $term_id . '/delete';;
       $link = l($link_text, $link_url, $link_ops);
       $forum_control_links[] = $link;
 
