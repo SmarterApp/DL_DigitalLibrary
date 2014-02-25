@@ -66,7 +66,7 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
     if (file_exists($file_path)) {
       $context['sandbox']['progress'] = 0;
       $context['sandbox']['reviewers'] = $resource_reviewers;
-      $context['sandbox']['reviewers_total'] = 433;
+      $context['sandbox']['reviewers_total'] = 521;
     }
   }
 
