@@ -145,11 +145,10 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
  */
 function sbac_report_resource_statistics_batch($resources, $resource_filters, &$context) {
   $limit = 100;
+  $context['sandbox']['finished'] = 0;
 
   // First time through.
   if (!isset($context['sandbox']['file'])) {
-    $context['sandbox']['finished'] = 0;
-    $context['results']['count'] = 0;
     $columns = set_report_columns();
     $context['sandbox']['report_configuration'] = $columns;
 
@@ -192,6 +191,10 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
   
   // Open the file for writing ('a' puts pointer at end of file).
   $handle = fopen($context['sandbox']['file'], 'a');
+
+  if (!isset($context['results']['count'])) {
+    $context['results']['count'] = 0;
+  }
 
   // Loop until we hit the batch limit.
   for ($i = 0; $i < $limit; $i++) {
