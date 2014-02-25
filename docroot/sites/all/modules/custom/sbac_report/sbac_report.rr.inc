@@ -38,7 +38,6 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
   module_load_include('inc', 'sbac_report', 'sbac_report.pages');
   $limit = 500;
   $context['sandbox']['finished'] = 0;
-  ini_set('max_execution_time', 60);
 
   if (!isset($context['sandbox']['file'])) {
     $column_titles = array(
