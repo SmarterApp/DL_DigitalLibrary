@@ -167,7 +167,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
 
     // Create the file and print the labels in the header row.
     $filename = 'Resource_Statistics_' . date('M_d_Y_g_i_s') . '.csv';
-    $file_path = file_directory_temp() . '/' . $filename;
+    $file_path = '/tmp/' . $filename;
     $handle = fopen($file_path, 'w'); // Create the file.
     fputcsv($handle, $column_titles); // Write the labels to the header row.
     fclose($handle);
