@@ -92,20 +92,37 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
       }
       // get all feedback for this user
       // loop around them,
-      $sql = "SELECT f.* FROM {eck_feedback} f WHERE f.uid = :uid AND f.type = 'qc' AND f.completed = 1 AND ((f.status = 1) OR (f.status = 0 AND f.archived = 1))";
+      $sql = "SELECT f.* FROM {eck_feedback} f
+              WHERE f.uid = :uid AND f.type = 'qc'
+              AND f.completed = 1
+              AND ((f.status = 1) OR (f.status = 0 AND f.archived = 1))";
       $eck_results = db_query($sql, array(':uid' => $account->uid));
-      foreach ($eck_results as $$eck_record) {
-        $other_sql = "SELECT f.* FROM {eck_feedback} f WHERE f.uid <> :uid AND f.type = 'qc' AND f.completed = 1 AND ((f.status = 1) OR (f.status = 0 AND f.archived = 1))";
+      foreach ($eck_results as $eck_record) {
+        $consistency_rate = 0;
+        $other_sql = "SELECT f.* FROM {eck_feedback} f
+                      WHERE f.uid <> :uid AND f.type = 'qc'
+                      AND f.completed = 1
+                      AND ((f.status = 1) OR (f.status = 0 AND f.archived = 1))";
         $other_eck_results = db_query($other_sql, array(':uid' => $account->uid));
-
+        // think i have to loop around all and call this function. rec_consistency_rate($all, $current);
+        $title = db_query("SELECT title FROM {node} WHERE nid = :nid", array(':nid' => $eck_record->node_id))->fetchField();
+        // resource title
+        $csv_column[] = $title;
+        // consistency rate
+        $csv_column[] = $consistency_rate;
       }
+
+      // write the record to csv.
+      fputcsv($handle, $csv_column);
+      $context['results']['count']++;
+      $context['finished'] = $context['results']['count'] / $context['sandbox']['reviewers_total'];
     }
   }
 
   // Show message updating user on how many subscribers have been exported.
-  $context['message'] = t('Exported @count of @total resources.', array(
+  $context['message'] = t('Exported @count of @total resource reviewers.', array(
     '@count' => $context['results']['count'],
-    '@total' => $context['sandbox']['resources_total'],
+    '@total' => $context['sandbox']['reviewers_total'],
   ));
 }
 
@@ -116,7 +133,7 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
  * @param $results
  * @param $operations
  */
-function sbac_report_gk_batch_finished($success, $results, $operations) {
+function sbac_report_rr_batch_finished($success, $results, $operations) {
   if ($success) {
     $directory = "private://rr_reports/";
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
