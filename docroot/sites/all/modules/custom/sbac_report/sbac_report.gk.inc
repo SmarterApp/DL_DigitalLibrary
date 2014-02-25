@@ -39,6 +39,7 @@ function sbac_report_gk_batch_process($resource_nodes, &$context) {
 
   if (!isset($context['sandbox']['file'])) {
     $context['sandbox']['finished'] = 0;
+    $context['results']['count'] = 0;
 
     $column_titles = array(
       'Title',
@@ -63,29 +64,27 @@ function sbac_report_gk_batch_process($resource_nodes, &$context) {
     $context['sandbox']['report_configuration'] = $column_titles;
 
     // Create the file and print the labels in the header row.
+    $directory = "private://gk_reports/";
+    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $filename = 'GK_Report_' . date('M_d_Y_g_i_s') . '.csv';
-    $file_path = file_directory_temp() . '/' . $filename;
-    $handle = fopen($file_path, 'w'); // Create the file.
+    $directory .= $filename;
+    $directory_real_path = drupal_realpath($directory);
+    $handle = fopen($directory_real_path, 'w'); // Create the file.
     fputcsv($handle, $column_titles); // Write the labels to the header row
     fclose($handle);
 
     // Store info in sandbox during processing.
-    $context['sandbox']['file'] = $file_path;
+    $context['sandbox']['file'] = $directory_real_path;
 
     // Store some values in the results array for processing when finshed.
     $context['results']['filename'] = $filename;
-    $context['results']['file'] = $file_path;
+    $context['results']['file'] = $directory_real_path;
 
-    if (file_exists($file_path)) {
+    if (file_exists($directory_real_path)) {
       $context['sandbox']['progress'] = 0;
       $context['sandbox']['resources'] = $resource_nodes;
       $context['sandbox']['resources_total'] = 804;
     }
-  }
-
-  // Accounting.
-  if (!isset($context['results']['count'])) {
-    $context['results']['count'] = 0;
   }
 
   // Open the file for writing ('a' puts pointer at end of file).
@@ -235,10 +234,8 @@ function sbac_report_gk_batch_process($resource_nodes, &$context) {
 function sbac_report_gk_batch_finished($success, $results, $operations) {
   if ($success) {
     $directory = "private://gk_reports/";
-    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $directory .= $results['filename'];
     $directory_real_path = drupal_realpath($directory);
-    copy($results['file'], $directory_real_path);
     $mime_type = file_get_mimetype($directory);
 
     global $user;
