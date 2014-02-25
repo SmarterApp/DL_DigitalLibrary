@@ -89,7 +89,7 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['reports/gr-report'] = array(
+  $items['reports/rr-report'] = array(
     'title' => 'GK Report',
     'file' => 'sbac_report.gk.inc',
     'page callback' => 'sbac_report_gk_report',
