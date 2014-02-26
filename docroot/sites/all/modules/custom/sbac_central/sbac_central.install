@@ -864,22 +864,24 @@ function sbac_central_update_7066() {
   }
 
   // Ended
-  $user_output = array();
+  $user_output_array = array();
   foreach($the_changed_ones as $id => $records) {
-    $user_output = "The user (uid: " . $user->uid . "), ";
-    if (isset($user->field_first_name['und'][0]['value']) && $user->field_first_name['und'][0]['value'] != '') {
-      $user_output .= trim($user->field_first_name['und'][0]['value']) . " ";
+    $user = user_load($records->uid);
+    if ($user) {
+      $user_output = "The user (uid: " . $user->uid . "), ";
+      if (isset($user->field_first_name['und'][0]['value']) && $user->field_first_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_first_name['und'][0]['value']) . " ";
+      }
+      if (isset($user->field_last_name['und'][0]['value']) && $user->field_last_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_last_name['und'][0]['value']) . " ";
+      }
+      $user_output .= "has had his/her " . $records->type . " count incremented by one";
+      $user_output_array[] = $user_output;
     }
-    if (isset($user->field_last_name['und'][0]['value']) && $user->field_last_name['und'][0]['value'] != '') {
-      $user_output .= trim($user->field_last_name['und'][0]['value']) . " ";
-    }
-    $user_output[] .= "has had his/her count incremented by one";
   }
-
   $data = "There was a total of " . count($the_changed_ones) . " users effected by this script\n\n";
-  $user_data = implode("\n", $user_output);
+  $user_data = implode("\n", $user_output_array);
   $output = $data . "\n\n" . $user_data;
   file_save_data($output, 'private://results_from_update_7066.txt');
-
   return "Fixed qc reviews that have been set to inactive";
 }
