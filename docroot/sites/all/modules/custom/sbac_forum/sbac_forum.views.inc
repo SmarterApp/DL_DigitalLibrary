@@ -52,3 +52,85 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
     $view->set_arguments(array($user->uid));
   }
 }
+
+
+function sbac_forum_views_query_alter(&$view, &$query) {
+  if ($view->name == 'forum_list') {
+
+    $condition_groups = count($query->where) + 1;
+
+    // Get User data.
+    global $user;
+    $users_roles = array_keys($user->roles);
+    $user_profile = user_load($user->uid);
+    $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
+    $users_states = array();
+    if (isset($user_profile_wrapper->field_state)) {
+      $state_terms = $user_profile_wrapper->field_state->value();
+      if (!empty($state_terms)) {
+        foreach ($state_terms as $state) {
+          $users_states[] = $state->tid;
+        }
+      }
+    }
+
+    // create the join object. STATE
+    $join = new views_join;
+    $join->table ='field_data_field_state';
+    $join->left_table = 'taxonomy_term_data';
+    $join->left_field = 'tid';
+    $join->field = 'entity_id';
+    $join->extra = array(
+       0 => array('field' => 'entity_type', 'value' => 'taxonomy_term'),
+       1 => array('field' => 'deleted', 'value' => 0),
+    );
+    $join->type = "LEFT";
+    $join->extra_type = 'AND';
+    $join->adjusted = 'TRUE';
+
+    $view->query->table_queue['field_data_field_state'] = array(
+      'table' => 'field_data_field_state',
+      'num' => 1,
+      'alias' => 'field_data_field_state',
+      'join' => $join,
+      'relationship' => 'taxonomy_term'
+    );
+
+    $state_condtion_group = $condition_groups++;
+    if (!empty($users_states)) {
+      $query->add_where($state_condtion_group, 'field_data_field_state.field_state_tid', $users_states, 'IN');
+    }
+    $query->add_where($state_condtion_group, 'field_data_field_state.field_state_tid', array(), 'IS NULL');
+    $query->where[$state_condtion_group]['type'] = "OR";
+
+
+    // create the join object. ROLE
+    $join = new views_join;
+    $join->table ='field_data_field_forum_access_role_list';
+    $join->left_table = 'taxonomy_term_data';
+    $join->left_field = 'tid';
+    $join->field = 'entity_id';
+    $join->extra = array(
+       0 => array('field' => 'entity_type', 'value' => 'taxonomy_term'),
+       1 => array('field' => 'deleted', 'value' => 0),
+    );
+    $join->type = "LEFT";
+    $join->extra_type = 'AND';
+    $join->adjusted = 'TRUE';
+
+    $view->query->table_queue['field_data_field_forum_access_role_list'] = array(
+      'table' => 'field_data_field_forum_access_role_list',
+      'num' => 1,
+      'alias' => 'field_data_field_forum_access_role_list',
+      'join' => $join,
+      'relationship' => 'taxonomy_term'
+    );
+
+    $role_condition_group = $condition_groups++;
+    $query->add_where($role_condition_group, 'field_data_field_forum_access_role_list.field_forum_access_role_list_value', $users_roles, 'IN');
+    $query->add_where($role_condition_group, 'field_data_field_forum_access_role_list.field_forum_access_role_list_value', array(), 'IS NULL');
+    $query->where[$role_condition_group]['type'] = "OR";
+
+
+  }
+}

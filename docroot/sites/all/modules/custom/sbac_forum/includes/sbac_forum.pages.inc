@@ -2,7 +2,7 @@
 
 
 function sbac_forum_main_landing_page() {
-  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.views');
+  // module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.views');
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
   $current_filters = '';
