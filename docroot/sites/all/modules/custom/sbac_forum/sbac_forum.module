@@ -526,3 +526,33 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   }
 
 }
+
+/**
+ * =============================================================================
+ *
+ *      Topic Node CRUD functions
+ *
+ * =============================================================================
+ */
+function sbac_forum_taxonomy_term_insert($term) {
+  if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
+    global $user;
+    $term->field_forum_facilitators[LANGUAGE_NONE][0]['target_id'] = $user->uid;
+    $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = 1;
+
+    // Add faci to member list.
+    $member_fc = $term->field_fc_forum_members[LANGUAGE_NONE][0]['value'];
+    $member_fc_wrapper = entity_metadata_wrapper('field_collection_item', $member_fc);
+    if (isset($member_fc_wrapper->field_fc_forum_member)) {
+      $member_fc_wrapper->field_fc_forum_member->set($user->uid);
+      $member_fc_wrapper->save(TRUE);
+    }
+
+    taxonomy_term_save($term);
+  }
+}
+
+
+function sbac_forum_taxonomy_term_update($term) {
+
+}
