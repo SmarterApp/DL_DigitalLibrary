@@ -36,12 +36,10 @@ function sbac_report_rr_report() {
  */
 function sbac_report_rr_batch_process($resource_reviewers, &$context) {
   module_load_include('inc', 'sbac_report', 'sbac_report.pages');
-  $limit = 500;
+  $context['sandbox']['finished'] = 0;
+  $limit = 200;
 
   if (!isset($context['sandbox']['file'])) {
-    $context['sandbox']['finished'] = 0;
-    $context['results']['count'] = 0;
-
     $column_titles = array(
       'Reviewer Name',
       'Reviewer State',
@@ -55,7 +53,6 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $filename = 'RR_Report_' . date('M_d_Y_g_i_s') . '.csv';
     $directory .= $filename;
-    $file_path = file_directory_temp() . '/' . $filename;
     $directory_real_path = drupal_realpath($directory);
     $handle = fopen($directory_real_path, 'w'); // Create the file.
     fputcsv($handle, $column_titles); // Write the labels to the header row
@@ -71,12 +68,17 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
     if (file_exists($directory_real_path)) {
       $context['sandbox']['progress'] = 0;
       $context['sandbox']['reviewers'] = $resource_reviewers;
-      $context['sandbox']['reviewers_total'] = 521;
+      $context['sandbox']['reviewers_total'] = 315;
     }
   }
 
   // Open the file for writing ('a' puts pointer at end of file).
   $handle = fopen($context['sandbox']['file'], 'a');
+
+  // Accounting.
+  if (!isset($context['results']['count'])) {
+    $context['results']['count'] = 0;
+  }
 
   // Loop until we hit the batch limit.
   for ($i = 0; $i < $limit; $i++) {
@@ -84,7 +86,6 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
       // initialize
       $csv_column = array();
       $review_columns = array();
-      $valid = FALSE;
       // get account
       $account = array_shift($context['sandbox']['reviewers']);
       $account = user_load($account->uid);
@@ -96,25 +97,33 @@ function sbac_report_rr_batch_process($resource_reviewers, &$context) {
       $eck_results = db_query($sql, array(':uid' => $account->uid));
       foreach ($eck_results as $eck_record) {
         $eck_entity = entity_load_single('feedback', $eck_record->id);
-        $other_qc_sql = "SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND status = 1 AND completed = 1 AND uid <> :uid";
-        $other_qc_results = db_query($other_qc_sql, array(':nid' => $eck_record->node_id, ':uid' => $account->uid));
-        $other_qcs = array();
-        foreach ($other_qc_results as $qc_result) {
-          $qc_entity = entity_load_single('feedback', $qc_result->id);
-          $other_qcs[] = $qc_entity;
-        }
-        $consistency_rate = "100%";
-        if (count($other_qcs) > 1) {
-          $consistency_rate = rec_consistency_rate($other_qcs, $eck_entity);
-        }
+        if ($eck_entity) {
+          $node = node_load($eck_record->node_id);
+          if ($node) {
+            $other_qc_sql = "SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND status = 1 AND completed = 1 AND uid <> :uid";
+            $other_qc_results = db_query($other_qc_sql, array(':nid' => $eck_record->node_id, ':uid' => $account->uid));
+            $other_qcs = array();
+            foreach ($other_qc_results as $qc_result) {
+              $qc_entity = entity_load_single('feedback', $qc_result->id);
+              if ($qc_entity) {
+                $other_qcs[] = $qc_entity;
+              }
+            }
 
-        // think i have to loop around all and call this function. rec_consistency_rate($all, $current);
-        $title = db_query("SELECT title FROM {node} WHERE nid = :nid", array(':nid' => $eck_record->node_id))->fetchField();
-        if ($title) {
-          // resource title
-          $review_columns[] = $title;
-          // consistency rate
-          $review_columns[] = $consistency_rate;
+            $consistency_rate = NULL;
+            if (count($other_qcs) == 2) {
+              $consistency_rate = rec_consistency_rate($other_qcs, $eck_entity);
+            }
+
+            // think i have to loop around all and call this function. rec_consistency_rate($all, $current);
+            $title = db_query("SELECT title FROM {node} WHERE nid = :nid", array(':nid' => $eck_record->node_id))->fetchField();
+            if ($title && $consistency_rate) {
+              // resource title
+              $review_columns[] = $title;
+              // consistency rate
+              $review_columns[] = $consistency_rate;
+            }
+          }
         }
       }
 
