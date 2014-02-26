@@ -847,3 +847,45 @@ function sbac_central_update_7065() {
   $output = $data . "\n\n" . $entity_output . "\n\n" . $users_output;
   file_save_data($output, 'private://results_from_update.txt');
 }
+
+/**
+ * Run through the eck_feedback, if a row is completed, status is 0
+ * and title of the review does not contain the users uid.
+ *
+ */
+function sbac_central_update_7066() {
+  $sql = "SELECT * FROM {eck_feedback} WHERE completed = 1 AND status = 0 AND archived = 0";
+  $results = db_query($sql);
+  $count = 0;
+  $the_changed_ones = array();
+  foreach ($results as $row) {
+    if (strpos($row->title, $row->uid) === FALSE) {
+      db_query("UPDATE {eck_feedback} SET archived = 1 WHERE id = :id", array(':id' => $row->id));
+      $count++;
+      $the_changed_ones[$row->id] = $row;
+    }
+  }
+
+  // Ended
+  $user_output_array = array();
+  foreach($the_changed_ones as $id => $records) {
+    $user = user_load($records->uid);
+    if ($user) {
+      $user_output = "The user (uid: " . $user->uid . "), ";
+      if (isset($user->field_first_name['und'][0]['value']) && $user->field_first_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_first_name['und'][0]['value']) . " ";
+      }
+      if (isset($user->field_last_name['und'][0]['value']) && $user->field_last_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_last_name['und'][0]['value']) . " ";
+      }
+      $user_output .= "has had his/her " . $records->type . " count incremented by one";
+      $user_output_array[] = $user_output;
+    }
+  }
+  $data = "There was a total of " . count($the_changed_ones) . " users effected by this script\n\n";
+  $user_data = implode("\n", $user_output_array);
+  $output = $data . "\n\n" . $user_data;
+  file_save_data($output, 'private://results_from_update_7066.txt');
+  return "Fixed qc reviews that have been set to inactive";
+}
+
