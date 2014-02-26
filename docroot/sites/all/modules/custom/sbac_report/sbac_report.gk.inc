@@ -36,11 +36,9 @@ function sbac_report_gk_report() {
  */
 function sbac_report_gk_batch_process($resource_nodes, &$context) {
   $limit = 500;
+  $context['sandbox']['finished'] = 0;
 
   if (!isset($context['sandbox']['file'])) {
-    $context['sandbox']['finished'] = 0;
-    $context['results']['count'] = 0;
-
     $column_titles = array(
       'Title',
       'Return Date',
@@ -89,6 +87,11 @@ function sbac_report_gk_batch_process($resource_nodes, &$context) {
 
   // Open the file for writing ('a' puts pointer at end of file).
   $handle = fopen($context['sandbox']['file'], 'a');
+
+  // Accounting.
+  if (!isset($context['results']['count'])) {
+    $context['results']['count'] = 0;
+  }
 
   // Loop until we hit the batch limit.
   for ($i = 0; $i < $limit; $i++) {
