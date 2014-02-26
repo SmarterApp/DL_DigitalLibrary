@@ -130,7 +130,5 @@ function sbac_forum_views_query_alter(&$view, &$query) {
     $query->add_where($role_condition_group, 'field_data_field_forum_access_role_list.field_forum_access_role_list_value', $users_roles, 'IN');
     $query->add_where($role_condition_group, 'field_data_field_forum_access_role_list.field_forum_access_role_list_value', array(), 'IS NULL');
     $query->where[$role_condition_group]['type'] = "OR";
-
-
   }
 }
