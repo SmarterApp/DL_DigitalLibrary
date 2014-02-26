@@ -637,7 +637,7 @@ function sbac_forum_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 17,
+      'weight' => 18,
     ),
   );
 
@@ -678,10 +678,61 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_removed_member_count'
+  $field_instances['taxonomy_term-forum-field_forum_removed_member_count'] = array(
+    'bundle' => 'forum',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 15,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_forum_removed_member_count',
+    'label' => 'Removed Member Count',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 17,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-forum-field_forum_topic_comment_count'
   $field_instances['taxonomy_term-forum-field_forum_topic_comment_count'] = array(
     'bundle' => 'forum',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -718,7 +769,11 @@ function sbac_forum_field_default_field_instances() {
   // Exported field_instance: 'taxonomy_term-forum-field_forum_topic_count'
   $field_instances['taxonomy_term-forum-field_forum_topic_count'] = array(
     'bundle' => 'forum',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -943,6 +998,7 @@ function sbac_forum_field_default_field_instances() {
   t('Member Count');
   t('Members');
   t('Removed');
+  t('Removed Member Count');
   t('Reply (comment) Count');
   t('Role');
   t('State');

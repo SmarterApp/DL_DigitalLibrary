@@ -374,6 +374,22 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
+  // Exported field_base: 'field_forum_removed_member_count'
+  $field_bases['field_forum_removed_member_count'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_forum_removed_member_count',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
   // Exported field_base: 'field_forum_topic_comment_count'
   $field_bases['field_forum_topic_comment_count'] = array(
     'active' => 1,

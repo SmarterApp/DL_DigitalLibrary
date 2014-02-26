@@ -118,6 +118,7 @@ function sbac_forum_field_group_info() {
       1 => 'field_forum_topic_comment_count',
       2 => 'field_forum_member_count',
       3 => 'field_forum_last_activity',
+      4 => 'field_forum_removed_member_count',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
