@@ -854,11 +854,32 @@ function sbac_central_update_7066() {
   $sql = "SELECT * FROM {eck_feedback} WHERE completed = 1 AND status = 0 AND archived = 0";
   $results = db_query($sql);
   $count = 0;
+  $the_changed_ones = array();
   foreach ($results as $row) {
     if (strpos($row->title, $row->uid) === FALSE) {
       db_query("UPDATE {eck_feedback} SET archived = 1 WHERE id = :id", array(':id' => $row->id));
       $count++;
+      $the_changed_ones[$row->id] = $row;
     }
   }
+
+  // Ended
+  $user_output = array();
+  foreach($the_changed_ones as $id => $records) {
+    $user_output = "The user (uid: " . $user->uid . "), ";
+    if (isset($user->field_first_name['und'][0]['value']) && $user->field_first_name['und'][0]['value'] != '') {
+      $user_output .= trim($user->field_first_name['und'][0]['value']) . " ";
+    }
+    if (isset($user->field_last_name['und'][0]['value']) && $user->field_last_name['und'][0]['value'] != '') {
+      $user_output .= trim($user->field_last_name['und'][0]['value']) . " ";
+    }
+    $user_output[] .= "has had his/her count incremented by one";
+  }
+
+  $data = "There was a total of " . count($the_changed_ones) . " users effected by this script\n\n";
+  $user_data = implode("\n", $user_output);
+  $output = $data . "\n\n" . $user_data;
+  file_save_data($output, 'private://results_from_update_7066.txt');
+
   return "Fixed qc reviews that have been set to inactive";
 }
