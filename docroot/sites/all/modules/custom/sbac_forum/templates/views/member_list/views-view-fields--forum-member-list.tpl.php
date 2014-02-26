@@ -34,3 +34,12 @@
     <?php print $field->content; ?>
   <?php print $field->wrapper_suffix; ?>
 <?php endforeach; ?>
+
+<?php if ($sbac_forum_indv_member_controls): ?>
+  <div class="member-controls-wrapper">
+    <div class="member-control-icon"></div>
+    <div class="member-control-popup">
+      <?php print $sbac_forum_indv_member_controls; ?>
+    </div>
+  </div>
+<?php endif; ?>
