@@ -1074,7 +1074,7 @@ function _sbac_resource_digital_library_links($fields) {
  * @param $uid
  * @param $nid
  */
-function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE) {
+function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE, $archived = FALSE) {
   $feedback = array();
   if ($nid) {
     $query = db_select('eck_feedback', 'f');
@@ -1090,7 +1090,14 @@ function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $st
       }
     }
     if ($status !== FALSE) {
-      $query->condition('f.status', $status);
+      if ($archived == FALSE) {
+        $query->condition('f.status', $status);
+      }
+      else {
+        $condition1 = db_and()->condition('f.status', 1);
+        $condition2 = db_and()->condition('f.status', 0)->condition('f.archived', 1);
+        $query->condition(db_or()->condition($condition1)->condition($condition2));
+      }
     }
     if ($completed !== FALSE) {
       $query->condition('f.completed', $completed);

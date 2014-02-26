@@ -46,10 +46,10 @@ function sbac_report_individual() {
 
       // All Reviews.
       $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
-      $completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
-      // $reviews = array_merge($reviews_in_progress, $completed_reviews);
-      $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $completed_reviews);
-      $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $average_consistency_rate);
+      $all_completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
+      $all_current_completed_reviews = sbac_report_get_current_completed_reviews($uid, $date_range);
+      $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $all_current_completed_reviews);
+      $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $all_completed_reviews, $average_consistency_rate);
 
       // The big 'summation' table.
       $summation = sbac_report_build_summation_table($uid, $date_range);
@@ -816,9 +816,9 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
               ORDER BY    review_date DESC
            ";
 
-//  if ($display != -1) {
-//    $query .= ' LIMIT ' . (int) $display;
-//  }
+  if ($display != -1) {
+    $query .= ' LIMIT ' . (int) $display;
+  }
 
   $result = db_query($query, array(
     ':uid' => (int) $uid,
