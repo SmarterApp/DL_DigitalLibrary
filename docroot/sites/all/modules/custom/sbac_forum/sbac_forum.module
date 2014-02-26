@@ -562,6 +562,20 @@ function sbac_forum_taxonomy_term_insert($term) {
 }
 
 
-function sbac_forum_taxonomy_term_update($term) {
+function sbac_forum_taxonomy_term_presave($term) {
+  if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
+    global $user;
 
+    // Cleanup task to ensure that state list is unset if access is set to "all states";
+    $state_access = $term->field_forum_access_states[LANGUAGE_NONE][0]['value'];
+    if ($state_access) {
+      $term->field_state[LANGUAGE_NONE] = array(); // Unset the selection for state lists.
+    }
+
+    // Cleanup task to ensure that role list is unset if access is set to "all roles";
+    $role_access = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
+    if ($role_access) {
+      $term->field_forum_access_role_list[LANGUAGE_NONE] = array(); // Unset the selection for role lists.
+    }
+  }
 }
