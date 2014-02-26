@@ -18,7 +18,7 @@ function sbac_report_rr_report() {
 
   if ($resource_reviewers) {
     batch_set(array(
-        'title' => t('GK Report'),
+        'title' => t('RR Report'),
         'operations' => array(
           array('sbac_report_rr_batch_process', array($resource_reviewers)),
         ),
