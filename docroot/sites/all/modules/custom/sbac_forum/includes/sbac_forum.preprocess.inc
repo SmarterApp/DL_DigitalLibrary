@@ -29,11 +29,12 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
   $facilitator_text = '';
   $member_text = '';
 
-  $faci_field = $row_data->field_field_forum_facilitators;
+  $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
   $is_faci = FALSE;
+
   if (!empty($faci_field)) {
     foreach ($faci_field as $index => $values) {
-      $faci_user_id = $values['raw']['target_id'];
+      $faci_user_id = $values['target_id'];
       if ($current_user->uid == $faci_user_id) {
         $is_faci = TRUE;
       }
@@ -41,7 +42,9 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
     $facilitator_text = '<div class="sbac-forum-faci-status-label">';
     if (!$is_faci) { // Current user is not set as facilitator
       $first_item = array_shift($faci_field);
-      $faci_data = entity_metadata_wrapper('user', $first_item['raw']['entity']);
+      $first_faci_user_id = $first_item['target_id'];
+      $target_faci = user_load($first_faci_user_id);
+      $faci_data = entity_metadata_wrapper('user', $target_faci);
       $fn = $faci_data->field_first_name->value();
       $ln = $faci_data->field_last_name->value();
       $full_name = $fn . ' ' . $ln;
