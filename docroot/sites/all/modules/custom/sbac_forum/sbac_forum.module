@@ -407,10 +407,18 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
       $form['description']['#access'] = FALSE;
 
       global $user;
+      $help_text = '<div>*NOTE: <p>Facilitator fields and Member fields should not be modified directly.';
+      $help_text .= 'If necessary, make sure to update "Administrative (hidden)" fields to preserve logic/stability</p>';
+      $help_text .= '</div>';
+      $form['group_hidden_label'] = array(
+        '#markup' => $help_text,
+        '#weight' => 9,
+      );
       if ($user->uid != 1) { // Only super admin can see these fields.
         $can_see = FALSE;
 
         // Membership fields.
+        $form['group_hidden_label']['#access'] = $can_see;
         $form['field_forum_facilitators']['#access'] = $can_see;
         $form['field_fc_forum_members']['#access'] = $can_see;
 
@@ -418,6 +426,7 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
         $form['field_forum_topic_count']['#access'] = $can_see;
         $form['field_forum_topic_comment_count']['#access'] = $can_see;
         $form['field_forum_member_count']['#access'] = $can_see;
+        $form['field_forum_removed_member_count']['#access'] = $can_see;
         $form['field_forum_last_activity']['#access'] = $can_see;
       }
 

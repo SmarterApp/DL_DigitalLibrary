@@ -95,7 +95,7 @@ function sbac_forum_view_forum_page($term) {
       );
       $facilitator_text = theme('item_list', $list_args);
 
-      // Have to add markup for faci information for popup as well.
+      // Have to add markup for faci information for popup/auth-pane as well.
       // ******** TODO **********
     }
   }
@@ -215,11 +215,16 @@ function sbac_forum_view_forum_page($term) {
   if (in_array('facilitator', $user->roles)) { // User is a facilitator
     if (($is_member === TRUE) ||
         ($is_member === FALSE) ){ // Show tab as long as user is not removed.
+      $removed_member_count = $forum_data->field_forum_removed_member_count->value();
+      $removed_member_count_text = '';
+      if ($removed_member_count) {
+        $removed_member_count_text = '(' .$removed_member_count .')';
+      }
       $tabs[] = array(
         'vid' => 'forum_member_list',
         'display' => 'block_1',
         'args' => $term->tid,
-        'title' => t('Removed Members ()'),
+        'title' => t('Removed Members '. $removed_member_count_text),
         'weight' => -97,
         'type' => 'view',
       );
