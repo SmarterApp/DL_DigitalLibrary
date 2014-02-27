@@ -246,7 +246,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = '<div class="my-forum-empty-text"><h2>You Are Not A Member Of Any Forums Yet<h2>
+  $handler->display->display_options['empty']['area']['content'] = '<div class="my-forum-empty-text"><h2>You Are Not A Member Of Any Forums Yet</h2>
 <a href="forums-main-page/reset/my-forums/default">Find a forum </a>to participate in our vibrant community.</div>';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
