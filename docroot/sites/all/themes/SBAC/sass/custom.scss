@@ -3024,7 +3024,10 @@ a.tabledrag-handle .handle {
 	}
 }
 
-
+/*Overwrite foundation/components/_grid.scss*/
+.row {
+	max-width: 960px;
+}
 
 
 

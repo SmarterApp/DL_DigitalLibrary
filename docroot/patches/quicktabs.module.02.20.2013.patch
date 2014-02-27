@@ -1,0 +1,16 @@
+diff --git a/docroot/sites/all/modules/contrib/quicktabs/quicktabs.module b/docroot/sites/all/modules/contrib/quicktabs/quicktabs.module
+index 182a89c..8db03ac 100644
+--- a/docroot/sites/all/modules/contrib/quicktabs/quicktabs.module
++++ b/docroot/sites/all/modules/contrib/quicktabs/quicktabs.module
+@@ -639,8 +639,10 @@ function theme_qt_quicktabs_tabset($vars) {
+     $item = array();
+     if (is_array($vars['tabset']['tablinks'][$key])) {
+       $tab = $vars['tabset']['tablinks'][$key];
++      $tab_class = $vars['tabset']['tablinks'][$key]['#link_class'];
++      $item['class'] = array($tab_class);
+       if ($key == $vars['tabset']['#options']['active']) {
+-        $item['class'] = array('active');
++        $item['class'][] = 'active';
+       }
+       $item['data'] = drupal_render($tab);
+       $variables['items'][] = $item;

@@ -746,11 +746,11 @@ function sbac_central_update_7064() {
 function sbac_central_update_7065() {
   /**
    * select all workbench_moderation_node_history for a node;
-  if there is a state of rejected in the "state" field, then keep looping ahead,
-  then, if you find a state of "needs review" in the "state" field,
-  then you need to loop back through the previous states, finding each user
-  load the user, then load the related eck_feedback
-  set the archived flag to 1.
+   *  if there is a state of rejected in the "state" field, then keep looping ahead,
+   *  then, if you find a state of "needs review" in the "state" field,
+   *  then you need to loop back through the previous states, finding each user
+   *  load the user, then load the related eck_feedback
+   *  set the archived flag to 1.
    */
 
   $the_changed_ones = array();
@@ -884,4 +884,17 @@ function sbac_central_update_7066() {
   $output = $data . "\n\n" . $user_data;
   file_save_data($output, 'private://results_from_update_7066.txt');
   return "Fixed qc reviews that have been set to inactive";
+}
+
+
+/*
+ * Enables SBAC_Forum module.
+ */
+function sbac_central_update_7067() {
+  $modules = array(
+    'sbac_forum',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+
 }

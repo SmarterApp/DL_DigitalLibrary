@@ -10624,3 +10624,9 @@ a.tabledrag-handle .handle {
     width: 220px;
   }
 }
+
+/*Overwrite foundation/components/_grid.scss*/
+/* line 3025, ../sass/custom.scss */
+.row {
+  max-width: 960px;
+}

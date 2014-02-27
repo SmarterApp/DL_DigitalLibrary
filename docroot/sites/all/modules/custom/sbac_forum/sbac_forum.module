@@ -1,0 +1,629 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Forum feature.
+ */
+
+include_once 'sbac_forum.features.inc';
+include_once 'includes/sbac_forum.component_alter.inc';
+include_once 'includes/sbac_forum.api.inc';
+include_once 'includes/sbac_forum.ajax.inc';
+
+define('SBAC_FORUM_CATEGORY_FILTERS', 'sbac-forum-category-filters');
+define('SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS', 'sbac-forum-my-forum-category-filters');
+
+define('SBAC_FORUM_SUBNAV_ACTIVE', 'sbac-forum-sub-nav-active');
+define('SBAC_FORUM_SUBNAV_ALL', 'all-forums');
+define('SBAC_FORUM_SUBNAV_OWN', 'my-forum');
+define('SBAC_FORUM_SUBNAV_KEYWORD', 'keyword-search');
+
+define('SBAC_FORUM_FILTERS_CLOSED', 'sbac-forum-filters-closed');
+define('SBAC_FORUM_MY_FORUM_FILTERS_CLOSED', 'sbac-forum-my-forum-filters-closed');
+
+define('SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME', 'forum-member-list-');
+
+/**
+ * =============================================================================
+ *
+ *      Hooks
+ *
+ * =============================================================================
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function sbac_forum_menu() {
+  $items['forums'] = array(
+    'title' => 'Forums',
+    'file' => 'includes/sbac_forum.pages.inc',
+    'page callback' => 'sbac_forum_main_landing_page',
+    'access callback' => '_sbac_forum_user_access',
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -10,
+  );
+
+  // Create own menu callback for adding a term. Dont need to mess with menu_alter.
+  $items['forums/%taxonomy_vocabulary_machine_name/add'] = array(
+    'title' => 'Start A Forum',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_form_term', array(), 1),
+    'access callback' => '_sbac_forum_add_forum_user_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+    'file path' => drupal_get_path('module', 'taxonomy'),
+    'file' => 'taxonomy.admin.inc',
+  );
+
+  $items['forums/term/%taxonomy_term'] = array(
+    'title' => 'Taxonomy term',
+    'title callback' => 'taxonomy_term_title',
+    'title arguments' => array(2),
+    'page callback' => 'sbac_forum_view_forum_page',
+    'page arguments' => array(2),
+    'access callback' => '_sbac_forum_view_forum_user_access',
+    'access arguments' => array(2),
+    'file' => 'includes/sbac_forum.pages.inc',
+  );
+
+  $items['forums/term/%taxonomy_term/delete'] = array(
+    'title' => 'Delete Forum',
+    'page callback' => 'sbac_forum_delete_forum_page',
+    'page arguments' => array(2),
+    'access callback' => '_sbac_forum_delete_forum_user_access',
+    'access arguments' => array(2),
+    'file' => 'includes/sbac_forum.pages.inc',
+  );
+
+  $items['forums-main-page/reset/%/%'] = array(
+    'title' => 'Forums',
+    'file' => 'includes/sbac_forum.pages.inc',
+    'page callback' => 'sbac_forum_main_landing_page_reset',
+    'page arguments' => array(2,3),
+    'access callback' => '_sbac_forum_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Access callback for Forums page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to view this page.
+ */
+function _sbac_forum_user_access() {
+  global $user;
+  $access = FALSE;
+  if (!empty($user->uid)) {
+    $access = TRUE;
+  }
+  return $access;
+}
+
+/**
+ * Access callback for Add Forum page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to add a forum.
+ */
+function _sbac_forum_add_forum_user_access($vocabulary) {
+  global $user;
+  $access = FALSE;
+
+  // If user is trying to url hack to add terms to other vocabs,
+  //   return false immediately.
+  if ($vocabulary->machine_name != 'forum') {
+    return $access;
+  }
+
+  // Anon users should not have access.
+  if (!empty($user->uid)) {
+    // Facilitators or users with "administer taxonomy" perms can add forums
+    if (in_array('facilitator', $user->roles) ||
+        user_access('administer taxonomy') ) {
+      $access = TRUE;
+    }
+  }
+  return $access;
+}
+
+/**
+ * Access callback for Forum View page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to view a forum.
+ */
+function _sbac_forum_view_forum_user_access($term) {
+  global $user;
+
+  if ($user->uid == 1) { // Allow superadmin bypass
+    return TRUE;
+  }
+
+  if ($user->uid == 0) { // Anon users have no access.
+    return FALSE;
+  }
+
+  $access = sbac_forum__api__check_forum_view_access($user, $term);
+  return $access;
+}
+
+/**
+ * Access callback for Forum Delete page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to view a forum.
+ */
+function _sbac_forum_delete_forum_user_access($term) {
+  global $user;
+  $access = FALSE;
+
+  if ($term->vocabulary_machine_name != 'forum') {
+    return $access; // Someone trying to delete a taxonomy term not from forums
+  }
+
+  $vocab_id = $term->vid;
+  $delete_perm = 'delete terms in ' . $vocab_id;
+  $access = user_access($delete_perm);
+  return $access;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ * @return mixed
+ */
+function sbac_forum_block_info() {
+  $blocks['sbac_forum_categories'] = array(
+    'info' => t('Categories'),
+    'region' => 'filter',
+    'pages' => "forums",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *
+ * @return array
+ */
+function sbac_forum_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'sbac_forum_categories':
+      module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+      $block['subject'] = t('');
+      $block['content'] = drupal_get_form('sbac_forum_category_forum_form');
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_date_formats
+ */
+function sbac_forum_date_formats() {
+  $formats = array();
+
+  $new_formats = array(
+    'forum_listing'  => 'M jS, Y g:i a',
+  );
+
+  foreach ($new_formats as $key => $value) {
+    $formats[] = array(
+      'type' => $key,
+      'format' => $value,
+      'locales' => array(),
+    );
+    variable_set('date_format_'. $key, $value);
+  };
+
+  return $formats;
+}
+
+/**
+ * Implements hook_date_format_types
+ */
+function sbac_forum_date_format_types() {
+  return array(
+    'forum_listing' => t('Forum - Listing Page View'),
+  );
+}
+
+
+/**
+ * Implementation of hook_theme()
+ */
+function sbac_forum_theme($existing, $type, $theme, $path) {
+  $items['sbac_forum_filter_categories'] = array(
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates',
+    'template' => 'forum-filter-categories',
+    'variables' => array(
+      'categories' => NULL,
+      'cf_value' => NULL,
+      'cf_html' => NULL,
+    ),
+  );
+
+  $items['sbac_forum_render_target_forum'] = array(
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates',
+    'template' => 'forum-view-page',
+    'variables' => array(
+      'fields' => NULL,
+    ),
+  );
+
+  //============== Views template overrides. ===============================
+
+  /**
+   * ---------- Forum list View.---------------
+   */
+  $items['views_view__forum_list__block'] = array(
+    'template'             => 'views-view--forum-list--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list',
+    'arguments'            => array('view' => null,),
+    'original hook'        => 'views_view',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_forum_preprocess_views_view__forum_list__block',
+    ),
+  );
+
+  $items['views_view_unformatted__forum_list__block'] = array(
+    'template'             => 'views-view-unformatted--forum-list--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list',
+    'arguments'            => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
+    'original hook'        => 'views_view_unformatted',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_unformatted',
+      'sbac_forum_preprocess_views_view_unformatted__forum_list__block',
+    ),
+  );
+
+  $items['views_view_fields__forum_list__block'] = array(
+    'template'             => 'views-view-fields--forum-list--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list',
+    'arguments'            => array('view' => null, 'fields' => null, 'row' => null),
+    'original hook'        => 'views_view_fields',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_forum_preprocess_views_view_fields__forum_list__block',
+    ),
+  );
+
+
+  /**
+   * ---------- Topic list View.---------------
+   */
+  $items['views_view__forum_topic_list__block'] = array(
+    'template'             => 'views-view--forum-topic-list--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
+    'arguments'            => array('view' => null,),
+    'original hook'        => 'views_view',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_forum_preprocess_views_view__forum_topic_list__block',
+    ),
+  );
+
+  $items['views_view_unformatted__forum_topic_list__block'] = array(
+    'template'             => 'views-view-unformatted--forum-topic-list--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
+    'arguments'            => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
+    'original hook'        => 'views_view_unformatted',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_unformatted',
+      'sbac_forum_preprocess_views_view_unformatted__forum_topic_list__block',
+    ),
+  );
+
+  $items['views_view_fields__forum_topic_list__block'] = array(
+    'template'             => 'views-view-fields--forum-topic-list--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
+    'arguments'            => array('view' => null, 'fields' => null, 'row' => null),
+    'original hook'        => 'views_view_fields',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_forum_preprocess_views_view_fields__forum_topic_list__block',
+    ),
+  );
+
+
+  /**
+   * ---------- Member list View.---------------
+   *
+   *    NOTE: Affects both displays (block and block-1 aka Member and Removed)
+   */
+  $items['views_view__forum_member_list'] = array(
+    'template'             => 'views-view--forum-member-list',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
+    'arguments'            => array('view' => null,),
+    'original hook'        => 'views_view',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_forum_preprocess_views_view__forum_member_list',
+    ),
+  );
+
+  $items['views_view_unformatted__forum_member_list'] = array(
+    'template'             => 'views-view-unformatted--forum-member-list',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
+    'arguments'            => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
+    'original hook'        => 'views_view_unformatted',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_unformatted',
+      'sbac_forum_preprocess_views_view_unformatted__forum_member_list',
+    ),
+  );
+
+  $items['views_view_fields__forum_member_list'] = array(
+    'template'             => 'views-view-fields--forum-member-list',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
+    'arguments'            => array('view' => null, 'fields' => null, 'row' => null),
+    'original hook'        => 'views_view_fields',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_forum_preprocess_views_view_fields__forum_member_list',
+    ),
+  );
+
+
+  // ==================== End Views templates  =================================
+
+
+  return $items;
+}
+
+/**
+ * Implements hook_form_alter
+ */
+function sbac_forum_form_alter(&$form, $form_state, $form_id) {
+}
+
+/**
+ * Implements hook_form_FORM-ID_alter
+ */
+function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'taxonomy_form_term') {
+    if ((isset($form['#term'])) &&
+        (!isset($form['delete'])) &&
+        ($form['#term']['vocabulary_machine_name'] == 'forum') ){
+      // Hide the description field that comes with the taxonomy term entity.
+      //   Use our own descrition field, more control.
+      $form['description']['#access'] = FALSE;
+
+      global $user;
+      $help_text = '<div>*NOTE: <p>Facilitator fields and Member fields should not be modified directly.';
+      $help_text .= 'If necessary, make sure to update "Administrative (hidden)" fields to preserve logic/stability</p>';
+      $help_text .= '</div>';
+      $form['group_hidden_label'] = array(
+        '#markup' => $help_text,
+        '#weight' => 9,
+      );
+      if ($user->uid != 1) { // Only super admin can see these fields.
+        $can_see = FALSE;
+
+        // Membership fields.
+        $form['group_hidden_label']['#access'] = $can_see;
+        $form['field_forum_facilitators']['#access'] = $can_see;
+        $form['field_fc_forum_members']['#access'] = $can_see;
+
+        // Stats fields.
+        $form['field_forum_topic_count']['#access'] = $can_see;
+        $form['field_forum_topic_comment_count']['#access'] = $can_see;
+        $form['field_forum_member_count']['#access'] = $can_see;
+        $form['field_forum_removed_member_count']['#access'] = $can_see;
+        $form['field_forum_last_activity']['#access'] = $can_see;
+      }
+
+      $path_to_css_file = drupal_get_path('module', 'sbac_forum');
+      $path_to_css_file .= '/css/sbac_forum.css';
+      $form['#attached']['css'][] = $path_to_css_file;
+
+      $form['name']['#title'] = 'Forum Title';
+
+      // Tags fields. Add wrapper to group them
+      $form['field_subject']['#prefix'] = '<div class="forum-tags-left">';
+      $form['field_intended_end_user']['#suffix'] = '</div>';
+      $form['field_grades']['#prefix'] = '<div class="forum-tags-right">';
+      $form['field_intended_student']['#suffix'] = '</div><div class="clearfix"></div>';
+
+
+      // Access fields. Modify behaviour.
+      $form['field_forum_access_states']['#prefix'] = '<div class="forum-add-access-left">';
+      $form['field_state']['#suffix'] = '</div>';
+      // $form['field_state']['#suffix'] = '';
+      $state_field_state = array(
+        'visible' => array(
+          ':input[name="field_forum_access_states[und]"]' => array('value' => 0),
+        ),
+      );
+      $form['field_state']['#states'] = $state_field_state;
+      unset($form['field_state'][LANGUAGE_NONE]['#options']['_none']); // remove none option
+
+      $form['field_forum_access_user_roles']['#prefix'] = '<div class="forum-add-access-right">';
+      $form['field_forum_access_role_list']['#suffix'] = '</div><div class="clearfix"></div>';
+      $role_field_state = array(
+        'visible' => array(
+          ':input[name="field_forum_access_user_roles[und]"]' => array('value' => 0),
+        ),
+      );
+      $form['field_forum_access_role_list']['#states'] = $role_field_state;
+      unset($form['field_forum_access_role_list'][LANGUAGE_NONE]['#options']['_none']); // remove none option
+
+
+      // Modify submit buttons
+      $cancel_button_classes = 'sbac-forum-add-forum-cancel-button gray';
+      $form['actions']['cancel_add'] = array(
+        '#type'         => 'submit',
+        '#value'        => t('Cancel'),
+        '#weight' => 4,
+        '#limit_validation_errors' => array(),
+        '#attributes'   => array(
+          'class' => array($cancel_button_classes),
+        ),
+        '#submit' => array('_sbac_forum__add_forum_form_redirect_submit'),
+        '#prefix'       => '<div class="sbac-forum-add-forum-buttons">',
+      );
+      if (isset($form['actions']['delete'])) { // Edit form
+        $form['actions']['delete']['#attributes']['class'] = array('red');
+        $form['actions']['delete']['#suffix'] = '</div>';
+      } else { // Add forum forum
+        $form['actions']['submit']['#value'] = 'Start Forum';
+        $form['actions']['submit']['#suffix'] = '</div>';
+      }
+
+
+      $form['#validate'][] = '_sbac_forum__forum_form__access_field_validate';
+
+      // Redirect on successful completion.
+      $form['#submit'][] = '_sbac_forum__add_forum_form_redirect_submit';
+
+    } elseif ((isset($form['#term'])) &&
+        (isset($form['delete'])) &&
+        ($form['#term']->vocabulary_machine_name == 'forum') ) {
+      // This is the delete confirm form
+      $forum_path = 'forums/term/' . $form['#term']->tid;
+      $form['actions']['cancel']['#href'] = $forum_path;
+      $form['actions']['cancel']['#options']['path'] = $forum_path;
+    }
+
+  }
+}
+
+function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
+  $form_state['redirect'] = 'forums';
+}
+
+function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
+  $values = $form_state['values'];
+
+  global $user;
+  $user_profile = user_load($user->uid);
+  $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
+  $users_roles = array();
+  if (isset($user_profile_wrapper->field_position)) {
+    $position_term = $user_profile_wrapper->field_position->value();
+    $users_roles[] = $position_term->tid;
+  }
+  $users_states = array();
+  if (isset($user_profile_wrapper->field_state)) {
+    $state_terms = $user_profile_wrapper->field_state->value();
+    if (!empty($state_terms)) {
+      foreach ($state_terms as $state) {
+        $users_states[] = $state->tid;
+      }
+    }
+  }
+
+
+  $states_field_value = $values['field_forum_access_states'][LANGUAGE_NONE][0]['value'];
+  if (!$states_field_value) {
+    $selected_states = $values['field_state'];
+    if (count($selected_states[LANGUAGE_NONE])) { // There will be one entry even if empty. Check value.
+      $temp = $selected_states[LANGUAGE_NONE];
+      $selected_value = array_shift($temp);
+      if (empty($selected_value['tid'])) {
+        form_set_error('field_state', 'At least one State must be selected');
+      } else {
+        $states_array = array();
+        foreach ($selected_states[LANGUAGE_NONE] as $key => $value) {
+          $states_array[] = $value['tid'];
+        }
+        $has_state = array_intersect($states_array, $users_states);
+        if (empty($has_state)) {
+          form_set_error('field_state', 'You must have at least 1 of your own states selected.');
+        }
+      }
+    }
+  }
+
+  $roles_field_value = $values['field_forum_access_user_roles'][LANGUAGE_NONE][0]['value'];
+  if (!$roles_field_value) {
+    $selected_roles = $values['field_forum_access_role_list'];
+    if (count($selected_roles[LANGUAGE_NONE]) == 1) { // There will be one entry even if empty. Check value.
+      $temp = $selected_roles[LANGUAGE_NONE];
+      $selected_value = array_shift($temp);
+      if (empty($selected_value['value'])) {
+        form_set_error('field_forum_access_role_list', 'At least one Role must be selected');
+      } else {
+        $roles_array = array();
+        foreach ($selected_roles[LANGUAGE_NONE] as $key => $value) {
+          $roles_array[] = $value['value'];
+        }
+        $has_role = array_intersect($roles_array, $users_roles);
+        if (empty($has_role)) {
+          form_set_error('field_forum_access_role_list', 'You must have at least your own role/title selected.');
+        }
+      }
+    }
+  }
+
+}
+
+/**
+ * =============================================================================
+ *
+ *      Topic Node CRUD functions
+ *
+ * =============================================================================
+ */
+function sbac_forum_taxonomy_term_insert($term) {
+  if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
+    global $user;
+    $term->field_forum_facilitators[LANGUAGE_NONE][0]['target_id'] = $user->uid;
+    $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = 1;
+
+    // Add faci to member list.
+    $member_fc = $term->field_fc_forum_members[LANGUAGE_NONE][0]['value'];
+    $member_fc_wrapper = entity_metadata_wrapper('field_collection_item', $member_fc);
+    if (isset($member_fc_wrapper->field_fc_forum_member)) {
+      $member_fc_wrapper->field_fc_forum_member->set($user->uid);
+      $member_fc_wrapper->save(TRUE);
+    }
+
+    taxonomy_term_save($term);
+  }
+}
+
+
+function sbac_forum_taxonomy_term_presave($term) {
+  if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
+    global $user;
+
+    // Cleanup task to ensure that state list is unset if access is set to "all states";
+    $state_access = $term->field_forum_access_states[LANGUAGE_NONE][0]['value'];
+    if ($state_access) {
+      $term->field_state[LANGUAGE_NONE] = array(); // Unset the selection for state lists.
+    }
+
+    // Cleanup task to ensure that role list is unset if access is set to "all roles";
+    $role_access = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
+    if ($role_access) {
+      $term->field_forum_access_role_list[LANGUAGE_NONE] = array(); // Unset the selection for role lists.
+    }
+  }
+}
