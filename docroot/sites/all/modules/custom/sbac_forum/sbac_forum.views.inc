@@ -73,7 +73,8 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
 
 
 function sbac_forum_views_query_alter(&$view, &$query) {
-  if ($view->name == 'forum_list') {
+  if (($view->name == 'forum_list') ||
+      ($view->name == 'forum_list_empty')) {
 
     $condition_groups = count($query->where) + 1;
 
