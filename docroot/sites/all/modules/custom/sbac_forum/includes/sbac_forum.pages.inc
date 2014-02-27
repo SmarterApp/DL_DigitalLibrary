@@ -51,7 +51,6 @@ function sbac_forum_main_landing_page() {
   $view_p->_post_execute();
   $count_values[$passive_display] = $view_p->total_rows;
   $view_p->destroy();
-  dsm($count_values);
 
   // Active
   $view = views_get_view('forum_list');

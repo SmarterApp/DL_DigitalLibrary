@@ -61,7 +61,7 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
     $link_ops = array('attributes' => array('class' => 'forum-list-filter-empty-text-reset-link button'));
     $empty_text_link = l($link_text, $empty_text_url, $link_ops);
     $empty_text_content = '<div class="sbac-forum-filter-no-results-wrapper">';
-    $empty_text_content .= '<h2>Your search returned no results<h2>';
+    $empty_text_content .= '<h2>Your search returned no results</h2>';
     $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below';
     $empty_text_content .= 'that have been identified for you by using the subject(s) and grade(s) in your profile</p>';
     $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">'.$empty_text_link.'</div>';
