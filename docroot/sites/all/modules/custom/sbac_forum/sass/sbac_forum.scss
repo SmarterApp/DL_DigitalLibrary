@@ -313,7 +313,7 @@ select {
   cursor: pointer;
   font-size: 15px;
   line-height: 1;
-  margin: 0;
+  margin: 0 !important;
   padding: 7px 3px 4px;
   text-indent: 0.01px;
   text-overflow: "";
@@ -531,6 +531,7 @@ a.new-topic-link:hover {
 		}
 		
 		.sbac-forum-main-container {
+			
 			.views-field {
 				font-size: 13px;
 				line-height: 20px;
@@ -583,6 +584,11 @@ a.new-topic-link:hover {
 				
 				.facilitator:before {
 					border-left: 8px solid #8A1538;
+				}
+				
+				.facilitator span {
+					color:#8A1538;
+					font-weight: bold;
 				}
 				
 				.sbac-forum-is-member-highlight {
@@ -694,6 +700,40 @@ a.new-topic-link:hover {
 					}
 				}
 			}
+		}
+	}
+	
+	/*No results page*/
+	.sbac-forum-filter-no-results-wrapper {
+		background: none repeat scroll 0 0 #FFFFFF;
+	  border-radius: 15px;
+    box-shadow: 0 0 10px 0 rgba(4, 56, 78, 0.75);
+    display: block;
+    margin: 20px auto;
+    min-height: 60px;
+    padding: 40px 50px;
+    position: relative;
+
+		h2 {
+			color: #000000;
+		  display: block;
+	    font-size: 18px;
+	    font-weight: bold;
+	    margin: 0;
+	    padding: 0;
+	    text-transform: capitalize;
+		}
+		
+		p {
+			font-size: 16px;
+		  line-height: 1.6;
+	    margin: 0;
+	    max-width: 560px;
+			padding-top: 9px;
+		}
+
+		.button {
+			margin: 12px 0 0;
 		}
 	}
 }
@@ -1461,3 +1501,4 @@ a.new-topic-link:hover {
 		background-color: transparent;
   }
 }
+
