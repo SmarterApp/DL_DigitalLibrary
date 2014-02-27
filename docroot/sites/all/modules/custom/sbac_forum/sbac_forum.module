@@ -515,7 +515,23 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
 }
 
 function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
-  $form_state['redirect'] = 'forums';
+  $link = l('Post a Topic', '#'); // TODO Send to post topic link
+
+  $message = 'Congratulations! You created a forum! '.$link.' to start a discussion';
+  drupal_get_messages();
+  drupal_set_message($message);
+
+  $tid = 0;
+  $redirect = 'forums';
+  if (isset($form_state['term'])) {
+    $tid = $form_state['term']->tid;
+  }
+
+  if (!empty($tid)) {
+    $link = 'forums/term/' . $tid;
+  }
+
+  $form_state['redirect'] = $link;
 }
 
 function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
