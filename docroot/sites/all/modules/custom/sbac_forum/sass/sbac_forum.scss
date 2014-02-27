@@ -314,13 +314,14 @@ select {
   font-size: 15px;
   line-height: 1;
   margin: 0 !important;
-  padding: 7px 3px 4px;
+  padding: 7px 3px 4px 7px;
   text-indent: 0.01px;
   text-overflow: "";
   vertical-align: top;
-  width: 180px;
+  width: 200px !important;
 	-webkit-appearance: none;
 	-moz-appearance: none;
+	height: 34px;
 }
 
 #sbac-forum-filter-button:before {
@@ -704,7 +705,8 @@ a.new-topic-link:hover {
 	}
 	
 	/*No results page*/
-	.sbac-forum-filter-no-results-wrapper {
+	.sbac-forum-filter-no-results-wrapper, 
+	.my-forum-empty-text {
 		background: none repeat scroll 0 0 #FFFFFF;
 	  border-radius: 15px;
     box-shadow: 0 0 10px 0 rgba(4, 56, 78, 0.75);
@@ -734,6 +736,19 @@ a.new-topic-link:hover {
 
 		.button {
 			margin: 12px 0 0;
+		}
+	}
+	
+	.my-forum-empty-text {
+		a {
+			color: #0583AC;
+			text-decoration: none;
+			border-bottom: 1px #0583AC solid ;
+			
+			&:hover {
+				color: #8A1538;
+				border-bottom: 1px #8A1538 solid ;
+			}
 		}
 	}
 }
