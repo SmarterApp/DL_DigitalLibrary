@@ -53,6 +53,22 @@ function sbac_forum_main_landing_page() {
   return $output;
 }
 
+function sbac_forum_main_landing_page_reset($item, $severity) {
+  switch ($item) {
+    case 'all-forums':
+      $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
+      break;
+    case 'my-forums':
+      if ($severity == 'default') {
+        sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+      } else {
+        $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
+        sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+      }
+      break;
+  }
+  drupal_goto('forums');
+}
 
 function sbac_forum_view_forum_page($term) {
 	global $user;

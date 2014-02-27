@@ -4,6 +4,7 @@
 function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $active_display = 'block') {
   // $arg_definitions = $view->display_handler->get_option('arguments');
   $view_filters = $view->display_handler->get_option('filters');
+  $empty_text_url = 'forums-main-page/reset/all-forums/all';
 
   // Current filter session - create the args where needed.
   if (!empty($current_filters)) {
@@ -50,6 +51,23 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
   if ($active_display == 'block_1') { // Machine name for second display for view "my forums".
     global $user;
     $view->set_arguments(array($user->uid));
+    $empty_text_url = 'forums-main-page/reset/my-forums/all';
+  }
+
+  if (!empty($current_filters)) {
+    // Empty Text programatically.
+    $empty_text_class = $view->display_handler->get_option('empty');
+    $link_text = t('Browse all Forums');
+    $link_ops = array('attributes' => array('class' => 'forum-list-filter-empty-text-reset-link button'));
+    $empty_text_link = l($link_text, $empty_text_url, $link_ops);
+    $empty_text_content = '<div class="sbac-forum-filter-no-results-wrapper">';
+    $empty_text_content .= '<h2>Your search returned no results<h2>';
+    $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below';
+    $empty_text_content .= 'that have been identified for you by using the subject(s) and grade(s) in your profile</p>';
+    $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">'.$empty_text_link.'</div>';
+    $empty_text_content .= '</div>';
+    $empty_text_class['area']['content'] = $empty_text_content;
+    $view->display_handler->set_option('empty', $empty_text_class);
   }
 }
 
