@@ -537,8 +537,8 @@ function sbac_forum_field_default_field_instances() {
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_forum_description',
     'label' => 'Description',
-    'profanity' => 0,
-    'required' => 0,
+    'profanity' => 1,
+    'required' => 1,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -825,7 +825,7 @@ function sbac_forum_field_default_field_instances() {
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_grades',
     'label' => 'Grade(s)',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -964,7 +964,7 @@ function sbac_forum_field_default_field_instances() {
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_subject',
     'label' => 'Subjects and Domains',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
