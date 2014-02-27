@@ -38,7 +38,8 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
 
   // Load up forum data.
   $forum_data = entity_metadata_wrapper('taxonomy_term', $forum);
-
+  $user_profile = user_load($user_obj->uid); // Load up profile.
+  $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
 
   // Check to see if forum is role restricted.
   $validate_user_role = FALSE; // default to all roles have access
@@ -58,8 +59,13 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
   if (($validate_user_role) &&
       (!empty($user_obj)) &&
       (!empty($allowed_roles)) ){
-    $users_roles = array_keys($user_obj->roles);
-    $has_role = array_intersect($allowed_roles, $users_roles);
+    if (isset($user_profile_wrapper->field_position)) {
+      $title_terms = $user_profile_wrapper->field_position->value();
+      if (!empty($title_terms)) {
+        $users_title = $title_terms->tid;
+        $has_role = in_array($users_title, $allowed_roles);
+      }
+    }
   }
 
 
@@ -86,7 +92,6 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
   if (($validate_user_state) &&
       (!empty($user_obj)) &&
       (!empty($allowed_states)) ) {
-    $user_profile = user_load($user_obj->uid);
     $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
     if (isset($user_profile_wrapper->field_state)) {
       $state_terms = $user_profile_wrapper->field_state->value();
