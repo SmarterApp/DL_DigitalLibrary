@@ -512,13 +512,42 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
 function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   $values = $form_state['values'];
 
+  global $user;
+  $user_profile = user_load($user->uid);
+  $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
+  $users_roles = array();
+  if (isset($user_profile_wrapper->field_position)) {
+    $position_term = $user_profile_wrapper->field_position->value();
+    $users_roles[] = $position_term->tid;
+  }
+  $users_states = array();
+  if (isset($user_profile_wrapper->field_state)) {
+    $state_terms = $user_profile_wrapper->field_state->value();
+    if (!empty($state_terms)) {
+      foreach ($state_terms as $state) {
+        $users_states[] = $state->tid;
+      }
+    }
+  }
+
+
   $states_field_value = $values['field_forum_access_states'][LANGUAGE_NONE][0]['value'];
   if (!$states_field_value) {
     $selected_states = $values['field_state'];
-    if (count($selected_states[LANGUAGE_NONE]) == 1) { // There will be one entry even if empty. Check value.
-      $selected_value = array_shift($selected_states[LANGUAGE_NONE]);
+    if (count($selected_states[LANGUAGE_NONE])) { // There will be one entry even if empty. Check value.
+      $temp = $selected_states[LANGUAGE_NONE];
+      $selected_value = array_shift($temp);
       if (empty($selected_value['tid'])) {
         form_set_error('field_state', 'At least one State must be selected');
+      } else {
+        $states_array = array();
+        foreach ($selected_states[LANGUAGE_NONE] as $key => $value) {
+          $states_array[] = $value['tid'];
+        }
+        $has_state = array_intersect($states_array, $users_states);
+        if (empty($has_state)) {
+          form_set_error('field_state', 'You must have at least 1 of your own states selected.');
+        }
       }
     }
   }
@@ -527,9 +556,19 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   if (!$roles_field_value) {
     $selected_roles = $values['field_forum_access_role_list'];
     if (count($selected_roles[LANGUAGE_NONE]) == 1) { // There will be one entry even if empty. Check value.
-      $selected_value = array_shift($selected_roles[LANGUAGE_NONE]);
+      $temp = $selected_roles[LANGUAGE_NONE];
+      $selected_value = array_shift($temp);
       if (empty($selected_value['value'])) {
         form_set_error('field_forum_access_role_list', 'At least one Role must be selected');
+      } else {
+        $roles_array = array();
+        foreach ($selected_roles[LANGUAGE_NONE] as $key => $value) {
+          $roles_array[] = $value['value'];
+        }
+        $has_role = array_intersect($roles_array, $users_roles);
+        if (empty($has_role)) {
+          form_set_error('field_forum_access_role_list', 'You must have at least your own role/title selected.');
+        }
       }
     }
   }
