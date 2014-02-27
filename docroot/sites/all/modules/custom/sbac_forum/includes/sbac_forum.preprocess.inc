@@ -53,7 +53,7 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
       $faci_link = l($full_name, $link, $link_ops);
       $facilitator_text .= 'Facilitator: '. $faci_link;
     } else{
-      $facilitator_text .= 'You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span>';
+      $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
     }
     $facilitator_text .= '</div>';
   }
