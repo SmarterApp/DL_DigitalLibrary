@@ -302,6 +302,48 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  /**
+   * ---------- Forum list EMPTY View.---------------
+   */
+  $items['views_view__forum_list_empty__block'] = array(
+    'template'             => 'views-view--forum-list-empty--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list_empty',
+    'arguments'            => array('view' => null,),
+    'original hook'        => 'views_view',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_forum_preprocess_views_view__forum_list_empty__block',
+    ),
+  );
+
+  $items['views_view_unformatted__forum_list_empty__block'] = array(
+    'template'             => 'views-view-unformatted--forum-list-empty--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list_empty',
+    'arguments'            => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
+    'original hook'        => 'views_view_unformatted',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_unformatted',
+      'sbac_forum_preprocess_views_view_unformatted__forum_list_empty__block',
+    ),
+  );
+
+  $items['views_view_fields__forum_list_empty__block'] = array(
+    'template'             => 'views-view-fields--forum-list-empty--block',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list_empty',
+    'arguments'            => array('view' => null, 'fields' => null, 'row' => null),
+    'original hook'        => 'views_view_fields',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_forum_preprocess_views_view_fields__forum_list_empty__block',
+    ),
+  );
+
 
   /**
    * ---------- Topic list View.---------------

@@ -60,7 +60,20 @@ function sbac_forum_main_landing_page() {
   $view->execute();
   $view->_post_execute();
   $forum_list_output = $view->preview();
-  $count_values[$active_display] = $view->total_rows;
+  $active_view_count = $view->total_rows;
+  $count_values[$active_display] = $active_view_count;
+
+  // Empty
+  if ((!$active_view_count) && (!empty($current_filters)) ) {
+      $view_e = views_get_view('forum_list_empty');
+      $view_e->set_display('block');
+      // sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
+      $view_e->pre_execute();
+      $view_e->execute();
+      $view_e->_post_execute();
+      $forum_list_empty_output = $view_e->preview();
+      $forum_list_output .= $forum_list_empty_output;
+  }
 
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   $subnav = drupal_get_form('sbac_forum_sub_nav_form', $count_values);
