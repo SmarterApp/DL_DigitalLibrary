@@ -211,11 +211,16 @@ function sbac_forum_view_forum_page($term) {
 
   $tabs = array();
   $tab_classes = array();
+  $current_topic_count = $forum_data->field_forum_topic_count->value();
+  $topic_count_text = ' (0)';
+  if ($current_topic_count) {
+    $topic_count_text = ' (' .$current_topic_count .')';
+  }
   $tabs[] = array(
     'vid' => 'forum_topic_list',
     'display' => 'block',
     'args' => $term->tid,
-    'title' => t('Topics ()'),
+    'title' => t('Topics'). $topic_count_text,
     'weight' => -99,
     'type' => 'view',
   );
