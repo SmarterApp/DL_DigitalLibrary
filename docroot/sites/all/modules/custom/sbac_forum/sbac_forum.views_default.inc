@@ -37,6 +37,12 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['pager']['options']['more_button_text'] = 'Load More Forums';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Relationship: Taxonomy term: Members (field_fc_forum_members) */
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['id'] = 'field_fc_forum_members_value';
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['table'] = 'field_data_field_fc_forum_members';
@@ -234,6 +240,15 @@ function sbac_forum_views_default_views() {
 
   /* Display: My Forums */
   $handler = $view->new_display('block', 'My Forums', 'block_1');
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<div class="my-forum-empty-text"><h2>You Are Not A Member Of Any Forums Yet<h2>
+<a href="forums-main-page/reset/my-forums/default">Find a forum </a>to participate in our vibrant community.</div>';
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Taxonomy term: Members (field_fc_forum_members) */
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['id'] = 'field_fc_forum_members_value';
