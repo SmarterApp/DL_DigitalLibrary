@@ -362,8 +362,11 @@ select {
     width: 17px;
 }
 
+/*Row list view*/
 .sbac-forum-main-container {
-	.view-forum-list {
+	
+	.view-forum-list,
+	.view-forum-list-empty {
 
 		.views-row {
 			-moz-box-sizing: border-box;
@@ -510,6 +513,7 @@ a.new-topic-link:hover {
 	    font-size: 15px;
 	    height: 34px;
 	    padding: 0 10px;
+			width: 220px;
 		}
   }
 
