@@ -144,9 +144,9 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
  * @param $context
  */
 function sbac_report_resource_statistics_batch($resources, $resource_filters, &$context) {
-  $limit = 200;
+  $limit = 100;
   $context['sandbox']['finished'] = 0;
-  ini_set('max_execution_time', 60);
+  ini_set('max_execution_time', 300);
 
   // First time through.
   if (!isset($context['sandbox']['file'])) {
@@ -166,35 +166,36 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
       }
     }
 
-    // Create the file and print the labels in the header row.
+    $directory = "private://resource_stats_csv/";
+    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $filename = 'Resource_Statistics_' . date('M_d_Y_g_i_s') . '.csv';
-    $file_path = file_directory_temp() . '/' . $filename;
-    $handle = fopen($file_path, 'w'); // Create the file.
+    $directory .= $filename;
+    $directory_real_path = drupal_realpath($directory);
+    $handle = fopen($directory_real_path, 'w'); // Create the file.
     fputcsv($handle, $column_titles); // Write the labels to the header row.
     fclose($handle);
 
     // Store info in sandbox during processing.
-    $context['sandbox']['file'] = $file_path;
+    $context['sandbox']['file'] = $directory_real_path;
 
     // Store some values in the results array for processing when finshed.
     $context['results']['filename'] = $filename;
-    $context['results']['file'] = $file_path;
+    $context['results']['file'] = $directory_real_path;
 
-    if (file_exists($file_path)) {
+    if (file_exists($directory_real_path)) {
       $context['sandbox']['progress'] = 0;
       $context['sandbox']['resources'] = $resources;
       $context['sandbox']['resource_filters'] = $resource_filters;
       $context['sandbox']['resources_total'] = count($context['sandbox']['resources']);
     }
   }
+  
+  // Open the file for writing ('a' puts pointer at end of file).
+  $handle = fopen($context['sandbox']['file'], 'a');
 
-  // Accounting.
   if (!isset($context['results']['count'])) {
     $context['results']['count'] = 0;
   }
-
-  // Open the file for writing ('a' puts pointer at end of file).
-  $handle = fopen($context['sandbox']['file'], 'a');
 
   // Loop until we hit the batch limit.
   for ($i = 0; $i < $limit; $i++) {
@@ -267,10 +268,8 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
 function sbac_report_resource_statistics_finished_batch($success, $results, $operations) {
   if ($success) {
     $directory = "private://resource_stats_csv/";
-    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $directory .= $results['filename'];
     $directory_real_path = drupal_realpath($directory);
-    copy($results['file'], $directory_real_path);
     $mime_type = file_get_mimetype($directory);
 
     global $user;

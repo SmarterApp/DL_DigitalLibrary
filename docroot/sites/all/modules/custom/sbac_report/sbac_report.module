@@ -964,6 +964,48 @@ SQL;
 }
 
 /**
+ * Gets all the reviews in the "completed" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+function sbac_report_get_current_completed_reviews($uid, $date_range) {
+  $completed = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    status = :status AND
+    completed = :completed AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // anything with status = 1 and completed = 1 is completed.
+  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+
+  return $completed;
+}
+
+/**
  *
  *
  * @param $reviews
