@@ -302,7 +302,26 @@ a.category-hide:focus {
 }
 
 
-// --------- Main button styling, Apply and Reset -------------------------
+// --------- Main select, button styling, Apply and Reset -------------------------
+
+select {
+  background: url("../images/icon-arrow-down.png") no-repeat scroll right 6px top 12px #F2F2F2;
+  border: 1px solid #006082;
+	background-color: #F2F2F2;
+  border-radius: 0;
+  color: $gray;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  margin: 0;
+  padding: 7px 3px 4px;
+  text-indent: 0.01px;
+  text-overflow: "";
+  vertical-align: top;
+  width: 180px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
 
 #sbac-forum-filter-button:before {
     background-image: url("../images/icon-buttonAccept.png");
@@ -478,25 +497,6 @@ a.new-topic-link:hover {
 
 		.form-item {
 			margin: 0;
-		}
-
-		select {
-		  background: url("../images/icon-arrow-down.png") no-repeat scroll right 6px top 12px #F2F2F2;
-	    border: 1px solid #006082;
-			background-color: #F2F2F2;
-	    border-radius: 0;
-	    color: $gray;
-	    cursor: pointer;
-	    font-size: 15px;
-	    line-height: 1;
-	    margin: 0;
-	    padding: 7px 3px 4px;
-	    text-indent: 0.01px;
-	    text-overflow: "";
-	    vertical-align: top;
-	    width: 180px;
-			-webkit-appearance: none;
-			-moz-appearance: none;
 		}
   }
 
@@ -1310,6 +1310,11 @@ a.new-topic-link:hover {
 	.view-forum-member-list {
 		padding-top: 10px;
 
+		select {
+			border: 1px solid #CECECE;
+			width: 200px;
+		}
+			
 		.views-row {
 			-moz-box-sizing: border-box;
 			@include border-radius(6px);
