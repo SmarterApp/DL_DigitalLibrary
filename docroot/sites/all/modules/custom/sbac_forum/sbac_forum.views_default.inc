@@ -307,6 +307,13 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['pager']['options']['more_button_text'] = 'Load More Members';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<div class="forum-members-empty-message">There are no members yet</div>';
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Relationship: Field collection item: Entity with the Members (field_fc_forum_members) */
   $handler->display->display_options['relationships']['field_fc_forum_members_taxonomy_term']['id'] = 'field_fc_forum_members_taxonomy_term';
   $handler->display->display_options['relationships']['field_fc_forum_members_taxonomy_term']['table'] = 'field_collection_item';
@@ -464,6 +471,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<div class="sbac-forum-filter-no-topics-wrapper">There are no discussion topics yet</div>';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
