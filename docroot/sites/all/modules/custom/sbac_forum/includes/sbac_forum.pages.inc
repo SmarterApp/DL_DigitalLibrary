@@ -9,6 +9,7 @@ function sbac_forum_main_landing_page() {
   $passive_filters = '';
   $count_values = array();
   $active_display = 'block';
+  $passive_display = 'block_1';
   $forum_list_output = 'Forum Content';
 
   $active_tab = sbac_forum__api__get_active_subnav();
@@ -49,6 +50,8 @@ function sbac_forum_main_landing_page() {
   $view_p->execute();
   $view_p->_post_execute();
   $count_values[$passive_display] = $view_p->total_rows;
+  $view_p->destroy();
+  dsm($count_values);
 
   // Active
   $view = views_get_view('forum_list');
