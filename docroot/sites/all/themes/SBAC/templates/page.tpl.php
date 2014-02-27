@@ -132,13 +132,15 @@ global $user;
   </div>
   <div><?php print render($page['sub-header']); ?></div>
 </div>
-<?php if($page['filter']): ?>
+
+<?php endif; ?>
+
+<?php if(!in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
 <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
       <?php print render($page['filter']); ?>
 </div>
 <?php endif; ?>
 
-<?php endif; ?>
 <?php if ($site_slogan): ?>
 <div class="row">
     <div class="large-12 columns hide-for-small">
