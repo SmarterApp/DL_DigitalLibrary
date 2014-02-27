@@ -117,7 +117,7 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
       $fn = $faci_data->field_first_name->value();
       $ln = $faci_data->field_last_name->value();
       $full_name = $fn . ' ' . $ln;
-      $link = 'forum-auth-pane/'. $faci->uid;
+      $link = 'forum-auth-pane/'. $first_faci_user_id;
       $link_ops = array('attributes' => array('class' => 'forum-list-auth-pane-item'));
       $faci_link = l($full_name, $link, $link_ops);
       $facilitator_text .= 'Facilitator: '. $faci_link;

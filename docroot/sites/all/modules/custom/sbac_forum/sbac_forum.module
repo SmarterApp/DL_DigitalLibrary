@@ -565,11 +565,15 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
     $tid = $form_state['term']->tid;
   }
 
+  $triggering_element = $form_state['triggering_element']['#value'];
   if (!empty($tid)) {
     $link = 'forums/term/' . $tid;
-    $message = 'Congratulations! You created a forum! '.$link.' to start a discussion';
-    drupal_get_messages();
-    drupal_set_message($message);
+    if (($triggering_element == 'Start Forum')) {
+      $url = l('Post a topic', '#');
+      $message = 'Congratulations! You created a forum! '.$url.' to start a discussion';
+      drupal_get_messages();
+      drupal_set_message($message);
+    }
   }
 
   $form_state['redirect'] = $link;
