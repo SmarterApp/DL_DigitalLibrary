@@ -239,11 +239,13 @@ function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
  * =============================================================================
  */
 
-function sbac_forum_sub_nav_form($form, &$form_state) {
+function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   $form = array();
 
   $all_forums_classes = '';
+  $all_forums_count_text = '';
   $my_forums_classes = '';
+  $my_forums_count_text = '';
   $active_tab = sbac_forum__api__get_active_subnav();
   switch($active_tab) {
     case SBAC_FORUM_SUBNAV_ALL:
@@ -261,18 +263,25 @@ function sbac_forum_sub_nav_form($form, &$form_state) {
       break;
   }
 
+  if (isset($count_values['block']) && !empty($count_values['block'])) {
+    $all_forums_count_text = '('.$count_values['block'].')';
+  }
   $form['all_forums'] = array(
     '#prefix'       => '<div class="forum-subnav-primary-wrapper">',
     '#type'         => 'submit',
-    '#value'        => t('All Forums'),
+    '#value'        => t('All Forums'). ' ' . $all_forums_count_text,
     '#attributes'   => array(
       'class'   => array($all_forums_classes),
     ),
     '#submit' => array('_sbac_forum_sub_nav__set_all__submit'),
   );
+
+  if (isset($count_values['block_1']) && !empty($count_values['block_1'])) {
+    $my_forums_count_text = '('.$count_values['block_1'].')';
+  }
   $form['my_forum'] = array(
     '#type'         => 'submit',
-    '#value'        => t('My Forums'),
+    '#value'        => t('My Forums'). ' '. $my_forums_count_text,
     '#attributes'   => array(
       'class' => array($my_forums_classes),
     ),

@@ -6,6 +6,8 @@ function sbac_forum_main_landing_page() {
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
   $current_filters = '';
+  $passive_filters = '';
+  $count_values = array();
   $active_display = 'block';
   $forum_list_output = 'Forum Content';
 
@@ -17,26 +19,38 @@ function sbac_forum_main_landing_page() {
   switch($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_ALL:
       $active_display = 'block';
+      $passive_display = 'block_1';
       if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
         $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
-
+      }
+      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
+        $passive_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
       }
       break;
     case SBAC_FORUM_SUBNAV_OWN:
       $active_display = 'block_1';
+      $passive_display = 'block';
       if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
         $current_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
+        $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
       }
       break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
       break;
   }
 
+  // Passive
+  $view_p = views_get_view('forum_list');
+  $view_p->set_display($passive_display);
+  sbac_forum_forum_listing_apply_filters($view_p, $passive_filters, $passive_display); // Set filters here.
+  $view_p->pre_execute();
+  $view_p->execute();
+  $view_p->_post_execute();
+  $count_values[$passive_display] = $view_p->total_rows;
 
-  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-  $subnav = drupal_get_form('sbac_forum_sub_nav_form');
-  $output .= drupal_render($subnav);
-
+  // Active
   $view = views_get_view('forum_list');
   $view->set_display($active_display);
   sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
@@ -44,7 +58,11 @@ function sbac_forum_main_landing_page() {
   $view->execute();
   $view->_post_execute();
   $forum_list_output = $view->preview();
+  $count_values[$active_display] = $view->total_rows;
 
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  $subnav = drupal_get_form('sbac_forum_sub_nav_form', $count_values);
+  $output .= drupal_render($subnav);
 
   $output .= '<div class="sbac-forum-main-container">';
   $output .= $forum_list_output;
