@@ -65,9 +65,16 @@ function sbac_forum_main_landing_page() {
 
   // Empty
   if ((!$active_view_count) && (!empty($current_filters)) ) {
+      if ($active_display == 'block') {
+        $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
+        $_COOKIE[SBAC_FORUM_FILTERS_CLOSED] = TRUE;
+      } else {
+        $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
+        $_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED] = TRUE;
+      }
       $view_e = views_get_view('forum_list_empty');
       $view_e->set_display('block');
-      // sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
+      sbac_forum_forum_listing_empty_apply_filters($view_e); // Set filters here.
       $view_e->pre_execute();
       $view_e->execute();
       $view_e->_post_execute();
@@ -93,10 +100,10 @@ function sbac_forum_main_landing_page_reset($item, $severity) {
       break;
     case 'my-forums':
       if ($severity == 'default') {
-        sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+        // sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
       } else {
         $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
-        sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+        // sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
       }
       break;
   }
