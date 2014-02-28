@@ -99,7 +99,7 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
 }
 
 
-function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE) {
+function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   if ($js) {
     ctools_include('ajax');
@@ -110,6 +110,7 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE) {
 
     $form_state = array(
       'ajax' => TRUE,
+      'forum_to_leave' => $term,
     );
 
     // Use ctools to generate ajax instructions for the browser to create
@@ -127,16 +128,13 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        sbac_forum__api__leave_forum($term);
         $url = 'forums';
         $output[] = ctools_ajax_command_redirect($url);
       }
     }
     print ajax_render($output);
     exit();
-
-    // Return the ajax instructions to the browser via ajax_render().
-    // print ajax_render($output);
-    // drupal_exit();
   } else {
     return drupal_get_form('sbac_forum_leave_forum_confirm');
   }

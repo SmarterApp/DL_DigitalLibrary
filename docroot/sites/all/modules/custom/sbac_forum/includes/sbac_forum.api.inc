@@ -253,7 +253,7 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
 
     } else { // leave forum
       $link_text = t('Leave this Forum');
-      $link_url = 'sbac-forum/nojs/forum-leave';
+      $link_url = 'sbac-forum/nojs/forum-leave/' . $term_id;
       $link_ops = array(
         'attributes' => array(
           'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-leave-forum-link',
@@ -273,4 +273,53 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
     $forum_control_link_list = theme('item_list', $list_args);
   }
   return $forum_control_link_list;
+}
+
+
+function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $account = NULL) {
+  if ($account == NULL) {
+    global $user;
+    $account = $user;
+  }
+
+  $forum_term_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_term);
+  if (isset($forum_term_wrapper->field_fc_forum_members)) {
+    $member_list = $forum_term_wrapper->field_fc_forum_members->value();
+    if (!empty($member_list)) {
+      foreach ($member_list as $key => $field_collection_item) {
+        $member_wrapper = entity_metadata_wrapper('field_collection_item', $field_collection_item);
+        if (isset($member_wrapper->field_fc_forum_member)) {
+          $current_member = $member_wrapper->field_fc_forum_member->value();
+          if ($current_member->uid == $account->uid) { // Matches current member
+            if ($operation == 'leave') {
+              // Delete item. Cleans up after itself.
+              $field_collection_item->delete();
+
+              // Set New Member count
+              $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
+              $new_member_count = $current_member_count - 1;
+              $forum_term_wrapper->field_forum_member_count->set($new_member_count);
+
+              $forum_term_wrapper->save(TRUE);
+              taxonomy_term_save($forum_term);
+
+              // invalidate memberlist cache when a new user joins.
+              $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME. $forum_term->tid;
+              if (cache_get($cid)) {
+                cache_clear_all($cid, 'cache');
+              }
+
+            } elseif ($operation == 'remove') {
+
+            }
+            break;
+          }
+        }
+
+      }
+    }
+  }
+
+  // dsm($member_list);
+
 }

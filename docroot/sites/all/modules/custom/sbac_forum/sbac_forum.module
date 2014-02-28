@@ -87,9 +87,9 @@ function sbac_forum_menu() {
 
   // ----- Modals -----
 
-  $items['sbac-forum/%ctools_js/forum-leave'] = array(
+  $items['sbac-forum/%ctools_js/forum-leave/%taxonomy_term'] = array(
     'page callback' => 'sbac_forum__ajax__leave_forum_modal_callback',
-    'page arguments' => array(1),
+    'page arguments' => array(1, 3),
     'access arguments' => array('access content'),
   );
 
