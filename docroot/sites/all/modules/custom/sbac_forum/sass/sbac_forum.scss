@@ -781,7 +781,7 @@ a.new-topic-link:hover {
 }
 
 
-// --------------------- Add Forum Form ------------------------------
+// --------------------- Add, Edit Forum Form ------------------------------
 .page-forums-forum-add,
 .page-taxonomy-term-edit,
 .page-admin-structure-taxonomy-forum-add {
@@ -979,6 +979,11 @@ a.new-topic-link:hover {
 	}
 }
 
+.page-taxonomy-term-edit {
+	ul.button-group {
+		display: none;
+	}
+}
 
 // --------------------- View Forum Form ------------------------------
 .page-forums-term {
