@@ -416,17 +416,17 @@ function sbac_forum_leave_forum_confirm($form, &$form_state) {
     If you leave this forum you will no longer be able to post topics or participate in group discussions.') . '</p>',
   );
 
+	$form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Leave Forum',
+    '#attributes' => array('class' => array('edit-leave-overlay', 'blue'))
+  );
+	
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
-    '#attributes' => array('id' => array('edit-cancel-leave-overlay'))
+    '#attributes' => array('class' => array('edit-cancel-leave-overlay', 'gray', 'cancel'))
   );
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Leave Forum',
-    '#attributes' => array('id' => array('edit-leave-overlay'))
-  );
-
+  
   return $form;
 }

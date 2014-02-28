@@ -429,7 +429,7 @@ a.new-topic-link {
 	font-size: 16px;
   font-weight: normal;
   height: 34px;
-	line-height: 34px;
+	line-height: 32px;
   min-width: 125px;
   padding: 0 25px 0  30px;
   text-align: center;
@@ -781,7 +781,7 @@ a.new-topic-link:hover {
 }
 
 
-// --------------------- Add Forum Form ------------------------------
+// --------------------- Add, Edit Forum Form ------------------------------
 .page-forums-forum-add,
 .page-taxonomy-term-edit,
 .page-admin-structure-taxonomy-forum-add {
@@ -979,6 +979,11 @@ a.new-topic-link:hover {
 	}
 }
 
+.page-taxonomy-term-edit {
+	ul.button-group {
+		display: none;
+	}
+}
 
 // --------------------- View Forum Form ------------------------------
 .page-forums-term {
@@ -1026,6 +1031,7 @@ a.new-topic-link:hover {
 					a {
 						color: #0583AC;
 						font-size: 15px;
+						display: blo;
 						
 						&:hover {
 							text-decoration: underline;
@@ -1534,6 +1540,47 @@ a.new-topic-link:hover {
 		  opacity: 1;
 		}
 		
+	}
+}
+
+
+// --------------------- Model style ------------------------------
+#sbac-forum-leave-forum-confirm {
+	
+	#modal-title {
+		padding: 0;
+	}
+	
+	h2 {
+	  padding-bottom: 5px;
+	  color: #000000;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    text-transform: capitalize;
+	}
+	button {
+		float: right;
+		margin-left: 30px;
+	}
+	
+	#edit-submit--3 {
+		background-color: #0084B0;
+	}
+	
+	#edit-cancel {
+		background-color: #6E7379;
+	  border: 1px solid #4D5457;
+		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+		padding-left: 40px;
+	}	
+	
+	button.gray.cancel:before {
+	 content: url("../images/icon-buttonCancel.png");
+   left: 15px;
+   position: absolute;
+   top: 4px;
 	}
 }
 
