@@ -547,7 +547,7 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
         $form['actions']['submit']['#suffix'] = '</div>';
       }
 
-
+      $form['#validate'][] = '_sbac_forum__forum_form__title_profanity_validate';
       $form['#validate'][] = '_sbac_forum__forum_form__access_field_validate';
 
       // Redirect on successful completion.
@@ -586,6 +586,21 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
   }
 
   $form_state['redirect'] = $link;
+}
+
+/**
+ * Validation function for the title
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_forum__forum_form__title_profanity_validate(&$form, &$form_state) {
+  $title = $form_state['values']['name'];
+  $bad_words = profanity_validate_text($title);
+  if ($bad_words) {
+    $error = 'Please remove any inappropriate language from Forum Title.';
+    form_set_error('name', $error);
+  }
 }
 
 function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
@@ -651,7 +666,6 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
       }
     }
   }
-
 }
 
 /**
