@@ -308,11 +308,23 @@ function sbac_forum_view_forum_page($term) {
 
 
   // Controls.
-  ctools_include('modal');
-  ctools_modal_add_js();
   $forum_control_links = array();
   $forum_control_link_list = sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term->tid);
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.view_page.js");
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  $js_settings = array(
+    'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 560,
+        'height' => 220,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting'); // Styles the modal.
 
 
   // Add all the markup to variable for tpl.
