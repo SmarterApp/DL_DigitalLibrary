@@ -4,7 +4,7 @@
  * Ajax callback for sbac_forum_join_button_form in includes/sbac_forum.forms.inc
  */
 function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
-  // ctools_include('ajax');
+  ctools_include('ajax');
   $commands = array();
   $values = $form_state['values'];
 
@@ -85,13 +85,17 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   sbac_forum__api__check_user_is_forum_member($forum_id, $target_user_id);
 
   // Ajax/js fancy behaviour.
-  $message_selector = '.sbac-forum-confirm-message-region';
   $message = 'Welcome to ' . $forum_name;
-  $commands[] = ajax_command_html($message_selector, $message);
+  // $message_selector = '.sbac-forum-confirm-message-region';
+  // $commands[] = ajax_command_html($message_selector, $message);
+  $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = $message;
 
   $button_selector = '#join-forum-form-wrapper';
   $link_text = sbac_forum__api__create_start_new_topic_link();
   $commands[] = ajax_command_replace($button_selector, $link_text);
+
+  // Partial implementation for not needing to refresh. Easier to call page refresh to reload tab contents.
+  $commands[] = ctools_ajax_command_reload();
 
   $page = array('#type' => 'ajax', '#commands' => $commands);
   ajax_deliver($page);
@@ -99,7 +103,7 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
 }
 
 
-function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE) {
+function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   if ($js) {
     ctools_include('ajax');
@@ -110,6 +114,7 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE) {
 
     $form_state = array(
       'ajax' => TRUE,
+      'forum_to_leave' => $term,
     );
 
     // Use ctools to generate ajax instructions for the browser to create
@@ -127,16 +132,13 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        sbac_forum__api__leave_forum($term);
         $url = 'forums';
         $output[] = ctools_ajax_command_redirect($url);
       }
     }
     print ajax_render($output);
     exit();
-
-    // Return the ajax instructions to the browser via ajax_render().
-    // print ajax_render($output);
-    // drupal_exit();
   } else {
     return drupal_get_form('sbac_forum_leave_forum_confirm');
   }
