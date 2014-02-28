@@ -66,7 +66,7 @@
 
     <?php if (!empty($fields['students'])):?>
       <div class="vp-students-field">
-        <div class="title-tags"><?php print t('Intended Students'); ?></div>
+        <div class="title-tags"><?php print t('Intended Student Populations'); ?></div>
         <?php print $fields['students']; ?>
       </div>
     <?php endif; ?>
