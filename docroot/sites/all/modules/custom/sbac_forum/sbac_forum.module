@@ -85,6 +85,14 @@ function sbac_forum_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  // ----- Modals -----
+
+  $items['sbac-forum/%ctools_js/forum-leave'] = array(
+    'page callback' => 'sbac_forum__ajax__leave_forum_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 

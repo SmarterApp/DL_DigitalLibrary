@@ -308,6 +308,8 @@ function sbac_forum_view_forum_page($term) {
 
 
   // Controls.
+  ctools_include('modal');
+  ctools_modal_add_js();
   $forum_control_links = array();
   $forum_control_link_list = sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term->tid);
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.view_page.js");

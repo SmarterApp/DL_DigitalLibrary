@@ -97,3 +97,47 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   ajax_deliver($page);
   exit;
 }
+
+
+function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE) {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+
+    $form_state = array(
+      'ajax' => TRUE,
+    );
+
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('sbac_forum_leave_forum_confirm', $form_state);
+
+    // If the form has been submitted, there may be additional instructions
+    // such as dismissing the modal popup.
+    // if (!empty($form_state['ajax_commands'])) {
+    //   $output = $form_state['ajax_commands'];
+    // }
+
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        $url = 'forums';
+        $output[] = ctools_ajax_command_redirect($url);
+      }
+    }
+    print ajax_render($output);
+    exit();
+
+    // Return the ajax instructions to the browser via ajax_render().
+    // print ajax_render($output);
+    // drupal_exit();
+  } else {
+    return drupal_get_form('sbac_forum_leave_forum_confirm');
+  }
+}

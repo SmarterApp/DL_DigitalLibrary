@@ -253,10 +253,10 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
 
     } else { // leave forum
       $link_text = t('Leave this Forum');
-      $link_url = '#TODO';
+      $link_url = 'sbac-forum/nojs/forum-leave';
       $link_ops = array(
         'attributes' => array(
-          'class' => 'vp-control-link',
+          'class' => 'vp-control-link ctools-use-modal',
         ),
       );
       $link = l($link_text, $link_url, $link_ops);
