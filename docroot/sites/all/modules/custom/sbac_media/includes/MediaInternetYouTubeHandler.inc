@@ -25,10 +25,12 @@ class MediaInternetYouTubeHandler extends MediaInternetBaseHandler {
     $url = 'http://www.youtube.com/oembed?url=http%3A//youtube.com/watch%3Fv%3D'. $id;
     $response = drupal_http_request($url, array('method' => 'HEAD'));
     if ($response->code == 401) {
-      throw new MediaInternetValidationException("Embedding has been disabled for this video.");
+      // throw new MediaInternetValidationException("Embedding has been disabled for this video.");
+      return FALSE;
     }
     elseif ($response->code != 200) {
-      throw new MediaInternetValidationException("The YouTube video ID is invalid or the video was deleted.");
+      // throw new MediaInternetValidationException("The YouTube video ID is invalid or the video was deleted.");
+      return FALSE;
     }
     return TRUE;
   }
@@ -46,7 +48,7 @@ class MediaInternetYouTubeHandler extends MediaInternetBaseHandler {
       preg_match($pattern, $embedCode, $matches);
       // @TODO: Parse is called often. Refactor so that valid ID is checked
       // when a video is added, but not every time the embedCode is parsed.
-      if (isset($matches[1]) && self::validId($matches[1])) {
+      if (isset($matches[1]) && self::validId($matches[1]) == TRUE) {
         return file_stream_wrapper_uri_normalize('youtube://v/' . $matches[1]);
       }
     }
@@ -138,8 +140,8 @@ class MediaInternetYouTubeHandler extends MediaInternetBaseHandler {
       return drupal_json_decode($response->data);
     }
     else {
-      throw new Exception("Error Processing Request. (Error: {$response->code}, {$response->error})");
-      return;
+      // throw new Exception("Error Processing Request. (Error: {$response->code}, {$response->error})");
+      return FALSE;
     }
   }
 }
