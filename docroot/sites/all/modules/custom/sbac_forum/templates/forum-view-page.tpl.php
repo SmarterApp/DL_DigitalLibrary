@@ -9,6 +9,11 @@
   <?php endif;?>
 </div>
 <div class="sbac-forum-confirm-message-region">
+  <?php if (!empty($fields['welcome_message'])) : ?>
+      <div style="display:block">
+        <?php print $fields['welcome_message']; ?>
+      </div>
+  <?php endif;?>
 </div>
 
 <div class="sbac-forum-vp-top clearfix">

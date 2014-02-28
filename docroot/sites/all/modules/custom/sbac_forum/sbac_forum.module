@@ -21,6 +21,7 @@ define('SBAC_FORUM_FILTERS_CLOSED', 'sbac-forum-filters-closed');
 define('SBAC_FORUM_MY_FORUM_FILTERS_CLOSED', 'sbac-forum-my-forum-filters-closed');
 
 define('SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME', 'forum-member-list-');
+define('SBAC_FORUM_SHOW_JOIN_MESSAGE', 'sbac-forum-new-join');
 
 /**
  * =============================================================================

@@ -4,7 +4,7 @@
  * Ajax callback for sbac_forum_join_button_form in includes/sbac_forum.forms.inc
  */
 function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
-  // ctools_include('ajax');
+  ctools_include('ajax');
   $commands = array();
   $values = $form_state['values'];
 
@@ -85,13 +85,17 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   sbac_forum__api__check_user_is_forum_member($forum_id, $target_user_id);
 
   // Ajax/js fancy behaviour.
-  $message_selector = '.sbac-forum-confirm-message-region';
   $message = 'Welcome to ' . $forum_name;
-  $commands[] = ajax_command_html($message_selector, $message);
+  // $message_selector = '.sbac-forum-confirm-message-region';
+  // $commands[] = ajax_command_html($message_selector, $message);
+  $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = $message;
 
   $button_selector = '#join-forum-form-wrapper';
   $link_text = sbac_forum__api__create_start_new_topic_link();
   $commands[] = ajax_command_replace($button_selector, $link_text);
+
+  // Partial implementation for not needing to refresh. Easier to call page refresh to reload tab contents.
+  $commands[] = ctools_ajax_command_reload();
 
   $page = array('#type' => 'ajax', '#commands' => $commands);
   ajax_deliver($page);
