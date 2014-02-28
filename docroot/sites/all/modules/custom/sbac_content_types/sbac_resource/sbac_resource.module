@@ -750,9 +750,16 @@ function _sbac_resource_preview_content(&$vars) {
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'youtube') {
-      $url .= '?rel=0'; // Disable related videos.
-      $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen></iframe></div>';
-      $viewer['viewer_class'] = '';
+      if (strpos($url, 'youtube') !== FALSE) {
+        $url .= '?rel=0'; // Disable related videos.
+        $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen></iframe></div>';
+        $viewer['viewer_class'] = '';
+      }
+      else {
+        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+        $viewer['viewer'] = theme('image', array('path' => $url));
+        $viewer['viewer_class'] = '';
+      }
     }
     else {
       $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';

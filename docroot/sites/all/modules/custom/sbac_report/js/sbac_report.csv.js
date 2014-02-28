@@ -18,8 +18,7 @@
       ], function (i, v) {
         // Add a title attribute to the delete tags on the User Activity and Detailed Resource tabs.
         Drupal.behaviors.sbac_report_csv.addDeleteButtonTitles(v);
-        $(v + ' ul.chzn-choices').bind('DOMSubtreeModified', function (e) {
-          alert('hi');
+        $(v + ' ul.chzn-choices').bind("propertychange", function (e) {
           Drupal.behaviors.sbac_report_csv.addDeleteButtonTitles(v);
         });
 
