@@ -313,14 +313,15 @@ select {
   cursor: pointer;
   font-size: 15px;
   line-height: 1;
-  margin: 0;
-  padding: 7px 3px 4px;
+  margin: 0 !important;
+  padding: 7px 3px 4px 7px;
   text-indent: 0.01px;
   text-overflow: "";
   vertical-align: top;
-  width: 180px;
+  width: 200px !important;
 	-webkit-appearance: none;
 	-moz-appearance: none;
+	height: 34px;
 }
 
 #sbac-forum-filter-button:before {
@@ -361,8 +362,11 @@ select {
     width: 17px;
 }
 
+/*Row list view*/
 .sbac-forum-main-container {
-	.view-forum-list {
+	
+	.view-forum-list,
+	.view-forum-list-empty {
 
 		.views-row {
 			-moz-box-sizing: border-box;
@@ -509,6 +513,7 @@ a.new-topic-link:hover {
 	    font-size: 15px;
 	    height: 34px;
 	    padding: 0 10px;
+			width: 220px;
 		}
   }
 
@@ -531,6 +536,7 @@ a.new-topic-link:hover {
 		}
 		
 		.sbac-forum-main-container {
+			
 			.views-field {
 				font-size: 13px;
 				line-height: 20px;
@@ -583,6 +589,11 @@ a.new-topic-link:hover {
 				
 				.facilitator:before {
 					border-left: 8px solid #8A1538;
+				}
+				
+				.facilitator span {
+					color:#8A1538;
+					font-weight: bold;
 				}
 				
 				.sbac-forum-is-member-highlight {
@@ -693,6 +704,54 @@ a.new-topic-link:hover {
 						@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 					}
 				}
+			}
+		}
+	}
+	
+	/*No results page*/
+	.sbac-forum-filter-no-results-wrapper, 
+	.my-forum-empty-text {
+		background: none repeat scroll 0 0 #FFFFFF;
+	  border-radius: 15px;
+    box-shadow: 0 0 10px 0 rgba(4, 56, 78, 0.75);
+    display: block;
+    margin: 20px auto;
+    min-height: 60px;
+    padding: 40px 50px;
+    position: relative;
+
+		h2 {
+			color: #000000;
+		  display: block;
+	    font-size: 18px;
+	    font-weight: bold;
+	    margin: 0;
+	    padding: 0;
+	    text-transform: capitalize;
+		}
+		
+		p {
+			font-size: 16px;
+		  line-height: 1.6;
+	    margin: 0;
+	    max-width: 560px;
+			padding-top: 9px;
+		}
+
+		.button {
+			margin: 12px 0 0;
+		}
+	}
+	
+	.my-forum-empty-text {
+		a {
+			color: #0583AC;
+			text-decoration: none;
+			border-bottom: 1px #0583AC solid ;
+			
+			&:hover {
+				color: #8A1538;
+				border-bottom: 1px #8A1538 solid ;
 			}
 		}
 	}
@@ -1461,3 +1520,4 @@ a.new-topic-link:hover {
 		background-color: transparent;
   }
 }
+

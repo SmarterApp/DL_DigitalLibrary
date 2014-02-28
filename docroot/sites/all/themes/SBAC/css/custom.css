@@ -10630,3 +10630,11 @@ a.tabledrag-handle .handle {
 .row {
   max-width: 960px;
 }
+
+/* line 3032, ../sass/custom.scss */
+.page-admin-structure #edit-cancel {
+  padding: 7px 18px;
+  height: 34px;
+  line-height: 34px;
+  margin-left: 10px;
+}
