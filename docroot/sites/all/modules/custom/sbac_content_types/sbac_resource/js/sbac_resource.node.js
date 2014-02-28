@@ -94,11 +94,11 @@
               img.attr('height', 400);
               img.attr('width', 850);
               resource.empty().append(img);
-        }
+              }
             else {
-          resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>');
-          resource.removeClass('google-doc');
-        }        
+              resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>');
+              resource.removeClass('google-doc');
+            }
             break;
           default:
           var img = $('<img>');
