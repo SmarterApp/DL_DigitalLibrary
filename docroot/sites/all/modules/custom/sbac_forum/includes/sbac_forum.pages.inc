@@ -326,9 +326,15 @@ function sbac_forum_view_forum_page($term) {
   );
   drupal_add_js($js_settings, 'setting'); // Styles the modal.
 
+  // Check if user had just joined. Show welcome message and then unset the variable.
+  if ($_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE]) {
+    $welcome_message = $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE];
+    $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = '';
+  }
 
   // Add all the markup to variable for tpl.
   $fields = array(
+    'welcome_message'      => $welcome_message,
     'controls_link_list'   => $forum_control_link_list,
     'description'          => $description_text ,
     'facilitators'         => $facilitator_text,
