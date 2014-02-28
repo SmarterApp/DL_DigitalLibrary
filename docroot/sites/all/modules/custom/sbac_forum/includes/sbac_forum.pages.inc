@@ -65,9 +65,16 @@ function sbac_forum_main_landing_page() {
 
   // Empty
   if ((!$active_view_count) && (!empty($current_filters)) ) {
+      if ($active_display == 'block') {
+        $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
+        $_COOKIE[SBAC_FORUM_FILTERS_CLOSED] = TRUE;
+      } else {
+        $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
+        $_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED] = TRUE;
+      }
       $view_e = views_get_view('forum_list_empty');
       $view_e->set_display('block');
-      // sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
+      sbac_forum_forum_listing_empty_apply_filters($view_e); // Set filters here.
       $view_e->pre_execute();
       $view_e->execute();
       $view_e->_post_execute();
@@ -93,10 +100,10 @@ function sbac_forum_main_landing_page_reset($item, $severity) {
       break;
     case 'my-forums':
       if ($severity == 'default') {
-        sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+        // sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
       } else {
         $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
-        sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+        // sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
       }
       break;
   }
@@ -304,6 +311,20 @@ function sbac_forum_view_forum_page($term) {
   $forum_control_links = array();
   $forum_control_link_list = sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term->tid);
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.view_page.js");
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  $js_settings = array(
+    'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 560,
+        'height' => 220,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting'); // Styles the modal.
 
 
   // Add all the markup to variable for tpl.

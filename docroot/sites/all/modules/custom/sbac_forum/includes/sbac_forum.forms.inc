@@ -402,3 +402,36 @@ function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
   return $form;
 }
 
+/**
+ * =============================================================================
+ *    Forum Leave Button Form
+ * =============================================================================
+ */
+
+function sbac_forum_leave_forum_confirm($form, &$form_state) {
+  $form = array();
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => arg(0),
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<h2>'.t('You are about to leave this forum').'</h2><p>' . t('
+    If you leave this forum you will no longer be able to post topics or participate in group discussions.') . '</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-leave-overlay'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Leave Forum',
+    '#attributes' => array('id' => array('edit-leave-overlay'))
+  );
+
+  return $form;
+}

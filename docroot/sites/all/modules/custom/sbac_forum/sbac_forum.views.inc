@@ -62,13 +62,118 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
     $empty_text_link = l($link_text, $empty_text_url, $link_ops);
     $empty_text_content = '<div class="sbac-forum-filter-no-results-wrapper">';
     $empty_text_content .= '<h2>Your search returned no results</h2>';
-    $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below';
+    $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below ';
     $empty_text_content .= 'that have been identified for you by using the subject(s) and grade(s) in your profile</p>';
     $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">'.$empty_text_link.'</div>';
     $empty_text_content .= '</div>';
     $empty_text_class['area']['content'] = $empty_text_content;
     $view->display_handler->set_option('empty', $empty_text_class);
   }
+}
+
+
+function sbac_forum_forum_listing_empty_apply_filters(&$view, $account = NULL) {
+ if (is_null($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  // reload account
+  $account = user_load($account->uid);
+
+  $view_filters = $view->display_handler->get_option('filters');
+
+  $get_tid = function($element) {
+    return $element['tid'];
+  };
+
+  foreach ($view_filters as &$field) {
+    $field['group'] = 1;
+  }
+
+
+  $subject_all_term_obj = taxonomy_get_term_by_name('Not Subject Specific', 'subject');
+  if (!empty($subject_all_term_obj) ){
+    $subject_all_term = array_shift($subject_all_term_obj);
+    $subject_tid_all = $subject_all_term->tid;
+  } else {
+    $subject_tid_all = 153; // fallback to hardcoded??
+  }
+
+
+  $grade_all_term_obj = taxonomy_get_term_by_name('Not Grade Specific', 'grades');
+  if (!empty($grade_all_term_obj) ){
+    $grade_all_term = array_shift($grade_all_term_obj);
+    $grade_tid_all = $grade_all_term->tid;
+  } else {
+    $grade_tid_all = 122; // fallback to hardcoded??
+  }
+
+  // subject
+  if (!isset($view_filters['field_subject_tid']['value'])) {
+    $view_filters['field_subject_tid']['value'] = array();
+  }
+
+  $view_filters['field_subject_tid']['operator'] = 'or';
+  $view_filters['field_subject_tid']['group'] = 2;
+
+  if ($subjects = field_get_items('user', $account, 'field_subject_s_')) {
+    $subjects = array_map($get_tid, $subjects);
+    foreach ($subjects as $key => $value) {
+      if ($value == NULL) {
+        unset($subjects[$key]);
+      }
+    }
+
+    // not subject specific - remove filters
+    if (in_array($subject_tid_all, $subjects)) {
+      unset($view_filters['field_subject_tid']);
+    }
+    else {
+      $view_filters['field_subject_tid']['value'][] = $subject_tid_all;
+      $view_filters['field_subject_tid']['value'] = array_merge($view_filters['field_subject_tid']['value'], $subjects);
+    }
+  }
+
+  // grade
+  if (!isset($view_filters['field_grades_tid']['value'])) {
+    $view_filters['field_grades_tid']['value'] = array();
+  }
+
+  $view_filters['field_grades_tid']['operator'] = 'or';
+  $view_filters['field_grades_tid']['group'] = 2;
+
+  if ($grades = field_get_items('user', $account, 'field_grade_level_s_')) {
+    $grades = array_map($get_tid, $grades);
+    foreach ($grades as $key => $value) {
+      if ($value == NULL) {
+        unset($grades[$key]);
+      }
+    }
+
+    // not grade specific - remove filters
+    if (in_array($grade_tid_all, $grades)) {
+      unset($view_filters['field_grades_tid']);
+    }
+    else {
+      $view_filters['field_grades_tid']['value'][] = $grade_tid_all;
+      $view_filters['field_grades_tid']['value'] = array_merge($view_filters['field_grades_tid']['value'], $grades);
+    }
+  }
+
+  $groups = array(
+    'operator' => 'AND',
+    'groups' => array(
+      1 => 'AND',
+    ),
+  );
+
+  if (isset($view_filters['field_subject_tid']) || isset($view_filters['field_grades_tid'])) {
+    $groups['groups'][2] = 'AND';
+  }
+
+  $view->display_handler->set_option('filter_groups', $groups);
+  $view->display_handler->set_option('filters', $view_filters);
 }
 
 
