@@ -566,74 +566,29 @@ if (file_exists('/var/www/site-php')) {
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':
-      // Alfresco / CMIS repo.
-      $conf['cmis_repositories'] = array(
-        'default' => array(
-          'user' => 'admin',
-          'password' => 'm3rcury',
-          'update_url' => 'http://ec2-54-221-242-182.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
-          'zip_url' => 'http://ec2-54-221-242-182.compute-1.amazonaws.com:8080/alfresco/service/slingshot/zipdown',
-          'login_url' => 'http://ec2-54-221-242-182.compute-1.amazonaws.com:8080/alfresco/service/api/login',
-          'get_url' => 'http://ec2-54-221-242-182.compute-1.amazonaws.com:8080/alfresco/service/simflofy/DOCUMENT_ID/googleurl.json',
-          'label' => 'local cmis repo',
-          'url' => 'http://ec2-54-221-242-182.compute-1.amazonaws.com:8080/alfresco/s/cmis',
-          'transport' => 'cmis_headerswing',
-          'headerswing_headers' => array(
-            'HTTP_HOST' => 'FRONTEND_HOST',
-            'HTTP_HOST' => 'FRONTEND_HOST_AGAIN',
-            'HTTP_USER' => 'FRONTEND_USER',
-            'PHP_AUTH_USER' => 'FRONTEND_USER',
-            'PHP_AUTH_DIGEST' => 'FRONTEND_AUTH'
-          )
-        )
-      );
-    break;
+      $conf['file_private_path'] = '/mnt/files/sbacdev/files-private';
+      // do something on dev
+      break;
+
     case 'test':
-      // Alfresco / CMIS repo.
-      $conf['cmis_repositories'] = array(
-        'default' => array(
-          'user' => 'admin',
-          'password' => 'm3rcury',
-          'update_url' => 'http://ec2-184-72-219-99.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
-          'zip_url' => 'http://ec2-184-72-219-99.compute-1.amazonaws.com:8080/alfresco/service/slingshot/zipdown',
-          'login_url' => 'http://ec2-184-72-219-99.compute-1.amazonaws.com:8080/alfresco/service/api/login',
-          'get_url' => 'http://ec2-184-72-219-99.compute-1.amazonaws.com:8080/alfresco/service/simflofy/DOCUMENT_ID/googleurl.json',
-          'label' => 'local cmis repo',
-          'url' => 'http://ec2-184-72-219-99.compute-1.amazonaws.com:8080/alfresco/s/cmis',
-          'transport' => 'cmis_headerswing',
-          'headerswing_headers' => array(
-            'HTTP_HOST' => 'FRONTEND_HOST',
-            'HTTP_HOST' => 'FRONTEND_HOST_AGAIN',
-            'HTTP_USER' => 'FRONTEND_USER',
-            'PHP_AUTH_USER' => 'FRONTEND_USER',
-            'PHP_AUTH_DIGEST' => 'FRONTEND_AUTH'
-          )
-        )
-      );
-    break;
+      // do something on staging
+      $conf['file_private_path'] = '/mnt/files/sbacstg/files-private';
+      break;
+
+    case 'stage2':
+      // do something on staging
+      $conf['file_private_path'] = '/mnt/files/sbacstg2/files-private';
+      break;
+
+    case 'stage3':
+      // do something on staging
+      $conf['file_private_path'] = '/mnt/files/sbacstg3/files-private';
+      break;
+
     case 'prod':
-      // Alfresco / CMIS repo.
-      $conf['cmis_repositories'] = array(
-        'default' => array(
-          'user' => 'admin',
-          'password' => 'm3rcury',
-          'update_url' => 'http://ec2-184-73-218-88.compute-1.amazonaws.com:8080/alfresco/service/sbac/updateid',
-          'zip_url' => 'http://ec2-184-73-218-88.compute-1.amazonaws.com:8080/alfresco/service/slingshot/zipdown',
-          'login_url' => 'http://ec2-184-73-218-88.compute-1.amazonaws.com:8080/alfresco/service/api/login',
-          'get_url' => 'http://ec2-184-73-218-88.compute-1.amazonaws.com:8080/alfresco/service/simflofy/DOCUMENT_ID/googleurl.json',
-          'label' => 'local cmis repo',
-          'url' => 'http://ec2-184-73-218-88.compute-1.amazonaws.com:8080/alfresco/s/cmis',
-          'transport' => 'cmis_headerswing',
-          'headerswing_headers' => array(
-            'HTTP_HOST' => 'FRONTEND_HOST',
-            'HTTP_HOST' => 'FRONTEND_HOST_AGAIN',
-            'HTTP_USER' => 'FRONTEND_USER',
-            'PHP_AUTH_USER' => 'FRONTEND_USER',
-            'PHP_AUTH_DIGEST' => 'FRONTEND_AUTH'
-          )
-        )
-      );
-    break;
+      // do something on prod
+      $conf['file_private_path'] = '/mnt/files/sbac/files-private';
+      break;
   }
 }
 
@@ -648,6 +603,7 @@ else {
 error_reporting(E_ERROR);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
+ini_set('memory_limit', '196M');
 
 /**
  * Fast 404 settings:
