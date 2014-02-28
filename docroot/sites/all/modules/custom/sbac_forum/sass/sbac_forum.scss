@@ -159,6 +159,29 @@ $gray: #464B54;
 
 // ------- Popup container for taxonomy terms aka filter choices. --------
 
+.block-sbac-forum {
+	position: relative;
+	
+	> h2 {
+		margin-left: 15px;
+		position: absolute;
+		top: 10px;
+		left: 0;
+		color: #04384E;
+	  font-family: Verdana,Geneva,sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+		font-weight: normal;
+		top: -35px;
+	  z-index: 999;
+	}
+	
+	.sbac-forum-category-forum-form {
+		position: relative;
+	}
+}
+
 .categories-filter-choices {
   position: absolute;
   top: 100px;
@@ -314,7 +337,7 @@ select {
   font-size: 15px;
   line-height: 1;
   margin: 0 !important;
-  padding: 7px 3px 4px 7px;
+  padding: 5px 3px 6px 7px;
   text-indent: 0.01px;
   text-overflow: "";
   vertical-align: top;
@@ -513,7 +536,7 @@ a.new-topic-link:hover {
 	    font-size: 15px;
 	    height: 34px;
 	    padding: 0 10px;
-			width: 220px;
+			width: 210px;
 		}
   }
 
@@ -1400,6 +1423,7 @@ a.new-topic-link:hover {
 			.views-field-nothing {
 				color: #0583AC;
 				font-size: 13px;
+				line-height: 1.3;
 				font-weight: bold;
 				margin: 0 0 6px;
 			}
@@ -1411,6 +1435,8 @@ a.new-topic-link:hover {
 		    line-height: 1;
 		    margin: 0 0 6px;
 		    padding: 0;
+				width: 153px;
+				float: right;
 
 				.views-label, .field-content {
 					display: inline-block;
@@ -1425,13 +1451,12 @@ a.new-topic-link:hover {
 		
 		.member-controls-wrapper {
 			display: block;
-			float: right;
-			left: 68px;
 	    height: 80px;
-	    margin-top: -120px;
-	    padding-top: 0px;
-	    position: relative;
-	    right: 0;
+	    margin-top: 0;
+	    padding-top: 0;
+	    position: absolute;
+	    right: -55px;
+			top: -47px;
 	    width: 150px;
 	    z-index: 999;
 	
