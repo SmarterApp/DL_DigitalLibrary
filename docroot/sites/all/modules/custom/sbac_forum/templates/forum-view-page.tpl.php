@@ -1,10 +1,10 @@
 <div class="sbac-forum-vp-controls-wrapper">
-  <?php if (!empty($fields['controls_link_list']) ): ?>
+  <?php if (!empty($fields['controls_link_list']['markup']) ): ?>
     <div class="sbac-forum-vp-controls">
       <?php print t('Forum Settings');?>
     </div>
-    <div class="sbac-forum-vp-controls-popup">
-      <?php print $fields['controls_link_list']; ?>
+    <div class="sbac-forum-vp-controls-popup <?php print $fields['controls_link_list']['classes']; ?>">
+      <?php print $fields['controls_link_list']['markup']; ?>
     </div>
   <?php endif;?>
 </div>

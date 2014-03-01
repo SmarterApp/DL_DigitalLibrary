@@ -69,7 +69,7 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   taxonomy_term_save($forum_term);
 
   $forum_controls = sbac_forum__api__create_forum_controls(TRUE, $is_facilitator, $forum_id);
-  if (!empty($forum_controls)) {
+  if (!empty($forum_controls['markup'])) {
     $controls_selector = '.sbac-forum-vp-controls-wrapper';
     $forum_controls_text = '<div class="sbac-forum-vp-controls"> Forum Settings</div>';
     $forum_controls_text .= '<div class="sbac-forum-vp-controls-popup">';

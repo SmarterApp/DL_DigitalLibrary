@@ -232,6 +232,7 @@ function sbac_forum__api__create_start_new_topic_link() {
 function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term_id) {
   global $user;
   $forum_control_link_list = '';
+  $extra_classes = '';
   if ($is_member === TRUE) {
     if (($is_facilitator) ||
         ($user->uid == 1) ) { // Edit and delete
@@ -262,6 +263,7 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
       );
       $link = l($link_text, $link_url, $link_ops);
       $forum_control_links[] = $link;
+      $extra_classes = 'hover-over-large-popup';
     }
   }
   if (!empty($forum_control_links)) {
@@ -272,7 +274,12 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
     );
     $forum_control_link_list = theme('item_list', $list_args);
   }
-  return $forum_control_link_list;
+
+  $output = array(
+    'markup' => $forum_control_link_list,
+    'classes' => $extra_classes,
+  );
+  return $output;
 }
 
 
