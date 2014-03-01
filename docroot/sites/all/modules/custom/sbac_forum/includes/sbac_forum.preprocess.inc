@@ -211,16 +211,35 @@ function sbac_forum_preprocess_views_view_fields__forum_member_list(&$vars) {
       if ($row_uid != $current_user->uid) {
         $args = $vars['view']->args;
         $term_id = array_shift($args);
+        $link_dom_id = 'forum-remove-member-link-'. $term_id . '-' . $row_uid;
         $link_ops = array(
           'attributes' => array(
-            'class' => 'members-control-link',
+            'class' => 'members-control-link ctools-use-modal ctools-modal-'.$link_dom_id,
+            'id'    => $link_dom_id,
           ),
         );
 
         $link_text = t('Remove Member');
-        $link_url = 'forums/term/' . $term_id . '/members-edit/' . $row_uid . '/remove';
+        $link_url = 'sbac-forum/nojs/' . $term_id . '/members-edit/' . $row_uid . '/remove';
         $link = l($link_text, $link_url, $link_ops);
         $output = $link;
+
+        // attach all modal requirements.
+        ctools_include('ajax');
+        ctools_include('modal');
+        ctools_add_js('ajax-responder');
+        ctools_modal_add_js();
+        $js_settings = array(
+          $link_dom_id => array( // Link has to have ctools-modal- namespace class along with this id.
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 660,
+              'height' => 420,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings, 'setting'); // Styles the modal.
+
       }
     }
   }

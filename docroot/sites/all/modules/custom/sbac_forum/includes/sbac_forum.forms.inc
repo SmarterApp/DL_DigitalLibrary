@@ -421,12 +421,49 @@ function sbac_forum_leave_forum_confirm($form, &$form_state) {
     '#value' => 'Leave Forum',
     '#attributes' => array('class' => array('edit-leave-overlay', 'blue'))
   );
-	
+
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
     '#attributes' => array('class' => array('edit-cancel-leave-overlay', 'gray', 'cancel'))
   );
-  
+
+  return $form;
+}
+
+
+/**
+ * =============================================================================
+ *    Forum Remove Member Form
+ * =============================================================================
+ */
+
+function sbac_forum_remove_member_confirm($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => '<h2>'.t('You are about to remove this user').'</h2><p>' . t('
+    If you continue this user will no longer be able to participate in thie forum. Please provide rationale as to why they have been removed. This will be sent to the user via notification.') . '</p>',
+  );
+
+  $form['notification_message'] = array(
+    '#type' => 'textarea',
+    '#title' => t(''),
+    '#default_value' => '',
+    '#rows' => 10,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Remove User',
+    '#attributes' => array('class' => array('edit-remove-overlay', 'blue'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('edit-cancel-remove-overlay', 'gray', 'cancel'))
+  );
+
   return $form;
 }

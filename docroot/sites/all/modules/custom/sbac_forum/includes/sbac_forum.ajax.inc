@@ -143,3 +143,46 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
     return drupal_get_form('sbac_forum_leave_forum_confirm');
   }
 }
+
+
+function sbac_forum__ajax__remove_member_modal_callback($js = FALSE, $term, $uid_to_remove) {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+
+    $form_state = array(
+      'ajax' => TRUE,
+      'forum_to_update' => $term,
+    );
+
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('sbac_forum_remove_member_confirm', $form_state);
+
+    // If the form has been submitted, there may be additional instructions
+    // such as dismissing the modal popup.
+    // if (!empty($form_state['ajax_commands'])) {
+    //   $output = $form_state['ajax_commands'];
+    // }
+
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        sbac_forum__api__leave_forum($term, 'remove', $uid_to_remove);
+        $notification_message = $form_state['values']['notification_message'];
+        // TODO - add taskit element here.
+        $output[] = ctools_ajax_command_reload();
+      }
+    }
+    print ajax_render($output);
+    exit();
+  } else {
+    return drupal_get_form('sbac_forum_remove_member_confirm');
+  }
+}
