@@ -219,6 +219,47 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removedmsg'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_removedmsg'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_removedmsg',
+    'label' => 'Remove message',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 5,
+    ),
+    'xss' => 0,
+  );
+
   // Exported field_instance: 'node-topic-body'
   $field_instances['node-topic-body'] = array(
     'bundle' => 'topic',
@@ -997,6 +1038,7 @@ function sbac_forum_field_default_field_instances() {
   t('Member');
   t('Member Count');
   t('Members');
+  t('Remove message');
   t('Removed');
   t('Removed Member Count');
   t('Reply (comment) Count');
