@@ -94,6 +94,14 @@ function sbac_forum_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-forum/%ctools_js/%taxonomy_term/members-edit/%/remove'] = array(
+    'page callback' => 'sbac_forum__ajax__remove_member_modal_callback',
+    'page arguments' => array(1, 2, 4),
+    'access arguments' => array('access content'),
+    'access callback' => '_sbac_forum_remove_members_user_access',
+    'access arguments' => array(2, 4),
+  );
+
   return $items;
 }
 
@@ -153,6 +161,11 @@ function _sbac_forum_view_forum_user_access($term) {
     return FALSE;
   }
 
+  $membership_status = sbac_forum__api__check_user_is_forum_member($term->tid, $user->uid);
+  if ($membership_status === 'removed') { // Removed users can no longer see forum.
+    return FALSE;
+  }
+
   $access = sbac_forum__api__check_forum_view_access($user, $term);
   return $access;
 }
@@ -173,6 +186,31 @@ function _sbac_forum_delete_forum_user_access($term) {
   $vocab_id = $term->vid;
   $delete_perm = 'delete terms in ' . $vocab_id;
   $access = user_access($delete_perm);
+  return $access;
+}
+
+/**
+ * Access callback for Modal URL for removing members callback.
+ *
+ * @return Boolean TRUE/FALSE if user has access to remove a member from a forum.
+ */
+function _sbac_forum_remove_members_user_access($term, $uid_to_remove) {
+  global $user;
+  $access = FALSE;
+
+  if ($term->vocabulary_machine_name != 'forum') {
+    return $access; // Someone trying to delete a taxonomy term not from forums
+  }
+
+  if (!in_array('facilitator', $user->roles)) { // Only faci can remove users.
+    return $access;
+  }
+
+  $is_member = sbac_forum__api__check_user_is_forum_member($term->tid, $uid_to_remove);
+  if ($is_member === TRUE) { // User to remove is a member of this current forum.
+    $access = TRUE;
+  }
+
   return $access;
 }
 

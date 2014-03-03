@@ -139,6 +139,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Removed Resource Review'),
         'class' => 'RemovedResourceReview',
       ),
+      // removed forum user membership
+      array(
+        'name' => 'removed_forum_member',
+        'description' => t('Removed Forum Member'),
+        'class' => 'RemovedForumMember',
+      ),
     );
 
     foreach ($types as &$type) {

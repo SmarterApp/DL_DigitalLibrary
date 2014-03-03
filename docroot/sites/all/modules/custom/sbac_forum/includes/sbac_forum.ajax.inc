@@ -69,7 +69,7 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   taxonomy_term_save($forum_term);
 
   $forum_controls = sbac_forum__api__create_forum_controls(TRUE, $is_facilitator, $forum_id);
-  if (!empty($forum_controls)) {
+  if (!empty($forum_controls['markup'])) {
     $controls_selector = '.sbac-forum-vp-controls-wrapper';
     $forum_controls_text = '<div class="sbac-forum-vp-controls"> Forum Settings</div>';
     $forum_controls_text .= '<div class="sbac-forum-vp-controls-popup">';
@@ -141,5 +141,61 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
     exit();
   } else {
     return drupal_get_form('sbac_forum_leave_forum_confirm');
+  }
+}
+
+
+function sbac_forum__ajax__remove_member_modal_callback($js = FALSE, $term, $uid_to_remove) {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+
+    $form_state = array(
+      'ajax' => TRUE,
+      'forum_to_update' => $term,
+    );
+
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('sbac_forum_remove_member_confirm', $form_state);
+
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        global $user;
+        $notification_message = $form_state['values']['notification_message'];
+        $task_data = sbac_forum__api__leave_forum($term, 'remove', $uid_to_remove, $notification_message);
+
+        // // Params for task.
+        $from_user_id = $user->uid; // TriggeringUser
+        $for_user_id = $uid_to_remove;    // OwningUser
+        if (isset($task_data['removed_member_collection_eid'])) {
+          $removed_member_collection_id = $task_data['removed_member_collection_eid'];
+        }
+        $forum_id = $term->tid;
+
+        // Create task notification.
+        if ($task = taskit_get_object('removed_forum_member')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('taxonomy_term', $forum_id);
+          $task->addEntity('field_collection_item', $removed_member_collection_id);
+          $task->addOwningUser($for_user_id);
+          $task->addTriggeringUser($from_user_id);
+          $task->save();
+        }
+
+        $output[] = ctools_ajax_command_reload();
+      }
+    }
+    print ajax_render($output);
+    exit();
+  } else {
+    return drupal_get_form('sbac_forum_remove_member_confirm');
   }
 }

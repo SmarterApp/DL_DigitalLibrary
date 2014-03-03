@@ -232,6 +232,7 @@ function sbac_forum__api__create_start_new_topic_link() {
 function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term_id) {
   global $user;
   $forum_control_link_list = '';
+  $extra_classes = '';
   if ($is_member === TRUE) {
     if (($is_facilitator) ||
         ($user->uid == 1) ) { // Edit and delete
@@ -262,6 +263,7 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
       );
       $link = l($link_text, $link_url, $link_ops);
       $forum_control_links[] = $link;
+      $extra_classes = 'hover-over-large-popup';
     }
   }
   if (!empty($forum_control_links)) {
@@ -272,14 +274,20 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
     );
     $forum_control_link_list = theme('item_list', $list_args);
   }
-  return $forum_control_link_list;
+
+  $output = array(
+    'markup' => $forum_control_link_list,
+    'classes' => $extra_classes,
+  );
+  return $output;
 }
 
 
-function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $account = NULL) {
-  if ($account == NULL) {
+function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $account_uid = NULL, $reason_message = NULL) {
+  $return_data = array();
+  if ($account_uid == NULL) {
     global $user;
-    $account = $user;
+    $account_uid = $user->uid;
   }
 
   $forum_term_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_term);
@@ -290,27 +298,42 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
         $member_wrapper = entity_metadata_wrapper('field_collection_item', $field_collection_item);
         if (isset($member_wrapper->field_fc_forum_member)) {
           $current_member = $member_wrapper->field_fc_forum_member->value();
-          if ($current_member->uid == $account->uid) { // Matches current member
+          if ($current_member->uid == $account_uid) { // Matches current member
             if ($operation == 'leave') {
               // Delete item. Cleans up after itself.
               $field_collection_item->delete();
 
-              // Set New Member count
-              $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
-              $new_member_count = $current_member_count - 1;
-              $forum_term_wrapper->field_forum_member_count->set($new_member_count);
-
-              $forum_term_wrapper->save(TRUE);
-              taxonomy_term_save($forum_term);
-
-              // invalidate memberlist cache when a new user joins.
-              $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME. $forum_term->tid;
-              if (cache_get($cid)) {
-                cache_clear_all($cid, 'cache');
-              }
-
             } elseif ($operation == 'remove') {
+              // Set the current member flag to "removed".
+              $member_wrapper->field_fc_forum_member_is_removed->set(1);
+              $date = strtotime('today');
+              $member_wrapper->field_fc_forum_member_removed->set($date);
+              if (!empty($reason_message)) {
+                $member_wrapper->field_fc_forum_member_removedmsg->set($reason_message);
+              } else {
+                $member_wrapper->field_fc_forum_member_removedmsg->set('');
+              }
+              $member_wrapper->save(TRUE);
+              $return_data['removed_member_collection_eid'] = $member_wrapper->item_id->value();
+              // Set New removed member count. increment.
+              $current_removed_member_count = $forum_term_wrapper->field_forum_removed_member_count->value();
+              $new_removed_member_count = $current_removed_member_count + 1;
+              $forum_term_wrapper->field_forum_removed_member_count->set($new_removed_member_count);
+            }
 
+            // Set New Member count. Decrement.
+            $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
+            $new_member_count = $current_member_count - 1;
+            $forum_term_wrapper->field_forum_member_count->set($new_member_count);
+
+            // Update all enties.
+            $forum_term_wrapper->save(TRUE);
+            taxonomy_term_save($forum_term);
+
+            // invalidate memberlist cache when a user is removed or leaves.
+            $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME. $forum_term->tid;
+            if (cache_get($cid)) {
+              cache_clear_all($cid, 'cache');
             }
             break;
           }
@@ -319,7 +342,5 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
       }
     }
   }
-
-  // dsm($member_list);
-
+  return $return_data;
 }
