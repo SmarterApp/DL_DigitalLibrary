@@ -467,3 +467,32 @@ function sbac_forum_remove_member_confirm($form, &$form_state) {
 
   return $form;
 }
+
+/**
+ * =============================================================================
+ *    Forum Restore Member Form
+ * =============================================================================
+ */
+
+function sbac_forum_restore_member_confirm($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => '<h2>'.t('You are about to re-add this user').'</h2><p>' . t('
+    If you continue, this user will recieve a notification indicating that they may once again participate in this forum') . '</p>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Re-add User',
+    '#attributes' => array('class' => array('edit-restore-overlay', 'blue'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('edit-cancel-restore-overlay', 'gray', 'cancel'))
+  );
+
+  return $form;
+}

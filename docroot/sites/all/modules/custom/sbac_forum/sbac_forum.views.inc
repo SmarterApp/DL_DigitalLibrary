@@ -201,6 +201,10 @@ function sbac_forum_views_query_alter(&$view, &$query) {
         }
       }
     }
+    $user_removed_from_forum_list = array();
+    if (isset($user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME])) {
+      $user_removed_from_forum_list = $user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME];
+    }
 
     // create the join object. STATE
     $join = new views_join;
@@ -258,5 +262,11 @@ function sbac_forum_views_query_alter(&$view, &$query) {
     $query->add_where($role_condition_group, 'field_data_field_forum_access_role_list.field_forum_access_role_list_value', $users_roles, 'IN');
     $query->add_where($role_condition_group, 'field_data_field_forum_access_role_list.field_forum_access_role_list_value', array(), 'IS NULL');
     $query->where[$role_condition_group]['type'] = "OR";
+
+    // Should have group on its own.
+    if (!empty($user_removed_from_forum_list)) { // Exclude all forums user has been removed from.
+      $query->add_where($condition_groups, 'taxonomy_term_data.tid', $user_removed_from_forum_list, 'NOT IN');
+    }
+
   }
 }

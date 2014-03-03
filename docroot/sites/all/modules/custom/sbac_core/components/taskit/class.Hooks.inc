@@ -145,6 +145,13 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Removed Forum Member'),
         'class' => 'RemovedForumMember',
       ),
+      // restored forum user membership
+      array(
+        'name' => 'restored_forum_member',
+        'description' => t('Restored Forum Member'),
+        'class' => 'RestoredForumMember',
+      ),
+
     );
 
     foreach ($types as &$type) {

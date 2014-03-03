@@ -282,7 +282,16 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
   return $output;
 }
 
-
+/**
+ * Handles updating all required entities when user either leaves,is removed or is added back to a forum.
+ *
+ * @param [type] $forum_term Forum being modified
+ * @param string $operation is either "leave", 'remove', 'restore'
+ * @param [type] $account_uid user being modified.
+ * @param [type] $reason_message optional message as to why user is being removed.
+ *
+ * @return array any information that is needed by caller. Removed op returns field_collection entity id.
+ */
 function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $account_uid = NULL, $reason_message = NULL) {
   $return_data = array();
   if ($account_uid == NULL) {
@@ -303,6 +312,11 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
               // Delete item. Cleans up after itself.
               $field_collection_item->delete();
 
+              // Set New Member count. Decrement.
+              $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
+              $new_member_count = $current_member_count - 1;
+              $forum_term_wrapper->field_forum_member_count->set($new_member_count);
+
             } elseif ($operation == 'remove') {
               // Set the current member flag to "removed".
               $member_wrapper->field_fc_forum_member_is_removed->set(1);
@@ -319,12 +333,56 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
               $current_removed_member_count = $forum_term_wrapper->field_forum_removed_member_count->value();
               $new_removed_member_count = $current_removed_member_count + 1;
               $forum_term_wrapper->field_forum_removed_member_count->set($new_removed_member_count);
-            }
 
-            // Set New Member count. Decrement.
-            $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
-            $new_member_count = $current_member_count - 1;
-            $forum_term_wrapper->field_forum_member_count->set($new_member_count);
+              // Set New Member count. Decrement.
+              $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
+              $new_member_count = $current_member_count - 1;
+              $forum_term_wrapper->field_forum_member_count->set($new_member_count);
+
+              // Update user data field that stores tids of all forums user is removed from.
+              $this_user = user_load($account_uid);
+              $existing_removed_list = array();
+              if (isset($this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME])) {
+                $existing_removed_list = $this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME];
+                $existing_removed_list[$forum_term->tid] = $forum_term->tid;
+              } else {
+                $existing_removed_list = array($forum_term->tid => $forum_term->tid);
+              }
+              $data = array(
+                SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME => $existing_removed_list,
+              );
+              user_save($this_user, array('data' => $data));
+
+            } elseif ($operation == 'restore') {
+              // UnSet the current removed member flag.
+              $member_wrapper->field_fc_forum_member_is_removed->set(0);
+              $date = strtotime('today');
+              $member_wrapper->field_fc_forum_member_joined->set($date);
+              $member_wrapper->save(TRUE);
+
+              // Set New removed member count. decrement.
+              $current_removed_member_count = $forum_term_wrapper->field_forum_removed_member_count->value();
+              $new_removed_member_count = $current_removed_member_count - 1;
+              $forum_term_wrapper->field_forum_removed_member_count->set($new_removed_member_count);
+
+              // Set New Member count. inrement.
+              $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
+              $new_member_count = $current_member_count + 1;
+              $forum_term_wrapper->field_forum_member_count->set($new_member_count);
+
+              // Update user data field that stores tids of all forums user is removed from.
+              $this_user = user_load($account_uid);
+              $existing_removed_list = array();
+              if (isset($this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME])) {
+                $existing_removed_list = $this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME];
+                unset($existing_removed_list[$forum_term->tid]);
+              }
+              $data = array(
+                SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME => $existing_removed_list,
+              );
+              user_save($this_user, array('data' => $data));
+
+            }
 
             // Update all enties.
             $forum_term_wrapper->save(TRUE);

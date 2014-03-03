@@ -22,6 +22,7 @@ define('SBAC_FORUM_MY_FORUM_FILTERS_CLOSED', 'sbac-forum-my-forum-filters-closed
 
 define('SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME', 'forum-member-list-');
 define('SBAC_FORUM_SHOW_JOIN_MESSAGE', 'sbac-forum-new-join');
+define('SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME', 'sbac_forum_user_data_removed_list');
 
 /**
  * =============================================================================
@@ -99,6 +100,14 @@ function sbac_forum_menu() {
     'page arguments' => array(1, 2, 4),
     'access arguments' => array('access content'),
     'access callback' => '_sbac_forum_remove_members_user_access',
+    'access arguments' => array(2, 4),
+  );
+
+  $items['sbac-forum/%ctools_js/%taxonomy_term/members-edit/%/restore'] = array(
+    'page callback' => 'sbac_forum__ajax__restore_member_modal_callback',
+    'page arguments' => array(1, 2, 4),
+    'access arguments' => array('access content'),
+    'access callback' => '_sbac_forum_restore_members_user_access',
     'access arguments' => array(2, 4),
   );
 
@@ -213,6 +222,32 @@ function _sbac_forum_remove_members_user_access($term, $uid_to_remove) {
 
   return $access;
 }
+
+/**
+ * Access callback for Modal URL for re-adding members callback.
+ *
+ * @return Boolean TRUE/FALSE if user has access to remove a member from a forum.
+ */
+function _sbac_forum_restore_members_user_access($term, $uid_to_remove) {
+  global $user;
+  $access = FALSE;
+
+  if ($term->vocabulary_machine_name != 'forum') {
+    return $access; // Someone trying to delete a taxonomy term not from forums
+  }
+
+  if (!in_array('facilitator', $user->roles)) { // Only faci can remove users.
+    return $access;
+  }
+
+  $is_member = sbac_forum__api__check_user_is_forum_member($term->tid, $uid_to_remove);
+  if ($is_member === 'removed') { // User to re-add is a removed member of this current forum.
+    $access = TRUE;
+  }
+
+  return $access;
+}
+
 
 /**
  * Implements hook_block_info().

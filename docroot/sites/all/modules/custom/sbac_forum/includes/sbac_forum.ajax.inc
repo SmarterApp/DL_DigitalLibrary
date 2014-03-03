@@ -199,3 +199,54 @@ function sbac_forum__ajax__remove_member_modal_callback($js = FALSE, $term, $uid
     return drupal_get_form('sbac_forum_remove_member_confirm');
   }
 }
+
+
+function sbac_forum__ajax__restore_member_modal_callback($js = FALSE, $term, $uid_to_restore) {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+
+    $form_state = array(
+      'ajax' => TRUE,
+      'forum_to_update' => $term,
+    );
+
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('sbac_forum_restore_member_confirm', $form_state);
+
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        global $user;
+        sbac_forum__api__leave_forum($term, 'restore', $uid_to_restore);
+
+        // // Params for task.
+        $from_user_id = $user->uid; // TriggeringUser
+        $for_user_id = $uid_to_restore;    // OwningUser
+        $forum_id = $term->tid;
+
+        // Create task notification.
+        if ($task = taskit_get_object('restored_forum_member')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('taxonomy_term', $forum_id);
+          $task->addOwningUser($for_user_id);
+          $task->addTriggeringUser($from_user_id);
+          $task->save();
+        }
+
+        $output[] = ctools_ajax_command_reload();
+      }
+    }
+    print ajax_render($output);
+    exit();
+  } else {
+    return drupal_get_form('sbac_forum_restore_member_confirm');
+  }
+}
