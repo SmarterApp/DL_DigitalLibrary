@@ -148,7 +148,7 @@ function sbac_forum__ajax__delete_forum_modal_callback($js = FALSE, $term) {
 
         // Then finally, delete the Forum.
         $name = $term->name;
-        // $delete = taxonomy_term_delete($term->tid);
+        $delete = taxonomy_term_delete($term->tid);
         if ($delete) {
           $message = 'Forum: "'. $name .'" has been deleted successfully';
           $type = 'status';

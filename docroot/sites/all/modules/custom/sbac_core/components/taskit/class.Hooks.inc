@@ -151,7 +151,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Restored Forum Member'),
         'class' => 'RestoredForumMember',
       ),
-
+      // deleting a forum term
+      array(
+        'name' => 'deleted_forum_term',
+        'description' => t('Deleted Forum Term'),
+        'class' => 'DeletedForumTerm',
+      ),
     );
 
     foreach ($types as &$type) {

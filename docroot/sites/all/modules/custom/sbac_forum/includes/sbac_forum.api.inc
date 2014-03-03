@@ -437,15 +437,45 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
  * Notification Router for forum. Used when multiple notifications have to be created.
  *   Function has to decide who to send notifications to based on $op field.
  *
- *
  * Possible operations:
  *   1. on-delete
  *   2. access-change
+ *
+ * @param Object $forum_term Forum being modified. Expects fields are already loaded.
+ * @param string $op is either "on-delete", 'access-change'
+ *
  */
 function sbac_forum__api__send_bulk_notifications($forum_term, $op) {
+  global $user;
   switch ($op) {
-    case 'on-delete':
+    case 'on-delete': // Send notification to all members.
+      $term_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_term);
+      if (isset($term_wrapper->field_fc_forum_members)) {
+        $members = $term_wrapper->field_fc_forum_members->value();
+        foreach ($members as $field_collection_item_member) {
+          $fci_wrapper = entity_metadata_wrapper('field_collection_item', $field_collection_item_member);
+          $is_removed = FALSE;
+          if (isset($fci_wrapper->field_fc_forum_member_is_removed)) {
+            $is_removed = $fci_wrapper->field_fc_forum_member_is_removed->value();
+          }
+          if (!$is_removed) { // only notify non-removed members.
+            if (isset($fci_wrapper->field_fc_forum_member)) {
+              $member_info = $fci_wrapper->field_fc_forum_member->value();
+              if ($member_info->uid != $user->uid) { // No need to notify person deleting the forum.
+                // Create task notification.
+                if ($task = taskit_get_object('deleted_forum_term')) {
+                  $task->addVisibility($task::VISIBILITY_USER);
+                  $task->addEntity('taxonomy_term', $forum_term->tid);
+                  $task->addOwningUser($member_info->uid);
+                  $task->addTriggeringUser($user->uid);
+                  $task->save();
+                }
+              }
+            }
+          }
 
+        }
+      }
       break;
     case 'access-change':
       break;
