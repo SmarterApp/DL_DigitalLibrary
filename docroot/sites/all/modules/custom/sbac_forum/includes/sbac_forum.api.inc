@@ -235,7 +235,7 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
   $extra_classes = '';
   if ($is_member === TRUE) {
     if (($is_facilitator) ||
-        ($user->uid == 1) ) { // Edit and delete
+        ($user->uid == 1) ) { // Edit and delete forum
       $link_ops = array(
         'attributes' => array(
           'class' => 'vp-control-link',
@@ -248,10 +248,25 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
       $forum_control_links[] = $link;
 
       $link_text = t('Delete Forum');
-      $link_url = 'forums/term/' . $term_id . '/delete';;
+      $link_ops = array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-delete-forum-link',
+          'id'    => 'sbac-forum-delete-forum-link'
+        ),
+      );
+      $link_url = 'sbac-forum/nojs/forum-delete/'.$term_id;
       $link = l($link_text, $link_url, $link_ops);
       $forum_control_links[] = $link;
-
+      $js_settings = array(
+        'sbac-forum-delete-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 560,
+            'height' => 240,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings, 'setting'); // Styles the modal.
     } else { // leave forum
       $link_text = t('Leave this Forum');
       $link_url = 'sbac-forum/nojs/forum-leave/' . $term_id;
@@ -264,6 +279,16 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
       $link = l($link_text, $link_url, $link_ops);
       $forum_control_links[] = $link;
       $extra_classes = 'hover-over-large-popup';
+      $js_settings = array(
+        'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 560,
+            'height' => 230,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings, 'setting'); // Styles the modal.
     }
   }
   if (!empty($forum_control_links)) {
@@ -273,6 +298,10 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
       'attributes' => array('class' => 'vp-control-links'),
     );
     $forum_control_link_list = theme('item_list', $list_args);
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
   }
 
   $output = array(
@@ -401,4 +430,54 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
     }
   }
   return $return_data;
+}
+
+
+/**
+ * Notification Router for forum. Used when multiple notifications have to be created.
+ *   Function has to decide who to send notifications to based on $op field.
+ *
+ * Possible operations:
+ *   1. on-delete
+ *   2. access-change
+ *
+ * @param Object $forum_term Forum being modified. Expects fields are already loaded.
+ * @param string $op is either "on-delete", 'access-change'
+ *
+ */
+function sbac_forum__api__send_bulk_notifications($forum_term, $op) {
+  global $user;
+  switch ($op) {
+    case 'on-delete': // Send notification to all members.
+      $term_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_term);
+      if (isset($term_wrapper->field_fc_forum_members)) {
+        $members = $term_wrapper->field_fc_forum_members->value();
+        foreach ($members as $field_collection_item_member) {
+          $fci_wrapper = entity_metadata_wrapper('field_collection_item', $field_collection_item_member);
+          $is_removed = FALSE;
+          if (isset($fci_wrapper->field_fc_forum_member_is_removed)) {
+            $is_removed = $fci_wrapper->field_fc_forum_member_is_removed->value();
+          }
+          if (!$is_removed) { // only notify non-removed members.
+            if (isset($fci_wrapper->field_fc_forum_member)) {
+              $member_info = $fci_wrapper->field_fc_forum_member->value();
+              if ($member_info->uid != $user->uid) { // No need to notify person deleting the forum.
+                // Create task notification.
+                if ($task = taskit_get_object('deleted_forum_term')) {
+                  $task->addVisibility($task::VISIBILITY_USER);
+                  $task->addEntity('taxonomy_term', $forum_term->tid);
+                  $task->addOwningUser($member_info->uid);
+                  $task->addTriggeringUser($user->uid);
+                  $task->save();
+                }
+              }
+            }
+          }
+
+        }
+      }
+      break;
+    case 'access-change':
+      break;
+  }
 }

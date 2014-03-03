@@ -370,6 +370,36 @@ function _sbac_forum_sub_nav__set_own__submit($form, &$form_state) {
 
 /**
  * =============================================================================
+ *    Forum Delete Form Button
+ * =============================================================================
+ */
+
+function sbac_forum_delete_forum_confirm($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => '<h2>'.t('You are about to delete this forum').'</h2><p>' . t('
+    If you continue, the forum and all its content will be permanently deleted. Members will receive a notification that the forum is no longer available.') . '</p>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Delete Forum',
+    '#attributes' => array('class' => array('edit-delete-overlay', 'blue'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('edit-cancel-delete-overlay', 'gray', 'cancel'))
+  );
+
+  return $form;
+}
+
+
+/**
+ * =============================================================================
  *    Forum Join Button Form
  * =============================================================================
  */
@@ -401,6 +431,7 @@ function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
   );
   return $form;
 }
+
 
 /**
  * =============================================================================
@@ -467,6 +498,7 @@ function sbac_forum_remove_member_confirm($form, &$form_state) {
 
   return $form;
 }
+
 
 /**
  * =============================================================================

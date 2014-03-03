@@ -69,15 +69,6 @@ function sbac_forum_menu() {
     'file' => 'includes/sbac_forum.pages.inc',
   );
 
-  $items['forums/term/%taxonomy_term/delete'] = array(
-    'title' => 'Delete Forum',
-    'page callback' => 'sbac_forum_delete_forum_page',
-    'page arguments' => array(2),
-    'access callback' => '_sbac_forum_delete_forum_user_access',
-    'access arguments' => array(2),
-    'file' => 'includes/sbac_forum.pages.inc',
-  );
-
   $items['forums-main-page/reset/%/%'] = array(
     'title' => 'Forums',
     'file' => 'includes/sbac_forum.pages.inc',
@@ -88,6 +79,13 @@ function sbac_forum_menu() {
   );
 
   // ----- Modals -----
+
+  $items['sbac-forum/%ctools_js/forum-delete/%taxonomy_term'] = array(
+    'page callback' => 'sbac_forum__ajax__delete_forum_modal_callback',
+    'page arguments' => array(1, 3),
+    'access callback' => '_sbac_forum_delete_forum_user_access',
+    'access arguments' => array(3),
+  );
 
   $items['sbac-forum/%ctools_js/forum-leave/%taxonomy_term'] = array(
     'page callback' => 'sbac_forum__ajax__leave_forum_modal_callback',
@@ -741,10 +739,38 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   }
 }
 
+
+/**
+ * Implements hook_cron_queue_info()
+ */
+function sbac_forum_cron_queue_info() {
+  $queues['sbac_forum_delete_orphaned_topics'] = array(
+    'worker callback' => 'sbac_forum_delete_orphaned_topics_process',
+    'time' => 60,
+  );
+  return $queues;
+}
+
+/**
+ * Worker callback defined in hook_cron_queue_info()
+ */
+function sbac_forum_delete_orphaned_topics_process($item_nid) {
+  if (isset($item_nid)) {
+    $topic_node = node_load($item_nid);
+    if ($topic_node) {
+      $deleted_node_title = $topic_node->title;
+      node_delete($item_nid);
+      watchdog('action', 'Cleanup Task: Deleted Orphaned Topic "%name". Triggered by a Forum Deletion. ', array('%name' => $deleted_node_title));
+    }
+  }
+}
+
+
+
 /**
  * =============================================================================
  *
- *      Topic Node CRUD functions
+ *      Forum Term CRUD functions
  *
  * =============================================================================
  */

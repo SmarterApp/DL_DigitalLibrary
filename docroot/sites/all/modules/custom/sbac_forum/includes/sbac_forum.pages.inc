@@ -1,6 +1,10 @@
 <?php
 
-
+/**
+ * Main Page - /Forums. Shows all forums and allows users to filter/sort them.
+ *
+ * @return HTML output from theme function.
+ */
 function sbac_forum_main_landing_page() {
   // module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.views');
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
@@ -93,6 +97,13 @@ function sbac_forum_main_landing_page() {
   return $output;
 }
 
+/**
+ * Middleground cleanup page callback to reset session variables and perform redirection.
+ *
+ * @param string $item which page is requesting cleanup (all forums or my forums)
+ * @param string $severity default or all. Tells function how extensive the clear needs to be.
+ *
+ */
 function sbac_forum_main_landing_page_reset($item, $severity) {
   switch ($item) {
     case 'all-forums':
@@ -110,6 +121,13 @@ function sbac_forum_main_landing_page_reset($item, $severity) {
   drupal_goto('forums');
 }
 
+/**
+ * Custom taxonomy term view page for forum terms.
+ *
+ * @param [type] $term [description]
+ *
+ * @return [type] [description]
+ */
 function sbac_forum_view_forum_page($term) {
 	global $user;
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
@@ -311,20 +329,6 @@ function sbac_forum_view_forum_page($term) {
   $forum_control_links = array();
   $forum_control_link_list = sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term->tid);
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.view_page.js");
-  ctools_include('ajax');
-  ctools_include('modal');
-  ctools_add_js('ajax-responder');
-  ctools_modal_add_js();
-  $js_settings = array(
-    'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 560,
-        'height' => 220,
-      ),
-    ),
-  );
-  drupal_add_js($js_settings, 'setting'); // Styles the modal.
 
   // Check if user had just joined. Show welcome message and then unset the variable.
   $welcome_message = '';
@@ -348,24 +352,5 @@ function sbac_forum_view_forum_page($term) {
   );
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );
-  return $output;
-}
-
-
-function sbac_forum_delete_forum_page($term) {
-  $output = 'Delete term';
-  $name = $term->name;
-  $delete = taxonomy_term_delete($term->tid);
-  if ($delete) {
-    $message = 'Forum: "'. $name .'" has been deleted successfully';
-    $type = 'status';
-  } else {
-    $message = 'There was a problem deleting forum '. $name .'. Contact Administrator';
-    $type = 'error';
-  }
-
-  drupal_set_message($message, $type);
-  drupal_goto('forums');
-
   return $output;
 }
