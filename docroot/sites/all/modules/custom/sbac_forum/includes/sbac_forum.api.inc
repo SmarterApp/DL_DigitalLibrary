@@ -431,3 +431,23 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
   }
   return $return_data;
 }
+
+
+/**
+ * Notification Router for forum. Used when multiple notifications have to be created.
+ *   Function has to decide who to send notifications to based on $op field.
+ *
+ *
+ * Possible operations:
+ *   1. on-delete
+ *   2. access-change
+ */
+function sbac_forum__api__send_bulk_notifications($forum_term, $op) {
+  switch ($op) {
+    case 'on-delete':
+
+      break;
+    case 'access-change':
+      break;
+  }
+}

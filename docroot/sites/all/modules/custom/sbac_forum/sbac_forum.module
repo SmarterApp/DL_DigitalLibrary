@@ -739,10 +739,38 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   }
 }
 
+
+/**
+ * Implements hook_cron_queue_info()
+ */
+function sbac_forum_cron_queue_info() {
+  $queues['sbac_forum_delete_orphaned_topics'] = array(
+    'worker callback' => 'sbac_forum_delete_orphaned_topics_process',
+    'time' => 60,
+  );
+  return $queues;
+}
+
+/**
+ * Worker callback defined in hook_cron_queue_info()
+ */
+function sbac_forum_delete_orphaned_topics_process($item_nid) {
+  if (isset($item_nid)) {
+    $topic_node = node_load($item_nid);
+    if ($topic_node) {
+      $deleted_node_title = $topic_node->title;
+      node_delete($item_nid);
+      watchdog('action', 'Cleanup Task: Deleted Orphaned Topic "%name". Triggered by a Forum Deletion. ', array('%name' => $deleted_node_title));
+    }
+  }
+}
+
+
+
 /**
  * =============================================================================
  *
- *      Topic Node CRUD functions
+ *      Forum Term CRUD functions
  *
  * =============================================================================
  */

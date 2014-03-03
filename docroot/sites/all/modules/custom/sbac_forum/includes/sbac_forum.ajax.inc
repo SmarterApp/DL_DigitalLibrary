@@ -133,14 +133,20 @@ function sbac_forum__ajax__delete_forum_modal_callback($js = FALSE, $term) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
 
-        // All the cleanup tasks go here.
-        // TODO:
-        //
-        // #1. Delete all Terms with this forum id. Use QUEUE
-        // #2. Send out notification to all members.
+        // Add cleanup task to drupalqueue to delete all topic nodes that belong to this forum
+        $topics = taxonomy_select_nodes($term->tid);
+        if (!empty($topics)) {
+          $sbac_forum_delete_orphans_queue = DrupalQueue::get('sbac_forum_delete_orphaned_topics');
+          foreach ($topics as $topic_node_id) {
+            $sbac_forum_delete_orphans_queue->createItem($topic_node_id);
+          }
+        }
+
+        // Notification taskit entity creation.
+        sbac_forum__api__send_bulk_notifications($term, 'on-delete');
 
 
-        // Delete the Forum.
+        // Then finally, delete the Forum.
         $name = $term->name;
         // $delete = taxonomy_term_delete($term->tid);
         if ($delete) {
