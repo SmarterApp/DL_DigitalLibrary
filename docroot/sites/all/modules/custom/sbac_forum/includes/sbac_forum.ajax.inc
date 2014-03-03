@@ -233,13 +233,13 @@ function sbac_forum__ajax__restore_member_modal_callback($js = FALSE, $term, $ui
         $forum_id = $term->tid;
 
         // Create task notification.
-        // if ($task = taskit_get_object('removed_forum_member')) {
-        //   $task->addVisibility($task::VISIBILITY_USER);
-        //   $task->addEntity('taxonomy_term', $forum_id);
-        //   $task->addOwningUser($for_user_id);
-        //   $task->addTriggeringUser($from_user_id);
-        //   $task->save();
-        // }
+        if ($task = taskit_get_object('restored_forum_member')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('taxonomy_term', $forum_id);
+          $task->addOwningUser($for_user_id);
+          $task->addTriggeringUser($from_user_id);
+          $task->save();
+        }
 
         $output[] = ctools_ajax_command_reload();
       }
