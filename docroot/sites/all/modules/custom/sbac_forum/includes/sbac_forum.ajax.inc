@@ -103,6 +103,66 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
 }
 
 
+/**
+ * =============================================================================
+ *
+ *    Modal Callbacks
+ *
+ * =============================================================================
+ */
+
+function sbac_forum__ajax__delete_forum_modal_callback($js = FALSE, $term) {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $form_state = array(
+      'ajax' => TRUE,
+    );
+
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('sbac_forum_delete_forum_confirm', $form_state);
+
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+
+        // All the cleanup tasks go here.
+        // TODO:
+        //
+        // #1. Delete all Terms with this forum id. Use QUEUE
+        // #2. Send out notification to all members.
+
+
+        // Delete the Forum.
+        $name = $term->name;
+        // $delete = taxonomy_term_delete($term->tid);
+        if ($delete) {
+          $message = 'Forum: "'. $name .'" has been deleted successfully';
+          $type = 'status';
+        } else {
+          $message = 'There was a problem deleting forum '. $name .'. Contact Administrator';
+          $type = 'error';
+        }
+        drupal_set_message($message, $type);
+
+        $url = 'forums';
+        $output[] = ctools_ajax_command_redirect($url);
+      }
+    }
+    print ajax_render($output);
+    exit();
+  } else {
+    return drupal_get_form('sbac_forum_delete_forum_confirm');
+  }
+}
+
 function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   if ($js) {
