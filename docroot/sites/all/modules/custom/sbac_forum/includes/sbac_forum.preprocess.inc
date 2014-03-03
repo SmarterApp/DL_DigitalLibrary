@@ -211,6 +211,9 @@ function sbac_forum_preprocess_views_view_fields__forum_member_list(&$vars) {
 
       $args = $vars['view']->args;
       $term_id = array_shift($args);
+      $link_dom_id = '';
+      $link_text = '';
+      $link_url = '';
 
       if ($vars['view']->current_display == 'block') { // Only add member controls for member list.
         $link_dom_id = 'forum-remove-member-link-'. $term_id . '-' . $row_uid;

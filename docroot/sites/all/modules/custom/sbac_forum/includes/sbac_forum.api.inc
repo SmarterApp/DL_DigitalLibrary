@@ -339,6 +339,20 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
               $new_member_count = $current_member_count - 1;
               $forum_term_wrapper->field_forum_member_count->set($new_member_count);
 
+              // Update user data field that stores tids of all forums user is removed from.
+              $this_user = user_load($account_uid);
+              $existing_removed_list = array();
+              if (isset($this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME])) {
+                $existing_removed_list = $this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME];
+                $existing_removed_list[$forum_term->tid] = $forum_term->tid;
+              } else {
+                $existing_removed_list = array($forum_term->tid => $forum_term->tid);
+              }
+              $data = array(
+                SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME => $existing_removed_list,
+              );
+              user_save($this_user, array('data' => $data));
+
             } elseif ($operation == 'restore') {
               // UnSet the current removed member flag.
               $member_wrapper->field_fc_forum_member_is_removed->set(0);
@@ -355,6 +369,19 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
               $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
               $new_member_count = $current_member_count + 1;
               $forum_term_wrapper->field_forum_member_count->set($new_member_count);
+
+              // Update user data field that stores tids of all forums user is removed from.
+              $this_user = user_load($account_uid);
+              $existing_removed_list = array();
+              if (isset($this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME])) {
+                $existing_removed_list = $this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME];
+                unset($existing_removed_list[$forum_term->tid]);
+              }
+              $data = array(
+                SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME => $existing_removed_list,
+              );
+              user_save($this_user, array('data' => $data));
+
             }
 
             // Update all enties.
