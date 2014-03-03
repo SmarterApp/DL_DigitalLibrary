@@ -283,7 +283,8 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
 }
 
 
-function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $account_uid = NULL) {
+function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $account_uid = NULL, $reason_message = NULL) {
+  $return_data = array();
   if ($account_uid == NULL) {
     global $user;
     $account_uid = $user->uid;
@@ -307,7 +308,13 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
               $member_wrapper->field_fc_forum_member_is_removed->set(1);
               $date = strtotime('today');
               $member_wrapper->field_fc_forum_member_removed->set($date);
+              if (!empty($reason_message)) {
+                $member_wrapper->field_fc_forum_member_removedmsg->set($reason_message);
+              } else {
+                $member_wrapper->field_fc_forum_member_removedmsg->set('');
+              }
               $member_wrapper->save(TRUE);
+              $return_data['removed_member_collection_eid'] = $member_wrapper->item_id->value();
               // Set New removed member count. increment.
               $current_removed_member_count = $forum_term_wrapper->field_forum_removed_member_count->value();
               $new_removed_member_count = $current_removed_member_count + 1;
@@ -335,4 +342,5 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
       }
     }
   }
+  return $return_data;
 }

@@ -163,20 +163,33 @@ function sbac_forum__ajax__remove_member_modal_callback($js = FALSE, $term, $uid
     // a form in a modal popup.
     $output = ctools_modal_form_wrapper('sbac_forum_remove_member_confirm', $form_state);
 
-    // If the form has been submitted, there may be additional instructions
-    // such as dismissing the modal popup.
-    // if (!empty($form_state['ajax_commands'])) {
-    //   $output = $form_state['ajax_commands'];
-    // }
-
     // This means the form has been executed
     if (!empty($form_state['executed'])) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
-        sbac_forum__api__leave_forum($term, 'remove', $uid_to_remove);
+        global $user;
         $notification_message = $form_state['values']['notification_message'];
-        // TODO - add taskit element here.
+        $task_data = sbac_forum__api__leave_forum($term, 'remove', $uid_to_remove, $notification_message);
+
+        // // Params for task.
+        $from_user_id = $user->uid; // TriggeringUser
+        $for_user_id = $uid_to_remove;    // OwningUser
+        if (isset($task_data['removed_member_collection_eid'])) {
+          $removed_member_collection_id = $task_data['removed_member_collection_eid'];
+        }
+        $forum_id = $term->tid;
+
+        // Create task notification.
+        if ($task = taskit_get_object('removed_forum_member')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('taxonomy_term', $forum_id);
+          $task->addEntity('field_collection_item', $removed_member_collection_id);
+          $task->addOwningUser($for_user_id);
+          $task->addTriggeringUser($from_user_id);
+          $task->save();
+        }
+
         $output[] = ctools_ajax_command_reload();
       }
     }
