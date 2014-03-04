@@ -155,7 +155,7 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
   $is_member = sbac_forum__api__check_user_is_forum_member($forum_id, $user->uid);
 
   if ($is_member === TRUE) {
-    $join_button = sbac_forum__api__create_start_new_topic_link();
+    $join_button = sbac_forum__api__create_start_new_topic_link($forum_id);
   } elseif ($is_member === FALSE) {
     $join_form = drupal_get_form('sbac_forum_join_button_form', $forum_id, $user->uid);
     $join_button = drupal_render($join_form);

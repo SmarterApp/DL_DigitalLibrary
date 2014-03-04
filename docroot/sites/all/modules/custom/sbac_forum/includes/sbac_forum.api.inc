@@ -207,13 +207,14 @@ function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
 }
 
 
-function sbac_forum__api__create_start_new_topic_link() {
+function sbac_forum__api__create_start_new_topic_link($forum_id) {
   $link_ops = array(
     'attributes' => array(
       'class' => 'new-topic-link',
-    )
+    ),
+    'query' => array('target-forum' => $forum_id),
   );
-  $link = l('Start a Topic', '#', $link_ops);
+  $link = l('Start a Topic', 'node/add/topic', $link_ops);
   $link_text = '<div class="join-forum-start-topic-wrapper">' . $link . '</div>';
 
   return $link_text;

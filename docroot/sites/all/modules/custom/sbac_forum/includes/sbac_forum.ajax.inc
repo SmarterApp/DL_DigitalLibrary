@@ -91,7 +91,7 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = $message;
 
   $button_selector = '#join-forum-form-wrapper';
-  $link_text = sbac_forum__api__create_start_new_topic_link();
+  $link_text = sbac_forum__api__create_start_new_topic_link($forum_id);
   $commands[] = ajax_command_replace($button_selector, $link_text);
 
   // Partial implementation for not needing to refresh. Easier to call page refresh to reload tab contents.
