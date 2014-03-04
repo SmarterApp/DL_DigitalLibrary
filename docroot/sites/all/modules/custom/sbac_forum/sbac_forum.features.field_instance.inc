@@ -58,7 +58,7 @@ function sbac_forum_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
@@ -73,7 +73,7 @@ function sbac_forum_field_default_field_instances() {
       'description_field' => 0,
       'file_directory' => '',
       'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf jpg jpeg gif png',
-      'max_filesize' => '',
+      'max_filesize' => '100 MB',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -97,7 +97,7 @@ function sbac_forum_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
@@ -384,8 +384,8 @@ function sbac_forum_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'body',
     'label' => 'Description',
-    'profanity' => 0,
-    'required' => 0,
+    'profanity' => 1,
+    'required' => 1,
     'settings' => array(
       'display_summary' => 0,
       'text_processing' => 0,
@@ -398,7 +398,7 @@ function sbac_forum_field_default_field_instances() {
         'label_help_description' => '',
         'maxlength_js' => 600,
         'maxlength_js_enforce' => 0,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_label' => 'Character count: <strong>@remaining</strong>',
         'maxlength_js_truncate_html' => 0,
         'rows' => 20,
         'summary_rows' => 5,
@@ -416,11 +416,11 @@ function sbac_forum_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -437,40 +437,19 @@ function sbac_forum_field_default_field_instances() {
       'description_field' => 0,
       'file_directory' => '',
       'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf jpg jpeg gif png',
-      'max_filesize' => '',
+      'max_filesize' => '100 MB',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'file',
       'settings' => array(
-        'allowed_schemes' => array(
-          'private' => 'private',
-          'public' => 0,
-          'schooltube' => 0,
-          'slideshare' => 0,
-          'teachertube' => 0,
-          'vimeo' => 0,
-          'youtube' => 0,
-        ),
-        'allowed_types' => array(
-          'audio' => 0,
-          'document' => 'document',
-          'image' => 'image',
-          'video' => 0,
-        ),
-        'browser_plugins' => array(
-          'media_default--media_browser_1' => 0,
-          'media_default--media_browser_my_files' => 0,
-          'media_internet' => 0,
-          'upload' => 'upload',
-        ),
         'label_help_description' => '',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -483,10 +462,9 @@ function sbac_forum_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'type' => 'hidden',
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -512,7 +490,7 @@ function sbac_forum_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -524,11 +502,11 @@ function sbac_forum_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -569,7 +547,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'link_field',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 

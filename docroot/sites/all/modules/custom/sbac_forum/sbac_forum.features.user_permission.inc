@@ -41,7 +41,9 @@ function sbac_forum_user_default_permissions() {
   // Exported permission: 'delete any topic content'.
   $permissions['delete any topic content'] = array(
     'name' => 'delete any topic content',
-    'roles' => array(),
+    'roles' => array(
+      'facilitator' => 'facilitator',
+    ),
     'module' => 'node',
   );
 
@@ -66,7 +68,9 @@ function sbac_forum_user_default_permissions() {
   // Exported permission: 'edit any topic content'.
   $permissions['edit any topic content'] = array(
     'name' => 'edit any topic content',
-    'roles' => array(),
+    'roles' => array(
+      'facilitator' => 'facilitator',
+    ),
     'module' => 'node',
   );
 

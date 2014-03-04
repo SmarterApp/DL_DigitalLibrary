@@ -454,7 +454,7 @@ function sbac_forum_field_default_field_bases() {
   // Exported field_base: 'field_topic_comment_files'
   $field_bases['field_topic_comment_files'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_topic_comment_files',
@@ -485,7 +485,7 @@ function sbac_forum_field_default_field_bases() {
   // Exported field_base: 'field_topic_comment_links'
   $field_bases['field_topic_comment_links'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_topic_comment_links',
@@ -515,7 +515,7 @@ function sbac_forum_field_default_field_bases() {
   // Exported field_base: 'field_topic_files'
   $field_bases['field_topic_files'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_topic_files',
@@ -580,7 +580,7 @@ function sbac_forum_field_default_field_bases() {
   // Exported field_base: 'field_topic_links'
   $field_bases['field_topic_links'] = array(
     'active' => 1,
-    'cardinality' => 1,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_topic_links',

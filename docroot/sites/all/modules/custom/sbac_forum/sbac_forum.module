@@ -637,8 +637,6 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id)
 }
 
 function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
-  $link = l('Post a Topic', '#'); // TODO Send to post topic link
-
   $tid = 0;
   $link = 'forums';
   if (isset($form_state['term'])) {
@@ -649,7 +647,13 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
   if (!empty($tid)) {
     $link = 'forums/term/' . $tid;
     if (($triggering_element == 'Start Forum')) {
-      $url = l('Post a topic', '#');
+      $link_ops = array(
+        'attributes' => array(
+          'class' => 'new-topic-link',
+        ),
+        'query' => array('target-forum' => $tid),
+      );
+      $url = l('Post a Topic', 'node/add/topic', $link_ops);
       $message = 'Congratulations! You created a forum! '.$url.' to start a discussion';
       drupal_get_messages();
       drupal_set_message($message);
@@ -737,6 +741,135 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
       }
     }
   }
+}
+
+
+/**
+ * Implements hook_form_alter
+ */
+function sbac_forum_form_topic_node_form_alter(&$form, $form_state, $form_id) {
+  if (isset($form['#node'])) {
+    if (!isset($form['#node']->nid) ) { // Add new topic form.
+      drupal_set_title('Start a Topic');
+      $default_forum_parent = $_GET['target-forum'];
+      if ($default_forum_parent) {
+        $form['auto_default_forum_parent'] = array(
+          '#type' => 'value',
+          '#value' => $default_forum_parent
+        );
+      }
+
+      $form['actions']['submit']['#value'] = 'Start Topic';
+      $form['actions']['submit']['#suffix'] = '</div>';
+
+      // Do access checks and validation to ensure topic relates to correct forum.
+      $form['#validate'][] = '_sbac_forum__topic_form__default_parent_term_validate';
+    } else { // Edit form
+      if (isset($form['actions']['delete'])) { // Edit form
+        $form['actions']['delete']['#attributes']['class'] = array('red');
+        $form['actions']['delete']['#suffix'] = '</div>';
+      }
+    }
+
+    // Add length restriction.
+    $form['title']['#maxlength'] = 75;
+    $form['title']['#attributes']['maxlength_js_label'][0] = 'Character count: @remaining';
+    $form['title']['#maxlength_js'] = TRUE;
+
+    // File uploaded widget tweaks
+    $form['field_topic_files'][LANGUAGE_NONE]['#file_upload_description'] = '';
+    $js_file_path = drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.topic_form.js';
+    $form['#attached']['js'][] = $js_file_path;
+
+    // Do title profanity validation.
+    $form['#validate'][] = '_sbac_forum__topic_form__title_profanity_validate';
+
+    // Modify submit buttons
+    $cancel_button_classes = 'sbac-forum-add-forum-cancel-button gray';
+    $form['actions']['cancel_add'] = array(
+      '#type'         => 'submit',
+      '#value'        => t('Cancel'),
+      '#weight' => 4,
+      '#limit_validation_errors' => array(),
+      '#attributes'   => array(
+        'class' => array($cancel_button_classes),
+      ),
+      '#submit' => array('_sbac_forum__add_topic_form_redirect_submit'),
+      '#prefix'       => '<div class="sbac-forum-add-topic-buttons">',
+    );
+  }
+
+  // Hide fields
+  global $user;
+  $has_access = FALSE;
+  if ($user->uid == 1) {
+    $has_access = TRUE; // Only allow superadmin to see fields.
+  }
+  $form['field_topic_forum_parent']['#access'] = $has_access;
+  $form['author']['#access'] = $has_access;
+  $form['options']['#access'] = $has_access;
+  $form['revision_information']['#access'] = $has_access;
+}
+
+
+function _sbac_forum__topic_form__default_parent_term_validate(&$form, &$form_state) {
+  $values = $form_state['values'];
+  if (isset($values['auto_default_forum_parent'])) {
+    $parent_term = taxonomy_term_load($values['auto_default_forum_parent']);
+    if (!empty($parent_term)) { // Check if this is a valid term.
+      global $user;
+      // Check user has access to do this.
+      $has_access = sbac_forum__api__check_forum_view_access($user, $parent_term);
+      $is_member = sbac_forum__api__check_user_is_forum_member($parent_term->tid, $user->uid);
+      if (($has_access) &&
+          ($is_member === TRUE) ) {
+        $form_state['values']['field_topic_forum_parent'][LANGUAGE_NONE][0] = get_object_vars($parent_term);
+      } else {
+        form_set_error('', 'You do not have access to add a topic to this forum.'); // Forum is either restricted or user is not a member.
+      }
+    } else {
+      form_set_error('', 'Could not load associated Forum.'); // someone trying to url hack to a different non-existent forum
+    }
+  } else {
+    form_set_error('', 'There is no Forum associated with this topic post.'); // Default forum parent should be passed in. Otherwise it will be an orphan
+  }
+}
+
+/**
+ * Validation function for the title
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_forum__topic_form__title_profanity_validate(&$form, &$form_state) {
+  $title = $form_state['values']['title'];
+  $bad_words = profanity_validate_text($title);
+  if ($bad_words) {
+    $error = 'Please remove any inappropriate language from Topic Title.';
+    form_set_error('title', $error);
+  }
+}
+
+function _sbac_forum__add_topic_form_redirect_submit($form, &$form_state) {
+  $values = $form;
+
+  $tid = 0;
+  $link = 'forums';
+  if (isset($values['auto_default_forum_parent']) ) {
+    $tid = $values['auto_default_forum_parent']['#value'];
+  }
+  if (!empty($tid)) {
+    $link = 'forums/term/' . $tid;
+  }
+
+
+  if (isset($form_state['node'])) { // Coming from edit form.
+    if (!empty($form_state['node']->nid)) {
+      $link = 'node/'. $form_state['node']->nid;
+    }
+  }
+
+  $form_state['redirect'] = $link;
 }
 
 
