@@ -217,7 +217,7 @@ function sbac_forum_field_group_info() {
       'formatter' => 'collapsible',
       'instance_settings' => array(
         'description' => '',
-        'classes' => 'group-topic-materials field-group-fieldset',
+        'classes' => '',
         'required_fields' => 1,
       ),
     ),
