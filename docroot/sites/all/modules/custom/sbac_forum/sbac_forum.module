@@ -347,7 +347,7 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_node',
-      'sbac_forum_preprocess_node__topic',
+      // 'sbac_forum_preprocess_node__topic', // This doesnt actually work. see sbac_forum_preprocess_node
     ),
   );
 
@@ -532,10 +532,15 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   return $items;
 }
 
-// function sbac_forum_preprocess_node(&$vars) {
-//   dsm($vars);
-//   $vars['whang'] = 'what';
-// }
+/**
+ * Implements hook_preprocess_node
+ */
+function sbac_forum_preprocess_node(&$vars) {
+  if ($vars['type'] == 'topic') {
+    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.preprocess');
+    sbac_forum_preprocess_node__topic($vars);
+  }
+}
 
 /**
  * Implements hook_form_alter

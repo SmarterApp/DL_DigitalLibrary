@@ -1,6 +1,66 @@
 <?php
 
 
+function sbac_forum_preprocess_node__topic(&$vars) {
+  drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
+  global $user;
+  $node_data = entity_metadata_wrapper('node', $vars['node']);
+  $forum_term = $node_data->field_topic_forum_parent->value();
+
+  // Declare variables.
+  $forum_name_text = '';
+  $control_data = array();
+  $back_link = '';
+  $delete_link = '';
+  $edit_link = '';
+
+  $is_faci = FALSE;
+  if (in_array('facilitator', $user->roles)) {
+    $is_faci = TRUE;
+  }
+
+  if (!empty($forum_term)) {
+    $forum_name_text = $forum_term->name;
+    $is_member = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $user->uid);
+    if ($is_member === TRUE) {
+      $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
+      drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
+    }
+
+    $link_ops = array(
+      'attributes' => array(
+        'class' => 'topic-node-back-link',
+      ),
+    );
+    $link_url = 'forums/term/' . $forum_term->tid;
+    $back_link = '<span class="tertiary-back-link-img"></span>' . l('All Topics', $link_url, $link_ops);
+  }
+
+  // Access Check this.
+  $can_delete = node_access('delete', $vars['node']);
+  if ($can_delete) {
+    $delete_link = '<span class="tertiary-delete-link-img"></span>' . l('Delete Topic', '#');
+  }
+  $can_edit = node_access('update', $vars['node']);
+  if ($can_edit) {
+    $edit_link = '<span class="tertiary-edit-link-img"></span>' . l('Edit Topic', '#');
+  }
+
+
+  $parent_forum_markup = array(
+    'forum_name'       => $forum_name_text,
+    'controls'         => $control_data, // Has key "markup" and "classes"
+  );
+  $vars['parent_forum_markup'] = $parent_forum_markup;
+
+  $tertiary_nav = array(
+    'back'             => $back_link,
+    'delete'           => $delete_link,
+    'edit'             => $edit_link,
+  );
+  $vars['tertiary_nav'] = $tertiary_nav;
+}
+
 /**
  * ---------- Forum list View.---------------
  */

@@ -76,15 +76,42 @@
  */
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
-<div>
 
+<div class="topic-node--forum-parent-info">
+
+  <div class="topic-node-forum-parent-name-wrapper">
+    <h1><?php print $parent_forum_markup['forum_name']; ?><h1>
+  </div>
+
+  <div class="sbac-forum-topic-node-view-controls-wrapper">
+    <?php if(!empty($parent_forum_markup['controls']['markup'])) : ?>
+      <div class="sbac-forum-topic-node-view-controls">
+        <?php print t('Forum Settings');?>
+      </div>
+      <div class="sbac-forum-topic-node-view-controls-popup <?php print $$parent_forum_markup['controls']['classes']; ?>">
+        <?php print $parent_forum_markup['controls']['markup']; ?>
+      </div>
+    <?php endif;?>
+  </div> <!-- end vp-controls-wrapper -->
+
+</div> <!-- end parent-info -->
+
+<div class="topic-node-view-tertiary-nav">
+  <div class="topic-node-view-tertiary-nav-left">
+    <?php print $tertiary_nav['back']; ?>
+  </div>
+  <div class="topic-node-view-tertiary-nav-right">
+    <?php print $tertiary_nav['delete']; ?>
+    <?php print $tertiary_nav['edit']; ?>
+  </div>
+</div> <!-- end tertiary-nav -->
+
+<div class="topic-node-auhor-pane">
+  author image here.
 </div>
+
   <?php print render($title_prefix); ?>
-  <?php if (!$page): ?>
-    <?php if (!$page): ?>
-      <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
-    <?php endif; ?>
-  <?php endif; ?>
+    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
   <?php print render($title_suffix); ?>
 
   <?php if ($display_submitted): ?>
