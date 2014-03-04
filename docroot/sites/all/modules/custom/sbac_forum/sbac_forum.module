@@ -907,6 +907,10 @@ function sbac_forum_delete_orphaned_topics_process($item_nid) {
  *
  * =============================================================================
  */
+
+/**
+ * Implements hook_taxonomy_term_insert
+ */
 function sbac_forum_taxonomy_term_insert($term) {
   if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
     global $user;
@@ -925,7 +929,9 @@ function sbac_forum_taxonomy_term_insert($term) {
   }
 }
 
-
+/**
+ * Implements hook_taxonomy_term_presave
+ */
 function sbac_forum_taxonomy_term_presave($term) {
   if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
     global $user;
@@ -940,6 +946,61 @@ function sbac_forum_taxonomy_term_presave($term) {
     $role_access = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
     if ($role_access) {
       $term->field_forum_access_role_list[LANGUAGE_NONE] = array(); // Unset the selection for role lists.
+    }
+  }
+}
+
+
+/**
+ * =============================================================================
+ *
+ *      Topic Node CRUD functions
+ *
+ * =============================================================================
+ */
+
+/**
+ * Implements hook_node_insert
+ */
+function sbac_forum_node_insert($node) {
+  if ($node->type == 'topic') {
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    if (isset($node_wrapper->field_topic_forum_parent)) {
+      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_obj)) {
+        // Update topic counter field on forum.
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if (isset($forum_wrapper->field_forum_topic_count)) {
+          $current_count = $forum_wrapper->field_forum_topic_count->value();
+          $current_count++;
+          $forum_wrapper->field_forum_topic_count->set($current_count);
+          $forum_wrapper->save(TRUE);
+          taxonomy_term_save($forum_obj);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_delete
+ */
+function sbac_forum_node_delete($node) {
+  if ($node->type == 'topic') {
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    if (isset($node_wrapper->field_topic_forum_parent)) {
+      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_obj)) {
+        // Update topic counter field on forum.
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if (isset($forum_wrapper->field_forum_topic_count)) {
+          $current_count = $forum_wrapper->field_forum_topic_count->value();
+          $current_count--;
+          $forum_wrapper->field_forum_topic_count->set($current_count);
+          $forum_wrapper->save(TRUE);
+          taxonomy_term_save($forum_obj);
+        }
+      }
     }
   }
 }
