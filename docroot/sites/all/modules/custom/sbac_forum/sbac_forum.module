@@ -338,6 +338,19 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  // Node template override
+  $items['node__topic'] = array(
+    'render element' => 'elements',
+    'path' => $path,// . '/templates',
+    'file' => 'includes/sbac_forum.preprocess.inc',
+    'template' => 'templates/node--topic',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_node',
+      'sbac_forum_preprocess_node__topic',
+    ),
+  );
+
   //============== Views template overrides. ===============================
 
   /**
@@ -518,6 +531,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
 
   return $items;
 }
+
+// function sbac_forum_preprocess_node(&$vars) {
+//   dsm($vars);
+//   $vars['whang'] = 'what';
+// }
 
 /**
  * Implements hook_form_alter
@@ -809,6 +827,10 @@ function sbac_forum_form_topic_node_form_alter(&$form, $form_state, $form_id) {
   $form['author']['#access'] = $has_access;
   $form['options']['#access'] = $has_access;
   $form['revision_information']['#access'] = $has_access;
+
+  $path_to_css_file = drupal_get_path('module', 'sbac_forum');
+  $path_to_css_file .= '/css/sbac_forum.css';
+  $form['#attached']['css'][] = $path_to_css_file;
 }
 
 
