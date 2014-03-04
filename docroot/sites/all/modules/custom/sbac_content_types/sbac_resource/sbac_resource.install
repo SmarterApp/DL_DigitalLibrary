@@ -1050,7 +1050,6 @@ function sbac_resource_update_7047() {
       db_create_table($name, $table);
     }
   }
-
   return $ret;
 }
 

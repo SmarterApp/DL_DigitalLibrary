@@ -114,6 +114,11 @@ function sbac_flag_menu() {
     'access callback' => TRUE,
   );
 
+  $items['sbac-flag/run-cron'] = array(
+    'page callback' => 'sbac_flag_cron_run',
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -210,6 +215,52 @@ function sbac_flag_session_regenerate() {
     $user = $account;
   }
   date_default_timezone_set(drupal_get_user_timezone());
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * After 24 hours (the user session) cron job will make the moderated
+ * item available to all moderators in the queue if a user has not completed
+ * the moderation in the allotted user session.  This will prevent a
+ * moderator from holding on to a flagged item indefinitely. If a user
+ * is currently working on the moderated item (the item is active),
+ * the cron job will not remove the item
+ *
+ */
+function sbac_flag_cron_run() {
+  $sql = "SELECT * FROM {eck_flag} WHERE being_moderated > 0 AND resolved = 0";
+  $result = db_query($sql);
+  foreach ($result as $row) {
+    $sql = "SELECT * FROM {sessions} WHERE uid = :uid";
+    $session = db_query($sql, array(':uid' => $row->being_moderated))->fetchObject();
+    if ($session) {
+      $twenty_four_hours_ago = time() - 86400;
+      if ($row->changed >= $twenty_four_hours_ago && $session->timestamp >= $twenty_four_hours_ago) {
+        // if the changed date of the eck_flag is greater then 24 hours
+        // and
+        // if the user's session timestamp is greater then 24 hours
+        // unset this flag and return it to everyone
+        $node = node_load($row->nid);
+        if ($row->type == 'resource') {
+          //sbac_flag_unset_being_moderated($node);
+        }
+        else {
+          //sbac_flag_unset_being_moderated($node, $row->target_id);
+        }
+      }
+    }
+    else {
+      // if there is no session, the user left (closed browser), unset the eck_flag
+      $node = node_load($row->nid);
+      if ($row->type == 'resource') {
+        //sbac_flag_unset_being_moderated($node);
+      }
+      else {
+        //sbac_flag_unset_being_moderated($node, $row->target_id);
+      }
+    }
+  }
 }
 
 /**
@@ -1071,10 +1122,10 @@ function sbac_flag_get_all_urgent_flags($flags) {
 function sbac_flag_set_being_moderated($node, $eck_review = FALSE) {
   global $user;
   if ($eck_review) {
-    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :uid WHERE ef.target_id = :target_id AND ef.target_type = :type", array(':uid' => $user->uid, ':target_id' => $eck_review, ':type' => 'review'));
+    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :uid, ef.changed = :changed WHERE ef.target_id = :target_id AND ef.target_type = :type", array(':uid' => $user->uid, ':changed' => time(), ':target_id' => $eck_review, ':type' => 'review'));
   }
   else {
-    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :uid WHERE ef.nid = :nid AND ef.target_type = :type", array(':uid' => $user->uid, ':nid' => $node->nid, ':type' => 'resource'));
+    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :uid, ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':uid' => $user->uid, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
   }
 }
 
@@ -1086,10 +1137,10 @@ function sbac_flag_set_being_moderated($node, $eck_review = FALSE) {
  */
 function sbac_flag_unset_being_moderated($node, $eck_review = FALSE) {
   if ($eck_review) {
-    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :being_moderated WHERE ef.target_id = :target_id AND ef.target_type = :type", array(':being_moderated' => 0, ':target_id' => $eck_review, ':type' => 'review'));
+    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :being_moderated, ef.changed = :changed WHERE ef.target_id = :target_id AND ef.target_type = :type", array(':being_moderated' => 0, ':changed' => time(), ':target_id' => $eck_review, ':type' => 'review'));
   }
   else {
-    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :being_moderated WHERE ef.nid = :nid AND ef.target_type = :type", array(':being_moderated' => 0, ':nid' => $node->nid, ':type' => 'resource'));
+    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :being_moderated, ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':being_moderated' => 0, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
   }
 }
 
@@ -1100,10 +1151,10 @@ function sbac_flag_unset_being_moderated($node, $eck_review = FALSE) {
  */
 function sbac_flag_resolve_all_flags($node, $eck_review = FALSE) {
   if ($eck_review) {
-    db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved WHERE ef.target_id = :target_id AND ef.target_type = :type", array(':resolved' => 1, ':target_id' => $eck_review, ':type' => 'review'));
+    db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved, ef.changed = :changed WHERE ef.target_id = :target_id AND ef.target_type = :type", array(':resolved' => 1, ':changed' => time(), ':target_id' => $eck_review, ':type' => 'review'));
   }
   else {
-    db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 1, ':nid' => $node->nid, ':type' => 'resource'));
+    db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 1, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
   }
 }
 
@@ -1115,7 +1166,7 @@ function sbac_flag_resolve_all_flags($node, $eck_review = FALSE) {
  * @param $node
  */
 function sbac_flag_remove_resource($node) {
-  db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 2, ':nid' => $node->nid, ':type' => 'resource'));
+  db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved, ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 2, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
 }
 
 /**

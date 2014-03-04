@@ -20,9 +20,7 @@ function sbac_resource_views_query_alter(&$view, &$query) {
   if ($view->name == 'my_resources') {
     global $user;
     $view->query->add_table('sbac_node_resource_state');
-    //$all_condition = db_and()->condition('sbac_node_resource_state.state', "FRUIT")->condition('sbac_node_resource_state.uid', 0);
     $user_condition = db_and()->condition('sbac_node_resource_state.state', "author")->condition('sbac_node_resource_state.uid', $user->uid);
-    //$view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
     $view->query->add_where('AND', $user_condition);
     $node_condition = db_or()->condition('node.uid', $user->uid);
     $view->query->add_where('AND', $node_condition);
