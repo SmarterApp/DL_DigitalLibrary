@@ -6,9 +6,9 @@
  *
  * Available variables:
  * - $title: the (sanitized) title of the node.
- * - $content: An array of node items. Use render($content) to print them all, or
- *   print a subset such as render($content['field_example']). Use
- *   hide($content['field_example']) to temporarily suppress the printing of a
+ * - $content: An array of node items. Use render($content) to echo them all, or
+ *   echo a subset such as render($content['field_example']). Use
+ *   hide($content['field_example']) to temporarily suppress the echoing of a
  *   given element.
  * - $user_picture: The node author's picture from user-picture.tpl.php.
  * - $date: Formatted creation date. Preprocess functions can reformat it by
@@ -78,20 +78,20 @@
   drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
 ?>
 <?php if (isset($resource_type) && $resource_type): ?>
-  <span class="resource-type"><?php print $resource_type; ?></span>
+  <span class="resource-type"><?php echo $resource_type; ?></span>
 <?php endif; ?>
-<article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<article id="node-<?php echo $node->nid; ?>" class="<?php echo $classes; ?>"<?php echo $attributes; ?>>
   <div class="resource-attributes">
     <?php if (isset($author) && $author): ?>
-      <p><span class="author">Author: </span><?php print $author; ?></p>
+      <p><span class="author">Author: </span><?php echo $author; ?></p>
     <?php endif; ?>
 
     <?php if (isset($field_publisher[0]['safe_value']) && $field_publisher[0]['safe_value']): ?>
-      <p class="divider"><span class="publisher">Owner: </span><?php print $field_publisher[0]['safe_value']; ?><p>
+      <p class="divider"><span class="publisher">Owner: </span><?php echo $field_publisher[0]['safe_value']; ?><p>
     <?php endif; ?>
 
     <?php if (isset($edit_link) && $edit_link): ?>
-      <p><span class="edit-link"><?php print $edit_link; ?></span></p>
+      <p><span class="edit-link"><?php echo $edit_link; ?></span></p>
     <?php endif; ?>
 
     <p class="metadata"></p>
@@ -99,26 +99,36 @@
 
   <?php if (isset($viewer)) : ?>
   <div id="resource-element-wrapper">
-    <div id="resource-element" class="<?php echo $viewer_class; ?>"><?php print $viewer; ?></div>
+    <div id="resource-element" class="<?php echo $viewer_class; ?>"><?php echo $viewer; ?></div>
   </div>
     <div class="infobar">
     <div class="row">
       <div class="column large-3">
-        <?php print $materials; ?>
+        <?php echo $materials; ?>
         <div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>
       </div>
       <div class="column large-7">
-        <p><span id="sbac-filename"><?php print $viewer_filename; ?></span></p>
+        <p><span id="sbac-filename"><?php echo $viewer_filename; ?></span></p>
       </div>
       <div class="column large-2">
         <?php
+          if (isset($download_partial)) {
+            echo "<p>This is a <span id='sbac-partial-download'>partial download</span></p>";
+          }
           if (isset($download)) {
-            print $download;
+            echo $download;
           }
         ?>
       </div>
     </div>
   </div>
+  <?php endif; ?>
+
+  <?php if (isset($download_partial)): ?>
+    <div class="sbac-download-dropdown f-dropdown" style="display:none;">
+      <p>The resource includes on or more copy-protected files.</p>
+      <p>Copy-protected files are excluded from the download.</p>
+    </div>
   <?php endif; ?>
 
   <?php if (isset($flag['resource']) && count($flag) > 0): ?>
@@ -144,7 +154,7 @@
   <?php endif; ?>
 
   <?php if (isset($content['review']) && $content['review']): ?>
-    <div id="review"><?php print render($content['review']); ?></div>
+    <div id="review"><?php echo render($content['review']); ?></div>
   <?php endif; ?>
 
 </article>

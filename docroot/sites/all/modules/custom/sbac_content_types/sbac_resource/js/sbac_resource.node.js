@@ -125,6 +125,10 @@
         return false;
       });
 
+      $('#sbac-partial-download').click( function() {
+        $('.sbac-download-dropdown').toggle();
+      });
+
       // when the list loses focus.
       $(document).click(function() {
         var selectedDiv = $('.selectedDiv');

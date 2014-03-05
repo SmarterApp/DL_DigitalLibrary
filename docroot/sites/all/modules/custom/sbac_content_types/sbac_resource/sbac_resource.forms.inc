@@ -1876,9 +1876,6 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['field_view_permissions_per_state']['#weight'] = 39;
 
   // Resource Actions.
-  if ($form['field_resource_actions']['und']['#default_value'] == NULL) {
-    $form['field_resource_actions']['und']['#default_value'] = array(0, 1);
-  }
   $form['field_resource_actions']['#weight'] = 40;
 
   // Sharing options

@@ -653,8 +653,12 @@ function sbac_resource_preprocess_node(&$vars) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
       $viewer = _sbac_resource_preview_content($vars);
       $materials = _sbac_resource_preview_materials($vars);
-      if (isset($vars['document']) && sbac_media_downloadable_scheme($vars['document']) && !in_array(SBAC_SHARE_GUEST, $user->roles)) {
+      $result = sbac_resource_determine_download_ability($vars);
+      if ($result['primary'] || $result['secondary']) {
         $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('class' => 'button small right')));
+        if ($result['primary'] == FALSE || $result['secondary'] == FALSE) {
+          $vars['download_partial'] = TRUE;
+        }
       }
       $vars['viewer'] = $viewer['viewer'];
       $vars['viewer_filename'] = $viewer['viewer_filename'];
@@ -662,6 +666,35 @@ function sbac_resource_preprocess_node(&$vars) {
       $vars['materials'] = $materials;
     }
   }
+}
+
+/**
+ * Determines if the resource button is displayed or not.
+ *
+ */
+function sbac_resource_determine_download_ability(&$vars) {
+  global $user;
+  $result = array('primary' => FALSE, 'secondary' => FALSE);
+  if (isset($vars['document']) && sbac_media_downloadable_scheme($vars['document']) && !in_array(SBAC_SHARE_GUEST, $user->roles)) {
+    if (isset($vars['field_resource_actions'][0])) {
+      foreach ($vars['field_resource_actions'] as $index => $value) {
+        if ($index == 0) { // primary or secondary depending on how drupal served this up.
+          if ($value['value'] == 0) {
+            $result['primary'] = TRUE;
+          }
+          if ($value['value'] == 1) {
+            $result['secondary'] = TRUE;
+          }
+        }
+        if ($index == 1) { // always secondary
+          if ($value['value'] == 1) {
+            $result['secondary'] = TRUE;
+          }
+        }
+      }
+    }
+  }
+  return $result;
 }
 
 /**
