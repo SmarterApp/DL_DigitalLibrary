@@ -1722,7 +1722,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    display: block;
 	    font-size: 22px;
 	    font-weight: bold;
-	    margin: 0 0 25px;
+	    margin: 0 0 5px;
 	    padding: 0;
 	    text-transform: capitalize;
 		}
@@ -1731,7 +1731,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		  display: block;
 	    float: right;
 	    height: 80px;
-	    margin-top: -100px;
+	    margin-top: -90px;
 	    padding-top: 50px;
 	    position: relative;
 	    right: 0;
@@ -1790,12 +1790,151 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    width: 130px;
 				
 				ul {
-				    list-style-type: none;
-				    margin: 0;
-				    padding: 5px 0 10px;
+				  list-style-type: none;
+			    margin: 0;
+			    padding: 10px 0 7px;
+					li {
+						margin-left: 15px;
+						a {
+							color: #0583AC;
+						}
+						
+						a:hover {
+							text-decoration: underline;
+						}
+					}
 				}
 			}
 		}
+	}
+	
+	.topic-node-view-tertiary-nav {
+		clear: both;
+		
+		.topic-node-view-tertiary-nav-left {
+			float: left;
+			width: 50%;
+			
+			a.topic-node-back-link {
+				display: inline-block;
+		    font-size: 15px;
+		    line-height: 20px;
+		    margin: 15px 0;
+		    vertical-align: top;
+				color: #0583AC;
+			}
+			
+			a.topic-node-back-link:hover {
+				text-decoration: underline;
+			}
+			
+			a.topic-node-back-link:before {
+			  content: "";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    position: relative;
+		    text-decoration: none;
+		    top: -2px;
+			}
+		}
+		
+		.topic-node-view-tertiary-nav-right {
+			float: right;
+			width: 50%;
+			
+			span {
+				float: right;
+			}
+			
+			.tertiary-edit-link a:before {
+			  content: "";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    opacity: 0.5;
+		    position: relative;
+		    text-decoration: none;
+		    top: -2px;
+			}
+			
+			.tertiary-edit-link a {
+			  float: right;
+		    font-size: 15px;
+		    margin: 15px 0;
+		    color: #62676E;
+		    display: inline-block;
+		    line-height: 20px;
+		    vertical-align: top;
+			}
+			
+			.tertiary-delete-link a:before {
+			  content: "";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    opacity: 0.5;
+		    position: relative;
+		    text-decoration: none;
+		    top: -2px;
+			}
+			
+			.tertiary-delete-link a {
+			  float: right;
+		    font-size: 15px;
+		    margin: 15px 0 15px 30px;
+		    color: #62676E;
+		    display: inline-block;
+		    line-height: 20px;
+		    vertical-align: top;
+			}
+			
+			.tertiary-edit-link a:hover,
+			.tertiary-delete-link a:hover {
+				text-decoration: underline;
+			}
+			
+			.tertiary-edit-link a:hover:before,
+			.tertiary-delete-link a:hover:before {
+				opacity: 1;
+			}
+		}
+	}
+	
+	.topic-node-auhor-pane {
+		padding-right: 40px;
+		background-image: url("../images/avatar.png");
+		background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 120px;
+    width: 120px;
+		text-indent: -9999;
+		float: left;
+		margin-right: 40px;
+	}
+	
+	h2.node-title a {
+		color: #000000;
+	  display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0 0 9px;
+    text-transform: capitalize;
+	}
+	
+	.body.field {
+		font-size: 16px;
+		line-height: 1.6;
+    margin: 0;
+    max-width: 560px;
 	}
 }
 

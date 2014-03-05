@@ -37,16 +37,16 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   }
 
   // Access Check this.
+	$can_edit = node_access('update', $vars['node']);
+  if ($can_edit) {
+    $edit_link = '<span class="tertiary-edit-link">' . l('Edit Topic', '#'). '</span>';
+  }
+	
   $can_delete = node_access('delete', $vars['node']);
   if ($can_delete) {
-    $delete_link = '<span class="tertiary-delete-link-img"></span>' . l('Delete Topic', '#');
+    $delete_link = '<span class="tertiary-delete-link">' . l('Delete Topic', '#') . '</span>';
   }
-  $can_edit = node_access('update', $vars['node']);
-  if ($can_edit) {
-    $edit_link = '<span class="tertiary-edit-link-img"></span>' . l('Edit Topic', '#');
-  }
-
-
+  
   $parent_forum_markup = array(
     'forum_name'       => $forum_name_text,
     'controls'         => $control_data, // Has key "markup" and "classes"
