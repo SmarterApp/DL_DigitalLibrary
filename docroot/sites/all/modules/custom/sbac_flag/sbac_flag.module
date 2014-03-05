@@ -114,11 +114,6 @@ function sbac_flag_menu() {
     'access callback' => TRUE,
   );
 
-  $items['sbac-flag/run-cron'] = array(
-    'page callback' => 'sbac_flag_cron_run',
-    'access callback' => TRUE,
-  );
-
   return $items;
 }
 
@@ -228,7 +223,7 @@ function sbac_flag_session_regenerate() {
  * the cron job will not remove the item
  *
  */
-function sbac_flag_cron_run() {
+function sbac_flag_cron() {
   $sql = "SELECT * FROM {eck_flag} WHERE being_moderated > 0 AND resolved = 0";
   $result = db_query($sql);
   foreach ($result as $row) {
@@ -243,10 +238,10 @@ function sbac_flag_cron_run() {
         // unset this flag and return it to everyone
         $node = node_load($row->nid);
         if ($row->type == 'resource') {
-          //sbac_flag_unset_being_moderated($node);
+          sbac_flag_unset_being_moderated($node);
         }
         else {
-          //sbac_flag_unset_being_moderated($node, $row->target_id);
+          sbac_flag_unset_being_moderated($node, $row->target_id);
         }
       }
     }
@@ -254,10 +249,10 @@ function sbac_flag_cron_run() {
       // if there is no session, the user left (closed browser), unset the eck_flag
       $node = node_load($row->nid);
       if ($row->type == 'resource') {
-        //sbac_flag_unset_being_moderated($node);
+        sbac_flag_unset_being_moderated($node);
       }
       else {
-        //sbac_flag_unset_being_moderated($node, $row->target_id);
+        sbac_flag_unset_being_moderated($node, $row->target_id);
       }
     }
   }
