@@ -77,6 +77,7 @@
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
+
 <div class="topic-node--forum-parent-info">
 
   <div class="topic-node-forum-parent-name-wrapper">
@@ -93,7 +94,6 @@
       </div>
     <?php endif;?>
   </div> <!-- end vp-controls-wrapper -->
-
 </div> <!-- end parent-info -->
 
 <div class="topic-node-view-tertiary-nav">
@@ -106,30 +106,42 @@
   </div>
 </div> <!-- end tertiary-nav -->
 
-<div class="topic-node-auhor-pane">
-  author image here.
-</div>
+<div class="topic-node-main-content">
 
-  <?php print render($title_prefix); ?>
-    <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
-  <?php print render($title_suffix); ?>
-
-  <?php if ($display_submitted): ?>
-    <div class="posted">
-      <?php if ($user_picture): ?>
-        <?php print $user_picture; ?>
-      <?php endif; ?>
-      <?php print $submitted; ?>
+  <div class="topic-node-main-content-left">
+    <div class="topic-node-auhor-pane">
+      author image here.
     </div>
-  <?php endif; ?>
+  </div> <!-- end main content left-->
 
-  <?php
-    // We hide the comments and links now so that we can render them later.
-    hide($content['comments']);
-    hide($content['links']);
-    hide($content['field_tags']);
-    print render($content);
-  ?>
+  <div class="topic-node-main-content-right">
+    <?php print render($title_prefix); ?>
+      <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
+    <?php print render($title_suffix); ?>
+
+    <?php if ($display_submitted): ?>
+      <div class="posted">
+        <?php if ($user_picture): ?>
+          <?php print $user_picture; ?>
+        <?php endif; ?>
+        <?php print $submitted; ?>
+      </div>
+    <?php endif; ?>
+
+    <?php
+      // We hide the comments and links now so that we can render them later.
+      hide($content['comments']);
+      hide($content['links']);
+      hide($content['field_tags']);
+      print render($content);
+    ?>
+  </div> <!-- end main content right-->
+</div> <!-- end main content-->
+
+<div class="topic-node-comments-region">
+  <div class="whatsup">
+    <?php print render($content['comments']['comment_form']); ?>
+  </div>
 
   <?php if (!empty($content['field_tags']) && !$is_front): ?>
     <?php print render($content['field_tags']) ?>
@@ -137,5 +149,7 @@
 
   <?php print render($content['links']); ?>
   <?php print render($content['comments']); ?>
+</div> <!--end comments-section -->
+
 
 </article>
