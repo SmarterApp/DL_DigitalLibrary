@@ -101,8 +101,8 @@
     <?php print $tertiary_nav['back']; ?>
   </div>
   <div class="topic-node-view-tertiary-nav-right">
+		<?php print $tertiary_nav['edit']; ?>
     <?php print $tertiary_nav['delete']; ?>
-    <?php print $tertiary_nav['edit']; ?>
   </div>
 </div> <!-- end tertiary-nav -->
 

@@ -1075,11 +1075,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 
 	.sbac-forum-vp-controls:before {
-	  content: "\f000";
+	  content:"\e621";
     display: inline-block;
     float: left;
-    font-family: "GeneralFoundicons";
-    font-size: 18px;
+    font-family: "sbac";
+    font-size: 20px;
     margin: 0 7px 0 0;
     opacity: 0.5;
 		cursor: pointer;
@@ -1533,11 +1533,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 
 		.member-control-icon:before {
-		  content: "\f000";
+		  content:"\e621";
 	    display: inline-block;
 	    float: left;
-	    font-family: "GeneralFoundicons";
-	    font-size: 18px;
+	    font-family: "sbac";
+	    font-size: 20px;
 	    margin: 0 7px 0 0;
 	    opacity: 0.5;
 			cursor: pointer;
@@ -1546,7 +1546,6 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		.sbac-forum-vp-controls:hover:before {
 		  opacity: 1;
 		}
-		
 	}
 }
 
@@ -1594,7 +1593,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 // --------------------- Add, View Topic Page ------------------------------
 
 .page-node-add-topic,
-.node-type-topic {
+.node-type-topic,
+.page-comment {
 	
 	.main-container {
 	  background: none repeat scroll 0 0 #FFFFFF;
@@ -1676,10 +1676,12 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			text-align: right;
 			padding-right: 23px;
 		}
+		
 		button {
 			float: right;
 			background-color: #8A1538;
 		  border: 1px solid #793348;
+			margin: 10px 0;
 		}
 	}
 	
@@ -1705,8 +1707,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 }
 
-/*View Topic Page*/
-.node-type-topic {
+/*---------------------------
+View Topic Page, Comment Page
+----------------------------*/
+.node-type-topic,
+.page-comment {
 	
 	#page-title,
 	.button-group {
@@ -1739,12 +1744,12 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    z-index: 999;
 		
 		 .sbac-forum-topic-node-view-controls:before {
-			  content: "";
+			  content:"\e621";
 		    cursor: pointer;
 		    display: inline-block;
 		    float: left;
-		    font-family: "GeneralFoundicons";
-		    font-size: 18px;
+		    font-family: "sbac";
+		    font-size: 20px;
 		    margin: 0 7px 0 0;
 		    opacity: 0.5;
 			}
@@ -1808,6 +1813,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 	}
 	
+	/*top navigation*/
 	.topic-node-view-tertiary-nav {
 		clear: both;
 		
@@ -1819,7 +1825,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				display: inline-block;
 		    font-size: 15px;
 		    line-height: 20px;
-		    margin: 15px 0;
+		    margin: 5px 0 15px;
 		    vertical-align: top;
 				color: #0583AC;
 			}
@@ -1829,7 +1835,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			}
 			
 			a.topic-node-back-link:before {
-			  content: "";
+			  content: "\e620";
 		    display: inline-block;
 		    font-family: 'sbac';
 		    font-size: 20px;
@@ -1850,7 +1856,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			}
 			
 			.tertiary-edit-link a:before {
-			  content: "";
+			  content: "\e61d";
 		    display: inline-block;
 		    font-family: 'sbac';
 		    font-size: 20px;
@@ -1865,7 +1871,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			.tertiary-edit-link a {
 			  float: right;
 		    font-size: 15px;
-		    margin: 15px 0;
+				margin: 5px 0 15px 30px;
 		    color: #62676E;
 		    display: inline-block;
 		    line-height: 20px;
@@ -1873,7 +1879,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			}
 			
 			.tertiary-delete-link a:before {
-			  content: "";
+			  content:"\e632";
 		    display: inline-block;
 		    font-family: 'sbac';
 		    font-size: 20px;
@@ -1888,7 +1894,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			.tertiary-delete-link a {
 			  float: right;
 		    font-size: 15px;
-		    margin: 15px 0 15px 30px;
+		    margin: 5px 0 15px;
 		    color: #62676E;
 		    display: inline-block;
 		    line-height: 20px;
@@ -1907,34 +1913,59 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 	}
 	
-	.topic-node-auhor-pane {
-		padding-right: 40px;
-		background-image: url("../images/avatar.png");
-		background-position: center center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    height: 120px;
-    width: 120px;
-		text-indent: -9999;
-		float: left;
-		margin-right: 40px;
+	/*topic main content*/
+	.topic-node-main-content {
+		clear: both;
+		
+		.topic-node-main-content-left {
+			float: left;
+			margin-right: 40px;
+			
+			.topic-node-auhor-pane {
+				background-image: url("../images/avatar.png");
+				background-position: center center;
+		    background-repeat: no-repeat;
+		    background-size: contain;
+		    height: 120px;
+		    width: 120px;
+				text-indent: -9999;
+				float: left;
+			}
+		}
+		
+		.topic-node-main-content-right {
+			float: left;
+			
+			h2 {
+				margin-bottom: 5px;
+				
+				&.node-title a {
+					color: #000000;
+				  display: block;
+			    font-size: 18px;
+			    font-weight: bold;
+			    margin: 0;
+			    padding: 0 0 5px;
+			    text-transform: capitalize;
+				}
+			}
+			
+			.body.field {
+				font-size: 16px;
+				line-height: 1.6;
+		    margin: 0;
+		    max-width: 560px;
+			}
+		}
+		
+		.field-name-field-topic-files {
+			margin-top: 10px;
+		}
 	}
 	
-	h2.node-title a {
-		color: #000000;
-	  display: block;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-    padding: 0 0 9px;
-    text-transform: capitalize;
-	}
-	
-	.body.field {
-		font-size: 16px;
-		line-height: 1.6;
-    margin: 0;
-    max-width: 560px;
+	/*Comments Region*/
+	.topic-node-comments-region {
+		clear: both;
 	}
 }
 
