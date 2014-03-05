@@ -88,7 +88,7 @@
       <div class="sbac-forum-topic-node-view-controls">
         <?php print t('Forum Settings');?>
       </div>
-      <div class="sbac-forum-topic-node-view-controls-popup <?php print $$parent_forum_markup['controls']['classes']; ?>">
+      <div class="sbac-forum-topic-node-view-controls-popup <?php print $parent_forum_markup['controls']['classes']; ?>">
         <?php print $parent_forum_markup['controls']['markup']; ?>
       </div>
     <?php endif;?>

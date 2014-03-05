@@ -5,7 +5,7 @@
     attach: function (context, settings) {
 
 
-      $('.bac-forum-topic-node-view-controls').mouseenter(function() {
+      $('.sbac-forum-topic-node-view-controls').mouseenter(function() {
         $('.sbac-forum-topic-node-view-controls-popup').show('fast');
       });
 
