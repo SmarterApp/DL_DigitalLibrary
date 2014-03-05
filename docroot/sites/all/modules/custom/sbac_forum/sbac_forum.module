@@ -551,7 +551,7 @@ function sbac_forum_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implements hook_form_FORM-ID_alter
  */
-function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id) {
+function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'taxonomy_form_term') {
     if ((isset($form['#term'])) &&
         (!isset($form['delete'])) &&
@@ -770,15 +770,17 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
 /**
  * Implements hook_form_alter
  */
-function sbac_forum_form_topic_node_form_alter(&$form, $form_state, $form_id) {
+function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['#node'])) {
     if (!isset($form['#node']->nid) ) { // Add new topic form.
       drupal_set_title('Start a Topic');
-      $default_forum_parent = $_GET['target-forum'];
-      if ($default_forum_parent) {
-        $form['auto_default_forum_parent'] = array(
+
+      if (!($form_state['executed'])) { // Only set this on non-ajax requests. Basically on page load. You lose the GET var after ajax callback.
+        $default_forum_parent = $_GET['target-forum'];
+        // Have to set default forum that this topic relates to.
+        $form_state['auto_default_forum_parent'] = array(
           '#type' => 'value',
-          '#value' => $default_forum_parent
+          '#value' => $default_forum_parent,
         );
       }
 
@@ -839,10 +841,11 @@ function sbac_forum_form_topic_node_form_alter(&$form, $form_state, $form_id) {
 }
 
 
-function _sbac_forum__topic_form__default_parent_term_validate(&$form, &$form_state) {
-  $values = $form_state['values'];
+
+function _sbac_forum__topic_form__default_parent_term_validate($form, &$form_state) {
+  $values = $form_state; // Safe so this doesnt act on form_state directly.
   if (isset($values['auto_default_forum_parent'])) {
-    $parent_term = taxonomy_term_load($values['auto_default_forum_parent']);
+    $parent_term = taxonomy_term_load($values['auto_default_forum_parent']['#value']);
     if (!empty($parent_term)) { // Check if this is a valid term.
       global $user;
       // Check user has access to do this.
