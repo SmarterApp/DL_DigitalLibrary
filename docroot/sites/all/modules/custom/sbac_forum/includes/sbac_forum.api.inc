@@ -312,6 +312,60 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
   return $output;
 }
 
+function sbac_forum__api__get_author_picture($user_id) {
+  $output = '';
+  $target_user = NULL;
+  if (is_numeric($user_id)) {
+    $target_user = user_load($user_id);
+  } else {
+    $target_user = $user_id; // Account is already passed in.
+  }
+
+  $account_data = entity_metadata_wrapper('user', $target_user);
+  if (isset($account_data->field_privacy)) {
+    $privacy_settings = $account_data->field_privacy->value();
+    if (in_array('picture', $privacy_settings)) { // Check privacy settings
+      if (!empty($target_user->picture)) { // Check if user has uploaded a picture
+        $picture = theme('image_style', array(
+          'style_name' => 'profile_image',
+          'path' => $target_user->picture->uri,
+          'attributes' => array('class' => 'topic-node-auth-pane-img profile-pic')
+        ));
+        $output = $picture;
+      }
+    }
+  }
+
+  return $output;
+}
+
+function sbac_forum__api__get_authpane_hoverover($user_id) {
+  $account = user_load($user_id);
+  $account_renderable = user_view($account, 'tooltip');
+
+  $account_data = entity_metadata_wrapper('user', $account);
+  $fn = $account_data->field_first_name->value();
+  $ln = $account_data->field_last_name->value();
+  $full_name = $fn . ' ' . $ln;
+
+  $tooltip = '
+              <span class="devtools-tooltip account-tooltip">
+                <a href="#" class="devtools-tooltip-trigger">' . $full_name . '</a>
+                <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
+              </span>
+             ';
+
+  $created = isset($entity->created) ? $entity->created : time();
+
+  $output = t('!name', array(
+    '!name' => $tooltip,
+    '!date' => format_date($created, 'simple'),
+  ));
+
+  return $output;
+}
+
+
 /**
  * Handles updating all required entities when user either leaves,is removed or is added back to a forum.
  *
@@ -432,7 +486,6 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
   }
   return $return_data;
 }
-
 
 /**
  * Notification Router for forum. Used when multiple notifications have to be created.

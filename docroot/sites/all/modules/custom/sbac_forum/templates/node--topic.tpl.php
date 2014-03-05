@@ -110,7 +110,13 @@
 
   <div class="topic-node-main-content-left">
     <div class="topic-node-auhor-pane">
-      author image here.
+      <?php print $main_content['author_image']; ?>
+    </div>
+    <div class="topic-node-author-pane-name">
+      <?php print $main_content['author_name_popup']; ?>
+    </div>
+    <div class="topic-node-author-pane-post-date">
+      <?php print $main_content['posted']; ?>
     </div>
   </div> <!-- end main content left-->
 
@@ -118,15 +124,6 @@
     <?php print render($title_prefix); ?>
       <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
     <?php print render($title_suffix); ?>
-
-    <?php if ($display_submitted): ?>
-      <div class="posted">
-        <?php if ($user_picture): ?>
-          <?php print $user_picture; ?>
-        <?php endif; ?>
-        <?php print $submitted; ?>
-      </div>
-    <?php endif; ?>
 
     <?php
       // We hide the comments and links now so that we can render them later.
@@ -139,7 +136,7 @@
 </div> <!-- end main content-->
 
 <div class="topic-node-comments-region">
-  <div class="whatsup">
+  <div class="topic-node-reply-direct-wrapper">
     <?php print render($content['comments']['comment_form']); ?>
   </div>
 

@@ -13,6 +13,9 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $back_link = '';
   $delete_link = '';
   $edit_link = '';
+  $author_image_markup = '';
+  $author_info = '';
+  $posted = '';
 
   $is_faci = FALSE;
   if (in_array('facilitator', $user->roles)) {
@@ -39,14 +42,23 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   // Access Check this.
 	$can_edit = node_access('update', $vars['node']);
   if ($can_edit) {
-    $edit_link = '<span class="tertiary-edit-link">' . l('Edit Topic', '#'). '</span>';
+    $edit_link = '<span class="tertiary-edit-link">' . l('Edit Topic', $node_data->edit_url->value()). '</span>';
   }
-	
+
   $can_delete = node_access('delete', $vars['node']);
   if ($can_delete) {
     $delete_link = '<span class="tertiary-delete-link">' . l('Delete Topic', '#') . '</span>';
   }
-  
+
+  // Author Pane Info.
+  $topic_author = $node_data->author->value();
+  $author_image_markup = sbac_forum__api__get_author_picture($topic_author);
+  $author_info = sbac_forum__api__get_authpane_hoverover($topic_author->uid);
+  $posted = date('M jS, Y', $node_data->created->value());
+
+
+  // Put everything into arrays and register in vars for tpl. ------------
+
   $parent_forum_markup = array(
     'forum_name'       => $forum_name_text,
     'controls'         => $control_data, // Has key "markup" and "classes"
@@ -59,6 +71,13 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'edit'             => $edit_link,
   );
   $vars['tertiary_nav'] = $tertiary_nav;
+
+  $main_content = array(
+    'author_image'      => $author_image_markup,
+    'author_name_popup' => $author_info,
+    'posted'            => $posted,
+  );
+  $vars['main_content'] = $main_content;
 }
 
 /**
