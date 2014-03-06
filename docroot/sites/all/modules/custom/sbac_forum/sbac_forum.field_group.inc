@@ -171,6 +171,34 @@ function sbac_forum_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_topic_comments_links|comment|comment_node_topic|form';
+  $field_group->group_name = 'group_topic_comments_links';
+  $field_group->entity_type = 'comment';
+  $field_group->bundle = 'comment_node_topic';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Attach link(s)',
+    'weight' => '6',
+    'children' => array(
+      0 => 'field_topic_comment_links',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Attach link(s)',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'classes' => 'group-topic-comments-links field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $export['group_topic_comments_links|comment|comment_node_topic|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_topic_comments_materials|comment|comment_node_topic|form';
   $field_group->group_name = 'group_topic_comments_materials';
   $field_group->entity_type = 'comment';
@@ -178,15 +206,14 @@ function sbac_forum_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Materials',
+    'label' => 'Attach file(s)',
     'weight' => '1',
     'children' => array(
       0 => 'field_topic_comment_files',
-      1 => 'field_topic_comment_links',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'label' => 'Materials',
+      'label' => 'Attach file(s)',
       'instance_settings' => array(
         'required_fields' => 1,
         'classes' => 'group-topic-comments-materials field-group-fieldset',
@@ -200,6 +227,34 @@ function sbac_forum_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_topic_links|node|topic|form';
+  $field_group->group_name = 'group_topic_links';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'topic';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Attach link(s)',
+    'weight' => '3',
+    'children' => array(
+      0 => 'field_topic_links',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Attach link(s)',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'classes' => 'group-topic-links field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $export['group_topic_links|node|topic|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_topic_materials|node|topic|form';
   $field_group->group_name = 'group_topic_materials';
   $field_group->entity_type = 'node';
@@ -207,20 +262,20 @@ function sbac_forum_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Materials',
+    'label' => 'Attach file(s)',
     'weight' => '2',
     'children' => array(
       0 => 'field_topic_files',
-      1 => 'field_topic_links',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Attach file(s)',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => '',
         'required_fields' => 1,
+        'classes' => '',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $export['group_topic_materials|node|topic|form'] = $field_group;

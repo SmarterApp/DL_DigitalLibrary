@@ -969,7 +969,10 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
     $form['title']['#maxlength_js'] = TRUE;
 
     // File uploaded widget tweaks
+    $form['field_topic_files'][LANGUAGE_NONE]['#title'] = '';
+    $form['field_topic_files'][LANGUAGE_NONE]['#file_upload_title'] = '';
     $form['field_topic_files'][LANGUAGE_NONE]['#file_upload_description'] = '';
+    $form['field_topic_links'][LANGUAGE_NONE]['#title'] = '';
     $js_file_path = drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.topic_form.js';
     $form['#attached']['js'][] = $js_file_path;
 
