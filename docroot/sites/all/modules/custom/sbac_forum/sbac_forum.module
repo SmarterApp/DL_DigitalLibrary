@@ -480,6 +480,32 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['views_view_field__forum_topic_list__block__uid'] = array(
+    'template'             => 'views-view-field--forum-topic-list--block--uid',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
+    'arguments'            => array('view' => null, 'field' => null, 'row' => null),
+    'original hook'        => 'views_view_field',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_field',
+      'sbac_forum_preprocess_views_view_field__forum_topic_list__block__uid',
+    ),
+  );
+
+  $items['views_view_field__forum_topic_list__block__last_comment_uid'] = array(
+    'template'             => 'views-view-field--forum-topic-list--block--last-comment-uid',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
+    'arguments'            => array('view' => null, 'field' => null, 'row' => null),
+    'original hook'        => 'views_view_field',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_field',
+      'sbac_forum_preprocess_views_view_field__forum_topic_list__block__last_comment_uid',
+    ),
+  );
+
 
   /**
    * ---------- Member list View.---------------

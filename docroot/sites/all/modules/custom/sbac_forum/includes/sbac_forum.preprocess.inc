@@ -259,6 +259,33 @@ function sbac_forum_preprocess_views_view_fields__forum_topic_list__block(&$vars
 
 }
 
+/**
+ * views_view_field preprocess
+ */
+function sbac_forum_preprocess_views_view_field__forum_topic_list__block__uid(&$vars) {
+  $user_uid = $vars['output'];
+  $new_output = '';
+  if (!empty($user_uid)) {
+    $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
+    $new_output = 'Started by: ' . $author_name . ' <span class="topic-listing-field-divider"></span> ';
+  }
+
+  $vars['output'] = $new_output;
+}
+
+/**
+ * views_view_field preprocess
+ */
+function sbac_forum_preprocess_views_view_field__forum_topic_list__block__last_comment_uid(&$vars) {
+  $user_uid = $vars['output'];
+  $new_output = '';
+  if (!empty($user_uid)) {
+    $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
+    $new_output = '' . $author_name . ' <span class="topic-listing-field-divider2"></span> ';
+  }
+
+  $vars['output'] = $new_output;
+}
 
 /**
  * ---------- Member list View.---------------
