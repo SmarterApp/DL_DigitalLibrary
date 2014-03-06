@@ -98,4 +98,19 @@
 			}
 		}
   }
+	
+	.devtools-tooltip-body:after {
+	  border-left: 12px solid rgba(0, 0, 0, 0);
+    border-right: 12px solid rgba(0, 0, 0, 0);
+    border-top: 12px solid #828588;
+    bottom: -12px;
+    content: "";
+    display: block;
+    height: 0;
+    left: 50%;
+    margin-left: -10px;
+    position: absolute;
+    width: 0;
+    z-index: 1000;
+	}
 }
