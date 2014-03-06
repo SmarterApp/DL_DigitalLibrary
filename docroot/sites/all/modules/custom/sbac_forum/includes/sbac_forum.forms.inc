@@ -528,3 +528,32 @@ function sbac_forum_restore_member_confirm($form, &$form_state) {
 
   return $form;
 }
+
+/**
+ * =============================================================================
+ *    Topic Delete Form Button
+ * =============================================================================
+ */
+
+function sbac_forum_delete_topic_confirm($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => '<h2>'.t('You are about to delete this discussion topic').'</h2><p>' . t('
+    If you continue, all discusson information (including topic details and any replies) will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Delete Topic',
+    '#attributes' => array('class' => array('edit-delete-topic-overlay', 'blue'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('edit-cancel-delete-topic-overlay', 'gray', 'cancel'))
+  );
+
+  return $form;
+}

@@ -169,6 +169,7 @@ function sbac_forum__ajax__delete_forum_modal_callback($js = FALSE, $term) {
   }
 }
 
+
 function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   if ($js) {
@@ -207,6 +208,67 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
     exit();
   } else {
     return drupal_get_form('sbac_forum_leave_forum_confirm');
+  }
+}
+
+
+function sbac_forum__ajax__delete_topic_modal_callback($js = FALSE, $term, $topic) {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $form_state = array(
+      'ajax' => TRUE,
+    );
+
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('sbac_forum_delete_topic_confirm', $form_state);
+
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        global $user;
+
+        // Create task notification.
+        $from_user_id = $user->uid; // TriggeringUser
+        $for_user_id = $topic->uid;    // OwningUser
+        if ($from_user_id != $for_user_id) { // no need to notify if youre deleting your own topic
+          if ($task = taskit_get_object('deleted_topic_node')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addEntity('node', $topic->nid);
+            $task->addEntity('taxonomy_term', $term->tid);
+            $task->addOwningUser($for_user_id);
+            $task->addTriggeringUser($from_user_id);
+            $task->save();
+          }
+        }
+
+        // Then finally, delete the Topic.
+        $name = $topic->title;
+        $delete = node_delete($topic->nid);
+        if ($delete) {
+          $message = 'Topic: "'. $name .'" has been deleted successfully';
+          $type = 'status';
+        } else {
+          $message = 'There was a problem deleting topic '. $name .'. Contact Administrator';
+          $type = 'error';
+        }
+        drupal_set_message($message, $type);
+
+        $url = 'forums';
+        $output[] = ctools_ajax_command_redirect($url);
+      }
+    }
+    print ajax_render($output);
+    exit();
+  } else {
+    return drupal_get_form('sbac_forum_delete_topic_confirm');
   }
 }
 

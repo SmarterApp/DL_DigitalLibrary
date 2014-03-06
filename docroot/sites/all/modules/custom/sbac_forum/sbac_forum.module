@@ -109,6 +109,13 @@ function sbac_forum_menu() {
     'access arguments' => array(2, 4),
   );
 
+  $items['sbac-forum/%ctools_js/topic-delete/%taxonomy_term/%node'] = array(
+    'page callback' => 'sbac_forum__ajax__delete_topic_modal_callback',
+    'page arguments' => array(1, 3, 4),
+    'access callback' => '_sbac_forum_delete_topic_user_access',
+    'access arguments' => array(3, 4),
+  );
+
   return $items;
 }
 
@@ -197,6 +204,23 @@ function _sbac_forum_delete_forum_user_access($term) {
 }
 
 /**
+ * Access callback for Topic Delete page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to delete a topic.
+ */
+function _sbac_forum_delete_topic_user_access($term, $topic) {
+  global $user;
+  $access = FALSE;
+
+  if ($term->vocabulary_machine_name != 'forum') {
+    return $access; // Someone trying to delete something related to a taxonomy term not from forums
+  }
+
+  $access = node_access('delete', $topic);
+  return $access;
+}
+
+/**
  * Access callback for Modal URL for removing members callback.
  *
  * @return Boolean TRUE/FALSE if user has access to remove a member from a forum.
@@ -245,6 +269,7 @@ function _sbac_forum_restore_members_user_access($term, $uid_to_remove) {
 
   return $access;
 }
+
 
 
 /**
@@ -314,6 +339,32 @@ function sbac_forum_date_format_types() {
     'forum_listing' => t('Forum - Listing Page View'),
   );
 }
+
+/**
+ * Implements hook_cron_queue_info()
+ */
+function sbac_forum_cron_queue_info() {
+  $queues['sbac_forum_delete_orphaned_topics'] = array(
+    'worker callback' => 'sbac_forum_delete_orphaned_topics_process',
+    'time' => 60,
+  );
+  return $queues;
+}
+
+/**
+ * Worker callback defined in hook_cron_queue_info()
+ */
+function sbac_forum_delete_orphaned_topics_process($item_nid) {
+  if (isset($item_nid)) {
+    $topic_node = node_load($item_nid);
+    if ($topic_node) {
+      $deleted_node_title = $topic_node->title;
+      node_delete($item_nid);
+      watchdog('action', 'Cleanup Task: Deleted Orphaned Topic "%name". Triggered by a Forum Deletion. ', array('%name' => $deleted_node_title));
+    }
+  }
+}
+
 
 
 /**
@@ -595,10 +646,38 @@ function sbac_forum_preprocess_node(&$vars) {
 }
 
 /**
+ * Implements hook_node_access
+ */
+function sbac_forum_node_access($node, $op, $account) {
+  if (isset($node->type)) {
+    if ($node->type == 'topic') {
+      switch ($op) {
+        case 'view':
+          // Check if the parent forum has access restrictions. (role or state)
+          $node_data = entity_metadata_wrapper('node', $node);
+          if (isset($node_data->field_topic_forum_parent)) {
+            $parent_forum = $node_data->field_topic_forum_parent->value();
+            $has_access = sbac_forum__api__check_forum_view_access($account, $parent_forum);
+            if (!empty($has_access)) {
+              return NODE_ACCESS_ALLOW;
+            }
+          }
+          return NODE_ACCESS_DENY;
+          break;
+      }
+    }
+  }
+}
+
+// ========================= FORM ALTERS =======================================
+
+/**
  * Implements hook_form_alter
  */
 function sbac_forum_form_alter(&$form, $form_state, $form_id) {
 }
+
+// --------
 
 /**
  * Implements hook_form_FORM-ID_alter
@@ -687,7 +766,9 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       );
       if (isset($form['actions']['delete'])) { // Edit form
         $form['actions']['delete']['#attributes']['class'] = array('red');
-        $form['actions']['delete']['#suffix'] = '</div>';
+        // $form['actions']['delete']['#suffix'] = '</div>';
+        $form['actions']['delete']['#access'] = FALSE; // Disable the delete button.
+        $form['actions']['submit']['#suffix'] = '</div>';
       } else { // Add forum forum
         $form['actions']['submit']['#value'] = 'Start Forum';
         $form['actions']['submit']['#suffix'] = '</div>';
@@ -818,6 +899,7 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   }
 }
 
+// ---------
 
 /**
  * Implements hook_form_alter
@@ -837,14 +919,14 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
       }
 
       $form['actions']['submit']['#value'] = 'Start Topic';
-      $form['actions']['submit']['#suffix'] = '</div>';
 
       // Do access checks and validation to ensure topic relates to correct forum.
       $form['#validate'][] = '_sbac_forum__topic_form__default_parent_term_validate';
     } else { // Edit form
       if (isset($form['actions']['delete'])) { // Edit form
         $form['actions']['delete']['#attributes']['class'] = array('red');
-        $form['actions']['delete']['#suffix'] = '</div>';
+        //$form['actions']['delete']['#suffix'] = '</div>';
+        $form['actions']['delete']['#access'] = FALSE; // Disable the delete button.
       }
     }
 
@@ -874,6 +956,7 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
       '#submit' => array('_sbac_forum__add_topic_form_redirect_submit'),
       '#prefix'       => '<div class="sbac-forum-add-topic-buttons">',
     );
+    $form['actions']['submit']['#suffix'] = '</div>';
   }
 
   // Hide fields
@@ -892,8 +975,12 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
   $form['#attached']['css'][] = $path_to_css_file;
 }
 
-
-
+/**
+ * Validation function for setting forum relationshp
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_forum__topic_form__default_parent_term_validate($form, &$form_state) {
   $values = $form_state; // Safe so this doesnt act on form_state directly.
   if (isset($values['auto_default_forum_parent'])) {
@@ -932,6 +1019,12 @@ function _sbac_forum__topic_form__title_profanity_validate(&$form, &$form_state)
   }
 }
 
+/**
+ * On add topic node form submission, redirect to proper place.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_forum__add_topic_form_redirect_submit($form, &$form_state) {
   $values = $form;
 
@@ -952,32 +1045,6 @@ function _sbac_forum__add_topic_form_redirect_submit($form, &$form_state) {
   }
 
   $form_state['redirect'] = $link;
-}
-
-
-/**
- * Implements hook_cron_queue_info()
- */
-function sbac_forum_cron_queue_info() {
-  $queues['sbac_forum_delete_orphaned_topics'] = array(
-    'worker callback' => 'sbac_forum_delete_orphaned_topics_process',
-    'time' => 60,
-  );
-  return $queues;
-}
-
-/**
- * Worker callback defined in hook_cron_queue_info()
- */
-function sbac_forum_delete_orphaned_topics_process($item_nid) {
-  if (isset($item_nid)) {
-    $topic_node = node_load($item_nid);
-    if ($topic_node) {
-      $deleted_node_title = $topic_node->title;
-      node_delete($item_nid);
-      watchdog('action', 'Cleanup Task: Deleted Orphaned Topic "%name". Triggered by a Forum Deletion. ', array('%name' => $deleted_node_title));
-    }
-  }
 }
 
 
@@ -1079,6 +1146,66 @@ function sbac_forum_node_delete($node) {
           $current_count = $forum_wrapper->field_forum_topic_count->value();
           $current_count--;
           $forum_wrapper->field_forum_topic_count->set($current_count);
+          $forum_wrapper->save(TRUE);
+          taxonomy_term_save($forum_obj);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * =============================================================================
+ *
+ *      Comments for Topic Node CRUD functions
+ *
+ * =============================================================================
+ */
+
+/**
+ * Implements hook_comment_insert
+ */
+function sbac_forum_comment_insert($comment) {
+  $related_nid = $comment->nid;
+  $comment_author_id = $comment->uid;
+  if (!empty($related_nid)) {
+    $topic_node = node_load($related_nid);
+    $node_wrapper = entity_metadata_wrapper('node', $topic_node);
+    if (isset($node_wrapper->field_topic_forum_parent)) {
+      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_obj)) {
+        // Update Reply counter field on forum.
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if (isset($forum_wrapper->field_forum_topic_count)) {
+          $current_count = $forum_wrapper->field_forum_topic_comment_count->value();
+          $current_count++;
+          $forum_wrapper->field_forum_topic_comment_count->set($current_count);
+          $forum_wrapper->save(TRUE);
+          taxonomy_term_save($forum_obj);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_comment_delete
+ */
+function sbac_forum_comment_delete($comment) {
+  $related_nid = $comment->nid;
+  $comment_author_id = $comment->uid;
+  if (!empty($related_nid)) {
+    $topic_node = node_load($related_nid);
+    $node_wrapper = entity_metadata_wrapper('node', $topic_node);
+    if (isset($node_wrapper->field_topic_forum_parent)) {
+      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_obj)) {
+        // Update Reply counter field on forum.
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if (isset($forum_wrapper->field_forum_topic_count)) {
+          $current_count = $forum_wrapper->field_forum_topic_comment_count->value();
+          $current_count--;
+          $forum_wrapper->field_forum_topic_comment_count->set($current_count);
           $forum_wrapper->save(TRUE);
           taxonomy_term_save($forum_obj);
         }

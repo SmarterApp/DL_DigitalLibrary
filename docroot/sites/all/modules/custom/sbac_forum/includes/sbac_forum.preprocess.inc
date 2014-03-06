@@ -48,7 +48,24 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
   $can_delete = node_access('delete', $vars['node']);
   if ($can_delete) {
-    $delete_link = '<span class="tertiary-delete-link">' . l('Delete Topic', '#') . '</span>';
+    $link_ops = array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-delete-topic-link',
+        'id'    => 'sbac-forum-delete-topic-link'
+      ),
+    );
+    $delete_link = 'sbac-forum/nojs/topic-delete/'.$forum_term->tid .'/' . $node_data->nid->value();
+    $delete_link = '<span class="tertiary-delete-link">' . l('Delete Topic', $delete_link, $link_ops) . '</span>';
+    $js_settings = array(
+      'sbac-forum-delete-topic-link' => array( // Link has to have ctools-modal- namespace class along with this id.
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 560,
+          'height' => 260,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting'); // Styles the modal.
   }
 
   // Author Pane Info.
