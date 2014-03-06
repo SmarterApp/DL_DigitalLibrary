@@ -721,7 +721,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['label'] = '';
   $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['comment_count']['suffix'] = ' Replies';
+  $handler->display->display_options['fields']['comment_count']['suffix'] = '<div class="topic-listing-suffix-label"> Replies</div>';
   /* Sort criterion: Content: Last comment time */
   $handler->display->display_options['sorts']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
   $handler->display->display_options['sorts']['last_comment_timestamp']['table'] = 'node_comment_statistics';

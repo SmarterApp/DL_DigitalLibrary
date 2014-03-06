@@ -130,8 +130,21 @@
       hide($content['comments']);
       hide($content['links']);
       hide($content['field_tags']);
+      hide($content['field_topic_links']);
+      hide($content['field_topic_files']);
       print render($content);
     ?>
+
+    <div class="topic-node-main-content-materials-wrapper">
+      <?php if($main_content['has_materials']): ?>
+        <span class="topic-node-main-content-materials-logo"></span>
+        <div class="topic-node-main-content-materials-label">Material(s)</div>
+        <?php
+          print render($content['field_topic_files']);
+          print render($content['field_topic_links']);
+        ?>
+      <?php endif;?>
+    </div>
   </div> <!-- end main content right-->
 </div> <!-- end main content-->
 

@@ -16,6 +16,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $author_image_markup = '';
   $author_info = '';
   $posted = '';
+  $has_materials = FALSE;
 
   $is_faci = FALSE;
   if (in_array('facilitator', $user->roles)) {
@@ -56,6 +57,24 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $author_info = sbac_forum__api__get_authpane_hoverover($topic_author->uid);
   $posted = date('M jS, Y', $node_data->created->value());
 
+  $has_files = FALSE;
+  if (isset($node_data->field_topic_files)) {
+    $topic_files = $node_data->field_topic_files->value();
+    if (!empty($topic_files)) {
+      $has_files = TRUE;
+    }
+  }
+  $has_links = FALSE;
+  if (isset($node_data->field_topic_links)) {
+    $topic_links = $node_data->field_topic_links->value();
+    if (!empty($topic_links)) {
+      $has_links = TRUE;
+    }
+  }
+  if ($has_links || $has_files) {
+    $has_materials = TRUE;
+  }
+
 
   // Put everything into arrays and register in vars for tpl. ------------
 
@@ -76,6 +95,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'author_image'      => $author_image_markup,
     'author_name_popup' => $author_info,
     'posted'            => $posted,
+    'has_materials'     => $has_materials,
   );
   $vars['main_content'] = $main_content;
 }
