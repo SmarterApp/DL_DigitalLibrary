@@ -233,21 +233,33 @@ function sbac_forum__ajax__delete_topic_modal_callback($js = FALSE, $term, $topi
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        global $user;
 
-        // Notification taskit entity creation.
-
+        // Create task notification.
+        $from_user_id = $user->uid; // TriggeringUser
+        $for_user_id = $topic->uid;    // OwningUser
+        if ($from_user_id != $for_user_id) { // no need to notify if youre deleting your own topic
+          if ($task = taskit_get_object('deleted_topic_node')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addEntity('node', $topic->nid);
+            $task->addEntity('taxonomy_term', $term->tid);
+            $task->addOwningUser($for_user_id);
+            $task->addTriggeringUser($from_user_id);
+            $task->save();
+          }
+        }
 
         // Then finally, delete the Topic.
-        // $name = $topic->title;
-        // $delete = node_delete($topic->nid);
-        // if ($delete) {
-        //   $message = 'Topic: "'. $name .'" has been deleted successfully';
-        //   $type = 'status';
-        // } else {
-        //   $message = 'There was a problem deleting topic '. $name .'. Contact Administrator';
-        //   $type = 'error';
-        // }
-        // drupal_set_message($message, $type);
+        $name = $topic->title;
+        $delete = node_delete($topic->nid);
+        if ($delete) {
+          $message = 'Topic: "'. $name .'" has been deleted successfully';
+          $type = 'status';
+        } else {
+          $message = 'There was a problem deleting topic '. $name .'. Contact Administrator';
+          $type = 'error';
+        }
+        drupal_set_message($message, $type);
 
         $url = 'forums';
         $output[] = ctools_ajax_command_redirect($url);
