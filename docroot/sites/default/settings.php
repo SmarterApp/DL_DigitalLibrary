@@ -292,7 +292,7 @@ ini_set('session.gc_divisor', 100);
  * a session is deleted, authenticated users are logged out, and the contents
  * of the user's $_SESSION variable is discarded.
  */
-ini_set('session.gc_maxlifetime', 7200);
+ini_set('session.gc_maxlifetime', 86400);
 
 /**
  * Set session cookie lifetime (in seconds), i.e. the time from the session is
