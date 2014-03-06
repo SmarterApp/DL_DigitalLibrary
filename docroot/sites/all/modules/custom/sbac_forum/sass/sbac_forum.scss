@@ -398,7 +398,6 @@ select {
 	    box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
 	    display: block;
 	    margin: 0 0 15px;
-	    overflow: hidden;
 	    padding: 20px 114px 20px 20px;
 	    position: relative;
 		}
@@ -603,7 +602,6 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			.views-field-nothing {
 				display: inline-block;
 				margin-top: 15px;
-				float: left;
 				position: relative;
 				
 				.sbac-forum-membership-status-label,
@@ -649,12 +647,16 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					color: #0583AC;
 					font-weight: bold;
 				}
+				
+				a.devtools-tooltip-trigger {
+					color: #0583AC;
+					font-weight: bold;
+				}
 			}
 			
 			.views-field-field-forum-last-activity {	
 				display: inline-block;			
 				margin-top: 15px;
-				float: left;
 				
 				.views-label,
 				.field-content {
@@ -1205,6 +1207,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    height: 65px;
 	    left: -50px;
 	    margin-top: 40px;
+			margin-bottom: 0;
 	    overflow: hidden;
 	    padding: 0 50px;
 	    position: relative;
@@ -1306,6 +1309,28 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    z-index: 1;
 		}
 	}
+	
+	/*hide label of edit sort*/
+	label[for="edit-sort-by"] {
+		display: none;
+	}
+	
+	/*style of select box*/
+	.form-item-sort-by {
+		select {
+			border: 1px solid #CECECE;
+			width: 200px;
+		}
+	}
+	
+	/**/
+	.view-empty {
+		clear: both;
+		font-size: 16px;
+		line-height: 1.6;
+    margin: 40px 0;
+    max-width: 560px;
+	}
 }
 
 
@@ -1327,10 +1352,6 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	.view-forum-topic-list  {
 
 		margin-top: 10px;
-		
-		label[for="edit-sort-by"] {
-			display: none;
-		}
 		
 		.view-filters {
 			float: left;
@@ -1432,6 +1453,16 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				padding: 24px 0 0;
 				width: 110px;
 				text-align: center;
+				font-size: 15px;
+				font-weight: bold;
+				
+				.topic-listing-suffix-label {
+					font-family: Verdana,Geneva,sans-serif;
+					font-size: 13px;
+			    letter-spacing: 1px;
+			    text-transform: uppercase;
+					font-weight: normal;
+				}
 			}
 		}
 
@@ -1455,11 +1486,6 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 	.view-forum-member-list {
 		padding-top: 10px;
-
-		select {
-			border: 1px solid #CECECE;
-			width: 200px;
-		}
 			
 		.views-row {
 			-moz-box-sizing: border-box;
@@ -1484,12 +1510,15 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    width: 60px;
 			}
 
-			.views-field-nothing {
-				color: #0583AC;
-				font-size: 13px;
-				line-height: 1.3;
-				font-weight: bold;
+			.views-field-uid {
 				margin: 0 0 6px;
+				
+				a {
+					color: #0583AC;
+					font-size: 13px;
+					line-height: 1.3;
+					font-weight: bold;
+				}
 			}
 
 			.views-field-field-state,
@@ -1594,6 +1623,10 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			cursor: pointer;
 		}
 
+		.member-control-icon:hover:before {
+			 opacity: 1;
+		}
+			
 		.sbac-forum-vp-controls:hover:before {
 		  opacity: 1;
 		}

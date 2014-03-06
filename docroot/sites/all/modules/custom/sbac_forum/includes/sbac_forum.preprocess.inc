@@ -117,6 +117,42 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $vars['main_content'] = $main_content;
 }
 
+
+function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
+  $comment_entity = $vars['comment'];
+
+  $comment_auth_uid = $comment_entity->uid;
+  $user_image = sbac_forum__api__get_author_picture($comment_auth_uid, 'forum_profile_image_60x60');
+  $user_name_w_hoverover = sbac_forum__api__get_authpane_hoverover($comment_auth_uid);
+
+  $posted_date = date('M jS, Y' , $comment_entity->created);
+
+  $has_materials = FALSE;
+  $comment_data = entity_metadata_wrapper('comment', $comment_entity);
+  $has_files = FALSE;
+  if (isset($comment_data->field_topic_comment_files)) {
+    $topic_files = $comment_data->field_topic_comment_files->value();
+    if (!empty($topic_files)) {
+      $has_files = TRUE;
+    }
+  }
+  $has_links = FALSE;
+  if (isset($comment_data->field_topic_comment_links)) {
+    $topic_links = $comment_data->field_topic_comment_links->value();
+    if (!empty($topic_links)) {
+      $has_links = TRUE;
+    }
+  }
+  if ($has_links || $has_files) {
+    $has_materials = TRUE;
+  }
+
+  $vars['picture'] = $user_image;
+  $vars['auth_name_hover'] = $user_name_w_hoverover;
+  $vars['posted_date'] = $posted_date;
+  $vars['has_materials'] = $has_materials;
+
+}
 /**
  * ---------- Forum list View.---------------
  */
