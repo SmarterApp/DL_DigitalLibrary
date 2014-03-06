@@ -186,12 +186,13 @@ function sbac_forum_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Materials',
       'instance_settings' => array(
-        'description' => '',
-        'classes' => 'group-topic-comments-materials field-group-fieldset',
         'required_fields' => 1,
+        'classes' => 'group-topic-comments-materials field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $export['group_topic_comments_materials|comment|comment_node_topic|form'] = $field_group;
