@@ -120,17 +120,14 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
     }
     $facilitator_text = '<div class="sbac-forum-faci-status-label">';
     if (!$is_faci) { // Current user is not set as facilitator
-      $first_item = array_shift($faci_field);
-      $first_faci_user_id = $first_item['target_id'];
-      $target_faci = user_load($first_faci_user_id);
-      $faci_data = entity_metadata_wrapper('user', $target_faci);
-      $fn = $faci_data->field_first_name->value();
-      $ln = $faci_data->field_last_name->value();
-      $full_name = $fn . ' ' . $ln;
-      $link = 'forum-auth-pane/'. $first_faci_user_id;
-      $link_ops = array('attributes' => array('class' => 'forum-list-auth-pane-item'));
-      $faci_link = l($full_name, $link, $link_ops);
-      $facilitator_text .= 'Facilitator: '. $faci_link;
+      if (!empty($faci_field)) {
+        $first_item = array_shift($faci_field);
+        $first_faci_user_id = $first_item['target_id'];
+        $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
+        $facilitator_text .= 'Facilitator: '. $faci_link;
+      } else { // No facilitator set
+        $facilitator_text .= 'Facilitator: None';
+      }
     } else{
       $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
     }
