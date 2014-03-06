@@ -109,6 +109,13 @@ function sbac_forum_menu() {
     'access arguments' => array(2, 4),
   );
 
+  $items['sbac-forum/%ctools_js/topic-delete/%taxonomy_term/%node'] = array(
+    'page callback' => 'sbac_forum__ajax__delete_topic_modal_callback',
+    'page arguments' => array(1, 3, 4),
+    'access callback' => '_sbac_forum_delete_topic_user_access',
+    'access arguments' => array(3, 4),
+  );
+
   return $items;
 }
 
@@ -193,6 +200,23 @@ function _sbac_forum_delete_forum_user_access($term) {
   $vocab_id = $term->vid;
   $delete_perm = 'delete terms in ' . $vocab_id;
   $access = user_access($delete_perm);
+  return $access;
+}
+
+/**
+ * Access callback for Topic Delete page.
+ *
+ * @return Boolean TRUE/FALSE if user has access to delete a topic.
+ */
+function _sbac_forum_delete_topic_user_access($term, $topic) {
+  global $user;
+  $access = FALSE;
+
+  if ($term->vocabulary_machine_name != 'forum') {
+    return $access; // Someone trying to delete something related to a taxonomy term not from forums
+  }
+
+  $access = node_access('delete', $topic);
   return $access;
 }
 
