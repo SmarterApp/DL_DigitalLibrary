@@ -540,6 +540,15 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['item_id']['table'] = 'field_collection_item';
   $handler->display->display_options['fields']['item_id']['field'] = 'item_id';
   $handler->display->display_options['fields']['item_id']['exclude'] = TRUE;
+  /* Field: User: Privacy */
+  $handler->display->display_options['fields']['field_privacy']['id'] = 'field_privacy';
+  $handler->display->display_options['fields']['field_privacy']['table'] = 'field_data_field_privacy';
+  $handler->display->display_options['fields']['field_privacy']['field'] = 'field_privacy';
+  $handler->display->display_options['fields']['field_privacy']['relationship'] = 'field_fc_forum_member_target_id';
+  $handler->display->display_options['fields']['field_privacy']['label'] = '';
+  $handler->display->display_options['fields']['field_privacy']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_privacy']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_privacy']['delta_offset'] = '0';
   /* Field: User: Picture */
   $handler->display->display_options['fields']['picture']['id'] = 'picture';
   $handler->display->display_options['fields']['picture']['table'] = 'users';
@@ -548,30 +557,15 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['picture']['label'] = '';
   $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['picture']['link_photo_to_profile'] = FALSE;
-  $handler->display->display_options['fields']['picture']['image_style'] = 'small';
-  /* Field: User: Name */
-  $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
-  $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
-  $handler->display->display_options['fields']['field_first_name']['field'] = 'field_first_name';
-  $handler->display->display_options['fields']['field_first_name']['relationship'] = 'field_fc_forum_member_target_id';
-  $handler->display->display_options['fields']['field_first_name']['label'] = '';
-  $handler->display->display_options['fields']['field_first_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
-  /* Field: User: Last name */
-  $handler->display->display_options['fields']['field_last_name']['id'] = 'field_last_name';
-  $handler->display->display_options['fields']['field_last_name']['table'] = 'field_data_field_last_name';
-  $handler->display->display_options['fields']['field_last_name']['field'] = 'field_last_name';
-  $handler->display->display_options['fields']['field_last_name']['relationship'] = 'field_fc_forum_member_target_id';
-  $handler->display->display_options['fields']['field_last_name']['label'] = '';
-  $handler->display->display_options['fields']['field_last_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_last_name']['element_label_colon'] = FALSE;
-  /* Field: Global: Custom text */
-  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['table'] = 'views';
-  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[field_first_name] [field_last_name]';
-  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['picture']['image_style'] = 'forum_profile_image_60x60';
+  /* Field: User: Uid */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'users';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['relationship'] = 'field_fc_forum_member_target_id';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
   /* Field: Field: State */
   $handler->display->display_options['fields']['field_state']['id'] = 'field_state';
   $handler->display->display_options['fields']['field_state']['table'] = 'field_data_field_state';
@@ -670,13 +664,20 @@ function sbac_forum_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Forum - Topic List';
+  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['exposed_form']['options']['expose_sort_order'] = FALSE;
+  $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
+  $handler->display->display_options['pager']['type'] = 'load_more';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '12';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '1';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['more_button_text'] = 'Load Most Topics';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* No results behavior: Global: Text area */
@@ -686,10 +687,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = '<div class="sbac-forum-filter-no-topics-wrapper">There are no discussion topics yet</div>';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
-  /* Relationship: Content: Author */
-  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -697,40 +694,19 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: User: Name */
-  $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
-  $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
-  $handler->display->display_options['fields']['field_first_name']['field'] = 'field_first_name';
-  $handler->display->display_options['fields']['field_first_name']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['field_first_name']['label'] = '';
-  $handler->display->display_options['fields']['field_first_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
-  /* Field: User: Last name */
-  $handler->display->display_options['fields']['field_last_name']['id'] = 'field_last_name';
-  $handler->display->display_options['fields']['field_last_name']['table'] = 'field_data_field_last_name';
-  $handler->display->display_options['fields']['field_last_name']['field'] = 'field_last_name';
-  $handler->display->display_options['fields']['field_last_name']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['field_last_name']['label'] = '';
-  $handler->display->display_options['fields']['field_last_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_last_name']['element_label_colon'] = FALSE;
-  /* Field: Global: Custom text */
-  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['table'] = 'views';
-  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['label'] = 'Started by';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[field_first_name] [field_last_name]';
-  /* Field: Content: Comment count */
-  $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
-  $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
-  $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
-  $handler->display->display_options['fields']['comment_count']['label'] = '';
-  $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['comment_count']['suffix'] = ' Replies';
-  /* Field: Content: Last comment author */
-  $handler->display->display_options['fields']['last_comment_name']['id'] = 'last_comment_name';
-  $handler->display->display_options['fields']['last_comment_name']['table'] = 'node_comment_statistics';
-  $handler->display->display_options['fields']['last_comment_name']['field'] = 'last_comment_name';
-  $handler->display->display_options['fields']['last_comment_name']['label'] = 'Latest Reply';
+  /* Field: Content: Author uid */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Field: Content: Last comment uid */
+  $handler->display->display_options['fields']['last_comment_uid']['id'] = 'last_comment_uid';
+  $handler->display->display_options['fields']['last_comment_uid']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['last_comment_uid']['field'] = 'last_comment_uid';
+  $handler->display->display_options['fields']['last_comment_uid']['label'] = 'Latest Reply';
+  $handler->display->display_options['fields']['last_comment_uid']['separator'] = '';
   /* Field: Content: Last comment time */
   $handler->display->display_options['fields']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
   $handler->display->display_options['fields']['last_comment_timestamp']['table'] = 'node_comment_statistics';
@@ -739,6 +715,35 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['last_comment_timestamp']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['last_comment_timestamp']['date_format'] = 'custom';
   $handler->display->display_options['fields']['last_comment_timestamp']['custom_date_format'] = 'M jS Y g:i a';
+  /* Field: Content: Comment count */
+  $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['label'] = '';
+  $handler->display->display_options['fields']['comment_count']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['comment_count']['alter']['text'] = '[comment_count] <div class="topic-listing-suffix-label">Replies</div>';
+  $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
+  /* Sort criterion: Content: Last comment time */
+  $handler->display->display_options['sorts']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
+  $handler->display->display_options['sorts']['last_comment_timestamp']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['sorts']['last_comment_timestamp']['field'] = 'last_comment_timestamp';
+  $handler->display->display_options['sorts']['last_comment_timestamp']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['last_comment_timestamp']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['last_comment_timestamp']['expose']['label'] = 'Most Recent Activity';
+  /* Sort criterion: Content: Comment count */
+  $handler->display->display_options['sorts']['comment_count']['id'] = 'comment_count';
+  $handler->display->display_options['sorts']['comment_count']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['sorts']['comment_count']['field'] = 'comment_count';
+  $handler->display->display_options['sorts']['comment_count']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['comment_count']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['comment_count']['expose']['label'] = 'Most Replies';
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['created']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['created']['expose']['label'] = 'Newest';
   /* Contextual filter: Content: Forum (field_topic_forum_parent) */
   $handler->display->display_options['arguments']['field_topic_forum_parent_tid']['id'] = 'field_topic_forum_parent_tid';
   $handler->display->display_options['arguments']['field_topic_forum_parent_tid']['table'] = 'field_data_field_topic_forum_parent';

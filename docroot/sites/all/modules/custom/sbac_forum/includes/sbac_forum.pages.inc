@@ -153,13 +153,7 @@ function sbac_forum_view_forum_page($term) {
         if ($faci->uid == $user->uid) {
           $is_facilitator = TRUE;
         }
-        $faci_data = entity_metadata_wrapper('user', $faci);
-        $fn = $faci_data->field_first_name->value();
-        $ln = $faci_data->field_last_name->value();
-        $full_name = $fn . ' ' . $ln;
-        $link = 'forum-auth-pane/'. $faci->uid;
-        $link_ops = array('attributes' => array('class' => 'vp-auth-pane-item'));
-        $item_list[] = l($full_name, $link, $link_ops);
+        $item_list[] = sbac_forum__api__get_authpane_hoverover($faci->uid);
       }
 
       $list_args = array(
@@ -168,9 +162,6 @@ function sbac_forum_view_forum_page($term) {
         'attributes' => array('class' => 'vp-auth-pane'),
       );
       $facilitator_text = theme('item_list', $list_args);
-
-      // Have to add markup for faci information for popup/auth-pane as well.
-      // ******** TODO **********
     }
   }
 

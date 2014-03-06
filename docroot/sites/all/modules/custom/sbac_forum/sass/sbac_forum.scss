@@ -429,11 +429,11 @@ a.new-topic-link {
 	font-size: 16px;
   font-weight: normal;
   height: 34px;
-	line-height: 32px;
+	line-height: 34px;
   min-width: 125px;
   padding: 0 25px 0  30px;
   text-align: center;
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 a.new-topic-link {
@@ -446,6 +446,7 @@ a.new-topic-link:before  {
     display: inline;
     font-family: 'sbac';
     font-size: 20px;
+		line-height: 24px;
     font-weight: normal;
     margin-right: 7px;
 }
@@ -454,6 +455,26 @@ a.new-forum-link:hover,
 a.new-topic-link:hover {
   background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 	color: #fff;
+}
+
+/*Button for Add node page*/
+button.gray.sbac-forum-add-forum-cancel-button, .button.form-submit {
+  padding-left: 40px !important;
+  position: relative;
+}
+
+button.gray.sbac-forum-add-forum-cancel-button:before {
+ content: url("../images/icon-buttonCancel.png");
+ left: 15px;
+ position: absolute;
+ top: 4px;
+}
+
+.button.form-submit:before {
+ content: url("../images/icon-buttonAccept.png");
+ left: 15px;
+ position: absolute;
+ top: 4px;
 }
 
 
@@ -958,25 +979,6 @@ a.new-topic-link:hover {
 			margin-left: 30px;
 		}
   }
-
-	button.gray.sbac-forum-add-forum-cancel-button, .button.form-submit {
-	  padding-left: 40px !important;
-    position: relative;
-	}
-
-	button.gray.sbac-forum-add-forum-cancel-button:before {
-	 content: url("../images/icon-buttonCancel.png");
-   left: 15px;
-   position: absolute;
-   top: 4px;
-	}
-
-	.button.form-submit:before {
-	 content: url("../images/icon-buttonAccept.png");
-   left: 15px;
-   position: absolute;
-   top: 4px;
-	}
 }
 
 .page-taxonomy-term-edit {
@@ -1074,11 +1076,11 @@ a.new-topic-link:hover {
 	}
 
 	.sbac-forum-vp-controls:before {
-	  content: "\f000";
+	  content:"\e621";
     display: inline-block;
     float: left;
-    font-family: "GeneralFoundicons";
-    font-size: 18px;
+    font-family: "sbac";
+    font-size: 20px;
     margin: 0 7px 0 0;
     opacity: 0.5;
 		cursor: pointer;
@@ -1326,8 +1328,20 @@ a.new-topic-link:hover {
 
 		margin-top: 10px;
 		
+		label[for="edit-sort-by"] {
+			display: none;
+		}
+		
+		.view-filters {
+			float: left;
+			
+			form {margin: 0;}
+		}
+		
+		#join-forum-form-wrapper,
 		#join-forum-button-wrapper {
 			float: right;
+			margin-top: 1em;
 			
 			button {
 				padding: 0 30px;
@@ -1348,7 +1362,7 @@ a.new-topic-link:hover {
 
 		.view-content {
 			clear: both;
-			padding-top: 30px;
+			padding-top: 20px;
 		}
 
 		.views-row {
@@ -1359,9 +1373,10 @@ a.new-topic-link:hover {
 	    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
 	    display: block;
 	    margin: 0 0 15px;
-	    overflow: hidden;
+	    /*overflow: hidden;*/
 	    padding: 15px 114px 15px 15px;
 	    position: relative;
+			z-index: 3;
 
 			.views-field.views-field-title {
 				display: block;
@@ -1380,6 +1395,43 @@ a.new-topic-link:hover {
 			.views-field {
 				display: inline-block;
 				font-size: 13px;
+				
+				a{
+					color: #0583AC;
+					font-weight: bold;
+				}
+			}
+			
+			.views-field-uid {
+				border-right: 1px solid #62676E;
+			  color: #70757E;
+		    display: block;
+		    float: left;
+		    font-size: 13px;
+		    height: 20px;
+		    line-height: 20px;
+		    margin: 0 10px 0 0;
+		    padding: 0 10px 0 0;
+			}
+			
+			.views-field-comment-count {
+			  -moz-box-sizing: border-box;
+		    background-color: #F2F2F2;
+		    border-left: 1px solid #FFFFFF;
+		    border-radius: 0 6px 6px 0;
+		    box-shadow: -1px 0 0 0 #CECECE;
+		    color: #464B54;
+		    display: block;
+		    height: 100%;
+		    list-style-type: none;
+		    padding: 0;
+		    position: absolute;
+		    right: 0;
+		    text-shadow: 0 1px 0 #FFFFFF;
+		    top: 0;
+				padding: 24px 0 0;
+				width: 110px;
+				text-align: center;
 			}
 		}
 
@@ -1532,11 +1584,11 @@ a.new-topic-link:hover {
 		}
 
 		.member-control-icon:before {
-		  content: "\f000";
+		  content:"\e621";
 	    display: inline-block;
 	    float: left;
-	    font-family: "GeneralFoundicons";
-	    font-size: 18px;
+	    font-family: "sbac";
+	    font-size: 20px;
 	    margin: 0 7px 0 0;
 	    opacity: 0.5;
 			cursor: pointer;
@@ -1545,7 +1597,6 @@ a.new-topic-link:hover {
 		.sbac-forum-vp-controls:hover:before {
 		  opacity: 1;
 		}
-		
 	}
 }
 
@@ -1589,6 +1640,412 @@ a.new-topic-link:hover {
    top: 4px;
 	}
 }
+
+// --------------------- Add, View Topic Page ------------------------------
+
+.page-node-add-topic,
+.node-type-topic,
+.page-comment {
+	
+	.main-container {
+	  background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 15px;
+    box-shadow: 0 0 10px 0 rgba(4, 56, 78, 0.75);
+    display: block;
+    margin: 50px auto;
+    min-height: 60px;
+    padding: 40px 50px;
+    position: relative;
+    width: 960px;
+
+		#main {
+			padding: 0;
+		}
+	}
+	
+	#page-title {
+	  border-bottom: 1px solid #62676E;
+    color: #04384E;
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 25px;
+    padding: 0;
+    text-transform: capitalize;
+	}
+	
+	.form-item-title,
+	.form-type-textarea {
+		label {
+		  color: #101010;
+	    font-size: 14px;
+	    font-weight: bold;
+		}
+	}
+	
+	input#edit-title,
+	.form-textarea {
+	  margin: 15px 0 25px;
+    width: 410px;
+	}
+	
+	.form-item-title,
+	.form-type-textarea {
+		position: relative;
+	 	width: 410px;
+	
+		.counter {
+		  display: block;
+	    font-size: 12px;
+	    font-weight: normal;
+	    position: absolute;
+	    right: 0;
+	    top: 3px;
+		}
+	}
+	
+	.form-type-managed-file {
+		button {
+			float: right;
+		}
+	}
+	
+	.form-managed-file {
+		.form-file {
+			float: left;
+	    width: 50%;
+		}
+	}
+	
+	table.field-multiple-table,
+	table.sticky-enabled {
+		width: 100%;
+	}
+	
+	table.sticky-enabled {
+		th:last-child {
+			text-align: right;
+			padding-right: 23px;
+		}
+		
+		button {
+			float: right;
+			background-color: #8A1538;
+		  border: 1px solid #793348;
+			margin: 10px 0;
+		}
+	}
+	
+	button.field-add-more-submit {
+		float: right;
+	}
+	
+	#field-topic-links-add-more-wrapper {
+		th > label {
+		  color: #101010;
+	    font-size: 14px;
+	    font-weight: bold;
+			margin-left: 10px;
+		}
+	}
+	
+	/*button*/
+	.sbac-forum-add-topic-buttons {
+		button{
+			margin-left: 30px;
+			float: right;
+		}
+	}
+}
+
+/*---------------------------
+View Topic Page, Comment Page
+----------------------------*/
+.node-type-topic,
+.page-comment {
+	
+	#page-title,
+	.button-group {
+		display: none;
+	}
+	
+	.topic-node--forum-parent-info {
+		position: relative;
+		
+		 h1:first-child {
+			border-bottom: 1px solid #62676E;
+	    color: #04384E;
+	    display: block;
+	    font-size: 22px;
+	    font-weight: bold;
+	    margin: 0 0 5px;
+	    padding: 0;
+	    text-transform: capitalize;
+		}
+		
+		.sbac-forum-topic-node-view-controls-wrapper {
+		  display: block;
+	    float: right;
+	    height: 80px;
+	    margin-top: -90px;
+	    padding-top: 50px;
+	    position: relative;
+	    right: 0;
+	    width: 130px;
+	    z-index: 999;
+		
+		 .sbac-forum-topic-node-view-controls:before {
+			  content:"\e621";
+		    cursor: pointer;
+		    display: inline-block;
+		    float: left;
+		    font-family: "sbac";
+		    font-size: 20px;
+		    margin: 0 7px 0 0;
+		    opacity: 0.5;
+			}
+			
+			.sbac-forum-topic-node-view-controls {
+			  color: #62676E;
+		    cursor: pointer;
+		    display: inline-block;
+		    float: right;
+		    font-size: 15px;
+		    line-height: 20px;
+		    margin-top: 0;
+			}
+			
+			.sbac-forum-topic-node-view-controls-popup:after {
+			  border-left: 12px solid rgba(0, 0, 0, 0);
+		    border-right: 12px solid rgba(0, 0, 0, 0);
+		    border-top: 12px solid #828588;
+		    bottom: 31px;
+		    content: "";
+		    display: block;
+		    height: 0;
+		    left: 50%;
+		    margin-left: -10px;
+		    position: absolute;
+		    width: 0;
+		    z-index: 1000;
+			}
+			
+			.sbac-forum-topic-node-view-controls-popup:after {
+			  background-color: rgba(0, 0, 0, 0);
+		    bottom: 30px;
+		    position: absolute;
+			}
+			
+			.sbac-forum-topic-node-view-controls-popup  {
+			  background-color: #FFFFFF;
+		    border: 1px solid #828588;
+		    border-radius: 10px;
+		    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+		    color: #464B54;
+		    margin-top: -90px;
+		    width: 130px;
+				display: none;
+				
+				ul {
+				  list-style-type: none;
+			    margin: 0;
+			    padding: 10px 0 7px;
+					li {
+						margin-left: 15px;
+						a {
+							color: #0583AC;
+						}
+						
+						a:hover {
+							text-decoration: underline;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/*top navigation*/
+	.topic-node-view-tertiary-nav {
+		clear: both;
+		
+		.topic-node-view-tertiary-nav-left {
+			float: left;
+			width: 50%;
+			
+			a.topic-node-back-link {
+				display: inline-block;
+		    font-size: 15px;
+		    line-height: 20px;
+		    margin: 5px 0 15px;
+		    vertical-align: top;
+				color: #0583AC;
+			}
+			
+			a.topic-node-back-link:hover {
+				text-decoration: underline;
+			}
+			
+			a.topic-node-back-link:before {
+			  content: "\e620";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    position: relative;
+		    text-decoration: none;
+		    top: -2px;
+			}
+		}
+		
+		.topic-node-view-tertiary-nav-right {
+			float: right;
+			width: 50%;
+			
+			span {
+				float: right;
+			}
+			
+			.tertiary-edit-link a:before {
+			  content: "\e61d";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    opacity: 0.5;
+		    position: relative;
+		    text-decoration: none;
+		    top: -2px;
+			}
+			
+			.tertiary-edit-link a {
+			  float: right;
+		    font-size: 15px;
+				margin: 5px 0 15px 30px;
+		    color: #62676E;
+		    display: inline-block;
+		    line-height: 20px;
+		    vertical-align: top;
+			}
+			
+			.tertiary-delete-link a:before {
+			  content:"\e632";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    opacity: 0.5;
+		    position: relative;
+		    text-decoration: none;
+		    top: -2px;
+			}
+			
+			.tertiary-delete-link a {
+			  float: right;
+		    font-size: 15px;
+		    margin: 5px 0 15px;
+		    color: #62676E;
+		    display: inline-block;
+		    line-height: 20px;
+		    vertical-align: top;
+			}
+			
+			.tertiary-edit-link a:hover,
+			.tertiary-delete-link a:hover {
+				text-decoration: underline;
+			}
+			
+			.tertiary-edit-link a:hover:before,
+			.tertiary-delete-link a:hover:before {
+				opacity: 1;
+			}
+		}
+	}
+	
+	/*topic main content*/
+	.topic-node-main-content {
+		clear: both;
+		
+		.topic-node-main-content-left {
+			float: left;
+			margin-right: 40px;
+			
+			.topic-node-auhor-pane {
+				background-image: url("../images/avatar.png");
+				background-position: center center;
+		    background-repeat: no-repeat;
+		    background-size: contain;
+		    height: 120px;
+		    width: 120px;
+				
+				img {
+					height: 120px;
+			    width: 120px;
+				}
+			}
+			
+			.topic-node-author-pane-name {
+				margin-top: 10px;
+				
+				a {
+					color: #0583AC;
+				  cursor: pointer;
+			    text-decoration: none;
+					font-weight: bold;
+					width: 120px;
+					word-wrap: break-word;
+					line-height: 1.2;
+					float: left;
+				}
+			}
+			
+			.topic-node-author-pane-post-date {
+				font-size: 13px;
+				line-height: 1.6;
+				margin-top: 5px;
+			}
+		}
+		
+		.topic-node-main-content-right {
+			float: left;
+			
+			h2 {
+				margin-bottom: 5px;
+				
+				&.node-title a {
+					color: #000000;
+				  display: block;
+			    font-size: 18px;
+			    font-weight: bold;
+			    margin: 0;
+			    padding: 0 0 5px;
+			    text-transform: capitalize;
+				}
+			}
+			
+			.body.field {
+				font-size: 16px;
+				line-height: 1.6;
+		    margin: 0;
+		    max-width: 560px;
+			}
+		}
+		
+		.field-name-field-topic-files {
+			margin-top: 10px;
+		}
+	}
+	
+	/*Comments Region*/
+	.topic-node-comments-region {
+		clear: both;
+		padding-top: 40px;
+	}
+}
+
 
 /*Fixed for FF*/
 @-moz-document url-prefix() { 

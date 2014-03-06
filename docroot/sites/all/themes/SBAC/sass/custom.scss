@@ -1,6 +1,7 @@
 @import "app.scss";
 @import "colors.scss";
 @import "compass/css3/";
+@import url(../css/sbac_icons.css);
 
 /* ==========================================================================
    Table of Contents
@@ -271,7 +272,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
     /*background: #006184;*/
 		/*background: #0084B0;*/
 		/*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
-		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));		
+		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
   }
 }
 
@@ -422,10 +423,10 @@ html.js {
 	position: relative;
 	border-top: 0;
 	padding-left: 10px;
-	
+
 	li {
 		border: none;
-		
+
 		a {
 	    background: none repeat scroll 0 0 #FAFAFA;
 	    border: 1px solid #CECECE;
@@ -437,7 +438,7 @@ html.js {
 	    padding: 20px 40px 20px 20px;
 	    text-align: right;
 			color: #0583AC;
-			
+
 			&:hover {
 				background-color: rgba(250,250,250,1);
 				background-image: -webkit-linear-gradient(left, rgba(0,95,130,0.025) 10%,rgba(0,95,130,0.05) 98%);
@@ -467,7 +468,7 @@ html.js {
 			    z-index: 1;
 			}
 			&:focus {
-				/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */ 
+				/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */
 				/*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
 				@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 			}
@@ -480,7 +481,7 @@ html.js {
 		    padding-top: 6px;
 		}
 	}
-	
+
 	li.selected {
 		a {
 			background: none repeat scroll 0 0 #FFFFFF;
@@ -502,12 +503,12 @@ html.js {
 		    z-index: 2;
 		}
 		&:focus {
-			/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */ 
+			/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */
 			/*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
 			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 		}
 	}
-  
+
 	li:first-child {
 	    border-top: 1px solid #CECECE;
 	    margin-top: 10px;
@@ -520,7 +521,7 @@ html.js {
 
 div.vertical-tabs {
 		border-radius:5px;
-		background-color: #FFFFFF;	
+		background-color: #FFFFFF;
 }
 /* -----------------------------------------
    Forms
@@ -890,12 +891,12 @@ nav.main-nav {
 
 .sbac-favorites-menu {
 	padding-left: 19px;
-	
+
 	a {
 		background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 		padding-left: 20px;
 	}
-	
+
 	.sbac-favorites-menu-tooltip {
 		width: 142px;
 		font-size: 0.8em;
@@ -907,7 +908,7 @@ nav.main-nav {
 		white-space:nowrap;
 		padding-top: 20px;
 		overflow: visible !important;
-		
+
 		&.f-dropdown {line-height: 1.6;}
 	}
 }
@@ -1365,7 +1366,7 @@ a.tabledrag-handle .handle {
 		background-image: -moz-linear-gradient(center top , rgba(0, 95, 130, 0) 20%, rgba(0, 95, 130, 0.1) 70%);
     text-shadow: 0 1px 0 #FFFFFF
   }
-  
+
 	&:focus {
 		outline: 0;
 	}
@@ -1402,10 +1403,10 @@ a.tabledrag-handle .handle {
 /* overwrite foundation/components/_section.scss */
 .section-container.auto > section > .title, .section-container.auto > .section > .title {
 	background-color: none;
-  border: none;	
+  border: none;
 }
 
-.section-container.auto > section.active { 
+.section-container.auto > section.active {
 	display: block;
 }
 
@@ -2121,7 +2122,7 @@ a.tabledrag-handle .handle {
       overflow: hidden;
       overflow-y:auto;
       width: auto !important;
-			
+
 			p {
 				font-size: 16px;
 				line-height: 1.6;
@@ -2793,7 +2794,7 @@ a.tabledrag-handle .handle {
   //float: right;
   color: white;
   background: #2aa549;
- 
+
   &:hover, &:focus {
 	/*	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
 		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
@@ -2866,7 +2867,7 @@ a.tabledrag-handle .handle {
 			vertical-align: middle;
 		}
 	}
-}	
+}
 
 /* ----------------------------------------
     Narrow + Wide & Half + Half Columns
@@ -2896,7 +2897,7 @@ a.tabledrag-handle .handle {
   ------------------------------------------------ */
 .chzn-container {
 	width: 100% !important;
-	
+
 	ul {
 		margin: 0 !important;
 	}
@@ -2923,11 +2924,11 @@ a.tabledrag-handle .handle {
 
 /*Add Selected Standards - comfirmation modal*/
 #alignment-page .standards-browser {
-	
+
 	.confirm-buttons {
 		padding-bottom: 25px;
 	}
-	
+
 	#cmod-confirm-cancel.button, #cmod-confirm-submit.button {
 		width: auto !important;
 		margin: 0 10px;
@@ -2944,24 +2945,24 @@ a.tabledrag-handle .handle {
     min-width: 125px;
     padding: 0 18px;
     text-align: center;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);				
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 	}
-	
+
 	#cmod-confirm-cancel.button {
 		background-color: #8A1538;
 		border: 1px solid #793348;
-		
+
 		&:hover {
 			background-color: #8A1538 !important;
 			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 	   /* background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
 		}
 	}
-		
+
 	#cmod-confirm-submit.button {
 		background-color: #0084B0;
 	  border: 1px solid #0D6785;
-	
+
 		&:hover {
 			background-color: #0084B0 !important;
 			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
@@ -2971,10 +2972,10 @@ a.tabledrag-handle .handle {
 }
 
 /*Global sort select box*/
-.block-sbac-resource-sbac-resource-dl-sort-form, 
+.block-sbac-resource-sbac-resource-dl-sort-form,
 .block-sbac-resource-sbac-resource-rr-sort-form,
 .block-sbac-resource-sbac-resource-mr-sort-form  {
-	
+
 	select {
 		background: url(../images/icons/icon-arrow-down.png) no-repeat top 12px right 6px;
 		color: #464B54;
@@ -2995,28 +2996,28 @@ a.tabledrag-handle .handle {
 		width: 210px;
 		vertical-align: top;
 	}
-	
+
 	option {
 		color: #464B54;
 		font-size: 15px;
 		padding: 3px;
  	}
-	
+
 	/*Remove the outline*/
 	select:-moz-focusring {
     color: transparent;
     text-shadow: 0 0 0 #000;
 	}
-	
+
 	/*for Chrome*/
-	@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	@media screen and (-webkit-min-device-pixel-ratio:0) {
 		select, option {
 			padding: 8px 6px;
 	  }
 	}
-	
+
 	/*for IE9, IE10*/
-	@media screen and (min-width:0\0) { 
+	@media screen and (min-width:0\0) {
 	   select, option {
 			padding: 6px;
 			width: 220px;

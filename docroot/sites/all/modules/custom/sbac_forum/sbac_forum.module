@@ -338,6 +338,19 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  // Node template override
+  $items['node__topic'] = array(
+    'render element' => 'elements',
+    'path' => $path,// . '/templates',
+    'file' => 'includes/sbac_forum.preprocess.inc',
+    'template' => 'templates/node--topic',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_node',
+      // 'sbac_forum_preprocess_node__topic', // This doesnt actually work. see sbac_forum_preprocess_node
+    ),
+  );
+
   //============== Views template overrides. ===============================
 
   /**
@@ -467,6 +480,32 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['views_view_field__forum_topic_list__block__uid'] = array(
+    'template'             => 'views-view-field--forum-topic-list--block--uid',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
+    'arguments'            => array('view' => null, 'field' => null, 'row' => null),
+    'original hook'        => 'views_view_field',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_field',
+      'sbac_forum_preprocess_views_view_field__forum_topic_list__block__uid',
+    ),
+  );
+
+  $items['views_view_field__forum_topic_list__block__last_comment_uid'] = array(
+    'template'             => 'views-view-field--forum-topic-list--block--last-comment-uid',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
+    'arguments'            => array('view' => null, 'field' => null, 'row' => null),
+    'original hook'        => 'views_view_field',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_field',
+      'sbac_forum_preprocess_views_view_field__forum_topic_list__block__last_comment_uid',
+    ),
+  );
+
 
   /**
    * ---------- Member list View.---------------
@@ -512,11 +551,47 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['views_view_field__forum_member_list__picture'] = array(
+    'template'             => 'views-view-field--forum-member-list--picture',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
+    'arguments'            => array('view' => null, 'field' => null, 'row' => null),
+    'original hook'        => 'views_view_field',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_field',
+      'sbac_forum_preprocess_views_view_field__forum_member_list__picture',
+    ),
+  );
+
+  $items['views_view_field__forum_member_list__uid'] = array(
+    'template'             => 'views-view-field--forum-member-list--uid',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
+    'arguments'            => array('view' => null, 'field' => null, 'row' => null),
+    'original hook'        => 'views_view_field',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_field',
+      'sbac_forum_preprocess_views_view_field__forum_member_list__uid',
+    ),
+  );
+
 
   // ==================== End Views templates  =================================
 
 
   return $items;
+}
+
+/**
+ * Implements hook_preprocess_node
+ */
+function sbac_forum_preprocess_node(&$vars) {
+  if ($vars['type'] == 'topic') {
+    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.preprocess');
+    sbac_forum_preprocess_node__topic($vars);
+  }
 }
 
 /**
@@ -528,7 +603,7 @@ function sbac_forum_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implements hook_form_FORM-ID_alter
  */
-function sbac_forum_form_taxonomy_form_term_alter(&$form, $form_state, $form_id) {
+function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'taxonomy_form_term') {
     if ((isset($form['#term'])) &&
         (!isset($form['delete'])) &&
@@ -649,7 +724,7 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
     if (($triggering_element == 'Start Forum')) {
       $link_ops = array(
         'attributes' => array(
-          'class' => 'new-topic-link',
+          'class' => 'in-message-new-topic-link',
         ),
         'query' => array('target-forum' => $tid),
       );
@@ -747,15 +822,17 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
 /**
  * Implements hook_form_alter
  */
-function sbac_forum_form_topic_node_form_alter(&$form, $form_state, $form_id) {
+function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['#node'])) {
     if (!isset($form['#node']->nid) ) { // Add new topic form.
       drupal_set_title('Start a Topic');
-      $default_forum_parent = $_GET['target-forum'];
-      if ($default_forum_parent) {
-        $form['auto_default_forum_parent'] = array(
+
+      if (!($form_state['executed'])) { // Only set this on non-ajax requests. Basically on page load. You lose the GET var after ajax callback.
+        $default_forum_parent = $_GET['target-forum'];
+        // Have to set default forum that this topic relates to.
+        $form_state['auto_default_forum_parent'] = array(
           '#type' => 'value',
-          '#value' => $default_forum_parent
+          '#value' => $default_forum_parent,
         );
       }
 
@@ -809,13 +886,18 @@ function sbac_forum_form_topic_node_form_alter(&$form, $form_state, $form_id) {
   $form['author']['#access'] = $has_access;
   $form['options']['#access'] = $has_access;
   $form['revision_information']['#access'] = $has_access;
+
+  $path_to_css_file = drupal_get_path('module', 'sbac_forum');
+  $path_to_css_file .= '/css/sbac_forum.css';
+  $form['#attached']['css'][] = $path_to_css_file;
 }
 
 
-function _sbac_forum__topic_form__default_parent_term_validate(&$form, &$form_state) {
-  $values = $form_state['values'];
+
+function _sbac_forum__topic_form__default_parent_term_validate($form, &$form_state) {
+  $values = $form_state; // Safe so this doesnt act on form_state directly.
   if (isset($values['auto_default_forum_parent'])) {
-    $parent_term = taxonomy_term_load($values['auto_default_forum_parent']);
+    $parent_term = taxonomy_term_load($values['auto_default_forum_parent']['#value']);
     if (!empty($parent_term)) { // Check if this is a valid term.
       global $user;
       // Check user has access to do this.
@@ -907,6 +989,10 @@ function sbac_forum_delete_orphaned_topics_process($item_nid) {
  *
  * =============================================================================
  */
+
+/**
+ * Implements hook_taxonomy_term_insert
+ */
 function sbac_forum_taxonomy_term_insert($term) {
   if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
     global $user;
@@ -925,7 +1011,9 @@ function sbac_forum_taxonomy_term_insert($term) {
   }
 }
 
-
+/**
+ * Implements hook_taxonomy_term_presave
+ */
 function sbac_forum_taxonomy_term_presave($term) {
   if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
     global $user;
@@ -940,6 +1028,61 @@ function sbac_forum_taxonomy_term_presave($term) {
     $role_access = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
     if ($role_access) {
       $term->field_forum_access_role_list[LANGUAGE_NONE] = array(); // Unset the selection for role lists.
+    }
+  }
+}
+
+
+/**
+ * =============================================================================
+ *
+ *      Topic Node CRUD functions
+ *
+ * =============================================================================
+ */
+
+/**
+ * Implements hook_node_insert
+ */
+function sbac_forum_node_insert($node) {
+  if ($node->type == 'topic') {
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    if (isset($node_wrapper->field_topic_forum_parent)) {
+      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_obj)) {
+        // Update topic counter field on forum.
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if (isset($forum_wrapper->field_forum_topic_count)) {
+          $current_count = $forum_wrapper->field_forum_topic_count->value();
+          $current_count++;
+          $forum_wrapper->field_forum_topic_count->set($current_count);
+          $forum_wrapper->save(TRUE);
+          taxonomy_term_save($forum_obj);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_delete
+ */
+function sbac_forum_node_delete($node) {
+  if ($node->type == 'topic') {
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    if (isset($node_wrapper->field_topic_forum_parent)) {
+      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_obj)) {
+        // Update topic counter field on forum.
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if (isset($forum_wrapper->field_forum_topic_count)) {
+          $current_count = $forum_wrapper->field_forum_topic_count->value();
+          $current_count--;
+          $forum_wrapper->field_forum_topic_count->set($current_count);
+          $forum_wrapper->save(TRUE);
+          taxonomy_term_save($forum_obj);
+        }
+      }
     }
   }
 }
