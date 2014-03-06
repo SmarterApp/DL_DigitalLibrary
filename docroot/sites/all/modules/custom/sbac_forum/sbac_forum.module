@@ -724,7 +724,7 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
     if (($triggering_element == 'Start Forum')) {
       $link_ops = array(
         'attributes' => array(
-          'class' => 'new-topic-link',
+          'class' => 'in-message-new-topic-link',
         ),
         'query' => array('target-forum' => $tid),
       );
