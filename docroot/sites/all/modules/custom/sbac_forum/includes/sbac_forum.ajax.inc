@@ -252,16 +252,11 @@ function sbac_forum__ajax__delete_topic_modal_callback($js = FALSE, $term, $topi
         // Then finally, delete the Topic.
         $name = $topic->title;
         $delete = node_delete($topic->nid);
-        if ($delete) {
-          $message = 'Topic: "'. $name .'" has been deleted successfully';
-          $type = 'status';
-        } else {
-          $message = 'There was a problem deleting topic '. $name .'. Contact Administrator';
-          $type = 'error';
-        }
+        $message = 'Topic: "'. $name .'" has been deleted successfully';
+        $type = 'status';
         drupal_set_message($message, $type);
 
-        $url = 'forums';
+        $url = 'forums/term/' . $term->tid;
         $output[] = ctools_ajax_command_redirect($url);
       }
     }
