@@ -687,7 +687,9 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       );
       if (isset($form['actions']['delete'])) { // Edit form
         $form['actions']['delete']['#attributes']['class'] = array('red');
-        $form['actions']['delete']['#suffix'] = '</div>';
+        // $form['actions']['delete']['#suffix'] = '</div>';
+        $form['actions']['delete']['#access'] = FALSE; // Disable the delete button.
+        $form['actions']['submit']['#suffix'] = '</div>';
       } else { // Add forum forum
         $form['actions']['submit']['#value'] = 'Start Forum';
         $form['actions']['submit']['#suffix'] = '</div>';
@@ -837,14 +839,14 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
       }
 
       $form['actions']['submit']['#value'] = 'Start Topic';
-      $form['actions']['submit']['#suffix'] = '</div>';
 
       // Do access checks and validation to ensure topic relates to correct forum.
       $form['#validate'][] = '_sbac_forum__topic_form__default_parent_term_validate';
     } else { // Edit form
       if (isset($form['actions']['delete'])) { // Edit form
         $form['actions']['delete']['#attributes']['class'] = array('red');
-        $form['actions']['delete']['#suffix'] = '</div>';
+        //$form['actions']['delete']['#suffix'] = '</div>';
+        $form['actions']['delete']['#access'] = FALSE; // Disable the delete button.
       }
     }
 
@@ -874,6 +876,7 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
       '#submit' => array('_sbac_forum__add_topic_form_redirect_submit'),
       '#prefix'       => '<div class="sbac-forum-add-topic-buttons">',
     );
+    $form['actions']['submit']['#suffix'] = '</div>';
   }
 
   // Hide fields
