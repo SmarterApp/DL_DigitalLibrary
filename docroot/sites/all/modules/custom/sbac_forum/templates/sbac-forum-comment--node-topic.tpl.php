@@ -91,7 +91,6 @@
       ?>
       <div class="topic-node-comment-materials-wrapper">
         <?php if($has_materials): ?>
-          <span class="topic-node-comment-materials-logo"></span>
           <div class="topic-node-comment-materials-label">Material(s)</div>
           <?php
             print render($content['field_topic_comment_files']);

@@ -137,7 +137,6 @@
 
     <div class="topic-node-main-content-materials-wrapper">
       <?php if($main_content['has_materials']): ?>
-        <span class="topic-node-main-content-materials-logo"></span>
         <div class="topic-node-main-content-materials-label">Material(s)</div>
         <?php
           print render($content['field_topic_files']);

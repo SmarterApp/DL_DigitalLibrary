@@ -1895,6 +1895,12 @@ View Topic Page, Comment Page
 					}
 				}
 			}
+			
+			.sbac-forum-topic-node-view-controls-popup.hover-over-large-popup {
+			    margin-left: -10px;
+			    margin-top: -60px;
+			    width: 160px;
+			}
 		}
 	}
 	
@@ -2065,20 +2071,208 @@ View Topic Page, Comment Page
 		    margin: 0;
 		    max-width: 560px;
 			}
+			
+			.topic-node-main-content-materials-wrapper {
+				margin-top: 20px;
+				
+				.topic-node-main-content-materials-label {
+					border-bottom: 1px solid #CECECE;
+				  color: #101010;
+			    display: inline-block;
+			    font-size: 13px;
+			    font-weight: bold;
+			    line-height: 20px;
+			    margin: 0;
+			    padding: 0;
+			    vertical-align: top;
+					width: 410px;
+				}
+				
+				.topic-node-main-content-materials-label:before {
+				  color: #91959E;
+			    content:"\e600";
+			    display: inline-block;
+			    font-family: 'sbac';
+			    font-size: 20px;
+			    font-weight: normal;
+			    margin-right: 7px;
+			    position: relative;
+			    top: -2px;
+				}
+				
+				.field-name-field-topic-files {
+					img {display: none;}
+					
+					a{
+						 display: inline-block;
+						 font-size: 13px;
+				     line-height: 20px;
+				     vertical-align: top;
+						 color: #0583AC;
+					}
+					
+					 a:before {
+					  color: #101010;
+				    content: "•";
+				    display: inline-block;
+				    font-size: 20px;
+				    font-weight: normal;
+				    margin-right: 5px;
+				    position: relative;
+					}
+				}
+			}
 		}
 		
 		.field-name-field-topic-files {
 			margin-top: 10px;
 		}
 	}
-	
-	/*Comments Region*/
 	.topic-node-comments-region {
 		clear: both;
 		padding-top: 40px;
 	}
 }
 
+// --------------------- Comments Region ------------------------------
+
+.topic-node-comments-region {
+	clear: both;
+	
+	h2.title {
+		color: #000000;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    padding: 10px 0;
+    text-transform: capitalize;
+	}
+	
+	.comment {
+		-moz-box-sizing: border-box;
+	  background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 6px;
+    border-top: 1px solid #CECECE;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
+    margin: 0 0 15px;
+    padding: 15px;
+    position: relative;
+    width: 665px;
+
+		.topic-node-comment-region-left {
+			float: left;
+			width: 60px;
+			height: 60px;
+			
+			.topic-node-comment-author-img {
+				background-image: url("../images/avatar.png");
+		    background-size: contain;
+				width: 60px;
+				height: 60px;
+				display: block;
+			}
+		}
+		
+		.topic-node-comment-region-right {
+			float: left;
+			width: 560px;
+			margin-left: 15px;
+			font-size: 13px;
+			line-height: 1.2;
+			
+			a.devtools-tooltip-trigger {
+				color: #0583AC;
+				font-weight: bold;
+			}
+			
+			.field.field-name-comment-body  {
+				font-size: 13px;
+				line-height: 1.2;
+				margin: 10px 0;
+			}
+			
+			.field-name-field-topic-comment-files,
+			.field-name-field-topic-comment-links {
+				img {display: none;}
+				
+				 a {
+					color: #0583AC;
+					display: inline-block;
+			    font-size: 13px;
+			    line-height: 20px;
+			    vertical-align: top;
+				}
+				
+				 a:before {
+				  color: #101010;
+			    content: "•";
+			    display: inline-block;
+			    font-size: 20px;
+			    font-weight: normal;
+			    margin-right: 5px;
+			    position: relative;
+				}
+			}
+			
+			.topic-node-comment-region-right-bottom {
+				text-align: right;
+				
+				ul{
+					list-style-type: none;
+					margin-bottom: 0;
+					
+					li {
+						display: inline-block;
+				    margin-top: 20px;
+						line-height: 1;
+				
+						a {
+							margin-left: 30px;
+							color: #62676E;
+							font-size: 13px;
+							line-height: 20px;
+							
+							&:hover {text-decoration: underline;}
+						}
+					}
+					
+					li.comment-reply a {
+						color: #0583AC;
+					}
+						
+					li.comment-delete a:before,
+					li.comment-edit a:before,
+					li.comment-reply a:before {
+						content:"\e632";
+					  display: inline-block;
+				    font-family: 'sbac';
+				    font-size: 20px;
+				    font-weight: normal;
+				    margin-right: 7px;
+				    opacity: 0.5;
+				    position: relative;
+				    text-decoration: none;
+					}
+					
+					li.comment-edit a:before {
+						content:"\e61d";
+					}
+					
+					li.comment-reply a:before {
+						content:"\e630";
+						opacity: 1;
+					}
+					
+					li.comment-edit a:hover:before,
+					li.comment-delete a:hover:before {
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
+}
 
 /*Fixed for FF*/
 @-moz-document url-prefix() { 

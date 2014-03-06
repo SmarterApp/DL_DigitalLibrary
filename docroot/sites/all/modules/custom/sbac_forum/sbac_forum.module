@@ -719,6 +719,11 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       //   Use our own descrition field, more control.
       $form['description']['#access'] = FALSE;
 
+      // Add length restriction.
+      $form['name']['#maxlength'] = 75;
+      $form['name']['#attributes']['maxlength_js_label'][0] = 'Character count: @remaining';
+      $form['name']['#maxlength_js'] = TRUE;
+
       global $user;
       $help_text = '<div>*NOTE: <p>Facilitator fields and Member fields should not be modified directly.';
       $help_text .= 'If necessary, make sure to update "Administrative (hidden)" fields to preserve logic/stability</p>';
@@ -964,7 +969,10 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
     $form['title']['#maxlength_js'] = TRUE;
 
     // File uploaded widget tweaks
+    $form['field_topic_files'][LANGUAGE_NONE]['#title'] = '';
+    $form['field_topic_files'][LANGUAGE_NONE]['#file_upload_title'] = '';
     $form['field_topic_files'][LANGUAGE_NONE]['#file_upload_description'] = '';
+    $form['field_topic_links'][LANGUAGE_NONE]['#title'] = '';
     $js_file_path = drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.topic_form.js';
     $form['#attached']['js'][] = $js_file_path;
 
@@ -1075,6 +1083,21 @@ function _sbac_forum__add_topic_form_redirect_submit($form, &$form_state) {
   $form_state['redirect'] = $link;
 }
 
+
+// ----------
+
+function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $form_id) {
+  $form['author']['#access'] = FALSE; // Hide this form element.
+
+  $form['comment_body'][LANGUAGE_NONE][0]['value']['#title'] = 'Your response:';
+
+  // Remove all the bloat that comes with this widget.
+  $form['field_topic_comment_files'][LANGUAGE_NONE]['#title'] = '';
+  $form['field_topic_comment_files'][LANGUAGE_NONE]['#file_upload_title'] = '';
+  $form['field_topic_comment_files'][LANGUAGE_NONE]['#file_upload_description'] = '';
+
+  $form['field_topic_comment_links'][LANGUAGE_NONE]['#title'] = '';
+}
 
 
 /**
