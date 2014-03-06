@@ -52,7 +52,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
   // Author Pane Info.
   $topic_author = $node_data->author->value();
-  $author_image_markup = sbac_forum__api__get_author_picture($topic_author);
+  $author_image_markup = sbac_forum__api__get_author_picture($topic_author, 'forum_profile_image_120x120');
   $author_info = sbac_forum__api__get_authpane_hoverover($topic_author->uid);
   $posted = date('M jS, Y', $node_data->created->value());
 

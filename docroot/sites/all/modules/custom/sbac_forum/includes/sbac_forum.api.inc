@@ -312,7 +312,7 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
   return $output;
 }
 
-function sbac_forum__api__get_author_picture($user_id) {
+function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
   $output = '';
   $target_user = NULL;
   if (is_numeric($user_id)) {
@@ -327,7 +327,7 @@ function sbac_forum__api__get_author_picture($user_id) {
     if (in_array('picture', $privacy_settings)) { // Check privacy settings
       if (!empty($target_user->picture)) { // Check if user has uploaded a picture
         $picture = theme('image_style', array(
-          'style_name' => 'profile_image',
+          'style_name' => $image_style_name,
           'path' => $target_user->picture->uri,
           'attributes' => array('class' => 'topic-node-auth-pane-img profile-pic')
         ));
