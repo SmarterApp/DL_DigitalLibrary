@@ -246,6 +246,8 @@ function sbac_media_download_contents($node) {
         mkdir($destination);
       }
 
+      $result = sbac_media_determine_download_access($node);
+
       $zip = new ZipArchive;
       $archive_uri = 'public://resource_zips/';
       $filename = 'download_' . REQUEST_TIME . '.zip';
@@ -254,10 +256,13 @@ function sbac_media_download_contents($node) {
       $open = $zip->open($real_path, ZipArchive::CREATE);
       if ($open === TRUE) {
         foreach ($node->document as $key => $media) {
-          if (is_numeric($key)) {
-            if ($media->fid) {
-              $file = file_load($media->fid);
-              if ($file) {
+          if (is_numeric($key) && $media->fid) {
+            $file = file_load($media->fid);
+            if ($file) {
+              if ($key == 0 && $result['primary'] == TRUE) {
+                $zip->addFile(drupal_realpath($file->uri), $file->filename);
+              }
+              if ($key > 0 && $result['secondary'] == TRUE) {
                 $zip->addFile(drupal_realpath($file->uri), $file->filename);
               }
             }
@@ -283,6 +288,35 @@ function sbac_media_download_contents($node) {
       return "There are no files to download."; // no downloadable file schemes (public://)
     }
   }
+}
+
+/**
+ * Determines if the resource button is displayed or not.
+ *
+ */
+function sbac_media_determine_download_access($node) {
+  global $user;
+  $result = array('primary' => FALSE, 'secondary' => FALSE);
+  if (isset($node->document) && sbac_media_downloadable_scheme($node->document) && !in_array(SBAC_SHARE_GUEST, $user->roles)) {
+    if (isset($node->field_resource_actions['und'][0])) {
+      foreach ($node->field_resource_actions['und'] as $index => $value) {
+        if ($index == 0) { // primary or secondary depending on how drupal served this up.
+          if ($value['value'] == 0) {
+            $result['primary'] = TRUE;
+          }
+          if ($value['value'] == 1) {
+            $result['secondary'] = TRUE;
+          }
+        }
+        if ($index == 1) { // always secondary
+          if ($value['value'] == 1) {
+            $result['secondary'] = TRUE;
+          }
+        }
+      }
+    }
+  }
+  return $result;
 }
 
 /**
