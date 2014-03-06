@@ -89,6 +89,7 @@ features[field_instance][] = taxonomy_term-forum-field_intended_student
 features[field_instance][] = taxonomy_term-forum-field_state
 features[field_instance][] = taxonomy_term-forum-field_subject
 features[image][] = forum_profile_image_120x120
+features[image][] = forum_profile_image_60x60
 features[node][] = topic
 features[taxonomy][] = forum
 features[user_permission][] = access comments
