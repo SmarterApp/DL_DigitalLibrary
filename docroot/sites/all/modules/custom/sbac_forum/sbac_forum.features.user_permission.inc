@@ -25,6 +25,7 @@ function sbac_forum_user_default_permissions() {
     'name' => 'administer comments',
     'roles' => array(
       'administrator' => 'administrator',
+      'facilitator' => 'facilitator',
     ),
     'module' => 'comment',
   );
@@ -117,6 +118,7 @@ function sbac_forum_user_default_permissions() {
     'name' => 'skip comment approval',
     'roles' => array(
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'comment',
   );
