@@ -1129,3 +1129,63 @@ function sbac_forum_node_delete($node) {
     }
   }
 }
+
+/**
+ * =============================================================================
+ *
+ *      Comments for Topic Node CRUD functions
+ *
+ * =============================================================================
+ */
+
+/**
+ * Implements hook_comment_insert
+ */
+function sbac_forum_comment_insert($comment) {
+  $related_nid = $comment->nid;
+  $comment_author_id = $comment->uid;
+  if (!empty($related_nid)) {
+    $topic_node = node_load($related_nid);
+    $node_wrapper = entity_metadata_wrapper('node', $topic_node);
+    if (isset($node_wrapper->field_topic_forum_parent)) {
+      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_obj)) {
+        // Update Reply counter field on forum.
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if (isset($forum_wrapper->field_forum_topic_count)) {
+          $current_count = $forum_wrapper->field_forum_topic_comment_count->value();
+          $current_count++;
+          $forum_wrapper->field_forum_topic_comment_count->set($current_count);
+          $forum_wrapper->save(TRUE);
+          taxonomy_term_save($forum_obj);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_comment_delete
+ */
+function sbac_forum_comment_delete($comment) {
+  $related_nid = $comment->nid;
+  $comment_author_id = $comment->uid;
+  if (!empty($related_nid)) {
+    $topic_node = node_load($related_nid);
+    $node_wrapper = entity_metadata_wrapper('node', $topic_node);
+    if (isset($node_wrapper->field_topic_forum_parent)) {
+      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_obj)) {
+        // Update Reply counter field on forum.
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if (isset($forum_wrapper->field_forum_topic_count)) {
+          $current_count = $forum_wrapper->field_forum_topic_comment_count->value();
+          $current_count--;
+          $forum_wrapper->field_forum_topic_comment_count->set($current_count);
+          $forum_wrapper->save(TRUE);
+          taxonomy_term_save($forum_obj);
+        }
+      }
+    }
+  }
+}
