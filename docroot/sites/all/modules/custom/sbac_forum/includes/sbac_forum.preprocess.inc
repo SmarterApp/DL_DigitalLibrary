@@ -358,3 +358,36 @@ function sbac_forum_preprocess_views_view_fields__forum_member_list(&$vars) {
 
   $vars['sbac_forum_indv_member_controls'] = $output;
 }
+
+/**
+ * views_view_field preprocess
+ */
+function sbac_forum_preprocess_views_view_field__forum_member_list__picture(&$vars) {
+  $show_image = FALSE;
+  $row_data = $vars['row'];
+  if (isset($row_data->field_field_privacy)) {
+    foreach ($row_data->field_field_privacy as $privacy_option) {
+      if ($privacy_option['raw']['value'] == 'picture') {
+        $show_image = TRUE;
+      }
+    }
+  }
+
+  if ($show_image == FALSE) { // Ensure privacy field is respected.
+    $vars['output'] = '';
+  }
+}
+
+/**
+ * views_view_field preprocess
+ */
+function sbac_forum_preprocess_views_view_field__forum_member_list__uid(&$vars) {
+  $user_uid = $vars['output'];
+  $new_output = '';
+  if (!empty($user_uid)) {
+    $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
+    $new_output = '' . $author_name . '';
+  }
+
+  $vars['output'] = $new_output;
+}

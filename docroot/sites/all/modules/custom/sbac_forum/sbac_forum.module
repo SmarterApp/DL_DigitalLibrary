@@ -551,6 +551,32 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['views_view_field__forum_member_list__picture'] = array(
+    'template'             => 'views-view-field--forum-member-list--picture',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
+    'arguments'            => array('view' => null, 'field' => null, 'row' => null),
+    'original hook'        => 'views_view_field',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_field',
+      'sbac_forum_preprocess_views_view_field__forum_member_list__picture',
+    ),
+  );
+
+  $items['views_view_field__forum_member_list__uid'] = array(
+    'template'             => 'views-view-field--forum-member-list--uid',
+    'path'                 => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
+    'arguments'            => array('view' => null, 'field' => null, 'row' => null),
+    'original hook'        => 'views_view_field',
+    'file'                 => '../../../includes/sbac_forum.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_field',
+      'sbac_forum_preprocess_views_view_field__forum_member_list__uid',
+    ),
+  );
+
 
   // ==================== End Views templates  =================================
 
