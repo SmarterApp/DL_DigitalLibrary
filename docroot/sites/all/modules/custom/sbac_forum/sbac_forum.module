@@ -402,6 +402,17 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['sbac_forum_comment__node_topic'] = array(
+    'render element' => 'elements',
+    'path' => $path,// . '/templates',
+    'file' => 'includes/sbac_forum.preprocess.inc',
+    'template' => 'templates/sbac-forum-comment--node-topic',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_comment',
+    ),
+  );
+
   //============== Views template overrides. ===============================
 
   /**
@@ -666,6 +677,23 @@ function sbac_forum_node_access($node, $op, $account) {
           break;
       }
     }
+  }
+}
+
+/**
+ * Implements hook_comment_view
+ */
+function sbac_forum_comment_view($comment, $view_mode, $langcode) {
+}
+
+/**
+ * Implements hook_preprocess_comment
+ */
+function sbac_forum_preprocess_comment(&$vars) {
+  if ($vars['elements']['#bundle'] == 'comment_node_topic') {
+    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.preprocess');
+    $vars['theme_hook_suggestions'][] = 'sbac_forum_comment__node_topic';
+    sbac_forum_preprocess_sbac_forum_comment__node_topic($vars);
   }
 }
 

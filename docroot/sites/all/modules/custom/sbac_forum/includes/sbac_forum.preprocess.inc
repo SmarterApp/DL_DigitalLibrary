@@ -117,6 +117,22 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $vars['main_content'] = $main_content;
 }
 
+
+function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
+  $comment_entity = $vars['comment'];
+
+  $comment_auth_uid = $comment_entity->uid;
+  $user_image = sbac_forum__api__get_author_picture($comment_auth_uid, 'forum_profile_image_60x60');
+  $user_name_w_hoverover = sbac_forum__api__get_authpane_hoverover($comment_auth_uid);
+
+  $posted_date = date('M jS, Y' , $comment_entity->created);
+
+
+  $vars['picture'] = $user_image;
+  $vars['auth_name_hover'] = $user_name_w_hoverover;
+  $vars['posted_date'] = $posted_date;
+
+}
 /**
  * ---------- Forum list View.---------------
  */
