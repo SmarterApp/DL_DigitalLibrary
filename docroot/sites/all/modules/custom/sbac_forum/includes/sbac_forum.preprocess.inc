@@ -127,10 +127,30 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
   $posted_date = date('M jS, Y' , $comment_entity->created);
 
+  $has_materials = FALSE;
+  $comment_data = entity_metadata_wrapper('comment', $comment_entity);
+  $has_files = FALSE;
+  if (isset($comment_data->field_topic_comment_files)) {
+    $topic_files = $comment_data->field_topic_comment_files->value();
+    if (!empty($topic_files)) {
+      $has_files = TRUE;
+    }
+  }
+  $has_links = FALSE;
+  if (isset($comment_data->field_topic_comment_links)) {
+    $topic_links = $comment_data->field_topic_comment_links->value();
+    if (!empty($topic_links)) {
+      $has_links = TRUE;
+    }
+  }
+  if ($has_links || $has_files) {
+    $has_materials = TRUE;
+  }
 
   $vars['picture'] = $user_image;
   $vars['auth_name_hover'] = $user_name_w_hoverover;
   $vars['posted_date'] = $posted_date;
+  $vars['has_materials'] = $has_materials;
 
 }
 /**

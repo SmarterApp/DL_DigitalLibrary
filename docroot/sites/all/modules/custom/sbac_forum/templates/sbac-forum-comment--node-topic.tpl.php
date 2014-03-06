@@ -61,6 +61,9 @@
 
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+  <div class="topic-node-comment-region-status-message">
+  </div>
+
   <div class="topic-node-comment-region-left">
     <div class="topic-node-comment-author-img">
       <?php print $picture ?>
@@ -82,8 +85,20 @@
       <?php
         // We hide the comments and links now so that we can render them later.
         hide($content['links']);
+        hide($content['field_topic_comment_links']);
+        hide($content['field_topic_comment_files']);
         print render($content);
       ?>
+      <div class="topic-node-comment-materials-wrapper">
+        <?php if($has_materials): ?>
+          <span class="topic-node-comment-materials-logo"></span>
+          <div class="topic-node-comment-materials-label">Material(s)</div>
+          <?php
+            print render($content['field_topic_comment_files']);
+            print render($content['field_topic_comment_links']);
+          ?>
+        <?php endif;?>
+      </div>
       <?php if ($signature): ?>
       <div class="user-signature clearfix">
         <?php print $signature ?>
@@ -97,7 +112,6 @@
 
     <div class="topic-node-comment-region-right-reply-form">
     </div> <!-- END region reply form-->
-
   </div> <!-- END region right-->
 </div>
 
