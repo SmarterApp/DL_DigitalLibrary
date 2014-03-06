@@ -429,11 +429,11 @@ a.new-topic-link {
 	font-size: 16px;
   font-weight: normal;
   height: 34px;
-	line-height: 32px;
+	line-height: 34px;
   min-width: 125px;
   padding: 0 25px 0  30px;
   text-align: center;
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 a.new-topic-link {
@@ -446,6 +446,7 @@ a.new-topic-link:before  {
     display: inline;
     font-family: 'sbac';
     font-size: 20px;
+		line-height: 24px;
     font-weight: normal;
     margin-right: 7px;
 }
@@ -1327,8 +1328,20 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 		margin-top: 10px;
 		
+		label[for="edit-sort-by"] {
+			display: none;
+		}
+		
+		.view-filters {
+			float: left;
+			
+			form {margin: 0;}
+		}
+		
+		#join-forum-form-wrapper,
 		#join-forum-button-wrapper {
 			float: right;
+			margin-top: 1em;
 			
 			button {
 				padding: 0 30px;
@@ -1349,7 +1362,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 		.view-content {
 			clear: both;
-			padding-top: 30px;
+			padding-top: 20px;
 		}
 
 		.views-row {
@@ -1360,9 +1373,10 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
 	    display: block;
 	    margin: 0 0 15px;
-	    overflow: hidden;
+	    /*overflow: hidden;*/
 	    padding: 15px 114px 15px 15px;
 	    position: relative;
+			z-index: 3;
 
 			.views-field.views-field-title {
 				display: block;
@@ -1381,6 +1395,43 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			.views-field {
 				display: inline-block;
 				font-size: 13px;
+				
+				a{
+					color: #0583AC;
+					font-weight: bold;
+				}
+			}
+			
+			.views-field-uid {
+				border-right: 1px solid #62676E;
+			  color: #70757E;
+		    display: block;
+		    float: left;
+		    font-size: 13px;
+		    height: 20px;
+		    line-height: 20px;
+		    margin: 0 10px 0 0;
+		    padding: 0 10px 0 0;
+			}
+			
+			.views-field-comment-count {
+			  -moz-box-sizing: border-box;
+		    background-color: #F2F2F2;
+		    border-left: 1px solid #FFFFFF;
+		    border-radius: 0 6px 6px 0;
+		    box-shadow: -1px 0 0 0 #CECECE;
+		    color: #464B54;
+		    display: block;
+		    height: 100%;
+		    list-style-type: none;
+		    padding: 0;
+		    position: absolute;
+		    right: 0;
+		    text-shadow: 0 1px 0 #FFFFFF;
+		    top: 0;
+				padding: 24px 0 0;
+				width: 110px;
+				text-align: center;
 			}
 		}
 
@@ -1793,6 +1844,7 @@ View Topic Page, Comment Page
 		    color: #464B54;
 		    margin-top: -90px;
 		    width: 130px;
+				display: none;
 				
 				ul {
 				  list-style-type: none;
@@ -1928,8 +1980,32 @@ View Topic Page, Comment Page
 		    background-size: contain;
 		    height: 120px;
 		    width: 120px;
-				text-indent: -9999;
-				float: left;
+				
+				img {
+					height: 120px;
+			    width: 120px;
+				}
+			}
+			
+			.topic-node-author-pane-name {
+				margin-top: 10px;
+				
+				a {
+					color: #0583AC;
+				  cursor: pointer;
+			    text-decoration: none;
+					font-weight: bold;
+					width: 120px;
+					word-wrap: break-word;
+					line-height: 1.2;
+					float: left;
+				}
+			}
+			
+			.topic-node-author-pane-post-date {
+				font-size: 13px;
+				line-height: 1.6;
+				margin-top: 5px;
 			}
 		}
 		
@@ -1966,6 +2042,7 @@ View Topic Page, Comment Page
 	/*Comments Region*/
 	.topic-node-comments-region {
 		clear: both;
+		padding-top: 40px;
 	}
 }
 
