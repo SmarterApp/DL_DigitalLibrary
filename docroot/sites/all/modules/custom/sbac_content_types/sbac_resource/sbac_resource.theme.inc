@@ -816,7 +816,7 @@ function _sbac_resource_my_resources_links($fields) {
         $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
           'html' => TRUE,
           'attributes' => array(
-            'class' => 'use-ajax medium button ctools-modal-sbac-resource-modal-delete-resource',
+            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource',
             'id' => 'sbac-resource-modal-delete-resource'
           ),
           'query' => array('nid' => $nid),
@@ -915,7 +915,7 @@ function _sbac_resource_my_resources_links($fields) {
         $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
           'html' => TRUE,
           'attributes' => array(
-            'class' => 'use-ajax medium button ctools-modal-sbac-resource-modal-delete-resource',
+            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource',
             'id' => 'sbac-resource-modal-delete-resource'
           ),
           'query' => array('nid' => $nid),

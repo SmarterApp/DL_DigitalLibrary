@@ -2889,18 +2889,18 @@ function sbac_resource_unsubmit_resource_form($form, &$form_state) {
     '#markup' => '<p>Unsubmitting your resource will return your resource back to draft.
                  Your resource will no longer be in the review process until it is resubmitted.</p>',
   );
-
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
-  );
-
+ 
   $form['unsubmit'] = array(
     '#type' => 'submit',
     '#value' => 'Un-submit',
     '#attributes' => array('class' => array('button', 'blue'))
   );
 
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+ 
   return $form;
 }

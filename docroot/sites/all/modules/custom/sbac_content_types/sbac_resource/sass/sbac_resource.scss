@@ -187,7 +187,22 @@ a.sbac-grid-layout, a.sbac-list-layout {
 
   a {
     margin-bottom: 5px;
+		color: #fff !important;
   }
+
+	a.button.red {
+		background-color: #8A1538;
+    border: 1px solid #793348;
+	}
+	
+	a.button.red:hover, a.button.red:focus {
+		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
+	}
+	
+	a.button.blue:hover, a.button.blue:focus {
+		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
+		 background-color: #0084B0;
+	}
 }
 
 a.sbac-grid-layout {
@@ -1638,10 +1653,43 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	content: '';
 	background-color: #F5F5F5;
 }
+
 #openInViewerButtonIcon {
 	display: none;
 }
 
 .button.secondary.backButton:hover {
   background-color: #0084B0 !important;
+}
+
+/*Un-Sumbit Modal*/
+.page-my-resources {
+	#modal-content {
+		overflow: hidden !important;
+		
+		button {
+			float: right;
+			margin-left: 30px;
+		}
+		
+		#edit-cancel.gray {
+			background-color: #6E7379;
+		  border: 1px solid #4D5457;
+			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+			padding-left: 40px !important;
+			position: relative;
+		}
+		
+		#edit-cancel.gray:before {
+		  content: url("../images/icon-buttonCancel.png");
+	    left: 15px;
+	    position: absolute;
+	    top: 4px;
+		}
+		
+		#edit-unsubmit.blue:hover, #edit-unsubmit.blue:focus {
+			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
+			 background-color: #0084B0;
+		}
+	}
 }
