@@ -598,7 +598,7 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
   $form['field_content_module_container']['field_content_module_summary'] = array(
     '#type' => 'item',
     '#title' => t('Add Content Module') . ' ' . theme('form_required_marker'),
-    '#markup' => '<p>'.t('This is the content module with which you want users to interact. You can add a HTML5 captivate package file with a zip or gz extension.').'</p>',
+    '#markup' => '<p>'.t('This is the content module with which you want users to interact. You can add a HTML5 captivate package file with a zip extension.').'</p>',
     '#weight' => -101,
   );
 
@@ -956,7 +956,7 @@ function sbac_media_file_validate($file) {
     global $user;
     $file_limit = 104857600; // 104857600 Bytes == 100MB
     if ($file->source == 'field_content_module_picker') { // HTML5 field.
-      $file_limit = 26214400; //26214400 = 25MB in bytes
+      $file_limit = 104857600; //26214400 = 25MB in bytes
     }
     // Have to create custom validator for user1. Standard file_validate_size exempts user1.
     if ($user->uid == 1) {
@@ -980,7 +980,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
 
   drupal_get_messages(); // clear messages if they were some from before.
   $allowed_file_types = array('zip');
-  $allowed_size = array(26214400, 0); //26214400 = 25MB in bytes
+  $allowed_size = array(104857600, 0); //26214400 = 25MB in bytes
   $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
   $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
   if ($writable) {
@@ -999,7 +999,14 @@ function sbac_media_html5_element_upload($form, $form_state) {
         $saved = $zip->extractTo($drupal_html5_temp_path);
         // Handle the situation where the folder name that was zipped could be different then the name of the zip.
         if ($saved) {
-          $folder_name = $zip->getNameIndex(0);
+          $zip_foldername =$zip->getNameIndex(0);
+          $pos = strpos($zip_foldername, '/');
+          if ($pos !== FALSE) {
+            $folder_name = substr($zip_foldername, 0, $pos);
+          }
+          else {
+            $folder_name = $zip_foldername;
+          }
           $full_html5_temp_path = drupal_realpath($drupal_html5_temp_path) . '/' . $folder_name;
           if (file_exists($full_html5_temp_path)) {
             $full_html5_path = drupal_realpath($directory . '/html5_module');
@@ -1014,7 +1021,6 @@ function sbac_media_html5_element_upload($form, $form_state) {
       // Check that the zip saved.
       $no_errors = FALSE;
       if (file_exists($real_path)) {
-        global $user;
         $zip_file_path = drupal_realpath($directory);
         $file_data = pathinfo($real_path); // provides filename with extension on it.
         $zip_archive_path = $zip_file_path . '/' . $file_data['basename'];
