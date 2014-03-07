@@ -22,3 +22,17 @@ function sbac_forum_update_7002() {
   module_enable($modules);
   drupal_flush_all_caches();
 }
+
+
+/**
+ * Enables morecomments module.
+ *
+ *  Implemnts hook_update_N().
+ */
+function sbac_forum_update_7003() {
+  $modules = array(
+    'morecomments',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}

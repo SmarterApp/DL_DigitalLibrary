@@ -28,7 +28,7 @@ function sbac_forum_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_per_page_topic';
-  $strongarm->value = '50';
+  $strongarm->value = '30';
   $export['comment_default_per_page_topic'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -225,6 +225,20 @@ function sbac_forum_strongarm() {
   $strongarm->name = 'menu_parent_topic';
   $strongarm->value = 'main-menu:0';
   $export['menu_parent_topic'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'morecomments_enabled_topic';
+  $strongarm->value = 1;
+  $export['morecomments_enabled_topic'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'morecomments_text_topic';
+  $strongarm->value = 'Load More Replies';
+  $export['morecomments_text_topic'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
