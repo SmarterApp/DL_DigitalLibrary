@@ -106,7 +106,9 @@
     </div>
 
     <div class="topic-node-comment-region-right-bottom">
-      <?php print render($content['links']) ?>
+      <?php if($is_member === TRUE): ?>
+        <?php print render($content['links']) ?>
+      <?php endif; ?>
     </div>
 
     <div class="topic-node-comment-region-right-reply-form">

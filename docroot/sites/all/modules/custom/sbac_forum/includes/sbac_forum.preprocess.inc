@@ -125,7 +125,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   $user_image = sbac_forum__api__get_author_picture($comment_auth_uid, 'forum_profile_image_60x60');
   $user_name_w_hoverover = sbac_forum__api__get_authpane_hoverover($comment_auth_uid);
 
-  $posted_date = date('M jS, Y' , $comment_entity->created);
+  $posted_date = date('M jS, Y g:ia' , $comment_entity->created);
 
   $has_materials = FALSE;
   $comment_data = entity_metadata_wrapper('comment', $comment_entity);
@@ -152,6 +152,14 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   $vars['posted_date'] = $posted_date;
   $vars['has_materials'] = $has_materials;
 
+  global $user;
+  $is_member = FALSE;
+  $topic_node = $vars['node'];
+  $parent_forum = $topic_node->field_topic_forum_parent[LANGUAGE_NONE][0]['tid'];
+  if (!empty($parent_forum)) {
+    $is_member = sbac_forum__api__check_user_is_forum_member($parent_forum, $user->uid);
+  }
+  $vars['is_member'] = $is_member;
 }
 /**
  * ---------- Forum list View.---------------

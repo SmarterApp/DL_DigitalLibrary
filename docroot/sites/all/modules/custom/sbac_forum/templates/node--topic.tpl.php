@@ -156,6 +156,12 @@
     <?php print render($content['field_tags']) ?>
   <?php endif; ?>
 
+  <?php if (!empty($comment_count)): ?>
+    <div class="topic-node-comments-counter">
+      <h2><?php print format_plural($comment_count, '1 Reply', '@count Replies'); ?></h2>
+    </div>
+  <?php endif ?>
+
   <?php //print render($content['links']); ?>
   <?php print render($content['comments']); ?>
 </div> <!--end comments-section -->
