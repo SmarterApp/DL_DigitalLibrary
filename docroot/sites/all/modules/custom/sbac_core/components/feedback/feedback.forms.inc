@@ -332,8 +332,7 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
 
       $count = db_query($query, $args)->fetchField();
 
-      $max_review_count = 3;
-      if ($count == $max_review_count) {
+      if ($count == FEEDBACK_MAX_REVIEW) {
         $query = "  SELECT  id
                     FROM    eck_feedback
                     WHERE   type = 'qc'
