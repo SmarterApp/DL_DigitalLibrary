@@ -1362,7 +1362,7 @@ function sbac_resource_save_current_state($node) {
         $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
         $current_review = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'single');
         if (!$completed_feedback && !$current_review) {
-          sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
+          sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
         }
         else {
           $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1);
