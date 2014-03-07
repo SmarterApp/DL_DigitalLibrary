@@ -650,7 +650,13 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				
 				a.devtools-tooltip-trigger {
 					color: #0583AC;
+					display: inline-block;
 					font-weight: bold;
+			    height: 20px;
+			    overflow: hidden;
+			    vertical-align: bottom;
+			    width: 160px;
+			    word-break: break-all;
 				}
 			}
 			
@@ -1713,6 +1719,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		  color: #101010;
 	    font-size: 14px;
 	    font-weight: bold;
+			padding-bottom: 2px;
 		}
 	}
 	
@@ -1734,12 +1741,6 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    position: absolute;
 	    right: 0;
 	    top: 3px;
-		}
-	}
-	
-	.form-type-managed-file {
-		button {
-			float: right;
 		}
 	}
 	
@@ -2100,15 +2101,17 @@ View Topic Page, Comment Page
 			    top: -2px;
 				}
 				
-				.field-name-field-topic-files {
+				.field-name-field-topic-files,
+				.field-name-field-topic-links {
 					img {display: none;}
 					
 					a{
-						 display: inline-block;
+						 display: block;
 						 font-size: 13px;
 				     line-height: 20px;
 				     vertical-align: top;
 						 color: #0583AC;
+						 margin-bottom: 3px;
 					}
 					
 					 a:before {
@@ -2128,25 +2131,106 @@ View Topic Page, Comment Page
 			margin-top: 10px;
 		}
 	}
-	.topic-node-comments-region {
-		clear: both;
-		padding-top: 40px;
-	}
 }
 
 // --------------------- Comments Region ------------------------------
 
 .topic-node-comments-region {
 	clear: both;
+	padding-top: 20px;
 	
+	/*Response Section*/
+	.comment-form {
+		margin-bottom: 0;
+		padding-top: 8px;
+	}
+	
+	.topic-node-reply-direct-wrapper {
+		background-color: #F7F7F7;
+	  border-bottom: 1px solid #CECECE;
+    border-top: 1px solid #CECECE;
+    margin: 30px 0 20px;
+    padding: 0 15px 0;
+
+		.form-textarea-wrapper {
+			textarea {
+				height: 100px;
+			  margin: 0;
+		    padding: 0;
+		    width: 665px;
+			}
+		}
+		
+		fieldset {
+			margin: 0;
+			padding: 0;
+			border: none !important;
+		}
+			
+		fieldset.collapsed {
+			border: none !important;
+		}
+			
+		#comment_comment_node_topic_form_group_topic_comments_materials,
+		#comment_comment_node_topic_form_group_topic_comments_links {
+			
+			.fieldset-legend,
+			legend {
+				background: none !important;
+				font-weight: normal;
+			}
+			
+			a {
+			  display: block;
+		    font-size: 15px;
+		    line-height: 20px;
+		    margin: 5px 0 5px;
+		    vertical-align: top;
+				color: #0583AC;
+				
+				&:hover {text-decoration: underline;}
+			}
+			
+			a.fieldset-title:before {
+			  content:"\e600";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    position: relative;
+		    top: -2px;
+			}
+		}
+		
+		#comment_comment_node_topic_form_group_topic_comments_links a.fieldset-title:before {
+			content:"\e634";
+		}
+		
+		.tabledrag-toggle-weight-wrapper {
+			display: none;
+		}
+		
+		#field-topic-comment-links-add-more-wrapper {
+			.form-item {
+				margin-top: 0;
+			}
+			
+			th.field-label {
+				display: none;
+			}
+		}
+	}
+	
+	
+	
+	/*Comment Section*/
 	h2.title {
-		color: #000000;
-    display: block;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-    padding: 10px 0;
-    text-transform: capitalize;
+		display: none;
+	}
+	
+	.topic-node-comments-counter {
+		h2 {color: #464B54;}
 	}
 	
 	.comment {
@@ -2192,6 +2276,34 @@ View Topic Page, Comment Page
 				margin: 10px 0;
 			}
 			
+			.topic-node-comment-materials-wrapper {
+				
+				.topic-node-comment-materials-label {
+					border-bottom: 1px solid #CECECE;
+					color: #101010;
+			    display: inline-block;
+			    font-size: 13px;
+			    font-weight: bold;
+			    line-height: 20px;
+			    margin: 0 0 5px;
+			    padding: 0;
+			    vertical-align: top;
+			    width: 410px;
+				}
+				
+				.topic-node-comment-materials-label:before {
+				  color: #91959E;
+			    content:"\e600";
+			    display: inline-block;
+			    font-family: 'sbac';
+			    font-size: 20px;
+			    font-weight: normal;
+			    margin-right: 7px;
+			    position: relative;
+			    top: -2px;
+				}
+			}
+				
 			.field-name-field-topic-comment-files,
 			.field-name-field-topic-comment-links {
 				img {display: none;}
