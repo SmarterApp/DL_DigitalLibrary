@@ -2839,3 +2839,68 @@ function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state)
   exit;
 }
 
+/**
+ * Displays the unsubmit modal.
+ *
+ * @param bool $js
+ */
+function sbac_resource_unsubmit_resource_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+
+    $form_state = array(
+      'title' => t("You are about to unsubmit your resource"),
+      'ajax' => $js,
+      'nid' => $_GET['nid'],
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_resource_unsubmit_resource_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        $node = node_load($form_state['nid']);
+        if ($node) {
+          workbench_moderation_moderate($node, 'draft');
+          $output[] = ctools_ajax_command_redirect('my-resources');
+        }
+      }
+    }
+
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The unsubmit modal form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_resource_unsubmit_resource_form($form, &$form_state) {
+  $form['submit_description'] = array(
+    '#markup' => '<p>Unsubmitting your resource will return your resource back to draft.
+                 Your resource will no longer be in the review process until it is resubmitted.</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['unsubmit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Un-submit',
+    '#attributes' => array('class' => array('button', 'blue'))
+  );
+
+  return $form;
+}

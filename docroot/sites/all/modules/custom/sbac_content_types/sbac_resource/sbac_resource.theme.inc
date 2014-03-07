@@ -838,7 +838,27 @@ function _sbac_resource_my_resources_links($fields) {
       case 'needs_review':
         $url = url('node/' . $nid, array('absolute' => TRUE));
         $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+        $variables['buttons'][] = l(t('Un-submit'), 'sbac-resource/nojs/unsubmit-resource-modal', array(
+          'html' => TRUE,
+          'query' => array(
+            'nid' => $nid
+          ),
+          'attributes' => array(
+            'class' => 'use-ajax button blue ctools-modal-sbac-resource-modal-unsubmit-resource',
+            'id' => 'sbac-resource-modal-unsubmit-resource'
+          )
+        ));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['links'][] = l(t('Un-submit'), 'sbac-resource/nojs/unsubmit-resource-modal', array(
+          'html' => TRUE,
+          'query' => array(
+            'nid' => $nid
+          ),
+          'attributes' => array(
+            'class' => 'use-ajax ctools-modal-sbac-resource-modal-unsubmit-resource',
+            'id' => 'sbac-resource-modal-unsubmit-resource'
+          )
+        ));
         $variables['text'] = t('Submitted');
         break;
       case 'being_reviewed':
@@ -918,6 +938,18 @@ function _sbac_resource_my_resources_links($fields) {
     // JS to properly size the modal when submit resource is clicked.
     $js_settings = array(
       'sbac-resource-modal-delete-resource' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 160,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
+
+    // JS to properly size the modal when submit resource is clicked.
+    $js_settings = array(
+      'sbac-resource-modal-unsubmit-resource' => array(
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
