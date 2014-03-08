@@ -1167,12 +1167,44 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
         if (isset($_GET['nid'])) {
           $node = node_load($_GET['nid']);
           if ($node) {
-            workbench_moderation_moderate($node, 'needs_review');
-            sbac_resource_save_current_state($node);
             $output[] = ctools_ajax_command_redirect('my-resources');
 
-            // create notificaton for resource author
-            if ($task = taskit_get_object('resource_submitted')) {
+            // create notification for resource author
+            // is this a first submission or a re-submission?
+            $recipients = array();
+            $query = new EntityFieldQuery();
+            $submitted = (bool) $query->entityCondition('entity_type', 'feedback')
+              ->entityCondition('type', 'gate_keeper')
+              ->propertyCondition('completed', 1)
+              ->propertyCondition('node_id', $node->nid)
+              ->count()
+              ->execute();
+            if ($submitted) {
+              // if there is already a gatekeeper entry, then this is a re-submission
+              $task_type = 'resource_resubmitted';
+              // get the current feedback for this node so we can notify the gk/reviewers
+              $query = new EntityFieldQuery();
+              $feedbacks = $query->entityCondition('entity_type', 'feedback')
+                ->propertyCondition('completed', 1)
+                ->propertyCondition('node_id', $node->nid)
+                ->propertyCondition('current', 1)
+                ->propertyCondition('status', 1)
+                ->execute();
+              if (isset($feedbacks['feedback'])) {
+                foreach ($feedbacks['feedback'] as $feedback) {
+                  $recipients[] = entity_load_single('feedback', $feedback->id);
+                }
+              }
+
+            }
+            else {
+              $task_type = 'resource_submitted';
+            }
+
+            workbench_moderation_moderate($node, 'needs_review');
+            sbac_resource_save_current_state($node);
+
+            if ($task = taskit_get_object($task_type)) {
               global $user;
 
               $task->addVisibility($task::VISIBILITY_USER);
@@ -1180,6 +1212,10 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               $task->addOwningUser($node->uid);
               $task->addTriggeringUser($user->uid);
               $task->save();
+
+              if(!empty($recipients)){
+                send_review_notifications($task, $node, $recipients);
+              }
             }
           }
         }
