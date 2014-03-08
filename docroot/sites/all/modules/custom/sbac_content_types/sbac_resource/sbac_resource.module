@@ -1368,6 +1368,8 @@ function sbac_resource_save_current_state($node) {
           }
         }
       }
+
+      _sbac_resource_save_reviewers($node, $user);
     }
 
     // if the user rejected the resource, delete the previous state and add a state that does allow
@@ -1391,6 +1393,7 @@ function sbac_resource_save_current_state($node) {
           $entity->state = 'gk_view_rejected';
           sbac_resource_save_resource_state($entity, $new_record);
         }
+        _sbac_resource_save_reviewers($node, $user);
       }
 
       if ($node->workbench_moderation['current']->from_state == 'approved') {
@@ -1436,6 +1439,7 @@ function sbac_resource_save_current_state($node) {
       if ($node->workbench_moderation['current']->from_state == 'approved') {
         sbac_resource_delete_resource_state_given_state($node, 'post_being_reviewed');
       }
+      _sbac_resource_save_reviewers($node, NULL, TRUE);
     }
 
     // Clean up the table.
@@ -2405,4 +2409,35 @@ function _sbac_resource_determine_state_access($node, $account, $op) {
     }
   }
   return $access;
+}
+
+/**
+ * Add a user to the field_recent_reviewers field
+ * @param $node
+ * @param $account
+ * @param bool $reset
+ */
+function _sbac_resource_save_reviewers(&$node, $account = NULL, $reset = FALSE, $remove = FALSE) {
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+  if ($reset) {
+    $node->field_recent_reviewers[LANGUAGE_NONE] = array();
+    field_attach_update('node', $node);
+    return;
+  }
+  if (!empty($node->field_recent_reviewers[LANGUAGE_NONE])) {
+    foreach ($node->field_recent_reviewers[LANGUAGE_NONE] as $index => $reviewer) {
+      if ($reviewer['target_id'] == $account->uid) {
+        unset($node->field_recent_reviewers[LANGUAGE_NONE][$index]);
+      }
+    }
+  }
+  if (!$remove) {
+    $node->field_recent_reviewers[LANGUAGE_NONE][] = array(
+      'target_id' => $account->uid,
+    );
+  }
+  field_attach_update('node', $node);
 }
