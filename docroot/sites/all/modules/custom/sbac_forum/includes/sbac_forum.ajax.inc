@@ -373,3 +373,19 @@ function sbac_forum__ajax__restore_member_modal_callback($js = FALSE, $term, $ui
     return drupal_get_form('sbac_forum_restore_member_confirm');
   }
 }
+
+
+/**
+ * =============================================================================
+ *
+ *    Ajax Callbacks
+ *
+ * =============================================================================
+ */
+
+function sbac_forum__ajax__inline_comment_form_modal_callback($topic, $comment_parent_id) {
+  drupal_static_reset('drupal_add_css');
+  drupal_static_reset('drupal_add_js');
+  $build = drupal_get_form("comment_node_topic_form", (object) array('nid' => $topic->nid, 'pid' => $comment_parent_id));
+  return drupal_render($build);
+}

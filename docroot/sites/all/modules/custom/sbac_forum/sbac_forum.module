@@ -116,6 +116,15 @@ function sbac_forum_menu() {
     'access arguments' => array(3, 4),
   );
 
+  // ----- Ajax -------
+
+  $items['sbac-forum/custom/comment-reply/%node/%'] = array(
+    'page callback' => 'sbac_forum__ajax__inline_comment_form_modal_callback',
+    'page arguments' => array(3, 4),
+    'access callback' => '_sbac_forum_add_comment_user_access',
+    'access arguments' => array(3, 4),
+  );
+
   return $items;
 }
 
@@ -270,6 +279,11 @@ function _sbac_forum_restore_members_user_access($term, $uid_to_remove) {
   return $access;
 }
 
+
+function _sbac_forum_add_comment_user_access($topic, $comment) {
+  $access = TRUE;
+  return $access;
+}
 
 
 /**
@@ -1087,9 +1101,9 @@ function _sbac_forum__add_topic_form_redirect_submit($form, &$form_state) {
 // ----------
 
 function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $form_id) {
+  drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $form['author']['#access'] = FALSE; // Hide this form element.
 
-  $form['comment_body'][LANGUAGE_NONE][0]['value']['#title'] = 'Your response:';
 
   // Remove all the bloat that comes with this widget.
   $form['field_topic_comment_files'][LANGUAGE_NONE]['#title'] = '';
@@ -1097,6 +1111,34 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
   $form['field_topic_comment_files'][LANGUAGE_NONE]['#file_upload_description'] = '';
 
   $form['field_topic_comment_links'][LANGUAGE_NONE]['#title'] = '';
+
+  $comment_body_title = 'Your response:';
+  $extra_link_classes = '';
+
+  if (isset($form['pid'])) {
+    $parent_term = $form['pid']['#value'];
+    if (!empty($parent_term)) { // Means this is a reply to a reply.
+      $form['#id'] .= '-' . $parent_term;
+      $parent_comment = comment_load($parent_term);
+      $parent_comment_data = entity_metadata_wrapper('comment', $parent_comment);
+      $fn = $parent_comment_data->author->field_first_name->value();
+      $comment_body_title = 'Reply to ' . $fn;
+    }
+  }
+
+  $form['comment_body'][LANGUAGE_NONE][0]['value']['#title'] = $comment_body_title;
+
+  $cancel_link_ops = array(
+    'attributes' => array(
+      'class' => 'button gray',
+    ),
+  );
+  $cancel_link = l('Cancel', '#', $cancel_link_ops);
+  $form['actions']['cancel_add'] = array(
+    '#markup'         => $cancel_link,
+  );
+
+  $form['actions']['submit']['#value'] = 'Submit';
 }
 
 

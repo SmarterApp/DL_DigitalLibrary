@@ -3,6 +3,9 @@
 
 function sbac_forum_preprocess_node__topic(&$vars) {
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
+  drupal_add_js('/misc/form.js');
+  drupal_add_js('/misc/collapse.js');
+
   global $user;
   $node_data = entity_metadata_wrapper('node', $vars['node']);
   $forum_term = $node_data->field_topic_forum_parent->value();
@@ -160,6 +163,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
     $is_member = sbac_forum__api__check_user_is_forum_member($parent_forum, $user->uid);
   }
   $vars['is_member'] = $is_member;
+
+  if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
+    $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
+    $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+  }
 }
 /**
  * ---------- Forum list View.---------------
