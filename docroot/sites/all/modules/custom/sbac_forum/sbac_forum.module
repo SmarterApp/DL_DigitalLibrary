@@ -1138,7 +1138,7 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
       'comment-form-sec' => $extra_link_attr,
     ),
   );
-  $cancel_link = l('Cancel', '#', $cancel_link_ops);
+  $cancel_link = l('Cancel', 'node/'.$form['nid']['#value'], $cancel_link_ops);
   $form['actions']['cancel_add'] = array(
     '#markup'         => $cancel_link,
   );

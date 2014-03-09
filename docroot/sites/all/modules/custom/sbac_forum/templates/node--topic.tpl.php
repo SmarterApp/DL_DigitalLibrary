@@ -77,6 +77,13 @@
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
+<div class="sbac-forum-confirm-message-region">
+  <?php if (!empty($parent_forum_markup['welcome_message'])) : ?>
+      <div style="display:block">
+        <?php print $parent_forum_markup['welcome_message']; ?>
+      </div>
+  <?php endif;?>
+</div>
 
 <div class="topic-node--forum-parent-info">
 

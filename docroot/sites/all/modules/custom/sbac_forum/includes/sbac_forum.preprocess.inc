@@ -21,6 +21,12 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $posted = '';
   $has_materials = FALSE;
 
+  $welcome_message = '';
+  if (isset($_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE]) ) {
+    $welcome_message = $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE];
+    $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = '';
+  }
+
   $is_faci = FALSE;
   if (in_array('facilitator', $user->roles)) {
     $is_faci = TRUE;
@@ -108,7 +114,10 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $action_section = l('Post a Reply', $new_comment_url, $action_link_ops);
 
   } elseif($is_member === FALSE) { // User not a member.
-
+    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+    $join_form = drupal_get_form('sbac_forum_join_button_form', $forum_term->tid, $user->uid);
+    $join_button = drupal_render($join_form);
+    $action_section = $join_button;
   }
   $vars['action_section'] = $action_section;
 
@@ -116,6 +125,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   // Put everything into arrays and register in vars for tpl. ------------
 
   $parent_forum_markup = array(
+    'welcome_message'  => $welcome_message,
     'forum_name'       => $forum_name_text,
     'controls'         => $control_data, // Has key "markup" and "classes"
   );

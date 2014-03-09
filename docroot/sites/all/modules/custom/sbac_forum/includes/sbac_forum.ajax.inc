@@ -95,9 +95,9 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   $commands[] = ajax_command_replace($button_selector, $link_text);
 
   // Partial implementation for not needing to refresh. Easier to call page refresh to reload tab contents.
-  $commands[] = ctools_ajax_command_reload();
+  $commands_updated[] = ctools_ajax_command_reload();
 
-  $page = array('#type' => 'ajax', '#commands' => $commands);
+  $page = array('#type' => 'ajax', '#commands' => $commands_updated);
   ajax_deliver($page);
   exit;
 }
