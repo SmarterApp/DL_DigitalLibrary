@@ -2226,7 +2226,7 @@ View Topic Page, Comment Page
 		}
 	}
 		
-	#field-topic-comment-links-add-more-wrapper {
+	.field-multiple-table {
 		.form-item {
 			margin-top: 0;
 		}
@@ -2256,6 +2256,45 @@ View Topic Page, Comment Page
 	@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 	background-color: #0084B0;
 }
+
+.button.comment-direct-reply-form-cancel-link {
+	padding-left: 40px;
+	margin-right: 30px;
+}	
+
+.button.comment-direct-reply-form-cancel-link:before {
+	content: url("../images/icon-buttonCancel.png");
+	left: 15px;
+	position: absolute;
+	top: 4px;
+}
+
+/*reply*/
+.topic-node-comment-region-right-reply-form {
+	.comment-form {
+	
+		.form-textarea-wrapper {
+			textarea {
+		    width: 560px;
+			}
+		}
+		
+		/*buttons for reply section*/
+		.button.comment-reply-form-cancel-link {
+			padding-left: 40px;
+			margin-right: 30px;
+		}	
+
+		.button.comment-reply-form-cancel-link:before {
+			content: url("../images/icon-buttonCancel.png");
+			left: 15px;
+			position: absolute;
+			top: 4px;
+		}
+	}
+}
+
+
 
 /*Comment Section*/
 h2.title {
@@ -2337,8 +2376,8 @@ h2.title {
 			}
 		}
 			
-		.field-name-field-topic-comment-files,
-		.field-name-field-topic-comment-links {
+		.field-name-field-topic-comment-files .file,
+		.field-name-field-topic-comment-links.field-wrapper {
 			img {display: none;}
 			
 			 a {

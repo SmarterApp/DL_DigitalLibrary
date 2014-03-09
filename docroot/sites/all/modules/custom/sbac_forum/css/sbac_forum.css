@@ -2436,11 +2436,11 @@ View Topic Page, Comment Page
   display: inline;
 }
 /* line 2230, ../sass/sbac_forum.scss */
-.comment-form #field-topic-comment-links-add-more-wrapper .form-item {
+.comment-form .field-multiple-table .form-item {
   margin-top: 0;
 }
 /* line 2234, ../sass/sbac_forum.scss */
-.comment-form #field-topic-comment-links-add-more-wrapper th.field-label {
+.comment-form .field-multiple-table th.field-label {
   display: none;
 }
 
@@ -2470,18 +2470,54 @@ View Topic Page, Comment Page
   background-color: #0084B0;
 }
 
+/* line 2260, ../sass/sbac_forum.scss */
+.button.comment-direct-reply-form-cancel-link {
+  padding-left: 40px;
+  margin-right: 30px;
+}
+
+/* line 2265, ../sass/sbac_forum.scss */
+.button.comment-direct-reply-form-cancel-link:before {
+  content: url("../images/icon-buttonCancel.png");
+  left: 15px;
+  position: absolute;
+  top: 4px;
+}
+
+/*reply*/
+/* line 2274, ../sass/sbac_forum.scss */
+.topic-node-comment-region-right-reply-form .comment-form {
+  /*buttons for reply section*/
+}
+/* line 2277, ../sass/sbac_forum.scss */
+.topic-node-comment-region-right-reply-form .comment-form .form-textarea-wrapper textarea {
+  width: 560px;
+}
+/* line 2283, ../sass/sbac_forum.scss */
+.topic-node-comment-region-right-reply-form .comment-form .button.comment-reply-form-cancel-link {
+  padding-left: 40px;
+  margin-right: 30px;
+}
+/* line 2288, ../sass/sbac_forum.scss */
+.topic-node-comment-region-right-reply-form .comment-form .button.comment-reply-form-cancel-link:before {
+  content: url("../images/icon-buttonCancel.png");
+  left: 15px;
+  position: absolute;
+  top: 4px;
+}
+
 /*Comment Section*/
-/* line 2261, ../sass/sbac_forum.scss */
+/* line 2300, ../sass/sbac_forum.scss */
 h2.title {
   display: none;
 }
 
-/* line 2266, ../sass/sbac_forum.scss */
+/* line 2305, ../sass/sbac_forum.scss */
 .topic-node-comments-counter h2 {
   color: #464B54;
 }
 
-/* line 2269, ../sass/sbac_forum.scss */
+/* line 2308, ../sass/sbac_forum.scss */
 .comment {
   -moz-box-sizing: border-box;
   background: none repeat scroll 0 0 #FFFFFF;
@@ -2493,13 +2529,13 @@ h2.title {
   position: relative;
   width: 665px;
 }
-/* line 2280, ../sass/sbac_forum.scss */
+/* line 2319, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-left {
   float: left;
   width: 60px;
   height: 60px;
 }
-/* line 2285, ../sass/sbac_forum.scss */
+/* line 2324, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-left .topic-node-comment-author-img {
   background-image: url("../images/avatar.png");
   background-size: contain;
@@ -2507,7 +2543,7 @@ h2.title {
   height: 60px;
   display: block;
 }
-/* line 2294, ../sass/sbac_forum.scss */
+/* line 2333, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right {
   float: left;
   width: 560px;
@@ -2515,18 +2551,18 @@ h2.title {
   font-size: 13px;
   line-height: 1.2;
 }
-/* line 2301, ../sass/sbac_forum.scss */
+/* line 2340, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right a.devtools-tooltip-trigger {
   color: #0583AC;
   font-weight: bold;
 }
-/* line 2306, ../sass/sbac_forum.scss */
+/* line 2345, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .field.field-name-comment-body {
   font-size: 13px;
   line-height: 1.2;
   margin: 10px 0;
 }
-/* line 2314, ../sass/sbac_forum.scss */
+/* line 2353, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-materials-wrapper .topic-node-comment-materials-label {
   border-bottom: 1px solid #CECECE;
   color: #101010;
@@ -2539,7 +2575,7 @@ h2.title {
   vertical-align: top;
   width: 410px;
 }
-/* line 2327, ../sass/sbac_forum.scss */
+/* line 2366, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-materials-wrapper .topic-node-comment-materials-label:before {
   color: #91959E;
   content: "\e600";
@@ -2551,23 +2587,23 @@ h2.title {
   position: relative;
   top: -2px;
 }
-/* line 2342, ../sass/sbac_forum.scss */
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-files img,
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-links img {
+/* line 2381, ../sass/sbac_forum.scss */
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-files .file img,
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper img {
   display: none;
 }
-/* line 2344, ../sass/sbac_forum.scss */
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-files a,
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-links a {
+/* line 2383, ../sass/sbac_forum.scss */
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-files .file a,
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper a {
   color: #0583AC;
   display: inline-block;
   font-size: 13px;
   line-height: 20px;
   vertical-align: top;
 }
-/* line 2352, ../sass/sbac_forum.scss */
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-files a:before,
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-links a:before {
+/* line 2391, ../sass/sbac_forum.scss */
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-files .file a:before,
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper a:before {
   color: #101010;
   content: "•";
   display: inline-block;
@@ -2576,37 +2612,37 @@ h2.title {
   margin-right: 5px;
   position: relative;
 }
-/* line 2363, ../sass/sbac_forum.scss */
+/* line 2402, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom {
   text-align: right;
 }
-/* line 2366, ../sass/sbac_forum.scss */
+/* line 2405, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul {
   list-style-type: none;
   margin-bottom: 0;
 }
-/* line 2370, ../sass/sbac_forum.scss */
+/* line 2409, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li {
   display: inline-block;
   margin-top: 20px;
   line-height: 1;
 }
-/* line 2375, ../sass/sbac_forum.scss */
+/* line 2414, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li a {
   margin-left: 30px;
   color: #62676E;
   font-size: 13px;
   line-height: 20px;
 }
-/* line 2381, ../sass/sbac_forum.scss */
+/* line 2420, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li a:hover {
   text-decoration: underline;
 }
-/* line 2385, ../sass/sbac_forum.scss */
+/* line 2424, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li.comment-reply a {
   color: #0583AC;
 }
-/* line 2391, ../sass/sbac_forum.scss */
+/* line 2430, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li.comment-delete a:before,
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li.comment-edit a:before,
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li.comment-reply a:before {
@@ -2620,16 +2656,16 @@ h2.title {
   position: relative;
   text-decoration: none;
 }
-/* line 2403, ../sass/sbac_forum.scss */
+/* line 2442, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li.comment-edit a:before {
   content: "\e61d";
 }
-/* line 2407, ../sass/sbac_forum.scss */
+/* line 2446, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li.comment-reply a:before {
   content: "\e630";
   opacity: 1;
 }
-/* line 2413, ../sass/sbac_forum.scss */
+/* line 2452, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li.comment-edit a:hover:before,
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom ul li.comment-delete a:hover:before {
   opacity: 1;
@@ -2637,7 +2673,7 @@ h2.title {
 
 /*Fixed for FF*/
 @-moz-document url-prefix() {
-  /* line 2423, ../sass/sbac_forum.scss */
+  /* line 2462, ../sass/sbac_forum.scss */
   .sbac-forum-vp-controls-popup:after {
     position: absolute;
     bottom: 30px;
