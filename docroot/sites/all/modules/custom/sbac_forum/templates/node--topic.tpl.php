@@ -149,7 +149,10 @@
 
 <div class="topic-node-comments-region">
   <div class="topic-node-reply-direct-wrapper">
-    <?php print render($content['comments']['comment_form']); ?>
+    <?php //print render($content['comments']['comment_form']); ?>
+  </div>
+  <div class="topic-node-controls">
+    <?php print $action_section; ?>
   </div>
 
   <?php if (!empty($content['field_tags']) && !$is_front): ?>

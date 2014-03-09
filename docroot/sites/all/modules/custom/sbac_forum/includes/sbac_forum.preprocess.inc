@@ -26,6 +26,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $is_faci = TRUE;
   }
 
+  $is_member = FALSE;
   if (!empty($forum_term)) {
     $forum_name_text = $forum_term->name;
     $is_member = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $user->uid);
@@ -94,6 +95,22 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   if ($has_links || $has_files) {
     $has_materials = TRUE;
   }
+
+  // action section.
+  $action_section = '';
+  if ($is_member === TRUE) {
+    $action_link_ops = array(
+      'attributes' => array(
+        'class' => 'button blue sbac-forum-topic-node-direct-comment-link',
+      ),
+    );
+    $new_comment_url = 'sbac-forum/custom/comment-reply/'. $node_data->nid->value() . '/0';
+    $action_section = l('Post a Reply', $new_comment_url, $action_link_ops);
+
+  } elseif($is_member === FALSE) { // User not a member.
+
+  }
+  $vars['action_section'] = $action_section;
 
 
   // Put everything into arrays and register in vars for tpl. ------------
