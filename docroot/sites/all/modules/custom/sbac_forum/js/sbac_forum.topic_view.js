@@ -23,7 +23,10 @@
 
         var title = $(this).attr('title');
         var href = $(this).attr('href');
+        var formLinksCont = $(this).parents("[class~=topic-node-comment-region-right-bottom]");
         var formCont = $(this).parents("[class~=topic-node-comment-region-right-bottom]").next();
+
+        formLinksCont.hide('slow'); // Hide links.
 
         // Load the page callback contents (form). Re-attach all behaviours
         formCont.load(href,function(){
@@ -34,9 +37,25 @@
         return false;
       };
 
+      var comment_reply_cancel = function(e) {
+        var linkContSelector = '.' + $(this).attr('comment-form-sec');
+        var activeFormCont = $(this).parents("[class~=topic-node-comment-region-right-reply-form]");
+        activeFormCont.slideUp('1000', function(){
+          activeFormCont.html('');
+          $(linkContSelector).show('fast');
+        });
+        return false;
+      };
+
+
       $(".comment-reply a, .comment-add a").once('comment-click', function() {
         $(this).click(comment_open);
       });
+
+      $(".comment-reply-form-cancel-link").once('cancel-comment-click', function() {
+        $(this).click(comment_reply_cancel);
+      });
+
     }, // End attach
     expand: function(formCont) {
       formCont.show('slow');

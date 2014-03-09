@@ -1113,7 +1113,7 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
   $form['field_topic_comment_links'][LANGUAGE_NONE]['#title'] = '';
 
   $comment_body_title = 'Your response:';
-  $extra_link_classes = '';
+  $extra_link_attr = '';
 
   if (isset($form['pid'])) {
     $parent_term = $form['pid']['#value'];
@@ -1123,6 +1123,8 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
       $parent_comment_data = entity_metadata_wrapper('comment', $parent_comment);
       $fn = $parent_comment_data->author->field_first_name->value();
       $comment_body_title = 'Reply to ' . $fn;
+
+      $extra_link_attr = 'reply-links-for-' . $parent_term;
     }
   }
 
@@ -1130,7 +1132,8 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
 
   $cancel_link_ops = array(
     'attributes' => array(
-      'class' => 'button gray',
+      'class' => 'button gray comment-reply-form-cancel-link',
+      'comment-form-sec' => $extra_link_attr,
     ),
   );
   $cancel_link = l('Cancel', '#', $cancel_link_ops);

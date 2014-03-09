@@ -105,7 +105,7 @@
       <?php endif; ?>
     </div>
 
-    <div class="topic-node-comment-region-right-bottom">
+    <div class="topic-node-comment-region-right-bottom reply-links-for-<?php print $comment->cid; ?>">
       <?php if($is_member === TRUE): ?>
         <?php print render($content['links']) ?>
       <?php endif; ?>
