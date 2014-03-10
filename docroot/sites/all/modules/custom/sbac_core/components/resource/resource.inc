@@ -3,6 +3,8 @@
 define('FEEDBACK_DEFAULT_SET_COUNT',    2);  // default number of gate keeper items;
 define('FEEDBACK_REVIEW_TIMEOUT',       72); // value in hours;
 define('FEEDBACK_REVIEW_REMINDER',      24); // value in hours
+define('FEEDBACK_RESUBMISSION_TIMEOUT', 1209600); // 2 weeks in seconds
+define('FEEDBACK_MAX_REVIEW',           3); // number of reviews before publishing
 define('FEEDBACK_REVIEW_NOTIFICATION',  1); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
 define('FEEDBACK_REVIEWER_RID',         17); // id of the 'resource reviewer' role;
 define('FEEDBACK_PUBLISHER_RID',        16); // id of the 'resource publisher' role;
@@ -147,6 +149,28 @@ function resource_access($op, $node, $account = NULL) {
 
     if (in_array($op, array('view gate keeper', 'start gate keeper', 'edit gate keeper'))) {
 
+      // is this a resubmission?
+      $resubmission_timestamp = db_query("SELECT
+                                            max(history.stamp)
+                                          FROM node
+                                            LEFT JOIN workbench_moderation_node_history history
+                                              ON history.nid = node.nid
+                                          WHERE node.nid = :nid AND from_state = 'draft' AND state = 'needs_review'
+                                          group by history.nid
+                                          having count(history.nid) > 1;", array(':nid' => $node->nid))->fetchField();
+      if ($resubmission_timestamp) {
+        // if we're still within the 2 weeks (FEEDBACK_RESUBMISSION_TIMEOUT) limit
+        if (time() - FEEDBACK_RESUBMISSION_TIMEOUT < $resubmission_timestamp) {
+          // deny anyone who is not an original reviewer
+          $original_reviewer = db_query("SELECT
+                                            count(*)
+                                          FROM field_data_field_recent_reviewers
+                                          WHERE entity_id = :nid and field_recent_reviewers_target_id = :uid", array(':nid' => $node->nid, ':uid' => $account->uid))->fetchField();
+          if (!$original_reviewer) {
+            return FALSE;
+          }
+        }
+      }
       // read-only access
       // users can view the GK if:
       //  1. there are no existing GK entities, AND

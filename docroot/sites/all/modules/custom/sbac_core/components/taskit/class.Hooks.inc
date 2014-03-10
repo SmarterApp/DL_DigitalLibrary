@@ -91,6 +91,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Resource has been submitted for review.'),
         'class' => 'ResourceSubmitted',
       ),
+      // resource is re-submitted for review
+      array(
+        'name' => 'resource_resubmitted',
+        'description' => t('Resource has been re-submitted for review.'),
+        'class' => 'ResourceResubmitted',
+      ),
       // resource rejected (at any step of the process)
       array(
         'name' => 'resource_rejected',
