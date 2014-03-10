@@ -155,6 +155,11 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['table'] = 'field_data_field_forum_topic_comment_count';
   $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['field'] = 'field_forum_topic_comment_count_value';
   $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Created (field_forum_created) */
+  $handler->display->display_options['sorts']['field_forum_created_value']['id'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['table'] = 'field_data_field_forum_created';
+  $handler->display->display_options['sorts']['field_forum_created_value']['field'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['order'] = 'DESC';
   /* Sort criterion: Taxonomy term: Member Count (field_forum_member_count) */
   $handler->display->display_options['sorts']['field_forum_member_count_value']['id'] = 'field_forum_member_count_value';
   $handler->display->display_options['sorts']['field_forum_member_count_value']['table'] = 'field_data_field_forum_member_count';
@@ -277,6 +282,11 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['table'] = 'field_data_field_forum_topic_comment_count';
   $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['field'] = 'field_forum_topic_comment_count_value';
   $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Created (field_forum_created) */
+  $handler->display->display_options['sorts']['field_forum_created_value']['id'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['table'] = 'field_data_field_forum_created';
+  $handler->display->display_options['sorts']['field_forum_created_value']['field'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['order'] = 'DESC';
   /* Sort criterion: Taxonomy term: Member Count (field_forum_member_count) */
   $handler->display->display_options['sorts']['field_forum_member_count_value']['id'] = 'field_forum_member_count_value';
   $handler->display->display_options['sorts']['field_forum_member_count_value']['table'] = 'field_data_field_forum_member_count';
