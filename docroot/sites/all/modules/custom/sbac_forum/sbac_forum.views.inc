@@ -92,7 +92,7 @@ function sbac_forum_listing_apply_sorts(&$view, $current_sorting, $default_sort)
         $sort_field_key = 'field_forum_topic_comment_count_value';
         break;
       case 'forum-newest':
-        $sort_field_key = 'created_1';
+        $sort_field_key = 'field_forum_created_value';
         break;
       case 'forum-most-members' :
         $sort_field_key = 'field_forum_member_count_value';
