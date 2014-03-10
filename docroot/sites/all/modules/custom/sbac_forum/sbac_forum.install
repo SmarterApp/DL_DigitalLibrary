@@ -50,3 +50,18 @@ function sbac_forum_update_7004() {
   module_enable($modules);
   drupal_flush_all_caches();
 }
+
+
+/**
+ * Enables apachesolr_comments and apachesolr_term module.
+ *
+ *  Implemnts hook_update_N().
+ */
+function sbac_forum_update_7004() {
+  $modules = array(
+    'apachesolr_comments',
+    'apachesolr_term',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
