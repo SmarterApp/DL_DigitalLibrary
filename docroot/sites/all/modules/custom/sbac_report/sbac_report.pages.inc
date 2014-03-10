@@ -218,7 +218,8 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   $src = '/misc/arrow-' . $sort . '.png'; // up / down image.
   $data[$order . '_image'] = '<img typeof="foaf:Image" src="' . $src . '" width="13" height="13" alt="sort ascending" title="sort ascending">';
 
-  $query = "SELECT node.title AS node_title,
+  $query = "SELECT node.nid AS nid,
+            node.title AS node_title,
             node.created AS node_created,
             workbench_moderation_node_history.state AS workbench_moderation_node_history_state,
             node.sticky AS node_sticky
@@ -252,6 +253,7 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
 
   $rows = array();
   foreach ($results as $row) {
+    $resource = node_load($row->nid);
     $state = $row->workbench_moderation_node_history_state;
     $state_output = $state;
     if ($state == 'needs_review') {
@@ -270,7 +272,8 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
       $state_output = t('Returned');
     }
     $row->state = $state_output;
-    $row->title = truncate($row->node_title, 55, array('check_markup' => FALSE));
+    $title = truncate($row->node_title, 55, array('check_markup' => FALSE));
+    $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => array('sec' => '1')));
     $row->contribution_date = date('m/d/Y h:i a', $row->node_created);
     $rows[] = $row;
   }
@@ -816,9 +819,9 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
               ORDER BY    review_date DESC
            ";
 
-  if ($display != -1) {
-    $query .= ' LIMIT ' . (int) $display;
-  }
+//  if ($display != -1) {
+//    $query .= ' LIMIT ' . (int) $display;
+//  }
 
   $result = db_query($query, array(
     ':uid' => (int) $uid,
@@ -839,13 +842,13 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       continue;
     }
 
+    $resource = node_load($row->nid);
+
     // resource title
     $item[] = array(
-      'data' => '<div class="cell-scroll">' . $row->node_title . '</div>',
+      'data' => '<div class="cell-scroll">' . l($row->node_title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => array('sec' => '1'))) . '</div>',
       'class' => 'cell title',
     );
-
-    $resource = node_load($row->nid);
 
     // review date
     $item[] = array(

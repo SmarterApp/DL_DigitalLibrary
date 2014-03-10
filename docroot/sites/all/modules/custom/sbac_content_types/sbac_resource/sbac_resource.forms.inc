@@ -1248,6 +1248,7 @@ function sbac_resource_delete_resource_modal_callback($js = FALSE) {
     $form_state = array(
       'title' => t('You are about to delete this draft resource'),
       'ajax' => TRUE,
+      'nid' => $_GET['nid'],
     );
 
     $output = ctools_modal_form_wrapper('sbac_resource_delete_resource_form', $form_state);
@@ -2568,11 +2569,6 @@ function sbac_resource_submit_resource_form() {
  */
 function sbac_resource_delete_resource_form() {
   $form = array();
-
-  $form['hidden_url'] = array(
-    '#type' => 'hidden',
-    '#value' => arg(0),
-  );
 
   $form['submit_description'] = array(
     '#markup' => '<p>' . t('
