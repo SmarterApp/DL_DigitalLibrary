@@ -119,6 +119,13 @@ function sbac_forum_menu() {
     'access arguments' => array(3, 4),
   );
 
+  $items['sbac-forum/%ctools_js/custom/comment-delete/%'] = array(
+    'page callback' => 'sbac_forum__ajax__delete_comment_form_modal_callback',
+    'page arguments' => array(1, 4),
+    'access callback' => '_sbac_forum_delete_comment_user_access',
+    'access arguments' => array(4),
+  );
+
   // ----- Ajax -------
 
   $items['sbac-forum/custom/comment-reply/%node/%'] = array(
@@ -288,6 +295,10 @@ function _sbac_forum_add_comment_user_access($topic, $comment) {
   return $access;
 }
 
+function _sbac_forum_delete_comment_user_access($comment) {
+  $access = TRUE;
+  return $access;
+}
 
 /**
  * Implements hook_block_info().
@@ -1031,10 +1042,12 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
   if ($user->uid == 1) {
     $has_access = TRUE; // Only allow superadmin to see fields.
   }
+
   $form['field_topic_forum_parent']['#access'] = $has_access;
   $form['author']['#access'] = $has_access;
   $form['options']['#access'] = $has_access;
   $form['revision_information']['#access'] = $has_access;
+  $form['comment_settings']['#access'] = $has_access;
 
   $path_to_css_file = drupal_get_path('module', 'sbac_forum');
   $path_to_css_file .= '/css/sbac_forum.css';

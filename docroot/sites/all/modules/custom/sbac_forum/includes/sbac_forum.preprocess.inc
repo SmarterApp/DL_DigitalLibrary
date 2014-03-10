@@ -203,9 +203,41 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   }
   $vars['is_member'] = $is_member;
 
-  if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
-    $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
-    $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+  if ($is_member === TRUE) {
+    if (isset($vars['content']['links']['comment']['#links']['comment-delete'])) {
+      $vars['content']['links']['comment']['#links']['comment-delete']['title'] = 'Delete';
+      $new_url = 'sbac-forum/nojs/custom/comment-delete/' . $comment_entity->cid;
+      $vars['content']['links']['comment']['#links']['comment-delete']['href'] = $new_url;
+      $del_link_class = 'sbac-forum-del-comment-link-'.$comment_entity->cid;
+      $link_ops = array(
+        'class' => 'ctools-use-modal ctools-modal-' . $del_link_class,
+        'id'    => $del_link_class,
+      );
+      $vars['content']['links']['comment']['#links']['comment-delete']['attributes'] = $link_ops;
+      // Modal requirements.
+      $js_settings = array(
+        $del_link_class => array( // Link has to have ctools-modal- namespace class along with this id.
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 560,
+            'height' => 230,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings, 'setting'); // Styles the modal.
+      ctools_include('ajax');
+      ctools_include('modal');
+      ctools_add_js('ajax-responder');
+      ctools_modal_add_js();
+    }
+    if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
+      $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
+    }
+    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
+      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
+      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
+      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    }
   }
 }
 /**

@@ -584,3 +584,32 @@ function sbac_forum_delete_topic_confirm($form, &$form_state) {
 
   return $form;
 }
+
+/**
+ * =============================================================================
+ *    Comment Delete Form Button
+ * =============================================================================
+ */
+
+function sbac_forum_delete_comment_confirm($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => '<h2>'.t('You are about to delete this discussion topic reply').'</h2><p>' . t('
+    If you continue, this reply along with all related replies will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Delete Reply',
+    '#attributes' => array('class' => array('edit-delete-reply-overlay', 'blue'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('edit-cancel-delete-reply-overlay', 'gray', 'cancel'))
+  );
+
+  return $form;
+}
