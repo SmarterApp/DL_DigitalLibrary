@@ -470,7 +470,7 @@ function sbac_forum__ajax__all_forums_sort_form_change($form, $form_state) {
   $commands = array();
   $commands[] = ctools_ajax_command_reload();
   print ajax_render($commands);
-  exit;
+  exit();
 }
 
 /**
@@ -495,5 +495,23 @@ function sbac_forum__ajax__my_forum_sort_form_change($form, $form_state) {
   $commands = array();
   $commands[] = ctools_ajax_command_reload();
   print ajax_render($commands);
-  exit;
+  exit();
+}
+
+function sbac_forum__ajax__keyword_search_trigger($form, $form_state) {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  $keyword = $form_state['values']['forum_keyword'];
+  $options = array(
+    'query' => array(
+      'keyword' => $keyword,
+    ),
+  );
+
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $url = 'forums-search';
+  $output[] = ctools_ajax_command_redirect($url, 0 , $options);
+  print ajax_render($output);
+  exit();
 }

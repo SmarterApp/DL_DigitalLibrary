@@ -24,14 +24,14 @@
 
         var href = $(this).attr('href');
         var formCont = $('.topic-node-reply-direct-wrapper');
-        $(this).hide(); // Hide the control button.
-
-        // Load the page callback contents (form). Re-attach all behaviours
-        formCont.load(href,function(){
-          Drupal.behaviors.sbac_forum_js_topic_node_view_page.expand(formCont);
-          Drupal.attachBehaviors(formCont, Drupal.settings);
+         // Hide the control button.
+        $(this).parents('[class~=topic-node-controls]').hide('slow', function() {
+          // Load the page callback contents (form). Re-attach all behaviours
+          formCont.load(href,function(){
+            Drupal.behaviors.sbac_forum_js_topic_node_view_page.expand(formCont);
+            Drupal.attachBehaviors(formCont, Drupal.settings);
+          });
         });
-
         return false;
       };
 
@@ -44,6 +44,8 @@
         $(".topic-node-reply-direct-wrapper").hide('slow');
         $(".topic-node-reply-direct-wrapper").html('');
         $(".topic-node-controls a").each(function(){ $(this).show('fast'); });
+        var directLinkSelector = '.sbac-forum-topic-node-direct-comment-link';
+        $(directLinkSelector).parents('[class~=topic-node-controls]').slideDown('fast');
 
         var title = $(this).attr('title');
         var href = $(this).attr('href');
@@ -76,7 +78,7 @@
         var activeDirectFormCont = $('.topic-node-reply-direct-wrapper');
         activeDirectFormCont.slideUp('5000', function(){
           activeDirectFormCont.html('');
-          $(directLinkSelector).slideDown('fast');
+          $(directLinkSelector).parents('[class~=topic-node-controls]').slideDown('fast');
         });
         return false;
       }

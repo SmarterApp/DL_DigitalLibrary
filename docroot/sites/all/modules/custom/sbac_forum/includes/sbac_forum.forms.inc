@@ -356,7 +356,7 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     )
   );
 
-
+  drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.subnav_form.js');
   $form['forum_keyword'] = array(
     '#prefix'         => '<div class="forum-subnav-keyword-wrapper">',
     '#suffix'         => '</div>',
@@ -364,6 +364,13 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     '#title'          => t(''),
     '#default_value'  => 'Search Forums',
     '#size'           => 30,
+    '#ajax'           => array(
+      'callback'  => 'sbac_forum__ajax__keyword_search_trigger',
+      'event'     => 'blur',
+      'wrapper'   => 'form-subnav-keyword-wrapper',
+      'progress'  => array('type' => 'none'),
+      'keypress'  => TRUE,
+    )
   );
 
   $vocab = taxonomy_vocabulary_machine_name_load('forum');
