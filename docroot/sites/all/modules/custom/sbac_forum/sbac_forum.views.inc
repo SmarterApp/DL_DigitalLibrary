@@ -72,6 +72,46 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
 }
 
 
+/**
+ * Populates sort options with data if provided.
+ *
+ * @param $view
+ *   The view object.
+ *
+ */
+function sbac_forum_listing_apply_sorts(&$view, $current_sorting, $default_sort) {
+  if (!empty($current_sorting)) {
+    $view_sorts = $view->display_handler->get_option('sorts');
+
+    $sort_field_key = $default_sort;
+    switch ($current_sorting) {
+      case 'forum-recent-activity':
+        $sort_field_key = 'field_forum_last_activity_value';
+        break;
+      case 'forum-most-active':
+        $sort_field_key = 'field_forum_topic_comment_count_value';
+        break;
+      case 'forum-newest':
+        $sort_field_key = 'created_1';
+        break;
+      case 'forum-most-members' :
+        $sort_field_key = 'field_forum_member_count_value';
+        break;
+    }
+
+    $new_sorts = array();
+    foreach ($view_sorts as $key => $value) {
+      if ($key == $sort_field_key) {
+        $new_sorts[$key] = $value;
+      }
+    }
+    if (!empty($new_sorts)) {
+      $view->display_handler->set_option('sorts', $new_sorts);
+    }
+  }
+}
+
+
 function sbac_forum_forum_listing_empty_apply_filters(&$view, $account = NULL) {
  if (is_null($account)) {
     global $user;

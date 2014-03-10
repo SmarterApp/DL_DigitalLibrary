@@ -12,6 +12,9 @@ include_once 'includes/sbac_forum.ajax.inc';
 define('SBAC_FORUM_CATEGORY_FILTERS', 'sbac-forum-category-filters');
 define('SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS', 'sbac-forum-my-forum-category-filters');
 
+define('SBAC_FORUM_ALL_FORUM_SORTS', 'sbac-all-forum-sorts');
+define('SBAC_FORUM_MY_FORUM_SORTS', 'sbac-my-forum-sorts');
+
 define('SBAC_FORUM_SUBNAV_ACTIVE', 'sbac-forum-sub-nav-active');
 define('SBAC_FORUM_SUBNAV_ALL', 'all-forums');
 define('SBAC_FORUM_SUBNAV_OWN', 'my-forum');

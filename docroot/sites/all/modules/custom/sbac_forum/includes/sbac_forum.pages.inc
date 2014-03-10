@@ -11,6 +11,8 @@ function sbac_forum_main_landing_page() {
   $output = '';
   $current_filters = '';
   $passive_filters = '';
+  $current_sorts = '';
+  $default_sort = 'forum-most-active';
   $count_values = array();
   $active_display = 'block';
   $passive_display = 'block_1';
@@ -31,6 +33,10 @@ function sbac_forum_main_landing_page() {
       if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
         $passive_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
       }
+      if (isset($_SESSION[SBAC_FORUM_ALL_FORUM_SORTS]) &&
+          $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] != '') {
+        $current_sorts = $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS];
+      }
       break;
     case SBAC_FORUM_SUBNAV_OWN:
       $active_display = 'block_1';
@@ -40,6 +46,11 @@ function sbac_forum_main_landing_page() {
       }
       if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
         $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_SORTS]) &&
+          $_SESSION[SBAC_FORUM_MY_FORUM_SORTS] != '') {
+        $current_sorts = $_SESSION[SBAC_FORUM_MY_FORUM_SORTS];
+        $default_sort = 'forum-recent-activity';
       }
       break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
@@ -60,6 +71,7 @@ function sbac_forum_main_landing_page() {
   $view = views_get_view('forum_list');
   $view->set_display($active_display);
   sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
+  sbac_forum_listing_apply_sorts($view, $current_sorts, $default_sort);
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
