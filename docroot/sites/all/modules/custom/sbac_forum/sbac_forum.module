@@ -1237,9 +1237,13 @@ function sbac_forum_node_insert($node) {
           $current_count = $forum_wrapper->field_forum_topic_count->value();
           $current_count++;
           $forum_wrapper->field_forum_topic_count->set($current_count);
-          $forum_wrapper->save(TRUE);
-          taxonomy_term_save($forum_obj);
         }
+        if (isset($forum_wrapper->field_forum_last_activity)) {
+          $date = strtotime('today');
+          $forum_wrapper->field_forum_last_activity->set($date);
+        }
+        $forum_wrapper->save(TRUE);
+        taxonomy_term_save($forum_obj);
       }
     }
   }
@@ -1294,9 +1298,13 @@ function sbac_forum_comment_insert($comment) {
           $current_count = $forum_wrapper->field_forum_topic_comment_count->value();
           $current_count++;
           $forum_wrapper->field_forum_topic_comment_count->set($current_count);
-          $forum_wrapper->save(TRUE);
-          taxonomy_term_save($forum_obj);
         }
+        if (isset($forum_wrapper->field_forum_last_activity)) {
+          $date = strtotime('today');
+          $forum_wrapper->field_forum_last_activity->set($date);
+        }
+        $forum_wrapper->save(TRUE);
+        taxonomy_term_save($forum_obj);
       }
     }
   }
