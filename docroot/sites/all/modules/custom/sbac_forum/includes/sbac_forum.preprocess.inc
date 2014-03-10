@@ -150,6 +150,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
 function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   $comment_entity = $vars['comment'];
+  $comment_data = entity_metadata_wrapper('comment', $comment_entity);
 
   $comment_auth_uid = $comment_entity->uid;
   $user_image = sbac_forum__api__get_author_picture($comment_auth_uid, 'forum_profile_image_60x60');
@@ -157,8 +158,18 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
   $posted_date = date('M jS, Y g:ia' , $comment_entity->created);
 
+  $depth_extra = '';
+  $depth = $comment_entity->depth;
+  if ($depth > 5) { // If nesting is passed 5 levels deep, get parent info
+    $parent_comment = $comment_data->parent->value();
+    if (!empty($parent_comment)) { // Extra check.
+      $parent_uid = $parent_comment->uid;
+      $parent_name = sbac_forum__api__get_authpane_hoverover($parent_uid);
+      $depth_extra = ', replying to ' . $parent_name;
+    }
+  }
+
   $has_materials = FALSE;
-  $comment_data = entity_metadata_wrapper('comment', $comment_entity);
   $has_files = FALSE;
   if (isset($comment_data->field_topic_comment_files)) {
     $topic_files = $comment_data->field_topic_comment_files->value();
@@ -179,6 +190,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
   $vars['picture'] = $user_image;
   $vars['auth_name_hover'] = $user_name_w_hoverover;
+  $vars['depth_extra'] = $depth_extra;
   $vars['posted_date'] = $posted_date;
   $vars['has_materials'] = $has_materials;
 

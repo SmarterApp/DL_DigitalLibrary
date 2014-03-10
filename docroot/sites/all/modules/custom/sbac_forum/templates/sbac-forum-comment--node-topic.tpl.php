@@ -78,6 +78,7 @@
     <div class="topic-node-comment-region-right-top">
       <?php print $auth_name_hover; ?>
       <?php print ' ' . $posted_date; ?>
+      <?php print $depth_extra; ?>
     </div> <!-- END region right top -->
 
 
