@@ -179,7 +179,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Attach link(s)',
-    'weight' => '6',
+    'weight' => '3',
     'children' => array(
       0 => 'field_topic_comment_links',
     ),
@@ -207,7 +207,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Attach file(s)',
-    'weight' => '1',
+    'weight' => '2',
     'children' => array(
       0 => 'field_topic_comment_files',
     ),

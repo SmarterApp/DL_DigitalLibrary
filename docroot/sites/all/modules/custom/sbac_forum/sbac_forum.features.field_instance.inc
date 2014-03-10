@@ -85,7 +85,7 @@ function sbac_forum_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 2,
+      'weight' => 1,
     ),
   );
 
