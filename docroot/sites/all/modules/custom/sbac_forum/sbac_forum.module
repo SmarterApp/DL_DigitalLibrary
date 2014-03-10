@@ -775,6 +775,7 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
         $form['field_forum_member_count']['#access'] = $can_see;
         $form['field_forum_removed_member_count']['#access'] = $can_see;
         $form['field_forum_last_activity']['#access'] = $can_see;
+        $form['field_forum_created']['#access'] = $can_see;
       }
 
       $path_to_css_file = drupal_get_path('module', 'sbac_forum');
