@@ -1131,6 +1131,7 @@ function _sbac_forum__add_topic_form_redirect_submit($form, &$form_state) {
 
 function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $form_id) {
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
+  drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.topic_comments_form.js');
   $form['author']['#access'] = FALSE; // Hide this form element.
 
 

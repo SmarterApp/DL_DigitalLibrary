@@ -10,8 +10,17 @@
     attach: function (context, settings) {
 
       if ($('#edit-field-topic-files button').length) {
-        $('#edit-field-topic-files button[value^="Upload"]').html('Upload (100MB Max)');
+        // Client initially wanted it to say upload 100MB.
+        // $('#edit-field-topic-files button[value^="Upload"]').html('Upload (100MB Max)');
       }
+
+      // Hide upload button by default.
+      $('#edit-field-topic-files .form-managed-file button').hide();
+
+      // When a file is selected, dialog box closes, show the upload button
+      $('#edit-field-topic-files .form-managed-file input').change(function() {
+        $('#edit-field-topic-files .form-managed-file button').show('fast');
+      });
     }
   };
 
