@@ -119,6 +119,7 @@ function sbac_forum_field_group_info() {
       2 => 'field_forum_member_count',
       3 => 'field_forum_last_activity',
       4 => 'field_forum_removed_member_count',
+      5 => 'field_forum_created',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -179,7 +180,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Attach link(s)',
-    'weight' => '6',
+    'weight' => '3',
     'children' => array(
       0 => 'field_topic_comment_links',
     ),
@@ -207,7 +208,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Attach file(s)',
-    'weight' => '1',
+    'weight' => '2',
     'children' => array(
       0 => 'field_topic_comment_files',
     ),

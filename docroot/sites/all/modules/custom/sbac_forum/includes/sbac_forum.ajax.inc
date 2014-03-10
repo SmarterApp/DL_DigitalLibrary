@@ -95,9 +95,9 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   $commands[] = ajax_command_replace($button_selector, $link_text);
 
   // Partial implementation for not needing to refresh. Easier to call page refresh to reload tab contents.
-  $commands[] = ctools_ajax_command_reload();
+  $commands_updated[] = ctools_ajax_command_reload();
 
-  $page = array('#type' => 'ajax', '#commands' => $commands);
+  $page = array('#type' => 'ajax', '#commands' => $commands_updated);
   ajax_deliver($page);
   exit;
 }
@@ -372,4 +372,128 @@ function sbac_forum__ajax__restore_member_modal_callback($js = FALSE, $term, $ui
   } else {
     return drupal_get_form('sbac_forum_restore_member_confirm');
   }
+}
+
+function sbac_forum__ajax__delete_comment_form_modal_callback($js = FALSE, $comment_id_to_remove) {
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+
+    $form_state = array(
+      'ajax' => TRUE,
+    );
+
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('sbac_forum_delete_comment_confirm', $form_state);
+
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        global $user;
+        $comment_entity = comment_load($comment_id_to_remove);
+
+        // Params for task.
+        $from_user_id = $user->uid; // TriggeringUser
+        $for_user_id = $comment_entity->uid;    // OwningUser
+
+        if ($from_user_id != $for_user_id) { // no need to notify if youre deleting your own comment
+        // Create task notification.
+          if ($task = taskit_get_object('deleted_forum_comment')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addEntity('comment', $comment_id_to_remove);
+            $task->addOwningUser($for_user_id);
+            $task->addTriggeringUser($from_user_id);
+            $task->save();
+          }
+        }
+
+        // Delete comment
+        comment_delete($comment_id_to_remove);
+
+        $message = 'Forum Reply has been deleted successfully';
+        drupal_set_message($message);
+        $output[] = ctools_ajax_command_reload();
+      }
+    }
+    print ajax_render($output);
+    exit();
+  } else {
+    return drupal_get_form('sbac_forum_delete_comment_confirm');
+  }
+}
+/**
+ * =============================================================================
+ *
+ *    Ajax Callbacks
+ *
+ * =============================================================================
+ */
+
+function sbac_forum__ajax__inline_comment_form_modal_callback($topic, $comment_parent_id) {
+  drupal_static_reset('drupal_add_css');
+  drupal_static_reset('drupal_add_js');
+  if (empty($comment_parent_id)) {
+    $build = drupal_get_form("comment_node_topic_form", (object) array('nid' => $topic->nid));
+  } else {
+    $build = drupal_get_form("comment_node_topic_form", (object) array('nid' => $topic->nid, 'pid' => $comment_parent_id));
+  }
+  return drupal_render($build);
+}
+
+
+/**
+ * Ajax Callback - All Forum sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_forum__ajax__all_forums_sort_form_change($form, $form_state) {
+  // Set session variable here. Session only gets set when form submits a change.
+  $new_value_key = $form_state['values']['forum_sort_order'];
+  $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] = $new_value_key;
+
+  // Just return the form, dont force page refresh.
+  // return $form['dl_sort_order'];
+
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
+}
+
+/**
+ * Ajax Callback - My Forum sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_forum__ajax__my_forum_sort_form_change($form, $form_state) {
+  // Set session variable here. Session only gets set when form submits a change.
+  $new_value_key = $form_state['values']['forum_sort_order'];
+  $_SESSION[SBAC_FORUM_MY_FORUM_SORTS] = $new_value_key;
+
+  // Just return the form, dont force page refresh.
+  // return $form['dl_sort_order'];
+
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
 }

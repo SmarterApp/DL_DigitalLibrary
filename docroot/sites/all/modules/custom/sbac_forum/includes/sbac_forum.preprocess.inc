@@ -3,6 +3,9 @@
 
 function sbac_forum_preprocess_node__topic(&$vars) {
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
+  drupal_add_js('/misc/form.js');
+  drupal_add_js('/misc/collapse.js');
+
   global $user;
   $node_data = entity_metadata_wrapper('node', $vars['node']);
   $forum_term = $node_data->field_topic_forum_parent->value();
@@ -18,11 +21,18 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $posted = '';
   $has_materials = FALSE;
 
+  $welcome_message = '';
+  if (isset($_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE]) ) {
+    $welcome_message = $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE];
+    $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = '';
+  }
+
   $is_faci = FALSE;
   if (in_array('facilitator', $user->roles)) {
     $is_faci = TRUE;
   }
 
+  $is_member = FALSE;
   if (!empty($forum_term)) {
     $forum_name_text = $forum_term->name;
     $is_member = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $user->uid);
@@ -92,10 +102,30 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $has_materials = TRUE;
   }
 
+  // action section.
+  $action_section = '';
+  if ($is_member === TRUE) {
+    $action_link_ops = array(
+      'attributes' => array(
+        'class' => 'button blue sbac-forum-topic-node-direct-comment-link',
+      ),
+    );
+    $new_comment_url = 'sbac-forum/custom/comment-reply/'. $node_data->nid->value() . '/0';
+    $action_section = l('Post a Reply', $new_comment_url, $action_link_ops);
+
+  } elseif($is_member === FALSE) { // User not a member.
+    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+    $join_form = drupal_get_form('sbac_forum_join_button_form', $forum_term->tid, $user->uid);
+    $join_button = drupal_render($join_form);
+    $action_section = $join_button;
+  }
+  $vars['action_section'] = $action_section;
+
 
   // Put everything into arrays and register in vars for tpl. ------------
 
   $parent_forum_markup = array(
+    'welcome_message'  => $welcome_message,
     'forum_name'       => $forum_name_text,
     'controls'         => $control_data, // Has key "markup" and "classes"
   );
@@ -120,15 +150,26 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
 function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   $comment_entity = $vars['comment'];
+  $comment_data = entity_metadata_wrapper('comment', $comment_entity);
 
   $comment_auth_uid = $comment_entity->uid;
   $user_image = sbac_forum__api__get_author_picture($comment_auth_uid, 'forum_profile_image_60x60');
   $user_name_w_hoverover = sbac_forum__api__get_authpane_hoverover($comment_auth_uid);
 
-  $posted_date = date('M jS, Y' , $comment_entity->created);
+  $posted_date = date('M jS, Y g:ia' , $comment_entity->created);
+
+  $depth_extra = '';
+  $depth = $comment_entity->depth;
+  if ($depth > 5) { // If nesting is passed 5 levels deep, get parent info
+    $parent_comment = $comment_data->parent->value();
+    if (!empty($parent_comment)) { // Extra check.
+      $parent_uid = $parent_comment->uid;
+      $parent_name = sbac_forum__api__get_authpane_hoverover($parent_uid);
+      $depth_extra = ', replying to ' . $parent_name;
+    }
+  }
 
   $has_materials = FALSE;
-  $comment_data = entity_metadata_wrapper('comment', $comment_entity);
   $has_files = FALSE;
   if (isset($comment_data->field_topic_comment_files)) {
     $topic_files = $comment_data->field_topic_comment_files->value();
@@ -149,9 +190,55 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
   $vars['picture'] = $user_image;
   $vars['auth_name_hover'] = $user_name_w_hoverover;
+  $vars['depth_extra'] = $depth_extra;
   $vars['posted_date'] = $posted_date;
   $vars['has_materials'] = $has_materials;
 
+  global $user;
+  $is_member = FALSE;
+  $topic_node = $vars['node'];
+  $parent_forum = $topic_node->field_topic_forum_parent[LANGUAGE_NONE][0]['tid'];
+  if (!empty($parent_forum)) {
+    $is_member = sbac_forum__api__check_user_is_forum_member($parent_forum, $user->uid);
+  }
+  $vars['is_member'] = $is_member;
+
+  if ($is_member === TRUE) {
+    if (isset($vars['content']['links']['comment']['#links']['comment-delete'])) {
+      $vars['content']['links']['comment']['#links']['comment-delete']['title'] = 'Delete';
+      $new_url = 'sbac-forum/nojs/custom/comment-delete/' . $comment_entity->cid;
+      $vars['content']['links']['comment']['#links']['comment-delete']['href'] = $new_url;
+      $del_link_class = 'sbac-forum-del-comment-link-'.$comment_entity->cid;
+      $link_ops = array(
+        'class' => 'ctools-use-modal ctools-modal-' . $del_link_class,
+        'id'    => $del_link_class,
+      );
+      $vars['content']['links']['comment']['#links']['comment-delete']['attributes'] = $link_ops;
+      // Modal requirements.
+      $js_settings = array(
+        $del_link_class => array( // Link has to have ctools-modal- namespace class along with this id.
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 560,
+            'height' => 230,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings, 'setting'); // Styles the modal.
+      ctools_include('ajax');
+      ctools_include('modal');
+      ctools_add_js('ajax-responder');
+      ctools_modal_add_js();
+    }
+    if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
+      $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
+    }
+    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
+      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
+      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
+      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    }
+  }
 }
 /**
  * ---------- Forum list View.---------------

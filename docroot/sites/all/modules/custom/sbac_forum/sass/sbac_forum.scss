@@ -28,7 +28,7 @@ $gray: #464B54;
 .page-forums-forum-add,
 .page-taxonomy-term-edit,
 .page-forums-term {
-	
+
 	.main-container {
 		background: none repeat scroll 0 0 #FFFFFF;
 		@include border-radius(15px);
@@ -122,7 +122,7 @@ $gray: #464B54;
     }
 
   .sbac-forum-filter-name,
-  .sbac-forum-filter-custom-link {	
+  .sbac-forum-filter-custom-link {
       margin: 0;
       font-weight: bold;
       font-size: 1.1em;
@@ -161,7 +161,7 @@ $gray: #464B54;
 
 .block-sbac-forum {
 	position: relative;
-	
+
 	> h2 {
 		margin-left: 15px;
 		position: absolute;
@@ -176,7 +176,7 @@ $gray: #464B54;
 		top: -35px;
 	  z-index: 999;
 	}
-	
+
 	.sbac-forum-category-forum-form {
 		position: relative;
 	}
@@ -387,7 +387,7 @@ select {
 
 /*Row list view*/
 .sbac-forum-main-container {
-	
+
 	.view-forum-list,
 	.view-forum-list-empty {
 
@@ -548,7 +548,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
   }
 
   .forum-subnav-keyword-wrapper {
-	
+
      input {
 		  -moz-box-sizing: border-box;
 	    border: 1px solid #006082;
@@ -567,7 +567,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 // --------------------- Forum Landing ------------------------------
 .sbac-forum-browse-page {
-	
+
 	.main-container {
 	  background-color: transparent;
     border-radius: 0;
@@ -577,33 +577,33 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		.columns {
 			padding: 0;
 		}
-		
+
 		.sbac-forum-main-container {
-			
+
 			.views-field {
 				font-size: 13px;
 				line-height: 20px;
 				color: #70757E;
 			}
-			
+
 			.views-field-name {
 				a {
 					color: #04384E;
 					font-size: 15px;
 					font-weight: bold;
 					line-height: 1;
-					
+
 					&:hover {
 						text-decoration: underline;
 					}
 				}
 			}
-			
+
 			.views-field-nothing {
 				display: inline-block;
 				margin-top: 15px;
 				position: relative;
-				
+
 				.sbac-forum-membership-status-label,
 				.sbac-forum-faci-status-label {
 					display: inline-block;
@@ -614,8 +614,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					margin: 0 10px 0 0;
 			    padding: 0 10px 0 0;
 				}
-				
-				.sbac-forum-membership-status-label:before, 
+
+				.sbac-forum-membership-status-label:before,
 				.facilitator:before {
 					content: "";
 			    position: absolute;
@@ -628,49 +628,55 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					border-bottom: 8px solid transparent;
 					border-left: 8px solid #268A16;
 				}
-				
+
 				.facilitator:before {
 					border-left: 8px solid #8A1538;
 				}
-				
+
 				.facilitator span {
 					color:#8A1538;
 					font-weight: bold;
 				}
-				
+
 				.sbac-forum-is-member-highlight {
 					color: #268A16;
 					font-weight: bold;
 				}
-				
+
 				.forum-list-auth-pane-item {
 					color: #0583AC;
 					font-weight: bold;
 				}
-				
+
 				a.devtools-tooltip-trigger {
 					color: #0583AC;
+					display: inline-block;
 					font-weight: bold;
+			    height: 20px;
+			    overflow: hidden;
+			    vertical-align: bottom;
+			    width: 160px;
+			    word-break: break-all;
 				}
 			}
-			
-			.views-field-field-forum-last-activity {	
-				display: inline-block;			
+
+			.views-field-field-forum-last-activity {
+				display: inline-block;
 				margin-top: 15px;
-				
+
 				.views-label,
 				.field-content {
 					display: inline-block;
 					margin-top: 0;
 					font-weight: normal;
-					
+
 					.date-display-single {
 						font-size: 13px;
 						color: #101010;
 					}
 				}
 			}
-			
+
 			.views-field-field-forum-topic-count,
 			.views-field-field-forum-member-count,
 			.views-field-field-forum-topic-comment-count {
@@ -689,25 +695,25 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    text-shadow: 0 1px 0 #FFFFFF;
 		    top: 0;
 			}
-			
+
 			.views-field-field-forum-topic-count {
 				right: 220px;
 			}
-			
+
 			.views-field-field-forum-topic-comment-count {
 				right: 110px;
 			}
-			
+
 			.views-field-field-forum-member-count {
 				@include border-radius(0 6px 6px 0);
 			}
-			
+
 			.field-content {
 				margin-top: 25px;
 				font-size: 15px;
 				font-weight: bold;
 				text-align: center;
-				
+
 				.forum-listing-suffix-label {
 					font-family: Verdana,Geneva,sans-serif;
 					font-size: 13px;
@@ -719,13 +725,13 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				}
 			}
 		}
-		
+
 		/*Load More Forums button*/
 		ul.pager-load-more {
-			
+
 			li{
 				margin: 0;
-				
+
 				a {
 					@include border-radius(6px);
 					box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
@@ -745,7 +751,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			    border: 1px solid #268A16;
 					width: 444px;
 					margin: 0 auto;
-					
+
 					&:hover {
 						@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 					}
@@ -753,9 +759,9 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			}
 		}
 	}
-	
+
 	/*No results page*/
-	.sbac-forum-filter-no-results-wrapper, 
+	.sbac-forum-filter-no-results-wrapper,
 	.my-forum-empty-text {
 		background: none repeat scroll 0 0 #FFFFFF;
 	  border-radius: 15px;
@@ -775,7 +781,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    padding: 0;
 	    text-transform: capitalize;
 		}
-		
+
 		p {
 			font-size: 16px;
 		  line-height: 1.6;
@@ -788,13 +794,13 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			margin: 12px 0 0;
 		}
 	}
-	
+
 	.my-forum-empty-text {
 		a {
 			color: #0583AC;
 			text-decoration: none;
 			border-bottom: 1px #0583AC solid ;
-			
+
 			&:hover {
 				color: #8A1538;
 				border-bottom: 1px #8A1538 solid ;
@@ -991,7 +997,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 // --------------------- View Forum Form ------------------------------
 .page-forums-term {
-	
+
 	#page-title {
     display:block !important;
 		border-bottom: 1px solid #62676E;
@@ -1014,7 +1020,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
     right: 0;
     width: 130px;
     z-index: 999;
-		
+
 		.sbac-forum-vp-controls-popup {
 			width: 130px;
 			border: 1px solid #828588;
@@ -1023,20 +1029,20 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			@include border-radius(10px);
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 			margin-top: -90px;
-	
+
 			ul {
 				list-style-type: none;
 				margin: 0;
 				padding: 5px 0 10px;
-				
+
 				li {
 					margin: 5px 0 0 17px;
-					
+
 					a {
 						color: #0583AC;
 						font-size: 15px;
 						display: blo;
-						
+
 						&:hover {
 							text-decoration: underline;
 						}
@@ -1044,13 +1050,13 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				}
 			}
 		}
-		
+
 		.sbac-forum-vp-controls-popup.hover-over-large-popup {
 			width: 160px;
 			margin-top: -60px;
 			margin-left: -10px;
 		}
-			
+
 		.sbac-forum-vp-controls-popup:after {
 			content: "";
 	    height: 0;
@@ -1064,9 +1070,9 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    left: 50%;
 			z-index: 1000;
 			margin-left: -10px;
-		}				
+		}
 	}
-	
+
 	.sbac-forum-vp-controls {
 		float: right;
 		margin-top: 0;
@@ -1094,7 +1100,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 	/*sbac forum top*/
 	.sbac-forum-vp-top {
-		
+
 		.col {
 		  display: block;
 	    float: left;
@@ -1118,7 +1124,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 
 		.vp-faci-field {
-			
+
 			.title-tags {
 				font-size: 13px;
 			  line-height: 1.2;
@@ -1156,7 +1162,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		.vp-subjects-field,
 		.vp-end-users-field,
 		.vp-students-field {
-			
+
 			.title-tags {
 				-moz-border-bottom-colors: none;
 				-moz-border-left-colors: none;
@@ -1280,7 +1286,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			    position: relative;
 			    z-index: 2;
 				}
-				
+
 				&.active:after {
 				  background: none repeat scroll 0 0 #FFFFFF;
 			    bottom: -7px;
@@ -1309,12 +1315,12 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    z-index: 1;
 		}
 	}
-	
+
 	/*hide label of edit sort*/
 	label[for="edit-sort-by"] {
 		display: none;
 	}
-	
+
 	/*style of select box*/
 	.form-item-sort-by {
 		select {
@@ -1322,7 +1328,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			width: 200px;
 		}
 	}
-	
+
 	/**/
 	.view-empty {
 		clear: both;
@@ -1336,7 +1342,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 /*Topic's tab*/
 .page-forums-term {
-	
+
 	.sbac-forum-confirm-message-region > div {
 		background-color: #F2F2F2;
 	  border: 5px solid #FFFFFF;
@@ -1348,26 +1354,26 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		font-size: 18px;
 		line-height: 1.2;
 	}
-	
+
 	.view-forum-topic-list  {
 
 		margin-top: 10px;
-		
+
 		.view-filters {
 			float: left;
-			
+
 			form {margin: 0;}
 		}
-		
+
 		#join-forum-form-wrapper,
 		#join-forum-button-wrapper {
 			float: right;
 			margin-top: 1em;
-			
+
 			button {
 				padding: 0 30px;
 			}
-			
+
 			.ajax-progress-throbber {
 			  display: none;
 			}
@@ -1416,13 +1422,13 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			.views-field {
 				display: inline-block;
 				font-size: 13px;
-				
+
 				a{
 					color: #0583AC;
 					font-weight: bold;
 				}
 			}
-			
+
 			.views-field-uid {
 				border-right: 1px solid #62676E;
 			  color: #70757E;
@@ -1434,7 +1440,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    margin: 0 10px 0 0;
 		    padding: 0 10px 0 0;
 			}
-			
+
 			.views-field-comment-count {
 			  -moz-box-sizing: border-box;
 		    background-color: #F2F2F2;
@@ -1455,7 +1461,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				text-align: center;
 				font-size: 15px;
 				font-weight: bold;
-				
+
 				.topic-listing-suffix-label {
 					font-family: Verdana,Geneva,sans-serif;
 					font-size: 13px;
@@ -1486,7 +1492,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 	.view-forum-member-list {
 		padding-top: 10px;
-			
+
 		.views-row {
 			-moz-box-sizing: border-box;
 			@include border-radius(6px);
@@ -1512,7 +1518,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 			.views-field-uid {
 				margin: 0 0 6px;
-				
+
 				a {
 					color: #0583AC;
 					font-size: 13px;
@@ -1541,7 +1547,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			clear:left;
 			margin-left: 0;
 		}
-		
+
 		.member-controls-wrapper {
 			display: block;
 	    height: 80px;
@@ -1552,7 +1558,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			top: -47px;
 	    width: 150px;
 	    z-index: 999;
-	
+
 			&:hover {
 				.member-control-popup {
 					display: none;
@@ -1568,7 +1574,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 				display: none;
 				float: right;
-			
+
 				a {
 					color: #0583AC;
 					font-size: 15px;
@@ -1596,7 +1602,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    left: 50%;
 				z-index: 1000;
 				margin-left: -10px;
-			}				
+			}
 		}
 
 		.member-control-icon {
@@ -1626,7 +1632,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		.member-control-icon:hover:before {
 			 opacity: 1;
 		}
-			
+
 		.sbac-forum-vp-controls:hover:before {
 		  opacity: 1;
 		}
@@ -1636,11 +1642,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 // --------------------- Model style ------------------------------
 #sbac-forum-leave-forum-confirm {
-	
+
 	#modal-title {
 		padding: 0;
 	}
-	
+
 	h2 {
 	  padding-bottom: 5px;
 	  color: #000000;
@@ -1654,18 +1660,18 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		float: right;
 		margin-left: 30px;
 	}
-	
+
 	#edit-submit--3 {
 		background-color: #0084B0;
 	}
-	
+
 	#edit-cancel {
 		background-color: #6E7379;
 	  border: 1px solid #4D5457;
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 		padding-left: 40px;
-	}	
-	
+	}
+
 	button.gray.cancel:before {
 	 content: url("../images/icon-buttonCancel.png");
    left: 15px;
@@ -1679,7 +1685,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 .page-node-add-topic,
 .node-type-topic,
 .page-comment {
-	
+
 	.main-container {
 	  background: none repeat scroll 0 0 #FFFFFF;
     border-radius: 15px;
@@ -1695,7 +1701,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			padding: 0;
 		}
 	}
-	
+
 	#page-title {
 	  border-bottom: 1px solid #62676E;
     color: #04384E;
@@ -1706,27 +1712,28 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
     padding: 0;
     text-transform: capitalize;
 	}
-	
+
 	.form-item-title,
 	.form-type-textarea {
 		label {
 		  color: #101010;
 	    font-size: 14px;
 	    font-weight: bold;
+			padding-bottom: 2px;
 		}
 	}
-	
+
 	input#edit-title,
 	.form-textarea {
 	  margin: 15px 0 25px;
     width: 410px;
 	}
-	
+
 	.form-item-title,
 	.form-type-textarea {
 		position: relative;
 	 	width: 410px;
-	
+
 		.counter {
 		  display: block;
 	    font-size: 12px;
@@ -1736,31 +1743,25 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    top: 3px;
 		}
 	}
-	
-	.form-type-managed-file {
-		button {
-			float: right;
-		}
-	}
-	
+
 	.form-managed-file {
 		.form-file {
 			float: left;
 	    width: 50%;
 		}
 	}
-	
+
 	table.field-multiple-table,
 	table.sticky-enabled {
 		width: 100%;
 	}
-	
+
 	table.sticky-enabled {
 		th:last-child {
 			text-align: right;
 			padding-right: 23px;
 		}
-		
+
 		button {
 			float: right;
 			background-color: #8A1538;
@@ -1768,11 +1769,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			margin: 10px 0;
 		}
 	}
-	
+
 	button.field-add-more-submit {
 		float: right;
 	}
-	
+
 	#field-topic-links-add-more-wrapper {
 		th > label {
 		  color: #101010;
@@ -1781,7 +1782,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			margin-left: 10px;
 		}
 	}
-	
+
 	/*button*/
 	.sbac-forum-add-topic-buttons {
 		button{
@@ -1796,15 +1797,15 @@ View Topic Page, Comment Page
 ----------------------------*/
 .node-type-topic,
 .page-comment {
-	
+
 	#page-title,
 	.button-group {
 		display: none;
 	}
-	
+
 	.topic-node--forum-parent-info {
 		position: relative;
-		
+
 		 h1:first-child {
 			border-bottom: 1px solid #62676E;
 	    color: #04384E;
@@ -1815,7 +1816,7 @@ View Topic Page, Comment Page
 	    padding: 0;
 	    text-transform: capitalize;
 		}
-		
+
 		.sbac-forum-topic-node-view-controls-wrapper {
 		  display: block;
 	    float: right;
@@ -1826,7 +1827,7 @@ View Topic Page, Comment Page
 	    right: 0;
 	    width: 130px;
 	    z-index: 999;
-		
+
 		 .sbac-forum-topic-node-view-controls:before {
 			  content:"\e621";
 		    cursor: pointer;
@@ -1837,7 +1838,7 @@ View Topic Page, Comment Page
 		    margin: 0 7px 0 0;
 		    opacity: 0.5;
 			}
-			
+
 			.sbac-forum-topic-node-view-controls {
 			  color: #62676E;
 		    cursor: pointer;
@@ -1847,7 +1848,7 @@ View Topic Page, Comment Page
 		    line-height: 20px;
 		    margin-top: 0;
 			}
-			
+
 			.sbac-forum-topic-node-view-controls-popup:after {
 			  border-left: 12px solid rgba(0, 0, 0, 0);
 		    border-right: 12px solid rgba(0, 0, 0, 0);
@@ -1862,13 +1863,13 @@ View Topic Page, Comment Page
 		    width: 0;
 		    z-index: 1000;
 			}
-			
+
 			.sbac-forum-topic-node-view-controls-popup:after {
 			  background-color: rgba(0, 0, 0, 0);
 		    bottom: 30px;
 		    position: absolute;
 			}
-			
+
 			.sbac-forum-topic-node-view-controls-popup  {
 			  background-color: #FFFFFF;
 		    border: 1px solid #828588;
@@ -1878,7 +1879,7 @@ View Topic Page, Comment Page
 		    margin-top: -90px;
 		    width: 130px;
 				display: none;
-				
+
 				ul {
 				  list-style-type: none;
 			    margin: 0;
@@ -1888,14 +1889,14 @@ View Topic Page, Comment Page
 						a {
 							color: #0583AC;
 						}
-						
+
 						a:hover {
 							text-decoration: underline;
 						}
 					}
 				}
 			}
-			
+
 			.sbac-forum-topic-node-view-controls-popup.hover-over-large-popup {
 			    margin-left: -10px;
 			    margin-top: -60px;
@@ -1903,15 +1904,15 @@ View Topic Page, Comment Page
 			}
 		}
 	}
-	
+
 	/*top navigation*/
 	.topic-node-view-tertiary-nav {
 		clear: both;
-		
+
 		.topic-node-view-tertiary-nav-left {
 			float: left;
 			width: 50%;
-			
+
 			a.topic-node-back-link {
 				display: inline-block;
 		    font-size: 15px;
@@ -1920,11 +1921,11 @@ View Topic Page, Comment Page
 		    vertical-align: top;
 				color: #0583AC;
 			}
-			
+
 			a.topic-node-back-link:hover {
 				text-decoration: underline;
 			}
-			
+
 			a.topic-node-back-link:before {
 			  content: "\e620";
 		    display: inline-block;
@@ -1937,15 +1938,15 @@ View Topic Page, Comment Page
 		    top: -2px;
 			}
 		}
-		
+
 		.topic-node-view-tertiary-nav-right {
 			float: right;
 			width: 50%;
-			
+
 			span {
 				float: right;
 			}
-			
+
 			.tertiary-edit-link a:before {
 			  content: "\e61d";
 		    display: inline-block;
@@ -1958,7 +1959,7 @@ View Topic Page, Comment Page
 		    text-decoration: none;
 		    top: -2px;
 			}
-			
+
 			.tertiary-edit-link a {
 			  float: right;
 		    font-size: 15px;
@@ -1968,7 +1969,7 @@ View Topic Page, Comment Page
 		    line-height: 20px;
 		    vertical-align: top;
 			}
-			
+
 			.tertiary-delete-link a:before {
 			  content:"\e632";
 		    display: inline-block;
@@ -1981,7 +1982,7 @@ View Topic Page, Comment Page
 		    text-decoration: none;
 		    top: -2px;
 			}
-			
+
 			.tertiary-delete-link a {
 			  float: right;
 		    font-size: 15px;
@@ -1991,27 +1992,27 @@ View Topic Page, Comment Page
 		    line-height: 20px;
 		    vertical-align: top;
 			}
-			
+
 			.tertiary-edit-link a:hover,
 			.tertiary-delete-link a:hover {
 				text-decoration: underline;
 			}
-			
+
 			.tertiary-edit-link a:hover:before,
 			.tertiary-delete-link a:hover:before {
 				opacity: 1;
 			}
 		}
 	}
-	
+
 	/*topic main content*/
 	.topic-node-main-content {
 		clear: both;
-		
+
 		.topic-node-main-content-left {
 			float: left;
 			margin-right: 40px;
-			
+
 			.topic-node-auhor-pane {
 				background-image: url("../images/avatar.png");
 				background-position: center center;
@@ -2019,16 +2020,16 @@ View Topic Page, Comment Page
 		    background-size: contain;
 		    height: 120px;
 		    width: 120px;
-				
+
 				img {
 					height: 120px;
 			    width: 120px;
 				}
 			}
-			
+
 			.topic-node-author-pane-name {
 				margin-top: 10px;
-				
+
 				a {
 					color: #0583AC;
 				  cursor: pointer;
@@ -2040,20 +2041,20 @@ View Topic Page, Comment Page
 					float: left;
 				}
 			}
-			
+
 			.topic-node-author-pane-post-date {
 				font-size: 13px;
 				line-height: 1.6;
 				margin-top: 5px;
 			}
 		}
-		
+
 		.topic-node-main-content-right {
 			float: left;
-			
+
 			h2 {
 				margin-bottom: 5px;
-				
+
 				&.node-title a {
 					color: #000000;
 				  display: block;
@@ -2064,17 +2065,17 @@ View Topic Page, Comment Page
 			    text-transform: capitalize;
 				}
 			}
-			
+
 			.body.field {
 				font-size: 16px;
 				line-height: 1.6;
 		    margin: 0;
 		    max-width: 560px;
 			}
-			
+
 			.topic-node-main-content-materials-wrapper {
 				margin-top: 20px;
-				
+
 				.topic-node-main-content-materials-label {
 					border-bottom: 1px solid #CECECE;
 				  color: #101010;
@@ -2087,7 +2088,7 @@ View Topic Page, Comment Page
 			    vertical-align: top;
 					width: 410px;
 				}
-				
+
 				.topic-node-main-content-materials-label:before {
 				  color: #91959E;
 			    content:"\e600";
@@ -2099,18 +2100,20 @@ View Topic Page, Comment Page
 			    position: relative;
 			    top: -2px;
 				}
-				
-				.field-name-field-topic-files {
+
+				.field-name-field-topic-files,
+				.field-name-field-topic-links {
 					img {display: none;}
-					
+
 					a{
-						 display: inline-block;
+						 display: block;
 						 font-size: 13px;
 				     line-height: 20px;
 				     vertical-align: top;
 						 color: #0583AC;
+						 margin-bottom: 3px;
 					}
-					
+
 					 a:before {
 					  color: #101010;
 				    content: "•";
@@ -2123,14 +2126,10 @@ View Topic Page, Comment Page
 				}
 			}
 		}
-		
+
 		.field-name-field-topic-files {
 			margin-top: 10px;
 		}
-	}
-	.topic-node-comments-region {
-		clear: both;
-		padding-top: 40px;
 	}
 }
 
@@ -2138,136 +2137,325 @@ View Topic Page, Comment Page
 
 .topic-node-comments-region {
 	clear: both;
-	
-	h2.title {
-		color: #000000;
-    display: block;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-    padding: 10px 0;
-    text-transform: capitalize;
-	}
-	
-	.comment {
-		-moz-box-sizing: border-box;
-	  background: none repeat scroll 0 0 #FFFFFF;
-    border-radius: 6px;
-    border-top: 1px solid #CECECE;
-    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
-    margin: 0 0 15px;
-    padding: 15px;
-    position: relative;
-    width: 665px;
+	padding-top: 20px;
 
-		.topic-node-comment-region-left {
-			float: left;
-			width: 60px;
-			height: 60px;
-			
-			.topic-node-comment-author-img {
-				background-image: url("../images/avatar.png");
-		    background-size: contain;
-				width: 60px;
-				height: 60px;
-				display: block;
+  .indented .indented .indented .indented .indented .indented .indented {
+    margin-left: 0;
+  }
+
+}
+
+/*Response Section*/
+.topic-node-reply-direct-wrapper {
+	background-color: #F7F7F7;
+  border-bottom: 1px solid #CECECE;
+  border-top: 1px solid #CECECE;
+  margin: 30px 0 20px;
+  padding: 0 15px 0;
+}
+
+.comment-form {
+		margin-bottom: 0;
+		padding-top: 8px;
+
+	.form-textarea-wrapper {
+		textarea {
+			height: 100px;
+		  margin: 0;
+	    padding: 0;
+	    width: 665px;
+		}
+	}
+
+	fieldset {
+		margin: 0;
+		padding: 0;
+		border: none !important;
+	}
+
+	fieldset.collapsed {
+		border: none !important;
+	}
+
+	#comment_comment_node_topic_form_group_topic_comments_materials,
+	#comment_comment_node_topic_form_group_topic_comments_links {
+
+		.fieldset-legend,
+		legend {
+			background: none !important;
+			font-weight: normal;
+		}
+
+		a {
+		  display: block;
+	    font-size: 15px;
+	    line-height: 20px;
+	    margin: 5px 0 5px;
+	    vertical-align: top;
+			color: #0583AC;
+
+			&:hover {text-decoration: underline;}
+		}
+
+		a.fieldset-title:before {
+		  content:"\e600";
+	    display: inline-block;
+	    font-family: 'sbac';
+	    font-size: 20px;
+	    font-weight: normal;
+	    margin-right: 7px;
+	    position: relative;
+	    top: -2px;
+		}
+	}
+
+	#comment_comment_node_topic_form_group_topic_comments_links a.fieldset-title:before {
+		content:"\e634";
+	}
+
+	.tabledrag-toggle-weight-wrapper {
+		display: none;
+	}
+
+	#edit-field-topic-comment-files {
+
+		.file-widget {
+			margin-top: 4px;
+			span {
+				display: inline;
+				margin-top: 5px;
+				vertical-align: bottom;
+
+				img, a {display: inline;}
 			}
 		}
-		
-		.topic-node-comment-region-right {
-			float: left;
-			width: 560px;
-			margin-left: 15px;
+	}
+
+	.field-multiple-table {
+		.form-item {
+			margin-top: 0;
+		}
+
+		th.field-label {
+			display: none;
+		}
+	}
+}
+
+#edit-field-topic-comment-files-und-ajax-wrapper {
+
+	.form-item.form-type-managed-file {margin-top: 0;}
+}
+
+/*buttons for response section*/
+.form-type-managed-file button.form-submit,
+.field-name-field-topic-comment-links button.form-submit {
+	background-color: #0084B0;
+  border: 1px solid #0D6785;
+}
+
+.form-type-managed-file button.form-submit:focus,
+ .form-type-managed-file button.form-submit:hover,
+.field-name-field-topic-comment-links button.form-submit:focus,
+.field-name-field-topic-comment-links button.form-submit:hover{
+	@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
+	background-color: #0084B0;
+}
+
+.button.comment-direct-reply-form-cancel-link {
+	padding-left: 40px;
+	margin-right: 30px;
+}
+
+.button.comment-direct-reply-form-cancel-link:before {
+	content: url("../images/icon-buttonCancel.png");
+	left: 15px;
+	position: absolute;
+	top: 4px;
+}
+
+/*reply*/
+.topic-node-comment-region-right-reply-form {
+	.comment-form {
+
+		.form-textarea-wrapper {
+			textarea {
+		    width: 560px;
+			}
+		}
+
+		/*buttons for reply section*/
+		.button.comment-reply-form-cancel-link {
+			padding-left: 40px;
+			margin-right: 30px;
+		}
+
+		.button.comment-reply-form-cancel-link:before {
+			content: url("../images/icon-buttonCancel.png");
+			left: 15px;
+			position: absolute;
+			top: 4px;
+		}
+	}
+}
+
+
+
+/*Comment Section*/
+h2.title {
+	display: none;
+}
+
+.topic-node-comments-counter {
+	h2 {color: #464B54;}
+}
+
+.comment {
+	-moz-box-sizing: border-box;
+  background: none repeat scroll 0 0 #FFFFFF;
+   border-radius: 6px;
+   border-top: 1px solid #CECECE;
+   box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
+   margin: 0 0 15px;
+   padding: 15px;
+   position: relative;
+   width: 665px;
+
+	.topic-node-comment-region-left {
+		float: left;
+		width: 60px;
+		height: 60px;
+
+		.topic-node-comment-author-img {
+			background-image: url("../images/avatar.png");
+	    background-size: contain;
+			width: 60px;
+			height: 60px;
+			display: block;
+		}
+	}
+
+	.topic-node-comment-region-right {
+		float: left;
+		width: 560px;
+		margin-left: 15px;
+		font-size: 13px;
+		line-height: 1.2;
+
+		a.devtools-tooltip-trigger {
+			color: #0583AC;
+			font-weight: bold;
+		}
+
+		.field.field-name-comment-body  {
 			font-size: 13px;
 			line-height: 1.2;
-			
-			a.devtools-tooltip-trigger {
+			margin: 10px 0;
+		}
+
+		.topic-node-comment-materials-wrapper {
+
+			.topic-node-comment-materials-label {
+				border-bottom: 1px solid #CECECE;
+				color: #101010;
+		    display: inline-block;
+		    font-size: 13px;
+		    font-weight: bold;
+		    line-height: 20px;
+		    margin: 0 0 5px;
+		    padding: 0;
+		    vertical-align: top;
+		    width: 410px;
+			}
+
+			.topic-node-comment-materials-label:before {
+			  color: #91959E;
+		    content:"\e600";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    position: relative;
+		    top: -2px;
+			}
+		}
+
+		.field-name-field-topic-comment-files .file,
+		.field-name-field-topic-comment-links.field-wrapper {
+			img {display: none;}
+
+			 a {
 				color: #0583AC;
-				font-weight: bold;
+				display: inline-block;
+		    font-size: 13px;
+		    line-height: 20px;
+		    vertical-align: top;
 			}
-			
-			.field.field-name-comment-body  {
-				font-size: 13px;
-				line-height: 1.2;
-				margin: 10px 0;
+
+			 a:before {
+			  color: #101010;
+		    content: "•";
+		    display: inline-block;
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 5px;
+		    position: relative;
 			}
-			
-			.field-name-field-topic-comment-files,
-			.field-name-field-topic-comment-links {
-				img {display: none;}
-				
-				 a {
-					color: #0583AC;
+		}
+
+		.topic-node-comment-region-right-bottom {
+			text-align: right;
+
+			ul{
+				list-style-type: none;
+				margin-bottom: 0;
+
+				li {
 					display: inline-block;
-			    font-size: 13px;
-			    line-height: 20px;
-			    vertical-align: top;
+			    margin-top: 20px;
+					line-height: 1;
+
+					a {
+						margin-left: 30px;
+						color: #62676E;
+						font-size: 13px;
+						line-height: 20px;
+
+						&:hover {text-decoration: underline;}
+					}
 				}
-				
-				 a:before {
-				  color: #101010;
-			    content: "•";
-			    display: inline-block;
+
+				li.comment-reply a {
+					color: #0583AC;
+				}
+
+				li.comment-delete a:before,
+				li.comment-edit a:before,
+				li.comment-reply a:before {
+					content:"\e632";
+				  display: inline-block;
+			    font-family: 'sbac';
 			    font-size: 20px;
 			    font-weight: normal;
-			    margin-right: 5px;
+			    margin-right: 7px;
+			    opacity: 0.5;
 			    position: relative;
+			    text-decoration: none;
 				}
-			}
-			
-			.topic-node-comment-region-right-bottom {
-				text-align: right;
-				
-				ul{
-					list-style-type: none;
-					margin-bottom: 0;
-					
-					li {
-						display: inline-block;
-				    margin-top: 20px;
-						line-height: 1;
-				
-						a {
-							margin-left: 30px;
-							color: #62676E;
-							font-size: 13px;
-							line-height: 20px;
-							
-							&:hover {text-decoration: underline;}
-						}
-					}
-					
-					li.comment-reply a {
-						color: #0583AC;
-					}
-						
-					li.comment-delete a:before,
-					li.comment-edit a:before,
-					li.comment-reply a:before {
-						content:"\e632";
-					  display: inline-block;
-				    font-family: 'sbac';
-				    font-size: 20px;
-				    font-weight: normal;
-				    margin-right: 7px;
-				    opacity: 0.5;
-				    position: relative;
-				    text-decoration: none;
-					}
-					
-					li.comment-edit a:before {
-						content:"\e61d";
-					}
-					
-					li.comment-reply a:before {
-						content:"\e630";
-						opacity: 1;
-					}
-					
-					li.comment-edit a:hover:before,
-					li.comment-delete a:hover:before {
-						opacity: 1;
-					}
+
+				li.comment-edit a:before {
+					content:"\e61d";
+				}
+
+				li.comment-reply a:before {
+					content:"\e630";
+					opacity: 1;
+				}
+
+				li.comment-edit a:hover:before,
+				li.comment-delete a:hover:before {
+					opacity: 1;
 				}
 			}
 		}
@@ -2275,7 +2463,7 @@ View Topic Page, Comment Page
 }
 
 /*Fixed for FF*/
-@-moz-document url-prefix() { 
+@-moz-document url-prefix() {
   .sbac-forum-vp-controls-popup:after {
     position:absolute;
     bottom: 30px;

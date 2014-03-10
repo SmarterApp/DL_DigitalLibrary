@@ -29,6 +29,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['expose_sort_order'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'load_more';
   $handler->display->display_options['pager']['options']['items_per_page'] = '12';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -149,6 +150,21 @@ function sbac_forum_views_default_views() {
     'thousand_separator' => ',',
     'prefix_suffix' => 1,
   );
+  /* Sort criterion: Taxonomy term: Reply (comment) Count (field_forum_topic_comment_count) */
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['id'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['table'] = 'field_data_field_forum_topic_comment_count';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['field'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Created (field_forum_created) */
+  $handler->display->display_options['sorts']['field_forum_created_value']['id'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['table'] = 'field_data_field_forum_created';
+  $handler->display->display_options['sorts']['field_forum_created_value']['field'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Member Count (field_forum_member_count) */
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['id'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['table'] = 'field_data_field_forum_member_count';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['field'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['order'] = 'DESC';
   /* Filter criterion: Taxonomy vocabulary: Machine name */
   $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
   $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
@@ -255,6 +271,27 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['table'] = 'field_data_field_fc_forum_members';
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['field'] = 'field_fc_forum_members_value';
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['delta'] = '-1';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Taxonomy term: Last Activity (field_forum_last_activity) */
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['id'] = 'field_forum_last_activity_value';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['table'] = 'field_data_field_forum_last_activity';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['field'] = 'field_forum_last_activity_value';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Reply (comment) Count (field_forum_topic_comment_count) */
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['id'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['table'] = 'field_data_field_forum_topic_comment_count';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['field'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Created (field_forum_created) */
+  $handler->display->display_options['sorts']['field_forum_created_value']['id'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['table'] = 'field_data_field_forum_created';
+  $handler->display->display_options['sorts']['field_forum_created_value']['field'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Member Count (field_forum_member_count) */
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['id'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['table'] = 'field_data_field_forum_member_count';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['field'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['order'] = 'DESC';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Field collection item: Member (field_fc_forum_member) */
   $handler->display->display_options['arguments']['field_fc_forum_member_target_id']['id'] = 'field_fc_forum_member_target_id';

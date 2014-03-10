@@ -163,6 +163,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Deleted Topic Node'),
         'class' => 'DeletedTopicNode',
       ),
+      // deleting a forum comment
+      array(
+        'name' => 'deleted_forum_comment',
+        'description' => t('Deleted Forum Comment'),
+        'class' => 'DeletedForumComment',
+      ),
     );
 
     foreach ($types as &$type) {

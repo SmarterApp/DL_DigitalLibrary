@@ -2,7 +2,12 @@
 
 /**
  * @file
- * Default theme implementation for comments.
+ * Overrides the default theme implementation for comments.
+ *
+ * This stripped down template file is necessary to make proper use of the
+ * field weight/display settings of the core comment entity properties exposed
+ * as pseudo-fields. Same variables are available as in the default comment
+ * template.
  *
  * Available variables:
  * - $author: Comment author. Can be link or plain text.
@@ -55,65 +60,13 @@
  * @see template_preprocess_comment()
  * @see template_process()
  * @see theme_comment()
- *
- * @ingroup themeable
+ * @see comment_goodness_field_extra_fields()
  */
-
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  <div class="topic-node-comment-region-status-message">
+
+  <div class="content"<?php print $content_attributes; ?>>
+    <?php print render($content); ?>
   </div>
 
-  <div class="topic-node-comment-region-left">
-    <div class="topic-node-comment-author-img">
-      <?php print $picture ?>
-    </div>
-  </div>
-
-  <div class="topic-node-comment-region-right">
-    <?php if ($new): ?>
-      <span class="new"><?php //print $new ?></span>
-    <?php endif; ?>
-
-    <div class="topic-node-comment-region-right-top">
-      <?php print $auth_name_hover; ?>
-      <?php print ' ' . $posted_date; ?>
-      <?php print $depth_extra; ?>
-    </div> <!-- END region right top -->
-
-
-    <div class="content"<?php print $content_attributes; ?>>
-      <?php
-        // We hide the comments and links now so that we can render them later.
-        hide($content['links']);
-        hide($content['field_topic_comment_links']);
-        hide($content['field_topic_comment_files']);
-        print render($content);
-      ?>
-      <div class="topic-node-comment-materials-wrapper">
-        <?php if($has_materials): ?>
-          <div class="topic-node-comment-materials-label">Material(s)</div>
-          <?php
-            print render($content['field_topic_comment_files']);
-            print render($content['field_topic_comment_links']);
-          ?>
-        <?php endif;?>
-      </div>
-      <?php if ($signature): ?>
-      <div class="user-signature clearfix">
-        <?php print $signature ?>
-      </div>
-      <?php endif; ?>
-    </div>
-
-    <div class="topic-node-comment-region-right-bottom reply-links-for-<?php print $comment->cid; ?>">
-      <?php if($is_member === TRUE): ?>
-        <?php print render($content['links']) ?>
-      <?php endif; ?>
-    </div>
-
-    <div class="topic-node-comment-region-right-reply-form">
-    </div> <!-- END region reply form-->
-  </div> <!-- END region right-->
 </div>
-

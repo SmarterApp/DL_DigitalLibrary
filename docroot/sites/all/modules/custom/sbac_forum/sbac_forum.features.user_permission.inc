@@ -30,6 +30,15 @@ function sbac_forum_user_default_permissions() {
     'module' => 'comment',
   );
 
+  // Exported permission: 'administer morecomments'.
+  $permissions['administer morecomments'] = array(
+    'name' => 'administer morecomments',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'morecomments',
+  );
+
   // Exported permission: 'create topic content'.
   $permissions['create topic content'] = array(
     'name' => 'create topic content',

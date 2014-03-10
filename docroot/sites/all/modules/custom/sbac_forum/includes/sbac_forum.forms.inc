@@ -241,6 +241,8 @@ function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
 
 function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   $form = array();
+  $default = '';
+  $options = array();
 
   $all_forums_classes = '';
   $all_forums_count_text = '';
@@ -250,9 +252,36 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   switch($active_tab) {
     case SBAC_FORUM_SUBNAV_ALL:
       $all_forums_classes = 'is-pressed';
+
+      $default = 'forum-most-active';
+      // If session var is set, make it the default.
+      if (isset($_SESSION[SBAC_FORUM_ALL_FORUM_SORTS]) &&
+          $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] != '') {
+        $default = $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS];
+      }
+      $options = array(
+        'forum-most-active'   => t('Most Active'),
+        'forum-newest'        => t('Newest'),
+        'forum-most-members'  => t('Most Members'),
+      );
+      $sort_ajax_callback = 'sbac_forum__ajax__all_forums_sort_form_change';
       break;
     case SBAC_FORUM_SUBNAV_OWN:
       $my_forums_classes = 'is-pressed';
+
+      $default = 'forum-recent-activity';
+      // If session var is set, make it the default.
+      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_SORTS]) &&
+          $_SESSION[SBAC_FORUM_MY_FORUM_SORTS] != '') {
+        $default = $_SESSION[SBAC_FORUM_MY_FORUM_SORTS];
+      }
+      $options = array(
+        'forum-recent-activity' => t('Recent Activity'),
+        'forum-most-active'     => t('Most Active'),
+        'forum-newest'          => t('Newest'),
+        'forum-most-members'    => t('Most Members'),
+      );
+      $sort_ajax_callback = 'sbac_forum__ajax__my_forum_sort_form_change';
       break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
       // both should be off. Keyword search was performed.
@@ -260,6 +289,17 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     default:
       // set all forums if it ends up empty.
       $all_forums_classes = 'is-pressed';
+      $default = 'forum-most-active';
+      // If session var is set, make it the default.
+      if (isset($_SESSION[SBAC_FORUM_ALL_FORUM_SORTS]) &&
+          $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] != '') {
+        $default = $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS];
+      }
+      $options = array(
+        'forum-most-active'   => t('Most Active'),
+        'forum-newest'        => t('Newest'),
+        'forum-most-members'  => t('Most Members'),
+      );
       break;
   }
 
@@ -289,18 +329,6 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     '#suffix'       => '</div>',
   );
 
-  $default = 'forum-most-active';
-  // // If session var is set, make it the default.
-  // if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
-  //     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
-  //   $default = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
-  // }
-
-  $options = array(
-    'forum-most-active'   => t('Most Active'),
-    'forum-newest'        => t('Newest'),
-    'forum-most-members'  => t('Most Members'),
-  );
 
   // Ajax submitted. Set Text if selected.
   if (isset($form_state['values']['forum_sort_order'])) {
@@ -311,7 +339,6 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     $options[$default] = t('Sort by: ' . $options[$default]);
   }
 
-
   // Needs to ajax submit to set the session variable that tracks default state.
   $form['forum_sort_order'] = array(
     '#prefix'         => '<div class="forum-subnav-sort-wrapper">',
@@ -321,12 +348,12 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     '#required'       => FALSE,
     '#options'        => $options,
     '#default_value'  => $default,
-    // '#ajax'           => array(
-    //   'callback'  => '_sbac_resource_digital_library_sort_form__ajax__change',
-    //   'event'     => 'change',
-    //   'wrapper'   => 'form-wrapper-dl-sort-element',
-    //   'progress'  => array('type' => 'none'),
-    // )
+    '#ajax'           => array(
+      'callback'  => $sort_ajax_callback,
+      'event'     => 'change',
+      'wrapper'   => 'form-wrapper-forums-sort-element',
+      'progress'  => array('type' => 'none'),
+    )
   );
 
 
@@ -553,6 +580,35 @@ function sbac_forum_delete_topic_confirm($form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Cancel',
     '#attributes' => array('class' => array('edit-cancel-delete-topic-overlay', 'gray', 'cancel'))
+  );
+
+  return $form;
+}
+
+/**
+ * =============================================================================
+ *    Comment Delete Form Button
+ * =============================================================================
+ */
+
+function sbac_forum_delete_comment_confirm($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => '<h2>'.t('You are about to delete this discussion topic reply').'</h2><p>' . t('
+    If you continue, this reply along with all related replies will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Delete Reply',
+    '#attributes' => array('class' => array('edit-delete-reply-overlay', 'blue'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('edit-cancel-delete-reply-overlay', 'gray', 'cancel'))
   );
 
   return $form;

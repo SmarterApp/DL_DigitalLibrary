@@ -77,6 +77,13 @@
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
+<div class="sbac-forum-confirm-message-region">
+  <?php if (!empty($parent_forum_markup['welcome_message'])) : ?>
+      <div style="display:block">
+        <?php print $parent_forum_markup['welcome_message']; ?>
+      </div>
+  <?php endif;?>
+</div>
 
 <div class="topic-node--forum-parent-info">
 
@@ -149,12 +156,21 @@
 
 <div class="topic-node-comments-region">
   <div class="topic-node-reply-direct-wrapper">
-    <?php print render($content['comments']['comment_form']); ?>
+    <?php //print render($content['comments']['comment_form']); ?>
+  </div>
+  <div class="topic-node-controls">
+    <?php print $action_section; ?>
   </div>
 
   <?php if (!empty($content['field_tags']) && !$is_front): ?>
     <?php print render($content['field_tags']) ?>
   <?php endif; ?>
+
+  <?php if (!empty($comment_count)): ?>
+    <div class="topic-node-comments-counter">
+      <h2><?php print format_plural($comment_count, '1 Reply', '@count Replies'); ?></h2>
+    </div>
+  <?php endif ?>
 
   <?php //print render($content['links']); ?>
   <?php print render($content['comments']); ?>
