@@ -35,6 +35,13 @@ function sbac_search_apachesolr_environments() {
       0 => 'alignment',
       1 => 'help_page',
       2 => 'resource',
+      3 => 'topic',
+    ),
+    'taxonomy_term' => array(
+      0 => 'forum',
+    ),
+    'comment' => array(
+      0 => 'comment_node_topic',
     ),
   );
   $export['acquia_search_server_1'] = $environment;
