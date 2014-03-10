@@ -57,7 +57,7 @@ function sbac_forum_update_7004() {
  *
  *  Implemnts hook_update_N().
  */
-function sbac_forum_update_7004() {
+function sbac_forum_update_7005() {
   $modules = array(
     'apachesolr_comments',
     'apachesolr_term',
