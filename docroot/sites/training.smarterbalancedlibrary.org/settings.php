@@ -284,7 +284,7 @@ $drupal_hash_salt = '';
  * collection occurs by using the most common settings.
  */
 ini_set('session.gc_probability', 1);
-ini_set('session.gc_divisor', 100);
+ini_set('session.gc_divisor', 1);
 
 /**
  * Set session lifetime (in seconds), i.e. the time from the user's last visit
