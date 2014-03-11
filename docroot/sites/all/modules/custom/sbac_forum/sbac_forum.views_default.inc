@@ -854,6 +854,10 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
+  /* Field: Apache Solr: content */
+  $handler->display->display_options['fields']['content']['id'] = 'content';
+  $handler->display->display_options['fields']['content']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['fields']['content']['field'] = 'content';
   /* Filter criterion: Apache Solr: entity_type */
   $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
   $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__acquia_search_server_1';
