@@ -30,6 +30,7 @@
 // TODO: cleanup
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
 ?>
+<div class="<?php print $classes; ?>">
 <div class="kw-search-back-button-wrapper">
   <?php
     $link_ops = array(
@@ -41,7 +42,6 @@
     print $link_back;
   ?>
 </div>
-<div class="<?php print $classes; ?>">
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>
     <?php print $title; ?>
