@@ -26,8 +26,21 @@
  *
  * @ingroup views_templates
  */
+// Adding code inline with this view. Should be in preprocess but no time.
+// TODO: cleanup
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
 ?>
+<div class="kw-search-back-button-wrapper">
+  <?php
+    $link_ops = array(
+      'attributes' => array(
+        'class' => 'kw-search-back-button-link',
+      )
+    );
+    $link_back = l('Back to All Forums', 'forums', $link_ops);
+    print $link_back;
+  ?>
+</div>
 <div class="<?php print $classes; ?>">
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>
@@ -37,7 +50,30 @@
 
   <?php if ($exposed): ?>
     <div class="view-filters">
-      <?php print $exposed; ?>
+      <div class="kw-search-tertiary-nav">
+        all forums link.
+        my forums link.
+      </div>
+      <div class="kw-search-keyword-form-element">
+        <?php print $exposed; ?>
+      </div>
+      <div class="kw-search-new-forum-link">
+        <?php
+          $vocab = taxonomy_vocabulary_machine_name_load('forum');
+          $access_to_add = _sbac_forum_add_forum_user_access($vocab);
+          if ($access_to_add) {
+            $link_options = array(
+              'attributes' => array(
+                'class'=> 'new-forum-link',
+              ),
+            );
+            $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
+            $new_forum_link_text .= l('Start a Forum', 'forums/forum/add', $link_options);
+            $new_forum_link_text .= '</div>';
+            print $new_forum_link_text;
+          }
+        ?>
+      </div>
     </div>
   <?php endif; ?>
 
