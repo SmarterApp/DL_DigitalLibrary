@@ -1208,6 +1208,24 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
   $form['actions']['submit']['#value'] = 'Submit';
 }
 
+// ----------
+
+/**
+ * Implements hook_form_FORM-ID_alter
+ */
+function sbac_forum_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'views_exposed_form') {
+    if (($form['#id'] == 'views-exposed-form-forum-topic-list-block') ||
+        ($form['#id'] == 'views-exposed-form-forum-member-list-block') ) {
+      // Add words "sort by" to active selected sort options
+      if (isset($form_state['input']['sort_by'])) {
+        $selected_sort_by = $form_state['input']['sort_by'];
+        $sort_by_label = $form['sort_by']['#options'][$selected_sort_by];
+        $form['sort_by']['#options'][$selected_sort_by] = 'Sort by: ' . $sort_by_label;
+      }
+    }
+  }
+}
 
 /**
  * =============================================================================
