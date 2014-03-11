@@ -2765,31 +2765,36 @@ h2.title {
 				
 				.view-field-info {
 					margin-top: 15px;
-					
-					.view-field-membership,
-					.view-field-last-activity {
-						display: inline-block;
-				    position: relative;
-					}
-					
-					.view-field-membership {
-					  border-right: 1px solid #62676E;
-				    color: #70757E;
-				    display: inline-block;
-				    height: 20px;
-				    line-height: 20px;
-				    margin: 0 10px 0 0;
-				    padding: 0 10px 0 0;
-					}
-					
-					.view-field-last-activity span {
+				}	
+				
+				.view-field-membership,
+				.view-field-last-activity {
+					display: inline-block;
+			    position: relative;
+				}
+				
+				.view-field-membership,
+				.view-field-start {
+				  border-right: 1px solid #62676E;
+			    color: #70757E;
+			    display: inline-block;
+			    height: 20px;
+			    line-height: 20px;
+			    margin: 0 10px 0 0;
+			    padding: 0 10px 0 0;
+				}
+				
+				.view-field-last-activity,
+				.view-field-last-reply {
+					span {
 					  color: #101010;
 				    font-size: 13px;
 					}
 				}
 			}
 			
-			.kw-search-entity-forum-wrapper {
+			.kw-search-entity-forum-wrapper,
+			.kw-search-entity-topic-wrapper {
 				.topic-count,
 				.reply-count,
 				.member-count {
@@ -2839,47 +2844,73 @@ h2.title {
 			}
 			
 			.kw-search-entity-topic-wrapper {
+				
 				.reply-count {
 					@include border-radius(0 6px 6px 0);
-					-moz-box-sizing: border-box;
-					background-color: #F2F2F2;
-			    border-left: 1px solid #FFFFFF;
-			    box-shadow: -1px 0 0 0 #CECECE;
-			    color: #464B54;
-			    display: block;
-			    height: 100%;
-			    list-style-type: none;
-			    padding: 25px 0 0;
-			    position: absolute;
-			    right: 0;
-			    text-shadow: 0 1px 0 #FFFFFF;
-			    top: 0;
-			    width: 110px;
-					font-size: 15px;
-					line-height: 20px;
-				  font-weight: bold;
-			    text-align: center;
-			
-					span.label {
-						background-color: transparent;
-						color: #464B54;
-						font-family: Verdana,Geneva,sans-serif;
-				    font-size: 13px;
-				    font-weight: normal;
-				    letter-spacing: 1px;
-				    text-shadow: 0 1px 0 #FFFFFF;
-				    text-transform: uppercase;
-						display: block;
-					}
+					right: 0;
 				}
 				
 				a {
 					color: #0583AC;
 				}
 				
+				a.devtools-tooltip-trigger {
+					font-weight: bold;
+				}
+				
 				.view-field-in-forum,
-				.view-field-title {
+				.view-field-title,
+				.view-field-start,
+				.view-field-last-reply {
 					display: inline;
+				}
+				
+				.view-field-info-lower {
+					margin-top: 15px;
+				}
+			}
+			
+			.kw-search-entity-comment-wrapper {
+				
+				.author-thubmnail {
+					background: url("../images/avatar.png") no-repeat 0 0;
+			    background-size: contain;
+					width: 60px;
+					height: 60px;
+					display: block;
+					float: left;
+					margin-right: 15px;
+				}
+				
+				a {
+					color: #0583AC;
+				}
+				
+				a.devtools-tooltip-trigger {
+					font-weight: bold;
+					color: #101010;
+			    font-size: 13px;
+				}
+				
+				span {
+				  border-right: 1px solid #62676E;
+			    color: #70757E;
+			    display: inline-block;
+			    height: 13px;
+			    line-height: 13px;
+			    margin: 0 10px 0 0;
+			    padding: 0 10px 0 0;
+				}
+				
+				span:last-child,
+				span:first-child {
+					border-right: none;
+					margin-right: 5px;
+					padding-right: 0;
+				}
+				
+				.view-field-comment {
+					margin-top: 7px;
 				}
 			}
 		}

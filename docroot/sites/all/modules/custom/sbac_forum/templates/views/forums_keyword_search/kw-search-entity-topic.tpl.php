@@ -6,7 +6,7 @@
     </div>
     <div class="view-field-info-lower">
       <div class="view-field-start"><?php print 'Started by: ' . $fields['started'];?></div>
-      <div class="view-field-last-reply"><?php print 'Last Reply: ' . $fields['last_activity'];?></div>
+      <div class="view-field-last-reply"><?php print 'Last Reply: ' . '<span>'. $fields['last_activity'].'</span>';?></div>
     </div>
   </div>
 
