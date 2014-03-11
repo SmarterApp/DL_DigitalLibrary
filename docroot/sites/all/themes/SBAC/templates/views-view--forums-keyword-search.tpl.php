@@ -59,7 +59,34 @@
     </div>
   <?php elseif ($empty): ?>
     <div class="view-empty">
-      <?php print $empty; ?>
+      <div class="kw-search-empty-text">
+        <?php
+          $empty_text_url = 'forums';
+          $link_text = t('Browse all Forums');
+          $link_ops = array('attributes' => array('class' => 'forum-list-filter-empty-text-reset-link button'));
+          $empty_text_link = l($link_text, $empty_text_url, $link_ops);
+          $empty_text_content = '<div class="sbac-forum-filter-no-results-wrapper">';
+          $empty_text_content .= '<h2>Your search returned no results</h2>';
+          $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below ';
+          $empty_text_content .= 'that have been identified for you by using the subject(s) and grade(s) in your profile</p>';
+          $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">'.$empty_text_link.'</div>';
+          $empty_text_content .= '</div>';
+          print $empty_text_content;
+        ?>
+      </div>
+      <div class="kw-search-empty-text-view-suggestion">
+        <?php
+          $view_e = views_get_view('forum_list_empty');
+          $view_e->set_display('block');
+          sbac_forum_forum_listing_empty_apply_filters($view_e); // Set filters here.
+          $view_e->pre_execute();
+          $view_e->execute();
+          $view_e->_post_execute();
+          $forum_list_empty_output = $view_e->preview();
+          print $forum_list_empty_output;
+        ?>
+      </div>
+      <?php //print $empty; ?>
     </div>
   <?php endif; ?>
 
