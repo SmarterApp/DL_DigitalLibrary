@@ -569,7 +569,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 }
 
 // --------------------- Forum Landing ------------------------------
-.sbac-forum-browse-page {
+.sbac-forum-browse-page,
+.page-forums-search { /*include search not result page*/
 
 	.main-container {
 	  background-color: transparent;
@@ -581,7 +582,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			padding: 0;
 		}
 
-		.sbac-forum-main-container {
+		.sbac-forum-main-container,
+		.view-forums-keyword-search {
 
 			.views-field {
 				font-size: 13px;
@@ -2501,7 +2503,7 @@ View Topic Page, Comment Page
 .button.comment-direct-reply-form-cancel-link {
 	padding-left: 40px;
 	margin-right: 30px;
-	margin-top: 5px;
+	margin-top: 10px;
 }
 
 /*Chrome*/
@@ -2533,7 +2535,7 @@ View Topic Page, Comment Page
 		.button.comment-reply-form-cancel-link {
 			padding-left: 40px;
 			margin-right: 30px;
-			margin-top: 5px;
+			margin-top: 10px;
 		}
 		
 		/*Chrome*/
@@ -2728,7 +2730,65 @@ h2.title {
 		}
 	}
 	
+	/*back button*/
+	.kw-search-back-button-wrapper {
+		margin: -10px 0 15px;
+		display: block;
+		height: 30px;
+
+		a.kw-search-back-button-link {
+			position: absolute;
+			color: #FFFFFF;
+	    display: block;
+	    font-size: 15px;
+	    line-height: 20px;
+	    vertical-align: top;
+	    height: 34px;
+	    line-height: 34px;
+		}
+		
+		a.kw-search-back-button-link:before {
+		  content: "\e620";
+	    display: inline;
+	    font-family: 'sbac';
+	    font-size: 20px;
+	    font-weight: normal;
+	    margin-right: 7px;
+	    position: relative;
+	    top: -2px;
+		}
+	}
+	
 	.view-forums-keyword-search {
+		
+		.kw-search-tertiary-nav,
+		.kw-search-keyword-form-element,
+		.kw-search-new-forum-link {
+			display: inline-block;
+		}
+		
+		.kw-search-tertiary-nav {
+			vertical-align: top;
+			margin-right: 30px;
+		}
+		
+		.kw-search-keyword-form-element {
+			.form-item {margin: 0;}
+		}
+		
+		.kw-search-new-forum-link {
+			float: right;
+		}
+		
+		input#edit-keyword {
+			-moz-box-sizing: border-box;
+	    border: 1px solid #006082;
+	    color: #464B54;
+	    font-size: 15px;
+	    height: 34px;
+	    padding: 0 10px;
+	    width: 210px;
+		}
 		
 		.view-header {
 			color: #fff;
