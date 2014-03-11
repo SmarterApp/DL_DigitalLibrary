@@ -2747,7 +2747,7 @@ h2.title {
 		    box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
 		    display: block;
 		    margin: 0 0 15px;
-		    padding: 20px 114px 20px 20px;
+		    padding: 15px 114px 15px 15px;
 		    position: relative;
 		
 				.view-field-title {
@@ -2795,6 +2795,8 @@ h2.title {
 			
 			.kw-search-entity-forum-wrapper,
 			.kw-search-entity-topic-wrapper {
+				padding: 5px 0 5px 5px;
+				
 				.topic-count,
 				.reply-count,
 				.member-count {
