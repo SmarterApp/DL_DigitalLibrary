@@ -2312,7 +2312,7 @@ View Topic Page, Comment Page
 	clear: both;
 	padding-top: 20px;
 
-  .indented .indented .indented .indented .indented .indented .indented {
+  .indented .indented .indented .indented .indented .indented {
     margin-left: 0;
   }
 	
@@ -2553,8 +2553,6 @@ View Topic Page, Comment Page
 	}
 }
 
-
-
 /*Comment Section*/
 h2.title {
 	display: none;
@@ -2710,6 +2708,178 @@ h2.title {
 				li.comment-edit a:hover:before,
 				li.comment-delete a:hover:before {
 					opacity: 1;
+				}
+			}
+		}
+	}
+}
+
+// --------------------- Page Forums Search ------------------------------
+.page-forums-search {
+	
+	.main-container {
+	  background-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    box-shadow: none;
+    margin-top: 1.2em;
+
+		.columns {
+	    padding: 0;
+		}
+	}
+	
+	.view-forums-keyword-search {
+		
+		.view-header {
+			color: #fff;
+			margin-bottom: 15px;
+		}
+		
+		.view-content {
+				color: #70757E;
+				font-size: 13px;
+		    line-height: 20px;
+			
+			.views-row {
+			  -moz-box-sizing: border-box;
+		    background: none repeat scroll 0 0 #FFFFFF;
+		    border-radius: 6px;
+		    box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
+		    display: block;
+		    margin: 0 0 15px;
+		    padding: 20px 114px 20px 20px;
+		    position: relative;
+		
+				.view-field-title {
+					a {	
+						color: #04384E;
+						font-size: 15px;
+				    font-weight: bold;
+				    line-height: 1;
+				
+						&:hover {
+							text-decoration: underline;
+						}
+					}
+				}
+				
+				.view-field-info {
+					margin-top: 15px;
+					
+					.view-field-membership,
+					.view-field-last-activity {
+						display: inline-block;
+				    position: relative;
+					}
+					
+					.view-field-membership {
+					  border-right: 1px solid #62676E;
+				    color: #70757E;
+				    display: inline-block;
+				    height: 20px;
+				    line-height: 20px;
+				    margin: 0 10px 0 0;
+				    padding: 0 10px 0 0;
+					}
+					
+					.view-field-last-activity span {
+					  color: #101010;
+				    font-size: 13px;
+					}
+				}
+			}
+			
+			.kw-search-entity-forum-wrapper {
+				.topic-count,
+				.reply-count,
+				.member-count {
+					-moz-box-sizing: border-box;
+					background-color: #F2F2F2;
+			    border-left: 1px solid #FFFFFF;
+			    box-shadow: -1px 0 0 0 #CECECE;
+			    color: #464B54;
+			    display: block;
+			    height: 100%;
+			    list-style-type: none;
+			    padding: 25px 0 0;
+			    position: absolute;
+			    right: 0;
+			    text-shadow: 0 1px 0 #FFFFFF;
+			    top: 0;
+			    width: 110px;
+					font-size: 15px;
+					line-height: 20px;
+				  font-weight: bold;
+			    text-align: center;
+			
+					span.label {
+						background-color: transparent;
+						color: #464B54;
+						font-family: Verdana,Geneva,sans-serif;
+				    font-size: 13px;
+				    font-weight: normal;
+				    letter-spacing: 1px;
+				    text-shadow: 0 1px 0 #FFFFFF;
+				    text-transform: uppercase;
+						display: block;
+					}
+				}
+				
+				.topic-count{
+				  right: 220px;
+				}
+				
+				.reply-count {
+					right: 110px;
+				}
+				
+				.member-count {
+					@include border-radius(0 6px 6px 0);
+				}
+			}
+			
+			.kw-search-entity-topic-wrapper {
+				.reply-count {
+					@include border-radius(0 6px 6px 0);
+					-moz-box-sizing: border-box;
+					background-color: #F2F2F2;
+			    border-left: 1px solid #FFFFFF;
+			    box-shadow: -1px 0 0 0 #CECECE;
+			    color: #464B54;
+			    display: block;
+			    height: 100%;
+			    list-style-type: none;
+			    padding: 25px 0 0;
+			    position: absolute;
+			    right: 0;
+			    text-shadow: 0 1px 0 #FFFFFF;
+			    top: 0;
+			    width: 110px;
+					font-size: 15px;
+					line-height: 20px;
+				  font-weight: bold;
+			    text-align: center;
+			
+					span.label {
+						background-color: transparent;
+						color: #464B54;
+						font-family: Verdana,Geneva,sans-serif;
+				    font-size: 13px;
+				    font-weight: normal;
+				    letter-spacing: 1px;
+				    text-shadow: 0 1px 0 #FFFFFF;
+				    text-transform: uppercase;
+						display: block;
+					}
+				}
+				
+				a {
+					color: #0583AC;
+				}
+				
+				.view-field-in-forum,
+				.view-field-title {
+					display: inline;
 				}
 			}
 		}
