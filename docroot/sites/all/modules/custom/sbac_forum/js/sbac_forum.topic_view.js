@@ -13,6 +13,10 @@
         $('.sbac-forum-topic-node-view-controls-popup').hide('fast');
       });
 
+      if($('body').hasClass('page-comment-reply')) {
+        $('.topic-node-controls').hide();
+        $('.topic-node-comments-counter').hide();
+      }
 
       var direct_comment_open = function(e) {
         //remove all already open comment forms
@@ -60,6 +64,7 @@
           Drupal.attachBehaviors(formCont, Drupal.settings);
         });
 
+
         return false;
       };
 
@@ -92,11 +97,32 @@
       });
 
       $(".comment-reply-form-cancel-link").once('cancel-comment-click', function() {
-        $(this).click(comment_reply_cancel);
+        if($('body').hasClass('page-comment-reply')) {
+          // Means do not attach the javascript click hanlder to do client side functions. Its not ajax loaded anymore.
+        } else {
+          $(this).click(comment_reply_cancel);
+        }
       });
 
       $(".comment-direct-reply-form-cancel-link").once('cancel-comment-direct-click', function() {
-        $(this).click(comment_reply_direct_cancel);
+        if($('body').hasClass('page-comment-reply')) {
+          // Means do not attach the javascript click hanlder to do client side functions. Its not ajax loaded anymore.
+        } else {
+          $(this).click(comment_reply_direct_cancel);
+        }
+      });
+
+      // Ensure it doesnt go to the next page to validate.
+      $('.comment-form button#edit-submit').once('submit-validation-shortcircuit', function() {
+        $(this).attr('disabled', 'disabled');
+        $('.comment-form .field-name-comment-body .form-textarea').keypress(function() {
+          $('.comment-form button#edit-submit').removeAttr('disabled');
+        });
+        $('.comment-form .field-name-comment-body .form-textarea').blur(function() {
+          if (!$(this).val()) {
+            $('.comment-form button#edit-submit').attr('disabled', 'disabled');
+          };
+        });
       });
 
     }, // End attach
