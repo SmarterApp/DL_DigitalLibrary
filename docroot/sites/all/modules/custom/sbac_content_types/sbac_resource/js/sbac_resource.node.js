@@ -125,7 +125,7 @@
         return false;
       });
 
-      $('#sbac-partial-download').click( function() {
+      $('#sbac-partial-download').hover( function() {
         $('.sbac-download-dropdown').toggle();
       });
 
