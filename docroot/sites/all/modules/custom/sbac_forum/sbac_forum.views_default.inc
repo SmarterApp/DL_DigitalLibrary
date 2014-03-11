@@ -760,13 +760,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['comment_count']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['comment_count']['alter']['text'] = '[comment_count] <div class="topic-listing-suffix-label">Replies</div>';
   $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
-  /* Sort criterion: Content: Last comment time */
-  $handler->display->display_options['sorts']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
-  $handler->display->display_options['sorts']['last_comment_timestamp']['table'] = 'node_comment_statistics';
-  $handler->display->display_options['sorts']['last_comment_timestamp']['field'] = 'last_comment_timestamp';
-  $handler->display->display_options['sorts']['last_comment_timestamp']['order'] = 'DESC';
-  $handler->display->display_options['sorts']['last_comment_timestamp']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['last_comment_timestamp']['expose']['label'] = 'Most Recent Activity';
   /* Sort criterion: Content: Comment count */
   $handler->display->display_options['sorts']['comment_count']['id'] = 'comment_count';
   $handler->display->display_options['sorts']['comment_count']['table'] = 'node_comment_statistics';
@@ -774,6 +767,13 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['sorts']['comment_count']['order'] = 'DESC';
   $handler->display->display_options['sorts']['comment_count']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['comment_count']['expose']['label'] = 'Most Replies';
+  /* Sort criterion: Content: Last comment time */
+  $handler->display->display_options['sorts']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
+  $handler->display->display_options['sorts']['last_comment_timestamp']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['sorts']['last_comment_timestamp']['field'] = 'last_comment_timestamp';
+  $handler->display->display_options['sorts']['last_comment_timestamp']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['last_comment_timestamp']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['last_comment_timestamp']['expose']['label'] = 'Most Recent Activity';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
