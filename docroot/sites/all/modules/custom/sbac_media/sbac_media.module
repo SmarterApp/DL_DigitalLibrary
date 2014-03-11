@@ -1178,57 +1178,57 @@ function sbac_media_delete_file_record_html5_module($zip_contents_path, $directo
  * @param $new_state
  *  The new state of the revision.
  */
-function sbac_media_workbench_moderation_transition($node, $previous_state, $new_state) {
-  if ($node->type == 'resource' && $new_state == 'published') {
-    ini_set('max_execution_time', 900);
-    ini_set('memory_limit', '1024M');
-
-    $destination = variable_get('file_public_path', conf_path() . '/files') . '/resources/';
-    if (!file_exists($destination)) {
-      mkdir($destination);
-    }
-
-    // Create a zip file of all the contents.
-    $zip = new ZipArchive;
-    $archive_uri = 'public://resources/';
-    if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-      $prepend = $_ENV['AH_SITE_ENVIRONMENT'];
-    }
-    else {
-      $prepend = 'local';
-    }
-
-    $filename = 'resource_' . $node->nid . '_' . $_SERVER['REQUEST_TIME'] . '.' . $prepend . '.zip';
-    $archive_uri .= $filename;
-    $real_path = drupal_realpath($archive_uri);
-    $open = $zip->open($real_path, ZipArchive::CREATE);
-    if ($open === TRUE) {
-      foreach ($node->document as $media) {
-        if ($media->fid) {
-          $file = file_load($media->fid);
-          if ($file) {
-            $zip->addFile(drupal_realpath($file->uri), $file->filename);
-          }
-        }
-      }
-
-      // Add a json file of the entire node object.
-      $json_node = drupal_json_encode($node);
-      if ($json_node) {
-        $zip->addFromString($node->nid . '.json', $json_node);
-      }
-      $zip->close();
-    }
-
-    if (file_exists($real_path)) {
-      sbac_media_create_file_from_cmis($node, $real_path);
-      unlink($real_path); // delete the temp zip.
-    }
-  }
-  else {
-    return "There are no files to download."; // no downloadable file schemes (public://)
-  }
-}
+//function sbac_media_workbench_moderation_transition($node, $previous_state, $new_state) {
+//  if ($node->type == 'resource' && $new_state == 'published') {
+//    ini_set('max_execution_time', 900);
+//    ini_set('memory_limit', '1024M');
+//
+//    $destination = variable_get('file_public_path', conf_path() . '/files') . '/resources/';
+//    if (!file_exists($destination)) {
+//      mkdir($destination);
+//    }
+//
+//    // Create a zip file of all the contents.
+//    $zip = new ZipArchive;
+//    $archive_uri = 'public://resources/';
+//    if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+//      $prepend = $_ENV['AH_SITE_ENVIRONMENT'];
+//    }
+//    else {
+//      $prepend = 'local';
+//    }
+//
+//    $filename = 'resource_' . $node->nid . '_' . $_SERVER['REQUEST_TIME'] . '.' . $prepend . '.zip';
+//    $archive_uri .= $filename;
+//    $real_path = drupal_realpath($archive_uri);
+//    $open = $zip->open($real_path, ZipArchive::CREATE);
+//    if ($open === TRUE) {
+//      foreach ($node->document as $media) {
+//        if ($media->fid) {
+//          $file = file_load($media->fid);
+//          if ($file) {
+//            $zip->addFile(drupal_realpath($file->uri), $file->filename);
+//          }
+//        }
+//      }
+//
+//      // Add a json file of the entire node object.
+//      $json_node = drupal_json_encode($node);
+//      if ($json_node) {
+//        $zip->addFromString($node->nid . '.json', $json_node);
+//      }
+//      $zip->close();
+//    }
+//
+//    if (file_exists($real_path)) {
+//      sbac_media_create_file_from_cmis($node, $real_path);
+//      unlink($real_path); // delete the temp zip.
+//    }
+//  }
+//  else {
+//    return "There are no files to download."; // no downloadable file schemes (public://)
+//  }
+//}
 
 /**
  * Adds the file to Alfresco.
