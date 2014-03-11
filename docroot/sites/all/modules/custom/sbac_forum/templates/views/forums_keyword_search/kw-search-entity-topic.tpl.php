@@ -1,16 +1,16 @@
 <div class="kw-search-entity-topic-wrapper">
   <div class="row-left">
-    <div>
-      <?php print $fields['title'];?>
-      <?php print 'in forum: ' . $fields['forum_parent'];?>
+    <div class="view-field-info-upper">
+      <div class="view-field-title"><?php print $fields['title'];?></div>
+      <div class="view-field-in-forum"><?php print 'in forum: ' .' <span>' . $fields['forum_parent']. '</span>';?></div>
     </div>
-    <div>
-      <?php print 'Started by: ' . $fields['started'];?>
-      <?php print 'Last Reply: ' . $fields['last_activity'];?>
+    <div class="view-field-info-lower">
+      <div class="view-field-start"><?php print 'Started by: ' . $fields['started'];?></div>
+      <div class="view-field-last-reply"><?php print 'Last Reply: ' . $fields['last_activity'];?></div>
     </div>
   </div>
 
   <div class="row-right">
-    <?php print $fields['reply_count'];?> Replies
+    <div class="reply-count"><?php print $fields['reply_count'];?> <span class="label">Replies</span></div>
   </div>
 </div>
