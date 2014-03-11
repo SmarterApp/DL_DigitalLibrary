@@ -548,3 +548,171 @@ function sbac_forum_preprocess_views_view_field__forum_member_list__uid(&$vars) 
 
   $vars['output'] = $new_output;
 }
+
+
+
+/**
+ * =============================================================================
+ *    Preprocessors for keyword search.
+ *
+ *    There was a problem putting them in the module.
+ * =============================================================================
+ */
+
+/** ---------- Forum keyword search view ---------
+ *
+ */
+
+
+function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$vars) {
+  $current_user = $vars['user'];
+  $row_info = $vars['row'];
+
+  switch ($row_info->entity_type) {
+    case 'taxonomy_term':
+      if ($row_info->bundle_name == "Forum") {
+        $params = array();
+        $forum_term = taxonomy_term_load($row_info->entity_id);
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_term);
+
+        // Term Name.
+        $term_name = $forum_term->name;
+        $link_path = 'forums/term/' . $forum_term->tid;
+        $link_to_term = l($term_name, $link_path);
+        $params['title'] = $link_to_term;
+
+        // Membership text.
+        $facilitator_text = '';
+        $member_text = '';
+
+        $faci_field = $forum_term->field_forum_facilitators[LANGUAGE_NONE];
+        $is_faci = FALSE;
+
+        if (!empty($faci_field)) {
+          foreach ($faci_field as $index => $values) {
+            $faci_user_id = $values['target_id'];
+            if ($current_user->uid == $faci_user_id) {
+              $is_faci = TRUE;
+            }
+          }
+          $facilitator_text = '<div class="sbac-forum-faci-status-label">';
+          if (!$is_faci) { // Current user is not set as facilitator
+            if (!empty($faci_field)) {
+              $first_item = array_shift($faci_field);
+              $first_faci_user_id = $first_item['target_id'];
+              $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
+              $facilitator_text .= 'Facilitator: '. $faci_link;
+            } else { // No facilitator set
+              $facilitator_text .= 'Facilitator: None';
+            }
+          } else{
+            $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
+          }
+          $facilitator_text .= '</div>';
+        }
+
+        if (!$is_faci) {
+          $forum_tid = $forum_term->tid;
+          $is_member = sbac_forum__api__check_user_is_forum_member($forum_tid, $current_user->uid);
+          if ($is_member === TRUE) {
+            $member_text = '<div class="sbac-forum-membership-status-label">You are a <span class="sbac-forum-is-member-highlight">member</span></div>';
+          }
+        }
+
+        $membership_output = $member_text . $facilitator_text ;
+        $params['membership'] = $membership_output;
+
+        // Last activity
+        $last_activity = date('M jS Y, g:i a', $forum_wrapper->field_forum_last_activity->value());
+        $params['last_activity'] = $last_activity;
+
+        //Stats
+        $topic_count = $forum_wrapper->field_forum_topic_count->value();
+        $reply_count = $forum_wrapper->field_forum_topic_comment_count->value();
+        $member_count = $forum_wrapper->field_forum_member_count->value();
+        $params['topic_count'] = $topic_count;
+        $params['reply_count'] = $reply_count;
+        $params['member_count'] = $member_count;
+
+        $output = theme('sbac_forum_keyword_search_render_forum', array('fields' => $params));
+        $new_fields = new stdClass();
+        $new_fields->separator = '';
+        $new_fields->wrapper_prefix = '';
+        $new_fields->wrapper_suffix = '';
+        $new_fields->label_html = '';
+        $new_fields->content = $output;
+        $vars['fields'] = array('forum_entity' => $new_fields);
+      }
+      break;
+    case 'node':
+      if ($row_info->bundle_name == "Topic") {
+        $topic_node = node_load($row_info->entity_id);
+        $topic_wrapper = entity_metadata_wrapper('node', $topic_node);
+
+        // Title
+        $node_title = $topic_wrapper->title->value();
+        $params['title'] = l($node_title, 'node/'.$topic_node->nid);
+
+        // Forum parent
+        $forum_parent = $topic_wrapper->field_topic_forum_parent->value();
+        $term_name = $forum_parent->name;
+        $link_path = 'forums/term/' . $forum_parent->tid;
+        $link_to_term = l($term_name, $link_path);
+        $params['forum_parent'] = $link_to_term;
+
+        // Author
+        $auth_hover = sbac_forum__api__get_authpane_hoverover($topic_wrapper->author->uid->value());
+        $params['started'] = $auth_hover;
+
+        // Last comment time
+        $last_activity = date('M jS Y, g:i a', $topic_node->last_comment_timestamp);
+        $params['last_activity'] = $last_activity;
+
+        $params['reply_count'] = $topic_node->comment_count;
+
+        $output = theme('sbac_forum_keyword_search_render_topic', array('fields' => $params));
+        $new_fields = new stdClass();
+        $new_fields->separator = '';
+        $new_fields->wrapper_prefix = '';
+        $new_fields->wrapper_suffix = '';
+        $new_fields->label_html = '';
+        $new_fields->content = $output;
+        $vars['fields'] = array('topic_entity' => $new_fields);
+      }
+      break;
+    case 'comment':
+      if ($row_info->bundle_name == "Topic comment") {
+        $comment_entity = comment_load($row_info->entity_id);
+        $author_uid = $comment_entity->uid;
+
+        $auth_image = sbac_forum__api__get_author_picture($author_uid, 'forum_profile_image_60x60');
+        $auth_name = sbac_forum__api__get_authpane_hoverover($author_uid);
+        $params['auth_image'] = $auth_image;
+        $params['auth_name'] = $auth_name;
+
+        $created = date('M jS Y, g:i a', $comment_entity->created);
+        $params['created'] = $created;
+
+        $comment_wrapper = entity_metadata_wrapper('comment', $comment_entity);
+        $topic_node = $comment_wrapper->node->value();
+        $params['topic_link'] = l($topic_node->title, 'node/' . $topic_node->nid);
+        $forum_parent = $comment_wrapper->node->field_topic_forum_parent->value();
+        $params['forum_link'] = l($forum_parent->name, 'forums/term/' . $forum_parent->tid);
+
+        $snippet = $vars['fields']['content']->raw;
+        $trimmed_content = truncate_utf8($snippet, 220, TRUE, TRUE);
+        $params['content'] = ' ... ' . $trimmed_content;
+
+        $output = theme('sbac_forum_keyword_search_render_comment', array('fields' => $params));
+        $new_fields = new stdClass();
+        $new_fields->separator = '';
+        $new_fields->wrapper_prefix = '';
+        $new_fields->wrapper_suffix = '';
+        $new_fields->label_html = '';
+        $new_fields->content = $output;
+        $vars['fields'] = array('comment_entity' => $new_fields);
+      }
+      break;
+  }
+
+}

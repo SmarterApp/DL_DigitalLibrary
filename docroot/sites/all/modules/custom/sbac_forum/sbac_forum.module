@@ -683,7 +683,39 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   // ==================== End Views templates  =================================
 
 
+  // Keyword search templates
+  $items['sbac_forum_keyword_search_render_forum'] = array(
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forums_keyword_search',
+    'template' => 'kw-search-entity-forum',
+    'variables' => array(
+      'fields' => NULL,
+    ),
+  );
+  $items['sbac_forum_keyword_search_render_topic'] = array(
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forums_keyword_search',
+    'template' => 'kw-search-entity-topic',
+    'variables' => array(
+      'fields' => NULL,
+    ),
+  );
+  $items['sbac_forum_keyword_search_render_comment'] = array(
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forums_keyword_search',
+    'template' => 'kw-search-entity-comment',
+    'variables' => array(
+      'fields' => NULL,
+    ),
+  );
   return $items;
+}
+
+/**
+ * Implements hook_preprocess_views_view_fields
+ */
+function sbac_forum_preprocess_views_view_fields(&$vars) { // This is the only way the preprocess gets read in. TODO: Find out why that is. if you have time.
+  if ($vars['view']->name == 'forums_keyword_search') {
+    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.preprocess');
+    sbac_forum_preprocess_views_view_fields__forums_keyword_search__page($vars);
+  }
 }
 
 /**
