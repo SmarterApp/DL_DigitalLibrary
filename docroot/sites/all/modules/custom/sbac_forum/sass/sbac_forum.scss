@@ -451,7 +451,10 @@ a.new-topic-link:before  {
 }
 
 a.new-forum-link:hover,
-a.new-topic-link:hover {
+a.new-forum-link:focus,
+a.new-topic-link:hover,
+a.new-topic-link:focus
+ {
   background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 	color: #fff;
 }
@@ -1426,10 +1429,10 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		#join-forum-form-wrapper,
 		#join-forum-button-wrapper {
 			float: right;
-			margin-top: 1em;
 
 			button {
 				padding: 0 30px;
+				margin-top: 1em;
 			}
 
 			.ajax-progress-throbber {
@@ -1442,6 +1445,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 			a {
 				display: block;
+				margin-top: 1em;
 			}
 		}
 
@@ -2497,6 +2501,15 @@ View Topic Page, Comment Page
 .button.comment-direct-reply-form-cancel-link {
 	padding-left: 40px;
 	margin-right: 30px;
+	margin-top: 5px;
+}
+
+/*Chrome*/
+@media screen and (-webkit-min-device-pixel-ratio:0)
+{
+	.button.comment-direct-reply-form-cancel-link {
+		margin-top: 25px;
+	}
 }
 
 .button.comment-direct-reply-form-cancel-link:before {
