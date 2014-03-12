@@ -473,7 +473,7 @@ function sbac_forum_delete_forum_confirm($form, &$form_state) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Forum',
-    '#attributes' => array('class' => array('edit-delete-overlay', 'blue'))
+    '#attributes' => array('class' => array('edit-delete-overlay', 'red'))
   );
 
   $form['cancel'] = array(
