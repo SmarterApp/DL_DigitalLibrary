@@ -562,7 +562,87 @@ function sbac_forum_preprocess_views_view_field__forum_member_list__uid(&$vars) 
 /** ---------- Forum keyword search view ---------
  *
  */
+function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
+  drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
+  $link_ops = array(
+    'attributes' => array(
+      'class' => 'kw-search-back-button-link',
+    )
+  );
+  $link_back = l('Back to All Forums', 'keyword-search-redirect/all-forums', $link_ops);
+  $vars['link_back'] = $link_back;
 
+  // Form implementation doesnt work after ajax submission of keyword exposed filter field. No time to fix.
+  // module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  // $kw_subnav = drupal_render(drupal_get_form('sbac_forum_keyword_search_sub_nav_form'));
+  $count_values = $_SESSION[SBAC_FORUM_FILTER_RESULTS_COUNTER];
+  $all_forums_count_text = '';
+  $link_ops = array(
+    'attributes' => array(
+      'class' => 'button kw-search-all-forums-button-link',
+    )
+  );
+  if (isset($count_values['block']) && !empty($count_values['block'])) {
+    $all_forums_count_text = ' ('.$count_values['block'].')';
+  }
+  $link_all_forums = l('All Forums' . $all_forums_count_text, 'keyword-search-redirect/all-forums', $link_ops);
+
+  $my_forums_count_text = '';
+  $link_ops = array(
+    'attributes' => array(
+      'class' => 'button kw-search-my-forums-button-link',
+    )
+  );
+  if (isset($count_values['block_1']) && !empty($count_values['block_1'])) {
+    $my_forums_count_text = ' ('.$count_values['block_1'].')';
+  }
+  $link_my_forums = l('My Forums' . $my_forums_count_text, 'keyword-search-redirect/my-forums', $link_ops);
+
+  $kw_subnav = $link_all_forums . $link_my_forums;
+  $vars['keyword_subnav'] = $kw_subnav;
+
+  $new_forum_link_text = '';
+  $vocab = taxonomy_vocabulary_machine_name_load('forum');
+  $access_to_add = _sbac_forum_add_forum_user_access($vocab);
+  if ($access_to_add) {
+    $link_options = array(
+      'attributes' => array(
+        'class'=> 'new-forum-link',
+      ),
+    );
+    $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
+    $new_forum_link_text .= l('Start a Forum', 'forums/forum/add', $link_options);
+    $new_forum_link_text .= '</div>';
+
+  }
+  $vars['new_forum_link_text'] = $new_forum_link_text;
+
+  $is_empty = isset($vars['empty']);
+  $empty_text_content = '';
+  $forum_list_empty_output = '';
+  if (!empty($is_empty)) {
+    $empty_text_url = 'forums';
+    $link_text = t('Browse all Forums');
+    $link_ops = array('attributes' => array('class' => 'forum-list-filter-empty-text-reset-link button'));
+    $empty_text_link = l($link_text, $empty_text_url, $link_ops);
+    $empty_text_content = '<div class="sbac-forum-filter-no-results-wrapper">';
+    $empty_text_content .= '<h2>Your search returned no results</h2>';
+    $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below ';
+    $empty_text_content .= 'that have been identified for you by using the subject(s) and grade(s) in your profile</p>';
+    $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">'.$empty_text_link.'</div>';
+    $empty_text_content .= '</div>';
+
+    $view_e = views_get_view('forum_list_empty');
+    $view_e->set_display('block');
+    sbac_forum_forum_listing_empty_apply_filters($view_e); // Set filters here.
+    $view_e->pre_execute();
+    $view_e->execute();
+    $view_e->_post_execute();
+    $forum_list_empty_output = $view_e->preview();
+  }
+  $vars['empty_text_content'] = $empty_text_content;
+  $vars['forum_list_empty_output'] = $forum_list_empty_output;
+}
 
 function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$vars) {
   $current_user = $vars['user'];

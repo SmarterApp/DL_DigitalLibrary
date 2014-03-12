@@ -23,6 +23,8 @@ define('SBAC_FORUM_SUBNAV_KEYWORD', 'keyword-search');
 define('SBAC_FORUM_FILTERS_CLOSED', 'sbac-forum-filters-closed');
 define('SBAC_FORUM_MY_FORUM_FILTERS_CLOSED', 'sbac-forum-my-forum-filters-closed');
 
+define('SBAC_FORUM_FILTER_RESULTS_COUNTER', 'sbac-forum-filters-result-counter-values');
+
 define('SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME', 'forum-member-list-');
 define('SBAC_FORUM_SHOW_JOIN_MESSAGE', 'sbac-forum-new-join');
 define('SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME', 'sbac_forum_user_data_removed_list');
@@ -77,6 +79,15 @@ function sbac_forum_menu() {
     'file' => 'includes/sbac_forum.pages.inc',
     'page callback' => 'sbac_forum_main_landing_page_reset',
     'page arguments' => array(2,3),
+    'access callback' => '_sbac_forum_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['keyword-search-redirect/%'] = array(
+    'title' => 'Forums keyword search traffic control',
+    'file' => 'includes/sbac_forum.pages.inc',
+    'page callback' => 'sbac_forum_keyword_search_redirect',
+    'page arguments' => array(1),
     'access callback' => '_sbac_forum_user_access',
     'type' => MENU_CALLBACK,
   );
@@ -711,6 +722,16 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_preprocess_views_view_fields
  */
+function sbac_forum_preprocess_views_view(&$vars) { // This is the only way the preprocess gets read in. TODO: Find out why that is. if you have time.
+  if ($vars['view']->name == 'forums_keyword_search') {
+    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.preprocess');
+    sbac_forum_preprocess_views_view__forums_keyword_search__page($vars);
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view_fields
+ */
 function sbac_forum_preprocess_views_view_fields(&$vars) { // This is the only way the preprocess gets read in. TODO: Find out why that is. if you have time.
   if ($vars['view']->name == 'forums_keyword_search') {
     module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.preprocess');
@@ -1208,6 +1229,24 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
   $form['actions']['submit']['#value'] = 'Submit';
 }
 
+// ----------
+
+/**
+ * Implements hook_form_FORM-ID_alter
+ */
+function sbac_forum_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'views_exposed_form') {
+    if (($form['#id'] == 'views-exposed-form-forum-topic-list-block') ||
+        ($form['#id'] == 'views-exposed-form-forum-member-list-block') ) {
+      // Add words "sort by" to active selected sort options
+      if (isset($form_state['input']['sort_by'])) {
+        $selected_sort_by = $form_state['input']['sort_by'];
+        $sort_by_label = $form['sort_by']['#options'][$selected_sort_by];
+        $form['sort_by']['#options'][$selected_sort_by] = 'Sort by: ' . $sort_by_label;
+      }
+    }
+  }
+}
 
 /**
  * =============================================================================

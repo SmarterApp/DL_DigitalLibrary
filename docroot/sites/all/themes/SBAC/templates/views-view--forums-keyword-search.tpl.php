@@ -26,9 +26,12 @@
  *
  * @ingroup views_templates
  */
-  drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
 ?>
 <div class="<?php print $classes; ?>">
+  <div class="kw-search-back-button-wrapper">
+    <?php print $link_back; ?>
+  </div>
+
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>
     <?php print $title; ?>
@@ -37,12 +40,20 @@
 
   <?php if ($exposed): ?>
     <div class="view-filters">
-      <?php print $exposed; ?>
+      <div class="kw-search-tertiary-nav">
+        <?php print $keyword_subnav; ?>
+      </div>
+      <div class="kw-search-keyword-form-element">
+        <?php print $exposed; ?>
+      </div>
+      <div class="kw-search-new-forum-link">
+        <?php print $new_forum_link_text; ?>
+      </div>
     </div>
   <?php endif; ?>
 
   <?php if ($header): ?>
-    <div class="view-header">
+    <div class="view-header kw-search-res-counter">
       <?php print $header; ?>
     </div>
   <?php endif; ?>
@@ -59,7 +70,13 @@
     </div>
   <?php elseif ($empty): ?>
     <div class="view-empty">
-      <?php print $empty; ?>
+      <div class="kw-search-empty-text">
+        <?php print $empty_text_content; ?>
+      </div>
+      <div class="kw-search-empty-text-view-suggestion">
+        <?php print $forum_list_empty_output; ?>
+      </div>
+      <?php //print $empty; ?>
     </div>
   <?php endif; ?>
 

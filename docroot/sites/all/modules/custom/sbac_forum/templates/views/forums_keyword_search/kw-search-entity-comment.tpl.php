@@ -1,15 +1,17 @@
 <div class="kw-search-entity-comment-wrapper">
   <div class="row-left">
-    <div><?php print $fields['auth_image'];?></div>
+    <div class="author-thubmnail"><?php print $fields['auth_image'];?></div>
   </div>
 
   <div class="row-right">
-    <div>
-      <?php print $fields['auth_name'];?>
-      <?php print $fields['created'];?>
-      <?php print 'in topic: ' . $fields['topic_link'];?>
-      <?php print 'in forum: ' . $fields['forum_link'];?>
+    <div class="view-comment-info">
+      <span><?php print $fields['auth_name'];?></span>
+      <span><?php print $fields['created'];?></span>
+      <span><?php print 'in topic: ' . $fields['topic_link'];?></span>
+      <span><?php print 'in forum: ' . $fields['forum_link'];?></span>
     </div>
-    <?php print $fields['content'];?>
+    <div class="view-field-comment">
+			<?php print $fields['content'];?>
+		</div>
   </div>
 </div>
