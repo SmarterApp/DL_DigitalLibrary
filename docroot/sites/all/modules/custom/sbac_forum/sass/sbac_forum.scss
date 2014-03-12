@@ -502,7 +502,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    padding: 0 20px;
 	    text-shadow: 0 1px 0 #FFFFFF;
 			float: left;
-			@include border-radius(5px);
+			@include border-radius(6px);
     }
 
 		button#edit-all-forums {
@@ -1331,7 +1331,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	.form-item-sort-by {
 		select {
 			border: 1px solid #CECECE;
-			width: 200px;
+			width: 250px !important;
 		}
 	}
 
@@ -2789,6 +2789,7 @@ h2.title {
 		}
 	}
 	
+	/*Nav of Forum Search*/
 	.view-forums-keyword-search {
 		
 		.kw-search-tertiary-nav,
@@ -2796,6 +2797,36 @@ h2.title {
 		.kw-search-new-forum-link {
 			display: inline-block;
 		}
+		
+		.kw-search-tertiary-nav {
+			.button {
+				background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 100%);
+				background-color: #F7F7F7;
+				border-color: #FFFFFF #62676E #62676E;
+				border-image: none;
+		    border-style: solid;
+		    border-width: 1px;
+		    color: $gray;
+		    display: inline-block;
+		    font-size: 15px;
+		    height: 34px;
+		    line-height: 32px;
+		    padding: 0 20px;
+		    text-shadow: 0 1px 0 #FFFFFF;
+				float: left;
+				@include border-radius(6px);
+				float: left;
+	    }
+
+			.button.kw-search-all-forums-button-link {
+				@include border-radius(6px 0 0 6px);
+				border-right: none;
+			}
+
+			.button.kw-search-my-forums-button-link {
+				@include border-radius(0 6px 6px 0);
+			}
+	  }
 		
 		.kw-search-tertiary-nav {
 			vertical-align: top;
