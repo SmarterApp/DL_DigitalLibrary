@@ -617,6 +617,12 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
   }
   $vars['new_forum_link_text'] = $new_forum_link_text;
 
+  $vars['target_keyword'] = '';
+  $target_keyword = $vars['view']->exposed_raw_input['keyword'];
+  if (!empty($target_keyword)) {
+    $vars['target_keyword'] = 'with <strong>"' . $target_keyword . '"</strong>';
+  }
+
   $is_empty = isset($vars['empty']);
   $empty_text_content = '';
   $forum_list_empty_output = '';

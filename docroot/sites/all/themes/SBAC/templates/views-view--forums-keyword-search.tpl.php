@@ -54,7 +54,7 @@
 
   <?php if ($header): ?>
     <div class="view-header kw-search-res-counter">
-      <?php print $header; ?>
+      <strong><?php print $header;?></strong><?php print ' ' . $target_keyword; ?>
     </div>
   <?php endif; ?>
 
