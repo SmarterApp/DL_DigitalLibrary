@@ -2773,7 +2773,7 @@ View Topic Page, Comment Page
 }
 /* line 2404, ../sass/sbac_forum.scss */
 .comment-form .fieldset-wrapper {
-  width: 560px;
+  width: 100%;
 }
 /* line 2409, ../sass/sbac_forum.scss */
 .comment-form #comment_comment_node_topic_form_group_topic_comments_materials,
