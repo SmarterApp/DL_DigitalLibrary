@@ -98,6 +98,7 @@ function sbac_forum_main_landing_page() {
       $forum_list_output .= $forum_list_empty_output;
   }
 
+  $_SESSION[SBAC_FORUM_FILTER_RESULTS_COUNTER] = $count_values;
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   $subnav = drupal_get_form('sbac_forum_sub_nav_form', $count_values);
   $output .= drupal_render($subnav);

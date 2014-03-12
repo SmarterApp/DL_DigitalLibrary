@@ -401,6 +401,60 @@ function _sbac_forum_sub_nav__set_own__submit($form, &$form_state) {
   sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_OWN);
 }
 
+/**
+ * =============================================================================
+ *    Forum Keyword search Sub-Nav form
+ * =============================================================================
+ */
+
+function sbac_forum_keyword_search_sub_nav_form($form, &$form_state ) {
+  $form = array();
+
+  $all_forums_classes = '';
+  $all_forums_count_text = '';
+  $my_forums_classes = '';
+  $my_forums_count_text = '';
+
+  $count_values = $_SESSION[SBAC_FORUM_FILTER_RESULTS_COUNTER];
+
+  if (isset($count_values['block']) && !empty($count_values['block'])) {
+    $all_forums_count_text = '('.$count_values['block'].')';
+  }
+  $form['all_forums'] = array(
+    '#prefix'       => '<div class="forum-kw-search-subnav-primary-wrapper">',
+    '#type'         => 'submit',
+    '#value'        => t('All Forums'). ' ' . $all_forums_count_text,
+    '#attributes'   => array(
+      'class'   => array($all_forums_classes),
+    ),
+    '#submit' => array('_sbac_forum_kw_search_sub_nav__set_all__submit'),
+  );
+
+  if (isset($count_values['block_1']) && !empty($count_values['block_1'])) {
+    $my_forums_count_text = '('.$count_values['block_1'].')';
+  }
+  $form['my_forum'] = array(
+    '#type'         => 'submit',
+    '#value'        => t('My Forums'). ' '. $my_forums_count_text,
+    '#attributes'   => array(
+      'class' => array($my_forums_classes),
+    ),
+    '#submit' => array('_sbac_forum_kw_search_sub_nav__set_own__submit'),
+    '#suffix'       => '</div>',
+  );
+
+  return $form;
+}
+
+function _sbac_forum_kw_search_sub_nav__set_all__submit($form, &$form_state) {
+  sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+  $form_state['redirect'] = 'forums';
+}
+
+function _sbac_forum_kw_search_sub_nav__set_own__submit($form, &$form_state) {
+  sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_OWN);
+  $form_state['redirect'] = 'forums';
+}
 
 /**
  * =============================================================================

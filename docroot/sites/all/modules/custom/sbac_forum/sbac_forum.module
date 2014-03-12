@@ -23,6 +23,8 @@ define('SBAC_FORUM_SUBNAV_KEYWORD', 'keyword-search');
 define('SBAC_FORUM_FILTERS_CLOSED', 'sbac-forum-filters-closed');
 define('SBAC_FORUM_MY_FORUM_FILTERS_CLOSED', 'sbac-forum-my-forum-filters-closed');
 
+define('SBAC_FORUM_FILTER_RESULTS_COUNTER', 'sbac-forum-filters-result-counter-values');
+
 define('SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME', 'forum-member-list-');
 define('SBAC_FORUM_SHOW_JOIN_MESSAGE', 'sbac-forum-new-join');
 define('SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME', 'sbac_forum_user_data_removed_list');

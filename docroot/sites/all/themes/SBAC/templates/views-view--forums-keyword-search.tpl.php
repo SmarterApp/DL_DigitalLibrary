@@ -51,8 +51,10 @@
   <?php if ($exposed): ?>
     <div class="view-filters">
       <div class="kw-search-tertiary-nav">
-        all forums link.
-        my forums link.
+        <?php
+          module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+          print drupal_render(drupal_get_form('sbac_forum_keyword_search_sub_nav_form'))
+        ?>
       </div>
       <div class="kw-search-keyword-form-element">
         <?php print $exposed; ?>
@@ -78,7 +80,7 @@
   <?php endif; ?>
 
   <?php if ($header): ?>
-    <div class="view-header">
+    <div class="view-header kw-search-res-counter">
       <?php print $header; ?>
     </div>
   <?php endif; ?>
