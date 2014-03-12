@@ -135,6 +135,26 @@ function sbac_forum_main_landing_page_reset($item, $severity) {
 }
 
 /**
+ * Middleground traffic controller. Used to set the active subnav element on forums then redirect to page.
+ *
+ * @param string $where where to redirect to.
+ */
+function sbac_forum_keyword_search_redirect($where = FALSE) {
+  switch($where) {
+    case 'all-forums':
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+      break;
+    case 'my-forums':
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_OWN);
+      break;
+    default:
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+      break;
+  }
+  drupal_goto('forums');
+}
+
+/**
  * Custom taxonomy term view page for forum terms.
  *
  * @param [type] $term [description]

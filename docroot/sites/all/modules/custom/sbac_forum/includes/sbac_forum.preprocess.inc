@@ -572,8 +572,33 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
   $link_back = l('Back to All Forums', 'forums', $link_ops);
   $vars['link_back'] = $link_back;
 
-  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-  $kw_subnav = drupal_render(drupal_get_form('sbac_forum_keyword_search_sub_nav_form'));
+  // Form implementation doesnt work after ajax submission of keyword exposed filter field. No time to fix.
+  // module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  // $kw_subnav = drupal_render(drupal_get_form('sbac_forum_keyword_search_sub_nav_form'));
+  $count_values = $_SESSION[SBAC_FORUM_FILTER_RESULTS_COUNTER];
+  $all_forums_count_text = '';
+  $link_ops = array(
+    'attributes' => array(
+      'class' => 'button kw-search-all-forums-button-link',
+    )
+  );
+  if (isset($count_values['block']) && !empty($count_values['block'])) {
+    $all_forums_count_text = ' ('.$count_values['block'].')';
+  }
+  $link_all_forums = l('All Forums' . $all_forums_count_text, 'keyword-search-redirect/all-forums', $link_ops);
+
+  $my_forums_count_text = '';
+  $link_ops = array(
+    'attributes' => array(
+      'class' => 'button kw-search-my-forums-button-link',
+    )
+  );
+  if (isset($count_values['block_1']) && !empty($count_values['block_1'])) {
+    $my_forums_count_text = ' ('.$count_values['block_1'].')';
+  }
+  $link_my_forums = l('My Forums' . $my_forums_count_text, 'keyword-search-redirect/my-forums', $link_ops);
+
+  $kw_subnav = $link_all_forums . $link_my_forums;
   $vars['keyword_subnav'] = $kw_subnav;
 
   $new_forum_link_text = '';

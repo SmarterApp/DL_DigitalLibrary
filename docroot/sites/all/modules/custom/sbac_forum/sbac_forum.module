@@ -83,6 +83,15 @@ function sbac_forum_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['keyword-search-redirect/%'] = array(
+    'title' => 'Forums keyword search traffic control',
+    'file' => 'includes/sbac_forum.pages.inc',
+    'page callback' => 'sbac_forum_keyword_search_redirect',
+    'page arguments' => array(1),
+    'access callback' => '_sbac_forum_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
   // ----- Modals -----
 
   $items['sbac-forum/%ctools_js/forum-delete/%taxonomy_term'] = array(
