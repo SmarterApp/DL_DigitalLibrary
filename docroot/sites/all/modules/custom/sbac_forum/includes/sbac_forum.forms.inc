@@ -634,7 +634,7 @@ function sbac_forum_delete_topic_confirm($form, &$form_state) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Topic',
-    '#attributes' => array('class' => array('edit-delete-topic-overlay', 'blue'))
+    '#attributes' => array('class' => array('edit-delete-topic-overlay', 'red'))
   );
 
   $form['cancel'] = array(
@@ -663,7 +663,7 @@ function sbac_forum_delete_comment_confirm($form, &$form_state) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Reply',
-    '#attributes' => array('class' => array('edit-delete-reply-overlay', 'blue'))
+    '#attributes' => array('class' => array('edit-delete-reply-overlay', 'red'))
   );
 
   $form['cancel'] = array(

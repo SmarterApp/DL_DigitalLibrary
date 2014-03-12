@@ -898,7 +898,23 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		width: 390px !important;
 		margin-left: 28px;
 	}
-
+  
+	#taxonomy_term_forum_form_group_forum_access {
+		margin-bottom: 20px;
+		
+		/*error message*/
+		.forum-state-warning-message,
+		.forum-role-warning-message {
+			background-color: rgba(138, 21, 56, 0.1);
+		  border: 2px solid #ED1C24;
+	    color: #8A1538 !important;
+	    margin-top: 5px;
+			padding: 8px;
+			line-height: 1.2;
+			font-size: 12px !important;
+		}
+	}
+	
 	.group-forum-tags,
 	#taxonomy_term_forum_form_group_forum_access {
 
@@ -2504,7 +2520,8 @@ View Topic Page, Comment Page
 	background-color: #0084B0;
 }
 
-.button.comment-direct-reply-form-cancel-link {
+.button.comment-direct-reply-form-cancel-link,
+.button.comment-reply-form-cancel-link  {
 	padding-left: 40px;
 	margin-right: 30px;
 	margin-top: 10px;
@@ -2513,12 +2530,14 @@ View Topic Page, Comment Page
 /*Chrome*/
 @media screen and (-webkit-min-device-pixel-ratio:0)
 {
-	.button.comment-direct-reply-form-cancel-link {
+	.button.comment-direct-reply-form-cancel-link, 
+	.button.comment-reply-form-cancel-link {
 		margin-top: 25px;
 	}
 }
 
-.button.comment-direct-reply-form-cancel-link:before {
+.button.comment-direct-reply-form-cancel-link:before,
+.button.comment-reply-form-cancel-link:before {
 	content: url("../images/icon-buttonCancel.png");
 	left: 15px;
 	position: absolute;
@@ -2745,6 +2764,56 @@ h2.title {
 	text-align: center;
 }
 
+/*Modal of Comment & Topic Delete Form*/
+.node-type-topic {
+	#modalContent .ctools-modal-content .modal-content {
+		overflow: hidden;
+	}
+	
+	div.ctools-modal-content .modal-header {
+		padding: 0 !important;
+		display: none;
+	}
+}
+
+#sbac-forum-delete-comment-confirm,
+#sbac-forum-delete-topic-confirm {
+	
+	h2 {
+	  padding-bottom: 15px;
+    color: #000000;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    padding: 12px 0;
+    text-transform: capitalize;
+	}
+	
+	button{
+		float: right;
+		margin-left: 30px;
+	}
+	
+	button#edit-cancel.gray {
+	  background-color: #6E7379;
+    border: 1px solid #4D5457;
+		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+		padding-left: 40px !important;
+	}
+	
+	button#edit-cancel.gray:before {
+   	content: url("../images/icon-buttonCancel.png");
+		left: 15px;
+		position: absolute;
+		top: 4px;
+	}
+	
+	button.form-submit.red:hover,
+	button.form-submit.red:focus  {
+		background-color: #8A1538 !important;
+	}
+}
 
 // --------------------- Page Forums Search ------------------------------
 .page-forums-search {
