@@ -38,7 +38,7 @@ function sbac_flag_modal_content($js = FALSE) {
           // and the nodes view permissions field.
           $accounts = sbac_flag_get_users_with_node_access($node);
           foreach ($accounts as $uid => $account) {
-            if ($task = taskit_get_object('resource_flagged')) {
+            if ($task = taskit_get_object('resource_flagged') && _sbac_resource_determine_state_access($node, $user) == TRUE) {
               $task->addVisibility($task::VISIBILITY_USER);
               $task->addEntity('node', $node->nid);
               $task->addOwningUser($account->uid);
