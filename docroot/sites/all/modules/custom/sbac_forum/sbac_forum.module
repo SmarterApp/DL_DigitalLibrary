@@ -713,6 +713,16 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_preprocess_views_view_fields
  */
+function sbac_forum_preprocess_views_view(&$vars) { // This is the only way the preprocess gets read in. TODO: Find out why that is. if you have time.
+  if ($vars['view']->name == 'forums_keyword_search') {
+    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.preprocess');
+    sbac_forum_preprocess_views_view__forums_keyword_search__page($vars);
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view_fields
+ */
 function sbac_forum_preprocess_views_view_fields(&$vars) { // This is the only way the preprocess gets read in. TODO: Find out why that is. if you have time.
   if ($vars['view']->name == 'forums_keyword_search') {
     module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.preprocess');

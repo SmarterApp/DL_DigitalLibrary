@@ -26,22 +26,12 @@
  *
  * @ingroup views_templates
  */
-// Adding code inline with this view. Should be in preprocess but no time.
-// TODO: cleanup
-  drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
 ?>
 <div class="<?php print $classes; ?>">
-<div class="kw-search-back-button-wrapper">
-  <?php
-    $link_ops = array(
-      'attributes' => array(
-        'class' => 'kw-search-back-button-link',
-      )
-    );
-    $link_back = l('Back to All Forums', 'forums', $link_ops);
-    print $link_back;
-  ?>
-</div>
+  <div class="kw-search-back-button-wrapper">
+    <?php print $link_back; ?>
+  </div>
+
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>
     <?php print $title; ?>
@@ -51,30 +41,13 @@
   <?php if ($exposed): ?>
     <div class="view-filters">
       <div class="kw-search-tertiary-nav">
-        <?php
-          module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-          print drupal_render(drupal_get_form('sbac_forum_keyword_search_sub_nav_form'))
-        ?>
+        <?php print $keyword_subnav; ?>
       </div>
       <div class="kw-search-keyword-form-element">
         <?php print $exposed; ?>
       </div>
       <div class="kw-search-new-forum-link">
-        <?php
-          $vocab = taxonomy_vocabulary_machine_name_load('forum');
-          $access_to_add = _sbac_forum_add_forum_user_access($vocab);
-          if ($access_to_add) {
-            $link_options = array(
-              'attributes' => array(
-                'class'=> 'new-forum-link',
-              ),
-            );
-            $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
-            $new_forum_link_text .= l('Start a Forum', 'forums/forum/add', $link_options);
-            $new_forum_link_text .= '</div>';
-            print $new_forum_link_text;
-          }
-        ?>
+        <?php print $new_forum_link_text; ?>
       </div>
     </div>
   <?php endif; ?>
@@ -98,31 +71,10 @@
   <?php elseif ($empty): ?>
     <div class="view-empty">
       <div class="kw-search-empty-text">
-        <?php
-          $empty_text_url = 'forums';
-          $link_text = t('Browse all Forums');
-          $link_ops = array('attributes' => array('class' => 'forum-list-filter-empty-text-reset-link button'));
-          $empty_text_link = l($link_text, $empty_text_url, $link_ops);
-          $empty_text_content = '<div class="sbac-forum-filter-no-results-wrapper">';
-          $empty_text_content .= '<h2>Your search returned no results</h2>';
-          $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below ';
-          $empty_text_content .= 'that have been identified for you by using the subject(s) and grade(s) in your profile</p>';
-          $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">'.$empty_text_link.'</div>';
-          $empty_text_content .= '</div>';
-          print $empty_text_content;
-        ?>
+        <?php print $empty_text_content; ?>
       </div>
       <div class="kw-search-empty-text-view-suggestion">
-        <?php
-          $view_e = views_get_view('forum_list_empty');
-          $view_e->set_display('block');
-          sbac_forum_forum_listing_empty_apply_filters($view_e); // Set filters here.
-          $view_e->pre_execute();
-          $view_e->execute();
-          $view_e->_post_execute();
-          $forum_list_empty_output = $view_e->preview();
-          print $forum_list_empty_output;
-        ?>
+        <?php print $forum_list_empty_output; ?>
       </div>
       <?php //print $empty; ?>
     </div>
