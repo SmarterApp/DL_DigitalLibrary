@@ -2734,10 +2734,7 @@ h2.title {
 	font-weight: normal;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 	
-	.ajax-progress, .ajax-progress-throbber {
-		display: none;
-	}
-	.ajax-progress .throbber {
+	.wait {
 		display: none;
 	}
 }
