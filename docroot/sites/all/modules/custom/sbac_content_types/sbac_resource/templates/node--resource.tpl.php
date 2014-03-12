@@ -120,15 +120,16 @@
           }
         ?>
       </div>
+
+			<?php if (isset($download_partial)): ?>
+		    <div class="sbac-download-dropdown f-dropdown" style="display:none;">
+		      <p>The resource includes on or more copy-protected files.</p>
+		      <p>Copy-protected files are excluded from the download.</p>
+		    </div>
+		  <?php endif; ?>
+		
     </div>
   </div>
-  <?php endif; ?>
-
-  <?php if (isset($download_partial)): ?>
-    <div class="sbac-download-dropdown f-dropdown" style="display:none;">
-      <p>The resource includes on or more copy-protected files.</p>
-      <p>Copy-protected files are excluded from the download.</p>
-    </div>
   <?php endif; ?>
 
   <?php if (isset($flag['resource']) && count($flag) > 0): ?>

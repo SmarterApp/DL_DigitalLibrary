@@ -238,7 +238,7 @@ a.sbac-grid-layout {
   .f-dropdown {
     top: 48px !important;
     left: 10px !important;
-	width: 150px;
+		width: 150px;
   }
 }
 
@@ -951,6 +951,7 @@ a.sbac-grid-layout {
   margin-bottom: 35px;
   text-align: left;
   border-radius: 0 0 8px 8px;
+	position: relative;
 
   .button {
     margin-bottom: 0;
@@ -969,10 +970,71 @@ a.sbac-grid-layout {
     margin-bottom: 3px;
   }
 
+	.large-7 {
+		width: 42%;
+	}
+	
+	.large-2 {
+		width: 32%;
+		float: right;
+		
+		p {
+			position: absolute;
+			top: 9px;
+			right: 113px;
+			
+			span#sbac-partial-download {
+				text-decoration: underline;
+				cursor: pointer;
+			}
+		}
+	}
+	
+	.sbac-download-dropdown.f-dropdown {
+		top: -88px !important;
+		right: 66px;
+		z-index: 9999;
+		width: 180px;
+		height: 90px;
+		
+		p {
+			color: #5A5A5A;
+			line-height: 1.25;
+		}
+		
+		p:first-child {
+			margin-bottom: 10px;
+		}
+	}
+	
+	.f-dropdown:after {
+	 	border-color:  #CCCCCC rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+		left: 85px;
+		top: 89px;
+		border-style: solid inset inset;
+	}
+	
+	.f-dropdown:before {
+	  border-color: #FFFFFF rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+		left: 86px;
+		top: 88px;
+		border-style: solid inset inset;
+	}
+
   #sbac-filename {
     display: block;
     margin-top: 9px;
   }
+}
+
+#resource-element {
+	width: 880px;
+	height: 455px;
+	img {
+		width: 880px;
+		height: 455px;
+		background-size: cover;
+	}
 }
 
 .node-type-resource {
