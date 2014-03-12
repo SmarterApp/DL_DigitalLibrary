@@ -569,7 +569,7 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
       'class' => 'kw-search-back-button-link',
     )
   );
-  $link_back = l('Back to All Forums', 'forums', $link_ops);
+  $link_back = l('Back to All Forums', 'keyword-search-redirect/all-forums', $link_ops);
   $vars['link_back'] = $link_back;
 
   // Form implementation doesnt work after ajax submission of keyword exposed filter field. No time to fix.
