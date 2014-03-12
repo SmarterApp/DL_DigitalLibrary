@@ -502,7 +502,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    padding: 0 20px;
 	    text-shadow: 0 1px 0 #FFFFFF;
 			float: left;
-			@include border-radius(5px);
+			@include border-radius(6px);
     }
 
 		button#edit-all-forums {
@@ -898,7 +898,23 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		width: 390px !important;
 		margin-left: 28px;
 	}
-
+  
+	#taxonomy_term_forum_form_group_forum_access {
+		margin-bottom: 20px;
+		
+		/*error message*/
+		.forum-state-warning-message,
+		.forum-role-warning-message {
+			background-color: rgba(138, 21, 56, 0.1);
+		  border: 2px solid #ED1C24;
+	    color: #8A1538 !important;
+	    margin-top: 5px;
+			padding: 8px;
+			line-height: 1.2;
+			font-size: 12px !important;
+		}
+	}
+	
 	.group-forum-tags,
 	#taxonomy_term_forum_form_group_forum_access {
 
@@ -1331,7 +1347,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	.form-item-sort-by {
 		select {
 			border: 1px solid #CECECE;
-			width: 200px;
+			width: 250px !important;
 		}
 	}
 
@@ -2402,7 +2418,7 @@ View Topic Page, Comment Page
 	}
 	
 	.fieldset-wrapper {
-		width: 560px;
+		width: 100%;
 	}
 
 	#comment_comment_node_topic_form_group_topic_comments_materials,
@@ -2504,7 +2520,8 @@ View Topic Page, Comment Page
 	background-color: #0084B0;
 }
 
-.button.comment-direct-reply-form-cancel-link {
+.button.comment-direct-reply-form-cancel-link,
+.button.comment-reply-form-cancel-link  {
 	padding-left: 40px;
 	margin-right: 30px;
 	margin-top: 10px;
@@ -2513,12 +2530,14 @@ View Topic Page, Comment Page
 /*Chrome*/
 @media screen and (-webkit-min-device-pixel-ratio:0)
 {
-	.button.comment-direct-reply-form-cancel-link {
+	.button.comment-direct-reply-form-cancel-link, 
+	.button.comment-reply-form-cancel-link {
 		margin-top: 25px;
 	}
 }
 
-.button.comment-direct-reply-form-cancel-link:before {
+.button.comment-direct-reply-form-cancel-link:before,
+.button.comment-reply-form-cancel-link:before {
 	content: url("../images/icon-buttonCancel.png");
 	left: 15px;
 	position: absolute;
@@ -2745,6 +2764,57 @@ h2.title {
 	text-align: center;
 }
 
+/*Modal of Comment & Topic Delete Form*/
+.node-type-topic {
+	#modalContent .ctools-modal-content .modal-content {
+		overflow: hidden;
+	}
+	
+	div.ctools-modal-content .modal-header {
+		padding: 0 !important;
+		display: none;
+	}
+}
+
+#sbac-forum-delete-forum-confirm,
+#sbac-forum-delete-comment-confirm,
+#sbac-forum-delete-topic-confirm {
+	
+	h2 {
+	  padding-bottom: 15px;
+    color: #000000;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    padding: 12px 0;
+    text-transform: capitalize;
+	}
+	
+	button{
+		float: right;
+		margin-left: 30px;
+	}
+	
+	button#edit-cancel.gray {
+	  background-color: #6E7379;
+    border: 1px solid #4D5457;
+		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+		padding-left: 40px !important;
+	}
+	
+	button#edit-cancel.gray:before {
+   	content: url("../images/icon-buttonCancel.png");
+		left: 15px;
+		position: absolute;
+		top: 4px;
+	}
+	
+	button.form-submit.red:hover,
+	button.form-submit.red:focus  {
+		background-color: #8A1538 !important;
+	}
+}
 
 // --------------------- Page Forums Search ------------------------------
 .page-forums-search {
@@ -2789,6 +2859,7 @@ h2.title {
 		}
 	}
 	
+	/*Nav of Forum Search*/
 	.view-forums-keyword-search {
 		
 		.kw-search-tertiary-nav,
@@ -2796,6 +2867,36 @@ h2.title {
 		.kw-search-new-forum-link {
 			display: inline-block;
 		}
+		
+		.kw-search-tertiary-nav {
+			.button {
+				background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 100%);
+				background-color: #F7F7F7;
+				border-color: #FFFFFF #62676E #62676E;
+				border-image: none;
+		    border-style: solid;
+		    border-width: 1px;
+		    color: $gray;
+		    display: inline-block;
+		    font-size: 15px;
+		    height: 34px;
+		    line-height: 32px;
+		    padding: 0 20px;
+		    text-shadow: 0 1px 0 #FFFFFF;
+				float: left;
+				@include border-radius(6px);
+				float: left;
+	    }
+
+			.button.kw-search-all-forums-button-link {
+				@include border-radius(6px 0 0 6px);
+				border-right: none;
+			}
+
+			.button.kw-search-my-forums-button-link {
+				@include border-radius(0 6px 6px 0);
+			}
+	  }
 		
 		.kw-search-tertiary-nav {
 			vertical-align: top;

@@ -842,6 +842,10 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
         $form['field_forum_created']['#access'] = $can_see;
       }
 
+      $path_to_js_file = drupal_get_path('module', 'sbac_forum');
+      $path_to_js_file .= '/js/sbac_forum.forum_form.js';
+      $form['#attached']['js'][] = $path_to_js_file;
+
       $path_to_css_file = drupal_get_path('module', 'sbac_forum');
       $path_to_css_file .= '/css/sbac_forum.css';
       $form['#attached']['css'][] = $path_to_css_file;
@@ -858,7 +862,6 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       // Access fields. Modify behaviour.
       $form['field_forum_access_states']['#prefix'] = '<div class="forum-add-access-left">';
       $form['field_state']['#suffix'] = '</div>';
-      // $form['field_state']['#suffix'] = '';
       $state_field_state = array(
         'visible' => array(
           ':input[name="field_forum_access_states[und]"]' => array('value' => 0),
@@ -1078,15 +1081,15 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
     $form['actions']['cancel_add'] = array(
       '#type'         => 'submit',
       '#value'        => t('Cancel'),
-      '#weight' => 4,
+      '#weight' => 6,
       '#limit_validation_errors' => array(),
       '#attributes'   => array(
         'class' => array($cancel_button_classes),
       ),
       '#submit' => array('_sbac_forum__add_topic_form_redirect_submit'),
-      '#prefix'       => '<div class="sbac-forum-add-topic-buttons">',
+      '#suffix' => '</div>',
     );
-    $form['actions']['submit']['#suffix'] = '</div>';
+    $form['actions']['submit']['#prefix'] = '<div class="sbac-forum-add-topic-buttons">';
   }
 
   // Hide fields
