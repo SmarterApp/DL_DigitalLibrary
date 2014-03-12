@@ -2400,6 +2400,10 @@ View Topic Page, Comment Page
 	fieldset.collapsed {
 		border: none !important;
 	}
+	
+	.fieldset-wrapper {
+		width: 560px;
+	}
 
 	#comment_comment_node_topic_form_group_topic_comments_materials,
 	#comment_comment_node_topic_form_group_topic_comments_links {
@@ -2528,6 +2532,8 @@ View Topic Page, Comment Page
 		.form-textarea-wrapper {
 			textarea {
 		    width: 560px;
+				font-size: 13px;
+				line-height: 1.2;
 			}
 		}
 
@@ -2667,7 +2673,7 @@ h2.title {
 
 				li {
 					display: inline-block;
-			    margin-top: 20px;
+			    margin: 20px 0 0 0;
 					line-height: 1;
 
 					a {
@@ -2715,6 +2721,33 @@ h2.title {
 		}
 	}
 }
+
+.morecomments-button {
+	display: block;
+	margin: 10px auto 0;
+	width: 480px;
+	background-color: #2AA549;
+	border: 1px solid #268A16;
+	@inculd border-radius(6px);
+	box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+	font-size: 16px;
+	font-weight: normal;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+	
+	.ajax-progress, .ajax-progress-throbber {
+		display: none;
+	}
+	.ajax-progress .throbber {
+		display: none;
+	}
+}
+
+.morecomments-button:hover,
+.morecomments-button:focus {
+	@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
+	text-align: center;
+}
+
 
 // --------------------- Page Forums Search ------------------------------
 .page-forums-search {
@@ -2987,4 +3020,6 @@ h2.title {
 		background-color: transparent;
   }
 }
+
+
 
