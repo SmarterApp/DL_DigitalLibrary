@@ -44,6 +44,7 @@
         $(".topic-node-comment-region-right-reply-form").each(function() {
           $(this).hide('fast');
           $(this).remove(".comment-form");
+          $(this).prev("[class~=topic-node-comment-region-right-bottom]").show('fast');
         });
         $(".topic-node-reply-direct-wrapper").hide('slow');
         $(".topic-node-reply-direct-wrapper").html('');

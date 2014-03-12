@@ -1186,8 +1186,14 @@ function _sbac_forum__add_topic_form_redirect_submit($form, &$form_state) {
 // ----------
 
 function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $form_id) {
-  drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
-  drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.topic_comments_form.js');
+  $path_to_js_file = drupal_get_path('module', 'sbac_forum');
+  $path_to_js_file .= '/js/sbac_forum.topic_comments_form.js';
+  $form['#attached']['js'][] = $path_to_js_file;
+
+  $path_to_css_file = drupal_get_path('module', 'sbac_forum');
+  $path_to_css_file .= '/css/sbac_forum.css';
+  $form['#attached']['css'][] = $path_to_css_file;
+
   $form['author']['#access'] = FALSE; // Hide this form element.
 
 
