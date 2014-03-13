@@ -1010,7 +1010,7 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   $roles_field_value = $values['field_forum_access_user_roles'][LANGUAGE_NONE][0]['value'];
   if (!$roles_field_value) {
     $selected_roles = $values['field_forum_access_role_list'];
-    if (count($selected_roles[LANGUAGE_NONE]) == 1) { // There will be one entry even if empty. Check value.
+    if (count($selected_roles[LANGUAGE_NONE]) >= 1) { // There will be one entry even if empty. Check value.
       $temp = $selected_roles[LANGUAGE_NONE];
       $selected_value = array_shift($temp);
       if (empty($selected_value['value'])) {
@@ -1186,8 +1186,14 @@ function _sbac_forum__add_topic_form_redirect_submit($form, &$form_state) {
 // ----------
 
 function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $form_id) {
-  drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
-  drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.topic_comments_form.js');
+  $path_to_js_file = drupal_get_path('module', 'sbac_forum');
+  $path_to_js_file .= '/js/sbac_forum.topic_comments_form.js';
+  $form['#attached']['js'][] = $path_to_js_file;
+
+  $path_to_css_file = drupal_get_path('module', 'sbac_forum');
+  $path_to_css_file .= '/css/sbac_forum.css';
+  $form['#attached']['css'][] = $path_to_css_file;
+
   $form['author']['#access'] = FALSE; // Hide this form element.
 
 
@@ -1289,14 +1295,116 @@ function sbac_forum_taxonomy_term_presave($term) {
 
     // Cleanup task to ensure that state list is unset if access is set to "all states";
     $state_access = $term->field_forum_access_states[LANGUAGE_NONE][0]['value'];
+    $state_restrictions = array();
     if ($state_access) {
       $term->field_state[LANGUAGE_NONE] = array(); // Unset the selection for state lists.
+    } else { // forum has been state restricted. Get states.
+      $raw = $term->field_state[LANGUAGE_NONE];
+      foreach ($raw as $key => $value) {
+        $state_restrictions[$value['tid']] = $value['tid'];
+      }
     }
 
-    // Cleanup task to ensure that role list is unset if access is set to "all roles";
+    // Cleanup task to ensure that role list is unset if access is set to "all roles"; AKA title
     $role_access = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
+    $role_restrictions = array();
     if ($role_access) {
       $term->field_forum_access_role_list[LANGUAGE_NONE] = array(); // Unset the selection for role lists.
+    } else {
+      $raw = $term->field_forum_access_role_list[LANGUAGE_NONE];
+      foreach ($raw as $key => $value) {
+        $role_restrictions[$value['value']] = $value['value'];
+      }
+    }
+
+    $people_to_notify = array();
+    $entity_list = array();
+    $member_count = $term->field_forum_member_count[LANGUAGE_NONE][0]['value'];
+    $removed_member_count = $term->field_forum_removed_member_count[LANGUAGE_NONE][0]['value'];
+    if ((!empty($state_restrictions)) ||
+        (!empty($role_restrictions)) ) {
+
+      $term_data = entity_metadata_wrapper('taxonomy_term', $term);
+      if (isset($term_data->field_fc_forum_members)) {
+        $fc_member_list = $term_data->field_fc_forum_members->value();
+        if (!empty($fc_member_list)) {
+          foreach ($fc_member_list as $fc_item) {
+            $member_entity = entity_metadata_wrapper('field_collection_item', $fc_item);
+            if (isset($member_entity->field_fc_forum_member)) {
+
+              // Do state check first.
+              $has_state = array();
+              if (!empty($state_restrictions)) {
+                $members_states_raw = $member_entity->field_fc_forum_member->field_state->value();
+                $members_states = array();
+                if (!empty($members_states_raw)) {
+                  foreach ($members_states_raw as $index =>  $state_element) {
+                    $members_states[$state_element->tid] = $state_element->tid;
+                  }
+                }
+                $has_state = array_intersect($state_restrictions, $members_states);
+              } // end state check
+
+
+              // Check position/title/role
+              $has_role = array();
+              if (!empty($role_restrictions)) {
+                $members_title_raw = $member_entity->field_fc_forum_member->field_position->value();
+                $members_title_tid = $members_title_raw->tid;
+                $has_role = in_array($members_title_tid, $role_restrictions);
+              } // end title check
+
+
+              // Bring it all together
+              $pass = 0; // Both need to match. Its an "AND", role AND state.
+              if (!empty($role_restrictions)) {
+                if (!empty($has_role)) {
+                  $pass++;
+                }
+              } else { // Forum isnt role restricted.
+                $pass++;
+              }
+
+              if (!empty($state_restrictions)) { // Means check state
+                if (!empty($has_state)) {
+                  $pass++;
+                }
+              }else {
+                $pass++;
+              }
+
+              if ($pass != 2) {
+                $user_to_remove = $member_entity->field_fc_forum_member->uid->value();
+                $entity_id = $member_entity->item_id->value();
+                $entity_list[] = $entity_id;
+                $fc_item->delete(); // Mimics "leaving" a forum. User is removed entirely.
+                $member_count--;
+                $people_to_notify[] = $user_to_remove;
+              }
+            }
+          }
+        }
+      } // endif for sanity check entity metadata wrapper field.
+    } // End OR
+
+    if (!empty($people_to_notify)) {
+      $clean_members_list = array();
+      // Cleanup task to remove the relationship between deleted field collection entity and forum term.
+      foreach ($term->field_fc_forum_members[LANGUAGE_NONE] as $index => $entity_data) {
+        if (!in_array($entity_data['value'], $entity_list)) {
+          $clean_members_list[] = $entity_data;
+        }
+      }
+      $term->field_fc_forum_members[LANGUAGE_NONE] = $clean_members_list;
+      $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = $member_count;
+
+      sbac_forum__api__send_bulk_notifications($term, 'access-change', $people_to_notify);
+
+      // invalidate memberlist cache when a user is removed or leaves.
+      $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME. $term->tid;
+      if (cache_get($cid)) {
+        cache_clear_all($cid, 'cache');
+      }
     }
   }
 }

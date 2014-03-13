@@ -385,6 +385,7 @@ function sbac_forum__ajax__delete_comment_form_modal_callback($js = FALSE, $comm
 
     $form_state = array(
       'ajax' => TRUE,
+      'target_comment_to_delete' => $comment_id_to_remove,
     );
 
     // Use ctools to generate ajax instructions for the browser to create
@@ -396,36 +397,13 @@ function sbac_forum__ajax__delete_comment_form_modal_callback($js = FALSE, $comm
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
-        global $user;
-        $comment_entity = comment_load($comment_id_to_remove);
-
-        // Params for task.
-        $from_user_id = $user->uid; // TriggeringUser
-        $for_user_id = $comment_entity->uid;    // OwningUser
-
-        if ($from_user_id != $for_user_id) { // no need to notify if youre deleting your own comment
-        // Create task notification.
-          if ($task = taskit_get_object('deleted_forum_comment')) {
-            $task->addVisibility($task::VISIBILITY_USER);
-            $task->addEntity('comment', $comment_id_to_remove);
-            $task->addOwningUser($for_user_id);
-            $task->addTriggeringUser($from_user_id);
-            $task->save();
-          }
-        }
-
-        // Delete comment
-        comment_delete($comment_id_to_remove);
-
-        $message = 'Forum Reply has been deleted successfully';
-        drupal_set_message($message);
         $output[] = ctools_ajax_command_reload();
       }
     }
     print ajax_render($output);
     exit();
   } else {
-    return drupal_get_form('sbac_forum_delete_comment_confirm');
+    return drupal_get_form('sbac_forum_delete_comment_confirm', $comment_id_to_remove);
   }
 }
 /**

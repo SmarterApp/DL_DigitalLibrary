@@ -39,6 +39,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     if ($is_member === TRUE) {
       $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
+      drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
     }
 
     $link_ops = array(

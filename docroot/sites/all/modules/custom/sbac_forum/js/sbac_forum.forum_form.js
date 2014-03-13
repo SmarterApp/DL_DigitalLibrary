@@ -27,7 +27,7 @@
       });
 
 
-      var elem2 = 'input#edit-field-forum-access-states-und-0';
+      var elem2 = 'input#edit-field-forum-access-user-roles-und-0';
       if ($( elem2 ).prop( "checked" )) {
         $('p.forum-role-warning-message').show();
       } else {

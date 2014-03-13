@@ -1826,8 +1826,14 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 	.form-managed-file {
 		.form-file {
-			float: left;
-	    width: 50%;
+			/*float: left;
+				width: 50%;*/
+				margin-left: 15px;
+				margin-top: 5px;
+		}
+		
+		input[type="file"] {
+			width: 80%;
 		}
 	}
 
@@ -1850,7 +1856,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 	}
 
-	button.field-add-more-submit {
+	button.field-add-more-submit.form-submit {
 		float: right;
 	}
 
@@ -2510,6 +2516,7 @@ View Topic Page, Comment Page
 .field-name-field-topic-comment-links button.form-submit {
 	background-color: #0084B0;
   border: 1px solid #0D6785;
+	float: left;
 }
 
 .form-type-managed-file button.form-submit:focus,
