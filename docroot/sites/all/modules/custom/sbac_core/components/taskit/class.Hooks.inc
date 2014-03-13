@@ -169,6 +169,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Deleted Forum Comment'),
         'class' => 'DeletedForumComment',
       ),
+      // forum changed access criteria
+      array(
+        'name' => 'forum_access_change',
+        'description' => t('Forum Access Change'),
+        'class' => 'ForumAccessChange',
+      ),
     );
 
     foreach ($types as &$type) {
