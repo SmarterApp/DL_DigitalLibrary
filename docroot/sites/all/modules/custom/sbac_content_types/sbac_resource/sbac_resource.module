@@ -1277,49 +1277,6 @@ function sbac_resource_node_load($nodes, $types) {
 }
 
 /**
- * Implements hook_node_delete().
- *
- * @param $node, $i = file index
- */
-//function sbac_resource_node_delete($node) {
-//  $i = 0;
-//  if (isset($node->field_file['und'])) {
-//    while ($i < count($node->field_file['und'])) {
-//  	  if (isset($node->field_document_id['und'][$i]['value']) && $node->field_document_id['und'][$i]['value']) {
-//  		  sbac_resource_delete_file_from_cmis($node->field_document_id['und'][$i]['value'], $i);
-//  		  unset($node->field_document_id['und'][$i]);
-//  	  }
-//
-//  	  $i++;
-//    }
-//  }
-//}
-
-/**
- * The state of the revision before the transition occurred.
- * @param $node, $i = file index
- */
-//function sbac_resource_delete_file_from_cmis($document_id, $i)
-//{
-//  module_load_include('api.inc', 'cmis');
-//  try {
-//    $start = microtime_float();
-//
-//    $repository = cmis_get_repository();
-//    $cmis_object_properties = cmisapi_getProperties($repository->repositoryId, $document_id);
-//    cmisapi_deleteObject($repository->repositoryId, $cmis_object_properties->id);
-//
-//    $end = microtime_float();
-//    $difference = $end - $start;
-//
-//    watchdog('sbac', 'did delete in: ' . $difference . ' seconds');
-//  }
-//  catch (CMISException $e) {
-//    // cmis_error_handler('sbac_documents_delete_document', $e);
-//  }
-//}
-
-/**
  * Implemenets hook_workbench_moderation_transition().
  *
  * @param $new_state
@@ -2278,7 +2235,7 @@ function sbac_resource_node_access($node, $op, $account) {
 function sbac_resource_determine_access($node, $account, $op) {
   // state access
   $access = _sbac_resource_determine_state_access($node, $account);
-  if ($access) {
+  if ($access || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'resource-review') === TRUE)) {
     // workflow access
     $access = _sbac_resource_determine_workflow_access($node, $account, $op);
   }

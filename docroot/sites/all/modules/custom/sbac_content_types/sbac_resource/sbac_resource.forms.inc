@@ -2896,6 +2896,7 @@ function sbac_resource_unsubmit_resource_modal($js = FALSE) {
         $node = node_load($form_state['nid']);
         if ($node) {
           workbench_moderation_moderate($node, 'draft');
+          sbac_resource_save_current_state($node);
           $output[] = ctools_ajax_command_redirect('my-resources');
         }
       }
