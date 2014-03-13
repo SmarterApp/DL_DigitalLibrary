@@ -1721,7 +1721,9 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 
 // --------------------- Model style ------------------------------
-#sbac-forum-leave-forum-confirm {
+#sbac-forum-leave-forum-confirm,
+#sbac-forum-remove-member-confirm,
+#sbac-forum-restore-member-confirm {
 
 	#modal-title {
 		padding: 0;
@@ -1734,6 +1736,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
     font-size: 18px;
     font-weight: bold;
     margin: 0;
+		padding: 12px 0;
     text-transform: capitalize;
 	}
 	button {
@@ -1742,7 +1745,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 
 	#edit-submit--3 {
-		background-color: #0084B0;
+		/*background-color: #0084B0;*/
+		background-color: #8A1538;
 	}
 
 	#edit-cancel {

@@ -575,7 +575,7 @@ function sbac_forum_remove_member_confirm($form, &$form_state) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Remove User',
-    '#attributes' => array('class' => array('edit-remove-overlay', 'blue'))
+    '#attributes' => array('class' => array('edit-remove-overlay', 'red'))
   );
 
   $form['cancel'] = array(
