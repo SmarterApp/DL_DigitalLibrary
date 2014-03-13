@@ -1010,7 +1010,7 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   $roles_field_value = $values['field_forum_access_user_roles'][LANGUAGE_NONE][0]['value'];
   if (!$roles_field_value) {
     $selected_roles = $values['field_forum_access_role_list'];
-    if (count($selected_roles[LANGUAGE_NONE]) == 1) { // There will be one entry even if empty. Check value.
+    if (count($selected_roles[LANGUAGE_NONE]) >= 1) { // There will be one entry even if empty. Check value.
       $temp = $selected_roles[LANGUAGE_NONE];
       $selected_value = array_shift($temp);
       if (empty($selected_value['value'])) {
