@@ -1721,7 +1721,9 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 
 // --------------------- Model style ------------------------------
-#sbac-forum-leave-forum-confirm {
+#sbac-forum-leave-forum-confirm,
+#sbac-forum-remove-member-confirm,
+#sbac-forum-restore-member-confirm {
 
 	#modal-title {
 		padding: 0;
@@ -1734,6 +1736,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
     font-size: 18px;
     font-weight: bold;
     margin: 0;
+		padding: 12px 0;
     text-transform: capitalize;
 	}
 	button {
@@ -1742,7 +1745,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 
 	#edit-submit--3 {
-		background-color: #0084B0;
+		/*background-color: #0084B0;*/
+		background-color: #8A1538;
 	}
 
 	#edit-cancel {
@@ -2603,9 +2607,27 @@ h2.title {
    border-top: 1px solid #CECECE;
    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
    margin: 0 0 15px;
-   padding: 15px;
+   padding: 0;
    position: relative;
    width: 665px;
+
+	.row-comment-content {
+		padding: 15px;
+		float: left;
+	}
+
+	.topic-node-comment-region-status-message {
+		background-color: #FDF2B1;
+		width: 100%;
+		border-bottom: 1px solid #CECECE;
+	  @include border-radius(6px 6px 0 0);
+    color: #04384E;
+    font-size: 18px;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 15px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	}
 
 	.topic-node-comment-region-left {
 		float: left;
@@ -2771,8 +2793,9 @@ h2.title {
 	text-align: center;
 }
 
-/*Modal of Comment & Topic Delete Form*/
-.node-type-topic {
+/*Modal of Comment & Topic Delete Form; Modal of Leave Forum*/
+.node-type-topic,
+.page-forums-term {
 	#modalContent .ctools-modal-content .modal-content {
 		overflow: hidden;
 	}
@@ -2785,7 +2808,8 @@ h2.title {
 
 #sbac-forum-delete-forum-confirm,
 #sbac-forum-delete-comment-confirm,
-#sbac-forum-delete-topic-confirm {
+#sbac-forum-delete-topic-confirm,
+#sbac-forum-leave-forum-confirm {
 	
 	h2 {
 	  padding-bottom: 15px;
