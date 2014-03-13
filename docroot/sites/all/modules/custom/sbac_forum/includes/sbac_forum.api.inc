@@ -499,7 +499,7 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
  * @param string $op is either "on-delete", 'access-change'
  *
  */
-function sbac_forum__api__send_bulk_notifications($forum_term, $op) {
+function sbac_forum__api__send_bulk_notifications($forum_term, $op, $users_to_notify = array()) {
   global $user;
   switch ($op) {
     case 'on-delete': // Send notification to all members.
@@ -532,6 +532,18 @@ function sbac_forum__api__send_bulk_notifications($forum_term, $op) {
       }
       break;
     case 'access-change':
+      if (!empty($users_to_notify)) {
+        foreach ($users_to_notify as $user_to_remove) {
+          // Create task notification.
+          if ($task = taskit_get_object('forum_access_change')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addEntity('taxonomy_term', $forum_term->tid);
+            $task->addOwningUser($user_to_remove);
+            $task->addTriggeringUser($user->uid);
+            $task->save();
+          }
+        }
+      }
       break;
   }
 }
