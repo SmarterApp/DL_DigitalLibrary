@@ -652,8 +652,13 @@ function sbac_forum_delete_topic_confirm($form, &$form_state) {
  * =============================================================================
  */
 
-function sbac_forum_delete_comment_confirm($form, &$form_state) {
+function sbac_forum_delete_comment_confirm($form, &$form_state, $target_comment_to_delete = NULL) {
   $form = array();
+
+  $form['target_comment_to_delete'] = array(
+    '#type' => 'value',
+    '#value' => $target_comment_to_delete,
+  );
 
   $form['submit_description'] = array(
     '#markup' => '<h2>'.t('You are about to delete this discussion topic reply').'</h2><p>' . t('
@@ -673,4 +678,44 @@ function sbac_forum_delete_comment_confirm($form, &$form_state) {
   );
 
   return $form;
+}
+
+function sbac_forum_delete_comment_confirm_submit($form, &$form_state) {
+  global $user;
+
+  if (!isset($form_state['ajax'])) { // If not ajax, the value is stored within formstate values like normal submit.
+    $comment_id_to_remove = $form_state['values']['target_comment_to_delete'];
+  } else {
+    $comment_id_to_remove = $form_state['target_comment_to_delete'];
+  }
+
+  $comment_entity = comment_load($comment_id_to_remove);
+
+  if ($form_state['triggering_element']['#value'] != 'Cancel') {
+    // Params for task.
+    $from_user_id = $user->uid; // TriggeringUser
+    $for_user_id = $comment_entity->uid;    // OwningUser
+
+    if ($from_user_id != $for_user_id) { // no need to notify if youre deleting your own comment
+    // Create task notification.
+      if ($task = taskit_get_object('deleted_forum_comment')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('comment', $comment_id_to_remove);
+        $task->addOwningUser($for_user_id);
+        $task->addTriggeringUser($from_user_id);
+        $task->save();
+      }
+    }
+
+    // Delete comment
+    comment_delete($comment_id_to_remove);
+    $message = 'Forum Reply has been deleted successfully';
+    drupal_set_message($message);
+  }
+
+  // If ajax was short-circuited, have to manually redirect.
+  if (!isset($form_state['ajax'])) {
+    $redirect_to = 'node/' . $comment_entity->nid;
+    $form_state['redirect'] = $redirect_to;
+  }
 }
