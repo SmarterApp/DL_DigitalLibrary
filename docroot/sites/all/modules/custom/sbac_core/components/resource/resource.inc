@@ -1,7 +1,7 @@
 <?php
 
 define('FEEDBACK_DEFAULT_SET_COUNT',    2);  // default number of gate keeper items;
-define('FEEDBACK_REVIEW_TIMEOUT',       72); // value in hours;
+define('FEEDBACK_REVIEW_TIMEOUT',       1); // value in hours;
 define('FEEDBACK_REVIEW_REMINDER',      24); // value in hours
 define('FEEDBACK_RESUBMISSION_TIMEOUT', 1209600); // 2 weeks in seconds
 define('FEEDBACK_MAX_REVIEW',           3); // number of reviews before publishing
