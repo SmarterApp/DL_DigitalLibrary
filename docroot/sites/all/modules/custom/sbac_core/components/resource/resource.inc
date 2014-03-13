@@ -168,13 +168,23 @@ function resource_access($op, $node, $account = NULL) {
       if ($resubmission_timestamp) {
         // if we're still within the 2 weeks (FEEDBACK_RESUBMISSION_TIMEOUT) limit
         if (time() - FEEDBACK_RESUBMISSION_TIMEOUT < $resubmission_timestamp) {
-          // deny anyone who is not an original reviewer
-          $original_reviewer = db_query("SELECT
-                                            count(*)
+          // are there any original reviewers
+          $original_reviewers = db_query("SELECT
+                                            field_recent_reviewers_target_id
                                           FROM field_data_field_recent_reviewers
-                                          WHERE entity_id = :nid and field_recent_reviewers_target_id = :uid", array(':nid' => $node->nid, ':uid' => $account->uid))->fetchField();
-          if (!$original_reviewer) {
-            return FALSE;
+                                          WHERE entity_id = :nid", array(':nid' => $node->nid));
+          if ($original_reviewers->rowCount()) {
+            // deny anyone who's not an original reviewer
+            $is_reviewer = FALSE;
+            foreach ($original_reviewers as $reviewer) {
+              if ($reviewer == $account->uid) {
+                $is_reviewer = TRUE;
+                break;
+              }
+            }
+            if (!$is_reviewer) {
+              return FALSE;
+            }
           }
         }
       }
