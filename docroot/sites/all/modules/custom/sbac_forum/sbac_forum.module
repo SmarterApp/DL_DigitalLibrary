@@ -28,7 +28,7 @@ define('SBAC_FORUM_FILTER_RESULTS_COUNTER', 'sbac-forum-filters-result-counter-v
 define('SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME', 'forum-member-list-');
 define('SBAC_FORUM_SHOW_JOIN_MESSAGE', 'sbac-forum-new-join');
 define('SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME', 'sbac_forum_user_data_removed_list');
-
+define('SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE', 'sbac-forum-new-comment');
 /**
  * =============================================================================
  *
@@ -1501,6 +1501,7 @@ function sbac_forum_comment_insert($comment) {
         }
         $forum_wrapper->save(TRUE);
         taxonomy_term_save($forum_obj);
+        $_SESSION[SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE] = $comment->cid;
       }
     }
   }

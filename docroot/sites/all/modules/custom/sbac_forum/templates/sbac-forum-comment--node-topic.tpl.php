@@ -62,6 +62,7 @@
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
   <div class="topic-node-comment-region-status-message">
+    <?php print $new_comment_status_message;?>
   </div>
 
   <div class="topic-node-comment-region-left">

@@ -153,6 +153,17 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   $comment_entity = $vars['comment'];
   $comment_data = entity_metadata_wrapper('comment', $comment_entity);
 
+  $new_status_message = '';
+  if (isset($_SESSION[SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE])) {
+    if (!empty($_SESSION[SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE])) {
+      $current_sesh_val = $_SESSION[SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE];
+      if ($current_sesh_val == $comment_entity->cid) {
+        $new_status_message = 'Thank you for joining the conversation';
+        $_SESSION[SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE] = 0;
+      }
+    }
+  }
+
   $comment_auth_uid = $comment_entity->uid;
   $user_image = sbac_forum__api__get_author_picture($comment_auth_uid, 'forum_profile_image_60x60');
   $user_name_w_hoverover = sbac_forum__api__get_authpane_hoverover($comment_auth_uid);
@@ -189,6 +200,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
     $has_materials = TRUE;
   }
 
+  $vars['new_comment_status_message'] = $new_status_message;
   $vars['picture'] = $user_image;
   $vars['auth_name_hover'] = $user_name_w_hoverover;
   $vars['depth_extra'] = $depth_extra;
