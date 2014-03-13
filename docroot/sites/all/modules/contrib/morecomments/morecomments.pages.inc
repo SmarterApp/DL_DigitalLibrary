@@ -54,7 +54,7 @@ function morecomments_comment_render($nid, $page) {
     }
     else {
       $query->addExpression('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'torder');
-      $query->orderBy('torder', 'ASC');
+      $query->orderBy('torder', $order_direction);
     }
 
     $cids = $query->execute()->fetchCol();
