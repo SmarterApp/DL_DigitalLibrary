@@ -177,7 +177,7 @@ function resource_access($op, $node, $account = NULL) {
             // deny anyone who's not an original reviewer
             $is_reviewer = FALSE;
             foreach ($original_reviewers as $reviewer) {
-              if ($reviewer == $account->uid) {
+              if ($reviewer->field_recent_reviewers_target_id == $account->uid) {
                 $is_reviewer = TRUE;
                 break;
               }
