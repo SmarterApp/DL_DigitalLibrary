@@ -1076,6 +1076,14 @@ function sbac_resource_preprocess_html(&$vars) {
       $vars['classes_array'][] = 'list-view';
     }
   }
+
+  // Page not found markup.
+  if (isset($vars['page']['content']['system_main']['main']['#markup'])) {
+    $value = $vars['page']['content']['system_main']['main']['#markup'];
+    if (strpos($value, 'could not be found')) {
+      $vars['classes_array'][] = 'sbac-resource-access-denied';
+    }
+  }
 }
 
 /**
