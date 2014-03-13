@@ -3041,7 +3041,41 @@ a.tabledrag-handle .handle {
 	}
 }
 
-
-
+/* -----------------------------------------------
+    Restricted Resource Message
+  ------------------------------------------------ */
+.sbac-resource-access-denied {
+	#main {
+		width: 600px;
+		margin: 0 auto;
+		padding-bottom: 120px;
+		
+		&.columns {
+			float: none !important;
+		}
+		
+		h1 {
+			color: #04384E;
+	    display: block;
+	    font-size: 22px;
+	    font-weight: bold;
+	    margin: 0;
+	    padding: 20px 0;
+		}
+		
+		p {
+		  font-size: 16px;
+	    line-height: 1.6;
+	    margin: 0 0 40px;
+		}
+		
+		a.medium.button {
+			margin: 0 auto;
+			text-align: center;
+			display: block;
+			width: 200px;
+		}
+	}
+}
 
 
