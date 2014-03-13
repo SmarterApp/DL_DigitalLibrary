@@ -8,7 +8,7 @@ class DeletedForumTerm extends \taskit\sbac_core\BaseTask {
     $forum    = taxonomy_term_load(current($entities['taxonomy_term']));
     $account  = user_load(current($accounts));
 
-    if ($forum && $account) {
+    if ($account) {
       $this->setTaskUrl('forums');
 
       $output = array();
