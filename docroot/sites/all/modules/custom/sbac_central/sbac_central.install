@@ -889,21 +889,23 @@ function sbac_central_update_7066() {
 
 /*
  * Enables SBAC_Forum module.
+ *
+ * ** Changed to 7068 because 7067 has already
+ * ** been ran on production. so when we push, this will run.
  */
-function sbac_central_update_7067() {
+function sbac_central_update_7068() {
   $modules = array(
     'sbac_forum',
   );
   module_enable($modules);
   drupal_flush_all_caches();
-
 }
 
 /*
  * Gets records that were not saved correctly because
  * of the missing entity_save within sbac_core.
  */
-function sbac_central_update_7068() {
+function sbac_central_update_7069() {
   $sql = "SELECT e.* FROM {eck_feedback} e JOIN {node} n ON e.node_id = n.nid WHERE e.type = 'post' AND n.sticky = 1";
   $results = db_query($sql);
   foreach ($results as $row) {
