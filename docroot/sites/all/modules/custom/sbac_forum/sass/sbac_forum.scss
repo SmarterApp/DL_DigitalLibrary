@@ -3157,6 +3157,8 @@ h2.title {
 
 /*Fix IE9 bugs*/
 .ie9 {
+	
+	/*Tooltip of Forum setting on Forum section*/
 	.sbac-forum-topic-node-view-controls {
 		width: 140px;
 	}
@@ -3177,4 +3179,11 @@ h2.title {
 			height: 20px;
 		}
 	}	
+	
+
+	
+	.button.comment-direct-reply-form-cancel-link, 
+	.button.comment-reply-form-cancel-link {
+		margin-top: 25px !important;
+	}
 }

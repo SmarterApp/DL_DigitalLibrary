@@ -3594,22 +3594,31 @@ h2.title {
 }
 
 /*Fix IE9 bugs*/
-/* line 3160, ../sass/sbac_forum.scss */
+/* line 3159, ../sass/sbac_forum.scss */
+.ie9 {
+  /*Tooltip of Forum setting on Forum section*/
+}
+/* line 3162, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls {
   width: 140px;
 }
-/* line 3165, ../sass/sbac_forum.scss */
+/* line 3167, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper ul {
   padding: 3px 0 5px !important;
   line-height: 1.4 !important;
 }
-/* line 3169, ../sass/sbac_forum.scss */
+/* line 3171, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper ul li {
   margin-bottom: 0 !important;
 }
-/* line 3174, ../sass/sbac_forum.scss */
+/* line 3176, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper a {
   font-size: 15px;
   line-height: 1;
   height: 20px;
+}
+/* line 3186, ../sass/sbac_forum.scss */
+.ie9 .button.comment-direct-reply-form-cancel-link,
+.ie9 .button.comment-reply-form-cancel-link {
+  margin-top: 25px !important;
 }
