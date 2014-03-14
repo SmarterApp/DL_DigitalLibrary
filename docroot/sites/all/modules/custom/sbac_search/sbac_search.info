@@ -7,7 +7,6 @@ project = sbac_search
 dependencies[] = acquia_search
 dependencies[] = acquia_search_multi_subs
 dependencies[] = apachesolr
-dependencies[] = apachesolr_access
 dependencies[] = apachesolr_search
 dependencies[] = apachesolr_user
 dependencies[] = apachesolr_views
