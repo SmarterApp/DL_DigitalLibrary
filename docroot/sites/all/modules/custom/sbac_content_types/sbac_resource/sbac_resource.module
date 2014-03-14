@@ -2396,7 +2396,13 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         if ($account->uid == $node->uid && ($op == 'view' || $op == 'update')) {
           $access = TRUE;
         }
-      break;
+        break;
+      case 'removed':
+        // author has view/edit
+        if ($account->uid == $node->uid && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
+        }
+        break;
     }
   }
 
