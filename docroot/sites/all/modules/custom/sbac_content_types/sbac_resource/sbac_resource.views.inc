@@ -16,47 +16,50 @@ function sbac_resource_views_query_alter(&$view, &$query) {
     $all_condition = db_and()->condition('sbac_node_resource_state.state', "published")->condition('sbac_node_resource_state.uid', 0);
     $view->query->add_where('AND', $all_condition);
 
-    // Get User data.
+    // Users cannot see resources that are flagged with a state restriction
     global $user;
-    $user_profile = user_load($user->uid);
-    $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
-    $users_states = array();
-    if (isset($user_profile_wrapper->field_state)) {
-      $state_terms = $user_profile_wrapper->field_state->value();
-      if (!empty($state_terms)) {
-        foreach ($state_terms as $state) {
-          $users_states[] = $state->tid;
+    $has_role = array_intersect($user->roles, array('administrator'));
+    if (empty($has_role)) { // Administrator role is exempted from this. They see all.
+      $user_profile = user_load($user->uid);
+      $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
+      $users_states = array();
+      if (isset($user_profile_wrapper->field_state)) {
+        $state_terms = $user_profile_wrapper->field_state->value();
+        if (!empty($state_terms)) {
+          foreach ($state_terms as $state) {
+            $users_states[] = $state->tid;
+          }
         }
       }
-    }
 
-    // create the join object. STATE
-    $join = new views_join;
-    $join->table ='field_data_field_view_permissions_per_state';
-    $join->left_table = 'node';
-    $join->left_field = 'nid';
-    $join->field = 'entity_id';
-    $join->extra = array(
-       0 => array('field' => 'entity_type', 'value' => 'node'),
-       1 => array('field' => 'deleted', 'value' => 0),
-    );
-    $join->type = "LEFT";
-    $join->extra_type = 'AND';
-    $join->adjusted = 'TRUE';
+      // create the join object. STATE
+      $join = new views_join;
+      $join->table ='field_data_field_view_permissions_per_state';
+      $join->left_table = 'node';
+      $join->left_field = 'nid';
+      $join->field = 'entity_id';
+      $join->extra = array(
+         0 => array('field' => 'entity_type', 'value' => 'node'),
+         1 => array('field' => 'deleted', 'value' => 0),
+      );
+      $join->type = "LEFT";
+      $join->extra_type = 'AND';
+      $join->adjusted = 'TRUE';
 
-    $view->query->table_queue['field_data_field_view_permissions_per_state'] = array(
-      'table' => 'field_data_field_view_permissions_per_state',
-      'num' => 1,
-      'alias' => 'field_data_field_view_permissions_per_state',
-      'join' => $join,
-      'relationship' => 'node'
-    );
-    $condition_groups = count($query->where) + 1;
-    if (!empty($users_states)) {
-      $query->add_where($condition_groups, 'field_data_field_view_permissions_per_state.field_view_permissions_per_state_tid', $users_states, 'IN');
+      $view->query->table_queue['field_data_field_view_permissions_per_state'] = array(
+        'table' => 'field_data_field_view_permissions_per_state',
+        'num' => 1,
+        'alias' => 'field_data_field_view_permissions_per_state',
+        'join' => $join,
+        'relationship' => 'node'
+      );
+      $condition_groups = count($query->where) + 1;
+      if (!empty($users_states)) {
+        $query->add_where($condition_groups, 'field_data_field_view_permissions_per_state.field_view_permissions_per_state_tid', $users_states, 'IN');
+      }
+      $query->add_where($condition_groups, 'field_data_field_view_permissions_per_state.field_view_permissions_per_state_tid', array(), 'IS NULL');
+      $query->where[$condition_groups]['type'] = "OR";
     }
-    $query->add_where($condition_groups, 'field_data_field_view_permissions_per_state.field_view_permissions_per_state_tid', array(), 'IS NULL');
-    $query->where[$condition_groups]['type'] = "OR";
   }
 
   if ($view->name == 'my_resources') {
