@@ -2054,6 +2054,7 @@ View Topic Page, Comment Page
 			  border-left: 12px solid rgba(0, 0, 0, 0);
 		    border-right: 12px solid rgba(0, 0, 0, 0);
 		    border-top: 12px solid #828588;
+				background-color: rgba(0, 0, 0, 0);
 		    bottom: 31px;
 		    content: "";
 		    display: block;
@@ -2065,11 +2066,11 @@ View Topic Page, Comment Page
 		    z-index: 1000;
 			}
 
-			.sbac-forum-topic-node-view-controls-popup:after {
-			  background-color: rgba(0, 0, 0, 0);
-		    bottom: 30px;
-		    position: absolute;
-			}
+			/*.sbac-forum-topic-node-view-controls-popup:after {
+						  background-color: rgba(0, 0, 0, 0);
+					    bottom: 30px;
+					    position: absolute;
+						}*/
 
 			.sbac-forum-topic-node-view-controls-popup  {
 			  background-color: #FFFFFF;
@@ -2239,6 +2240,7 @@ View Topic Page, Comment Page
 					width: 120px;
 					word-wrap: break-word;
 					line-height: 1.2;
+					font-size: 16px;
 					float: left;
 				}
 			}
@@ -2247,6 +2249,8 @@ View Topic Page, Comment Page
 				font-size: 13px;
 				line-height: 1.6;
 				margin-top: 5px;
+				clear: both;
+				display: block;
 			}
 		}
 
@@ -3151,4 +3155,26 @@ h2.title {
 }
 
 
-
+/*Fix IE9 bugs*/
+.ie9 {
+	.sbac-forum-topic-node-view-controls {
+		width: 140px;
+	}
+	
+	.sbac-forum-topic-node-view-controls-wrapper {
+		ul {
+			padding: 3px 0 5px !important;
+			line-height: 1.4 !important;
+			
+			li {
+				margin-bottom: 0 !important;
+			}
+		}
+		
+	  a{
+			font-size: 15px;
+			line-height: 1;
+			height: 20px;
+		}
+	}	
+}

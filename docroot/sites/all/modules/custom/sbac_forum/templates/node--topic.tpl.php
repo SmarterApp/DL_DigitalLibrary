@@ -88,7 +88,7 @@
 <div class="topic-node--forum-parent-info">
 
   <div class="topic-node-forum-parent-name-wrapper">
-    <h1><?php print $parent_forum_markup['forum_name']; ?><h1>
+    <h1><?php print $parent_forum_markup['forum_name']; ?></h1>
   </div>
 
   <div class="sbac-forum-topic-node-view-controls-wrapper">
