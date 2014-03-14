@@ -898,3 +898,15 @@ function sbac_central_update_7067() {
   drupal_flush_all_caches();
 
 }
+
+/*
+ * Gets records that were not saved correctly because
+ * of the missing entity_save within sbac_core.
+ */
+function sbac_central_update_7068() {
+  $sql = "SELECT e.* FROM {eck_feedback} e JOIN {node} n ON e.node_id = n.nid WHERE e.type = 'post' AND n.sticky = 1";
+  $results = db_query($sql);
+  foreach ($results as $row) {
+    db_query("UPDATE {eck_feedback} SET completed = 1 WHERE id = :id", array(':id' => $row->id));
+  }
+}
