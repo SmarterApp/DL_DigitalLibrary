@@ -106,6 +106,18 @@ function resource_access($op, $node, $account = NULL) {
       return ($published && $role);
     }
 
+    if ($op == 'access quality criteria revisions') {
+      // only allow access to the Revisions tab if this is a resubmission
+      return db_query("SELECT
+                          max(history.stamp)
+                        FROM node
+                          LEFT JOIN workbench_moderation_node_history history
+                            ON history.nid = node.nid
+                        WHERE node.nid = :nid AND from_state = 'draft' AND state = 'needs_review'
+                        group by history.nid
+                        having count(history.nid) > 1;", array(':nid' => $node->nid))->fetchField();
+    }
+
     $args = array(
       ':node_id' => $node->nid,
       ':uid' => $account->uid,

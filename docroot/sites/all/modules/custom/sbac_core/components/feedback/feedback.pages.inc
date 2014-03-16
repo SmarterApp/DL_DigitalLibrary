@@ -38,6 +38,7 @@ function resource_feedback_page($node) {
       ),
       'access quality criteria process' => array(
         'feedback' => array(
+          'revisions', // revisions tab
           'gk',     // gate keeper tab
           'qc',     // quality criteria review tab
         ),

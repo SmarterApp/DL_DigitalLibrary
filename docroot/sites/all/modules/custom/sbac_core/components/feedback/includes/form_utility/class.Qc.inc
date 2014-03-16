@@ -137,6 +137,20 @@ class Qc extends Base {
     // add custom submit handler
     $this->_form['#submit'][] = 'feedback_eck_qc_form_submit';
 
+    // only show field_contributor_comment to the resource author
+    global $user;
+    if ($this->_resource->uid != $user->uid) {
+      if (!empty($this->_form['field_review_set'][LANGUAGE_NONE])) {
+        for ($i = 0; $i < $this->_form['field_review_set'][LANGUAGE_NONE]['#cardinality']; $i++) {
+          if(!empty($this->_form['field_review_set']['und'][$i]['field_contributor_comment'])){
+            $this->_form['field_review_set']['und'][$i]['field_contributor_comment']['#access'] = FALSE;
+          }
+          if(!empty($this->_form['field_review_set']['und'][$i]['field_contributor_comment_date'])){
+            $this->_form['field_review_set']['und'][$i]['field_contributor_comment_date']['#access'] = FALSE;
+          }
+        }
+      }
+    }
     parent::postProcess();
   }
 

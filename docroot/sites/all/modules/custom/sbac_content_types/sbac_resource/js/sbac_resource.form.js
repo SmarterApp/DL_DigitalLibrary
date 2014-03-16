@@ -72,10 +72,11 @@
     var submit_resource = $('#sbac-resource-modal-submit-resource');
     var save_all_changes = $('#sbac-resource-save-all-changes');
     var active_tab = $('.vertical-tab-button.selected a strong').html();
+    var last_tab = $('.vertical-tab-button.last a strong').html();
 
     submit_resource.hide();
     save_all_changes.hide();
-    if (active_tab == 'Tags' && dlrb_member == false) {
+    if ((active_tab == last_tab) && dlrb_member == false) {
       $('#edit-save-continue').html('Submit Resource');
     }
     else if (active_tab == 'Advanced') {

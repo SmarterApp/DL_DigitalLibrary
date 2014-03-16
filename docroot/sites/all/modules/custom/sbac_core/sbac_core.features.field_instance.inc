@@ -467,6 +467,89 @@ function sbac_core_field_default_field_instances() {
     'xss' => 1,
   );
 
+  // Exported field_instance: 'field_collection_item-field_quality_set-field_contributor_comment'
+  $field_instances['field_collection_item-field_quality_set-field_contributor_comment'] = array(
+    'bundle' => 'field_quality_set',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_contributor_comment',
+    'label' => 'Contributor\'s comment',
+    'profanity' => 1,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 3,
+    ),
+    'xss' => 1,
+  );
+
+  // Exported field_instance: 'field_collection_item-field_quality_set-field_contributor_comment_date'
+  $field_instances['field_collection_item-field_quality_set-field_contributor_comment_date'] = array(
+    'bundle' => 'field_quality_set',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_contributor_comment_date',
+    'label' => 'Contributor\'s comment date',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'increment' => 15,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_help_description' => '',
+        'label_position' => 'above',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_text',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'field_collection_item-field_quality_set-field_meets_criterion'
   $field_instances['field_collection_item-field_quality_set-field_meets_criterion'] = array(
     'bundle' => 'field_quality_set',
@@ -540,6 +623,96 @@ function sbac_core_field_default_field_instances() {
       'weight' => 2,
     ),
     'xss' => 1,
+  );
+
+  // Exported field_instance: 'field_collection_item-field_review_set-field_contributor_comment'
+  $field_instances['field_collection_item-field_review_set-field_contributor_comment'] = array(
+    'bundle' => 'field_review_set',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_contributor_comment',
+    'label' => 'Contributor\'s comment',
+    'profanity' => 1,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 5,
+    ),
+    'xss' => 1,
+  );
+
+  // Exported field_instance: 'field_collection_item-field_review_set-field_contributor_comment_date'
+  $field_instances['field_collection_item-field_review_set-field_contributor_comment_date'] = array(
+    'bundle' => 'field_review_set',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+        ),
+        'type' => 'date_default',
+        'weight' => 3,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_contributor_comment_date',
+    'label' => 'Contributor\'s comment date',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'increment' => 15,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_help_description' => '',
+        'label_position' => 'above',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_text',
+      'weight' => 7,
+    ),
   );
 
   // Exported field_instance: 'field_collection_item-field_review_set-field_level'
@@ -968,9 +1141,11 @@ function sbac_core_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Add some details');
-  t('Appropriate For:');
+  t('Appropriate For');
   t('Avg Rating');
   t('Comments');
+  t('Contributor\'s comment');
+  t('Contributor\'s comment date');
   t('Details');
   t('Flagged reviews and users are reviewed by the Smarter Balanced Assessment Consortium to determine whether they violate the terms of service. Violations can lead to account termination.');
   t('Helps Improve Student Learning');

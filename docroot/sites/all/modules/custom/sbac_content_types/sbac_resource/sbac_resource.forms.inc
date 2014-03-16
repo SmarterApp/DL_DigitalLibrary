@@ -73,6 +73,7 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_summary($form, $form_state);
     _sbac_resource_form_materials($form, $form_state);
     _sbac_resource_form_tags($form, $form_state);
+    _sbac_resource_form_revisions($form, $form_state);
     _sbac_resource_form_advanced($form, $form_state);
     _sbac_resource_form_cancel_all_changes_button($form, $form_state);
     _sbac_resource_form_save_all_changes_button($form, $form_state);
@@ -355,16 +356,33 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $selector = ".vertical-tabs-list li:nth-child(2) a";
         $valid = FALSE;
         break;
+      case 'sbac-revisions-tab':
       case 'edit-group_tags':
         global $user;
         if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
           $valid = FALSE;
         }
         else {
-          $valid = TRUE;
+          if ($active_tab == 'sbac-revisions-tab') {
+            $valid = TRUE;
+          }
+          else {
+            $query = new EntityFieldQuery();
+            $submitted = (bool) $query->entityCondition('entity_type', 'feedback')
+              ->entityCondition('bundle', 'gate_keeper')
+              ->propertyCondition('completed', 1)
+              ->propertyCondition('node_id', $form_state['node']->nid)
+              ->count()
+              ->execute();
+            if ($submitted) {
+              $valid = FALSE;
+            } else {
+              $valid = TRUE;
+            }
+          }
         }
         $selector = ".vertical-tabs-list li:nth-child(5) a";
-        break;
+      break;
       case 'edit-group_summary':
         $valid = FALSE;
         $selector = ".vertical-tabs-list li:nth-child(4) a";
@@ -424,6 +442,21 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
   if (!$save_all_changes_modal) {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
+    // Save the contributor's comments
+    if (!empty($form_state['values']['sbac_revisions'])) {
+      foreach ($form_state['values']['sbac_revisions'] as $feedback) {
+        $question_ids = explode('::', $feedback['question_id']);
+        foreach ($question_ids as $item_id) {
+          $question = field_collection_item_load($item_id);
+          if ($question) {
+            $question_wrapper = entity_metadata_wrapper('field_collection_item', $question);
+            $question_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
+            $question_wrapper->field_contributor_comment_date->set(time());
+            $question_wrapper->save();
+          }
+        }
+      }
+    }
   }
   // Rebuild form.
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
@@ -489,6 +522,13 @@ function sbac_resource_validate_form(&$form, &$form_state) {
   // Do not validate on ajax events like "Upload"
   if ($form_state['submitted']) {
     switch ($form_state['values']['additional_settings__active_tab']) {
+      case 'sbac-revisions-tab':
+        sbac_resource_validate_general($form, $form_state);
+        sbac_resource_validate_materials($form, $form_state);
+        sbac_resource_validate_summary($form, $form_state);
+        sbac_resource_validate_tags($form, $form_state);
+        sbac_resource_validate_revisions($form, $form_state);
+        break;
       case 'edit-group_materials':
         sbac_resource_validate_general($form, $form_state);
         sbac_resource_validate_materials($form, $form_state);
@@ -901,6 +941,36 @@ function sbac_resource_validate_materials(&$form, &$form_state) {
     drupal_set_message('materials:field_use_of_student_images:group:' . $error, 'sbac_resource_error');
   }
   */
+}
+
+/**
+ * Validation function for revisions section
+ * @param $form
+ * @param $form_state
+ */
+function sbac_resource_validate_revisions(&$form, &$form_state){
+  if(!empty($form_state['values']['sbac_revisions'])){
+    $i = 1;
+    foreach($form_state['values']['sbac_revisions'] as $index => $feedback) {
+      $text = $feedback['contributor_comment'];
+      if ($text == '') {
+        $error = "Please add a comment to question $i.";
+      }
+      else {
+        $bad_words = profanity_validate_text($text);
+        if ($bad_words) {
+          $error = "Please remove any inappropriate language from question $i.";
+        }
+      }
+      if ($error) {
+        form_set_error('sbac_revisions][' . $index . '][contributor_comment', $error);
+        _sbac_resource_remove_error_message($error);
+        drupal_set_message('revisions:field_contributor_comment_'.$index.':single:' . $error, 'sbac_resource_error');
+        drupal_set_message('revisions:field_contributor_comment_'.$index.':group:' . $error, 'sbac_resource_error');
+      }
+      $i++;
+    }
+  }
 }
 
 /**
@@ -1782,6 +1852,229 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   if (isset($_GET['flag']) && ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'view-resource-flags')) {
     if (isset($form['field_pii']['und'])) {
       $form['field_pii']['und']['#attributes']['disabled'] = 'disabled';
+    }
+  }
+}
+
+/**
+ * Create revisions tab
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_revisions(&$form, $form_state) {
+  if (isset($form['#node']->nid)) {
+
+    $post_entities = entity_load('feedback', FALSE, array(
+      'node_id' => $form['#node']->nid,
+      'type' => 'post',
+      'status' => 1,
+      'current' => 1,
+      'completed' => 1,
+    ));
+
+    if ($post_entities) {
+      $post = current($post_entities);
+
+    }
+
+    // check for QC feedbacks first
+    $qc_entities = entity_load('feedback', FALSE, array(
+      'node_id' => $form['#node']->nid,
+      'status' => 1,
+      'current' => 1,
+      'completed' => 1,
+      'type' => 'qc',
+    ));
+    if (!empty($qc_entities)) {
+      $form['sbac_revisions'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Revisions'),
+        '#tree' => TRUE,
+        '#group' => 'additional_settings',
+        '#attributes' => array(
+          'id' => 'sbac-revisions-tab',
+        )
+      );
+      $form['sbac_revisions']['header'] = array(
+        '#markup' => t('Quality Criteria'),
+        '#prefix' => '<h2>',
+        '#suffix' => '</h2>'
+      );
+      $form['sbac_revisions']['post_title'] = array(
+        '#markup' => t('Posting comments'),
+        '#prefix' => '<h2>',
+        '#suffix' => '</h2>'
+      );
+      $form['sbac_revisions']['post_comment'] = array(
+        '#markup' => field_entity_value($post, 'field_to_contributor'),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>'
+      );
+      $form['sbac_revisions']['sub_header'] = array(
+        '#markup' => t("Reviewer's Resource Recommendation"),
+        '#prefix' => '<h5>',
+        '#suffix' => '</h5>',
+      );
+      // QC recommendations
+      $recommendations = '';
+      $i = 1;
+      foreach ($qc_entities as $entity) {
+        $created = format_date($entity->changed, 'full');
+        $options = field_allowed_values('field_rec_options');
+        $headline = $options[field_entity_value($entity, 'field_rec_options')];
+        $comments = field_entity_value($entity, 'field_rec_rationale');
+        $recommendations .= theme('qc_teaser', array(
+          'id' => $entity->id,
+          'author' => t('Reviewer !count', array('!count' => $i)),
+          'created' => $created,
+          'headline' => $headline,
+          'comments' => more_less_text($comments, 140),
+        ));
+        $form['sbac_revisions']['recommendations'] = array(
+          '#markup' => $recommendations,
+        );
+        $i++;
+      }
+      // QC questions
+      $focus = field_get_value($form_state['node'], 'field_focus', 'tid');
+      $questions_count = sizeof(field_entity_value(reset($qc_entities), 'field_review_set'));
+      for ($i = 0; $i < $questions_count; $i++) {
+        $question_title = variable_get('qc_' . $focus . '_criteria_' . ($i + 1) . '_title');
+        $question_title = filter_text($question_title);
+        $question_desc = variable_get('qc_' . $focus . '_criteria_' . ($i + 1) . '_description');
+        $question_desc = filter_text($question_desc);
+        $question_desc = more_less_text($question_desc, 300);
+        $form['sbac_revisions']['feedback_' . $i] = array(
+          '#type' => 'fieldset',
+        );
+        $form['sbac_revisions']['feedback_' . $i]['label'] = array(
+          '#markup' => $i + 1 . '. ' . strip_tags($question_title),
+        );
+        $form['sbac_revisions']['feedback_' . $i]['description'] = array(
+          '#markup' => $question_desc,
+        );
+        $form['sbac_revisions']['feedback_' . $i]['comments'] = array(
+          '#markup' => t("Reviewer's Comments"),
+        );
+        $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'] = array(
+          '#type' => 'container',
+        );
+        // Reviewers' comments
+        $j = 1;
+        $question_ids = array();
+        foreach ($qc_entities as $entity) {
+          $questions = field_entity_value($entity, 'field_review_set');
+          $level = field_entity_value($questions[$i], 'field_level');
+          $comments = field_entity_value($questions[$i], 'field_comments');
+          $comments = more_less_text($comments, 140);
+          $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j] = array(
+            '#type' => 'container',
+          );
+          $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['author'] = array(
+            '#markup' => t('Reviewer !j', array('!j' => $j)),
+            '#prefix'=>'<div class="author">',
+            '#suffix'=>'</div>',
+          );
+          $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['created'] = array(
+            '#markup' => format_date($entity->changed, 'full'),
+            '#prefix'=>'<div class="created">',
+            '#suffix'=>'</div>',
+          );
+          $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['headline'] = array(
+            '#markup' => t('Quality Criteria Level: !level', array('!level' => $level)),
+            '#prefix'=>'<div class="headline">',
+            '#suffix'=>'</div>',
+          );
+          $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['comments'] = array(
+            '#markup' => $comments,
+            '#prefix'=>'<div class="comments">',
+            '#suffix'=>'</div>',
+          );
+          $question_ids[] = $questions[$i]->item_id;
+          $j++;
+        }
+        $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
+          '#type' => 'textarea',
+          '#title' => t("Contributor's comment"),
+          '#description' => t('Please enter how this criterion has been addressed in this resubmission.'),
+        );
+        $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
+          '#type' => 'hidden',
+          '#value' => implode('::', $question_ids),
+        );
+      }
+    }
+    else {
+      // check for gk feedback
+      $gk = entity_load('feedback', FALSE, array(
+        'node_id' => $form['#node']->nid,
+        'status' => 1,
+        'current' => 1,
+        'completed' => 1,
+        'type' => 'gate_keeper',
+      ));
+      if (!empty($gk)) {
+        $form['sbac_revisions'] = array(
+          '#type' => 'fieldset',
+          '#title' => t('Revisions'),
+          '#tree' => TRUE,
+          '#group' => 'additional_settings',
+          '#attributes' => array(
+            'id' => 'sbac-revisions-tab',
+          )
+        );
+        $form['sbac_revisions']['header'] = array(
+          '#markup'=>t('Gate Keeping Criteria'),
+          '#prefix'=>'<h2>',
+          '#suffix'=>'</h2>'
+        );
+        $feedback = current($gk);
+        $i = 1;
+        foreach (field_entity_value($feedback, 'field_quality_set') as $question) {
+          $question_title = variable_get('resource_gate_keeper_criteria_' . $i . '_title');
+          $question_title = filter_text($question_title);
+
+          $question_desc = variable_get('resource_gate_keeper_criteria_' . $i . '_description');
+          $question_desc = filter_text($question_desc);
+          $question_desc = more_less_text($question_desc, 300);
+
+          $level = field_entity_value($question, 'field_meets_criterion');
+          $level = $level ? t('Yes') : t('No');
+
+          $form['sbac_revisions']['feedback_' . $i] = array(
+            '#type'=> 'fieldset'
+          );
+          $form['sbac_revisions']['feedback_' . $i]['question'] = array(
+            '#markup' => $i . '. ' . strip_tags($question_title),
+            '#prefix' => '<h5>',
+            '#suffix' => '</h5>'
+          );
+          $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
+            '#type'=>'hidden',
+            '#value' => $question->item_id,
+          );
+          $form['sbac_revisions']['feedback_' . $i]['description'] = array(
+            '#markup' => $question_desc
+          );
+          $form['sbac_revisions']['feedback_' . $i]['gk_info'] = array(
+            '#type' => 'item',
+            '#title' => t('Reviewer 1'),
+            '#markup' => format_date($feedback->created, 'full')
+          );
+          $form['sbac_revisions']['feedback_' . $i]['gk_comment'] = array(
+            '#type' => 'item',
+            '#title' => t('Quality Criteria Level: !level', array('!level' => $level)),
+            '#markup' => more_less_text(field_entity_value($question, 'field_comments'))
+          );
+          $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
+            '#type' => 'textarea',
+            '#title' => t("Contributor's comment"),
+            '#description' => t('Please enter how this criterion has been addressed in this resubmission.'),
+          );
+          $i++;
+        }
+      }
     }
   }
 }
@@ -2922,7 +3215,7 @@ function sbac_resource_unsubmit_resource_form($form, &$form_state) {
     '#markup' => '<p>Unsubmitting your resource will return your resource back to draft.
                  Your resource will no longer be in the review process until it is resubmitted.</p>',
   );
- 
+
   $form['unsubmit'] = array(
     '#type' => 'submit',
     '#value' => 'Un-submit',
@@ -2934,6 +3227,6 @@ function sbac_resource_unsubmit_resource_form($form, &$form_state) {
     '#value' => 'Cancel',
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
- 
+
   return $form;
 }
