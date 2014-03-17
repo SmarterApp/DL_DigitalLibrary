@@ -1466,6 +1466,12 @@ function sbac_forum_node_delete($node) {
         }
       }
     }
+    $edit = array(
+      'entity_type' => 'node',
+      'entity_id' => $node->nid,
+      'title' => $node->title,
+    );
+    drupal_write_record('sbac_forum_deleted_log', $edit);
   }
 }
 

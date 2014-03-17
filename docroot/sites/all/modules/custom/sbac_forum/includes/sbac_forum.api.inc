@@ -553,3 +553,13 @@ function sbac_forum__api__send_bulk_notifications($forum_term, $op, $users_to_no
       break;
   }
 }
+
+function sbac_forum__api__get_deleted_log_entry($entity_id, $entity_type) {
+  $query = db_select('sbac_forum_deleted_log', 'dl');
+  $query->fields('dl', array('title'));
+  $query->condition('dl.entity_id', $entity_id);
+  $query->condition('dl.entity_type', $entity_type);
+  $query->orderBy('dl.entity_id', 'DESC');
+  $query->range(0, 1);
+  return $query->execute()->fetchAssoc();
+}
