@@ -1,0 +1,9 @@
+name = Google CDN
+description = Provides the ability to upload file contents to Google
+package = Google
+core = 7.x
+files[] = google_cdn.module
+files[] = GoogleCDNStreamWrapper.inc
+dependencies[] = libraries (2.x)
+configure = admin/config/media/amazons3
+

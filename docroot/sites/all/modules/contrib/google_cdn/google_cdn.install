@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Google CDN module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function google_cdn_requirements($phase) {
+  $t = get_t();
+
+  if ($phase != 'runtime') {
+    return array();
+  }
+
+  $fopen_allowed = ini_get('allow_url_fopen');
+  $ok_message = $t('The PHP allow_url_fopen setting is on.');
+  $error_message = $t('Google CDN module requires that the allow_url_fopen setting be turned on in php.ini.');
+
+  $requirements['google_cdn_allow_url_fopen'] = array(
+    'severity' => $fopen_allowed ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+    'title' => $t('Google CDN'),
+    'value' => 'allow_url_fopen',
+    'description' => $fopen_allowed ? $ok_message : $error_message,
+  );
+
+  $info = libraries_load('google_sdk');
+  if (!$info['loaded']) {
+    $requirements['google_sdk'] = array(
+      'severity' => REQUIREMENT_ERROR,
+      'title' => $t('Google SDK'),
+      'value' => $t('Failed to load the Google SDK'),
+      'description' => $t('Please make sure the Google SDK library is installed in the libraries directory.'),
+    );
+  }
+  else if(!$info['version'] || version_compare($info['version'], GOOGLE_SDK_MINIMUM_VERSION) < 0) {
+    $requirements['google_sdk'] = array(
+      'severity' => REQUIREMENT_ERROR,
+      'title' => $t('Google SDK'),
+      'value' => $info['version'] . ' incompatible',
+      'description' => $t('Please make sure the Google SDK library installed is ' . GOOGLE_SDK_MINIMUM_VERSION . ' or greater.'),
+    );
+  }
+  else {
+    $requirements['google_sdk'] = array(
+      'severity' => REQUIREMENT_OK,
+      'title' => $t('Google SDK'),
+      'value' => $info['version'] . ' compatible',
+    );
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function google_cdn_uninstall() {
+  variable_del('google_cdn_public_key');
+  variable_del('google_cdn_uri');
+  variable_del('google_cdn_bucket_name');
+  variable_del('google_cdn_extensions');
+}

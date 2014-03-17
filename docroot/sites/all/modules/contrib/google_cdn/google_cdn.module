@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Primary file that contains the Google CDN functionality.
+ */
+
+/**
+ * Denotes "AWS SDK for PHP" minimum version number.
+ */
+define('GOOGLE_SDK_MINIMUM_VERSION', '1..0');
+
+/**
+ * Implements hook_menu().
+ */
+function google_cdn_menu() {
+  $items = array();
+
+  $items['admin/config/media/google_cdn'] = array(
+    'title' => 'Google CDN',
+    'description' => 'Configure Google credentials and settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('google_cdn_admin'),
+    'access arguments' => array('administer google cdn'),
+    'file' => 'google_cdn.admin.inc'
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function google_cdn_permission() {
+  return array(
+    'administer google cdn' => array(
+      'title' => t('Administer Google CDN'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_libraries_info()
+ */
+function google_cdn_libraries_info() {
+  return array(
+    'google_sdk' => array(
+      'name' => 'google_sdk',
+      'title' => 'Google SDK for PHP',
+      'vendor url' => 'https://github.com/google/google-api-php-client/',
+      'download url' => 'https://github.com/google/google-api-php-client/',
+      'files' => array(
+        'php' => array(
+          'src/Google/Service.php',
+        ),
+      ),
+      'version arguments' => array(
+        'file' => 'src/Google/Service.php',
+      ),
+      'version callback' => 'google_cdn_library_version_callback',
+    ),
+  );
+}
+
+function google_cdn_library_version_callback($library) {
+  $version = '1.0';
+  return $version;
+}
+
