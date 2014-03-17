@@ -562,7 +562,7 @@ function sbac_forum_remove_member_confirm($form, &$form_state) {
 
   $form['submit_description'] = array(
     '#markup' => '<h2>'.t('You are about to remove this user').'</h2><p>' . t('
-    If you continue this user will no longer be able to participate in thie forum. Please provide rationale as to why they have been removed. This will be sent to the user via notification.') . '</p>',
+    If you continue this user will no longer be able to participate in the forum. Please provide rationale as to why they have been removed. This will be sent to the user via notification.') . '</p>',
   );
 
   $form['notification_message'] = array(
