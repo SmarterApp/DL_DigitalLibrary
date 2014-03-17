@@ -1068,7 +1068,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_intended_end_user',
-    'label' => 'Intended End User(s)',
+    'label' => 'Intended Forum Participants',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1201,7 +1201,7 @@ function sbac_forum_field_default_field_instances() {
   t('Files');
   t('Forum');
   t('Grade(s)');
-  t('Intended End User(s)');
+  t('Intended Forum Participants');
   t('Intended Student Population(s)');
   t('Last Activity');
   t('Links');

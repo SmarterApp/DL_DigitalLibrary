@@ -124,7 +124,7 @@ function _sbac_forum_filter_categories() {
   $categories['intended_student_populations']['terms'] = taxonomy_get_tree($intended_student_populations->vid);
 
   $intended_end_user = taxonomy_vocabulary_machine_name_load('intended_end_user');
-  $categories['intended_end_user']['display_name'] = 'Intended End Users';
+  $categories['intended_end_user']['display_name'] = 'Intended Forum Participants';
   $categories['intended_end_user']['vocabulary'] = $intended_end_user;
   $categories['intended_end_user']['terms'] = taxonomy_get_tree($intended_end_user->vid);
 
