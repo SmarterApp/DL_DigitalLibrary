@@ -368,7 +368,13 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
       $target_faci = user_load($first_faci_user_id);
       $faci_data = entity_metadata_wrapper('user', $target_faci);
       $fn = $faci_data->field_first_name->value();
-      $ln = $faci_data->field_last_name->value();
+      $ln = ''; // last name hide by default.
+      if (isset($faci_data->field_privacy)) { // user is using non-default settings.
+        $privacy_settings = $faci_data->field_privacy->value();
+        if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
+          $ln = $faci_data->field_last_name->value();
+        }
+      }
       $full_name = $fn . ' ' . $ln;
       $link = 'forum-auth-pane/'. $first_faci_user_id;
       $link_ops = array('attributes' => array('class' => 'forum-list-auth-pane-item'));
