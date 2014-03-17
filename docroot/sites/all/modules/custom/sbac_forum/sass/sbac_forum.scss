@@ -2703,6 +2703,8 @@ h2.title {
 		    font-size: 13px;
 		    line-height: 20px;
 		    vertical-align: top;
+				float: left;
+				clear: both;
 			}
 
 			 a:before {
@@ -2715,10 +2717,15 @@ h2.title {
 		    position: relative;
 			}
 		}
+		
+		.field-name-field-topic-comment-files .file-widget form-managed-file .file :before {
+	    content: "" !important;
+		}
 
 		.topic-node-comment-region-right-bottom {
 			text-align: right;
-
+			clear: both;
+			
 			ul{
 				list-style-type: none;
 				margin-bottom: 0;
