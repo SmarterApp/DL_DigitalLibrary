@@ -467,6 +467,7 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 
     case 'post_distinction':
       $entity->completed = 1;
+      entity_save('feedback', $entity);
       // distinction = sticky
       $node->sticky = 1;
       node_save($node);

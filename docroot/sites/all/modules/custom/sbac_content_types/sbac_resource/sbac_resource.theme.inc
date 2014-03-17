@@ -866,6 +866,33 @@ function _sbac_resource_my_resources_links($fields) {
         $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['text'] = t('In Review');
+
+        $gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
+        $completed_gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+        if (!$gate_keeper && !$completed_gate_keeper) {
+          $variables['buttons'][] = l(t('Un-submit'), 'sbac-resource/nojs/unsubmit-resource-modal', array(
+            'html' => TRUE,
+            'query' => array(
+              'nid' => $nid
+            ),
+            'attributes' => array(
+              'class' => 'use-ajax button blue ctools-modal-sbac-resource-modal-unsubmit-resource',
+              'id' => 'sbac-resource-modal-unsubmit-resource'
+            )
+          ));
+
+          $variables['links'][] = l(t('Un-submit'), 'sbac-resource/nojs/unsubmit-resource-modal', array(
+            'html' => TRUE,
+            'query' => array(
+              'nid' => $nid
+            ),
+            'attributes' => array(
+              'class' => 'use-ajax ctools-modal-sbac-resource-modal-unsubmit-resource',
+              'id' => 'sbac-resource-modal-unsubmit-resource'
+            )
+          ));
+        }
+
         break;
       case 'rejected':
         $variables['buttons'][] = l('View Notification', 'user', array('absolute' => TRUE, 'fragment' => 'profile-notifications', 'attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));

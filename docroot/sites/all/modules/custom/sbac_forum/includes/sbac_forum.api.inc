@@ -345,8 +345,14 @@ function sbac_forum__api__get_authpane_hoverover($user_id) {
 
   $account_data = entity_metadata_wrapper('user', $account);
   $fn = $account_data->field_first_name->value();
-  $ln = $account_data->field_last_name->value();
-  $full_name = $fn . ' ' . $ln;
+  $ln = ''; // last name hide by default.
+  if (isset($account_data->field_privacy)) { // user is using non-default settings.
+    $privacy_settings = $account_data->field_privacy->value();
+    if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
+      $ln = ' ' . $account_data->field_last_name->value();
+    }
+  }
+  $full_name = $fn . $ln;
 
   $tooltip = '
               <span class="devtools-tooltip account-tooltip">
@@ -546,4 +552,14 @@ function sbac_forum__api__send_bulk_notifications($forum_term, $op, $users_to_no
       }
       break;
   }
+}
+
+function sbac_forum__api__get_deleted_log_entry($entity_id, $entity_type) {
+  $query = db_select('sbac_forum_deleted_log', 'dl');
+  $query->fields('dl', array('title'));
+  $query->condition('dl.entity_id', $entity_id);
+  $query->condition('dl.entity_type', $entity_type);
+  $query->orderBy('dl.entity_id', 'DESC');
+  $query->range(0, 1);
+  return $query->execute()->fetchAssoc();
 }

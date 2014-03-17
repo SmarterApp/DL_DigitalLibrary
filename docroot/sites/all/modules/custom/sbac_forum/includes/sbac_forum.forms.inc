@@ -124,7 +124,7 @@ function _sbac_forum_filter_categories() {
   $categories['intended_student_populations']['terms'] = taxonomy_get_tree($intended_student_populations->vid);
 
   $intended_end_user = taxonomy_vocabulary_machine_name_load('intended_end_user');
-  $categories['intended_end_user']['display_name'] = 'Intended End Users';
+  $categories['intended_end_user']['display_name'] = 'Intended Forum Participants';
   $categories['intended_end_user']['vocabulary'] = $intended_end_user;
   $categories['intended_end_user']['terms'] = taxonomy_get_tree($intended_end_user->vid);
 
@@ -562,7 +562,7 @@ function sbac_forum_remove_member_confirm($form, &$form_state) {
 
   $form['submit_description'] = array(
     '#markup' => '<h2>'.t('You are about to remove this user').'</h2><p>' . t('
-    If you continue this user will no longer be able to participate in thie forum. Please provide rationale as to why they have been removed. This will be sent to the user via notification.') . '</p>',
+    If you continue this user will no longer be able to participate in the forum. Please provide rationale as to why they have been removed. This will be sent to the user via notification.') . '</p>',
   );
 
   $form['notification_message'] = array(
@@ -575,7 +575,7 @@ function sbac_forum_remove_member_confirm($form, &$form_state) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Remove User',
-    '#attributes' => array('class' => array('edit-remove-overlay', 'blue'))
+    '#attributes' => array('class' => array('edit-remove-overlay', 'red'))
   );
 
   $form['cancel'] = array(
@@ -701,6 +701,7 @@ function sbac_forum_delete_comment_confirm_submit($form, &$form_state) {
       if ($task = taskit_get_object('deleted_forum_comment')) {
         $task->addVisibility($task::VISIBILITY_USER);
         $task->addEntity('comment', $comment_id_to_remove);
+        $task->addEntity('node', $comment_entity->nid);
         $task->addOwningUser($for_user_id);
         $task->addTriggeringUser($from_user_id);
         $task->save();

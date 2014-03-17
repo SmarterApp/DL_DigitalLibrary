@@ -864,7 +864,7 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       $form['field_state']['#suffix'] = '</div>';
       $state_field_state = array(
         'visible' => array(
-          ':input[name="field_forum_access_states[und]"]' => array('value' => 0),
+          ':input[name="field_forum_access_states[und]"]' => array('value' => "0"),
         ),
       );
       $form['field_state']['#states'] = $state_field_state;
@@ -874,7 +874,7 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       $form['field_forum_access_role_list']['#suffix'] = '</div><div class="clearfix"></div>';
       $role_field_state = array(
         'visible' => array(
-          ':input[name="field_forum_access_user_roles[und]"]' => array('value' => 0),
+          ':input[name="field_forum_access_user_roles[und]"]' => array('value' => "0"),
         ),
       );
       $form['field_forum_access_role_list']['#states'] = $role_field_state;
@@ -1246,7 +1246,8 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
 function sbac_forum_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'views_exposed_form') {
     if (($form['#id'] == 'views-exposed-form-forum-topic-list-block') ||
-        ($form['#id'] == 'views-exposed-form-forum-member-list-block') ) {
+        ($form['#id'] == 'views-exposed-form-forum-member-list-block') ||
+        ($form['#id'] == 'views-exposed-form-forum-member-list-block-1')) {
       // Add words "sort by" to active selected sort options
       if (isset($form_state['input']['sort_by'])) {
         $selected_sort_by = $form_state['input']['sort_by'];
@@ -1465,6 +1466,12 @@ function sbac_forum_node_delete($node) {
         }
       }
     }
+    $edit = array(
+      'entity_type' => 'node',
+      'entity_id' => $node->nid,
+      'title' => $node->title,
+    );
+    drupal_write_record('sbac_forum_deleted_log', $edit);
   }
 }
 

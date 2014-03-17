@@ -244,7 +244,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       ctools_modal_add_js();
     }
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
-      $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
+      if ($comment_entity->uid != $user->uid) { // can only edit your own. facilitators have comment admin privs, have to hide edit link.
+        unset($vars['content']['links']['comment']['#links']['comment-edit']);
+      } else {
+        $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
+      }
     }
     if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
       $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
@@ -364,8 +368,14 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
       $target_faci = user_load($first_faci_user_id);
       $faci_data = entity_metadata_wrapper('user', $target_faci);
       $fn = $faci_data->field_first_name->value();
-      $ln = $faci_data->field_last_name->value();
-      $full_name = $fn . ' ' . $ln;
+      $ln = ''; // last name hide by default.
+      if (isset($faci_data->field_privacy)) { // user is using non-default settings.
+        $privacy_settings = $faci_data->field_privacy->value();
+        if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
+          $ln = ' ' . $faci_data->field_last_name->value();
+        }
+      }
+      $full_name = $fn . $ln;
       $link = 'forum-auth-pane/'. $first_faci_user_id;
       $link_ops = array('attributes' => array('class' => 'forum-list-auth-pane-item'));
       $faci_link = l($full_name, $link, $link_ops);

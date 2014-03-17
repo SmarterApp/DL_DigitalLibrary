@@ -209,7 +209,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_intended_end_user_tid']['value'] = '';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator_id'] = 'field_intended_end_user_tid_op';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['label'] = 'Intended End User(s) (field_intended_end_user)';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['label'] = 'Intended Forum Participants (field_intended_end_user)';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator'] = 'field_intended_end_user_tid_op';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['identifier'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['multiple'] = TRUE;

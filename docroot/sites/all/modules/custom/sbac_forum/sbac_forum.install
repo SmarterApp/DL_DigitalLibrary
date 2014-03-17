@@ -1,6 +1,52 @@
 <?php
 
 /**
+ * Implements hook_schema().
+ */
+function sbac_forum_schema() {
+  $schema = array();
+
+  $schema['sbac_forum_deleted_log'] = array(
+    'description' => 'Keep track of titles of deleted forums and topics.',
+    'fields' => array(
+      'fdlid' => array(
+        'description' => 'The primary key.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'entity_id' => array(
+        'description' => 'The related entity id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_type' => array(
+        'description' => 'The related entity type.',
+        'type' => 'varchar',
+        'length' => 150,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'title' => array(
+        'description' => 'The title to store.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'entity' => array('entity_id', 'entity_type'),
+    ),
+    'primary key' => array('fdlid'),
+  );
+
+  return $schema;
+}
+
+/**
  *
  */
 function sbac_forum_install() {
@@ -64,4 +110,30 @@ function sbac_forum_update_7005() {
   );
   module_enable($modules);
   drupal_flush_all_caches();
+}
+
+
+/**
+ * Disables apachesolr_access.
+ *
+ *  Implemnts hook_update_N().
+ */
+function sbac_forum_update_7006() {
+  $modules = array(
+    'apachesolr_access',
+  );
+  module_disable($modules);
+  drupal_flush_all_caches();
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Adds the new table.
+ */
+function sbac_forum_update_7007() {
+  $ret = array();
+  $schema = drupal_get_schema('sbac_forum_deleted_log', TRUE);
+  db_create_table('sbac_forum_deleted_log', $schema);
+  return $ret;
 }
