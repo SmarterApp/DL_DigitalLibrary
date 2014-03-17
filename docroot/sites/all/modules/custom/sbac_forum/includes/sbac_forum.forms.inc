@@ -701,6 +701,7 @@ function sbac_forum_delete_comment_confirm_submit($form, &$form_state) {
       if ($task = taskit_get_object('deleted_forum_comment')) {
         $task->addVisibility($task::VISIBILITY_USER);
         $task->addEntity('comment', $comment_id_to_remove);
+        $task->addEntity('node', $comment_entity->nid);
         $task->addOwningUser($for_user_id);
         $task->addTriggeringUser($from_user_id);
         $task->save();

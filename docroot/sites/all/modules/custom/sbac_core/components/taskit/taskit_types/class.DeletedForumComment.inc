@@ -5,16 +5,19 @@ require_once('class.BaseTask.inc');
 
 class DeletedForumComment extends \taskit\sbac_core\BaseTask {
   public function display($entities, $accounts) {
-    // $forum    = taxonomy_term_load(current($entities['taxonomy_term']));
+    $topic    = node_load(current($entities['node']));
     $account  = user_load(current($accounts));
     $forum_name = '';
 
-    if ($account) {
-      $this->setTaskUrl('forums');
+    if ($topic && $account) {
+      $redirect_url = 'node/' . $topic->nid;
+      $this->setTaskUrl($redirect_url);
+
+      $topic_title = $topic->title;
 
       $output = array();
-      $output[] = t('A Facilitator has deleted a forum reply.', array(
-        '!title' => '<span class="taskit-title">' . $forum_name . '</span>',
+      $output[] = t('A Facilitator has deleted a forum reply in Discussion: !title.', array(
+        '!title' => '<span class="taskit-title">' . $topic_title . '</span>',
       ));
 
       $output[] = '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format). '</span> ';
