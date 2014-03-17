@@ -244,7 +244,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       ctools_modal_add_js();
     }
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
-      $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
+      if ($comment_entity->uid != $user->uid) { // can only edit your own. facilitators have comment admin privs, have to hide edit link.
+        unset($vars['content']['links']['comment']['#links']['comment-edit']);
+      } else {
+        $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
+      }
     }
     if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
       $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
