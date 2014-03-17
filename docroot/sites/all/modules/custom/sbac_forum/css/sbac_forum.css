@@ -731,7 +731,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
   height: 20px;
   overflow: hidden;
   vertical-align: bottom;
-  width: 160px;
+  max-width: 160px;
   word-break: break-all;
 }
 /* line 668, ../sass/sbac_forum.scss */
