@@ -54,10 +54,10 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
       if (isset($faci_data->field_privacy)) { // user is using non-default settings.
         $privacy_settings = $faci_data->field_privacy->value();
         if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
-          $ln = $faci_data->field_last_name->value();
+          $ln = ' ' . $faci_data->field_last_name->value();
         }
       }
-      $full_name = $fn . ' ' . $ln;
+      $full_name = $fn . $ln;
       $faci_list_selector = '.vp-faci-field ul.vp-auth-pane';
       $link = 'forum-auth-pane/'. $user_obj->uid;
       $link_ops = array('attributes' => array('class' => 'vp-auth-pane-item'));

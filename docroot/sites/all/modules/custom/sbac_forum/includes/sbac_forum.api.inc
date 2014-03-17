@@ -349,10 +349,10 @@ function sbac_forum__api__get_authpane_hoverover($user_id) {
   if (isset($account_data->field_privacy)) { // user is using non-default settings.
     $privacy_settings = $account_data->field_privacy->value();
     if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
-      $ln = $account_data->field_last_name->value();
+      $ln = ' ' . $account_data->field_last_name->value();
     }
   }
-  $full_name = $fn . ' ' . $ln;
+  $full_name = $fn . $ln;
 
   $tooltip = '
               <span class="devtools-tooltip account-tooltip">
