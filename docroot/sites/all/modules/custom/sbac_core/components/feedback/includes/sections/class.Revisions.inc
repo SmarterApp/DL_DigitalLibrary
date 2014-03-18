@@ -39,7 +39,7 @@ class Revisions extends Base {
     $publisher_feedback = entity_load_single('feedback', $feedback->id);
     return '
           <div class="feedback-item">
-            <div class="criteria-set-title">
+            <div class="criteria-set-title-post">
               ' . t('Posting Comments') . '
             </div>
             <div class="comments">' . field_entity_value($publisher_feedback, 'field_to_contributor') . '</div>
@@ -79,13 +79,13 @@ class Revisions extends Base {
         $question_desc = more_less_text($question_desc, 300);
 
         $question_html .= '
-              <div class="criteria-set-title">
+              <div class="criteria-set-title-question">
                 ' . ($i + 1) . '. ' . strip_tags($question_title) . '
               </div>
               <div class="criteria-set-commentes-text">
                 ' . $question_desc . '
               </div>
-              <div class="comments-title">
+              <div class="comments-title-comments">
                 ' . t("Reviewer's Comments") . '
               </div>
            ';
@@ -115,7 +115,7 @@ class Revisions extends Base {
         // contributor's comment
         $question_html .= '</div>';
         $question_html .= '
-                <div class="comments-title">
+                <div class="comments-title-contributor">
                     ' . t("Contributor's Comment") . '
                 </div>
                 <div class="">
@@ -135,7 +135,7 @@ class Revisions extends Base {
           <div class="feedback-wrap" id="feedback-wrap-qc-comments">
             <h2>' . t('Quality Criteria') . '</h2>
             ' . $publisher_html . '
-            <div class="criteria-set-title">
+            <div class="criteria-set-title-recommendation">
               ' . t('Reviewers Resource Recommendation') . '
             </div>
             <div class="feedback-items">
@@ -167,19 +167,19 @@ class Revisions extends Base {
 
       $output_gk .= '
           <div class="feedback-item">
-            <div class="criteria-set-title">
+            <div class="criteria-set-title-gate-keeper">
               ' . $i . '. ' . strip_tags($item_title) . '
             </div>
             <div class="desc">
               ' . $item_desc . '
             </div>
 
-            <div class="criteria-set-title">' . t('Reviewer 1') . '</div>
+            <div class="criteria-set-title-reviewer">' . t('Reviewer 1') . '</div>
             <div class="date">' . format_date($entity->changed, 'full') . '</div>
             <div class="headline">' . t('Quality Criteria Level: !level', array('!level' => $level)) . '</div>
             <div class="comments">' . field_entity_value($question, 'field_comments') . '</div>
 
-            <div class="criteria-set-title">' . t("Contributor's comment") . '</div>
+            <div class="criteria-set-title-contributor">' . t("Contributor's comment") . '</div>
             <div class="date">' . format_date(field_entity_value($question, 'field_contributor_comment_date'), 'full') . '</div>
             <div class="comments">' . field_entity_value($question, 'field_contributor_comment') . '</div>
           </div>
