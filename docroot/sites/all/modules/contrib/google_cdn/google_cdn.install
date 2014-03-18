@@ -15,38 +15,27 @@ function google_cdn_requirements($phase) {
     return array();
   }
 
-  $fopen_allowed = ini_get('allow_url_fopen');
-  $ok_message = $t('The PHP allow_url_fopen setting is on.');
-  $error_message = $t('Google CDN module requires that the allow_url_fopen setting be turned on in php.ini.');
-
-  $requirements['google_cdn_allow_url_fopen'] = array(
-    'severity' => $fopen_allowed ? REQUIREMENT_OK : REQUIREMENT_ERROR,
-    'title' => $t('Google CDN'),
-    'value' => 'allow_url_fopen',
-    'description' => $fopen_allowed ? $ok_message : $error_message,
-  );
-
-  $info = libraries_load('google_sdk');
+  $info = libraries_load('google-api-php-client');
   if (!$info['loaded']) {
-    $requirements['google_sdk'] = array(
+    $requirements['google_api'] = array(
       'severity' => REQUIREMENT_ERROR,
-      'title' => $t('Google SDK'),
-      'value' => $t('Failed to load the Google SDK'),
-      'description' => $t('Please make sure the Google SDK library is installed in the libraries directory.'),
+      'title' => $t('Google API PHP Client'),
+      'value' => $t('Failed to load the Google API'),
+      'description' => $t('Please make sure the Google API library is installed in the libraries directory.'),
     );
   }
   else if(!$info['version'] || version_compare($info['version'], GOOGLE_SDK_MINIMUM_VERSION) < 0) {
-    $requirements['google_sdk'] = array(
+    $requirements['google_api'] = array(
       'severity' => REQUIREMENT_ERROR,
-      'title' => $t('Google SDK'),
+      'title' => $t('Google API PHP Client'),
       'value' => $info['version'] . ' incompatible',
-      'description' => $t('Please make sure the Google SDK library installed is ' . GOOGLE_SDK_MINIMUM_VERSION . ' or greater.'),
+      'description' => $t('Please make sure the Google API library installed is ' . GOOGLE_SDK_MINIMUM_VERSION . ' or greater.'),
     );
   }
   else {
-    $requirements['google_sdk'] = array(
+    $requirements['google_api'] = array(
       'severity' => REQUIREMENT_OK,
-      'title' => $t('Google SDK'),
+      'title' => $t('Google API PHP Client'),
       'value' => $info['version'] . ' compatible',
     );
   }
@@ -62,4 +51,5 @@ function google_cdn_uninstall() {
   variable_del('google_cdn_uri');
   variable_del('google_cdn_bucket_name');
   variable_del('google_cdn_extensions');
+  variable_del('google_cdn_folder');
 }

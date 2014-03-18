@@ -11,25 +11,39 @@
 function google_cdn_admin() {
   $form = array();
 
-  $form['google_cdn_public_key'] = array(
-    '#type' => 'textfield',
+  $form['google_cdn_public_key_file'] = array(
+    '#type' => 'managed_file',
     '#title' => t('Public Key'),
-    '#default_value' => variable_get('google_cdn_public_key', ''),
-    '#description' => t('The public key to Google Cloud Storage.'),
+    '#default_value' => variable_get('google_cdn_public_key'),
+    '#description' => t('The public p12 key that allows access to your Google Cloud Storage account.'),
+    '#required' => TRUE,
+    '#upload_validators' => array(
+      'file_validate_extensions' => array('p12'),
+    ),
+    '#upload_location' => 'private://google_cdn/',
+    '#process' => array('google_cdn_admin_public_key_file_element_process'),
+  );
+
+  $form['google_cdn_client_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Service Account Client ID'),
+    '#default_value' => variable_get('google_cdn_client_id'),
+    '#description' => t('The service account client ID credential. Should follow this pattern "xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"'),
     '#required' => TRUE,
   );
 
-  $form['google_cdn_uri'] = array(
+  $form['google_cdn_service_account_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Google Cloud Storage URI'),
-    '#description' => t('The URI that points to your google cloud store.'),
-    '#default_value' => variable_get('google_cdn_uri', ''),
+    '#title' => t('Service Account Name'),
+    '#default_value' => variable_get('google_cdn_service_account_name'),
+    '#description' => t('The service account name credential. This is the email address that should look like xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@developer.gserviceaccount.com'),
+    '#required' => TRUE,
   );
 
   $form['google_cdn_bucket_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Bucket Name'),
-    '#default_value' => variable_get('google_cdn_bucket_name', ''),
+    '#default_value' => variable_get('google_cdn_bucket_name'),
     '#description' => t('The bucket name within Google Cloud Storage.'),
     '#required' => TRUE,
   );
@@ -37,7 +51,7 @@ function google_cdn_admin() {
   $form['google_cdn_folder'] = array(
     '#type' => 'textfield',
     '#title' => t('Folder Name'),
-    '#default_value' => variable_get('google_cdn_folder', ''),
+    '#default_value' => variable_get('google_cdn_folder'),
     '#description' => t('The folder name within Google Cloud Storage.'),
     '#required' => TRUE,
   );
@@ -45,58 +59,112 @@ function google_cdn_admin() {
   $form['google_cdn_extensions'] = array(
     '#type' => 'textarea',
     '#title' => t('File Extensions'),
-    '#default_value' => variable_get('google_cdn_extensions', ''),
+    '#default_value' => variable_get('google_cdn_extensions'),
     '#description' => t('The file extensions to copy to the Google Cloud Storage bucket.'),
     '#required' => TRUE,
     '#rows' => 10,
     '#cols' => 90,
   );
 
-  return system_settings_form($form);
+  if (variable_get('google_cdn_public_key', NULL) != NULL) {
+    $form['test_connection'] = array(
+      '#type' => 'submit',
+      '#value' => t(GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON),
+    );
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t(GOOGLE_CDN_ADMIN_SUBMIT_BUTTON),
+    '#submit' => array('google_cdn_admin_submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Hides the default upload button.
+ *
+ * @param $element
+ * @param $form_state
+ * @param $form
+ * @return mixed
+ */
+function google_cdn_admin_public_key_file_element_process($element, &$form_state, $form) {
+  $element = file_managed_file_process($element, $form_state, $form);
+  $element['upload_button']['#access'] = FALSE;
+  return $element;
 }
 
 /**
  * Validate the admin form.
  */
-//function google_cdn_admin_validate($form, &$form_state) {
-//  $bucket = $form_state['values']['google_cdn_bucket'];
-//  $cloudfront = $form_state['values']['google_cdn_cloudfront'];
+function google_cdn_admin_validate($form, &$form_state) {
+  if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
+    $info = libraries_load('google-api-php-client');
+    if ($info['loaded']) {
+      $google_cdn_storage_client_id = variable_get('google_cdn_client_id');
+      $google_cdn_storage_service_account_name = variable_get('google_cdn_service_account_name');
+      $google_cdn_storage_key_file_path = variable_get('google_cdn_public_key_file_path');
 
-//  if ($cloudfront) {
-//    $keypair = variable_get('aws_cloudfront_keypair', '');
-//    $pem = variable_get('aws_cloudfront_pem', '');
-//    if (empty($keypair) || empty($pem)) {
-//      form_set_error('google_cdn_cloudfront', t('You must configure your CloudFront credentials in the awksdk module.'));
-//    }
-//  }
-//
-//  if (!libraries_load('google_cdn')) {
-//    form_set_error('google_cdn_bucket', t('Unable to load the AWS SDK. Please check you have installed the library correctly and configured your S3 credentials.'));
-//  }
-//  elseif (!class_exists('google_cdn')) {
-//    form_set_error('google_cdn_bucket', t('Cannot load google_cdn class. Please check the awssdk is installed correctly'));
-//  }
-//  else {
-//    try {
-//      $s3 = new google_cdn();
-//      $response = $s3->list_objects($bucket, array(
-//        'max-keys' => 1,
-//      ));
-//      if (!$s3->if_bucket_exists($bucket) || !$response->isOK()) {
-//        form_set_error('google_cdn_bucket', t('The S3 access credentials are invalid or the bucket does not exist'));
-//      }
-//    }
-//    catch (RequestCore_Exception $e) {
-//      if (strstr($e->getMessage(), 'SSL certificate problem')) {
-//        form_set_error('google_cdn_bucket', t('There was a problem with the SSL certificate. Try setting AWS_CERTIFICATE_AUTHORITY to true in "libraries/awssdk/config.inc.php". You may also have a curl library (e.g. the default shipped with MAMP) that does not contain trust certificates for the major authorities. The following exception was thrown: @exception'), array('@exception' => $e->getMessage()));
-//      }
-//      else {
-//        form_set_error('google_cdn_bucket', t('There was a problem connecting to S3. The following exception was thrown: @exception'), array('@exception' => $e->getMessage()));
-//      }
-//
-//    }
-//    catch (Exception $e) {
-//      form_set_error('google_cdn_bucket', t('There was a problem using S3. The following exception was thrown: @exception'), array('@exception' => $e->getMessage()));
-//    }
-//  }
-//}
+      try {
+        $client = new Google_Client();
+        $key = file_get_contents($google_cdn_storage_key_file_path);
+        $client->setAssertionCredentials(new Google_AssertionCredentials(
+            $google_cdn_storage_service_account_name,
+            array('https://www.googleapis.com/auth/devstorage.read_write'),
+            $key)
+        );
+
+        $client->setClientId($google_cdn_storage_client_id);
+        $service = new Google_StorageService($client);
+
+        $client::$auth->refreshTokenWithAssertion();
+        $access_token = json_decode($client->getAccessToken())->access_token;
+        cache_set("google_cdn_access_token", $access_token, 'cache', CACHE_TEMPORARY);
+        if ($access_token) {
+          drupal_set_message('Success authenticating! We were able to connect to your Google Cloud Storage App.');
+        }
+
+      } catch (Exception $e) {
+        watchdog_exception('google_cloud_storage', $e);
+        form_set_error('google_cdn_public_key_file', t('Error authenticating. Please check the Client ID, Service Account Name, and/or Key file path and try again.'));
+      }
+    }
+    else {
+      form_set_error('', t("Google's API Client Library for PHP was not loaded."));
+    }
+  }
+}
+
+/**
+ * Saves the variables and p12 key file.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function google_cdn_admin_submit($form, &$form_state) {
+  if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_SUBMIT_BUTTON) {
+    variable_set('google_cdn_bucket_name', $form_state['values']['google_cdn_bucket_name']);
+    variable_set('google_cdn_folder', $form_state['values']['google_cdn_folder']);
+    variable_set('google_cdn_extensions', $form_state['values']['google_cdn_extensions']);
+    variable_set('google_cdn_client_id', $form_state['values']['google_cdn_client_id']);
+    variable_set('google_cdn_service_account_name', $form_state['values']['google_cdn_service_account_name']);
+
+    // Load the file.
+    $file = file_load($form_state['values']['google_cdn_public_key_file']);
+    // Change status to permanent.
+    $file->status = FILE_STATUS_PERMANENT;
+    // Save.
+    $uploaded = file_save($file);
+    // Record that the module is using the file.
+    global $user;
+    $account = $user;
+    file_usage_add($file, 'google_cdn', 'admin', $account->uid);
+    if ($uploaded) {
+      variable_set('google_cdn_public_key', $file->fid);
+      $real_path = drupal_realpath($file->uri);
+      variable_set('google_cdn_public_key_file_path', $real_path);
+    }
+  }
+}

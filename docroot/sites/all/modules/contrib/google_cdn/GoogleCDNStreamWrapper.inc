@@ -12,7 +12,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * @var Google Cloud Store connection object
    */
-  protected $cs = NULL;
+  protected $gs = NULL;
 
   /**
    * @var String Instance URI referenced as "gs://bucket/"
@@ -30,13 +30,19 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected $folder;
 
   /**
+   * @var string Google Cloud Store key
+   */
+  protected $key;
+
+  /**
    * Object constructor.
    */
   public function __construct() {
-    $this->hostname = variable_get('amazons3_hostname', '');
-    $this->bucket = $bucket = variable_get('amazons3_bucket', '');
+    $this->hostname = variable_get('google_cdn_uri');
+    $this->bucket = variable_get('google_cdn_bucket_name');
+    $this->folder = variable_get('google_cdn_folder');
+    $this->key = variable_get('google_cdn_public_key');
   }
-
 
   /**
    * Sets the stream resource URI.
