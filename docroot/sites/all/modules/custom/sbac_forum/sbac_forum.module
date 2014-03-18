@@ -8,6 +8,7 @@ include_once 'sbac_forum.features.inc';
 include_once 'includes/sbac_forum.component_alter.inc';
 include_once 'includes/sbac_forum.api.inc';
 include_once 'includes/sbac_forum.ajax.inc';
+include_once 'includes/sbac_forum.solr.inc';
 
 define('SBAC_FORUM_CATEGORY_FILTERS', 'sbac-forum-category-filters');
 define('SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS', 'sbac-forum-my-forum-category-filters');
@@ -29,6 +30,12 @@ define('SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME', 'forum-member-list-');
 define('SBAC_FORUM_SHOW_JOIN_MESSAGE', 'sbac-forum-new-join');
 define('SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME', 'sbac_forum_user_data_removed_list');
 define('SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE', 'sbac-forum-new-comment');
+
+define('SBAC_FORUM_CUSTOM_SOLR_FILTER_FIELD_ROLE', 'im_forum_access__custom__role');
+define('SBAC_FORUM_CUSTOM_SOLR_FILTER_FIELD_STATE', 'im_forum_access__custom__state');
+define('SBAC_FORUM_CUSTOM_SOLR_FILTER_FIELD_ROLE_OPEN', 'im_forum_access__custom__role_open');
+define('SBAC_FORUM_CUSTOM_SOLR_FILTER_FIELD_STATE_OPEN', 'im_forum_access__custom__state_open');
+
 /**
  * =============================================================================
  *
@@ -1322,8 +1329,8 @@ function sbac_forum_taxonomy_term_presave($term) {
     $entity_list = array();
     $member_count = $term->field_forum_member_count[LANGUAGE_NONE][0]['value'];
     $removed_member_count = $term->field_forum_removed_member_count[LANGUAGE_NONE][0]['value'];
-    if ((!empty($state_restrictions)) ||
-        (!empty($role_restrictions)) ) {
+    if ( ((!empty($state_restrictions)) || (!empty($role_restrictions)) )  &&
+         ($member_count > 1)){ // no need to run notify if there is only the creator as member.
 
       $term_data = entity_metadata_wrapper('taxonomy_term', $term);
       if (isset($term_data->field_fc_forum_members)) {
@@ -1407,6 +1414,27 @@ function sbac_forum_taxonomy_term_presave($term) {
         cache_clear_all($cid, 'cache');
       }
     }
+
+    // Get all nodes tagged with this term / in this forum.
+    $nodes = taxonomy_select_nodes($term->tid, FALSE );
+    if (!empty($nodes)) {
+      // All comments for all the nodes must be re-indexed.
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'comment')
+      ->propertyCondition('nid', $nodes, 'IN');
+      $result = $query->execute();
+
+      $cids = array();
+      if (isset($result['comment'])) {
+        $cids = array_keys($result['comment']);
+      }
+      if (!empty($cids)) {
+        foreach ($cids as $cid) {
+          apachesolr_mark_entity('comment', $cid);
+        }
+      }
+    }
+
   }
 }
 
