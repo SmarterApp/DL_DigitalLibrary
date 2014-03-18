@@ -62,8 +62,31 @@ function google_cdn_libraries_info() {
   );
 }
 
+
+/**
+ * Custom callback that returns a version number
+ * back to the Library API to allow it to load
+ * the Google SDK correctly.
+ *
+ * @param $library
+ * @return string
+ */
 function google_cdn_library_version_callback($library) {
   $version = '1.0';
   return $version;
 }
 
+/**
+ * Implements hook_stream_wrappers().
+ *
+ * Create a stream wrapper for S3.
+ */
+function google_cdn_stream_wrappers() {
+  return array(
+    'google_cdn' => array(
+      'name' => 'Google CDN',
+      'class' => 'GoogleCDNStreamWrapper',
+      'description' => t('Google CDN (Cloud Storage)'),
+    ),
+  );
+}
