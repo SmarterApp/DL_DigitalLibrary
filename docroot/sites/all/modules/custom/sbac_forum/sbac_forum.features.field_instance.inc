@@ -859,7 +859,11 @@ function sbac_forum_field_default_field_instances() {
   // Exported field_instance: 'taxonomy_term-forum-field_forum_member_count'
   $field_instances['taxonomy_term-forum-field_forum_member_count'] = array(
     'bundle' => 'forum',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
