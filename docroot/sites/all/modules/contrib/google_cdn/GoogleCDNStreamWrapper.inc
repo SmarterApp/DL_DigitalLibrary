@@ -12,12 +12,27 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * @var Google Cloud Store connection object
    */
-  protected $gs = NULL;
+  protected $gcs = NULL;
+
+  /**
+   * @var Google Cloud Store access token
+   */
+  protected $access_token = NULL;
 
   /**
    * @var String Instance URI referenced as "gs://bucket/"
    */
   protected $uri;
+
+  /**
+   * @var string Google Cloud Storage client ID
+   */
+  protected $client_id;
+
+  /**
+   * @var string Google Cloud Storage service account name
+   */
+  protected $service_account_name;
 
   /**
    * @var string Google Cloud Store bucket name
@@ -30,18 +45,44 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected $folder;
 
   /**
-   * @var string Google Cloud Store key
+   * @var string Google Cloud Store allowed extensions.
+   */
+  protected $extensions;
+
+  /**
+   * @var string Google Cloud Store allowed key.
    */
   protected $key;
+
+  /**
+   * @var string Google Cloud Store allowed key_file_path.
+   */
+  protected $key_file_path;
+
+  /**
+   * @var string Google Cloud Store allowed pem_file.
+   */
+  protected $pem_file;
+
+  /**
+   * @var string Google Cloud Store allowed pem_fid.
+   */
+  protected $pem_fid;
+
 
   /**
    * Object constructor.
    */
   public function __construct() {
-    $this->hostname = variable_get('google_cdn_uri');
+    $this->client_id = variable_get('google_cdn_client_id');
+    $this->service_account_name = variable_get('google_cdn_service_account_name');
     $this->bucket = variable_get('google_cdn_bucket_name');
     $this->folder = variable_get('google_cdn_folder');
+    $this->extensions = variable_get('google_cdn_extensions');
     $this->key = variable_get('google_cdn_public_key');
+    $this->key_file_path = variable_get('google_cdn_public_key_file_path');
+    $this->pem_file = variable_get('google_cdn_pem_file_path');
+    $this->pem_fid = variable_get('google_cdn_pem_fid');
   }
 
   /**
@@ -81,14 +122,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     // Delivers the first request to an image from the private file system
     // otherwise it returns an external URL to an image that has not been
     // created yet.
-//    $path = explode('/', $this->getLocalPath());
-//    if ($path[0] === 'styles') {
-//      if (!$this->_amazons3_get_object($this->uri, $this->caching)) {
-//        array_shift($path);
-//        return url('system/files/styles/' . implode('/', $path), array('absolute' => TRUE));
-//      }
-//    }
-
     $local_path = $this->getLocalPath();
 
     // Generate the URL.
@@ -110,6 +143,30 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   Returns a string representing the file's MIME type
    */
   public static function getMimeType($uri, $mapping = NULL) {
+    // Load the default file map.
+    if (!isset(self::$mapping)) {
+      include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+      self::$mapping = file_mimetype_mapping();
+    }
+
+    $extension = '';
+    $file_parts = explode('.', basename($uri));
+
+    // Remove the first part: a full filename should not match an extension.
+    array_shift($file_parts);
+
+    // Iterate over the file parts, trying to find a match.
+    // For my.awesome.image.jpeg, we try:
+    // jpeg
+    // image.jpeg, and
+    // awesome.image.jpeg
+    while ($additional_part = array_pop($file_parts)) {
+      $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
+      if (isset(self::$mapping['extensions'][$extension])) {
+        return self::$mapping['mimetypes'][self::$mapping['extensions'][$extension]];
+      }
+    }
+
     return 'application/octet-stream';
   }
 
@@ -155,7 +212,15 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see drupal_dirname()
    */
   public function dirname($uri = NULL) {
-    return '';
+    list($scheme, $target) = explode('://', $uri, 2);
+    $target  = $this->getTarget($uri);
+    $dirname = dirname($target);
+
+    if ($dirname === '.') {
+      $dirname = '';
+    }
+
+    return $scheme . '://' . $dirname;
   }
 
   /**
@@ -323,6 +388,10 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.unlink.php
    */
   public function unlink($uri) {
+    $response = $this->getGCS()->delete($this->bucket, $this->getLocalPath($uri));
+    if ($response->isOK()) {
+      return TRUE;
+    }
     return FALSE;
   }
 
@@ -407,14 +476,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   public function rmdir($uri, $options) {
     return '';
   }
-  /**
-   * Helper function for deleting directories.
-   *
-   * The force flag will perform a recursive delete.
-   */
-  public function amazons3_rmdir($uri, $options, $force = FALSE) {
-    return FALSE;
-  }
+
 
   /**
    * Support for stat().
@@ -525,5 +587,51 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $this->buffer = NULL;
     $this->bufferWrite = FALSE;
     $this->bufferLength = 0;
+  }
+
+  /**
+   * Get the Google Cloud Storage connection.
+   *
+   * @return Google Client
+   *
+   */
+  protected function getGCS() {
+    if ($this->gcs === NULL) {
+      if (!libraries_load('google-api-php-client')) {
+        drupal_set_message(t('Unable to load the Google API PHP library. Please check you have installed the library correctly.') . 'error');
+      }
+      elseif (empty($this->bucket)) {
+        drupal_set_message(t('Bucket name not configured.') . 'error');
+      }
+      else {
+        try {
+          $client = new Google_Client();
+          // Replace this with your application name.
+          $client->setApplicationName($this->service_account_name);
+          // Replace this with the service you are using.
+          $service = new Google_Service_Storage($client);
+          // This file location should point to the private key file.
+          $key = file_get_contents($this->key_file_path);
+          $cred = new Google_Auth_AssertionCredentials(
+          // Replace this with the email address from the client.
+            $this->service_account_name,
+            // Replace this with the scopes you are requesting.
+            array('https://www.googleapis.com/auth/devstorage.read_write'),
+            $key
+          );
+
+          $client->setAssertionCredentials($cred);
+          if($client->getAuth()->isAccessTokenExpired()) {
+            $client->getAuth()->refreshTokenWithAssertion($cred);
+          }
+          $this->access_token = $client->getAccessToken();
+          $this->gcs = $service;
+        }
+        catch (Exception $e) {
+          drupal_set_message(t('There was a problem connecting to Google Cloud Storage. @message', array('message' => $e->getMessage())), 'error');
+        }
+      }
+    }
+    return $this->gcs;
   }
 }

@@ -80,15 +80,15 @@ function google_cdn_init() {
  *
  * Create a stream wrapper for Google CDN.
  */
-//function google_cdn_stream_wrappers() {
-//  return array(
-//    'google_cdn' => array(
-//      'name' => 'Google CDN',
-//      'class' => 'GoogleCDNStreamWrapper',
-//      'description' => t('Google CDN (Cloud Storage)'),
-//    ),
-//  );
-//}
+function google_cdn_stream_wrappers() {
+  return array(
+    'gs' => array(
+      'name' => 'Google CDN',
+      'class' => 'GoogleCDNStreamWrapper',
+      'description' => t('Google CDN (Cloud Storage)'),
+    ),
+  );
+}
 
 /**
  * Implements hook_file_download().

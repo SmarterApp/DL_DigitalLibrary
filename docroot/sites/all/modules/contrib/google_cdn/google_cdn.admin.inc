@@ -175,19 +175,36 @@ function google_cdn_admin_submit($form, &$form_state) {
       $real_path = drupal_realpath($file->uri);
       variable_set('google_cdn_public_key_file_path', $real_path);
 
-      // openssl pkcs12 -in path/to/key.p12 -nodes -nocerts > path/to/key.pem
+      // Create the PEM file using PHP: openssl pkcs12 -in path/to/key.p12 -nodes -nocerts > path/to/key.pem
       $path_to_pem = str_replace($file->filename, '', $real_path);
       $path_to_pem .= 'google_key.pem';
+      $uri_to_pem = "private://google_cdn/google_key.pem";
 
-      $password = 'notasecret';
-      $pkey_result = array();
-      $pkcs12_read = openssl_pkcs12_read(file_get_contents($real_path), $pkey_result, $password);
-      if ($pkcs12_read) {
-        $new_password = '';
-        $pem_result = NULL;
-        $pem_export = openssl_pkey_export($pkey_result['pkey'], $pem_result, $new_password);
-        if ($pem_export) {
-          
+      if (!file_exists($path_to_pem)) {
+        $password = 'notasecret';
+        $pkey_result = array();
+        $pkcs12_read = openssl_pkcs12_read(file_get_contents($real_path), $pkey_result, $password);
+        if ($pkcs12_read) {
+          $new_password = '';
+          $pem_result = NULL;
+          $pem_export = openssl_pkey_export($pkey_result['pkey'], $pem_result, $new_password);
+          if ($pem_export) {
+            file_put_contents($path_to_pem, $pem_result);
+
+            $file = new stdClass();
+            $file->fid = NULL;
+            $file->uri = $uri_to_pem;
+            $file->filename = drupal_basename($uri_to_pem);
+            $file->filemime = file_get_mimetype($file->uri);
+            $file->uid      = $user->uid;
+            $file->status   = FILE_STATUS_PERMANENT;
+            $file->replace = FILE_EXISTS_REPLACE;
+            $file->size = filesize($path_to_pem);
+            file_save($file);
+
+            variable_set('google_cdn_pem_file_path', $path_to_pem);
+            variable_set('google_cdn_pem_fid', $file->fid);
+          }
         }
       }
     }
