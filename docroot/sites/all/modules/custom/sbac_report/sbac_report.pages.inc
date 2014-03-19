@@ -499,7 +499,7 @@ function sbac_report_sne_autocomplete($string = '') {
   $state_condition = '';
   $state_tid = sbac_report_get_default_state_tid();
 
-  if (isset($state_tid['all']) && $state_tid['all'] == 'all') {
+  if (isset($state_tid['all']) && ($state_tid['all'] == 'all' || $state_tid == 'all')) {
     $state_condition = '';
   }
   elseif (!empty($state_tid)) {
