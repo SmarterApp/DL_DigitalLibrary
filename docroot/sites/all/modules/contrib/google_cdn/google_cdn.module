@@ -8,7 +8,7 @@
 /**
  * Denotes "AWS SDK for PHP" minimum version number.
  */
-define('GOOGLE_CDN_MINIMUM_VERSION', '0.6.7');
+define('GOOGLE_CDN_MINIMUM_VERSION', '1.0.5');
 define('GOOGLE_CDN_ADMIN_SUBMIT_BUTTON', 'Save Configuration');
 define('GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON', 'Test Connection');
 
@@ -51,32 +51,28 @@ function google_cdn_libraries_info() {
       'vendor url' => 'http://code.google.com/p/google-api-php-client/',
       'download url' => 'http://code.google.com/p/google-api-php-client/downloads/list',
       'version arguments' => array(
-        'file' => 'src/Google_Client.php',
+        'file' => 'src/Google/Client.php',
+        'pattern' => '/LIBVER = \"(\d+\.\d+\.?\d?).*/',
+        'lines' => 45,
+        'cols' => 80,
       ),
       'files' => array(
         'php' => array(
-          'src/Google_Client.php',
-          'src/contrib/Google_StorageService.php',
+          'src/Google/Client.php',
+          'src/Google/Service/Storage.php',
         ),
       ),
-      'version callback' => 'google_cdn_library_version_callback',
     ),
   );
 }
 
-
 /**
- * Custom callback that returns a version number
- * back to the Library API to allow it to load
- * the Google SDK correctly. Google does not save the
- * version number within the SDK.
  *
- * @param $library
- * @return string
  */
-function google_cdn_library_version_callback($library) {
-  $version = '0.6.7';
-  return $version;
+function google_cdn_init() {
+  $var =  libraries_get_path('google-api-php-client') . '/src/';
+  $local_file_path = realpath($var);
+  set_include_path(get_include_path() . PATH_SEPARATOR . $local_file_path);
 }
 
 /**
@@ -84,15 +80,15 @@ function google_cdn_library_version_callback($library) {
  *
  * Create a stream wrapper for Google CDN.
  */
-function google_cdn_stream_wrappers() {
-  return array(
-    'google_cdn' => array(
-      'name' => 'Google CDN',
-      'class' => 'GoogleCDNStreamWrapper',
-      'description' => t('Google CDN (Cloud Storage)'),
-    ),
-  );
-}
+//function google_cdn_stream_wrappers() {
+//  return array(
+//    'google_cdn' => array(
+//      'name' => 'Google CDN',
+//      'class' => 'GoogleCDNStreamWrapper',
+//      'description' => t('Google CDN (Cloud Storage)'),
+//    ),
+//  );
+//}
 
 /**
  * Implements hook_file_download().

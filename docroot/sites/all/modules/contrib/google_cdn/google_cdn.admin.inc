@@ -109,19 +109,25 @@ function google_cdn_admin_validate($form, &$form_state) {
 
       try {
         $client = new Google_Client();
+        // Replace this with your application name.
+        $client->setApplicationName($google_cdn_storage_service_account_name);
+        // Replace this with the service you are using.
+        $service = new Google_Service_Storage($client);
+        // This file location should point to the private key file.
         $key = file_get_contents($google_cdn_storage_key_file_path);
-        $client->setAssertionCredentials(new Google_AssertionCredentials(
-            $google_cdn_storage_service_account_name,
-            array('https://www.googleapis.com/auth/devstorage.read_write'),
-            $key)
+        $cred = new Google_Auth_AssertionCredentials(
+        // Replace this with the email address from the client.
+          $google_cdn_storage_service_account_name,
+          // Replace this with the scopes you are requesting.
+          array('https://www.googleapis.com/auth/devstorage.read_write'),
+          $key
         );
 
-        $client->setClientId($google_cdn_storage_client_id);
-        $service = new Google_StorageService($client);
-
-        $client::$auth->refreshTokenWithAssertion();
-        $access_token = json_decode($client->getAccessToken())->access_token;
-        cache_set("google_cdn_access_token", $access_token, 'cache', CACHE_TEMPORARY);
+        $client->setAssertionCredentials($cred);
+        if($client->getAuth()->isAccessTokenExpired()) {
+          $client->getAuth()->refreshTokenWithAssertion($cred);
+        }
+        $access_token = $client->getAccessToken();
         if ($access_token) {
           drupal_set_message('Success authenticating! We were able to connect to your Google Cloud Storage App.');
         }
