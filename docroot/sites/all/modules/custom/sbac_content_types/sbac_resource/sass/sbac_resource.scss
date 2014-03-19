@@ -1772,9 +1772,14 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	    display: block;
 	    font-size: 1em;
 	    font-weight: bold;
-	    margin: 20px 19px 0 0;
-			padding: 0 0 15px;
+	    margin: 20px 0 0;
+			padding: 0;
 	    text-transform: capitalize;
+		}
+		
+		h2:first-child {
+			font-size: 1.2em;
+			border-bottom: 1px solid #CECECE;
 		}
 			
 		fieldset {
@@ -1798,6 +1803,9 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		.fieldset-wrapper {
 			p {
 				font-size: 14px;
+				border-bottom: 1px solid #CECECE;
+				padding-bottom: 20px;
+				margin-bottom: 20px;
 				padding-top: 10px;
 			}
 		}
@@ -1884,6 +1892,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 			color: #04384E;
 	    font-family: Verdana,Geneva,sans-serif;
 	    font-size: 12px;
+			line-height: 1.4;
 	    font-weight: 400;
 	    letter-spacing: 1px;
 	    text-transform: uppercase;

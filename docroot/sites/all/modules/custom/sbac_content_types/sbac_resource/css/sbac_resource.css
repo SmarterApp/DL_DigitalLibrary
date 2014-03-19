@@ -1842,18 +1842,23 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   display: block;
   font-size: 1em;
   font-weight: bold;
-  margin: 20px 19px 0 0;
-  padding: 0 0 15px;
+  margin: 20px 0 0;
+  padding: 0;
   text-transform: capitalize;
 }
 /* line 1780, ../sass/sbac_resource.scss */
+#sbac-resource-form #sbac-revisions-tab h2:first-child {
+  font-size: 1.2em;
+  border-bottom: 1px solid #CECECE;
+}
+/* line 1785, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab fieldset {
   border: none;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0 0 10px 0;
 }
-/* line 1787, ../sass/sbac_resource.scss */
+/* line 1792, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab h5 {
   font-family: Arial,Helvetica,sans-serif;
   color: #4D4D4D;
@@ -1864,31 +1869,34 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   padding: 0;
   text-transform: capitalize;
 }
-/* line 1799, ../sass/sbac_resource.scss */
+/* line 1804, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab .fieldset-wrapper p {
   font-size: 14px;
+  border-bottom: 1px solid #CECECE;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
   padding-top: 10px;
 }
-/* line 1805, ../sass/sbac_resource.scss */
+/* line 1813, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab .form-type-item {
   font-size: 12px;
   font-style: italic;
   color: #A2A2A2;
   line-height: 1.4;
 }
-/* line 1812, ../sass/sbac_resource.scss */
+/* line 1820, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab label {
   font-size: 12px;
   font-style: normal;
   padding-bottom: 6px;
 }
-/* line 1818, ../sass/sbac_resource.scss */
+/* line 1826, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab div[id$="gk-comment"] {
   font-style: normal;
   line-height: 1.4;
   color: #5A5A5A;
 }
-/* line 1823, ../sass/sbac_resource.scss */
+/* line 1831, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab div[id$="gk-comment"] label {
   color: #04384E;
   font-family: Verdana,Geneva,sans-serif;
@@ -1899,7 +1907,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   margin: 20px 0 0;
   text-transform: uppercase;
 }
-/* line 1835, ../sass/sbac_resource.scss */
+/* line 1843, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab .sub-title {
   display: block;
   font-style: italic;
@@ -1908,11 +1916,11 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   font-weight: normal;
   padding-top: 5px;
 }
-/* line 1844, ../sass/sbac_resource.scss */
+/* line 1852, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab textarea {
   height: 80px;
 }
-/* line 1848, ../sass/sbac_resource.scss */
+/* line 1856, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab .form-type-textarea.form-item {
   border-bottom: 1px solid #CECECE;
   margin-bottom: 20px;
@@ -1920,11 +1928,11 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   font-weight: normal;
   clear: both;
 }
-/* line 1856, ../sass/sbac_resource.scss */
+/* line 1864, ../sass/sbac_resource.scss */
 #sbac-resource-form #sbac-revisions-tab .form-type-textarea.form-item:last-child {
   border-bottom: none;
 }
-/* line 1863, ../sass/sbac_resource.scss */
+/* line 1871, ../sass/sbac_resource.scss */
 #sbac-resource-form .feedback-review,
 #sbac-resource-form .col.form-wrapper {
   display: block;
@@ -1934,13 +1942,13 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   font-size: 12px;
   margin-top: 20px;
 }
-/* line 1871, ../sass/sbac_resource.scss */
+/* line 1879, ../sass/sbac_resource.scss */
 #sbac-resource-form .feedback-review .author,
 #sbac-resource-form .col.form-wrapper .author {
   font-size: 13px;
   font-weight: bold;
 }
-/* line 1876, ../sass/sbac_resource.scss */
+/* line 1884, ../sass/sbac_resource.scss */
 #sbac-resource-form .feedback-review .created,
 #sbac-resource-form .col.form-wrapper .created {
   font-style: italic;
@@ -1948,12 +1956,13 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   line-height: 1.4;
   margin: 2px 0 5px 0;
 }
-/* line 1883, ../sass/sbac_resource.scss */
+/* line 1891, ../sass/sbac_resource.scss */
 #sbac-resource-form .feedback-review .headline,
 #sbac-resource-form .col.form-wrapper .headline {
   color: #04384E;
   font-family: Verdana,Geneva,sans-serif;
   font-size: 12px;
+  line-height: 1.4;
   font-weight: 400;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -1963,23 +1972,23 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   padding-top: 15px;
   font-weight: bold;
 }
-/* line 1897, ../sass/sbac_resource.scss */
+/* line 1906, ../sass/sbac_resource.scss */
 #sbac-resource-form .feedback-review .comments,
 #sbac-resource-form .col.form-wrapper .comments {
   font-size: 12px;
   line-height: 1.4;
 }
-/* line 1904, ../sass/sbac_resource.scss */
+/* line 1913, ../sass/sbac_resource.scss */
 #sbac-resource-form .feedback-review + .feedback-review,
 #sbac-resource-form .col.form-wrapper + .col.form-wrapper {
   margin-left: 20px;
   margin-bottom: 20px;
 }
-/* line 1909, ../sass/sbac_resource.scss */
+/* line 1918, ../sass/sbac_resource.scss */
 #sbac-resource-form fieldset[id*="edit-sbac-revisions-feedback"] {
   clear: both;
 }
-/* line 1913, ../sass/sbac_resource.scss */
+/* line 1922, ../sass/sbac_resource.scss */
 #sbac-resource-form fieldset[id*="edit-sbac-revisions-feedback"].form-wrapper {
   clear: both;
   margin-top: 20px;
@@ -1988,33 +1997,33 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   font-size: 13px;
   font-weight: bold;
 }
-/* line 1922, ../sass/sbac_resource.scss */
+/* line 1931, ../sass/sbac_resource.scss */
 #sbac-resource-form .more-less-text {
   margin-bottom: 20px;
 }
-/* line 1927, ../sass/sbac_resource.scss */
+/* line 1936, ../sass/sbac_resource.scss */
 #sbac-resource-form .more-less-text-summary,
 #sbac-resource-form .more-less-text-full {
   font-size: 13px;
   font-weight: normal;
 }
-/* line 1931, ../sass/sbac_resource.scss */
+/* line 1940, ../sass/sbac_resource.scss */
 #sbac-resource-form .more-less-text-summary span,
 #sbac-resource-form .more-less-text-full span {
   font-size: 13px !important;
 }
-/* line 1933, ../sass/sbac_resource.scss */
+/* line 1942, ../sass/sbac_resource.scss */
 #sbac-resource-form .more-less-text-summary ul,
 #sbac-resource-form .more-less-text-full ul {
   margin: 15px 0 15px 15px;
 }
-/* line 1937, ../sass/sbac_resource.scss */
+/* line 1946, ../sass/sbac_resource.scss */
 #sbac-resource-form .more-less-text-summary ul ul,
 #sbac-resource-form .more-less-text-full ul ul {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 1947, ../sass/sbac_resource.scss */
+/* line 1956, ../sass/sbac_resource.scss */
 #sbac-resource-form .col.form-wrapper .created,
 #sbac-resource-form .col.form-wrapper .headline,
 #sbac-resource-form .col.form-wrapper .comments {
@@ -2022,19 +2031,19 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
 }
 
 /*Down arrow trigger*/
-/* line 1955, ../sass/sbac_resource.scss */
+/* line 1964, ../sass/sbac_resource.scss */
 a.more-less-text-trigger-more,
 a.more-less-text-trigger-less {
   color: #0583AC;
 }
-/* line 1958, ../sass/sbac_resource.scss */
+/* line 1967, ../sass/sbac_resource.scss */
 a.more-less-text-trigger-more:hover,
 a.more-less-text-trigger-less:hover {
   color: #0583AC;
   text-decoration: underline;
 }
 
-/* line 1965, ../sass/sbac_resource.scss */
+/* line 1974, ../sass/sbac_resource.scss */
 a.more-less-text-trigger-more:after,
 a.more-less-text-trigger-less:after {
   content: "\e610";
@@ -2046,17 +2055,17 @@ a.more-less-text-trigger-less:after {
   top: 4px;
 }
 
-/* line 1975, ../sass/sbac_resource.scss */
+/* line 1984, ../sass/sbac_resource.scss */
 a.more-less-text-trigger-less:after {
   content: "\e611";
 }
 
 /* Review */
-/* line 1981, ../sass/sbac_resource.scss */
+/* line 1990, ../sass/sbac_resource.scss */
 #review .section-revisions {
   font-size: 16px;
 }
-/* line 1985, ../sass/sbac_resource.scss */
+/* line 1994, ../sass/sbac_resource.scss */
 #review .section-revisions h2 {
   border-bottom: 1px solid #62676E;
   color: #04384E;
@@ -2068,30 +2077,30 @@ a.more-less-text-trigger-less:after {
   text-transform: capitalize;
   line-height: 1.6;
 }
-/* line 1997, ../sass/sbac_resource.scss */
+/* line 2006, ../sass/sbac_resource.scss */
 #review .section-revisions .feedback-item {
   width: 560px;
 }
-/* line 2001, ../sass/sbac_resource.scss */
+/* line 2010, ../sass/sbac_resource.scss */
 #review .section-revisions .feedback-item .criteria-set-title-gate-keeper {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 15px;
   line-height: 1.4;
 }
-/* line 2008, ../sass/sbac_resource.scss */
+/* line 2017, ../sass/sbac_resource.scss */
 #review .section-revisions .feedback-item .criteria-set-title-reviewer {
   font-size: 13x;
   font-weight: bold;
   margin-bottom: 5px;
 }
-/* line 2014, ../sass/sbac_resource.scss */
+/* line 2023, ../sass/sbac_resource.scss */
 #review .section-revisions .feedback-item .date {
   font-size: 13px;
   color: #A2A2A2;
   margin-bottom: 5px;
 }
-/* line 2020, ../sass/sbac_resource.scss */
+/* line 2029, ../sass/sbac_resource.scss */
 #review .section-revisions .feedback-item .headline {
   color: #04384E;
   font-family: Verdana,Geneva,sans-serif;
@@ -2102,14 +2111,14 @@ a.more-less-text-trigger-less:after {
   margin: 20px 0 0;
   text-transform: uppercase;
 }
-/* line 2031, ../sass/sbac_resource.scss */
+/* line 2040, ../sass/sbac_resource.scss */
 #review .section-revisions .feedback-item .comments {
   color: #70757E;
   line-height: 1.4;
   margin-bottom: 5px;
   font-size: 13px;
 }
-/* line 2038, ../sass/sbac_resource.scss */
+/* line 2047, ../sass/sbac_resource.scss */
 #review .section-revisions .feedback-item .criteria-set-title-contributor {
   font-size: 13px;
   font-weight: bold;
@@ -2118,13 +2127,13 @@ a.more-less-text-trigger-less:after {
 }
 
 /*Optimize node-type-resource theme */
-/* line 2050, ../sass/sbac_resource.scss */
+/* line 2059, ../sass/sbac_resource.scss */
 .page-node-add-resource #edit-group_tags .chzn-container-multi.chzn-container,
 .section-node-edit #edit-group_tags .chzn-container-multi.chzn-container {
   width: 270px !important;
 }
 
-/* line 2054, ../sass/sbac_resource.scss */
+/* line 2063, ../sass/sbac_resource.scss */
 .form-textarea-wrapper textarea {
   max-width: 650px !important;
 }
