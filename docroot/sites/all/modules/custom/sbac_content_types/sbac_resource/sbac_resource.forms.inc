@@ -1901,11 +1901,14 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
         '#prefix' => '<h2>',
         '#suffix' => '</h2>'
       );
-      $form['sbac_revisions']['post_comment'] = array(
-        '#markup' => field_entity_value($post, 'field_to_contributor'),
-        '#prefix' => '<h2>Posting comments</h2><p>',
-        '#suffix' => '</p>'
-      );
+      $post_comment = field_entity_value($post, 'field_to_contributor');
+      if ($post_comment != '') {
+        $form['sbac_revisions']['post_comment'] = array(
+          '#markup' => field_entity_value($post, 'field_to_contributor'),
+          '#prefix' => '<h2>Posting comments</h2><p>',
+          '#suffix' => '</p>'
+        );
+      }
       $form['sbac_revisions']['sub_header'] = array(
         '#markup' => t("Reviewer's Resource Recommendation"),
         '#prefix' => '<h5>',
