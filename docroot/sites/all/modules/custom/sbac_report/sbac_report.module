@@ -336,7 +336,7 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
     '#date_year_range' => '-3:+3',
     '#datepicker_options' => array(),
     //'#suffix' => '</div></div>', // Closing tags for the dropdown template.
-    '#suffix' => '</fieldset></input></form></fieldset>',
+    '#suffix' => '</fieldset></fieldset>',
   );
 }
 
