@@ -1847,16 +1847,134 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		
 		.form-type-textarea.form-item {
 			border-bottom: 1px solid #CECECE;
-			margin-bottom: 0;
-			padding-bottom: 15px;
+			margin-bottom: 20px;
+			padding-bottom: 25px;
 			font-weight: normal;
+			clear: both;
 		}
 		
 		.form-type-textarea.form-item:last-child {
 			border-bottom: none;
 		}
 	}
-} 
+	
+	/*Return Revisions*/
+	.feedback-review,
+	.col.form-wrapper {
+		display: block;
+		float: left;
+		position: relative;
+		width: 200px;
+		font-size: 12px;
+		margin-top: 20px;
+		
+		.author {
+			font-size: 13px;
+			font-weight: bold;
+		}
+		
+		.created {
+			font-style: italic;
+			color: #A2A2A2;
+			line-height: 1.4;
+			margin: 2px 0 5px 0;
+		}
+		
+		.headline {
+			color: #04384E;
+	    font-family: Verdana,Geneva,sans-serif;
+	    font-size: 12px;
+	    font-weight: 400;
+	    letter-spacing: 1px;
+	    text-transform: uppercase;
+			border-bottom: 1px #CECECE solid;
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+			padding-top: 15px;
+			font-weight: bold;
+		}
+		
+		.comments {
+			font-size: 12px;
+			line-height: 1.4;
+		}
+	}
+	
+	.feedback-review + .feedback-review,
+	.col.form-wrapper + .col.form-wrapper {
+		margin-left: 20px;
+		margin-bottom: 20px;
+	}
+	
+	fieldset[id*="edit-sbac-revisions-feedback"] {
+		clear: both;
+	}
+	
+	fieldset[id*="edit-sbac-revisions-feedback"].form-wrapper {
+		clear: both;
+		margin-top: 20px;
+		padding-top: 20px;
+		display: block;
+		font-size: 13px;
+		font-weight: bold;
+	}
+	
+	.more-less-text {
+		margin-bottom: 20px;
+	}
+	
+	.more-less-text-summary,
+	.more-less-text-full {
+		font-size: 13px;
+		font-weight: normal;
+		
+		span {font-size: 13px !important;}
+		
+		ul{
+			margin: 15px 0 15px 15px;
+		}
+		
+		ul ul {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+	}
+	
+	.col.form-wrapper {
+		
+		.created,
+		.headline,
+		.comments {
+			font-weight: normal;
+		}
+	}
+}
+
+/*Down arrow trigger*/
+a.more-less-text-trigger-more,
+a.more-less-text-trigger-less {
+	color: #0583AC;
+	
+	&:hover {
+		color: #0583AC;
+		text-decoration: underline;
+	}
+}
+
+a.more-less-text-trigger-more:after,
+a.more-less-text-trigger-less:after {
+    content:"\e610";
+    display: inline-block;
+    font-family: 'sbac';
+    font-size: 20px;
+    font-weight: normal;
+    position: relative;
+    top: 4px;
+}
+
+a.more-less-text-trigger-less:after {
+    content:"\e611";
+}
 
 /* Review */
 #review {
@@ -1923,9 +2041,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		    margin-top: 20px;
 				margin-bottom: 5px;
 			}
-		}
-		
-	
+		}	
 	}
 }
 
