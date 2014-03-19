@@ -103,20 +103,21 @@ function google_cdn_admin_validate($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
     $info = libraries_load('google-api-php-client');
     if ($info['loaded']) {
-      $google_cdn_storage_service_account_name = variable_get('google_cdn_service_account_name');
-      $google_cdn_storage_key_file_path = variable_get('google_cdn_public_key_file_path');
+      $google_cdn_service_account_name = variable_get('google_cdn_service_account_name');
+      $google_cdn_key_file_path = variable_get('google_cdn_public_key_file_path');
+      $google_cdn_bucket_name = variable_get('google_cdn_bucket_name');
 
       try {
         $client = new Google_Client();
         // Replace this with your application name.
-        $client->setApplicationName($google_cdn_storage_service_account_name);
+        $client->setApplicationName($google_cdn_service_account_name);
         // Replace this with the service you are using.
         $service = new Google_Service_Storage($client);
         // This file location should point to the private key file.
-        $key = file_get_contents($google_cdn_storage_key_file_path);
+        $key = file_get_contents($google_cdn_key_file_path);
         $cred = new Google_Auth_AssertionCredentials(
         // Replace this with the email address from the client.
-          $google_cdn_storage_service_account_name,
+          $google_cdn_service_account_name,
           // Replace this with the scopes you are requesting.
           array('https://www.googleapis.com/auth/devstorage.read_write'),
           $key
@@ -127,16 +128,15 @@ function google_cdn_admin_validate($form, &$form_state) {
           $client->getAuth()->refreshTokenWithAssertion($cred);
         }
         $access_token = $client->getAccessToken();
+        $bucket_info = $service->buckets->get($google_cdn_bucket_name);
 
-        $what = $service->buckets->get('sbac_media2');
-
-        if ($access_token) {
+        if ($access_token && $bucket_info) {
           drupal_set_message('Success authenticating! We were able to connect to your Google Cloud Storage App.');
         }
 
       } catch (Exception $e) {
         watchdog_exception('google_cdn', $e);
-        form_set_error('google_cdn_public_key_file', t('Error authenticating. Please check the Service Account Name and Key file path and try again.'));
+        form_set_error('google_cdn_public_key_file', t('Error authenticating. Please check the Service Account Name, Key file and Bucket Name.'));
       }
     }
     else {
@@ -163,6 +163,7 @@ function google_cdn_admin_submit($form, &$form_state) {
     $file = file_load($form_state['values']['google_cdn_public_key_file']);
     // Change status to permanent.
     $file->status = FILE_STATUS_PERMANENT;
+    $file->replace = FILE_EXISTS_REPLACE;
     // Save.
     $uploaded = file_save($file);
     // Record that the module is using the file.
@@ -173,6 +174,22 @@ function google_cdn_admin_submit($form, &$form_state) {
       variable_set('google_cdn_public_key', $file->fid);
       $real_path = drupal_realpath($file->uri);
       variable_set('google_cdn_public_key_file_path', $real_path);
+
+      // openssl pkcs12 -in path/to/key.p12 -nodes -nocerts > path/to/key.pem
+      $path_to_pem = str_replace($file->filename, '', $real_path);
+      $path_to_pem .= 'google_key.pem';
+
+      $password = 'notasecret';
+      $pkey_result = array();
+      $pkcs12_read = openssl_pkcs12_read(file_get_contents($real_path), $pkey_result, $password);
+      if ($pkcs12_read) {
+        $new_password = '';
+        $pem_result = NULL;
+        $pem_export = openssl_pkey_export($pkey_result['pkey'], $pem_result, $new_password);
+        if ($pem_export) {
+          
+        }
+      }
     }
   }
 }

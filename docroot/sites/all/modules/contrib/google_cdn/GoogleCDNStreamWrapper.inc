@@ -77,8 +77,27 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   Returns a string containing a web accessible URL for the resource.
    */
   public function getExternalUrl() {
-    $url = '';
+    // Image styles support
+    // Delivers the first request to an image from the private file system
+    // otherwise it returns an external URL to an image that has not been
+    // created yet.
+//    $path = explode('/', $this->getLocalPath());
+//    if ($path[0] === 'styles') {
+//      if (!$this->_amazons3_get_object($this->uri, $this->caching)) {
+//        array_shift($path);
+//        return url('system/files/styles/' . implode('/', $path), array('absolute' => TRUE));
+//      }
+//    }
+
+    $local_path = $this->getLocalPath();
+
+    // Generate the URL.
+    $url = $this->domain . '/' . $local_path;
+
+
+
     return $url;
+
   }
 
   /**
@@ -478,7 +497,13 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   Optional URI, supplied when doing a move or rename.
    */
   protected function getLocalPath($uri = NULL) {
-    return $uri;
+    if (!isset($uri)) {
+      $uri = $this->uri;
+    }
+
+    $path  = str_replace('gs://', '', $uri);
+    $path = trim($path, '/');
+    return $path;
   }
 
   /**
