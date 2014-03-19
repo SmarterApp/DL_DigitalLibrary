@@ -103,7 +103,6 @@ function google_cdn_admin_validate($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
     $info = libraries_load('google-api-php-client');
     if ($info['loaded']) {
-      $google_cdn_storage_client_id = variable_get('google_cdn_client_id');
       $google_cdn_storage_service_account_name = variable_get('google_cdn_service_account_name');
       $google_cdn_storage_key_file_path = variable_get('google_cdn_public_key_file_path');
 
@@ -128,17 +127,20 @@ function google_cdn_admin_validate($form, &$form_state) {
           $client->getAuth()->refreshTokenWithAssertion($cred);
         }
         $access_token = $client->getAccessToken();
+
+        $what = $service->buckets->get('sbac_media2');
+
         if ($access_token) {
           drupal_set_message('Success authenticating! We were able to connect to your Google Cloud Storage App.');
         }
 
       } catch (Exception $e) {
-        watchdog_exception('google_cloud_storage', $e);
-        form_set_error('google_cdn_public_key_file', t('Error authenticating. Please check the Client ID, Service Account Name, and/or Key file path and try again.'));
+        watchdog_exception('google_cdn', $e);
+        form_set_error('google_cdn_public_key_file', t('Error authenticating. Please check the Service Account Name and Key file path and try again.'));
       }
     }
     else {
-      form_set_error('', t("Google's API Client Library for PHP was not loaded."));
+      form_set_error('', t("Google API Client Library for PHP was unable loaded."));
     }
   }
 }
