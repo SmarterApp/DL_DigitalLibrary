@@ -1901,14 +1901,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
         '#prefix' => '<h2>',
         '#suffix' => '</h2>'
       );
-      $form['sbac_revisions']['post_title'] = array(
-        '#markup' => t('Posting comments'),
-        '#prefix' => '<h2>',
-        '#suffix' => '</h2>'
-      );
       $form['sbac_revisions']['post_comment'] = array(
         '#markup' => field_entity_value($post, 'field_to_contributor'),
-        '#prefix' => '<p>',
+        '#prefix' => '<h2>Posting comments</h2><p>',
         '#suffix' => '</p>'
       );
       $form['sbac_revisions']['sub_header'] = array(
@@ -1970,6 +1965,11 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
           $comments = more_less_text($comments, 140);
           $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j] = array(
             '#type' => 'container',
+            '#attributes' => array(
+              'class' => array(
+                'col'
+              )
+            )
           );
           $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['author'] = array(
             '#markup' => t('Reviewer !j', array('!j' => $j)),
