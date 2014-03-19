@@ -1756,3 +1756,195 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		}
 	}
 }
+
+/* -----------------------------------------
+    Revisions tab of page node
+   ----------------------------------------- */
+#sbac-resource-form {
+	
+	margin-left: 13px;
+	
+	#sbac-revisions-tab {
+		h2 {
+			font-family: Arial,Helvetica,sans-serif;
+			/*border-bottom: 1px solid #62676E;*/
+			color: #18577E;
+	    display: block;
+	    font-size: 1em;
+	    font-weight: bold;
+	    margin: 20px 19px 0 0;
+			padding: 0 0 15px;
+	    text-transform: capitalize;
+		}
+			
+		fieldset {
+		  border: none;
+			margin-top: 0;
+			margin-bottom: 0;
+			padding: 0 0 10px 0;
+		}
+		
+		h5 {
+			font-family: Arial,Helvetica,sans-serif;
+	    color: #4D4D4D;;
+	    display: block;
+	    font-size: 1em;
+	    font-weight: bold;
+	    margin: 0;
+	    padding: 0;
+	    text-transform: capitalize;
+		}
+		
+		.fieldset-wrapper {
+			p {
+				font-size: 14px;
+				padding-top: 10px;
+			}
+		}
+		
+		.form-type-item {
+			font-size: 12px;
+			font-style: italic;
+			color: #A2A2A2;
+			line-height: 1.4;
+		}
+		
+		label {
+			font-size: 12px;
+			font-style: normal;
+			padding-bottom: 6px;
+		}
+		
+		div[id$="gk-comment"] {
+			font-style: normal;
+			line-height: 1.4;
+			color:  #5A5A5A;
+			
+			label {
+		    color: #04384E;
+		    font-family: Verdana,Geneva,sans-serif;
+		    font-size: 12px;
+		    font-weight: 400;
+		    letter-spacing: 1px;
+		    line-height: normal;
+		    margin: 20px 0 0;
+		    text-transform: uppercase;
+			}
+		}
+		
+		.sub-title {
+			display: block;
+			font-style: italic;
+			color: #A2A2A2;
+			font-size: 13px;
+			font-weight: normal;
+			padding-top: 5px;
+		}
+		
+		textarea {
+			height: 80px;
+		}
+		
+		.form-type-textarea.form-item {
+			border-bottom: 1px solid #CECECE;
+			margin-bottom: 0;
+			padding-bottom: 15px;
+			font-weight: normal;
+		}
+		
+		.form-type-textarea.form-item:last-child {
+			border-bottom: none;
+		}
+	}
+} 
+
+/* Review */
+#review {
+	.section-revisions {
+		
+		font-size: 16px;
+		
+		h2 {
+			border-bottom: 1px solid #62676E;
+		  color: #04384E;
+	    display: block;
+	    font-size: 22px;
+	    font-weight: bold;
+	    margin: 0 0 30px;
+	    padding: 15px 0 0;
+	    text-transform: capitalize;
+			line-height: 1.6;
+		 }
+		
+		.feedback-item {
+			
+			width: 560px;
+			
+			.criteria-set-title-gate-keeper {
+				font-size: 18px;
+				font-weight: bold;
+				margin-bottom: 15px;
+				line-height: 1.4;
+			}
+			
+			.criteria-set-title-reviewer  {
+				font-size: 13x;
+				font-weight: bold;
+				margin-bottom: 5px;
+			}
+			
+			.date {
+				font-size: 13px;
+				color: #A2A2A2;
+				margin-bottom: 5px;
+			}
+			
+			.headline {
+				color: #04384E;
+			  font-family: Verdana,Geneva,sans-serif;
+		    font-size: 13px;
+		    font-weight: 600;
+		    letter-spacing: 1px;
+		    line-height: normal;
+		    margin: 20px 0 0;
+		    text-transform: uppercase;
+			}
+			
+			.comments {
+				color: #70757E;
+				line-height: 1.4;
+				margin-bottom: 5px;
+				font-size: 13px;
+			}
+			
+			.criteria-set-title-contributor {
+				font-size: 13px;
+			  font-weight: bold;
+		    margin-top: 20px;
+				margin-bottom: 5px;
+			}
+		}
+		
+	
+	}
+}
+
+/*Optimize node-type-resource theme */
+.page-node-add-resource #edit-group_tags .chzn-container-multi.chzn-container, 
+.section-node-edit #edit-group_tags .chzn-container-multi.chzn-container {
+    width: 270px !important;
+}
+
+.form-textarea-wrapper textarea {
+    max-width: 650px !important;
+}
+
+
+
+
+
+
+
+
+
+

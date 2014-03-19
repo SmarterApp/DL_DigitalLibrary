@@ -7838,7 +7838,7 @@ html.js input.throbbing {
   height: 100%;
   position: absolute;
   right: -1px;
-  top: -1px;
+  top: 0;
   width: 15px;
   z-index: 2;
 }
