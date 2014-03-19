@@ -69,6 +69,31 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    */
   protected $pem_fid;
 
+  /**
+   * @var int Current read/write position
+   */
+  protected $position = 0;
+
+  /**
+   * @var int Total size of the object as returned by S3 (Content-length)
+   */
+  protected $objectSize = 0;
+
+  /**
+   * @var string Object read/write buffer, typically a file
+   */
+  protected $buffer = NULL;
+
+  /**
+   * @var boolean Whether $buffer is active as a write buffer
+   */
+  protected $bufferWrite = FALSE;
+
+  /**
+   * @var int Buffer length
+   */
+  protected $bufferLength = 0;
+
 
   /**
    * Object constructor.
@@ -83,12 +108,13 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $this->key_file_path = variable_get('google_cdn_public_key_file_path');
     $this->pem_file = variable_get('google_cdn_pem_file_path');
     $this->pem_fid = variable_get('google_cdn_pem_fid');
+    $this->getGCS();
   }
 
   /**
    * Sets the stream resource URI.
    *
-   * URIs are formatted as "s3://bucket/key"
+   * URIs are formatted as "gs://bucket/key"
    *
    * @return string
    *   Returns the current URI of the instance.
@@ -100,7 +126,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * Returns the stream resource URI.
    *
-   * URIs are formatted as "s3://bucket/key"
+   * URIs are formatted as "gs://bucket/key"
    *
    * @return string
    *   Returns the current URI of the instance.
@@ -111,8 +137,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
 
   /**
    * Returns a web accessible URL for the resource.
-   *
-   * In the format http://mybucket.amazons3.com/myfile.jpg
    *
    * @return string
    *   Returns a string containing a web accessible URL for the resource.
@@ -144,9 +168,9 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    */
   public static function getMimeType($uri, $mapping = NULL) {
     // Load the default file map.
-    if (!isset(self::$mapping)) {
+    if (!isset($mapping)) {
       include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
-      self::$mapping = file_mimetype_mapping();
+      $mapping = file_mimetype_mapping();
     }
 
     $extension = '';
@@ -162,8 +186,8 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     // awesome.image.jpeg
     while ($additional_part = array_pop($file_parts)) {
       $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
-      if (isset(self::$mapping['extensions'][$extension])) {
-        return self::$mapping['mimetypes'][self::$mapping['extensions'][$extension]];
+      if (isset($mapping['extensions'][$extension])) {
+        return $mapping['mimetypes'][$mapping['extensions'][$extension]];
       }
     }
 
@@ -193,7 +217,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   Returns FALSE as this wrapper does not provide an implementation.
    */
   public function realpath() {
-    return FALSE;
+    return $this->getLocalPath();
   }
 
   /**
@@ -241,7 +265,30 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-open.php
    */
   public function stream_open($uri, $mode, $options, &$opened_path) {
+    $this->callConstructor();
     $this->uri = $uri;
+
+    // If this stream is being opened for writing, clear the object buffer.
+    // Return true as we'll create the object on fflush call.
+    if (strpbrk($mode, 'wax')) {
+      $this->clearBuffer();
+      $this->bufferWrite = TRUE;
+      return TRUE;
+    }
+
+    try {
+      $response = $this->gcs->objects->get($this->bucket, $this->folder . '/test2.txt');
+      if ($response) {
+        $this->clearBuffer();
+        $this->bufferWrite = FALSE;
+        $this->objectSize = $response['13'];
+        return TRUE;
+      }
+    }
+    catch (Exception $e) {
+      drupal_set_message(t('There was a problem connecting to Google Cloud Storage. @message', array('message' => $e->getMessage())), 'error');
+    }
+
     return FALSE;
   }
 
@@ -292,7 +339,27 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-read.php
    */
   public function stream_read($count) {
-    return '';
+    // Make sure that count doesn't exceed object size.
+    if ($count + $this->position > $this->objectSize) {
+      $count = $this->objectSize - $this->position;
+    }
+    $data = '';
+    if ($count > 0) {
+      $range_end = $this->position + $count - 1;
+      if ($range_end > $this->bufferLength) {
+        $opts = array(
+          'range' => $this->position . '-' . $range_end,
+        );
+        $response = $this->getS3()->get_object($this->bucket, $this->getLocalPath($this->uri), $opts);
+        if ($response->isOK()) {
+          $this->buffer .= $response->body;
+          $this->bufferLength += strlen($response->body);
+        }
+      }
+      $data = substr($response->body, 0, min($count, $this->objectSize));
+      $this->position += strlen($data);
+    }
+    return $data;
   }
 
   /**
@@ -307,7 +374,12 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-write.php
    */
   public function stream_write($data) {
-    return $data;
+    $data_length = strlen($data);
+    $this->buffer .= $data;
+    $this->bufferLength += $data_length;
+    $this->position += $data_length;
+
+    return $data_length;
   }
 
   /**
@@ -319,6 +391,9 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-eof.php
    */
   public function stream_eof() {
+    if (!$this->uri) {
+      return TRUE;
+    }
     return ($this->position >= $this->objectSize);
   }
 
@@ -336,7 +411,29 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-seek.php
    */
   public function stream_seek($offset, $whence) {
-    return '';
+    switch ($whence) {
+      case SEEK_CUR:
+        // Set position to current location plus $offset.
+        $new_position = $this->position + $offset;
+        break;
+
+      case SEEK_END:
+        // Set position to eof plus $offset.
+        $new_position = $this->objectSize + $offset;
+        break;
+
+      case SEEK_SET:
+      default:
+        // Set position equal to $offset.
+        $new_position = $offset;
+        break;
+    }
+
+    $ret = ($new_position >= 0 && $new_position <= $this->objectSize);
+    if ($ret) {
+      $this->position = $new_position;
+    }
+    return $ret;
   }
 
   /**
@@ -348,6 +445,24 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-flush.php
    */
   public function stream_flush() {
+    if ($this->bufferWrite) {
+      try {
+        $local_path = $this->getLocalPath();
+        //set the mimetype for the file and set the location of the file to be uploaded
+        $postbody = array('mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri), 'data' => $this->buffer);
+        $gso = new Google_Service_Storage_StorageObject();
+        $gso->setName($this->folder . $local_path);
+        $response = $this->gcs->objects->insert($this->bucket, $gso ,$postbody);
+        if ($response->isOK()) {
+          return TRUE;
+        }
+      }
+      catch (Exception $e) {
+        watchdog_exception('google_cdn', $e);
+        drupal_set_message('Unable to save the file to Google Cloud Storage.');
+      }
+    }
+    $this->clearBuffer();
     return FALSE;
   }
 
@@ -445,6 +560,9 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * Support for mkdir().
    *
+   * Google Cloud Storage is not a tree structure, so folder's
+   * do not exist.
+   *
    * @param string $uri
    *   A string containing the URI to the directory to create.
    * @param int $mode
@@ -458,7 +576,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.mkdir.php
    */
   public function mkdir($uri, $mode, $options) {
-    return FALSE;
+    return TRUE;
   }
 
   /**
@@ -493,6 +611,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.url-stat.php
    */
   public function url_stat($uri, $flags) {
+    $this->callConstructor();
     return $this->_stat($uri);
   }
 
@@ -628,10 +747,83 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           $this->gcs = $service;
         }
         catch (Exception $e) {
+          watchdog_exception('google_cdn', $e);
           drupal_set_message(t('There was a problem connecting to Google Cloud Storage. @message', array('message' => $e->getMessage())), 'error');
         }
       }
     }
-    return $this->gcs;
+  }
+
+  /**
+   * Get file status.
+   *
+   * @return array
+   *   An array with file status, or FALSE in case of an error - see fstat()
+   *   for a description of this array.
+   *
+   * @see http://php.net/manual/en/streamwrapper.stream-stat.php
+   */
+  protected function _stat($uri = NULL) {
+    if (!isset($uri)) {
+      $uri = $this->uri;
+    }
+    $metadata = $this->getGCS();
+    if ($metadata) {
+      $stat = array();
+      $stat[0] = $stat['dev'] = 0;
+      $stat[1] = $stat['ino'] = 0;
+      $stat[2] = $stat['mode'] = $metadata['mode'];
+      $stat[3] = $stat['nlink'] = 0;
+      $stat[4] = $stat['uid'] = 0;
+      $stat[5] = $stat['gid'] = 0;
+      $stat[6] = $stat['rdev'] = 0;
+      $stat[7] = $stat['size'] = 0;
+      $stat[8] = $stat['atime'] = 0;
+      $stat[9] = $stat['mtime'] = 0;
+      $stat[10] = $stat['ctime'] = 0;
+      $stat[11] = $stat['blksize'] = 0;
+      $stat[12] = $stat['blocks'] = 0;
+
+      if (!$metadata['dir']) {
+        if (!isset($metadata['uid']) || !isset($metadata['filesize']) || !isset($metadata['timestamp'])) {
+          return FALSE;
+        }
+        else {
+          $stat[4] = $stat['uid'] = $metadata['uid'];
+          $stat[7] = $stat['size'] = $metadata['filesize'];
+          $stat[8] = $stat['atime'] = $metadata['timestamp'];
+          $stat[9] = $stat['mtime'] = $metadata['timestamp'];
+          $stat[10] = $stat['ctime'] = $metadata['timestamp'];
+        }
+      }
+      return $stat;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Returns the filename for the given URI.
+   *
+   * @param $uri
+   * @return mixed
+   */
+  protected function getFilename($uri) {
+    $filename = str_replace('gs://', '', $uri);
+    return $filename;
+  }
+
+  /**
+   * Assert that the constructor has been called, call it if not.
+   *
+   * Due to PHP bug #40459, the constructor of this class isn't always called
+   * for some of the methods. This private method calls the constructor if
+   * it hasn't been called before.
+   *
+   * @see https://bugs.php.net/bug.php?id=40459
+   */
+  protected function callConstructor() {
+    if ($this->client_id === NULL) {
+      $this->__construct();
+    }
   }
 }

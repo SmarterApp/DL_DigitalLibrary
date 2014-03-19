@@ -67,7 +67,25 @@ function google_cdn_libraries_info() {
 }
 
 /**
+ * Implements hook_registry_files_alter().
  *
+ * @param $files
+ * @param $modules
+ */
+function google_cdn_registry_files_alter(&$files, $modules) {
+  $library_path = function_exists('libraries_get_path') ? libraries_get_path('google-api-php-client') : 'sites/all/libraries/google-api-php-client';
+  $files[$library_path . '/src/Google/Service/Storage.php'] = array(
+    'module' => 'google_cdn',
+    'weight' => 0,
+  );
+}
+
+/**
+ * Implements hook_init().
+ *
+ * Google's API PHP Client library does not
+ * include its own files correctly. To fix this
+ * in Drupal, we need to add the include path on every page call.
  */
 function google_cdn_init() {
   $var =  libraries_get_path('google-api-php-client') . '/src/';
@@ -85,7 +103,7 @@ function google_cdn_stream_wrappers() {
     'gs' => array(
       'name' => 'Google CDN',
       'class' => 'GoogleCDNStreamWrapper',
-      'description' => t('Google CDN (Cloud Storage)'),
+      'description' => t('Google CDN (Google Cloud Storage)'),
     ),
   );
 }
