@@ -817,41 +817,49 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-stat.php
    */
   protected function _stat($uri = NULL) {
-    if (!isset($uri)) {
+    if ($uri == NULL) {
       $uri = $this->uri;
     }
-    $metadata = $this->getGCS();
-    if ($metadata) {
-      $stat = array();
-      $stat[0] = $stat['dev'] = 0;
-      $stat[1] = $stat['ino'] = 0;
-      $stat[2] = $stat['mode'] = $metadata['mode'];
-      $stat[3] = $stat['nlink'] = 0;
-      $stat[4] = $stat['uid'] = 0;
-      $stat[5] = $stat['gid'] = 0;
-      $stat[6] = $stat['rdev'] = 0;
-      $stat[7] = $stat['size'] = 0;
-      $stat[8] = $stat['atime'] = 0;
-      $stat[9] = $stat['mtime'] = 0;
-      $stat[10] = $stat['ctime'] = 0;
-      $stat[11] = $stat['blksize'] = 0;
-      $stat[12] = $stat['blocks'] = 0;
+    $this->uri = $uri;
 
-      if (!$metadata['dir']) {
-        if (!isset($metadata['uid']) || !isset($metadata['filesize']) || !isset($metadata['timestamp'])) {
-          return FALSE;
-        }
-        else {
-          $stat[4] = $stat['uid'] = $metadata['uid'];
-          $stat[7] = $stat['size'] = $metadata['filesize'];
-          $stat[8] = $stat['atime'] = $metadata['timestamp'];
-          $stat[9] = $stat['mtime'] = $metadata['timestamp'];
-          $stat[10] = $stat['ctime'] = $metadata['timestamp'];
-        }
+    $target = $this->getTarget($this->uri);
+    $stat = FALSE;
+    $mode = 0;
+
+    try {
+
+      $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
+
+      if (empty($target)) {
+        $mode = 0040000; // S_IFDIR means it's a directory.
       }
-      return $stat;
+      else {
+        $mode = 0100000; // S_IFREG, means it's a file.
+      }
+      if ($mode) {
+        $mode |= 0777;
+        $stat = array(
+          'dev' => 0,
+          'ino' => 0,
+          'mode' => $mode,
+          'nlink' => 0,
+          'uid' => 0,
+          'gid' => 0,
+          'rdev' => 0,
+          'size' => 14,
+          'atime' => 0,
+          'mtime' => 0,
+          'ctime' => 0,
+          'blksize' => 0,
+          'blocks' => 0,
+        );
+      }
     }
-    return FALSE;
+    catch (Exception $e) {
+
+    }
+
+    return $stat;
   }
 
   /**
