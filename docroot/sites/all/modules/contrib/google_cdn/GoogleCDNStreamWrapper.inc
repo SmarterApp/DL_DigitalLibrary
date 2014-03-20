@@ -521,7 +521,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.unlink.php
    */
   public function unlink($uri) {
-    $response = $this->getGCS()->delete($this->bucket, $this->getLocalPath($uri));
+    $response = $this->gcs->delete($this->bucket, $this->getLocalPath($uri));
     if ($response->isOK()) {
       return TRUE;
     }
@@ -712,7 +712,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   String specifying the path.
    */
   public function getDirectoryPath() {
-    return $this->domain;
+    return $this->bucket;
   }
 
   /**
@@ -852,17 +852,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       return $stat;
     }
     return FALSE;
-  }
-
-  /**
-   * Returns the filename for the given URI.
-   *
-   * @param $uri
-   * @return mixed
-   */
-  protected function getFilename($uri) {
-    $filename = str_replace('gs://', '', $uri);
-    return $filename;
   }
 
   /**
