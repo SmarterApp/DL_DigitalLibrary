@@ -5,15 +5,16 @@
   Drupal.behaviors.date_popup_focus = {
     attach: function (context) {
       for (var id in Drupal.settings.datePopup) {
+        console.log(id);
         $('#' + id).bind('focus', Drupal.settings.datePopup[id], function (e) {
           $(this).unbind(e);
 
-          window.date_popup_init_interval = setInterval(function () {
-            if ($(e.currentTarget).hasClass('date-popup-init')) {
-              $(e.currentTarget).focus();
-              clearInterval(window.date_popup_init_interval);
-            }
-          }, 25);
+//          window.date_popup_init_interval = setInterval(function () {
+//            if ($(e.currentTarget).hasClass('date-popup-init')) {
+//              $(e.currentTarget).focus();
+//              clearInterval(window.date_popup_init_interval);
+//            }
+//          }, 25);
         });
       }
 
