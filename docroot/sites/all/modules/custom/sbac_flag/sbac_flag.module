@@ -234,7 +234,7 @@ function sbac_flag_cron() {
     $sql = "SELECT * FROM {sessions} WHERE uid = :uid";
     $session = db_query($sql, array(':uid' => $row->being_moderated))->fetchObject();
     if ($session) {
-      $twenty_four_hours_ago = time() - 86400;
+      $twenty_four_hours_ago = time() - 300; //86400;
       if ($row->changed >= $twenty_four_hours_ago && $session->timestamp >= $twenty_four_hours_ago) {
         // if the changed date of the eck_flag is greater then 24 hours
         // and
