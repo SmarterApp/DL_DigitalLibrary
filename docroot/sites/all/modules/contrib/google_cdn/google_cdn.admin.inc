@@ -112,10 +112,10 @@ function google_cdn_admin_validate($form, &$form_state) {
         // Replace this with your application name.
         $client->setApplicationName($google_cdn_service_account_name);
         // Replace this with the service you are using.
-        $service = new Google_Service_Storage($client);
+        $service = new Google_StorageService($client);
         // This file location should point to the private key file.
         $key = file_get_contents($google_cdn_key_file_path);
-        $cred = new Google_Auth_AssertionCredentials(
+        $cred = new Google_AssertionCredentials(
         // Replace this with the email address from the client.
           $google_cdn_service_account_name,
           // Replace this with the scopes you are requesting.
@@ -185,7 +185,7 @@ function google_cdn_admin_submit($form, &$form_state) {
         $pkey_result = array();
         $pkcs12_read = openssl_pkcs12_read(file_get_contents($real_path), $pkey_result, $password);
         if ($pkcs12_read) {
-          $new_password = '';
+          $new_password = 'notasecret';
           $pem_result = NULL;
           $pem_export = openssl_pkey_export($pkey_result['pkey'], $pem_result, $new_password);
           if ($pem_export) {

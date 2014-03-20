@@ -8,9 +8,10 @@
 /**
  * Denotes "AWS SDK for PHP" minimum version number.
  */
-define('GOOGLE_CDN_MINIMUM_VERSION', '1.0.5');
+define('GOOGLE_CDN_MINIMUM_VERSION', '0.6.7');
 define('GOOGLE_CDN_ADMIN_SUBMIT_BUTTON', 'Save Configuration');
 define('GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON', 'Test Connection');
+define('GOOGLE_CDN_SIGNED_URL_EXPIRY', 300);
 
 /**
  * Implements hook_menu().
@@ -51,19 +52,31 @@ function google_cdn_libraries_info() {
       'vendor url' => 'http://code.google.com/p/google-api-php-client/',
       'download url' => 'https://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.7.tar.gz',
       'version arguments' => array(
-        'file' => 'src/Google/Client.php',
-        'pattern' => '/LIBVER = \"(\d+\.\d+\.?\d?).*/',
-        'lines' => 45,
-        'cols' => 80,
+        'file' => 'src/Google_Client.php',
       ),
       'files' => array(
         'php' => array(
-          'src/Google/Client.php',
-          'src/Google/Service/Storage.php',
+          'src/Google_Client.php',
+          'src/contrib/Google_StorageService.php',
         ),
       ),
+      'version callback' => 'google_cdn_library_version_callback',
     ),
   );
+}
+
+/**
+ * Custom callback that returns a version number
+ * back to the Library API to allow it to load
+ * the Google SDK correctly. Google does not save the
+ * version number within the SDK.
+ *
+ * @param $library
+ * @return string
+ */
+function google_cdn_library_version_callback($library) {
+  $version = '0.6.7';
+  return $version;
 }
 
 /**
@@ -72,13 +85,13 @@ function google_cdn_libraries_info() {
  * @param $files
  * @param $modules
  */
-function google_cdn_registry_files_alter(&$files, $modules) {
-  $library_path = function_exists('libraries_get_path') ? libraries_get_path('google-api-php-client') : 'sites/all/libraries/google-api-php-client';
-  $files[$library_path . '/src/Google/Service/Storage.php'] = array(
-    'module' => 'google_cdn',
-    'weight' => 0,
-  );
-}
+//function google_cdn_registry_files_alter(&$files, $modules) {
+//  $library_path = function_exists('libraries_get_path') ? libraries_get_path('google-api-php-client') : 'sites/all/libraries/google-api-php-client';
+//  $files[$library_path . '/src/Google/Service/Storage.php'] = array(
+//    'module' => 'google_cdn',
+//    'weight' => 0,
+//  );
+//}
 
 /**
  * Implements hook_init().
@@ -87,11 +100,11 @@ function google_cdn_registry_files_alter(&$files, $modules) {
  * include its own files correctly. To fix this
  * in Drupal, we need to add the include path on every page call.
  */
-function google_cdn_init() {
-  $var =  libraries_get_path('google-api-php-client') . '/src/';
-  $local_file_path = realpath($var);
-  set_include_path(get_include_path() . PATH_SEPARATOR . $local_file_path);
-}
+//function google_cdn_init() {
+//  $var =  libraries_get_path('google-api-php-client') . '/src/';
+//  $local_file_path = realpath($var);
+//  set_include_path(get_include_path() . PATH_SEPARATOR . $local_file_path);
+//}
 
 /**
  * Implements hook_stream_wrappers().
