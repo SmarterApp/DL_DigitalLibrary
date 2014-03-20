@@ -451,8 +451,10 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         //set the mimetype for the file and set the location of the file to be uploaded
         $postbody = array('mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri), 'data' => $this->buffer);
         $gso = new Google_Service_Storage_StorageObject();
-        $gso->setName($this->folder . $local_path);
+        $gso->setName($this->folder . '/' .  $local_path);
+        $gso->setBucket($this->bucket);
         $response = $this->gcs->objects->insert($this->bucket, $gso ,$postbody);
+
         if ($response->isOK()) {
           return TRUE;
         }
@@ -715,7 +717,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *
    */
   protected function getGCS() {
-    if ($this->gcs === NULL) {
+    if ($this->gcs == NULL) {
       if (!libraries_load('google-api-php-client')) {
         drupal_set_message(t('Unable to load the Google API PHP library. Please check you have installed the library correctly.') . 'error');
       }
@@ -735,7 +737,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           // Replace this with the email address from the client.
             $this->service_account_name,
             // Replace this with the scopes you are requesting.
-            array('https://www.googleapis.com/auth/devstorage.read_write'),
+            array('https://www.googleapis.com/auth/devstorage.full_control'),
             $key
           );
 
@@ -822,7 +824,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see https://bugs.php.net/bug.php?id=40459
    */
   protected function callConstructor() {
-    if ($this->client_id === NULL) {
+    if ($this->gcs == NULL) {
       $this->__construct();
     }
   }
