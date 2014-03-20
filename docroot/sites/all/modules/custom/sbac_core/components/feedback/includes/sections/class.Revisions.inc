@@ -123,7 +123,7 @@ class Revisions extends Base {
             <div class="author">' . t('Reviewer !j', array('!j' => $j)) . '</div>
             <div class="created">' . format_date($entity->created, 'full') . '</div>
             <div class="headline">' . t('Quality Criteria Level: !level', array('!level' => $level)) . '</div>
-            <div class="comments">' . $comments . '</div>
+            <div class="comments-content">' . $comments . '</div>
           </div>
         ';
         $j++;
@@ -135,10 +135,10 @@ class Revisions extends Base {
         <div class="comments-title-contributor">
             ' . t("Contributor's Comment") . '
         </div>
-        <div class="">
+        <div class="created">
           ' . $contributor_comment_date . '
         </div>
-        <div class="feedback-item">
+        <div class="feedback-content">
           ' . $contributor_comment . '
         </div>
       ';
