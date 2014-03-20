@@ -7,11 +7,11 @@
     <?php echo $created; ?>
   </div>
 
-  <div class="headline">
+  <div class="headline bold">
     <?php echo $headline; ?>
   </div>
 
-  <div class="comments">
+  <div class="comments-content">
     <?php echo $comments; ?>
   </div>
 </div>
