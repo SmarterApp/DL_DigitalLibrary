@@ -71,7 +71,7 @@ class Revisions extends Base {
         'author' => t('Reviewer !count', array('!count' => $i)),
         'created' => $created,
         'headline' => $headline,
-        'comments' => more_less_text($publisher_comment, 140),
+        'comments-content' => more_less_text($publisher_comment, 140),
       ));
       $i++;
     }
