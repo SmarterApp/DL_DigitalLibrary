@@ -49,42 +49,42 @@
         var resource = $('#resource-element');
         switch (type) {
           case 'document':
-          $('.infobar .ajax-progress').show();
-          Drupal.behaviors.sbac_resource_load_media.check(resource, local_url);
+            $('.infobar .ajax-progress').show();
+            Drupal.behaviors.sbac_resource_load_media.check(resource, local_url);
             break;
           case 'html5':
-          resource.empty().append('<iframe src="' + $(this).attr('href') + '" width="850" height="600" style="border: none;"></iframe>');
-          resource.removeClass('google-doc');
+            resource.empty().append('<iframe src="' + $(this).attr('href') + '" width="850" height="600" style="border: none;"></iframe>');
+            resource.removeClass('google-doc');
             break;
           case 'video':
-          resource.empty().append('<div id="sbac-jwplayer"></div>');
-          jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850, primary: "flash" });
-          jwplayer('sbac-jwplayer').play();
-          resource.removeClass('google-doc');
+            resource.empty().append('<div id="sbac-jwplayer"></div>');
+            jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850, primary: "flash" });
+            jwplayer('sbac-jwplayer').play();
+            resource.removeClass('google-doc');
             break;
           case 'image':
-          var img = $('<img>');
-          img.attr('src', $(this).attr('href'));
-          img.attr('height', 400);
-          img.attr('width', 850);
-          resource.empty().append(img);
-          resource.removeClass('google-doc');
+            var img = $('<img>');
+            img.attr('src', $(this).attr('href'));
+            img.attr('height', 400);
+            img.attr('width', 850);
+            resource.empty().append(img);
+            resource.removeClass('google-doc');
             break;
           case 'schooltube':
-          resource.empty().append('<div class="flex-video"><iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>');
-          resource.removeClass('google-doc');
+            resource.empty().append('<div class="flex-video"><iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>');
+            resource.removeClass('google-doc');
             break;
           case 'teachertube':
-          resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe>');
-          resource.removeClass('google-doc');
+            resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe>');
+            resource.removeClass('google-doc');
             break;
           case 'slideshare':
-          resource.empty().append('<div class="flex-video"><iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>');
-          resource.removeClass('google-doc');
+            resource.empty().append('<div class="flex-video"><iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>');
+            resource.removeClass('google-doc');
             break;
           case 'vimeo':
-          resource.empty().append('<div class="flex-video"><iframe src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>');
-          resource.removeClass('google-doc');
+            resource.empty().append('<div class="flex-video"><iframe src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>');
+            resource.removeClass('google-doc');
             break;
           case 'youtube':
             if (local_url.indexOf('youtube') == -1) {
@@ -94,19 +94,19 @@
               img.attr('height', 400);
               img.attr('width', 850);
               resource.empty().append(img);
-              }
+            }
             else {
               resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>');
               resource.removeClass('google-doc');
             }
             break;
           default:
-          var img = $('<img>');
-          img.attr('src', $(this).attr('href'));
-          img.attr('height', 400);
-          img.attr('width', 850);
-          resource.empty().append(img);
-          resource.removeClass('google-doc');
+            var img = $('<img>');
+            img.attr('src', $(this).attr('href'));
+            img.attr('height', 400);
+            img.attr('width', 850);
+            resource.empty().append(img);
+            resource.removeClass('google-doc');
             break;
         }
 
@@ -123,6 +123,10 @@
         doc_type.empty().append(type);
 
         return false;
+      });
+
+      $('#sbac-partial-download').hover( function() {
+        $('.sbac-download-dropdown').toggle();
       });
 
       // when the list loses focus.
