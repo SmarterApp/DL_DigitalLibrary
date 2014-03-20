@@ -204,7 +204,7 @@ function feedback_qc_form_submit($form, &$form_state) {
         $entity->status = 0;
         entity_save('feedback', $entity);
         sbac_resource_save_current_state($node);
-        _sbac_resource_save_reviewers($node, NULL, FALSE, TRUE);
+//        _sbac_resource_save_reviewers($node, NULL, FALSE, TRUE);
       }
 
       break;
