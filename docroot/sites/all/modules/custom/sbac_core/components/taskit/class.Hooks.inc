@@ -87,6 +87,12 @@ class Hooks extends \devtools\Hooks {
     $types = array(
       // resource is submitted for review
       array(
+        'name' => 'review_completed',
+        'description' => t('User has completed a review.'),
+        'class' => 'ReviewCompleted',
+      ),
+      // resource is submitted for review
+      array(
         'name' => 'resource_submitted',
         'description' => t('Resource has been submitted for review.'),
         'class' => 'ResourceSubmitted',
