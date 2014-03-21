@@ -268,29 +268,30 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
         ),
       );
       drupal_add_js($js_settings, 'setting'); // Styles the modal.
-    } else { // leave forum
-      $link_text = t('Leave this Forum');
-      $link_url = 'sbac-forum/nojs/forum-leave/' . $term_id;
-      $link_ops = array(
-        'attributes' => array(
-          'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-leave-forum-link',
-          'id'    => 'sbac-forum-leave-forum-link'
-        ),
-      );
-      $link = l($link_text, $link_url, $link_ops);
-      $forum_control_links[] = $link;
-      $extra_classes = 'hover-over-large-popup';
-      $js_settings = array(
-        'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
-          'modalSize' => array(
-            'type' => 'fixed',
-            'width' => 560,
-            'height' => 230,
-          ),
-        ),
-      );
-      drupal_add_js($js_settings, 'setting'); // Styles the modal.
     }
+
+    $link_text = t('Leave this Forum');
+    $link_url = 'sbac-forum/nojs/forum-leave/' . $term_id;
+    $link_ops = array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-leave-forum-link',
+        'id'    => 'sbac-forum-leave-forum-link'
+      ),
+    );
+    $link = l($link_text, $link_url, $link_ops);
+    $forum_control_links[] = $link;
+    $extra_classes = 'hover-over-large-popup';
+    $js_settings = array(
+      'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 560,
+          'height' => 230,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting'); // Styles the modal.
+
   }
   if (!empty($forum_control_links)) {
     $list_args = array(
@@ -401,6 +402,19 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
             if ($operation == 'leave') {
               // Delete item. Cleans up after itself.
               $field_collection_item->delete();
+
+              if (in_array('facilitator', $current_member->roles)) { // Faci is trying to leave
+                $current_facis = $forum_term_wrapper->field_forum_facilitators->value();
+                $new_facis = array();
+                if (!empty($current_facis)) {
+                  foreach ($current_facis as $site_user_obj) {
+                    if ($site_user_obj->uid != $account_uid) {
+                      $new_facis[] = $site_user_obj->uid;
+                    }
+                  }
+                  $forum_term_wrapper->field_forum_facilitators->set($new_facis);
+                }
+              }
 
               // Set New Member count. Decrement.
               $current_member_count = $forum_term_wrapper->field_forum_member_count->value();
