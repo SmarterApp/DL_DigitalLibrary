@@ -62,10 +62,17 @@ $darkgreen: #246a34;
 }
 
 .report-title {
-  padding-bottom:10px;
-  border-bottom:1px solid #ccc;
-  margin: 10px 0;
-  font-size: 1.2em;
+  /*padding-bottom:10px;
+    border-bottom:1px solid #ccc;
+    margin: 10px 0;
+    font-size: 1.2em;*/
+	color: #000000;
+	display: block;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 20px;
+  padding: 10px 0;
+  text-transform: capitalize;
 }
 
 .chzn-container-single .chzn-search input {
@@ -157,6 +164,7 @@ i.icon-info {
     width: 25%;
     margin-right: 20px;
     float: left;
+		margin-top: 0;
 
     .chzn-container-single {
       width: 100% !important;
@@ -230,6 +238,7 @@ i.icon-info {
     float: left;
     margin-right: 10px;
 		padding-right: 20px;
+		margin-top: 0;
 		
 		#autocomplete {
 			padding-left: 10px;
@@ -296,6 +305,145 @@ i.icon-info {
   }
 }
 
+/*Individual Contributor and Reviewer Report*/
+.page-reports {
+	#sbac-report-individual-form {
+
+		border-bottom: 1px solid #62676E;
+		padding-bottom: 10px;
+		margin-bottom: 5px;
+
+		label {
+			font-size: 14px;
+		}
+
+		#edit-date-range {
+
+			legend {
+				font-size: 14px;
+			}
+
+			span {
+				margin-right: 20px;
+			}
+		}
+
+		#edit-submit {
+			margin-top: 20px;
+		}
+	}
+	
+	#sbac-csv-report-user-activity-form {
+		
+		label {
+			font-size: 13px;
+		}
+		span {
+			margin-right: 20px;
+		}
+	}
+	
+	.view-sne-details {
+		
+		.large-3.profile-pic {
+			padding-right: 0;
+			margin-bottom: 15px;
+			width: 16%;
+			
+			.profile-img {
+			  background-image: url("../images/avatar.png");
+		    background-position: center center;
+		    background-repeat: no-repeat;
+		    background-size: contain;
+		    width: 100px;
+			}
+		}
+		
+		.large-9.user-profile {
+			float:left;
+			
+			h2 {
+				padding: 0 !important;
+				margin-bottom: 8px;
+			}
+			
+			.views-field {
+				margin-bottom: 7px;
+				font-size: 15px;
+				
+				&.email {
+					color: #0583AC;
+			    cursor: pointer;
+			    text-decoration: none;
+				}
+			}
+		}
+
+		.profile-details {
+			clear: both;
+			margin: 0 1em;
+			
+			.views-field {
+				margin-bottom: 20px;
+				
+				.title {
+					border-bottom: 1px solid #CECECE;
+					color: #04384E;
+				  display: block;
+			    font-family: Verdana,Geneva,sans-serif;
+			    font-size: 12px;
+			    letter-spacing: 1px;
+			    line-height: normal;
+			    margin: 0 0 5px;
+			    padding: 0 0 3px;
+			    text-transform: uppercase;
+				}
+				
+				.tag {
+					background-color: #F2F2F2;
+					border-radius: 2px;
+			    display: inline-block;
+			    font-size: 12px;
+			    line-height: 22px;
+			    margin-right: 7px;
+			    margin-top: 7px;
+			    padding: 0 5px;
+				}
+			}
+		}
+	}
+	
+	#individual {
+		
+		table {
+			color: #464B54;
+			font-size: 13px;
+	    line-height: 1.5;
+	    text-align: left;
+			margin-bottom: 30px;
+		}
+		
+		th {
+		  background-color: #F2F2F2;
+			font-size: 13px;
+	    padding: 10px;
+			color: #464B54;
+			line-height: 1.5;
+		}
+		
+		td {
+			padding: 10px;
+			font-size: 13px;
+			text-align: left;
+			background: none repeat scroll 0 0 #FFFFFF;
+		}
+	}
+	
+	select#edit-display {
+		width: 200px;
+		margin-bottom: 30px;
+	}
+}
 
 
 /**
@@ -312,14 +460,14 @@ i.icon-info {
   }
 
 	table.report-summation {
-	  border:none !important;
+	  /*border:none !important;*/
 	  background:none;
 	  font-size: 0.85em;
 
 	  @mixin table-header() {
 	    border:1px solid #ccc;
-	        color: #056b8d;
-	        font-weight: bold;
+	    color: #056b8d;
+      font-weight: bold;
 	    @include background-image(linear-gradient(#ededed, #ebebeb));
 	  }
 
@@ -340,8 +488,13 @@ i.icon-info {
 	  tbody {
 	    tr{
 	      td {
+					background-color: #fff;
+					background-image: none;
+					
 	        &.subheader{
-	          @include table-header();
+	          /*@include table-header();*/
+						background-color: #fff;
+						background-image: none;
 	        }
 
           .cell-scroll {

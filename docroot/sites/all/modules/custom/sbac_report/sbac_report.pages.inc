@@ -407,7 +407,7 @@ function sbac_report_build_sne_output($user) {
             $picture = theme('image_style', array(
               'style_name' => 'profile_image',
               'path' => $user->picture->uri,
-              'attributes' => array('class' => 'column large-3 profile-pic')
+              'attributes' => array('class' => 'profile-img')
             ));
             $user_output['picture'] = '<a href="/user/' . $user->uid . '">' . $picture . '</a>';
           }
