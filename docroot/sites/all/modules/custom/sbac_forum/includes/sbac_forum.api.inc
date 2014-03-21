@@ -268,6 +268,7 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
         ),
       );
       drupal_add_js($js_settings, 'setting'); // Styles the modal.
+      $extra_classes = 'hover-over-large-popup';
     }
 
     $link_text = t('Leave this Forum');
@@ -280,7 +281,6 @@ function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $te
     );
     $link = l($link_text, $link_url, $link_ops);
     $forum_control_links[] = $link;
-    $extra_classes = 'hover-over-large-popup';
     $js_settings = array(
       'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
         'modalSize' => array(
