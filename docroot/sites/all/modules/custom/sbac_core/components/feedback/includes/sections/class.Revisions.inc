@@ -197,7 +197,7 @@ class Revisions extends Base {
 
             <div class="criteria-set-title-contributor">' . t("Contributor's comment") . '</div>
             <div class="date">' . format_date(field_entity_value($question, 'field_contributor_comment_date'), 'full') . '</div>
-            <div class="comments">' . field_entity_value($question, 'field_contributor_comment') . '</div>
+            <div class="comments-content">' . field_entity_value($question, 'field_contributor_comment') . '</div>
           </div>
         ';
 
