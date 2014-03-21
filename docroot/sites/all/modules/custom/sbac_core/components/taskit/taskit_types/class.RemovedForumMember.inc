@@ -21,7 +21,7 @@ class RemovedForumMember extends \taskit\sbac_core\BaseTask {
       }
 
       $output = array();
-      $output[] = t('A Facilitator has removed you from this forum: !title', array(
+      $output[] = t('A facilitator has removed you from this forum: !title', array(
         '!title' => '<span class="taskit-title">' . $forum->name . '</span>',
       ));
 

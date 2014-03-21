@@ -20,7 +20,7 @@ class DeletedTopicNode extends \taskit\sbac_core\BaseTask {
       }
 
       $output = array();
-      $output[] = t('A Facilitator for !forumname has deleted a discussion topic!title a topic you created.', array(
+      $output[] = t('A facilitator for !forumname has deleted topic!title a topic you created.', array(
         '!forumname' => '<span class="taskit-title">' . $forum->name . '</span>',
         '!title' => '<span class="taskit-title">' . $topic_title . '</span>',
       ));

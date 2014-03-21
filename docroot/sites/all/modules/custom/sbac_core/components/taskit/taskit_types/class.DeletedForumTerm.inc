@@ -12,7 +12,7 @@ class DeletedForumTerm extends \taskit\sbac_core\BaseTask {
       $this->setTaskUrl('forums');
 
       $output = array();
-      $output[] = t('A Facilitator has deleted this forum: !title', array(
+      $output[] = t('A facilitator has deleted this forum: !title', array(
         '!title' => '<span class="taskit-title">' . $forum->name . '</span>',
       ));
 
