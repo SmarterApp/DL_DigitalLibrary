@@ -30,12 +30,19 @@
   <?php print $gate_keeping; ?>
 
   <div style="clear:both;"></div>
-  <h3><?php print t('All Reviews'); ?></h3>
-  <p><?php print t('All consistency rates are calculated based on the
-                    differential in recommendations or ratings between 3
-                    resource reviewers. The tables below represent resources
-                    for which all reviews were completed in the selected
-                    time period.'); ?></p>
+  <h3><?php print t('Quality Criteria Reviews'); ?></h3>
+  <p><?php print t('The table below includes the number of Quality Criteria Reviews
+                    the reviewer has started but not yet completed,
+                    and the total number Quality Criteria Reviews the reviewer
+                    has completed in the selected time period.'); ?></p>
   <?php print $all_reviews; ?>
+  <?php $help_link = l('help topics', 'help-topics') ;?>
+  <h3><?php print t('Consistency Analysis of Quality Criteria Reviews'); ?></h3>
+  <p><?php print t("Consistency rates compare a reviewer's posting recommendations
+                    and Quality Criteria ratings to those of the other two reviewers
+                    who reviewed the same resource. Rates for resources contributors
+                    have resubmitted and rates for resources that have been removed
+                    from the Digital Library are not displayed. See the !helplink
+                    for more information.", array('!helplink' => $help_link) ); ?></p>
   <?php print $summation; ?>
 <?php endif ?>
