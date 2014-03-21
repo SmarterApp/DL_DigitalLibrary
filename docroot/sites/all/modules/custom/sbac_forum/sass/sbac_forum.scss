@@ -1044,13 +1044,14 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
     z-index: 999;
 
 		.sbac-forum-vp-controls-popup {
-			width: 130px;
+			width: 160px;
 			border: 1px solid #828588;
 			color: #464B54;
 			background-color: $white;
 			@include border-radius(10px);
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-			margin-top: -90px;
+			margin-top: -59px;
+			margin-left: -10px;
 
 			ul {
 				list-style-type: none;
@@ -1063,7 +1064,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					a {
 						color: #0583AC;
 						font-size: 15px;
-						display: blo;
+						display: block;
+						white-space: nowrap;
 
 						&:hover {
 							text-decoration: underline;
@@ -1074,8 +1076,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 
 		.sbac-forum-vp-controls-popup.hover-over-large-popup {
-			width: 160px;
-			margin-top: -60px;
+			margin-top: -117px;
 			margin-left: -10px;
 		}
 
