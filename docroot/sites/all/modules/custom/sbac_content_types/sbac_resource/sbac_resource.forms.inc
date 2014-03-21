@@ -3181,7 +3181,7 @@ function sbac_resource_unsubmit_resource_modal($js = FALSE) {
     ctools_include('modal');
 
     $form_state = array(
-      'title' => t("You are about to unsubmit your resource"),
+      'title' => t("You are about to un-submit your resource"),
       'ajax' => $js,
       'nid' => $_GET['nid'],
     );
