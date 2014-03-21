@@ -2058,12 +2058,15 @@ a.more-less-text-trigger-less:after {
 		    text-transform: uppercase;
 			}
 			
-			.comments-content {
+			.comments-content, .comments {
 				color: #70757E;
 				line-height: 1.4;
 				margin-bottom: 5px;
 				margin-top: 10px;
 				font-size: 13px;
+			}
+			
+			.comments {
 				width: 560px;
 			}
 			
