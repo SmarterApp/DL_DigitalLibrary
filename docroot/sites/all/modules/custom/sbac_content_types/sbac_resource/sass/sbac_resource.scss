@@ -1078,6 +1078,7 @@ a.sbac-grid-layout {
     background: transparent;
     margin: 0 -15px;
     padding: 0 20px;
+		line-height: 1.6;
   }
 
  .section-container.auto > section .content {
@@ -1757,10 +1758,10 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	}
 }
 
-/* -----------------------------------------
-    Revisions tab of page node
-   ----------------------------------------- */
-#sbac-resource-form {
+/* ----------------------------------------------
+    Revisions, Quality Criteria tab of page node
+   --------------------------------------------- */
+#sbac-resource-form, #eck-post-form {
 	
 	margin-left: 13px;
 	
@@ -1785,8 +1786,9 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		fieldset {
 		  border: none;
 			margin-top: 0;
-			margin-bottom: 0;
-			padding: 0 0 10px 0;
+			border-top: 1px solid #CECECE;
+			margin-top: 0px;
+			padding: 30px 0 0;
 		}
 		
 		h5 {
@@ -1795,12 +1797,13 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	    display: block;
 	    font-size: 1em;
 	    font-weight: bold;
-	    margin: 0;
+	    margin: 20px 0 0;
 	    padding: 0;
 	    text-transform: capitalize;
 		}
 		
 		.fieldset-wrapper {
+			
 			p {
 				font-size: 14px;
 				border-bottom: 1px solid #CECECE;
@@ -1815,18 +1818,20 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 			font-style: italic;
 			color: #A2A2A2;
 			line-height: 1.4;
+			font-weight: normal;
 		}
 		
 		label {
 			font-size: 12px;
 			font-style: normal;
-			padding-bottom: 6px;
+			padding-bottom: 2px;
 		}
 		
 		div[id$="gk-comment"] {
 			font-style: normal;
 			line-height: 1.4;
 			color:  #5A5A5A;
+			font-weight: normal;
 			
 			label {
 		    color: #04384E;
@@ -1851,18 +1856,14 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		
 		textarea {
 			height: 80px;
+			max-width: 650px;
+			margin-top: 10px;
+			font-size: 13px;
 		}
 		
 		.form-type-textarea.form-item {
-			border-bottom: 1px solid #CECECE;
-			margin-bottom: 20px;
-			padding-bottom: 25px;
 			font-weight: normal;
 			clear: both;
-		}
-		
-		.form-type-textarea.form-item:last-child {
-			border-bottom: none;
 		}
 	}
 	
@@ -1872,9 +1873,14 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		display: block;
 		float: left;
 		position: relative;
-		width: 200px;
+		/*width: 200px;*/
+		width: 31%;
 		font-size: 12px;
 		margin-top: 20px;
+		margin-bottom: 5px;
+		margin-right: 0;
+		padding-right: 0;
+		border-right: none;
 		
 		.author {
 			font-size: 13px;
@@ -1903,7 +1909,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 			font-weight: bold;
 		}
 		
-		.comments {
+		.comments-content {
 			font-size: 12px;
 			line-height: 1.4;
 		}
@@ -1912,7 +1918,6 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	.feedback-review + .feedback-review,
 	.col.form-wrapper + .col.form-wrapper {
 		margin-left: 20px;
-		margin-bottom: 20px;
 	}
 	
 	fieldset[id*="edit-sbac-revisions-feedback"] {
@@ -1923,6 +1928,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		clear: both;
 		margin-top: 20px;
 		padding-top: 20px;
+		padding-right: 0;
 		display: block;
 		font-size: 13px;
 		font-weight: bold;
@@ -1955,7 +1961,17 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		.headline,
 		.comments {
 			font-weight: normal;
+			line-height: 1.4;
 		}
+	}
+}
+
+/*Quality Criteria Review*/
+ #eck-post-form {
+	margin-left: 0;
+	
+	.criteria-set-title p {
+		font-weight: bold;
 	}
 }
 
@@ -1963,6 +1979,13 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 a.more-less-text-trigger-more,
 a.more-less-text-trigger-less {
 	color: #0583AC;
+	background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+	/*display: inline-block;*/
+	display: block !important;
+  font-size: 13px !important;
+	padding: 0 !important;
 	
 	&:hover {
 		color: #0583AC;
@@ -2005,19 +2028,17 @@ a.more-less-text-trigger-less:after {
 		
 		.feedback-item {
 			
-			width: 560px;
-			
 			.criteria-set-title-gate-keeper {
 				font-size: 18px;
 				font-weight: bold;
 				margin-bottom: 15px;
 				line-height: 1.4;
+				width: 560px;
 			}
 			
 			.criteria-set-title-reviewer  {
-				font-size: 13x;
+				font-size: 13px;
 				font-weight: bold;
-				margin-bottom: 5px;
 			}
 			
 			.date {
@@ -2030,27 +2051,150 @@ a.more-less-text-trigger-less:after {
 				color: #04384E;
 			  font-family: Verdana,Geneva,sans-serif;
 		    font-size: 13px;
-		    font-weight: 600;
+		    font-weight: 400;
 		    letter-spacing: 1px;
 		    line-height: normal;
-		    margin: 20px 0 0;
+		    margin: 20px 0 10px;
 		    text-transform: uppercase;
 			}
 			
-			.comments {
+			.comments-content {
 				color: #70757E;
 				line-height: 1.4;
 				margin-bottom: 5px;
+				margin-top: 10px;
 				font-size: 13px;
+				width: 560px;
 			}
 			
 			.criteria-set-title-contributor {
 				font-size: 13px;
 			  font-weight: bold;
 		    margin-top: 20px;
-				margin-bottom: 5px;
 			}
+		}
+		
+		.feedback-item:last-child {
+			border-bottom: none;
 		}	
+	}
+}
+
+
+/*Revision tab - Review of resubmission*/
+#review {
+	.section-revisions {
+		#feedback-wrap-qc-comments {
+			.feedback-item {
+			   width: 100%;
+			
+				.feedback-review  {
+					border-right: none;
+				}
+			}
+			
+			.criteria-set-title-post {
+				font-family: Arial,Helvetica,sans-serif;
+		    color: #4D4D4D;;
+		    display: block;
+		    font-size: 18px;
+		    font-weight: bold;
+		    margin: 0;
+		    padding: 0;
+		    text-transform: capitalize;
+			}
+			
+			.comments {
+				font-size: 16px;
+				margin: 15px 0 20px;
+			}
+			
+			.criteria-set-title-recommendation {
+				font-size: 18px;
+				font-weight: bold;
+				padding: 0;
+				margin-bottom: 15px;
+			}
+			
+			.author {
+				margin: 0;
+				font-size: 13px;
+			}
+			
+			.created {
+				color: #A2A2A2;
+				font-size: 13px;
+			}
+			
+			.headline {
+				font-weight: normal;
+				font-size: 12px;
+				border-bottom: 1px solid #CCC;
+				padding-bottom: 8px;
+			}
+			
+			.headline.bold {
+				font-weight: bold;
+			}
+				
+			.more-less-text-summary  {
+				font-size: 13px;
+			}
+			
+			.criteria-set-title-question {
+				font-size: 18px;
+				font-weight: bold;
+			}
+			
+			.criteria-set-commentes-text {
+				
+				span {font-size: 16px !important;}
+
+				ul{
+					margin: 5px 0 15px 15px;
+				}
+
+				ul ul {
+					margin-top: 0;
+					margin-bottom: 0;
+				}
+			}
+			
+			.comments-title-comments {
+				font-size: 13px;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+			
+			.comments-title-contributor {
+				font-size: 13px;
+				font-weight: bold;
+			}
+			
+			.feedback-item {
+				font-size: 13px;
+			}
+		}
+	}
+}
+
+#eck-qc-form,
+#eck-post-form {
+	.criteria-set-comments-text {
+		
+		span {
+			font-size: 16px !important;
+			color: #5A5A5A;
+		}
+
+		ul{
+			margin: 5px 0 15px 15px;
+		}
+
+		ul ul {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
 	}
 }
 
