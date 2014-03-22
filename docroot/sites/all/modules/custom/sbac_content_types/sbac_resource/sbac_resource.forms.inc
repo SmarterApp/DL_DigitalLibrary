@@ -1745,6 +1745,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
   sbac_media_widget_form_element($form, $form_state);
+  global $user;
 
   // License Informations
   // Let's remove the N/A Option from the license information section
@@ -1813,6 +1814,23 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_license_secondary']['#states']['visible'] = $state_license_1;
   $form['field_license_secondary']['und']['#options']['_none'] = '--Select License--';
 
+  $copyright_access = FALSE;
+  $owner_match = FALSE;
+  $has_role = array_intersect($user->roles, array('administrator', 'DLRB member'));
+  if (isset($form['#node'])) {
+    $owner_uid = $form['#node']->uid;
+    if ($user->uid == $owner_uid) {
+      $owner_match = TRUE;
+    }
+  }
+  if ((!empty($has_role)) || ($user->uid == 1) || ($owner_match)){
+    $copyright_access = TRUE;
+  }
+  $form['field_copyright_clearace_forms']['#access'] = $copyright_access;
+  $form['field_copyright_clearace_forms'][LANGUAGE_NONE]['#file_upload_title'] = '';
+  $form['field_copyright_clearace_forms'][LANGUAGE_NONE]['#file_upload_description'] = '';
+  $form['field_copyright_clearace_forms']['#states']['visible'] = $state_license_1;
+
   $form['group_license_information'] = array(
     '#prefix' => '<div id="license-information-group">',
     '#suffix' => '</div>',
@@ -1824,7 +1842,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   sbac_resource_license_url($form, $form_state);
 
-  global $user;
   $form['user_name'] = array(
     '#type' => 'hidden',
     '#value' => ucwords(full_name($user)),

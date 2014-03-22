@@ -135,6 +135,7 @@ function sbac_resource_field_group_info() {
       3 => 'field_license',
       4 => 'field_pii',
       5 => 'field_license_secondary',
+      6 => 'field_copyright_clearace_forms',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
