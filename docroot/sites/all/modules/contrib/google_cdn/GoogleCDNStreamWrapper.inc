@@ -155,21 +155,24 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     // Delivers the first request to an image from the private file system
     // otherwise it returns an external URL to an image that has not been
     // created yet.
-//    $path = explode('/', $this->getLocalPath());
-//    if ($path[0] === 'styles') {
-//      if (!$this->_amazons3_get_object($this->uri, $this->caching)) {
-//        array_shift($path);
-//        return url('system/files/styles/' . implode('/', $path), array('absolute' => TRUE));
-//      }
-//    }
+    $path = explode('/', $this->getLocalPath());
+    if ($path[0] === 'styles') {
+      $target = $this->getTarget($this->uri);
+      if (!$this->gcs->objects->get($this->bucket, $this->folder . '/' . $target)) {
+        array_shift($path);
+        return url('system/files/styles/' . implode('/', $path), array('absolute' => TRUE));
+      }
+    }
 
     $url = '';
     $local_path = $this->getLocalPath();
-    try {
+    if ($local_path) {
+      try {
         $url = $this->generate_signed_url($local_path);
-    }
-    catch (Exception $e) {
-      drupal_set_message(t('There was a problem connecting to Google Cloud Storage. @message', array('message' => $e->getMessage())), 'error');
+      }
+      catch (Exception $e) {
+        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getExternalUrl');
+      }
     }
 
     return $url;
@@ -294,17 +297,20 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       return TRUE;
     }
 
-    try {
-      $response = $this->gcs->objects->get($this->bucket, $this->folder . '/test2.txt');
-      if ($response) {
-        $this->clearBuffer();
-        $this->bufferWrite = FALSE;
-        $this->objectSize = $response['13'];
-        return TRUE;
+    $target = $this->getTarget($this->uri);
+    if ($target) {
+      try {
+        $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
+        if ($response) {
+          $this->clearBuffer();
+          $this->bufferWrite = FALSE;
+          $this->objectSize = $response['13'];
+          return TRUE;
+        }
       }
-    }
-    catch (Exception $e) {
-      drupal_set_message(t('There was a problem connecting to Google Cloud Storage. @message', array('message' => $e->getMessage())), 'error');
+      catch (Exception $e) {
+        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_open');
+      }
     }
 
     return FALSE;
@@ -476,8 +482,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e);
-        drupal_set_message('Unable to save the file to Google Cloud Storage.');
+        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_flush');
       }
     }
     $this->clearBuffer();
@@ -521,9 +526,17 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.unlink.php
    */
   public function unlink($uri) {
-    $response = $this->gcs->delete($this->bucket, $this->getLocalPath($uri));
-    if ($response->isOK()) {
-      return TRUE;
+    $target = $this->getLocalPath($uri);
+    if ($target) {
+      try {
+        $response = $this->gcs->objects->delete($this->bucket, $this->folder . '/' . $target);
+        if ($response == NULL) {
+          return TRUE;
+        }
+      }
+      catch (Exceception $e) {
+        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::unlink');
+      }
     }
     return FALSE;
   }
@@ -545,7 +558,29 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.rename.php
    */
   public function rename($from_uri, $to_uri) {
-    return $this->unlink($from_uri);
+    $this->callConstructor();
+    $from = $this->getLocalPath($from_uri);
+    $to = $this->getLocalPath($to_uri);
+
+    if ($from && $to) {
+      try {
+        $response = $this->gcs->objects->copy(
+          $this->bucket, $this->folder . '/' . $from,
+          $this->bucket, $this->folder . '/' . $to
+        );
+
+        if ($response) {
+          $deleted = $this->unlink($from_uri);
+          if ($deleted) {
+            return TRUE;
+          }
+        }
+      }
+      catch (Exception $e) {
+        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::rename');
+      }
+    }
+    return FALSE;
   }
 
   /**
@@ -610,7 +645,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.rmdir.php
    */
   public function rmdir($uri, $options) {
-    return '';
+    return TRUE;
   }
 
 
@@ -706,16 +741,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   }
 
   /**
-   * Gets the path that the wrapper is responsible for.
-   *
-   * @return string
-   *   String specifying the path.
-   */
-  public function getDirectoryPath() {
-    return $this->bucket;
-  }
-
-  /**
    * Flush the object buffers.
    */
   protected function clearBuffer() {
@@ -765,8 +790,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           $this->gcs = $service;
         }
         catch (Exception $e) {
-          watchdog_exception('google_cdn', $e);
-          drupal_set_message(t('There was a problem connecting to Google Cloud Storage. @message', array('message' => $e->getMessage())), 'error');
+          watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getGCS');
         }
       }
     }
@@ -798,7 +822,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $url = NULL;
     if ($signature) {
       $secure = 'http://';
-      if ($this->https == TRUE) {
+      if ($this->https) {
         $secure = 'https://';
       }
       $url = $secure . $this->bucket . '.storage.googleapis.com/' . $this->folder . '/' . $filename . '?GoogleAccessId=' . $this->service_account_name . '&Expires=' . $expiry . '&Signature=' . $signature;
@@ -817,49 +841,46 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-stat.php
    */
   protected function _stat($uri = NULL) {
-    if ($uri == NULL) {
+    if (!isset($uri)) {
       $uri = $this->uri;
     }
     $this->uri = $uri;
+    $target = $this->getTarget($uri);
+    if ($target) {
+      try {
+        $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
+        if ($response) {
+          $mode = 0100000;
+          $mode |= 0777;
 
-    $target = $this->getTarget($this->uri);
-    $stat = FALSE;
-    $mode = 0;
-
-    try {
-
-      $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
-
-      if (empty($target)) {
-        $mode = 0040000; // S_IFDIR means it's a directory.
+          $stat = array();
+          $stat[0] = $stat['dev'] = 0;
+          $stat[1] = $stat['ino'] = 0;
+          $stat[2] = $stat['mode'] = $mode;
+          $stat[3] = $stat['nlink'] = 0;
+          $stat[4] = $stat['uid'] = 0;
+          $stat[5] = $stat['gid'] = 0;
+          $stat[6] = $stat['rdev'] = 0;
+          $stat[7] = $stat['size'] = 0;
+          $stat[8] = $stat['atime'] = 0;
+          $stat[9] = $stat['mtime'] = 0;
+          $stat[10] = $stat['ctime'] = 0;
+          $stat[11] = $stat['blksize'] = 0;
+          $stat[12] = $stat['blocks'] = 0;
+          $stat[4] = $stat['uid'] = 0;
+          $stat[7] = $stat['size'] = $response['size'];
+          $stat[8] = $stat['atime'] = $response['generation'];
+          $stat[9] = $stat['mtime'] = $response['generation'];
+          $stat[10] = $stat['ctime'] = $response['generation'];
+          return $stat;
+        }
       }
-      else {
-        $mode = 0100000; // S_IFREG, means it's a file.
-      }
-      if ($mode) {
-        $mode |= 0777;
-        $stat = array(
-          'dev' => 0,
-          'ino' => 0,
-          'mode' => $mode,
-          'nlink' => 0,
-          'uid' => 0,
-          'gid' => 0,
-          'rdev' => 0,
-          'size' => 14,
-          'atime' => 0,
-          'mtime' => 0,
-          'ctime' => 0,
-          'blksize' => 0,
-          'blocks' => 0,
-        );
+      catch (Exception $e) {
+        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::_stat');
       }
     }
-    catch (Exception $e) {
 
-    }
-
-    return $stat;
+    return FALSE;
   }
 
   /**

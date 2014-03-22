@@ -75,7 +75,7 @@ function google_cdn_libraries_info() {
  * @return string
  */
 function google_cdn_library_version_callback($library) {
-  $version = '0.6.7';
+  $version = GOOGLE_CDN_MINIMUM_VERSION;
   return $version;
 }
 
