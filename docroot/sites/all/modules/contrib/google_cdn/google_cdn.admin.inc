@@ -97,7 +97,12 @@ function google_cdn_admin_public_key_file_element_process($element, &$form_state
 }
 
 /**
- * Validate the admin form.
+ * Validates the admin form.
+ *
+ * Tests the credentials the user entered and responds with a message.
+ *
+ * @param $form
+ * @param $form_state
  */
 function google_cdn_admin_validate($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
@@ -146,7 +151,10 @@ function google_cdn_admin_validate($form, &$form_state) {
 }
 
 /**
- * Saves the variables and p12 key file.
+ * Submit handler for admin form.
+ *
+ * Saves the variables and p12 key file. Also creates a PEM file for later use
+ * in regards to signed urls.
  *
  * @param $form
  * @param $form_state
@@ -189,8 +197,10 @@ function google_cdn_admin_submit($form, &$form_state) {
           $pem_result = NULL;
           $pem_export = openssl_pkey_export($pkey_result['pkey'], $pem_result, $new_password);
           if ($pem_export) {
+            // save the file.
             file_put_contents($path_to_pem, $pem_result);
 
+            // create a record in Druapl managed files.
             $file = new stdClass();
             $file->fid = NULL;
             $file->uri = $uri_to_pem;
@@ -202,6 +212,7 @@ function google_cdn_admin_submit($form, &$form_state) {
             $file->size = filesize($path_to_pem);
             file_save($file);
 
+            // save information for later use.
             variable_set('google_cdn_pem_file_path', $path_to_pem);
             variable_set('google_cdn_pem_fid', $file->fid);
           }

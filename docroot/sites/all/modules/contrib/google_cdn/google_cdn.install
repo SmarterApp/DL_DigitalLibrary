@@ -7,6 +7,8 @@
 
 /**
  * Implements hook_requirements().
+ *
+ * Checks that the correct version of the library is loaded.
  */
 function google_cdn_requirements($phase) {
   $t = get_t();
@@ -45,6 +47,8 @@ function google_cdn_requirements($phase) {
 
 /**
  * Implements hook_uninstall().
+ *
+ * Remove the variables.
  */
 function google_cdn_uninstall() {
   variable_del('google_cdn_public_key');

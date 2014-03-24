@@ -20,9 +20,9 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected $client = NULL;
 
   /**
-   * @var Google Cloud Store access token
+   * @var Google Cloud Store API domain.
    */
-  protected $access_token = NULL;
+  protected $domain = GOOGLE_CDN_API_DOMAIN;
 
   /**
    * @var String Instance URI referenced as "gs://bucket/"
@@ -355,7 +355,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         try {
           $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
           if ($response) {
-            $download_url= "https://storage.googleapis.com/" . $this->bucket . "/" . $this->folder . '/' . $target;
+            $download_url= 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
             $request = new Google_HttpRequest($download_url, 'GET');
             $httpRequest = $this->client->getIo()->authenticatedRequest($request);
             if ($httpRequest) {
@@ -843,7 +843,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       if ($this->https) {
         $secure = 'https://';
       }
-      $url = $secure . $this->bucket . '.storage.googleapis.com/' . $this->folder . '/' . $filename . '?GoogleAccessId=' . $this->service_account_name . '&Expires=' . $expiry . '&Signature=' . $signature;
+      $url = $secure . $this->bucket . '.' . $this->domain . '/' . $this->folder . '/' . $filename . '?GoogleAccessId=' . $this->service_account_name . '&Expires=' . $expiry . '&Signature=' . $signature;
     }
 
     return $url;
