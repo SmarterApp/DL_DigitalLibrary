@@ -24,6 +24,9 @@ define('SBAC_RESOURCE_ALL_USER_FLAG', 0);
 define('SBAC_RESOURCE_REVIEWER_ROLE', 'resource_reviewer');
 define('SBAC_RESOURCE_PUBLISHER_ROLE', 'resource publisher');
 
+define('SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME', 'sbac-smart-search-last-url');
+define('SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME', 'sbac-smart-search-url-history');
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -112,6 +115,24 @@ function sbac_resource_menu() {
     'menu_name' => 'main-menu',
     'weight' => -49,
     'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['dlr-smart-search'] = array(
+    'title' => 'Digital Library Resources',
+    'page callback' => 'sbac_resource_smart_search_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['admin/sbac/smart-search-builder'] = array(
+    'title' => 'Smart Search Query Builder',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_smart_search_builder_form'),
+    'access arguments' => array('configure sbac'),
+    'type' => MENU_CALLBACK,
+    'weight' => 10,
+    'file' => 'sbac_resource.forms.inc',
   );
 
   $items['admin/structure/types/manage/%node_type/messages'] = array(

@@ -140,3 +140,26 @@ function sbac_resource_no_search_results($string = '') {
 
   return $output;
 }
+
+/**
+ * Menu Callback
+ */
+function sbac_resource_smart_search_page() {
+  $output = 'testing';
+
+  $params = $_GET;
+  unset($params['q']);
+  if (empty($params)) { // No query string attached. No need to do anything.
+    drupal_goto('digital-library-resources');
+  }
+
+  dsm($params);
+  foreach ($params as $vocab_machine_name => $term_ids) {
+
+  }
+
+
+
+
+  return $output;
+}
