@@ -10,7 +10,7 @@
 class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
 
   /**
-   * @var Google Cloud Store service object
+   * @var Google Cloud Store connection object
    */
   protected $gcs = NULL;
 
@@ -75,6 +75,11 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected $pem_fid;
 
   /**
+   * A buffer for reading/wrting.
+   */
+  protected $object = NULL;
+
+  /**
    * @var int Current read/write position
    */
   protected $position = 0;
@@ -103,16 +108,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @var bool HTTPS flag
    */
   protected $https = FALSE;
-
-  /**
-   * The pointer to the next read or write
-   */
-  protected $stream_pointer = 0;
-
-  /**
-   * A buffer for reading/wrting.
-   */
-  protected $stream_object = NULL;
 
   /**
    * Object constructor.
@@ -257,33 +252,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   }
 
   /**
-   * Gets the name of the directory from a given path.
-   *
-   * This method is usually accessed through drupal_dirname(), which wraps
-   * around the normal PHP dirname() function, which does not support stream
-   * wrappers.
-   *
-   * @param string $uri
-   *   An optional URI.
-   *
-   * @return string
-   *   A string containing the directory name, or FALSE if not applicable.
-   *
-   * @see drupal_dirname()
-   */
-  public function dirname($uri = NULL) {
-    list($scheme, $target) = explode('://', $uri, 2);
-    $target  = $this->getTarget($uri);
-    $dirname = dirname($target);
-
-    if ($dirname === '.') {
-      $dirname = '';
-    }
-
-    return $scheme . '://' . $dirname;
-  }
-
-  /**
    * Support for fopen(), file_get_contents(), file_put_contents() etc.
    *
    * @param string $uri
@@ -380,7 +348,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   public function stream_read($count) {
     //if the data is empty, get the data from the object
     //this stores all the data in the $stream_data property, only request once
-    if (!$this->stream_object) {
+    if (!$this->object) {
       //if the object is empty, get the object from rackspace
       $target = $this->getTarget($this->uri);
       if ($target) {
@@ -388,9 +356,11 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
           if ($response) {
             $download_url= "https://storage.googleapis.com/" . $this->bucket . "/" . $this->folder . '/' . $target;
-            //get an object by name...
             $request = new Google_HttpRequest($download_url, 'GET');
-            $httpRequest = $this->getIo()->authenticatedRequest($request);
+            $httpRequest = $this->client->getIo()->authenticatedRequest($request);
+            if ($httpRequest) {
+              $this->object = $httpRequest->getResponseBody();
+            }
           }
         }
         catch (Exception $e) {
@@ -398,8 +368,8 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         }
       }
     }
-    $data = substr($this->stream_object, $this->stream_pointer, $count);
-    $this->stream_pointer += $count;
+    $data = substr($this->object, $this->position, $count);
+    $this->position += $count;
     return $data;
   }
 
@@ -581,11 +551,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
 
     if ($from && $to) {
       try {
-        $response = $this->gcs->objects->copy(
-          $this->bucket, $this->folder . '/' . $from,
-          $this->bucket, $this->folder . '/' . $to
-        );
-
+        $response = $this->gcs->objects->insert($this->bucket, $this->folder . '/' . $to);
         if ($response) {
           $deleted = $this->unlink($from_uri);
           if ($deleted) {
@@ -686,6 +652,38 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   }
 
   /**
+   * Gets the name of the directory from a given path.
+   *
+   * This method is usually accessed through drupal_dirname(), which wraps
+   * around the normal PHP dirname() function, which does not support stream
+   * wrappers.
+   *
+   * @param string $uri
+   *   An optional URI.
+   *
+   * @return string
+   *   A string containing the directory name, or FALSE if not applicable.
+   *
+   * @see drupal_dirname()
+   */
+  public function dirname($uri = NULL) {
+    list($scheme, $target) = explode('://', $uri, 2);
+    $target  = $this->getTarget($uri);
+    $dirname = dirname($target);
+
+    if ($dirname === '.') {
+      $dirname = '';
+    }
+
+    $path = explode('/', $dirname);
+    if ($path[0] == 'styles') {
+      return 'private://' . $dirname;
+    }
+
+    return $scheme . '://' . $dirname;
+  }
+
+  /**
    * Support for opendir().
    *
    * @param string $uri
@@ -766,6 +764,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $this->buffer = NULL;
     $this->bufferWrite = FALSE;
     $this->bufferLength = 0;
+    $this->object = NULL;
   }
 
   /**
