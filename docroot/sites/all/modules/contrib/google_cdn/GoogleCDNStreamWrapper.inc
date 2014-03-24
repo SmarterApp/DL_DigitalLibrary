@@ -675,11 +675,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       $dirname = '';
     }
 
-    $path = explode('/', $dirname);
-    if ($path[0] == 'styles') {
-      return 'private://' . $dirname;
-    }
-
     return $scheme . '://' . $dirname;
   }
 
@@ -864,6 +859,12 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $this->uri = $uri;
     $target = $this->getTarget($uri);
     if ($target) {
+//      $path = explode('/', $target);
+//      if (isset($path[0]) && $path[0] == 'styles') {
+//        // No need to check for an image style size.
+//        return FALSE;
+//      }
+
       try {
         $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
         if ($response) {
