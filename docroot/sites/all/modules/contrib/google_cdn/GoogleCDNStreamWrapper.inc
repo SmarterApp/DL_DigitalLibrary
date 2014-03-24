@@ -100,6 +100,16 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected $https = FALSE;
 
   /**
+   * The pointer to the next read or write
+   */
+  protected $stream_pointer = 0;
+
+  /**
+   * A buffer for reading/wrting.
+   */
+  protected $stream_data = NULL;
+
+  /**
    * Object constructor.
    */
   public function __construct() {
@@ -158,7 +168,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $path = explode('/', $this->getLocalPath());
     if ($path[0] === 'styles') {
       $target = $this->getTarget($this->uri);
-      if (!$this->gcs->objects->get($this->bucket, $this->folder . '/' . $target)) {
+      if ($target) {
         array_shift($path);
         return url('system/files/styles/' . implode('/', $path), array('absolute' => TRUE));
       }
@@ -304,7 +314,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         if ($response) {
           $this->clearBuffer();
           $this->bufferWrite = FALSE;
-          $this->objectSize = $response['13'];
+          $this->objectSize = $response['size'];
           return TRUE;
         }
       }
@@ -363,26 +373,25 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-read.php
    */
   public function stream_read($count) {
-    // Make sure that count doesn't exceed object size.
-    if ($count + $this->position > $this->objectSize) {
-      $count = $this->objectSize - $this->position;
-    }
-    $data = '';
-    if ($count > 0) {
-      $range_end = $this->position + $count - 1;
-      if ($range_end > $this->bufferLength) {
-        $opts = array(
-          'range' => $this->position . '-' . $range_end,
-        );
-        $response = $this->getS3()->get_object($this->bucket, $this->getLocalPath($this->uri), $opts);
-        if ($response->isOK()) {
-          $this->buffer .= $response->body;
-          $this->bufferLength += strlen($response->body);
+    //if the data is empty, get the data from the object
+    //this stores all the data in the $stream_data property, only request once
+    if (!$this->stream_data) {
+      //if the object is empty, get the object from rackspace
+      $target = $this->getTarget($this->uri);
+      if ($target) {
+        try {
+          $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
+          if ($response) {
+            $this->stream_data = $response;
+          }
+        }
+        catch (Exception $e) {
+          watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::strea_read');
         }
       }
-      $data = substr($response->body, 0, min($count, $this->objectSize));
-      $this->position += strlen($data);
     }
+    $data = substr($this->stream_data, $this->stream_pointer, $count);
+    $this->stream_pointer += $count;
     return $data;
   }
 
@@ -473,7 +482,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       try {
         $local_path = $this->getLocalPath();
         //set the mimetype for the file and set the location of the file to be uploaded
-        $postbody = array('mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri), 'data' => $this->buffer);
+        $postbody = array('mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri), 'data' => $this->buffer, 'mediaUpload' => TRUE);
         $gso = new Google_StorageObject();
         $gso->setName($this->folder . '/' .  $local_path);
         $response = $this->gcs->objects->insert($this->bucket, $gso ,$postbody);

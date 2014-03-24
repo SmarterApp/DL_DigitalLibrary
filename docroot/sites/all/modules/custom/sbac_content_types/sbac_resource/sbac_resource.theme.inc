@@ -721,7 +721,7 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
         $uri = $default_file;
       }
 
-      $ext = pathinfo($url, PATHINFO_EXTENSION);
+      $ext = pathinfo($uri, PATHINFO_EXTENSION);
       $type = _sbac_resource_determine_extension($ext);
       if ($type != 'image') {
         $url = $default_file;
