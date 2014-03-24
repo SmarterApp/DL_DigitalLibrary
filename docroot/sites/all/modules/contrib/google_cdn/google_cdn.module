@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Primary file that contains the Google CDN functionality.
+ */
+
+// The minimum version number for the library.
+define('GOOGLE_CDN_MINIMUM_VERSION', '0.6.7');
+// The save button text for the admin form.
+define('GOOGLE_CDN_ADMIN_SUBMIT_BUTTON', 'Save Configuration');
+// The test button text for the admin form.
+define('GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON', 'Test Connection');
+// The time to live for the signed urls.
+define('GOOGLE_CDN_SIGNED_URL_EXPIRY', 300);
+// The google API domain.
+define('GOOGLE_CDN_API_DOMAIN', 'storage.googleapis.com');
+
+/**
+ * Implements hook_menu().
+ */
+function google_cdn_menu() {
+  $items = array();
+
+  $items['admin/config/media/google_cdn'] = array(
+    'title' => 'Google CDN',
+    'description' => 'Configure Google credentials and settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('google_cdn_admin'),
+    'access arguments' => array('administer google cdn'),
+    'file' => 'google_cdn.admin.inc'
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function google_cdn_permission() {
+  return array(
+    'administer google cdn' => array(
+      'title' => t('Administer Google CDN'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_libraries_info()
+ */
+function google_cdn_libraries_info() {
+  return array(
+    'google-api-php-client' => array(
+      'title' => 'Google SDK for PHP',
+      'vendor url' => 'http://code.google.com/p/google-api-php-client/',
+      'download url' => 'https://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.7.tar.gz',
+      'version arguments' => array(
+        'file' => 'src/Google_Client.php',
+      ),
+      'files' => array(
+        'php' => array(
+          'src/Google_Client.php',
+          'src/contrib/Google_StorageService.php',
+        ),
+      ),
+      'version callback' => 'google_cdn_library_version_callback',
+    ),
+  );
+}
+
+/**
+ * Custom callback that returns a version number
+ * back to the Library API to allow it to load
+ * the Google SDK correctly. Google does not save the
+ * version number within the SDK.
+ *
+ * @param $library
+ * @return string
+ */
+function google_cdn_library_version_callback($library) {
+  $version = GOOGLE_CDN_MINIMUM_VERSION;
+  return $version;
+}
+
+/**
+ * Implements hook_registry_files_alter().
+ *
+ * @param $files
+ * @param $modules
+ */
+//function google_cdn_registry_files_alter(&$files, $modules) {
+//  $library_path = function_exists('libraries_get_path') ? libraries_get_path('google-api-php-client') : 'sites/all/libraries/google-api-php-client';
+//  $files[$library_path . '/src/Google/Service/Storage.php'] = array(
+//    'module' => 'google_cdn',
+//    'weight' => 0,
+//  );
+//}
+
+/**
+ * Implements hook_init().
+ *
+ * Google's API PHP Client library does not
+ * include its own files correctly. To fix this
+ * in Drupal, we need to add the include path on every page call.
+ */
+//function google_cdn_init() {
+//  $var =  libraries_get_path('google-api-php-client') . '/src/';
+//  $local_file_path = realpath($var);
+//  set_include_path(get_include_path() . PATH_SEPARATOR . $local_file_path);
+//}
+
+/**
+ * Implements hook_stream_wrappers().
+ *
+ * Create a stream wrapper for Google CDN.
+ */
+function google_cdn_stream_wrappers() {
+  return array(
+    'gs' => array(
+      'name' => 'Google CDN',
+      'class' => 'GoogleCDNStreamWrapper',
+      'description' => t('Google CDN (Google Cloud Storage)'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_file_download().
+ *
+ * Prevents users from trying to download the p12 key.
+ *
+ * @param $uri
+ * @return bool
+ */
+function google_cdn_file_download($uri) {
+  if (strpos($uri, 'google_cdn') !== FALSE) {
+    return -1;
+  }
+  return NULL;
+}
