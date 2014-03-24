@@ -10,9 +10,14 @@
 class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
 
   /**
-   * @var Google Cloud Store connection object
+   * @var Google Cloud Store service object
    */
   protected $gcs = NULL;
+
+  /**
+   * @var Google Cloud Store client object
+   */
+  protected $client = NULL;
 
   /**
    * @var Google Cloud Store access token
@@ -107,7 +112,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * A buffer for reading/wrting.
    */
-  protected $stream_data = NULL;
+  protected $stream_object = NULL;
 
   /**
    * Object constructor.
@@ -375,14 +380,17 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   public function stream_read($count) {
     //if the data is empty, get the data from the object
     //this stores all the data in the $stream_data property, only request once
-    if (!$this->stream_data) {
+    if (!$this->stream_object) {
       //if the object is empty, get the object from rackspace
       $target = $this->getTarget($this->uri);
       if ($target) {
         try {
           $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
           if ($response) {
-            $this->stream_data = $response;
+            $download_url= "https://storage.googleapis.com/" . $this->bucket . "/" . $this->folder . '/' . $target;
+            //get an object by name...
+            $request = new Google_HttpRequest($download_url, 'GET');
+            $httpRequest = $this->getIo()->authenticatedRequest($request);
           }
         }
         catch (Exception $e) {
@@ -390,7 +398,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         }
       }
     }
-    $data = substr($this->stream_data, $this->stream_pointer, $count);
+    $data = substr($this->stream_object, $this->stream_pointer, $count);
     $this->stream_pointer += $count;
     return $data;
   }
@@ -797,6 +805,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           }
           $this->access_token = $client->getAccessToken();
           $this->gcs = $service;
+          $this->client = $client;
         }
         catch (Exception $e) {
           watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getGCS');
