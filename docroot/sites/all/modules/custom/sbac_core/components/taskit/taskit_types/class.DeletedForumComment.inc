@@ -16,7 +16,7 @@ class DeletedForumComment extends \taskit\sbac_core\BaseTask {
       $topic_title = $topic->title;
 
       $output = array();
-      $output[] = t('A facilitator has deleted a forum reply in discussion: !title.', array(
+      $output[] = t('A facilitator has deleted a forum reply in !title.', array(
         '!title' => '<span class="taskit-title">' . $topic_title . '</span>',
       ));
 

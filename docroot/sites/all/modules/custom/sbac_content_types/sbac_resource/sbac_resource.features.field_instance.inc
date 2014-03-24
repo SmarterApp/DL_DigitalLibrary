@@ -591,6 +591,62 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_copyright_clearace_forms'
+  $field_instances['node-resource-field_copyright_clearace_forms'] = array(
+    'bundle' => 'resource',
+    'deleted' => 0,
+    'description' => 'If applicable, upload any completed and signed Copyright Clearance Forms.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 49,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_copyright_clearace_forms',
+    'label' => 'Copyright Clearace Form(s)',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf jpg jpeg gif png',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'file',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'file_generic',
+      'weight' => 38,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_digital_media_type'
   $field_instances['node-resource-field_digital_media_type'] = array(
     'bundle' => 'resource',
@@ -1492,7 +1548,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_buttons',
-      'weight' => 38,
+      'weight' => 39,
     ),
   );
 
@@ -2663,6 +2719,7 @@ function sbac_resource_field_default_field_instances() {
   t('Connection to CCSS');
   t('Connection to FAP');
   t('Contexts');
+  t('Copyright Clearace Form(s)');
   t('Describe how this resource enables students to actively engage in the formative assessment process, if applicable.');
   t('Describe the likely context(s) in which the resource could be used (e.g. PLCs, individual, ongoing learning, small group, whole class).');
   t('Digital Media Type(s)');
@@ -2678,6 +2735,7 @@ function sbac_resource_field_default_field_instances() {
   t('Identify how this resource addresses the Common Core State Standards (e.g., how it addresses particular claims, clusters, targets, and/or “standards”). Pay special attention to the interconnectedness of claims.');
   t('Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.');
   t('Identify the learning goals associated with this resource. Learning goals can be for students and/or educators depending upon whether a resource is a professional learning resource or an instructional resource.');
+  t('If applicable, upload any completed and signed Copyright Clearance Forms.');
   t('Include evidence that the resource has been tried successfully with educators (or students) and has resulted in a positive impact on educator practices (or student outcomes)');
   t('Individual(s) or group(s) for whom the resource was produced. Select all that apply.');
   t('Intended End User(s)');
