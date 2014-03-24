@@ -2079,8 +2079,9 @@ View Topic Page, Comment Page
 		    border-radius: 10px;
 		    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 		    color: #464B54;
-		    margin-top: -90px;
-		    width: 130px;
+				margin-left: -10px;
+		    margin-top: -60px;
+		    width: 160px;
 				display: none;
 
 				ul {
@@ -2563,6 +2564,8 @@ View Topic Page, Comment Page
 /*reply*/
 .topic-node-comment-region-right-reply-form {
 	.comment-form {
+		
+		clear: both;
 
 		.form-textarea-wrapper {
 			textarea {
