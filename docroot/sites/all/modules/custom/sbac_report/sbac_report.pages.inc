@@ -104,7 +104,7 @@ function sbac_report_individual() {
     $output[SBAC_REPORT_TAB_USER] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
-      '#title' => t('User Activity (CSV Report)'),
+      '#title' => 'User Activity <span> (CSV Report) </span>',
       '#attributes' => array(
         'id' => SBAC_REPORT_TAB_USER,
       ),
@@ -116,7 +116,7 @@ function sbac_report_individual() {
     $output[SBAC_REPORT_TAB_STATES] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
-      '#title' => t('Detailed Resource Statistics Report (CSV Report)'),
+      '#title' => t('Detailed Resource Statistics Report CSV Report)'),
       '#attributes' => array(
         'id' => SBAC_REPORT_TAB_STATES,
       ),

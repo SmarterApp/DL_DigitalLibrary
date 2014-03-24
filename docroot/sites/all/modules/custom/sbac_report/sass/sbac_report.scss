@@ -34,6 +34,26 @@ $darkgreen: #246a34;
   }
 }
 
+.page-reports {
+	.row {
+		max-width: 960px;
+	}
+	
+	h1#page-title {
+		color: #04384E;
+	  display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 0 10px;
+    padding: 20px 0 15px;
+    text-transform: capitalize;
+	}
+	
+	#main.columns {
+		padding: 0 50px 0 40px;
+	}
+}
+
 .chzn-container-multi .chzn-choices .search-field input {
 	height: 25px;
 	padding-top: 3px;
@@ -62,15 +82,11 @@ $darkgreen: #246a34;
 }
 
 .report-title {
-  /*padding-bottom:10px;
-    border-bottom:1px solid #ccc;
-    margin: 10px 0;
-    font-size: 1.2em;*/
 	color: #000000;
 	display: block;
   font-size: 18px;
   font-weight: bold;
-  margin: 0 0 20px;
+  margin: 15px 0 20px;
   padding: 10px 0;
   text-transform: capitalize;
 }
@@ -82,7 +98,6 @@ $darkgreen: #246a34;
 #edit-user-group-dropdown {
   height: 310px;
 }
-
 
 i.icon-info {
   width: 18px;
@@ -128,6 +143,7 @@ i.icon-info {
 
     select {
       width: 85px;
+			font-size: 0.8em;
     }
   }
 }
@@ -439,9 +455,18 @@ i.icon-info {
 		}
 	}
 	
+	.form-item-display {
+		float: right;
+	}
+	
+	label[for="edit-display"] {
+		display: inline-block;
+	}
+	
 	select#edit-display {
-		width: 200px;
+		width: 85px;
 		margin-bottom: 30px;
+		font-size: 0.8em;
 	}
 }
 
@@ -450,12 +475,17 @@ i.icon-info {
  Tables
   **/
 .page-reports {
+	
+	#main {
+		width: 960px;
+	}
+	
   div.vertical-tabs {
-    margin-left: 8em;
+    margin-left: 15em;
 
     ul.vertical-tabs-list {
-      margin-left: -8em;
-      width: 8em;
+      margin-left: -15em;
+      width: 15em;
     }
   }
 
@@ -463,6 +493,9 @@ i.icon-info {
 	  /*border:none !important;*/
 	  background:none;
 	  font-size: 0.85em;
+		width: 600px;
+		display: block;
+		overflow-x: scroll;
 
 	  @mixin table-header() {
 	    border:1px solid #ccc;
