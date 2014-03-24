@@ -681,6 +681,8 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * Support for opendir().
    *
+   * There are no directories in Google Cloud Storage.
+   *
    * @param string $uri
    *   A string containing the URI to the directory to open.
    * @param array $options
@@ -698,18 +700,21 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * Support for readdir().
    *
+   * There are no directories in Google Cloud Storage.
+   *
    * @return string|bool
    *   The next filename, or FALSE if there are no more files in the directory.
    *
    * @see http://php.net/manual/en/streamwrapper.dir-readdir.php
    */
   public function dir_readdir() {
-    $filename = current($this->dir);
-    return $filename;
+    return FALSE;
   }
 
   /**
    * Support for rewinddir().
+   *
+   * There are no directories in Google Cloud Storage.
    *
    * @return bool
    *   TRUE on success.
@@ -717,12 +722,13 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.dir-rewinddir.php
    */
   public function dir_rewinddir() {
-    reset($this->dir);
     return TRUE;
   }
 
   /**
    * Support for closedir().
+   *
+   * There are no directories in Google Cloud Storage.
    *
    * @return bool
    *   TRUE on success.
@@ -730,7 +736,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.dir-closedir.php
    */
   public function dir_closedir() {
-    $this->dir = array();
     return TRUE;
   }
 
@@ -797,7 +802,8 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           if($client->getAuth()->isAccessTokenExpired()) {
             $client->getAuth()->refreshTokenWithAssertion($cred);
           }
-          $this->access_token = $client->getAccessToken();
+
+          // Store services for later use.
           $this->gcs = $service;
           $this->client = $client;
         }
@@ -859,12 +865,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $this->uri = $uri;
     $target = $this->getTarget($uri);
     if ($target) {
-//      $path = explode('/', $target);
-//      if (isset($path[0]) && $path[0] == 'styles') {
-//        // No need to check for an image style size.
-//        return FALSE;
-//      }
-
       try {
         $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
         if ($response) {
