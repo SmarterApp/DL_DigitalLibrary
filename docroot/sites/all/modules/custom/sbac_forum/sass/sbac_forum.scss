@@ -2322,10 +2322,13 @@ View Topic Page, Comment Page
 					}
 
 					 a:before {
-					  color: #101010;
-				    content: "•";
+				    content: " ";
+						background: #101010;
+						width: 5px;
+						height: 5px;
+						border-radius: 50%;
 				    display: inline-block;
-				    font-size: 20px;
+				    font-size: 25px;
 				    font-weight: normal;
 				    margin-right: 5px;
 				    position: relative;
@@ -2412,6 +2415,7 @@ View Topic Page, Comment Page
 .comment-form {
 		margin-bottom: 0;
 		padding-top: 8px;
+		clear: both;
 
 	.form-textarea-wrapper {
 		textarea {
@@ -2458,12 +2462,14 @@ View Topic Page, Comment Page
 		legend {
 			background: none !important;
 			font-weight: normal;
+			display: block;
+			height: 30px;
 		}
 
 		a {
 		  display: block;
 	    font-size: 15px;
-	    line-height: 20px;
+	    line-height: 25px;
 	    margin: 5px 0 5px;
 	    vertical-align: top;
 			color: #0583AC;
@@ -2705,15 +2711,18 @@ h2.title {
 				color: #0583AC;
 				display: inline-block;
 		    font-size: 13px;
-		    line-height: 20px;
+		    line-height: 25px;
 		    vertical-align: top;
 				float: left;
 				clear: both;
 			}
 
 			 a:before {
-			  color: #101010;
-		    content: "•";
+		    content: " ";
+				background: #101010;
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
 		    display: inline-block;
 		    font-size: 20px;
 		    font-weight: normal;
@@ -2726,6 +2735,10 @@ h2.title {
 	    content: "" !important;
 		}
 
+		.topic-node-comment-region-right-reply-form {
+			clear: both;
+		}
+		
 		.topic-node-comment-region-right-bottom {
 			text-align: right;
 			clear: both;
