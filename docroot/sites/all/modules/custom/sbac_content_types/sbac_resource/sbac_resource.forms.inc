@@ -3253,3 +3253,216 @@ function sbac_resource_unsubmit_resource_form($form, &$form_state) {
 
   return $form;
 }
+
+
+function sbac_resource_smart_search_builder_form($form, &$form_state) {
+  $form = array();
+
+  $vocabs = array(
+    'subject',
+    'grades',
+    'attributes',
+    'digital_media_type',
+    'focus',
+    'intended_end_user',
+    'intended_student_populations',
+    'educational_use',
+    'smarter_balanced_keyword',
+    'geographical_settings',
+    // 'technologies_for_classroom_use',
+    // 'education_alignment',
+  );
+  $form['help_text'] = array(
+    '#markup' => '<p>Select filters from the available options to create a url</p>',
+    '#weight' => -3,
+  );
+
+  // Show the current setting. Clicking reset will unset the variable.
+  $current_label = '<strong>Smart Search URL: </strong>';
+  $current_value = variable_get(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, '');
+  if (empty($current_value)) {
+    $current_value = '-- None --';
+  }
+  $form['current_url'] = array(
+    '#type' => 'fieldset',
+    '#title' => $current_label,
+    '#collapsible' => FALSE,
+    '#collapsed' => TRUE,
+    '#weight' => -2,
+  );
+  $form['current_url']['cu_markup'] = array(
+    '#markup' => $current_value,
+    '#weight' => -1,
+  );
+
+  // Process any current filter settings. This is to set the default so user can see what the url filters by.
+  $current_filters = array();
+  $raw_url = explode('?',$current_value);
+  if (count($raw_url) == 2) {
+    $current_filters = drupal_get_query_array($raw_url[1]);
+  }
+
+  // Loop through list of vocabs to get the terms.
+  foreach ($vocabs as $index => $machine_name) {
+    $vocab_entity = taxonomy_vocabulary_machine_name_load($machine_name);
+    $collapsed = TRUE;
+    $defaults = array();
+
+    // Process default settings.
+    $default_key = $machine_name . ':' . $vocab_entity->vid;
+    if (isset($current_filters[$default_key])) {
+      $defaults = explode(',', $current_filters[$default_key]);
+      $collapsed = FALSE;
+    }
+
+    // Create fieldset grouping
+    $form[$machine_name] = array(
+      '#type' => 'fieldset',
+      '#title' => t($vocab_entity->name),
+      '#weight' => $index,
+      '#collapsible' => TRUE,
+      '#collapsed' => $collapsed,
+    );
+
+    // Hide the vid so form_state has access to it.
+    $form[$machine_name][$machine_name . '_vid'] = array(
+      '#type' => 'value',
+      '#value' => $vocab_entity->vid,
+    );
+
+    // Set options.
+    $vocab_terms = array();
+    $vocab_tree = taxonomy_get_tree($vocab_entity->vid);
+    foreach ($vocab_tree as $term) {
+      $vocab_terms[$term->tid] = $term->name;
+    }
+    $form[$machine_name][$machine_name . '_terms'] = array(
+      '#type' => 'checkboxes',
+      '#options' => $vocab_terms,
+      '#default_value' => $defaults,
+    );
+  }
+
+
+  // Submit handlers.
+  $form['generate'] = array(
+    '#type' => 'submit',
+    '#value' => 'Generate New',
+    '#attributes' => array('class' => array('button', 'blue')),
+    '#weight' => 99,
+  );
+
+  $form['reset'] = array(
+    '#type' => 'submit',
+    '#value' => 'Reset',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
+    '#weight' => 100,
+  );
+
+  $history_links = variable_get(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, array());
+  if (!empty($history_links)) {
+    $history_params = array(
+      'items' => $history_links,
+      'type' => 'ul',
+    );
+    $history = theme('item_list', $history_params);
+    $form['history'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Generated URL History'),
+      '#collapsible' => FALSE,
+      '#collapsed' => TRUE,
+      '#weight' => 101,
+    );
+    $form['history']['history_markup'] = array(
+      '#markup' => $history,
+      '#weight' => 1,
+    );
+    $form['history']['clear_history'] = array(
+      '#type' => 'submit',
+      '#value' => 'Clear History',
+      '#attributes' => array('class' => array('button', 'blue')),
+      '#weight' => 2,
+    );
+
+  }
+
+  // Use to test existing urls.
+  $form['tester'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Test URL'),
+    '#description' => 'Paste a url here to test what filters it sets.',
+    '#collapsible' => FALSE,
+    '#collapsed' => TRUE,
+    '#weight' => 102,
+  );
+  $form['tester']['test_url'] = array(
+    '#type' => 'textfield',
+    '#weight' => 103,
+  );
+  $form['tester']['test_url_submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Test',
+    '#attributes' => array('class' => array('button', 'blue')),
+    '#weight' => 104,
+  );
+
+  return $form;
+}
+
+function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Reset') {
+    variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, '');
+  } elseif($form_state['triggering_element']['#value'] == 'Test') {
+    $values = $form_state['values'];
+    $test_url = $values['test_url'];
+    variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, $test_url);
+  } elseif($form_state['triggering_element']['#value'] == 'Clear History') {
+    variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, array());
+  } else { // Generate new.
+    $values = $form_state['values'];
+    $vocabs = array(
+      'subject',
+      'grades',
+      'attributes',
+      'digital_media_type',
+      'focus',
+      'intended_end_user',
+      'intended_student_populations',
+      'educational_use',
+      'smarter_balanced_keyword',
+      'geographical_settings',
+      // 'technologies_for_classroom_use',
+      // 'education_alignment',
+    );
+
+    $query_params = array();
+    foreach ($vocabs as $machine_name) {
+      $vid = $values[$machine_name . '_vid'];
+      $term_key = $machine_name . '_terms';
+      $checkboxes = $values[$term_key];
+      $checked = array_filter($checkboxes);
+      if (!empty($checked)) {
+        $key = $machine_name . ':' . $vid;
+        $value = implode(',', $checked);
+        $query_params[$key] = $value;
+      }
+    }
+
+    if (!empty($query_params)) {
+      $url_params = array(
+        'absolute' => TRUE,
+        'query' => $query_params,
+      );
+      $link = url('dlr-smart-search', $url_params);
+      $clean_link = urldecode($link);
+      variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, $clean_link);
+
+      $history = variable_get(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, array());
+      $history[] = $clean_link;
+      variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, $history);
+    }
+  }
+
+}
+
+
