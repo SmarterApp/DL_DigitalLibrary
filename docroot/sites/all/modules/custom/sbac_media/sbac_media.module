@@ -97,7 +97,6 @@ function sbac_media_file_stream() {
     header('Content-Length: ' . $file->filesize);
     header('Content-Type: ' . $file->filemime);
 
-
     $bucket = variable_get('google_cdn_bucket_name');
     $folder = variable_get('google_cdn_folder');
     $services = sbac_media_get_google_cloud_storage();
