@@ -366,12 +366,15 @@ i.icon-info {
 			margin-bottom: 15px;
 			width: 16%;
 			
-			.profile-img {
+			.user-picture {
 			  background-image: url("../images/avatar.png");
 		    background-position: center center;
 		    background-repeat: no-repeat;
 		    background-size: contain;
-		    width: 100px;
+				display: block;
+		   /* width: 100px;*/
+			  height: 100px;
+			  width: auto;
 			}
 		}
 		
