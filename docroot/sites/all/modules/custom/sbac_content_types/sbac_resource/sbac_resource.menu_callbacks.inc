@@ -24,6 +24,7 @@ function sbac_resource_digital_library_page() {
   $view->destroy();
 
   // If we didn't find any results, we default to the user's filtered subject/grade items
+  $ignore_smart_search = FALSE;
   if (!$count && ($search_string != '' || $current_filters != '')) {
     // Reset variables
     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
@@ -41,9 +42,20 @@ function sbac_resource_digital_library_page() {
     $view->destroy();
     drupal_get_messages();
     $no_results = sbac_resource_no_search_results($search_string);
+    $ignore_smart_search = TRUE;
   }
   menu_set_active_item('digital-library-resources');
-  return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results));
+
+  $smart_search_text = '';
+  if ( (isset($_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS])) &&
+       ($_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS] == TRUE) ) {
+    $_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS] = FALSE;
+    if ($ignore_smart_search == FALSE) {
+      $smart_search_text = theme('smart_search_welcome', array('current_filters' => $current_filters, 'kw' => $search_string));
+    }
+  }
+
+  return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text));
 }
 
 /**
@@ -177,6 +189,8 @@ function sbac_resource_smart_search_page() {
   }
 
   // $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
+  $_SESSION[SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS] = TRUE; // Hide the filter block.
+  $_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS] = TRUE; // Show the help message in content region.
   drupal_goto('digital-library-resources');
   return $output;
 }

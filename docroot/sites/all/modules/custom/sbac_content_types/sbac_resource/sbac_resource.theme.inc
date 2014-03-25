@@ -56,7 +56,20 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'variables' => array(
       'digital_library_output' => NULL,
       'no_results' => NULL,
+      'smart_search_welcome' => NULL,
     )
+  );
+
+  $items['smart_search_welcome'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates',
+    'template' => 'smart-search-welcome',
+    'variables' => array(
+      'current_filters' => NULL,
+      'kw' => NULL,
+    ),
+    'preprocess functions' => array(
+      'sbac_resource_smart_search_welcome__preprocess',
+    ),
   );
 
   $items['my_resources'] = array(
@@ -1273,4 +1286,47 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
     ));
   }
   return $content;
+}
+
+function sbac_resource_smart_search_welcome__preprocess(&$vars) {
+  drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.smart_search.js');
+  $search_filters_output = '';
+  $edit_link = '';
+
+  $view_filters = array();
+  $current_filters = $vars['current_filters'];
+  $kw = $vars['kw'];
+
+  if (!empty($kw)) {
+    $view_filters[] = 'Keywords: ' . $kw;
+  }
+
+  $filters = explode('::', $current_filters);
+  if ($filters) {
+    foreach ($filters as $filter) {
+      $filter_info = explode(':', $filter);
+      if ($filter_info && sizeof($filter_info) == 2) {
+        $vid = $filter_info[0];
+        $tid = $filter_info[1];
+        if ($vid && $tid) {
+          $vocabulary = taxonomy_vocabulary_load($vid);
+          $term = taxonomy_term_load($tid);
+          if ($vocabulary && $term) {
+            $view_filters[] = $vocabulary->name . ': ' . $term->name;
+          }
+        }
+      }
+    }
+  }
+
+  if (!empty($view_filters) ){
+    $item_list_params = array(
+      'items' => $view_filters,
+      'type' => 'ul',
+    );
+    $search_filters_output = theme('item_list', $item_list_params);
+  }
+  $edit_link = l('Edit Filters', '#', array('attributes' => array('class' => 'button ssw-edit-link')));
+  $vars['search_filters'] = $search_filters_output;
+  $vars['edit_filters_link'] = $edit_link;
 }
