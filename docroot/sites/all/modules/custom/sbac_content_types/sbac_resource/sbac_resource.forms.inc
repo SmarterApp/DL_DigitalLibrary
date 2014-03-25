@@ -3343,6 +3343,26 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     );
   }
 
+  // Keyword search field
+  $kw_collapsed = TRUE;
+  $kw_default = '';
+  if (isset($current_filters['kw'])) {
+    $kw_default = urldecode($current_filters['kw']);
+    $kw_collapsed = FALSE;
+  }
+  $form['kw_field'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Keyword Search'),
+    '#weight' => 98,
+    '#collapsible' => TRUE,
+    '#collapsed' => $kw_collapsed,
+  );
+  $form['kw_field']['kw_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Enter keyword(s) to search by'),
+    '#default_value' => $kw_default,
+  );
+
 
   // Submit handlers.
   $form['generate'] = array(
@@ -3436,6 +3456,10 @@ function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
     );
 
     $query_params = array();
+    if (!empty($values['kw_text'])) {
+      $query_params['kw'] = urlencode($values['kw_text']);
+    }
+
     foreach ($vocabs as $machine_name) {
       $vid = $values[$machine_name . '_vid'];
       $term_key = $machine_name . '_terms';

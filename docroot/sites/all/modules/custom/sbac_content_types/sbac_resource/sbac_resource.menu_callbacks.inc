@@ -153,13 +153,30 @@ function sbac_resource_smart_search_page() {
     drupal_goto('digital-library-resources');
   }
 
-  dsm($params);
-  foreach ($params as $vocab_machine_name => $term_ids) {
-
+  $current_filter_array = array();
+  if (isset($params['kw'])) {
+    $kw_search = $params['kw'];
+    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = $kw_search;
+    unset($params['kw']);
+  }
+  foreach ($params as $vocab => $term_ids) {
+    $vocab_details = explode(':', $vocab);
+    $terms = explode(',', $term_ids);
+    if (!empty($terms)) {
+      foreach ($terms as $term_id) {
+        $current_filter_array[] = $vocab_details[1] . ':' . $term_id;
+      }
+    }
   }
 
+  $current_filters = '';
+  if (!empty($current_filter_array)) {
+    $current_filters = implode('::', $current_filter_array);
+    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = $current_filters;
+    // setup more variables here. Collapsed filter tray etc.
+  }
 
-
-
+  // $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
+  drupal_goto('digital-library-resources');
   return $output;
 }
