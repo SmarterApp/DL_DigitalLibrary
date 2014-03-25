@@ -985,9 +985,13 @@ function sbac_central_update_7071() {
                     $data = file_get_contents($old_path);
                     $bucket = variable_get('google_cdn_bucket_name');
                     $folder = variable_get('google_cdn_folder');
+                    $media = new Google_MediaFileUpload('binary/octet-stream', $data, true, (2048*1024));
+                    $media->progress = 0;
+                    $media->mimeType = 'binary/octet-stream';
                     $postbody = array(
                       'mimeType' => GoogleCDNStreamWrapper::getMimeType($file->uri),
                       'data' => $data,
+                      'mediaUpload' => $media,
                     );
                     $google_uri = "resources/" . floor($node->nid/32000) . "/" . $node->nid . '/' . $file->filename;
                     $gso = new Google_StorageObject();
