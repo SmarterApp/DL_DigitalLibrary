@@ -960,7 +960,7 @@ function sbac_central_update_7071() {
   }
 
   if ($service) {
-    $sql = "SELECT * FROM {node} WHERE type = 'resource' AND nid = 9306";
+    $sql = "SELECT * FROM {node} WHERE type = 'resource'";
     $result = db_query($sql);
     foreach ($result as $row) {
       $node = node_load($row->nid);
