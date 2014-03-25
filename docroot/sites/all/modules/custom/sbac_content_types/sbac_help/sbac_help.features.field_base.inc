@@ -63,7 +63,7 @@ function sbac_help_field_default_field_bases() {
     'module' => 'image',
     'settings' => array(
       'default_image' => 0,
-      'uri_scheme' => 'public',
+      'uri_scheme' => 'gs',
     ),
     'translatable' => 0,
     'type' => 'image',
