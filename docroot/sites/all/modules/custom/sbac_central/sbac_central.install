@@ -930,7 +930,7 @@ function sbac_central_update_7070() {
  * Migrates old files to new Google CDN.
  */
 function sbac_central_update_7071() {
-  ini_set('memory_limit', '512M');
+  ini_set('memory_limit', '756M');
   $service = NULL;
   $client = NULL;
   try {
@@ -1003,9 +1003,6 @@ function sbac_central_update_7071() {
                     $response = $service->objects->insert($bucket, $gso, $postbody);
                     if ($response) {
                       // Now you do the upload
-                      // While the upload are not complete, the $media->nextChunk() will always return false.
-                      // When the upload are completed, will return an array with informations about the file uploaded
-                      // You can verify the progress (int) $media->progress , the size (int) $media->size and the chunk (int) -> $media->chunkSize
                       $upload_result = false;
                       while ($upload_result === false) {
                         $upload_result = $media->nextChunk($response);

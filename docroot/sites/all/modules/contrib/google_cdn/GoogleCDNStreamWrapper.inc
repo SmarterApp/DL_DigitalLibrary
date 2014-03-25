@@ -20,6 +20,11 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected $client = NULL;
 
   /**
+   * @var Google Cloud Store credential object
+   */
+  protected $cred = NULL;
+
+  /**
    * @var Google Cloud Store API domain.
    */
   protected $domain = GOOGLE_CDN_API_DOMAIN;
@@ -808,6 +813,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           // Store services for later use.
           $this->gcs = $service;
           $this->client = $client;
+          $this->cred = $cred;
         }
         catch (Exception $e) {
           watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getGCS');
@@ -915,6 +921,10 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected function callConstructor() {
     if ($this->gcs == NULL) {
       $this->__construct();
+    }
+
+    if($this->client->getAuth()->isAccessTokenExpired()) {
+      $this->client->getAuth()->refreshTokenWithAssertion($this->cred);
     }
   }
 }
