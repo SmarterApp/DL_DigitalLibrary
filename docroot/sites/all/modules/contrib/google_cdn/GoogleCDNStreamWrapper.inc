@@ -209,12 +209,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
 
     // Remove the first part: a full filename should not match an extension.
     array_shift($file_parts);
-
-    // Iterate over the file parts, trying to find a match.
-    // For my.awesome.image.jpeg, we try:
-    // jpeg
-    // image.jpeg, and
-    // awesome.image.jpeg
     while ($additional_part = array_pop($file_parts)) {
       $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
       if (isset($mapping['extensions'][$extension])) {
