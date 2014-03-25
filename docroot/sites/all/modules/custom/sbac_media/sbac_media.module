@@ -73,20 +73,12 @@ function sbac_media_menu() {
     'title' => 'File Stream',
   );
 
-  $items['sbac-media/check-youtube'] = array(
-    'page callback' => 'sbac_media_check_youtube',
-    'access callback' => TRUE,
-    'title' => 'File Stream',
-  );
-
   return $items;
 }
 
-function sbac_media_check_youtube() {
-  $var = '';
-}
-
 /**
+ * @todo: Need to rework this to work with Google CDN now.
+ *
  * @param $fid
  * @param null $session_id
  */
@@ -231,6 +223,8 @@ function sbac_media_file_mimetype_mapping_alter(&$mapping) {
 }
 
 /**
+ * @todo: Need to rework this to work with Google CDN.
+ *
  * Packages and downloads all materials into a zip.
  *
  * @param $node
