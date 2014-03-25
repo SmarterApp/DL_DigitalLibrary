@@ -26,6 +26,8 @@ define('SBAC_RESOURCE_PUBLISHER_ROLE', 'resource publisher');
 
 define('SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME', 'sbac-smart-search-last-url');
 define('SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME', 'sbac-smart-search-url-history');
+define('SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS', 'sbac-smart-search-hide-filters');
+define('SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS', 'sbac-smart-search-show-status');
 
 /**
  * Implements hook_update_projects_alter().
