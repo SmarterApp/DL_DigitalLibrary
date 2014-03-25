@@ -2294,56 +2294,56 @@ a.more-less-text-trigger-less:after {
 /* line 2219, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms fieldset {
   border: none;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
 }
-/* line 2221, ../sass/sbac_resource.scss */
+/* line 2225, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms legend {
   font-size: 0.8em;
   font-weight: bold;
   color: #4D4D4D;
 }
-/* line 2227, ../sass/sbac_resource.scss */
+/* line 2231, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms .fieldset-description {
   font-size: 0.8em;
 }
-/* line 2231, ../sass/sbac_resource.scss */
+/* line 2235, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms input[id*="edit-field-copyright-clearace-forms"] {
   width: 500px;
 }
-/* line 2235, ../sass/sbac_resource.scss */
+/* line 2239, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms button.form-submit {
   float: right;
   margin-top: -5px;
 }
-/* line 2240, ../sass/sbac_resource.scss */
+/* line 2244, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] {
   width: 100%;
   margin-top: 10px;
 }
-/* line 2244, ../sass/sbac_resource.scss */
+/* line 2248, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] thead {
   background: none;
 }
-/* line 2247, ../sass/sbac_resource.scss */
+/* line 2251, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] thead th:last-child {
   text-align: right;
 }
-/* line 2251, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] thead tr.even, #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] thead tr.odd {
+/* line 2256, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] tr.even, #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] tr.odd {
   background: none;
 }
-/* line 2256, ../sass/sbac_resource.scss */
+/* line 2260, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] a {
   color: #222;
 }
-/* line 2259, ../sass/sbac_resource.scss */
+/* line 2265, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms button[id*="remove-button"] {
-  width: 100px;
-  height: 34px;
   background-color: transparent;
   border: none;
   border-radius: 0;
   box-shadow: none;
-  color: #FFFFFF;
+  color: transparent;
   cursor: pointer;
   font-size: 16px;
   font-weight: normal;
@@ -2353,5 +2353,22 @@ a.more-less-text-trigger-less:after {
   text-align: center;
   text-shadow: none;
   float: right;
-  text-indent: -9999em;
+  /*text-indent: -9999em;*/
+}
+/* line 2283, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms button[id*="remove-button"]:hover {
+  background-image: none !important;
+}
+/* line 2287, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms button[id*="remove-button"]:after {
+  font-family: "GeneralFoundicons";
+  content: "\f018";
+  display: inline-block;
+  font-size: 1em;
+  height: 13px;
+  margin-top: 12px;
+  margin-right: 20px;
+  vertical-align: baseline;
+  width: 13px;
+  color: #AAA;
 }

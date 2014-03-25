@@ -2216,7 +2216,11 @@ a.more-less-text-trigger-less:after {
 	
 	margin-top: 30px;
 	
-	fieldset {border: none;}
+	fieldset {
+		border: none;
+		margin-bottom: 5px;
+		padding-bottom: 5px;
+	}
 	
 	legend {
 		font-size: 0.8em;
@@ -2247,23 +2251,23 @@ a.more-less-text-trigger-less:after {
 			th:last-child {
 				text-align: right;
 			}
-			
-			tr.even, tr.odd {
-				background: none;
-			}
 		}
 		
-		a {color: #222;}
+		tr.even, tr.odd {
+			background: none;
+		}
+		
+		a {
+			color: #222;
+		}
 	}
 	
 	button[id*="remove-button"] {
-		width: 100px;
-	 	height: 34px;
 		background-color: transparent;
   	border: none;
    	border-radius: 0;
    	box-shadow:none;
-   	color: #FFFFFF;
+   	color: transparent;
    	cursor: pointer;
    	font-size: 16px;
    	font-weight: normal;
@@ -2273,7 +2277,24 @@ a.more-less-text-trigger-less:after {
    	text-align: center;
    	text-shadow:none;
 		float: right;
-		text-indent: -9999em;
+		/*text-indent: -9999em;*/
+	}
+	
+	button[id*="remove-button"]:hover {
+		background-image: none !important;
+	}
+	
+	button[id*="remove-button"]:after {
+		font-family: "GeneralFoundicons";
+    content: "\f018";
+    display: inline-block;
+		font-size: 1em;
+    height: 13px;
+    margin-top: 12px;
+		margin-right: 20px;
+    vertical-align: baseline;
+    width: 13px;
+		color: #AAA;
 	}
 }
 
