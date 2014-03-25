@@ -932,6 +932,7 @@ function sbac_central_update_7070() {
 function sbac_central_update_7071() {
   ini_set('memory_limit', '512M');
   $service = NULL;
+  $client = NULL;
   try {
     libraries_load('google-api-php-client');
     $service_account_name = variable_get('google_cdn_service_account_name');
@@ -969,7 +970,7 @@ function sbac_central_update_7071() {
         foreach ($node->document as $document) {
           if ($document->fid) {
             $file = file_load($document->fid);
-            if ($file) {
+            if ($file && strpos($file->uri, 'gs://') === FALSE) {
               $google_uri = NULL;
               if (strpos($file->uri, 'private://') !== FALSE) {
                 $google_uri = str_replace('private://', '', $file->uri);
@@ -983,6 +984,10 @@ function sbac_central_update_7071() {
                 $old_path = drupal_realpath($file->uri);
                 if (file_exists($old_path)) {
                   try {
+                    if ($client->getAuth()->isAccessTokenExpired()) {
+                      $client->getAuth()->refreshTokenWithAssertion($cred);
+                    }
+
                     $data = file_get_contents($old_path);
                     $bucket = variable_get('google_cdn_bucket_name');
                     $folder = variable_get('google_cdn_folder');
