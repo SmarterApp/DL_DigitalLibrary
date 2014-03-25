@@ -939,17 +939,16 @@ function sbac_central_update_7071() {
           if ($file) {
             $google_uri = NULL;
             if (strpos($file->uri, 'private://') !== FALSE) {
-              $google_uri = str_replace('private://resources/', '', $file->uri);
+              $google_uri = str_replace('private://', '', $file->uri);
             }
 
             if (strpos($file->uri, 'public://') !== FALSE) {
-              $google_uri = str_replace('public://resources/', '', $file->uri);
+              $google_uri = str_replace('public://', '', $file->uri);
             }
 
             if ($google_uri) {
               try {
                 libraries_load('google-api-php-client');
-                $client_id = variable_get('google_cdn_client_id');
                 $service_account_name = variable_get('google_cdn_service_account_name');
                 $key_file_path = variable_get('google_cdn_public_key_file_path');
 
@@ -996,7 +995,6 @@ function sbac_central_update_7071() {
                 watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getGCS');
               }
             }
-
           }
         }
       }
