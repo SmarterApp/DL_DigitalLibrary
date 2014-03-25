@@ -2285,3 +2285,23 @@ a.more-less-text-trigger-less:after {
 .form-textarea-wrapper textarea {
   max-width: 650px !important;
 }
+
+/*Copyright Clearace Form on Material tab*/
+/* line 2217, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms fieldset {
+  border: none;
+}
+/* line 2219, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms legend {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #4D4D4D;
+}
+/* line 2225, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms .fieldset-description {
+  font-size: 0.8em;
+}
+/* line 2229, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms button.form-submit {
+  float: right;
+}

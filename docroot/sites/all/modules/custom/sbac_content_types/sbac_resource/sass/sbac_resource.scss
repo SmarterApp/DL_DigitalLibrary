@@ -2211,9 +2211,25 @@ a.more-less-text-trigger-less:after {
     max-width: 650px !important;
 }
 
-
-
-
+/*Copyright Clearace Form on Material tab*/
+#edit-field-copyright-clearace-forms {
+	
+	fieldset {border: none;}
+	
+	legend {
+		font-size: 0.8em;
+		font-weight: bold;
+   	color: #4D4D4D;
+	}
+	
+	.fieldset-description {
+		font-size: 0.8em;
+	}
+	
+	button.form-submit {
+		float: right;
+	}
+}
 
 
 
