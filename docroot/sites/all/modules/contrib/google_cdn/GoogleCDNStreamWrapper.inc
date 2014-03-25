@@ -888,7 +888,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::_stat');
+        // watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::_stat');
       }
     }
 
