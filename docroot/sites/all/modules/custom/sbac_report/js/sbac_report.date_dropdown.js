@@ -5,7 +5,6 @@
   Drupal.behaviors.date_popup_focus = {
     attach: function (context) {
       for (var id in Drupal.settings.datePopup) {
-        console.log(id);
         $('#' + id).bind('focus', Drupal.settings.datePopup[id], function (e) {
           $(this).unbind(e);
 
