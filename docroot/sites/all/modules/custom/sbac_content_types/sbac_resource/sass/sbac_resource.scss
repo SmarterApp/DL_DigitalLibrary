@@ -2236,6 +2236,45 @@ a.more-less-text-trigger-less:after {
 		float: right;
 		margin-top: -5px;
 	}
+	
+	table[id*="edit-field-copyright-clearace-forms"] {
+		width: 100%;
+		margin-top: 10px;
+		
+		thead {
+		  background: none;
+			
+			th:last-child {
+				text-align: right;
+			}
+			
+			tr.even, tr.odd {
+				background: none;
+			}
+		}
+		
+		a {color: #222;}
+	}
+	
+	button[id*="remove-button"] {
+		width: 100px;
+	 	height: 34px;
+		background-color: transparent;
+  	border: none;
+   	border-radius: 0;
+   	box-shadow:none;
+   	color: #FFFFFF;
+   	cursor: pointer;
+   	font-size: 16px;
+   	font-weight: normal;
+   	height: 34px;
+   	line-height: 34px;
+   	padding: 0;
+   	text-align: center;
+   	text-shadow:none;
+		float: right;
+		text-indent: -9999em;
+	}
 }
 
 
