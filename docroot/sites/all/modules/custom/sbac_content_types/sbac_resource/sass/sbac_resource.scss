@@ -2214,6 +2214,8 @@ a.more-less-text-trigger-less:after {
 /*Copyright Clearace Form on Material tab*/
 #edit-field-copyright-clearace-forms {
 	
+	margin-top: 30px;
+	
 	fieldset {border: none;}
 	
 	legend {
@@ -2226,8 +2228,13 @@ a.more-less-text-trigger-less:after {
 		font-size: 0.8em;
 	}
 	
+	input[id*="edit-field-copyright-clearace-forms"] {
+		width: 500px;
+	}
+	
 	button.form-submit {
 		float: right;
+		margin-top: -5px;
 	}
 }
 

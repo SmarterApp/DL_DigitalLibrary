@@ -2287,21 +2287,30 @@ a.more-less-text-trigger-less:after {
 }
 
 /*Copyright Clearace Form on Material tab*/
-/* line 2217, ../sass/sbac_resource.scss */
+/* line 2215, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms {
+  margin-top: 30px;
+}
+/* line 2219, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms fieldset {
   border: none;
 }
-/* line 2219, ../sass/sbac_resource.scss */
+/* line 2221, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms legend {
   font-size: 0.8em;
   font-weight: bold;
   color: #4D4D4D;
 }
-/* line 2225, ../sass/sbac_resource.scss */
+/* line 2227, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms .fieldset-description {
   font-size: 0.8em;
 }
-/* line 2229, ../sass/sbac_resource.scss */
+/* line 2231, ../sass/sbac_resource.scss */
+#edit-field-copyright-clearace-forms input[id*="edit-field-copyright-clearace-forms"] {
+  width: 500px;
+}
+/* line 2235, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms button.form-submit {
   float: right;
+  margin-top: -5px;
 }
