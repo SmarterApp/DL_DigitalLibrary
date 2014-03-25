@@ -366,7 +366,7 @@ i.icon-info {
   float: left;
   width: 100px;
   height: 100px;
-  height: auto;
+  /*height: auto;*/
 }
 /* line 380, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .large-3.profile-pic .user-picture .profile-img {
