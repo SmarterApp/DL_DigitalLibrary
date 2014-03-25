@@ -367,36 +367,41 @@ i.icon-info {
   height: 100px;
   width: auto;
 }
-/* line 381, ../sass/sbac_report.scss */
+/* line 379, ../sass/sbac_report.scss */
+.page-reports .view-sne-details .large-3.profile-pic .user-picture .profile-img {
+  width: 100px !important;
+  height: auto !important;
+}
+/* line 386, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .large-9.user-profile {
   float: left;
 }
-/* line 384, ../sass/sbac_report.scss */
+/* line 389, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .large-9.user-profile h2 {
   padding: 0 !important;
   margin-bottom: 8px;
 }
-/* line 389, ../sass/sbac_report.scss */
+/* line 394, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .large-9.user-profile .views-field {
   margin-bottom: 7px;
   font-size: 15px;
 }
-/* line 393, ../sass/sbac_report.scss */
+/* line 398, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .large-9.user-profile .views-field.email {
   color: #0583AC;
   cursor: pointer;
   text-decoration: none;
 }
-/* line 401, ../sass/sbac_report.scss */
+/* line 406, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .profile-details {
   clear: both;
   margin: 0 1em;
 }
-/* line 405, ../sass/sbac_report.scss */
+/* line 410, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .profile-details .views-field {
   margin-bottom: 20px;
 }
-/* line 408, ../sass/sbac_report.scss */
+/* line 413, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .profile-details .views-field .title {
   border-bottom: 1px solid #CECECE;
   color: #04384E;
@@ -409,7 +414,7 @@ i.icon-info {
   padding: 0 0 3px;
   text-transform: uppercase;
 }
-/* line 421, ../sass/sbac_report.scss */
+/* line 426, ../sass/sbac_report.scss */
 .page-reports .view-sne-details .profile-details .views-field .tag {
   background-color: #F2F2F2;
   border-radius: 2px;
@@ -420,7 +425,7 @@ i.icon-info {
   margin-top: 7px;
   padding: 0 5px;
 }
-/* line 437, ../sass/sbac_report.scss */
+/* line 442, ../sass/sbac_report.scss */
 .page-reports #individual table {
   color: #464B54;
   font-size: 13px;
@@ -428,7 +433,7 @@ i.icon-info {
   text-align: left;
   margin-bottom: 30px;
 }
-/* line 445, ../sass/sbac_report.scss */
+/* line 450, ../sass/sbac_report.scss */
 .page-reports #individual th {
   background-color: #F2F2F2;
   font-size: 13px;
@@ -436,22 +441,22 @@ i.icon-info {
   color: #464B54;
   line-height: 1.5;
 }
-/* line 453, ../sass/sbac_report.scss */
+/* line 458, ../sass/sbac_report.scss */
 .page-reports #individual td {
   padding: 10px;
   font-size: 13px;
   text-align: left;
   background: none repeat scroll 0 0 #FFFFFF;
 }
-/* line 461, ../sass/sbac_report.scss */
+/* line 466, ../sass/sbac_report.scss */
 .page-reports .form-item-display {
   float: right;
 }
-/* line 465, ../sass/sbac_report.scss */
+/* line 470, ../sass/sbac_report.scss */
 .page-reports label[for="edit-display"] {
   display: inline-block;
 }
-/* line 469, ../sass/sbac_report.scss */
+/* line 474, ../sass/sbac_report.scss */
 .page-reports select#edit-display {
   width: 85px;
   margin-bottom: 30px;
@@ -461,20 +466,20 @@ i.icon-info {
 /**
  Tables
   **/
-/* line 482, ../sass/sbac_report.scss */
+/* line 487, ../sass/sbac_report.scss */
 .page-reports #main {
   width: 960px;
 }
-/* line 486, ../sass/sbac_report.scss */
+/* line 491, ../sass/sbac_report.scss */
 .page-reports div.vertical-tabs {
   margin-left: 8em;
 }
-/* line 489, ../sass/sbac_report.scss */
+/* line 494, ../sass/sbac_report.scss */
 .page-reports div.vertical-tabs ul.vertical-tabs-list {
   margin-left: -8em;
   width: 8em;
 }
-/* line 495, ../sass/sbac_report.scss */
+/* line 500, ../sass/sbac_report.scss */
 .page-reports table.report-summation {
   /*border:none !important;*/
   background: none;
@@ -483,16 +488,16 @@ i.icon-info {
   		display: block;
   		overflow-x: scroll;*/
 }
-/* line 510, ../sass/sbac_report.scss */
+/* line 515, ../sass/sbac_report.scss */
 .page-reports table.report-summation thead {
   background: none;
 }
-/* line 513, ../sass/sbac_report.scss */
+/* line 518, ../sass/sbac_report.scss */
 .page-reports table.report-summation thead tr th {
   background: none;
   border: none;
 }
-/* line 517, ../sass/sbac_report.scss */
+/* line 522, ../sass/sbac_report.scss */
 .page-reports table.report-summation thead tr th.header {
   border: 1px solid #ccc;
   color: #056b8d;
@@ -503,19 +508,19 @@ i.icon-info {
   background-image: -o-linear-gradient(#ededed, #ebebeb);
   background-image: linear-gradient(#ededed, #ebebeb);
 }
-/* line 526, ../sass/sbac_report.scss */
+/* line 531, ../sass/sbac_report.scss */
 .page-reports table.report-summation tbody tr td {
   background-color: #fff;
   background-image: none;
   padding: 10px 2px !important;
 }
-/* line 531, ../sass/sbac_report.scss */
+/* line 536, ../sass/sbac_report.scss */
 .page-reports table.report-summation tbody tr td.subheader {
   /*@include table-header();*/
   background-color: #fff;
   background-image: none;
 }
-/* line 537, ../sass/sbac_report.scss */
+/* line 542, ../sass/sbac_report.scss */
 .page-reports table.report-summation tbody tr td .cell-scroll {
   max-width: 52px;
   overflow-x: scroll;
@@ -524,49 +529,49 @@ i.icon-info {
 /**
  Modals
   **/
-/* line 550, ../sass/sbac_report.scss */
+/* line 555, ../sass/sbac_report.scss */
 .clear {
   clear: both;
 }
 
-/* line 555, ../sass/sbac_report.scss */
+/* line 560, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog {
   text-align: right;
 }
-/* line 558, ../sass/sbac_report.scss */
+/* line 563, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .intro {
   text-align: left;
 }
-/* line 561, ../sass/sbac_report.scss */
+/* line 566, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .intro .review-date {
   float: left;
 }
-/* line 565, ../sass/sbac_report.scss */
+/* line 570, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .intro .recommendation {
   float: right;
 }
-/* line 570, ../sass/sbac_report.scss */
+/* line 575, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .flexslider {
   margin: 20px auto 50px;
   text-align: left;
   width: 580px;
 }
-/* line 576, ../sass/sbac_report.scss */
+/* line 581, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li {
   margin: 0;
 }
-/* line 580, ../sass/sbac_report.scss */
+/* line 585, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .slide-title,
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .inline-title {
   font-weight: bold;
 }
-/* line 583, ../sass/sbac_report.scss */
+/* line 588, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .slide-title p,
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .inline-title p {
   font-weight: bold;
   font-size: 1em;
 }
-/* line 593, ../sass/sbac_report.scss */
+/* line 598, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .gk-item,
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .qc-item,
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .post-item,
@@ -574,60 +579,60 @@ i.icon-info {
 .dialog_sbac_report_individual_modal_form #dialog .flexslider .slides li .qc-question-item {
   margin: 0 0 10px 0;
 }
-/* line 600, ../sass/sbac_report.scss */
+/* line 605, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .flexslider-continue {
   display: inline;
   float: right;
   margin: 0 0 0 10px;
 }
-/* line 606, ../sass/sbac_report.scss */
+/* line 611, ../sass/sbac_report.scss */
 .dialog_sbac_report_individual_modal_form #dialog .close-dialog {
   display: inline;
   margin: 0;
 }
 
 /*SNE tab, CSV tab*/
-/* line 617, ../sass/sbac_report.scss */
+/* line 622, ../sass/sbac_report.scss */
 .page-reports ul.vertical-tabs-list {
   margin-left: 0;
   padding-bottom: 5px;
 }
-/* line 622, ../sass/sbac_report.scss */
+/* line 627, ../sass/sbac_report.scss */
 .page-reports fieldset[id*="edit-date-range"] {
   clear: left;
   border: none;
   padding: 10px 0 0;
   margin-bottom: 0;
 }
-/* line 628, ../sass/sbac_report.scss */
+/* line 633, ../sass/sbac_report.scss */
 .page-reports fieldset[id*="edit-date-range"] input[type="radio"] {
   margin-bottom: 15px;
 }
-/* line 632, ../sass/sbac_report.scss */
+/* line 637, ../sass/sbac_report.scss */
 .page-reports fieldset[id*="edit-date-range"] .form-wrapper {
   border: none;
   padding: 0;
 }
-/* line 637, ../sass/sbac_report.scss */
+/* line 642, ../sass/sbac_report.scss */
 .page-reports fieldset[id*="edit-date-range"] .form-wrapper .form-type-textfield .description {
   display: none;
 }
-/* line 643, ../sass/sbac_report.scss */
+/* line 648, ../sass/sbac_report.scss */
 .page-reports .container-inline-date label, .page-reports .container-inline-date input {
   display: block;
   float: left;
 }
-/* line 648, ../sass/sbac_report.scss */
+/* line 653, ../sass/sbac_report.scss */
 .page-reports .container-inline-date label {
   margin-right: 10px;
   margin-top: 10px;
 }
-/* line 654, ../sass/sbac_report.scss */
+/* line 659, ../sass/sbac_report.scss */
 .page-reports hr {
   display: none;
 }
 
-/* line 661, ../sass/sbac_report.scss */
+/* line 666, ../sass/sbac_report.scss */
 .page-reports .report-form-container button:focus {
   border-color: #9ecaed !important;
   box-shadow: 0 0 10px #9ecaed !important;
