@@ -97,9 +97,25 @@ function sbac_media_file_stream() {
     header('Content-Length: ' . $file->filesize);
     header('Content-Type: ' . $file->filemime);
 
-    $real_path = drupal_realpath($file->uri);
-    if (file_exists($real_path)) {
-      $file_stream = file_get_contents($real_path);
+
+    $bucket = variable_get('google_cdn_bucket_name');
+    $folder = variable_get('google_cdn_folder');
+    $services = sbac_media_get_google_cloud_storage();
+    if ($services) {
+      try {
+        $target = str_replace('gs://', '', $file->uri);
+        $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
+        if ($response) {
+          $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
+          $request = new Google_HttpRequest($download_url, 'GET');
+          $httpRequest = $services['client']->getIo()->authenticatedRequest($request);
+          if ($httpRequest) {
+            $file_stream = $httpRequest->getResponseBody();
+          }
+        }
+      } catch (Exception $e) {
+        watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::strea_read');
+      }
     }
   }
 
@@ -267,8 +283,6 @@ function sbac_media_get_google_cloud_storage() {
 }
 
 /**
- * @todo: Need to rework this to work with Google CDN.
- *
  * Packages and downloads all materials into a zip.
  *
  * @param $node
@@ -343,7 +357,8 @@ function sbac_media_download_contents($node) {
           unlink($real_path); // delete the temp zip.
         }
       }
-    } else {
+    }
+    else {
       return "There are no files to download."; // no downloadable file schemes (public://)
     }
   }
