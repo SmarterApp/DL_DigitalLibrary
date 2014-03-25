@@ -912,3 +912,16 @@ function sbac_central_update_7069() {
     db_query("UPDATE {eck_feedback} SET completed = 1, status = 1 WHERE id = :id", array(':id' => $row->id));
   }
 }
+
+/*
+ * Enables SBAC_Forum module.
+ *
+ * ** Changed to 7068 because 7067 has already
+ * ** been ran on production. so when we push, this will run.
+ */
+function sbac_central_update_7070() {
+  $modules = array(
+    'google_cdn',
+  );
+  module_enable($modules);
+}
