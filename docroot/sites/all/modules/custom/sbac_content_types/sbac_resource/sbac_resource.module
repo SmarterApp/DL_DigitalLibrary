@@ -893,7 +893,7 @@ function _sbac_resource_preview_materials(&$vars) {
 
         // check to see whether its public scheme or not, if so not external
         if ($media->fid) {
-          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript)));
+          $material_urls[] = l(ucwords($media->filename), urlencode($url), array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript)));
         }
         else { // embedded media
           if (strpos($media->embed_url, 'youtube')) {
