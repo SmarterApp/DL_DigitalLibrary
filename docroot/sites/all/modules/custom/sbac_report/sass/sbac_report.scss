@@ -50,7 +50,7 @@ $darkgreen: #246a34;
 	}
 	
 	#main.columns {
-		padding: 0 50px 0 40px;
+		/*padding: 0 50px 0 40px;*/
 	}
 }
 
@@ -481,11 +481,11 @@ i.icon-info {
 	}
 	
   div.vertical-tabs {
-    margin-left: 15em;
+    margin-left: 8em;
 
     ul.vertical-tabs-list {
-      margin-left: -15em;
-      width: 15em;
+      margin-left: -8em;
+      width: 8em;
     }
   }
 
@@ -493,9 +493,9 @@ i.icon-info {
 	  /*border:none !important;*/
 	  background:none;
 	  font-size: 0.85em;
-		width: 600px;
-		display: block;
-		overflow-x: scroll;
+	/*	width: 600px;
+			display: block;
+			overflow-x: scroll;*/
 
 	  @mixin table-header() {
 	    border:1px solid #ccc;
@@ -523,6 +523,7 @@ i.icon-info {
 	      td {
 					background-color: #fff;
 					background-image: none;
+					padding: 10px 2px !important;
 					
 	        &.subheader{
 	          /*@include table-header();*/
@@ -532,7 +533,7 @@ i.icon-info {
 
           .cell-scroll {
             max-width: 52px;
-            overflow-x: scroll;
+            /*overflow-x: scroll;*/
           }
 	      }
 	    }
