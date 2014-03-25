@@ -990,6 +990,7 @@ function sbac_central_update_7071() {
                       'data' => $data,
                       'mediaUpload' => TRUE
                     );
+                    $google_uri = "resources/" . floor($node->nid/32000) . "/" . $node->nid . '/' . $file->filename;
                     $gso = new Google_StorageObject();
                     $gso->setName($folder . '/' . $google_uri);
                     $response = $service->objects->insert($bucket, $gso, $postbody);
