@@ -454,12 +454,20 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       try {
         $local_path = $this->getLocalPath();
         //set the mimetype for the file and set the location of the file to be uploaded
-        $postbody = array('mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri), 'data' => $this->buffer, 'mediaUpload' => TRUE);
+        $media = new Google_MediaFileUpload(GoogleCDNStreamWrapper::getMimeType($this->uri), $this->buffer, true, (2048*1024));
+        $postbody = array('mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri), 'data' => $this->buffer, 'mediaUpload' => $media);
         $gso = new Google_StorageObject();
         $gso->setName($this->folder . '/' .  $local_path);
         $response = $this->gcs->objects->insert($this->bucket, $gso ,$postbody);
         if ($response) {
-          return TRUE;
+          // Send the content in chunks.
+          $upload_result = false;
+          while ($upload_result === false) {
+            $upload_result = $media->nextChunk($response);
+          }
+          if ($upload_result) {
+            return TRUE;
+          }
         }
       }
       catch (Exception $e) {
@@ -888,7 +896,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::_stat');
+        // watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::_stat');
       }
     }
 
