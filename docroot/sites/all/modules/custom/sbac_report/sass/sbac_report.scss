@@ -372,9 +372,10 @@ i.icon-info {
 		    background-repeat: no-repeat;
 		    background-size: contain;
 				display: block;
-		   /* width: 100px;*/
+				float: left;
+		    width: 100px;
 			  height: 100px;
-			  width: auto;
+			  height: auto;
 			
 				.profile-img {
 					width: 100px !important;
