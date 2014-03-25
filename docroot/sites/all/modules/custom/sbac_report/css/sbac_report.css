@@ -515,7 +515,7 @@ i.icon-info {
 /* line 534, ../sass/sbac_report.scss */
 .page-reports table.report-summation tbody tr td .cell-scroll {
   max-width: 52px;
-  /*overflow-x: scroll;*/
+  overflow-x: scroll;
 }
 
 /**
