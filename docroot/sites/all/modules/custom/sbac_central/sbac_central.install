@@ -1039,6 +1039,13 @@ function sbac_central_update_7071() {
                 db_query('UPDATE {file_managed} f SET f.uri = "gs://' . $google_uri . '" WHERE f.fid = ' . $fid);
               }
             }
+
+            unset($media);
+            unset($gso);
+            unset($response);
+            unset($postbody);
+            unset($google_uri);
+            unset($handle);
           }
           catch (Exception $e) {
             watchdog('google_cdn', $e);
