@@ -50,8 +50,6 @@
         var resource = $('#resource-element');
         switch (type) {
           case 'document':
-//            $('.infobar .ajax-progress').show();
-//            Drupal.behaviors.sbac_resource_load_media.check(resource, local_url);
             var google_url = 'http://docs.google.com/viewer';
             if (window.location.protocol == 'https:') {
               google_url = 'https://docs.google.com/viewer';
@@ -59,7 +57,6 @@
             var google_viewer = '<iframe src="' + google_url + '?url=' + encodeURIComponent(local_url) + '&embedded=true' + '" width="880" height="400" style="border: none;"></iframe>';
             resource.empty().append(google_viewer);
             resource.addClass('google-doc');
-//            $('.infobar .ajax-progress').hide();
             break;
           case 'html5':
             resource.empty().append('<iframe src="' + local_url + '" width="850" height="600" style="border: none;"></iframe>');
