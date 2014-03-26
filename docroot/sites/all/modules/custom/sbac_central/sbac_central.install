@@ -930,7 +930,7 @@ function sbac_central_update_7070() {
  * Migrates old files to new Google CDN.
  */
 function sbac_central_update_7071() {
-  ini_set('memory_limit', '512M');
+  ini_set('memory_limit', '1024M');
   $service = NULL;
   $client = NULL;
   try {
@@ -1007,6 +1007,10 @@ function sbac_central_update_7071() {
     foreach ($files_to_upload as $nid => $files) {
       foreach ($files as $file_info) {
         foreach ($file_info as $fid => $file) {
+          error_log('filefid: ' . $file['fid']);
+          error_log('filefilename: ' . $file['filename']);
+          error_log('fileoldpath: ' . $file['old_path']);
+          error_log('fileuri: ' . $file['uri']);
           try {
             error_log('what');
             if ($client->getAuth()->isAccessTokenExpired()) {
