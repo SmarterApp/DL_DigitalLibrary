@@ -68,12 +68,12 @@
       html {display: none;}
     </style>
     <script type='text/javascript'>
-//      if (self == top) {
-//        document.documentElement.style.display = 'block';
-//      }
-//      else {
-//        top.location = self.location;
-//      }
+      if (self == top) {
+        document.documentElement.style.display = 'block';
+      }
+      else {
+        top.location = self.location;
+      }
     </script>
   <?php endif; ?>
 </head>
