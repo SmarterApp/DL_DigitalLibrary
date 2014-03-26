@@ -1008,49 +1008,36 @@ function sbac_central_update_7071() {
     foreach ($files_to_upload as $nid => $files) {
       foreach ($files as $file_info) {
         foreach ($file_info as $fid => $file) {
-          error_log('filefid: ' . $file['fid']);
-          error_log('filefilename: ' . $file['filename']);
-          error_log('fileoldpath: ' . $file['old_path']);
-          error_log('fileuri: ' . $file['uri']);
           try {
-            error_log('what');
             if ($client->getAuth()->isAccessTokenExpired()) {
-              error_log('what1');
               $client->getAuth()->refreshTokenWithAssertion($cred);
-              error_log('what2');
             }
-            error_log('what3');
-            $media = new Google_MediaFileUpload(file_get_mimetype($file['uri']), file_get_contents($file['old_path']), true, (2048*1024));
-            error_log('what4');
+            $chunk_size_bytes = 2048 * 1024;
+            $media = new Google_MediaFileUpload(file_get_mimetype($file['uri']), NULL, true, $chunk_size_bytes);
+            $media->setFileSize(filesize($file['old_path']));
             $postbody = array(
               'mimeType' => file_get_mimetype($file['uri']),
-              'data' => file_get_contents($file['old_path']),
+              'data' => NULL,
               'mediaUpload' => $media,
             );
-            error_log('what5');
             $google_uri = "resources/" . floor($nid/32000) . "/" . $nid . '/' . $file['filename'];
             $gso = new Google_StorageObject();
             $gso->setName($folder . '/' . $google_uri);
-            error_log('what6');
             $response = $service->objects->insert($bucket, $gso, $postbody);
-            error_log('what7');
             if ($response) {
-              error_log('what8');
-              // Now you do the upload
               $upload_result = false;
-              while ($upload_result === false) {
-                error_log('what9');
-                $upload_result = $media->nextChunk($response);
+              $handle = fopen($file['old_path'], "rb");
+              while (!$upload_result && !feof($handle)) {
+                $chunk = fread($handle, $chunk_size_bytes);
+                $upload_result = $media->nextChunk($response, $chunk);
               }
-              error_log('what10');
+              fclose($handle);
               if ($upload_result) {
-                error_log('what11');
                 db_query('UPDATE {file_managed} f SET f.uri = "gs://' . $google_uri . '" WHERE f.fid = ' . $fid);
               }
             }
           }
           catch (Exception $e) {
-            error_log('google_cdn: nid = ' . $nid . ' - fid = ' . $fid);
             watchdog('google_cdn', $e);
           }
         }
