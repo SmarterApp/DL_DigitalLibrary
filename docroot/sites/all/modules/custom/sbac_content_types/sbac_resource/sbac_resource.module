@@ -793,7 +793,7 @@ function _sbac_resource_preview_content(&$vars) {
       if (isset($_SERVER['HTTPS'])) {
         $google_url = 'https://docs.google.com/viewer';
       }
-      $viewer['viewer'] = '<iframe src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+      $viewer['viewer'] = '<iframe src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;"></iframe>';
       $viewer['viewer_class'] = 'google-doc';
     }
     else if ($type == 'video') {
