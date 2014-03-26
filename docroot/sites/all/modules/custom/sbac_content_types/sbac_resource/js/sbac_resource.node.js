@@ -21,7 +21,8 @@
               if (window.location.protocol == 'https:') {
                 google_url = 'https://docs.google.com/viewer';
               }
-              var google_viewer = '<iframe src="' + google_url + '?url="' + local_url + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+              local_url +=  '&embedded=true';
+              var google_viewer = '<iframe src="' + google_url + '?url="' + encodeURI(local_url) + '" width="850" height="400" style="border: none;"></iframe>';
               resource.empty().append(google_viewer);
               resource.addClass('google-doc');
               $('.infobar .ajax-progress').hide();
