@@ -1067,7 +1067,7 @@ function sbac_resource_update_7048() {
  * Creates states for each user / node in the system.
  */
 function sbac_resource_update_7049() {
-  ini_set('memory_limit', '512M');
+  ini_set('memory_limit', '756M');
   $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
   foreach ($results as $row) {
     $node = node_load($row->nid);
