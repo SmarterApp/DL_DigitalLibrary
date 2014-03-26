@@ -2898,6 +2898,10 @@ a.tabledrag-handle .handle {
 
 	ul {
 		margin: 0 !important;
+		
+		input.default {
+			min-height: 25px;
+		}
 	}
 }
 #edit-group_summary, #edit-group_basic {

@@ -2020,7 +2020,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
           }
           $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
             '#type' => 'textarea',
-            '#title' => t("Contributor's comment<br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
+            '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
           );
           $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
             '#type' => 'hidden',
@@ -2092,7 +2092,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             );
             $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
               '#type' => 'textarea',
-              '#title' => t("Contributor's comment<br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
+              '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
             );
             $i++;
           }
