@@ -1074,7 +1074,7 @@ function sbac_resource_update_7049() {
     if ($node) {
       $entity = NULL;
       // No records exist for this node and uid.
-      $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
+      $new_record = sbac_resource_get_state($entity, $node->nid);
       if ($new_record) {
         sbac_resource_save_current_state($node);
       }
