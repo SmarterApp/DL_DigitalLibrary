@@ -874,13 +874,13 @@ function _sbac_resource_preview_materials(&$vars) {
         }
         else if ($media->fid) {
           $file = file_load($media->fid);
-          if ($type == 'document') {
-            global $base_url;
-            $url = $base_url . '/sbac-media/file-stream/' . $file->fid . '/' . session_name();
-          }
-          else {
+//          if ($type == 'document') {
+//            global $base_url;
+//            $url = $base_url . '/sbac-media/file-stream/' . $file->fid . '/' . session_name();
+//          }
+//          else {
             $url = file_create_url($file->uri);
-          }
+//          }
         }
         else {
           $url = sbac_media_create_embed_url($media);
