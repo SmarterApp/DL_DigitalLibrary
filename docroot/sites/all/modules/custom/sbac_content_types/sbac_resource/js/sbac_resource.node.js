@@ -44,7 +44,7 @@
       $('#sbac-materials li a').click( function (event) {
         event.stopPropagation();
         event.preventDefault();
-        var local_url = encodeURIComponent($(this).attr('href'));
+        var local_url = $(this).attr('href');
         var type = $(this).attr('sbac-type');
         var resource = $('#resource-element');
         switch (type) {
