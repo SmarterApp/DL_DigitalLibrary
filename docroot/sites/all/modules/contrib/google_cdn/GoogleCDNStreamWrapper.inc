@@ -621,20 +621,22 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    */
   public function mkdir($uri, $mode, $options) {
     try {
-      $local_path = $this->getTarget($uri);
-      $postbody = array('mimeType' => 'application/directory', 'data' => NULL);
-      $directory = new Google_DirectoryService($this->client);
-      $response = $directory->groups->insert($postbody);
-//      $gso = new Google_StorageObject();
-//      $gso->setName($this->folder . '/' .  $local_path);
-//      $response = $this->gcs->objects->insert($this->bucket, $gso ,$postbody);
-      if ($response) {
-        return TRUE;
+      $this->callConstructor();
+      $target = $this->getLocalPath($uri);
+      $download_url= 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target . '/';
+      $request = new Google_HttpRequest($download_url, 'PUT');
+      $http_response = $this->client->getIo()->authenticatedRequest($request);
+      if ($http_response) {
+        $code = $http_response->getResponseHttpCode();
+        if ($code == 200) {
+          return TRUE;
+        }
       }
     }
     catch (Exception $e) {
       watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_flush');
     }
+
     return FALSE;
   }
 
@@ -890,9 +892,30 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $target = $this->getTarget($uri);
     if ($target) {
       try {
-        $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
-        if ($response) {
-          $mode = 0100000;
+        // Determine type, file or folder?
+        $path_info = pathinfo($this->uri);
+        $download_url= 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
+        if (!isset($path_info['extension'])) {
+          $download_url .= '/';
+        }
+        $request = new Google_HttpRequest($download_url, 'GET');
+        $http_response = $this->client->getIo()->authenticatedRequest($request);
+        $code = FALSE;
+        $body = FALSE;
+        if ($http_response) {
+          $code = $http_response->getResponseHttpCode();
+          $body = $http_response->getResponseBody();
+        }
+
+        if ($code == 200) {
+          if ($body == FALSE && !isset($path_info['extension'])) {
+            $mode = 0040000;
+            $size = 1;
+          }
+          else {
+            $mode = 0100000;
+            $size = strlen($body);
+          }
           $mode |= 0777;
 
           $stat = array();
@@ -910,14 +933,15 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           $stat[11] = $stat['blksize'] = 0;
           $stat[12] = $stat['blocks'] = 0;
           $stat[4] = $stat['uid'] = 0;
-          $stat[7] = $stat['size'] = $response['size'];
-          $stat[8] = $stat['atime'] = $response['generation'];
-          $stat[9] = $stat['mtime'] = $response['generation'];
-          $stat[10] = $stat['ctime'] = $response['generation'];
+          $stat[7] = $stat['size'] = $size;
+          $stat[8] = $stat['atime'] = 0;
+          $stat[9] = $stat['mtime'] = 0;
+          $stat[10] = $stat['ctime'] = 0;
           return $stat;
         }
       }
       catch (Exception $e) {
+        // commented out since it's causing a lot of watchdog errors.
         // watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::_stat');
       }
     }
