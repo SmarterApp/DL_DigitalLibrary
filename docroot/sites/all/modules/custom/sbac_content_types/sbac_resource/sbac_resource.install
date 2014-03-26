@@ -1072,7 +1072,12 @@ function sbac_resource_update_7049() {
   foreach ($results as $row) {
     $node = node_load($row->nid);
     if ($node) {
-      sbac_resource_save_current_state($node);
+      $entity = NULL;
+      // No records exist for this node and uid.
+      $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
+      if ($new_record) {
+        sbac_resource_save_current_state($node);
+      }
     }
   }
   return "Added states for each node";
