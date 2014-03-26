@@ -691,7 +691,7 @@ function sbac_resource_preprocess_node(&$vars) {
     // Documents
     if (isset($vars['document'][0]) || isset($vars['document']['html5'])) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
-      drupal_add_http_header('X-Frame-Options', 'goforit')
+      drupal_add_http_header('X-Frame-Options', 'goforit');
       $viewer = _sbac_resource_preview_content($vars);
       $materials = _sbac_resource_preview_materials($vars);
       $result = sbac_resource_determine_download_ability($vars);
