@@ -1034,6 +1034,7 @@ function sbac_central_update_7071() {
             }
           }
           catch (Exception $e) {
+            error_log('google_cdn: nid = ' . $nid . ' - fid = ' . $fid);
             watchdog('google_cdn', $e);
           }
         }
