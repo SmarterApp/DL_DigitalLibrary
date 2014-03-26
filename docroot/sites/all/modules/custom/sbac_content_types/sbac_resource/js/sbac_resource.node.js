@@ -52,7 +52,10 @@
           case 'document':
 //            $('.infobar .ajax-progress').show();
 //            Drupal.behaviors.sbac_resource_load_media.check(resource, local_url);
-
+            var google_url = 'http://docs.google.com/viewer';
+            if (window.location.protocol == 'https:') {
+              google_url = 'https://docs.google.com/viewer';
+            }
             local_url +=  '&embedded=true';
             var google_viewer = '<iframe src="' + google_url + '?url="' + encodeURI(local_url) + '" width="850" height="400" style="border: none;"></iframe>';
             resource.empty().append(google_viewer);
