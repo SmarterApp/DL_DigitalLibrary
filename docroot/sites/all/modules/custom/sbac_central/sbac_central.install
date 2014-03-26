@@ -1016,7 +1016,7 @@ function sbac_central_update_7071() {
             if ($client->getAuth()->isAccessTokenExpired()) {
               $client->getAuth()->refreshTokenWithAssertion($cred);
             }
-            $chunk_size_bytes = 2048 * 1024;
+            $chunk_size_bytes = 1 * 1024 * 1024;
             $media = new Google_MediaFileUpload(file_get_mimetype($file['uri']), NULL, true, $chunk_size_bytes);
             $media->setFileSize(filesize($file['old_path']));
             $postbody = array(
