@@ -913,148 +913,148 @@ function sbac_central_update_7069() {
   }
 }
 
-/*
- * Enables SBAC_Forum module.
- *
- * ** Changed to 7068 because 7067 has already
- * ** been ran on production. so when we push, this will run.
- */
-function sbac_central_update_7070() {
-  $modules = array(
-    'google_cdn',
-  );
-  module_enable($modules);
-}
-
-/**
- * Migrates old files to new Google CDN.
- */
-function sbac_central_update_7071() {
-  error_log('script started');
-  ini_set('memory_limit', '756M');
-  $service = NULL;
-  $client = NULL;
-  try {
-    libraries_load('google-api-php-client');
-    $service_account_name = variable_get('google_cdn_service_account_name');
-    $key_file_path = variable_get('google_cdn_public_key_file_path');
-
-    $client = new Google_Client();
-    // Replace this with your application name.
-    $client->setApplicationName($service_account_name);
-    // Replace this with the service you are using.
-    $service = new Google_StorageService($client);
-    // This file location should point to the private key file.
-    $key = file_get_contents($key_file_path);
-    $cred = new Google_AssertionCredentials(
-    // Replace this with the email address from the client.
-      $service_account_name,
-      // Replace this with the scopes you are requesting.
-      array('https://www.googleapis.com/auth/devstorage.full_control'),
-      $key
-    );
-
-    $client->setAssertionCredentials($cred);
-    if ($client->getAuth()->isAccessTokenExpired()) {
-      $client->getAuth()->refreshTokenWithAssertion($cred);
-    }
-  }
-  catch (Exception $e) {
-    watchdog_exception('google_cdn', $e);
-  }
-
-  if ($service) {
-    $bucket = variable_get('google_cdn_bucket_name');
-    $folder = variable_get('google_cdn_folder');
-    $files_to_upload = array();
-
-    $sql = "SELECT * FROM {node} WHERE type = 'resource'";
-    $result = db_query($sql);
-    foreach ($result as $row) {
-      $node = node_load($row->nid);
-      if ($node) {
-        foreach ($node->document as $document) {
-          if ($document->fid) {
-            $file = file_load($document->fid);
-            if ($file && strpos($file->uri, 'gs://') === FALSE) {
-              $google_uri = NULL;
-              if (strpos($file->uri, 'private://') !== FALSE) {
-                $google_uri = str_replace('private://', '', $file->uri);
-              }
-
-              if (strpos($file->uri, 'public://') !== FALSE) {
-                $google_uri = str_replace('public://', '', $file->uri);
-              }
-
-              if ($google_uri) {
-                $old_path = drupal_realpath($file->uri);
-                if (file_exists($old_path)) {
-                  $files_to_upload[$node->nid]['files'][$file->fid]['uri'] = $file->uri;
-                  $files_to_upload[$node->nid]['files'][$file->fid]['old_path'] = $old_path;
-                  $files_to_upload[$node->nid]['files'][$file->fid]['filename'] = $file->filename;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    unset($node);
-    unset($file);
-    unset($row);
-    unset($result);
-
-    foreach ($files_to_upload as $nid => $files) {
-      foreach ($files as $file_info) {
-        foreach ($file_info as $fid => $file) {
-          error_log('filefid: ' . $file['fid']);
-          error_log('filefilename: ' . $file['filename']);
-          error_log('fileoldpath: ' . $file['old_path']);
-          error_log('fileuri: ' . $file['uri']);
-          try {
-            error_log('what');
-            if ($client->getAuth()->isAccessTokenExpired()) {
-              error_log('what1');
-              $client->getAuth()->refreshTokenWithAssertion($cred);
-              error_log('what2');
-            }
-            error_log('what3');
-            $media = new Google_MediaFileUpload(file_get_mimetype($file['uri']), file_get_contents($file['old_path']), true, (2048*1024));
-            error_log('what4');
-            $postbody = array(
-              'mimeType' => file_get_mimetype($file['uri']),
-              'data' => file_get_contents($file['old_path']),
-              'mediaUpload' => $media,
-            );
-            error_log('what5');
-            $google_uri = "resources/" . floor($nid/32000) . "/" . $nid . '/' . $file['filename'];
-            $gso = new Google_StorageObject();
-            $gso->setName($folder . '/' . $google_uri);
-            error_log('what6');
-            $response = $service->objects->insert($bucket, $gso, $postbody);
-            error_log('what7');
-            if ($response) {
-              error_log('what8');
-              // Now you do the upload
-              $upload_result = false;
-              while ($upload_result === false) {
-                error_log('what9');
-                $upload_result = $media->nextChunk($response);
-              }
-              error_log('what10');
-              if ($upload_result) {
-                error_log('what11');
-                db_query('UPDATE {file_managed} f SET f.uri = "gs://' . $google_uri . '" WHERE f.fid = ' . $fid);
-              }
-            }
-          }
-          catch (Exception $e) {
-            error_log('google_cdn: nid = ' . $nid . ' - fid = ' . $fid);
-            watchdog('google_cdn', $e);
-          }
-        }
-      }
-    }
-  }
-}
+///*
+// * Enables SBAC_Forum module.
+// *
+// * ** Changed to 7068 because 7067 has already
+// * ** been ran on production. so when we push, this will run.
+// */
+//function sbac_central_update_7070() {
+//  $modules = array(
+//    'google_cdn',
+//  );
+//  module_enable($modules);
+//}
+//
+///**
+// * Migrates old files to new Google CDN.
+// */
+//function sbac_central_update_7071() {
+//  error_log('script started');
+//  ini_set('memory_limit', '756M');
+//  $service = NULL;
+//  $client = NULL;
+//  try {
+//    libraries_load('google-api-php-client');
+//    $service_account_name = variable_get('google_cdn_service_account_name');
+//    $key_file_path = variable_get('google_cdn_public_key_file_path');
+//
+//    $client = new Google_Client();
+//    // Replace this with your application name.
+//    $client->setApplicationName($service_account_name);
+//    // Replace this with the service you are using.
+//    $service = new Google_StorageService($client);
+//    // This file location should point to the private key file.
+//    $key = file_get_contents($key_file_path);
+//    $cred = new Google_AssertionCredentials(
+//    // Replace this with the email address from the client.
+//      $service_account_name,
+//      // Replace this with the scopes you are requesting.
+//      array('https://www.googleapis.com/auth/devstorage.full_control'),
+//      $key
+//    );
+//
+//    $client->setAssertionCredentials($cred);
+//    if ($client->getAuth()->isAccessTokenExpired()) {
+//      $client->getAuth()->refreshTokenWithAssertion($cred);
+//    }
+//  }
+//  catch (Exception $e) {
+//    watchdog_exception('google_cdn', $e);
+//  }
+//
+//  if ($service) {
+//    $bucket = variable_get('google_cdn_bucket_name');
+//    $folder = variable_get('google_cdn_folder');
+//    $files_to_upload = array();
+//
+//    $sql = "SELECT * FROM {node} WHERE type = 'resource'";
+//    $result = db_query($sql);
+//    foreach ($result as $row) {
+//      $node = node_load($row->nid);
+//      if ($node) {
+//        foreach ($node->document as $document) {
+//          if ($document->fid) {
+//            $file = file_load($document->fid);
+//            if ($file && strpos($file->uri, 'gs://') === FALSE) {
+//              $google_uri = NULL;
+//              if (strpos($file->uri, 'private://') !== FALSE) {
+//                $google_uri = str_replace('private://', '', $file->uri);
+//              }
+//
+//              if (strpos($file->uri, 'public://') !== FALSE) {
+//                $google_uri = str_replace('public://', '', $file->uri);
+//              }
+//
+//              if ($google_uri) {
+//                $old_path = drupal_realpath($file->uri);
+//                if (file_exists($old_path)) {
+//                  $files_to_upload[$node->nid]['files'][$file->fid]['uri'] = $file->uri;
+//                  $files_to_upload[$node->nid]['files'][$file->fid]['old_path'] = $old_path;
+//                  $files_to_upload[$node->nid]['files'][$file->fid]['filename'] = $file->filename;
+//                }
+//              }
+//            }
+//          }
+//        }
+//      }
+//    }
+//
+//    unset($node);
+//    unset($file);
+//    unset($row);
+//    unset($result);
+//
+//    foreach ($files_to_upload as $nid => $files) {
+//      foreach ($files as $file_info) {
+//        foreach ($file_info as $fid => $file) {
+//          error_log('filefid: ' . $file['fid']);
+//          error_log('filefilename: ' . $file['filename']);
+//          error_log('fileoldpath: ' . $file['old_path']);
+//          error_log('fileuri: ' . $file['uri']);
+//          try {
+//            error_log('what');
+//            if ($client->getAuth()->isAccessTokenExpired()) {
+//              error_log('what1');
+//              $client->getAuth()->refreshTokenWithAssertion($cred);
+//              error_log('what2');
+//            }
+//            error_log('what3');
+//            $media = new Google_MediaFileUpload(file_get_mimetype($file['uri']), file_get_contents($file['old_path']), true, (2048*1024));
+//            error_log('what4');
+//            $postbody = array(
+//              'mimeType' => file_get_mimetype($file['uri']),
+//              'data' => file_get_contents($file['old_path']),
+//              'mediaUpload' => $media,
+//            );
+//            error_log('what5');
+//            $google_uri = "resources/" . floor($nid/32000) . "/" . $nid . '/' . $file['filename'];
+//            $gso = new Google_StorageObject();
+//            $gso->setName($folder . '/' . $google_uri);
+//            error_log('what6');
+//            $response = $service->objects->insert($bucket, $gso, $postbody);
+//            error_log('what7');
+//            if ($response) {
+//              error_log('what8');
+//              // Now you do the upload
+//              $upload_result = false;
+//              while ($upload_result === false) {
+//                error_log('what9');
+//                $upload_result = $media->nextChunk($response);
+//              }
+//              error_log('what10');
+//              if ($upload_result) {
+//                error_log('what11');
+//                db_query('UPDATE {file_managed} f SET f.uri = "gs://' . $google_uri . '" WHERE f.fid = ' . $fid);
+//              }
+//            }
+//          }
+//          catch (Exception $e) {
+//            error_log('google_cdn: nid = ' . $nid . ' - fid = ' . $fid);
+//            watchdog('google_cdn', $e);
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
