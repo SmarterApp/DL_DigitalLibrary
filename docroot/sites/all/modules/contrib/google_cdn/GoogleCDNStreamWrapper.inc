@@ -459,7 +459,8 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       try {
         $local_path = $this->getLocalPath();
         //set the mimetype for the file and set the location of the file to be uploaded
-        $media = new Google_MediaFileUpload(GoogleCDNStreamWrapper::getMimeType($this->uri), $this->buffer, true, (2048*1024));
+        $chunk_size_bytes = 1 * 1024 * 1024;
+        $media = new Google_MediaFileUpload(GoogleCDNStreamWrapper::getMimeType($this->uri), $this->buffer, true, $chunk_size_bytes);
         $postbody = array('mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri), 'data' => $this->buffer, 'mediaUpload' => $media);
         $gso = new Google_StorageObject();
         $gso->setName($this->folder . '/' .  $local_path);
@@ -619,7 +620,22 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.mkdir.php
    */
   public function mkdir($uri, $mode, $options) {
-    return TRUE;
+    try {
+      $local_path = $this->getTarget($uri);
+      $postbody = array('mimeType' => 'application/directory', 'data' => NULL);
+      $directory = new Google_DirectoryService($this->client);
+      $response = $directory->groups->insert($postbody);
+//      $gso = new Google_StorageObject();
+//      $gso->setName($this->folder . '/' .  $local_path);
+//      $response = $this->gcs->objects->insert($this->bucket, $gso ,$postbody);
+      if ($response) {
+        return TRUE;
+      }
+    }
+    catch (Exception $e) {
+      watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_flush');
+    }
+    return FALSE;
   }
 
   /**

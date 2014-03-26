@@ -82,44 +82,44 @@ function sbac_media_menu() {
  * @param $fid
  * @param null $session_id
  */
-function sbac_media_file_stream() {
-  $file_stream = FALSE;
-  $fid = arg(2);
-  $session = arg(3);
-  $file = file_load($fid);
-  if ($session == NULL || !$file) {
-    return;
-  }
-
-  if ($session == session_name()) {
-    header('Cache-Control: no-cache private');
-    header('Content-Description: File Transfer');
-    header('Content-Length: ' . $file->filesize);
-    header('Content-Type: ' . $file->filemime);
-
-    $bucket = variable_get('google_cdn_bucket_name');
-    $folder = variable_get('google_cdn_folder');
-    $services = sbac_media_get_google_cloud_storage();
-    if ($services) {
-      try {
-        $target = str_replace('gs://', '', $file->uri);
-        $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
-        if ($response) {
-          $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
-          $request = new Google_HttpRequest($download_url, 'GET');
-          $httpRequest = $services['client']->getIo()->authenticatedRequest($request);
-          if ($httpRequest) {
-            $file_stream = $httpRequest->getResponseBody();
-          }
-        }
-      } catch (Exception $e) {
-        watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::strea_read');
-      }
-    }
-  }
-
-  echo $file_stream;
-}
+//function sbac_media_file_stream() {
+//  $file_stream = FALSE;
+//  $fid = arg(2);
+//  $session = arg(3);
+//  $file = file_load($fid);
+//  if ($session == NULL || !$file) {
+//    return;
+//  }
+//
+//  if ($session == session_name()) {
+//    header('Cache-Control: no-cache private');
+//    header('Content-Description: File Transfer');
+//    header('Content-Length: ' . $file->filesize);
+//    header('Content-Type: ' . $file->filemime);
+//
+//    $bucket = variable_get('google_cdn_bucket_name');
+//    $folder = variable_get('google_cdn_folder');
+//    $services = sbac_media_get_google_cloud_storage();
+//    if ($services) {
+//      try {
+//        $target = str_replace('gs://', '', $file->uri);
+//        $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
+//        if ($response) {
+//          $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
+//          $request = new Google_HttpRequest($download_url, 'GET');
+//          $httpRequest = $services['client']->getIo()->authenticatedRequest($request);
+//          if ($httpRequest) {
+//            $file_stream = $httpRequest->getResponseBody();
+//          }
+//        }
+//      } catch (Exception $e) {
+//        watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::strea_read');
+//      }
+//    }
+//  }
+//
+//  echo $file_stream;
+//}
 
 /**
  * Function to check if there are any downloadable files.
