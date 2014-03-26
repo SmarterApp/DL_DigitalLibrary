@@ -930,7 +930,7 @@ function sbac_central_update_7070() {
  * Migrates old files to new Google CDN.
  */
 function sbac_central_update_7071() {
-  ini_set('memory_limit', '1512M');
+  ini_set('memory_limit', '1024M');
   $service = NULL;
   $client = NULL;
   try {
@@ -957,11 +957,16 @@ function sbac_central_update_7071() {
     if ($client->getAuth()->isAccessTokenExpired()) {
       $client->getAuth()->refreshTokenWithAssertion($cred);
     }
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     watchdog_exception('google_cdn', $e);
   }
 
   if ($service) {
+    $bucket = variable_get('google_cdn_bucket_name');
+    $folder = variable_get('google_cdn_folder');
+    $files_to_upload = array();
+
     $sql = "SELECT * FROM {node} WHERE type = 'resource'";
     $result = db_query($sql);
     foreach ($result as $row) {
@@ -983,44 +988,48 @@ function sbac_central_update_7071() {
               if ($google_uri) {
                 $old_path = drupal_realpath($file->uri);
                 if (file_exists($old_path)) {
-                  try {
-                    if ($client->getAuth()->isAccessTokenExpired()) {
-                      $client->getAuth()->refreshTokenWithAssertion($cred);
-                    }
-
-                    $data = file_get_contents($old_path);
-                    $bucket = variable_get('google_cdn_bucket_name');
-                    $folder = variable_get('google_cdn_folder');
-                    $media = new Google_MediaFileUpload(GoogleCDNStreamWrapper::getMimeType($file->uri), $data, true, (2048*1024));
-                    $postbody = array(
-                      'mimeType' => GoogleCDNStreamWrapper::getMimeType($file->uri),
-                      'data' => $data,
-                      'mediaUpload' => $media,
-                    );
-                    $google_uri = "resources/" . floor($node->nid/32000) . "/" . $node->nid . '/' . $file->filename;
-                    $gso = new Google_StorageObject();
-                    $gso->setName($folder . '/' . $google_uri);
-                    $response = $service->objects->insert($bucket, $gso, $postbody);
-                    if ($response) {
-                      // Now you do the upload
-                      $upload_result = false;
-                      while ($upload_result === false) {
-                        $upload_result = $media->nextChunk($response);
-                      }
-
-                      if ($upload_result) {
-                        $file->uri = 'gs://' . $google_uri;
-                        file_save($file);
-                      }
-                    }
-                  }
-                  catch (Exception $e) {
-                    watchdog('google_cdn', $e);
-                  }
+                  $files_to_upload[$node->nid]['files'][$file->fid]['uri'] = $file->uri;
+                  $files_to_upload[$node->nid]['files'][$file->fid]['old_path'] = $old_path;
+                  $files_to_upload[$node->nid]['files'][$file->fid]['filename'] = $file->filename;
                 }
               }
             }
           }
+        }
+      }
+    }
+
+    foreach ($files_to_upload as $nid => $files) {
+      foreach ($files as $fid => $file) {
+        try {
+          if ($client->getAuth()->isAccessTokenExpired()) {
+            $client->getAuth()->refreshTokenWithAssertion($cred);
+          }
+          $media = new Google_MediaFileUpload(GoogleCDNStreamWrapper::getMimeType($file->uri), file_get_contents($old_path), true, (2048*1024));
+          $postbody = array(
+            'mimeType' => GoogleCDNStreamWrapper::getMimeType($file->uri),
+            'data' => file_get_contents($old_path),
+            'mediaUpload' => $media,
+          );
+          $google_uri = "resources/" . floor($node->nid/32000) . "/" . $node->nid . '/' . $file->filename;
+          $gso = new Google_StorageObject();
+          $gso->setName($folder . '/' . $google_uri);
+          $response = $service->objects->insert($bucket, $gso, $postbody);
+          if ($response) {
+            // Now you do the upload
+            $upload_result = false;
+            while ($upload_result === false) {
+              $upload_result = $media->nextChunk($response);
+            }
+
+            if ($upload_result) {
+              $new_uri = 'gs://' . $google_uri;
+              db_query('UPDATE {file_managed} f SET f.uri = ' . $new_uri . ' WHERE f.fid = ' . $file->fid);
+            }
+          }
+        }
+        catch (Exception $e) {
+          watchdog('google_cdn', $e);
         }
       }
     }
