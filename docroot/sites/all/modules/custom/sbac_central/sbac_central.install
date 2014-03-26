@@ -930,7 +930,7 @@ function sbac_central_update_7070() {
  * Migrates old files to new Google CDN.
  */
 function sbac_central_update_7071() {
-  ini_set('memory_limit', '1024M');
+  ini_set('memory_limit', '1512M');
   $service = NULL;
   $client = NULL;
   try {
