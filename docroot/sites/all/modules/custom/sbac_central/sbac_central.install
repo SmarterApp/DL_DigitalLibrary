@@ -930,6 +930,7 @@ function sbac_central_update_7070() {
  * Migrates old files to new Google CDN.
  */
 function sbac_central_update_7071() {
+  error_log('script started');
   ini_set('memory_limit', '1024M');
   $service = NULL;
   $client = NULL;
@@ -1044,7 +1045,7 @@ function sbac_central_update_7071() {
               error_log('what10');
               if ($upload_result) {
                 error_log('what11');
-                db_query('UPDATE {file_managed} f SET f.uri = gs://' . $google_uri . ' WHERE f.fid = ' . $fid);
+                db_query('UPDATE {file_managed} f SET f.uri = "gs://' . $google_uri . '" WHERE f.fid = ' . $fid);
               }
             }
           }
