@@ -1099,6 +1099,7 @@ function sbac_resource_update_7049() {
     }
     // nodes are stored in memory, delete that cache.
     node_load(FALSE, NULL, TRUE);
+    entity_get_controller('node')->resetCache(array($node->nid));
     unset($node);
   }
   unset($nodes);
