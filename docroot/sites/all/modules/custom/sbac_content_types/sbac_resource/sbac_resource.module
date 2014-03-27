@@ -1335,6 +1335,10 @@ function sbac_resource_save_current_state($node) {
     $entity = NULL;
     $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
     $entity->state = 'author';
+
+    $mem = memory_get_usage(TRUE);
+    error_log('sbac_resource_save_current_state: ' . $mem);
+
     sbac_resource_save_resource_state($entity, $new_record);
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'draft') {
       sbac_resource_delete_resource_state_except($node->nid, $entity->state);
@@ -1550,6 +1554,9 @@ function sbac_resource_get_users_by_role($role_name) {
  * @param $new_record
  */
 function sbac_resource_save_resource_state($entity, $new_record) {
+  $mem = memory_get_usage(TRUE);
+  error_log('sbac_resource_save_resource_state: ' . $mem);
+
   if ($new_record) {
     drupal_write_record('sbac_node_resource_state', $entity);
   }
@@ -1566,6 +1573,9 @@ function sbac_resource_save_resource_state($entity, $new_record) {
  * @param $new_state
  */
 function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_state, $flag_param = FALSE) {
+  $mem = memory_get_usage(TRUE);
+  error_log('sbac_resource_save_resource_state_for_all_role: ' . $mem);
+
   $qc_reviewed = NULL;
   if ($flag_param) {
     $result = db_query('SELECT s.* FROM {sbac_node_resource_state} s WHERE s.nid = :nid AND s.state = :state', array(':nid' => $node->nid, ':state' => 'qc_reviewed'));
@@ -1602,6 +1612,9 @@ function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $ol
   if (!is_object($node)) {
     $node = node_load($node);
   }
+
+  $mem = memory_get_usage(TRUE);
+  error_log('sbac_resource_delete_resource_state_for_all_role: ' . $mem);
 
   $entity = NULL;
   $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $old_state);
@@ -1656,6 +1669,9 @@ function sbac_resource_delete_resource_state($entity) {
     return;
   }
 
+  $mem = memory_get_usage(TRUE);
+  error_log('sbac_resource_delete_resource_state: ' . $mem);
+
   if ($entity->uid == 0) {
     db_delete('sbac_node_resource_state')
       ->condition('nid', $entity->nid)
@@ -1682,6 +1698,9 @@ function sbac_resource_delete_resource_state($entity) {
  * @return bool
  */
 function sbac_resource_get_state(&$entity, $nid, $uid = NULL, $state = NULL, $flag = NULL){
+  $mem = memory_get_usage(TRUE);
+  error_log('sbac_resource_get_state: ' . $mem);
+
   $query = db_select('sbac_node_resource_state', 'snrs');
   $query->fields('snrs');
   $query->condition('nid', $nid);
