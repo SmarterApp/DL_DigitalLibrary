@@ -1023,46 +1023,42 @@ function sbac_central_connect_to_google_bucket(&$service, &$client, &$cred) {
  */
 function sbac_central_get_node_files_to_upload($nid) {
   $mem = formatSizeUnits(memory_get_usage(TRUE));
-  error_log('mem4a:' . $mem);
+  error_log('ftu1:' . $mem);
   $files_to_upload = array();
-  $node = node_load($nid);
-  if ($node) {
+  $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid", array(':nid' => $nid));
+  foreach ($result as $document) {
     $mem = formatSizeUnits(memory_get_usage(TRUE));
-    error_log('mem4a:' . $mem);
-    foreach ($node->document as $document) {
-      if ($document->fid) {
-        $file = file_load($document->fid);
-        $mem = formatSizeUnits(memory_get_usage(TRUE));
-        error_log('mem4a:' . $mem);
-        if ($file && strpos($file->uri, 'gs://') === FALSE) {
-          $google_uri = NULL;
-          if (strpos($file->uri, 'private://') !== FALSE) {
-            $google_uri = str_replace('private://', '', $file->uri);
-          }
+    error_log('ftu2:' . $mem);
+    if ($document->fid) {
+      $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $document->fid))->fetchObject();
+      $mem = formatSizeUnits(memory_get_usage(TRUE));
+      error_log('ftu3:' . $mem);
+      if ($file && strpos($file->uri, 'gs://') === FALSE) {
+        $google_uri = NULL;
+        if (strpos($file->uri, 'private://') !== FALSE) {
+          $google_uri = str_replace('private://', '', $file->uri);
+        }
 
-          if (strpos($file->uri, 'public://') !== FALSE) {
-            $google_uri = str_replace('public://', '', $file->uri);
-          }
+        if (strpos($file->uri, 'public://') !== FALSE) {
+          $google_uri = str_replace('public://', '', $file->uri);
+        }
 
-          if ($google_uri) {
-            $old_path = drupal_realpath($file->uri);
-            if (file_exists($old_path)) {
-              $mem = formatSizeUnits(memory_get_usage(TRUE));
-              error_log('mem4a:' . $mem);
-              $files_to_upload['files'][$file->fid]['uri'] = $file->uri;
-              $files_to_upload['files'][$file->fid]['old_path'] = $old_path;
-              $files_to_upload['files'][$file->fid]['filename'] = $file->filename;
-              $mem = formatSizeUnits(memory_get_usage(TRUE));
-              error_log('mem4a:' . $mem);
-            }
+        if ($google_uri) {
+          $old_path = drupal_realpath($file->uri);
+          if (file_exists($old_path)) {
+            $mem = formatSizeUnits(memory_get_usage(TRUE));
+            error_log('ftu4:' . $mem);
+            $files_to_upload['files'][$file->fid]['fid'] = $file->fid;
+            $mem = formatSizeUnits(memory_get_usage(TRUE));
+            error_log('ftu5:' . $mem);
           }
         }
       }
     }
   }
-  unset($node);
+
   $mem = formatSizeUnits(memory_get_usage(TRUE));
-  error_log('mem4a:' . $mem);
+  error_log('ftu6:' . $mem);
   return $files_to_upload;
 }
 
