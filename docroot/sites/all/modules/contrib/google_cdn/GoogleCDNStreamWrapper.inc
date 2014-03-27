@@ -165,7 +165,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   Returns a string containing a web accessible URL for the resource.
    */
   public function getExternalUrl() {
-
+    $this->callConstructor();
     // Image styles support
     // Delivers the first request to an image from the private file system
     // otherwise it returns an external URL to an image that has not been
@@ -521,6 +521,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.unlink.php
    */
   public function unlink($uri) {
+    $this->callConstructor();
     $target = $this->getLocalPath($uri);
     if ($target) {
       try {
