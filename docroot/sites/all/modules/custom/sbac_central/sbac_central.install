@@ -930,9 +930,9 @@ function sbac_central_update_7070() {
  * Migrates old files to new Google CDN.
  */
 function sbac_central_update_7071() {
-  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'dev') {
-    return;
-  }
+//  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'dev') {
+//    return;
+//  }
 
   error_log('script started');
   ini_set('memory_limit', '512M');
