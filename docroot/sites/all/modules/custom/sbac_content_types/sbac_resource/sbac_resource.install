@@ -1068,26 +1068,28 @@ function sbac_resource_update_7048() {
  */
 function sbac_resource_update_7049() {
   ini_set('memory_limit', '512M');
-  $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
-  $mem = memory_get_usage(TRUE);
+  $sql  = 'SELECT n.*, w.state AS state ';
+  $sql .= 'FROM {node} n ';
+  $sql .= 'JOIN {workbench_moderation_node_history} w ';
+  $sql .= 'ON n.nid = w.nid AND n.vid = w.vid ';
+  $sql .= 'WHERE n.type = :type';
+  $results = db_query($sql, array(':type' => 'resource'));
+  $mem = formatSizeUnits(memory_get_usage(TRUE));
   error_log('mem: ' . $mem);
   foreach ($results as $row) {
-    $node = node_load($row->nid);
-    $mem = memory_get_usage(TRUE);
+    $node = $row;
+    $node->workbench_moderation['current']->state = $row->state;
+
+    $mem = formatSizeUnits(memory_get_usage(TRUE));
     error_log('mem2: ' . $mem);
     if ($node) {
       $entity = NULL;
-      // No records exist for this node and uid.
-      $new_record = sbac_resource_get_state($entity, $node->nid);
-      $mem = memory_get_usage(TRUE);
-      error_log('mem3: ' . $mem);
-      if ($new_record) {
-        $mem = memory_get_usage(TRUE);
-        error_log('mem4: ' . $mem);
-        sbac_resource_save_current_state($node);
-        $mem = memory_get_usage(TRUE);
-        error_log('mem5: ' . $mem);
-      }
+      $mem = formatSizeUnits(memory_get_usage(TRUE));
+      error_log('mem4: ' . $mem);
+      sbac_resource_save_current_state($node);
+      $mem = formatSizeUnits(memory_get_usage(TRUE));
+      error_log('mem5: ' . $mem);
+
     }
   }
   return "Added states for each node";
