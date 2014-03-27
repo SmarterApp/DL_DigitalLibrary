@@ -119,6 +119,10 @@
 
         tbody {
           border: 0;
+					
+					tr:last-child {
+						border-bottom: none;
+					}
 
           tr {
             background: none;
@@ -141,10 +145,12 @@
                 margin: 0 0 10px 0;
 
                 p {
-                  font-size: 1em;
+                  /*font-size: 1em;*/
+									font-size: 18px;
                   font-weight: bold;
                   max-width: 800px;
                   margin-left: 5px;
+								  font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
                 }
               }
 
