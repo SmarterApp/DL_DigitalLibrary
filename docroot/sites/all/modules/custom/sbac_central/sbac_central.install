@@ -950,7 +950,7 @@ function sbac_central_update_7071() {
             $files_to_upload[$nid] = $node_files_to_upload;
           }
         }
-        // Upload the files. 
+        // Upload the files.
         if ($files_to_upload) {
           sbac_central_process_files_to_upload($files_to_upload, $client, $service);
         }
@@ -1095,12 +1095,6 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
             // file uploaded successfully, set the new URI.
             error_log('upload result before save: ' . $upload_result);
             if ($upload_result) {
-              unset($media);
-              unset($gso);
-              unset($response);
-              unset($postbody);
-              unset($handle);
-
               $new_uri = 'gs://' . $google_uri;
               db_query('UPDATE {file_managed} SET uri = :uri WHERE fid = :fid', array(':uri' => $new_uri, ':fid' => $fid));
             }
