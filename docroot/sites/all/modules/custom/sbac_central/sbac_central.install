@@ -934,12 +934,21 @@ function sbac_central_update_7071() {
   ini_set('memory_limit', '700M');
   $service = NULL;
   $client = NULL;
+  $cred = NULL;
 
-  sbac_central_connect_to_google_bucket($service, $client);
-  if ($service && $client) {
+  $mem = formatSizeUnits(memory_get_usage(TRUE));
+  error_log('mem1:' . $mem);
+  sbac_central_connect_to_google_bucket($service, $client, $cred);
+  $mem = formatSizeUnits(memory_get_usage(TRUE));
+  error_log('mem2:' . $mem);
+  if ($service && $client && $cred) {
     $nids = sbac_central_get_resource_nids();
+    $mem = formatSizeUnits(memory_get_usage(TRUE));
+    error_log('mem3:' . $mem);
     if ($nids) {
       $chunks = array_chunk($nids, 50);
+      $mem = formatSizeUnits(memory_get_usage(TRUE));
+      error_log('mem4:' . $mem);
       foreach ($chunks as $chunk) {
         $files_to_upload = array();
         for ($i = 0; $i < 50; $i++) {
@@ -950,9 +959,17 @@ function sbac_central_update_7071() {
             $files_to_upload[$nid] = $node_files_to_upload;
           }
         }
+
+        $mem = formatSizeUnits(memory_get_usage(TRUE));
+        error_log('mem5:' . $mem);
+
         // Upload the files.
         if ($files_to_upload) {
-          sbac_central_process_files_to_upload($files_to_upload, $client, $service);
+          $mem = formatSizeUnits(memory_get_usage(TRUE));
+          error_log('mem6:' . $mem);
+          sbac_central_process_files_to_upload($files_to_upload, $client, $service, $cred);
+          $mem = formatSizeUnits(memory_get_usage(TRUE));
+          error_log('mem7:' . $mem);
         }
       }
     }
@@ -965,7 +982,7 @@ function sbac_central_update_7071() {
  * @param $service
  * @param $client
  */
-function sbac_central_connect_to_google_bucket(&$service, &$client) {
+function sbac_central_connect_to_google_bucket(&$service, &$client, &$cred) {
   try {
     libraries_load('google-api-php-client');
     $service_account_name = variable_get('google_cdn_service_account_name');
@@ -1031,6 +1048,7 @@ function sbac_central_get_node_files_to_upload($nid) {
       }
     }
   }
+  unset($node);
   return $files_to_upload;
 }
 
@@ -1056,7 +1074,7 @@ function sbac_central_get_resource_nids() {
  * @param $client
  * @param $service
  */
-function sbac_central_process_files_to_upload($files_to_upload, $client, $service) {
+function sbac_central_process_files_to_upload($files_to_upload, $client, $service, $cred) {
   error_log('count of files to upload: ' . count($files_to_upload));
   $bucket = variable_get('google_cdn_bucket_name');
   $folder = variable_get('google_cdn_folder');
@@ -1066,6 +1084,9 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
         try {
           error_log('fid: ' . $fid);
           error_log('uri: ' . $file['uri']);
+
+          $mem = formatSizeUnits(memory_get_usage(TRUE));
+          error_log('files_to_upload1:' . $mem);
 
           if ($client->getAuth()->isAccessTokenExpired()) {
             $client->getAuth()->refreshTokenWithAssertion($cred);
@@ -1079,16 +1100,26 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
             'mediaUpload' => $media,
           );
           $google_uri = "resources/" . floor($nid/32000) . "/" . $nid . '/' . $file['filename'];
+
+          $mem = formatSizeUnits(memory_get_usage(TRUE));
+          error_log('files_to_upload2:' . $mem);
+
           $gso = new Google_StorageObject();
           $gso->setName($folder . '/' . $google_uri);
           $response = $service->objects->insert($bucket, $gso, $postbody);
           if ($response) {
+            $mem = formatSizeUnits(memory_get_usage(TRUE));
+            error_log('files_to_upload3:' . $mem);
             // Now upload the file in chunks.
             $upload_result = false;
             $handle = fopen($file['old_path'], "rb");
             while (!$upload_result && !feof($handle)) {
+              $mem = formatSizeUnits(memory_get_usage(TRUE));
+              error_log('files_to_upload3a:' . $mem);
               $chunk = fread($handle, $chunk_size_bytes);
               $upload_result = $media->nextChunk($response, $chunk);
+              $mem = formatSizeUnits(memory_get_usage(TRUE));
+              error_log('files_to_upload3b:' . $mem);
             }
             fclose($handle);
 
@@ -1099,6 +1130,9 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
               db_query('UPDATE {file_managed} SET uri = :uri WHERE fid = :fid', array(':uri' => $new_uri, ':fid' => $fid));
             }
           }
+
+          $mem = formatSizeUnits(memory_get_usage(TRUE));
+          error_log('files_to_upload4:' . $mem);
 
           unset($media);
           unset($gso);
@@ -1113,4 +1147,40 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
       }
     }
   }
+}
+
+/**
+ * Helper.
+ *
+ * @param $bytes
+ * @return string
+ */
+function formatSizeUnits($bytes)
+{
+  if ($bytes >= 1073741824)
+  {
+    $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+  }
+  elseif ($bytes >= 1048576)
+  {
+    $bytes = number_format($bytes / 1048576, 2) . ' MB';
+  }
+  elseif ($bytes >= 1024)
+  {
+    $bytes = number_format($bytes / 1024, 2) . ' KB';
+  }
+  elseif ($bytes > 1)
+  {
+    $bytes = $bytes . ' bytes';
+  }
+  elseif ($bytes == 1)
+  {
+    $bytes = $bytes . ' byte';
+  }
+  else
+  {
+    $bytes = '0 bytes';
+  }
+
+  return $bytes;
 }
