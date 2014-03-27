@@ -1098,8 +1098,6 @@ function sbac_resource_update_7049() {
     error_log('mem2: ' . formatSizeUnits(memory_get_usage(TRUE)));
     sbac_resource_save_current_state($node);
     error_log('mem3: ' . formatSizeUnits(memory_get_usage(TRUE)));
-    gc_collect_cycles();
-    error_log('mem4: ' . formatSizeUnits(memory_get_usage(TRUE)));
   }
 
   error_log('total: ' . formatSizeUnits(memory_get_usage(TRUE)));
