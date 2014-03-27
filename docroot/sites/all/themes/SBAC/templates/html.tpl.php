@@ -69,13 +69,9 @@
     </style>
     <script type='text/javascript'>
       if (self == top) {
-        console.log("self = " + self.location);
-        console.log("top = " + top.location);
         document.documentElement.style.display = 'block';
       }
       else {
-        console.log("self1 = " + self.location);
-        console.log("top1 = " + top.location);
         top.location = self.location;
       }
     </script>
