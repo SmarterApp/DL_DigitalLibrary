@@ -1013,6 +1013,9 @@ function sbac_central_update_7071() {
       foreach ($files as $file_info) {
         foreach ($file_info as $fid => $file) {
           try {
+            error_log('fid: ' . $fid);
+            error_log('uri: ' . $file['uri']);
+
             if ($client->getAuth()->isAccessTokenExpired()) {
               $client->getAuth()->refreshTokenWithAssertion($cred);
             }
@@ -1039,6 +1042,7 @@ function sbac_central_update_7071() {
               fclose($handle);
 
               // file uploaded successfully, set the new URI.
+              error_log('upload result before save: ' . $upload_result);
               if ($upload_result) {
                 db_query('UPDATE {file_managed} f SET f.uri = "gs://' . $google_uri . '" WHERE f.fid = ' . $fid);
               }
