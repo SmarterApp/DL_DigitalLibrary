@@ -1093,65 +1093,67 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
       foreach ($file_info as $fid => $file) {
         try {
           $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $fid))->fetchObject();
-          $old_path = drupal_realpath($file->uri);
-          error_log('fid: ' . $fid);
-          error_log('uri: ' . $file->uri);
+          if ($file) {
+            $old_path = drupal_realpath($file->uri);
+            error_log('fid: ' . $fid);
+            error_log('uri: ' . $file->uri);
 
-          $mem = formatSizeUnits(memory_get_usage(TRUE));
-          error_log('files_to_upload1:' . $mem);
-
-          if ($client->getAuth()->isAccessTokenExpired()) {
-            $client->getAuth()->refreshTokenWithAssertion($cred);
-          }
-          $chunk_size_bytes = 1 * 1024 * 1024;
-          $media = new Google_MediaFileUpload(file_get_mimetype($file->uri), NULL, true, $chunk_size_bytes);
-          $media->setFileSize(filesize($old_path));
-          $postbody = array(
-            'mimeType' => file_get_mimetype($file->uri),
-            'data' => NULL,
-            'mediaUpload' => $media,
-          );
-          $google_uri = "resources/" . floor($nid/32000) . "/" . $nid . '/' . $file->filename;
-
-          $mem = formatSizeUnits(memory_get_usage(TRUE));
-          error_log('files_to_upload2:' . $mem);
-
-          $gso = new Google_StorageObject();
-          $gso->setName($folder . '/' . $google_uri);
-          $response = $service->objects->insert($bucket, $gso, $postbody);
-          if ($response) {
             $mem = formatSizeUnits(memory_get_usage(TRUE));
-            error_log('files_to_upload3:' . $mem);
-            // Now upload the file in chunks.
-            $upload_result = false;
-            $handle = fopen($old_path, "rb");
-            while (!$upload_result && !feof($handle)) {
-              $mem = formatSizeUnits(memory_get_usage(TRUE));
-              error_log('files_to_upload3a:' . $mem);
-              $chunk = fread($handle, $chunk_size_bytes);
-              $upload_result = $media->nextChunk($response, $chunk);
-              $mem = formatSizeUnits(memory_get_usage(TRUE));
-              error_log('files_to_upload3b:' . $mem);
-            }
-            fclose($handle);
+            error_log('files_to_upload1:' . $mem);
 
-            // file uploaded successfully, set the new URI.
-            error_log('upload result before save: ' . $upload_result);
-            if ($upload_result) {
-              $new_uri = 'gs://' . $google_uri;
-              db_query('UPDATE {file_managed} SET uri = :uri WHERE fid = :fid', array(':uri' => $new_uri, ':fid' => $fid));
+            if ($client->getAuth()->isAccessTokenExpired()) {
+              $client->getAuth()->refreshTokenWithAssertion($cred);
             }
+            $chunk_size_bytes = 1 * 1024 * 1024;
+            $media = new Google_MediaFileUpload(file_get_mimetype($file->uri), NULL, true, $chunk_size_bytes);
+            $media->setFileSize(filesize($old_path));
+            $postbody = array(
+              'mimeType' => file_get_mimetype($file->uri),
+              'data' => NULL,
+              'mediaUpload' => $media,
+            );
+            $google_uri = "resources/" . floor($nid/32000) . "/" . $nid . '/' . $file->filename;
+
+            $mem = formatSizeUnits(memory_get_usage(TRUE));
+            error_log('files_to_upload2:' . $mem);
+
+            $gso = new Google_StorageObject();
+            $gso->setName($folder . '/' . $google_uri);
+            $response = $service->objects->insert($bucket, $gso, $postbody);
+            if ($response) {
+              $mem = formatSizeUnits(memory_get_usage(TRUE));
+              error_log('files_to_upload3:' . $mem);
+              // Now upload the file in chunks.
+              $upload_result = false;
+              $handle = fopen($old_path, "rb");
+              while (!$upload_result && !feof($handle)) {
+                $mem = formatSizeUnits(memory_get_usage(TRUE));
+                error_log('files_to_upload3a:' . $mem);
+                $chunk = fread($handle, $chunk_size_bytes);
+                $upload_result = $media->nextChunk($response, $chunk);
+                $mem = formatSizeUnits(memory_get_usage(TRUE));
+                error_log('files_to_upload3b:' . $mem);
+              }
+              fclose($handle);
+
+              // file uploaded successfully, set the new URI.
+              error_log('upload result before save: ' . $upload_result);
+              if ($upload_result) {
+                $new_uri = 'gs://' . $google_uri;
+                db_query('UPDATE {file_managed} SET uri = :uri WHERE fid = :fid', array(':uri' => $new_uri, ':fid' => $fid));
+              }
+            }
+
+            $mem = formatSizeUnits(memory_get_usage(TRUE));
+            error_log('files_to_upload4:' . $mem);
+
+            unset($media);
+            unset($gso);
+            unset($response);
+            unset($postbody);
+            unset($google_uri);
+            unset($handle);
           }
-
-          $mem = formatSizeUnits(memory_get_usage(TRUE));
-          error_log('files_to_upload4:' . $mem);
-
-          unset($media);
-          unset($gso);
-          unset($response);
-          unset($postbody);
-          unset($google_uri);
-          unset($handle);
         }
         catch (Exception $e) {
           watchdog('google_cdn', $e);
