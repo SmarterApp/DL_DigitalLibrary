@@ -3343,6 +3343,34 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     );
   }
 
+  $ccss_vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
+  $ccss_defaults = array();
+  $ccss_default_key = 'education_alignment:' . $ccss_vocab->vid;
+  $ccss_collapsed = TRUE;
+  if (isset($current_filters[$ccss_default_key])) {
+    $ccss_defaults = explode(',', $current_filters[$ccss_default_key]);
+    $ccss_collapsed = FALSE;
+  }
+  $form['ccss_vid'] = array(
+    '#type' => 'value',
+    '#value' => $ccss_vocab->vid,
+  );
+  $form['ccss_wrapper'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Educational Alignment'),
+    '#weight' => 97,
+    '#collapsible' => TRUE,
+    '#collapsed' => $ccss_collapsed,
+  );
+  $form['ccss_wrapper']['ccss_elements'] = array(
+    '#type' => 'taxonomy_manager_tree',
+    '#vid' => $ccss_vocab->vid,
+    '#pager' => TRUE,
+    '#default_value' => $ccss_defaults,
+    '#terms_to_expand' => $ccss_defaults,
+  );
+
+
   // Keyword search field
   $kw_collapsed = TRUE;
   $kw_default = '';
@@ -3470,6 +3498,12 @@ function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
         $value = implode(',', $checked);
         $query_params[$key] = $value;
       }
+    }
+
+    if (!empty($values['ccss_elements']['selected_terms'])) {
+      $ccss_key = 'education_alignment:'. $values['ccss_vid'];
+      $ccss_value = implode(',', $values['ccss_elements']['selected_terms']);
+      $query_params[$ccss_key] = $ccss_value;
     }
 
     if (!empty($query_params)) {
