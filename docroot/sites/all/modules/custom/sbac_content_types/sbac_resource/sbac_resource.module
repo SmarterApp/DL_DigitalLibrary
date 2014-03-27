@@ -1336,7 +1336,7 @@ function sbac_resource_save_current_state($node) {
     $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
     $entity->state = 'author';
 
-    $mem = memory_get_usage(TRUE);
+    $mem = formatSizeUnits(memory_get_usage(TRUE));
     error_log('sbac_resource_save_current_state: ' . $mem);
 
     sbac_resource_save_resource_state($entity, $new_record);
@@ -1554,7 +1554,7 @@ function sbac_resource_get_users_by_role($role_name) {
  * @param $new_record
  */
 function sbac_resource_save_resource_state($entity, $new_record) {
-  $mem = memory_get_usage(TRUE);
+  $mem = formatSizeUnits(memory_get_usage(TRUE));
   error_log('sbac_resource_save_resource_state: ' . $mem);
 
   if ($new_record) {
@@ -1573,7 +1573,7 @@ function sbac_resource_save_resource_state($entity, $new_record) {
  * @param $new_state
  */
 function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_state, $flag_param = FALSE) {
-  $mem = memory_get_usage(TRUE);
+  $mem = formatSizeUnits(memory_get_usage(TRUE));
   error_log('sbac_resource_save_resource_state_for_all_role: ' . $mem);
 
   $qc_reviewed = NULL;
@@ -1613,7 +1613,7 @@ function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $ol
     $node = node_load($node);
   }
 
-  $mem = memory_get_usage(TRUE);
+  $mem = formatSizeUnits(memory_get_usage(TRUE));
   error_log('sbac_resource_delete_resource_state_for_all_role: ' . $mem);
 
   $entity = NULL;
@@ -1669,7 +1669,7 @@ function sbac_resource_delete_resource_state($entity) {
     return;
   }
 
-  $mem = memory_get_usage(TRUE);
+  $mem = formatSizeUnits(memory_get_usage(TRUE));
   error_log('sbac_resource_delete_resource_state: ' . $mem);
 
   if ($entity->uid == 0) {
@@ -1698,7 +1698,7 @@ function sbac_resource_delete_resource_state($entity) {
  * @return bool
  */
 function sbac_resource_get_state(&$entity, $nid, $uid = NULL, $state = NULL, $flag = NULL){
-  $mem = memory_get_usage(TRUE);
+  $mem = formatSizeUnits(memory_get_usage(TRUE));
   error_log('sbac_resource_get_state: ' . $mem);
 
   $query = db_select('sbac_node_resource_state', 'snrs');
