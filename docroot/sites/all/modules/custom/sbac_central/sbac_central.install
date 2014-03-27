@@ -1092,7 +1092,7 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
     foreach ($files as $file_info) {
       foreach ($file_info as $fid => $file) {
         try {
-          $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $document->fid))->fetchObject();
+          $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $fid))->fetchObject();
           $old_path = drupal_realpath($file->uri);
           error_log('fid: ' . $fid);
           error_log('uri: ' . $file->uri);
