@@ -1084,6 +1084,8 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
             $gso->setName($folder . '/' . $google_uri);
             $response = $service->objects->insert($bucket, $gso, $postbody);
             if ($response) {
+              $mem = formatSizeUnits(memory_get_usage(TRUE));
+              error_log('mem:' . $mem);
               // Now upload the file in chunks.
               $upload_result = false;
               $handle = fopen($old_path, "rb");
@@ -1094,7 +1096,6 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
               fclose($handle);
 
               // file uploaded successfully, set the new URI.
-              error_log('upload result before save: ' . $upload_result);
               if ($upload_result) {
                 $new_uri = 'gs://' . $google_uri;
                 db_query('UPDATE {file_managed} SET uri = :uri WHERE fid = :fid', array(':uri' => $new_uri, ':fid' => $fid));
