@@ -1084,6 +1084,8 @@ function sbac_resource_update_7049() {
     }
     unset($node);
   }
+
+  // Unset all the variables.
   unset($results);
   unset($row);
   unset($sql);
@@ -1091,10 +1093,13 @@ function sbac_resource_update_7049() {
   foreach ($nodes as $nid) {
     $node = node_load($nid);
     if ($node) {
+      error_log('INSTALL: ' . sbac_central_format_size_units(memory_get_usage(TRUE)));
       sbac_resource_save_current_state($node);
+      error_log('INSTALL: ' . sbac_central_format_size_units(memory_get_usage(TRUE)));
     }
+    // nodes are stored in memory, delete that cache.
+    node_load(FALSE, NULL, TRUE);
     unset($node);
-    gc_collect_cycles();
   }
   unset($nodes);
 
