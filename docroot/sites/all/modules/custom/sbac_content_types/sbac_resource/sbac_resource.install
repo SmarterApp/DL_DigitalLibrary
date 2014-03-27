@@ -1075,7 +1075,6 @@ function sbac_resource_update_7049() {
   $sql .= 'ON n.nid = w.nid AND n.vid = w.vid ';
   $sql .= 'WHERE n.type = :type';
   $results = db_query($sql, array(':type' => 'resource'));
-  error_log('INSTALL: ' . formatSizeUnits(memory_get_usage(TRUE)));
 
   $nodes = array();
   foreach ($results as $row) {
@@ -1089,19 +1088,15 @@ function sbac_resource_update_7049() {
   unset($row);
   unset($sql);
 
-  error_log('INSTALL1: ' . formatSizeUnits(memory_get_usage(TRUE)));
   foreach ($nodes as $nid) {
     $node = node_load($nid);
     if ($node) {
-      error_log('INSTALL2: ' . formatSizeUnits(memory_get_usage(TRUE)));
       sbac_resource_save_current_state($node);
-      error_log('INSTALL3: ' . formatSizeUnits(memory_get_usage(TRUE)));
     }
     unset($node);
     gc_collect_cycles();
   }
   unset($nodes);
 
-  error_log('total: ' . formatSizeUnits(memory_get_usage(TRUE)));
   return "Added states for each node";
 }

@@ -951,9 +951,6 @@ function sbac_central_update_7071() {
           }
         }
 
-        $mem = formatSizeUnits(memory_get_usage(TRUE));
-        error_log('mem5:' . $mem);
-
         // Upload the files.
         if ($files_to_upload) {
           sbac_central_process_files_to_upload($files_to_upload, $client, $service, $cred);
@@ -1084,8 +1081,6 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
             $gso->setName($folder . '/' . $google_uri);
             $response = $service->objects->insert($bucket, $gso, $postbody);
             if ($response) {
-              $mem = formatSizeUnits(memory_get_usage(TRUE));
-              error_log('mem:' . $mem);
               // Now upload the file in chunks.
               $upload_result = false;
               $handle = fopen($old_path, "rb");
@@ -1116,33 +1111,4 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
       }
     }
   }
-}
-
-/**
- * Helper.
- *
- * @param $bytes
- * @return string
- */
-function formatSizeUnits($bytes) {
-  if ($bytes >= 1073741824) {
-    $bytes = number_format($bytes / 1073741824, 2) . ' GB';
-  }
-  elseif ($bytes >= 1048576) {
-    $bytes = number_format($bytes / 1048576, 2) . ' MB';
-  }
-  elseif ($bytes >= 1024) {
-    $bytes = number_format($bytes / 1024, 2) . ' KB';
-  }
-  elseif ($bytes > 1) {
-    $bytes = $bytes . ' bytes';
-  }
-  elseif ($bytes == 1) {
-    $bytes = $bytes . ' byte';
-  }
-  else {
-    $bytes = '0 bytes';
-  }
-
-  return $bytes;
 }
