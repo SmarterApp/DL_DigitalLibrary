@@ -1169,6 +1169,8 @@ function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $st
         $condition1 = db_and()->condition('f.status', 1);
         $condition2 = db_and()->condition('f.status', 0)->condition('f.archived', 1);
         $query->condition(db_or()->condition($condition1)->condition($condition2));
+        unset($condition1);
+        unset($condition2);
       }
     }
     if ($completed !== FALSE) {
@@ -1180,13 +1182,20 @@ function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $st
     if ($return_type == 'single') { // get the latest result.
       $query->orderBy('f.id', 'DESC');
       $query->range(0, 1);
-      return $query->execute()->fetchAssoc();
+      $single = $query->execute()->fetchAssoc();
+
+      unset($query);
+      return $single;
     }
     else {
       $result = $query->execute();
       foreach ($result as $record) {
         $feedback[] = $record;
       }
+
+      unset($query);
+      unset($result);
+      unset($record);
     }
   }
   return $feedback;

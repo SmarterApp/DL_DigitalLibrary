@@ -1067,6 +1067,7 @@ function sbac_resource_update_7048() {
  * Creates states for each user / node in the system.
  */
 function sbac_resource_update_7049() {
+  error_log('script started');
   ini_set('memory_limit', '512M');
   $sql  = 'SELECT n.*, w.state AS state ';
   $sql .= 'FROM {node} n ';
@@ -1074,23 +1075,33 @@ function sbac_resource_update_7049() {
   $sql .= 'ON n.nid = w.nid AND n.vid = w.vid ';
   $sql .= 'WHERE n.type = :type';
   $results = db_query($sql, array(':type' => 'resource'));
-  $mem = formatSizeUnits(memory_get_usage(TRUE));
-  error_log('mem: ' . $mem);
+  error_log('mem: ' . formatSizeUnits(memory_get_usage(TRUE)));
+
+  $nodes = array();
   foreach ($results as $row) {
     $node = $row;
-    $node->workbench_moderation['current']->state = $row->state;
-
-    $mem = formatSizeUnits(memory_get_usage(TRUE));
-    error_log('mem2: ' . $mem);
-    if ($node) {
-      $entity = NULL;
-      $mem = formatSizeUnits(memory_get_usage(TRUE));
-      error_log('mem4: ' . $mem);
-      sbac_resource_save_current_state($node);
-      $mem = formatSizeUnits(memory_get_usage(TRUE));
-      error_log('mem5: ' . $mem);
-
+    if (isset($row->state) && $row->state) {
+      $node->workbench_moderation = NULL;
+      $node->workbench_moderation['current'] = new stdClass();
+      $node->workbench_moderation['current']->state = new stdClass();
+      $node->workbench_moderation['current']->state = $row->state;
+      $nodes[] = $node;
     }
+    unset($node);
   }
+  unset($results);
+  unset($row);
+  unset($sql);
+
+  error_log('mem1: ' . formatSizeUnits(memory_get_usage(TRUE)));
+  foreach ($nodes as $node) {
+    error_log('mem2: ' . formatSizeUnits(memory_get_usage(TRUE)));
+    sbac_resource_save_current_state($node);
+    error_log('mem3: ' . formatSizeUnits(memory_get_usage(TRUE)));
+    gc_collect_cycles();
+    error_log('mem4: ' . formatSizeUnits(memory_get_usage(TRUE)));
+  }
+
+  error_log('total: ' . formatSizeUnits(memory_get_usage(TRUE)));
   return "Added states for each node";
 }
