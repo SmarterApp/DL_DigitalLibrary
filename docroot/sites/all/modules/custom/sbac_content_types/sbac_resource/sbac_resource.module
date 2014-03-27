@@ -666,7 +666,9 @@ function sbac_resource_preprocess_node(&$vars) {
     drupal_set_title($vars['title']);
     drupal_add_js(libraries_get_path('jwplayer') . '/jwplayer.js');
     drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.node.js');
+
     $vars['author'] = ''; $vars['license'] = ''; $vars['owner'] = ''; $vars['resource_type'] = '';
+
     if (isset($vars['field_focus'][0]['tid'])) {
       $resource_types = array();
       foreach ($vars['field_focus'] as $key => $term) {
@@ -683,12 +685,14 @@ function sbac_resource_preprocess_node(&$vars) {
     if (isset($vars['field_license'][0]['taxonomy_term']->name)) {
       $vars['license'] = $vars['field_license'][0]['taxonomy_term']->name;
     }
+
     // Edit link for DLRB member's.
     global $user;
     if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
       $url = url('node/' . $vars['nid'] . '/edit', array('absolute' => TRUE));
       $vars['edit_link'] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'))));
     }
+
     // Documents
     if (isset($vars['document'][0]) || isset($vars['document']['html5'])) {
       // Determine the file type, load up the correct video player, doc viewer or image viewer.
@@ -757,7 +761,7 @@ function _sbac_resource_preview_content(&$vars) {
     $source = $directory . '/html5_module/dlcomponents/CoverPage.html';
     $url = file_create_url($source);
     $viewer['viewer_filename'] = ucwords($file_data['filename']);
-    $viewer['viewer'] = '<iframe src="' . $url . '" width="850" height="600" style="border: none;"></iframe>';
+    $viewer['viewer'] = '<iframe src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
   }
 
   if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
@@ -792,7 +796,7 @@ function _sbac_resource_preview_content(&$vars) {
       $viewer['viewer_class'] = 'google-doc';
     }
     else if ($type == 'video') {
-      $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 850});});';
+      $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 880});});';
       drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999));
       $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
       $viewer['viewer_class'] = '';

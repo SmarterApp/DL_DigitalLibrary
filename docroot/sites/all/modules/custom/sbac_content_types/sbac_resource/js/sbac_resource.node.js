@@ -59,12 +59,12 @@
             resource.addClass('google-doc');
             break;
           case 'html5':
-            resource.empty().append('<iframe src="' + local_url + '" width="850" height="600" style="border: none;"></iframe>');
+            resource.empty().append('<iframe src="' + local_url + '" width="880" height="600" style="border: none;"></iframe>');
             resource.removeClass('google-doc');
             break;
           case 'video':
             resource.empty().append('<div id="sbac-jwplayer"></div>');
-            jwplayer('sbac-jwplayer').setup({ file: local_url, height: 400, width: 850, primary: "flash" });
+            jwplayer('sbac-jwplayer').setup({ file: local_url, height: 400, width: 880, primary: "flash" });
             jwplayer('sbac-jwplayer').play();
             resource.removeClass('google-doc');
             break;
