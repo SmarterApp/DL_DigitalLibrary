@@ -931,7 +931,7 @@ function sbac_central_update_7070() {
  */
 function sbac_central_update_7071() {
   error_log('script started');
-  ini_set('memory_limit', '512M');
+  ini_set('memory_limit', '700M');
   $service = NULL;
   $client = NULL;
 
