@@ -1046,7 +1046,8 @@ function sbac_central_update_7071() {
               // file uploaded successfully, set the new URI.
               error_log('upload result before save: ' . $upload_result);
               if ($upload_result) {
-                db_query('UPDATE {file_managed} f SET f.uri = "gs://' . $google_uri . '" WHERE f.fid = ' . $fid);
+                $new_uri = 'gs://' . $google_uri;
+                db_query('UPDATE {file_managed} SET uri = :uri WHERE fid = :fid', array(':uri' => $new_uri, ':fid' => $fid));
               }
             }
 
