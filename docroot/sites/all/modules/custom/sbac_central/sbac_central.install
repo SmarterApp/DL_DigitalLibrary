@@ -1009,6 +1009,8 @@ function sbac_central_update_7071() {
     unset($row);
     unset($result);
 
+    error_log('count of files to upload: ' . count($files_to_upload));
+
     foreach ($files_to_upload as $nid => $files) {
       foreach ($files as $file_info) {
         foreach ($file_info as $fid => $file) {
