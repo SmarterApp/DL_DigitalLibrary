@@ -1179,6 +1179,7 @@ function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $st
     if ($current !== FALSE) {
       $query->condition('f.current', $current);
     }
+
     if ($return_type == 'single') { // get the latest result.
       $query->orderBy('f.id', 'DESC');
       $query->range(0, 1);

@@ -1075,17 +1075,13 @@ function sbac_resource_update_7049() {
   $sql .= 'ON n.nid = w.nid AND n.vid = w.vid ';
   $sql .= 'WHERE n.type = :type';
   $results = db_query($sql, array(':type' => 'resource'));
-  error_log('mem: ' . formatSizeUnits(memory_get_usage(TRUE)));
+  error_log('INSTALL: ' . formatSizeUnits(memory_get_usage(TRUE)));
 
   $nodes = array();
   foreach ($results as $row) {
     $node = $row;
     if (isset($row->state) && $row->state) {
-      $node->workbench_moderation = NULL;
-      $node->workbench_moderation['current'] = new stdClass();
-      $node->workbench_moderation['current']->state = new stdClass();
-      $node->workbench_moderation['current']->state = $row->state;
-      $nodes[] = $node;
+      $nodes[] = $row->nid;
     }
     unset($node);
   }
@@ -1093,12 +1089,18 @@ function sbac_resource_update_7049() {
   unset($row);
   unset($sql);
 
-  error_log('mem1: ' . formatSizeUnits(memory_get_usage(TRUE)));
-  foreach ($nodes as $node) {
-    error_log('mem2: ' . formatSizeUnits(memory_get_usage(TRUE)));
-    sbac_resource_save_current_state($node);
-    error_log('mem3: ' . formatSizeUnits(memory_get_usage(TRUE)));
+  error_log('INSTALL1: ' . formatSizeUnits(memory_get_usage(TRUE)));
+  foreach ($nodes as $nid) {
+    $node = node_load($nid);
+    if ($node) {
+      error_log('INSTALL2: ' . formatSizeUnits(memory_get_usage(TRUE)));
+      sbac_resource_save_current_state($node);
+      error_log('INSTALL3: ' . formatSizeUnits(memory_get_usage(TRUE)));
+    }
+    unset($node);
+    gc_collect_cycles();
   }
+  unset($nodes);
 
   error_log('total: ' . formatSizeUnits(memory_get_usage(TRUE)));
   return "Added states for each node";
