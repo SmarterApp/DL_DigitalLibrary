@@ -93,6 +93,11 @@ function google_cdn_admin() {
 function google_cdn_admin_public_key_file_element_process($element, &$form_state, $form) {
   $element = file_managed_file_process($element, $form_state, $form);
   $element['upload_button']['#access'] = FALSE;
+
+  if (isset($element['remove_button']['#submit'])) {
+    $element['remove_button']['#submit'][] = 'google_cdn_delete_key_file';
+  }
+
   return $element;
 }
 
@@ -218,6 +223,22 @@ function google_cdn_admin_submit($form, &$form_state) {
           }
         }
       }
+    }
+  }
+}
+
+/**
+ * Remove the PEM file. Called when the user deletes the p12 key.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function google_cdn_delete_key_file($form, &$form_state) {
+  $pem_fid = variable_get('google_cdn_pem_fid');
+  if ($pem_fid) {
+    $file = file_load($pem_fid);
+    if ($file) {
+      file_delete($file);
     }
   }
 }
