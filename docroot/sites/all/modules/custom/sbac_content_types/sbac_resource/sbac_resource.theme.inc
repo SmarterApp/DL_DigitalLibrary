@@ -688,9 +688,9 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     $nid = $fields['nid']->raw;
     $node = node_load($nid);
     if ($node) {
-      $class = 'grid-image';
+      $class = 'grid-image lazy';
       if ($view_display == 'list') {
-        $class = 'list-image';
+        $class = 'list-image lazy';
       }
 
       $default_file = 'public://file.png';
