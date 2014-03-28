@@ -601,6 +601,12 @@ else {
   $conf['file_default_scheme'] = 'private';
 }
 
+// Google CDN variables.
+$conf['google_cdn_bucket_name'] = 'sbac_media';
+$conf['google_cdn_extensions'] = 'all';
+$conf['google_cdn_client_id'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot.apps.googleusercontent.com';
+$conf['google_cdn_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot@developer.gserviceaccount.com';
+
 error_reporting(E_ERROR);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
