@@ -1091,7 +1091,7 @@ function sbac_resource_update_7049() {
   unset($sql);
 
   foreach ($nodes as $nid) {
-    $node = node_load($nid);
+    $node = node_load($nid, NULL, TRUE);
     if ($node) {
       error_log('INSTALL: ' . sbac_central_format_size_units(memory_get_usage(TRUE)));
       sbac_resource_save_current_state($node);
