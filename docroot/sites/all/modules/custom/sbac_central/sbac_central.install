@@ -1111,3 +1111,13 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
     }
   }
 }
+
+/**
+ * Enables views_content_cache.
+ */
+function sbac_central_update_7072() {
+  $modules = array(
+    'views_content_cache',
+  );
+  module_enable($modules);
+}
