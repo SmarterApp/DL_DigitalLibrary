@@ -8,9 +8,7 @@
    */
   Drupal.behaviors.sbac_search_categories = {
     attach: function (context, settings) {
-      $("img.lazy").lazy({
-        delay: 2000
-      });
+      $("img.lazy").lazy();
 
       $(document).click(function() {
         if (!$(this).hasClass('selectedDiv')) {
