@@ -8,6 +8,10 @@
    */
   Drupal.behaviors.sbac_my_resources_categories = {
     attach: function (context, settings) {
+      $("img.lazy").lazy({
+        delay: 2000
+      });
+
       $(document).click(function() {
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');

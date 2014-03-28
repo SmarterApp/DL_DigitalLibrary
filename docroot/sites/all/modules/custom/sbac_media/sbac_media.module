@@ -1055,7 +1055,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
   drupal_get_messages(); // clear messages if they were some from before.
   $allowed_file_types = array('zip');
   $allowed_size = array(104857600, 0); //104857600 = 100MB in bytes
-  $directory = "gs://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
+  $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
   $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
   if ($writable) {
     $validators = array(
@@ -1575,7 +1575,7 @@ function sbac_media_delete_media($js = FALSE) {
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if ($form_state['html5']) {
           // Build path to delete file folder.
-          $directory = "gs://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
+          $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
           $zip_contents_path = drupal_realpath($directory) . '/html5_module';
           if (file_exists($zip_contents_path)) {
             sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);

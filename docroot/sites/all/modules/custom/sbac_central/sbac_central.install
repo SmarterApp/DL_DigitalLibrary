@@ -1009,7 +1009,7 @@ function sbac_central_get_node_files_to_upload($nid) {
   foreach ($result as $document) {
     if ($document->fid) {
       $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $document->fid))->fetchObject();
-      if ($file && strpos($file->uri, 'gs://') === FALSE) {
+      if ($file && strpos($file->uri, 'gs://') === FALSE && strpos($file->uri, 'html5/') !== TRUE) {
         $google_uri = NULL;
         if (strpos($file->uri, 'private://') !== FALSE) {
           $google_uri = str_replace('private://', '', $file->uri);

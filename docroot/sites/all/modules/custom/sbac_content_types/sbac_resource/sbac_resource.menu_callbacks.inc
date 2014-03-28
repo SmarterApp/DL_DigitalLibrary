@@ -12,6 +12,7 @@ function sbac_resource_digital_library_page() {
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/jquery.lazy.min.js');
 
   $view = views_get_view('resources');
   $view->set_display($display);
@@ -76,6 +77,7 @@ function sbac_resource_my_resources_page() {
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.my_resources.categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/jquery.lazy.min.js');
 
   // Load up the view.
   $view = views_get_view('my_resources');
@@ -110,6 +112,7 @@ function sbac_resource_resource_review_page() {
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/jquery.lazy.min.js');
 
   // Load up the view.
   $view = views_get_view('resource_review');
