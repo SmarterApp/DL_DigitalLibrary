@@ -2890,19 +2890,19 @@ function sbac_resource_delete_resource_form() {
     '#markup' => '<p>' . t('
     If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '</p>',
   );
-
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('id' => array('edit-cancel-overlay'))
-  );
-
+ 
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Draft Resource',
     '#attributes' => array('id' => array('edit-delete-overlay'))
   );
 
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-overlay'))
+  );
+	
   return $form;
 }
 

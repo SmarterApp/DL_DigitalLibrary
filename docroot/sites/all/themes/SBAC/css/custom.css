@@ -9687,7 +9687,7 @@ a.tabledrag-handle .handle {
 
 /* line 2206, ../sass/custom.scss */
 #sbac-resource-delete-resource-form > div #edit-cancel-overlay {
-  margin-left: 220px;
+  /* margin-left: 220px;*/
 }
 /* line 2210, ../sass/custom.scss */
 #sbac-resource-delete-resource-form > div #edit-delete-overlay {
