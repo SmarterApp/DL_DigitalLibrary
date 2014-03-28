@@ -1067,7 +1067,6 @@ function sbac_resource_update_7048() {
  * Creates states for each user / node in the system.
  */
 function sbac_resource_update_7049() {
-  error_log('script started');
   ini_set('memory_limit', '512M');
   $sql  = 'SELECT n.*, w.state AS state ';
   $sql .= 'FROM {node} n ';
@@ -1093,9 +1092,7 @@ function sbac_resource_update_7049() {
   foreach ($nodes as $nid) {
     $node = node_load($nid, NULL, TRUE);
     if ($node) {
-      error_log('INSTALL: ' . sbac_central_format_size_units(memory_get_usage(TRUE)));
       sbac_resource_save_current_state($node);
-      error_log('INSTALL: ' . sbac_central_format_size_units(memory_get_usage(TRUE)));
     }
     // nodes are stored in memory, delete that cache.
     node_load(FALSE, NULL, TRUE);

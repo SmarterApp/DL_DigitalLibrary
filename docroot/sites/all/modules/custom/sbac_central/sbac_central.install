@@ -930,7 +930,6 @@ function sbac_central_update_7070() {
  * Migrates old files to new Google CDN.
  */
 function sbac_central_update_7071() {
-  error_log('script started');
   $service = NULL;
   $client = NULL;
   $cred = NULL;
