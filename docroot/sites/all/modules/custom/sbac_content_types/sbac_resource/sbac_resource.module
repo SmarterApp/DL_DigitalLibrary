@@ -1324,11 +1324,6 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
   if ($node->type == 'resource') {
     sbac_resource_save_current_state($node);
   }
-
-  if ($new_state == 'published') {
-    clear_views_exposed_filter_cache('resources', 'grid_view');
-    clear_views_exposed_filter_cache('resources', 'list_view');
-  }
 }
 
 /**
