@@ -832,31 +832,29 @@ function get_users_for_resources_stats_report($resource, $feedback_reviews) {
   $authors = array();
   $reviewers = array();
 
+  $internal_authors = array();
   try {
     $value = $resource->field_author->value();
     if (!is_null($value)) {
-      $authors[$value] = $value;
+      $internal_authors[$value] = $value;
     }
   }
   catch (EntityMetadataWrapperException $e) {
     print $e->getMessage();
   }
 
-  if ($authors) {
+  if ($internal_authors) {
     $sql = "select * from users where name in (:authors)";
-    $result = db_query($sql, array(':authors' => array_keys($authors)));
+    $result = db_query($sql, array(':authors' => array_keys($internal_authors)));
     $query = NULL;
-    unset($query); //memory management
-
+    unset($query);
     $sql = NULL;
-    unset($sql); //memory management
+    unset($sql);
 
-    $authors = array();
     foreach ($result as $record) {
       $authors[$record->uid] = entity_metadata_wrapper('user', $record);
     }
-    // posters
-    // reviewers
+
     foreach ($feedback_reviews as $reviews) {
       foreach ($reviews as $review) {
         try {
