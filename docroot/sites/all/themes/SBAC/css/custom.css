@@ -10677,3 +10677,85 @@ a.tabledrag-handle .handle {
   display: block;
   width: 200px;
 }
+
+/* ---------------------------------------------------------------------
+    Re-style 
+		- Resource Count
+		- Sort menu
+		- Action buttons (i.e. create new resource on the My Resources tab)
+		- Grid/List view
+------------------------------------------------------------------------ */
+/* line 3090, ../sass/custom.scss */
+.top-bar.last-top {
+  background-color: #0684AD;
+  padding: 20px 0 5px;
+}
+
+/* line 3097, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-results-count h3 {
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: normal;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+/* line 3103, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-results-count h3 span {
+  font-weight: bold;
+}
+
+/* line 3111, ../sass/custom.scss */
+div.block-sbac-resource-sbac-resource-dl-sort-form,
+div.block-sbac-resource-sbac-resource-mr-sort-form,
+div.block-sbac-resource-sbac-resource-rr-sort-form {
+  margin-left: 0;
+}
+/* line 3114, ../sass/custom.scss */
+div.block-sbac-resource-sbac-resource-dl-sort-form select,
+div.block-sbac-resource-sbac-resource-mr-sort-form select,
+div.block-sbac-resource-sbac-resource-rr-sort-form select {
+  width: 180px;
+}
+
+/* line 3121, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button a.button {
+  moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background-color: #00B5E2;
+  border-image: none;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: none;
+  color: #FFFFFF;
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+  margin: 0 0 0 30px;
+  padding: 0 54px 18px 18px;
+  position: relative;
+  width: 225px;
+  z-index: 4;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: normal;
+  height: 34px;
+  line-height: 30px;
+  min-width: 125px;
+}
+/* line 3148, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button a.button:after {
+  background-color: rgba(0, 0, 0, 0.1);
+  background-image: url("../images/button-select.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.1);
+  content: " ";
+  display: block;
+  height: 32px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 36px;
+}
