@@ -830,49 +830,51 @@ SQL;
 function get_users_for_resources_stats_report($resource, $feedback_reviews) {
   // authors
   $authors = array();
+  $reviewers = array();
+
   try {
     $value = $resource->field_author->value();
     if (!is_null($value)) {
       $authors[$value] = $value;
     }
-  } catch (EntityMetadataWrapperException $e) {
+  }
+  catch (EntityMetadataWrapperException $e) {
     print $e->getMessage();
   }
-  $sql = <<<SQL
-    select * from users where name in (:authors)
-SQL;
-  // $query = sprintf($sql, "'" . implode("','", array_keys($authors)) . "'");
 
-  $result = db_query($sql, array(':authors' => array_keys($authors)));
-  $query = NULL;
-  unset($query); //memory management
+  if ($authors) {
+    $sql = "select * from users where name in (:authors)";
+    $result = db_query($sql, array(':authors' => array_keys($authors)));
+    $query = NULL;
+    unset($query); //memory management
 
-  $sql = NULL;
-  unset($sql); //memory management
+    $sql = NULL;
+    unset($sql); //memory management
 
-  $authors = array();
-  foreach ($result as $record) {
-    $authors[$record->uid] = entity_metadata_wrapper('user', $record);
-  }
-  // posters
-  // reviewers
-  $reviewers = array();
-  foreach ($feedback_reviews as $reviews) {
-    foreach ($reviews as $review) {
-      try {
-        $uid = $review->uid->value(); /// get's the actual user.
-        $value = entity_metadata_wrapper('user', $uid);
-        if (is_object($uid)) {
-          $reviewers[$uid->uid] = $value;
+    $authors = array();
+    foreach ($result as $record) {
+      $authors[$record->uid] = entity_metadata_wrapper('user', $record);
+    }
+    // posters
+    // reviewers
+    foreach ($feedback_reviews as $reviews) {
+      foreach ($reviews as $review) {
+        try {
+          $uid = $review->uid->value(); /// get's the actual user.
+          $value = entity_metadata_wrapper('user', $uid);
+          if (is_object($uid)) {
+            $reviewers[$uid->uid] = $value;
+          }
+          else {
+            $reviewers[$uid] = $value;
+          }
+        } catch (EntityMetadataWrapperException $e) {
+          print $e->getMessage();
         }
-        else {
-          $reviewers[$uid] = $value;
-        }
-      } catch (EntityMetadataWrapperException $e) {
-        print $e->getMessage();
       }
     }
   }
+
   return array($authors, $reviewers);
 }
 
