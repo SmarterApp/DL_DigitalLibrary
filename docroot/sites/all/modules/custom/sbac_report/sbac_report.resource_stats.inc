@@ -73,10 +73,6 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
  */
 function sbac_csv_report_resource_stats_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_STATES;
-
-  if (FALSE) {
-    // TODO: validate csv form
-  }
 }
 
 /**
@@ -144,7 +140,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
  * @param $context
  */
 function sbac_report_resource_statistics_batch($resources, $resource_filters, &$context) {
-  $limit = 100;
+  $limit = 50;
   $context['sandbox']['finished'] = 0;
   ini_set('max_execution_time', 300);
 
@@ -167,7 +163,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
     }
 
     $directory = "private://resource_stats_csv/";
-    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $filename = 'Resource_Statistics_' . date('M_d_Y_g_i_s') . '.csv';
     $directory .= $filename;
     $directory_real_path = drupal_realpath($directory);
@@ -188,7 +184,18 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
       $context['sandbox']['resource_filters'] = $resource_filters;
       $context['sandbox']['resources_total'] = count($context['sandbox']['resources']);
     }
+
+    unset($column_titles);
+    unset($columns);
+    unset($configuration);
+    unset($directory);
+    unset($directory_real_path);
+    unset($fieldkey);
+    unset($filename);
   }
+
+  unset($resources);
+  unset($resource_filters);
   
   // Open the file for writing ('a' puts pointer at end of file).
   $handle = fopen($context['sandbox']['file'], 'a');
@@ -227,6 +234,12 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
           get_counts_for_flags($entity_node, $data);
           get_reviews_for_resources($entity_node, $data);
 
+          unset($resource_feedback);
+          unset($workbench_moderation);
+          unset($share_data);
+          unset($authors);
+          unset($reviewers);
+
           $row = array();
           foreach ($schema['fieldkeys'] as $field_key) { // (columns)
             if (isset($field_key['skip']) && $field_key['skip']) {
@@ -245,34 +258,20 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
               $final_value = format_metadata_value_field($value, $is_date, NULL, $entity_node);
             }
             $row[] = $final_value;
-            unset($field_key);
-          }
 
-          if (isset($data['review'])) {
-            foreach ($data['review'] as $eck_review_id => $eck_review) {
-              if ($eck_review) {
-                foreach ($eck_review as $key => $value) {
-                  if ($key == 'appropriate_for_categories') {
-                    $appropriate_for_categories = array();
-                    foreach ($eck_review['appropriate_for_categories'] as $index => $term) {
-                      $appropriate_for_categories[] = $term->name;
-                    }
-                    if ($appropriate_for_categories) {
-                      $row[] = implode(',', $appropriate_for_categories);
-                    }
-                    else {
-                      $row[] = '';
-                    }
-                  }
-                  else {
-                    $row[] = $value;
-                  }
-                }
-              }
-            }
+            unset($final_value);
+            unset($field_key);
+            unset($is_date);
+            unset($primary_key);
+            unset($value);
           }
+          unset($field_key);
+
+          get_resource_review_output_for_csv($data, $row);
 
           fputcsv($handle, $row);
+          unset($row);
+          unset($data);
           $context['results']['count']++;
           $context['finished'] = $context['results']['count'] / $context['sandbox']['resources_total'];
         }
@@ -283,6 +282,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
   }
 
   fclose($handle);
+  unset($handle);
 
   // Show message updating user on how many subscribers have been exported.
   $context['message'] = t('Exported @count of @total resources.', array(
@@ -1287,6 +1287,38 @@ function get_resource_review_data($fieldkey, $data, $resource) {
   }
 
   return $value;
+}
+
+/**
+ * Puts the resource review output into the csv.
+ *
+ * @param $data
+ * @param $row
+ */
+function get_resource_review_output_for_csv(&$data, &$row) {
+  if (isset($data['review'])) {
+    foreach ($data['review'] as $eck_review_id => $eck_review) {
+      if ($eck_review) {
+        foreach ($eck_review as $key => $value) {
+          if ($key == 'appropriate_for_categories') {
+            $appropriate_for_categories = array();
+            foreach ($eck_review['appropriate_for_categories'] as $index => $term) {
+              $appropriate_for_categories[] = $term->name;
+            }
+            if ($appropriate_for_categories) {
+              $row[] = implode(',', $appropriate_for_categories);
+            }
+            else {
+              $row[] = '';
+            }
+          }
+          else {
+            $row[] = $value;
+          }
+        }
+      }
+    }
+  }
 }
 
 /**

@@ -298,11 +298,12 @@ function sbac_search_block_view($delta = '') {
         case 'digital-library-resources':
           $wrapper_class = 'dlr-page-filter-block-wrapper';
           if ( (isset($_SESSION[SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS])) &&
-               ($_SESSION[SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS] == TRUE) ) {
+               ($_SESSION[SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS] == TRUE)) {
             $_SESSION[SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS] = FALSE;
             $wrapper_class .= ' js-hide';
           }
-          $block['content'] = '<div class="'.$wrapper_class.'">'.drupal_render(drupal_get_form('sbac_search_digital_library_resources_form')) . "</div>";
+          $form = drupal_get_form('sbac_search_digital_library_resources_form');
+          $block['content'] = '<div class="' . $wrapper_class . '">' . drupal_render($form) . "</div>";
           break;
         case 'resource-review':
           $block['content'] = drupal_get_form('sbac_search_resource_review_form');
