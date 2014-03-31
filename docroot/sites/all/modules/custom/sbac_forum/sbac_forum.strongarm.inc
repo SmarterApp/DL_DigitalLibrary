@@ -286,7 +286,7 @@ function sbac_forum_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'morecomments_text_topic';
-  $strongarm->value = 'Load More Replies';
+  $strongarm->value = 'Show More Replies';
   $export['morecomments_text_topic'] = $strongarm;
 
   $strongarm = new stdClass();

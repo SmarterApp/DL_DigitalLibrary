@@ -292,7 +292,7 @@
         $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
       }
 
-      $('.pager-next a').html('Load More Resources').addClass('button');
+      $('.pager-next a').html('Show More Resources').addClass('button');
     }
   };
 

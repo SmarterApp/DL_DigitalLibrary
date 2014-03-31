@@ -92,7 +92,7 @@ class Hooks extends \devtools\Hooks {
     ) + $base;
 
     $items['load_more/review/%node/%/%'] = array(
-      'title' => 'Load More Reviews',
+      'title' => 'Show More Reviews',
       'page callback' => 'review_load_more_ajax',
       'page arguments' => array(2, 3, 4),
       'access callback' => 'resource_access',
