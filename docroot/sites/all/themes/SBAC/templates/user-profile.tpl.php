@@ -84,41 +84,49 @@
       ?>
     </div>
 
-		<div class="introduction">
-			<?php echo drupal_render($user_profile['field_introduction']); ?>
-		</div>
-		<div class="profile-details">
-			<?php
-        $grade = $subject = $sp = '';
-        if(isset($user_profile['field_grade_level_s_']['#items']) && $user_profile['field_grade_level_s_']['#items']) {
-          foreach ($user_profile['field_grade_level_s_']['#items'] as $key => $grade) {
-            $grades[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_grade_level_s_'][$key])) . '</span>';
-            //print_r($key);
+  <?php if($user_profile['view_mode'] == 'tooltip'): ?>
+	</div> <!-- END column 9-->
+  <div class="column hoverover-span2cols user-profile">
+  <?php endif;?>
+      <div class="introduction">
+        <?php echo drupal_render($user_profile['field_introduction']); ?>
+      </div>
+      <div class="profile-details">
+        <?php
+          $grade = $subject = $sp = '';
+          if(isset($user_profile['field_grade_level_s_']['#items']) && $user_profile['field_grade_level_s_']['#items']) {
+            foreach ($user_profile['field_grade_level_s_']['#items'] as $key => $grade) {
+              $grades[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_grade_level_s_'][$key])) . '</span>';
+              //print_r($key);
+            }
+            $grade = implode(', ', $grades);
           }
-          $grade = implode(', ', $grades);
-        }
-        if(isset($user_profile['field_subject_s_']['#items']) && $user_profile['field_subject_s_']['#items']) {
-          foreach ($user_profile['field_subject_s_']['#items'] as $key1 => $subject) {
-            $subjects[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_subject_s_'][$key1])) . '</span>';
-            //print_r($key);
+          if(isset($user_profile['field_subject_s_']['#items']) && $user_profile['field_subject_s_']['#items']) {
+            foreach ($user_profile['field_subject_s_']['#items'] as $key1 => $subject) {
+              $subjects[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_subject_s_'][$key1])) . '</span>';
+              //print_r($key);
+            }
+            $subject = implode(', ', $subjects);
           }
-          $subject = implode(', ', $subjects);
-        }
-        if(isset($user_profile['field_special_populations']['#items']) && $user_profile['field_special_populations']['#items']) {
-          foreach ($user_profile['field_special_populations']['#items'] as $key2 => $sp) {
-            $sps[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_special_populations'][$key2])) . '</span>';
-            //print_r($key);
+          if(isset($user_profile['field_special_populations']['#items']) && $user_profile['field_special_populations']['#items']) {
+            foreach ($user_profile['field_special_populations']['#items'] as $key2 => $sp) {
+              $sps[] = '<span>' . str_replace("&nbsp;", '', drupal_render($user_profile['field_special_populations'][$key2])) . '</span>';
+              //print_r($key);
+            }
+            $sp = implode(', ', $sps);
           }
-          $sp = implode(', ', $sps);
-        }
 
-				echo '<div><span class="title">Grades: </span>'. $grade .'</div>';
-				echo '<div><span class="title">Subjects: </span>'. $subject .'</div>';
-				echo '<div><span class="title">Student Populations: </span>'. $sp .'</div>';
-			?>
-		</div>
-	</div>
-</div>
+          echo '<div><span class="title">Grades: </span>'. $grade .'</div>';
+          echo '<div><span class="title">Subjects: </span>'. $subject .'</div>';
+          echo '<div><span class="title">Student Populations: </span>'. $sp .'</div>';
+        ?>
+      </div>
+
+
+  </div>
+
+
+</div> <!-- END row first-->
 <div class="line"></div>
 <div class="row second">
 	<div class="column large-12">
