@@ -3,7 +3,7 @@
 
 	<p>We have sent an email to
 	<?php if($mail = $_GET['mail']):?>
-	<?php print $mail; ?>
+	<?php print filter_xss($mail); ?>
 	<?php else:?>
 	<?php print 'you'; ?>
 	<?php endif; ?>

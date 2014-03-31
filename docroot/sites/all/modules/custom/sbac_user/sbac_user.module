@@ -592,6 +592,15 @@ function sbac_user_entity_presave($entity, $type) {
       }
     }
 
+    // Ensure clean data goes into these fields. I dont know why this needs to happen.. should be automatic.
+    //   All fields are set to plain text format, thats likely wrong.
+    $fn = $entity->field_first_name['und'][0]['value'];
+    $clean_fn = filter_xss($fn);
+    $entity->field_first_name['und'][0]['value'] = $clean_fn;
+    $ln = $entity->field_last_name['und'][0]['value'];
+    $clean_ln = filter_xss($ln);
+    $entity->field_last_name['und'][0]['value'] = $clean_ln;
+
     // display disabled fields by default for new users (field_privacy)
     if (isset($entity->is_new) && $entity->is_new) {
       $entity->field_privacy['und'][]['value'] = 'field_first_name';
