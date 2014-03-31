@@ -115,25 +115,12 @@ global $user;
       <?php print $main_menu_links; ?>
     <?php endif; ?>
   </nav>
+  <?php if (isset($page['search']) && $page['search']): ?>
+    <div class="search right">
+      <?php print render($page['search']); ?>
+    </div>
+  <?php endif; ?>
 </div>
-<?php if(!in_array(SBAC_SHARE_GUEST, $user->roles) && ($page['sub-header'] || $page['search'] || $page['toggle'])): ?>
-<div class="top-bar last-top">
-  <div class="toggle right">
-    <?php print render($page['toggle']); ?>
-  </div>
-<!--   <div class="filter-categories right">
-    <a href="#" class="category active">Category</a>
-  </div>
-  <div class="filter-sort right">
-    <a href="#" class="sort">Sort</a>
-  </div> -->
-  <div class="search right">
-    <?php print render($page['search']); ?>
-  </div>
-  <div><?php print render($page['sub-header']); ?></div>
-</div>
-
-<?php endif; ?>
 
 <?php if(!in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
 <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
@@ -148,6 +135,17 @@ global $user;
     </div>
 </div>
 <?php endif; ?>
+
+<?php if(!in_array(SBAC_SHARE_GUEST, $user->roles) && ($page['sub-header'] || $page['toggle'])): ?>
+  <div class="top-bar last-top">
+    <div class="toggle right">
+      <?php print render($page['toggle']); ?>
+    </div>
+    <div><?php print render($page['sub-header']); ?></div>
+  </div>
+<?php endif; ?>
+
+
 <div class="row main-row">
   <div class="main-container clearfix">
   <div id="main" class="<?php print $main_grid; ?> columns">

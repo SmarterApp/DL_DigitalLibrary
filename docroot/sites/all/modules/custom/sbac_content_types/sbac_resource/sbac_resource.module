@@ -1882,7 +1882,7 @@ function sbac_resource_block_info() {
 
   $blocks['sbac_resource_grid_list_button'] = array(
     'info' => t('Grid / List button'),
-    'region' => 'search',
+    'region' => 'sub-header',
     'pages' => "digital-library-resources*\nmy-resources*\nresource-review*",
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'cache' => DRUPAL_NO_CACHE,
@@ -1899,7 +1899,7 @@ function sbac_resource_block_info() {
   );
 
   $blocks['sbac_resource_dl_sort_form'] = array(
-    'info' => t('Sort'),
+    'info' => t('Digital Library Sort'),
     'region' => 'sub-header',
     'pages' => "digital-library-resources*\n",
     'visibility' => BLOCK_VISIBILITY_LISTED,
@@ -1909,7 +1909,7 @@ function sbac_resource_block_info() {
   );
 
   $blocks['sbac_resource_rr_sort_form'] = array(
-    'info' => t('Sort'),
+    'info' => t('Resource Review Sort'),
     'region' => 'sub-header',
     'pages' => "resource-review*\n",
     'visibility' => BLOCK_VISIBILITY_LISTED,
@@ -1919,12 +1919,12 @@ function sbac_resource_block_info() {
   );
 
   $blocks['sbac_resource_mr_sort_form'] = array(
-    'info' => t('Sort'),
+    'info' => t('My Resources Sort'),
     'region' => 'sub-header',
     'pages' => "my-resources*\n",
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'cache' => DRUPAL_NO_CACHE,
-    'weight' => -21,
+    'weight' => -23,
     'status' => 1,
   );
 
@@ -1962,7 +1962,7 @@ function sbac_resource_block_view($delta = '') {
         $count = $_SESSION[$name];
       }
       $block['subject'] = NULL;
-      $block['content'] = '<h3 class="left">' . t('Resources (' . $count . ')') . '</h3>';
+      $block['content'] = '<h3 class="left"><span>' . $count . '</span>' . t(' Resources:') . '</h3>';
       break;
 
     case 'sbac_resource_create_button':
@@ -2016,9 +2016,14 @@ function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
   }
   if (isset($blocks['sbac_resource']['sbac_resource_create_button']) && $theme == 'SBAC') {
     $blocks['sbac_resource']['sbac_resource_create_button']['pages'] = "my-resources*";
+    $blocks['sbac_resource']['sbac_resource_create_button']['weight'] = -22;
   }
   if (isset($blocks['sbac_resource']['sbac_resource_grid_list_button']) && $theme == 'SBAC') {
     $blocks['sbac_resource']['sbac_resource_grid_list_button']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
+    $blocks['sbac_resource']['sbac_resource_grid_list_button']['region'] = "sub-header";
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_mr_sort_form']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_mr_sort_form']['weight'] = -23;
   }
 }
 
