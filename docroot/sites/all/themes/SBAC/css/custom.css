@@ -10708,20 +10708,23 @@ div.block-sbac-resource-sbac-resource-dl-sort-form,
 div.block-sbac-resource-sbac-resource-mr-sort-form,
 div.block-sbac-resource-sbac-resource-rr-sort-form {
   margin-left: 0;
+  position: relative;
+  z-index: 5;
 }
-/* line 3114, ../sass/custom.scss */
+/* line 3116, ../sass/custom.scss */
 div.block-sbac-resource-sbac-resource-dl-sort-form select,
 div.block-sbac-resource-sbac-resource-mr-sort-form select,
 div.block-sbac-resource-sbac-resource-rr-sort-form select {
   width: 180px;
 }
 
-/* line 3121, ../sass/custom.scss */
+/* line 3123, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button a.button {
   moz-border-bottom-colors: none;
   -moz-border-left-colors: none;
   -moz-border-right-colors: none;
   -moz-border-top-colors: none;
+  border-color: rgba(255, 255, 255, 0.7) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);
   background-color: #00B5E2;
   border-image: none;
   border-style: solid;
@@ -10730,9 +10733,9 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   color: #FFFFFF;
   margin: 0;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
-  margin: 0 0 0 30px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+  margin: -2px 0 0 30px;
   padding: 0 54px 18px 18px;
-  position: relative;
   width: 225px;
   z-index: 4;
   border-radius: 6px;
@@ -10740,10 +10743,12 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   font-size: 16px;
   font-weight: normal;
   height: 34px;
-  line-height: 30px;
+  line-height: 32px;
   min-width: 125px;
+  position: relative;
+  z-index: 4;
 }
-/* line 3148, ../sass/custom.scss */
+/* line 3153, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button a.button:after {
   background-color: rgba(0, 0, 0, 0.1);
   background-image: url("../images/button-select.png");
@@ -10758,4 +10763,85 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   right: 0;
   top: 0;
   width: 36px;
+}
+/* line 3169, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button a.button.open {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+}
+/* line 3173, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown {
+  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
+  transition: max-height 0.75s ease 0s;
+  -moz-box-sizing: border-box;
+  background-color: #F7F7F7;
+  border: 1px solid #0D6785;
+  border-radius: 6px;
+  width: 245px !important;
+  padding: 15px 0 0 !important;
+  max-width: 225px;
+  left: 30px !important;
+  top: 28px !important;
+  position: absolute;
+  z-index: 3;
+}
+/* line 3189, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown li a {
+  background-color: transparent !important;
+  color: #464B54  !important;
+  display: block;
+  font-size: 16px;
+  margin: 0;
+  padding: 12px 20px !important;
+  word-wrap: break-word;
+}
+/* line 3198, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown li a:hover {
+  background-color: #F2F2F2;
+  color: #006082;
+  text-decoration: underline;
+}
+/* line 3206, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown li.last {
+  border-top: 1px solid #FFFFFF;
+  box-shadow: 0 -1px 0 0 #CECECE;
+}
+/* line 3210, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown li.last:hover {
+  -webkit-border-radius: 0 0 5px 5px;
+  -moz-border-radius: 0 0 5px 5px;
+  -ms-border-radius: 0 0 5px 5px;
+  -o-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+}
+/* line 3217, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-create-button #sbac-create-resource.f-dropdown:before,
+.block-sbac-resource-sbac-resource-create-button #sbac-create-resource.f-dropdown:after {
+  display: none;
+}
+
+/* line 3225, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-grid-list-button a.sbac-grid-layout,
+.block-sbac-resource-sbac-resource-grid-list-button a.sbac-list-layout {
+  float: right;
+  color: #fff;
+  font-size: 16px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+  margin-right: 35px;
+}
+/* line 3234, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-grid-list-button a.sbac-list-layout:before,
+.block-sbac-resource-sbac-resource-grid-list-button a.sbac-grid-layout:before {
+  content: "\e609";
+  display: inline-block;
+  float: left;
+  font-family: 'sbac';
+  font-size: 20px;
+  font-weight: normal;
+  margin-right: 5px;
+  position: relative;
+  top: 0px;
+}
+/* line 3246, ../sass/custom.scss */
+.block-sbac-resource-sbac-resource-grid-list-button a.sbac-grid-layout:before {
+  content: "\e608";
 }
