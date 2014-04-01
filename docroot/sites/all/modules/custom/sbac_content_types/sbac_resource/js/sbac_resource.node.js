@@ -54,7 +54,7 @@
             if (window.location.protocol == 'https:') {
               google_url = 'https://docs.google.com/viewer';
             }
-            var google_viewer = '<iframe title="resource-preview" src="' + google_url + '?url=' + encodeURIComponent(local_url) + '&embedded=true' + '" width="880" height="400" style="border: none;"></iframe>';
+            var google_viewer = '<iframe title="resource-preview" src="' + google_url + '?url=' + encodeURIComponent(local_url) + '&embedded=true' + '" width="880" height="400" style="border: none;">Alternative Content</iframe>';
             resource.empty().append(google_viewer);
             resource.addClass('google-doc');
             break;
@@ -77,19 +77,19 @@
             resource.removeClass('google-doc');
             break;
           case 'schooltube':
-            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="500" height="375" src="' + local_url + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>');
+            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="500" height="375" src="' + local_url + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen">Alternative Content</iframe></div>');
             resource.removeClass('google-doc');
             break;
           case 'teachertube':
-            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' + local_url + '" frameborder="0" allowfullscreen/></iframe>');
+            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' + local_url + '" frameborder="0" allowfullscreen/>Alternative Content</iframe>');
             resource.removeClass('google-doc');
             break;
           case 'slideshare':
-            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + local_url + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>');
+            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + local_url + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen>Alternative Content</iframe></div>');
             resource.removeClass('google-doc');
             break;
           case 'vimeo':
-            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>');
+            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>Alternative Content</iframe></div>');
             resource.removeClass('google-doc');
             break;
           case 'youtube':
@@ -102,7 +102,7 @@
               resource.empty().append(img);
             }
             else {
-              resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' + local_url + '" frameborder="0" allowfullscreen></iframe></div>');
+              resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' + local_url + '" frameborder="0" allowfullscreen>Alternative Content</iframe></div>');
               resource.removeClass('google-doc');
             }
             break;
