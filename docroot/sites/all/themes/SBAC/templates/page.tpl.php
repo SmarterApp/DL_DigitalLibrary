@@ -23,7 +23,7 @@ global $user;
   <?php if ($user->uid && !in_array('guest', $user->roles)): ?>
   <ul class="inline-list right user-nav">
     <li class="user-info">
-       <a data-dropdown="drop3" href="">
+       <a data-dropdown="drop3" href="#">
         <?php
           $user_item = user_load($user->uid);
           if (isset($user_item->picture->uri)) {
