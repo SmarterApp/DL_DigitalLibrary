@@ -10,6 +10,13 @@
     attach: function (context, settings) {
       $("img.lazy").lazy();
 
+      if ($('#admin-create-menu').length) {
+        var admin_create_menu = $('#admin-create-menu');
+        admin_create_menu.click(function() {
+            admin_create_menu.toggleClass('open-list');
+        });
+      }
+
       $(document).click(function() {
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
