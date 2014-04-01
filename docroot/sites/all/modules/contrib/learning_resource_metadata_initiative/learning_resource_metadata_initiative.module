@@ -56,6 +56,7 @@ function learning_resource_metadata_initiative_create_lrmi_payload($node) {
       // 'name' => 'Publisher Field',
     ),
   );
+  drupal_alter('learning_resource_metadata_payload', $resource_data, $node);
   return $resource_data;
 }
 

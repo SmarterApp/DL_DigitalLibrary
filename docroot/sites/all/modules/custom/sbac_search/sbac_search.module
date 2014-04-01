@@ -9,6 +9,7 @@ include_once 'sbac_search.features.inc';
 define('SBAC_SEARCH_MY_RESOURCES_FILTERS', 'sbac-my-resources-filters');
 define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS', 'sbac-digital-library-filters');
 define('SBAC_SEARCH_RESOURCE_REVIEW_FILTERS', 'sbac-resource-review-filters');
+define('SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS', 'sbac-external-resources-filters');
 
 define('SBAC_SEARCH_MY_RESOURCES_SORTS', 'sbac-my-resources-sorts');
 define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS', 'sbac-digital-library-sorts');
@@ -21,8 +22,10 @@ define('SBAC_SEARCH_RESOURCE_REVIEW_COUNT', 'sbac-resource-review-count');
 define('SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED', 'sbac-my-resources-filters-closed');
 define('SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED', 'sbac-digital-library-filters-closed');
 define('SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED', 'sbac-resource-review-filters-closed');
+define('SBAC_SEARCH_EXTERNAL_RESOURCE_FILTERS_CLOSED', 'sbac-external-resource-filters-closed');
 
 define('SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS', 'sbac-search-digital-library-keywords');
+define('SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS', 'sbac-search-external-resource-keywords');
 
 /**
  * Implements hook_update_projects_alter().
@@ -327,6 +330,9 @@ function sbac_search_hide_category_style() {
     return ' style="display:none;"';
   }
   if (arg(0) == 'resource-review' && isset($_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) {
+    return ' style="display:none;"';
+  }
+  if (arg(0) == 'external-resources' && isset($_COOKIE[SBAC_SEARCH_EXTERNAL_RESOURCE_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_EXTERNAL_RESOURCE_FILTERS_CLOSED]) {
     return ' style="display:none;"';
   }
 }

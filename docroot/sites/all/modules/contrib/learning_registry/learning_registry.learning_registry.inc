@@ -17,14 +17,14 @@
  * @return bool
  *   Returns TRUE if operation was successful, FALSE if not.
  */
-function _learning_registry_publish(&$node, $headless = FALSE) {
+function _learning_registry_publish(&$node, $headless = FALSE, $op = LEARNING_REGISTRY_MODE_PUBLISH) {
   $content_info = _learning_registry_get_content_info($node);
   $resource_data = _learning_registry_def_resource_data($content_info);
   $empty_submission = _learning_registry_build_envelope();
-  drupal_alter('learning_registry_prepared_submission', $resource_data, $node);
+  drupal_alter('learning_registry_prepared_submission', $resource_data, $node, $op);
   $prepared_submission = _learning_registry_add_resource_data_to_submission($empty_submission, $resource_data);
   $resource_post_payload = drupal_json_encode($prepared_submission);
-  $result = _learning_registry_send_to_registry($node->nid, $resource_post_payload, LEARNING_REGISTRY_MODE_PUBLISH, $headless);
+  $result = _learning_registry_send_to_registry($node->nid, $resource_post_payload, $op, $headless);
   return $result;
 }
 
@@ -132,14 +132,21 @@ function _learning_registry_send_to_registry($nid, $json, $service_num = LEARNIN
         $submission_url = variable_get('learning_registry_node_url', NULL) . '/harvest/getrecord?by_doc_ID=TRUE&request_ID=' . $result;
         drupal_set_message(t('Node ID @nid published to the registry. <a href="@url" target="_new">(View node on registry.)</a>', array('@nid' => $nid, '@url' => $submission_url)));
       }
-
+      // Allow other modules to act on SUCCESS
+      module_invoke_all('learning_registry_publish_success', $nid, $result);
+      return TRUE;
+    }
+    elseif (isset($submission_result['success']) && $submission_result['success'] === TRUE && $submission_result['doc_id'] == NULL) {
+      // this is a successful update
       return TRUE;
     }
     else {
       if (!$headless) {
         drupal_set_message(t('Error publishing node to registry.'), 'warning');
       }
-
+      watchdog('learning_registry', '<pre>' . print_r($submission_result) . '</pre>', WATCHDOG_ALERT);
+      // Allow other modules to act on FAILURE
+      module_invoke_all('learning_registry_publish_failure');
       return FALSE;
     }
   }
@@ -294,23 +301,23 @@ function _learning_registry_update_submission_status($nid, $result) {
       if ($submission_record) {
         if ($submission_record->published == 0) {
           db_update('learning_registry')
-          ->fields(array(
-                  'published' => REQUEST_TIME,
-                  'docid' => $result_array['document_results'][0]['doc_ID'],
-                  'queued' => 0,
-                ))
-          ->condition('nid', $nid)
-          ->execute();
+            ->fields(array(
+              'published' => REQUEST_TIME,
+              'docid' => $result_array['document_results'][0]['doc_ID'],
+              'queued' => 0,
+            ))
+            ->condition('nid', $nid)
+            ->execute();
         }
         else {
           db_update('learning_registry')
-          ->fields(array(
-                  'updated' => REQUEST_TIME,
-                  'docid' => $result_array['document_results'][0]['doc_ID'],
-                  'queued' => 0,
-                ))
-          ->condition('nid', $nid)
-          ->execute();
+            ->fields(array(
+              'updated' => REQUEST_TIME,
+              'docid' => $result_array['document_results'][0]['doc_ID'],
+              'queued' => 0,
+            ))
+            ->condition('nid', $nid)
+            ->execute();
         }
       }
       else {
@@ -401,19 +408,19 @@ function _learning_registry_queue_node($nid) {
   // If exists, update, else insert new record.
   if ($submission_record) {
     db_update('learning_registry')
-    ->fields(array(
-            'queued' => 1,
-          ))
-    ->condition('nid', $nid)
-    ->execute();
+      ->fields(array(
+        'queued' => 1,
+      ))
+      ->condition('nid', $nid)
+      ->execute();
   }
   else {
     $id = db_insert('learning_registry')
-    ->fields(array(
-      'nid' => $nid,
-      'queued' => 1,
-    ))
-    ->execute();
+      ->fields(array(
+        'nid' => $nid,
+        'queued' => 1,
+      ))
+      ->execute();
   }
 }
 

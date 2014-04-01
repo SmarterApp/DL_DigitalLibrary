@@ -173,6 +173,7 @@ function learning_registry_node_delete($node) {
  * attempts to push them to the Learning Registry.
  */
 function learning_registry_cron() {
+  module_load_include('inc', 'learning_registry', 'learning_registry.learning_registry');
   // Pull node IDs of records queued for processing.
   $records = db_query('SELECT nid FROM {learning_registry} WHERE queued = :queued', array(':queued' => 1));
 
