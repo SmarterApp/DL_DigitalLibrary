@@ -882,6 +882,8 @@ function sbac_search_digital_library_categories() {
 function sbac_search_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'search_block_form') {
     unset($form['#submit']);
+    $form['search_block_form']['#title'] = '';
+    $form['search_block_form']['#title_display'] = 'invisible';
     $form['search_block_form']['#attributes'] = array('id' => 'sbac-search-textbox');
     if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS])) {
       $form['search_block_form']['#default_value'] = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS];
