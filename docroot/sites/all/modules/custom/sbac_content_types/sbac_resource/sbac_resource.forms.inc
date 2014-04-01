@@ -1767,12 +1767,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     ),
   );
 
-  // $state_license_2 = array(
-  //   'input[name="field_license_information[und]"]' => array(
-  //     array('value' => '2'),
-  //   ),
-  // );
-
   $form['field_author']['#states']['visible'] = $state_license_either;
   $form['field_author']['#states']['required'] = $state_license_either;
   // $form['field_author']['#states']['invisible'] = $state_license_2;
@@ -1783,20 +1777,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_publisher']['#states']['required'] = $state_license_either;
   // $form['field_publisher']['#states']['invisible'] = $state_license_2;
   $form['field_publisher']['und'][0]['value']['#maxlength'] = 150;
-
-  /*
-  //Show this when field_license_information option 0  is selected
-  $form['field_license_text'] = array(
-    '#markup' => '
-      <div id="field_static_license_text" class="form-item">
-        <label>' . $form['field_license']['und']['#title'] . '</label>
-        <div class="description">' . t('The license language is identified in detail under Section 6 of the Terms of Service') . '</div>
-        <div class="field-content">' . l(url('terms-of-service', array('absolute' => TRUE)), 'terms-of-service') . '</div>
-      </div>
-    ',
-    '#weight' => $form['field_license']['#weight'],
-  );
-  */
 
   //Show this when field_license_information option 1 is selected
   $form['field_license']['#states']['visible'] = $state_license_1;
