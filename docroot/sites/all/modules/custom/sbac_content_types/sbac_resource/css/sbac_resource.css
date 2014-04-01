@@ -2347,7 +2347,7 @@ a.more-less-text-trigger-less:after {
 }
 /* line 2272, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] a.tabledrag-handle {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 /* line 2276, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] .form-managed-file {
@@ -2363,26 +2363,27 @@ a.more-less-text-trigger-less:after {
   cursor: pointer;
   font-size: 16px;
   font-weight: normal;
-  height: 41px;
+  height: 34px;
   line-height: 34px;
   padding: 0;
   text-align: center;
   text-shadow: none;
   float: right;
+  margin-top: 4px;
+  margin-bottom: 0;
   /*text-indent: -9999em;*/
 }
-/* line 2299, ../sass/sbac_resource.scss */
+/* line 2301, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms button[id*="remove-button"]:hover {
   background-image: none !important;
 }
-/* line 2303, ../sass/sbac_resource.scss */
+/* line 2305, ../sass/sbac_resource.scss */
 #edit-field-copyright-clearace-forms button[id*="remove-button"]:after {
   font-family: "GeneralFoundicons";
   content: "\f018";
   display: inline-block;
   font-size: 1em;
-  height: 13px;
-  margin-top: 16px;
+  height: 16px;
   margin-right: 20px;
   vertical-align: baseline;
   width: 13px;
@@ -2390,7 +2391,7 @@ a.more-less-text-trigger-less:after {
 }
 
 /*Smart Search*/
-/* line 2318, ../sass/sbac_resource.scss */
+/* line 2319, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper {
   background: none repeat scroll 0 0 #fcf1b0;
   -webkit-border-radius: 8px;
@@ -2406,13 +2407,13 @@ a.more-less-text-trigger-less:after {
   position: relative;
   width: 100%;
 }
-/* line 2329, ../sass/sbac_resource.scss */
+/* line 2330, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-left {
   width: 4%;
   display: inline-block;
   vertical-align: top;
 }
-/* line 2337, ../sass/sbac_resource.scss */
+/* line 2338, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-left .ssw-icon:after {
   content: "\e60e";
   display: inline-block;
@@ -2423,12 +2424,12 @@ a.more-less-text-trigger-less:after {
   top: 4px;
   color: #aeac8e;
 }
-/* line 2349, ../sass/sbac_resource.scss */
+/* line 2350, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center {
   width: 76%;
   display: inline-block;
 }
-/* line 2353, ../sass/sbac_resource.scss */
+/* line 2354, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .legend {
   color: #04385d;
   font-size: 22px;
@@ -2436,16 +2437,16 @@ a.more-less-text-trigger-less:after {
   margin-bottom: 10px;
   margin-top: 10px;
 }
-/* line 2361, ../sass/sbac_resource.scss */
+/* line 2362, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .legend:last-child {
   margin-bottom: 0;
 }
-/* line 2366, ../sass/sbac_resource.scss */
+/* line 2367, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .ssw-search-filters ul {
   list-style-type: none;
   margin: 0;
 }
-/* line 2370, ../sass/sbac_resource.scss */
+/* line 2371, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .ssw-search-filters ul li {
   background-color: #e4daa0;
   -webkit-border-radius: 3px;
@@ -2459,11 +2460,11 @@ a.more-less-text-trigger-less:after {
   margin: 5px 7px 5px 2px;
   padding: 8px 10px;
 }
-/* line 2380, ../sass/sbac_resource.scss */
+/* line 2381, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .ssw-search-filters ul li:first-child {
   margin-left: 0;
 }
-/* line 2387, ../sass/sbac_resource.scss */
+/* line 2388, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-right {
   width: 18%;
   display: inline-block;
@@ -2471,7 +2472,7 @@ a.more-less-text-trigger-less:after {
   text-align: right;
   margin-top: 10px;
 }
-/* line 2394, ../sass/sbac_resource.scss */
+/* line 2395, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-right .button.ssw-edit-link:before {
   background-image: url("../images/icon-buttonEdit.png");
   width: 17px;
@@ -2484,7 +2485,7 @@ a.more-less-text-trigger-less:after {
   vertical-align: middle;
   width: 18px;
 }
-/* line 2407, ../sass/sbac_resource.scss */
+/* line 2408, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-right .button.ssw-edit-link {
   white-space: nowrap;
 }
