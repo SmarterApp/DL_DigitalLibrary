@@ -253,7 +253,7 @@
   Drupal.behaviors.sbac_resource_review_textbox = {
     attach: function (context, settings) {
       // Moves the text into the hidden field.
-      $('#sbac-search-textbox').keypress( function(event) {
+      $('.sbac-search-textbox').keypress( function(event) {
         var keypressed = event.which;
         if(keypressed == 13){
           $('#sbac-search-keywords').val($(this).val());
@@ -262,7 +262,7 @@
         }
       });
       // Moves the text into the hidden field.
-      $('#sbac-search-textbox').change( function(event) {
+      $('.sbac-search-textbox').change( function(event) {
         $('#sbac-search-keywords').val($(this).val());
       });
 
@@ -275,7 +275,7 @@
       $('#views-exposed-form-all-resource-review-list-view').hide();
 
 
-      if ($('#sbac-search-textbox').val() != '') {
+      if ($('.sbac-search-textbox').val() != '') {
         $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
       }
 
