@@ -13,7 +13,6 @@ dependencies[] = features
 dependencies[] = field_group
 dependencies[] = file
 dependencies[] = image
-dependencies[] = ldap_user
 dependencies[] = link
 dependencies[] = list
 dependencies[] = media

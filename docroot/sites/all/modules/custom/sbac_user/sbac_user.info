@@ -12,7 +12,6 @@ dependencies[] = field_group
 dependencies[] = file_entity
 dependencies[] = filter
 dependencies[] = image
-dependencies[] = ldap_user
 dependencies[] = list
 dependencies[] = media_internet
 dependencies[] = menu
