@@ -2547,3 +2547,17 @@ function _sbac_resource_save_reviewers(&$node, $account = NULL, $reset = FALSE, 
   }
   field_attach_update('node', $node);
 }
+
+/**
+ * @param $nid
+ * @return null
+ */
+function sbac_resource_get_url_alias($nid) {
+  $alias = NULL;
+
+  $source = 'node/' . $nid;
+  $sql = "SELECT alias FROM {url_alias} WHERE source = :source";
+  $alias = db_query($sql, array(':source' => $source))->fetchField();
+
+  return $alias;
+}
