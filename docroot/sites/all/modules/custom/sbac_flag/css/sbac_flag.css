@@ -208,27 +208,28 @@
   padding: 10px 20px 15px;
   font-size: 18px;
   position: relative;
+  margin-left: 25px;
 }
-/* line 213, ../sass/sbac_flag.scss */
+/* line 214, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .flag-information .flag-status {
   color: #006082;
   font-weight: bold;
   padding: 0 0 15px;
 }
-/* line 220, ../sass/sbac_flag.scss */
+/* line 221, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .flag-resource-container {
   margin: 0;
 }
-/* line 224, ../sass/sbac_flag.scss */
+/* line 225, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category {
   position: relative;
 }
-/* line 227, ../sass/sbac_flag.scss */
+/* line 228, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category .resource-category {
   width: 90%;
   line-height: 1.4;
 }
-/* line 232, ../sass/sbac_flag.scss */
+/* line 233, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category .resource-count {
   position: absolute;
   bottom: 10px;
@@ -236,16 +237,16 @@
 }
 
 /*Confirmation modal for edit page*/
-/* line 243, ../sass/sbac_flag.scss */
+/* line 244, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .page-moderation .modal-content, .node-type-resource.section-content .page-moderation .modal-content {
   overflow-y: hidden !important;
 }
-/* line 249, ../sass/sbac_flag.scss */
+/* line 250, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #sbac-flag-start-moderation-form .button, .page-node-edit.node-type-resource #sbac-flag-start-moderation-form .form-submit, .node-type-resource.section-content #sbac-flag-start-moderation-form .button, .node-type-resource.section-content #sbac-flag-start-moderation-form .form-submit {
   float: right;
   margin-left: 30px;
 }
-/* line 260, ../sass/sbac_flag.scss */
+/* line 261, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont,
@@ -258,7 +259,7 @@
   padding: 15px 40px 0;
   background-color: #F2F2F2;
 }
-/* line 266, ../sass/sbac_flag.scss */
+/* line 267, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont h3,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont h3,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont h3,
@@ -270,7 +271,7 @@
   color: #000;
   padding-top: 10px;
 }
-/* line 272, ../sass/sbac_flag.scss */
+/* line 273, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .category-output,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .category-output,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont .category-output,
@@ -280,7 +281,7 @@
 .node-type-resource.section-content #sbac-flag-resolve-all-resource-review-moderation-form .flag-modal-cont .category-output {
   font-size: 16px;
 }
-/* line 275, ../sass/sbac_flag.scss */
+/* line 276, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .category-output span,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .category-output span,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont .category-output span,
@@ -291,7 +292,7 @@
   color: #62676E;
   font-style: italic;
 }
-/* line 281, ../sass/sbac_flag.scss */
+/* line 282, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont label,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont label,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont label,
@@ -302,7 +303,7 @@
   font-size: 16px;
   color: #000;
 }
-/* line 286, ../sass/sbac_flag.scss */
+/* line 287, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-textarea-wrapper, .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-item-contributor-message,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-textarea-wrapper,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-item-contributor-message,
@@ -318,7 +319,7 @@
 .node-type-resource.section-content #sbac-flag-resolve-all-resource-review-moderation-form .flag-modal-cont .form-item-contributor-message {
   position: relative;
 }
-/* line 289, ../sass/sbac_flag.scss */
+/* line 290, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-textarea-wrapper textarea, .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-item-contributor-message textarea,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-textarea-wrapper textarea,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-item-contributor-message textarea,
@@ -336,7 +337,7 @@
   max-width: 100%;
   margin-bottom: 15px;
 }
-/* line 295, ../sass/sbac_flag.scss */
+/* line 296, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-textarea-wrapper .counter, .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-item-contributor-message .counter,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-textarea-wrapper .counter,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-item-contributor-message .counter,
@@ -356,7 +357,7 @@
   top: -20px;
   color: #5A5A5A;
 }
-/* line 305, ../sass/sbac_flag.scss */
+/* line 306, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-button-cont,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-button-cont,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-button-cont,
@@ -374,7 +375,7 @@
   z-index: 4;
   height: 69px;
 }
-/* line 317, ../sass/sbac_flag.scss */
+/* line 318, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button,
@@ -385,7 +386,7 @@
   float: right;
   margin-left: 30px;
 }
-/* line 319, ../sass/sbac_flag.scss */
+/* line 320, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button#edit-finish-moderation,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button#edit-finish-moderation,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button#edit-finish-moderation,
@@ -397,7 +398,7 @@
   border: 1px solid #0D6785;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
-/* line 325, ../sass/sbac_flag.scss */
+/* line 326, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button[id*="edit-cancel"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button[id*="edit-cancel"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button[id*="edit-cancel"],
@@ -409,7 +410,7 @@
   border: 1px solid #4D5457 !important;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset !important;
 }
-/* line 331, ../sass/sbac_flag.scss */
+/* line 332, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button[id*="edit-finish-moderation"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button[id*="edit-finish-moderation"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button[id*="edit-finish-moderation"],
@@ -421,25 +422,25 @@
   border: 1px solid #793348 !important;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset !important;
 }
-/* line 338, ../sass/sbac_flag.scss */
+/* line 339, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .form-item-error-holder.error + .form-item, .node-type-resource.section-content .form-item-error-holder.error + .form-item {
   background: url("../images/icon-validation-fail.png") no-repeat right 10px top 40px;
 }
 
 /*Modal with scrolling content*/
-/* line 348, ../sass/sbac_flag.scss */
+/* line 349, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content, .node-type-resource.section-content #modalContent .ctools-modal-content {
   padding: 0;
   width: 850px !important;
   height: 340px !important;
 }
-/* line 353, ../sass/sbac_flag.scss */
+/* line 354, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content .modal-content, .node-type-resource.section-content #modalContent .ctools-modal-content .modal-content {
   overflow-y: hidden !important;
   height: auto !important;
   padding: 0 !important;
 }
-/* line 360, ../sass/sbac_flag.scss */
+/* line 361, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .modal-header, .node-type-resource.section-content #modalContent .modal-header {
   -moz-box-sizing: border-box;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
@@ -447,7 +448,7 @@
   position: relative;
   z-index: 3;
 }
-/* line 368, ../sass/sbac_flag.scss */
+/* line 369, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .modal-title, .node-type-resource.section-content #modalContent .modal-title {
   color: #04384E !important;
   display: block;
@@ -459,19 +460,19 @@
 }
 
 /*Modal with small content*/
-/* line 385, ../sass/sbac_flag.scss */
+/* line 386, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content.small, .node-type-resource.section-content #modalContent .ctools-modal-content.small {
   width: 620px !important;
   height: auto !important;
 }
-/* line 389, ../sass/sbac_flag.scss */
+/* line 390, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content.small .modal-header, .node-type-resource.section-content #modalContent .ctools-modal-content.small .modal-header {
   -moz-box-sizing: none;
   box-shadow: none;
   font-size: 18px !important;
   color: #000;
 }
-/* line 396, ../sass/sbac_flag.scss */
+/* line 397, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content.small .modal-title, .node-type-resource.section-content #modalContent .ctools-modal-content.small .modal-title {
   /*color: #04384E !important;*/
   display: block;
@@ -481,19 +482,19 @@
   text-transform: capitalize;
   padding: 0 !important;
 }
-/* line 406, ../sass/sbac_flag.scss */
+/* line 407, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content.small form, .node-type-resource.section-content #modalContent .ctools-modal-content.small form {
   margin-top: 0;
   padding: 0 40px;
 }
 
 /*Modal - sbac-flag-start-moderation-form*/
-/* line 416, ../sass/sbac_flag.scss */
+/* line 417, ../sass/sbac_flag.scss */
 #sbac-flag-start-moderation-form button {
   float: right;
   margin-left: 30px;
 }
-/* line 421, ../sass/sbac_flag.scss */
+/* line 422, ../sass/sbac_flag.scss */
 #sbac-flag-start-moderation-form #edit-cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
@@ -501,50 +502,50 @@
 }
 
 /*Modal - sbac-flag-resolve-all-resource-review-moderation-form*/
-/* line 430, ../sass/sbac_flag.scss */
+/* line 431, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form button {
   float: right;
   margin-left: 30px;
 }
-/* line 435, ../sass/sbac_flag.scss */
+/* line 436, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form button#edit-continue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
-/* line 441, ../sass/sbac_flag.scss */
+/* line 442, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form button#edit-cancel {
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
-/* line 445, ../sass/sbac_flag.scss */
+/* line 446, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form h3 {
   font-size: 16px;
   color: #000;
 }
-/* line 450, ../sass/sbac_flag.scss */
+/* line 451, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form .category-output {
   font-size: 16px;
 }
-/* line 453, ../sass/sbac_flag.scss */
+/* line 454, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form .category-output span {
   color: #62676E;
   font-style: italic;
 }
 
 /*Modal - sbac-flag-cancel-resource-review-moderation-form*/
-/* line 462, ../sass/sbac_flag.scss */
+/* line 463, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-review-moderation-form button {
   float: right;
   margin-left: 30px;
 }
-/* line 467, ../sass/sbac_flag.scss */
+/* line 468, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-review-moderation-form button#edit-cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
   padding-left: 40px;
 }
-/* line 474, ../sass/sbac_flag.scss */
+/* line 475, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-review-moderation-form button#edit-continue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
@@ -552,17 +553,17 @@
 }
 
 /*Modal - sbac-flag-cancel-resource-moderation-form*/
-/* line 482, ../sass/sbac_flag.scss */
+/* line 483, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-moderation-form {
   padding: 0 40px;
   margin-top: 30px;
 }
-/* line 487, ../sass/sbac_flag.scss */
+/* line 488, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-moderation-form button {
   float: right;
   margin-left: 30px;
 }
-/* line 492, ../sass/sbac_flag.scss */
+/* line 493, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-moderation-form button#edit-continue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
@@ -570,19 +571,19 @@
 }
 
 /*Modal - sbac-flag-session-expire-form*/
-/* line 501, ../sass/sbac_flag.scss */
+/* line 502, ../sass/sbac_flag.scss */
 #sbac-flag-session-expire-form button {
   float: right;
   margin-left: 30px;
   margin-top: 30px;
 }
-/* line 506, ../sass/sbac_flag.scss */
+/* line 507, ../sass/sbac_flag.scss */
 #sbac-flag-session-expire-form button#edit-continue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
-/* line 512, ../sass/sbac_flag.scss */
+/* line 513, ../sass/sbac_flag.scss */
 #sbac-flag-session-expire-form button#edit-cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
@@ -636,37 +637,37 @@
 	}
 }*/
 /*button*/
-/* line 569, ../sass/sbac_flag.scss */
+/* line 570, ../sass/sbac_flag.scss */
 .flag-category-review-buttons, .form-actions {
   text-align: center !important;
   padding-top: 15px;
 }
-/* line 573, ../sass/sbac_flag.scss */
+/* line 574, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel, .flag-category-review-buttons .finish, .form-actions .cancel, .form-actions .finish {
   display: inline-block;
   margin: 0 15px;
   position: relative;
 }
-/* line 578, ../sass/sbac_flag.scss */
+/* line 579, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel .item-list, .flag-category-review-buttons .finish .item-list, .form-actions .cancel .item-list, .form-actions .finish .item-list {
   position: absolute;
   top: 40px;
   right: 30px;
 }
-/* line 583, ../sass/sbac_flag.scss */
+/* line 584, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel .item-list ul, .flag-category-review-buttons .finish .item-list ul, .form-actions .cancel .item-list ul, .form-actions .finish .item-list ul {
   width: 190px;
   text-align: left;
   top: 0 !important;
   left: 0 !important;
 }
-/* line 592, ../sass/sbac_flag.scss */
+/* line 593, ../sass/sbac_flag.scss */
 .flag-category-review-buttons #sbac-flag-cancel-moderation, .form-actions #sbac-flag-cancel-moderation {
   display: inline-block;
   margin: 0 15px;
 }
 
-/* line 598, ../sass/sbac_flag.scss */
+/* line 599, ../sass/sbac_flag.scss */
 button.gray.cancel, .button.gray.cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
@@ -674,14 +675,14 @@ button.gray.cancel, .button.gray.cancel {
   position: relative;
   margin: 0;
 }
-/* line 605, ../sass/sbac_flag.scss */
+/* line 606, ../sass/sbac_flag.scss */
 button.gray.cancel:hover, .button.gray.cancel:hover {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
-/* line 611, ../sass/sbac_flag.scss */
+/* line 612, ../sass/sbac_flag.scss */
 button.gray.cancel:before, .button.gray.cancel:before {
   content: url(../images/buttonCancel.png);
   position: absolute;
@@ -689,27 +690,27 @@ button.gray.cancel:before, .button.gray.cancel:before {
   top: 4px;
 }
 
-/* line 618, ../sass/sbac_flag.scss */
+/* line 619, ../sass/sbac_flag.scss */
 .sbac-flag-load-more-button {
   text-align: center;
   margin-top: 30px;
 }
-/* line 622, ../sass/sbac_flag.scss */
+/* line 623, ../sass/sbac_flag.scss */
 .sbac-flag-load-more-button a {
   width: 480px;
 }
 
-/* line 625, ../sass/sbac_flag.scss */
+/* line 626, ../sass/sbac_flag.scss */
 .ajax-progress-throbber {
   display: none;
 }
 
-/* line 629, ../sass/sbac_flag.scss */
+/* line 630, ../sass/sbac_flag.scss */
 div.ctools-modal-content .modal-title {
   height: auto !important;
 }
 
-/* line 633, ../sass/sbac_flag.scss */
+/* line 634, ../sass/sbac_flag.scss */
 .section-moderation #modalContent .ctools-modal-content .modal-content {
   overflow-y: hidden !important;
 }

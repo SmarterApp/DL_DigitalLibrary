@@ -418,7 +418,7 @@ a.sbac-grid-layout {
   /*for IE 9, 10*/
 }
 /* line 384, ../sass/sbac_resource.scss */
-.digital-library .resource-card h3 span a, .digital-library .resource-card h4 span a, .page-digital-library-resources .resource-card h3 span a, .page-digital-library-resources .resource-card h4 span a, .node-resource .resource-card h3 span a, .node-resource .resource-card h4 span a {
+.digital-library .resource-card h3 .field-content a, .digital-library .resource-card h4 .field-content a, .page-digital-library-resources .resource-card h3 .field-content a, .page-digital-library-resources .resource-card h4 .field-content a, .node-resource .resource-card h3 .field-content a, .node-resource .resource-card h4 .field-content a {
   color: #0085ad;
   padding-right: 5px;
   display: block;
@@ -1654,7 +1654,7 @@ a.category-hide:focus {
   margin: 0;
   max-width: 560px;
   padding: 0 0 10px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 /* line 1596, ../sass/sbac_resource.scss */
 #profile-wrap .title-tags {

@@ -381,7 +381,7 @@ a.sbac-grid-layout {
       max-width: 250px;
       word-wrap: break-word;
 
-      span a {
+      .field-content a {
         color: #0085ad;
 				padding-right: 5px;
 				display: block;
@@ -1590,7 +1590,7 @@ a.category-hide:focus {
     margin: 0;
     max-width: 560px;
     padding: 0 0 10px;
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 	}
 
 	.title-tags {
