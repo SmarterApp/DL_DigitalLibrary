@@ -792,7 +792,7 @@ function _sbac_resource_preview_content(&$vars) {
       if (isset($_SERVER['HTTPS'])) {
         $google_url = 'https://docs.google.com/viewer';
       }
-      $viewer['viewer'] = '<iframe src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;"></iframe>';
+      $viewer['viewer'] = '<iframe title="resource-preview" src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;"></iframe>';
       $viewer['viewer_class'] = 'google-doc';
     }
     else if ($type == 'video') {
@@ -806,19 +806,19 @@ function _sbac_resource_preview_content(&$vars) {
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'schooltube') {
-      $viewer['viewer'] = '<div class="flex-video"><iframe width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>';
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'teachertube') {
-      $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/></iframe></div>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/></iframe></div>';
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'slideshare') {
-      $viewer['viewer'] = '<div class="flex-video"><iframe src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>';
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'vimeo') {
-      $viewer['viewer'] = '<div class="flex-video"><iframe src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>';
+      $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>';
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'youtube') {
