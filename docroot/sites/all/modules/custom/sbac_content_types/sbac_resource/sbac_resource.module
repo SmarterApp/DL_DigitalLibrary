@@ -2040,7 +2040,7 @@ function sbac_resource_create_button() {
   if (in_array('resource contributor', $user->roles)) {
     $content = l('Create New Resource', 'node/add/resource', array(
       'absolute' => TRUE,
-      'attributes' => array('class' => array('small', 'button')),
+      'attributes' => array('class' => array('small', 'button', 'open')),
       'query' => array('destination' => arg(0)),
     ));
   }
