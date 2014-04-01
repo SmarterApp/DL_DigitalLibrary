@@ -1052,6 +1052,10 @@ function _sbac_resource_determine_file_type_icon($ext) {
  * @param $vars
  */
 function sbac_resource_preprocess_page(&$vars) {
+  if ($_SERVER['REQUEST_URI'] == '/') {
+    drupal_set_title('Smarter Balanced Assessment Consortium');
+  }
+
   $vars['html5'] = FALSE;
   if (isset($vars['node']) && $vars['node']->type == 'resource') {
     if (isset($vars['page']['#type']) && $vars['page']['#type'] == 'page') {
