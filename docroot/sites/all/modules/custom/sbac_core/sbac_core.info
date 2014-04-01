@@ -18,7 +18,6 @@ dependencies[] = number
 dependencies[] = options
 dependencies[] = print
 dependencies[] = rate
-dependencies[] = sbac_core
 dependencies[] = strongarm
 dependencies[] = taskit
 dependencies[] = taxonomy

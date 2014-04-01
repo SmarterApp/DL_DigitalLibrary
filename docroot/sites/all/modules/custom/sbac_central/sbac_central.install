@@ -1121,3 +1121,20 @@ function sbac_central_update_7072() {
   );
   module_enable($modules);
 }
+
+/**
+ * Disable LDAP and associated modules.
+ */
+function sbac_central_update_7073() {
+  $modules = array(
+    'sbac_ldap',
+    'ldap',
+    'ldap_authentication',
+    'ldap_authorization',
+    'ldap_authorization_drupal_role',
+    'ldap_query',
+    'ldap_servers',
+    'ldap_user',
+  );
+  module_disable($modules);
+}
