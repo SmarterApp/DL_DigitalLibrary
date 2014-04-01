@@ -700,7 +700,7 @@ function sbac_resource_preprocess_node(&$vars) {
       $materials = _sbac_resource_preview_materials($vars);
       $result = sbac_resource_determine_download_ability($vars);
       if ($result['primary'] || $result['secondary']) {
-        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('class' => 'button small right')));
+        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download', 'class' => 'button small right')));
         if ($result['primary'] == FALSE || $result['secondary'] == FALSE) {
           $vars['download_partial'] = TRUE;
         }
@@ -899,7 +899,7 @@ function _sbac_resource_preview_materials(&$vars) {
   }
 
   if ($material_urls) {
-    $materials = '<a class="button small arrow sbac-materials-dropdown" data-dropdown="sbac-materials">'. t('View All Materials'). '<span></span></a>';
+    $materials = '<a title="View All Materials" class="button small arrow sbac-materials-dropdown" data-dropdown="sbac-materials">'. t('View All Materials'). '<span></span></a>';
     $materials .= theme('item_list', array(
       'items' => $material_urls,
       'attributes' => array(
