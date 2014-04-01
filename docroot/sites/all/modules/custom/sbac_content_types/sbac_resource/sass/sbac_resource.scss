@@ -635,8 +635,7 @@ a.sbac-grid-layout {
   background: #c9eaf8;
   color: #0684ad;
   padding: 45px 0 0;
-  border-top: 2px solid #0684ad;
-  border-bottom: 1px solid #94d8f3;
+  border-bottom: 1px solid #056382;
 
   position: relative;
 
@@ -1339,10 +1338,10 @@ a.sbac-grid-layout {
   }
 }
 
-@media all and (min-width: 1271px){
+@media all and (min-width: 1281px){
   .grid-view {
     .main-row {
-      max-width: 1270px;
+      max-width: 1280px;
     }
 
     .grid-library {
@@ -1355,7 +1354,7 @@ a.sbac-grid-layout {
   }
 }
 
-@media all and (max-width: 1270px) and (min-width: 961px){
+@media all and (max-width: 1280px) and (min-width: 961px){
   .grid-view {
     .main-row {
       max-width: 960px;

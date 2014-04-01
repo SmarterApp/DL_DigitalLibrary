@@ -569,6 +569,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 
 .top-bar {
   margin: 0;
+	line-height: 44px;
 
   &.main-top {
     background-color: #f2f2f2;
@@ -581,7 +582,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   &.sub-top {
     background-color: $white; // color overlay
     height: auto;
-    border-bottom: 1px solid $header-borders;
+    border-bottom: 1px solid #006082;
   }
 
   &.last-top {
@@ -863,8 +864,8 @@ nav.main-nav {
       a {
         display: block;
         padding: 0 10px 1px;
-        height: 40px;
-        line-height: 40px;
+        height: 44px;
+        line-height: 44px;
         color: $header-text; // text color
 
         &.active {
@@ -3087,9 +3088,22 @@ a.tabledrag-handle .handle {
 		- Action buttons (i.e. create new resource on the My Resources tab)
 		- Grid/List view
 ------------------------------------------------------------------------ */
+@media all and (min-width: 1281px){
+	.top-bar.last-top {
+		max-width: 1280px;
+	}
+}
+
+@media all and (max-width: 1280px) and (min-width: 961px){
+	.top-bar.last-top {
+		max-width: 960px;
+	}
+}
+
 .top-bar.last-top {
 	background-color: #0684AD;
 	padding: 20px 0 5px;
+	margin: 0 auto;
 }
 
 .block-sbac-resource-sbac-resource-results-count {
@@ -3135,9 +3149,9 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		margin: 0;
 		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
-		margin: -2px 0 0 30px;
-		padding: 0 54px 18px 18px;
-		width: 225px;
+		margin: 0 0 0 25px;
+		padding: 0 54px 0 18px;
+		min-width: 225px;
 		z-index: 4;
 		border-radius: 6px;
 		cursor: pointer;
@@ -3145,7 +3159,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		font-weight: normal;
 		height: 34px;
 		line-height: 32px;
-		min-width: 125px;
+		min-width: 225px;
 		position: relative;
 		z-index: 4;
 	}
@@ -3180,7 +3194,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		width: 245px !important;
 		padding: 15px 0 0 !important;
 		max-width: 225px;
-		left: 30px !important;
+		left: 25px !important;
 	  top: 28px !important;
 		position: absolute;
 		z-index: 3;
