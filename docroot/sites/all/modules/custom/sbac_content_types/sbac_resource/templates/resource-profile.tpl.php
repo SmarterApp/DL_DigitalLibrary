@@ -18,17 +18,17 @@
 	  <?php endif; ?>
 
 	  <?php if (isset($node->field_connection_to_fap['und'][0])): ?>
-	    <h2 class="about">Specific Connection To The Formative Assessment Process</h2>
+	    <h2 class="about">Specific Connection to the Formative Assessment Process</h2>
 	    <div class="item-list"><?php echo $node->field_connection_to_fap['und'][0]['value']; ?></div>
 	  <?php endif; ?>
 
     <?php if (isset($node->field_student_agency['und'][0])): ?>
-      <h2 class="about">Student Engagement To The Formative Assessment Process</h2>
+      <h2 class="about">Student Engagement to the Formative Assessment Process</h2>
       <div class="item-list"><?php echo $node->field_student_agency['und'][0]['value']; ?></div>
     <?php endif; ?>
 
 	  <?php if (isset($node->field_connection_to_ccss['und'][0])): ?>
-	    <h2 class="about">Specific Connection To The Common Core State Standards</h2>
+	    <h2 class="about">Specific Connection to the Common Core State Standards</h2>
 	    <div class="item-list"><?php echo $node->field_connection_to_ccss['und'][0]['value']; ?></div>
 	  <?php endif; ?>
 
@@ -43,7 +43,7 @@
 	  <?php endif; ?>
 
 	  <?php if (isset($node->field_contexts['und'][0])): ?>
-	    <h2 class="about">Context(s) Within Which The Resource Could Be Used</h2>
+	    <h2 class="about">Context(s) In Which the Resource Could Be Used</h2>
 	    <div class="item-list"><?php echo $node->field_contexts['und'][0]['value']; ?></div>
 	  <?php endif; ?>
 
