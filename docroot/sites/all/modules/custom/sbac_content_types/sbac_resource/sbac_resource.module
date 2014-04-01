@@ -2049,7 +2049,7 @@ function sbac_resource_create_button() {
   if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
     $create_urls[] = l('Resource', 'node/add/resource', array('attributes' => array('class' => array('create-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resource')));
     $create_urls[] = l('Content Module', 'node/add/resource', array('attributes' => array('class' => array('create-module')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'module')));
-    $content = '<a class="button small open arrow sbac-create-resource-dropdown" data-dropdown="sbac-create-resource">'. t('Create New'). '<span></span></a>';
+    $content = '<a class="button small open-list arrow sbac-create-resource-dropdown" data-dropdown="sbac-create-resource">'. t('Create New'). '<span></span></a>';
     $content .= theme('item_list', array(
       'items' => $create_urls,
       'attributes' => array(
