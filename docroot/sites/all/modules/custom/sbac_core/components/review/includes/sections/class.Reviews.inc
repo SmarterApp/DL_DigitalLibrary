@@ -29,7 +29,7 @@ class Reviews extends Base {
 
       $button = '';
       if ($allowed_to_create) { 
-        $button = '<a href="#" class="review-form-trigger button medium">' . t('Write your review') . '</a>';
+        $button = '<a href="#" title="Write your review" class="review-form-trigger button medium">' . t('Write your review') . '</a>';
       }
 
       $output .= '
