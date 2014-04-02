@@ -1103,3 +1103,16 @@ function sbac_resource_update_7049() {
 
   return "Added states for each node";
 }
+
+/**
+ * Remove Creative Commons link
+ */
+function sbac_resource_update_7050(){
+  $terms = taxonomy_get_term_by_name('Creative Commons Attribution No Derivatives','license');
+  if(count($terms)){
+    foreach($terms as $term){
+      $term->description = '';
+      taxonomy_term_save($term);
+    }
+  }
+}
