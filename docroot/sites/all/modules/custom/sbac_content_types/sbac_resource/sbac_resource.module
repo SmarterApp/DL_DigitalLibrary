@@ -2309,7 +2309,7 @@ function sbac_resource_node_access($node, $op, $account) {
 function sbac_resource_determine_access($node, $account, $op) {
   // state access
   $access = _sbac_resource_determine_state_access($node, $account);
-  if ($access || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'resource-review') === TRUE)) {
+  if (($access || isset($_SERVER['HTTP_REFERER'])) && strpos($_SERVER['HTTP_REFERER'], 'resource-review') !== FALSE) {
     // workflow access
     $access = _sbac_resource_determine_workflow_access($node, $account, $op);
   }
@@ -2503,6 +2503,17 @@ function _sbac_resource_determine_state_access($node, $account) {
   }
   // if the array is empty, then the user has access.
   if (empty($all_states)) {
+    if (is_string($node)) {
+      $node_perm = array_keys(node_list_permissions($node));
+      $user_perm = user_role_permissions($account->roles);
+      foreach ($user_perm as $perm_id => $perms_list) {
+        $perm_intersect = array_intersect($node_perm, array_keys($perms_list));
+        if (count($perm_intersect) > 0) {
+          return TRUE;
+        }
+      }
+      return FALSE;
+    }
     $access = TRUE;
     return $access;
   }
