@@ -28,12 +28,8 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
-      'advanced end user' => 'advanced end user',
-      'basic end user' => 'basic end user',
       'digital library administrator' => 'digital library administrator',
-      'facilitator' => 'facilitator',
       'help desk' => 'help desk',
-      'moderator' => 'moderator',
       'system administrator' => 'system administrator',
     ),
     'module' => 'admin_menu',
