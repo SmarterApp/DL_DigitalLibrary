@@ -906,28 +906,47 @@ a.sbac-grid-layout {
 }
 
 .block-sbac-resource-sbac-resource-back-button {
-  float: left;
-  background: url('../images/back-small.png') 5px center no-repeat;
-  margin: .5em;
-  padding-left: 15px;
+  /*float: left;
+    background: url('../images/back-small.png') 5px center no-repeat;
+    margin: .5em;
+    padding-left: 15px;*/
 
   .button {
-    margin: 0px 1em 1em 2em;
-    float: left;
-    background: none !important;
-    color: #FFF !important;
-    border: none !important;
-    top: 0 !important;
-    font-weight:normal !important;
-    text-shadow:none !important;
+    background-color: #0684AD;
+		border: medium none;
+    border-radius: 0;
+    bottom: -70px;
+    box-shadow: none;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: block;
+    font-size: 15px;
+    height: 34px;
+    left: -20px;
+    line-height: 34px;
+    position: absolute;
+    text-align: center;
+    text-shadow: none;
+    vertical-align: top;
 
-    &:hover, &:focus, &:active {
-      @include box-shadow (none);
-      background: transparent;
-      color: inherit;
-      text-shadow: none !important;
+    &:hover {/*
+          @include box-shadow (none);
+          background: transparent;
+          color: inherit;
+          text-shadow: none !important;*/
     }
   }
+
+	.button:before {
+	  content: "\e620";
+    display: inline;
+    font-family: 'sbac';
+    font-size: 20px;
+    font-weight: normal;
+    margin-right: 7px;
+    position: relative;
+    top: -2px;
+	}
 }
 
 .preview{
