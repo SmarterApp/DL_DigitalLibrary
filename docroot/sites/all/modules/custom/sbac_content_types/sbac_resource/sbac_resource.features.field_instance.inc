@@ -2051,7 +2051,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_student_agency',
-    'label' => 'Student Engagement in the Formative Assesment Process',
+    'label' => 'Student Engagement in the Formative Assessment Process',
     'profanity' => 0,
     'required' => 0,
     'settings' => array(
@@ -2760,7 +2760,7 @@ function sbac_resource_field_default_field_instances() {
   t('Resource Type');
   t('Setting(s) for which this resource is appropriate. Select all that apply.');
   t('Smarter Balanced Keyword(s)');
-  t('Student Engagement in the Formative Assesment Process');
+  t('Student Engagement in the Formative Assessment Process');
   t('Student population(s) for which the resource is best suited. Select all that apply.');
   t('Subjects and Domains');
   t('Subscription Package Type');

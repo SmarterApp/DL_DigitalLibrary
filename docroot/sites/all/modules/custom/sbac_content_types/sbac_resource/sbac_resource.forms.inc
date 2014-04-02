@@ -696,7 +696,7 @@ function sbac_resource_validate_general(&$form, &$form_state) {
       form_set_error('field_connection_to_fap', $error);
       _sbac_resource_remove_error_message($error);
       drupal_set_message('general:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
-      drupal_set_message('general:field_connection_to_fap:group:Remove inappropriate language from connection to the formative assesment process', 'sbac_resource_error');
+      drupal_set_message('general:field_connection_to_fap:group:Remove inappropriate language from connection to the formative assessment process', 'sbac_resource_error');
     }
   }
   if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
