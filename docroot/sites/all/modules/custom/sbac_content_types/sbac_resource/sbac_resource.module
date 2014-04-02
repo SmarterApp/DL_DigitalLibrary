@@ -2506,8 +2506,8 @@ function _sbac_resource_determine_state_access($node, $account) {
     if (is_string($node)) {
       $node_perm = array_keys(node_list_permissions($node));
       $user_perm = user_role_permissions($account->roles);
-      foreach ($user_perm as $perm_id => $str_perm) {
-        $perm_intersect = array_intersect($node_perm, array_keys($str_perm));
+      foreach ($user_perm as $perm_id => $perms_list) {
+        $perm_intersect = array_intersect($node_perm, array_keys($perms_list));
         if (count($perm_intersect) > 0) {
           return TRUE;
         }
