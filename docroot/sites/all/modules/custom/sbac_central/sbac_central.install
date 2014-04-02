@@ -1138,3 +1138,17 @@ function sbac_central_update_7073() {
   );
   module_disable($modules);
 }
+
+/**
+ * Disable CMIS modules.
+ */
+function sbac_central_update_7074() {
+  $modules = array(
+    'cmis',
+    'cmis_common',
+    'cmis_browser',
+    'cmis_query',
+    'cmis_headerswing',
+  );
+  module_disable($modules);
+}
