@@ -29,14 +29,14 @@
         $alias = sbac_resource_get_url_alias($fields['nid']->raw);
         print l(htmlspecialchars_decode($fields['title']->raw), $alias);
       ?>
-      <div class="shield-drop"><?php print $image; ?></div>
-      <?php if (isset($fields['favorites_link'])): ?>
+    </h3>
+    <div class="shield-drop"><?php print $image; ?></div>
+    <?php if (isset($fields['favorites_link'])): ?>
       <div class="favorites-link">
         <?php echo $fields['favorites_link']; ?>
         <?php echo $fields['favorites_tooltip']; ?>
       </div>
-      <?php endif; ?>
-    </h3>
+    <?php endif; ?>
 
     <?php if (isset($fields['image'])): ?>
       <?php print $fields['image']; ?>

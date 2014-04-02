@@ -160,7 +160,7 @@ global $user;
       </div>
     <?php endif; ?>
 
-    <a title='main content' id="main-content" href="#"></a>
+    <a id="main-content"></a>
 
     <?php // if ($breadcrumb): print $breadcrumb; endif; ?>
     <?php if ($title && !$is_front && arg(0) != 'user' && arg(0) != 'legal_accept'): ?>

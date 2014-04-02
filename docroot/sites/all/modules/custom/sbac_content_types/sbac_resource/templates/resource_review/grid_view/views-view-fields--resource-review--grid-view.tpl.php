@@ -30,8 +30,8 @@
         $alias = sbac_resource_get_url_alias($fields['nid']->raw);
         print l(htmlspecialchars_decode($fields['title']->raw), $alias);
       ?>
-      <div class="shield-drop"><?php print $image; ?></div>
     </h3>
+    <div class="shield-drop"><?php print $image; ?></div>
 
     <?php if (isset($fields['image'])): ?>
       <?php print $fields['image']; ?>
