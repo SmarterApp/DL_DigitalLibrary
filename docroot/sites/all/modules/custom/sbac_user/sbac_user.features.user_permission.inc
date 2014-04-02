@@ -343,7 +343,6 @@ function sbac_user_user_default_permissions() {
       'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'digital library administrator' => 'digital library administrator',
-      'moderator' => 'moderator',
       'system administrator' => 'system administrator',
     ),
     'module' => 'node',
