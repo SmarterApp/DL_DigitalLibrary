@@ -2296,65 +2296,69 @@ a.more-less-text-trigger-less:after {
 
 /*Copyright Clearace Form on Material tab*/
 /* line 2223, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms {
+div[id*="edit-field-copyright-clearace-forms"] {
   margin-top: 30px;
 }
 /* line 2227, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms fieldset {
+div[id*="edit-field-copyright-clearace-forms"] fieldset {
   border: none;
   margin-bottom: 5px;
   padding-bottom: 5px;
+  padding-right: 0;
 }
-/* line 2233, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms legend {
+/* line 2234, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] legend {
   font-size: 0.8em;
   font-weight: bold;
   color: #4D4D4D;
 }
-/* line 2239, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms .fieldset-description {
+/* line 2240, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] .fieldset-description {
   font-size: 0.8em;
 }
-/* line 2243, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms input[id*="edit-field-copyright-clearace-forms"] {
+/* line 2244, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] input[id*="edit-field-copyright-clearace-forms"] {
   width: 500px;
 }
-/* line 2247, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms button.form-submit {
+/* line 2248, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] button.form-submit {
   float: right;
   margin-top: -5px;
 }
-/* line 2252, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] {
+/* line 2253, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] table[id*="edit-field-copyright-clearace-forms"] {
   width: 100%;
   margin-top: 10px;
 }
-/* line 2256, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] thead {
+/* line 2257, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] table[id*="edit-field-copyright-clearace-forms"] thead {
   background: none;
 }
-/* line 2259, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] thead th:last-child {
+/* line 2260, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] table[id*="edit-field-copyright-clearace-forms"] thead th:last-child {
   text-align: right;
 }
-/* line 2264, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] tr.even, #edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] tr.odd {
+/* line 2265, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] table[id*="edit-field-copyright-clearace-forms"] tr.even, div[id*="edit-field-copyright-clearace-forms"] table[id*="edit-field-copyright-clearace-forms"] tr.odd {
   background: none;
 }
-/* line 2268, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] a {
+/* line 2269, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] table[id*="edit-field-copyright-clearace-forms"] a {
   color: #222;
 }
-/* line 2272, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] a.tabledrag-handle {
-  margin-top: 6px;
+/* line 2273, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] table[id*="edit-field-copyright-clearace-forms"] a.tabledrag-handle {
+  margin-top: 5px;
 }
-/* line 2276, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms table[id*="edit-field-copyright-clearace-forms"] .form-managed-file {
-  line-height: 34px;
+/* line 2277, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] table[id*="edit-field-copyright-clearace-forms"] .form-managed-file {
+  line-height: 24px;
+  margin-top: 2px;
+  width: 500px;
+  word-break: break-all;
 }
-/* line 2281, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms button[id*="remove-button"] {
+/* line 2285, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"] {
   background-color: transparent;
   border: none;
   border-radius: 0;
@@ -2363,25 +2367,24 @@ a.more-less-text-trigger-less:after {
   cursor: pointer;
   font-size: 14px;
   font-weight: normal;
-  height: 34px;
-  line-height: 34px;
+  height: 24px;
+  line-height: 24px;
   padding: 0;
   text-align: center;
   text-shadow: none;
   float: right;
-  margin-top: 4px;
+  margin-top: 3px;
   margin-bottom: 0;
   /*text-indent: -9999em;*/
 }
-/* line 2301, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms button[id*="remove-button"]:hover {
+/* line 2305, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:hover {
   background-image: none !important;
 }
-/* line 2305, ../sass/sbac_resource.scss */
-#edit-field-copyright-clearace-forms button[id*="remove-button"]:after {
+/* line 2309, ../sass/sbac_resource.scss */
+div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after {
   font-family: "GeneralFoundicons";
   content: "\f018";
-  display: inline-block;
   font-size: 1em;
   height: 16px;
   margin-right: 20px;
@@ -2391,7 +2394,7 @@ a.more-less-text-trigger-less:after {
 }
 
 /*Smart Search*/
-/* line 2319, ../sass/sbac_resource.scss */
+/* line 2322, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper {
   background: none repeat scroll 0 0 #fcf1b0;
   -webkit-border-radius: 8px;
@@ -2407,13 +2410,13 @@ a.more-less-text-trigger-less:after {
   position: relative;
   width: 100%;
 }
-/* line 2330, ../sass/sbac_resource.scss */
+/* line 2333, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-left {
   width: 4%;
   display: inline-block;
   vertical-align: top;
 }
-/* line 2338, ../sass/sbac_resource.scss */
+/* line 2341, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-left .ssw-icon:after {
   content: "\e60e";
   display: inline-block;
@@ -2424,12 +2427,12 @@ a.more-less-text-trigger-less:after {
   top: 4px;
   color: #aeac8e;
 }
-/* line 2350, ../sass/sbac_resource.scss */
+/* line 2353, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center {
   width: 76%;
   display: inline-block;
 }
-/* line 2354, ../sass/sbac_resource.scss */
+/* line 2357, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .legend {
   color: #04385d;
   font-size: 22px;
@@ -2437,16 +2440,16 @@ a.more-less-text-trigger-less:after {
   margin-bottom: 10px;
   margin-top: 10px;
 }
-/* line 2362, ../sass/sbac_resource.scss */
+/* line 2365, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .legend:last-child {
   margin-bottom: 0;
 }
-/* line 2367, ../sass/sbac_resource.scss */
+/* line 2370, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .ssw-search-filters ul {
   list-style-type: none;
   margin: 0;
 }
-/* line 2371, ../sass/sbac_resource.scss */
+/* line 2374, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .ssw-search-filters ul li {
   background-color: #e4daa0;
   -webkit-border-radius: 3px;
@@ -2460,11 +2463,11 @@ a.more-less-text-trigger-less:after {
   margin: 5px 7px 5px 2px;
   padding: 8px 10px;
 }
-/* line 2381, ../sass/sbac_resource.scss */
+/* line 2384, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-center .ssw-search-filters ul li:first-child {
   margin-left: 0;
 }
-/* line 2388, ../sass/sbac_resource.scss */
+/* line 2391, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-right {
   width: 18%;
   display: inline-block;
@@ -2472,7 +2475,7 @@ a.more-less-text-trigger-less:after {
   text-align: right;
   margin-top: 10px;
 }
-/* line 2395, ../sass/sbac_resource.scss */
+/* line 2398, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-right .button.ssw-edit-link:before {
   background-image: url("../images/icon-buttonEdit.png");
   width: 17px;
@@ -2485,7 +2488,7 @@ a.more-less-text-trigger-less:after {
   vertical-align: middle;
   width: 18px;
 }
-/* line 2408, ../sass/sbac_resource.scss */
+/* line 2411, ../sass/sbac_resource.scss */
 .smart-search-welcome-main-wrapper .ssw-right .button.ssw-edit-link {
   white-space: nowrap;
 }
