@@ -4,8 +4,8 @@
  * Drupal needs this blank file.
  */
 
-define('SBAC_LEARNING_REGISTRY_INBLOOM_URL', 'http://maps-sandbox.inbloom.org:8080/lri-reboot');
-define('SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE', 2);
+define('SBAC_LEARNING_REGISTRY_INBLOOM_URL', 'http://maps-sandbox.inbloom.org:8080/lri-reboot/resources/search');
+define('SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE', 12);
 define('SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS', 'sbac-learning-registry-external-solr-keywords');
 
 /**
@@ -56,9 +56,14 @@ function sbac_learning_registry_external_resource_load($start = 0) {
       $filter_info = explode(':', $filter);
       $parameters[$filter_info[0]][] = sbac_learning_registry_external_resource_filter_values($filter_info[0], $filter_info[1]);
     }
+    $parameters['start'] = $start;
+    if (isset($_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS])) {
+      $parameters['solr_keywords'] = $_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS];
+    }
     $request_url = sbac_learning_registry_inbloom_construct_request_url($parameters);
-    $request_url = 'http://maps-sandbox.inbloom.org:8080/lri-reboot/resources/search?query=resource.standard_t:CCSS.Math.Content.8.EE.A.2&rows=' . SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE . '&start=' . $start;
-    dsm($request_url);
+//    dsm($request_url);
+    $request_url = 'http://maps-sandbox.inbloom.org:8080/lri-reboot/resources/search?query=resource_solrsummary_t:biology&rows=' . SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE . '&start=' . $start;
+//    dsm($request_url);
     $results = sbac_learning_registry_inbloom_send_request($request_url);
   }
   $start = $start + SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE;
@@ -110,9 +115,30 @@ function sbac_learning_registry_external_resources_page() {
  * @return string
  */
 function sbac_learning_registry_inbloom_construct_request_url($parameters) {
+  // TODO: We're waiting on inBloom for this mapping information
+//  dsm($parameters);
+  $mappings = array(
+    'solr_keywords' => 'resource_solrsummary_t',
+    'start' => 'start',
+    'intended_user_roles' => 'something'
+  );
+  $query = array();
+  foreach ($mappings as $param => $inbloom) {
+    if (isset($parameters[$param])) {
+      if (is_array($parameters[$param])) {
+        // TODO: Handle multiple selection
+        foreach ($parameters[$param] as $v) {
+          $query[$inbloom] = $v;
+        }
+      }
+      else {
+        $query[$inbloom] = $parameters[$param];
+      }
+    }
+  }
   $options = array(
     'absolute' => TRUE,
-    'query' => $parameters,
+    'query' => $query,
   );
   return url(SBAC_LEARNING_REGISTRY_INBLOOM_URL, $options);
 }
@@ -584,10 +610,10 @@ function sbac_learning_registry_workbench_moderation_transition($node, $previous
       // in the future.
       if ($node->status == 1) {
         if (variable_get('learning_registry_queuing', LEARNING_REGISTRY_QUEUE_IMMEDIATE) == LEARNING_REGISTRY_QUEUE_QUEUED) {
-//          _learning_registry_queue_node($node->nid);
+          _learning_registry_queue_node($node->nid);
         }
         else {
-//          _learning_registry_publish($node);
+          _learning_registry_publish($node);
         }
       }
     }
