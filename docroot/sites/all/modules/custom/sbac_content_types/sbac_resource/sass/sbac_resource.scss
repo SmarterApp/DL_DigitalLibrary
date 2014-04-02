@@ -378,14 +378,13 @@ a.sbac-grid-layout {
       font-size: 1em;
       font-weight: normal;
       font-family: Arial, sans-serif;
-      max-width: 250px;
+      max-width: 225px;
       word-wrap: break-word;
 
-      .field-content a {
+      &.resource-name a {
         color: #0085ad;
 				padding-right: 5px;
 				display: block;
-				float: left;
       }
 
 			span a {width: 92% \9\0; } /*for IE 9, 10*/
@@ -410,11 +409,20 @@ a.sbac-grid-layout {
 		.distinction span a{ width: 83% \9\0; } /*for IE 9, 10*/
 
     .shield-drop {
-			 width: 25px;
+			width: 25px;
 			display: inline-block;
+			
+			img {
+				box-shadow: none;
+				margin-top: 0;
+				position: absolute;
+				right: 30px;
+				top: 11px;
+			}
+			
       .f-dropdown.open {
         top: 38px !important;
-        right: 25px !important;
+        right: 20px !important;
         left: auto !important;
         width: 170px;
 				text-align: center;
@@ -535,13 +543,15 @@ a.sbac-grid-layout {
 
       .resource-name {
         border-bottom: 1px solid #aaaaaa;
-        padding-bottom: 5px;
-        margin-top: 10px;
+        padding-bottom: 2px;
+        margin-top: 0;
       }
 
       h3 {
         font-size: 16px;
         max-width: 100%;
+
+				a {width: 90%;}
       }
 
     .distinction span a {
@@ -563,11 +573,22 @@ a.sbac-grid-layout {
       }
 
 			.shield-drop {
+				
+				img{
+					right: 40px;
+			    top: 2px;
+				}
+		
 				.f-dropdown.open {
-					right: 37px !important;
+					right: 32px !important;
 				}
 			}
 
+			.favorites-link {
+			    right: 0;
+			    top: 5px;
+				}
+				
       .list-view-info {
         font-size: 0.75em;
         color: $darkgreen;
