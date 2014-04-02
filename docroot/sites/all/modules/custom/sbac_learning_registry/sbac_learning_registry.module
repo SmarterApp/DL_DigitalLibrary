@@ -103,6 +103,9 @@ function sbac_learning_registry_clear_all() {
  * Page callback
  */
 function sbac_learning_registry_external_resources_page() {
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_modal_add_js();
   return theme('sbac_external_resource', array(
     'results' => sbac_learning_registry_external_resource_load(0),
   ));
