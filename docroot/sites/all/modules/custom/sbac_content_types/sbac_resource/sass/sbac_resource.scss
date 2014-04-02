@@ -378,7 +378,7 @@ a.sbac-grid-layout {
       font-size: 1em;
       font-weight: normal;
       font-family: Arial, sans-serif;
-      max-width: 225px;
+      max-width: 223px;
       word-wrap: break-word;
 
       &.resource-name a {
@@ -421,7 +421,7 @@ a.sbac-grid-layout {
 			}
 			
       .f-dropdown.open {
-        top: 38px !important;
+        top: 32px !important;
         right: 20px !important;
         left: auto !important;
         width: 170px;
@@ -1450,6 +1450,17 @@ a.sbac-grid-layout {
 
 				.shield-drop  {
 					width: auto;
+					
+					img {
+						right: 4px;
+					}
+					
+					.f-dropdown.open {
+						right: -5px !important;
+						top: 38px !important;
+						
+						li {width: auto !important;}
+					}
 				}
 			}
 		}
