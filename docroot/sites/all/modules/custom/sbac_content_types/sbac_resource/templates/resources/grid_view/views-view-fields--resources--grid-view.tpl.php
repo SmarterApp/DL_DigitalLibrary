@@ -44,9 +44,9 @@
     <?php endif; ?>
 
     <div class='resource-stats'>
-      <p>
-        <?php (isset($fields['field_alt_body']) ? print $fields['field_alt_body']->content : print ''); ?>
-      </p>
+        <?php if (isset($fields['field_alt_body'])): ?>
+          <?php echo $fields['field_alt_body']->content; ?>
+        <?php endif; ?>
     </div>
   </div>
 
@@ -57,7 +57,7 @@
     }
   ?>
 
-  <div class="clearfix resoruce-bottom <?php print $class; ?> <?php (isset($fields['text']) ? print  strtolower(str_replace(' ', '-', $fields['text'])) : ''); ?>">
+  <div class="clearfix resoruce-bottom <?php print $class; ?> <?php (isset($fields['text']) ? print strtolower(str_replace(' ', '-', $fields['text'])) : ''); ?>">
     <?php if (isset($fields['text']) && $fields['text'] != 'approved'): ?>
       <div class="resource-state-description">
         <p>

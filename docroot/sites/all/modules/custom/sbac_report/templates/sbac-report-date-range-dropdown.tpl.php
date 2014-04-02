@@ -11,4 +11,5 @@
         <input type="radio" name="date-select" value="<?php print $ago_90; ?>" <?php print $date_display == t('Last 90 Days') ? 'checked' : ''; ?>><?php print t('Last 90 Days'); ?><br />
         <input type="radio" name="date-select" value="custom" <?php print $date_display == t('Custom Date') ? 'checked' : ''; ?>><?php print t('Custom Date'); ?><br />
             <fieldset class="form-wrapper">
+              <legend>Choose a Date:</legend>
 <?php // The closing tags are attached to the date popup form element. ?>

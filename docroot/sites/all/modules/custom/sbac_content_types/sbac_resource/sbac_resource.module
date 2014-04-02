@@ -707,7 +707,7 @@ function sbac_resource_preprocess_node(&$vars) {
       $materials = _sbac_resource_preview_materials($vars);
       $result = sbac_resource_determine_download_ability($vars);
       if ($result['primary'] || $result['secondary']) {
-        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download', 'class' => 'button small right')));
+        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download Zip File', 'class' => 'button small right')));
         if ($result['primary'] == FALSE || $result['secondary'] == FALSE) {
           $vars['download_partial'] = TRUE;
         }

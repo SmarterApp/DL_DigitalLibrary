@@ -1370,7 +1370,7 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   $summary_valid = sbac_resource_check_summary($form, $form_state);
   $form['completed_flag_summary'] = array(
     '#markup' => ($summary_valid ? '<span class="section-complete"></span>' : '<span class="section-incomplete"></span>'),
-    '#prefix' => '<div class="completed-flag" id="completed-flag-basic">',
+    '#prefix' => '<div class="completed-flag" id="completed-flag-summary">',
     '#suffix' => '</div>'
   );
   $form['#group_children']['completed_flag_summary'] = "group_summary";
@@ -1384,7 +1384,7 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   $materials_valid = sbac_resource_check_materials($form, $form_state);
   $form['completed_flag_materials'] = array(
     '#markup' => ($materials_valid ? '<span class="section-complete"></span>' : '<span class="section-incomplete"></span>'),
-    '#prefix' => '<div class="completed-flag" id="completed-flag-basic">',
+    '#prefix' => '<div class="completed-flag" id="completed-flag-materials">',
     '#suffix' => '</div>'
   );
   $form['#group_children']['completed_flag_materials'] = "group_materials";
@@ -2097,7 +2097,7 @@ function sbac_resource_license_url(&$form, &$form_state) {
         $content = '
           <div id="edit-field-license-url" class="form-item form-type-item">
             <label for="edit-field-license-url">' . t('License URL') . '</label>
-          ' . l($term->description, $term->description) . '
+          ' . l($term->description, $term->description, array('attributes' => array('title' => $term->description))) . '
           </div>
         ';
       }
@@ -2390,7 +2390,8 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
       '#markup' => l(t('Submit Resource'), 'sbac_resource/nojs/submit-resource', array(
         'attributes' => array(
           'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-resource-modal-submit-resource',
-          'id' => 'sbac-resource-modal-submit-resource'
+          'id' => 'sbac-resource-modal-submit-resource',
+          'title' => 'Submit Resource',
         ),
         'query' => array(
           'nid' => $form['#node']->nid
@@ -2461,7 +2462,8 @@ function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
       '#markup' => l(t('Save All Changes (Modal)'), 'sbac_resource/nojs/save-all-changes', array(
         'attributes' => array(
           'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-resource-save-all-changes',
-          'id' => 'sbac-resource-save-all-changes'
+          'id' => 'sbac-resource-save-all-changes',
+          'title' => 'Save All Changes',
         ),
         'query' => array(
           'nid' => $form['#node']->nid,
