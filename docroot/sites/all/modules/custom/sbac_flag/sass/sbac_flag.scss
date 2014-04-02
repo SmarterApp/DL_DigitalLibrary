@@ -1,26 +1,27 @@
 .page-moderation {
-	
+
 	.block-sbac-flag-moderation-count {
 		float: left;
 		margin-left: 26px;
 		margin-right: 10px;
-		
+
 		h3 {
-			color: #0085AD;
-	    font-size: 1.2rem;
+			color: #FFF; /*#0085AD*/
+	    font-size: 15px;
 	    font-weight: normal;
 	    height: 45px;
 	    line-height: 45px;
 	    margin: 0;
 	    padding: 0;
+	    text-shadow:0 1px 0 rgba(0, 0, 0, 0.3)
 		}
 	}
-	
+
 	.block-sbac-flag-moderation-category {
-		vertical-align: top;	
-		float: left;	
+		vertical-align: top;
+		float: left;
 	}
-		
+
 	.main-container {
 	  background-clip: padding-box;
 		background-color: transparent;
@@ -28,7 +29,7 @@
 		box-shadow: none;
 		margin: 1.5625em auto 4.6875em;
 		padding: 15px 0;
-			
+
 		.resource-card {
 			-moz-box-sizing: border-box;
 			background: none repeat scroll 0 0 #FFFFFF;
@@ -40,17 +41,17 @@
 	    padding: 15px 114px 15px 15px;
 	    position: relative;
 			height: 110px;
-	
+
 			.row {
 				margin-left: 0;
 			}
-			
+
 			.resource-title a, .review-title a {
 				color: #04384E;
 			  font-size: 15px;
 		    font-weight: bold;
 			}
-			
+
 			.resource-title {
 				font-size: 13px;
 				line-height: 1.2;
@@ -58,7 +59,7 @@
 		    padding-top: 9px;
 				font-style: italic;
 			}
-				
+
 			.row-right {
 				-moz-box-sizing: border-box;
 				background-color: #F2F2F2;
@@ -75,33 +76,33 @@
 		    text-shadow: 0 1px 0 #FFFFFF;
 		    top: 0;
 		    width: 280px;
-		
+
 				.flag-status {
 					padding: 15px 60px 30px 10px;
-					
+
 					&.urgent {color: #ff0000;}
 				}
-				
+
 				a {
 					margin-left: 10px;
 				}
 			}
-		}			
+		}
 	}
 }
 
 /*Moderation resource detail view page*/
 .node-type-resource {
-	
+
 	.flag-resource-container {
 		margin: 0 30px;
-		
+
 		.resource-flag-category {
 			border-bottom: 1px solid #62676E;
 			padding: 20px 0 5px;
 			margin-bottom: 10px;
 			position: relative;
-			
+
 			.resource-category {
 				color: #04384E;
 		    display: block;
@@ -114,7 +115,7 @@
 				line-height: 1.4;
 				width: 90%;
 			}
-			
+
 			.resource-count {
 				display: inline-block;
 				margin-left: 10px;
@@ -126,18 +127,18 @@
 				right: 0;
 			}
 		}
-		
+
 		.flag-row {
 			padding: 10px 0 20px;
 			border-bottom: 1px #cecece solid;
 			margin-bottom: 20px;
-			
+
 			.flag-user {
 				padding-bottom: 15px;
 			}
 		}
 	}
-	
+
 	.resource-flag-information {
 	  background-color: #F2F2F2;
     border: 7px solid #FFFFFF;
@@ -157,30 +158,30 @@
 	    padding-top: 0px;
 			font-size: 16px;
 		}
-		
+
 		.flag-count {padding-top: 3px;}
-		
+
 		.flag-button {
 			position: absolute;
 			top: 22px;
 			right: 20px;
 			a {
 				margin-bottom: 0;
-				
+
 			}
-		} 
+		}
 	}
-	
+
 	.resource-flag-information.urgent {
 	    background-color: #FDF2B1;
 	    color: #101010;
-	
+
 			.flag-status {color: #8A1538;}
 	}
 }
 
 .node-type-resource {
-	
+
 	.entity-review.view-mode-full {
 	  border-bottom: none;
 		padding-top: 0;
@@ -189,16 +190,16 @@
 
 /*Edit page*/
 .page-node-edit.node-type-resource {
-		
+
 	#page-title {
    	border-bottom: none;
    	float: left;
 	}
-	
+
 	.resource-preview {
 		margin-top: 18px;
 	}
-	
+
 	.flag-information {
 		clear: both;
 		background-color: #F2F2F2;
@@ -216,26 +217,26 @@
 			font-weight: bold;
 			padding: 0 0 15px;
 		}
-	}	
-	
+	}
+
 	.flag-resource-container {
 		margin: 0;
 	}
-	
+
 	.resource-flag-category {
 		position: relative;
-		
+
 		.resource-category {
 			width: 90%;
 			line-height: 1.4;
 		}
-		
+
 		.resource-count {
 			position: absolute;
 			bottom: 10px;
 			right: 0;
 		}
-	}	
+	}
 }
 
 /*Confirmation modal for edit page*/
@@ -257,42 +258,42 @@
 	form[id*="sbac-flag-remove-resource-form"],
 	form[id*="sbac-flag-remove-resource-review-form"],
 	#sbac-flag-resolve-all-resource-review-moderation-form {
-	
+
 		.flag-modal-cont {
 			height: 200px;
 			overflow-y: scroll;
 			padding: 15px 40px 0;
 			background-color: #F2F2F2;
-		
+
 			h3 {
 				font-size: 18px;
 				color: #000;
 				padding-top: 10px;
 			}
-		
+
 			.category-output {
 				font-size: 16px;
-			
+
 				span {
 					color: #62676E;
 					font-style: italic;
 				}
 			}
-		
+
 			label {
 				font-size: 16px;
 				color: #000;
 			}
-		
+
 			.form-textarea-wrapper, .form-item-contributor-message {
 				position: relative;
-				
+
 				textarea {
 					width: 100% !important;
 					max-width: 100%;
 					margin-bottom: 15px;
 				}
-				
+
 				.counter {
 					font-size: 13px;
 			    position: absolute;
@@ -302,7 +303,7 @@
 				}
 			}
 		}
-	
+
 		.flag-button-cont {
 			-moz-box-sizing: border-box;
 	    border-top: 1px solid #F2F2F2;
@@ -314,28 +315,28 @@
 	    z-index: 4;
 			height: 69px;
 		}
-	
+
 		button {float: right; margin-left: 30px;}
-		
+
 		button#edit-finish-moderation {
 			background-color: #0084B0;
 			border: 1px solid #0D6785;
 			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 		}
-		
+
 		button[id*="edit-cancel"] {
 			background-color: #6E7379 !important;
 		  border: 1px solid #4D5457 !important;
 			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset !important;
 		}
-	
+
 		button[id*="edit-finish-moderation"] {
 			background-color: #8A1538 !important;
 	    border: 1px solid #793348 !important;
 			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset !important;
 		}
 	}
-	
+
 	.form-item-error-holder.error + .form-item {
 	  background: url("../images/icon-validation-fail.png") no-repeat right 10px top 40px;
 	}
@@ -343,21 +344,21 @@
 
 /*Modal with scrolling content*/
 .page-node-edit.node-type-resource, .node-type-resource.section-content  {
-	
+
 	#modalContent {
-		
+
 		.ctools-modal-content {
 			padding: 0;
 			width: 850px !important;
 			height: 340px !important;
-			
+
 			.modal-content {
 				overflow-y:	hidden !important;
 				height: auto !important;
 				padding: 0 !important;
 			}
 		}
-		
+
 		.modal-header {
 			-moz-box-sizing: border-box;
 		  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
@@ -365,7 +366,7 @@
 	    position: relative;
 	    z-index: 3;
 		}
-		
+
 		.modal-title {
 			color: #04384E !important;
 			display: block;
@@ -375,25 +376,25 @@
 	    text-transform: capitalize;
 			padding: 0 !important;
 		}
-	}	
+	}
 }
 
 /*Modal with small content*/
 .page-node-edit.node-type-resource, .node-type-resource.section-content {
-	
+
 	#modalContent {
-		
+
 		.ctools-modal-content.small {
 			width: 620px !important;
 			height: auto !important;
-			
+
 			.modal-header {
 				-moz-box-sizing: none;
 			  box-shadow: none;
 				font-size: 18px !important;
 				color: #000;
 			}
-			
+
 			.modal-title {
 				/*color: #04384E !important;*/
 				display: block;
@@ -403,7 +404,7 @@
 		    text-transform: capitalize;
 				padding: 0 !important;
 			}
-			
+
 			form {
 				margin-top: 0;
 				padding: 0 40px;
@@ -412,13 +413,13 @@
 	}
 }
 
-/*Modal - sbac-flag-start-moderation-form*/	
+/*Modal - sbac-flag-start-moderation-form*/
 #sbac-flag-start-moderation-form {
 	button{
 		float: right;
 		margin-left: 30px;
 	}
-	
+
 	#edit-cancel {
 		background-color: #6E7379;
 	  border: 1px solid #4D5457;
@@ -432,25 +433,25 @@
 		float: right;
 		margin-left: 30px;
 	}
-	
+
 	button#edit-continue {
 		background-color: #0084B0;
     border: 1px solid #0D6785;
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 	}
-	
+
 	button#edit-cancel {
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 	}
-	
+
 	h3 {
 		font-size: 16px;
 		color: #000;
 	}
-	
+
 	.category-output {
 		font-size: 16px;
-	
+
 		span {
 			color: #62676E;
 			font-style: italic;
@@ -464,14 +465,14 @@
 		float: right;
 		margin-left: 30px;
 	}
-	
+
 	button#edit-cancel {
 		background-color: #6E7379;
 	  border: 1px solid #4D5457;
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 		padding-left: 40px;
 	}
-	
+
 	button#edit-continue {
 		background-color: #0084B0;
 		border: 1px solid #0D6785;
@@ -481,15 +482,15 @@
 
 /*Modal - sbac-flag-cancel-resource-moderation-form*/
 #sbac-flag-cancel-resource-moderation-form {
-	
+
 	padding: 0 40px;
 	margin-top: 30px;
-	
+
 	button{
 		float: right;
 		margin-left: 30px;
 	}
-	
+
 	button#edit-continue {
 		background-color: #0084B0;
 		border: 1px solid #0D6785;
@@ -509,16 +510,16 @@
 		border: 1px solid #0D6785;
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 	}
-	
+
 	button#edit-cancel {
 		background-color: #6E7379;
 	  border: 1px solid #4D5457;
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 	}
 }
-	
-	
-	
+
+
+
 /*Confirmation modal for sbac-flag-remove-resource-review-form page*/
 /*.node-type-resource {
 
@@ -527,21 +528,21 @@
 			float: right;
 			margin-left: 30px;
 		}
-		
+
 		label {
 			font-size: 16px;
 			color: #000;
 		}
-	
+
 		.form-item-contributor-message {
 			position: relative;
-			
+
 			textarea {
 				width: 100% !important;
 				max-width: 100%;
 				margin-bottom: 15px;
 			}
-			
+
 			.counter {
 				font-size: 13px;
 		    position: absolute;
@@ -550,14 +551,14 @@
 				color: #5A5A5A;
 			}
 		}
-		
+
 		button[id*="edit-cancel"] {
 			background-color: #6E7379;
 		  border: 1px solid #4D5457;
 			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 			padding-left: 40px;
 		}
-	
+
 		button[id*="edit-finish-moderation"] {
 			background-color: #8A1538;
 	    border: 1px solid #793348;
@@ -566,21 +567,21 @@
 	}
 }*/
 
-/*button*/ 
+/*button*/
 .flag-category-review-buttons, .form-actions {
 	text-align: center !important;
 	padding-top: 15px;
-	
+
 	.cancel, .finish {
 		display: inline-block;
 		margin: 0 15px;
 		position: relative;
-		
+
 		.item-list {
 			position: absolute;
 			top: 40px;
 			right: 30px;
-			
+
 			ul {
 				width: 190px;
 				text-align: left;
@@ -589,7 +590,7 @@
 			}
 		}
 	}
-	
+
 	#sbac-flag-cancel-moderation {
 		display: inline-block;
 		margin: 0 15px;
@@ -619,7 +620,7 @@ button.gray.cancel:before, .button.gray.cancel:before {
 .sbac-flag-load-more-button {
 	text-align: center;
 	margin-top: 30px;
-	
+
 	a {width: 480px;}
 }
 

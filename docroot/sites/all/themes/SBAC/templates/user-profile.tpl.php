@@ -76,9 +76,9 @@
 
     <div class="profile-email-address">
       <?php
-        if (isset($user_profile['field_subject_s_']['#object'])) {
-          if (sbac_user_privacy_check('mail', $user_profile['field_subject_s_']['#object'])) {
-            echo "<a href=\"mailto:" . $user->mail . "\">" . $user->mail . "</a>";
+        if (isset($user_profile['account_info'])) {
+          if (sbac_user_privacy_check('mail', $user_profile['account_info'])) {
+            echo "<a href=\"mailto:" . $user_profile['account_info']->mail . "\">" . $user_profile['account_info']->mail . "</a>";
           }
         }
       ?>

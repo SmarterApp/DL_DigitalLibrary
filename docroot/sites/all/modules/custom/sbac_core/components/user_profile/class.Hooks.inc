@@ -54,6 +54,7 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_user_view($account, $view_mode, $langcode) {
     $account->content['view_mode'] = $view_mode;
+    $account->content['account_info'] = $account;
     // we don't want to add tabs on any other view modes
       if ($view_mode !== 'full') {
         return;

@@ -624,31 +624,42 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     }
   }
 
-  .button {
-    @include border-radius (6px);
-    @include transition (all 500ms ease);
-    @include box-shadow(none);
-    padding: 8px 18px;
-    margin-left: 10px;
-    background: rgba(191, 216, 229, 1);
-    border: 1px rgba(0, 98, 152, .5) solid;
-    font-size: 1em;
-    font-weight: bold;
-    color: rgba(0, 98, 152, 1);
-    text-shadow: 0px -1px 0px rgba(000,000,000,0), 0px 1px 0px rgba(255,255,255,.5);
-    cursor: pointer;
-    line-height: 1em;
-    height: auto;
+  /*.button {
+   		@include border-radius (6px);
+        @include transition (all 500ms ease);
+        @include box-shadow(none);
+        padding: 8px 18px;
+        margin-left: 10px;
+        background: rgba(191, 216, 229, 1);
+        border: 1px rgba(0, 98, 152, .5) solid;
+        font-size: 1em;
+        font-weight: bold;
+        color: rgba(0, 98, 152, 1);
+        text-shadow: 0px -1px 0px rgba(000,000,000,0), 0px 1px 0px rgba(255,255,255,.5);
+        cursor: pointer;
+        line-height: 1em;
+        height: auto;
 
-    &:hover, &:focus, &.form-submit.ajax-processed {
-			 /*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
-			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
-		} /*{
-          color: rgba(255, 255, 255, 1);
-          background: rgba(0, 133, 173, 1);
-          text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
-        }*/
-  }
+      &:hover, &:focus, &.form-submit.ajax-processed {
+  			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+  			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
+  	
+        color: rgba(255, 255, 255, 1);
+        background: rgba(0, 133, 173, 1);
+        text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
+       }
+    }*/
+
+		.button {
+			float: left;
+			top: 18px;
+			margin-left: 8px;
+			
+			&:hover {
+				background-color: transparent;
+				background-image: none;
+			}
+		}
 
   .user-nav {
     font-size: 1em;
@@ -2899,7 +2910,7 @@ a.tabledrag-handle .handle {
 
 	ul {
 		margin: 0 !important;
-		
+
 		input.default {
 			min-height: 25px;
 		}
@@ -3052,11 +3063,11 @@ a.tabledrag-handle .handle {
 		width: 600px;
 		margin: 0 auto;
 		padding-bottom: 120px;
-		
+
 		&.columns {
 			float: none !important;
 		}
-		
+
 		h1 {
 			color: #04384E;
 	    display: block;
@@ -3065,13 +3076,13 @@ a.tabledrag-handle .handle {
 	    margin: 0;
 	    padding: 20px 0;
 		}
-		
+
 		p {
 		  font-size: 16px;
 	    line-height: 1.6;
 	    margin: 0 0 40px;
 		}
-		
+
 		a.medium.button {
 			margin: 0 auto;
 			text-align: center;
@@ -3082,7 +3093,7 @@ a.tabledrag-handle .handle {
 }
 
 /* ---------------------------------------------------------------------
-    Re-style 
+    Re-style
 		- Resource Count
 		- Sort menu
 		- Action buttons (i.e. create new resource on the My Resources tab)
@@ -3100,6 +3111,14 @@ a.tabledrag-handle .handle {
 	}
 }
 
+/* fix for back button block for resource node pages.*/
+.page-moderation .top-bar.last-top,
+.node-type-resource .top-bar.last-top{
+  height:25px;
+  max-width:960px;
+  padding:0 0 0;
+}
+
 .top-bar.last-top {
 	background-color: #0684AD;
 	padding: 20px 0 5px;
@@ -3107,7 +3126,7 @@ a.tabledrag-handle .handle {
 }
 
 .block-sbac-resource-sbac-resource-results-count {
-	
+
 	h3 {
 		color: #FFFFFF;
 		font-size: 15px;
@@ -3117,7 +3136,7 @@ a.tabledrag-handle .handle {
 		span {
 			font-weight: bold;
 		}
-	}	
+	}
 }
 
 div.block-sbac-resource-sbac-resource-dl-sort-form,
@@ -3133,7 +3152,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 }
 
 .block-sbac-resource-sbac-resource-create-button {
-	
+
 	a.button {
 		moz-border-bottom-colors: none;
 		-moz-border-left-colors: none;
@@ -3163,11 +3182,11 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		position: relative;
 		z-index: 4;
 	}
-	
+
 	a.button.sbac-create-resource-dropdown {
 		padding: 0 54px 0 18px;
 	}
-	
+
 	a.button.sbac-create-resource-dropdown:after {
 	    background-color: rgba(0, 0, 0, 0.1);
 	    background-image: url("../images/button-select.png");
@@ -3183,14 +3202,14 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	    top: 0;
 	    width: 36px;
 	}
-	
+
 	a.button.open-list {
 	    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
 	}
-	
+
 	ul#sbac-create-resource.f-dropdown {
-		box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);   
-    transition: max-height 0.75s ease 0s;    
+		box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
+    transition: max-height 0.75s ease 0s;
     -moz-box-sizing: border-box;
     background-color: #F7F7F7;
     border: 1px solid #0D6785;
@@ -3202,7 +3221,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	  top: 28px !important;
 		position: absolute;
 		z-index: 3;
-		
+
 		li {
 			a {
 				background-color: transparent !important;
@@ -3212,7 +3231,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		    margin: 0;
 		    padding: 12px 20px !important;
 		    word-wrap: break-word;
-		
+
 			 &:hover {
 				 background-color: #F2F2F2;
 				 color: #006082;
@@ -3220,17 +3239,17 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 				}
 			}
 		}
-		
+
 		li.last {
 			border-top: 1px solid #FFFFFF;
 			box-shadow: 0 -1px 0 0 #CECECE;
-			
+
 			&:hover {
 				@include border-radius( 0 0 5px 5px);
 			}
 		}
 	}
-	
+
 	#sbac-create-resource.f-dropdown:before,
 	#sbac-create-resource.f-dropdown:after {
 		display: none;
@@ -3238,8 +3257,8 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 }
 
 .block-sbac-resource-sbac-resource-grid-list-button {
-	
-	a.sbac-grid-layout, 
+
+	a.sbac-grid-layout,
 	a.sbac-list-layout {
 		float: right;
 		color: #fff;
@@ -3247,7 +3266,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 		margin-right: 35px;
 	}
-	
+
 	 a.sbac-list-layout:before,
 	 a.sbac-grid-layout:before {
 	  content: "\e609";
@@ -3260,7 +3279,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
     position: relative;
     top: 0px;
 	}
-	
+
 	a.sbac-grid-layout:before {
 		content: "\e608";
 	}
