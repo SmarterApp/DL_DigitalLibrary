@@ -47,6 +47,7 @@ function sbac_resource_menu() {
   $items = array();
 
   $items['sbac_resource/%ctools_js/add-alignment'] = array(
+    'title' => 'Add Alignment',
     'page callback' => 'sbac_resource_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -54,6 +55,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac_resource/%ctools_js/filter-by-alignment'] = array(
+    'title' => 'Filter',
     'page callback' => 'sbac_resource_filter_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -61,6 +63,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac_resource/%ctools_js/submit-resource'] = array(
+    'title' => 'Submit Resource',
     'page callback' => 'sbac_resource_submit_resource_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -68,6 +71,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac_resource/%ctools_js/delete-resource'] = array(
+    'title' => 'Delete Resource',
     'page callback' => 'sbac_resource_delete_resource_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -75,6 +79,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac_resource/%ctools_js/save-all-changes'] = array(
+    'title' => 'Save All Changes',
     'page callback' => 'sbac_resource_save_all_changes_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -82,6 +87,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac-resource/%ctools_js/unsubmit-resource-modal'] = array(
+    'title' => 'Unsubmit Resource',
     'page callback' => 'sbac_resource_unsubmit_resource_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -148,6 +154,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac-resource/url-exists'] = array(
+    'title' => 'URL Exists',
     'page callback' => 'sbac_resource_url_exists_ajax',
     'access arguments' => array('access content'),
     'title' => 'URL Exist',

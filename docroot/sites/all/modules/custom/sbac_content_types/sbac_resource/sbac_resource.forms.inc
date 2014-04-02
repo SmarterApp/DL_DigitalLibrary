@@ -1716,7 +1716,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
     // Alignment Button
     $form['add_alignment_tag_button'] = array(
       '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
-        'attributes' => array('class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
+        'attributes' => array('title' => 'Add Standard(s)', 'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
         'query' => array('nid' => $form['#node']->nid))),
       '#weight' => 23.6,
     );

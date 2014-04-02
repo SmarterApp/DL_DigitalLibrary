@@ -180,6 +180,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
     '#markup' => l(t('Add Standard(s) to Resource'), '#',
       array(
         'attributes' => array(
+          'title' => 'Add Standard(s)',
           'class' => array('form-submit', 'button'),
           'id' => 'ccss-submit',
         ),
@@ -193,6 +194,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
         'attributes' => array(
           'class' => 'button ctools-close-modal close',
           'id' => 'ccss-cancel',
+          'title' => 'Cancel',
         ),
         'external' => TRUE,
       )
@@ -273,6 +275,7 @@ function sbac_alignment_filter_alignment_form($form, $form_state, $tid = 0) {
         'attributes' => array(
           'class' => array('form-submit', 'button'),
           'id' => 'ccss-submit',
+          'title' => 'Add Selections',
         ),
         'external' => TRUE,
       )
@@ -284,6 +287,7 @@ function sbac_alignment_filter_alignment_form($form, $form_state, $tid = 0) {
         'attributes' => array(
           'class' => 'button ctools-close-modal close',
           'id' => 'ccss-cancel2',
+          'title' => 'Cancel',
         ),
         'external' => TRUE,
       )

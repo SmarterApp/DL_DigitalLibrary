@@ -80,7 +80,7 @@
               </div>
             </div>
           </div>
-          <?php print l('<i class="gen-enclosed foundicon-remove"></i>', '#', array('html' => TRUE, 'attributes' => array('class' => 'ccss-term-delete', 'nid' => $row['nid']))); ?>
+          <?php print l('<i class="gen-enclosed foundicon-remove"></i>', '#', array('html' => TRUE, 'attributes' => array('title' => 'Remvoe', 'class' => 'ccss-term-delete', 'nid' => $row['nid']))); ?>
         </td>
       </tr>
     <?php endforeach; ?>

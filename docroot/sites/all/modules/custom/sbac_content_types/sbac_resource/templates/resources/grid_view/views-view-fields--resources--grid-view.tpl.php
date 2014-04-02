@@ -27,7 +27,7 @@
     <h3 class='resource-name <?php print $class; ?>'>
       <?php
         $alias = sbac_resource_get_url_alias($fields['nid']->raw);
-        print '<div class="field-content">' . l(htmlspecialchars_decode($fields['title']->raw), $alias) . '</div>';
+        print l(htmlspecialchars_decode($fields['title']->raw), $alias);
       ?>
       <div class="shield-drop"><?php print $image; ?></div>
       <?php if (isset($fields['favorites_link'])): ?>
