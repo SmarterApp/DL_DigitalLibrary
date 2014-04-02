@@ -227,45 +227,4 @@
       });
     }
   };
-
-  // /**
-  //  * Clears all current filters.
-  //  *
-  //  * @type {{attach: Function}}
-  //  */
-  // Drupal.behaviors.sbac_my_resources_textbox = {
-  //   attach: function (context, settings) {
-  //     // Moves the text into the hidden field.
-  //     $('#sbac-search-textbox').keypress( function(event) {
-  //       var keypressed = event.which;
-  //       if(keypressed == 13){
-  //         $('#sbac-search-keywords').val($(this).val());
-  //         $('#sbac-search-filter-button').click();
-  //         return false;
-  //       }
-  //     });
-  //     // Moves the text into the hidden field.
-  //     $('#sbac-search-textbox').change( function(event) {
-  //       $('#sbac-search-keywords').val($(this).val());
-  //     });
-  //     // Hide the Keyword field.
-  //     $('#views-exposed-form-my-resources-grid-view').hide();
-  //     $('#views-exposed-form-my-resources-list-view').hide();
-
-  //     if ($('#sbac-search-textbox').val() != '') {
-  //       $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
-  //     }
-
-  //     $('.pager-next a').html('Load More Resources').addClass('button');
-  //   }
-  // };
-
-  // Drupal.behaviors.sbac_my_resources_clear = {
-  //   attach: function (context, settings) {
-  //     $('.sbac-clear-search').click( function() {
-  //       window.location.href = 'sbac-search/clear-all?location=my-resources';
-  //     });
-  //   }
-  // };
-
 })(jQuery);

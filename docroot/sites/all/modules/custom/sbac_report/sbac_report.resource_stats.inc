@@ -73,10 +73,6 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
  */
 function sbac_csv_report_resource_stats_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_STATES;
-
-  if (FALSE) {
-    // TODO: validate csv form
-  }
 }
 
 /**
@@ -144,7 +140,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
  * @param $context
  */
 function sbac_report_resource_statistics_batch($resources, $resource_filters, &$context) {
-  $limit = 100;
+  $limit = 50;
   $context['sandbox']['finished'] = 0;
   ini_set('max_execution_time', 300);
 
@@ -167,7 +163,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
     }
 
     $directory = "private://resource_stats_csv/";
-    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     $filename = 'Resource_Statistics_' . date('M_d_Y_g_i_s') . '.csv';
     $directory .= $filename;
     $directory_real_path = drupal_realpath($directory);
@@ -188,7 +184,18 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
       $context['sandbox']['resource_filters'] = $resource_filters;
       $context['sandbox']['resources_total'] = count($context['sandbox']['resources']);
     }
+
+    unset($column_titles);
+    unset($columns);
+    unset($configuration);
+    unset($directory);
+    unset($directory_real_path);
+    unset($fieldkey);
+    unset($filename);
   }
+
+  unset($resources);
+  unset($resource_filters);
   
   // Open the file for writing ('a' puts pointer at end of file).
   $handle = fopen($context['sandbox']['file'], 'a');
@@ -198,6 +205,8 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
   }
 
   // Loop until we hit the batch limit.
+  $report_configuration = $context['sandbox']['report_configuration'];
+  $schema = $report_configuration['node_schema'];
   for ($i = 0; $i < $limit; $i++) {
     if ($context['sandbox']['resources']) {
       $nid = array_shift($context['sandbox']['resources']);
@@ -211,7 +220,6 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
           $authors = NULL;
           $reviewers = NULL;
           list($authors, $reviewers) = get_users_for_resources_stats_report($entity_node, $resource_feedback);
-
           ksort($resource_feedback);
           ksort($workbench_moderation);
 
@@ -224,11 +232,20 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
           $data['share'] = $share_data;
           get_counts_for_resource_stats($entity_node, $data);
           get_counts_for_flags($entity_node, $data);
+          get_reviews_for_resources($entity_node, $data);
 
-          $report_configuration = $context['sandbox']['report_configuration'];
-          $schema = $report_configuration['node_schema'];
+          unset($resource_feedback);
+          unset($workbench_moderation);
+          unset($share_data);
+          unset($authors);
+          unset($reviewers);
+
           $row = array();
           foreach ($schema['fieldkeys'] as $field_key) { // (columns)
+            if (isset($field_key['skip']) && $field_key['skip']) {
+              continue;
+            }
+
             $primary_key = 'nid';
             if (array_key_exists('primarykey', $field_key)) {
               $primary_key = $field_key['primarykey'];
@@ -241,17 +258,31 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
               $final_value = format_metadata_value_field($value, $is_date, NULL, $entity_node);
             }
             $row[] = $final_value;
+
+            unset($final_value);
+            unset($field_key);
+            unset($is_date);
+            unset($primary_key);
+            unset($value);
           }
+          unset($field_key);
+
+          get_resource_review_output_for_csv($data, $row);
 
           fputcsv($handle, $row);
+          unset($row);
+          unset($data);
           $context['results']['count']++;
           $context['finished'] = $context['results']['count'] / $context['sandbox']['resources_total'];
         }
+        unset($entity_node);
       }
+      unset($node);
     }
   }
 
   fclose($handle);
+  unset($handle);
 
   // Show message updating user on how many subscribers have been exported.
   $context['message'] = t('Exported @count of @total resources.', array(
@@ -465,63 +496,6 @@ function sbac_report_default_resource_attribute_option($form_state = array()) {
     }
   }
   return 0;
-}
-
-/**
- * This routine builds the detailed resource statistics csv report.  It uses other routines to get the data,
- * and format the report.  It returns the report as a string to the caller.  It takes as input the filters
- * from the front end form selector with five filter parameters: type, status, grade, attribute, and grade.
- */
-function build_resource_stats_csv($resource_filters) {
-  $data = array();
-  $resource_feedback = NULL;
-  $workbench_moderation = NULL;
-  $authors = NULL;
-  $reviewers = NULL;
-
-  ini_set('memory_limit', '1024M');
-  ini_set('max_execution_time', 600);
-
-  $resources = get_resources($resource_filters);
-  if ($resources) {
-    $resource_feedback = get_entities_for_resources($resources, 'feedback');
-    $workbench_moderation = get_workbench_moderation_history($resources);
-    list($authors, $reviewers) = get_users_for_resources_stats_report($resources, $resource_feedback);
-
-    ksort($resources);
-    ksort($resource_feedback);
-    ksort($workbench_moderation);
-  }
-
-  $data['resource_nodes'] = $resources;
-  $data['resource_feedback'] = $resource_feedback;
-  $data['workbench_moderation'] = $workbench_moderation;
-  $data['authors'] = $authors;
-  $data['reviewers'] = $reviewers;
-
-  if ($resources) {
-    get_counts_for_resource_stats($resources, $data); // already key sorted from here.
-  }
-  else {
-    $data['count_uploaded_materials'] = 0;
-    $data['return_date'] = 0;
-    $data['review_cycle'] = 0;
-    $data['student_learning_rating_average'] = 0;
-    $data['pro_dev_rating_average'] = 0;
-    $data['ease_use_rating_average'] = 0;
-    $data['total_reviews_per_node'] = 0;
-  }
-
-  $file_data = NULL;
-  if ($resources) {
-    // get the report configuration.
-    $report_configuration = set_report_columns();
-    $file_data = create_resource_stats_from_data($data, $report_configuration);
-  }
-
-  $data = NULL;
-  unset($data); //memory management
-  return $file_data;
 }
 
 /**
@@ -856,49 +830,49 @@ SQL;
 function get_users_for_resources_stats_report($resource, $feedback_reviews) {
   // authors
   $authors = array();
+  $reviewers = array();
+
+  $internal_authors = array();
   try {
     $value = $resource->field_author->value();
     if (!is_null($value)) {
-      $authors[$value] = $value;
+      $internal_authors[$value] = $value;
     }
-  } catch (EntityMetadataWrapperException $e) {
+  }
+  catch (EntityMetadataWrapperException $e) {
     print $e->getMessage();
   }
-  $sql = <<<SQL
-    select * from users where name in (:authors)
-SQL;
-  // $query = sprintf($sql, "'" . implode("','", array_keys($authors)) . "'");
 
-  $result = db_query($sql, array(':authors' => array_keys($authors)));
-  $query = NULL;
-  unset($query); //memory management
+  if ($internal_authors) {
+    $sql = "select * from users where name in (:authors)";
+    $result = db_query($sql, array(':authors' => array_keys($internal_authors)));
+    $query = NULL;
+    unset($query);
+    $sql = NULL;
+    unset($sql);
 
-  $sql = NULL;
-  unset($sql); //memory management
+    foreach ($result as $record) {
+      $authors[$record->uid] = entity_metadata_wrapper('user', $record);
+    }
 
-  $authors = array();
-  foreach ($result as $record) {
-    $authors[$record->uid] = entity_metadata_wrapper('user', $record);
-  }
-  // posters
-  // reviewers
-  $reviewers = array();
-  foreach ($feedback_reviews as $reviews) {
-    foreach ($reviews as $review) {
-      try {
-        $uid = $review->uid->value(); /// get's the actual user.
-        $value = entity_metadata_wrapper('user', $uid);
-        if (is_object($uid)) {
-          $reviewers[$uid->uid] = $value;
+    foreach ($feedback_reviews as $reviews) {
+      foreach ($reviews as $review) {
+        try {
+          $uid = $review->uid->value(); /// get's the actual user.
+          $value = entity_metadata_wrapper('user', $uid);
+          if (is_object($uid)) {
+            $reviewers[$uid->uid] = $value;
+          }
+          else {
+            $reviewers[$uid] = $value;
+          }
+        } catch (EntityMetadataWrapperException $e) {
+          print $e->getMessage();
         }
-        else {
-          $reviewers[$uid] = $value;
-        }
-      } catch (EntityMetadataWrapperException $e) {
-        print $e->getMessage();
       }
     }
   }
+
   return array($authors, $reviewers);
 }
 
@@ -1010,6 +984,88 @@ function get_counts_for_flags($node, &$data) {
   # Resource Review Flag Reason(s)
   $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'review_end_use' AND ef.nid = :nid";
   $data['resource_review_flag_reasons'] = count_with_nodes_query($sql, $node, TRUE, TRUE);
+}
+
+/**
+ * Gets all reviews for a given node.
+ *
+ * @param $node
+ * @param $data
+ */
+function get_reviews_for_resources($node, &$data) {
+  // Current Top Three "Appropriate For" Categories
+  // find vocab id of our taxonomy
+  $vid = db_query("SELECT vid FROM taxonomy_vocabulary WHERE machine_name = 'applied_category'")->fetchField();
+  $tree = taxonomy_get_tree($vid);
+
+  // figure out how many reviews are applicable to each term
+  $query = "  SELECT        COUNT(fd.entity_id) AS count,
+                                  fd.field_appropriate_for_tid AS tid
+                    FROM          eck_review er
+                    INNER JOIN    field_data_field_appropriate_for fd
+                      ON          fd.bundle = 'end_use'
+                      AND         fd.entity_id = er.id
+                    WHERE         er.type = 'end_use'
+                    AND           er.status = 1
+                    AND           er.node_id = :node_id
+                    GROUP BY      fd.field_appropriate_for_tid
+                    ORDER BY      count DESC
+                 ";
+
+  $result = db_query($query, array(':node_id' => $node->nid->value()));
+  $i = 0;
+  $top_three_categories = array();
+  foreach ($result as $row) {
+    foreach ($tree as &$term_ref) {
+      if ($term_ref->tid == $row->tid) {
+        $term_ref->count = $row->count;
+        if ($i < 3) {
+          $term_ref->highlight = TRUE;
+          $top_three_categories[] = $term_ref->name . '(' . $term_ref->count . ')';
+        }
+        break;
+      }
+    }
+    $i++;
+  }
+
+  if ($top_three_categories) {
+    $data['review']['top_three_appropriate_for_categories'] = implode(',', $top_three_categories);
+  }
+
+  global $user;
+  $account = user_load($user->uid);
+  $sql = "SELECT * FROM {eck_review} WHERE node_id = :node_id";
+  $result = db_query($sql, array(':node_id' => $node->nid->value()));
+  foreach ($result as $eck_review) {
+    $review_entity = entity_load_single('review', $eck_review->id);
+    $review_entity_wrapper = entity_metadata_wrapper('review', $review_entity);
+    if ($review_entity) {
+      // Reviewer/Rater Name
+      $data['review'][$review_entity->id]['name'] = $account->field_first_name['und'][0]['value'] . ' ' . $account->field_last_name['und'][0]['value'];
+
+      // Review/Rating Date
+      $data['review'][$review_entity->id]['date'] = date('M d, Y - g:h a', $review_entity->created);
+
+      // Review/Rating Title
+      $data['review'][$review_entity->id]['title'] = $review_entity->title;
+
+      // Review/Rating Description
+      $data['review'][$review_entity->id]['description'] = $review_entity_wrapper->field_details->value();
+
+      // Student Learning Rating
+      $data['review'][$review_entity->id]['student_learning_rating'] = $review_entity_wrapper->field_student_learning->value();
+
+      // Professional Development Rating
+      $data['review'][$review_entity->id]['professional_development_rating'] = $review_entity_wrapper->field_pro_dev->value();
+
+      // Ease of Use Rating
+      $data['review'][$review_entity->id]['ease_of_use_rating'] = $review_entity_wrapper->field_ease_use->value();;
+
+      // "Appropriate For" Categories
+      $data['review'][$review_entity->id]['appropriate_for_categories'] = $review_entity_wrapper->field_appropriate_for->value();;
+    }
+  }
 }
 
 /**
@@ -1211,6 +1267,58 @@ function get_eck_flag_data($fieldkey, $data, $resource) {
     }
   }
   return $value;
+}
+
+/**
+ * Get the resource review data.
+ *
+ * @param $fieldkey
+ * @param $data
+ * @param $resource
+ * @return null
+ */
+function get_resource_review_data($fieldkey, $data, $resource) {
+  $value = NULL;
+
+  if ($fieldkey[0] == 'top_three_appropriate_for_categories') {
+    if (isset($data['review'][$fieldkey[0]])) {
+      $value = $data['review'][$fieldkey[0]];
+    }
+  }
+
+  return $value;
+}
+
+/**
+ * Puts the resource review output into the csv.
+ *
+ * @param $data
+ * @param $row
+ */
+function get_resource_review_output_for_csv(&$data, &$row) {
+  if (isset($data['review'])) {
+    foreach ($data['review'] as $eck_review_id => $eck_review) {
+      if ($eck_review) {
+        foreach ($eck_review as $key => $value) {
+          if ($key == 'appropriate_for_categories') {
+            $appropriate_for_categories = array();
+            foreach ($eck_review['appropriate_for_categories'] as $index => $term) {
+              $appropriate_for_categories[] = $term->name;
+            }
+            if ($appropriate_for_categories) {
+              $row[] = implode(',', $appropriate_for_categories);
+            }
+            else {
+              $row[] = '';
+            }
+          }
+          else {
+            $row[] = $value;
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -1553,6 +1661,16 @@ function set_report_columns() {
           array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
           array('has_flagged_reviews', 'Has Flagged Reviews', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
           array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          // resource reviews.
+          array('top_three_appropriate_for_categories', 'Current Top Three "Appropriate For" Categories', 'function' => 'get_resource_review_data', 'field' => 'review'),
+          array('name', 'Reviewer/Rater Name', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
+          array('date', 'Reviewer/Rating Date', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
+          array('title', 'Reviewer/Rating Title', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
+          array('description', 'Reviewer/Rating Description', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
+          array('student_learning_rating', 'Student Learning Rating', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
+          array('professional_development_rating', 'Professional Development Rating', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
+          array('ease_of_use_rating', 'Ease of Use Rating', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
+          array('appropriate_for_categories', '"Appropriate For" Categories', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
         ),
       ),
     );

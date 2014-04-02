@@ -1067,12 +1067,39 @@ function sbac_resource_update_7048() {
  * Creates states for each user / node in the system.
  */
 function sbac_resource_update_7049() {
-  $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
+  ini_set('memory_limit', '512M');
+  $sql  = 'SELECT n.*, w.state AS state ';
+  $sql .= 'FROM {node} n ';
+  $sql .= 'JOIN {workbench_moderation_node_history} w ';
+  $sql .= 'ON n.nid = w.nid AND n.vid = w.vid ';
+  $sql .= 'WHERE n.type = :type';
+  $results = db_query($sql, array(':type' => 'resource'));
+
+  $nodes = array();
   foreach ($results as $row) {
-    $node = node_load($row->nid);
+    $node = $row;
+    if (isset($row->state) && $row->state) {
+      $nodes[] = $row->nid;
+    }
+    unset($node);
+  }
+
+  // Unset all the variables.
+  unset($results);
+  unset($row);
+  unset($sql);
+
+  foreach ($nodes as $nid) {
+    $node = node_load($nid, NULL, TRUE);
     if ($node) {
       sbac_resource_save_current_state($node);
     }
+    // nodes are stored in memory, delete that cache.
+    node_load(FALSE, NULL, TRUE);
+    entity_get_controller('node')->resetCache(array($node->nid));
+    unset($node);
   }
+  unset($nodes);
+
   return "Added states for each node";
 }

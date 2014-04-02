@@ -13,7 +13,7 @@ class RestoredForumMember extends \taskit\sbac_core\BaseTask {
       $message = '';
 
       $output = array();
-      $output[] = t('A Facilitator has re-added you to this forum: !title', array(
+      $output[] = t('A facilitator has re-added you to this forum: !title', array(
         '!title' => '<span class="taskit-title">' . $forum->name . '</span>',
       ));
 

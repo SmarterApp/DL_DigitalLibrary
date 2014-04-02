@@ -4,7 +4,7 @@
   <?php foreach ($sections as $key => $section): ?>
     <section class="<?php echo $section['class']; ?> <?php echo "section-" . $n; ?> ">
       <p class="title" data-section-title data-options="deep_linking: true">
-        <a href="#<?php echo $name . '-' . $key; ?>"><?php echo $section['title']; ?></a>
+        <a title="<?php echo $section['title']; ?>" href="#<?php echo $name . '-' . $key; ?>"><?php echo $section['title']; ?></a>
       </p>
       <div class="content" data-section-content>
         <?php echo $section['content']; ?>

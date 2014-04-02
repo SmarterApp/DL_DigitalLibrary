@@ -1745,6 +1745,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
  */
 function _sbac_resource_form_materials(&$form, $form_state) {
   sbac_media_widget_form_element($form, $form_state);
+  global $user;
 
   // License Informations
   // Let's remove the N/A Option from the license information section
@@ -1766,12 +1767,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     ),
   );
 
-  // $state_license_2 = array(
-  //   'input[name="field_license_information[und]"]' => array(
-  //     array('value' => '2'),
-  //   ),
-  // );
-
   $form['field_author']['#states']['visible'] = $state_license_either;
   $form['field_author']['#states']['required'] = $state_license_either;
   // $form['field_author']['#states']['invisible'] = $state_license_2;
@@ -1782,20 +1777,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_publisher']['#states']['required'] = $state_license_either;
   // $form['field_publisher']['#states']['invisible'] = $state_license_2;
   $form['field_publisher']['und'][0]['value']['#maxlength'] = 150;
-
-  /*
-  //Show this when field_license_information option 0  is selected
-  $form['field_license_text'] = array(
-    '#markup' => '
-      <div id="field_static_license_text" class="form-item">
-        <label>' . $form['field_license']['und']['#title'] . '</label>
-        <div class="description">' . t('The license language is identified in detail under Section 6 of the Terms of Service') . '</div>
-        <div class="field-content">' . l(url('terms-of-service', array('absolute' => TRUE)), 'terms-of-service') . '</div>
-      </div>
-    ',
-    '#weight' => $form['field_license']['#weight'],
-  );
-  */
 
   //Show this when field_license_information option 1 is selected
   $form['field_license']['#states']['visible'] = $state_license_1;
@@ -1813,6 +1794,23 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['field_license_secondary']['#states']['visible'] = $state_license_1;
   $form['field_license_secondary']['und']['#options']['_none'] = '--Select License--';
 
+  $copyright_access = FALSE;
+  $owner_match = FALSE;
+  $has_role = array_intersect($user->roles, array('administrator', 'DLRB member'));
+  if (isset($form['#node'])) {
+    $owner_uid = $form['#node']->uid;
+    if ($user->uid == $owner_uid) {
+      $owner_match = TRUE;
+    }
+  }
+  if ((!empty($has_role)) || ($user->uid == 1) || ($owner_match)){
+    $copyright_access = TRUE;
+  }
+  $form['field_copyright_clearace_forms']['#access'] = $copyright_access;
+  $form['field_copyright_clearace_forms'][LANGUAGE_NONE]['#file_upload_title'] = '';
+  $form['field_copyright_clearace_forms'][LANGUAGE_NONE]['#file_upload_description'] = '';
+  $form['field_copyright_clearace_forms']['#states']['visible'] = $state_license_1;
+
   $form['group_license_information'] = array(
     '#prefix' => '<div id="license-information-group">',
     '#suffix' => '</div>',
@@ -1824,7 +1822,6 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   sbac_resource_license_url($form, $form_state);
 
-  global $user;
   $form['user_name'] = array(
     '#type' => 'hidden',
     '#value' => ucwords(full_name($user)),
@@ -2003,7 +2000,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
           }
           $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
             '#type' => 'textarea',
-            '#title' => t("Contributor's comment<br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
+            '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
           );
           $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
             '#type' => 'hidden',
@@ -2075,7 +2072,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             );
             $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
               '#type' => 'textarea',
-              '#title' => t("Contributor's comment<br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
+              '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
             );
             $i++;
           }
@@ -2873,19 +2870,19 @@ function sbac_resource_delete_resource_form() {
     '#markup' => '<p>' . t('
     If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '</p>',
   );
-
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('id' => array('edit-cancel-overlay'))
-  );
-
+ 
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Draft Resource',
     '#attributes' => array('id' => array('edit-delete-overlay'))
   );
 
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-overlay'))
+  );
+	
   return $form;
 }
 
@@ -2970,7 +2967,8 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
     '#prefix'         => '<div id="form-wrapper-dl-sort-element">',
     '#suffix'         => '</div>',
     '#type'           => 'select',
-    '#title'          => t(''),
+    '#title'          => t('Sort'),
+    '#title_display'  => 'invisible',
     '#required'       => FALSE,
     '#options'        => $options,
     '#default_value'  => $default,
@@ -3050,7 +3048,8 @@ function sbac_resource_resource_review_sort_form($form, $form_state) {
     '#prefix'         => '<div id="form-wrapper-rr-sort-element">',
     '#suffix'         => '</div>',
     '#type'           => 'select',
-    '#title'          => t(''),
+    '#title'          => t('Sort'),
+    '#title_display'  => 'invisible',
     '#required'       => FALSE,
     '#options'        => $options,
     '#default_value'  => $default,
@@ -3130,7 +3129,8 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
     '#prefix'         => '<div id="form-wrapper-mr-sort-element">',
     '#suffix'         => '</div>',
     '#type'           => 'select',
-    '#title'          => t(''),
+    '#title'          => t('Sort'),
+    '#title_display'  => 'invisible',
     '#required'       => FALSE,
     '#options'        => $options,
     '#default_value'  => $default,
@@ -3181,7 +3181,7 @@ function sbac_resource_unsubmit_resource_modal($js = FALSE) {
     ctools_include('modal');
 
     $form_state = array(
-      'title' => t("You are about to unsubmit your resource"),
+      'title' => t("You are about to un-submit your resource"),
       'ajax' => $js,
       'nid' => $_GET['nid'],
     );
@@ -3236,3 +3236,274 @@ function sbac_resource_unsubmit_resource_form($form, &$form_state) {
 
   return $form;
 }
+
+
+function sbac_resource_smart_search_builder_form($form, &$form_state) {
+  $form = array();
+
+  $vocabs = array(
+    'subject',
+    'grades',
+    'attributes',
+    'digital_media_type',
+    'focus',
+    'intended_end_user',
+    'intended_student_populations',
+    'educational_use',
+    'smarter_balanced_keyword',
+    'geographical_settings',
+    // 'technologies_for_classroom_use',
+    // 'education_alignment',
+  );
+  $form['help_text'] = array(
+    '#markup' => '<p>Select filters from the available options to create a url</p>',
+    '#weight' => -3,
+  );
+
+  // Show the current setting. Clicking reset will unset the variable.
+  $current_label = '<strong>Smart Search URL: </strong>';
+  $current_value = variable_get(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, '');
+  if (empty($current_value)) {
+    $current_value = '-- None --';
+  }
+  $form['current_url'] = array(
+    '#type' => 'fieldset',
+    '#title' => $current_label,
+    '#collapsible' => FALSE,
+    '#collapsed' => TRUE,
+    '#weight' => -2,
+  );
+  $form['current_url']['cu_markup'] = array(
+    '#markup' => $current_value,
+    '#weight' => -1,
+  );
+
+  // Process any current filter settings. This is to set the default so user can see what the url filters by.
+  $current_filters = array();
+  $raw_url = explode('?',$current_value);
+  if (count($raw_url) == 2) {
+    $current_filters = drupal_get_query_array($raw_url[1]);
+  }
+
+  // Loop through list of vocabs to get the terms.
+  foreach ($vocabs as $index => $machine_name) {
+    $vocab_entity = taxonomy_vocabulary_machine_name_load($machine_name);
+    $collapsed = TRUE;
+    $defaults = array();
+
+    // Process default settings.
+    $default_key = $machine_name . ':' . $vocab_entity->vid;
+    if (isset($current_filters[$default_key])) {
+      $defaults = explode(',', $current_filters[$default_key]);
+      $collapsed = FALSE;
+    }
+
+    // Create fieldset grouping
+    $form[$machine_name] = array(
+      '#type' => 'fieldset',
+      '#title' => t($vocab_entity->name),
+      '#weight' => $index,
+      '#collapsible' => TRUE,
+      '#collapsed' => $collapsed,
+    );
+
+    // Hide the vid so form_state has access to it.
+    $form[$machine_name][$machine_name . '_vid'] = array(
+      '#type' => 'value',
+      '#value' => $vocab_entity->vid,
+    );
+
+    // Set options.
+    $vocab_terms = array();
+    $vocab_tree = taxonomy_get_tree($vocab_entity->vid);
+    foreach ($vocab_tree as $term) {
+      $vocab_terms[$term->tid] = $term->name;
+    }
+    $form[$machine_name][$machine_name . '_terms'] = array(
+      '#type' => 'checkboxes',
+      '#options' => $vocab_terms,
+      '#default_value' => $defaults,
+    );
+  }
+
+  $ccss_vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
+  $ccss_defaults = array();
+  $ccss_default_key = 'education_alignment:' . $ccss_vocab->vid;
+  $ccss_collapsed = TRUE;
+  if (isset($current_filters[$ccss_default_key])) {
+    $ccss_defaults = explode(',', $current_filters[$ccss_default_key]);
+    $ccss_collapsed = FALSE;
+  }
+  $form['ccss_vid'] = array(
+    '#type' => 'value',
+    '#value' => $ccss_vocab->vid,
+  );
+  $form['ccss_wrapper'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Educational Alignment'),
+    '#weight' => 97,
+    '#collapsible' => TRUE,
+    '#collapsed' => $ccss_collapsed,
+  );
+  $form['ccss_wrapper']['ccss_elements'] = array(
+    '#type' => 'taxonomy_manager_tree',
+    '#vid' => $ccss_vocab->vid,
+    '#pager' => TRUE,
+    '#default_value' => $ccss_defaults,
+    '#terms_to_expand' => $ccss_defaults,
+  );
+
+
+  // Keyword search field
+  $kw_collapsed = TRUE;
+  $kw_default = '';
+  if (isset($current_filters['kw'])) {
+    $kw_default = urldecode($current_filters['kw']);
+    $kw_collapsed = FALSE;
+  }
+  $form['kw_field'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Keyword Search'),
+    '#weight' => 98,
+    '#collapsible' => TRUE,
+    '#collapsed' => $kw_collapsed,
+  );
+  $form['kw_field']['kw_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Enter keyword(s) to search by'),
+    '#default_value' => $kw_default,
+  );
+
+
+  // Submit handlers.
+  $form['generate'] = array(
+    '#type' => 'submit',
+    '#value' => 'Generate New',
+    '#attributes' => array('class' => array('button', 'blue')),
+    '#weight' => 99,
+  );
+
+  $form['reset'] = array(
+    '#type' => 'submit',
+    '#value' => 'Reset',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
+    '#weight' => 100,
+  );
+
+  $history_links = variable_get(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, array());
+  if (!empty($history_links)) {
+    $history_params = array(
+      'items' => $history_links,
+      'type' => 'ul',
+    );
+    $history = theme('item_list', $history_params);
+    $form['history'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Generated URL History'),
+      '#collapsible' => FALSE,
+      '#collapsed' => TRUE,
+      '#weight' => 101,
+    );
+    $form['history']['history_markup'] = array(
+      '#markup' => $history,
+      '#weight' => 1,
+    );
+    $form['history']['clear_history'] = array(
+      '#type' => 'submit',
+      '#value' => 'Clear History',
+      '#attributes' => array('class' => array('button', 'blue')),
+      '#weight' => 2,
+    );
+
+  }
+
+  // Use to test existing urls.
+  $form['tester'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Test URL'),
+    '#description' => 'Paste a url here to test what filters it sets.',
+    '#collapsible' => FALSE,
+    '#collapsed' => TRUE,
+    '#weight' => 102,
+  );
+  $form['tester']['test_url'] = array(
+    '#type' => 'textfield',
+    '#weight' => 103,
+  );
+  $form['tester']['test_url_submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Test',
+    '#attributes' => array('class' => array('button', 'blue')),
+    '#weight' => 104,
+  );
+
+  return $form;
+}
+
+function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Reset') {
+    variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, '');
+  } elseif($form_state['triggering_element']['#value'] == 'Test') {
+    $values = $form_state['values'];
+    $test_url = $values['test_url'];
+    variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, $test_url);
+  } elseif($form_state['triggering_element']['#value'] == 'Clear History') {
+    variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, array());
+  } else { // Generate new.
+    $values = $form_state['values'];
+    $vocabs = array(
+      'subject',
+      'grades',
+      'attributes',
+      'digital_media_type',
+      'focus',
+      'intended_end_user',
+      'intended_student_populations',
+      'educational_use',
+      'smarter_balanced_keyword',
+      'geographical_settings',
+      // 'technologies_for_classroom_use',
+      // 'education_alignment',
+    );
+
+    $query_params = array();
+    if (!empty($values['kw_text'])) {
+      $query_params['kw'] = urlencode($values['kw_text']);
+    }
+
+    foreach ($vocabs as $machine_name) {
+      $vid = $values[$machine_name . '_vid'];
+      $term_key = $machine_name . '_terms';
+      $checkboxes = $values[$term_key];
+      $checked = array_filter($checkboxes);
+      if (!empty($checked)) {
+        $key = $machine_name . ':' . $vid;
+        $value = implode(',', $checked);
+        $query_params[$key] = $value;
+      }
+    }
+
+    if (!empty($values['ccss_elements']['selected_terms'])) {
+      $ccss_key = 'education_alignment:'. $values['ccss_vid'];
+      $ccss_value = implode(',', $values['ccss_elements']['selected_terms']);
+      $query_params[$ccss_key] = $ccss_value;
+    }
+
+    if (!empty($query_params)) {
+      $url_params = array(
+        'absolute' => TRUE,
+        'query' => $query_params,
+      );
+      $link = url('dlr-smart-search', $url_params);
+      $clean_link = urldecode($link);
+      variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, $clean_link);
+
+      $history = variable_get(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, array());
+      $history[] = $clean_link;
+      variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, $history);
+    }
+  }
+
+}
+
+

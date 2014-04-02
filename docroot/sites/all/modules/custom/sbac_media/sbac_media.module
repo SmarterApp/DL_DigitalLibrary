@@ -73,48 +73,53 @@ function sbac_media_menu() {
     'title' => 'File Stream',
   );
 
-  $items['sbac-media/check-youtube'] = array(
-    'page callback' => 'sbac_media_check_youtube',
-    'access callback' => TRUE,
-    'title' => 'File Stream',
-  );
-
   return $items;
 }
 
-function sbac_media_check_youtube() {
-  $var = '';
-}
-
 /**
+ * @todo: Need to rework this to work with Google CDN now.
+ *
  * @param $fid
  * @param null $session_id
  */
-function sbac_media_file_stream() {
-  $file_stream = FALSE;
-  $fid = arg(2);
-  $session = arg(3);
-  $file = file_load($fid);
-  if ($session == NULL || !$file) {
-    return;
-  }
-
-  if ($session == session_name()) {
-    error_log("Mime: " . $file->filemime);
-    header('Cache-Control: no-cache private');
-    header('Content-Description: File Transfer');
-    header('Content-Length: ' . $file->filesize);
-    header('Content-Type: ' . $file->filemime);
-
-    $real_path = drupal_realpath($file->uri);
-    error_log("path: " . $real_path);
-    if (file_exists($real_path)) {
-      $file_stream = file_get_contents($real_path);
-    }
-  }
-
-  echo $file_stream;
-}
+//function sbac_media_file_stream() {
+//  $file_stream = FALSE;
+//  $fid = arg(2);
+//  $session = arg(3);
+//  $file = file_load($fid);
+//  if ($session == NULL || !$file) {
+//    return;
+//  }
+//
+//  if ($session == session_name()) {
+//    header('Cache-Control: no-cache private');
+//    header('Content-Description: File Transfer');
+//    header('Content-Length: ' . $file->filesize);
+//    header('Content-Type: ' . $file->filemime);
+//
+//    $bucket = variable_get('google_cdn_bucket_name');
+//    $folder = variable_get('google_cdn_folder');
+//    $services = sbac_media_get_google_cloud_storage();
+//    if ($services) {
+//      try {
+//        $target = str_replace('gs://', '', $file->uri);
+//        $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
+//        if ($response) {
+//          $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
+//          $request = new Google_HttpRequest($download_url, 'GET');
+//          $httpRequest = $services['client']->getIo()->authenticatedRequest($request);
+//          if ($httpRequest) {
+//            $file_stream = $httpRequest->getResponseBody();
+//          }
+//        }
+//      } catch (Exception $e) {
+//        watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::strea_read');
+//      }
+//    }
+//  }
+//
+//  echo $file_stream;
+//}
 
 /**
  * Function to check if there are any downloadable files.
@@ -233,6 +238,50 @@ function sbac_media_file_mimetype_mapping_alter(&$mapping) {
 }
 
 /**
+ * Attempts to connect to the Google Cloud Storage.
+ *
+ * @return Google_StorageService|null
+ */
+function sbac_media_get_google_cloud_storage() {
+  $services = NULL;
+
+  try {
+    if (libraries_load('google-api-php-client')) {
+      $service_account_name = variable_get('google_cdn_service_account_name');
+      $key_file_path = variable_get('google_cdn_public_key_file_path');
+
+      $client = new Google_Client();
+      // Replace this with your application name.
+      $client->setApplicationName($service_account_name);
+      // Replace this with the service you are using.
+      $service = new Google_StorageService($client);
+      // This file location should point to the private key file.
+      $key = file_get_contents($key_file_path);
+      $cred = new Google_AssertionCredentials(
+      // Replace this with the email address from the client.
+        $service_account_name,
+        // Replace this with the scopes you are requesting.
+        array('https://www.googleapis.com/auth/devstorage.full_control'),
+        $key
+      );
+
+      $client->setAssertionCredentials($cred);
+      if ($client->getAuth()->isAccessTokenExpired()) {
+        $client->getAuth()->refreshTokenWithAssertion($cred);
+      }
+
+      $services['client'] = $client;
+      $services['service'] = $service;
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('google_cdn', $e);
+  }
+
+  return $services;
+}
+
+/**
  * Packages and downloads all materials into a zip.
  *
  * @param $node
@@ -245,8 +294,9 @@ function sbac_media_download_contents($node) {
       if (!file_exists($destination)) {
         mkdir($destination);
       }
-
       $result = sbac_media_determine_download_access($node);
+      $bucket = variable_get('google_cdn_bucket_name');
+      $folder = variable_get('google_cdn_folder');
 
       $zip = new ZipArchive;
       $archive_uri = 'public://resource_zips/';
@@ -255,15 +305,37 @@ function sbac_media_download_contents($node) {
       $real_path = drupal_realpath($archive_uri);
       $open = $zip->open($real_path, ZipArchive::CREATE);
       if ($open === TRUE) {
-        foreach ($node->document as $key => $media) {
-          if (is_numeric($key) && $media->fid) {
-            $file = file_load($media->fid);
-            if ($file) {
-              if ($key == 0 && $result['primary'] == TRUE) {
-                $zip->addFile(drupal_realpath($file->uri), $file->filename);
-              }
-              if ($key > 0 && $result['secondary'] == TRUE) {
-                $zip->addFile(drupal_realpath($file->uri), $file->filename);
+        $services = sbac_media_get_google_cloud_storage();
+        if ($services) {
+          foreach ($node->document as $key => $media) {
+            $add_file = FALSE;
+            if (is_numeric($key) && $media->fid) {
+              $file = file_load($media->fid);
+              if ($file) {
+                if ($key == 0 && $result['primary'] == TRUE) {
+                  $add_file = TRUE;
+                }
+                if ($key > 0 && $result['secondary'] == TRUE) {
+                  $add_file = TRUE;
+                }
+
+                if ($add_file) {
+                  try {
+                    $target = str_replace('gs://', '', $file->uri);
+                    $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
+                    if ($response) {
+                      $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
+                      $request = new Google_HttpRequest($download_url, 'GET');
+                      $httpRequest = $services['client']->getIo()->authenticatedRequest($request);
+                      if ($httpRequest) {
+                        $data = $httpRequest->getResponseBody();
+                        $zip->addFromString($file->filename, $data);
+                      }
+                    }
+                  } catch (Exception $e) {
+                    watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::strea_read');
+                  }
+                }
               }
             }
           }
@@ -284,7 +356,8 @@ function sbac_media_download_contents($node) {
           unlink($real_path); // delete the temp zip.
         }
       }
-    } else {
+    }
+    else {
       return "There are no files to download."; // no downloadable file schemes (public://)
     }
   }
@@ -535,6 +608,7 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     '#title' => t('Upload2'),
     '#size' => 22,
     '#theme_wrappers' => array(),
+    '#upload_location' => 'gs://resources',
   );
 
   $form['field_file_container']['field_file_upload_button'] = array(
@@ -897,7 +971,7 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
     $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
     // First param is file limit. second param is limit for total size for all uploads for user.
     $allowed_size = array(104857600, 0); //104857600 = 100MB in bytes
-    $directory = "private://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
+    $directory = "gs://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     if ($writable) {
       $validators = array(

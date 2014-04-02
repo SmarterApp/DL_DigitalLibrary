@@ -8,6 +8,19 @@
    */
   Drupal.behaviors.sbac_my_resources_categories = {
     attach: function (context, settings) {
+      $("img.lazy").lazy();
+
+      if ($('#admin-create-menu').length) {
+        var admin_create_menu = $('#admin-create-menu');
+        admin_create_menu.click(function() {
+          admin_create_menu.toggleClass('open-list');
+        });
+
+        $(document).click(function() {
+          admin_create_menu.removeClass('open-list');
+        });
+      }
+
       $(document).click(function() {
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
@@ -252,7 +265,7 @@
   Drupal.behaviors.sbac_my_resources_textbox = {
     attach: function (context, settings) {
       // Moves the text into the hidden field.
-      $('#sbac-search-textbox').keypress( function(event) {
+      $('.sbac-search-textbox').keypress( function(event) {
         var keypressed = event.which;
         if(keypressed == 13){
           $('#sbac-search-keywords').val($(this).val());
@@ -261,18 +274,18 @@
         }
       });
       // Moves the text into the hidden field.
-      $('#sbac-search-textbox').change( function(event) {
+      $('.sbac-search-textbox').change( function(event) {
         $('#sbac-search-keywords').val($(this).val());
       });
       // Hide the Keyword field.
       $('#views-exposed-form-my-resources-grid-view').hide();
       $('#views-exposed-form-my-resources-list-view').hide();
 
-      if ($('#sbac-search-textbox').val() != '') {
+      if ($('.sbac-search-textbox').val() != '') {
         $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
       }
 
-      $('.pager-next a').html('Load More Resources').addClass('button');
+      $('.pager-next a').html('Show More Resources').addClass('button');
     }
   };
 

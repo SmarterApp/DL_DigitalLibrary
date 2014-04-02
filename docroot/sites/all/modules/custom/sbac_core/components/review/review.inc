@@ -110,7 +110,7 @@ function review_load_more($node, $sortby, $page) {
       ),
     );
 
-    $output .= l('Load More Reviews', $url, $options);
+    $output .= l('Show More Reviews', $url, $options);
   }
 
   return $output;

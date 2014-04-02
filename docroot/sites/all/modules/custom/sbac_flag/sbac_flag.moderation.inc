@@ -18,7 +18,7 @@ function sbac_flag_moderation() {
   $load_more_button = NULL;
   if ($count > SBAC_FLAG_MODERATION_COUNT && !isset($list_output['remove_button'])) {
     // create load more button.
-    $load_more_button = '<a href="#" offset="' . $offset . '" class="load-more button green" id="sbac-load-more">Load More Items</a>';
+    $load_more_button = '<a href="#" offset="' . $offset . '" class="load-more button green" id="sbac-load-more">Show More Items</a>';
   }
 
   $output = '';

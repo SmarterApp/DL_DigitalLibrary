@@ -44,7 +44,7 @@
 <!--        <td>--><?php //print $row['field_alignment_type']; ?><!--</td>-->
         <td>
           <div class="read-more">
-            <a href="" class=""><i class="accessibility foundicon-eyeball"></i></a>
+            <a href="#" title="Read More" class=""><i class="accessibility foundicon-eyeball"></i></a>
             <div class="more description-hover">
               <div class="description-content">
               <h2><?php print $subject->name; ?></h2>

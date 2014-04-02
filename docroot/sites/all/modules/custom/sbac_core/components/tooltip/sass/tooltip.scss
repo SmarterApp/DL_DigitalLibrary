@@ -22,6 +22,8 @@
 			
 		.user-profile {
 			float: right !important;
+			text-align: left;
+			font-weight: normal;
 			
 			h2.name {
 				
@@ -46,6 +48,8 @@
 			}
 			
 			.introduction {
+				padding-top: 15px;
+				
 				.field {
 				  font-size: 0.85em;
 					line-height: 1.2;
@@ -61,6 +65,7 @@
 			.profile-details > div {
 			    clear: both;
 			    padding-top: 20px;
+					margin-bottom: 0;
 			    
 					span {
 					  background-color: #F2F2F2;
@@ -74,29 +79,27 @@
 					}
 					
 					span.title {
-					 -moz-border-bottom-colors: none;
-			    -moz-border-left-colors: none;
-			    -moz-border-right-colors: none;
-			    -moz-border-top-colors: none;
-			    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-			    border-color: -moz-use-text-color -moz-use-text-color #CECECE;
-			    border-image: none;
-			    border-radius: 0;
-			    border-style: none none solid;
-			    border-width: medium medium 1px;
-			    color: #04384E;
-			    display: block;
-			    font-family: Verdana,Geneva,sans-serif;
-			    font-size: 11px;
-			    letter-spacing: 1px;
-			    line-height: normal;
-			    margin: 0;
-			    padding: 0 0 3px;
-			    text-transform: uppercase;
+						background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+						border-image: none;
+						border-radius: 0;
+						border-bottom: 1px solid #CECECE !important;
+						color: #04384E;
+						display: block;
+						font-family: Verdana,Geneva,sans-serif;
+						font-size: 11px;
+						letter-spacing: 1px;
+						line-height: normal;
+						margin: 0;
+						padding: 0 0 3px;
+						text-transform: uppercase;
+					}
+				}
+			
+				.profile-details > div:first-child {
+					padding-top: 0;
 				}
 			}
 		}
-  }
 	
 	.devtools-tooltip-body:after {
 	  border-left: 12px solid rgba(0, 0, 0, 0);

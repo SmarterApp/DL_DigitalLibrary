@@ -26,7 +26,10 @@
     ?>
 
     <h3 class='resource-name <?php print $class; ?>'>
-      <?php print htmlspecialchars_decode($fields['title']->content); ?>
+      <?php
+        $alias = sbac_resource_get_url_alias($fields['nid']->raw);
+        print '<div class="field-content">' . l(htmlspecialchars_decode($fields['title']->raw), $alias) . '</div>';
+      ?>
       <div class="shield-drop"><?php print $image; ?></div>
     </h3>
 
@@ -89,15 +92,15 @@
     <?php if (isset($fields['subject']) || isset($fields['grades']) || isset($fields['media_types'])): ?>
     <div class="paradata-info">
         <?php if (isset($fields['subject']) && $fields['subject']): ?>
-          <div><label class="clearfix">Subjects:</label><?php print $fields['subject']; ?></div>
+          <div><div class="clearfix">Subjects:</div><?php print $fields['subject']; ?></div>
         <?php endif; ?>
 
         <?php if (isset($fields['grades']) && $fields['grades']): ?>
-          <div><label class="clearfix">Grades:</label><?php print $fields['grades']; ?></div>
+          <div><div class="clearfix">Grades:</div><?php print $fields['grades']; ?></div>
         <?php endif; ?>
 
         <?php if (isset($fields['media_types']) && $fields['media_types']): ?>
-          <div><label class="clearfix">Media Types:</label><?php print $fields['media_types']; ?></div>
+          <div><div class="clearfix">Media Types:</div><?php print $fields['media_types']; ?></div>
         <?php endif; ?>
     </div>
     <?php endif; ?>

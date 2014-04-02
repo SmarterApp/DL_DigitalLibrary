@@ -1,0 +1,215 @@
+diff --git a/plugins/views_plugin_cache.inc b/plugins/views_plugin_cache.inc
+index 7bf733f..81f71bf 100644
+--- a/plugins/views_plugin_cache.inc
++++ b/plugins/views_plugin_cache.inc
+@@ -256,59 +256,61 @@ class views_plugin_cache extends views_plugin {
+   }
+ 
+   function get_results_key() {
+-    global $user;
+-
+     if (!isset($this->_results_key)) {
+-
+-      $build_info = $this->view->build_info;
+-
+-      $query_plugin = $this->view->display_handler->get_plugin('query');
+-
+-      foreach (array('query','count_query') as $index) {
+-        // If the default query back-end is used generate SQL query strings from
+-        // the query objects.
+-        if ($build_info[$index] instanceof SelectQueryInterface) {
+-          $query = clone $build_info[$index];
+-          $query->preExecute();
+-          $build_info[$index] = (string) $query;
+-        }
+-      }
+-      $key_data = array(
+-        'build_info' => $build_info,
+-        'roles' => array_keys($user->roles),
+-        'super-user' => $user->uid == 1, // special caching for super user.
+-        'language' => $GLOBALS['language']->language,
+-        'base_url' => $GLOBALS['base_url'],
+-      );
+-      foreach (array('exposed_info', 'page', 'sort', 'order', 'items_per_page', 'offset') as $key) {
+-        if (isset($_GET[$key])) {
+-          $key_data[$key] = $_GET[$key];
+-        }
+-      }
+-
+-      $this->_results_key = $this->view->name . ':' . $this->display->id . ':results:' . md5(serialize($key_data));
++      $this->_results_key = $this->view->name . ':' . $this->display->id . ':results:' . $this->get_cache_key();
+     }
+ 
+     return $this->_results_key;
+   }
+ 
+   function get_output_key() {
+-    global $user;
+     if (!isset($this->_output_key)) {
+       $key_data = array(
+-        'result' => $this->view->result,
+-        'roles' => array_keys($user->roles),
+-        'super-user' => $user->uid == 1, // special caching for super user.
+         'theme' => $GLOBALS['theme'],
+-        'language' => $GLOBALS['language']->language,
+-        'base_url' => $GLOBALS['base_url'],
+       );
+-
+-      $this->_output_key = $this->view->name . ':' . $this->display->id . ':output:' . md5(serialize($key_data));
++      $this->_output_key = $this->view->name . ':' . $this->display->id . ':output:' . $this->get_cache_key($key_data);
+     }
+ 
+     return $this->_output_key;
+   }
++
++  /**
++   * Returns cache key.
++   *
++   * @param array $key_data
++   *   Additional data for cache segmentation and/or overrides for default
++   *   segmentation.
++   *
++   * @return string
++   */
++  function get_cache_key($key_data = array()) {
++    global $user;
++
++    $key_data += array(
++      'roles' => array_keys($user->roles),
++      'super-user' => $user->uid == 1, // special caching for super user.
++      'language' => $GLOBALS['language']->language,
++      'base_url' => $GLOBALS['base_url'],
++    );
++
++    if (empty($key_data['build_info'])) {
++      $build_info = $this->view->build_info;
++      foreach (array('query','count_query') as $index) {
++        // If the default query back-end is used generate SQL query strings from
++        // the query objects.
++        if ($build_info[$index] instanceof SelectQueryInterface) {
++          $query = clone $build_info[$index];
++          $query->preExecute();
++          $key_data['build_info'][$index] = array(
++            'sql' => (string) $query,
++            'arguments' => $query->getArguments(),
++          );
++        }
++      }
++    }
++    $key = md5(serialize($key_data));
++    return $key;
++  }
+ }
+ 
+ /**
+diff --git a/plugins/views_plugin_query_default.inc b/plugins/views_plugin_query_default.inc
+index 030c5ea..8a15e8d 100644
+--- a/plugins/views_plugin_query_default.inc
++++ b/plugins/views_plugin_query_default.inc
+@@ -1365,6 +1365,16 @@ class views_plugin_query_default extends views_plugin_query {
+     // Add all query substitutions as metadata.
+     $query->addMetaData('views_substitutions', module_invoke_all('views_query_substitutions', $this));
+ 
++    if (!$get_count) {
++      if (!empty($this->limit) || !empty($this->offset)) {
++        // We can't have an offset without a limit, so provide a very large limit
++        // instead.
++        $limit  = intval(!empty($this->limit) ? $this->limit : 999999);
++        $offset = intval(!empty($this->offset) ? $this->offset : 0);
++        $query->range($offset, $limit);
++      }
++    }
++
+     return $query;
+   }
+ 
+@@ -1469,16 +1479,8 @@ class views_plugin_query_default extends views_plugin_query {
+           $this->pager->execute_count_query($count_query);
+         }
+ 
+-        // Let the pager modify the query to add limits.
+         $this->pager->pre_execute($query);
+ 
+-        if (!empty($this->limit) || !empty($this->offset)) {
+-          // We can't have an offset without a limit, so provide a very large limit instead.
+-          $limit  = intval(!empty($this->limit) ? $this->limit : 999999);
+-          $offset = intval(!empty($this->offset) ? $this->offset : 0);
+-          $query->range($offset, $limit);
+-        }
+-
+         $result = $query->execute();
+ 
+         $view->result = array();
+diff --git a/tests/views_cache.test b/tests/views_cache.test
+index 3103762..28534a2 100644
+--- a/tests/views_cache.test
++++ b/tests/views_cache.test
+@@ -241,4 +241,68 @@ class ViewsCacheTest extends ViewsSqlTest {
+     $this->assertEqual($first_content_type, $second_content_type, t('Content types of responses are equal.'));
+   }
+ 
++  /**
++   * Test caching of different exposed filter values with the same view result.
++   *
++   * Make sure the output is different.
++   */
++  function testExposedFilterSameResultsCaching() {
++    // Create the view with time-based cache with hour lifetimes and add exposed
++    // filter to it with "Starts with" operator.
++    $view = $this->getBasicView();
++    $view->set_display();
++    $view->display_handler->override_option('cache', array(
++      'type' => 'time',
++      'results_lifespan' => '3600',
++      'output_lifespan' => '3600',
++    ));
++    $view->display_handler->override_option('filters', array(
++      'name' => array(
++        'id' => 'name',
++        'table' => 'views_test',
++        'field' => 'name',
++        'relationship' => 'none',
++        'operator' => 'starts',
++        'exposed' => TRUE,
++        'expose' => array(
++          'operator_id' => 'name_op',
++          'operator' => 'name_op',
++          'identifier' => 'name',
++        ),
++      ),
++    ));
++
++    // Clone the view before setting exposed input.
++    $clone = $view->copy();
++
++    // Pass "Rin" to the exposed filter and check that only one row returned.
++    $view->set_exposed_input(array(
++      'name' => 'Rin',
++    ));
++    $this->executeView($view);
++    $first_result = $view->result;
++    $first_output = $view->render();
++    $this->assertEqual(1, count($first_result), t('The number of rows returned by the first view match.'));
++
++    // Pass full "Ringo" to the exposed filter at the second time and make sure
++    // results are the same.
++    $clone->set_exposed_input(array(
++      'name' => 'Ringo',
++    ));
++    $this->executeView($clone);
++    $second_result = $clone->result;
++    $second_output = $clone->render();
++    $this->assertEqual($first_result, $second_result, t('Results of both views are the same.'));
++
++    // Check that output is not the same and it contains full "Ringo" word in
++    // default value of exposed input.
++    $this->assertNotEqual($first_output, $second_output, t('Output of the second view is different.'));
++    $this->drupalSetContent($second_output);
++    $element = $this->xpath('//input[@name="name" and @value="Ringo"]');
++    $this->assertTrue(!empty($element), t('Input field of exposed filter has the second value.'));
++
++    $view->destroy();
++    $clone->destroy();
++  }
++
+ }

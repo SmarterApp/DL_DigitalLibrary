@@ -24,15 +24,17 @@
 /* line 23, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile {
   float: right !important;
+  text-align: left;
+  font-weight: normal;
 }
-/* line 28, ../sass/tooltip.scss */
+/* line 30, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile h2.name .field {
   color: #04384E;
   font-size: 16px;
   font-weight: bold;
   display: inline;
 }
-/* line 39, ../sass/tooltip.scss */
+/* line 41, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-title,
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-school,
 .devtools-tooltip .devtools-tooltip-body .user-profile .introduction,
@@ -44,23 +46,28 @@
   margin: 0;
   padding: 7px 0 0;
 }
-/* line 49, ../sass/tooltip.scss */
+/* line 50, ../sass/tooltip.scss */
+.devtools-tooltip .devtools-tooltip-body .user-profile .introduction {
+  padding-top: 15px;
+}
+/* line 53, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .introduction .field {
   font-size: 0.85em;
   line-height: 1.2;
 }
-/* line 55, ../sass/tooltip.scss */
+/* line 59, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-email-address {
   color: #0583AC;
   cursor: pointer;
   text-decoration: none;
 }
-/* line 61, ../sass/tooltip.scss */
+/* line 65, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-details > div {
   clear: both;
   padding-top: 20px;
+  margin-bottom: 0;
 }
-/* line 65, ../sass/tooltip.scss */
+/* line 70, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-details > div span {
   background-color: #F2F2F2;
   border-radius: 2px;
@@ -71,18 +78,12 @@
   margin-top: 7px;
   padding: 0 5px;
 }
-/* line 76, ../sass/tooltip.scss */
+/* line 81, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-details > div span.title {
-  -moz-border-bottom-colors: none;
-  -moz-border-left-colors: none;
-  -moz-border-right-colors: none;
-  -moz-border-top-colors: none;
   background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-  border-color: -moz-use-text-color -moz-use-text-color #CECECE;
   border-image: none;
   border-radius: 0;
-  border-style: none none solid;
-  border-width: medium medium 1px;
+  border-bottom: 1px solid #CECECE !important;
   color: #04384E;
   display: block;
   font-family: Verdana,Geneva,sans-serif;
@@ -93,7 +94,11 @@
   padding: 0 0 3px;
   text-transform: uppercase;
 }
-/* line 101, ../sass/tooltip.scss */
+/* line 98, ../sass/tooltip.scss */
+.devtools-tooltip .devtools-tooltip-body .user-profile .profile-details > div:first-child {
+  padding-top: 0;
+}
+/* line 104, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body:after {
   border-left: 12px solid rgba(0, 0, 0, 0);
   border-right: 12px solid rgba(0, 0, 0, 0);

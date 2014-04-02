@@ -1044,13 +1044,14 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
     z-index: 999;
 
 		.sbac-forum-vp-controls-popup {
-			width: 130px;
+			width: 160px;
 			border: 1px solid #828588;
 			color: #464B54;
 			background-color: $white;
 			@include border-radius(10px);
 	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-			margin-top: -90px;
+			margin-top: -59px;
+			margin-left: -10px;
 
 			ul {
 				list-style-type: none;
@@ -1063,7 +1064,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					a {
 						color: #0583AC;
 						font-size: 15px;
-						display: blo;
+						display: block;
+						white-space: nowrap;
 
 						&:hover {
 							text-decoration: underline;
@@ -1074,8 +1076,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 
 		.sbac-forum-vp-controls-popup.hover-over-large-popup {
-			width: 160px;
-			margin-top: -60px;
+			margin-top: -117px;
 			margin-left: -10px;
 		}
 
@@ -2078,8 +2079,9 @@ View Topic Page, Comment Page
 		    border-radius: 10px;
 		    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 		    color: #464B54;
-		    margin-top: -90px;
-		    width: 130px;
+				margin-left: -10px;
+		    margin-top: -60px;
+		    width: 160px;
 				display: none;
 
 				ul {
@@ -2320,10 +2322,13 @@ View Topic Page, Comment Page
 					}
 
 					 a:before {
-					  color: #101010;
-				    content: "•";
+				    content: " ";
+						background: #101010;
+						width: 5px;
+						height: 5px;
+						border-radius: 50%;
 				    display: inline-block;
-				    font-size: 20px;
+				    font-size: 25px;
 				    font-weight: normal;
 				    margin-right: 5px;
 				    position: relative;
@@ -2410,6 +2415,7 @@ View Topic Page, Comment Page
 .comment-form {
 		margin-bottom: 0;
 		padding-top: 8px;
+		clear: both;
 
 	.form-textarea-wrapper {
 		textarea {
@@ -2456,12 +2462,14 @@ View Topic Page, Comment Page
 		legend {
 			background: none !important;
 			font-weight: normal;
+			display: block;
+			height: 30px;
 		}
 
 		a {
 		  display: block;
 	    font-size: 15px;
-	    line-height: 20px;
+	    line-height: 25px;
 	    margin: 5px 0 5px;
 	    vertical-align: top;
 			color: #0583AC;
@@ -2562,6 +2570,8 @@ View Topic Page, Comment Page
 /*reply*/
 .topic-node-comment-region-right-reply-form {
 	.comment-form {
+		
+		clear: both;
 
 		.form-textarea-wrapper {
 			textarea {
@@ -2701,15 +2711,18 @@ h2.title {
 				color: #0583AC;
 				display: inline-block;
 		    font-size: 13px;
-		    line-height: 20px;
+		    line-height: 25px;
 		    vertical-align: top;
 				float: left;
 				clear: both;
 			}
 
 			 a:before {
-			  color: #101010;
-		    content: "•";
+		    content: " ";
+				background: #101010;
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
 		    display: inline-block;
 		    font-size: 20px;
 		    font-weight: normal;
@@ -2722,6 +2735,10 @@ h2.title {
 	    content: "" !important;
 		}
 
+		.topic-node-comment-region-right-reply-form {
+			clear: both;
+		}
+		
 		.topic-node-comment-region-right-bottom {
 			text-align: right;
 			clear: both;

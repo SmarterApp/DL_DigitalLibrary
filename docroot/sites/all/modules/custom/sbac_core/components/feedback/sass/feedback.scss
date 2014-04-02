@@ -13,7 +13,6 @@
 .feedback-wrap {
   padding: 10px 30px;
 
-
   h2{
     font-size: 1.4em;
   }
@@ -22,6 +21,12 @@
     font-size: 1em;
   }
 
+	.feedback-item {
+		.comments {
+			margin-bottom: 20px;
+		}
+	}
+	
   textarea {
     resize: none;
   }
@@ -30,6 +35,7 @@
     font-weight:bold;
     font-size: 1.1em;
     margin: 0 0 10px 0;
+		color: #000;
   }
 
   .more-less-text{
@@ -119,6 +125,10 @@
 
         tbody {
           border: 0;
+					
+					tr:last-child {
+						border-bottom: none;
+					}
 
           tr {
             background: none;
@@ -141,10 +151,12 @@
                 margin: 0 0 10px 0;
 
                 p {
-                  font-size: 1em;
+                  /*font-size: 1em;*/
+									font-size: 18px;
                   font-weight: bold;
                   max-width: 800px;
                   margin-left: 5px;
+								  font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
                 }
               }
 

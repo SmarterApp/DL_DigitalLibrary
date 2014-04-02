@@ -567,38 +567,45 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':
       $conf['file_private_path'] = '/mnt/files/sbacdev/files-private';
+      $conf['google_cdn_folder'] = 'dev';
       // do something on dev
       break;
 
     case 'test':
       // do something on staging
       $conf['file_private_path'] = '/mnt/files/sbacstg/files-private';
+      $conf['google_cdn_folder'] = 'stage';
       break;
 
     case 'stage2':
       // do something on staging
       $conf['file_private_path'] = '/mnt/files/sbacstg2/files-private';
+      $conf['google_cdn_folder'] = 'stage2';
       break;
 
     case 'stage3':
       // do something on staging
       $conf['file_private_path'] = '/mnt/files/sbacstg3/files-private';
+      $conf['google_cdn_folder'] = 'integration';
       break;
 
     case 'prod':
       // do something on prod
       $conf['file_private_path'] = '/mnt/files/sbac/files-private';
+      $conf['google_cdn_folder'] = 'production';
       break;
   }
 }
-
-// Sets the Apache Solr Environment
-if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-  $conf['apachesolr_default_environment'] = 'amazon_apache_solr_training';
-}
 else {
-  $conf['apachesolr_default_environment'] = 'amazon_apache_solr_environment_local';
+  $conf['google_cdn_folder'] = 'local';
+  $conf['file_default_scheme'] = 'private';
 }
+
+// Google CDN variables.
+$conf['google_cdn_bucket_name'] = 'sbac_media';
+$conf['google_cdn_extensions'] = 'all';
+$conf['google_cdn_client_id'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot.apps.googleusercontent.com';
+$conf['google_cdn_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot@developer.gserviceaccount.com';
 
 error_reporting(E_ERROR);
 ini_set('display_errors', TRUE);

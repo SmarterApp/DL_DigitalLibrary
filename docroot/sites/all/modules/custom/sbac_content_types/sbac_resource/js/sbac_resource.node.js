@@ -21,7 +21,8 @@
               if (window.location.protocol == 'https:') {
                 google_url = 'https://docs.google.com/viewer';
               }
-              var google_viewer = '<iframe src="' + google_url + '?url=' + local_url + '&embedded=true" width="850" height="400" style="border: none;"></iframe>';
+              local_url +=  '&embedded=true';
+              var google_viewer = '<iframe src="' + google_url + '?url=' + local_url + '" width="880" height="400" style="border: none;"></iframe>';
               resource.empty().append(google_viewer);
               resource.addClass('google-doc');
               $('.infobar .ajax-progress').hide();
@@ -49,41 +50,46 @@
         var resource = $('#resource-element');
         switch (type) {
           case 'document':
-            $('.infobar .ajax-progress').show();
-            Drupal.behaviors.sbac_resource_load_media.check(resource, local_url);
+            var google_url = 'http://docs.google.com/viewer';
+            if (window.location.protocol == 'https:') {
+              google_url = 'https://docs.google.com/viewer';
+            }
+            var google_viewer = '<iframe title="resource-preview" src="' + google_url + '?url=' + encodeURIComponent(local_url) + '&embedded=true' + '" width="880" height="400" style="border: none;">Alternative Content</iframe>';
+            resource.empty().append(google_viewer);
+            resource.addClass('google-doc');
             break;
           case 'html5':
-            resource.empty().append('<iframe src="' + $(this).attr('href') + '" width="850" height="600" style="border: none;"></iframe>');
+            resource.empty().append('<iframe title="resource-preview" src="' + local_url + '" width="880" height="600" style="border: none;"></iframe>');
             resource.removeClass('google-doc');
             break;
           case 'video':
             resource.empty().append('<div id="sbac-jwplayer"></div>');
-            jwplayer('sbac-jwplayer').setup({ file: $(this).attr('href'), height: 400, width: 850, primary: "flash" });
+            jwplayer('sbac-jwplayer').setup({ file: local_url, height: 400, width: 880, primary: "flash" });
             jwplayer('sbac-jwplayer').play();
             resource.removeClass('google-doc');
             break;
           case 'image':
             var img = $('<img>');
-            img.attr('src', $(this).attr('href'));
+            img.attr('src', local_url);
             img.attr('height', 400);
             img.attr('width', 850);
             resource.empty().append(img);
             resource.removeClass('google-doc');
             break;
           case 'schooltube':
-            resource.empty().append('<div class="flex-video"><iframe width="500" height="375" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>');
+            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="500" height="375" src="' + local_url + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen">Alternative Content</iframe></div>');
             resource.removeClass('google-doc');
             break;
           case 'teachertube':
-            resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen/></iframe>');
+            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' + local_url + '" frameborder="0" allowfullscreen/>Alternative Content</iframe>');
             resource.removeClass('google-doc');
             break;
           case 'slideshare':
-            resource.empty().append('<div class="flex-video"><iframe src="' + $(this).attr('href') + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>');
+            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + local_url + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen>Alternative Content</iframe></div>');
             resource.removeClass('google-doc');
             break;
           case 'vimeo':
-            resource.empty().append('<div class="flex-video"><iframe src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>');
+            resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>Alternative Content</iframe></div>');
             resource.removeClass('google-doc');
             break;
           case 'youtube':
@@ -96,13 +102,13 @@
               resource.empty().append(img);
             }
             else {
-              resource.empty().append('<div class="flex-video"><iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>');
+              resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' + local_url + '" frameborder="0" allowfullscreen>Alternative Content</iframe></div>');
               resource.removeClass('google-doc');
             }
             break;
           default:
             var img = $('<img>');
-            img.attr('src', $(this).attr('href'));
+            img.attr('src', local_url);
             img.attr('height', 400);
             img.attr('width', 850);
             resource.empty().append(img);
