@@ -90,6 +90,7 @@
 				&:nth-child(2) {
 					width: auto;
 					line-height: 1.5;
+					word-break: break-all;
 					
 					input[type="checkbox"] {
 						margin-left: 0;
