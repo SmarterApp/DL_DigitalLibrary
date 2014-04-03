@@ -625,7 +625,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_copyright_clearace_forms',
-    'label' => 'Copyright Clearace Form(s)',
+    'label' => 'Copyright Clearance Form(s)',
     'required' => 0,
     'settings' => array(
       'description_field' => 0,
@@ -2719,7 +2719,7 @@ function sbac_resource_field_default_field_instances() {
   t('Connection to CCSS');
   t('Connection to FAP');
   t('Contexts');
-  t('Copyright Clearace Form(s)');
+  t('Copyright Clearance Form(s)');
   t('Describe how this resource enables students to actively engage in the formative assessment process, if applicable.');
   t('Describe the likely context(s) in which the resource could be used (e.g. PLCs, individual, ongoing learning, small group, whole class).');
   t('Digital Media Type(s)');
