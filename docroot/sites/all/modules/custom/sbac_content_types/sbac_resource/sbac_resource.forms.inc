@@ -1807,7 +1807,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
     $copyright_access = TRUE;
   }
   $form['field_copyright_clearace_forms']['#access'] = $copyright_access;
-  $form['field_copyright_clearace_forms'][LANGUAGE_NONE]['#file_upload_title'] = '';
+  // $form['field_copyright_clearace_forms'][LANGUAGE_NONE]['#file_upload_title'] = '';
   $form['field_copyright_clearace_forms'][LANGUAGE_NONE]['#file_upload_description'] = '';
   $form['field_copyright_clearace_forms']['#states']['visible'] = $state_license_1;
 

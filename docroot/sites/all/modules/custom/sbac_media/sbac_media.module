@@ -607,10 +607,9 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
 
   $form['field_file_container']['field_file_upload'] = array(
     '#type' => 'file',
-    '#title_display' => 'invisible',
     '#title' => t('Upload2'),
+    '#title_display' => 'invisible',
     '#size' => 22,
-    '#theme_wrappers' => array(),
     '#upload_location' => 'gs://resources',
   );
 
@@ -837,10 +836,10 @@ function _sbac_media_create_list($media_items, $form_state) {
   if ($media_items) {
     $output = '<table id="sbac-media-list" class="sortable">';
     if ($form_state['html5']) {
-      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan = 5>Secondary Material. These will be available in addition to module content.</td></tr></thead>';
+      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan="5">Secondary Material. These will be available in addition to module content.</td></tr></thead>';
     }
     else {
-      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan = 5>Primary Material. This is the main material with which you want users to interact.</td></tr></thead>';
+      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan="5">Primary Material. This is the main material with which you want users to interact.</td></tr></thead>';
       if (count($media_items) > 1) {
         $output .= '<div class="secondary-items-info">Secondary Material(s). These will be shown adjacent to the primary material.</div>';
       }
@@ -873,8 +872,8 @@ function _sbac_media_create_list($media_items, $form_state) {
           $checked = 'checked=checked';
         }
         $output .= '<br />
-        <label for="checkbox-' . $count . '">I have uploaded a separate transcript for this material</label>
-        <input id="checkbox-' . $count . '" type="checkbox" ' . $checked . ' media="' . $media_item->id . '" value="1" name="transcript[' . $media_item->id . ']">';
+        <label class="element-invisible" for="checkbox-' . $count . '">I have uploaded a separate transcript for this material</label>
+        <input id="checkbox-' . $count . '" type="checkbox" ' . $checked . ' media="' . $media_item->id . '" value="1" name="transcript[' . $media_item->id . ']" />I have uploaded a separate transcript for this material';
       }
       $output .= '</td>';
 
