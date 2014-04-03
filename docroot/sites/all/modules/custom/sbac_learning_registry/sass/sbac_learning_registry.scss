@@ -12,6 +12,11 @@ $darkgreen: #246a34;
 $darkblue: #006082;
 $gray: #464B54;
 
+
+
+body.page-external-resources {
+	background-color: #CECECE;
+}
 	
 /* -----------------------------------------
    Responsive Grid
@@ -37,10 +42,16 @@ $gray: #464B54;
   
 	.main-row {
      max-width: 1280px !important;
+
+		.results-view {
+			width: 960px;
+			margin: 0 auto;
+			padding: 0 15px;
+		}
    }
 
 	.ex-resource-card {
-      &:nth-child(5n+1){
+      &:nth-child(4n+1){
         clear:left;
       }
    }
@@ -62,11 +73,16 @@ $gray: #464B54;
 @media all and (max-width: 960px){
 	
   .main-row {
-     max-width: 656px;
+     max-width: 696px;
+
+		.results-view {
+			width: 696px;
+			margin: 0 auto;
+		}
    }
 
   .ex-resource-card {
-      &:nth-child(2n+1){
+      &:nth-child(3n+1){
         clear:left;
       }
    }
@@ -82,6 +98,39 @@ $gray: #464B54;
 		background-color: transparent;
 		border-radius: 0;
     box-shadow: none;
+		padding-top: 10px;
+	}
+	
+	h1#page-title {
+		display: none;		
+	}
+	
+	.feature-message {
+		background: none repeat scroll 0 0 #FDF2B1;
+	  border: 1px solid #EEEEEE;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    @include border-radius(6px);
+		padding: 12px 30px;
+		margin: 0 15px 25px 12px;
+		
+		p {
+			color: #04384e;
+			font-size: 14px;
+			line-height: 25px;
+			margin: 0;
+		}
+		
+		p:before {
+			background-image: url("../images/icon-exclamation.png");
+	    background-position: center center;
+	    content: " ";
+	    display: inline-block;
+	    height: 25px;
+	    width: 28px;
+	    margin-right: 12px;
+	    margin-top: -2px;
+	    vertical-align: middle;
+		}
 	}
 	
 	.ex-resource-card {
@@ -89,22 +138,22 @@ $gray: #464B54;
 		width: 212px;
 		height: 220px;
 		background: none repeat scroll 0 0 #FFFFFF;
-		border: 1px solid #63666A;
     @include border-radius(6px);
     padding: 0;
     position: relative;
 		float: left;
 		margin: 0 10px;
-		margin-bottom: 2em;
+		margin-bottom: 20px;
 		
 		.resource-title {
-			background-color: #CECECE;
+			background-color: rgba(206, 206, 206, 0.5);
 			@include border-radius(5px 5px 0 0);
 			padding: 12px 15px;
 			font-size: 14px;
 			color: #04384E;
 			height: 61px;
-			border-bottom: #04384E;
+			border-bottom: solid #04384E 1px;
+			border-color: rgba(4, 56, 78, 0.4);
 			
 			a {
 				color: #04384E;
@@ -121,6 +170,19 @@ $gray: #464B54;
 	
 	.load-more {
 		clear: both;
+		display: block;
+		width: 292px;
+		text-align: center;
+		background-color: #006298;
+		margin: 15px auto 0;
+		border: 1px solid #006298;
+		
+		&:hover,  &:focus {
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+			background-color: #006298 !important;
+			border: 1px solid #006298 !important;
+		}
+		
 	}
 }
 
