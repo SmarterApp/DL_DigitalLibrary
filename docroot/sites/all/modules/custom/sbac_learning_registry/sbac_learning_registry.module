@@ -70,7 +70,7 @@ function sbac_learning_registry_external_resource_load($start = 0) {
 
   $output = theme('sbac_external_resource_results', array(
     'results' => $results,
-    'load_more_link' => ctools_ajax_text_button(t('Load More External Resources'), "external-resources/nojs/load-more/" . $start, t('Load more external resources"'), 'load-more')
+    'load_more_link' => ctools_ajax_text_button(t('Show More External Resources'), "external-resources/nojs/load-more/" . $start, t('Show more external resources'), 'button load-more')
   ));
   return $output;
 }
