@@ -3,14 +3,14 @@
   <div class="categories-filter clearfix slideable <?php print $hide_filters; ?>" <?php print sbac_search_hide_category_style(); ?> >
     <?php
     $count = 1;
-    $total_cols = 4;
-    $cols = 4;
+    $total_cols = 3;
+    $cols = 3;
     $category_count = count($categories);
     $mod = ceil($category_count / $cols);
     foreach ($categories as $category_name => $category) {
       // Initialize the loop.
       if ($count == 1) {
-        echo '<div class="category-filter-name column large-3">';
+        echo '<div class="category-filter-name column large-4">';
         echo '<ul>';
       }
 
