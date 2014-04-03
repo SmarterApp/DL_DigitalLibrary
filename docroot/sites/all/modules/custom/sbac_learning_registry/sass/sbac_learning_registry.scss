@@ -12,11 +12,6 @@ $darkgreen: #246a34;
 $darkblue: #006082;
 $gray: #464B54;
 
-/* -----------------------------------------
-    External Resources List
-   ----------------------------------------- */
-.external-resources {}
-	
 	
 /* -----------------------------------------
    Responsive Grid
@@ -39,49 +34,128 @@ $gray: #464B54;
 }
 
 @media all and (min-width: 1281px){
-  .grid-view {
-    .main-row {
-      max-width: 1280px;
-    }
+  
+	.main-row {
+     max-width: 1280px !important;
+   }
 
-    .grid-library {
-      li {
-        &:nth-child(4n+1){
-          clear:left;
-        }
+	.ex-resource-card {
+      &:nth-child(5n+1){
+        clear:left;
       }
-    }
-  }
+   }
 }
 
 @media all and (max-width: 1280px) and (min-width: 961px){
-  .grid-view {
-    .main-row {
-      max-width: 960px;
-    }
+	
+  .main-row {
+     max-width: 960px;
+   }
 
-    .grid-library {
-      li {
-        &:nth-child(3n+1){
-          clear:left;
-        }
+  .ex-resource-card {
+      &:nth-child(4n+1){
+        clear:left;
       }
-    }
-  }
+   }
 }
 
 @media all and (max-width: 960px){
-  .grid-view {
-    .main-row {
-      max-width: 656px;
-    }
+	
+  .main-row {
+     max-width: 656px;
+   }
 
-    .grid-library{
-      li {
-        &:nth-child(2n + 1){
-          clear:left;
-        }
+  .ex-resource-card {
+      &:nth-child(2n+1){
+        clear:left;
       }
-    }
-  }
+   }
 }
+
+
+/* -----------------------------------------
+    External Resources List
+   ----------------------------------------- */
+.page-external-resources {
+	
+	.main-container {
+		background-color: transparent;
+		border-radius: 0;
+    box-shadow: none;
+	}
+	
+	.ex-resource-card {
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+		width: 212px;
+		height: 220px;
+		background: none repeat scroll 0 0 #FFFFFF;
+		border: 1px solid #63666A;
+    @include border-radius(6px);
+    padding: 0;
+    position: relative;
+		float: left;
+		margin: 0 10px;
+		margin-bottom: 2em;
+		
+		.resource-title {
+			background-color: #CECECE;
+			@include border-radius(5px 5px 0 0);
+			padding: 12px 15px;
+			font-size: 14px;
+			color: #04384E;
+			height: 61px;
+			border-bottom: #04384E;
+			
+			a {
+				color: #04384E;
+				line-height: 1.4;
+			}
+		}
+		
+		.resource-content {
+			padding: 12px 15px;
+			font-size: 13px;
+			line-height: 1.4;
+		}
+	}
+	
+	.load-more {
+		clear: both;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
