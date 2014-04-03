@@ -1071,8 +1071,14 @@ function sbac_resource_preprocess_page(&$vars) {
   if (isset($vars['page']['content']['system_main']['main']['#markup'])) {
     $value = $vars['page']['content']['system_main']['main']['#markup'];
     if (strpos($value, 'could not be found')) {
-      drupal_set_title(t('You do not have permission to view this resource'));
-      $message = '<p>' . t('The resource you are trying to access is restricted. Select Browse Resources to browse available resources in the Digital Library.') . '</p>';
+      drupal_set_title(t('Sorry, the page you requested was not found'));
+      $reason_list_items = array(
+        t('The page has moved'),
+        t('The page no longer exists'),
+        t('You do not have permission to view the page'),
+      );
+      $reason_list = theme('item_list', array('items' => $reason_list_items));
+      $message = '' . t('Possible reasons include:') . $reason_list . '';
       $button = l('Browse Resources', 'digital-library-resources', array('attributes' => array('class' => array('medium', 'button'))));
       $vars['page']['content']['system_main']['main']['#markup'] = $message . $button;
     }
