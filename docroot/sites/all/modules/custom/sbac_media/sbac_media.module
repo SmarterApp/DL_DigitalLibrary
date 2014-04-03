@@ -497,11 +497,9 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
   $html5 = FALSE;
   if ($form_state['html5']) {
     $html5 = TRUE;
-  }
-
-  if ($html5) {
     sbac_media_build_html5_section($form, $form_state);
   }
+
 
   $form['field_file_container']['#tree'] = TRUE;
   $form['field_file_container'] = array(
