@@ -286,8 +286,8 @@
       $('#views-exposed-form-resources-grid-view').hide();
       $('#views-exposed-form-resources-list-view').hide();
 
-      if ($('#sbac-search-textbox').val() != '') {
-        $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
+      if ($('#edit-solr-keywords').val() != '') {
+        $('.form-item-solr-keywords').append('<span class="sbac-clear-search"></span>');
       }
 
       $('.pager-next a').html('Load More Resources').addClass('button');
