@@ -174,3 +174,34 @@ body.page-external-resources {
   background-color: #006298 !important;
   border: 1px solid #006298 !important;
 }
+
+/*Search box on the navigation Bar*/
+/* line 190, ../sass/sbac_learning_registry.scss */
+#sbac-learning-registry-external-resources-solr-search-form .form-item {
+  margin: 0;
+}
+/* line 194, ../sass/sbac_learning_registry.scss */
+#sbac-learning-registry-external-resources-solr-search-form input#edit-solr-keywords {
+  -moz-box-sizing: border-box;
+  background: url("../images/icon-nav-search.png") no-repeat 14px 9px white;
+  border: 1px solid #CECECE;
+  -webkit-border-radius: 17px;
+  -moz-border-radius: 17px;
+  -ms-border-radius: 17px;
+  -o-border-radius: 17px;
+  border-radius: 17px;
+  box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1) inset, 1px 1px 0 0 white;
+  display: block;
+  height: 34px;
+  margin-top: -23px;
+  padding: 0 15px 0 44px;
+  position: absolute;
+  z-index: 2;
+  right: 30px;
+  top: 0;
+  width: 360px;
+}
+/* line 211, ../sass/sbac_learning_registry.scss */
+#sbac-learning-registry-external-resources-solr-search-form button#edit-submit {
+  display: none;
+}

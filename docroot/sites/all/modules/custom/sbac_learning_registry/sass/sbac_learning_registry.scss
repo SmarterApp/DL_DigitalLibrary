@@ -181,13 +181,37 @@ body.page-external-resources {
 			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 			background-color: #006298 !important;
 			border: 1px solid #006298 !important;
-		}
-		
+		}		
 	}
 }
 
-
-
+/*Search box on the navigation Bar*/
+#sbac-learning-registry-external-resources-solr-search-form {
+	.form-item {
+		margin: 0;
+	}
+	
+	input#edit-solr-keywords {
+		-moz-box-sizing: border-box;
+	  background: url("../images/icon-nav-search.png") no-repeat 14px 9px #fff;
+    border: 1px solid #CECECE;
+    @include border-radius(17px);
+    box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1) inset, 1px 1px 0 0 #FFFFFF;
+    display: block;
+    height: 34px;
+    margin-top: -23px;
+    padding: 0 15px 0 44px;
+    position: absolute;
+		z-index: 2;
+    right: 30px;
+    top: 0;
+    width: 360px;
+	}
+		
+	button#edit-submit {
+		display: none;
+	}
+}
 
 
 
