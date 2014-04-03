@@ -17,9 +17,7 @@ function sbac_learning_registry_menu() {
     'title' => t('External Resources'),
     'page callback' => 'sbac_learning_registry_external_resources_page',
     'access arguments' => array('access content'),
-    'type' => MENU_NORMAL_ITEM,
-    'menu_name' => 'main-menu',
-    'weight' => -50,
+    'type' => MENU_CALLBACK,
   );
   $items['external-resources/clear-all'] = array(
     'title' => 'Digital Library Resources',
@@ -101,6 +99,7 @@ function sbac_learning_registry_clear_all() {
  * Page callback
  */
 function sbac_learning_registry_external_resources_page() {
+  drupal_add_js(drupal_get_path("module", "sbac_learning_registry") . "/js/external-resource.js");
   ctools_include('modal');
   ctools_include('ajax');
   ctools_modal_add_js();
