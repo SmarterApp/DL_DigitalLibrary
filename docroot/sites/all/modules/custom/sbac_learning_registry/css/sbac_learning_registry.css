@@ -2,21 +2,18 @@
     Variables
    ----------------------------------------- */
 /* -----------------------------------------
-    External Resources List
-   ----------------------------------------- */
-/* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
-/* line 25, ../sass/sbac_learning_registry.scss */
+/* line 20, ../sass/sbac_learning_registry.scss */
 .grid-view .grid-library {
   margin: 0;
   padding: 0;
 }
-/* line 29, ../sass/sbac_learning_registry.scss */
+/* line 24, ../sass/sbac_learning_registry.scss */
 .grid-view .grid-library .resource-card {
   max-width: 290px;
 }
-/* line 33, ../sass/sbac_learning_registry.scss */
+/* line 28, ../sass/sbac_learning_registry.scss */
 .grid-view .grid-library li {
   list-style-type: none;
   float: left;
@@ -24,32 +21,91 @@
 }
 
 @media all and (min-width: 1281px) {
-  /* line 43, ../sass/sbac_learning_registry.scss */
-  .grid-view .main-row {
-    max-width: 1280px;
+  /* line 38, ../sass/sbac_learning_registry.scss */
+  .main-row {
+    max-width: 1280px !important;
   }
-  /* line 49, ../sass/sbac_learning_registry.scss */
-  .grid-view .grid-library li:nth-child(4n+1) {
+
+  /* line 43, ../sass/sbac_learning_registry.scss */
+  .ex-resource-card:nth-child(5n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 1280px) and (min-width: 961px) {
-  /* line 59, ../sass/sbac_learning_registry.scss */
-  .grid-view .main-row {
+  /* line 51, ../sass/sbac_learning_registry.scss */
+  .main-row {
     max-width: 960px;
   }
-  /* line 65, ../sass/sbac_learning_registry.scss */
-  .grid-view .grid-library li:nth-child(3n+1) {
+
+  /* line 56, ../sass/sbac_learning_registry.scss */
+  .ex-resource-card:nth-child(4n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 960px) {
-  /* line 75, ../sass/sbac_learning_registry.scss */
-  .grid-view .main-row {
+  /* line 64, ../sass/sbac_learning_registry.scss */
+  .main-row {
     max-width: 656px;
   }
-  /* line 81, ../sass/sbac_learning_registry.scss */
-  .grid-view .grid-library li:nth-child(2n + 1) {
+
+  /* line 69, ../sass/sbac_learning_registry.scss */
+  .ex-resource-card:nth-child(2n+1) {
     clear: left;
   }
+}
+/* -----------------------------------------
+    External Resources List
+   ----------------------------------------- */
+/* line 81, ../sass/sbac_learning_registry.scss */
+.page-external-resources .main-container {
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+/* line 87, ../sass/sbac_learning_registry.scss */
+.page-external-resources .ex-resource-card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  width: 212px;
+  height: 220px;
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #63666A;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  padding: 0;
+  position: relative;
+  float: left;
+  margin: 0 10px;
+  margin-bottom: 2em;
+}
+/* line 100, ../sass/sbac_learning_registry.scss */
+.page-external-resources .ex-resource-card .resource-title {
+  background-color: #CECECE;
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  -ms-border-radius: 5px 5px 0 0;
+  -o-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #04384E;
+  height: 61px;
+  border-bottom: #04384E;
+}
+/* line 109, ../sass/sbac_learning_registry.scss */
+.page-external-resources .ex-resource-card .resource-title a {
+  color: #04384E;
+  line-height: 1.4;
+}
+/* line 115, ../sass/sbac_learning_registry.scss */
+.page-external-resources .ex-resource-card .resource-content {
+  padding: 12px 15px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+/* line 122, ../sass/sbac_learning_registry.scss */
+.page-external-resources .load-more {
+  clear: both;
 }
