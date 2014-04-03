@@ -54,24 +54,22 @@ function sbac_learning_registry_external_resource_load($start = 0) {
     $parameters = array();
     foreach ($current_filters as $filter) {
       $filter_info = explode(':', $filter);
-      $parameters[$filter_info[0]][] = sbac_learning_registry_external_resource_filter_values($filter_info[0], $filter_info[1]);
+      $filter_name = is_numeric($filter_info[0]) ? 'common_core_standards' : $filter_info[0];
+      $parameters[$filter_name][] = sbac_learning_registry_external_resource_filter_values($filter_info[0], $filter_info[1]);
     }
     $parameters['start'] = $start;
-    if (isset($_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS])) {
+    if (!empty($_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS])) {
       $parameters['solr_keywords'] = $_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS];
     }
     $request_url = sbac_learning_registry_inbloom_construct_request_url($parameters);
-//    dsm($request_url);
-    $request_url = 'http://maps-sandbox.inbloom.org:8080/lri-reboot/resources/search?query=resource_solrsummary_t:biology&rows=' . SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE . '&start=' . $start;
-//    dsm($request_url);
     $results = sbac_learning_registry_inbloom_send_request($request_url);
   }
   $start = $start + SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE;
 
   $output = theme('sbac_external_resource_results', array(
     'results' => $results,
-    'load_more_link' => ctools_ajax_text_button(t('Load More External Resources'), "external-resources/nojs/load-more/" . $start, t('Load more external resources"'), 'load-more')
-  ));
+    'load_more_link' => count($results) ? ctools_ajax_text_button(t('Load More External Resources'), "external-resources/nojs/load-more/" . $start, t('Load more external resources"'), 'load-more') : NULL
+));
   return $output;
 }
 
@@ -118,30 +116,33 @@ function sbac_learning_registry_external_resources_page() {
  * @return string
  */
 function sbac_learning_registry_inbloom_construct_request_url($parameters) {
-  // TODO: We're waiting on inBloom for this mapping information
-//  dsm($parameters);
-  $mappings = array(
+  $mapping = array(
     'solr_keywords' => 'resource_solrsummary_t',
-    'start' => 'start',
-    'intended_user_roles' => 'something'
+    'intended_user_roles' => 'resource.audience_t',
+    'common_core_standards' => 'resource.standard_t',
+    'learning_resource_type' => 'resource.learningresource_t',
+    'educational_use' => 'resource.use_t',
+    'typical_age_range' => 'resource.agerange_t',
+    'interactivity_type' => 'resource.interactivity_t'
   );
-  $query = array();
-  foreach ($mappings as $param => $inbloom) {
-    if (isset($parameters[$param])) {
-      if (is_array($parameters[$param])) {
-        // TODO: Handle multiple selection
-        foreach ($parameters[$param] as $v) {
-          $query[$inbloom] = $v;
-        }
+  $inbloom_query = array();
+  foreach ($mapping as $form_param => $inbloom_param) {
+    if (isset($parameters[$form_param])) {
+      if (is_array($parameters[$form_param])) {
+        $inbloom_query[] = $inbloom_param . ':(' . implode(' OR ', $parameters[$form_param]) . ')';
       }
       else {
-        $query[$inbloom] = $parameters[$param];
+        $inbloom_query[] = $inbloom_param . ':' . $parameters[$form_param];
       }
     }
   }
   $options = array(
     'absolute' => TRUE,
-    'query' => $query,
+    'query' => array(
+      'start' => $parameters['start'],
+      'rows' => SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE,
+      'query' => implode(' AND ', $inbloom_query),
+    ),
   );
   return url(SBAC_LEARNING_REGISTRY_INBLOOM_URL, $options);
 }
@@ -344,7 +345,7 @@ function sbac_learning_registry_external_resources_form_submit(&$form, &$form_st
 function sbac_learning_registry_external_resource_filters() {
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
   drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
-	drupal_add_css(drupal_get_path('module', 'sbac_learning_registry') . '/css/sbac_learning_registry.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_learning_registry') . '/css/sbac_learning_registry.css');
   drupal_add_js(drupal_get_path('module', 'sbac_learning_registry') . '/js/sbac_learning_registry.categories.js');
 
   $cf_value = NULL;
