@@ -1153,7 +1153,7 @@ function sbac_flag_resolve_all_flags($node, $eck_review = FALSE) {
     db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved, ef.changed = :changed WHERE ef.target_id = :target_id AND ef.target_type = :type", array(':resolved' => 1, ':changed' => time(), ':target_id' => $eck_review, ':type' => 'review'));
   }
   else {
-    db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 1, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
+    db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved, ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 1, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
   }
 }
 
