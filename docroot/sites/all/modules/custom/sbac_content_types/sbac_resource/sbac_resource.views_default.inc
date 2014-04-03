@@ -97,7 +97,7 @@ function sbac_resource_views_default_views() {
   );
   $handler->display->display_options['filters']['state']['exposed'] = TRUE;
   $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
-  $handler->display->display_options['filters']['state']['expose']['label'] = 'Workbench State';
+  $handler->display->display_options['filters']['state']['expose']['label'] = 'Resource States';
   $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
   $handler->display->display_options['filters']['state']['expose']['identifier'] = 'state';
   $handler->display->display_options['filters']['state']['expose']['multiple'] = TRUE;
@@ -117,6 +117,7 @@ function sbac_resource_views_default_views() {
     8 => 0,
     23 => 0,
     26 => 0,
+    31 => 0,
   );
   /* Filter criterion: Field: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
@@ -144,6 +145,7 @@ function sbac_resource_views_default_views() {
     8 => 0,
     23 => 0,
     26 => 0,
+    31 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
@@ -154,7 +156,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['expose']['operator_id'] = 'field_subject_tid_op';
-  $handler->display->display_options['filters']['field_subject_tid']['expose']['label'] = 'Subject';
+  $handler->display->display_options['filters']['field_subject_tid']['expose']['label'] = 'Subjects';
   $handler->display->display_options['filters']['field_subject_tid']['expose']['operator'] = 'field_subject_tid_op';
   $handler->display->display_options['filters']['field_subject_tid']['expose']['identifier'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['expose']['multiple'] = TRUE;
@@ -174,6 +176,7 @@ function sbac_resource_views_default_views() {
     8 => 0,
     23 => 0,
     26 => 0,
+    31 => 0,
   );
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
@@ -184,7 +187,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_focus_tid']['field'] = 'field_focus_tid';
   $handler->display->display_options['filters']['field_focus_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_focus_tid']['expose']['operator_id'] = 'field_focus_tid_op';
-  $handler->display->display_options['filters']['field_focus_tid']['expose']['label'] = 'Focus';
+  $handler->display->display_options['filters']['field_focus_tid']['expose']['label'] = 'Resource Type';
   $handler->display->display_options['filters']['field_focus_tid']['expose']['operator'] = 'field_focus_tid_op';
   $handler->display->display_options['filters']['field_focus_tid']['expose']['identifier'] = 'field_focus_tid';
   $handler->display->display_options['filters']['field_focus_tid']['expose']['multiple'] = TRUE;
@@ -204,6 +207,7 @@ function sbac_resource_views_default_views() {
     8 => 0,
     23 => 0,
     26 => 0,
+    31 => 0,
   );
   $handler->display->display_options['filters']['field_focus_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
