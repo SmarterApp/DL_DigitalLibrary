@@ -1,0 +1,87 @@
+@import "compass/css3/";
+
+/* -----------------------------------------
+    Variables
+   ----------------------------------------- */
+$white: #FFF;
+$text: #5a5a5a;
+$header: #18577e;
+$teal: #0085ad;
+$lightblue: #00b5e2;
+$darkgreen: #246a34;
+$darkblue: #006082;
+$gray: #464B54;
+
+/* -----------------------------------------
+    External Resources List
+   ----------------------------------------- */
+.external-resources {}
+	
+	
+/* -----------------------------------------
+   Responsive Grid
+   ----------------------------------------- */
+.grid-view {
+  .grid-library {
+    margin: 0;
+    padding: 0;
+
+    .resource-card {
+      max-width: 290px;
+    }
+
+    li {
+      list-style-type: none;
+      float: left;
+      margin: 0 10px 10px;
+    }
+  }
+}
+
+@media all and (min-width: 1281px){
+  .grid-view {
+    .main-row {
+      max-width: 1280px;
+    }
+
+    .grid-library {
+      li {
+        &:nth-child(4n+1){
+          clear:left;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 1280px) and (min-width: 961px){
+  .grid-view {
+    .main-row {
+      max-width: 960px;
+    }
+
+    .grid-library {
+      li {
+        &:nth-child(3n+1){
+          clear:left;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 960px){
+  .grid-view {
+    .main-row {
+      max-width: 656px;
+    }
+
+    .grid-library{
+      li {
+        &:nth-child(2n + 1){
+          clear:left;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+/* -----------------------------------------
+    Variables
+   ----------------------------------------- */
+/* -----------------------------------------
+    External Resources List
+   ----------------------------------------- */
+/* -----------------------------------------
+   Responsive Grid
+   ----------------------------------------- */
+/* line 25, ../sass/sbac_learning_registry.scss */
+.grid-view .grid-library {
+  margin: 0;
+  padding: 0;
+}
+/* line 29, ../sass/sbac_learning_registry.scss */
+.grid-view .grid-library .resource-card {
+  max-width: 290px;
+}
+/* line 33, ../sass/sbac_learning_registry.scss */
+.grid-view .grid-library li {
+  list-style-type: none;
+  float: left;
+  margin: 0 10px 10px;
+}
+
+@media all and (min-width: 1281px) {
+  /* line 43, ../sass/sbac_learning_registry.scss */
+  .grid-view .main-row {
+    max-width: 1280px;
+  }
+  /* line 49, ../sass/sbac_learning_registry.scss */
+  .grid-view .grid-library li:nth-child(4n+1) {
+    clear: left;
+  }
+}
+@media all and (max-width: 1280px) and (min-width: 961px) {
+  /* line 59, ../sass/sbac_learning_registry.scss */
+  .grid-view .main-row {
+    max-width: 960px;
+  }
+  /* line 65, ../sass/sbac_learning_registry.scss */
+  .grid-view .grid-library li:nth-child(3n+1) {
+    clear: left;
+  }
+}
+@media all and (max-width: 960px) {
+  /* line 75, ../sass/sbac_learning_registry.scss */
+  .grid-view .main-row {
+    max-width: 656px;
+  }
+  /* line 81, ../sass/sbac_learning_registry.scss */
+  .grid-view .grid-library li:nth-child(2n + 1) {
+    clear: left;
+  }
+}
