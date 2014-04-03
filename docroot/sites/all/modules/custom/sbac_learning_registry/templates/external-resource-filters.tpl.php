@@ -3,37 +3,37 @@
   <div class="categories-filter clearfix slideable <?php print $hide_filters; ?>" <?php print sbac_search_hide_category_style(); ?> >
     <?php
     $count = 1;
-    $total_cols = 3;
-    $cols = 3;
+    $total_cols = 4;
+    $cols = 4;
     $category_count = count($categories);
     $mod = ceil($category_count / $cols);
-    foreach ($categories as $category) {
+    foreach ($categories as $category_name => $category) {
       // Initialize the loop.
       if ($count == 1) {
-        echo '<div class="category-filter-name column large-4">';
+        echo '<div class="category-filter-name column large-3">';
         echo '<ul>';
       }
 
       // Added a different type of entry.
-      if (isset($category['link']) && empty($category['vocabulary'])) {
+      if (isset($category['link'])) {
         echo '<li><div class="sbac-search-filter-custom-link">' . $category['link'] . '</div></li>';
       }
       else {
-        echo '<li><div class="sbac-search-filter-name" vid="' . $category['vocabulary']->vid . '">' . $category['display_name'];
+        echo '<li><div class="sbac-search-filter-name" vid="' . $category_name . '">' . $category['display_name'];
         // The choices per vocabulary.
         echo '<div class="categories-filter-choices">';
-        $category_vid = $category['vocabulary']->vid;
-        echo '<div vid="' . $category_vid . '" class="clearfix category-filter-list category-filter-list-' . $category_vid . ' ' . strtolower($category['display_name']) . '">';
+        echo '<div vid="' . $category_name . '" class="clearfix category-filter-list category-filter-list-' . $category_name . ' ' . strtolower($category['display_name']) . '">';
         echo '<h2 class="category-filter-header">' . $category['display_name'] . '<i class="gen-enclosed foundicon-remove right"></i></h2>';
         echo '<ul>';
-        foreach ($category['terms'] as $key => $term) {
+        $i = 0;
+        foreach ($category['terms'] as $term) {
           $class = '';
-          if (strpos($cf_value, $category_vid . ':' . $term->tid) !== FALSE) {
+          if (strpos($cf_value, $category_name . ':' . $i) !== FALSE) {
             $class = ' current ';
           }
-          echo '<li class="category-filter category-filter-' . $category_vid . '-' . $term->tid . ' ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '"><span class="highlight"></span><span class="filter-name ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '">' . $term->name . '</span></li>';
+          echo '<li class="category-filter category-filter-' . $category_name . '-' . $i . ' ' . $class . '" vid="' . $category_name . '" tid="' . $i . '"><span class="highlight"></span><span class="filter-name ' . $class . '" vid="' . $category_name . '" tid="' . $i . '">' . $term . '</span></li>';
+          $i++;
         }
-
         echo '</ul>';
         echo '</div>';
         echo '</div>';
