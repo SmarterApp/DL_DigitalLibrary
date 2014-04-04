@@ -16,8 +16,8 @@ jQuery(document).ready(function () {
     jQuery.colorbox({
       inline: true,
       href: '#external-resource-help-box',
-      width:'80%',
-      height:'80%',
+      width:'60%',
+      height:'40%',
       onComplete: initTextify,
       escKey: false,
       overlayClose: false
