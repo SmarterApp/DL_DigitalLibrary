@@ -201,6 +201,15 @@ global $user;
         <?php print render($page['sidebar_second']); ?>
       </div>
     <?php endif; ?>
+
+		<?php if('digital-library-resources' == current_path()): ?>
+		<div class="experimental-feature">
+		  <div class="title">EXPERIMENTAL FEATURE</div>
+		  <div class="additional-resoutces">Need additional resources? You may try searching <a href="/external-resources">external resources</a></div>
+		  <?php print $external_resources_link; ?>
+		</div>
+		<?php endif; ?>
+		
   </div>
 </div>
 <?php if (!empty($page['footer_first']) || !empty($page['footer_middle']) || !empty($page['footer_last'])): ?>
@@ -223,13 +232,6 @@ global $user;
   </footer>
 <?php endif; ?>
 
-<?php if('digital-library-resources' == current_path()): ?>
-<div class="experimental-feature">
-  <div class="title">EXPERIMENTAL FEATURE</div>
-  <div class="additional-resoutces">Need additional resources? You may try searching <a href="/external-resources">external resources</a></div>
-  <?php print $external_resources_link; ?>
-</div>
-<?php endif; ?>
 </div>
 <div class="bottom-bar">
   <div class="row">
