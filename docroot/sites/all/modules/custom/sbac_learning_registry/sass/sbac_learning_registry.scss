@@ -13,11 +13,56 @@ $darkblue: #006082;
 $gray: #464B54;
 
 
-
+/* -----------------------------------------
+   Header
+   ----------------------------------------- */
 body.page-external-resources {
 	background-color: #CECECE;
 }
+
+.sbac-external-logo {
+	background: url(../images/external-resources.png) no-repeat 0 0;
+	height: 40px;
+	width: 421px;
+	display: block;
+	float: left;
+	margin: 12px 15px 10px;
 	
+	h1 {
+		float: left;
+		text-indent: -999999em;
+	}
+}
+
+/*Search box on the navigation Bar*/
+#sbac-learning-registry-external-resources-solr-search-form {
+	.form-item {
+		margin: 0;
+	}
+	
+	input#edit-solr-keywords {
+		-moz-box-sizing: border-box;
+	  background: url("../images/icon-nav-search.png") no-repeat 14px 9px #fff;
+    border: 1px solid #CECECE;
+    @include border-radius(17px);
+    box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1) inset, 1px 1px 0 0 #FFFFFF;
+    display: block;
+    height: 34px;
+    margin-top: -15px;
+    padding: 0 15px 0 44px;
+    position: absolute;
+		z-index: 2;
+    right: 30px;
+    top: 0;
+    width: 360px;
+	}
+		
+	button#edit-submit {
+		display: none;
+	}
+}
+
+
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
@@ -185,35 +230,36 @@ body.page-external-resources {
 	}
 }
 
-/*Search box on the navigation Bar*/
-#sbac-learning-registry-external-resources-solr-search-form {
-	.form-item {
-		margin: 0;
+
+
+/*back button*/
+.page-external-resources {
+	.sbac-back-button {
+		width: 320px;
+		height: 25px;
+		line-height: 25px;
+		display: block;
+		margin: 20px auto;
+		font-size: 15px;	
+		position: relative;	
+		
+		a {
+			color: #0583AC;
+		}
 	}
 	
-	input#edit-solr-keywords {
-		-moz-box-sizing: border-box;
-	  background: url("../images/icon-nav-search.png") no-repeat 14px 9px #fff;
-    border: 1px solid #CECECE;
-    @include border-radius(17px);
-    box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1) inset, 1px 1px 0 0 #FFFFFF;
-    display: block;
-    height: 34px;
-    margin-top: -23px;
-    padding: 0 15px 0 44px;
-    position: absolute;
-		z-index: 2;
-    right: 30px;
-    top: 0;
-    width: 360px;
-	}
-		
-	button#edit-submit {
-		display: none;
+	.sbac-back-button:before {
+	  content:"\e620";
+    display: inline;
+    font-family: 'sbac';
+    font-size: 20px;
+    font-weight: normal;
+    margin-right: 7px;
+    position: relative;
+		color: #0583AC;
+    top: -2px;
 	}
 }
-
-
 
 
 

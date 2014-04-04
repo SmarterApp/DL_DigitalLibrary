@@ -5,7 +5,7 @@ global $user;
 <div class="page-wrap">
 
   <div class="top-bar sub-top">
-    <div>logo here</div>
+    <div class="sbac-external-logo"><h1>Search External Resources</h1></div>
     <?php if (isset($page['search']) && $page['search']): ?>
       <div class="search right">
         <?php print render($page['search']); ?>
@@ -28,7 +28,7 @@ global $user;
       </div>
     </div>
   </div>
-  <div>
+  <div class="sbac-back-button">
     <a href='/'>Back to Smarter Balanced Digital Library</a>
   </div>
 </div>

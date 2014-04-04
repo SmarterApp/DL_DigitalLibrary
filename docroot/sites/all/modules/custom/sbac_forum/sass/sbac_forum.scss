@@ -3169,6 +3169,45 @@ h2.title {
 	}
 }
 
+/*Nav search box*/
+.search {
+  text-align: right;
+	
+	.block-search {
+	  margin-right: 1em;
+    position: relative;
+    vertical-align: top;
+    width: 200px;
+
+		.form-text, 
+		.form-text:focus {
+		  background: url("../images/search.png") no-repeat scroll 5% center rgba(0, 0, 0, 0);
+		  border-radius: 20px;
+		  padding-left: 25px;
+		  position: absolute;
+		  top: 8px;
+		}
+		
+		.sbac-clear-search {
+		  background: url("../images/icon-validation-fail.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+	    cursor: pointer;
+	    display: block;
+	    float: right;
+	    height: 15px;
+	    position: absolute;
+	    right: 13px;
+	    top: 14px;
+	    width: 15px;
+		}
+		
+		button {
+			display: none !important;
+		}
+	}
+}
+
+
+
 /*Fixed for FF*/
 @-moz-document url-prefix() {
   .sbac-forum-vp-controls-popup:after {
@@ -3203,9 +3242,7 @@ h2.title {
 			height: 20px;
 		}
 	}	
-	
-
-	
+		
 	.button.comment-direct-reply-form-cancel-link, 
 	.button.comment-reply-form-cancel-link {
 		margin-top: 25px !important;
