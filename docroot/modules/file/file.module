@@ -363,7 +363,6 @@ function file_managed_file_process($element, &$form_state, $form) {
   $element['#id'] .= '-upload';
   $fid = isset($element['#value']['fid']) ? $element['#value']['fid'] : 0;
 
-
   // Set some default element properties.
   $element['#progress_indicator'] = empty($element['#progress_indicator']) ? 'none' : $element['#progress_indicator'];
   $element['#file'] = $fid ? file_load($fid) : FALSE;
