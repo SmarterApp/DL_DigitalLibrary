@@ -96,6 +96,7 @@ function sbac_resource_menu() {
 
   $items['digital-library-resources'] = array(
     'title' => 'Digital Library Resources',
+    'description' => 'Digital Library Resources',
     'page callback' => 'sbac_resource_digital_library_page',
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
@@ -106,6 +107,7 @@ function sbac_resource_menu() {
 
   $items['my-resources'] = array(
     'title' => 'My Resources',
+    'description' => 'My Resources',
     'page callback' => 'sbac_resource_my_resources_page',
     'access callback' => 'sbac_resource_my_resources_access_callback',
     'type' => MENU_NORMAL_ITEM,
@@ -116,6 +118,7 @@ function sbac_resource_menu() {
 
   $items['resource-review'] = array(
     'title' => 'Resource Review',
+    'description' => 'Resource Review',
     'page callback' => 'sbac_resource_resource_review_page',
     'access callback' => 'sbac_resource_resource_review_access_callback',
     'access arguments' => array('access content'),
@@ -157,7 +160,6 @@ function sbac_resource_menu() {
     'title' => 'URL Exists',
     'page callback' => 'sbac_resource_url_exists_ajax',
     'access arguments' => array('access content'),
-    'title' => 'URL Exist',
   );
 
   return $items;
