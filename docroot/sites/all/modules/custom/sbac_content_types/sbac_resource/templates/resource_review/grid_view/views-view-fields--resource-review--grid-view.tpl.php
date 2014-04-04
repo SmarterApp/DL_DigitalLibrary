@@ -39,9 +39,9 @@
     <?php endif; ?>
 
     <div class='resource-stats'>
-      <p>
-        <?php (isset($fields['field_alt_body']) ? print $fields['field_alt_body']->content : print ''); ?>
-      </p>
+      <?php if (isset($fields['field_alt_body'])): ?>
+        <?php echo $fields['field_alt_body']->content; ?>
+      <?php endif; ?>
     </div>
   </div>
 
