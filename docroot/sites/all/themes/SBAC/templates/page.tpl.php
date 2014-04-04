@@ -223,10 +223,13 @@ global $user;
   </footer>
 <?php endif; ?>
 
+<?php if('digital-library-resources' == current_path()): ?>
 <div>
   <div>EXPERIMENTAL FEATURE</div>
   <div>Need additional resources? You may try searching <a href="/external-resources">external resources</a></div>
+  <?php print $external_resources_link; ?>
 </div>
+<?php endif; ?>
 </div>
 <div class="bottom-bar">
   <div class="row">
