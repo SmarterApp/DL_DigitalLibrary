@@ -62,15 +62,16 @@ function sbac_media_menu() {
   );
 
   $items['sbac-media/download/%node'] = array(
+    'title' => 'Download Resource',
     'page callback' => 'sbac_media_download_contents',
     'page arguments' => array(2),
     'access arguments' => array('access content'),
   );
 
   $items['sbac-media/file-stream'] = array(
+    'title' => 'File Stream',
     'page callback' => 'sbac_media_file_stream',
     'access callback' => TRUE,
-    'title' => 'File Stream',
   );
 
   return $items;
@@ -578,7 +579,8 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
       '#markup' => l(t('Modal'), 'sbac-media/nojs/internet-confirm', array(
         'attributes' => array(
           'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-internet-confirm',
-          'id' => 'sbac-media-internet-confirm'
+          'id' => 'sbac-media-internet-confirm',
+          'title' => 'Confirm Embed',
         ),
         'query' => array(
           'nid' => $form['#node']->nid,
@@ -604,8 +606,8 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
   $form['field_file_container']['field_file_upload'] = array(
     '#type' => 'file',
     '#title' => t('Upload2'),
+    '#title_display' => 'invisible',
     '#size' => 22,
-    '#theme_wrappers' => array(),
     '#upload_location' => 'gs://resources',
   );
 
@@ -627,7 +629,8 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
       '#markup' => l(t('Duplicates'), 'sbac-media/nojs/duplicates', array(
         'attributes' => array(
           'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-modal-duplicates',
-          'id' => 'sbac-media-modal-duplicates'
+          'id' => 'sbac-media-modal-duplicates',
+          'title' => 'Duplicates',
         ),
         'query' => array(
           'nid' => $form['#node']->nid,
@@ -707,7 +710,8 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
       $delete_link = '<div class="columns large-1">'.l('<i class="general foundicon-trash"></i>', 'sbac-media/nojs/delete-media', array(
           'attributes' => array(
             'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media',
-            'id' => 'sbac-media-modal-delete-media'
+            'id' => 'sbac-media-modal-delete-media',
+            'title' => 'Delete Media',
           ),
           'html' =>true,
           'query' => array(
@@ -830,10 +834,10 @@ function _sbac_media_create_list($media_items, $form_state) {
   if ($media_items) {
     $output = '<table id="sbac-media-list" class="sortable">';
     if ($form_state['html5']) {
-      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan = 5>Secondary Material. These will be available in addition to module content.</td></tr></thead>';
+      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan="5">Secondary Material. These will be available in addition to module content.</td></tr></thead>';
     }
     else {
-      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan = 5>Primary Material. This is the main material with which you want users to interact.</td></tr></thead>';
+      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan="5">Primary Material. This is the main material with which you want users to interact.</td></tr></thead>';
       if (count($media_items) > 1) {
         $output .= '<div class="secondary-items-info">Secondary Material(s). These will be shown adjacent to the primary material.</div>';
       }
@@ -842,7 +846,7 @@ function _sbac_media_create_list($media_items, $form_state) {
     $count = 0;
     foreach ($media_items as $key => $media_item) {
       // Open.
-      $output .= '<tr id="' . $media_item->id . '">';
+      $output .= '<tr id="material-' . $media_item->id . '">';
 
       // Image.
       $type = _sbac_resource_determine_type($media_item, TRUE);
@@ -865,7 +869,9 @@ function _sbac_media_create_list($media_items, $form_state) {
         if ($media_item->transcript) {
           $checked = 'checked=checked';
         }
-        $output .= '<br /><input type="checkbox" ' . $checked . ' media="' . $media_item->id . '" value="1" name="transcript[' . $media_item->id . ']">I have uploaded a separate transcript for this material';
+        $output .= '<br />
+        <label class="element-invisible" for="checkbox-' . $count . '">I have uploaded a separate transcript for this material</label>
+        <input id="checkbox-' . $count . '" type="checkbox" ' . $checked . ' media="' . $media_item->id . '" value="1" name="transcript[' . $media_item->id . ']" />I have uploaded a separate transcript for this material';
       }
       $output .= '</td>';
 
@@ -879,8 +885,9 @@ function _sbac_media_create_list($media_items, $form_state) {
       // Delete link.
       $delete_link = l(t('Delete'), 'sbac-media/nojs/delete-media', array(
         'attributes' => array(
-          'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media',
-          'id' => 'sbac-media-modal-delete-media'
+          'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media-' . $count,
+          'id' => 'sbac-media-modal-delete-media-' . $count,
+          'title' => 'Delete Material',
         ),
         'query' => array(
           'fid' => $media_item->fid,
@@ -888,6 +895,19 @@ function _sbac_media_create_list($media_items, $form_state) {
           'id' => $media_item->id,
         )
       ));
+
+      // JS to properly size the modal.
+      $js_settings = array(
+        'sbac-media-modal-delete-media-' . $count => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 600,
+            'height' => 160,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings, 'setting');
+
       $output .= '<td class="delete-media"><i class="general foundicon-trash""></i>' . $delete_link . '</td>';
 
       // Close.
@@ -895,18 +915,6 @@ function _sbac_media_create_list($media_items, $form_state) {
       $count++;
     }
     $output .= '</table>';
-
-    // JS to properly size the modal.
-    $js_settings = array(
-      'sbac-media-modal-delete-media' => array(
-        'modalSize' => array(
-          'type' => 'fixed',
-          'width' => 600,
-          'height' => 160,
-        ),
-      ),
-    );
-    drupal_add_js($js_settings, 'setting');
   }
   else {
     $output = "<div id='sbac-media-list'></div>";
@@ -1875,7 +1883,7 @@ function sbac_media_duplicates_form($form, &$form_state) {
         $url = $node->path['alias'];
       }
 
-      $output .= '<p>' . l($node->title, $url, array('attributes' => array('class' => array('sbac-dup'), 'target' => '_blank'), 'absolute' => TRUE)) . '</p>';
+      $output .= '<p>' . l($node->title, $url, array('attributes' => array('title' => $node->title, 'class' => array('sbac-dup'), 'target' => '_blank'), 'absolute' => TRUE)) . '</p>';
       $output .= '<ul>';
       foreach ($media_items as $media) {
         $output .= '<li>' . $media->filename . '</li>';

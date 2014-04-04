@@ -44,7 +44,7 @@
 <!--        <td>--><?php //print $row['field_alignment_type']; ?><!--</td>-->
         <td>
           <div class="read-more">
-            <a href="#" title="Read More" class=""><i class="accessibility foundicon-eyeball"></i></a>
+            <a href="#" title="Read More" class=""><i class="accessibility foundicon-eyeball"></i>Read More</a>
             <div class="more description-hover">
               <div class="description-content">
               <h2><?php print $subject->name; ?></h2>
@@ -80,7 +80,7 @@
               </div>
             </div>
           </div>
-          <?php print l('<i class="gen-enclosed foundicon-remove"></i>', '#', array('html' => TRUE, 'attributes' => array('class' => 'ccss-term-delete', 'nid' => $row['nid']))); ?>
+          <?php print l('<i class="gen-enclosed foundicon-remove"></i>Remove', '#', array('html' => TRUE, 'attributes' => array('title' => 'Remove', 'class' => 'ccss-term-delete', 'nid' => $row['nid']))); ?>
         </td>
       </tr>
     <?php endforeach; ?>

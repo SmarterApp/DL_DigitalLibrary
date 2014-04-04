@@ -4,11 +4,11 @@
     <p id="description-<?php print $term_id; ?>">
       <div class="checkbox-less-<?php print $term_id; ?> checkbox-more-less short active">
         <?php print sbac_resource_truncate($element['term']->description, 140) ?>
-        <a href="#" onclick="javascript:read_more_less(this); return false;" class="alignment-more alignment-more-<?php print $term_id; ?>" term="<?php print $term_id; ?>">Read More</a>
+        <a title='Read More' href="#" onclick="javascript:read_more_less(this); return false;" class="alignment-more alignment-more-<?php print $term_id; ?>" term="<?php print $term_id; ?>">Read More</a>
       </div>
       <div class="checkbox-more-<?php print $term_id; ?> checkbox-more-less long" style="display:none">
         <?php print $element['term']->description ?>
-        <a href="#" onclick="javascript:read_more_less(this); return false;" class="alignment-less alignment-less-<?php print $term_id; ?>" term="<?php print $term_id; ?>">Read Less</a>
+        <a title='Read Less' href="#" onclick="javascript:read_more_less(this); return false;" class="alignment-less alignment-less-<?php print $term_id; ?>" term="<?php print $term_id; ?>">Read Less</a>
       </div>
     </p>
 </div>

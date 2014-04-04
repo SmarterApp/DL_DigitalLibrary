@@ -28,10 +28,10 @@
     <h3 class='resource-name <?php print $class; ?>'>
       <?php
         $alias = sbac_resource_get_url_alias($fields['nid']->raw);
-        print '<div class="field-content">' . l(htmlspecialchars_decode($fields['title']->raw), $alias) . '</div>';
+        print l(htmlspecialchars_decode($fields['title']->raw), $alias);
       ?>
-      <div class="shield-drop"><?php print $image; ?></div>
     </h3>
+    <div class="shield-drop"><?php print $image; ?></div>
 
     <?php if (isset($fields['image'])): ?>
       <?php print $fields['image']; ?>
@@ -39,9 +39,9 @@
     <?php endif; ?>
 
     <div class='resource-stats'>
-      <p>
-        <?php (isset($fields['field_alt_body']) ? print $fields['field_alt_body']->content : print ''); ?>
-      </p>
+      <?php if (isset($fields['field_alt_body'])): ?>
+        <?php echo $fields['field_alt_body']->content; ?>
+      <?php endif; ?>
     </div>
   </div>
 

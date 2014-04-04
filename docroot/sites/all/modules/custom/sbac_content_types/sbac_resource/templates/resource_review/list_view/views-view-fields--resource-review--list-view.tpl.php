@@ -25,10 +25,10 @@
     <h3 class='resource-name <?php print $class; ?>'>
       <?php
         $alias = sbac_resource_get_url_alias($fields['nid']->raw);
-        print '<div class="field-content">' . l(htmlspecialchars_decode($fields['title']->raw), $alias) . '</div>';
+        print l(htmlspecialchars_decode($fields['title']->raw), $alias);
       ?>
-      <div class="shield-drop"><?php print $image; ?></div>
     </h3>
+    <div class="shield-drop"><?php print $image; ?></div>
 
   <div class="list-view-info">
     <?php if (isset($fields['views']) && $fields['views']): ?>

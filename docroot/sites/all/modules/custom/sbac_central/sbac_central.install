@@ -1145,3 +1145,17 @@ function sbac_central_update_7073() {
 function sbac_central_update_7074(){
   module_enable(array('sbac_learning_registry'));
 }
+
+/**
+ * Disable CMIS modules.
+ */
+function sbac_central_update_7075() {
+  $modules = array(
+    'cmis',
+    'cmis_common',
+    'cmis_browser',
+    'cmis_query',
+    'cmis_headerswing',
+  );
+  module_disable($modules);
+}

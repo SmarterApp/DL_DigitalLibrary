@@ -390,6 +390,8 @@ class Base {
     //    select element, and then triggers the click() event on the 'Save and Close' button
     $this->_form['action'] = array(
       '#type' => 'select',
+      '#title' => 'Actions',
+      '#title_display' => 'invisible',
       '#options' => $this->_action_options,
       '#default_value' => 'save_close',
       '#attributes' => array(

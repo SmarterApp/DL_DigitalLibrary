@@ -27,16 +27,16 @@
     <h3 class='resource-name <?php print $class; ?>'>
       <?php
         $alias = sbac_resource_get_url_alias($fields['nid']->raw);
-        print '<div class="field-content">' . l(htmlspecialchars_decode($fields['title']->raw), $alias) . '</div>';
+        print l(htmlspecialchars_decode($fields['title']->raw), $alias);
       ?>
-      <div class="shield-drop"><?php print $image; ?></div>
-      <?php if (isset($fields['favorites_link'])): ?>
+    </h3>
+    <div class="shield-drop"><?php print $image; ?></div>
+    <?php if (isset($fields['favorites_link'])): ?>
       <div class="favorites-link">
         <?php echo $fields['favorites_link']; ?>
         <?php echo $fields['favorites_tooltip']; ?>
       </div>
-      <?php endif; ?>
-    </h3>
+    <?php endif; ?>
 
     <?php if (isset($fields['image'])): ?>
       <?php print $fields['image']; ?>
@@ -44,9 +44,9 @@
     <?php endif; ?>
 
     <div class='resource-stats'>
-      <p>
-        <?php (isset($fields['field_alt_body']) ? print $fields['field_alt_body']->content : print ''); ?>
-      </p>
+        <?php if (isset($fields['field_alt_body'])): ?>
+          <?php echo $fields['field_alt_body']->content; ?>
+        <?php endif; ?>
     </div>
   </div>
 
@@ -57,7 +57,7 @@
     }
   ?>
 
-  <div class="clearfix resoruce-bottom <?php print $class; ?> <?php (isset($fields['text']) ? print  strtolower(str_replace(' ', '-', $fields['text'])) : ''); ?>">
+  <div class="clearfix resoruce-bottom <?php print $class; ?> <?php (isset($fields['text']) ? print strtolower(str_replace(' ', '-', $fields['text'])) : ''); ?>">
     <?php if (isset($fields['text']) && $fields['text'] != 'approved'): ?>
       <div class="resource-state-description">
         <p>

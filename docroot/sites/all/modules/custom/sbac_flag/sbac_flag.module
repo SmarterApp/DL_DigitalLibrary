@@ -17,6 +17,7 @@ function sbac_flag_menu() {
   $items = array();
 
   $items['sbac-flag/%ctools_js/flag-resource'] = array(
+    'title' => 'Flag Resource',
     'page callback' => 'sbac_flag_modal_content',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -24,6 +25,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/start-moderation'] = array(
+    'title' => 'Start Moderation',
     'page callback' => 'sbac_flag_start_moderation',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -31,6 +33,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/start-resource-review-moderation'] = array(
+    'title' => 'Start Resource Review Moderation',
     'page callback' => 'sbac_flag_start_resource_review_moderation_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -38,6 +41,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/start-resource-moderation'] = array(
+    'title' => 'Start Resource Moderation',
     'page callback' => 'sbac_flag_start_resource_moderation_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -45,6 +49,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/cancel-resource-moderation'] = array(
+    'title' => 'Cancel Resource Moderation',
     'page callback' => 'sbac_flag_cancel_resource_moderation_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -52,6 +57,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/resolve-all-flags'] = array(
+    'title' => 'Resolve All Flags',
     'page callback' => 'sbac_flag_resolve_all_flags_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -59,6 +65,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/remove-resource'] = array(
+    'title' => 'Remove Resource',
     'page callback' => 'sbac_flag_remove_resource_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -66,6 +73,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/cancel-resource-review-moderation'] = array(
+    'title' => 'Cancel Resource Review Moderation',
     'page callback' => 'sbac_flag_cancel_resource_review_moderation_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -73,6 +81,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/resolve-all-resource-review-flags'] = array(
+    'title' => 'Resolve All Resource Review Flags',
     'page callback' => 'sbac_flag_resolve_all_resource_review_flags_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -80,6 +89,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/remove-resource-review'] = array(
+    'title' => 'Remove Resource Review',
     'page callback' => 'sbac_flag_remove_resource_review_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -87,6 +97,7 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/%ctools_js/session-expire'] = array(
+    'title' => 'Session Expire',
     'page callback' => 'sbac_flag_session_expire_modal',
     'page arguments' => array(1),
     'access callback' => TRUE,
@@ -104,12 +115,14 @@ function sbac_flag_menu() {
   );
 
   $items['sbac-flag/load-more'] = array(
+    'title' => 'Load More',
     'page callback' => 'sbac_flag_load_more',
     'access arguments' => array('access content'),
     'file' => 'sbac_flag.moderation.inc',
   );
 
   $items['sbac-flag/logout-user'] = array(
+    'title' => 'Logout',
     'page callback' => 'sbac_flag_logout_user',
     'access callback' => TRUE,
   );
