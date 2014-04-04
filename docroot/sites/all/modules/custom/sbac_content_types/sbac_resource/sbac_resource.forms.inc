@@ -1852,6 +1852,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   if (isset($_GET['flag']) && ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'view-resource-flags')) {
     if (isset($form['field_pii']['und'])) {
       $form['field_pii']['und']['#attributes']['checked'] = 'checked';
+      $form['field_pii']['und']['#attributes']['onclick'] = 'return false;';
     }
   }
 }
