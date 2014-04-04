@@ -1564,6 +1564,11 @@ a.category-hide {
 	 	color: #006082;
 }
 
+/*For Chrome*/
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+ a.category-hide {top:15px;} 
+}
+
 a.category-hide:hover {
 	text-decoration: underline;
 	color: #006082;
