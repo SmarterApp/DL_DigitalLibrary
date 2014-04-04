@@ -4,6 +4,7 @@
  * Drupal needs this blank file.
  */
 
+define('SBAC_LEARNING_REGISTRY_PUBLISHER', 'Smarter Balanced Assessment Consortium');
 define('SBAC_LEARNING_REGISTRY_INBLOOM_URL', 'http://maps-sandbox.inbloom.org:8080/lri-reboot/resources/search');
 define('SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE', 12);
 define('SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS', 'sbac-learning-registry-external-solr-keywords');
@@ -164,6 +165,8 @@ function sbac_learning_registry_inbloom_construct_request_url($parameters) {
       }
     }
   }
+  // TODO: This doesn't look like the right parameter to filter out the publisher
+  // $inbloom_query[] = 'resource.sourcetext_s:-(' . SBAC_LEARNING_REGISTRY_PUBLISHER . ')';
   $options = array(
     'absolute' => TRUE,
     'query' => array(
@@ -445,14 +448,14 @@ function sbac_learning_registry_external_resource_filters() {
         'display_name' => 'Intended User Roles',
         'terms' => sbac_learning_registry_external_resource_filter_values('intended_user_roles'),
       ),
-      'group_type' => array(
-        'display_name' => 'Group Type',
-        'terms' => sbac_learning_registry_external_resource_filter_values('group_type'),
-      ),
-      'media_type' => array(
-        'display_name' => 'Media Type',
-        'terms' => sbac_learning_registry_external_resource_filter_values('media_type'),
-      ),
+//      'group_type' => array(
+//        'display_name' => 'Group Type',
+//        'terms' => sbac_learning_registry_external_resource_filter_values('group_type'),
+//      ),
+//      'media_type' => array(
+//        'display_name' => 'Media Type',
+//        'terms' => sbac_learning_registry_external_resource_filter_values('media_type'),
+//      ),
       'interactivity_type' => array(
         'display_name' => 'Interactivity Type',
         'terms' => sbac_learning_registry_external_resource_filter_values('interactivity_type'),
@@ -698,7 +701,7 @@ function sbac_learning_registry_learning_resource_metadata_payload_alter(&$paylo
         'http://schema.org/Organization',
       ),
       'properties' => array(
-        'name' => 'Smarter Balanced Assessment Consortium',
+        'name' => SBAC_LEARNING_REGISTRY_PUBLISHER,
       ),
     );
     // inLanguage
