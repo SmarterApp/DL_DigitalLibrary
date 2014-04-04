@@ -829,11 +829,24 @@ function _sbac_resource_my_resources_links($fields) {
         $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
           'html' => TRUE,
           'attributes' => array(
-            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource',
-            'id' => 'sbac-resource-modal-delete-resource'
+            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource-button-' . $nid,
+            'id' => 'sbac-resource-modal-delete-resource-button-' . $nid,
           ),
           'query' => array('nid' => $nid),
         ));
+
+        // JS to properly size the modal when submit resource is clicked.
+        $js_settings = array(
+          'sbac-resource-modal-delete-resource-button-' . $nid => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 600,
+              'height' => 160,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings, 'setting');
+
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
@@ -842,10 +855,23 @@ function _sbac_resource_my_resources_links($fields) {
             'nid' => $nid
           ),
           'attributes' => array(
-            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource',
-            'id' => 'sbac-resource-modal-delete-resource'
+            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource-link-' . $nid,
+            'id' => 'sbac-resource-modal-delete-resource-link-' . $nid,
           )
         ));
+
+        // JS to properly size the modal when submit resource is clicked.
+        $js_settings = array(
+          'sbac-resource-modal-delete-resource-link-' . $nid => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 600,
+              'height' => 160,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings, 'setting');
+
         $variables['text'] = t('Saved as Draft');
         break;
       case 'needs_review':
@@ -857,10 +883,23 @@ function _sbac_resource_my_resources_links($fields) {
             'nid' => $nid
           ),
           'attributes' => array(
-            'class' => 'use-ajax button blue ctools-modal-sbac-resource-modal-unsubmit-resource',
-            'id' => 'sbac-resource-modal-unsubmit-resource'
+            'class' => 'use-ajax button blue ctools-modal-sbac-resource-modal-unsubmit-resource-button-' . $nid,
+            'id' => 'sbac-resource-modal-unsubmit-resource-button-' . $nid,
           )
         ));
+
+        // JS to properly size the modal when submit resource is clicked.
+        $js_settings = array(
+          'sbac-resource-modal-unsubmit-resource-button-' . $nid => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 600,
+              'height' => 160,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings, 'setting');
+
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['links'][] = l(t('Un-submit'), 'sbac-resource/nojs/unsubmit-resource-modal', array(
           'html' => TRUE,
@@ -868,10 +907,23 @@ function _sbac_resource_my_resources_links($fields) {
             'nid' => $nid
           ),
           'attributes' => array(
-            'class' => 'use-ajax ctools-modal-sbac-resource-modal-unsubmit-resource',
-            'id' => 'sbac-resource-modal-unsubmit-resource'
+            'class' => 'use-ajax ctools-modal-sbac-resource-modal-unsubmit-resource-link-' . $nid,
+            'id' => 'sbac-resource-modal-unsubmit-resource-link-' . $nid,
           )
         ));
+
+        // JS to properly size the modal when submit resource is clicked.
+        $js_settings = array(
+          'sbac-resource-modal-unsubmit-resource-link-' . $nid => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 600,
+              'height' => 160,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings, 'setting');
+
         $variables['text'] = t('Submitted');
         break;
       case 'being_reviewed':
@@ -889,10 +941,22 @@ function _sbac_resource_my_resources_links($fields) {
               'nid' => $nid
             ),
             'attributes' => array(
-              'class' => 'use-ajax button blue ctools-modal-sbac-resource-modal-unsubmit-resource',
-              'id' => 'sbac-resource-modal-unsubmit-resource'
+              'class' => 'use-ajax button blue ctools-modal-sbac-resource-modal-unsubmit-resource-button-' . $nid,
+              'id' => 'sbac-resource-modal-unsubmit-resource-button-' . $nid,
             )
           ));
+
+          // JS to properly size the modal when submit resource is clicked.
+          $js_settings = array(
+            'sbac-resource-modal-unsubmit-resource-button-' . $nid => array(
+              'modalSize' => array(
+                'type' => 'fixed',
+                'width' => 600,
+                'height' => 160,
+              ),
+            ),
+          );
+          drupal_add_js($js_settings, 'setting');
 
           $variables['links'][] = l(t('Un-submit'), 'sbac-resource/nojs/unsubmit-resource-modal', array(
             'html' => TRUE,
@@ -900,10 +964,22 @@ function _sbac_resource_my_resources_links($fields) {
               'nid' => $nid
             ),
             'attributes' => array(
-              'class' => 'use-ajax ctools-modal-sbac-resource-modal-unsubmit-resource',
-              'id' => 'sbac-resource-modal-unsubmit-resource'
+              'class' => 'use-ajax ctools-modal-sbac-resource-modal-unsubmit-resource-link-' . $nid,
+              'id' => 'sbac-resource-modal-unsubmit-resource-link-' . $nid,
             )
           ));
+
+          // JS to properly size the modal when submit resource is clicked.
+          $js_settings = array(
+            'sbac-resource-modal-unsubmit-resource-link-' . $nid => array(
+              'modalSize' => array(
+                'type' => 'fixed',
+                'width' => 600,
+                'height' => 160,
+              ),
+            ),
+          );
+          drupal_add_js($js_settings, 'setting');
         }
 
         break;
@@ -955,11 +1031,24 @@ function _sbac_resource_my_resources_links($fields) {
         $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
           'html' => TRUE,
           'attributes' => array(
-            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource',
-            'id' => 'sbac-resource-modal-delete-resource'
+            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource-button-' . $nid,
+            'id' => 'sbac-resource-modal-delete-resource-button-' . $nid,
           ),
           'query' => array('nid' => $nid),
         ));
+
+        // JS to properly size the modal when submit resource is clicked.
+        $js_settings = array(
+          'sbac-resource-modal-delete-resource-button-' . $nid => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 600,
+              'height' => 160,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings, 'setting');
+
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
           'html' => TRUE,
@@ -967,37 +1056,26 @@ function _sbac_resource_my_resources_links($fields) {
             'nid' => $nid
           ),
           'attributes' => array(
-            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource',
-            'id' => 'sbac-resource-modal-delete-resource'
+            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource-link-' . $nid,
+            'id' => 'sbac-resource-modal-delete-resource-link-' . $nid,
           )
         ));
+
+        // JS to properly size the modal when submit resource is clicked.
+        $js_settings = array(
+          'sbac-resource-modal-delete-resource-link-' . $nid => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 600,
+              'height' => 160,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings, 'setting');
+
         $variables['text'] = t('Removed');
         break;
     }
-
-    // JS to properly size the modal when submit resource is clicked.
-    $js_settings = array(
-      'sbac-resource-modal-delete-resource' => array(
-        'modalSize' => array(
-          'type' => 'fixed',
-          'width' => 600,
-          'height' => 160,
-        ),
-      ),
-    );
-    drupal_add_js($js_settings, 'setting');
-
-    // JS to properly size the modal when submit resource is clicked.
-    $js_settings = array(
-      'sbac-resource-modal-unsubmit-resource' => array(
-        'modalSize' => array(
-          'type' => 'fixed',
-          'width' => 600,
-          'height' => 160,
-        ),
-      ),
-    );
-    drupal_add_js($js_settings, 'setting');
   }
   return $variables;
 }

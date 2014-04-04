@@ -236,3 +236,77 @@ function sbac_user_update_7008() {
   
   return $ret;
 }
+
+/**
+ * Remove LDAP fields from user.
+ */
+function sbac_user_update_7009() {
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+
+  // User PUID.
+  $field_name = 'ldap_user_puid';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'ldap_user_puid', 'user');
+  field_delete_instance($field);
+
+  // User PUID SID.
+  $field_name = 'ldap_user_puid_sid';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'ldap_user_puid_sid', 'user');
+  field_delete_instance($field);
+
+  // User Prov Entries.
+  $field_name = 'ldap_user_prov_entries';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'ldap_user_prov_entries', 'user');
+  field_delete_instance($field);
+
+  // User LDAP Exclude
+  $field_name = 'ldap_user_ldap_exclude';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'ldap_user_ldap_exclude', 'user');
+  field_delete_instance($field);
+
+  // User PUID Property
+  $field_name = 'ldap_user_puid_property';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'ldap_user_puid_property', 'user');
+  field_delete_instance($field);
+
+  // User Current DN
+  $field_name = 'ldap_user_current_dn';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'ldap_user_current_dn', 'user');
+  field_delete_instance($field);
+
+  // User Last Checked.
+  $field_name = 'ldap_user_last_checked';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'ldap_user_last_checked', 'user');
+  field_delete_instance($field);
+
+  $ret = array();
+  return $ret;
+}

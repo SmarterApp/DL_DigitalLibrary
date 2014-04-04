@@ -47,6 +47,7 @@ function sbac_resource_menu() {
   $items = array();
 
   $items['sbac_resource/%ctools_js/add-alignment'] = array(
+    'title' => 'Add Alignment',
     'page callback' => 'sbac_resource_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -54,6 +55,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac_resource/%ctools_js/filter-by-alignment'] = array(
+    'title' => 'Filter',
     'page callback' => 'sbac_resource_filter_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -61,6 +63,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac_resource/%ctools_js/submit-resource'] = array(
+    'title' => 'Submit Resource',
     'page callback' => 'sbac_resource_submit_resource_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -68,6 +71,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac_resource/%ctools_js/delete-resource'] = array(
+    'title' => 'Delete Resource',
     'page callback' => 'sbac_resource_delete_resource_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -75,6 +79,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac_resource/%ctools_js/save-all-changes'] = array(
+    'title' => 'Save All Changes',
     'page callback' => 'sbac_resource_save_all_changes_modal_callback',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -82,6 +87,7 @@ function sbac_resource_menu() {
   );
 
   $items['sbac-resource/%ctools_js/unsubmit-resource-modal'] = array(
+    'title' => 'Unsubmit Resource',
     'page callback' => 'sbac_resource_unsubmit_resource_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
@@ -90,6 +96,7 @@ function sbac_resource_menu() {
 
   $items['digital-library-resources'] = array(
     'title' => 'Digital Library Resources',
+    'description' => 'Digital Library Resources',
     'page callback' => 'sbac_resource_digital_library_page',
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
@@ -100,6 +107,7 @@ function sbac_resource_menu() {
 
   $items['my-resources'] = array(
     'title' => 'My Resources',
+    'description' => 'My Resources',
     'page callback' => 'sbac_resource_my_resources_page',
     'access callback' => 'sbac_resource_my_resources_access_callback',
     'type' => MENU_NORMAL_ITEM,
@@ -110,6 +118,7 @@ function sbac_resource_menu() {
 
   $items['resource-review'] = array(
     'title' => 'Resource Review',
+    'description' => 'Resource Review',
     'page callback' => 'sbac_resource_resource_review_page',
     'access callback' => 'sbac_resource_resource_review_access_callback',
     'access arguments' => array('access content'),
@@ -148,9 +157,9 @@ function sbac_resource_menu() {
   );
 
   $items['sbac-resource/url-exists'] = array(
+    'title' => 'URL Exists',
     'page callback' => 'sbac_resource_url_exists_ajax',
     'access arguments' => array('access content'),
-    'title' => 'URL Exist',
   );
 
   return $items;
@@ -700,7 +709,7 @@ function sbac_resource_preprocess_node(&$vars) {
       $materials = _sbac_resource_preview_materials($vars);
       $result = sbac_resource_determine_download_ability($vars);
       if ($result['primary'] || $result['secondary']) {
-        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download', 'class' => 'button small right')));
+        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download Zip File', 'class' => 'button small right')));
         if ($result['primary'] == FALSE || $result['secondary'] == FALSE) {
           $vars['download_partial'] = TRUE;
         }

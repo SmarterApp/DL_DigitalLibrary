@@ -304,6 +304,7 @@ class Hooks extends \devtools\Hooks {
           'button',
         ),
         'id' => $trigger_id,
+        'title' => 'Cancel',
       ),
     );
 
@@ -418,6 +419,7 @@ class Hooks extends \devtools\Hooks {
           'button',
         ),
         'id' => $trigger_id,
+        'title' => 'Submit',
       ),
     );
 

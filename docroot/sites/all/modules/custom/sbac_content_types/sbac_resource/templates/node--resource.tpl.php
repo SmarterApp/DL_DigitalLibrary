@@ -87,7 +87,7 @@
     <?php endif; ?>
 
     <?php if (isset($field_publisher[0]['safe_value']) && $field_publisher[0]['safe_value']): ?>
-      <p class="divider"><span class="publisher">Owner: </span><?php echo $field_publisher[0]['safe_value']; ?><p>
+      <p class="divider"><span class="publisher">Owner: </span><?php echo $field_publisher[0]['safe_value']; ?></p>
     <?php endif; ?>
 
     <?php if (isset($edit_link) && $edit_link): ?>

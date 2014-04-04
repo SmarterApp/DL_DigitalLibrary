@@ -16,8 +16,8 @@
 
     <h3 class='resource-name <?php print $class; ?>'>
       <?php print htmlspecialchars_decode($fields['title']->content); ?>
-      <div class="shield-drop"><?php print $image; ?></div>
     </h3>
+    <div class="shield-drop"><?php print $image; ?></div>
 
     <?php if (isset($fields['image'])): ?>
       <?php print $fields['image']; ?>

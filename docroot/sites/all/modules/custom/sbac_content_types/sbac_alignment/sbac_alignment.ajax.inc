@@ -111,6 +111,7 @@ function sbac_alignment_ajax_terms_callback() {
         'id' => 'term-' . $term->tid,
         'class' => 'sbac-custom-term button',
         'tid' => $term->tid,
+        'title' => $term->name,
       ),
       'html' => TRUE,
     );

@@ -57,6 +57,7 @@ function sbac_help_menu() {
   );
 
   $items['welcome-tutorial/remove/%'] = array(
+    'title' => 'Welcome Tutorial Remove',
     'page callback' => 'sbac_help_remove',
     'page arguments' => array(2),
     'access callback' => 'user_access',
