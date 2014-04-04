@@ -2578,3 +2578,15 @@ function sbac_resource_get_url_alias($nid) {
 
   return $alias;
 }
+
+/**
+ * Implements hook_element_info_alter().
+ * Removes file.js from attached element type.
+ * @param  array  $type All element info type defaults.
+ */
+function sbac_resource_element_info_alter(&$type) {
+  $cur_path = explode('/', current_path());
+  if (in_array('node', $cur_path) && isset($type['managed_file']['#attached']['js'])) {
+    unset($type['managed_file']['#attached']['js']);
+  }
+}
