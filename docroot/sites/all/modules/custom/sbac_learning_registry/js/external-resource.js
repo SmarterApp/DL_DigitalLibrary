@@ -1,27 +1,11 @@
 jQuery(document).ready(function () {
 
-  function initTextify() {
-    jQuery('#external-resource-help-body').textify({
-      numberOfColumn: 2,
-      margin: 20,
-      padding: 32,
-      width: "auto",
-      height: "400",
-      showArrows : true,
-      showNavigation: true,
-    });
-  }
-
-  if (!(Drupal.settings.settings_php && Drupal.settings.settings_php.no_resource_modal)) {
     jQuery.colorbox({
       inline: true,
       href: '#external-resource-help-box',
-      width:'80%',
-      height:'80%',
-      onComplete: initTextify,
+      width:'auto',
+      height:'auto',
       escKey: false,
       overlayClose: false
     });
-  }
-
 });

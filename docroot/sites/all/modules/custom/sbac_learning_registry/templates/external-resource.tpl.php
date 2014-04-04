@@ -11,11 +11,9 @@
       <h2>Your search returned no results.</h2>
       <p>Please try a different search term.</p>
     </div>
-  <?php
-  else: ?>
+  <?php else: ?>
     <div>
       <p>You may use the keyword search and filters above to search for external resources that are in the Learning Registry.</p>
-
       <p>The Learning Registry is a searchable set of external online education-related resources from participating libraries.</p>
     </div>
   <?php endif; ?>
