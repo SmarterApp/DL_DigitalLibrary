@@ -6,7 +6,7 @@
     <div class="results">
       <?php print $results; ?>
     </div>
-  <?php elseif ($results == 'no results'): ?>
+  <?php elseif ($results == SBAC_LEARNING_REGISTRY_INBLOOM_NO_RESULTS): ?>
     <div class="no-result-message">
       <h2>Your search returned no results.</h2>
       <p>Please try a different search term.</p>
