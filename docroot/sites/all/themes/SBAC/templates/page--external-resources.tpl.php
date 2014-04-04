@@ -44,8 +44,8 @@ global $user;
         <p>You are about to search resources that are outside the Smarter Balanced Digital Library.</p>
         <p>Smarter Balanced does not review or evaluate the quality of these resources.</p>
       </div>
-      <a class="button right blue next">Continue</a>
-      <a class="button right gray secondary cancel" href="#">Cancel</a>
+      <a class="button right blue next otherClose">Continue</a>
+      <a class="button right gray secondary cancel backButton" href="#">Cancel</a>
     </div>
   </div>
 <?php endif; ?>

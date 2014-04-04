@@ -302,4 +302,10 @@
     }
   };
 
+  /**
+   * Reattach the ajax for the load more button
+   */
+  $(document).ajaxComplete(function(){
+    Drupal.attachBehaviors($('.load-more'));
+  });
 })(jQuery);

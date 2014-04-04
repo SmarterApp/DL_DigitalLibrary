@@ -7,6 +7,7 @@
 define('SBAC_LEARNING_REGISTRY_INBLOOM_URL', 'http://maps-sandbox.inbloom.org:8080/lri-reboot/resources/search');
 define('SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE', 12);
 define('SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS', 'sbac-learning-registry-external-solr-keywords');
+define('SBAC_LEARNING_REGISTRY_INBLOOM_NO_RESULTS', 'No Results');
 
 /**
  * Implements hook_menu()
@@ -41,6 +42,15 @@ function sbac_learning_registry_menu() {
   return $items;
 }
 
+/**
+ * Load the next SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE items from the LRI
+ * starting at $start
+ *
+ * @param int $start
+ * The starting point to load from
+ * @return string
+ * The HTML output
+ */
 function sbac_learning_registry_external_resource_load($start = 0) {
   ctools_include('ajax');
   $results = array();
@@ -63,7 +73,7 @@ function sbac_learning_registry_external_resource_load($start = 0) {
   }
   $start = $start + SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE;
 
-  $output = 'no results';
+  $output = SBAC_LEARNING_REGISTRY_INBLOOM_NO_RESULTS;
   if (count($results)) {
     $output = theme('sbac_external_resource_results', array(
       'results' => $results,
@@ -73,13 +83,23 @@ function sbac_learning_registry_external_resource_load($start = 0) {
   return $output;
 }
 
+/**
+ * Ajax call back to load the next SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE items
+ *
+ * @param $js
+ * @param int $start
+ * @return string
+ */
 function sbac_learning_registry_external_resource_load_more($js, $start = 0) {
   $results = '';
 
   if ($js) {
     $results = sbac_learning_registry_external_resource_load($start);
     $commands = array();
-    $commands[] = ajax_command_replace('.load-more', $results);
+    $commands[] = ajax_command_remove('.load-more');
+    if ($results != SBAC_LEARNING_REGISTRY_INBLOOM_NO_RESULTS) {
+      $commands[] = ajax_command_invoke('.results', 'append', array($results));
+    }
     print ajax_render($commands);
     exit;
   }
@@ -178,6 +198,16 @@ function sbac_learning_registry_inbloom_send_request($request) {
  */
 function sbac_learning_registry_inbloom_parse_response($response) {
   $results = drupal_json_decode($response);
+  // TODO: See if we can do the filtering as part of the query itself. Otherwise the results would look weird because we might not always have the same number of results returned due to this filtering.
+//  foreach ($results as $index => $result) {
+//    if (preg_match('/\b([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}\b/ix', $result['URL'], $matches)) {
+//      $domain = str_replace('www.', '', $matches[0]);
+//      $this_domain = str_replace('www.', '', $_SERVER['SERVER_NAME']);
+//      if($domain == $this_domain){
+//        unset($results[$index]);
+//      }
+//    }
+//  }
   return $results;
 }
 
@@ -223,6 +253,13 @@ function sbac_learning_registry_block_view($delta = '') {
   return $block;
 }
 
+/**
+ * SOLR search form
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function sbac_learning_registry_external_resources_solr_search_form($form, &$form_state) {
   $form = array();
 
@@ -240,6 +277,12 @@ function sbac_learning_registry_external_resources_solr_search_form($form, &$for
   return $form;
 }
 
+/**
+ * SOLR search form submit handler
+ *
+ * @param $form
+ * @param $form_state
+ */
 function sbac_learning_registry_external_resources_solr_search_form_submit(&$form, &$form_state) {
   $_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS] = $form_state['values']['solr_keywords'];
 }
@@ -773,6 +816,9 @@ function sbac_learning_registry_learning_registry_prepared_submission_alter(&$re
   }
 }
 
+/**
+ * Add all resources to the queue to be pushed to the LR
+ */
 function sbac_learning_registry_queue_all_resources() {
   module_load_include('inc', 'learning_registry', 'learning_registry.learning_registry');
   $query = "

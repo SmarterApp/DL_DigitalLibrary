@@ -227,6 +227,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
   global $user;
 
   $task = FALSE;
+  $completed_review = FALSE;
   switch ($form_state['values']['action']) {
     // TODO: we should probably do some additional validation here, just in case
     // the clever user modified DOM to enable disabled buttons and 'complete'
@@ -248,6 +249,8 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       workbench_moderation_moderate($node, 'rejected');
       $task = taskit_get_object('resource_rejected');
       sbac_resource_save_current_state($node);
+
+      $completed_review = TRUE;
       break;
 
     case 'meet':
@@ -272,16 +275,26 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       drupal_set_message(t('Quality Criteria Review process started.'));
       entity_save('feedback', $qc);
       sbac_resource_save_current_state($node);
+
+      $completed_review = TRUE;
       break;
   }
 
   if ($task && $node = node_load($entity->node_id)) {
-    global $user;
-
     $task->addVisibility($task::VISIBILITY_USER);
     $task->addEntity('node', $node->nid);
     $task->addEntity('feedback', $entity->id);
     $task->addOwningUser($node->uid);
+    $task->addTriggeringUser(1);
+    $task->save();
+  }
+
+  if ($completed_review && $node = node_load($entity->node_id)) {
+    $task = taskit_get_object('review_completed');
+    $task->addVisibility($task::VISIBILITY_USER);
+    $task->addEntity('node', $node->nid);
+    $task->addEntity('feedback', $entity->id);
+    $task->addOwningUser($user->uid);
     $task->addTriggeringUser(1);
     $task->save();
   }
@@ -300,6 +313,7 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
   global $user;
 
   $task = FALSE;
+  $completed_review = FALSE;
   switch ($form_state['values']['action']) {
     // handled in the modal's submit callback, otherwise we can run
     // into empty-field validation errors
@@ -402,7 +416,20 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
         sbac_resource_save_current_state($node);
       }
       sbac_resource_save_current_state($node);
+
+      $completed_review = TRUE;
+
       break;
+  }
+
+  if ($completed_review && $node) {
+    $task = taskit_get_object('review_completed');
+    $task->addVisibility($task::VISIBILITY_USER);
+    $task->addEntity('node', $node->nid);
+    $task->addEntity('feedback', $entity->id);
+    $task->addOwningUser($user->uid);
+    $task->addTriggeringUser(1);
+    $task->save();
   }
 
   $form_state['redirect'] = array(
@@ -442,6 +469,7 @@ function feedback_eck_post_form_submit($form, &$form_state) {
   }
 
   $task = FALSE;
+  $completed_review = FALSE;
   switch ($form_state['values']['action']) {
     // these are handled in the modal's submit callback
     case 'cancel':
@@ -455,6 +483,9 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       workbench_moderation_moderate($node, 'rejected');
       $task = taskit_get_object('resource_rejected');
       sbac_resource_save_current_state($node);
+
+      $completed_review = TRUE;
+
       break;
 
     case 'post':
@@ -463,11 +494,15 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       workbench_moderation_moderate($node, 'published');
       $task = taskit_get_object('resource_published');
       sbac_resource_save_current_state($node);
+
+      $completed_review = TRUE;
+
       break;
 
     case 'post_distinction':
       $entity->completed = 1;
       entity_save('feedback', $entity);
+
       // distinction = sticky
       $node->sticky = 1;
       node_save($node);
@@ -475,12 +510,24 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       $task = taskit_get_object('resource_published');
       sbac_resource_save_current_state($node);
 
+      $completed_review = TRUE;
+
       break;
   }
 
   $reviews[] = $entity;
 
   send_review_notifications($task, $node, $reviews);
+
+  if ($completed_review && $node) {
+    $task = taskit_get_object('review_completed');
+    $task->addVisibility($task::VISIBILITY_USER);
+    $task->addEntity('node', $node->nid);
+    $task->addEntity('feedback', $entity->id);
+    $task->addOwningUser($user->uid);
+    $task->addTriggeringUser(1);
+    $task->save();
+  }
 
   $form_state['redirect'] = 'node/' . $node->nid;
 }

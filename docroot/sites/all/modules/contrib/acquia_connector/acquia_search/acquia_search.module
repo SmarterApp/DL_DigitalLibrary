@@ -115,6 +115,9 @@ function acquia_search_enable_acquia_solr_environment() {
   }
   $environment['env_id'] = ACQUIA_SEARCH_ENVIRONMENT_ID;
   $environment['name'] = t('Acquia Search');
+
+  // allow other modules to override this
+  drupal_alter('acquia_search_enable', $environment);
   apachesolr_environment_save($environment);
 }
 

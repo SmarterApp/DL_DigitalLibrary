@@ -643,7 +643,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
       &:hover, &:focus, &.form-submit.ajax-processed {
   			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
   			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
-  	
+
         color: rgba(255, 255, 255, 1);
         background: rgba(0, 133, 173, 1);
         text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
@@ -654,7 +654,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 			float: left;
 			top: 18px;
 			margin-left: 8px;
-			
+
 			/*&:hover {
 							background-color: transparent;
 							background-image: none;
