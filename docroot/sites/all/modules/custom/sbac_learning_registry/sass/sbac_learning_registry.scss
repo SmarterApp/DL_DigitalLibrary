@@ -150,6 +150,33 @@ body.page-external-resources {
 		display: none;		
 	}
 	
+	.keyword-search-message,
+	.no-result-message {
+		background: none repeat scroll 0 0 #fff;
+	  border: 1px solid #EEEEEE;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    @include border-radius(6px);
+		padding: 20px 30px 18px;
+		margin: 0 15px 250px 12px;
+		
+		p {
+			font-size: 16px;
+			color: #464b54;
+			margin-top: 5px;
+			margin-bottom: 10px;
+		}
+		
+		h2 {
+			color: #464B54;
+			font-size: 21px;
+			font-weight: normal;
+		}
+	}
+	
+	.no-result-message {
+		p {color: #62676e;}
+	}
+	
 	.feature-message {
 		background: none repeat scroll 0 0 #FDF2B1;
 	  border: 1px solid #EEEEEE;
@@ -231,7 +258,6 @@ body.page-external-resources {
 }
 
 
-
 /*back button*/
 .page-external-resources {
 	.sbac-back-button {
@@ -261,8 +287,64 @@ body.page-external-resources {
 	}
 }
 
-
-
+/*Modal of Search External Resources*/
+#external-resource-help-box {
+	padding: 0 15px;
+	
+	h2 {
+		color: #464B54;
+		font-size: 18px;
+	}
+	
+	p{
+		color: #62676e;
+		font-size: 15px;
+	}
+	
+	p:first-child {
+		margin-bottom: 5px;
+	}
+	
+	a {
+		margin-left: 30px;
+		margin-bottom: 0;
+	}
+	
+	a.next:after {
+	  background-image: url("../images/icon-buttonNext.png");
+    background-position: center center;
+    content: " ";
+    display: inline-block;
+    height: 18px;
+    margin-left: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 17px;
+	}
+	
+	a.cancel:after {
+	  background-image: url("../images/icon-buttonCancel.png");
+    background-position: center center;
+    content: " ";
+    display: inline-block;
+    height: 18px;
+    margin-left: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 17px;
+	}
+	
+	a.cancel {
+		background-color: #6E7379;
+		border: 1px solid #4D5457;
+		box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5) inset;
+		
+		&:focus, &:hover {
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+		  background-color: #6E7379;
+		}
+	}
+}
 
 
 

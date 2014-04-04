@@ -132,7 +132,40 @@ body.page-external-resources {
 .page-external-resources h1#page-title {
   display: none;
 }
-/* line 153, ../sass/sbac_learning_registry.scss */
+/* line 154, ../sass/sbac_learning_registry.scss */
+.page-external-resources .keyword-search-message,
+.page-external-resources .no-result-message {
+  background: none repeat scroll 0 0 #fff;
+  border: 1px solid #EEEEEE;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  padding: 20px 30px 18px;
+  margin: 0 15px 250px 12px;
+}
+/* line 162, ../sass/sbac_learning_registry.scss */
+.page-external-resources .keyword-search-message p,
+.page-external-resources .no-result-message p {
+  font-size: 16px;
+  color: #464b54;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+/* line 169, ../sass/sbac_learning_registry.scss */
+.page-external-resources .keyword-search-message h2,
+.page-external-resources .no-result-message h2 {
+  color: #464B54;
+  font-size: 21px;
+  font-weight: normal;
+}
+/* line 177, ../sass/sbac_learning_registry.scss */
+.page-external-resources .no-result-message p {
+  color: #62676e;
+}
+/* line 180, ../sass/sbac_learning_registry.scss */
 .page-external-resources .feature-message {
   background: none repeat scroll 0 0 #FDF2B1;
   border: 1px solid #EEEEEE;
@@ -145,14 +178,14 @@ body.page-external-resources {
   padding: 12px 30px;
   margin: 0 15px 25px 12px;
 }
-/* line 161, ../sass/sbac_learning_registry.scss */
+/* line 188, ../sass/sbac_learning_registry.scss */
 .page-external-resources .feature-message p {
   color: #04384e;
   font-size: 14px;
   line-height: 25px;
   margin: 0;
 }
-/* line 168, ../sass/sbac_learning_registry.scss */
+/* line 195, ../sass/sbac_learning_registry.scss */
 .page-external-resources .feature-message p:before {
   background-image: url("../images/icon-exclamation.png");
   background-position: center center;
@@ -164,7 +197,7 @@ body.page-external-resources {
   margin-top: -2px;
   vertical-align: middle;
 }
-/* line 181, ../sass/sbac_learning_registry.scss */
+/* line 208, ../sass/sbac_learning_registry.scss */
 .page-external-resources .ex-resource-card {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
   width: 212px;
@@ -181,7 +214,7 @@ body.page-external-resources {
   margin: 0 10px;
   margin-bottom: 20px;
 }
-/* line 193, ../sass/sbac_learning_registry.scss */
+/* line 220, ../sass/sbac_learning_registry.scss */
 .page-external-resources .ex-resource-card .resource-title {
   background-color: rgba(206, 206, 206, 0.5);
   -webkit-border-radius: 5px 5px 0 0;
@@ -196,18 +229,18 @@ body.page-external-resources {
   border-bottom: solid #04384E 1px;
   border-color: rgba(4, 56, 78, 0.4);
 }
-/* line 203, ../sass/sbac_learning_registry.scss */
+/* line 230, ../sass/sbac_learning_registry.scss */
 .page-external-resources .ex-resource-card .resource-title a {
   color: #04384E;
   line-height: 1.4;
 }
-/* line 209, ../sass/sbac_learning_registry.scss */
+/* line 236, ../sass/sbac_learning_registry.scss */
 .page-external-resources .ex-resource-card .resource-content {
   padding: 12px 15px;
   font-size: 13px;
   line-height: 1.4;
 }
-/* line 216, ../sass/sbac_learning_registry.scss */
+/* line 243, ../sass/sbac_learning_registry.scss */
 .page-external-resources .load-more {
   clear: both;
   display: block;
@@ -217,7 +250,7 @@ body.page-external-resources {
   margin: 15px auto 0;
   border: 1px solid #006298;
 }
-/* line 225, ../sass/sbac_learning_registry.scss */
+/* line 252, ../sass/sbac_learning_registry.scss */
 .page-external-resources .load-more:hover, .page-external-resources .load-more:focus {
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
   background-color: #006298 !important;
@@ -225,7 +258,7 @@ body.page-external-resources {
 }
 
 /*back button*/
-/* line 237, ../sass/sbac_learning_registry.scss */
+/* line 263, ../sass/sbac_learning_registry.scss */
 .page-external-resources .sbac-back-button {
   width: 320px;
   height: 25px;
@@ -235,11 +268,11 @@ body.page-external-resources {
   font-size: 15px;
   position: relative;
 }
-/* line 246, ../sass/sbac_learning_registry.scss */
+/* line 272, ../sass/sbac_learning_registry.scss */
 .page-external-resources .sbac-back-button a {
   color: #0583AC;
 }
-/* line 251, ../sass/sbac_learning_registry.scss */
+/* line 277, ../sass/sbac_learning_registry.scss */
 .page-external-resources .sbac-back-button:before {
   content: "\e620";
   display: inline;
@@ -250,4 +283,64 @@ body.page-external-resources {
   position: relative;
   color: #0583AC;
   top: -2px;
+}
+
+/*Modal of Search External Resources*/
+/* line 291, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box {
+  padding: 0 15px;
+}
+/* line 294, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box h2 {
+  color: #464B54;
+  font-size: 18px;
+}
+/* line 299, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box p {
+  color: #62676e;
+  font-size: 15px;
+}
+/* line 304, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box p:first-child {
+  margin-bottom: 5px;
+}
+/* line 308, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box a {
+  margin-left: 30px;
+  margin-bottom: 0;
+}
+/* line 313, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box a.next:after {
+  background-image: url("../images/icon-buttonNext.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 18px;
+  margin-left: 12px;
+  margin-top: -2px;
+  vertical-align: middle;
+  width: 17px;
+}
+/* line 325, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box a.cancel:after {
+  background-image: url("../images/icon-buttonCancel.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 18px;
+  margin-left: 12px;
+  margin-top: -2px;
+  vertical-align: middle;
+  width: 17px;
+}
+/* line 337, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box a.cancel {
+  background-color: #6E7379;
+  border: 1px solid #4D5457;
+  box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5) inset;
+}
+/* line 342, ../sass/sbac_learning_registry.scss */
+#external-resource-help-box a.cancel:focus, #external-resource-help-box a.cancel:hover {
+  background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+  background-color: #6E7379;
 }
