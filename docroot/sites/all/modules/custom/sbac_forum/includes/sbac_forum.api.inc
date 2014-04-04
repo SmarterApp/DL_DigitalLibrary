@@ -358,7 +358,7 @@ function sbac_forum__api__get_authpane_hoverover($user_id) {
   $tooltip = '
               <span class="devtools-tooltip account-tooltip">
                 <a href="#" class="devtools-tooltip-trigger">' . $full_name . '</a>
-                <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
+                <span class="devtools-tooltip-body">' . render($account_renderable) . '</span>
               </span>
              ';
 
