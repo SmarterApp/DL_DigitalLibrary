@@ -10871,3 +10871,62 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
 /* ---------------------------------------------------------------------
     Experimental Feature Section
 ------------------------------------------------------------------------ */
+/* line 3292, ../sass/custom.scss */
+.experimental-feature {
+  text-align: center;
+  float: left;
+  width: 100%;
+  color: #fff;
+  position: relative;
+  margin-left: 15px;
+}
+/* line 3300, ../sass/custom.scss */
+.experimental-feature .title {
+  font-family: Verdana,Geneva,sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: 25px;
+  margin: 0 auto;
+  padding: 10px 0 0;
+  text-transform: uppercase;
+  width: 400px;
+  height: 40px;
+  display: block;
+  clear: both;
+  position: relative;
+  border-top: 1px #50a8c4 solid;
+}
+/* line 3316, ../sass/custom.scss */
+.experimental-feature .additional-resoutces {
+  font-size: 15px;
+  margin-top: 10px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+/* line 3322, ../sass/custom.scss */
+.experimental-feature .additional-resoutces a {
+  color: #fff;
+  text-decoration: underline;
+}
+/* line 3327, ../sass/custom.scss */
+.experimental-feature .additional-resoutces a:after {
+  background-image: url("../images/icons/icon-new-window.png");
+  background-position: center center;
+  content: " ";
+  display: inline-block;
+  height: 12.5px;
+  margin-left: 5px;
+  vertical-align: baseline;
+  width: 12.5px;
+}
+/* line 3339, ../sass/custom.scss */
+.experimental-feature .title:before {
+  content: " ";
+  display: inline-block;
+  height: 1px;
+  width: 100%;
+  background-color: #14556a;
+  position: absolute;
+  top: -2.5px;
+  left: 0;
+}
