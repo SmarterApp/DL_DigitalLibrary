@@ -209,7 +209,6 @@ global $user;
 		<div class="experimental-feature">
 		  <div class="title">EXPERIMENTAL FEATURE</div>
 		  <div class="additional-resoutces">Need additional resources? You may try searching <a href="/external-resources">external resources</a></div>
-		  <?php print $external_resources_link; ?>
 		</div>
 		<?php endif; ?>
 		
