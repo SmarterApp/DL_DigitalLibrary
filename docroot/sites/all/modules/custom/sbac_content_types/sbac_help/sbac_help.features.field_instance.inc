@@ -84,7 +84,7 @@ function sbac_help_field_default_field_instances() {
     'label' => 'Help Icon',
     'required' => 0,
     'settings' => array(
-      'alt_field' => 0,
+      'alt_field' => 1,
       'default_image' => 0,
       'file_directory' => 'help_page',
       'file_extensions' => 'png gif jpg jpeg',
