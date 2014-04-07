@@ -356,10 +356,10 @@ function sbac_forum__api__get_authpane_hoverover($user_id) {
   $full_name = $fn . $ln;
 
   $tooltip = '
-              <span class="devtools-tooltip account-tooltip">
+              <div class="devtools-tooltip account-tooltip">
                 <a href="#" class="devtools-tooltip-trigger">' . $full_name . '</a>
-                <span class="devtools-tooltip-body">' . render($account_renderable) . '</span>
-              </span>
+                <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
+              </div>
              ';
 
   $created = isset($entity->created) ? $entity->created : time();
