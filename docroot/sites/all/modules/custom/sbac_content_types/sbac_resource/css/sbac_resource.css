@@ -249,7 +249,7 @@ a.sbac-grid-layout {
 .block-sbac-resource-sbac-resource-create-button {
   float: left;
   position: relative;
-  margin-top: -10px;
+  margin-top: 1px;
 }
 /* line 239, ../sass/sbac_resource.scss */
 .block-sbac-resource-sbac-resource-create-button a.button {
