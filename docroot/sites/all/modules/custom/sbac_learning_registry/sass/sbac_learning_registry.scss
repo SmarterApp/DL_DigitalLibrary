@@ -56,6 +56,27 @@ body.page-external-resources {
     top: 0;
     width: 360px;
 	}
+	
+	.sbac-clear-search {
+	  background: url("../images/icon-validation-fail.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    cursor: pointer;
+    display: block;
+    float: right;
+    height: 15px;
+    position: absolute;
+    right: 45px;
+    top: -5px;
+    width: 15px;
+		z-index: 999;
+	}
+	
+	@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	 input#edit-solr-keywords {margin-top: 14px;} 
+	}
+	
+	@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	 .sbac-clear-search  {top: 24px;} 
+	}
 		
 	button#edit-submit {
 		display: none;
