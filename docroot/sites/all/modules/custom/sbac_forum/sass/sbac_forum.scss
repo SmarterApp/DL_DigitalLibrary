@@ -615,7 +615,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 				.sbac-forum-membership-status-label,
 				.sbac-forum-faci-status-label {
-					display: inline-flex;
+					display: inline-block;
 					height: 20px;
 					border-right: 1px solid #62676E;
 					color: #70757E;
@@ -1177,9 +1177,6 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 							font-size: 13px;
 							line-height: 1.2;
 						}
-					}
-					li:after {
-						content: ",";
 					}
 				}
 			}
