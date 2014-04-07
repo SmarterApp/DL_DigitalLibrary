@@ -402,9 +402,9 @@ function sbac_media_determine_download_access($node) {
  * @param $source
  * @param $destination
  */
-function sbac_media_image_style_create_derivative_alter(&$style, &$source, &$destination) {
+function sbac_media_image_style_create_derivative_alter(&$style, &$image_uri, &$derivative_uri) {
   if ($style['name'] == 'resource_image_grid') {
-    $destination = str_replace('gs://', 'private://', $destination);
+    $derivative_uri = str_replace('gs://', 'private://', $derivative_uri);
   }
 }
 
