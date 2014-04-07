@@ -984,18 +984,15 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
         'file_validate_extensions' => $allowed_file_types,
         'file_validate_size' => $allowed_size,
       );
+      $temp_uri = $_FILES['files']['tmp_name']['field_file_upload'];
+      $file_hash = md5_file($temp_uri);
       $file = file_save_upload('field_file_upload', $validators, $directory, FILE_EXISTS_REPLACE);
-
-      // Yuriy: I've removed the and'ed !$form_state['executed'] condition because it
-      // was preventing file uploads, and I don't see a reason for it to be here.
       if ($file) {
         $file->status = FILE_STATUS_PERMANENT;
         file_save($file);
 
         if (isset($form_state['node'])) {
           $node = $form_state['node'];
-          $file_url = drupal_realpath($file->uri);
-          $file_hash = md5_file($file_url);
 
           // Create the media item, duplicates get checked later.
           $media = new stdClass;
