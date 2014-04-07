@@ -301,12 +301,6 @@ function sbac_resource_views_view__resources__list_view__preprocess(&$vars) {
  */
 function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$vars) {
   $vars['fields']['state_button'] = NULL;
-  ctools_include('modal');
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  ctools_modal_add_js();
-  drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
   $image_assets = _sbac_resource_grid_image($vars['fields']);
   if ($image_assets) {
     $vars['fields']['image'] = $image_assets['image'];
@@ -355,12 +349,6 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
  * @param $vars
  */
 function sbac_resource_views_view_fields__resources__list_view__preprocess(&$vars) {
-  ctools_include('modal');
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  ctools_modal_add_js();
-  drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
   $image_assets = _sbac_resource_grid_image($vars['fields'], 'list');
   if ($image_assets) {
     $vars['fields']['image'] = $image_assets['image'];
@@ -439,12 +427,6 @@ function sbac_resource_views_view__my_resources__list_view__preprocess(&$vars) {
 function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$vars) {
   global $user;
   $vars['fields']['state_button'] = NULL;
-  ctools_include('modal');
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  ctools_modal_add_js();
-  drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
   $image_assets = _sbac_resource_grid_image($vars['fields']);
   if ($image_assets) {
     $vars['fields']['image'] = $image_assets['image'];
@@ -499,12 +481,6 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
  */
 function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$vars) {
   global $user;
-  ctools_include('modal');
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  ctools_modal_add_js();
-  drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
   $image_assets = _sbac_resource_grid_image($vars['fields'], 'list');
   if ($image_assets) {
     $vars['fields']['image'] = $image_assets['image'];
@@ -587,12 +563,6 @@ function sbac_resource_views_view__resource_review__list_view__preprocess(&$vars
  */
 function sbac_resource_views_view_fields__resource_review__grid_view__preprocess(&$vars) {
   $vars['fields']['state_button'] = NULL;
-  ctools_include('modal');
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  ctools_modal_add_js();
-  drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
   $image_assets = _sbac_resource_grid_image($vars['fields']);
   if ($image_assets) {
     $vars['fields']['image'] = $image_assets['image'];
@@ -635,12 +605,6 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
  * @param $vars
  */
 function sbac_resource_views_view_fields__resource_review__list_view__preprocess(&$vars) {
-  ctools_include('modal');
-  ctools_include('ajax');
-  ctools_add_js('ajax-responder');
-  ctools_modal_add_js();
-  drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
   $image_assets = _sbac_resource_grid_image($vars['fields'], 'list');
   if ($image_assets) {
     $vars['fields']['image'] = $image_assets['image'];
@@ -686,35 +650,37 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   $variables = array();
   if (isset($fields['nid']->raw)) {
     $nid = $fields['nid']->raw;
-    $node = node_load($nid);
-    if ($node) {
-      $class = 'grid-image lazy';
-      if ($view_display == 'list') {
-        $class = 'list-image lazy';
-      }
+    $class = 'grid-image lazy';
+    if ($view_display == 'list') {
+      $class = 'list-image lazy';
+    }
 
-      $default_file = 'public://file.png';
-      if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
-        if (isset($node->document['html5'])) {
-          $directory = "private://html5/" . floor($nid/32000) . "/" . $nid;
-          $directory_thumbnail_uri = $directory . '/html5_module/dlcomponents/thumbnail.png';
-          $directory_thumbnail_path = drupal_realpath($directory) . '/html5_module/dlcomponents/thumbnail.png';
-          if (file_exists($directory_thumbnail_path)) {
-            $uri = $directory_thumbnail_uri;
-            $url = file_create_url($directory_thumbnail_uri);
-          }
-          else {
-            $url = $default_file;
-            $uri = $default_file;
-          }
-        }
-        else {
-          $url = $default_file;
-          $uri = $default_file;
-        }
+    $default_file = 'public://file.png';
+
+    // Check if this is HTML5.
+    $sql =  'SELECT n.nid AS nid, fdfh.field_html5_value AS html5 FROM {node} n ';
+    $sql .= 'JOIN {field_data_field_html5} fdfh ON n.nid = fdfh.entity_id ';
+    $sql .= 'WHERE n.type = :resource AND n.nid = :nid';
+    $html5_result = db_query($sql, array(':resource' => 'resource', ':nid' => $nid))->fetchObject();
+    if ($html5_result && $html5_result->html5) {
+      $directory = "private://html5/" . floor($nid / 32000) . "/" . $nid;
+      $directory_thumbnail_uri = $directory . '/html5_module/dlcomponents/thumbnail.png';
+      $directory_thumbnail_path = drupal_realpath($directory) . '/html5_module/dlcomponents/thumbnail.png';
+      if (file_exists($directory_thumbnail_path)) {
+        $uri = $directory_thumbnail_uri;
+        $url = file_create_url($directory_thumbnail_uri);
       }
-      else if (isset($node->document[0])) {
-        $media = $node->document[0];
+      else {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+    }
+    else {
+      // Try to get non HTML5 media.
+      $sql = 'SELECT em.* FROM {eck_media} em ';
+      $sql .= 'WHERE em.nid = :nid AND em.weight = 100 LIMIT 1';
+      $media = db_query($sql, array(':nid' => $nid))->fetchObject();
+      if ($media && isset($media->fid) && $media->fid) {
         if ($media->fid) {
           $file = file_load($media->fid);
           $url = file_create_url($file->uri);
@@ -733,18 +699,26 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
         $url = $default_file;
         $uri = $default_file;
       }
-
-      $ext = pathinfo($uri, PATHINFO_EXTENSION);
-      $type = _sbac_resource_determine_extension($ext);
-      if ($type != 'image') {
-        $url = $default_file;
-        $uri = $default_file;
-      }
-
-      $variables['image'] = theme('image_style', array('style_name' => 'resource_image_grid', 'path' => $uri, 'attributes' => array('class' => $class)));
-      $variables['mime-type'] = file_get_mimetype($url);
-      $variables['file-type-icon'] = _sbac_resource_determine_file_type_icon($ext);
     }
+
+    unset($media);
+    unset($html5_result);
+    unset($sql);
+
+    $ext = pathinfo($uri, PATHINFO_EXTENSION);
+    $type = _sbac_resource_determine_extension($ext);
+    if ($type != 'image') {
+      $url = $default_file;
+      $uri = $default_file;
+    }
+
+    $variables['image'] = theme('image_style', array(
+      'style_name' => 'resource_image_grid',
+      'path' => $uri,
+      'attributes' => array('class' => $class)
+    ));
+    $variables['mime-type'] = file_get_mimetype($url);
+    $variables['file-type-icon'] = _sbac_resource_determine_file_type_icon($ext);
   }
   return $variables;
 }
