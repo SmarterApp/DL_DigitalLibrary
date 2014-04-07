@@ -29,7 +29,7 @@
   font-weight: normal;
 }
 /* line 31, ../sass/tooltip.scss */
-.devtools-tooltip .devtools-tooltip-body .user-profile h2.name .field {
+.devtools-tooltip .devtools-tooltip-body .user-profile .name .field {
   color: #04384E;
   font-size: 16px;
   font-weight: bold;
