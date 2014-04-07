@@ -287,6 +287,7 @@ function sbac_flag_resolve_all_flags_modal($js = FALSE) {
           if ($task = taskit_get_object('resolved_all_flags')) {
             $task->addVisibility($task::VISIBILITY_USER);
             $task->addEntity('node', $node->nid);
+            $task->addEntity('feedback', $form_state['feedback']);
             $task->addOwningUser($node->uid);
             $task->addTriggeringUser($user->uid);
             $task->save();
@@ -346,6 +347,7 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
           global $user;
           $task->addVisibility($task::VISIBILITY_USER);
           $task->addEntity('node', $node->nid);
+          $task->addEntity('feedback', $form_state['feedback']);
           $task->addOwningUser($node->uid);
           $task->addTriggeringUser($user->uid);
           $task->save();
@@ -748,6 +750,8 @@ function sbac_flag_resolve_all_flags_form_submit(&$form, &$form_state) {
       if ($flags) {
         foreach ($flags as $flag) {
           db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
+          // we only need one feedback comment here so it doesn't matter if it gets overridden in the loop because the comments are the same anyway
+          $form_state['feedback'] = $flag->id;
         }
       }
     }
@@ -836,6 +840,8 @@ function sbac_flag_remove_resource_form_submit(&$form, &$form_state) {
     if ($flags) {
       foreach ($flags as $flag) {
         db_query('UPDATE {eck_flag} ef SET ef.moderation_comment = :comment WHERE ef.id = :id', array(':comment' => $form_state['values']['contributor_message'], ':id' => $flag->id));
+        // we only need one feedback comment here so it doesn't matter if it gets overridden in the loop because the comments are the same anyway
+        $form_state['feedback'] = $flag->id;
       }
     }
   }
