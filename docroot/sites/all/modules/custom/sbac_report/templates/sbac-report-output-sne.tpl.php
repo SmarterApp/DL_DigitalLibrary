@@ -5,17 +5,17 @@
       <div class="row first">
         <div>
           <div class="column large-3 profile-pic">
-            <div class="user-picture">
+            <span class="user-picture">
               <?php
                 if (isset($user_output['picture'])) {
                   print $user_output['picture'];
                 }
               ?>
-            </div>
+            </span>
           </div>
         </div>
         <div class="column large-9 user-profile">
-          <div class="views-field views-field-field-first-name">
+          <span class="views-field views-field-field-first-name">
             <h2 class="field-content name clearfix">
               <?php
                 if (isset($user_output['first_name'])) {
@@ -26,7 +26,7 @@
                 }
               ?>
             </h2>
-          </div>
+          </span>
           <div class="views-field views-field-nothing-3">
             <span class="field-content">
               <?php
