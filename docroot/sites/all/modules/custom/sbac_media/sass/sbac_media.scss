@@ -78,7 +78,7 @@
 	    		.foundicon-trash {
 	    			color: #aaa;
 	    			font-size: 1em;
-	    			margin-right: -30px;
+	    			margin-right: -20px;
 	    		}
 
 	    		.ctools-modal-sbac-media-modal-delete-media {
@@ -86,6 +86,10 @@
 	    			width: 20px;
 	    			height: 20px;
 	    		}
+	
+					a {
+						color: transparent;
+					}
 	    	}
 				&:nth-child(2) {
 					width: auto;

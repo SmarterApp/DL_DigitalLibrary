@@ -234,7 +234,7 @@ a.sbac-grid-layout {
 .block-sbac-resource-sbac-resource-create-button {
   float: left;
   position: relative;
-	margin-top: -10px;
+	margin-top: 1px;
 
   a.button {
 		vertical-align: top;
@@ -379,7 +379,7 @@ a.sbac-grid-layout {
       font-size: 1em;
       font-weight: normal;
       font-family: Arial, sans-serif;
-      max-width: 223px;
+      max-width: 223px; 
       word-wrap: break-word;
 
       &.resource-name a {

@@ -83,7 +83,7 @@
 #sbac-media-list tbody tr td.delete-media .foundicon-trash {
   color: #aaa;
   font-size: 1em;
-  margin-right: -30px;
+  margin-right: -20px;
 }
 /* line 84, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td.delete-media .ctools-modal-sbac-media-modal-delete-media {
@@ -92,67 +92,71 @@
   height: 20px;
 }
 /* line 90, ../sass/sbac_media.scss */
+#sbac-media-list tbody tr td.delete-media a {
+  color: transparent;
+}
+/* line 94, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td:nth-child(2) {
   width: auto;
   line-height: 1.5;
   word-break: break-all;
 }
-/* line 95, ../sass/sbac_media.scss */
+/* line 99, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td:nth-child(2) input[type="checkbox"] {
   margin-left: 0;
 }
-/* line 99, ../sass/sbac_media.scss */
+/* line 103, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr td:nth-child(3) {
   white-space: nowrap;
   width: 20%;
 }
-/* line 106, ../sass/sbac_media.scss */
+/* line 110, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr:nth-child(2) td {
   padding-top: 45px;
 }
-/* line 110, ../sass/sbac_media.scss */
+/* line 114, ../sass/sbac_media.scss */
 #sbac-media-list tbody tr:nth-child(2).ui-sortable-helper td {
   padding-top: 20px;
   height: auto;
 }
 
-/* line 117, ../sass/sbac_media.scss */
+/* line 121, ../sass/sbac_media.scss */
 .media-table {
   position: relative;
 }
 
-/* line 123, ../sass/sbac_media.scss */
+/* line 127, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video {
   width: 55%;
   margin-right: 2%;
   float: left;
 }
-/* line 128, ../sass/sbac_media.scss */
+/* line 132, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-item-field-embed-video .description {
   display: block;
 }
-/* line 133, ../sass/sbac_media.scss */
+/* line 137, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-file {
   width: 50%;
   float: left;
   clear: both;
 }
-/* line 139, ../sass/sbac_media.scss */
+/* line 143, ../sass/sbac_media.scss */
 #sbac-field-file-container .form-submit {
   float: right;
 }
-/* line 143, ../sass/sbac_media.scss */
+/* line 147, ../sass/sbac_media.scss */
 #sbac-field-file-container .video-embed-button {
   margin-top: 3em;
 }
 
 /* overlay cancel button */
-/* line 149, ../sass/sbac_media.scss */
+/* line 153, ../sass/sbac_media.scss */
 #edit-cancel-media-overlay {
   margin-right: 10px;
 }
 
-/* line 153, ../sass/sbac_media.scss */
+/* line 157, ../sass/sbac_media.scss */
 .dup-btns {
   text-align: right;
 }
