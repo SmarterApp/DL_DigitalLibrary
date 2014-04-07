@@ -115,6 +115,7 @@ function sbac_learning_registry_external_resource_load_more($js, $start = 0) {
 function sbac_learning_registry_clear_all() {
   $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS] = '';
   $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS] = '';
+  $_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS] = '';
   drupal_goto('external-resources');
 }
 
@@ -191,7 +192,7 @@ function sbac_learning_registry_inbloom_send_request($request) {
     $results = sbac_learning_registry_inbloom_parse_response($response->data);
   }
   return $results;
-}
+  }
 
 /**
  * Parse the API response
