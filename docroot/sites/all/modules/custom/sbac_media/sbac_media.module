@@ -394,14 +394,18 @@ function sbac_media_determine_download_access($node) {
 }
 
 /**
- * Implements image_style_create_derivative().
+ * Implements drupal alter.
  *
+ * Change image path from external to local.
+ *
+ * @param $style
+ * @param $source
  * @param $destination
  */
 function sbac_media_image_style_create_derivative_alter(&$style, &$source, &$destination) {
-  $var = '';
-
-  $destination = str_replace('gs://', 'private://', $destination);
+  if ($style['name'] == 'resource_image_grid') {
+    $destination = str_replace('gs://', 'private://', $destination);
+  }
 }
 
 /**
