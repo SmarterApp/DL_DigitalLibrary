@@ -15,7 +15,11 @@ class RemovedResource extends \taskit\sbac_core\BaseTask {
         '!title' => '<span class="taskit-title">' . $node->title . '</span>',
         ':username' => $account->name,
       ));
-      $output[] = '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format). '</span> ';
+      $output[] = '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format) . '</span> ';
+      if (!empty($entities['feedback'])) {
+        $feedback = entity_load_single('flag', current($entities['feedback']));
+        $output[] = '<div class="taskit-content-toggle">' . $feedback->moderation_comment . '</div>';
+      }
       $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
       if ($flags) {
         $flag = array_shift($flags);
