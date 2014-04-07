@@ -344,7 +344,7 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     '#prefix'         => '<div class="forum-subnav-sort-wrapper">',
     '#suffix'         => '</div>',
     '#type'           => 'select',
-    '#title'          => t(''),
+    '#title'          => t('Sort forum by'),
     '#required'       => FALSE,
     '#options'        => $options,
     '#default_value'  => $default,
@@ -361,7 +361,7 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     '#prefix'         => '<div class="forum-subnav-keyword-wrapper">',
     '#suffix'         => '</div>',
     '#type'           => 'textfield',
-    '#title'          => t(''),
+    '#title'          => t('Search forums'),
     '#default_value'  => 'Search Forums',
     '#size'           => 30,
     '#ajax'           => array(
