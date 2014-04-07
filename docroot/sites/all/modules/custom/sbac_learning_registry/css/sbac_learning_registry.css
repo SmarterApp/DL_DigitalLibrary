@@ -64,15 +64,15 @@ body.page-external-resources {
   z-index: 999;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  /* line 74, ../sass/sbac_learning_registry.scss */
-  #sbac-learning-registry-external-resources-solr-search-form input#edit-solr-keywords {
-    margin-top: 14px;
+  /* line 38, ../sass/sbac_learning_registry.scss */
+  #sbac-learning-registry-external-resources-solr-search-form {
+    /*input#edit-solr-keywords {margin-top: 14px;} */
   }
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  /* line 78, ../sass/sbac_learning_registry.scss */
-  #sbac-learning-registry-external-resources-solr-search-form .sbac-clear-search {
-    top: 24px;
+  /* line 38, ../sass/sbac_learning_registry.scss */
+  #sbac-learning-registry-external-resources-solr-search-form {
+    /*.sbac-clear-search  {top: 24px;} */
   }
 }
 /* line 81, ../sass/sbac_learning_registry.scss */
