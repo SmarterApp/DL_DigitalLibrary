@@ -43,7 +43,7 @@
 	  <?php endif; ?>
 
 	  <?php if (isset($node->field_contexts['und'][0])): ?>
-	    <h2 class="about">Context(s) In Which the Resource Could Be Used</h2>
+	    <h2 class="about">Context(s) in Which the Resource Could Be Used</h2>
 	    <div class="item-list"><?php echo $node->field_contexts['und'][0]['value']; ?></div>
 	  <?php endif; ?>
 
