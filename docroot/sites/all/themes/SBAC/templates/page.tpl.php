@@ -290,7 +290,7 @@ global $user;
       <div id="resource-help-body">
         <?php print views_embed_view('resource_tutorial', 'resource_tutorial'); ?>
       </div>
-      <a title="Continue" class="otherClose button right">Continue</a>
+      <a title="Continue" class="otherClose button right" href="#">Continue</a>
       <a title="Cancel" class="button right secondary backButton" href="#">Cancel</a>
     </div>
   <div id="current-help-topic-modal">

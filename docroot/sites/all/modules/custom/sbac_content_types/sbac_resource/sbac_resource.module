@@ -770,7 +770,7 @@ function _sbac_resource_preview_content(&$vars) {
     $source = $directory . '/html5_module/dlcomponents/CoverPage.html';
     $url = file_create_url($source);
     $viewer['viewer_filename'] = ucwords($file_data['filename']);
-    $viewer['viewer'] = '<iframe src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+    $viewer['viewer'] = '<iframe title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
   }
 
   if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
@@ -811,7 +811,7 @@ function _sbac_resource_preview_content(&$vars) {
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'image') {
-      $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400));
+      $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400, 'alt'=>'Resource preview"'));
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'schooltube') {
@@ -833,18 +833,18 @@ function _sbac_resource_preview_content(&$vars) {
     else if ($type == 'youtube') {
       if (strpos($url, 'youtube') !== FALSE) {
         $url .= '?rel=0'; // Disable related videos.
-        $viewer['viewer'] = '<div class="flex-video"><iframe width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen>Alternative Content</iframe></div>';
+        $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen>Alternative Content</iframe></div>';
         $viewer['viewer_class'] = '';
       }
       else {
         $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-        $viewer['viewer'] = theme('image', array('path' => $url));
+        $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
         $viewer['viewer_class'] = '';
       }
     }
     else {
       $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-      $viewer['viewer'] = theme('image', array('path' => $url));
+      $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
       $viewer['viewer_class'] = '';
     }
   }
