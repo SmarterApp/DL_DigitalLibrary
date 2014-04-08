@@ -1510,6 +1510,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					font-weight: bold;
 				}
 			}
+			
+			.views-label-last-comment-uid,
+			.field-content {
+				display: inline-block;
+			}
 
 			.views-field-uid {
 				border-right: 1px solid #62676E;
