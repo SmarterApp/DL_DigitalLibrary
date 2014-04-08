@@ -601,6 +601,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['uid']['field'] = 'uid';
   $handler->display->display_options['fields']['uid']['relationship'] = 'field_fc_forum_member_target_id';
   $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['element_type'] = 'div';
   $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
   /* Field: Field: State */
@@ -736,6 +737,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['uid']['table'] = 'node';
   $handler->display->display_options['fields']['uid']['field'] = 'uid';
   $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['element_type'] = 'div';
   $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
   /* Field: Content: Last comment uid */
@@ -743,6 +745,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['last_comment_uid']['table'] = 'node_comment_statistics';
   $handler->display->display_options['fields']['last_comment_uid']['field'] = 'last_comment_uid';
   $handler->display->display_options['fields']['last_comment_uid']['label'] = 'Latest Reply';
+  $handler->display->display_options['fields']['last_comment_uid']['element_type'] = 'div';
   $handler->display->display_options['fields']['last_comment_uid']['separator'] = '';
   /* Field: Content: Last comment time */
   $handler->display->display_options['fields']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
@@ -759,6 +762,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['comment_count']['label'] = '';
   $handler->display->display_options['fields']['comment_count']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['comment_count']['alter']['text'] = '[comment_count] <div class="topic-listing-suffix-label">Replies</div>';
+  $handler->display->display_options['fields']['comment_count']['element_type'] = 'div';
   $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Comment count */
   $handler->display->display_options['sorts']['comment_count']['id'] = 'comment_count';

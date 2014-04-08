@@ -340,7 +340,7 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
   return $output;
 }
 
-function sbac_forum__api__get_authpane_hoverover($user_id) {
+function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
   $account = user_load($user_id);
   $account_renderable = user_view($account, 'tooltip');
 
@@ -356,10 +356,10 @@ function sbac_forum__api__get_authpane_hoverover($user_id) {
   $full_name = $fn . $ln;
 
   $tooltip = '
-              <span class="devtools-tooltip account-tooltip">
-                <a href="#" class="devtools-tooltip-trigger">' . $full_name . '</a>
+              <div class="devtools-tooltip account-tooltip">
+                <a href="#" class="devtools-tooltip-trigger">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
                 <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
-              </span>
+              </div>
              ';
 
   $created = isset($entity->created) ? $entity->created : time();

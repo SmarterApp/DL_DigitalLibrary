@@ -174,19 +174,20 @@ function sbac_forum_view_forum_page($term) {
   if (isset($forum_data->field_forum_description)) {
     $description_text = $forum_data->field_forum_description->value();
   }
-
+  $add_comma = FALSE;
   $is_facilitator = FALSE;
   $facilitator_text = '';
   $faci_details = '';
   if (isset($forum_data->field_forum_facilitators)) {
     $facilitators = $forum_data->field_forum_facilitators->value();
     if (!empty($facilitators)) {
+      $add_comma = sizeof($facilitators);
       $item_list = array();
       foreach ($facilitators as $faci) {
         if ($faci->uid == $user->uid) {
           $is_facilitator = TRUE;
         }
-        $item_list[] = sbac_forum__api__get_authpane_hoverover($faci->uid);
+        $item_list[] = sbac_forum__api__get_authpane_hoverover($faci->uid, --$add_comma);
       }
 
       $list_args = array(
