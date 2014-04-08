@@ -322,6 +322,7 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   $form['my_forum'] = array(
     '#type'         => 'submit',
     '#value'        => t('My Forums'). ' '. $my_forums_count_text,
+    '#title'        => t('My forums'),
     '#attributes'   => array(
       'class' => array($my_forums_classes),
     ),
@@ -436,6 +437,7 @@ function sbac_forum_keyword_search_sub_nav_form($form, &$form_state ) {
   $form['my_forum'] = array(
     '#type'         => 'submit',
     '#value'        => t('My Forums'). ' '. $my_forums_count_text,
+    '#title'        => t('My forums'),
     '#attributes'   => array(
       'class' => array($my_forums_classes),
     ),
