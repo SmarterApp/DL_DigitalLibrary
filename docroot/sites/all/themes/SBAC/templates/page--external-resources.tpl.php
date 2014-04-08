@@ -28,7 +28,7 @@ global $user;
       </div>
 
 			<div class="sbac-back-button">
-		    <a href='/'>Back to Smarter Balanced Digital Library</a>
+		    <a href='/' title="Back to Smarter Balanced Digital Library">Back to Smarter Balanced Digital Library</a>
 		  </div>
     </div>
   </div>
