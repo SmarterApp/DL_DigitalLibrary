@@ -282,6 +282,7 @@
     // content. This is helpful for allowing users to see error messages at the
     // top of a form, etc.
     $('#modal-content').html(response.output).scrollTop(0);
+    $('#modal-content input:first').focus();
     Drupal.attachBehaviors();
   }
 
