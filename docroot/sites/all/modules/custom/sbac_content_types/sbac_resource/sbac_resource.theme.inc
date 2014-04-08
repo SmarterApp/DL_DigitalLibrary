@@ -741,7 +741,7 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
         $uri = $default_file;
       }
 
-      $variables['image'] = theme('image_style', array('style_name' => 'resource_image_grid', 'path' => $uri, 'attributes' => array('class' => $class)));
+      $variables['image'] = theme('image_style', array('style_name' => 'resource_image_grid', 'path' => $uri, 'attributes' => array('class' => $class), 'alt' => 'Resource Image Preview'));
       $variables['mime-type'] = file_get_mimetype($url);
       $variables['file-type-icon'] = _sbac_resource_determine_file_type_icon($ext);
     }
