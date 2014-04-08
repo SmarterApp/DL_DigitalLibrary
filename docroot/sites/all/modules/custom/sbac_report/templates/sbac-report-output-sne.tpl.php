@@ -3,17 +3,19 @@
   <div class="view-content">
     <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
       <div class="row first">
-         <div class="column large-3 profile-pic">
-           <div class="user-picture">
-             <?php
-               if (isset($user_output['picture'])) {
-                 print $user_output['picture'];
-               }
-             ?>
-           </div>
+        <div>
+          <div class="column large-3 profile-pic">
+            <span class="user-picture">
+              <?php
+                if (isset($user_output['picture'])) {
+                  print $user_output['picture'];
+                }
+              ?>
+            </span>
+          </div>
         </div>
         <div class="column large-9 user-profile">
-          <div class="views-field views-field-field-first-name">
+          <span class="views-field views-field-field-first-name">
             <h2 class="field-content name clearfix">
               <?php
                 if (isset($user_output['first_name'])) {
@@ -24,7 +26,7 @@
                 }
               ?>
             </h2>
-          </div>
+          </span>
           <div class="views-field views-field-nothing-3">
             <span class="field-content">
               <?php
