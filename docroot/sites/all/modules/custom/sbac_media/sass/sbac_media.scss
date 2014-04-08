@@ -1,3 +1,4 @@
+@import "compass/css3/";
 #sbac-field-file-container {
 	position: relative;
 
@@ -42,6 +43,8 @@
     	width: 5%;
     	font-family: "GeneralFoundicons";
     	font-size: 1em;
+			text-indent: 0;
+			display: table-cell;
 
     	&.document:before {
     		content: "\f009";
@@ -65,8 +68,8 @@
     	cursor: move;
 
     	td {
-    		padding-top: 1em;
-    		padding-bottom: 1em;
+    		/*padding-top: 1em;
+    		    		padding-bottom: 1em;*/
 
 	    	&.delete-media {
 	    		text-align: right;
@@ -74,7 +77,7 @@
 					width: 5%;
 					margin: 10px 20px 0 0;
 					vertical-align: middle;
-
+ 
 	    		.foundicon-trash {
 	    			color: #aaa;
 	    			font-size: 1em;
@@ -108,7 +111,7 @@
     }
 
     tr:nth-child(2) td {
-    	padding-top: 45px;
+    	padding-top: 40px;
     }
 
     tr:nth-child(2).ui-sortable-helper td {

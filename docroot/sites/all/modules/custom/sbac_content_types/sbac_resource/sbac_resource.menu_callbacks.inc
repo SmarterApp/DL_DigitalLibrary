@@ -163,7 +163,9 @@ function sbac_resource_no_search_results($string = '') {
 }
 
 /**
- * Menu Callback
+ * Menu Callback.
+ *
+ * @return string
  */
 function sbac_resource_smart_search_page() {
   $output = 'testing';
@@ -190,7 +192,6 @@ function sbac_resource_smart_search_page() {
     }
   }
 
-  $current_filters = '';
   if (!empty($current_filter_array)) {
     $current_filters = implode('::', $current_filter_array);
     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = $current_filters;
@@ -200,6 +201,8 @@ function sbac_resource_smart_search_page() {
   // $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
   $_SESSION[SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS] = TRUE; // Hide the filter block.
   $_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS] = TRUE; // Show the help message in content region.
+
   drupal_goto('digital-library-resources');
+
   return $output;
 }
