@@ -130,7 +130,7 @@ function _learning_registry_send_to_registry($nid, $json, $service_num = LEARNIN
       $result = _learning_registry_update_submission_status($nid, $result);
       if (!$headless) {
         $submission_url = variable_get('learning_registry_node_url', NULL) . '/harvest/getrecord?by_doc_ID=TRUE&request_ID=' . $result;
-        drupal_set_message(t('Node ID @nid published to the registry. <a href="@url" target="_new">(View node on registry.)</a>', array('@nid' => $nid, '@url' => $submission_url)));
+//        drupal_set_message(t('Node ID @nid published to the registry. <a href="@url" target="_new">(View node on registry.)</a>', array('@nid' => $nid, '@url' => $submission_url)));
       }
       // Allow other modules to act on SUCCESS
       module_invoke_all('learning_registry_publish_success', $nid, $result);
