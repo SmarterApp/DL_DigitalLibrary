@@ -48,12 +48,12 @@ function sbac_resource_digital_library_page() {
   menu_set_active_item('digital-library-resources');
 
   $smart_search_text = '';
-  if ( (isset($_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS])) &&
-       ($_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS] == TRUE) ) {
+  if ((isset($_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS])) && ($_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS] == TRUE)) {
     $_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS] = FALSE;
     if ($ignore_smart_search == FALSE) {
       $smart_search_text = theme('smart_search_welcome', array('current_filters' => $current_filters, 'kw' => $search_string));
-    } else { // No search results. Diff behavour.
+    }
+    else { // No search results. Diff behavour.
       // Reset variables
       $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
       $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED] = TRUE;

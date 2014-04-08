@@ -548,6 +548,10 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		.form-item {
 			margin: 0;
 		}
+		
+		label {
+			display: none;
+		}
   }
 
   .forum-subnav-keyword-wrapper {
@@ -1174,9 +1178,6 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 							line-height: 1.2;
 						}
 					}
-					li:after {
-						content: ",";
-					}
 				}
 			}
 		}
@@ -1508,6 +1509,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					color: #0583AC;
 					font-weight: bold;
 				}
+			}
+			
+			.views-label-last-comment-uid,
+			.field-content {
+				display: inline-block;
 			}
 
 			.views-field-uid {

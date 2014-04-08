@@ -26,10 +26,10 @@
 	<?php endif; ?>
 
 	<div class="column large-9 user-profile">
-		<h2 class="name clearfix">
+		<div class="name clearfix">
 			<?php echo drupal_render($user_profile['field_first_name']) . ' '; ?>
       <?php echo drupal_render($user_profile['field_last_name']); ?>
-		</h2>
+		</div>
 
 		<div class="profile-title">
 			<?php

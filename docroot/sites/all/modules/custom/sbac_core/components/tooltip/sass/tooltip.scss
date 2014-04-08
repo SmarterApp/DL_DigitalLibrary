@@ -2,6 +2,7 @@
 
 .devtools-tooltip {
   position: relative;
+	display: inline-block;
 
   .devtools-tooltip-body {
 		border: 1px solid #828588;
@@ -25,7 +26,7 @@
 			text-align: left;
 			font-weight: normal;
 			
-			h2.name {
+			.name {
 				
 				.field {
 			 	 	color: #04384E;

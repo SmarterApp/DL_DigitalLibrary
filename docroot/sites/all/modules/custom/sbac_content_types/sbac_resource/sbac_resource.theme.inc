@@ -1148,47 +1148,57 @@ function _sbac_resource_resource_review_links($fields) {
  */
 function _sbac_resource_digital_library_links($fields) {
   $variables = array();
-  if (isset($fields['state']->raw)) {
-    global $user;
-    $state = $fields['state']->raw;
-    switch ($state) {
-      case 'published':
-        $nid = $fields['nid']->raw;
-        if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
-          $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-        }
-
-        $variables['sticky'] = FALSE;
-        if ($fields['sticky']->raw) {
-          $variables['sticky'] = TRUE;
-        }
-
-        // if the user has this entity as a favorite.
-        $favorites_class = 'sbac-favorites-link-no';
-        $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
-        $favorites = sbac_favorites_get_favorites($user->uid, $nid);
-        if ($favorites) {
-          $favorites_class = 'sbac-favorites-link-yes';
-          $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
-        }
-        $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
-
-        $variables['views'] = '0 Views';
-        if (isset($fields['field_unique_views'])) {
-          $variables['views'] = $fields['field_unique_views']->content;
-        }
-        $variables['downloads'] = '0 Downloads';
-        if (isset($fields['field_asset_downloads'])) {
-          $variables['downloads'] = $fields['field_asset_downloads']->content;
-        }
-        $variables['collaborators'] = 'N Collaborations';
-        $variables['subject'] = $fields['field_subject']->content;
-        $variables['grades'] = $fields['field_grades']->content;
-        $variables['media_types'] = $fields['field_digital_media_type']->content;
-        break;
-    }
+  global $user;
+  
+  $nid = $fields['nid']->raw;
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+    $variables['buttons'][] = l('Edit', $url, array(
+      'attributes' => array(
+        'class' => array('medium', 'button'),
+        'query' => array('destination' => arg(0))
+      )
+    ));
   }
+
+  $variables['sticky'] = FALSE;
+  if ($fields['sticky']->raw) {
+    $variables['sticky'] = TRUE;
+  }
+
+  // if the user has this entity as a favorite.
+  $favorites_class = 'sbac-favorites-link-no';
+  $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
+  $favorites = sbac_favorites_get_favorites($user->uid, $nid);
+  if ($favorites) {
+    $favorites_class = 'sbac-favorites-link-yes';
+    $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+  }
+
+  $variables['favorites_link'] = l('Favorites', $_GET['q'], array(
+    'attributes' => array(
+      'class' => array(
+        'sbac-favorites-link',
+        $favorites_class
+      ),
+      'nid' => $nid,
+      'uid' => $user->uid
+    )
+  ));
+
+  $variables['views'] = '0 Views';
+  if (isset($fields['field_unique_views'])) {
+    $variables['views'] = $fields['field_unique_views']->content;
+  }
+  $variables['downloads'] = '0 Downloads';
+  if (isset($fields['field_asset_downloads'])) {
+    $variables['downloads'] = $fields['field_asset_downloads']->content;
+  }
+  $variables['collaborators'] = 'N Collaborations';
+  $variables['subject'] = $fields['field_subject']->content;
+  $variables['grades'] = $fields['field_grades']->content;
+  $variables['media_types'] = $fields['field_digital_media_type']->content;
+
   return $variables;
 }
 
