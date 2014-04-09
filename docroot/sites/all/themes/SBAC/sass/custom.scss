@@ -1572,6 +1572,18 @@ a.tabledrag-handle .handle {
   }
 }
 
+#sbac-resource-alignment-tag-view {
+	.read-more,
+	.ccss-term-delete {
+		margin-left: 20px;
+		
+		span {
+			text-indent: -9999em;
+			float: left;
+		} 
+	}
+}
+
 #sbac-resource-submit-resource-form {
   margin: 0;
 }
