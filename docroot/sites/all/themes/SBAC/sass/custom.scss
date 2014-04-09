@@ -3062,7 +3062,7 @@ a.tabledrag-handle .handle {
 	#main {
 		width: 600px;
 		margin: 0 auto;
-		padding-bottom: 120px;
+		padding-bottom: 80px;
 
 		&.columns {
 			float: none !important;
@@ -3088,6 +3088,7 @@ a.tabledrag-handle .handle {
 			text-align: center;
 			display: block;
 			width: 200px;
+			margin-top: 50px;
 		}
 	}
 }
@@ -3348,8 +3349,97 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	}
 }
 
+/* ---------------------------------------------------------------------
+    SBAC Resource Access Denied page
+------------------------------------------------------------------------ */
+.sbac-resource-access-denied {
+	.top-bar.last-top {
+	  max-width: 960px;
+		padding: 0;
+	
+		.block-sbac-resource-sbac-resource-back-button {
+			width: 960px;
+			height: 50px;
+			position: relative;
+			
+			.button {
+			  background-color: #0684AD;
+		    border: medium none;
+		    border-radius: 0;
+		    bottom: -70px;
+		    box-shadow: none;
+		    color: #FFFFFF;
+		    cursor: pointer;
+		    display: block;
+		    font-size: 15px;
+		    height: 34px;
+		    left: -20px;
+		    line-height: 34px;
+		    position: absolute;
+		    text-align: center;
+		    text-shadow: none;
+		    vertical-align: top;
+		
+				&:hover {
+					background-color: #0684AD;
+					background-image: none;
+				}
+			}
+	
+			.button:before {
+			  content: "\e620";
+		    display: inline;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    position: relative;
+		    top: -2px;
+			}
+		}
+	}
+	
+	.main-container {
+		margin-top: 5px;
+	}
+	
+	/*Nav search box*/
+	.search {
+	  text-align: right;
 
+		.block-search {
+		  margin-right: 1em;
+	    position: relative;
+	    vertical-align: top;
+	    width: 200px;
 
+			.form-text, 
+			.form-text:focus {
+			  background: url("../images/search.png") no-repeat scroll 5% center rgba(0, 0, 0, 0);
+			  border-radius: 20px;
+			  padding-left: 25px;
+			  position: absolute;
+			  top: 8px;
+			}
+
+			.sbac-clear-search {
+			  background: url("../images/icon-validation-fail.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+		    cursor: pointer;
+		    display: block;
+		    float: right;
+		    height: 15px;
+		    position: absolute;
+		    right: 13px;
+		    top: 14px;
+		    width: 15px;
+			}
+
+			button {
+				display: none !important;
+			}
+		}
+	}
+}
 
 
 
