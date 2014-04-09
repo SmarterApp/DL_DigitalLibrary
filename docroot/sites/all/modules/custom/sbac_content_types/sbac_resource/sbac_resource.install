@@ -1116,3 +1116,16 @@ function sbac_resource_update_7050(){
     }
   }
 }
+
+/**
+ * Remove Creative Commons link
+ */
+function sbac_resource_update_7051(){
+  $terms = taxonomy_get_term_by_name('Creative Commons Attribution','license');
+  if(count($terms)){
+    foreach($terms as $term){
+      $term->description = '';
+      taxonomy_term_save($term);
+    }
+  }
+}
