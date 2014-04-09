@@ -1098,3 +1098,23 @@ function sbac_user_disable_feedback() {
   user_save($account);
   // return $data;
 }
+
+
+/**
+ * Implements hook_cron().
+ *
+ * Deletes the guest users who are older then one week.
+ */
+function sbac_user_cron() {
+  $one_weeks_ago = strtotime("-1 week");
+  $role = user_role_load_by_name('guest');
+  $query  = 'SELECT u.uid AS uid, u.access AS access FROM {users} AS u ';
+  $query .= 'JOIN {users_roles} AS ur ON u.uid = ur.uid ';
+  $query .= 'WHERE ur.rid = :rid';
+  $result = db_query($query, array('rid' => $role->rid));
+  foreach ($result as $row) {
+    if ($row->access <= $one_weeks_ago) {
+      user_delete($row->uid);
+    }
+  }
+}
