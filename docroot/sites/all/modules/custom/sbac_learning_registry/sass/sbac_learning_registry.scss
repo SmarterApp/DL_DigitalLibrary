@@ -18,26 +18,42 @@ $gray: #464B54;
    ----------------------------------------- */
 body.page-external-resources {
 	background-color: #CECECE;
-}
 
-.sbac-external-logo {
-	background: url(../images/external-resources.png) no-repeat 0 0;
-	height: 40px;
-	width: 421px;
-	display: block;
-	float: left;
-	margin: 12px 15px 10px;
-	
-	h1 {
+
+	.sbac-external-logo {
+		background: url(../images/external-resources.png) no-repeat 0 0;
+		height: 40px;
+		width: 421px;
+		display: block;
 		float: left;
-		text-indent: -999999em;
+		margin: 12px 15px 10px;
+	
+		h1 {
+			float: left;
+			text-indent: -999999em;
+		}
 	}
+
+	/*Search box on the navigation Bar*/
+	.search {
+	  display: block;
+	  float: right;
+	  height: 34px;
+	  margin: 14px 0 12px;
+	  text-align: right;
+	  width: 500px;
+	}
+	
+	@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	 .search {margin-top: 10px;} 
+	}
+	
 }
 
-/*Search box on the navigation Bar*/
 #sbac-learning-registry-external-resources-solr-search-form {
 	.form-item {
 		margin: 0;
+		position: relative;
 	}
 	
 	input#edit-solr-keywords {
@@ -48,9 +64,9 @@ body.page-external-resources {
     box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1) inset, 1px 1px 0 0 #FFFFFF;
     display: block;
     height: 34px;
-    margin-top: -15px;
+    /*margin-top: -15px;*/
     padding: 0 15px 0 44px;
-    position: absolute;
+    position: relative;
 		z-index: 2;
     right: 30px;
     top: 0;
@@ -65,17 +81,13 @@ body.page-external-resources {
     height: 15px;
     position: absolute;
     right: 45px;
-    top: -5px;
+    top: 9px;
     width: 15px;
 		z-index: 999;
 	}
 	
 	@media screen and (-webkit-min-device-pixel-ratio:0) { 
-	 /*input#edit-solr-keywords {margin-top: 14px;} */
-	}
-	
-	@media screen and (-webkit-min-device-pixel-ratio:0) { 
-	 /*.sbac-clear-search  {top: 24px;} */
+	 .sbac-clear-search  {top: 10px;} 
 	}
 		
 	button#edit-submit {
