@@ -771,7 +771,7 @@ a.sbac-grid-layout {
 /* line 734, ../sass/sbac_resource.scss */
 .filters form {
   margin: 0;
-  position: relative;
+  /*position: relative;*/
 }
 /* line 739, ../sass/sbac_resource.scss */
 .filters .category-buttons {
@@ -1644,7 +1644,7 @@ text-shadow: none !important;*/
 /*Categories toggle*/
 /* line 1588, ../sass/sbac_resource.scss */
 #sbac-search-digital-library-resources-form, #sbac-search-my-resources-form, #sbac-search-resource-review-form {
-  position: relative;
+  /*position: relative;*/
 }
 
 /* line 1592, ../sass/sbac_resource.scss */
@@ -1658,10 +1658,7 @@ a.category-hide {
 
 /*For Chrome*/
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  /* line 1602, ../sass/sbac_resource.scss */
-  a.category-hide {
-    top: 15px;
-  }
+  /*a.category-hide {top:15px;} */
 }
 /* line 1605, ../sass/sbac_resource.scss */
 a.category-hide:hover {
