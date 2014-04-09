@@ -1375,6 +1375,8 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
   }
 
   $filters = explode('::', $current_filters);
+  $vocab_listing = array();
+  $preformatted_filters = array();
   if ($filters) {
     foreach ($filters as $filter) {
       $filter_info = explode(':', $filter);
@@ -1385,10 +1387,17 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
           $vocabulary = taxonomy_vocabulary_load($vid);
           $term = taxonomy_term_load($tid);
           if ($vocabulary && $term) {
-            $view_filters[] = $vocabulary->name . ': ' . $term->name;
+            $vocab_listing[$vocabulary->vid] = $vocabulary->name;
+            $preformatted_filters[$vocabulary->vid][] = $term->name;
           }
         }
       }
+    }
+  }
+  if (!empty($preformatted_filters)) {
+    foreach ($preformatted_filters as $vid_key => $value) {
+      $target_terms_text = $vocab_listing[$vid_key] . ': ' . implode(', ', $value);
+      $view_filters[] = $target_terms_text;
     }
   }
 
