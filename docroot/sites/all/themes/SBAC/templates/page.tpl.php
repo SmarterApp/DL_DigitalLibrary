@@ -208,7 +208,7 @@ global $user;
 		<?php if('digital-library-resources' == current_path()): ?>
 		<div class="experimental-feature">
 		  <div class="title">EXPERIMENTAL FEATURE</div>
-		  <div class="additional-resoutces">Need additional resources? You may try searching <a href="/external-resources" title="External Resources">external resources</a></div>
+		  <div class="additional-resoutces">Need additional resources? You may try searching <a href="/external-resources" title="External Resources" target="_blank">external resources</a></div>
 		</div>
 		<?php endif; ?>
 		
