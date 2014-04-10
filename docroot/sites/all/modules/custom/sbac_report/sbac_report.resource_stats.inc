@@ -232,7 +232,15 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
           $data['share'] = $share_data;
           get_counts_for_resource_stats($entity_node, $data);
           get_counts_for_flags($entity_node, $data);
-          get_reviews_for_resources($entity_node, $data);
+          $review_count = get_reviews_for_resources($entity_node, $data);
+          if (!isset($context['results']['review_count'])) {
+            $context['results']['review_count'] = $review_count;
+          }
+          else {
+            if ($review_count > $context['results']['review_count']) {
+              $context['results']['review_count'] = $review_count;
+            }
+          }
 
           unset($resource_feedback);
           unset($workbench_moderation);
@@ -302,6 +310,28 @@ function sbac_report_resource_statistics_finished_batch($success, $results, $ope
     $directory .= $results['filename'];
     $directory_real_path = drupal_realpath($directory);
     $mime_type = file_get_mimetype($directory);
+
+    $review_count = $results['review_count'];
+    if ($review_count > 0) {
+      $handle = fopen($results['file'], 'r');
+      $data = fgetcsv($handle);
+      fclose($handle);
+
+      for ($i = 0; $i < $review_count -1; $i++) {
+        array_push($data, 'Reviewer/Rater Name');
+        array_push($data, 'Reviewer/Rating Date');
+        array_push($data, 'Reviewer/Rating Title');
+        array_push($data, 'Reviewer/Rater Description');
+        array_push($data, 'Student Learning Rating');
+        array_push($data, 'Professional Development Rating');
+        array_push($data, 'Ease of Use Rating');
+        array_push($data, '"Appropriate For" Categories');
+      }
+
+      $handle = fopen($results['file'], 'r+');
+      fputcsv($handle, $data);
+      fclose($handle);
+    }
 
     global $user;
     $dir_file = new stdClass();
@@ -1033,6 +1063,7 @@ function get_reviews_for_resources($node, &$data) {
     $data['review']['top_three_appropriate_for_categories'] = implode(',', $top_three_categories);
   }
 
+  $count = 0;
   $sql = "SELECT * FROM {eck_review} WHERE node_id = :node_id";
   $result = db_query($sql, array(':node_id' => $node->nid->value()));
   foreach ($result as $eck_review) {
@@ -1064,8 +1095,11 @@ function get_reviews_for_resources($node, &$data) {
 
       // "Appropriate For" Categories
       $data['review'][$review_entity->id]['appropriate_for_categories'] = $review_entity_wrapper->field_appropriate_for->value();
+
+      $count++;
     }
   }
+  return $count;
 }
 
 /**
