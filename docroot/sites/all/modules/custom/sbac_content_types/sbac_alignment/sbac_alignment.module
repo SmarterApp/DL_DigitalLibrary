@@ -491,7 +491,7 @@ function sbac_alignment_node_load($nodes, $types) {
   // forcefully populate the alignment term field based on associated
   // alignment nodes
   foreach ($nodes as $node) {
-    if ($node->type == 'resource') {
+    if (match_uri('node/[0-9]+') && $node->type == 'resource') {
       $node->field_alignment_term = array();
 
       $query = new EntityFieldQuery();
