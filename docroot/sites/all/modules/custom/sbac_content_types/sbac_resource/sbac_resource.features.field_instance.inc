@@ -2466,6 +2466,65 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-resource-field_thumbnail_uri'
+  $field_instances['node-resource-field_thumbnail_uri'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 50,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_thumbnail_uri',
+    'label' => 'Thumbnail URI',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 47,
+    ),
+    'xss' => 0,
+  );
+
   // Exported field_instance: 'node-resource-field_total_views'
   $field_instances['node-resource-field_total_views'] = array(
     'bundle' => 'resource',
@@ -2778,6 +2837,7 @@ function sbac_resource_field_default_field_instances() {
   t('The purpose of the instructional resources in the context of a lesson. Select all that apply.');
   t('The technologies required to use this resource in the classroom. Select all that apply.');
   t('The type(s) of media included in the resource. Select all that apply.');
+  t('Thumbnail URI');
   t('To contributor');
   t('Total Views');
   t('Unique Views');

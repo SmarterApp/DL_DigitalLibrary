@@ -2558,6 +2558,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_document_information']['#access'] = FALSE;
   $form['field_resource_state']['#access'] = FALSE;
   $form['field_html5']['#access'] = FALSE;
+  $form['field_thumbnail_uri']['#access'] = FALSE;
 }
 
 /**
