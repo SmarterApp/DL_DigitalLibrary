@@ -1837,7 +1837,10 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
       $file = file_load($media->fid);
       $url = file_create_url($file->uri);
       $uri = $file->uri;
-      if (!file_exists($uri)) {
+      $exists = file_exists($uri);
+      error_log('Exists: ' . $exists);
+      if (!$exists) {
+        error_log('didn exist');
         $url = $default_file;
         $uri = $default_file;
       }
