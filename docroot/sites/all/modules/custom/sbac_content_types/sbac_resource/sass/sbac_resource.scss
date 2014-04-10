@@ -1789,8 +1789,14 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 
 /*Un-Sumbit Modal*/
 .page-my-resources {
+	.modal-header {
+		padding-left: 0 !important;
+	}
+	
 	#modal-content {
 		overflow: hidden !important;
+		padding-left: 0;
+		padding-right: 0;
 
 		button {
 			float: right;
