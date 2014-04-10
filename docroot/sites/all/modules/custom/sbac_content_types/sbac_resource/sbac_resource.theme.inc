@@ -341,6 +341,11 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  global $base_url;
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -389,6 +394,11 @@ function sbac_resource_views_view_fields__resources__list_view__preprocess(&$var
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  global $base_url;
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -472,6 +482,11 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  global $base_url;
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -526,6 +541,11 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  global $base_url;
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -597,6 +617,11 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  global $base_url;
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -639,6 +664,11 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  global $base_url;
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -649,7 +679,6 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
 function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   $variables = array();
   if (isset($fields['nid']->raw)) {
-    $nid = $fields['nid']->raw;
     $class = 'grid-image lazy';
     if ($view_display == 'list') {
       $class = 'list-image lazy';
@@ -657,57 +686,13 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
 
     $default_file = 'public://file.png';
 
-    // Check if this is HTML5.
-    $sql =  'SELECT n.nid AS nid, fdfh.field_html5_value AS html5 FROM {node} n ';
-    $sql .= 'JOIN {field_data_field_html5} fdfh ON n.nid = fdfh.entity_id ';
-    $sql .= 'WHERE n.type = :resource AND n.nid = :nid';
-    $html5_result = db_query($sql, array(':resource' => 'resource', ':nid' => $nid))->fetchObject();
-    if ($html5_result && $html5_result->html5) {
-      $directory = "private://html5/" . floor($nid / 32000) . "/" . $nid;
-      $directory_thumbnail_uri = $directory . '/html5_module/dlcomponents/thumbnail.png';
-      $directory_thumbnail_path = drupal_realpath($directory) . '/html5_module/dlcomponents/thumbnail.png';
-      if (file_exists($directory_thumbnail_path)) {
-        $uri = $directory_thumbnail_uri;
-        $url = file_create_url($directory_thumbnail_uri);
-      }
-      else {
-        $url = $default_file;
-        $uri = $default_file;
-      }
-    }
-    else {
-      // Try to get non HTML5 media.
-      $sql = 'SELECT em.* FROM {eck_media} em ';
-      $sql .= 'WHERE em.nid = :nid AND em.weight = 100 LIMIT 1';
-      $media = db_query($sql, array(':nid' => $nid))->fetchObject();
-      if ($media && isset($media->fid) && $media->fid) {
-        if ($media->fid) {
-          $file = file_load($media->fid);
-          $url = file_create_url($file->uri);
-          $uri = $file->uri;
-          if (!file_exists($uri)) {
-            $url = $default_file;
-            $uri = $default_file;
-          }
-        }
-        else {
-          $url = $default_file;
-          $uri = $default_file;
-        }
-      }
-      else {
-        $url = $default_file;
-        $uri = $default_file;
-      }
-    }
+    $thumbnail_uri = $fields['field_thumbnail_uri']->content;
+    $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
+    $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
+    $thumbnail_pieces = explode('::', $thumbnail_uri);
+    $uri = $thumbnail_pieces[0];
+    $url = $thumbnail_pieces[1];
 
-    unset($media);
-    unset($html5_result);
-    unset($sql);
-
-
-//    $url = $default_file;
-//    $uri = $default_file;
     $ext = pathinfo($uri, PATHINFO_EXTENSION);
     $type = _sbac_resource_determine_extension($ext);
     if ($type != 'image') {
@@ -1151,7 +1136,7 @@ function _sbac_resource_resource_review_links($fields) {
 function _sbac_resource_digital_library_links($fields) {
   $variables = array();
   global $user;
-  
+
   $nid = $fields['nid']->raw;
   if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
     $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
@@ -1358,6 +1343,20 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
   $search_filters_output = '';
   $edit_link = '';
 
+  $vocab_labels = array(
+    'subject'                      => t('Subjects'),
+    'grades'                       => t('Grades'),
+    'attributes'                   => t('Attributes of the Formative Assessment Process'),
+    'digital_media_type'           => t('Media Types'),
+    'focus'                        => t('Resource Type'),
+    'intended_end_user'            => t('Intended End Users'),
+    'intended_student_populations' => t('Intended Student Populations'),
+    'educational_use'              => t('Educational Use'),
+    'smarter_balanced_keyword'     => t('Smarter Balanced Keywords'),
+    'geographical_settings'        => t('Geographic Settings'),
+    'education_alignment'          => t('Common Core State Standards'),
+  );
+
   $view_filters = array();
   $current_filters = $vars['current_filters'];
   $kw = $vars['kw'];
@@ -1379,8 +1378,13 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
           $vocabulary = taxonomy_vocabulary_load($vid);
           $term = taxonomy_term_load($tid);
           if ($vocabulary && $term) {
-            $vocab_listing[$vocabulary->vid] = $vocabulary->name;
-            $preformatted_filters[$vocabulary->vid][] = $term->name;
+            $term_label = $term->name;
+            if (isset($term->field_alignment_shortname)) {
+              $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+              $term_label = $term_wrapper->field_alignment_shortname->value();
+            }
+            $vocab_listing[$vocabulary->vid] = $vocab_labels[$vocabulary->machine_name];
+            $preformatted_filters[$vocabulary->vid][] = $term_label;
           }
         }
       }

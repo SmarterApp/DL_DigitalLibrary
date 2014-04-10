@@ -232,7 +232,15 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
           $data['share'] = $share_data;
           get_counts_for_resource_stats($entity_node, $data);
           get_counts_for_flags($entity_node, $data);
-          get_reviews_for_resources($entity_node, $data);
+          $review_count = get_reviews_for_resources($entity_node, $data);
+          if (!isset($context['results']['review_count'])) {
+            $context['results']['review_count'] = $review_count;
+          }
+          else {
+            if ($review_count > $context['results']['review_count']) {
+              $context['results']['review_count'] = $review_count;
+            }
+          }
 
           unset($resource_feedback);
           unset($workbench_moderation);
@@ -302,6 +310,28 @@ function sbac_report_resource_statistics_finished_batch($success, $results, $ope
     $directory .= $results['filename'];
     $directory_real_path = drupal_realpath($directory);
     $mime_type = file_get_mimetype($directory);
+
+    $review_count = $results['review_count'];
+    if ($review_count > 0) {
+      $handle = fopen($results['file'], 'r');
+      $data = fgetcsv($handle);
+      fclose($handle);
+
+      for ($i = 0; $i < $review_count -1; $i++) {
+        array_push($data, 'Reviewer/Rater Name');
+        array_push($data, 'Reviewer/Rating Date');
+        array_push($data, 'Reviewer/Rating Title');
+        array_push($data, 'Reviewer/Rater Description');
+        array_push($data, 'Student Learning Rating');
+        array_push($data, 'Professional Development Rating');
+        array_push($data, 'Ease of Use Rating');
+        array_push($data, '"Appropriate For" Categories');
+      }
+
+      $handle = fopen($results['file'], 'r+');
+      fputcsv($handle, $data);
+      fclose($handle);
+    }
 
     global $user;
     $dir_file = new stdClass();
@@ -1021,7 +1051,7 @@ function get_reviews_for_resources($node, &$data) {
         $term_ref->count = $row->count;
         if ($i < 3) {
           $term_ref->highlight = TRUE;
-          $top_three_categories[] = $term_ref->name . '(' . $term_ref->count . ')';
+          $top_three_categories[] = $term_ref->name . ' (' . $term_ref->count . ')';
         }
         break;
       }
@@ -1033,6 +1063,7 @@ function get_reviews_for_resources($node, &$data) {
     $data['review']['top_three_appropriate_for_categories'] = implode(',', $top_three_categories);
   }
 
+  $count = 0;
   $sql = "SELECT * FROM {eck_review} WHERE node_id = :node_id";
   $result = db_query($sql, array(':node_id' => $node->nid->value()));
   foreach ($result as $eck_review) {
@@ -1054,18 +1085,49 @@ function get_reviews_for_resources($node, &$data) {
       $data['review'][$review_entity->id]['description'] = $review_entity_wrapper->field_details->value();
 
       // Student Learning Rating
-      $data['review'][$review_entity->id]['student_learning_rating'] = $review_entity_wrapper->field_student_learning->value();
+      $data['review'][$review_entity->id]['student_learning_rating'] = sbac_report_determine_rating($review_entity_wrapper->field_student_learning->value());
 
       // Professional Development Rating
-      $data['review'][$review_entity->id]['professional_development_rating'] = $review_entity_wrapper->field_pro_dev->value();
+      $data['review'][$review_entity->id]['professional_development_rating'] = sbac_report_determine_rating($review_entity_wrapper->field_pro_dev->value());
 
       // Ease of Use Rating
-      $data['review'][$review_entity->id]['ease_of_use_rating'] = $review_entity_wrapper->field_ease_use->value();;
+      $data['review'][$review_entity->id]['ease_of_use_rating'] = sbac_report_determine_rating($review_entity_wrapper->field_ease_use->value());
 
       // "Appropriate For" Categories
-      $data['review'][$review_entity->id]['appropriate_for_categories'] = $review_entity_wrapper->field_appropriate_for->value();;
+      $data['review'][$review_entity->id]['appropriate_for_categories'] = $review_entity_wrapper->field_appropriate_for->value();
+
+      $count++;
     }
   }
+  return $count;
+}
+
+/**
+ * Returns the human readable value.
+ *
+ * @param $value
+ * @return int
+ */
+function sbac_report_determine_rating($value) {
+  $var = '';
+  switch ($value) {
+    case 25:
+      $new_value = 1;
+      break;
+    case 50:
+      $new_value = 2;
+      break;
+    case 75:
+      $new_value = 3;
+      break;
+    case 100:
+      $new_value = 4;
+      break;
+    default:
+      $new_value = 0;
+      break;
+  }
+  return $new_value;
 }
 
 /**
@@ -1484,10 +1546,6 @@ function set_report_columns() {
             'index' => 'post'
           ),
           array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
-          // total reivews.
-          array('total_reviews', 'Total Reviews', 'datasource' => 'total_reviews_per_node', 'not_wrapper' => TRUE),
-          // gk
-
           // users info
           array(
             'foreign',
@@ -1622,6 +1680,23 @@ function set_report_columns() {
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
           array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => TRUE),
+          array('field_total_views', 'Views'),
+          array('field_unique_views', 'Unique Views'),
+          array(
+            '',
+            'Total Number of Tag(s)',
+            'function' => 'get_total_tags'
+          ),
+          array('permanent_link_type', 'Type of Permanent Link', 'function' => 'get_share_data', 'field' => 'share'),
+          array('permanent_links_copied', 'Permanent Links Copied', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_status', 'Temporary Public Link Status', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data', 'field' => 'share'),
+          array('is_flagged', 'Is Flagged', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('has_flagged_reviews', 'Has Flagged Reviews', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
           // gk
           array(
             'average',
@@ -1644,25 +1719,8 @@ function set_report_columns() {
             'not_wrapper' => TRUE
           ),
           // gk
-          array('field_total_views', 'Views'),
-          array('field_unique_views', 'Unique Views'),
-          array(
-            '',
-            'Total Number of Tag(s)',
-            'function' => 'get_total_tags'
-          ),
-          array('permanent_link_type', 'Type of Permanent Link', 'function' => 'get_share_data', 'field' => 'share'),
-          array('permanent_links_copied', 'Permanent Links Copied', 'function' => 'get_share_data', 'field' => 'share'),
-          array('temp_public_link_status', 'Temporary Public Link Status', 'function' => 'get_share_data', 'field' => 'share'),
-          array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data', 'field' => 'share'),
-          array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data', 'field' => 'share'),
-          array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data', 'field' => 'share'),
-          array('is_flagged', 'Is Flagged', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('has_flagged_reviews', 'Has Flagged Reviews', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          // resource reviews.
           array('top_three_appropriate_for_categories', 'Current Top Three "Appropriate For" Categories', 'function' => 'get_resource_review_data', 'field' => 'review'),
+          array('total_reviews', 'Total Reviews', 'datasource' => 'total_reviews_per_node', 'not_wrapper' => TRUE),
           array('name', 'Reviewer/Rater Name', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
           array('date', 'Reviewer/Rating Date', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
           array('title', 'Reviewer/Rating Title', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),

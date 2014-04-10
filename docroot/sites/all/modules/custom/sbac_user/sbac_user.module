@@ -287,17 +287,17 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_privacy']['und']['#description'] = '';
     }
     // Populate first name from the LDAP if it hasn't been already done so
-    $field_first_name_default = $form['field_first_name']['und'][0]['value']['#default_value'];
-    $field_ldap_first_name_default = $form['field_ldap_first_name']['und'][0]['value']['#default_value'];
-    if(!isset($field_first_name_default) && isset($field_ldap_first_name_default) && $field_ldap_first_name_default) {
-      $form['field_first_name']['und'][0]['value']['#default_value'] = $field_ldap_first_name_default;
-    }
-    // Populate last name from the LDAP if it hasn't been already done so
-    $field_last_name_default = $form['field_last_name']['und'][0]['value']['#default_value'];
-    $field_ldap_last_name_default = $form['field_ldap_last_name']['und'][0]['value']['#default_value'];
-    if(!isset($field_last_name_default) && isset($field_ldap_last_name_default) && $field_ldap_last_name_default) {
-      $form['field_last_name']['und'][0]['value']['#default_value'] = $field_ldap_last_name_default;
-    }
+//    $field_first_name_default = $form['field_first_name']['und'][0]['value']['#default_value'];
+//    $field_ldap_first_name_default = $form['field_ldap_first_name']['und'][0]['value']['#default_value'];
+//    if(!isset($field_first_name_default) && isset($field_ldap_first_name_default) && $field_ldap_first_name_default) {
+//      $form['field_first_name']['und'][0]['value']['#default_value'] = $field_ldap_first_name_default;
+//    }
+//    // Populate last name from the LDAP if it hasn't been already done so
+//    $field_last_name_default = $form['field_last_name']['und'][0]['value']['#default_value'];
+//    $field_ldap_last_name_default = $form['field_ldap_last_name']['und'][0]['value']['#default_value'];
+//    if(!isset($field_last_name_default) && isset($field_ldap_last_name_default) && $field_ldap_last_name_default) {
+//      $form['field_last_name']['und'][0]['value']['#default_value'] = $field_ldap_last_name_default;
+//    }
     $form['#validate'][] = 'sbac_user_profile_validate';
   }
 
