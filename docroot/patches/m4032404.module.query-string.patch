@@ -1,0 +1,22 @@
+diff --git a/docroot/sites/all/modules/contrib/m4032404/m4032404.module b/docroot/sites/all/modules/contrib/m4032404/m4032404.module
+index 3b982a0..64b4170 100644
+--- a/docroot/sites/all/modules/contrib/m4032404/m4032404.module
++++ b/docroot/sites/all/modules/contrib/m4032404/m4032404.module
+@@ -43,7 +43,16 @@ function m4032404_callback() {
+       drupal_exit();
+     }
+   }
+-  drupal_not_found();
++  // The code in drupal_get_destination() doesn't preserve any query string
++  // on 403 pages, so reproduce the part we want here.
++  $path = $_GET['destination'];
++  $query = drupal_http_build_query(drupal_get_query_parameters(NULL, array('q', 'destination')));
++  if ($query != '') {
++    $path .= '?' . $query;
++  }
++  $destination = array('destination' => $path);
++  header('Location: ' . url('user', array('query' => $destination, 'absolute' => TRUE)), TRUE, 302);
++  // drupal_not_found(); // This doesnt respect the query parameters.
+   drupal_exit();
+ }
+ 

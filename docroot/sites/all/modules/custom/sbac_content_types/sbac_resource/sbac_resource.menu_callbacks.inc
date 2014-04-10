@@ -173,7 +173,8 @@ function sbac_resource_smart_search_page() {
   $params = $_GET;
   unset($params['q']);
   if (empty($params)) { // No query string attached. No need to do anything.
-    drupal_goto('digital-library-resources');
+    return $output;
+    // drupal_goto('digital-library-resources');
   }
 
   $current_filter_array = array();
