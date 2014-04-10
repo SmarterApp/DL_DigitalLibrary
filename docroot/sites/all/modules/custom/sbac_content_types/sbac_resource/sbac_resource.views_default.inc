@@ -1233,7 +1233,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_educational_use_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_educational_use_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
-  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -1486,6 +1486,11 @@ function sbac_resource_views_default_views() {
     'thousand_separator' => ' ',
     'prefix_suffix' => 0,
   );
+  /* Field: Content: Thumbnail URI */
+  $handler->display->display_options['fields']['field_thumbnail_uri']['id'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['table'] = 'field_data_field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
   $handler->display->display_options['block_caching'] = '6';
 
   /* Display: List View */
@@ -1591,6 +1596,11 @@ function sbac_resource_views_default_views() {
     'thousand_separator' => ' ',
     'prefix_suffix' => 0,
   );
+  /* Field: Content: Thumbnail URI */
+  $handler->display->display_options['fields']['field_thumbnail_uri']['id'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['table'] = 'field_data_field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
   $handler->display->display_options['block_caching'] = '6';
   $export['resources'] = $view;
 

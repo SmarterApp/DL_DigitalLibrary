@@ -1139,7 +1139,7 @@ function sbac_resource_update_7052() {
     $node = node_load($row->nid);
     if ($node) {
       sbac_resource_determine_thumbnail_uri($node);
-      node_save($node);
+      entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
     }
     unset($node);
   }
