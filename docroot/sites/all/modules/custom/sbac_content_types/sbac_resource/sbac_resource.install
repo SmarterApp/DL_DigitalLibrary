@@ -1134,6 +1134,7 @@ function sbac_resource_update_7051() {
  * Add thumbail uri to resource field.
  */
 function sbac_resource_update_7052() {
+  ini_set('memory_limit', '512M');
   $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
   foreach ($results as $row) {
     $node = node_load($row->nid);
