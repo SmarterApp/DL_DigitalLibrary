@@ -40,6 +40,12 @@ function sbac_learning_registry_menu() {
     'access arguments' => array('administer nodes'),
     'type' => MENU_CALLBACK,
   );
+  $items['external-resources/view-database'] = array(
+    'title' => 'View database',
+    'page callback' => 'sbac_learning_registry_view_database',
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -192,7 +198,7 @@ function sbac_learning_registry_inbloom_send_request($request) {
     $results = sbac_learning_registry_inbloom_parse_response($response->data);
   }
   return $results;
-  }
+}
 
 /**
  * Parse the API response
@@ -840,4 +846,44 @@ WHERE node.type = 'resource'
   foreach ($results as $result) {
     _learning_registry_queue_node($result->nid);
   }
+}
+
+/**
+ * Admin page so admins can look at the learning registry queue
+ * @return string
+ */
+function sbac_learning_registry_view_database() {
+  $table = array();
+  $header = array(
+    array('data' => t('Title'), 'field' => 'n.title'),
+    array('data' => t('Published'), 'field' => 'lr.published', 'sort' => 'desc'),
+    array('data' => t('Learning Registry Doc ID'), 'field' => 'lr.docid'),
+    array('data' => t('Queued'), 'field' => 'lr.queue'),
+  );
+  $query = db_select('learning_registry', 'lr')
+    ->extend('PagerDefault')
+    ->extend('TableSort');
+  $query->leftJoin('node', 'n', 'lr.nid = n.nid');
+  $results = $query
+    ->fields('lr', array())
+    ->fields('n', array('title'))
+    ->orderByHeader($header)
+    ->limit(50)
+    ->execute();
+  foreach ($results as $result) {
+    $row = array();
+    $row['nid'] = l($result->title, 'node/' . $result->nid, array('attributes' => array('target' => '_blank')));
+    $row['published'] = date(DATE_FORMAT_DATETIME, $result->published);
+    $submission_url = variable_get('learning_registry_node_url', NULL) . '/harvest/getrecord?by_doc_ID=TRUE&request_ID=' . $result->docid;
+    $row['docid'] = l($result->docid, $submission_url, array('attributes' => array('target' => '_blank')));
+    $row['queue'] = $result->queued == 0 ? 'No' : 'Yes';
+    $table[] = $row;
+  }
+  $output = '';
+  $output .= theme('table', array(
+    'header' => $header,
+    'rows' => $table,
+  ));
+  $output .= theme('pager');
+  return $output;
 }

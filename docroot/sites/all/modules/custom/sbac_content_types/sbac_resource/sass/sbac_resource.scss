@@ -733,7 +733,7 @@ a.sbac-grid-layout {
 
   form{
     margin: 0;
-		position: relative;
+		/*position: relative;*/
   }
 
   .category-buttons {
@@ -1586,7 +1586,7 @@ a.sbac-grid-layout {
 
 /*Categories toggle*/
 #sbac-search-digital-library-resources-form, #sbac-search-my-resources-form, #sbac-search-resource-review-form {
-	position: relative;
+	/*position: relative;*/
 }
 
 a.category-hide {
@@ -1599,7 +1599,7 @@ a.category-hide {
 
 /*For Chrome*/
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
- a.category-hide {top:15px;} 
+ /*a.category-hide {top:15px;} */
 }
 
 a.category-hide:hover {
