@@ -1307,7 +1307,7 @@ function sbac_resource_node_load($nodes, $types) {
     }
 
     // Load all media entities and attach them to the resource.
-    if ($node->type == 'resource') {
+    if (match_uri('node/[0-9]+') && $node->type == 'resource') {
       $media_items = sbac_media_load_items($node->nid);
       $node->document = $media_items;
 
