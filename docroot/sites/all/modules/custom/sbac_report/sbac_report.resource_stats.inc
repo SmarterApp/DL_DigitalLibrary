@@ -1042,6 +1042,7 @@ function get_reviews_for_resources($node, &$data) {
       // Reviewer/Rater Name
       $account = user_load($review_entity->uid);
       $data['review'][$review_entity->id]['name'] = $account->field_first_name['und'][0]['value'] . ' ' . $account->field_last_name['und'][0]['value'];
+      unset($account);
 
       // Review/Rating Date
       $data['review'][$review_entity->id]['date'] = date('M d, Y - g:h a', $review_entity->created);
