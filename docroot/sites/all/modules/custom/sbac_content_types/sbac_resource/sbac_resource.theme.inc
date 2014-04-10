@@ -1066,13 +1066,12 @@ function _sbac_resource_resource_review_links($fields) {
   $variables = array();
   if (isset($fields['state']->raw)) {
     $nid = $fields['nid']->raw;
-    $node = node_load($nid);
     $state = $fields['state']->raw;
     switch ($state) {
       case 'needs_review':
-        $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
+        $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper');
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
+        $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', 'link');
         $variables['text'] = t('Needs Review');
         break;
       case 'being_reviewed':
@@ -1089,9 +1088,9 @@ function _sbac_resource_resource_review_links($fields) {
           }
           // start review
           else {
-            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'qc');
+            $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc');
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-            $variables['links'][] = _sbac_resource_start_review_link($node, 'qc', 'link');
+            $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', 'link');
             $variables['text'] = t('Needs Review');
           }
         }
@@ -1107,9 +1106,9 @@ function _sbac_resource_resource_review_links($fields) {
           }
           // start review
           else {
-            $variables['buttons'][] = _sbac_resource_start_review_link($node, 'gate_keeper');
+            $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper');
             $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-            $variables['links'][] = _sbac_resource_start_review_link($node, 'gate_keeper', 'link');
+            $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', 'link');
             $variables['text'] = t('Needs Review');
           }
         }
@@ -1126,9 +1125,9 @@ function _sbac_resource_resource_review_links($fields) {
           $variables['text'] = t('Being Reviewed');
         }
         else {
-          $variables['buttons'][] = _sbac_resource_start_review_link($node, 'post');
+          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'post');
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = _sbac_resource_start_review_link($node, 'post', 'link');
+          $variables['links'][] = _sbac_resource_start_review_link($nid, 'post', 'link');
           $variables['text'] = t('Needs Posting');
         }
         break;
@@ -1297,24 +1296,15 @@ function _sbac_resource_determine_gate_keeper($nid, $uid = FALSE) {
  * @param $type
  * @return string
  */
-function _sbac_resource_start_review_link($node, $type, $style = 'button') {
+function _sbac_resource_start_review_link($nid, $type, $style = 'button') {
   if ($type == 'gate_keeper') {
     $stub = 'gate-keeper';
-    if (!resource_access('start gate keeper', $node)) {
-      return '';
-    }
   }
   elseif ($type == 'qc') {
     $stub = 'qc';
-    if (!resource_access('edit quality criteria', $node)) {
-      return '';
-    }
   }
   elseif ($type == 'post') {
     $stub = 'post';
-    if (!resource_access('start post', $node)) {
-      return '';
-    }
   }
   else {
     return '';
@@ -1328,12 +1318,11 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
     $count++;
   }
   $trigger_id = $stub . '-trigger-' . $count;
-
   drupal_add_library('dialog', 'dialog');
 
   $link_text = t('Start Review');
   if ($style == 'button') {
-    $content = l($link_text, 'node/' . $node->nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
+    $content = l($link_text, 'node/' . $nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
       'attributes' => array(
         'class' => array(
           'use-ajax',
@@ -1347,7 +1336,7 @@ function _sbac_resource_start_review_link($node, $type, $style = 'button') {
     ));
   }
   else {
-    $content = l($link_text, 'node/' . $node->nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
+    $content = l($link_text, 'node/' . $nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
       'attributes' => array(
         'class' => array(
           'use-ajax',
