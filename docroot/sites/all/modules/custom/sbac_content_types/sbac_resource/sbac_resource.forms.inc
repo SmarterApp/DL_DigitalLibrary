@@ -1363,9 +1363,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($general_valid) {
     drupal_add_js(array('sbac_general' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_general' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_general' => FALSE), 'setting');
+  // }
 
   $summary_valid = sbac_resource_check_summary($form, $form_state);
   $form['completed_flag_summary'] = array(
@@ -1377,9 +1377,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($summary_valid) {
     drupal_add_js(array('sbac_summary' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_summary' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_summary' => FALSE), 'setting');
+  // }
 
   $materials_valid = sbac_resource_check_materials($form, $form_state);
   $form['completed_flag_materials'] = array(
@@ -1391,9 +1391,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($materials_valid) {
     drupal_add_js(array('sbac_materials' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_materials' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_materials' => FALSE), 'setting');
+  // }
 
   $tags_valid = sbac_resource_check_tags($form, $form_state);
   $form['completed_flag_tags'] = array(
@@ -1405,9 +1405,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($tags_valid) {
     drupal_add_js(array('sbac_tags' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_tags' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_tags' => FALSE), 'setting');
+  // }
 
   $advanced_valid = TRUE;
   // $advanced_valid = sbac_resource_check_advanced($form, $form_state);
@@ -1420,9 +1420,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($advanced_valid) {
     drupal_add_js(array('sbac_advanced' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_advanced' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_advanced' => FALSE), 'setting');
+  // }
 }
 
 /**
@@ -2694,35 +2694,40 @@ function sbac_resource_check_summary($form, $form_state) {
  */
 function sbac_resource_check_materials($form, $form_state) {
   $valid = TRUE;
-
   if (isset($form_state['values'])) {
     if (isset($form_state['node']->nid)) {
       if ($form_state['html5']) {
         $media_items = sbac_media_load_html5_item($form_state['node']->nid);
         if (!$media_items) {
-          $valid = FALSE;
+          // $valid = FALSE;
+          return FALSE;
         }
       }
       else{
         $media_items = sbac_media_load_items($form_state['node']->nid);
         if (!$media_items) {
-          $valid = FALSE;
+          // $valid = FALSE;
+          return FALSE;
         }
       }
     }
     if (!$form_state['values']['field_author']['und'][0]['value']) {
-      $valid = FALSE;
+      // $valid = FALSE;
+      return FALSE;
     }
     if (!$form_state['values']['field_publisher']['und'][0]['value']) {
-      $valid = FALSE;
+      // $valid = FALSE;
+      return FALSE;
     }
     if (isset($form_state['field_license_information']['und'][0]['value']) && $form_state['field_license_information']['und'][0]['value'] == 0) {
       if (!$form_state['values']['field_license']['und'][0]['tid']) {
-        $valid = FALSE;
+        // $valid = FALSE;
+        return FALSE;
       }
     }
     if (!$form_state['values']['field_pii']['und'][0]['value']) {
-      $valid = FALSE;
+      // $valid = FALSE;
+      return FALSE;
     }
   }
   else {
@@ -2730,29 +2735,37 @@ function sbac_resource_check_materials($form, $form_state) {
       if ($form_state['html5']) {
         $media_items = sbac_media_load_html5_item($form['#node']->nid);
         if (!$media_items) {
-          $valid = FALSE;
+          // $valid = FALSE;
+          return FALSE;
         }
       }
       else {
         $media_items = sbac_media_load_items($form['#node']->nid);
         if (!$media_items) {
-          $valid = FALSE;
+          // $valid = FALSE;
+          return FALSE;
         }
       }
     }
     if (!$form['field_author']['und'][0]['value']['#default_value']) {
-      $valid = FALSE;
+      // $valid = FALSE;
+      return FALSE;
     }
+    dd($form['field_publisher']['und'][0]['value']['#default_value']);
     if (!$form['field_publisher']['und'][0]['value']['#default_value']) {
-      $valid = FALSE;
+      // $valid = FALSE;
+      return FALSE;
+      // return TRUE;
     }
     if (isset($form['field_license_information']['und']['#default_value']) && $form['field_license_information']['und']['#default_value'] == 1) {
       if (!$form['field_license']['und']['#default_value']) {
-        $valid = FALSE;
+        // $valid = FALSE;
+        return FALSE;
       }
     }
     if (!isset($_GET['flag']) && !$form['field_pii']['und']['#default_value']) {
-      $valid = FALSE;
+      // $valid = FALSE;
+      return FALSE;
     }
   }
   return $valid;

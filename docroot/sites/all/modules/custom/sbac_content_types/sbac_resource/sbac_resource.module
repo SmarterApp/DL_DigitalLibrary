@@ -141,7 +141,6 @@ function sbac_resource_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sbac_resource_smart_search_builder_form'),
     'access arguments' => array('configure sbac'),
-    'type' => MENU_CALLBACK,
     'weight' => 10,
     'file' => 'sbac_resource.forms.inc',
   );
@@ -1307,7 +1306,12 @@ function sbac_resource_node_load($nodes, $types) {
     }
 
     // Load all media entities and attach them to the resource.
-    if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && $node->type == 'resource') {
+    $load = FALSE;
+    if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && count($nodes) != 12 && $node->type == 'resource') {
+      $load = TRUE;
+    }
+
+    if ($load) {
       $media_items = sbac_media_load_items($node->nid);
       $node->document = $media_items;
 
@@ -1830,7 +1834,8 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
       $file = file_load($media->fid);
       $url = file_create_url($file->uri);
       $uri = $file->uri;
-      if (!file_exists($uri)) {
+      $exists = file_exists($uri);
+      if (!$exists) {
         $url = $default_file;
         $uri = $default_file;
       }
@@ -2656,19 +2661,3 @@ function sbac_resource_get_url_alias($nid) {
 
   return $alias;
 }
-
-// /**
-//  * Implements hook_element_info_alter().
-//  * Uses custom file.js that will automatically close new window after a short amount of time.
-//  * @param  array  $type All element info type defaults.
-//  */
-// function sbac_resource_element_info_alter(&$type) {
-//   $sbac_file_js = drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.file.js';
-//   $default_file_js = drupal_get_path('module', 'file') . '/file.js';
-
-//   if (isset($type['managed_file']['#attached']['js'])) {
-//     if (($pos = array_search($default_file_js, $type['managed_file']['#attached']['js'])) !== FALSE) {
-//       $type['managed_file']['#attached']['js'][$pos] = $sbac_file_js;
-//     }
-//   }
-// }
