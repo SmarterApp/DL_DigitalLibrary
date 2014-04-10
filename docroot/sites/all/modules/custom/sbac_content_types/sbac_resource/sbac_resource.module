@@ -1280,11 +1280,11 @@ function sbac_status_messages($variables) {
  * @param $types
  */
 function sbac_resource_node_load($nodes, $types) {
-  //make sure we are only viewing through the content/* path
-  global $user;
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
+      //make sure we are only viewing through the content/* path
+      global $user;
       //update the raw data table
       $query = "insert into node_user_paradata (
 						uid,
@@ -1311,9 +1311,11 @@ function sbac_resource_node_load($nodes, $types) {
       $media_items = sbac_media_load_items($node->nid);
       $node->document = $media_items;
 
-      $html5_item = sbac_media_load_html5_item($node->nid);
-      if ($html5_item !== FALSE) {
-        $node->document['html5'] = $html5_item;
+      if ($node->field_html5['und'][0]['value']) {
+        $html5_item = sbac_media_load_html5_item($node->nid);
+        if ($html5_item !== FALSE) {
+          $node->document['html5'] = $html5_item;
+        }
       }
     }
   }
@@ -2300,6 +2302,10 @@ function sbac_resource_entity_delete($entity, $type) {
  * @param $account
  */
 function sbac_resource_node_access($node, $op, $account) {
+  if ($account->uid == 1) {
+    return NODE_ACCESS_ALLOW;
+  }
+
   $type = is_string($node) ? $node : $node->type;
   if ($type == 'resource') {
     $access = sbac_resource_determine_access($node, $account, $op);
