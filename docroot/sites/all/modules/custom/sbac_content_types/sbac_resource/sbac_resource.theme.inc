@@ -1106,7 +1106,7 @@ function _sbac_resource_resource_review_links($fields) {
 function _sbac_resource_digital_library_links($fields) {
   $variables = array();
   global $user;
-  
+
   $nid = $fields['nid']->raw;
   if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
     $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
@@ -1313,6 +1313,20 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
   $search_filters_output = '';
   $edit_link = '';
 
+  $vocab_labels = array(
+    'subject'                      => t('Subjects'),
+    'grades'                       => t('Grades'),
+    'attributes'                   => t('Attributes of the Formative Assessment Process'),
+    'digital_media_type'           => t('Media Types'),
+    'focus'                        => t('Resource Type'),
+    'intended_end_user'            => t('Intended End Users'),
+    'intended_student_populations' => t('Intended Student Populations'),
+    'educational_use'              => t('Educational Use'),
+    'smarter_balanced_keyword'     => t('Smarter Balanced Keywords'),
+    'geographical_settings'        => t('Geographic Settings'),
+    'education_alignment'          => t('Common Core State Standards'),
+  );
+
   $view_filters = array();
   $current_filters = $vars['current_filters'];
   $kw = $vars['kw'];
@@ -1334,8 +1348,13 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
           $vocabulary = taxonomy_vocabulary_load($vid);
           $term = taxonomy_term_load($tid);
           if ($vocabulary && $term) {
-            $vocab_listing[$vocabulary->vid] = $vocabulary->name;
-            $preformatted_filters[$vocabulary->vid][] = $term->name;
+            $term_label = $term->name;
+            if (isset($term->field_alignment_shortname)) {
+              $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+              $term_label = $term_wrapper->field_alignment_shortname->value();
+            }
+            $vocab_listing[$vocabulary->vid] = $vocab_labels[$vocabulary->machine_name];
+            $preformatted_filters[$vocabulary->vid][] = $term_label;
           }
         }
       }

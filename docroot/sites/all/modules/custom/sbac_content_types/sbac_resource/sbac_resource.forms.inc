@@ -2886,7 +2886,7 @@ function sbac_resource_delete_resource_form() {
     '#markup' => '<p>' . t('
     If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '</p>',
   );
- 
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Draft Resource',
@@ -2898,7 +2898,7 @@ function sbac_resource_delete_resource_form() {
     '#value' => 'Cancel',
     '#attributes' => array('id' => array('edit-cancel-overlay'))
   );
-	
+
   return $form;
 }
 
@@ -3258,18 +3258,16 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
   $form = array();
 
   $vocabs = array(
-    'subject',
-    'grades',
-    'attributes',
-    'digital_media_type',
-    'focus',
-    'intended_end_user',
-    'intended_student_populations',
-    'educational_use',
-    'smarter_balanced_keyword',
-    'geographical_settings',
-    // 'technologies_for_classroom_use',
-    // 'education_alignment',
+    'subject'                      => t('Subjects'),
+    'grades'                       => t('Grades'),
+    'attributes'                   => t('Attributes of the Formative Assessment Process'),
+    'digital_media_type'           => t('Media Types'),
+    'focus'                        => t('Resource Type'),
+    'intended_end_user'            => t('Intended End Users'),
+    'intended_student_populations' => t('Intended Student Populations'),
+    'educational_use'              => t('Educational Use'),
+    'smarter_balanced_keyword'     => t('Smarter Balanced Keywords'),
+    'geographical_settings'        => t('Geographic Settings'),
   );
   $form['help_text'] = array(
     '#markup' => '<p>Select filters from the available options to create a url</p>',
@@ -3302,7 +3300,8 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
   }
 
   // Loop through list of vocabs to get the terms.
-  foreach ($vocabs as $index => $machine_name) {
+  $index = 0;
+  foreach ($vocabs as $machine_name => $label) {
     $vocab_entity = taxonomy_vocabulary_machine_name_load($machine_name);
     $collapsed = TRUE;
     $defaults = array();
@@ -3317,7 +3316,7 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     // Create fieldset grouping
     $form[$machine_name] = array(
       '#type' => 'fieldset',
-      '#title' => t($vocab_entity->name),
+      '#title' => $label,
       '#weight' => $index,
       '#collapsible' => TRUE,
       '#collapsed' => $collapsed,
@@ -3340,6 +3339,7 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
       '#options' => $vocab_terms,
       '#default_value' => $defaults,
     );
+    $index++;
   }
 
   $ccss_vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
@@ -3356,7 +3356,7 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
   );
   $form['ccss_wrapper'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Educational Alignment'),
+    '#title' => t('Common Core State Standards'),
     '#weight' => 97,
     '#collapsible' => TRUE,
     '#collapsed' => $ccss_collapsed,
