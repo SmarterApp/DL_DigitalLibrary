@@ -649,7 +649,6 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
 function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   $variables = array();
   if (isset($fields['nid']->raw)) {
-    $nid = $fields['nid']->raw;
     $class = 'grid-image lazy';
     if ($view_display == 'list') {
       $class = 'list-image lazy';
@@ -657,57 +656,14 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
 
     $default_file = 'public://file.png';
 
-    // Check if this is HTML5.
-    $sql =  'SELECT n.nid AS nid, fdfh.field_html5_value AS html5 FROM {node} n ';
-    $sql .= 'JOIN {field_data_field_html5} fdfh ON n.nid = fdfh.entity_id ';
-    $sql .= 'WHERE n.type = :resource AND n.nid = :nid';
-    $html5_result = db_query($sql, array(':resource' => 'resource', ':nid' => $nid))->fetchObject();
-    if ($html5_result && $html5_result->html5) {
-      $directory = "private://html5/" . floor($nid / 32000) . "/" . $nid;
-      $directory_thumbnail_uri = $directory . '/html5_module/dlcomponents/thumbnail.png';
-      $directory_thumbnail_path = drupal_realpath($directory) . '/html5_module/dlcomponents/thumbnail.png';
-      if (file_exists($directory_thumbnail_path)) {
-        $uri = $directory_thumbnail_uri;
-        $url = file_create_url($directory_thumbnail_uri);
-      }
-      else {
-        $url = $default_file;
-        $uri = $default_file;
-      }
-    }
-    else {
-      // Try to get non HTML5 media.
-      $sql = 'SELECT em.* FROM {eck_media} em ';
-      $sql .= 'WHERE em.nid = :nid AND em.weight = 100 LIMIT 1';
-      $media = db_query($sql, array(':nid' => $nid))->fetchObject();
-      if ($media && isset($media->fid) && $media->fid) {
-        if ($media->fid) {
-          $file = file_load($media->fid);
-          $url = file_create_url($file->uri);
-          $uri = $file->uri;
-          if (!file_exists($uri)) {
-            $url = $default_file;
-            $uri = $default_file;
-          }
-        }
-        else {
-          $url = $default_file;
-          $uri = $default_file;
-        }
-      }
-      else {
-        $url = $default_file;
-        $uri = $default_file;
-      }
-    }
-
-    unset($media);
-    unset($html5_result);
-    unset($sql);
+    $thumbnail_uri = $fields['field_thumbnail_uri']->content;
+    $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
+    $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
+    $thumbnail_pieces = explode('::', $thumbnail_uri);
+    $uri = $thumbnail_pieces[0];
+    $url = $thumbnail_pieces[1];
 
 
-//    $url = $default_file;
-//    $uri = $default_file;
     $ext = pathinfo($uri, PATHINFO_EXTENSION);
     $type = _sbac_resource_determine_extension($ext);
     if ($type != 'image') {
