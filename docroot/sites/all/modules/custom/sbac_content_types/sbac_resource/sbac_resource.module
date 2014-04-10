@@ -1306,13 +1306,10 @@ function sbac_resource_node_load($nodes, $types) {
     }
 
     // Load all media entities and attach them to the resource.
-    $load = TRUE;
-//    if (isset($_GET['op']) && $_GET['op'] == 'do' && isset($_GET['id'])  && $node->type == 'resource') {
-//      $load = TRUE;
-//    }
-//    else if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && $node->type == 'resource') {
-//      $load = TRUE;
-//    }
+    $load = FALSE;
+    if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && count($nodes) != 12 && $node->type == 'resource') {
+      $load = TRUE;
+    }
 
     if ($load) {
       $media_items = sbac_media_load_items($node->nid);
@@ -1838,9 +1835,7 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
       $url = file_create_url($file->uri);
       $uri = $file->uri;
       $exists = file_exists($uri);
-      error_log('Exists: ' . $exists);
       if (!$exists) {
-        error_log('didn exist');
         $url = $default_file;
         $uri = $default_file;
       }

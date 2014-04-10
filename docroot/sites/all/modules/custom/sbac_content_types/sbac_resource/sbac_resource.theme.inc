@@ -663,7 +663,6 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     $uri = $thumbnail_pieces[0];
     $url = $thumbnail_pieces[1];
 
-
     $ext = pathinfo($uri, PATHINFO_EXTENSION);
     $type = _sbac_resource_determine_extension($ext);
     if ($type != 'image') {
