@@ -1211,54 +1211,54 @@ function _sbac_resource_digital_library_links($fields) {
 function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE, $archived = FALSE) {
   $feedback = array();
   if ($nid) {
-    $query = db_select('eck_feedback', 'f');
-    $query->fields('f', array('id', 'uid', 'node_id', 'created', 'changed', 'title', 'status', 'completed', 'met_criteria', 'current'));
-    $query->condition('f.node_id', $nid);
-    $query->condition('f.type', $type);
+    $sql  = 'SELECT f.* FROM {eck_feedback} f ';
+    $sql .= 'WHERE f.node_id = :nid ';
+    $args[':nid'] = $nid;
+    $sql .= 'AND f.type = :type ';
+    $args[':type'] = $type;
     if ($uid !== FALSE) {
       if ($uid_not) {
-        $query->condition('f.uid', array($uid), 'NOT IN');
+        $sql .= 'AND f.uid NOT IN :uid ';
+        $args[':uid'] = array($uid);
       }
       else{
-        $query->condition('f.uid', $uid);
+        $sql .= 'AND f.uid = :uid ';
+        $args[':uid'] = $uid;
       }
     }
     if ($status !== FALSE) {
       if ($archived == FALSE) {
-        $query->condition('f.status', $status);
+        $sql .= 'AND f.status = :status ';
+        $args[':status'] = $status;
       }
       else {
-        $condition1 = db_and()->condition('f.status', 1);
-        $condition2 = db_and()->condition('f.status', 0)->condition('f.archived', 1);
-        $query->condition(db_or()->condition($condition1)->condition($condition2));
-        unset($condition1);
-        unset($condition2);
+        $sql .= 'AND ((f.status = :status1) OR (f.status = :status2 AND f.archived = :archived)) ';
+        $args[':status1'] = 1;
+        $args[':status2'] = 0;
+        $args[':archived'] = 1;
       }
     }
     if ($completed !== FALSE) {
-      $query->condition('f.completed', $completed);
+      $sql .= 'AND f.completed = :completed ';
+      $args[':completed'] = $completed;
     }
     if ($current !== FALSE) {
-      $query->condition('f.current', $current);
+      $sql .= 'AND f.current = :current ';
+      $args[':current'] = $current;
     }
 
     if ($return_type == 'single') { // get the latest result.
-      $query->orderBy('f.id', 'DESC');
-      $query->range(0, 1);
-      $single = $query->execute()->fetchAssoc();
-
-      unset($query);
+      $sql .= 'ORDER BY f.id DESC ';
+      $sql .= 'LIMIT 1';
+      $single = db_query($sql, $args)->fetchAssoc();
       return $single;
     }
     else {
-      $result = $query->execute();
+      $result = db_query($sql, $args);
       foreach ($result as $record) {
         $feedback[] = $record;
       }
-
-      unset($query);
       unset($result);
-      unset($record);
     }
   }
   return $feedback;
