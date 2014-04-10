@@ -341,10 +341,11 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
   $path = str_replace('</span>', '', $path);
-  $vars['fields']['path']->content = $path;
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -393,10 +394,11 @@ function sbac_resource_views_view_fields__resources__list_view__preprocess(&$var
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
   $path = str_replace('</span>', '', $path);
-  $vars['fields']['path']->content = $path;
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -480,10 +482,11 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
   $path = str_replace('</span>', '', $path);
-  $vars['fields']['path']->content = $path;
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -538,10 +541,11 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
   $path = str_replace('</span>', '', $path);
-  $vars['fields']['path']->content = $path;
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -613,10 +617,11 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
   $path = str_replace('</span>', '', $path);
-  $vars['fields']['path']->content = $path;
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
@@ -659,10 +664,11 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
   $path = str_replace('</span>', '', $path);
-  $vars['fields']['path']->content = $path;
+  $vars['fields']['path']->content = $base_url . $path;
 }
 
 /**
