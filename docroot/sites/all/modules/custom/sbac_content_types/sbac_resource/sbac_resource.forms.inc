@@ -1363,9 +1363,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($general_valid) {
     drupal_add_js(array('sbac_general' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_general' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_general' => FALSE), 'setting');
+  // }
 
   $summary_valid = sbac_resource_check_summary($form, $form_state);
   $form['completed_flag_summary'] = array(
@@ -1377,9 +1377,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($summary_valid) {
     drupal_add_js(array('sbac_summary' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_summary' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_summary' => FALSE), 'setting');
+  // }
 
   $materials_valid = sbac_resource_check_materials($form, $form_state);
   $form['completed_flag_materials'] = array(
@@ -1391,9 +1391,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($materials_valid) {
     drupal_add_js(array('sbac_materials' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_materials' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_materials' => FALSE), 'setting');
+  // }
 
   $tags_valid = sbac_resource_check_tags($form, $form_state);
   $form['completed_flag_tags'] = array(
@@ -1405,9 +1405,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($tags_valid) {
     drupal_add_js(array('sbac_tags' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_tags' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_tags' => FALSE), 'setting');
+  // }
 
   $advanced_valid = TRUE;
   // $advanced_valid = sbac_resource_check_advanced($form, $form_state);
@@ -1420,9 +1420,9 @@ function _sbac_resource_create_complete_flag(&$form, &$form_state) {
   if ($advanced_valid) {
     drupal_add_js(array('sbac_advanced' => TRUE), 'setting');
   }
-  else {
-    drupal_add_js(array('sbac_advanced' => FALSE), 'setting');
-  }
+  // else {
+  //   drupal_add_js(array('sbac_advanced' => FALSE), 'setting');
+  // }
 }
 
 /**
