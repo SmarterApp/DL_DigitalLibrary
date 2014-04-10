@@ -141,7 +141,6 @@ function sbac_resource_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sbac_resource_smart_search_builder_form'),
     'access arguments' => array('configure sbac'),
-    'type' => MENU_CALLBACK,
     'weight' => 10,
     'file' => 'sbac_resource.forms.inc',
   );
