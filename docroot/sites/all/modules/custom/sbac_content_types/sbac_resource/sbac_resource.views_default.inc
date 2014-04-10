@@ -323,6 +323,13 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_html5']['field'] = 'field_html5';
   $handler->display->display_options['fields']['field_html5']['label'] = '';
   $handler->display->display_options['fields']['field_html5']['element_label_colon'] = FALSE;
+  /* Field: Content: Thumbnail URI */
+  $handler->display->display_options['fields']['field_thumbnail_uri']['id'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['table'] = 'field_data_field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
 
   /* Display: List View */
   $handler = $view->new_display('block', 'List View', 'list_view');
@@ -427,6 +434,13 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_html5']['field'] = 'field_html5';
   $handler->display->display_options['fields']['field_html5']['label'] = '';
   $handler->display->display_options['fields']['field_html5']['element_label_colon'] = FALSE;
+  /* Field: Content: Thumbnail URI */
+  $handler->display->display_options['fields']['field_thumbnail_uri']['id'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['table'] = 'field_data_field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
   $export['my_resources'] = $view;
 
   $view = new view();
@@ -841,6 +855,13 @@ function sbac_resource_views_default_views() {
     'thousand_separator' => ' ',
     'prefix_suffix' => 0,
   );
+  /* Field: Content: Thumbnail URI */
+  $handler->display->display_options['fields']['field_thumbnail_uri']['id'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['table'] = 'field_data_field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
 
   /* Display: List View */
   $handler = $view->new_display('block', 'List View', 'list_view');
@@ -939,6 +960,12 @@ function sbac_resource_views_default_views() {
     'thousand_separator' => ' ',
     'prefix_suffix' => 0,
   );
+  /* Field: Content: Thumbnail URI */
+  $handler->display->display_options['fields']['field_thumbnail_uri']['id'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['table'] = 'field_data_field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
   $export['resource_review'] = $view;
 
   $view = new view();
@@ -957,35 +984,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'views_content_cache';
-  $handler->display->display_options['cache']['results_min_lifespan'] = '3600';
-  $handler->display->display_options['cache']['results_max_lifespan'] = '3600';
-  $handler->display->display_options['cache']['output_min_lifespan'] = '3600';
-  $handler->display->display_options['cache']['output_max_lifespan'] = '3600';
-  $handler->display->display_options['cache']['keys'] = array(
-    'comment' => array(
-      'changed' => 0,
-    ),
-    'node' => array(
-      'resource' => 'resource',
-      'alignment' => 0,
-      'help_page' => 0,
-      'topic' => 0,
-    ),
-    'node_only' => array(
-      'node_changed' => 'node_changed',
-    ),
-    'votingapi' => array(
-      'tag:vote' => 'tag:vote',
-      'tag:student_learning' => 'tag:student_learning',
-      'tag:pro_dev' => 'tag:pro_dev',
-      'tag:ease_use' => 'tag:ease_use',
-      'tag:helpful' => 'tag:helpful',
-      'function:count' => 'function:count',
-      'function:average' => 'function:average',
-      'function:sum' => 'function:sum',
-    ),
-  );
+  $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'none';
@@ -1490,6 +1489,8 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_thumbnail_uri']['id'] = 'field_thumbnail_uri';
   $handler->display->display_options['fields']['field_thumbnail_uri']['table'] = 'field_data_field_thumbnail_uri';
   $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
   $handler->display->display_options['block_caching'] = '6';
 
@@ -1600,6 +1601,8 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_thumbnail_uri']['id'] = 'field_thumbnail_uri';
   $handler->display->display_options['fields']['field_thumbnail_uri']['table'] = 'field_data_field_thumbnail_uri';
   $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
+  $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
   $handler->display->display_options['block_caching'] = '6';
   $export['resources'] = $view;
