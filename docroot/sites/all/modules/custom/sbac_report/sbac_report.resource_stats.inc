@@ -1021,7 +1021,7 @@ function get_reviews_for_resources($node, &$data) {
         $term_ref->count = $row->count;
         if ($i < 3) {
           $term_ref->highlight = TRUE;
-          $top_three_categories[] = $term_ref->name . '(' . $term_ref->count . ')';
+          $top_three_categories[] = $term_ref->name . ' (' . $term_ref->count . ')';
         }
         break;
       }
@@ -1054,18 +1054,46 @@ function get_reviews_for_resources($node, &$data) {
       $data['review'][$review_entity->id]['description'] = $review_entity_wrapper->field_details->value();
 
       // Student Learning Rating
-      $data['review'][$review_entity->id]['student_learning_rating'] = $review_entity_wrapper->field_student_learning->value();
+      $data['review'][$review_entity->id]['student_learning_rating'] = sbac_report_determine_rating($review_entity_wrapper->field_student_learning->value());
 
       // Professional Development Rating
-      $data['review'][$review_entity->id]['professional_development_rating'] = $review_entity_wrapper->field_pro_dev->value();
+      $data['review'][$review_entity->id]['professional_development_rating'] = sbac_report_determine_rating($review_entity_wrapper->field_pro_dev->value());
 
       // Ease of Use Rating
-      $data['review'][$review_entity->id]['ease_of_use_rating'] = $review_entity_wrapper->field_ease_use->value();;
+      $data['review'][$review_entity->id]['ease_of_use_rating'] = sbac_report_determine_rating($review_entity_wrapper->field_ease_use->value());
 
       // "Appropriate For" Categories
-      $data['review'][$review_entity->id]['appropriate_for_categories'] = $review_entity_wrapper->field_appropriate_for->value();;
+      $data['review'][$review_entity->id]['appropriate_for_categories'] = $review_entity_wrapper->field_appropriate_for->value();
     }
   }
+}
+
+/**
+ * Returns the human readable value.
+ *
+ * @param $value
+ * @return int
+ */
+function sbac_report_determine_rating($value) {
+  $var = '';
+  switch ($value) {
+    case 25:
+      $new_value = 1;
+      break;
+    case 50:
+      $new_value = 2;
+      break;
+    case 75:
+      $new_value = 3;
+      break;
+    case 100:
+      $new_value = 4;
+      break;
+    default:
+      $new_value = 0;
+      break;
+  }
+  return $new_value;
 }
 
 /**
