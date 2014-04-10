@@ -310,3 +310,32 @@ function sbac_user_update_7009() {
   $ret = array();
   return $ret;
 }
+
+/**
+ * Remove LDAP fields from user.
+ */
+function sbac_user_update_7010() {
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+
+  // User PUID.
+  $field_name = 'field_ldap_first_name';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'field_ldap_first_name', 'user');
+  field_delete_instance($field);
+
+  // User PUID SID.
+  $field_name = 'field_ldap_last_name';
+  $field = field_read_field($field_name);
+  $field['locked'] = 0; // 0: unlock; 1: lock.
+  field_update_field($field);
+
+  $field = field_info_instance('user', 'field_ldap_last_name', 'user');
+  field_delete_instance($field);
+
+  $ret = array();
+  return $ret;
+}
