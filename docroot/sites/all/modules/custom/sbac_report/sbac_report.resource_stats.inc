@@ -1033,8 +1033,6 @@ function get_reviews_for_resources($node, &$data) {
     $data['review']['top_three_appropriate_for_categories'] = implode(',', $top_three_categories);
   }
 
-  global $user;
-  $account = user_load($user->uid);
   $sql = "SELECT * FROM {eck_review} WHERE node_id = :node_id";
   $result = db_query($sql, array(':node_id' => $node->nid->value()));
   foreach ($result as $eck_review) {
@@ -1042,6 +1040,7 @@ function get_reviews_for_resources($node, &$data) {
     $review_entity_wrapper = entity_metadata_wrapper('review', $review_entity);
     if ($review_entity) {
       // Reviewer/Rater Name
+      $account = user_load($review_entity->uid);
       $data['review'][$review_entity->id]['name'] = $account->field_first_name['und'][0]['value'] . ' ' . $account->field_last_name['und'][0]['value'];
 
       // Review/Rating Date
