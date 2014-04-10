@@ -1107,10 +1107,10 @@ function sbac_resource_update_7049() {
 /**
  * Remove Creative Commons link
  */
-function sbac_resource_update_7050(){
-  $terms = taxonomy_get_term_by_name('Creative Commons Attribution No Derivatives','license');
-  if(count($terms)){
-    foreach($terms as $term){
+function sbac_resource_update_7050() {
+  $terms = taxonomy_get_term_by_name('Creative Commons Attribution No Derivatives', 'license');
+  if (count($terms)) {
+    foreach ($terms as $term) {
       $term->description = '';
       taxonomy_term_save($term);
     }
@@ -1120,12 +1120,27 @@ function sbac_resource_update_7050(){
 /**
  * Remove Creative Commons link
  */
-function sbac_resource_update_7051(){
-  $terms = taxonomy_get_term_by_name('Creative Commons Attribution','license');
-  if(count($terms)){
-    foreach($terms as $term){
+function sbac_resource_update_7051() {
+  $terms = taxonomy_get_term_by_name('Creative Commons Attribution', 'license');
+  if (count($terms)) {
+    foreach ($terms as $term) {
       $term->description = '';
       taxonomy_term_save($term);
     }
+  }
+}
+
+/**
+ * Add thumbail uri to resource field.
+ */
+function sbac_resource_update_7052() {
+  $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
+  foreach ($results as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      sbac_resource_determine_thumbnail_uri($node);
+      node_save($node);
+    }
+    unset($node);
   }
 }
