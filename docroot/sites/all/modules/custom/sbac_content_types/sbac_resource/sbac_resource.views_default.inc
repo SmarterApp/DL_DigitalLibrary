@@ -330,6 +330,12 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
   $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
+  $handler->display->display_options['fields']['path']['label'] = '';
+  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
 
   /* Display: List View */
   $handler = $view->new_display('block', 'List View', 'list_view');
@@ -441,6 +447,12 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
   $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
+  $handler->display->display_options['fields']['path']['label'] = '';
+  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
   $export['my_resources'] = $view;
 
   $view = new view();
@@ -862,6 +874,12 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
   $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
+  $handler->display->display_options['fields']['path']['label'] = '';
+  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
 
   /* Display: List View */
   $handler = $view->new_display('block', 'List View', 'list_view');
@@ -966,6 +984,12 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_thumbnail_uri']['field'] = 'field_thumbnail_uri';
   $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
   $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
+  $handler->display->display_options['fields']['path']['label'] = '';
+  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
   $export['resource_review'] = $view;
 
   $view = new view();
@@ -1492,6 +1516,10 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
   $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['block_caching'] = '6';
 
   /* Display: List View */
@@ -1604,6 +1632,12 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_thumbnail_uri']['label'] = '';
   $handler->display->display_options['fields']['field_thumbnail_uri']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_thumbnail_uri']['type'] = 'text_plain';
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
+  $handler->display->display_options['fields']['path']['label'] = '';
+  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
   $handler->display->display_options['block_caching'] = '6';
   $export['resources'] = $view;
 

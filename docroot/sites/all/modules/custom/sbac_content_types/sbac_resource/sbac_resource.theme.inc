@@ -480,6 +480,10 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $path;
 }
 
 /**
@@ -534,6 +538,10 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $path;
 }
 
 /**
@@ -605,6 +613,10 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $path;
 }
 
 /**
@@ -647,6 +659,10 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $path;
 }
 
 /**

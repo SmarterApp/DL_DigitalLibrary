@@ -27,8 +27,7 @@
 
     <h3 class='resource-name <?php print $class; ?>'>
       <?php
-        $alias = sbac_resource_get_url_alias($fields['nid']->raw);
-        print l(htmlspecialchars_decode($fields['title']->raw), $alias);
+        print l(htmlspecialchars_decode($fields['title']->raw), $fields['path']->content);
       ?>
     </h3>
     <div class="shield-drop"><?php print $image; ?></div>
