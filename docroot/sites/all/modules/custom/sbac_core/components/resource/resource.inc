@@ -167,6 +167,9 @@ function resource_access($op, $node, $account = NULL) {
     }
 
     if (in_array($op, array('view gate keeper', 'start gate keeper', 'edit gate keeper'))) {
+      if ($node->workbench_moderation['current']->state == 'draft'){
+        return FALSE;
+      }
 
       // is this a resubmission?
       $resubmission_timestamp = db_query("SELECT
