@@ -1306,13 +1306,13 @@ function sbac_resource_node_load($nodes, $types) {
     }
 
     // Load all media entities and attach them to the resource.
-    $load = FALSE;
-    if (isset($_GET['op']) && $_GET['op'] == 'do' && isset($_GET['id'])  && $node->type == 'resource') {
-      $load = TRUE;
-    }
-    else if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && $node->type == 'resource') {
-      $load = TRUE;
-    }
+    $load = TRUE;
+//    if (isset($_GET['op']) && $_GET['op'] == 'do' && isset($_GET['id'])  && $node->type == 'resource') {
+//      $load = TRUE;
+//    }
+//    else if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && $node->type == 'resource') {
+//      $load = TRUE;
+//    }
 
     if ($load) {
       $media_items = sbac_media_load_items($node->nid);
