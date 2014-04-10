@@ -341,6 +341,10 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $path;
 }
 
 /**
@@ -389,6 +393,10 @@ function sbac_resource_views_view_fields__resources__list_view__preprocess(&$var
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  $path = $vars['fields']['path']->content;
+  $path = str_replace('<span class="field-content">', '', $path);
+  $path = str_replace('</span>', '', $path);
+  $vars['fields']['path']->content = $path;
 }
 
 /**
