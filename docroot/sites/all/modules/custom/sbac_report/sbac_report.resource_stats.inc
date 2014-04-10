@@ -1484,10 +1484,6 @@ function set_report_columns() {
             'index' => 'post'
           ),
           array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
-          // total reivews.
-          array('total_reviews', 'Total Reviews', 'datasource' => 'total_reviews_per_node', 'not_wrapper' => TRUE),
-          // gk
-
           // users info
           array(
             'foreign',
@@ -1622,6 +1618,23 @@ function set_report_columns() {
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
           array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => TRUE),
+          array('field_total_views', 'Views'),
+          array('field_unique_views', 'Unique Views'),
+          array(
+            '',
+            'Total Number of Tag(s)',
+            'function' => 'get_total_tags'
+          ),
+          array('permanent_link_type', 'Type of Permanent Link', 'function' => 'get_share_data', 'field' => 'share'),
+          array('permanent_links_copied', 'Permanent Links Copied', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_status', 'Temporary Public Link Status', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data', 'field' => 'share'),
+          array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data', 'field' => 'share'),
+          array('is_flagged', 'Is Flagged', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('has_flagged_reviews', 'Has Flagged Reviews', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
           // gk
           array(
             'average',
@@ -1644,25 +1657,8 @@ function set_report_columns() {
             'not_wrapper' => TRUE
           ),
           // gk
-          array('field_total_views', 'Views'),
-          array('field_unique_views', 'Unique Views'),
-          array(
-            '',
-            'Total Number of Tag(s)',
-            'function' => 'get_total_tags'
-          ),
-          array('permanent_link_type', 'Type of Permanent Link', 'function' => 'get_share_data', 'field' => 'share'),
-          array('permanent_links_copied', 'Permanent Links Copied', 'function' => 'get_share_data', 'field' => 'share'),
-          array('temp_public_link_status', 'Temporary Public Link Status', 'function' => 'get_share_data', 'field' => 'share'),
-          array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data', 'field' => 'share'),
-          array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data', 'field' => 'share'),
-          array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data', 'field' => 'share'),
-          array('is_flagged', 'Is Flagged', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('has_flagged_reviews', 'Has Flagged Reviews', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          // resource reviews.
           array('top_three_appropriate_for_categories', 'Current Top Three "Appropriate For" Categories', 'function' => 'get_resource_review_data', 'field' => 'review'),
+          array('total_reviews', 'Total Reviews', 'datasource' => 'total_reviews_per_node', 'not_wrapper' => TRUE),
           array('name', 'Reviewer/Rater Name', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
           array('date', 'Reviewer/Rating Date', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
           array('title', 'Reviewer/Rating Title', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
