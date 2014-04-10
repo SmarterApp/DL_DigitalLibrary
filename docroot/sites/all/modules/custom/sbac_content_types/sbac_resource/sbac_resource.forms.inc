@@ -2751,7 +2751,6 @@ function sbac_resource_check_materials($form, $form_state) {
       // $valid = FALSE;
       return FALSE;
     }
-    dd($form['field_publisher']['und'][0]['value']['#default_value']);
     if (!$form['field_publisher']['und'][0]['value']['#default_value']) {
       // $valid = FALSE;
       return FALSE;
