@@ -48,15 +48,15 @@ define('SBAC_FORUM_CUSTOM_SOLR_FILTER_FIELD_STATE_OPEN', 'im_forum_access__custo
  * Implements hook_menu().
  */
 function sbac_forum_menu() {
-  $items['forums'] = array(
-    'title' => 'Forums',
-    'file' => 'includes/sbac_forum.pages.inc',
-    'page callback' => 'sbac_forum_main_landing_page',
-    'access callback' => '_sbac_forum_user_access',
-    'type' => MENU_NORMAL_ITEM,
-    'menu_name' => 'main-menu',
-    'weight' => -10,
-  );
+//  $items['forums'] = array(
+//    'title' => 'Forums',
+//    'file' => 'includes/sbac_forum.pages.inc',
+//    'page callback' => 'sbac_forum_main_landing_page',
+//    'access callback' => '_sbac_forum_user_access',
+//    'type' => MENU_NORMAL_ITEM,
+//    'menu_name' => 'main-menu',
+//    'weight' => -10,
+//  );
 
   // Create own menu callback for adding a term. Dont need to mess with menu_alter.
   $items['forums/%taxonomy_vocabulary_machine_name/add'] = array(
