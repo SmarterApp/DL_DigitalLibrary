@@ -1310,12 +1310,12 @@ function sbac_resource_node_load($nodes, $types) {
     }
 
     // Load all media entities and attach them to the resource.
-    $load = FALSE;
-    if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && count($nodes) != 12 && $node->type == 'resource') {
-      $load = TRUE;
-    }
-
-    if ($load) {
+//    $load = FALSE;
+//    if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && count($nodes) != 12 && $node->type == 'resource') {
+//      $load = TRUE;
+//    }
+//
+//    if ($load) {
       $media_items = sbac_media_load_items($node->nid);
       $node->document = $media_items;
 
@@ -1325,7 +1325,7 @@ function sbac_resource_node_load($nodes, $types) {
           $node->document['html5'] = $html5_item;
         }
       }
-    }
+//    }
   }
 }
 
