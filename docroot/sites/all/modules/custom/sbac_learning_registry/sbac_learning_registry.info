@@ -12,7 +12,6 @@ features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
 features[variable][] = learning_registry_node_types
 features[variable][] = learning_registry_node_url
-features[variable][] = learning_registry_oauth_salt
 features[variable][] = learning_registry_queuing
 features[variable][] = learning_registry_schema_type
 features[variable][] = learning_registry_schema_type_default_value

@@ -32,15 +32,8 @@ function sbac_learning_registry_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'learning_registry_oauth_salt';
-  $strongarm->value = 'KrP7FgnpjK4hXfVDIAwC';
-  $export['learning_registry_oauth_salt'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'learning_registry_queuing';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['learning_registry_queuing'] = $strongarm;
 
   $strongarm = new stdClass();
