@@ -564,6 +564,7 @@ if (file_exists('/var/www/site-php')) {
 
 // Sets the Apache Solr Environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+  error_log('env variable: ' . $_ENV['AH_SITE_ENVIRONMENT']);
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':
       $conf['file_private_path'] = '/mnt/files/sbacdev/files-private';
@@ -593,6 +594,11 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       // do something on prod
       $conf['file_private_path'] = '/mnt/files/sbac/files-private';
       $conf['google_cdn_folder'] = 'production';
+      break;
+    default:
+      // do something on training
+      $conf['file_private_path'] = '/mnt/files/sbac/sites/training.smarterbalancedlibrary.org/files-private';
+      $conf['google_cdn_folder'] = 'training';
       break;
   }
 }
