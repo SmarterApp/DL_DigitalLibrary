@@ -595,7 +595,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $conf['google_cdn_folder'] = 'production';
       if ($_SERVER['SERVER_NAME'] == 'training.smarterbalancedlibrary.org') {
         // do something on training
-        // $conf['file_private_path'] = '/mnt/files/sbac/sites/training.smarterbalancedlibrary.org/files-private';
+        $conf['file_private_path'] = '/mnt/files/sbac/sites/training.smarterbalancedlibrary.org/files-private';
         $conf['google_cdn_folder'] = 'training';
       }
       break;
