@@ -672,7 +672,7 @@ function sbac_resource_preprocess_node(&$vars) {
   if ($vars['type'] == 'resource') {
     drupal_add_http_header('X-Frame-Options', 'SAMEORIGIN');
     drupal_set_title($vars['title']);
-    drupal_add_js(libraries_get_path('jwplayer') . '/jwplayer.js');
+    drupal_add_js(libraries_get_path('jwplayer') . '/jwplayer.js', array('preprocess' => FALSE));
     drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.node.js');
 
     $vars['author'] = ''; $vars['license'] = ''; $vars['owner'] = ''; $vars['resource_type'] = '';
@@ -805,7 +805,7 @@ function _sbac_resource_preview_content(&$vars) {
     }
     else if ($type == 'video') {
       $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 880});});';
-      drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999));
+      drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999, 'preprocess' => FALSE));
       $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
       $viewer['viewer_class'] = '';
     }
