@@ -1311,10 +1311,19 @@ function sbac_resource_node_load($nodes, $types) {
 
     // Load all media entities and attach them to the resource.
     $load = FALSE;
+    error_log(print_r($_GET, TRUE));
+    error_log(print_r($_REQUEST, TRUE));
+    error_log('count: ' . count($nodes));
+
+    // update.php
     if (isset($_GET['op']) && isset($_GET['token']) && isset($_GET['id'])) {
       $load = TRUE;
     }
-
+    // drush scripts
+    if (arg(0) == 'digital-library-resources' && count($nodes) == 1) {
+      $load = TRUE;
+    }
+    // website.
     if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && count($nodes) != 12 && $node->type == 'resource') {
       $load = TRUE;
     }
