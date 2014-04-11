@@ -1279,6 +1279,10 @@ function sbac_status_messages($variables) {
  * @param $types
  */
 function sbac_resource_node_load($nodes, $types) {
+  if (!in_array('resource', $types)) {
+    return;
+  }
+
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
