@@ -1101,6 +1101,10 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
           $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $fid))->fetchObject();
           if ($file) {
             $old_path = drupal_realpath($file->uri);
+            error_log('oldpath: ' . $old_path);
+            if (!file_exists($old_path)) {
+              continue;
+            }
             if ($client->getAuth()->isAccessTokenExpired()) {
               $client->getAuth()->refreshTokenWithAssertion($cred);
             }
