@@ -927,9 +927,47 @@ function sbac_central_update_7070() {
 }
 
 /**
- * Migrates old files to new Google CDN.
+ * Disable LDAP and associated modules.
  */
 function sbac_central_update_7071() {
+  $modules = array(
+    'sbac_ldap',
+    'ldap',
+    'ldap_authentication',
+    'ldap_authorization',
+    'ldap_authorization_drupal_role',
+    'ldap_query',
+    'ldap_servers',
+    'ldap_user',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Enabled sbac_learning_registry module
+ */
+function sbac_central_update_7072(){
+  module_enable(array('sbac_learning_registry'));
+}
+
+/**
+ * Disable CMIS modules.
+ */
+function sbac_central_update_7073() {
+  $modules = array(
+    'cmis',
+    'cmis_common',
+    'cmis_browser',
+    'cmis_query',
+    'cmis_headerswing',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Migrates old files to new Google CDN.
+ */
+function sbac_central_update_7074() {
   $service = NULL;
   $client = NULL;
   $cred = NULL;
@@ -1110,52 +1148,4 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
       }
     }
   }
-}
-
-/**
- * Enables views_content_cache.
- */
-function sbac_central_update_7072() {
-  $modules = array(
-    'views_content_cache',
-  );
-  module_enable($modules);
-}
-
-/**
- * Disable LDAP and associated modules.
- */
-function sbac_central_update_7073() {
-  $modules = array(
-    'sbac_ldap',
-    'ldap',
-    'ldap_authentication',
-    'ldap_authorization',
-    'ldap_authorization_drupal_role',
-    'ldap_query',
-    'ldap_servers',
-    'ldap_user',
-  );
-  module_disable($modules);
-}
-
-/**
- * Enabled sbac_learning_registry module
- */
-function sbac_central_update_7074(){
-  module_enable(array('sbac_learning_registry'));
-}
-
-/**
- * Disable CMIS modules.
- */
-function sbac_central_update_7075() {
-  $modules = array(
-    'cmis',
-    'cmis_common',
-    'cmis_browser',
-    'cmis_query',
-    'cmis_headerswing',
-  );
-  module_disable($modules);
 }
