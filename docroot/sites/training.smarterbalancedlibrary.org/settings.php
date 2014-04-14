@@ -590,7 +590,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $conf['file_private_path'] = '/mnt/files/sbac/sites/training.smarterbalancedlibrary.org/files-private';
       $conf['google_cdn_folder'] = 'training';
       break;
-    case 'sbacloadtest':
+    case 'loadtest':
       $conf['file_private_path'] = '/mnt/files/sbacloadtest/files-private';
       $conf['google_cdn_folder'] = 'performance';
       break;
