@@ -1403,6 +1403,7 @@ function sbac_resource_views_default_views() {
     26 => 0,
     27 => 0,
   );
+  $handler->display->display_options['filters']['keys']['remove_score'] = TRUE;
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
