@@ -564,6 +564,7 @@ if (file_exists('/var/www/site-php')) {
 
 // Sets the Apache Solr Environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+  error_log($_ENV['AH_SITE_ENVIRONMENT']);
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':
       $conf['file_private_path'] = '/mnt/files/sbacdev/files-private';
@@ -590,7 +591,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $conf['file_private_path'] = '/mnt/files/sbac/files-private';
       $conf['google_cdn_folder'] = 'production';
       break;
-    case 'sbacloadtest':
+    case 'loadtest':
       $conf['file_private_path'] = '/mnt/files/sbacloadtest/files-private';
       $conf['google_cdn_folder'] = 'performance';
       break;
