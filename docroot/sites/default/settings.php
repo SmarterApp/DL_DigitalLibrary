@@ -591,7 +591,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $conf['file_private_path'] = '/mnt/files/sbac/files-private';
       $conf['google_cdn_folder'] = 'production';
       break;
-    case 'loadtest':
+    case 'sbacloadtest':
       $conf['file_private_path'] = '/mnt/files/sbacloadtest/files-private';
       $conf['google_cdn_folder'] = 'performance';
       break;
