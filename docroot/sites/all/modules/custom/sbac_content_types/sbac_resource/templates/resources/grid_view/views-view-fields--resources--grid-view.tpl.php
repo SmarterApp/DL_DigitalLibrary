@@ -89,6 +89,10 @@
       <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
         <?php // print $fields['collaborators']; ?>
       <?php endif; ?>
+
+      <?php if (isset($fields['rating']) && $fields['rating']): ?>
+        <?php print $fields['rating']; ?> (<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)
+      <?php endif; ?>
     </div>
 
     <?php endif; ?>
