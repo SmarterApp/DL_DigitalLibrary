@@ -788,12 +788,12 @@ function _sbac_resource_preview_content(&$vars) {
       $url = sbac_media_create_embed_url($media);
     }
 
-//    if ($type == 'document' && !sbac_resource_url_exist($url)) {
-//      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-//      $viewer['viewer'] = theme('image', array('path' => $url));
-//      $viewer['viewer_class'] = '';
-//      return $viewer;
-//    }
+    if ($type == 'document' && !sbac_resource_url_exist($url)) {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      $viewer['viewer'] = theme('image', array('path' => $url));
+      $viewer['viewer_class'] = '';
+      return $viewer;
+    }
 
     if ($type == 'document') {
       $google_url = 'http://docs.google.com/viewer';
