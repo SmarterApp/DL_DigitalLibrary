@@ -570,29 +570,29 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $conf['google_cdn_folder'] = 'dev';
       // do something on dev
       break;
-
     case 'test':
       // do something on staging
       $conf['file_private_path'] = '/mnt/files/sbacstg/files-private';
       $conf['google_cdn_folder'] = 'stage';
       break;
-
     case 'stage2':
       // do something on staging
       $conf['file_private_path'] = '/mnt/files/sbacstg2/files-private';
       $conf['google_cdn_folder'] = 'stage2';
       break;
-
     case 'stage3':
       // do something on staging
       $conf['file_private_path'] = '/mnt/files/sbacstg3/files-private';
       $conf['google_cdn_folder'] = 'integration';
       break;
-
     case 'prod':
       // do something on training
       $conf['file_private_path'] = '/mnt/files/sbac/sites/training.smarterbalancedlibrary.org/files-private';
       $conf['google_cdn_folder'] = 'training';
+      break;
+    case 'sbacloadtest':
+      $conf['file_private_path'] = '/mnt/files/sbacloadtest/files-private';
+      $conf['google_cdn_folder'] = 'performance';
       break;
   }
 }
