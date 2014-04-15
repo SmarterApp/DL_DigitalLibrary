@@ -115,7 +115,6 @@ function sbac_resource_my_resource_apply_filters(&$view) {
                       $state['draft'] = 'draft';
                       break;
                   }
-
                   $resource_states = $state;
                   break;
               }

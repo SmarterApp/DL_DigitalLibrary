@@ -3248,7 +3248,13 @@ function sbac_resource_unsubmit_resource_form($form, &$form_state) {
   return $form;
 }
 
-
+/**
+ * Jon's lack of comments.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function sbac_resource_smart_search_builder_form($form, &$form_state) {
   $form = array();
 
@@ -3451,16 +3457,25 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Pulled a Jon.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#value'] == 'Reset') {
     variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, '');
-  } elseif($form_state['triggering_element']['#value'] == 'Test') {
+  }
+  elseif ($form_state['triggering_element']['#value'] == 'Test') {
     $values = $form_state['values'];
     $test_url = $values['test_url'];
     variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME, $test_url);
-  } elseif($form_state['triggering_element']['#value'] == 'Clear History') {
+  }
+  elseif ($form_state['triggering_element']['#value'] == 'Clear History') {
     variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, array());
-  } else { // Generate new.
+  }
+  else { // Generate new.
     $values = $form_state['values'];
     $vocabs = array(
       'subject',
@@ -3495,7 +3510,7 @@ function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
     }
 
     if (!empty($values['ccss_elements']['selected_terms'])) {
-      $ccss_key = 'education_alignment:'. $values['ccss_vid'];
+      $ccss_key = 'education_alignment:' . $values['ccss_vid'];
       $ccss_value = implode(',', $values['ccss_elements']['selected_terms']);
       $query_params[$ccss_key] = $ccss_value;
     }
@@ -3514,7 +3529,6 @@ function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
       variable_set(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME, $history);
     }
   }
-
 }
 
 
