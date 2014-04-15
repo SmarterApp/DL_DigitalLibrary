@@ -594,12 +594,16 @@ function sbac_user_entity_presave($entity, $type) {
 
     // Ensure clean data goes into these fields. I dont know why this needs to happen.. should be automatic.
     //   All fields are set to plain text format, thats likely wrong.
-    $fn = $entity->field_first_name['und'][0]['value'];
-    $clean_fn = filter_xss($fn);
-    $entity->field_first_name['und'][0]['value'] = $clean_fn;
-    $ln = $entity->field_last_name['und'][0]['value'];
-    $clean_ln = filter_xss($ln);
-    $entity->field_last_name['und'][0]['value'] = $clean_ln;
+    if (isset($entity->field_first_name)) {
+      $fn = $entity->field_first_name['und'][0]['value'];
+      $clean_fn = filter_xss($fn);
+      $entity->field_first_name['und'][0]['value'] = $clean_fn;
+    }
+    if (isset($entity->field_last_name)) {
+      $ln = $entity->field_last_name['und'][0]['value'];
+      $clean_ln = filter_xss($ln);
+      $entity->field_last_name['und'][0]['value'] = $clean_ln;
+    }
 
     // display disabled fields by default for new users (field_privacy)
     if (isset($entity->is_new) && $entity->is_new) {
@@ -1117,4 +1121,39 @@ function sbac_user_cron() {
       user_delete($row->uid);
     }
   }
+}
+
+/**
+ * Implements hook_user_import_data().
+ * @param  [type] $settings        [description]
+ * @param  [type] $update_setting  [description]
+ * @param  [type] $column_settings [description]
+ * @param  [type] $module          [description]
+ * @param  [type] $field_id        [description]
+ * @param  [type] $data            [description]
+ * @param  [type] $column_id       [description]
+ * @return
+ */
+function sbac_user_user_import_data($settings, $update_setting, $column_settings, $module, $field_id, $data, $column_id) {
+  if ($module != 'field') {
+    return;
+  }
+
+  if ($field_id == 'field_first_name') {
+    if ($data[$column_id] == NULL) {
+      if (user_import_errors(t('Invalid first name'))) {
+        drupal_set_message(t('Error with: ' . $data[4]), 'error', FALSE);
+      }
+    }
+  }
+
+  if ($field_id == 'field_last_name') {
+    if ($data[$column_id] == NULL) {
+      if (user_import_errors(t('Invalid last name'))) {
+        drupal_set_message(t('Error with: ' . $data[4]), 'error', FALSE);
+      }
+    }
+  }
+
+  return;
 }
