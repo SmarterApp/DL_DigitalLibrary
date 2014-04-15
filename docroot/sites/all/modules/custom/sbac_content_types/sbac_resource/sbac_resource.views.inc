@@ -171,7 +171,7 @@ function sbac_resource_views_query_alter(&$view, &$query) {
                       if (!in_array('gk_needs_review', $values)) {
                         $not_like = "qc_reviewed::" . $user->uid;
                         $values[] = 'gk_needs_review';
-                        $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
+                        $all_states = array('gk_needs_review', 'qc_needs_review');
                         $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                         $view->query->add_where('AND', $all_condition);
                       }
@@ -179,7 +179,7 @@ function sbac_resource_views_query_alter(&$view, &$query) {
                     case 'Being Reviewed':
                       if (!in_array('post_being_reviewed', $values)) {
                         $values[] = 'post_being_reviewed';
-                        $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected', 'post_being_reviewed', 'post_view_rejected');
+                        $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'post_being_reviewed');
                         $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
                         $view->query->add_where('AND', $user_condition);
                       }
