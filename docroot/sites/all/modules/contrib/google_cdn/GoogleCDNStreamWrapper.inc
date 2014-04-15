@@ -852,7 +852,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $expiry = time() + GOOGLE_CDN_SIGNED_URL_EXPIRY;
 
     $file_info = explode('/', $file_path);
-    $file_name = urlencode(array_pop($file_info));
+    $file_name = rawurlencode(array_pop($file_info));
     $file_path = implode('/', $file_info) . '/' . $file_name;
     // This policy is defined in https://developers.google.com/storage/docs/accesscontrol#Signed-URLs
     $stringPolicy = "GET\n\n\n" . $expiry . "\n/" . $this->bucket . '/' . $this->folder . '/' . $file_path;
