@@ -81,22 +81,141 @@ function sbac_resource_views_query_alter(&$view, &$query) {
     // (gk_need_review, gk_being_reviewed, qc_needs_review, qc_being_reviewed, qc_reviewed, gk_view_rejected, post_being_reviewed, post_needs_review)
     $view->query->add_table('sbac_node_resource_state');
     $view->query->add_table('field_data_field_recent_reviewers');
+
+    $roles = array();
     if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
       // do nothing, roles can be combined to see all states.
       $roles['both'] = TRUE;
-      $not_like = "qc_reviewed::" . $user->uid;
-      $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
-      $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected', 'post_being_reviewed', 'post_view_rejected');
-      $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
-      $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
-      $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
     }
     else {
       if (in_array('resource reviewer', $user->roles)) {
-        // Can see needs review, being reviewed
-        unset($query->where[1]['conditions'][3]['value'][2]);
         $roles['rr'] = TRUE;
+        unset($query->where[1]['conditions'][3]['value'][2]);
+      }
 
+      if (in_array('resource publisher', $user->roles)) {
+        $roles['rp'] = TRUE;
+        unset($query->where[1]['conditions'][3]['value'][0]);
+        unset($query->where[1]['conditions'][3]['value'][1]);
+      }
+    }
+
+    $current_filters = array();
+    if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
+      $current_filters = explode('::', $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]);
+    }
+
+    if ($current_filters) {
+      // apply filters
+      $values = array();
+      foreach ($current_filters as $filter) {
+        $filter_info = explode(':', $filter);
+        if ($filter_info && sizeof($filter_info) == 2) {
+          $vid = $filter_info[0];
+          $tid = $filter_info[1];
+          if ($vid && $tid) {
+            $vocabulary = taxonomy_vocabulary_load($vid);
+            $term = taxonomy_term_load($tid);
+            if ($vocabulary && $term) {
+              if ($vocabulary->machine_name = 'resource_states') {
+
+                if (isset($roles['rp'])) {
+                  switch ($term->name) {
+                    case 'Needs Posting':
+                      if (!in_array('post_needs_review', $values)) {
+                        $not_like = "qc_reviewed::" . $user->uid;
+                        $values[] = 'post_needs_review';
+                        $all_states = array('post_needs_review');
+                        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+                        $view->query->add_where('AND', $all_condition);
+                      }
+                      break;
+                    case 'Being Reviewed':
+                      if (!in_array('post_being_reviewed', $values)) {
+                        $values[] = 'post_being_reviewed';
+                        $user_states = array('post_being_reviewed');
+                        $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+                        $view->query->add_where('AND', $user_condition);
+                      }
+                      break;
+                  }
+                }
+
+                if (isset($roles['rr'])) {
+                  switch ($term->name) {
+                    case 'Needs Review':
+                      if (!in_array('gk_needs_review', $values)) {
+                        $not_like = "qc_reviewed::" . $user->uid;
+                        $values[] = 'gk_needs_review';
+                        $values[] = 'qc_needs_review';
+                        $all_states = array('gk_needs_review', 'qc_needs_review');
+                        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+                        $view->query->add_where('AND', $all_condition);
+                      }
+                      break;
+                    case 'Being Reviewed':
+                      if (!in_array('gk_being_reviewed', $values)) {
+                        $values[] = 'gk_being_reviewed';
+                        $values[] = 'qc_being_reviewed';
+                        $user_states = array('gk_being_reviewed', 'qc_being_reviewed');
+                        $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+                        $view->query->add_where('AND', $user_condition);
+                      }
+                      break;
+                  }
+                }
+
+                if (isset($roles['both'])) {
+                  switch ($term->name) {
+                    case 'Needs Review':
+                      if (!in_array('gk_needs_review', $values)) {
+                        $not_like = "qc_reviewed::" . $user->uid;
+                        $values[] = 'gk_needs_review';
+                        $values[] = 'qc_needs_review';
+                        $values[] = 'needs_review';
+                        $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
+                        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+                        $view->query->add_where('AND', $all_condition);
+                      }
+                      break;
+                    case 'Being Reviewed':
+                      if (!in_array('post_being_reviewed', $values)) {
+                        $values[] = 'post_being_reviewed';
+                        $values[] = 'gk_being_reviewed';
+                        $values[] = 'qc_being_reviewed';
+                        $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected', 'post_being_reviewed', 'post_view_rejected');
+                        $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+                        $view->query->add_where('AND', $user_condition);
+                      }
+                      break;
+                    case 'Needs Posting':
+                      if (!in_array('post_needs_review', $values)) {
+                        $not_like = "qc_reviewed::" . $user->uid;
+                        $values[] = 'post_needs_review';
+                        $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
+                        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+                        $view->query->add_where('AND', $all_condition);
+                      }
+                      break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    else {
+      // apply stock
+      if ($roles['rp']) {
+        $all_states = array('post_needs_review');
+        $user_states = array('post_being_reviewed', 'post_view_rejected');
+        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+        $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+        $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
+      }
+      if ($roles['rr']) {
+        // Can see needs review, being reviewed
         $not_like = "qc_reviewed::" . $user->uid;
         $all_states = array('gk_needs_review', 'qc_needs_review');
         $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected');
@@ -115,96 +234,13 @@ function sbac_resource_views_query_alter(&$view, &$query) {
         $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
         $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
       }
-
-      if (in_array('resource publisher', $user->roles)) {
-        // Can see approved
-        unset($query->where[1]['conditions'][3]['value'][0]);
-        unset($query->where[1]['conditions'][3]['value'][1]);
-        $roles['rp'] = TRUE;
-
-        $all_states = array('post_needs_review');
-        $user_states = array('post_being_reviewed', 'post_view_rejected');
-        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+      if ($roles['both']) {
+        $not_like = 'qc_reviewed::' . $user->uid;
+        $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
+        $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected', 'post_being_reviewed', 'post_view_rejected');
+        $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
         $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
         $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
-      }
-    }
-
-    /**
-     * Since the values displayed to the user are not the values displayed in the database (information is dependant on who is viewing it),
-     * we must manipulate the provided values so that the correct database values are searched.
-     */
-    if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
-      $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
-      $filters = explode('::', $current_filters);
-      if ($filters) {
-        $values = array();
-        $view->query->add_table('sbac_node_resource_state');
-        $view->query->table_queue['sbac_node_resource_state']['join']->extra[0] = array('field' => 'uid', 'value' => $user->uid);
-        foreach ($filters as $filter) {
-          $filter_info = explode(':', $filter);
-          if ($filter_info && sizeof($filter_info) == 2) {
-            $vid = $filter_info[0];
-            $tid = $filter_info[1];
-            if ($vid && $tid) {
-              $vocabulary = taxonomy_vocabulary_load($vid);
-              $term = taxonomy_term_load($tid);
-              if ($vocabulary && $term) {
-                if ($vocabulary->machine_name = 'resource_states') {
-
-                  if (isset($roles['rp'])) {
-                    switch ($term->name) {
-                      case 'Needs Posting':
-                        $values[] = 'post_needs_review';
-                        break;
-                      case 'Being Reviewed':
-                        $values[] = 'post_being_reviewed';
-                        break;
-                    }
-                  }
-
-                  if (isset($roles['rr'])) {
-                    switch ($term->name) {
-                      case 'Needs Review':
-                        $values[] = 'gk_needs_review';
-                        $values[] = 'qc_needs_review';
-                        $values[] = 'needs_review';
-                        break;
-                      case 'Being Reviewed':
-                        $values[] = 'gk_being_reviewed';
-                        $values[] = 'qc_being_reviewed';
-                        break;
-                    }
-                  }
-
-                  if (isset($roles['both'])) {
-                    switch ($term->name) {
-                      case 'Needs Review':
-                        $values[] = 'gk_needs_review';
-                        $values[] = 'qc_needs_review';
-                        $values[] = 'needs_review';
-                        break;
-                      case 'Being Reviewed':
-                        $values[] = 'post_being_reviewed';
-                        $values[] = 'gk_being_reviewed';
-                        $values[] = 'qc_being_reviewed';
-                        break;
-                      case 'Needs Posting':
-                        $values[] = 'post_needs_review';
-                        break;
-                    }
-                  }
-
-                }
-              }
-            }
-          }
-        }
-
-        if ($values) {
-          $condition = db_or()->condition('sbac_node_resource_state.state', $values, 'IN');
-          $view->query->add_where('AND', $condition);
-        }
       }
     }
   }
@@ -550,7 +586,6 @@ function sbac_resource_resource_review_apply_filters(&$view) {
   // Not searching/filtering, so we default to the user's profile data for filtering
   else {
     global $user;
-
     if (in_array(FEEDBACK_REVIEWER_RID, array_keys($user->roles))) {
       sbac_resource_filter_user_tags($view, $user);
     }
