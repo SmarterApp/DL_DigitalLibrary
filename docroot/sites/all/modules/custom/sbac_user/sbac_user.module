@@ -225,8 +225,8 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     $form['#validate'][] = 'user_validate_picture';
     $form['#validate'][] = 'user_profile_form_validate';
     if ($is_edit_page !== FALSE) {
-      $form['field_first_name']['#disabled'] = TRUE;
-      $form['field_last_name']['#disabled'] = TRUE;
+      $form['field_first_name']['#disabled'] = !($form['field_first_name']['und'][0]['value']['#default_value'] == NULL);
+      $form['field_last_name']['#disabled'] = !($form['field_last_name']['und'][0]['value']['#default_value'] == NULL);
       // $form['account']['mail']['#disabled'] = TRUE; // primary email address
       $form['field_alternate_email_address']['#disabled'] = TRUE;
       $form['field_district_name']['#disabled'] = TRUE;
