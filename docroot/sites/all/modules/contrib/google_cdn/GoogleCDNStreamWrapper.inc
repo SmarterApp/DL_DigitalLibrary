@@ -873,7 +873,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       if ($this->https) {
         $secure = 'https://';
       }
-      $url = $secure . $this->bucket . '.' . $this->domain . '/' . $this->folder . '/' . $filename . '?GoogleAccessId=' . $this->service_account_name . '&Expires=' . $expiry . '&Signature=' . $signature;
+      $url = $secure . $this->bucket . '.' . $this->domain . '/' . $this->folder . '/' . $file_path . '?GoogleAccessId=' . $this->service_account_name . '&Expires=' . $expiry . '&Signature=' . $signature;
     }
 
     return $url;
