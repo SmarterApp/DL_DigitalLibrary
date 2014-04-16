@@ -1868,18 +1868,20 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
   if (isset($form['#node']->nid)) {
     if ($user->uid == $form['#node']->uid) {
       // what was the last feedback?
-      $last_feedback_type = db_query("SELECT type FROM eck_feedback WHERE node_id = :nid ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchField();
+      $last_feedback_type = db_query("SELECT type FROM eck_feedback WHERE node_id = :nid AND completed = 1 ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchField();
       switch ($last_feedback_type) {
         case 'post':
         case 'qc':
-          $post_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'post' ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
-          $post_entities = entity_load('feedback', $post_id);
+          if ($last_feedback_type == 'post') {
+            $post_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'post' AND completed = 1 ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
+            $post_entities = entity_load('feedback', $post_id);
 
-          if ($post_entities) {
-            $post = current($post_entities);
+            if ($post_entities) {
+              $post = current($post_entities);
+            }
           }
           // Get the last 3 QC
-          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' ORDER BY id DESC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
+          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY id DESC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
 
           // check for QC feedbacks first
           $qc_entities = entity_load('feedback', $qc_ids);
@@ -2008,7 +2010,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
           break;
         case 'gate_keeper':
           // Get the last gatekepper comment
-          $gk_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'gate_keeper' ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
+          $gk_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'gate_keeper' AND completed = 1 ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
           // check for gk feedback
           $gk = entity_load('feedback', $gk_id);
           if (!empty($gk)) {
