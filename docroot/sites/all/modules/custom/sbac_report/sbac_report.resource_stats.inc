@@ -1682,6 +1682,8 @@ function set_report_columns() {
           array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => TRUE),
           array('field_total_views', 'Views'),
           array('field_unique_views', 'Unique Views'),
+          array('field_asset_downloads', 'Downloads'),
+          array('field_unique_downloads', 'Unique Downloads'),
           array(
             '',
             'Total Number of Tag(s)',

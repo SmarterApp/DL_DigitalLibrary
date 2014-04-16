@@ -57,6 +57,41 @@ function sbac_resource_schema() {
     ),
   );
 
+  $schema['sbac_resource_download_stats'] = array(
+    'description' => t('Stores data for resource downloads by uid.'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the resource'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who downloaded the resource'),
+      ),
+      'hits' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('A counter by uid/nid for downloads of this nid'),
+      ),
+    ),
+    'primary key' => array('nid', 'uid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+    ),
+  );
+
   $schema['sbac_node_resource_state'] = array(
     'description' => t('Stores data for resource hits by uid.'),
     'fields' => array(
@@ -1146,4 +1181,11 @@ function sbac_resource_update_7052() {
     entity_get_controller('node')->resetCache(array($node->nid));
     unset($node);
   }
+}
+
+/**
+ * Create sbac_resource_download_stats table
+ */
+function sbac_resource_update_7053(){
+  db_create_table('sbac_resource_download_stats', drupal_get_schema_unprocessed('sbac_resource', 'sbac_resource_download_stats'));
 }

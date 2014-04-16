@@ -351,9 +351,16 @@ function sbac_media_download_contents($node) {
         header("Content-Transfer-Encoding: Binary");
         header("Content-Length:".filesize($real_path));
         header("Content-Disposition: attachment; filename=" . $filename);
-        if (readfile($real_path) !== false) {
-          $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' =>$node->field_asset_downloads[LANGUAGE_NONE][0]['value']+1));
-          entity_save_field('field_asset_downloads', $node, 'node', $node->nid);
+        if (readfile($real_path) !== FALSE) {
+          global $user;
+          // update the download stats
+          $query = "INSERT INTO {sbac_resource_download_stats} (uid, nid, hits) VALUES (:uid, :nid, :hits) ON DUPLICATE KEY UPDATE hits = hits + 1";
+          db_query($query, array(':uid' => $user->uid, ':nid' => $node->nid, ':hits' => 1));
+          $query = "SELECT sum(hits) as hits, count(distinct(uid)) as unique_hits FROM sbac_resource_download_stats WHERE nid = :nid";
+          $result = db_query($query, array(':nid' => $node->nid))->fetchAssoc();
+          $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' => $result['hits']));
+          $node->field_unique_downloads[LANGUAGE_NONE] = array(0 => array('value' => $result['unique_hits']));
+          entity_save_field(array('field_asset_downloads', 'field_unique_downloads'), $node, 'node', $node->nid);
           unlink($real_path); // delete the temp zip.
         }
       }
