@@ -121,7 +121,7 @@ function sbac_resource_resource_review_page() {
   sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();
-  // dpq($view->build_info['query']);
+//  dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
   $view->destroy();
 
