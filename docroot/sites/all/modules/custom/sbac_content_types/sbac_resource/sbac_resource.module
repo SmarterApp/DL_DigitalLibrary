@@ -1328,7 +1328,7 @@ function sbac_resource_node_load($nodes, $types) {
       $media_items = sbac_media_load_items($node->nid);
       $node->document = $media_items;
 
-      if ($node->field_html5['und'][0]['value']) {
+      if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
         $html5_item = sbac_media_load_html5_item($node->nid);
         if ($html5_item !== FALSE) {
           $node->document['html5'] = $html5_item;
@@ -1384,6 +1384,7 @@ function sbac_resource_save_current_state($node) {
     }
 
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
       sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
     }
 
@@ -1401,6 +1402,7 @@ function sbac_resource_save_current_state($node) {
       else if (!$completed_gate_keeper && !$gate_keeper) {
         sbac_resource_delete_resource_state_given_state($node, 'gk_being_reviewed');
         if (!$completed_gate_keeper) {
+          sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
           sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
         }
       }
@@ -1410,6 +1412,7 @@ function sbac_resource_save_current_state($node) {
         $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
         $current_review = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'single');
         if (!$completed_feedback && !$current_review) {
+          sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
           sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
         }
         else {
@@ -1436,6 +1439,7 @@ function sbac_resource_save_current_state($node) {
 
           if ($total_count < 3) {
             // everyone has access and is set to needs review
+            sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
             sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review', TRUE);
           }
           else {
@@ -1526,6 +1530,7 @@ function sbac_resource_save_current_state($node) {
         if (!$new_record) {
           sbac_resource_delete_resource_state($entity);
         }
+        sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_needs_review');
         sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_needs_review');
       }
 
