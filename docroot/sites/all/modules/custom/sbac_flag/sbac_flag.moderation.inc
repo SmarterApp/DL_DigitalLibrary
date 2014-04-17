@@ -143,6 +143,11 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
   $count = 0;
   ksort($sorted_flags);
   $outputted = array();
+
+  // Remove dupicate nodes from y_urgent, as they already show up on urgent.
+  $unique_flags = array_diff_key($sorted_flags['y_urgent']['resource'], $sorted_flags['urgent']['resource']);
+  $sorted_flags['y_urgent']['resource'] = $unique_flags;
+
   foreach ($sorted_flags as $type => $rows) {
     foreach ($rows as $flag_type => $nodes) {
       foreach ($nodes as $nid => $element) {
