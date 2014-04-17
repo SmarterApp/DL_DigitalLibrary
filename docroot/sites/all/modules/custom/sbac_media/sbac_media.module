@@ -814,7 +814,6 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
  */
 function sbac_media_after_build_form($form, $form_state) {
   $form['#submit'][] = 'sbac_media_widget_form_element_submit_handler';
-
   return $form;
 }
 
@@ -825,8 +824,15 @@ function sbac_media_after_build_form($form, $form_state) {
  * @param $form_state
  */
 function sbac_media_widget_form_element_submit_handler($form, $form_state) {
-  //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
+  if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
+    //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
+    db_query('DELETE FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 0));
 
+    // Clear previous transcript flags for this node.
+    db_query("UPDATE {eck_media} SET transcript = 0 WHERE nid = :nid", array(':nid' => $form_state['node']->nid));
+  }
+
+  // Handle the weight of the media items.
   if (isset($form_state['input']['weights']) && $form_state['input']['weights']) {
     $weights = drupal_json_decode($form_state['input']['weights']);
     if ($weights) {
@@ -834,12 +840,6 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
         db_query("UPDATE {eck_media} SET weight = :weight WHERE id = :id", array(':weight' => $weight, ':id' => $media_id));
       }
     }
-  }
-
-  // Clear previous transcript flags for this node.
-  if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
-    $nid = $form_state['node']->nid;
-    db_query("UPDATE {eck_media} SET transcript = 0 WHERE nid = :nid", array(':nid' => $nid));
   }
 
   // Set the transcript flag for each media item.
