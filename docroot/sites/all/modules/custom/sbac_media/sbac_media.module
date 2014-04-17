@@ -825,8 +825,18 @@ function sbac_media_after_build_form($form, $form_state) {
  */
 function sbac_media_widget_form_element_submit_handler($form, $form_state) {
   if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
-    //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
-    db_query('DELETE FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 0));
+    // need to handle HTML5 as well.
+    if ($form_state['triggering_element']['#value'] == 'Close') {
+      //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
+      db_query('DELETE FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 0));
+      // if status is 2, set back to 1, they didn't really want to delete it.
+      db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 2));
+    }
+    else {
+      db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 0));
+      // now check if a file is supposed to be removed, if they clicked save and a status of 2 exists, remove the file
+
+    }
 
     // Clear previous transcript flags for this node.
     db_query("UPDATE {eck_media} SET transcript = 0 WHERE nid = :nid", array(':nid' => $form_state['node']->nid));
@@ -1517,7 +1527,7 @@ function sbac_media_count_duplicates($media_items) {
 function sbac_media_load_items($nid) {
   $media_items = array();
   if ($nid) {
-    $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid AND type <> :type ORDER BY weight", array(':nid' => $nid, ':type' => 'html5'));
+    $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid AND type <> :type AND status <> :status ORDER BY weight", array(':nid' => $nid, ':type' => 'html5', ':status' => 2));
     foreach ($result as $row) {
       $media_item = new stdClass();
       $media_item->type = $row->type;
@@ -1549,6 +1559,18 @@ function sbac_media_load_html5_item($nid) {
     $html5_item = db_query("SELECT * FROM {eck_media} WHERE nid = :nid AND type = :type ORDER BY weight LIMIT 1", array(':nid' => $nid, ':type' => 'html5'))->fetchObject();
   }
   return $html5_item;
+}
+
+/**
+ * Sets the status value of the record to 2 (delete).
+ *
+ * @param $id
+ * @param null $fid
+ */
+function sbac_media_temp_delete_media_record($id, $fid = NULL) {
+  if ($id) {
+    db_query('UPDATE {eck_media} SET status = :status WHERE id = :id', array(':status' => 2, ':id' => $id));
+  }
 }
 
 /**
@@ -1604,20 +1626,21 @@ function sbac_media_delete_media($js = FALSE) {
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if ($form_state['html5']) {
           // Build path to delete file folder.
-          $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
-          $zip_contents_path = drupal_realpath($directory) . '/html5_module';
-          if (file_exists($zip_contents_path)) {
-            sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
-            file_unmanaged_delete_recursive($zip_contents_path);
-            file_unmanaged_delete_recursive($directory);
-          }
-          else {
-            watchdog('SBAC Media', 'Unable to remove HTML5 content module for node with nid of ' .  $form_state['values']['nid']);
-            file_unmanaged_delete_recursive($directory);
-          }
+//          $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
+//          $zip_contents_path = drupal_realpath($directory) . '/html5_module';
+//          if (file_exists($zip_contents_path)) {
+//            sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
+//            file_unmanaged_delete_recursive($zip_contents_path);
+//            file_unmanaged_delete_recursive($directory);
+//          }
+//          else {
+//            watchdog('SBAC Media', 'Unable to remove HTML5 content module for node with nid of ' .  $form_state['values']['nid']);
+//            file_unmanaged_delete_recursive($directory);
+//          }
 
           // Delete the record from file system (DB and File System)
-          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+          sbac_media_temp_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+//          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
 
           // Rebuild the HTML5 section.
           $form = array();
@@ -1628,7 +1651,8 @@ function sbac_media_delete_media($js = FALSE) {
           $output[] = ajax_command_html('#sbac-content-module-container', $rendered_output);
         }
         else {
-          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+          sbac_media_temp_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+//          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
           // Rebuild the list of items.
           $media_items = sbac_media_load_items($form_state['values']['nid']);
           $media_list = _sbac_media_create_list($media_items, $form_state);
