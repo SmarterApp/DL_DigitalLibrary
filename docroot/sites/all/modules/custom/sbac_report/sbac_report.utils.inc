@@ -310,7 +310,21 @@ function get_field_value_using_key($fieldkey, $data, $resource, $primary_key, &$
 
 function get_value_from_wrapper($fieldkey, $source) {
   if (array_key_exists('accessor', $fieldkey)) {
-    return $source->{$fieldkey['accessor']}();
+
+    $src_info = $source->info();
+
+    if ($src_info['bundle'] != 'education_alignment') {
+      return $source->{$fieldkey['accessor']}();
+    }
+
+    $src_raw = $source->raw();
+    $ccss = array();
+    $terms = taxonomy_term_load_multiple($src_raw);
+
+    foreach ($terms as $tid => $contents) {
+      $ccss[] = $contents->field_alignment_shortname['und'][0]['safe_value'];
+    }
+    return $ccss;
   }
   else {
     return $source->value();
