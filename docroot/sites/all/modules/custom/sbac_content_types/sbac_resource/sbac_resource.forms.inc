@@ -518,10 +518,6 @@ function sbac_resource_cancel_all_changes_submit(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_resource_validate_form(&$form, &$form_state) {
-  if (isset($form_state['clicked_button']['#value']) && $form_state['clicked_button']['#value'] == 'Close') {
-    $form_state['redirect'] = 'my-resources';
-    drupal_redirect_form($form_state);
-  }
   // Do not validate on ajax events like "Upload"
   if ($form_state['submitted']) {
     switch ($form_state['values']['additional_settings__active_tab']) {
@@ -2370,8 +2366,6 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
     '#value' => 'Close',
     '#weight' => 0,
     '#attributes' => array('class' => array('sbac-cancel-blue', 'sbac-resource-cancel-button')),
-    '#validate' => array('sbac_resource_validate_form'),
-    "#executes_submit_callback" => FALSE,
     '#limit_validation_errors' => array(),
   );
 }
