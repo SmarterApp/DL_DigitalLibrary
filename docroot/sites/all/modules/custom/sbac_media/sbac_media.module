@@ -828,7 +828,10 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
     // need to handle HTML5 as well.
     if ($form_state['triggering_element']['#value'] == 'Close') {
       //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
-      db_query('DELETE FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 0));
+      $temp_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 0));
+      foreach ($temp_files as $file) {
+        sbac_media_delete_media_record($file->id, $file->fid);
+      }
       // if status is 2, set back to 1, they didn't really want to delete it.
       db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 2));
     }
@@ -865,12 +868,9 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
   }
 }
 
-
-function sbac_media_remove_file($file) {
-
-}
-
 /**
+ * Creates the table list of media items.
+ *
  * @param $media_items
  * @return string
  */
@@ -1855,6 +1855,7 @@ function sbac_media_save_embedded_source($embedded_video_source, $nid) {
     $media->file_size = (isset($file->duration) ? $file->duration : 0);
     $media->weight = 100;
     $media->embed_url = $embedded_video_source;
+    $media->status = 0;
     entity_save('media', $media);
   }
 }
