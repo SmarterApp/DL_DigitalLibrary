@@ -1185,11 +1185,11 @@ function _sbac_resource_digital_library_links($fields) {
     )
   ));
 
-  $variables['views'] = '0 Views';
+  $variables['views'] = '0';
   if (isset($fields['field_unique_views'])) {
     $variables['views'] = $fields['field_unique_views']->content;
   }
-  $variables['downloads'] = '0 Downloads';
+  $variables['downloads'] = '0';
   if (isset($fields['field_asset_downloads'])) {
     $variables['downloads'] = $fields['field_asset_downloads']->content;
   }

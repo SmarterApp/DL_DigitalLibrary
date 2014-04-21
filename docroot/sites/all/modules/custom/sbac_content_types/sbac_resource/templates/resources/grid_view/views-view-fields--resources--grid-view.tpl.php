@@ -17,8 +17,8 @@
       if (isset($fields['sticky']) && $fields['sticky']->raw == 1) {
         $class = 'distinction';
         $text = 'Posted with Distinction';
-        $image =  '<a href="#" data-dropdown="distinction-drop-'. $fields['nid']->raw.'"><img src="/sites/all/themes/SBAC/images/icons/icon-shield.png" alt="Posted With Distinction Logo"></a>
-          <ul id="distinction-drop-'. $fields['nid']->raw.'" class="f-dropdown" data-dropdown-content>
+        $image =  '<a href="#" data-dropdown="distinction-drop-'. $fields['nid']->raw.'"><img src="/sites/all/themes/SBAC/images/icons/icon-distinction.png" alt="Posted With Distinction Logo"></a>
+          <ul id="distinction-drop-'. $fields['nid']->raw.'" class="f-dropdown down" data-dropdown-content>
             <li>Posted with Distinction</li>
           </ul>';
       }
@@ -30,12 +30,6 @@
       ?>
     </h3>
     <div class="shield-drop"><?php print $image; ?></div>
-    <?php if (isset($fields['favorites_link'])): ?>
-      <div class="favorites-link">
-        <?php echo $fields['favorites_link']; ?>
-        <?php echo $fields['favorites_tooltip']; ?>
-      </div>
-    <?php endif; ?>
 
     <?php if (isset($fields['image'])): ?>
       <?php print $fields['image']; ?>
@@ -47,6 +41,13 @@
           <?php echo $fields['field_alt_body']->content; ?>
         <?php endif; ?>
     </div>
+
+		<?php if (isset($fields['favorites_link'])): ?>
+      <div class="favorites-link">
+        <?php echo $fields['favorites_link']; ?>
+        <?php echo $fields['favorites_tooltip']; ?>
+      </div>
+    <?php endif; ?>
   </div>
 
   <?php
@@ -74,16 +75,31 @@
       ?>
     <?php endif; ?>
 
+		 <?php if (isset($fields['subject']) || isset($fields['grades']) || isset($fields['media_types'])): ?>
+	    <div class="paradata-info">
+	        <?php if (isset($fields['subject']) && $fields['subject']): ?>
+	          <div class="info-item"><div class="field-subject">Subjects:&nbsp;</div><?php print $fields['subject']; ?></div>
+	        <?php endif; ?>
+
+	        <?php if (isset($fields['grades']) && $fields['grades']): ?>
+	          <div class="info-item"><div class="field-grades">Grades:&nbsp;</div><?php print $fields['grades']; ?></div>
+	        <?php endif; ?>
+
+	        <?php if (isset($fields['media_types']) && $fields['media_types']): ?>
+	          <div class="info-item"><div class="field-media-types">Media Types:&nbsp;</div><?php print $fields['media_types']; ?></div>
+	        <?php endif; ?>
+	    </div>
+	    <?php endif; ?>
 
     <?php if (isset($fields['views']) || isset($fields['downloads']) || isset($fields['collaborators'])): ?>
 
     <div class="paradata-numbers">
       <?php if (isset($fields['views']) && $fields['views']): ?>
-        <?php print $fields['views'] . ','; ?>
+        <div class="stat-views"><?php print $fields['views']; ?></div>
       <?php endif; ?>
 
       <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-        <?php print $fields['downloads']; ?>
+        <div class="stat-downloads"><?php print $fields['downloads']; ?></div>
       <?php endif; ?>
 
       <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
@@ -91,27 +107,12 @@
       <?php endif; ?>
 
       <?php if (isset($fields['rating']) && $fields['rating']): ?>
-        <?php print $fields['rating']; ?> (<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)
+        <div class="rating-count">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div><?php print $fields['rating']; ?> 
       <?php endif; ?>
     </div>
 
     <?php endif; ?>
 
-    <?php if (isset($fields['subject']) || isset($fields['grades']) || isset($fields['media_types'])): ?>
-    <div class="paradata-info">
-        <?php if (isset($fields['subject']) && $fields['subject']): ?>
-          <div><div class="clearfix">Subjects:</div><?php print $fields['subject']; ?></div>
-        <?php endif; ?>
-
-        <?php if (isset($fields['grades']) && $fields['grades']): ?>
-          <div><div class="clearfix">Grades:</div><?php print $fields['grades']; ?></div>
-        <?php endif; ?>
-
-        <?php if (isset($fields['media_types']) && $fields['media_types']): ?>
-          <div><div class="clearfix">Media Types:</div><?php print $fields['media_types']; ?></div>
-        <?php endif; ?>
-    </div>
-    <?php endif; ?>
 
     <?php
       if (isset($fields['buttons']) && is_array($fields['buttons'])) {
