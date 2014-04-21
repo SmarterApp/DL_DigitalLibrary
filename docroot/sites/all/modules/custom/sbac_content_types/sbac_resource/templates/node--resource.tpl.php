@@ -80,6 +80,11 @@
 <?php if (isset($resource_type) && $resource_type): ?>
   <span class="resource-type"><?php echo $resource_type; ?></span>
 <?php endif; ?>
+<?php if (isset($favorites_link)): ?>
+  <div class="favorites-link">
+    <?php echo $favorites_link; ?>
+  </div>
+<?php endif; ?>
 <article id="node-<?php echo $node->nid; ?>" class="<?php echo $classes; ?>"<?php echo $attributes; ?>>
   <div class="resource-attributes">
     <?php if (isset($author) && $author): ?>

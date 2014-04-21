@@ -230,6 +230,7 @@
             $('.slideable').hide();
             Drupal.settings.sbac_search.isEdit = 0;
             $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
+            $('#sbac-search-digital-library-resources-form').submit();
           }
         }
         return false;

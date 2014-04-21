@@ -96,8 +96,8 @@ function sbac_resource_my_resource_apply_filters(&$view) {
                       break;
                     case 'In Review':
                       $state['being_reviewed'] = 'being_reviewed';
-                      $state['needs_review'] = 'needs_review';
-                      $state['approved'] = 'approved';
+                      // $state['needs_review'] = 'needs_review';
+                      // $state['approved'] = 'approved';
                       break;
                     case 'Posted':
                       $state['published'] = 'published';
@@ -113,6 +113,7 @@ function sbac_resource_my_resource_apply_filters(&$view) {
                       break;
                     default:
                       $state['draft'] = 'draft';
+                      $state['approved'] = 'approved';
                       break;
                   }
                   $resource_states = $state;

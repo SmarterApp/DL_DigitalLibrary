@@ -46,6 +46,7 @@
         if (is_favorite == 0) {
           the_favorite_link.removeClass('sbac-favorites-link-no').addClass('sbac-favorites-link-yes'); // update class
           the_favorite_link.next().html('Added to Favorites'); // update text
+          the_favorite_link.html('Unfavorite');
           var old_count = $('.sbac-favorites-menu span').html(); // update menu counter
           old_count++;
           $('.sbac-favorites-menu span').html(old_count);
@@ -55,6 +56,7 @@
           the_favorite_link.removeClass('sbac-favorites-link-yes');
           the_favorite_link.addClass('sbac-favorites-link-no');
           the_favorite_link.next().html('Add to Favorites');
+          the_favorite_link.html('Add to Favorites');
           var old_count = $('.sbac-favorites-menu span').html();
           old_count--;
           $('.sbac-favorites-menu span').html(old_count);
