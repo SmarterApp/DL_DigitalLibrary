@@ -752,8 +752,6 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
   $form['#group_children']['field_content_module_container'] = 'group_materials';
 }
 
-
-
 /**
  * After build function to add the submit handler in.
  *
@@ -774,7 +772,7 @@ function sbac_media_after_build_form($form, $form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_media_widget_form_element_submit_handler($form, $form_state) {
+function sbac_media_widget_form_element_submit_handler($form, &$form_state) {
   if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
     sbac_media_handle_temp_files($form, $form_state);
     // Clear previous transcript flags for this node.
@@ -796,6 +794,13 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
     $transcripts = $form_state['input']['transcript'];
     foreach ($transcripts as $media_id => $value) {
       db_query('UPDATE {eck_media} SET transcript = 1 WHERE id = :id', array(':id' => $media_id));
+    }
+  }
+
+  // On moderation, send them to moderate queue. 
+  if ($form_state['clicked_button']['#value'] == 'Close') {
+    if (isset($form_state['sbac-flag']) && $form_state['sbac-flag'] == TRUE) {
+      $form_state['redirect'] = 'moderation';
     }
   }
 }
