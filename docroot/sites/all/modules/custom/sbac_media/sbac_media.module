@@ -2,8 +2,9 @@
 
 // Hooks and callbacks for integrating with File Entity module for display.
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/includes/sbac_media.formatters.inc';
-
 include_once 'sbac_media.features.inc';
+
+define('SBAC_MEDIA_100MB', 104857600);
 
 /**
  * Implements hook_init().
@@ -12,7 +13,6 @@ function sbac_media_init() {
   module_load_include('inc', 'sbac_media', 'includes/MediaYouTubeStreamWrapper');
   module_load_include('inc', 'sbac_media', 'includes/VimeoStreamWrapper');
 }
-
 
 /**
  * Implements hook_update_projects_alter().
@@ -68,59 +68,8 @@ function sbac_media_menu() {
     'access arguments' => array('access content'),
   );
 
-  $items['sbac-media/file-stream'] = array(
-    'title' => 'File Stream',
-    'page callback' => 'sbac_media_file_stream',
-    'access callback' => TRUE,
-  );
-
   return $items;
 }
-
-/**
- * @todo: Need to rework this to work with Google CDN now.
- *
- * @param $fid
- * @param null $session_id
- */
-//function sbac_media_file_stream() {
-//  $file_stream = FALSE;
-//  $fid = arg(2);
-//  $session = arg(3);
-//  $file = file_load($fid);
-//  if ($session == NULL || !$file) {
-//    return;
-//  }
-//
-//  if ($session == session_name()) {
-//    header('Cache-Control: no-cache private');
-//    header('Content-Description: File Transfer');
-//    header('Content-Length: ' . $file->filesize);
-//    header('Content-Type: ' . $file->filemime);
-//
-//    $bucket = variable_get('google_cdn_bucket_name');
-//    $folder = variable_get('google_cdn_folder');
-//    $services = sbac_media_get_google_cloud_storage();
-//    if ($services) {
-//      try {
-//        $target = str_replace('gs://', '', $file->uri);
-//        $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
-//        if ($response) {
-//          $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
-//          $request = new Google_HttpRequest($download_url, 'GET');
-//          $httpRequest = $services['client']->getIo()->authenticatedRequest($request);
-//          if ($httpRequest) {
-//            $file_stream = $httpRequest->getResponseBody();
-//          }
-//        }
-//      } catch (Exception $e) {
-//        watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::strea_read');
-//      }
-//    }
-//  }
-//
-//  echo $file_stream;
-//}
 
 /**
  * Function to check if there are any downloadable files.
@@ -827,36 +776,7 @@ function sbac_media_after_build_form($form, $form_state) {
  */
 function sbac_media_widget_form_element_submit_handler($form, $form_state) {
   if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
-    // need to handle HTML5 as well.
-    if ($form_state['triggering_element']['#value'] == 'Close') {
-      //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
-      $temp_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 0));
-      foreach ($temp_files as $file) {
-        if ($file->type == 'html5') {
-          sbac_media_delete_html5_record($file);
-        }
-        else {
-          sbac_media_delete_media_record($file->id, $file->fid);
-        }
-      }
-      // if status is 2, set back to 1, they didn't really want to delete it.
-      db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 2));
-    }
-    else {
-      // temp file, they clicked save, permanently save the file now.
-      db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 0));
-      // now check if a file is supposed to be removed, if they clicked save and a status of 2 exists, remove the file
-      $remove_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 2));
-      foreach ($remove_files as $file) {
-        if ($file->type == 'html5') {
-          sbac_media_delete_html5_record($file);
-        }
-        else {
-          sbac_media_delete_media_record($file->id, $file->fid);
-        }
-      }
-    }
-
+    sbac_media_handle_temp_files($form, $form_state);
     // Clear previous transcript flags for this node.
     db_query("UPDATE {eck_media} SET transcript = 0 WHERE nid = :nid", array(':nid' => $form_state['node']->nid));
   }
@@ -876,6 +796,44 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
     $transcripts = $form_state['input']['transcript'];
     foreach ($transcripts as $media_id => $value) {
       db_query('UPDATE {eck_media} SET transcript = 1 WHERE id = :id', array(':id' => $media_id));
+    }
+  }
+}
+
+/**
+ * Handle the temp file situations.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_handle_temp_files($form, $form_state) {
+  // need to handle HTML5 as well.
+  if ($form_state['triggering_element']['#value'] == 'Close') {
+    //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
+    $temp_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 0));
+    foreach ($temp_files as $file) {
+      if ($file->type == 'html5') {
+        sbac_media_delete_html5_record($file);
+      }
+      else {
+        sbac_media_delete_media_record($file->id, $file->fid);
+      }
+    }
+    // if status is 2, set back to 1, they didn't really want to delete it.
+    db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 2));
+  }
+  else {
+    // temp file, they clicked save, permanently save the file now.
+    db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 0));
+    // now check if a file is supposed to be removed, if they clicked save and a status of 2 exists, remove the file
+    $remove_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 2));
+    foreach ($remove_files as $file) {
+      if ($file->type == 'html5') {
+        sbac_media_delete_html5_record($file);
+      }
+      else {
+        sbac_media_delete_media_record($file->id, $file->fid);
+      }
     }
   }
 }
@@ -1030,43 +988,7 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
     }
   }
   else {
-    $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
-    // First param is file limit. second param is limit for total size for all uploads for user.
-    $allowed_size = array(104857600, 0); //104857600 = 100MB in bytes
-    $directory = "gs://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
-    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-    if ($writable) {
-      $validators = array(
-        'file_validate_extensions' => $allowed_file_types,
-        'file_validate_size' => $allowed_size,
-      );
-      $temp_uri = $_FILES['files']['tmp_name']['field_file_upload'];
-      $file_hash = md5_file($temp_uri);
-      $file = file_save_upload('field_file_upload', $validators, $directory, FILE_EXISTS_REPLACE);
-      if ($file) {
-        $file->status = FILE_STATUS_PERMANENT;
-        file_save($file);
-
-        if (isset($form_state['node'])) {
-          $node = $form_state['node'];
-
-          // Create the media item, duplicates get checked later.
-          $media = new stdClass;
-          $media->type = 'media';
-          $media->fid = $file->fid;
-          $media->nid = $node->nid;
-          $media->filename = $file->filename;
-          $media->file_size = $file->filesize;
-          $media->file_hash = $file_hash;
-          $media->weight = 100;
-          $media->status = 0;
-          entity_save('media', $media);
-        }
-      }
-      else {
-        form_set_error('field_file_upload', t('You must add a file to continue.'));
-      }
-    }
+    sbac_media_save_media($form, $form_state);
   }
 
   // Update the view
@@ -1082,6 +1004,52 @@ function sbac_media_widget_form_element_upload($form, $form_state) {
 }
 
 /**
+ * Save the media item.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_save_media(&$form, &$form_state) {
+  $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
+  // First param is file limit. second param is limit for total size for all uploads for user.
+  $allowed_size = array(SBAC_MEDIA_100MB, 0);
+  $directory = "gs://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
+  $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+  if ($writable) {
+    $validators = array(
+      'file_validate_extensions' => $allowed_file_types,
+      'file_validate_size' => $allowed_size,
+    );
+    $temp_uri = $_FILES['files']['tmp_name']['field_file_upload'];
+    $file_hash = md5_file($temp_uri);
+    $file = file_save_upload('field_file_upload', $validators, $directory, FILE_EXISTS_REPLACE);
+    if ($file) {
+      $file->status = FILE_STATUS_PERMANENT;
+      file_save($file);
+
+      if (isset($form_state['node'])) {
+        $node = $form_state['node'];
+
+        // Create the media item, duplicates get checked later.
+        $media = new stdClass;
+        $media->type = 'media';
+        $media->fid = $file->fid;
+        $media->nid = $node->nid;
+        $media->filename = $file->filename;
+        $media->file_size = $file->filesize;
+        $media->file_hash = $file_hash;
+        $media->weight = 100;
+        $media->status = 0;
+        entity_save('media', $media);
+      }
+    }
+    else {
+      form_set_error('field_file_upload', t('You must add a file to continue.'));
+    }
+  }
+}
+
+/**
  * Implements hook_file_validate().
  *
  * @param $file
@@ -1091,9 +1059,9 @@ function sbac_media_file_validate($file) {
   if (($file->source == 'field_file_upload') ||
     ($file->source == 'field_content_module_picker')){
     global $user;
-    $file_limit = 104857600; // 104857600 Bytes == 100MB
+    $file_limit = SBAC_MEDIA_100MB;
     if ($file->source == 'field_content_module_picker') { // HTML5 field.
-      $file_limit = 104857600; //104857600 = 100MB in bytes
+      $file_limit = SBAC_MEDIA_100MB;
     }
     // Have to create custom validator for user1. Standard file_validate_size exempts user1.
     if ($user->uid == 1) {
@@ -1154,7 +1122,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
 function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
   try {
     $allowed_file_types = array('zip');
-    $allowed_size = array(104857600, 0); //104857600 = 100MB in bytes
+    $allowed_size = array(SBAC_MEDIA_100MB, 0);
     $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     if ($writable) {
