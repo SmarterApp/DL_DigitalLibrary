@@ -82,24 +82,45 @@
           $('.category-hide').addClass('js-hide');
         }
         else {
-          var last_filter = $('.categories-current-filters .current-filter:last');
+          var filters = current_filters.val();
+          var filters_array = filters.split('::');
+          var filters_length = filters_array.length;
+
+          var target_filter = filter_name.attr('vid') + ':' + filter_name.attr('tid');
+          var array_pos = filters_array.indexOf(target_filter);
+
+          if (array_pos == 0) {
+            var last_filter = $('.categories-current-filters .current-filter:first');
+            if (filters_length > 1) {
+              target_filter = target_filter + '::';
+            }
+          }
+          else if (array_pos != 0 && array_pos != (filters_length - 1)) {
+            var last_filter = $('.categories-current-filters .current-filter:nth-child(' + (array_pos + 1) +')');
+            target_filter = '::' + target_filter;
+          }
+          else if (array_pos == (filters_length - 1)) {
+            var last_filter = $('.categories-current-filters .current-filter:last');
+            if (filters_length > 1) {
+              target_filter = '::' + target_filter;
+            }
+          }
           last_filter.remove();
+
           filter_name.removeClass('current');
           filter_name.parent().removeClass('current');
 
-          // Remove the tid to the filter list
-          var filters = current_filters.val();
-          var pos = filters.lastIndexOf("::");
-          if (pos != -1) {
-            var new_filters = filters.substr(0, pos);
+          if (array_pos != -1) {
+            var new_filters = filters.replace(target_filter, '');
             current_filters.val(new_filters);
           }
           else {
             $('.categories-current-filters').addClass('noshow');
             reset_filters.addClass('js-hide');
             search_button.addClass('js-hide');
-            current_filters.val('');
+            current_filters.val('');  
           }
+
         }
         return false;
       });
