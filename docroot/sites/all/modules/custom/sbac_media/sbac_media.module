@@ -833,9 +833,13 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
       db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 2));
     }
     else {
+      // temp file, they clicked save, permanently save the file now.
       db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 0));
       // now check if a file is supposed to be removed, if they clicked save and a status of 2 exists, remove the file
-
+      $remove_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 2));
+      foreach ($remove_files as $file) {
+        sbac_media_delete_media_record($file->id, $file->fid);
+      }
     }
 
     // Clear previous transcript flags for this node.
@@ -859,6 +863,11 @@ function sbac_media_widget_form_element_submit_handler($form, $form_state) {
       db_query('UPDATE {eck_media} SET transcript = 1 WHERE id = :id', array(':id' => $media_id));
     }
   }
+}
+
+
+function sbac_media_remove_file($file) {
+
 }
 
 /**
