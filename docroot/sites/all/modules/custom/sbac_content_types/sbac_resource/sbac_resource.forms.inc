@@ -13,54 +13,7 @@
  */
 function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'resource_node_form') {
-    // Attach required JS
-    ctools_include('ajax');
-    ctools_include('modal');
-    ctools_add_js('ajax-responder');
-    ctools_modal_add_js();
-    drupal_set_title('');
-    $form['#id'] = 'sbac-resource-form';
-
-    $form['#attached']['js'] = array(
-      drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
-      drupal_get_path('module', 'sbac_alignment') . '/js/sbac_alignment.js',
-      drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
-      libraries_get_path('jquery.more') . '/jquery.more.js',
-    );
-    $form['#attached']['css'] = array(
-      drupal_get_path('module','sbac_resource').'/css/sbac_resource.css',
-      libraries_get_path('jquery.more') . '/jquery.more.css',
-    );
-
-    // Set the state in JS for later use.
-    if (isset($form['#node']->workbench_moderation['current']->state)) {
-      drupal_add_js(array('resource_workbench_current_state' => $form['#node']->workbench_moderation['current']->state), 'setting');
-    }
-    else {
-      drupal_add_js(array('resource_workbench_current_state' => 'creation'), 'setting');
-    }
-
-    if (!isset($form['#node']->nid)) {
-      drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
-    }
-
-    // Setup the form
-    $generate = FALSE;
-    if (isset($form_state['triggering_element']) && $form_state['triggering_element']['#value'] != 'Upload') {
-      $generate = TRUE;
-    }
-    else if (!isset($form_state['triggering_element'])) {
-      $generate = TRUE;
-    }
-
-    $form_state['html5'] = FALSE;
-    if (isset($_GET['type']) && $_GET['type'] == 'module') {
-      $form_state['html5'] = TRUE;
-    }
-    if (isset($form['field_html5']['und']['#default_value']) && $form['field_html5']['und']['#default_value'] == 1) {
-      $form_state['html5'] = TRUE;
-    }
-
+    $generate = _sbac_resource_setup_form($form, $form_state);
     _sbac_resource_module_flag($form, $form_state);
     if ($generate) {
       _sbac_resource_create_complete_flag($form, $form_state);
@@ -83,20 +36,72 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_submit_resource($form, $form_state);
     _sbac_resource_form_required_fields($form, $form_state);
     _sbac_resource_form_remove_elements($form, $form_state);
-
-    // Hide the Advanced fieldset if not DLRB member.
-    global $user;
-    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
-      drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
-    }
-    else {
-      field_group_hide_field_groups($form, array('group_advanced'));
-      drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
-    }
-
-    // hide recent reviewers field
-    $form['field_recent_reviewers']['#access'] = FALSE;
+    _sbac_resource_form_finalize($form, $form_state);
   }
+}
+
+/**
+ * Initialize form variables.
+ *
+ * @param $form
+ * @param $form_state
+ * @return bool
+ */
+function _sbac_resource_setup_form(&$form, &$form_state) {
+  // Attach required JS
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+  drupal_set_title('');
+  $form['#id'] = 'sbac-resource-form';
+
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
+    drupal_get_path('module', 'sbac_alignment') . '/js/sbac_alignment.js',
+    drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
+    libraries_get_path('jquery.more') . '/jquery.more.js',
+  );
+  $form['#attached']['css'] = array(
+    drupal_get_path('module','sbac_resource').'/css/sbac_resource.css',
+    libraries_get_path('jquery.more') . '/jquery.more.css',
+  );
+
+  // Set the state in JS for later use.
+  if (isset($form['#node']->workbench_moderation['current']->state)) {
+    drupal_add_js(array('resource_workbench_current_state' => $form['#node']->workbench_moderation['current']->state), 'setting');
+  }
+  else {
+    drupal_add_js(array('resource_workbench_current_state' => 'creation'), 'setting');
+  }
+
+  if (!isset($form['#node']->nid)) {
+    drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
+    drupal_add_js(array('resource_nid' => 0), 'setting');
+  }
+  else {
+    drupal_add_js(array('resource_nid' => $form['#node']->nid), 'setting');
+  }
+
+
+  // Setup the form
+  $generate = FALSE;
+  if (isset($form_state['triggering_element']) && $form_state['triggering_element']['#value'] != 'Upload') {
+    $generate = TRUE;
+  }
+  else if (!isset($form_state['triggering_element'])) {
+    $generate = TRUE;
+  }
+
+  $form_state['html5'] = FALSE;
+  if (isset($_GET['type']) && $_GET['type'] == 'module') {
+    $form_state['html5'] = TRUE;
+  }
+  if (isset($form['field_html5']['und']['#default_value']) && $form['field_html5']['und']['#default_value'] == 1) {
+    $form_state['html5'] = TRUE;
+  }
+
+  return $generate;
 }
 
 /**
@@ -2551,6 +2556,26 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_resource_state']['#access'] = FALSE;
   $form['field_html5']['#access'] = FALSE;
   $form['field_thumbnail_uri']['#access'] = FALSE;
+  // hide recent reviewers field
+  $form['field_recent_reviewers']['#access'] = FALSE;
+}
+
+/**
+ * Finish of the form generation.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_finalize(&$form, &$form_state) {
+  // Hide the Advanced fieldset if not DLRB member.
+  global $user;
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    drupal_add_js(array('sbac_dlrb_member' => TRUE), 'setting');
+  }
+  else {
+    field_group_hide_field_groups($form, array('group_advanced'));
+    drupal_add_js(array('sbac_dlrb_member' => FALSE), 'setting');
+  }
 }
 
 /**

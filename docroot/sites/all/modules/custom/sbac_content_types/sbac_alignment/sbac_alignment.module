@@ -492,16 +492,24 @@ function sbac_alignment_after_build_form($form, $form_state) {
 function sbac_alignment_widget_form_element_submit_handler($form, $form_state) {
   if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
     if ($form_state['triggering_element']['#value'] == 'Close') {
-      //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
-
+      // delete any temp reference
+      $temp_references = db_query('SELECT * FROM {field_data_field_resource_reference} WHERE deleted = :deleted AND field_resource_reference_target_id = :nid', array(':deleted' => 1, ':nid' => $form_state['node']->nid));
+      foreach ($temp_references as $reference) {
+        // remove the alignment node which removes the reference as well.
+        node_delete($reference->entity_id);
+      }
       // if status is 2, set back to 1, they didn't really want to delete it.
-
+      db_query('UPDATE {field_data_field_resource_reference} SET deleted = :deleted WHERE field_resource_reference_target_id = :target_id AND deleted = :deleted2', array(':deleted' => 0, ':target_id' => $form_state['node']->nid, ':deleted2' => 2));
     }
     else {
-      // temp file, they clicked save, permanently save the file now.
-
-      // now check if a file is supposed to be removed, if they clicked save and a status of 2 exists, remove the file
-
+      // temp reference, they clicked save, permanently save the reference now.
+      db_query('UPDATE {field_data_field_resource_reference} SET deleted = :deleted WHERE field_resource_reference_target_id = :target_id AND deleted = :deleted2', array(':deleted' => 0, ':target_id' => $form_state['node']->nid, ':deleted2' => 1));
+      // now check if a reference is supposed to be removed, if they clicked save and a status of 2 exists, remove the reference
+      $remove_references = db_query('SELECT * FROM {field_data_field_resource_reference} WHERE deleted = :deleted AND field_resource_reference_target_id = :nid', array(':deleted' => 2, ':nid' => $form_state['node']->nid));
+      foreach ($remove_references as $reference) {
+        // remove the alignment node which removed the reference as well.
+        node_delete($reference->entity_id);
+      }
     }
   }
 }
@@ -554,10 +562,6 @@ function sbac_alignment_node_load($nodes, $types) {
       }
     }
   }
-}
-
-function sbac_alignment_entity_presave($entity, $type) {
-  $var = '';
 }
 
 // set a hook on the node insert / update / delete and handle the temp ccss references?
