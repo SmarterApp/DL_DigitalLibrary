@@ -463,6 +463,47 @@ function sbac_alignment_form_alter(&$form, &$form_state, $form_id) {
       array_unshift($form['actions']['submit']['#submit'], 'sbac_alignment_form_submit_handler');
     }
   }
+
+  if ($form_id == 'resource_node_form') {
+    $form['#after_build'][] = 'sbac_alignment_after_build_form';
+  }
+}
+
+/**
+ * After build function to add the submit handler in.
+ *
+ * Used to add weights to the eck_media table.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_alignment_after_build_form($form, $form_state) {
+  $form['#submit'][] = 'sbac_alignment_widget_form_element_submit_handler';
+  return $form;
+}
+
+/**
+ * Submit handler to set the weights;
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_alignment_widget_form_element_submit_handler($form, $form_state) {
+  if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
+    if ($form_state['triggering_element']['#value'] == 'Close') {
+      //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
+
+      // if status is 2, set back to 1, they didn't really want to delete it.
+
+    }
+    else {
+      // temp file, they clicked save, permanently save the file now.
+
+      // now check if a file is supposed to be removed, if they clicked save and a status of 2 exists, remove the file
+
+    }
+  }
 }
 
 /**
@@ -518,3 +559,8 @@ function sbac_alignment_node_load($nodes, $types) {
 function sbac_alignment_entity_presave($entity, $type) {
   $var = '';
 }
+
+// set a hook on the node insert / update / delete and handle the temp ccss references?
+// if close was clicked, handle the new and deleted references
+// anything else, handle the new and deleted references
+// on the form alter?

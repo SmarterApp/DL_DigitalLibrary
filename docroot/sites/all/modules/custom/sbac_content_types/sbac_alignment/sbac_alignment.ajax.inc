@@ -157,7 +157,9 @@ function sbac_alignment_ajax_alignment_crud_callback() {
 
       $node = node_load($nid);
       if (node_access('delete', $node)) {
-        node_delete($nid);
+        // node_delete($nid);
+        // set the entity reference field_data_field_resource_reference deleted flag to 2
+        db_query('UPDATE field_data_field_resource_reference SET deleted = :deleted WHERE field_resource_reference_target_id = :target_id AND entity_id = :entityt_id', array(':deleted' => 2, ':target_id' => $nid, ':entity_id' => $nid));
       }
 
       print drupal_json_encode($data);
@@ -201,7 +203,8 @@ function sbac_alignment_ajax_alignment_crud_callback() {
         $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
         node_save($node);
 
-        // Set the deleted flag to 2
+        // Set the deleted flag to 1 to create a temp new alignment.
+        db_query('UPDATE field_data_field_resource_reference SET deleted = :deleted WHERE field_resource_reference_target_id = :target_id AND entity_id = :entityt_id', array(':deleted' => 1, ':target_id' => $nid, ':entity_id' => $nid));
 
         $term = taxonomy_term_load($tid);
         $standards_terms[] = $term->name;
