@@ -797,7 +797,7 @@ function sbac_media_widget_form_element_submit_handler($form, &$form_state) {
     }
   }
 
-  // On moderation, send them to moderate queue. 
+  // On moderation, send them to moderate queue.
   if ($form_state['clicked_button']['#value'] == 'Close') {
     if (isset($form_state['sbac-flag']) && $form_state['sbac-flag'] == TRUE) {
       $form_state['redirect'] = 'moderation';
