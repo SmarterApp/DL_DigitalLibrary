@@ -546,6 +546,7 @@ function sbac_alignment_node_load($nodes, $types) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', 'alignment')
+        ->entityCondition('deleted', 0)
         ->fieldCondition('field_resource_reference', 'target_id', $node->nid);
 
       $result = $query->execute();
@@ -563,8 +564,3 @@ function sbac_alignment_node_load($nodes, $types) {
     }
   }
 }
-
-// set a hook on the node insert / update / delete and handle the temp ccss references?
-// if close was clicked, handle the new and deleted references
-// anything else, handle the new and deleted references
-// on the form alter?
