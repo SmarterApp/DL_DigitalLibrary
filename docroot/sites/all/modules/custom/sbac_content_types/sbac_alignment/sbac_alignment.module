@@ -497,14 +497,12 @@ function sbac_alignment_node_load($nodes, $types) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', 'alignment')
-        ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
         ->fieldCondition('field_resource_reference', 'target_id', $node->nid);
 
       $result = $query->execute();
 
       if (isset($result['node'])) {
         $terms = array();
-
         foreach ($result['node'] as $item) {
           if ($alignment = node_load($item->nid)) {
             $terms = array_merge_recursive($terms, $alignment->field_education_alignment);
@@ -515,4 +513,8 @@ function sbac_alignment_node_load($nodes, $types) {
       }
     }
   }
+}
+
+function sbac_alignment_entity_presave($entity, $type) {
+  $var = '';
 }

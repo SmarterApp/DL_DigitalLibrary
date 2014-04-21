@@ -201,6 +201,8 @@ function sbac_alignment_ajax_alignment_crud_callback() {
         $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
         node_save($node);
 
+        // Set the deleted flag to 2
+
         $term = taxonomy_term_load($tid);
         $standards_terms[] = $term->name;
 
