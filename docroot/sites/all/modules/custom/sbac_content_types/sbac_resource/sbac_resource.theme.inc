@@ -751,7 +751,7 @@ function _sbac_resource_my_resources_admin_links($fields) {
     $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
 
 
-    $variables['views'] = '0 Views';
+    $variables['views'] = '0';
     if (isset($fields['field_unique_views'])) {
       $variables['views'] = $fields['field_unique_views']->content;
     }
@@ -987,7 +987,7 @@ function _sbac_resource_my_resources_links($fields) {
         }
         $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
 
-        $variables['views'] = '0 Views';
+        $variables['views'] = '0';
         if (isset($fields['field_unique_views'])) {
           $variables['views'] = $fields['field_unique_views']->content;
         }

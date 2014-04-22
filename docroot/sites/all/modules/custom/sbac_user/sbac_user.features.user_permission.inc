@@ -16,6 +16,7 @@ function sbac_user_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
       'digital library administrator' => 'digital library administrator',
       'system administrator' => 'system administrator',
     ),

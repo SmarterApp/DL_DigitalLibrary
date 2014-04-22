@@ -356,7 +356,7 @@ function sbac_core_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        0 => 'Do not recommend',
+        0 => 'Do Not Recommend',
         1 => 'Recommend with Revisions',
         2 => 'Recommend',
         3 => 'Recommend with Distinction',
