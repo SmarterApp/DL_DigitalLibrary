@@ -18,7 +18,7 @@
     if (isset($fields['sticky']) && $fields['sticky']->raw == 1) {
       $class = 'distinction';
       $text = 'Posted with Distinction';
-      $image = '<a href="#" data-dropdown="distinction-drop-' . $fields['nid']->raw . '"><img src="/sites/all/themes/SBAC/images/icons/icon-shield.png" alt="Posted With Distinction Logo"></a>
+      $image = '<a href="#" data-dropdown="distinction-drop-' . $fields['nid']->raw . '"><img src="/sites/all/themes/SBAC/images/icons/icon-distinction.png" alt="Posted With Distinction Logo"></a>
           <ul id="distinction-drop-' . $fields['nid']->raw . '" class="f-dropdown" data-dropdown-content>
             <li>Posted with Distinction</li>
           </ul>';
@@ -34,7 +34,7 @@
     <?php if (isset($fields['favorites_link'])): ?>
       <div class="favorites-link">
         <?php echo $fields['favorites_link']; ?>
-        <?php echo $fields['favorites_tooltip']; ?>
+        <?php //echo $fields['favorites_tooltip']; ?>
       </div>
     <?php endif; ?>
 

@@ -755,7 +755,7 @@ function _sbac_resource_my_resources_admin_links($fields) {
     if (isset($fields['field_unique_views'])) {
       $variables['views'] = $fields['field_unique_views']->content;
     }
-    $variables['downloads'] = '0 Downloads';
+    $variables['downloads'] = '0';
     if (isset($fields['field_asset_downloads'])) {
       $variables['downloads'] = $fields['field_asset_downloads']->content;
     }
@@ -991,7 +991,7 @@ function _sbac_resource_my_resources_links($fields) {
         if (isset($fields['field_unique_views'])) {
           $variables['views'] = $fields['field_unique_views']->content;
         }
-        $variables['downloads'] = '0 Downloads';
+        $variables['downloads'] = '0';
         if (isset($fields['field_asset_downloads'])) {
           $variables['downloads'] = $fields['field_asset_downloads']->content;
         }

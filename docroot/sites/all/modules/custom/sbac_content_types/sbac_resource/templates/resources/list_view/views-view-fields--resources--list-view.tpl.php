@@ -37,7 +37,7 @@
     <?php if (isset($fields['favorites_link'])): ?>
       <div class="favorites-link">
         <?php echo $fields['favorites_link']; ?>
-        <?php echo $fields['favorites_tooltip']; ?>
+        <?php //echo $fields['favorites_tooltip']; ?>
       </div>
     <?php endif; ?>
 
