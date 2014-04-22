@@ -743,12 +743,14 @@ function _sbac_resource_my_resources_admin_links($fields) {
 
     $favorites_class = 'sbac-favorites-link-no';
     $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
+    $favorites_text = t('Add to Favorites');
     $favorites = sbac_favorites_get_favorites($user->uid, $nid);
     if ($favorites) {
       $favorites_class = 'sbac-favorites-link-yes';
+      $favorites_text = t('Unfavorite');
       $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
     }
-    $variables['favorites_link'] = l('Favorites', $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
+    $variables['favorites_link'] = l($favorites_text, $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
 
 
     $variables['views'] = '0';
