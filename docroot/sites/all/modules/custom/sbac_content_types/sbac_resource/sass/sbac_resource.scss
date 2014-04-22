@@ -317,10 +317,11 @@ a.sbac-grid-layout {
     .resoruce-bottom {
       @include border-radius(0 0 6px 6px);
     	background-color: #c8e9f7;
-    	padding: 10px 15px 46px 15px;
+    	/*padding: 10px 15px 46px 15px;*/
+			padding: 10px 15px 0;
     	color: $darkgreen;
       font-size: 12px;
-			border-top: 1px #b7bfc4 solid;
+			/*border-top: 1px #b7bfc4 solid;*/
 
     	&.rejected{
     		background-color: #eee2e5;
@@ -329,10 +330,7 @@ a.sbac-grid-layout {
 
     	&.approved{
     		background-color: #c8e9f7;
-    	}
-
-    	.button {
-    		margin-right: 10px;
+				padding-bottom: 50px;
     	}
 
       .paradata-numbers {
@@ -562,7 +560,7 @@ a.sbac-grid-layout {
     }
 
     .resource-stats {
-      padding: 10px 0;
+      padding: 6px 0;
       font-size: 13px;
 			line-height: 1.4;
       clear: both;
@@ -596,32 +594,6 @@ a.sbac-grid-layout {
 		position: absolute;
 		left: 15px;
 		bottom: 15px;
-
-		a {
-			background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
-			display: block;
-			padding-left: 20px;
-			vertical-align: middle;
-			font-size: 10px;
-			line-height: 14px;
-			color: #62676e;
-			text-transform:uppercase;
-
-			&:hover, &.sbac-favorites-link-yes {
-				background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
-			}
-		}
-
-		.sbac-favorites-tooltip {
-			width: 142px;
-			font-size: 0.8em;
-			position: absolute;
-			z-index: 9999;
-			top: 25px;
-			right: -5px;
-			text-align: center;
-			white-space:nowrap;
-		}
 	}
 
   //List View
@@ -631,14 +603,15 @@ a.sbac-grid-layout {
     }
 
     .resource-card {
-      height: 105px;
-			margin: 0 0 15px 30px;
-			padding: 12px 214px 20px 29px;
+      height: 115px;
+			margin: 0 0 15px 0;
+			padding: 12px 25px 20px 29px;
 			
 			.column.large-2 {
-				width: 140px;
 				padding: 0;
 				display: inline-block;
+				margin: 3px 0 3px 8px;
+				width: 15.5%;
 			}
 			
 			.column.large-10 {
@@ -647,16 +620,17 @@ a.sbac-grid-layout {
 			}
 
       .resource-name {
-        border-bottom: 1px solid #aaaaaa;
-        padding-bottom: 2px;
-        margin-top: 0;
+       /* border-bottom: 1px solid #aaaaaa;
+               padding-bottom: 2px;
+               margin-top: 0;*/
       }
 
       h3 {
         font-size: 16px;
         max-width: 100%;
+				height: auto;
 
-				a {width: 90%;}
+				a {width: 100%;}
       }
 
 			img {
@@ -752,6 +726,149 @@ a.sbac-grid-layout {
   }
 }
 
+/*Digital Library Resources*/
+.page-digital-library-resources {
+	
+	.view-display-id-list_view {
+
+	  .resource-card {
+	    .column.large-10 {
+				float: left;
+				
+				h3, .resource-stats  {
+					height: auto;
+					width: 74%;
+					display: block;
+				}
+				
+				.shield-drop {
+					img {
+						top: -13px;
+						right: -14px;
+						z-index: 99;
+					}
+				}
+				
+				.list-view-info {
+					-moz-box-sizing: border-box;
+				  background-color: #F2F2F2;
+			    color: #464B54;
+			    display: block;
+			    letter-spacing: 1px;
+			    position: absolute;
+			    text-shadow: 0 1px 0 #FFFFFF;
+				  text-transform: uppercase;
+					border-left: 1px solid #FFFFFF;
+					border-radius: 0 6px 6px 0;
+			    box-shadow: -1px 0 0 0 #CECECE;
+			    height: 100%;
+			    line-height: 24px;
+			    padding: 23px 0 20px;
+			    right: -12px;
+			    top: -12px;
+			    width: 200px;
+					height: 113px;
+					z-index: 98;
+					margin-top: 0;
+					
+					.stat-views, 
+					.stat-downloads {
+	          display: inline-block;
+						vertical-align: top;
+						margin-left: 20px;
+						margin-bottom: 5px;
+
+						.field-content {
+							display: block;
+						}
+
+						.field-content:before {
+							background-position: center center;
+							content: " ";
+					    display: inline-block;
+					    margin-right: 7px;
+					    position: relative;
+					    top: -2px;
+					    vertical-align: middle;
+		        }
+	        }
+
+					.stat-views .field-content:before {
+						background: url(../images/icons/icon-statviews.png) no-repeat 0 0;
+						width: 20px;
+						height: 13px;
+					}
+
+					.stat-downloads .field-content:before {
+						background: url(../images/icons/icon-statdownloads.png) no-repeat 0 0;
+						width: 18px;
+						height: 15px;
+					}
+					
+					.rating {
+						border-top: 1px solid #FFFFFF;
+						box-shadow: 0 -1px 0 0 #CECECE;
+				    margin-top: 5px;
+				    padding-bottom: 5px;
+				    padding-top: 14px;
+						clear: both;
+						
+						.fivestar-static-form-item,
+						.rating-count {
+							display: inline-block;
+							vertical-align: top;
+							float: left;
+						}
+						
+						.rating-count {
+							margin-top: -5px;
+						}
+
+						.fivestar-static-form-item {
+							margin-left: 23px;
+							margin-right: 5px;
+							
+							.star {margin-right: 5px;}
+						}
+					}
+				}
+				
+				.resource-button {
+					position: absolute;
+					bottom: -27px;
+					right: 200px;
+					margin-bottom: 0;
+				}
+				
+				.favorites-link {
+				    bottom: -17px;
+				    left: 15px;
+				}
+			}
+		}	
+	}	
+}
+
+/*My Rsources Grid View*/
+.page-my-resources  {
+	
+	.view-display-id-grid_view {
+		
+		.resoruce-bottom {
+			
+			.paradata-info {
+				float: left;
+				display: block;
+				width: 100%;
+				padding-bottom: 50px;
+			}
+		}
+	}
+}
+
+
+
+
 .no-ie8compat .digital-library .resource-card h3 {
   /*padding-right: 10px;*/
 }
@@ -763,8 +880,7 @@ a.sbac-grid-layout {
 	}
 }
 
-//Resource Dropdown
-
+/*Resource Dropdown*/
 .filters {
   background: #c9eaf8;
   color: #0684ad;
@@ -1069,6 +1185,8 @@ a.sbac-grid-layout {
           background: transparent;
           color: inherit;
           text-shadow: none !important;*/
+			background: transparent;
+			background-image: none !important;
     }
   }
 
@@ -1213,6 +1331,16 @@ a.sbac-grid-layout {
 		margin-left: 25px;
 		font-size: 13px;
 		color: #62676E;
+		display: inline-block;
+	}
+	
+	.favorites-link {
+		display: inline-block;
+		width: auto;
+		float: right;
+		text-align: right;
+		margin-top: 3px;
+		margin-right: 26px;
 	}
 
   .main-container {
@@ -2595,5 +2723,51 @@ div[id*="edit-field-copyright-clearace-forms"] {
 		}
 }
 
+//add favorites star
+.favorites-link {
+	
+	a {
+		background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
+		display: block;
+		padding-left: 20px;
+		vertical-align: middle;
+		font-size: 10px;
+		line-height: 14px;
+		height: 15px;
+		color: #62676e;
+		text-transform:uppercase;
+
+		&.sbac-favorites-link-yes {
+			background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
+			color: #62676e;
+		}
+		
+		&.sbac-favorites-link-yes:hover {
+			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
+			color: #0c84ad;
+		}
+		
+		&.sbac-favorites-link-no {
+			background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
+			color: #62676e;
+		}
+		
+		&.sbac-favorites-link-no:hover {
+			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
+			color: #0c84ad;
+		}
+	}
+
+	.sbac-favorites-tooltip {
+		width: 142px;
+		font-size: 0.8em;
+		position: absolute;
+		z-index: 9999;
+		top: 25px;
+		right: -5px;
+		text-align: center;
+		white-space:nowrap;
+	}
+}
 
 

@@ -1,5 +1,5 @@
 <div class="resource-card">
-  <div class="row">
+  <div class="row clearfix">
     <div class="column large-2">
       <?php if (isset($fields['image'])): ?>
       <?php print $fields['image']; ?>
@@ -27,6 +27,12 @@
         print l(htmlspecialchars_decode($fields['title']->raw), $fields['path']->content);
       ?>
     </h3>
+
+		
+		<div class="resource-stats">
+		<div class="field-content">One minute papers allow the teacher to get a quick read on ideas and explanations that are prevalent in the class. It is a very engaging...</div>
+		</div>
+		
     <div class="shield-drop"><?php print $image; ?></div>
     <?php if (isset($fields['favorites_link'])): ?>
       <div class="favorites-link">
@@ -37,15 +43,18 @@
 
   <div class="list-view-info">
     <?php if (isset($fields['views']) && $fields['views']): ?>
-      <?php print $fields['views'] . ','; ?>
+      <div class="stat-views"><?php print $fields['views']; ?></div>
     <?php endif; ?>
 
     <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-      <?php print $fields['downloads']; ?>
+      <div class="stat-downloads"><?php print $fields['downloads']; ?></div>
     <?php endif; ?>
 
     <?php if (isset($fields['rating']) && $fields['rating']): ?>
-      <?php print $fields['rating']; ?> (<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)
+			<div class="rating">
+			  <?php print $fields['rating']; ?> 
+				<div class="rating-count">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div>
+			</div>
     <?php endif; ?>
 
     <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
@@ -53,7 +62,17 @@
     <?php endif; ?>
   </div>
 
-    </div>
+	 <?php
+    if (isset($fields['buttons']) && is_array($fields['buttons'])) {
+      foreach ($fields['buttons'] as $type => $button) {
+        print '<div class="resource-button right">';
+        print $button;
+        print '</div>';
+      }
+    }
+    ?>
+
+   </div>
 
     <?php
     $class = '';
@@ -62,7 +81,7 @@
     }
     ?>
 
-    <div class="clearfix resoruce-bottom column large-4 <?php (isset($fields['text']) ? print  strtolower(str_replace(' ', '-', $fields['text'])) : ''); ?>">
+    <!--<div class="clearfix resoruce-bottom column large-4 <?php (isset($fields['text']) ? print  strtolower(str_replace(' ', '-', $fields['text'])) : ''); ?>">
       <div class="column resource-state-description right">
 
         <?php if (isset($fields['links']) && $fields['links']): ?>
@@ -87,17 +106,8 @@
       </div>
 
     <?php endif; ?>
-
-        <?php
-        if (isset($fields['buttons']) && is_array($fields['buttons'])) {
-          foreach ($fields['buttons'] as $type => $button) {
-            print '<div class="resource-button right">';
-            print $button;
-            print '</div>';
-          }
-        }
-        ?>
+       
       </div>
-    </div>
+    </div>-->
   </div>
 </div>  

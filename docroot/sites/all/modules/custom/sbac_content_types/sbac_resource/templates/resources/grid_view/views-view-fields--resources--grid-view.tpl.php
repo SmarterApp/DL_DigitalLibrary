@@ -89,7 +89,7 @@
 	          <div class="info-item"><div class="field-media-types">Media Types:&nbsp;</div><?php print $fields['media_types']; ?></div>
 	        <?php endif; ?>
 	    </div>
-	    <?php endif; ?>
+	   <?php endif; ?>
 
     <?php if (isset($fields['views']) || isset($fields['downloads']) || isset($fields['collaborators'])): ?>
 
@@ -117,7 +117,7 @@
     <?php
       if (isset($fields['buttons']) && is_array($fields['buttons'])) {
         foreach ($fields['buttons'] as $type => $button) {
-          print '<div class="resource-button left">';
+          print '<div class="resource-button right">';
           print $button;
           print '</div>';
         }

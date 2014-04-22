@@ -75,17 +75,32 @@
       }
     }
     ?>
+		
+		<?php if (isset($fields['subject']) || isset($fields['grades']) || isset($fields['media_types'])): ?>
+      <div class="paradata-info">
+        <?php if (isset($fields['subject']) && $fields['subject']): ?>
+          <div class="info-item"><div class="field-subject">Subjects:</div><?php print $fields['subject']; ?></div>
+        <?php endif; ?>
 
+        <?php if (isset($fields['grades']) && $fields['grades']): ?>
+          <div class="info-item"><div class="field-grades">Grades:</div><?php print $fields['grades']; ?></div>
+        <?php endif; ?>
+
+        <?php if (isset($fields['media_types']) && $fields['media_types']): ?>
+          <div class="info-item"><div class="field-media-types">Media Types:</div><?php print $fields['media_types']; ?></div>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
 
     <?php if (isset($fields['views']) || isset($fields['downloads']) || isset($fields['collaborators'])): ?>
 
       <div class="paradata-numbers">
         <?php if (isset($fields['views']) && $fields['views']): ?>
-          <?php print $fields['views'] . ','; ?>
+          <div class="stat-views"><?php print $fields['views']; ?></div>
         <?php endif; ?>
 
         <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-          <?php print $fields['downloads']; ?>
+          <div class="stat-downloads"><?php print $fields['downloads']; ?></div>
         <?php endif; ?>
 
         <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
@@ -93,22 +108,6 @@
         <?php endif; ?>
       </div>
 
-    <?php endif; ?>
-
-    <?php if (isset($fields['subject']) || isset($fields['grades']) || isset($fields['media_types'])): ?>
-      <div class="paradata-info">
-        <?php if (isset($fields['subject']) && $fields['subject']): ?>
-          <div><div class="clearfix">Subjects:</div><?php print $fields['subject']; ?></div>
-        <?php endif; ?>
-
-        <?php if (isset($fields['grades']) && $fields['grades']): ?>
-          <div><div class="clearfix">Grades:</div><?php print $fields['grades']; ?></div>
-        <?php endif; ?>
-
-        <?php if (isset($fields['media_types']) && $fields['media_types']): ?>
-          <div><div class="clearfix">Media Types:</div><?php print $fields['media_types']; ?></div>
-        <?php endif; ?>
-      </div>
     <?php endif; ?>
 
   </div>
