@@ -330,7 +330,6 @@ a.sbac-grid-layout {
 
     	&.approved{
     		background-color: #c8e9f7;
-				padding-bottom: 50px;
     	}
 
       .paradata-numbers {
@@ -498,7 +497,7 @@ a.sbac-grid-layout {
 				border: none;
 			}
 			
-      .f-dropdown.down.open {
+      .f-dropdown.open {
         top: -47px !important;
         right: -65px !important;
         left: auto !important;
@@ -513,14 +512,14 @@ a.sbac-grid-layout {
         }
       }
 
-      .f-dropdown.down:after, .f-dropdown.down:before {
+      .f-dropdown:after, .f-dropdown:before {
         left: 79px;
 				border-color: #FFFFFF rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 			  border-style: solid inset inset;
 			  top: 38px;
       }
 
-			.f-dropdown.down:after {
+			.f-dropdown:after {
 				border-color: #5E5E5E rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 				left: 80px;
 				top: 39px;
@@ -666,7 +665,8 @@ a.sbac-grid-layout {
 				}
 		
 				.f-dropdown.open {
-					right: 32px !important;
+					top: -60px !important;
+		      right: -65px !important;
 				}
 			}
 
@@ -727,6 +727,17 @@ a.sbac-grid-layout {
 }
 
 /*Digital Library Resources*/
+.page-digital-library-resources.grid-view {
+	 .resoruce-bottom {
+   
+   	&.rejected{
+   	}
+
+   	&.approved{
+			padding-bottom: 50px;
+   	}
+	}
+}
 .page-digital-library-resources {
 	
 	.view-display-id-list_view {
@@ -845,7 +856,8 @@ a.sbac-grid-layout {
 				    left: 15px;
 				}
 			}
-		}	
+		}
+	
 	}	
 }
 
