@@ -119,7 +119,7 @@ function sbac_resource_views_default_views() {
     26 => 0,
     31 => 0,
   );
-  /* Filter criterion: Field: Grade(s) (field_grades) */
+  /* Filter criterion: Content: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -150,7 +150,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Subjects and Domains (field_subject) */
+  /* Filter criterion: Content: Subjects and Domains (field_subject) */
   $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
   $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
@@ -267,7 +267,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Content: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -283,7 +283,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_digital_media_type']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_digital_media_type']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_digital_media_type']['delta_offset'] = '0';
-  /* Field: Field: Subjects and Domains */
+  /* Field: Content: Subjects and Domains */
   $handler->display->display_options['fields']['field_subject']['id'] = 'field_subject';
   $handler->display->display_options['fields']['field_subject']['table'] = 'field_data_field_subject';
   $handler->display->display_options['fields']['field_subject']['field'] = 'field_subject';
@@ -297,7 +297,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_asset_downloads']['field'] = 'field_asset_downloads';
   $handler->display->display_options['fields']['field_asset_downloads']['label'] = '';
   $handler->display->display_options['fields']['field_asset_downloads']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_asset_downloads']['alter']['text'] = '[field_asset_downloads] Downloads';
+  $handler->display->display_options['fields']['field_asset_downloads']['alter']['text'] = '[field_asset_downloads]';
   $handler->display->display_options['fields']['field_asset_downloads']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_asset_downloads']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_asset_downloads']['settings'] = array(
@@ -310,7 +310,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_unique_views']['field'] = 'field_unique_views';
   $handler->display->display_options['fields']['field_unique_views']['label'] = '';
   $handler->display->display_options['fields']['field_unique_views']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_unique_views']['alter']['text'] = '[field_unique_views-value] Views';
+  $handler->display->display_options['fields']['field_unique_views']['alter']['text'] = '[field_unique_views-value]';
   $handler->display->display_options['fields']['field_unique_views']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_unique_views']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_unique_views']['settings'] = array(
@@ -384,7 +384,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Content: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -400,7 +400,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_digital_media_type']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_digital_media_type']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_digital_media_type']['delta_offset'] = '0';
-  /* Field: Field: Subjects and Domains */
+  /* Field: Content: Subjects and Domains */
   $handler->display->display_options['fields']['field_subject']['id'] = 'field_subject';
   $handler->display->display_options['fields']['field_subject']['table'] = 'field_data_field_subject';
   $handler->display->display_options['fields']['field_subject']['field'] = 'field_subject';
@@ -414,7 +414,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_asset_downloads']['field'] = 'field_asset_downloads';
   $handler->display->display_options['fields']['field_asset_downloads']['label'] = '';
   $handler->display->display_options['fields']['field_asset_downloads']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_asset_downloads']['alter']['text'] = '[field_asset_downloads] Downloads';
+  $handler->display->display_options['fields']['field_asset_downloads']['alter']['text'] = '[field_asset_downloads]';
   $handler->display->display_options['fields']['field_asset_downloads']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_asset_downloads']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_asset_downloads']['settings'] = array(
@@ -427,7 +427,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_unique_views']['field'] = 'field_unique_views';
   $handler->display->display_options['fields']['field_unique_views']['label'] = '';
   $handler->display->display_options['fields']['field_unique_views']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_unique_views']['alter']['text'] = '[field_unique_views] Views';
+  $handler->display->display_options['fields']['field_unique_views']['alter']['text'] = '[field_unique_views]';
   $handler->display->display_options['fields']['field_unique_views']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_unique_views']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_unique_views']['settings'] = array(
@@ -643,7 +643,7 @@ function sbac_resource_views_default_views() {
     26 => 0,
     31 => 0,
   );
-  /* Filter criterion: Field: Grade(s) (field_grades) */
+  /* Filter criterion: Content: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -674,7 +674,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Subjects and Domains (field_subject) */
+  /* Filter criterion: Content: Subjects and Domains (field_subject) */
   $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
   $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
@@ -705,7 +705,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
-  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
+  /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -817,7 +817,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Content: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -833,7 +833,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_digital_media_type']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_digital_media_type']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_digital_media_type']['delta_offset'] = '0';
-  /* Field: Field: Subjects and Domains */
+  /* Field: Content: Subjects and Domains */
   $handler->display->display_options['fields']['field_subject']['id'] = 'field_subject';
   $handler->display->display_options['fields']['field_subject']['table'] = 'field_data_field_subject';
   $handler->display->display_options['fields']['field_subject']['field'] = 'field_subject';
@@ -928,7 +928,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Content: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -944,7 +944,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_digital_media_type']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_digital_media_type']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_digital_media_type']['delta_offset'] = '0';
-  /* Field: Field: Subjects and Domains */
+  /* Field: Content: Subjects and Domains */
   $handler->display->display_options['fields']['field_subject']['id'] = 'field_subject';
   $handler->display->display_options['fields']['field_subject']['table'] = 'field_data_field_subject';
   $handler->display->display_options['fields']['field_subject']['field'] = 'field_subject';
@@ -1076,7 +1076,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['state']['value'] = array(
     'published' => 'published',
   );
-  /* Filter criterion: Field: Grade(s) (field_grades) */
+  /* Filter criterion: Content: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -1106,7 +1106,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended Student Population(s) (field_intended_student) */
+  /* Filter criterion: Content: Intended Student Population(s) (field_intended_student) */
   $handler->display->display_options['filters']['field_intended_student_tid']['id'] = 'field_intended_student_tid';
   $handler->display->display_options['filters']['field_intended_student_tid']['table'] = 'field_data_field_intended_student';
   $handler->display->display_options['filters']['field_intended_student_tid']['field'] = 'field_intended_student_tid';
@@ -1166,7 +1166,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_digital_media_type_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_digital_media_type_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['vocabulary'] = 'digital_media_type';
-  /* Filter criterion: Field: Subjects and Domains (field_subject) */
+  /* Filter criterion: Content: Subjects and Domains (field_subject) */
   $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
   $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
@@ -1256,7 +1256,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_educational_use_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_educational_use_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
-  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
+  /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -1460,7 +1460,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Content: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -1476,7 +1476,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_digital_media_type']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_digital_media_type']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_digital_media_type']['delta_offset'] = '0';
-  /* Field: Field: Subjects and Domains */
+  /* Field: Content: Subjects and Domains */
   $handler->display->display_options['fields']['field_subject']['id'] = 'field_subject';
   $handler->display->display_options['fields']['field_subject']['table'] = 'field_data_field_subject';
   $handler->display->display_options['fields']['field_subject']['field'] = 'field_subject';
@@ -1572,7 +1572,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Content: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -1588,7 +1588,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_digital_media_type']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_digital_media_type']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_digital_media_type']['delta_offset'] = '0';
-  /* Field: Field: Subjects and Domains */
+  /* Field: Content: Subjects and Domains */
   $handler->display->display_options['fields']['field_subject']['id'] = 'field_subject';
   $handler->display->display_options['fields']['field_subject']['table'] = 'field_data_field_subject';
   $handler->display->display_options['fields']['field_subject']['field'] = 'field_subject';
