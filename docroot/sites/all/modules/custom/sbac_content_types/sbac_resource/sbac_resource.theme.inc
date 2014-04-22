@@ -1174,7 +1174,12 @@ function _sbac_resource_digital_library_links($fields) {
     $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
   }
 
-  $variables['favorites_link'] = l('Favorites', $_GET['q'], array(
+  $favorite_text = t('Add to Favorites');
+  $favorites = sbac_favorites_get_favorites($user->uid, $nid);
+  if ($favorites) {
+    $favorite_text = t('Unfavorite');
+  }
+  $variables['favorites_link'] = l($favorite_text, $_GET['q'], array(
     'attributes' => array(
       'class' => array(
         'sbac-favorites-link',
