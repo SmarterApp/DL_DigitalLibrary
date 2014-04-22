@@ -60,13 +60,13 @@
 
       var resource_state = Drupal.settings.resource_workbench_current_state;
       $(':input').change( function () {
-        if ($(this).attr('id') == 'edit-field-author-und-0-value' || $(this).attr('id') == 'edit-field-publisher-und-0-value') {
+        if (!isDirty) {
+          isDirty = true;
         }
-        else {
-          if (!isDirty) {
-            isDirty = true;
-          }
-        }
+      });
+
+      $('.delete-media a').click( function () {
+        isDirty = true;
       });
 
       $(':input[type=text], textarea').keyup( function () {

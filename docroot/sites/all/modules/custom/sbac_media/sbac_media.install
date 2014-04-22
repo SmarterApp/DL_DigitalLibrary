@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Updates the eck_media status column.
+ */
+function sbac_media_update_7001() {
+  $ret = array();
+  db_query('UPDATE {eck_media} SET status = 1');
+  return $ret;
+}

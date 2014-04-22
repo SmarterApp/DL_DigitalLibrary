@@ -45,6 +45,10 @@ function resource_access($op, $node, $account = NULL) {
 
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
       if (($op == 'access about process' || $op == 'view about') || ($op == 'access review process' || $op == 'view reviews') || ($op == 'access share process' || $op == 'view share') || $op == 'access related resources' || $op == 'access flag') {
+        // Only show the About This Resource tab for guests
+        if (in_array(SBAC_SHARE_GUEST, $account->roles) && !in_array($op, array('view about','access about process'))) {
+          return FALSE;
+        }
         return TRUE;
       }
       else {

@@ -463,6 +463,55 @@ function sbac_alignment_form_alter(&$form, &$form_state, $form_id) {
       array_unshift($form['actions']['submit']['#submit'], 'sbac_alignment_form_submit_handler');
     }
   }
+
+  if ($form_id == 'resource_node_form') {
+    $form['#after_build'][] = 'sbac_alignment_after_build_form';
+  }
+}
+
+/**
+ * After build function to add the submit handler in.
+ *
+ * Used to add weights to the eck_media table.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_alignment_after_build_form($form, $form_state) {
+  $form['#submit'][] = 'sbac_alignment_widget_form_element_submit_handler';
+  return $form;
+}
+
+/**
+ * Submit handler to set the weights;
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_alignment_widget_form_element_submit_handler($form, $form_state) {
+  if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
+    if ($form_state['triggering_element']['#value'] == 'Close') {
+      // delete any temp reference
+      $temp_references = db_query('SELECT * FROM {field_data_field_resource_reference} WHERE deleted = :deleted AND field_resource_reference_target_id = :nid', array(':deleted' => 1, ':nid' => $form_state['node']->nid));
+      foreach ($temp_references as $reference) {
+        // remove the alignment node which removes the reference as well.
+        node_delete($reference->entity_id);
+      }
+      // if status is 2, set back to 1, they didn't really want to delete it.
+      db_query('UPDATE {field_data_field_resource_reference} SET deleted = :deleted WHERE field_resource_reference_target_id = :target_id AND deleted = :deleted2', array(':deleted' => 0, ':target_id' => $form_state['node']->nid, ':deleted2' => 2));
+    }
+    else {
+      // temp reference, they clicked save, permanently save the reference now.
+      db_query('UPDATE {field_data_field_resource_reference} SET deleted = :deleted WHERE field_resource_reference_target_id = :target_id AND deleted = :deleted2', array(':deleted' => 0, ':target_id' => $form_state['node']->nid, ':deleted2' => 1));
+      // now check if a reference is supposed to be removed, if they clicked save and a status of 2 exists, remove the reference
+      $remove_references = db_query('SELECT * FROM {field_data_field_resource_reference} WHERE deleted = :deleted AND field_resource_reference_target_id = :nid', array(':deleted' => 2, ':nid' => $form_state['node']->nid));
+      foreach ($remove_references as $reference) {
+        // remove the alignment node which removed the reference as well.
+        node_delete($reference->entity_id);
+      }
+    }
+  }
 }
 
 /**
@@ -497,14 +546,13 @@ function sbac_alignment_node_load($nodes, $types) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', 'alignment')
-        ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+        ->entityCondition('deleted', 0)
         ->fieldCondition('field_resource_reference', 'target_id', $node->nid);
 
       $result = $query->execute();
 
       if (isset($result['node'])) {
         $terms = array();
-
         foreach ($result['node'] as $item) {
           if ($alignment = node_load($item->nid)) {
             $terms = array_merge_recursive($terms, $alignment->field_education_alignment);

@@ -240,7 +240,7 @@ function sbac_flag_cancel_resource_moderation_modal($js = FALSE) {
       if ($form_state['triggering_element']['#value'] == 'Cancel Moderation') {
         $node = node_load($form_state['nid']);
         sbac_flag_unset_being_moderated($node);
-        $output[] = ctools_ajax_command_redirect('moderation');
+        $output[] = ajax_command_invoke('.sbac-resource-cancel-button', 'click');
       }
     }
     print ajax_render($output);
