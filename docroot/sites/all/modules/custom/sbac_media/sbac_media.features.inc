@@ -69,7 +69,12 @@ $items = array(
       'behavior' => 'textfield',
     ),
     'transcript' => array(
-      'label' => 'transcript',
+      'label' => 'Transcript',
+      'type' => 'text',
+      'behavior' => 'textfield',
+    ),
+    'status' => array(
+      'label' => 'Status',
       'type' => 'text',
       'behavior' => 'textfield',
     ),

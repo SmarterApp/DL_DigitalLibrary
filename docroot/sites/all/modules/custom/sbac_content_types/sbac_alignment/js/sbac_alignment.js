@@ -57,11 +57,12 @@
         var update_form = function (data) {
           $('tr#term-' + nid).hide();
         }
+        var current_nid = Drupal.settings.resource_nid;
         $.ajax({
           type: "POST",
           url: "/ajax-alignment-crud",
           success: update_form,
-          data: 'op=delete&nid=' + nid
+          data: 'op=delete&nid=' + nid + '&current_nid=' + current_nid
         });
         return false;
       });

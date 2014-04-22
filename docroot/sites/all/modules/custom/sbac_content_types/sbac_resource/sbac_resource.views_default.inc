@@ -1489,8 +1489,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_asset_downloads']['table'] = 'field_data_field_asset_downloads';
   $handler->display->display_options['fields']['field_asset_downloads']['field'] = 'field_asset_downloads';
   $handler->display->display_options['fields']['field_asset_downloads']['label'] = '';
-  $handler->display->display_options['fields']['field_asset_downloads']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_asset_downloads']['alter']['text'] = '[field_asset_downloads] Downloads';
   $handler->display->display_options['fields']['field_asset_downloads']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_asset_downloads']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_asset_downloads']['settings'] = array(
@@ -1502,8 +1500,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_unique_views']['table'] = 'field_data_field_unique_views';
   $handler->display->display_options['fields']['field_unique_views']['field'] = 'field_unique_views';
   $handler->display->display_options['fields']['field_unique_views']['label'] = '';
-  $handler->display->display_options['fields']['field_unique_views']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_unique_views']['alter']['text'] = '[field_unique_views-value] Views';
   $handler->display->display_options['fields']['field_unique_views']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_unique_views']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_unique_views']['settings'] = array(
@@ -1605,8 +1601,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_asset_downloads']['table'] = 'field_data_field_asset_downloads';
   $handler->display->display_options['fields']['field_asset_downloads']['field'] = 'field_asset_downloads';
   $handler->display->display_options['fields']['field_asset_downloads']['label'] = '';
-  $handler->display->display_options['fields']['field_asset_downloads']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_asset_downloads']['alter']['text'] = '[field_asset_downloads] Downloads';
   $handler->display->display_options['fields']['field_asset_downloads']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_asset_downloads']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_asset_downloads']['settings'] = array(
@@ -1618,8 +1612,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_unique_views']['table'] = 'field_data_field_unique_views';
   $handler->display->display_options['fields']['field_unique_views']['field'] = 'field_unique_views';
   $handler->display->display_options['fields']['field_unique_views']['label'] = '';
-  $handler->display->display_options['fields']['field_unique_views']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_unique_views']['alter']['text'] = '[field_unique_views] Views';
   $handler->display->display_options['fields']['field_unique_views']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_unique_views']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_unique_views']['settings'] = array(
