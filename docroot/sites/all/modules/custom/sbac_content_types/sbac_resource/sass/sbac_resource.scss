@@ -559,10 +559,14 @@ a.sbac-grid-layout {
     }
 
     .resource-stats {
-      padding: 6px 0;
-      font-size: 13px;
-			line-height: 1.4;
       clear: both;
+
+			p {
+				padding: 6px 0;
+      	font-size: 13px;
+				line-height: 1.4;
+				margin-bottom: 0;
+			}
     }
 
     .views-label-field-age-range {

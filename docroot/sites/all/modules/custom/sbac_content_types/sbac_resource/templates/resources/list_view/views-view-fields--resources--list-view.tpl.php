@@ -23,7 +23,7 @@
       }
     ?>
     <h3 class='resource-name <?php print $class; ?>'>
-      <?php print l(truncate_utf8(htmlspecialchars_decode($fields['title']->raw), 65, TRUE, TRUE), $fields['path']->content); ?>
+      <?php print l(truncate_utf8(htmlspecialchars_decode($fields['title']->raw), 70, TRUE, TRUE), $fields['path']->content); ?>
     </h3>
 
 		
