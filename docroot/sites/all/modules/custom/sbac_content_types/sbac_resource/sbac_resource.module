@@ -831,7 +831,11 @@ function _sbac_resource_preview_content(&$vars) {
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'image') {
-      $viewer['viewer'] = theme('image', array('path' => $url, 'width' => 850, 'height' => 400, 'alt'=>'Resource preview"'));
+      $viewer['viewer'] = theme('image_style', array(
+        'style_name' => 'resource_profile',
+        'path' => $file->uri,
+        'alt' => 'Resource preview"'
+      ));
       $viewer['viewer_class'] = '';
     }
     else if ($type == 'schooltube') {
@@ -903,6 +907,9 @@ function _sbac_resource_preview_materials(&$vars) {
         else if ($media->fid) {
           $file = file_load($media->fid);
           $url = file_create_url($file->uri);
+          if ($type == 'image') {
+            $url = image_style_url('resource_profile', $file->uri);
+          }
         }
         else {
           $url = sbac_media_create_embed_url($media);
