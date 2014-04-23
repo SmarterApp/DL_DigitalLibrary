@@ -1467,7 +1467,7 @@ text-shadow: none !important;*/
 #resource-element img {
   width: 880px;
   height: 455px;
-  background-size: cover;
+  /*background-size: cover;*/
 }
 
 /* line 1429, ../sass/sbac_resource.scss */
