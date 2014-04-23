@@ -273,6 +273,7 @@ function sbac_media_download_contents($node) {
                   try {
                     $target = str_replace('gs://', '', $file->uri);
                     $response = $services['service']->objects;
+                    $response = $response->get($bucket, $folder . '/' . $target);
 
                     if ($response) {
                       $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
@@ -1224,16 +1225,6 @@ function sbac_media_save_html5_record(&$file_attributes, $form_state) {
   $media->weight = 100;
   $media->status = 0;
   entity_save('media', $media);
-
-  // Delete old thumbnail image if any
-  if (!empty($node->field_thumbnail_uri[LANGUAGE_NONE])) {
-    $thumbnail_uri = $node->field_thumbnail_uri[LANGUAGE_NONE][0]['value'];
-    $thumbnail_pieces = explode('::', $thumbnail_uri);
-    $uri = $thumbnail_pieces[0];
-    $image_path = image_style_path('resource_image_grid', $uri);
-    $real_path = drupal_realpath($image_path);
-    file_unmanaged_delete($real_path);
-  }
 }
 
 /**
