@@ -23,14 +23,14 @@
       }
     ?>
     <h3 class='resource-name <?php print $class; ?>'>
-      <?php
-        print l(htmlspecialchars_decode($fields['title']->raw), $fields['path']->content);
-      ?>
+      <?php print l(truncate_utf8(htmlspecialchars_decode($fields['title']->raw), 65, TRUE, TRUE), $fields['path']->content); ?>
     </h3>
 
 		
 		<div class="resource-stats">
-		<div class="field-content">One minute papers allow the teacher to get a quick read on ideas and explanations that are prevalent in the class. It is a very engaging...</div>
+          <?php if (isset($fields['field_alt_body'])): ?>
+            <?php echo $fields['field_alt_body']->content; ?>
+          <?php endif; ?>
 		</div>
 		
     <div class="shield-drop"><?php print $image; ?></div>
