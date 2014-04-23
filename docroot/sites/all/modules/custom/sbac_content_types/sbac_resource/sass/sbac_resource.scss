@@ -434,7 +434,7 @@ a.sbac-grid-layout {
 
     .resource-state-description {
     	p {
-    		font-size: 18px;
+    		font-size: 15px;
         margin-bottom: 0.5em;
     		padding: 0;
     	}
@@ -534,7 +534,7 @@ a.sbac-grid-layout {
 
     i {
       position: absolute;
-      top: 10px;
+      top: 4px;
       right: 5px;
 
       &.sbac-select {
@@ -687,11 +687,12 @@ a.sbac-grid-layout {
       }
 
       .resource-state-description {
+				padding: 0;
         margin: 0;
         text-align: left;
 
         p {
-          font-size: 18px;
+          font-size: 15px;
           color: #246a34;
           margin-bottom: 10px;
         }
@@ -861,7 +862,7 @@ a.sbac-grid-layout {
 	}	
 }
 
-/*My Rsources Grid View*/
+/*My Rsources Page*/
 .page-my-resources  {
 	
 	.view-display-id-grid_view {
@@ -880,9 +881,105 @@ a.sbac-grid-layout {
 			}
 		}
 	}
+	
+	.view-display-id-list_view {
+		
+		.resource-card {
+			
+			.column.large-10 {
+				height: 55px;
+				
+				.shield-drop img {
+				    right: -14px;
+				    top: -13px;
+				    z-index: 99;
+				}
+				
+				.list-view-info {
+				  -moz-box-sizing: border-box;
+			    background-color: #F2F2F2;
+			    border-left: 1px solid #FFFFFF;
+			    border-radius: 0 6px 6px 0;
+			    box-shadow: -1px 0 0 0 #CECECE;
+			    color: #464B54;
+			    display: block;
+			    height: 113px;
+			    letter-spacing: 1px;
+			    line-height: 24px;
+			    margin-top: 0;
+			    padding: 23px 0 20px;
+			    position: absolute;
+			    right: -12px;
+			    text-shadow: 0 1px 0 #FFFFFF;
+			    text-transform: uppercase;
+			    top: -12px;
+			    width: 222px;
+			    z-index: 98;
+			
+					.stat-views, 
+					.stat-downloads {
+	          display: inline-block;
+						vertical-align: top;
+						margin-left: 20px;
+						margin-bottom: 5px;
+
+						.field-content {
+							display: block;
+						}
+
+						.field-content:before {
+							background-position: center center;
+							content: " ";
+					    display: inline-block;
+					    margin-right: 7px;
+					    position: relative;
+					    top: -2px;
+					    vertical-align: middle;
+		        }
+	        }
+
+					.stat-views .field-content:before {
+						background: url(../images/icons/icon-statviews.png) no-repeat 0 0;
+						width: 20px;
+						height: 13px;
+					}
+
+					.stat-downloads .field-content:before {
+						background: url(../images/icons/icon-statdownloads.png) no-repeat 0 0;
+						width: 18px;
+						height: 15px;
+					}
+				}
+				
+				.favorites-link {
+				  bottom: -17px;
+			    left: 15px;
+				}
+			}
+			
+			.column.large-4 {
+				width: 26%;
+				
+				.resource-button {
+					margin-top: 10px;
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
 }
 
-
+/*Resource Review Page*/
+.page-resource-review {
+	.column.large-4 {
+		width: 26%;
+		
+		.resource-button {
+			margin-top: 10px;
+			margin-bottom: 0;
+		}
+	}
+}
 
 
 .no-ie8compat .digital-library .resource-card h3 {

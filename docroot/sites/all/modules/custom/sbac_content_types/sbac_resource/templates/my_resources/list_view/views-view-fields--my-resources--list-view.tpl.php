@@ -32,7 +32,7 @@
       <?php if (isset($fields['favorites_link'])): ?>
         <div class="favorites-link">
           <?php echo $fields['favorites_link']; ?>
-          <?php echo $fields['favorites_tooltip']; ?>
+          <?php //echo $fields['favorites_tooltip']; ?>
         </div>
       <?php endif; ?>
 
@@ -87,7 +87,7 @@
         <?php
         if (isset($fields['buttons']) && is_array($fields['buttons'])) {
           foreach ($fields['buttons'] as $type => $button) {
-            print '<div class="resource-button right">';
+            print '<div class="resource-button left">';
             print $button;
             print '</div>';
           }

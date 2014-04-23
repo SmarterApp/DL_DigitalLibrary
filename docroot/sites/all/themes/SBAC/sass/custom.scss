@@ -3124,6 +3124,11 @@ a.tabledrag-handle .handle {
 	}
 }
 
+.list-view {
+	.top-bar.last-top {
+		max-width: 960px;
+	}
+}
 /* fix for back button block for resource node pages.*/
 .page-moderation .top-bar.last-top,
 .node-type-resource .top-bar.last-top{
