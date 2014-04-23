@@ -560,6 +560,7 @@ a.sbac-grid-layout {
 
     .resource-stats {
       clear: both;
+			padding-bottom: 10px;
 
 			p {
 				padding: 6px 0;
@@ -984,23 +985,6 @@ a.sbac-grid-layout {
 		}
 	}
 }
-
-/*Related Resource tab on Resource content Page*/
-.section-related-resources {
-	
-	.resource-top {
-		padding-bottom: 0 !important;
-	}
-	
-	.paradata-numbers {
-		display: none !important;
-	}
-	
-	.paradata-info {
-		padding-bottom: 10px !important;
-	}
-}
-
 
 
 .no-ie8compat .digital-library .resource-card h3 {
@@ -1830,7 +1814,7 @@ a.sbac-grid-layout {
 					max-width: 260px;
 					margin: 0 10px;
 
-					a {color: #0085AD;}
+					/*a {color: #0085AD;}*/
 				}
 
 				p{
@@ -1845,15 +1829,37 @@ a.sbac-grid-layout {
 				.shield-drop  {
 					width: auto;
 					
-					img {
-						right: 4px;
-					}
-					
 					.f-dropdown.open {
 						right: -5px !important;
 						top: 38px !important;
 						
 						li {width: auto !important;}
+					}
+					
+					.f-dropdown:before {
+						-moz-border-bottom-colors: none;
+					  -moz-border-left-colors: none;
+				    -moz-border-right-colors: none;
+				    -moz-border-top-colors: none;
+				    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #FFFFFF;
+				    border-image: none;
+				    border-style: inset inset solid;
+				    border-width: 6px;
+						left: 139px !important;
+						top: -12px;
+					}
+					
+					.f-dropdown:after {
+						-moz-border-bottom-colors: none;
+					  -moz-border-left-colors: none;
+				    -moz-border-right-colors: none;
+				    -moz-border-top-colors: none;
+				    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #CCC;
+				    border-image: none;
+				    border-style: inset inset solid;
+				    border-width: 6px;
+						left: 140px !important;
+						top: -14px;
 					}
 				}
 			}
@@ -1888,7 +1894,21 @@ a.sbac-grid-layout {
 .section-related-resources {
 	padding-bottom: 20px;
 }
-
+/*Related Resource tab on Resource content Page*/
+.section-related-resources {
+	
+	.resource-top {
+		padding-bottom: 0 !important;
+	}
+	
+	.paradata-numbers {
+		display: none !important;
+	}
+	
+	.paradata-info {
+		padding-bottom: 10px !important;
+	}
+}
 
 /*Resources search filter button*/
 #sbac-search-filter-button:before {
