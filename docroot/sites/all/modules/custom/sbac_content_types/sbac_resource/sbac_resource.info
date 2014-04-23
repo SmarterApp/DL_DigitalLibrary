@@ -135,6 +135,7 @@ features[field_instance][] = node-resource-field_unique_views
 features[field_instance][] = node-resource-field_view_permissions
 features[field_instance][] = node-resource-field_view_permissions_per_state
 features[image][] = resource_image_grid
+features[image][] = resource_profile
 features[node][] = resource
 features[taxonomy][] = age_range
 features[taxonomy][] = attributes
