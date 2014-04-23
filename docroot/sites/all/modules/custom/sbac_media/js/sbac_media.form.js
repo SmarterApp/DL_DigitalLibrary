@@ -20,7 +20,7 @@
         placeholder: "ui-state-highlight",
         update: function( event, ui ) {
             // Update the weights.
-            var rows = $("#sbac-media-list tr:gt(0)"); // skip the header row
+            var rows = $("#sbac-media-list tr").not('thead tr'); // skip the header row
             var json = { };
             rows.each(function(index) {
               json[$(this).attr('id')] = index;

@@ -350,21 +350,6 @@ function sbac_media_determine_download_access($node) {
 }
 
 /**
- * Implements drupal alter.
- *
- * Change image path from external to local.
- *
- * @param $style
- * @param $source
- * @param $destination
- */
-function sbac_media_image_style_create_derivative_alter(&$style, &$image_uri, &$derivative_uri) {
-  if ($style['name'] == 'resource_image_grid') {
-    $derivative_uri = str_replace('gs://', 'private://', $derivative_uri);
-  }
-}
-
-/**
  * Implements hook_file_download().
  *
  * @param $uri
@@ -784,6 +769,7 @@ function sbac_media_widget_form_element_submit_handler($form, &$form_state) {
     $weights = drupal_json_decode($form_state['input']['weights']);
     if ($weights) {
       foreach ($weights as $media_id => $weight) {
+        $media_id = str_replace('material-', '', $media_id);
         db_query("UPDATE {eck_media} SET weight = :weight WHERE id = :id", array(':weight' => $weight, ':id' => $media_id));
       }
     }
