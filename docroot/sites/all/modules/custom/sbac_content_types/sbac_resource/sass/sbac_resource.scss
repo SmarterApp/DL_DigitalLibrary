@@ -559,10 +559,14 @@ a.sbac-grid-layout {
     }
 
     .resource-stats {
-      padding: 6px 0;
-      font-size: 13px;
-			line-height: 1.4;
       clear: both;
+
+			p {
+				padding: 6px 0;
+      	font-size: 13px;
+				line-height: 1.4;
+				margin-bottom: 0;
+			}
     }
 
     .views-label-field-age-range {
@@ -980,6 +984,23 @@ a.sbac-grid-layout {
 		}
 	}
 }
+
+/*Related Resource tab on Resource content Page*/
+.section-related-resources {
+	
+	.resource-top {
+		padding-bottom: 0 !important;
+	}
+	
+	.paradata-numbers {
+		display: none !important;
+	}
+	
+	.paradata-info {
+		padding-bottom: 10px !important;
+	}
+}
+
 
 
 .no-ie8compat .digital-library .resource-card h3 {
