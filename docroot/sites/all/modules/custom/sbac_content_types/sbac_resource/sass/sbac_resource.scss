@@ -981,6 +981,23 @@ a.sbac-grid-layout {
 	}
 }
 
+/*Related Resource tab on Resource content Page*/
+.section-related-resources {
+	
+	.resource-top {
+		padding-bottom: 0 !important;
+	}
+	
+	.paradata-numbers {
+		display: none !important;
+	}
+	
+	.paradata-info {
+		padding-bottom: 10px !important;
+	}
+}
+
+
 
 .no-ie8compat .digital-library .resource-card h3 {
   /*padding-right: 10px;*/
