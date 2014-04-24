@@ -1,6 +1,37 @@
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
-
-# Ignore paths that contain user-generated content.
 sites/*/files
-sites/*/private
+sites/*.dev
+# Ignore paths that contain user-generated content.
+
+#ignore sass-cache
+sites/all/modules/custom/sbac_user/.sass-cache/
+sites/all/modules/custom/sbac_help/.sass-cache/
+sites/all/themes/SBAC/.sass-cache/
+.sass-cache
+
+#ignore Mac System files
+.DS_Store
+
+#ignore php storm system files
+.idea/
+
+# phpstorm project specific settings
+atlassian-ide-plugin.xml
+
+#ignore eclipse system files
+.project
+.settings
+.settings/com.aptana.editor.php.prefs
+
+#ignore komodo system files
+*.komodoproject
+
+# ignore dev module
+sites/all/modules/contrib/masquerade
+sites/all/modules/contrib/coder
+sites/all/modules/contrib/stage_file_proxy
+*FirePHPCore
+#ignore sample data set
+#sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ela.*.json
+#sites/all/modules/custom/sbac_content_types/sbac_alignment/data/ma.*.json
