@@ -2,9 +2,8 @@
 
 /**
  * @file
- *
- * Implement DrupalStreamWrapperInterface to provide a Google Cloud Store steamwrapper.
- *
+ * Implements DrupalStreamWrapperInterface to provide a Google Cloud
+ * stream wrapper.
  */
 
 class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
@@ -37,12 +36,12 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * @var string Google Cloud Storage client ID
    */
-  protected $client_id;
+  protected $clientId;
 
   /**
    * @var string Google Cloud Storage service account name
    */
-  protected $service_account_name;
+  protected $serviceAccountName;
 
   /**
    * @var string Google Cloud Store bucket name
@@ -60,19 +59,19 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected $key;
 
   /**
-   * @var string Google Cloud Store allowed key_file_path.
+   * @var string Google Cloud Store allowed keyFilePath.
    */
-  protected $key_file_path;
+  protected $keyFilePath;
 
   /**
-   * @var string Google Cloud Store allowed pem_file.
+   * @var string Google Cloud Store allowed pemFile.
    */
-  protected $pem_file;
+  protected $pemFile;
 
   /**
-   * @var string Google Cloud Store allowed pem_fid.
+   * @var string Google Cloud Store allowed pemFid.
    */
-  protected $pem_fid;
+  protected $pemFid;
 
   /**
    * A buffer for reading/wrting.
@@ -117,14 +116,14 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       $this->https = TRUE;
     }
 
-    $this->client_id = variable_get('google_cdn_client_id');
-    $this->service_account_name = variable_get('google_cdn_service_account_name');
+    $this->clientId = variable_get('google_cdn_client_id');
+    $this->serviceAccountName = variable_get('google_cdn_service_account_name');
     $this->bucket = variable_get('google_cdn_bucket_name');
     $this->folder = variable_get('google_cdn_folder');
     $this->key = variable_get('google_cdn_public_key');
-    $this->key_file_path = variable_get('google_cdn_public_key_file_path');
-    $this->pem_file = variable_get('google_cdn_pem_file_path');
-    $this->pem_fid = variable_get('google_cdn_pem_fid');
+    $this->keyFilePath = variable_get('google_cdn_public_key_file_path');
+    $this->pemFile = variable_get('google_cdn_pem_file_path');
+    $this->pemFid = variable_get('google_cdn_pem_fid');
     $this->getGCS();
   }
 
@@ -177,7 +176,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $local_path = $this->getLocalPath();
     if ($local_path) {
       try {
-        $url = $this->generate_signed_url($local_path);
+        $url = $this->generateSignedURL($local_path);
       }
       catch (Exception $e) {
         watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getExternalUrl');
@@ -339,20 +338,19 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.stream-read.php
    */
   public function stream_read($count) {
-    //if the data is empty, get the data from the object
-    //this stores all the data in the $stream_data property, only request once
+    // If the data is empty, get the data from the object.
     if (!$this->object) {
-      //if the object is empty, get the object from rackspace
+      // If the object is empty, get the object from rackspace.
       $target = $this->getTarget($this->uri);
       if ($target) {
         try {
           $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
           if ($response) {
-            $download_url= 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
+            $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
             $request = new Google_HttpRequest($download_url, 'GET');
-            $httpRequest = $this->client->getIo()->authenticatedRequest($request);
-            if ($httpRequest) {
-              $this->object = $httpRequest->getResponseBody();
+            $response = $this->client->getIo()->authenticatedRequest($request);
+            if ($response) {
+              $this->object = $response->getResponseBody();
             }
           }
         }
@@ -452,17 +450,20 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     if ($this->bufferWrite) {
       try {
         $local_path = $this->getLocalPath();
-        //set the mimetype for the file and set the location of the file to be uploaded
         $chunk_size_bytes = 1 * 1024 * 1024;
-        $media = new Google_MediaFileUpload(GoogleCDNStreamWrapper::getMimeType($this->uri), $this->buffer, true, $chunk_size_bytes);
-        $postbody = array('mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri), 'data' => $this->buffer, 'mediaUpload' => $media);
+        $media = new Google_MediaFileUpload(GoogleCDNStreamWrapper::getMimeType($this->uri), $this->buffer, TRUE, $chunk_size_bytes);
+        $postbody = array(
+          'mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri),
+          'data' => $this->buffer,
+          'mediaUpload' => $media,
+        );
         $gso = new Google_StorageObject();
-        $gso->setName($this->folder . '/' .  $local_path);
-        $response = $this->gcs->objects->insert($this->bucket, $gso ,$postbody);
+        $gso->setName($this->folder . '/' . $local_path);
+        $response = $this->gcs->objects->insert($this->bucket, $gso, $postbody);
         if ($response) {
           // Send the content in chunks.
-          $upload_result = false;
-          while ($upload_result === false) {
+          $upload_result = FALSE;
+          while ($upload_result === FALSE) {
             $upload_result = $media->nextChunk($response);
           }
           if ($upload_result) {
@@ -618,7 +619,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     try {
       $this->callConstructor();
       $target = $this->getLocalPath($uri);
-      $download_url= 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target . '/';
+      $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target . '/';
       $request = new Google_HttpRequest($download_url, 'PUT');
       $http_response = $this->client->getIo()->authenticatedRequest($request);
       if ($http_response) {
@@ -789,9 +790,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
 
   /**
    * Get the Google Cloud Storage connection.
-   *
-   * @return Google Client
-   *
    */
   protected function getGCS() {
     if ($this->gcs == NULL) {
@@ -805,21 +803,21 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         try {
           $client = new Google_Client();
           // Replace this with your application name.
-          $client->setApplicationName($this->service_account_name);
+          $client->setApplicationName($this->serviceAccountName);
           // Replace this with the service you are using.
           $service = new Google_StorageService($client);
           // This file location should point to the private key file.
-          $key = file_get_contents($this->key_file_path);
+          $key = file_get_contents($this->keyFilePath);
           $cred = new Google_AssertionCredentials(
           // Replace this with the email address from the client.
-            $this->service_account_name,
+            $this->serviceAccountName,
             // Replace this with the scopes you are requesting.
             array('https://www.googleapis.com/auth/devstorage.full_control'),
             $key
           );
 
           $client->setAssertionCredentials($cred);
-          if($client->getAuth()->isAccessTokenExpired()) {
+          if ($client->getAuth()->isAccessTokenExpired()) {
             $client->getAuth()->refreshTokenWithAssertion($cred);
           }
 
@@ -838,26 +836,27 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * Creates a signed url for the content.
    *
-   * @param $expiry
-   * @param $file_path
+   * @param string $file_path
+   *   The entire filepath to the object.
+   *
    * @return null|string
+   *   A signed URL or NULL.
    */
-  protected function generate_signed_url($file_path) {
+  protected function generateSignedURL($file_path) {
+    // This policy is defined in
+    // https://developers.google.com/storage/docs/accesscontrol#Signed-URLs.
     $expiry = time() + variable_get('google_cdn_signed_url_expiry');
-
     $file_info = explode('/', $file_path);
     $file_name = rawurlencode(array_pop($file_info));
     $file_path = implode('/', $file_info) . '/' . $file_name;
-    // This policy is defined in https://developers.google.com/storage/docs/accesscontrol#Signed-URLs
-    $stringPolicy = "GET\n\n\n" . $expiry . "\n/" . $this->bucket . '/' . $this->folder . '/' . $file_path;
+    $string_policy = "GET\n\n\n" . $expiry . "\n/" . $this->bucket . '/' . $this->folder . '/' . $file_path;
 
-    //this is a PEM version of the pks12 key generated by google.
-    $fp = fopen($this->pem_file, 'r');
+    // This is a PEM version of the pks12 key generated by google.
+    $fp = fopen($this->pemFile, 'r');
     $private_key = fread($fp, 8192);
     fclose($fp);
     $pkeyid = openssl_get_privatekey($private_key, "notasecret");
-
-    if (openssl_sign($stringPolicy, $signature, $pkeyid, 'sha256')) {
+    if (openssl_sign($string_policy, $signature, $pkeyid, 'sha256')) {
       $signature = urlencode(base64_encode($signature));
     }
 
@@ -867,7 +866,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       if ($this->https) {
         $secure = 'https://';
       }
-      $url = $secure . $this->bucket . '.' . $this->domain . '/' . $this->folder . '/' . $file_path . '?GoogleAccessId=' . $this->service_account_name . '&Expires=' . $expiry . '&Signature=' . $signature;
+      $url = $secure . $this->bucket . '.' . $this->domain . '/' . $this->folder . '/' . $file_path . '?GoogleAccessId=' . $this->serviceAccountName . '&Expires=' . $expiry . '&Signature=' . $signature;
     }
 
     return $url;
@@ -876,11 +875,12 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   /**
    * Get file status.
    *
+   * @param null $uri
+   *   The uri to the file.
+   *
    * @return array
    *   An array with file status, or FALSE in case of an error - see fstat()
    *   for a description of this array.
-   *
-   * @see http://php.net/manual/en/streamwrapper.stream-stat.php
    */
   protected function _stat($uri = NULL) {
     if (!isset($uri)) {
@@ -892,7 +892,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       try {
         // Determine type, file or folder?
         $path_info = pathinfo($this->uri);
-        $download_url= 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
+        $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
         if (!isset($path_info['extension'])) {
           $download_url .= '/';
         }
@@ -939,8 +939,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        // commented out since it's causing a lot of watchdog errors.
-        // watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::_stat');
       }
     }
 
@@ -961,7 +959,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       $this->__construct();
     }
 
-    if($this->client->getAuth()->isAccessTokenExpired()) {
+    if ($this->client->getAuth()->isAccessTokenExpired()) {
       $this->client->getAuth()->refreshTokenWithAssertion($this->cred);
     }
   }

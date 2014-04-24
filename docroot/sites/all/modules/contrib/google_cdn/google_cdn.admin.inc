@@ -67,13 +67,13 @@ function google_cdn_admin() {
   if (variable_get('google_cdn_public_key', NULL) != NULL) {
     $form['test_connection'] = array(
       '#type' => 'submit',
-      '#value' => t(GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON),
+      '#value' => t('@test', array('@test' => GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON)),
     );
   }
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t(GOOGLE_CDN_ADMIN_SUBMIT_BUTTON),
+    '#value' => t('@save', array('@save' => GOOGLE_CDN_ADMIN_SUBMIT_BUTTON)),
     '#submit' => array('google_cdn_admin_submit'),
   );
 
@@ -83,10 +83,15 @@ function google_cdn_admin() {
 /**
  * Hides the default upload button.
  *
- * @param $element
- * @param $form_state
- * @param $form
+ * @param array $element
+ *   The remove element.
+ * @param array $form_state
+ *   The form state.
+ * @param array $form
+ *   The form array.
+ *
  * @return mixed
+ *   the form element.
  */
 function google_cdn_admin_public_key_file_element_process($element, &$form_state, $form) {
   $element = file_managed_file_process($element, $form_state, $form);
@@ -104,8 +109,10 @@ function google_cdn_admin_public_key_file_element_process($element, &$form_state
  *
  * Tests the credentials the user entered and responds with a message.
  *
- * @param $form
- * @param $form_state
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form_state array.
  */
 function google_cdn_admin_validate($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
@@ -132,7 +139,7 @@ function google_cdn_admin_validate($form, &$form_state) {
         );
 
         $client->setAssertionCredentials($cred);
-        if($client->getAuth()->isAccessTokenExpired()) {
+        if ($client->getAuth()->isAccessTokenExpired()) {
           $client->getAuth()->refreshTokenWithAssertion($cred);
         }
         $access_token = $client->getAccessToken();
@@ -142,7 +149,8 @@ function google_cdn_admin_validate($form, &$form_state) {
           drupal_set_message('Success authenticating! We were able to connect to your Google Cloud Storage App.');
         }
 
-      } catch (Exception $e) {
+      }
+      catch (Exception $e) {
         watchdog_exception('google_cdn', $e);
         form_set_error('google_cdn_public_key_file', t('Error authenticating. Please check the Service Account Name, Key file and Bucket Name.'));
       }
@@ -159,8 +167,10 @@ function google_cdn_admin_validate($form, &$form_state) {
  * Saves the variables and p12 key file. Also creates a PEM file for later use
  * in regards to signed urls.
  *
- * @param $form
- * @param $form_state
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form_state array.
  */
 function google_cdn_admin_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_SUBMIT_BUTTON) {
@@ -176,8 +186,10 @@ function google_cdn_admin_submit($form, &$form_state) {
 /**
  * Saves the key file.
  *
- * @param $form
- * @param $form_state
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form_state array.
  */
 function google_cdn_admin_save_key_file(&$form, &$form_state) {
   // Load the file.
@@ -201,11 +213,12 @@ function google_cdn_admin_save_key_file(&$form, &$form_state) {
 /**
  * Creates and saves a PEM file.
  *
- * @param $file
- * @param $real_path
+ * @param object $file
+ *   The file object.
+ * @param string $real_path
+ *   The path to the file.
  */
 function google_cdn_admin_save_pem_file($file, $real_path) {
-  // Create the PEM file using PHP: openssl pkcs12 -in path/to/key.p12 -nodes -nocerts > path/to/key.pem
   $path_to_pem = str_replace($file->filename, '', $real_path);
   $path_to_pem .= 'google_key.pem';
   $uri_to_pem = "private://google_cdn/google_key.pem";
@@ -219,11 +232,11 @@ function google_cdn_admin_save_pem_file($file, $real_path) {
       $pem_result = NULL;
       $pem_export = openssl_pkey_export($pkey_result['pkey'], $pem_result, $new_password);
       if ($pem_export) {
-        // save the file.
+        // Save the file.
         file_put_contents($path_to_pem, $pem_result);
 
         global $user;
-        // create a record in Druapl managed files.
+        // Create a record in Druapl managed files.
         $file = new stdClass();
         $file->fid = NULL;
         $file->uri = $uri_to_pem;
@@ -235,7 +248,7 @@ function google_cdn_admin_save_pem_file($file, $real_path) {
         $file->size = filesize($path_to_pem);
         file_save($file);
 
-        // save information for later use.
+        // Save information for later use.
         variable_set('google_cdn_pem_file_path', $path_to_pem);
         variable_set('google_cdn_pem_fid', $file->fid);
       }
@@ -246,8 +259,10 @@ function google_cdn_admin_save_pem_file($file, $real_path) {
 /**
  * Remove the PEM file. Called when the user deletes the p12 key.
  *
- * @param $form
- * @param $form_state
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form_state array.
  */
 function google_cdn_delete_key_file($form, &$form_state) {
   $pem_fid = variable_get('google_cdn_pem_fid');

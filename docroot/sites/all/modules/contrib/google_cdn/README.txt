@@ -75,8 +75,8 @@ default download method to be the Google CDN. This makes the entire file system
 upload and download all files to / from the Google Bucket.
 
 As well, the admin can set the default download option on each file and image
-field. This sets the specific field to use or not use the Google CDN as the default
-upload and download method.
+field. This sets the specific field to use or not use the Google CDN as the
+default upload and download method.
 
 ----
 5.  Troubleshooting
@@ -93,5 +93,3 @@ upload and download method.
 - Add caching of the objects.
 - Implement ACL.
 - Could bring in some kinda graphical view of the bucket.
-
-

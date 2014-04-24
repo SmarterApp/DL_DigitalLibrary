@@ -26,7 +26,7 @@ function google_cdn_requirements($phase) {
       'description' => $t('Please make sure the Google API library is installed in the libraries directory.'),
     );
   }
-  else if(!$info['version'] || version_compare($info['version'], GOOGLE_CDN_MINIMUM_VERSION) < 0) {
+  elseif (!$info['version'] || version_compare($info['version'], GOOGLE_CDN_MINIMUM_VERSION) < 0) {
     $requirements['google_api'] = array(
       'severity' => REQUIREMENT_ERROR,
       'title' => $t('Google API PHP Client'),
