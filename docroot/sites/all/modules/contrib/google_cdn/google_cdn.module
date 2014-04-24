@@ -12,7 +12,7 @@ define('GOOGLE_CDN_ADMIN_SUBMIT_BUTTON', 'Save Configuration');
 // The test button text for the admin form.
 define('GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON', 'Test Connection');
 // The time to live for the signed urls.
-define('GOOGLE_CDN_SIGNED_URL_EXPIRY', 300);
+define('GOOGLE_CDN_SIGNED_URL_EXPIRY', 86400);
 // The google API domain.
 define('GOOGLE_CDN_API_DOMAIN', 'storage.googleapis.com');
 
