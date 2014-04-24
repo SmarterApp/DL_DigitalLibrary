@@ -860,7 +860,7 @@ function sbac_resource_validate_summary(&$form, &$form_state) {
  */
 function sbac_resource_validate_materials(&$form, &$form_state) {
   if ($form_state['html5']) {
-    $media_items = sbac_media_load_html5_item($form['#node']->nid);
+    $media_items = sbac_media_load_html5_item($form['#node']->nid, TRUE);
     if (!$media_items) {
       $error = 'You must add a content module file to continue';
       form_set_error('field_content_module_picker', $error);
