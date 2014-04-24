@@ -184,7 +184,7 @@ Drupal.verticalTab.prototype = {
 Drupal.theme.prototype.verticalTab = function (settings) {
   var tab = {};
   tab.item = $('<li class="vertical-tab-button" tabindex="-1"></li>')
-    .append(tab.link = $('<a title="' + settings.title + '" href="#"></a>')
+    .append(tab.link = $('<a href="#"></a>')
       .append(tab.title = $('<strong></strong>').text(settings.title))
       .append(tab.summary = $('<span class="summary"></span>')
     )

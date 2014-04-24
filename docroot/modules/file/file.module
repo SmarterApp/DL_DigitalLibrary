@@ -246,7 +246,7 @@ function file_ajax_upload() {
     return array('#type' => 'ajax', '#commands' => $commands);
   }
 
-  list($form, $form_state) = ajax_get_form();
+  list($form, $form_state, $form_id, $form_build_id, $commands) = ajax_get_form();
 
   if (!$form) {
     // Invalid form_build_id.
@@ -284,7 +284,6 @@ function file_ajax_upload() {
   $js = drupal_add_js();
   $settings = call_user_func_array('array_merge_recursive', $js['settings']['data']);
 
-  $commands = array();
   $commands[] = ajax_command_replace(NULL, $output, $settings);
   return array('#type' => 'ajax', '#commands' => $commands);
 }
@@ -358,9 +357,6 @@ function file_file_delete($file) {
  * support for a default value.
  */
 function file_managed_file_process($element, &$form_state, $form) {
-  // Append the '-upload' to the #id so the field label's 'for' attribute
-  // corresponds with the file element.
-  $element['#id'] .= '-upload';
   $fid = isset($element['#value']['fid']) ? $element['#value']['fid'] : 0;
 
   // Set some default element properties.
