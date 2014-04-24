@@ -741,17 +741,10 @@ function _sbac_resource_my_resources_admin_links($fields) {
       $variables['sticky'] = TRUE;
     }
 
-    $favorites_class = 'sbac-favorites-link-no';
-    $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
-    $favorites_text = t('Add to Favorites');
     $favorites = sbac_favorites_get_favorites($user->uid, $nid);
     if ($favorites) {
-      $favorites_class = 'sbac-favorites-link-yes';
-      $favorites_text = t('Unfavorite');
-      $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+      $variables['favorites_link'] = t('Favorite');
     }
-    $variables['favorites_link'] = l($favorites_text, $_GET['q'], array('attributes' => array('class' => array('sbac-favorites-link', $favorites_class), 'nid' => $nid, 'uid' => $user->uid)));
-
 
     $variables['views'] = '0';
     if (isset($fields['field_unique_views'])) {
@@ -1167,30 +1160,10 @@ function _sbac_resource_digital_library_links($fields) {
     $variables['sticky'] = TRUE;
   }
 
-  // if the user has this entity as a favorite.
-  $favorites_class = 'sbac-favorites-link-no';
-  $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Add to Favorites</div>';
   $favorites = sbac_favorites_get_favorites($user->uid, $nid);
   if ($favorites) {
-    $favorites_class = 'sbac-favorites-link-yes';
-    $variables['favorites_tooltip'] = '<div class="sbac-favorites-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+    $variables['favorites_link'] = t('Favorite');
   }
-
-  $favorite_text = t('Add to Favorites');
-  $favorites = sbac_favorites_get_favorites($user->uid, $nid);
-  if ($favorites) {
-    $favorite_text = t('Unfavorite');
-  }
-  $variables['favorites_link'] = l($favorite_text, $_GET['q'], array(
-    'attributes' => array(
-      'class' => array(
-        'sbac-favorites-link',
-        $favorites_class
-      ),
-      'nid' => $nid,
-      'uid' => $user->uid
-    )
-  ));
 
   $variables['views'] = '0';
   if (isset($fields['field_unique_views'])) {

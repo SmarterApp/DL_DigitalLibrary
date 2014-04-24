@@ -723,7 +723,7 @@ function sbac_resource_preprocess_node(&$vars) {
     // if the user has this entity as a favorite.
     $favorites_class = 'sbac-favorites-link-no';
     $favorite_text = t('Add to Favorites');
-    $favorites = sbac_favorites_get_favorites($user->uid, $nid);
+    $favorites = sbac_favorites_get_favorites($user->uid, $vars['nid']);
     if ($favorites) {
       $favorites_class = 'sbac-favorites-link-yes';
       $favorite_text = t('Unfavorite');
@@ -735,7 +735,7 @@ function sbac_resource_preprocess_node(&$vars) {
           'sbac-favorites-link',
           $favorites_class
         ),
-        'nid' => $nid,
+        'nid' => $vars['nid'],
         'uid' => $user->uid
       )
     ));
