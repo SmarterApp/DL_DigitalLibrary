@@ -55,11 +55,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   protected $folder;
 
   /**
-   * @var string Google Cloud Store allowed extensions.
-   */
-  protected $extensions;
-
-  /**
    * @var string Google Cloud Store allowed key.
    */
   protected $key;
@@ -126,7 +121,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $this->service_account_name = variable_get('google_cdn_service_account_name');
     $this->bucket = variable_get('google_cdn_bucket_name');
     $this->folder = variable_get('google_cdn_folder');
-    $this->extensions = variable_get('google_cdn_extensions');
     $this->key = variable_get('google_cdn_public_key');
     $this->key_file_path = variable_get('google_cdn_public_key_file_path');
     $this->pem_file = variable_get('google_cdn_pem_file_path');
@@ -849,7 +843,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @return null|string
    */
   protected function generate_signed_url($file_path) {
-    $expiry = time() + GOOGLE_CDN_SIGNED_URL_EXPIRY;
+    $expiry = time() + variable_get('google_cdn_signed_url_expiry');
 
     $file_info = explode('/', $file_path);
     $file_name = rawurlencode(array_pop($file_info));

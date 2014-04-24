@@ -51,9 +51,13 @@ function google_cdn_requirements($phase) {
  * Remove the variables.
  */
 function google_cdn_uninstall() {
-  variable_del('google_cdn_public_key');
-  variable_del('google_cdn_uri');
   variable_del('google_cdn_bucket_name');
-  variable_del('google_cdn_extensions');
   variable_del('google_cdn_folder');
+  variable_del('google_cdn_client_id');
+  variable_del('google_cdn_service_account_name');
+  variable_del('google_cdn_public_key_file_path');
+  variable_del('google_cdn_public_key');
+  variable_del('google_cdn_pem_file_path');
+  variable_del('google_cdn_pem_fid');
+  variabel_del('google_cdn_signed_url_expiry');
 }
