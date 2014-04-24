@@ -561,9 +561,11 @@ a.sbac-grid-layout {
     .resource-stats {
       clear: both;
 			padding-bottom: 10px;
+    	font-size: 13px;
+			line-height: 1.4;
+			padding: 6px 0;
 
 			p {
-				padding: 6px 0;
       	font-size: 13px;
 				line-height: 1.4;
 				margin-bottom: 0;
@@ -2885,11 +2887,11 @@ div[id*="edit-field-copyright-clearace-forms"] {
 		display: block;
 		padding-left: 20px;
 		vertical-align: middle;
-		font-size: 10px;
-		line-height: 14px;
+		font-size: 13px;
+		line-height: 15px;
 		height: 15px;
 		color: #62676e;
-		text-transform:uppercase;
+		/*text-transform:uppercase;*/
 
 		&.sbac-favorites-link-yes {
 			background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
