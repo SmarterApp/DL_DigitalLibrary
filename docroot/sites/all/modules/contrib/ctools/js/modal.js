@@ -99,6 +99,11 @@
     $('span.modal-title', Drupal.CTools.Modal.modal).html(Drupal.CTools.Modal.currentSettings.loadingText);
     Drupal.CTools.Modal.modalContent(Drupal.CTools.Modal.modal, settings.modalOptions, settings.animation, settings.animationSpeed);
     $('#modalContent .modal-content').html(Drupal.theme(settings.throbberTheme));
+
+    // Position autocomplete results based on the scroll position of the modal.
+    $('#modalContent .modal-content').delegate('input.form-autocomplete', 'keyup', function() {
+      $('#autocomplete').css('top', $(this).position().top + $(this).outerHeight() + $(this).offsetParent().filter('#modal-content').scrollTop());
+    });
   };
 
   /**
@@ -222,7 +227,11 @@
         // AJAX submits specified in this manner automatically submit to the
         // normal form action.
         element_settings.url = Drupal.CTools.Modal.findURL(this);
+        if (element_settings.url == '') {
+          element_settings.url = $(this).closest('form').attr('action');
+        }
         element_settings.event = 'click';
+        element_settings.setClick = true;
 
         var base = $this.attr('id');
         Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
@@ -283,7 +292,8 @@
     // top of a form, etc.
     $('#modal-content').html(response.output).scrollTop(0);
     $('#modal-content input:first').focus();
-    Drupal.attachBehaviors();
+    var settings = response.settings || ajax.settings || Drupal.settings;
+    Drupal.attachBehaviors('#modalContent', settings);
   }
 
   /**
