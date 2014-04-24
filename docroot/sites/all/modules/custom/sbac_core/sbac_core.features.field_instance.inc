@@ -140,7 +140,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 0,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'feedback-post-field_to_reviewer_1'
@@ -187,7 +187,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 1,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'feedback-post-field_to_reviewer_2'
@@ -234,7 +234,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 2,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'feedback-post-field_to_reviewer_3'
@@ -281,7 +281,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 3,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'feedback-qc-field_rec_options'
@@ -464,7 +464,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 1,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'field_collection_item-field_quality_set-field_contributor_comment'
@@ -505,7 +505,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 3,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'field_collection_item-field_quality_set-field_contributor_comment_date'
@@ -622,7 +622,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 2,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'field_collection_item-field_review_set-field_contributor_comment'
@@ -663,7 +663,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 5,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'field_collection_item-field_review_set-field_contributor_comment_date'
