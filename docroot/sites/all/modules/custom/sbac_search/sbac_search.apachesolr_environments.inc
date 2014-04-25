@@ -27,7 +27,7 @@ function sbac_search_apachesolr_environments() {
     'apachesolr_direct_commit' => 0,
     'apachesolr_index_updated' => 1384530583,
     'apachesolr_last_optimize' => 1384530583,
-    'apachesolr_read_only' => '0',
+    'apachesolr_read_only' => '1',
     'apachesolr_soft_commit' => 0,
   );
   $environment->index_bundles = array(

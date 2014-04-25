@@ -33,8 +33,7 @@
     <div class="shield-drop"><?php print $image; ?></div>
     <?php if (isset($fields['favorites_link'])): ?>
       <div class="favorites-link">
-        <?php echo $fields['favorites_link']; ?>
-        <?php //echo $fields['favorites_tooltip']; ?>
+        <?php echo strtoupper($fields['favorites_link']); ?>
       </div>
     <?php endif; ?>
 
@@ -105,6 +104,10 @@
 
         <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
           <?php // print $fields['collaborators']; ?>
+        <?php endif; ?>
+
+        <?php if (isset($fields['rating']) && $fields['rating']): ?>
+          <div class="rating-count">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div><?php print $fields['rating']; ?>
         <?php endif; ?>
       </div>
 
