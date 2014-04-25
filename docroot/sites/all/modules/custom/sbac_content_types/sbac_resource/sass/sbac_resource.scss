@@ -193,6 +193,7 @@ a.sbac-grid-layout, a.sbac-list-layout {
   a {
     margin-bottom: 5px;
 		color: #fff !important;
+		margin-right: 10px;
   }
 
 	a.button.red {
@@ -310,7 +311,7 @@ a.sbac-grid-layout {
     margin-bottom: 2em;
 
 		.resource-top {
-    	padding: 10px 15px 35px;
+    	padding: 10px 15px;
 			position: relative;
     }
 
@@ -745,6 +746,13 @@ a.sbac-grid-layout {
 			padding-bottom: 50px;
    	}
 	}
+	
+	.favorites-link {
+		position: relative;
+	  bottom: 0;
+	  left: 0;
+		margin: 5px 0;
+	}
 }
 .page-digital-library-resources {
 	
@@ -753,6 +761,7 @@ a.sbac-grid-layout {
 	  .resource-card {
 	    .column.large-10 {
 				float: left;
+				height: 68px;
 				
 				h3, .resource-stats  {
 					height: auto;
@@ -854,7 +863,7 @@ a.sbac-grid-layout {
 				
 				.resource-button {
 					position: absolute;
-					bottom: -27px;
+					bottom: -25px;
 					right: 200px;
 					margin-bottom: 0;
 				}
@@ -870,7 +879,21 @@ a.sbac-grid-layout {
 }
 
 /*My Rsources Page*/
-.page-my-resources  {
+.page-my-resources.grid-view {
+	
+	.favorites-link {
+		position: relative;
+	  bottom: 0;
+	  left: 0;
+		margin: 5px 0;
+	}
+	
+	.paradata-info {
+    padding: 10px 0 50px !important;
+	}
+}
+
+.page-my-resources.list-view  {
 	
 	.view-display-id-grid_view {
 		

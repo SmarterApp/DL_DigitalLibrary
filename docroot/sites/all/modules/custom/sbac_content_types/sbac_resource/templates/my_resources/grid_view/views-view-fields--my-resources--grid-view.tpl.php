@@ -31,11 +31,6 @@
       ?>
     </h3>
     <div class="shield-drop"><?php print $image; ?></div>
-    <?php if (isset($fields['favorites_link'])): ?>
-      <div class="favorites-link">
-        <?php echo strtoupper($fields['favorites_link']); ?>
-      </div>
-    <?php endif; ?>
 
     <?php if (isset($fields['image'])): ?>
       <?php print $fields['image']; ?>
@@ -47,6 +42,12 @@
         <?php echo $fields['field_alt_body']->content; ?>
       <?php endif; ?>
     </div>
+
+		<?php if (isset($fields['favorites_link'])): ?>
+      <div class="favorites-link">
+        <?php echo strtoupper($fields['favorites_link']); ?>
+      </div>
+    <?php endif; ?>
   </div>
 
   <?php
