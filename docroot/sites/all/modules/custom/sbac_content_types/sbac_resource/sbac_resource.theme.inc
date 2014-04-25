@@ -494,6 +494,12 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  if (isset($variables['rating'])) {
+    $vars['fields']['rating'] = $variables['rating'];
+  }
+  if (isset($variables['rating_count'])) {
+    $vars['fields']['rating_count'] = $variables['rating_count'];
+  }
   global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
@@ -758,6 +764,59 @@ function _sbac_resource_my_resources_admin_links($fields) {
     $variables['subject'] = $fields['field_subject']->content;
     $variables['grades'] = $fields['field_grades']->content;
     $variables['media_types'] = $fields['field_digital_media_type']->content;
+
+    // Get the resource rating.
+    $count_query = "  SELECT    COUNT(id)
+                    FROM      {eck_review}
+                    WHERE     type = 'end_use'
+                    AND       node_id = :node_id
+                    AND       status = 1
+                 ";
+    $review_count = db_query($count_query, array(':node_id' => $fields['nid']->raw))->fetchField();
+    $average_query = "
+    SELECT
+      (avg(student.field_student_learning_rating) +
+       avg(dev.field_pro_dev_rating) +
+       avg(ease.field_ease_use_rating)) / 3
+    FROM {field_data_field_student_learning} student
+      INNER JOIN {eck_review} review
+        ON review.id = student.entity_id
+      LEFT JOIN {field_data_field_pro_dev} dev
+        ON dev.entity_id = review.id
+      LEFT JOIN {field_data_field_ease_use} ease
+        ON ease.entity_id = review.id
+    WHERE student.bundle = 'end_use'
+          AND review.node_id = :nid";
+    $average = db_query($average_query, array(':nid'=>$fields['nid']->raw))->fetchField();
+    $fivestar = theme('fivestar_formatter_default', array(
+      'element' => array(
+        '#theme' => 'fivestar_formatter_default',
+        '#rating' => $average,
+        '#instance_settings' => array(
+          'stars' => 4,
+          'allow_clear' => 0,
+          'target' => 'none',
+          'user_register_form' => '',
+        ),
+        '#display_settings' => array(
+          'widget' => array(
+            'fivestar_widget' => '',
+          ),
+          'style' => 'average',
+          'text' => 'average',
+          'expose' => 1,
+        ),
+        '#widget' => array(
+          'name' => 'oxygen',
+          'css' => drupal_get_path('module', 'fivestar') . '/widgets/oxygen/oxygen.css',
+        ),
+        '#description' => '',
+        '#children' => '',
+      ),
+    ));
+
+    $variables['rating'] = $fivestar;
+    $variables['rating_count'] = $review_count;
   }
   else {
     $url = url('node/' . $nid, array('absolute' => TRUE));
