@@ -1008,9 +1008,9 @@ a.sbac-grid-layout {
   width: 18px;
   height: 15px;
 }
-/* line 983, ../sass/sbac_resource.scss */
-.page-my-resources.list-view .view-display-id-list_view .resource-card .column.large-10 .favorites-link {
-  bottom: -17px;
+/* line 984, ../sass/sbac_resource.scss */
+.page-my-resources.list-view .view-display-id-list_view .resource-card .favorites-link {
+  bottom: -40px;
   left: 15px;
 }
 /* line 989, ../sass/sbac_resource.scss */
