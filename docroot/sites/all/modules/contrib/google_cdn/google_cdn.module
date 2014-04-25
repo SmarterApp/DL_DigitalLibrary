@@ -33,6 +33,19 @@ function google_cdn_menu() {
 }
 
 /**
+ * Implements hook_help().
+ */
+function google_cdn_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/media/google_cdn':
+      return '<p>' . t("The Google CDN module allows for files to
+      be uploaded and downloaded from Google's Cloud Storage. This
+      administration page allows you to enter your connection
+      details and test the connection.") . '</p>';
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function google_cdn_permission() {
@@ -47,23 +60,65 @@ function google_cdn_permission() {
  * Implements hook_libraries_info().
  */
 function google_cdn_libraries_info() {
-  return array(
-    'google-api-php-client' => array(
-      'title' => 'Google SDK for PHP',
-      'vendor url' => 'http://code.google.com/p/google-api-php-client/',
-      'download url' => 'https://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.7.tar.gz',
-      'version arguments' => array(
-        'file' => 'src/Google_Client.php',
-      ),
-      'files' => array(
-        'php' => array(
-          'src/Google_Client.php',
-          'src/contrib/Google_StorageService.php',
+  // 0.6.7 or 1.0.5?
+  $library_info = array();
+  $library = array();
+  $library['library path'] = 'sites/all/libraries/google-api-php-client';
+  $options = array(
+    'file' => 'src/Google/Client.php',
+    'pattern' => '/const LIBVER = .(\d\.\d\.\d\-[a-z]+)./',
+    'lines' => 45,
+    'cols' => 200,
+  );
+
+  // Try 1.0.5 exists.
+  $version = NULL;
+  $version = libraries_get_version($library, $options);
+  if ($version) {
+    $library_info = array(
+      'google-api-php-client' => array(
+        'title' => 'Google SDK for PHP',
+        'vendor url' => 'http://code.google.com/p/google-api-php-client/',
+        'download url' => 'https://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.7.tar.gz',
+        'version arguments' => array(
+          'file' => 'src/Google/Client.php',
+          'pattern' => '/const LIBVER = .(\d\.\d\.\d\-[a-z]+)./',
+          'lines' => 45,
+          'cols' => 200,
+        ),
+        'files' => array(
+          'php' => array(
+            'src/Google/Client.php',
+            'src/Google/Service/Storage.php',
+          ),
         ),
       ),
-      'version callback' => 'google_cdn_library_version_callback',
-    ),
-  );
+    );
+  }
+
+  // Try 0.6.7.
+  $path_to_lib = DRUPAL_ROOT . '/' . $library['library path'] . '/src/Google_Client.php';
+  if (file_exists($path_to_lib)) {
+    $library_info = array(
+      'google-api-php-client' => array(
+        'title' => 'Google SDK for PHP',
+        'vendor url' => 'http://code.google.com/p/google-api-php-client/',
+        'download url' => 'https://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.7.tar.gz',
+        'version arguments' => array(
+          'file' => 'src/Google_Client.php',
+        ),
+        'files' => array(
+          'php' => array(
+            'src/Google_Client.php',
+            'src/contrib/Google_StorageService.php',
+          ),
+        ),
+        'version callback' => 'google_cdn_library_version_callback',
+      ),
+    );
+  }
+
+  return $library_info;
 }
 
 /**
@@ -84,33 +139,6 @@ function google_cdn_library_version_callback($library) {
   $version = GOOGLE_CDN_MINIMUM_VERSION;
   return $version;
 }
-
-/**
- * Implements hook_registry_files_alter().
- *
- * @param $files
- * @param $modules
- */
-//function google_cdn_registry_files_alter(&$files, $modules) {
-//  $library_path = function_exists('libraries_get_path') ? libraries_get_path('google-api-php-client') : 'sites/all/libraries/google-api-php-client';
-//  $files[$library_path . '/src/Google/Service/Storage.php'] = array(
-//    'module' => 'google_cdn',
-//    'weight' => 0,
-//  );
-//}
-
-/**
- * Implements hook_init().
- *
- * Google's API PHP Client library does not
- * include its own files correctly. To fix this
- * in Drupal, we need to add the include path on every page call.
- */
-//function google_cdn_init() {
-//  $var =  libraries_get_path('google-api-php-client') . '/src/';
-//  $local_file_path = realpath($var);
-//  set_include_path(get_include_path() . PATH_SEPARATOR . $local_file_path);
-//}
 
 /**
  * Implements hook_stream_wrappers().

@@ -796,8 +796,11 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       if (!libraries_load('google-api-php-client')) {
         drupal_set_message(t('Unable to load the Google API PHP library. Please check you have installed the library correctly.') . 'error');
       }
+      elseif (!class_exists('Google_Client')) {
+        watchdog('Google CDN', t('Google Client class not defined.'));
+      }
       elseif (empty($this->bucket)) {
-        drupal_set_message(t('Bucket name not configured.') . 'error');
+        watchdog('Google CDN', t('Bucket name not configured.'));
       }
       else {
         try {
@@ -883,14 +886,21 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   for a description of this array.
    */
   protected function _stat($uri = NULL) {
+    if (!class_exists('Google_Client')) {
+      return FALSE;
+    }
+
     if (!isset($uri)) {
       $uri = $this->uri;
     }
     $this->uri = $uri;
     $target = $this->getTarget($uri);
+
     if ($target) {
       try {
-        // Determine type, file or folder?
+        // Determine type: file or folder.
+        $code = FALSE;
+        $body = FALSE;
         $path_info = pathinfo($this->uri);
         $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
         if (!isset($path_info['extension'])) {
@@ -898,13 +908,10 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         }
         $request = new Google_HttpRequest($download_url, 'GET');
         $http_response = $this->client->getIo()->authenticatedRequest($request);
-        $code = FALSE;
-        $body = FALSE;
         if ($http_response) {
           $code = $http_response->getResponseHttpCode();
           $body = $http_response->getResponseBody();
         }
-
         if ($code == 200) {
           if ($body == FALSE && !isset($path_info['extension'])) {
             $mode = 0040000;
@@ -915,34 +922,51 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
             $size = strlen($body);
           }
           $mode |= 0777;
-
-          $stat = array();
-          $stat[0] = $stat['dev'] = 0;
-          $stat[1] = $stat['ino'] = 0;
-          $stat[2] = $stat['mode'] = $mode;
-          $stat[3] = $stat['nlink'] = 0;
-          $stat[4] = $stat['uid'] = 0;
-          $stat[5] = $stat['gid'] = 0;
-          $stat[6] = $stat['rdev'] = 0;
-          $stat[7] = $stat['size'] = 0;
-          $stat[8] = $stat['atime'] = 0;
-          $stat[9] = $stat['mtime'] = 0;
-          $stat[10] = $stat['ctime'] = 0;
-          $stat[11] = $stat['blksize'] = 0;
-          $stat[12] = $stat['blocks'] = 0;
-          $stat[4] = $stat['uid'] = 0;
-          $stat[7] = $stat['size'] = $size;
-          $stat[8] = $stat['atime'] = 0;
-          $stat[9] = $stat['mtime'] = 0;
-          $stat[10] = $stat['ctime'] = 0;
+          $stat = $this->_create_file_mode($mode, $size);
           return $stat;
         }
       }
       catch (Exception $e) {
+        // watchdog_exception('google_cdn', $e);
       }
     }
 
     return FALSE;
+  }
+
+  /**
+   * Creates the fstat array.
+   *
+   * @param int $mode
+   *   The file mode.
+   * @param int $size
+   *   The file size.
+   *
+   * @return array
+   */
+  protected function _create_file_mode($mode, $size) {
+    $stat = array();
+
+    $stat[0] = $stat['dev'] = 0;
+    $stat[1] = $stat['ino'] = 0;
+    $stat[2] = $stat['mode'] = $mode;
+    $stat[3] = $stat['nlink'] = 0;
+    $stat[4] = $stat['uid'] = 0;
+    $stat[5] = $stat['gid'] = 0;
+    $stat[6] = $stat['rdev'] = 0;
+    $stat[7] = $stat['size'] = 0;
+    $stat[8] = $stat['atime'] = 0;
+    $stat[9] = $stat['mtime'] = 0;
+    $stat[10] = $stat['ctime'] = 0;
+    $stat[11] = $stat['blksize'] = 0;
+    $stat[12] = $stat['blocks'] = 0;
+    $stat[4] = $stat['uid'] = 0;
+    $stat[7] = $stat['size'] = $size;
+    $stat[8] = $stat['atime'] = 0;
+    $stat[9] = $stat['mtime'] = 0;
+    $stat[10] = $stat['ctime'] = 0;
+
+    return $stat;
   }
 
   /**
@@ -959,7 +983,7 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       $this->__construct();
     }
 
-    if ($this->client->getAuth()->isAccessTokenExpired()) {
+    if (isset($this->client) && $this->client->getAuth()->isAccessTokenExpired()) {
       $this->client->getAuth()->refreshTokenWithAssertion($this->cred);
     }
   }

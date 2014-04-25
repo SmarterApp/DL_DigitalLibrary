@@ -11,7 +11,14 @@
 function google_cdn_admin() {
   $form = array();
 
-  $form['google_cdn_public_key_file'] = array(
+  $form['google_cdn_connection_details'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Connection Details'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+
+  $form['google_cdn_connection_details']['google_cdn_public_key_file'] = array(
     '#type' => 'managed_file',
     '#title' => t('Public Key'),
     '#default_value' => variable_get('google_cdn_public_key'),
@@ -24,7 +31,7 @@ function google_cdn_admin() {
     '#process' => array('google_cdn_admin_public_key_file_element_process'),
   );
 
-  $form['google_cdn_client_id'] = array(
+  $form['google_cdn_connection_details']['google_cdn_client_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Service Account Client ID'),
     '#default_value' => variable_get('google_cdn_client_id'),
@@ -32,7 +39,7 @@ function google_cdn_admin() {
     '#required' => TRUE,
   );
 
-  $form['google_cdn_service_account_name'] = array(
+  $form['google_cdn_connection_details']['google_cdn_service_account_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Service Account Name'),
     '#default_value' => variable_get('google_cdn_service_account_name'),
@@ -40,7 +47,7 @@ function google_cdn_admin() {
     '#required' => TRUE,
   );
 
-  $form['google_cdn_bucket_name'] = array(
+  $form['google_cdn_connection_details']['google_cdn_bucket_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Bucket Name'),
     '#default_value' => variable_get('google_cdn_bucket_name'),
@@ -48,7 +55,7 @@ function google_cdn_admin() {
     '#required' => TRUE,
   );
 
-  $form['google_cdn_folder'] = array(
+  $form['google_cdn_connection_details']['google_cdn_folder'] = array(
     '#type' => 'textfield',
     '#title' => t('Folder Name'),
     '#default_value' => variable_get('google_cdn_folder'),
@@ -56,12 +63,29 @@ function google_cdn_admin() {
     '#required' => TRUE,
   );
 
-  $form['google_cdn_signed_url_expiry'] = array(
+  $form['google_cdn_library_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Library Options'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+
+  $form['google_cdn_library_options']['google_cdn_signed_url_expiry'] = array(
     '#type' => 'textfield',
     '#title' => t('Expiry'),
     '#default_value' => variable_get('google_cdn_signed_url_expiry'),
     '#description' => t('The amount of time in seconds that the signed url will expire. (Example: 300 = 5 minutes)'),
     '#required' => TRUE,
+  );
+
+  $versions = array(0 => t('0.6.7'), 1 => t('1.0.5-beta'));
+  $form['google_cdn_library_options']['google_cdn_library_version'] = array(
+    '#type' => 'radios',
+    '#title' => t('Library Version'),
+    '#default_value' => variable_get('google_cdn_library_version'),
+    '#description' => t('The Google PHP API library version in use.'),
+    '#required' => TRUE,
+    '#options' => $versions,
   );
 
   if (variable_get('google_cdn_public_key', NULL) != NULL) {
@@ -127,10 +151,10 @@ function google_cdn_admin_validate($form, &$form_state) {
         // Replace this with your application name.
         $client->setApplicationName($google_cdn_service_account_name);
         // Replace this with the service you are using.
-        $service = new Google_StorageService($client);
+        $service = new Google_Service_Storage($client);
         // This file location should point to the private key file.
         $key = file_get_contents($google_cdn_key_file_path);
-        $cred = new Google_AssertionCredentials(
+        $cred = new Google_Auth_AssertionCredentials(
         // Replace this with the email address from the client.
           $google_cdn_service_account_name,
           // Replace this with the scopes you are requesting.
