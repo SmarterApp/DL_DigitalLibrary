@@ -31,8 +31,7 @@
       <div class="shield-drop"><?php print $image; ?></div>
       <?php if (isset($fields['favorites_link'])): ?>
         <div class="favorites-link">
-          <?php echo $fields['favorites_link']; ?>
-          <?php //echo $fields['favorites_tooltip']; ?>
+          <?php echo strtoupper($fields['favorites_link']); ?>
         </div>
       <?php endif; ?>
 

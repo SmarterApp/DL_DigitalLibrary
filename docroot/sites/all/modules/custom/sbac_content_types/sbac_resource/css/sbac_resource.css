@@ -2986,3 +2986,17 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
   text-align: center;
   white-space: nowrap;
 }
+
+/* line 2930, ../sass/sbac_resource.scss */
+.resource-card .favorites-link {
+  background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
+  display: block;
+  padding-left: 20px;
+  vertical-align: middle;
+  font-size: 10px;
+  line-height: 14px;
+  height: 15px;
+  color: #62676e;
+  font-style: uppercase;
+  letter-spacing: 1px;
+}
