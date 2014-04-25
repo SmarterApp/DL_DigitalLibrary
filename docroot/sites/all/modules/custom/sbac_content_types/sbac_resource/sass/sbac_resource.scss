@@ -873,8 +873,7 @@ a.sbac-grid-layout {
 				    left: 15px;
 				}
 			}
-		}
-	
+		}	
 	}	
 }
 
@@ -1451,6 +1450,11 @@ a.sbac-grid-layout {
 		height: 455px;
 		/*background-size: cover;*/
 	}
+	
+	img.jwlogo {
+		width: 84px;
+		height: 20px;
+	}
 }
 
 .node-type-resource {
@@ -1507,14 +1511,8 @@ a.sbac-grid-layout {
   }
 
  .section-container.auto > section .content {
-     /*border: none;
-          border-top: 1px solid #aaaaaa;*/
      margin: 0 -45px;
    }
-
-/*   .section-container.auto > section:last-child .title, .section-container.auto > .section:last-child .title {
-     border-right: none;
-   }*/
 
   .f-dropdown.open {
     top: 40px !important;
@@ -1569,31 +1567,7 @@ a.sbac-grid-layout {
   }
 }
 
-/*.section-container.auto > section > .title, .section-container.auto > section > .title a {
-  //font-family: $body-font-family;
-  font-size: emCalc(16px);
-  background: none;
-  color: #717880;
-  border: none;
 
-  &:hover {
-    background: none;
-  }
-}
-
-.node-resource {
-  .section-container.auto > section > .title a {
-    padding: 10px 20px;
-    border-right: 1px solid #ccc;
-  }
-}
-
-.section-container.auto > section.active > .title a {
-  background: $teal;
-  color: $white;
-  font-size: emCalc(16px);
-}
-*/
 /* Modal */
 
 .ui-dialog {
