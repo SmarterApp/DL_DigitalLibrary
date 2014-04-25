@@ -978,12 +978,15 @@ a.sbac-grid-layout {
 
 /*Resource Review Page*/
 .page-resource-review {
-	.column.large-4 {
-		width: 26%;
-		
-		.resource-button {
-			margin-top: 10px;
-			margin-bottom: 0;
+	
+	.resource-card {
+		.column.large-4 {
+			width: 26%;
+
+			.resource-button {
+				margin-top: 10px;
+				margin-bottom: 0;
+			}
 		}
 	}
 }
