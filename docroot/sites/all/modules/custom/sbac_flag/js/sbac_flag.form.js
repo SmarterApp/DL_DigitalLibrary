@@ -2,6 +2,7 @@
   Drupal.behaviors = Drupal.behaviors || {};
 
   var isDirty = false;
+  var clicked = false;
 
   Drupal.behaviors.sbac_flag_form = {
     attach: function (context, settings) {
@@ -27,13 +28,14 @@
         remove_resource.hide();
       }
 
-      $('.sbac-flag-resolve-all-flags').click( function() {
+      $('.sbac-flag-resolve-all-flags').one( "click",  function() {
         $('#chosen-flag-option').val(1);
         var changes_made = 0;
         if (isDirty) {
           changes_made = 1;
         }
         $('#changes-made').val(changes_made);
+        clicked = true;
         $('#edit-save-continue').mousedown();
         return false;
       });
@@ -88,8 +90,10 @@
       });
 
       $('#edit-save-continue').mousedown(function () {
-        isDirty = false;
-        clicked = true;
+        if (!clicked) {
+          isDirty = false;
+          clicked = false;
+        }
       });
     }
   };
