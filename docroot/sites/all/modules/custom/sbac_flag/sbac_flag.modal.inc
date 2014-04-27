@@ -340,6 +340,11 @@ function sbac_flag_remove_resource_modal($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Finish Moderation') {
         $node = node_load($form_state['nid']);
+        // if the node is stickied, remove that.
+        if ($node->sticky == 1) {
+          $node->sticky = 0;
+          node_save($node);
+        }
         // remove resource, rebuild permissions.
         workbench_moderation_moderate($node, 'removed');
         sbac_resource_save_current_state($node);
