@@ -13,6 +13,10 @@ define('GOOGLE_CDN_ADMIN_SUBMIT_BUTTON', 'Save Configuration');
 define('GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON', 'Test Connection');
 // The google API domain.
 define('GOOGLE_CDN_API_DOMAIN', 'storage.googleapis.com');
+// The legacy radio option for the version numbers.
+define('GOOGLE_CDN_LIBRARY_VERSION_067', 1);
+// The beta radio option for the version numbers.
+define('GOOGLE_CDN_LIBRARY_VERSION_105BETA', 2);
 
 /**
  * Implements hook_menu().
@@ -57,24 +61,28 @@ function google_cdn_permission() {
 }
 
 /**
+ * Implements hook_init().
+ *
+ * Google's API PHP Client library does not
+ * include its own files correctly. To fix this
+ * in Drupal, we need to add the include path on every page call.
+ */
+function google_cdn_init() {
+  $version = variable_get('google_cdn_library_version');
+  if ($version == GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
+    $var =  libraries_get_path('google-api-php-client') . '/src/';
+    $local_file_path = realpath($var);
+    set_include_path(get_include_path() . PATH_SEPARATOR . $local_file_path);
+  }
+}
+
+/**
  * Implements hook_libraries_info().
  */
 function google_cdn_libraries_info() {
-  // 0.6.7 or 1.0.5?
   $library_info = array();
-  $library = array();
-  $library['library path'] = 'sites/all/libraries/google-api-php-client';
-  $options = array(
-    'file' => 'src/Google/Client.php',
-    'pattern' => '/const LIBVER = .(\d\.\d\.\d\-[a-z]+)./',
-    'lines' => 45,
-    'cols' => 200,
-  );
-
-  // Try 1.0.5 exists.
-  $version = NULL;
-  $version = libraries_get_version($library, $options);
-  if ($version) {
+  $version = variable_get('google_cdn_library_version');
+  if ($version == GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
     $library_info = array(
       'google-api-php-client' => array(
         'title' => 'Google SDK for PHP',
@@ -90,15 +98,13 @@ function google_cdn_libraries_info() {
           'php' => array(
             'src/Google/Client.php',
             'src/Google/Service/Storage.php',
+            'src/Google/Service/Drive.php',
           ),
         ),
       ),
     );
   }
-
-  // Try 0.6.7.
-  $path_to_lib = DRUPAL_ROOT . '/' . $library['library path'] . '/src/Google_Client.php';
-  if (file_exists($path_to_lib)) {
+  elseif ($version == GOOGLE_CDN_LIBRARY_VERSION_067) {
     $library_info = array(
       'google-api-php-client' => array(
         'title' => 'Google SDK for PHP',
@@ -146,24 +152,151 @@ function google_cdn_library_version_callback($library) {
  * Create a stream wrapper for Google CDN.
  */
 function google_cdn_stream_wrappers() {
-  return array(
-    'gs' => array(
-      'name' => 'Google CDN',
-      'class' => 'GoogleCDNStreamWrapper',
-      'description' => t('Google CDN (Google Cloud Storage)'),
-    ),
-  );
+  $version = variable_get('google_cdn_library_version');
+  if ($version == GOOGLE_CDN_LIBRARY_VERSION_067) {
+    return array(
+      'gs' => array(
+        'name' => 'Google CDN',
+        'class' => 'GoogleCDNStreamWrapperLegacy',
+        'description' => t('Google CDN - v0.6.7'),
+      ),
+    );
+  }
+  elseif ($version == GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
+    return array(
+      'gs' => array(
+        'name' => 'Google CDN',
+        'class' => 'GoogleCDNStreamWrapperBeta',
+        'description' => t('Google CDN - v1.0.5-beta'),
+      ),
+    );
+  }
+  else {
+    $message = t('You must select a Google API library version in the configuration settings.');
+    drupal_set_message($message, 'error');
+    watchdog('Google CDN', $message);
+  }
 }
 
 /**
  * Implements hook_file_download().
  *
  * Prevents users from trying to download
- * the p12 key.
+ * the p12 key and/or PEM key.
  */
 function google_cdn_file_download($uri) {
   if (strpos($uri, 'google_cdn') !== FALSE) {
     return -1;
   }
   return NULL;
+}
+
+/**
+ * Tests the connection to the google bucket.
+ *
+ * @param $version
+ *   The version number for the library.
+ * @return array
+ *   The response coming back from the connection.
+ */
+function google_cdn_test_connection($version) {
+  $google_cdn_service_account_name = variable_get('google_cdn_service_account_name');
+  $google_cdn_key_file_path = variable_get('google_cdn_public_key_file_path');
+  $google_cdn_bucket_name = variable_get('google_cdn_bucket_name');
+
+  if ($version == GOOGLE_CDN_LIBRARY_VERSION_067) {
+    $response = google_cdn_connect_to_legacy($google_cdn_service_account_name, $google_cdn_key_file_path, $google_cdn_bucket_name);
+  }
+  else {
+    $response = google_cdn_connect_to_beta($google_cdn_service_account_name, $google_cdn_key_file_path, $google_cdn_bucket_name);
+  }
+  return $response;
+}
+
+/**
+ * Connect to the bucket using the legacy library.
+ *
+ * @param $google_cdn_service_account_name
+ *   Google service account name.
+ * @param $google_cdn_key_file_path
+ *   P12 key path.
+ * @param $google_cdn_bucket_name
+ *   Bucket name.
+ *
+ * @return array
+ *   Returns an array with access token and bucket information, or empty.
+ */
+function google_cdn_connect_to_legacy($google_cdn_service_account_name, $google_cdn_key_file_path, $google_cdn_bucket_name) {
+  try {
+    $client = new Google_Client();
+    // Replace this with your application name.
+    $client->setApplicationName($google_cdn_service_account_name);
+    // Replace this with the service you are using.
+    $service = new Google_StorageService($client);
+    // This file location should point to the private key file.
+    $key = file_get_contents($google_cdn_key_file_path);
+    $cred = new Google_AssertionCredentials(
+    // Replace this with the email address from the client.
+      $google_cdn_service_account_name,
+      // Replace this with the scopes you are requesting.
+      array('https://www.googleapis.com/auth/devstorage.read_write'),
+      $key
+    );
+
+    $client->setAssertionCredentials($cred);
+    if ($client->getAuth()->isAccessTokenExpired()) {
+      $client->getAuth()->refreshTokenWithAssertion($cred);
+    }
+    $access_token = $client->getAccessToken();
+    $bucket_info = $service->buckets->get($google_cdn_bucket_name);
+    return array('bucket' => $bucket_info, 'access_token' => $access_token);
+  }
+  catch (Exception $e) {
+    watchdog_exception('google_cdn', $e);
+  }
+  return array();
+}
+
+/**
+ * Connect to the bucket using the beta library.
+ *
+ * @param $google_cdn_service_account_name
+ *   Google service account name.
+ * @param $google_cdn_key_file_path
+ *   P12 key path.
+ * @param $google_cdn_bucket_name
+ *   Bucket name.
+ *
+ * @return array
+ *   Returns an array with access token and bucket information, or empty.
+ */
+function google_cdn_connect_to_beta($google_cdn_service_account_name, $google_cdn_key_file_path, $google_cdn_bucket_name) {
+  try {
+    $client = new Google_Client();
+    // Replace this with your application name.
+    $client->setApplicationName($google_cdn_service_account_name);
+    // Replace this with the service you are using.
+    $service = new Google_Service_Storage($client);
+    // This file location should point to the private key file.
+    $key = file_get_contents($google_cdn_key_file_path);
+    $cred = new Google_Auth_AssertionCredentials(
+    // Replace this with the email address from the client.
+      $google_cdn_service_account_name,
+      // Replace this with the scopes you are requesting.
+      array('https://www.googleapis.com/auth/devstorage.read_write'),
+      $key
+    );
+
+    $client->setAssertionCredentials($cred);
+    if ($client->getAuth()->isAccessTokenExpired()) {
+      $client->getAuth()->refreshTokenWithAssertion($cred);
+    }
+    $access_token = $client->getAccessToken();
+    $bucket_info = $service->buckets->get($google_cdn_bucket_name);
+    return array('bucket' => $bucket_info, 'access_token' => $access_token);
+  }
+  catch (Exception $e) {
+    watchdog_exception('google_cdn', $e);
+  }
+  return array();
 }

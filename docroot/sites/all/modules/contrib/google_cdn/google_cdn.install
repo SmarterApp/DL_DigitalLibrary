@@ -78,4 +78,5 @@ function google_cdn_uninstall() {
   variable_del('google_cdn_pem_file_path');
   variable_del('google_cdn_pem_fid');
   variable_del('google_cdn_signed_url_expiry');
+  variable_del('google_cdn_library_version');
 }

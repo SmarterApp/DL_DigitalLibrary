@@ -6,7 +6,7 @@
  * stream wrapper.
  */
 
-class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
+class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
 
   /**
    * @var Google Cloud Store connection object
@@ -127,6 +127,8 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
     $this->getGCS();
   }
 
+
+
   /**
    * Sets the stream resource URI.
    *
@@ -182,7 +184,6 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getExternalUrl');
       }
     }
-
     return $url;
   }
 
@@ -344,11 +345,12 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
       $target = $this->getTarget($this->uri);
       if ($target) {
         try {
-          $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
-          if ($response) {
+          $service = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
+          if ($service) {
             $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
-            $request = new Google_HttpRequest($download_url, 'GET');
-            $response = $this->client->getIo()->authenticatedRequest($request);
+            $request = new Google_Http_Request($download_url, 'GET');
+            $signed_request = $this->client->getAuth()->sign($request);
+            $response = $this->client->getIo()->makeRequest($signed_request);
             if ($response) {
               $this->object = $response->getResponseBody();
             }
@@ -449,26 +451,38 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
   public function stream_flush() {
     if ($this->bufferWrite) {
       try {
-        $local_path = $this->getLocalPath();
-        $chunk_size_bytes = 1 * 1024 * 1024;
-        $media = new Google_MediaFileUpload(GoogleCDNStreamWrapper::getMimeType($this->uri), $this->buffer, TRUE, $chunk_size_bytes);
-        $postbody = array(
-          'mimeType' => GoogleCDNStreamWrapper::getMimeType($this->uri),
+        $file = new Google_Service_Storage_StorageObject();
+        $local_path = $this->getLocalPath($this->uri);
+        $file->setName($this->folder . '/' . $local_path);
+        $post_body = array(
+          'mimeType' => GoogleCDNStreamWrapperBeta::getMimeType($this->uri),
           'data' => $this->buffer,
-          'mediaUpload' => $media,
         );
-        $gso = new Google_StorageObject();
-        $gso->setName($this->folder . '/' . $local_path);
-        $response = $this->gcs->objects->insert($this->bucket, $gso, $postbody);
-        if ($response) {
-          // Send the content in chunks.
-          $upload_result = FALSE;
-          while ($upload_result === FALSE) {
-            $upload_result = $media->nextChunk($response);
-          }
-          if ($upload_result) {
-            return TRUE;
-          }
+        $chunkSizeBytes = 1 * 1024 * 1024;
+        $this->client->setDefer(TRUE);
+        $request = $this->gcs->objects->insert($this->bucket, $file, $post_body);
+        $media = new Google_Http_MediaFileUpload(
+          $this->client,
+          $request,
+          GoogleCDNStreamWrapperBeta::getMimeType($this->uri),
+          NULL,
+          TRUE,
+          $chunkSizeBytes
+        );
+        $length = strlen($this->buffer);
+        $media->setFileSize($length);
+
+        // Send the content in chunks.
+        $upload_result = FALSE;
+        $pos = 0;
+        $length = strlen($this->buffer);
+        while (!$upload_result && $pos < $length) {
+          $chunk = substr($this->buffer, $pos, $chunkSizeBytes);
+          $upload_result = $media->nextChunk($chunk);
+          $pos += $chunkSizeBytes;
+        }
+        if ($upload_result) {
+          return TRUE;
         }
       }
       catch (Exception $e) {
@@ -616,24 +630,8 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.mkdir.php
    */
   public function mkdir($uri, $mode, $options) {
-    try {
-      $this->callConstructor();
-      $target = $this->getLocalPath($uri);
-      $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target . '/';
-      $request = new Google_HttpRequest($download_url, 'PUT');
-      $http_response = $this->client->getIo()->authenticatedRequest($request);
-      if ($http_response) {
-        $code = $http_response->getResponseHttpCode();
-        if ($code == 200) {
-          return TRUE;
-        }
-      }
-    }
-    catch (Exception $e) {
-      watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_flush');
-    }
-
-    return FALSE;
+    // Folders do not exist.
+    return TRUE;
   }
 
   /**
@@ -797,10 +795,10 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
         drupal_set_message(t('Unable to load the Google API PHP library. Please check you have installed the library correctly.') . 'error');
       }
       elseif (!class_exists('Google_Client')) {
-        watchdog('Google CDN', t('Google Client class not defined.'));
+        watchdog('Google CDN', 'Google Client class not defined.');
       }
       elseif (empty($this->bucket)) {
-        watchdog('Google CDN', t('Bucket name not configured.'));
+        watchdog('Google CDN', 'Bucket name not configured.');
       }
       else {
         try {
@@ -808,10 +806,10 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           // Replace this with your application name.
           $client->setApplicationName($this->serviceAccountName);
           // Replace this with the service you are using.
-          $service = new Google_StorageService($client);
+          $service = new Google_Service_Storage($client);
           // This file location should point to the private key file.
           $key = file_get_contents($this->keyFilePath);
-          $cred = new Google_AssertionCredentials(
+          $cred = new Google_Auth_AssertionCredentials(
           // Replace this with the email address from the client.
             $this->serviceAccountName,
             // Replace this with the scopes you are requesting.
@@ -823,7 +821,8 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
           if ($client->getAuth()->isAccessTokenExpired()) {
             $client->getAuth()->refreshTokenWithAssertion($cred);
           }
-
+          $token = $client->getAccessToken();
+          $client->setAccessToken($token);
           // Store services for later use.
           $this->gcs = $service;
           $this->client = $client;
@@ -886,51 +885,42 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   for a description of this array.
    */
   protected function _stat($uri = NULL) {
-    if (!class_exists('Google_Client')) {
-      return FALSE;
-    }
-
     if (!isset($uri)) {
       $uri = $this->uri;
     }
     $this->uri = $uri;
     $target = $this->getTarget($uri);
-
     if ($target) {
       try {
         // Determine type: file or folder.
-        $code = FALSE;
-        $body = FALSE;
+        // If it has no extension, I assume a folder.
         $path_info = pathinfo($this->uri);
-        $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
         if (!isset($path_info['extension'])) {
-          $download_url .= '/';
-        }
-        $request = new Google_HttpRequest($download_url, 'GET');
-        $http_response = $this->client->getIo()->authenticatedRequest($request);
-        if ($http_response) {
-          $code = $http_response->getResponseHttpCode();
-          $body = $http_response->getResponseBody();
-        }
-        if ($code == 200) {
-          if ($body == FALSE && !isset($path_info['extension'])) {
-            $mode = 0040000;
-            $size = 1;
-          }
-          else {
-            $mode = 0100000;
-            $size = strlen($body);
-          }
+          $mode = 0040000;
+          $size = 1;
           $mode |= 0777;
-          $stat = $this->_create_file_mode($mode, $size);
+          $stat = $this->createFileMode($mode, $size);
           return $stat;
+        }
+
+        $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
+        $request = new Google_Http_Request($download_url, 'GET');
+        $signed_request = $this->client->getAuth()->sign($request);
+        $http_request = $this->client->getIo()->makeRequest($signed_request);
+        if ($http_request) {
+          $code = $http_request->getResponseHttpCode();
+          if ($code == 200) {
+            $mode = 0100000;
+            $size = strlen($http_request->getResponseBody());
+            $mode |= 0777;
+            $stat = $this->createFileMode($mode, $size);
+            return $stat;
+          }
         }
       }
       catch (Exception $e) {
-        // watchdog_exception('google_cdn', $e);
       }
     }
-
     return FALSE;
   }
 
@@ -943,8 +933,9 @@ class GoogleCDNStreamWrapper implements DrupalStreamWrapperInterface {
    *   The file size.
    *
    * @return array
+   *   An array with fstat info populated or empty.
    */
-  protected function _create_file_mode($mode, $size) {
+  protected function createFileMode($mode, $size) {
     $stat = array();
 
     $stat[0] = $stat['dev'] = 0;
