@@ -606,6 +606,8 @@ $conf['google_cdn_bucket_name'] = 'sbac_media';
 $conf['google_cdn_extensions'] = 'all';
 $conf['google_cdn_client_id'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot.apps.googleusercontent.com';
 $conf['google_cdn_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot@developer.gserviceaccount.com';
+$conf['google_cdn_signed_url_expiry'] = 300;
+$conf['google_cdn_library_version'] = 2;
 
 error_reporting(E_ERROR);
 ini_set('display_errors', TRUE);
