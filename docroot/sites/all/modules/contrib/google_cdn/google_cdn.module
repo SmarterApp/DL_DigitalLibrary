@@ -70,7 +70,7 @@ function google_cdn_permission() {
 function google_cdn_init() {
   $version = variable_get('google_cdn_library_version');
   if ($version == GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
-    $var =  libraries_get_path('google-api-php-client') . '/src/';
+    $var = libraries_get_path('google-api-php-client') . '/src/';
     $local_file_path = realpath($var);
     set_include_path(get_include_path() . PATH_SEPARATOR . $local_file_path);
   }
@@ -194,8 +194,9 @@ function google_cdn_file_download($uri) {
 /**
  * Tests the connection to the google bucket.
  *
- * @param $version
+ * @param string $version
  *   The version number for the library.
+ *
  * @return array
  *   The response coming back from the connection.
  */
@@ -216,9 +217,9 @@ function google_cdn_test_connection($version) {
 /**
  * Connect to the bucket using the legacy library.
  *
- * @param $google_cdn_service_account_name
+ * @param string $google_cdn_service_account_name
  *   Google service account name.
- * @param $google_cdn_key_file_path
+ * @param string $google_cdn_key_file_path
  *   P12 key path.
  * @param $google_cdn_bucket_name
  *   Bucket name.
@@ -260,11 +261,11 @@ function google_cdn_connect_to_legacy($google_cdn_service_account_name, $google_
 /**
  * Connect to the bucket using the beta library.
  *
- * @param $google_cdn_service_account_name
+ * @param string $google_cdn_service_account_name
  *   Google service account name.
- * @param $google_cdn_key_file_path
+ * @param string $google_cdn_key_file_path
  *   P12 key path.
- * @param $google_cdn_bucket_name
+ * @param string $google_cdn_bucket_name
  *   Bucket name.
  *
  * @return array

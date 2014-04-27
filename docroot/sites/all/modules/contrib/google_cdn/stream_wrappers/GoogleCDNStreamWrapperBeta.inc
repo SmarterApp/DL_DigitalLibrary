@@ -127,8 +127,6 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
     $this->getGCS();
   }
 
-
-
   /**
    * Sets the stream resource URI.
    *
@@ -458,7 +456,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
           'mimeType' => GoogleCDNStreamWrapperBeta::getMimeType($this->uri),
           'data' => $this->buffer,
         );
-        $chunkSizeBytes = 1 * 1024 * 1024;
+        $chunk_size_bytes = 1 * 1024 * 1024;
         $this->client->setDefer(TRUE);
         $request = $this->gcs->objects->insert($this->bucket, $file, $post_body);
         $media = new Google_Http_MediaFileUpload(
@@ -467,7 +465,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
           GoogleCDNStreamWrapperBeta::getMimeType($this->uri),
           NULL,
           TRUE,
-          $chunkSizeBytes
+          $chunk_size_bytes
         );
         $length = strlen($this->buffer);
         $media->setFileSize($length);
@@ -477,9 +475,9 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         $pos = 0;
         $length = strlen($this->buffer);
         while (!$upload_result && $pos < $length) {
-          $chunk = substr($this->buffer, $pos, $chunkSizeBytes);
+          $chunk = substr($this->buffer, $pos, $chunk_size_bytes);
           $upload_result = $media->nextChunk($chunk);
-          $pos += $chunkSizeBytes;
+          $pos += $chunk_size_bytes;
         }
         if ($upload_result) {
           return TRUE;
