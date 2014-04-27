@@ -86,6 +86,15 @@ function google_cdn_admin() {
     '#description' => t('The Google PHP API library version in use.'),
     '#required' => TRUE,
     '#options' => $versions,
+    '#ajax' => array(
+      'callback' => 'google_cdn_admin_form_callback',
+      'wrapper' => 'google-cdn-message-container',
+      'effect' => 'fade',
+    ),
+  );
+
+  $form['google_cdn_library_options']['message_container'] = array(
+    '#markup' => '<div id="google-cdn-messsage-container"></div>',
   );
 
   if (variable_get('google_cdn_public_key', NULL) != NULL) {
@@ -102,6 +111,18 @@ function google_cdn_admin() {
   );
 
   return $form;
+}
+
+/**
+ * Ajax Callback for admin form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function google_cdn_admin_form_callback($form, $form_state) {
+  $var = '';
+  return $form['revision_information']['workflow_email'];
 }
 
 /**

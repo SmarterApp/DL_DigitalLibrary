@@ -1000,7 +1000,7 @@ function sbac_central_update_7074() {
 /**
  * Enabled xautoload module.
  */
-function sbac_central_update_7051(){
+function sbac_central_update_7075(){
   module_enable(array('xautoload'));
 }
 
