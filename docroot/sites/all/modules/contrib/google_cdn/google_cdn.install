@@ -26,7 +26,7 @@ function google_cdn_requirements($phase) {
       'description' => $t('Please make sure the Google API library is installed in the libraries directory.'),
     );
   }
-  else if(!$info['version'] || version_compare($info['version'], GOOGLE_CDN_MINIMUM_VERSION) < 0) {
+  elseif (!$info['version'] || version_compare($info['version'], GOOGLE_CDN_MINIMUM_VERSION) < 0) {
     $requirements['google_api'] = array(
       'severity' => REQUIREMENT_ERROR,
       'title' => $t('Google API PHP Client'),
@@ -51,9 +51,32 @@ function google_cdn_requirements($phase) {
  * Remove the variables.
  */
 function google_cdn_uninstall() {
-  variable_del('google_cdn_public_key');
-  variable_del('google_cdn_uri');
+  $pem_fid = variable_get('google_cdn_pem_fid');
+  if ($pem_fid) {
+    $file = file_load($pem_fid);
+    if ($file) {
+      file_delete($file);
+    }
+    unset($file);
+  }
+  $p12_fid = variable_get('google_cdn_public_key');
+  if ($p12_fid) {
+    $file = file_load($p12_fid);
+    if ($file) {
+      file_usage_delete($file, 'google_cdn');
+      file_delete($file);
+    }
+    unset($file);
+  }
+
   variable_del('google_cdn_bucket_name');
-  variable_del('google_cdn_extensions');
   variable_del('google_cdn_folder');
+  variable_del('google_cdn_client_id');
+  variable_del('google_cdn_service_account_name');
+  variable_del('google_cdn_public_key_file_path');
+  variable_del('google_cdn_public_key');
+  variable_del('google_cdn_pem_file_path');
+  variable_del('google_cdn_pem_fid');
+  variable_del('google_cdn_signed_url_expiry');
+  variable_del('google_cdn_library_version');
 }
