@@ -47,6 +47,31 @@ function sbac_resource_views_default_views_alter(&$views) {
       $views['help_topics']->display['page_1']->display_options['filters']['field_help_page_topic_tid']['value'][$resource_tutorial->tid] = $resource_tutorial->tid;
     }
   }
+
+  if (isset($views['workbench_moderation'])) {
+    $views['workbench_moderation']->disabled = TRUE;
+  }
+  if (isset($views['workbench_recent_content'])) {
+    $views['workbench_recent_content']->disabled = TRUE;
+  }
+  if (isset($views['workbench_edited'])) {
+    $views['workbench_edited']->disabled = TRUE;
+  }
+  if (isset($views['workbench_current_user'])) {
+    $views['workbench_current_user']->disabled = TRUE;
+  }
+  if (isset($views['legal_terms'])) {
+    $views['legal_terms']->disabled = TRUE;
+  }
+  if (isset($views['Maillog'])) {
+    $views['Maillog']->disabled = TRUE;
+  }
+  if (isset($views['media_browser'])) {
+    $views['media_browser']->disabled = TRUE;
+  }
+  if (isset($views['legal_users'])) {
+    $views['legal_users']->disabled = TRUE;
+  }
 }
 
 
