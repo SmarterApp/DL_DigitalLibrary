@@ -915,7 +915,35 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'views_content_cache';
+  $handler->display->display_options['cache']['results_min_lifespan'] = '1800';
+  $handler->display->display_options['cache']['results_max_lifespan'] = '1800';
+  $handler->display->display_options['cache']['output_min_lifespan'] = '1800';
+  $handler->display->display_options['cache']['output_max_lifespan'] = '1800';
+  $handler->display->display_options['cache']['keys'] = array(
+    'comment' => array(
+      'changed' => 0,
+    ),
+    'node' => array(
+      'resource' => 'resource',
+      'alignment' => 0,
+      'help_page' => 0,
+      'topic' => 0,
+    ),
+    'node_only' => array(
+      'node_changed' => 'node_changed',
+    ),
+    'votingapi' => array(
+      'tag:vote' => 'tag:vote',
+      'tag:student_learning' => 'tag:student_learning',
+      'tag:pro_dev' => 'tag:pro_dev',
+      'tag:ease_use' => 'tag:ease_use',
+      'tag:helpful' => 'tag:helpful',
+      'function:count' => 'function:count',
+      'function:average' => 'function:average',
+      'function:sum' => 'function:sum',
+    ),
+  );
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'none';
@@ -1163,7 +1191,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_educational_use_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_educational_use_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
-  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
+  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
