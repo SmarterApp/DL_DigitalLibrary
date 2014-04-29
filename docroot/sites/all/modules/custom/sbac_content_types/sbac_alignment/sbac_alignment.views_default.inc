@@ -25,7 +25,35 @@ function sbac_alignment_views_default_views() {
   $handler->display->display_options['title'] = 'Alignment';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'views_content_cache';
+  $handler->display->display_options['cache']['results_min_lifespan'] = '21600';
+  $handler->display->display_options['cache']['results_max_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_min_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_max_lifespan'] = '21600';
+  $handler->display->display_options['cache']['keys'] = array(
+    'comment' => array(
+      'changed' => 0,
+    ),
+    'node' => array(
+      'alignment' => 'alignment',
+      'help_page' => 0,
+      'resource' => 0,
+      'topic' => 0,
+    ),
+    'node_only' => array(
+      'node_changed' => 'node_changed',
+    ),
+    'votingapi' => array(
+      'tag:vote' => 0,
+      'tag:student_learning' => 0,
+      'tag:pro_dev' => 0,
+      'tag:ease_use' => 0,
+      'tag:helpful' => 0,
+      'function:count' => 0,
+      'function:average' => 0,
+      'function:sum' => 0,
+    ),
+  );
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['disable_sql_rewrite'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';

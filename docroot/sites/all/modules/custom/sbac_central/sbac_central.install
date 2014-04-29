@@ -998,6 +998,16 @@ function sbac_central_update_7074() {
 }
 
 /**
+ * Enable views content cache.
+ */
+function sbac_central_update_7075() {
+  $modules = array(
+    'views_content_cache',
+  );
+  module_disable($modules);
+}
+
+/**
  * Connect to the Google Cloud Storage.
  *
  * @param $service
