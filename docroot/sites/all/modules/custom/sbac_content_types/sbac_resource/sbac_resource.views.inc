@@ -66,8 +66,8 @@ function sbac_resource_views_default_views_alter(&$views) {
   if (isset($views['Maillog'])) {
     $views['Maillog']->disabled = TRUE;
   }
-  if (isset($views['media_browser'])) {
-    $views['media_browser']->disabled = TRUE;
+  if (isset($views['media_default'])) {
+    $views['media_default']->disabled = TRUE;
   }
   if (isset($views['legal_users'])) {
     $views['legal_users']->disabled = TRUE;
