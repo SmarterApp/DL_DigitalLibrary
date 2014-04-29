@@ -283,7 +283,7 @@ function sbac_media_download_contents($node) {
                       $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
 
                       $request = new Google_Http_Request($download_url, 'GET');
-                      $signed_request = $this->client->getAuth()->sign($request);
+                      $signed_request = $services['client']->getAuth()->sign($request);
                       $httpRequest = $services['client']->getIo()->makeRequest($signed_request);
                       if ($httpRequest) {
                         $data = $httpRequest->getResponseBody();
