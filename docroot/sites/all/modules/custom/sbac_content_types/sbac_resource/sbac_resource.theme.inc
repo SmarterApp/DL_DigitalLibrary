@@ -766,58 +766,8 @@ function _sbac_resource_my_resources_admin_links($fields) {
     $variables['grades'] = $fields['field_grades']->content;
     $variables['media_types'] = $fields['field_digital_media_type']->content;
 
-    // Get the resource rating.
-    $count_query = "  SELECT    COUNT(id)
-                    FROM      {eck_review}
-                    WHERE     type = 'end_use'
-                    AND       node_id = :node_id
-                    AND       status = 1
-                 ";
-    $review_count = db_query($count_query, array(':node_id' => $fields['nid']->raw))->fetchField();
-    $average_query = "
-    SELECT
-      (avg(student.field_student_learning_rating) +
-       avg(dev.field_pro_dev_rating) +
-       avg(ease.field_ease_use_rating)) / 3
-    FROM {field_data_field_student_learning} student
-      INNER JOIN {eck_review} review
-        ON review.id = student.entity_id
-      LEFT JOIN {field_data_field_pro_dev} dev
-        ON dev.entity_id = review.id
-      LEFT JOIN {field_data_field_ease_use} ease
-        ON ease.entity_id = review.id
-    WHERE student.bundle = 'end_use'
-          AND review.node_id = :nid";
-    $average = db_query($average_query, array(':nid'=>$fields['nid']->raw))->fetchField();
-    $fivestar = theme('fivestar_formatter_default', array(
-      'element' => array(
-        '#theme' => 'fivestar_formatter_default',
-        '#rating' => $average,
-        '#instance_settings' => array(
-          'stars' => 4,
-          'allow_clear' => 0,
-          'target' => 'none',
-          'user_register_form' => '',
-        ),
-        '#display_settings' => array(
-          'widget' => array(
-            'fivestar_widget' => '',
-          ),
-          'style' => 'average',
-          'text' => 'average',
-          'expose' => 1,
-        ),
-        '#widget' => array(
-          'name' => 'oxygen',
-          'css' => drupal_get_path('module', 'fivestar') . '/widgets/oxygen/oxygen.css',
-        ),
-        '#description' => '',
-        '#children' => '',
-      ),
-    ));
-
-    $variables['rating'] = $fivestar;
-    $variables['rating_count'] = $review_count;
+    $variables['rating'] = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($fields['nid']->raw));
+    $variables['rating_count'] = sbac_resource_get_rating_count($fields['nid']->raw);
   }
   else {
     $url = url('node/' . $nid, array('absolute' => TRUE));
@@ -1233,58 +1183,8 @@ function _sbac_resource_digital_library_links($fields) {
   $variables['grades'] = $fields['field_grades']->content;
   $variables['media_types'] = $fields['field_digital_media_type']->content;
 
-  // Get the resource rating.
-  $count_query = "  SELECT    COUNT(id)
-                    FROM      {eck_review}
-                    WHERE     type = 'end_use'
-                    AND       node_id = :node_id
-                    AND       status = 1
-                 ";
-  $review_count = db_query($count_query, array(':node_id' => $fields['nid']->raw))->fetchField();
-  $average_query = "
-    SELECT
-      (avg(student.field_student_learning_rating) +
-       avg(dev.field_pro_dev_rating) +
-       avg(ease.field_ease_use_rating)) / 3
-    FROM {field_data_field_student_learning} student
-      INNER JOIN {eck_review} review
-        ON review.id = student.entity_id
-      LEFT JOIN {field_data_field_pro_dev} dev
-        ON dev.entity_id = review.id
-      LEFT JOIN {field_data_field_ease_use} ease
-        ON ease.entity_id = review.id
-    WHERE student.bundle = 'end_use'
-          AND review.node_id = :nid";
-  $average = db_query($average_query, array(':nid'=>$fields['nid']->raw))->fetchField();
-  $fivestar = theme('fivestar_formatter_default', array(
-    'element' => array(
-      '#theme' => 'fivestar_formatter_default',
-      '#rating' => $average,
-      '#instance_settings' => array(
-        'stars' => 4,
-        'allow_clear' => 0,
-        'target' => 'none',
-        'user_register_form' => '',
-      ),
-      '#display_settings' => array(
-        'widget' => array(
-          'fivestar_widget' => '',
-        ),
-        'style' => 'average',
-        'text' => 'average',
-        'expose' => 1,
-      ),
-      '#widget' => array(
-        'name' => 'oxygen',
-        'css' => drupal_get_path('module', 'fivestar') . '/widgets/oxygen/oxygen.css',
-      ),
-      '#description' => '',
-      '#children' => '',
-    ),
-  ));
-
-  $variables['rating'] = $fivestar;
-  $variables['rating_count'] = $review_count;
+  $variables['rating'] = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($fields['nid']->raw));
+  $variables['rating_count'] = sbac_resource_get_rating_count($fields['nid']->raw);
 
   return $variables;
 }

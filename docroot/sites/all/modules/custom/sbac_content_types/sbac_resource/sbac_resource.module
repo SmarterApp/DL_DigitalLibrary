@@ -526,12 +526,15 @@ function sbac_share_create_resource_card(&$related_resources) {
       $fields['field_alt_body']->content = sbac_resource_truncate($body, 140);
       $fields['state'] = new stdClass;
       $fields['state']->raw = 'published';
-      $fields['views'] = (isset($node->field_unique_views['und'][0]['values']) ? $node->field_unique_views['und'][0]['values'] : 0);
-      $fields['downloads'] = (isset($node->field_asset_downloads['und'][0]['values']) ? $node->field_asset_downloads['und'][0]['values'] : 0);
+      $fields['views'] = (isset($node->field_unique_views['und'][0]['value']) ? $node->field_unique_views['und'][0]['value'] : 0);
+      $fields['downloads'] = (isset($node->field_asset_downloads['und'][0]['value']) ? $node->field_asset_downloads['und'][0]['value'] : 0);
       $fields['collaborators'] = 'N Collaborations';
       $fields['subject'] = sbac_share_get_field_terms($node->field_subject);
       $fields['grades'] = sbac_share_get_field_terms($node->field_grades);
       $fields['media_types'] = sbac_share_get_field_terms($node->field_digital_media_type);
+
+      $fields['rating'] = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($nid));
+      $fields['rating_count'] = sbac_resource_get_rating_count($nid);
       $output .= '<li>' . theme('sbac_resource_card', array('fields' => $fields)) . '</li>';
     }
   }
@@ -2706,4 +2709,79 @@ function sbac_resource_get_url_alias($nid) {
   $alias = db_query($sql, array(':source' => $source))->fetchField();
 
   return $alias;
+}
+
+/**
+ * Get a resource's rating count
+ *
+ * @param $nid
+ * @return mixed
+ */
+function sbac_resource_get_rating_count($nid) {
+  $count_query = "  SELECT    COUNT(id)
+                    FROM      {eck_review}
+                    WHERE     type = 'end_use'
+                    AND       node_id = :node_id
+                    AND       status = 1
+                 ";
+  return db_query($count_query, array(':node_id' => $nid))->fetchField();
+}
+
+/**
+ * Get a resource's average rating
+ *
+ * @param $nid
+ * @return mixed
+ */
+function sbac_resource_get_rating_average($nid){
+  $average_query = "
+    SELECT
+      (avg(student.field_student_learning_rating) +
+       avg(dev.field_pro_dev_rating) +
+       avg(ease.field_ease_use_rating)) / 3
+    FROM {field_data_field_student_learning} student
+      INNER JOIN {eck_review} review
+        ON review.id = student.entity_id
+      LEFT JOIN {field_data_field_pro_dev} dev
+        ON dev.entity_id = review.id
+      LEFT JOIN {field_data_field_ease_use} ease
+        ON ease.entity_id = review.id
+    WHERE student.bundle = 'end_use'
+          AND review.node_id = :nid";
+  return db_query($average_query, array(':nid'=>$nid))->fetchField();
+}
+
+/**
+ * Returns the fivestar HTML
+ *
+ * @param $rating
+ * @return string
+ */
+function sbac_resource_display_fivestar_rating($rating){
+  return theme('fivestar_formatter_default', array(
+    'element' => array(
+      '#theme' => 'fivestar_formatter_default',
+      '#rating' => $rating,
+      '#instance_settings' => array(
+        'stars' => 4,
+        'allow_clear' => 0,
+        'target' => 'none',
+        'user_register_form' => '',
+      ),
+      '#display_settings' => array(
+        'widget' => array(
+          'fivestar_widget' => '',
+        ),
+        'style' => 'average',
+        'text' => 'average',
+        'expose' => 1,
+      ),
+      '#widget' => array(
+        'name' => 'oxygen',
+        'css' => drupal_get_path('module', 'fivestar') . '/widgets/oxygen/oxygen.css',
+      ),
+      '#description' => '',
+      '#children' => '',
+    ),
+  ));
 }

@@ -60,16 +60,20 @@
     <?php if (isset($fields['views']) || isset($fields['downloads']) || isset($fields['collaborators'])): ?>
 
       <div class="paradata-numbers">
-        <?php if (isset($fields['views']) && $fields['views']): ?>
-          <?php print $fields['views'] . ','; ?>
+        <?php if (isset($fields['views'])): ?>
+          <div class="stat-views"><?php print $fields['views']; ?></div>
         <?php endif; ?>
 
-        <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-          <?php print $fields['downloads']; ?>
+        <?php if (isset($fields['downloads'])): ?>
+          <div class="stat-downloads"><?php print $fields['downloads']; ?></div>
         <?php endif; ?>
 
         <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
           <?php // print $fields['collaborators']; ?>
+        <?php endif; ?>
+
+        <?php if (isset($fields['rating']) && $fields['rating']): ?>
+          <div class="rating-count">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div><?php print $fields['rating']; ?>
         <?php endif; ?>
       </div>
 

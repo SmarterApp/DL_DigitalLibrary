@@ -161,32 +161,7 @@ class Reviews extends Base {
 
           $average = db_query($query, array(':node_id' => $this->_node->nid))->fetchField();
 
-          $fivestar = theme('fivestar_formatter_default', array(
-            'element' => array(
-              '#theme' => 'fivestar_formatter_default',
-              '#rating' => $average,
-              '#instance_settings' => array(
-                'stars' => 4,
-                'allow_clear' => 0,
-                'target' => 'none',
-                'user_register_form' => '',
-              ),
-              '#display_settings' => array(
-                'widget' => array(
-                  'fivestar_widget' => '',
-                ),
-                'style' => 'average',
-                'text' => 'average',
-                'expose' => 1,
-              ),
-              '#widget' => array(
-                'name' => 'oxygen',
-                'css' => drupal_get_path('module', 'fivestar') . '/widgets/oxygen/oxygen.css',
-              ),
-              '#description' => '',
-              '#children' => '',
-            ),
-          ));
+          $fivestar = sbac_resource_display_fivestar_rating($average);
 
           if ($average >= 75) {
             $label = t('Strongly Agree');
