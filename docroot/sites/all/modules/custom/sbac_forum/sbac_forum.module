@@ -1284,17 +1284,19 @@ function sbac_forum_taxonomy_term_insert($term) {
   if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
     global $user;
     $term->field_forum_facilitators[LANGUAGE_NONE][0]['target_id'] = $user->uid;
-    $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = 1;
+
 
     // Add faci to member list.
     $member_fc = $term->field_fc_forum_members[LANGUAGE_NONE][0]['value'];
-    $member_fc_wrapper = entity_metadata_wrapper('field_collection_item', $member_fc);
-    if (isset($member_fc_wrapper->field_fc_forum_member)) {
-      $member_fc_wrapper->field_fc_forum_member->set($user->uid);
-      $member_fc_wrapper->save(TRUE);
+    if ($member_fc) {
+      $member_fc_wrapper = entity_metadata_wrapper('field_collection_item', $member_fc);
+      if (isset($member_fc_wrapper->field_fc_forum_member)) {
+        $member_fc_wrapper->field_fc_forum_member->set($user->uid);
+        $member_fc_wrapper->save(TRUE);
+      }
+      $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = 1;
+      taxonomy_term_save($term);
     }
-
-    taxonomy_term_save($term);
   }
 }
 
@@ -1588,7 +1590,8 @@ function sbac_forum_get_posted_with_distinction_resources() {
           AND n.sticky = 1
           AND history.current = 1
           AND history.state = 'published'
-          ORDER BY n.nid ASC";
+          ORDER BY n.nid ASC
+          LIMIT 0, 1";
   return db_query($query)->fetchCol();
 }
 
@@ -1604,11 +1607,45 @@ function sbac_forum_create_resource_forum($nid, $vid) {
     $term = (object) array(
       'vid' => $vid,
       'name' => $node->title,
-      'description' => NULL,
+      'description' => '',
       'format' => 1,
+      'field_forum_resource_ref' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'target_id' => $node->nid
+          )
+        )
+      ),
+      'field_forum_description' => $node->field_alt_body,
+      'field_subject' => $node->field_subject,
+      'field_grades' => $node->field_grades,
+      'field_intended_end_user' => $node->field_intended_end_user,
+      'field_intended_student'=>$node->field_intended_student,
     );
     taxonomy_term_save($term);
+    if (isset($term->tid)) {
+      sbac_forum_create_forum_topic($term->tid, 'Use and Implementation', 'General discussion for questions and comments about the use and implementation of this resource');
+      sbac_forum_create_forum_topic($term->tid, 'Suggested Improvements', 'Discussion for suggested improvements and revisions for this resource');
+    }
   }
+}
+
+/**
+ * Programmatically create a forum topic
+ *
+ * @param $forum_id
+ * @param $topic
+ * @param $description
+ */
+function sbac_forum_create_forum_topic($forum_id, $topic, $description){
+  $node = new stdClass;
+  $node->type = 'topic';
+  $node->title = $topic;
+  $node->uid = 1;
+  $node->status = 1;
+  $node->body[LANGUAGE_NONE][0]['value'] = $description;
+  $node->field_topic_forum_parent[LANGUAGE_NONE][0]['tid'] = $forum_id;
+  node_save($node);
 }
 
 /**
