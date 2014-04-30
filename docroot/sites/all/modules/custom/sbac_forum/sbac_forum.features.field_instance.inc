@@ -938,6 +938,45 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_resource_ref'
+  $field_instances['taxonomy_term-forum-field_forum_resource_ref'] = array(
+    'bundle' => 'forum',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 17,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_forum_resource_ref',
+    'label' => 'Forum resource ref',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'label_help_description' => '',
+        'match_operator' => 'CONTAINS',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 20,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-forum-field_forum_topic_comment_count'
   $field_instances['taxonomy_term-forum-field_forum_topic_comment_count'] = array(
     'bundle' => 'forum',
@@ -1204,6 +1243,7 @@ function sbac_forum_field_default_field_instances() {
   t('Facilitators');
   t('Files');
   t('Forum');
+  t('Forum resource ref');
   t('Grade(s)');
   t('Intended Forum Participants');
   t('Intended Student Population(s)');
