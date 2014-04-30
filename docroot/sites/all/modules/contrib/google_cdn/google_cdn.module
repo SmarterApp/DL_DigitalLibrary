@@ -17,6 +17,12 @@ define('GOOGLE_CDN_API_DOMAIN', 'storage.googleapis.com');
 define('GOOGLE_CDN_LIBRARY_VERSION_067', 1);
 // The beta radio option for the version numbers.
 define('GOOGLE_CDN_LIBRARY_VERSION_105BETA', 2);
+// The github URL to the API download.
+define('GOOGLE_CDN_GITHUB_LINK', 'https://github.com/google/google-api-php-client');
+// The online drupal documentation link.
+define('GOOGLE_CDN_ONLINE_DOCUMENTATION_LINK', 'tobecontinued');
+// The provided google key.
+define('GOOGLE_CDN_PROVIDED_KEY', 'notasecret');
 
 /**
  * Implements hook_menu().
@@ -86,8 +92,8 @@ function google_cdn_libraries_info() {
     $library_info = array(
       'google-api-php-client' => array(
         'title' => 'Google SDK for PHP',
-        'vendor url' => 'http://code.google.com/p/google-api-php-client/',
-        'download url' => 'https://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.7.tar.gz',
+        'vendor url' => 'https://github.com/google/google-api-php-client',
+        'download url' => 'https://github.com/google/google-api-php-client/archive/master.zip',
         'version arguments' => array(
           'file' => 'src/Google/Client.php',
           'pattern' => '/const LIBVER = .(\d\.\d\.\d\-[a-z]+)./',
@@ -98,7 +104,6 @@ function google_cdn_libraries_info() {
           'php' => array(
             'src/Google/Client.php',
             'src/Google/Service/Storage.php',
-            'src/Google/Service/Drive.php',
           ),
         ),
       ),
@@ -132,8 +137,8 @@ function google_cdn_libraries_info() {
  *
  * Custom callback that returns a version number
  * back to the Library API to allow it to load
- * the Google SDK correctly. Google does not save the
- * version number within the SDK.
+ * the Google Library correctly. Google does not save the
+ * version number within the 0.6.7 Library.
  *
  * @param object $library
  *   The library object.
@@ -170,11 +175,6 @@ function google_cdn_stream_wrappers() {
         'description' => t('Google CDN - v1.0.5-beta'),
       ),
     );
-  }
-  else {
-    $message = t('You must select a Google API library version in the configuration settings.');
-    drupal_set_message($message, 'error');
-    watchdog('Google CDN', $message);
   }
 }
 
@@ -221,7 +221,7 @@ function google_cdn_test_connection($version) {
  *   Google service account name.
  * @param string $google_cdn_key_file_path
  *   P12 key path.
- * @param $google_cdn_bucket_name
+ * @param string $google_cdn_bucket_name
  *   Bucket name.
  *
  * @return array
