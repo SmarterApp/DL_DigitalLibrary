@@ -184,7 +184,7 @@ function google_cdn_admin($form, &$form_state) {
     else {
       $information .= 'installed.';
     }
-    $message = '<p>' . t($information, array('!XAutoload_link' => $x_auto_load_link)) . '</p>';
+    $message = '<p>' . t('!information', array('!information' => $information, '!XAutoload_link' => $x_auto_load_link)) . '</p>';
   }
   else {
     $message = '<p>' . t('Please select a library version.') . '</p>';
