@@ -1571,3 +1571,65 @@ function sbac_forum_comment_delete($comment) {
     }
   }
 }
+
+/**
+ * Get the resources that are posted with distinction
+ *
+ * @return mixed
+ */
+function sbac_forum_get_posted_with_distinction_resources() {
+  $query = "
+    SELECT
+      n.nid
+    FROM {node} n
+      LEFT JOIN {workbench_moderation_node_history} history
+        ON history.nid = n.nid
+    WHERE n.status = 1
+          AND n.sticky = 1
+          AND history.current = 1
+          AND history.state = 'published'
+          ORDER BY n.nid ASC";
+  return db_query($query)->fetchCol();
+}
+
+/**
+ * Create a resource forum from a resource
+ *
+ * @param $nid
+ * @param $vid
+ */
+function sbac_forum_create_resource_forum($nid, $vid) {
+  $node = node_load($nid);
+  if ($node && $node->type == 'resource') {
+    $term = (object) array(
+      'vid' => $vid,
+      'name' => $node->title,
+      'description' => NULL,
+      'format' => 1,
+    );
+    taxonomy_term_save($term);
+  }
+}
+
+/**
+ * Retrospectively create all resource forums
+ */
+function sbac_forum_create_all_resource_forums() {
+  $resources = sbac_forum_get_posted_with_distinction_resources();
+  $vocab = taxonomy_vocabulary_machine_name_load('forum');
+  foreach ($resources as $nid) {
+    // Check to make sure this forum doesn't exist already
+    $query = "
+      SELECT
+        count(*)
+      FROM {taxonomy_term_data} term
+        LEFT JOIN {field_data_field_forum_resource_ref} ref
+          ON term.tid = ref.entity_id
+      WHERE ref.entity_type = 'taxonomy_term'
+            AND ref.field_forum_resource_ref_target_id = :nid";
+    $exists = db_query($query, array(':nid' => $nid))->fetchField();
+    if(!$exists){
+      sbac_forum_create_resource_forum($nid, $vocab->vid);
+    }
+  }
+}
