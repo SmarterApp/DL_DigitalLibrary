@@ -42,6 +42,8 @@
 
         <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
           <div class="stat-downloads"><?php print $fields['downloads']; ?></div>
+        <?php else: ?>
+          <div class="stat-downloads"><div class="field-content">0</div></div>
         <?php endif; ?>
 
         <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>

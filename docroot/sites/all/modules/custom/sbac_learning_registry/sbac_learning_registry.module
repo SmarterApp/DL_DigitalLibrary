@@ -34,12 +34,6 @@ function sbac_learning_registry_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['external-resources/queue-all-resources'] = array(
-    'title' => 'Queue resources',
-    'page callback' => 'sbac_learning_registry_queue_all_resources',
-    'access arguments' => array('administer nodes'),
-    'type' => MENU_CALLBACK,
-  );
   $items['external-resources/view-database'] = array(
     'title' => 'View database',
     'page callback' => 'sbac_learning_registry_view_database',
@@ -704,63 +698,27 @@ function sbac_learning_registry_learning_resource_metadata_payload_alter(&$paylo
   $node_wrapper = entity_metadata_wrapper('node', $node);
   try { // Publisher
     $payload['items']['properties']['publisher'] = array(
-      'type' => array(
-        'http://schema.org/Organization',
-      ),
+      'type' => 'http://schema.org/Organization',
       'properties' => array(
         'name' => SBAC_LEARNING_REGISTRY_PUBLISHER,
       ),
     );
     // inLanguage
-    $payload['items']['properties']['inLanguage'] = array(
-      'type' => array(
-        'http://schema.org/Language',
-      ),
-      'properties' => array(
-        'name' => 'English',
-      ),
-    );
-    // Name
-    $payload['items']['properties']['name'] = array(
-      'type' => array(
-        'http://schema.org/Text',
-      ),
-      'properties' => array(
-        'name' => truncate_utf8($node->title, 75),
-      ),
-    );
+    $payload['items']['properties']['inLanguage'][] = 'English';
     // About
     if ($node_wrapper->field_subject->count()) {
-      $subjects = array();
       foreach ($node_wrapper->field_subject as $subject_wrapper) {
-        $subjects[] = $subject_wrapper->name->value();
+        $payload['items']['properties']['about'][] = $subject_wrapper->name->value();
       }
-      $payload['items']['properties']['about'] = array(
-        'type' => array(
-          'http://schema.org/Thing',
-        ),
-        'properties' => array(
-          'name' => implode(',', $subjects),
-        ),
-      );
     }
     // Description
-    $payload['items']['properties']['description'] = array(
-      'type' => array(
-        'http://schema.org/Thing',
-      ),
-      'properties' => array(
-        'name' => $node_wrapper->field_alt_body->value(),
-      ),
-    );
+    $payload['items']['properties']['description'] = $node_wrapper->field_alt_body->value();
     // educationalAlignment
     if ($node_wrapper->field_alignment_term->count()) {
       foreach ($node_wrapper->field_alignment_term as $alignment_wrapper) {
         $name = $alignment_wrapper->field_alignment_shortname->value();
-        $payload['items']['properties'][$name] = array(
-          'type' => array(
-            'http://schema.org/AlignmentObject',
-          ),
+        $payload['items']['properties']["educationalAlignment"][] = array(
+          'type' => 'http://schema.org/AlignmentObject',
           'properties' => array(
             'alignmentType' => 'teaches',
             'targetName' => $name,
@@ -770,43 +728,18 @@ function sbac_learning_registry_learning_resource_metadata_payload_alter(&$paylo
       }
     }
     // learningResourceType
-    $payload['items']['properties']['learningResourceType'] = array(
-      'type' => array(
-        'http://schema.org/Thing',
-      ),
-      'properties' => array(
-        'name' => $node_wrapper->field_focus->name->value()
-      ),
-    );
+    $payload['items']['properties']['learningResourceType'][] = $node_wrapper->field_focus->name->value();
     // educationalRole
     if ($node_wrapper->field_intended_end_user->count()) {
-      $intended_users = array();
       foreach ($node_wrapper->field_intended_end_user as $end_user_wrapper) {
-        $intended_users[] = $end_user_wrapper->name->value();
+        $payload['items']['properties']['educationalRole'][] = $end_user_wrapper->name->value();
       }
-      $payload['items']['properties']['educationalRole'] = array(
-        'type' => array(
-          'http://schema.org/Thing',
-        ),
-        'properties' => array(
-          'name' => implode(',', $intended_users)
-        ),
-      );
     }
     // educationalUse
     if ($node_wrapper->field_educational_use->count()) {
-      $usage = array();
       foreach ($node_wrapper->field_educational_use as $educational_use_wrapper) {
-        $usage[] = $educational_use_wrapper->name->value();
+        $payload['items']['properties']['educationalUse'][] = $educational_use_wrapper->name->value();
       }
-      $payload['items']['properties']['educationalUse'] = array(
-        'type' => array(
-          'http://schema.org/Thing',
-        ),
-        'properties' => array(
-          'name' => implode(',', $usage)
-        ),
-      );
     }
   } catch (EntityMetadataWrapperException $e) {
   }
@@ -835,11 +768,9 @@ function sbac_learning_registry_queue_all_resources() {
 SELECT
   node.nid
 FROM node
-  LEFT JOIN learning_registry ON node.nid = learning_registry.nid
   LEFT JOIN workbench_moderation_node_history ON workbench_moderation_node_history.nid = node.nid
 WHERE node.type = 'resource'
       AND node.status = 1
-      AND learning_registry.nid IS null
       AND workbench_moderation_node_history.current = 1
       AND workbench_moderation_node_history.state = 'published'";
   $results = db_query($query);

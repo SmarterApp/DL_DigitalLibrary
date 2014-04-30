@@ -12,36 +12,52 @@
  */
 function google_cdn_requirements($phase) {
   $t = get_t();
+  $requirements = array();
 
   if ($phase != 'runtime') {
-    return array();
+    return $requirements;
   }
 
   $info = libraries_load('google-api-php-client');
   if (!$info['loaded']) {
-    $requirements['google_api'] = array(
+    $requirements['google_cdn'] = array(
       'severity' => REQUIREMENT_ERROR,
-      'title' => $t('Google API PHP Client'),
+      'title' => $t('Google CDN'),
       'value' => $t('Failed to load the Google API'),
       'description' => $t('Please make sure the Google API library is installed in the libraries directory.'),
     );
   }
   elseif (!$info['version'] || version_compare($info['version'], GOOGLE_CDN_MINIMUM_VERSION) < 0) {
-    $requirements['google_api'] = array(
+    $requirements['google_cdn'] = array(
       'severity' => REQUIREMENT_ERROR,
-      'title' => $t('Google API PHP Client'),
+      'title' => $t('Google CDN'),
       'value' => $info['version'] . ' incompatible',
       'description' => $t('Please make sure the Google API library installed is ' . GOOGLE_CDN_MINIMUM_VERSION . ' or greater.'),
     );
   }
-  else {
-    $requirements['google_api'] = array(
-      'severity' => REQUIREMENT_OK,
-      'title' => $t('Google API PHP Client'),
-      'value' => $info['version'] . ' compatible',
+
+  if ($requirements) {
+    return $requirements;
+  }
+
+  $open_ssl = extension_loaded('openssl');
+  if (!$open_ssl) {
+    $requirements['google_cdn'] = array(
+      'severity' => REQUIREMENT_ERROR,
+      'title' => $t('Google CDN'),
+      'value' => $t('Failed to load the OpenSSL PHP extension'),
+      'description' => $t('Please make sure the Google API library installed is ' . GOOGLE_CDN_MINIMUM_VERSION . ' or greater.'),
     );
   }
 
+  if (!$requirements) {
+    $requirements['google_cdn'] = array(
+      'severity' => REQUIREMENT_OK,
+      'title' => $t('Google CDN'),
+      'value' => $t('Everything looks good.'),
+      'description' => $t('The Google API library and OpenSSL have been verified.'),
+    );
+  }
   return $requirements;
 }
 

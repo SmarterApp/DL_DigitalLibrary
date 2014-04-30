@@ -10,7 +10,6 @@ CONTENTS
 
 1.  Introduction
 2.  Installation
-2.1  Requirements
 3.  Configuration
 4.  Using the module
 5.  Troubleshooting
@@ -38,11 +37,26 @@ Install the module and enable it according to Drupal standards.
 The module's configuration pages reside at:
 - admin/config/media/google_cdn
 
+The module's permissions are found at:
+- admin/people/permissions
+
 ----
 2.1  Requirements
 
+OpenSSL Php Module - Required to handle Google authentication methods.
+- http://www.php.net/manual/en/book.openssl.php
+Private Directory
+- The private directory must be configured as the p12 that is required
+for Google's authentication is stored here for security reasons. As well,
+a .pem file is created from this p12 key that is stored here. This file
+is required for google's signing method.
+https://developers.google.com/storage/docs/accesscontrol#Signed-URLs.
+
 Google CDN requires:
 - Libraries API
+- XAutoLoad
+- Google API PHP Client Library
+(https://github.com/google/google-api-php-client)
 
 ----
 3.  Configuration
@@ -54,8 +68,14 @@ Google CDN's configuration section is located at:
 This section allows the admin to configure settings that pertain to the
 connection details and configuration of the module.
 
+Download the two dependent modules and install them according to Drupal
+standards. Download the Google API PHP library and place it in the
+following location sites/all/libraries/google-api-php-client.
+The main Google_Client.php file should be found at
+sites/all/libraries/google-api-php-client/src/Google/Client.php.
+
 ----
-3.3  Checking permissions
+3.1  Checking permissions
 
 In order to configure the google cdn module the user must be given
 the appropriate permission. Navigate to admin/people/permissions and
@@ -70,7 +90,7 @@ should configure the Google CDN. Once the configuration options are inputted,
 the admin can test the connection to ensure that the site is able to connect
 to the Google bucket.
 
-If the connection succeeds, the user can then select the File System
+If the connection succeeds, the administrator can then select the File System
 default download method to be the Google CDN. This makes the entire file system
 upload and download all files to / from the Google Bucket.
 
@@ -88,8 +108,4 @@ default upload and download method.
 
 ----
 6.  Feature roadmap
-- Make a stream wrapper for 1.0 beta library.
 - Create api to hook into specific areas
-- Add caching of the objects.
-- Implement ACL.
-- Could bring in some kinda graphical view of the bucket.
