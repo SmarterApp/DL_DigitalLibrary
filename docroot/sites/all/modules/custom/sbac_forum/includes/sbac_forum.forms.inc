@@ -292,6 +292,20 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
       break;
     case SBAC_FORUM_SUBNAV_RESOURCE:
       $resource_forums_classes = 'is-pressed';
+      $default = 'forum-recent-activity';
+      // If session var is set, make it the default.
+      if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS]) &&
+        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != '') {
+        $default = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS];
+      }
+      $options = array(
+        'forum-recent-activity' => t('Recent Activity'),
+        'forum-revelance' => t('Relevance'),
+        'forum-most-active' => t('Most Active'),
+        'forum-newest' => t('Newest'),
+        'forum-most-participants' => t('Most Participants'),
+      );
+      $sort_ajax_callback = 'sbac_forum__ajax__resource_forum_sort_form_change';
       break;
     case SBAC_FORUM_SUBNAV_TOPIC:
       $topic_forums_classes = 'is-pressed';

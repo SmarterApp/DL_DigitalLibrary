@@ -15,6 +15,8 @@ define('SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS', 'sbac-forum-my-forum-category-fil
 
 define('SBAC_FORUM_ALL_FORUM_SORTS', 'sbac-all-forum-sorts');
 define('SBAC_FORUM_MY_FORUM_SORTS', 'sbac-my-forum-sorts');
+define('SBAC_FORUM_RESOURCE_FORUM_SORTS', 'sbac-resource-forum-sorts');
+define('SBAC_FORUM_TOPIC_FORUM_SORTS', 'sbac-topic-forum-sorts');
 
 define('SBAC_FORUM_SUBNAV_ACTIVE', 'sbac-forum-sub-nav-active');
 define('SBAC_FORUM_SUBNAV_ALL', 'all-forums');
