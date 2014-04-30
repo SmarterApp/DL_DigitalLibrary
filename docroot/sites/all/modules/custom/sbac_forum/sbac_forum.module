@@ -19,6 +19,8 @@ define('SBAC_FORUM_MY_FORUM_SORTS', 'sbac-my-forum-sorts');
 define('SBAC_FORUM_SUBNAV_ACTIVE', 'sbac-forum-sub-nav-active');
 define('SBAC_FORUM_SUBNAV_ALL', 'all-forums');
 define('SBAC_FORUM_SUBNAV_OWN', 'my-forum');
+define('SBAC_FORUM_SUBNAV_RESOURCE', 'resource-forums');
+define('SBAC_FORUM_SUBNAV_TOPIC', 'topic-forums');
 define('SBAC_FORUM_SUBNAV_KEYWORD', 'keyword-search');
 
 define('SBAC_FORUM_FILTERS_CLOSED', 'sbac-forum-filters-closed');
@@ -48,15 +50,15 @@ define('SBAC_FORUM_CUSTOM_SOLR_FILTER_FIELD_STATE_OPEN', 'im_forum_access__custo
  * Implements hook_menu().
  */
 function sbac_forum_menu() {
-//  $items['forums'] = array(
-//    'title' => 'Forums',
-//    'file' => 'includes/sbac_forum.pages.inc',
-//    'page callback' => 'sbac_forum_main_landing_page',
-//    'access callback' => '_sbac_forum_user_access',
-//    'type' => MENU_NORMAL_ITEM,
-//    'menu_name' => 'main-menu',
-//    'weight' => -10,
-//  );
+  $items['forums'] = array(
+    'title' => 'Forums',
+    'file' => 'includes/sbac_forum.pages.inc',
+    'page callback' => 'sbac_forum_main_landing_page',
+    'access callback' => '_sbac_forum_user_access',
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -10,
+  );
 
   // Create own menu callback for adding a term. Dont need to mess with menu_alter.
   $items['forums/%taxonomy_vocabulary_machine_name/add'] = array(
