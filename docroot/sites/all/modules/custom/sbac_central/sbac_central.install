@@ -1005,6 +1005,13 @@ function sbac_central_update_7075(){
 }
 
 /**
+ * Enables views_data_export module.
+ */
+function sbac_central_update_7075() {
+  module_enable(array('views_data_export'));
+}
+
+/**
  * Connect to the Google Cloud Storage.
  *
  * @param $service
