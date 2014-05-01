@@ -31,8 +31,8 @@ function sbac_air_menu() {
  * @return string
  */
 function sbac_air_test_data() {
-  module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
-  $airclient = new AIRAPIClient();
+  // module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
+  // $airclient = new AIRAPIClient();
 
   // Main functions to test the data stream.
   // dsm($airclient->test_data('CC-ELA-v1'));
@@ -55,6 +55,7 @@ function sbac_air_test_data() {
  */
 function sbac_air_cron() {
   $ccss_vocab_name = 'education_alignment';
+  $publisher = 'CC';
 
   if (!($ccss_vocab = taxonomy_vocabulary_machine_name_load($ccss_vocab_name))) {
     return;
@@ -63,7 +64,7 @@ function sbac_air_cron() {
   module_load_include('inc', 'sbac_air', 'sbac_air.cron');
   
   //  Update 'English / Language Arts'
-  sbac_air_sync_ccss($ccss_vocab->vid, 'English / Language Arts');
+  sbac_air_sync_ccss($ccss_vocab->vid, 'English / Language Arts', $publisher);
   //  Update 'Mathematics'
   sbac_air_sync_ccss($ccss_vocab->vid, 'Mathematics');
 }
