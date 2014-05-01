@@ -12,6 +12,8 @@ include_once 'includes/sbac_forum.solr.inc';
 
 define('SBAC_FORUM_CATEGORY_FILTERS', 'sbac-forum-category-filters');
 define('SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS', 'sbac-forum-my-forum-category-filters');
+define('SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS', 'sbac-forum-resource-forum-category-filters');
+define('SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS', 'sbac-forum-topic-forum-category-filters');
 
 define('SBAC_FORUM_ALL_FORUM_SORTS', 'sbac-all-forum-sorts');
 define('SBAC_FORUM_MY_FORUM_SORTS', 'sbac-my-forum-sorts');
@@ -1591,7 +1593,7 @@ function sbac_forum_get_posted_with_distinction_resources() {
           AND history.current = 1
           AND history.state = 'published'
           ORDER BY n.nid ASC
-          LIMIT 0, 1";
+          LIMIT 0, 13"; // TODO: Only load a few for testing purposes only. Remove this limit to load all when in production.
   return db_query($query)->fetchCol();
 }
 
@@ -1643,6 +1645,8 @@ function sbac_forum_create_forum_topic($forum_id, $topic, $description){
   $node->title = $topic;
   $node->uid = 1;
   $node->status = 1;
+  $node->comment = 2;
+  $node->language = LANGUAGE_NONE;
   $node->body[LANGUAGE_NONE][0]['value'] = $description;
   $node->field_topic_forum_parent[LANGUAGE_NONE][0]['tid'] = $forum_id;
   node_save($node);
@@ -1669,4 +1673,13 @@ function sbac_forum_create_all_resource_forums() {
       sbac_forum_create_resource_forum($nid, $vocab->vid);
     }
   }
+}
+
+function sbac_forum_init() {
+  // TODO: This is for dev purposes only. Remove this when done.
+//  $term = taxonomy_term_load(60412);
+//  $term2 = taxonomy_term_load(60456);
+//  sbac_forum_create_all_resource_forums();
+//  taxonomy_term_delete(60465);
+//  $topic = node_load(133523);
 }
