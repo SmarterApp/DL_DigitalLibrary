@@ -1,0 +1,12 @@
+name = SBAC User Export View
+description = Exports a CSV of all users.
+core = 7.x
+package = ~SBAC
+version = 7.x-1.0
+project = sbac_user_export_view
+dependencies[] = views
+dependencies[] = views_data_export
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = sbac_view_users_export
+features_exclude[dependencies][ctools] = ctools
