@@ -11,6 +11,7 @@ function sbac_air_sync_ccss($ccss_vid, $ccss_vocab_name, $publisher = 'CC') {
   $publication = sbac_air_get_publication($api_client, $publisher, $ccss_vocab_name);
   $api_tags = $api_client->getStandards($publication);
   usort($api_tags, 'sbac_air_sort_tree');
+
   foreach ($api_tags as $api_standard) {
     if ($api_standard['fkParent']) {
       $target_tid = sbac_air_identify_tid($api_standard);
@@ -20,7 +21,6 @@ function sbac_air_sync_ccss($ccss_vid, $ccss_vocab_name, $publisher = 'CC') {
       else {
         sbac_air_add_ccss($ccss_vid, $api_standard);
       }
-      break;
     }
   }
 }
