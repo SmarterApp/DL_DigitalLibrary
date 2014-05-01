@@ -53,6 +53,36 @@ function sbac_forum_main_landing_page() {
         $default_sort = 'forum-recent-activity';
       }
       break;
+    case SBAC_FORUM_SUBNAV_RESOURCE:
+      $active_display = 'block_2';
+      $passive_display = 'block_3';
+      if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
+        $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS]) &&
+        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != '') {
+        $current_sorts = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS];
+        $default_sort = 'forum-recent-activity';
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_TOPIC:
+      $active_display = 'block_3';
+      $passive_display = 'block_2';
+      if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
+        $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS]) &&
+        $_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS] != '') {
+        $current_sorts = $_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS];
+        $default_sort = 'forum-recent-activity';
+      }
+      break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
       break;
   }
