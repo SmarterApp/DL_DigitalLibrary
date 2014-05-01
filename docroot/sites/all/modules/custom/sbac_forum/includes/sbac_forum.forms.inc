@@ -328,6 +328,10 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   }
 
   // Resource Forums tab
+  $resource_forums_display = 'block_2';
+  if (isset($count_values[$resource_forums_display]) && !empty($count_values[$resource_forums_display])) {
+    $resource_forums_count_text = '(' . $count_values[$resource_forums_display] . ')';
+  }
   $form['resource_forums'] = array(
     '#prefix'       => '<div class="forum-subnav-primary-wrapper">',
     '#type'         => 'submit',
@@ -367,6 +371,10 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
 //  );
 
   // Topic Forums tab
+  $topic_forums_display = 'block_3';
+  if (isset($count_values[$topic_forums_display]) && !empty($count_values[$topic_forums_display])) {
+    $topic_forums_count_text = '(' . $count_values[$topic_forums_display] . ')';
+  }
   $form['topic_forums'] = array(
     '#type'         => 'submit',
     '#value'        => t('Topic Forums'). ' '. $topic_forums_count_text,
