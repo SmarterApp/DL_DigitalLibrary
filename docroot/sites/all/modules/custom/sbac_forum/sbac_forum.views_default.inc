@@ -202,7 +202,7 @@ function sbac_forum_views_default_views() {
     27 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -313,6 +313,141 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['arguments']['field_fc_forum_member_is_removed_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_fc_forum_member_is_removed_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_fc_forum_member_is_removed_value']['summary_options']['items_per_page'] = '25';
+
+  /* Display: Resource Forums */
+  $handler = $view->new_display('block', 'Resource Forums', 'block_2');
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<div class="my-forum-empty-text"><h2>You Are Not A Member Of Any Forums Yet</h2>
+<a href="forums-main-page/reset/my-forums/default">Find a forum </a>to participate in our vibrant community.</div>';
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Taxonomy term: Members (field_fc_forum_members) */
+  $handler->display->display_options['relationships']['field_fc_forum_members_value']['id'] = 'field_fc_forum_members_value';
+  $handler->display->display_options['relationships']['field_fc_forum_members_value']['table'] = 'field_data_field_fc_forum_members';
+  $handler->display->display_options['relationships']['field_fc_forum_members_value']['field'] = 'field_fc_forum_members_value';
+  $handler->display->display_options['relationships']['field_fc_forum_members_value']['delta'] = '-1';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Taxonomy term: Last Activity (field_forum_last_activity) */
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['id'] = 'field_forum_last_activity_value';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['table'] = 'field_data_field_forum_last_activity';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['field'] = 'field_forum_last_activity_value';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Reply (comment) Count (field_forum_topic_comment_count) */
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['id'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['table'] = 'field_data_field_forum_topic_comment_count';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['field'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Created (field_forum_created) */
+  $handler->display->display_options['sorts']['field_forum_created_value']['id'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['table'] = 'field_data_field_forum_created';
+  $handler->display->display_options['sorts']['field_forum_created_value']['field'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Member Count (field_forum_member_count) */
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['id'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['table'] = 'field_data_field_forum_member_count';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['field'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Taxonomy vocabulary: Machine name */
+  $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
+  $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['value'] = array(
+    'forum' => 'forum',
+  );
+  $handler->display->display_options['filters']['machine_name']['group'] = 1;
+  /* Filter criterion: Field: Grade(s) (field_grades) */
+  $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
+  $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_grades_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator_id'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['label'] = 'Grade(s) (field_grades)';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['identifier'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    27 => 0,
+  );
+  $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
+  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator_id'] = 'field_intended_end_user_tid_op';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['label'] = 'Intended Forum Participants (field_intended_end_user)';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator'] = 'field_intended_end_user_tid_op';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['identifier'] = 'field_intended_end_user_tid';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    27 => 0,
+  );
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['vocabulary'] = 'intended_end_user';
+  /* Filter criterion: Field: Intended Student Population(s) (field_intended_student) */
+  $handler->display->display_options['filters']['field_intended_student_tid']['id'] = 'field_intended_student_tid';
+  $handler->display->display_options['filters']['field_intended_student_tid']['table'] = 'field_data_field_intended_student';
+  $handler->display->display_options['filters']['field_intended_student_tid']['field'] = 'field_intended_student_tid';
+  $handler->display->display_options['filters']['field_intended_student_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_intended_student_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['operator_id'] = 'field_intended_student_tid_op';
+  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['label'] = 'Intended Student Population(s) (field_intended_student)';
+  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['operator'] = 'field_intended_student_tid_op';
+  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['identifier'] = 'field_intended_student_tid';
+  $handler->display->display_options['filters']['field_intended_student_tid']['vocabulary'] = 'intended_student_populations';
+  /* Filter criterion: Field: Subjects and Domains (field_subject) */
+  $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
+  $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_subject_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
+  /* Filter criterion: Taxonomy term: Forum resource ref (field_forum_resource_ref) */
+  $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['id'] = 'field_forum_resource_ref_target_id';
+  $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['table'] = 'field_data_field_forum_resource_ref';
+  $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['field'] = 'field_forum_resource_ref_target_id';
+  $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['operator'] = 'not empty';
+
+  /* Display: Topic Forums */
+  $handler = $view->new_display('block', 'Topic Forums', 'block_3');
   $export['forum_list'] = $view;
 
   $view = new view();
@@ -715,7 +850,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '1';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
-  $handler->display->display_options['pager']['options']['more_button_text'] = 'Load Most Topics';
+  $handler->display->display_options['pager']['options']['more_button_text'] = 'Show More Topics';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* No results behavior: Global: Text area */
