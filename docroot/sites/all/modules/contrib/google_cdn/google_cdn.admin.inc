@@ -175,16 +175,20 @@ function google_cdn_admin($form, &$form_state) {
   elseif ($version = GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
     $is_installed = module_exists('xautoload');
     $x_auto_load_link = l(t('XAutoload'), 'https://drupal.org/project/xautoload', array('external' => TRUE));
-    $information = 'The latest version of the Google PHP API Client
-      Library requires a Drupal contrib module called !XAutoload_link. We
-      have checked your system and identified that XAutoload is ';
     if (!$is_installed) {
-      $information .= 'not installed. Please download and enable.';
+      $information = t('The latest version of the Google PHP API Client
+      Library requires a Drupal contrib module called !XAutoload_link. We
+      have checked your system and identified that XAutoload is not
+      installed. Please download
+      and enable.', array('!XAutoload_link' => $x_auto_load_link));
     }
     else {
-      $information .= 'installed.';
+      $information = t('The latest version of the Google PHP API Client
+      Library requires a Drupal contrib module called !XAutoload_link. We
+      have checked your system and identified that XAutoload is
+      installed.', array('!XAutoload_link' => $x_auto_load_link));
     }
-    $message = '<p>' . t('!information', array('!information' => $information, '!XAutoload_link' => $x_auto_load_link)) . '</p>';
+    $message = '<p>' . t('!information', array('!information' => $information)) . '</p>';
   }
   else {
     $message = '<p>' . t('Please select a library version.') . '</p>';
