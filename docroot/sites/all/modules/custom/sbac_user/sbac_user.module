@@ -189,7 +189,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
   if($form_id == 'user_login' || $form_id == 'user_login_block') {
      $form['name']['#title'] = 'Email Address';
      unset($form['name']['#description']);
-     $form['pass']['#description'] = l(t('Forget Your Password?'), 'user/password');
+     // $form['pass']['#description'] = l(t('Forget Your Password?'), 'user/password');
      $form['actions']['submit']['#value'] = 'Log into the Digital Library';
   }
 
@@ -1066,6 +1066,7 @@ function sbac_user_menu_alter(&$items) {
   $items['legal']['title'] = 'Terms of Service';
   $items['legal_accept/%/%']['title'] = 'Terms of Service';
   $items['user/password']['title'] = 'Password Reset or Account Activation';
+  $items['user/password']['access callback'] = FALSE;
 }
 
 /*
