@@ -132,6 +132,11 @@ function sbac_user_export_view_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
   $handler->display->display_options['path'] = 'user_csv';
+  $handler->display->display_options['displays'] = array(
+    'default' => 'default',
+  );
+  $handler->display->display_options['use_batch'] = 'batch';
+  $handler->display->display_options['segment_size'] = '100';
   $export['sbac_view_users_export'] = $view;
 
   return $export;
