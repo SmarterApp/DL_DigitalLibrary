@@ -1000,8 +1000,20 @@ function sbac_central_update_7074() {
 /**
  * Enabled xautoload module.
  */
-function sbac_central_update_7075(){
+function sbac_central_update_7076(){
   module_enable(array('xautoload'));
+}
+
+/**
+ * Enables views_data_export module.
+ */
+function sbac_central_update_7077() {
+  $modules = array(
+    'views_data_export',
+    'sbac_user_export_view',
+  );
+
+  module_enable($modules);
 }
 
 /**

@@ -883,6 +883,9 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
    *   for a description of this array.
    */
   protected function _stat($uri = NULL) {
+    if ($this->client == NULL) {
+      return FALSE;
+    }
     if (!isset($uri)) {
       $uri = $this->uri;
     }
