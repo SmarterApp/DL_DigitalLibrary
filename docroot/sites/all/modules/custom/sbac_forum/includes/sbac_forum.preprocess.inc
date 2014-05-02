@@ -279,6 +279,7 @@ function sbac_forum_preprocess_views_view_unformatted__forum_list__block(&$vars)
  * views_view_fields preprocess
  */
 function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
+  global $user;
   $current_user = $vars['user'];
   $row_data = $vars['row'];
 
@@ -320,6 +321,13 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
   }
 
   $vars['fields']['nothing']->content = $member_text . $facilitator_text ;
+
+  if (!empty($row_data->field_field_forum_resource_ref)) {
+    $favorites = sbac_favorites_get_favorites($user->uid, $row_data->field_field_forum_resource_ref[0]['raw']['target_id']);
+    if ($favorites) {
+      $vars['fields']['nothing_1']->content = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
+    }
+  }
 }
 
 

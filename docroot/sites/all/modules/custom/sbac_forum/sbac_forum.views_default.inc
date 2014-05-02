@@ -57,6 +57,16 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['tid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['tid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['tid']['separator'] = '';
+  /* Field: Taxonomy term: Forum resource ref */
+  $handler->display->display_options['fields']['field_forum_resource_ref']['id'] = 'field_forum_resource_ref';
+  $handler->display->display_options['fields']['field_forum_resource_ref']['table'] = 'field_data_field_forum_resource_ref';
+  $handler->display->display_options['fields']['field_forum_resource_ref']['field'] = 'field_forum_resource_ref';
+  $handler->display->display_options['fields']['field_forum_resource_ref']['label'] = '';
+  $handler->display->display_options['fields']['field_forum_resource_ref']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_forum_resource_ref']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_forum_resource_ref']['settings'] = array(
+    'link' => 0,
+  );
   /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
@@ -109,6 +119,12 @@ function sbac_forum_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = '';
+  $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   /* Field: Taxonomy term: Topic Count */
   $handler->display->display_options['fields']['field_forum_topic_count']['id'] = 'field_forum_topic_count';
   $handler->display->display_options['fields']['field_forum_topic_count']['table'] = 'field_data_field_forum_topic_count';
@@ -128,7 +144,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['field'] = 'field_forum_topic_comment_count';
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['label'] = '';
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_forum_topic_comment_count']['alter']['text'] = '[field_forum_topic_comment_count]<div class="forum-listing-suffix-label">Replies</div>';
+  $handler->display->display_options['fields']['field_forum_topic_comment_count']['alter']['text'] = '[field_forum_topic_comment_count]<div class="forum-listing-suffix-label">Posts</div>';
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['empty'] = '0<div class="forum-listing-suffix-label">Replies</div>';
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['settings'] = array(
@@ -143,7 +159,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_forum_member_count']['field'] = 'field_forum_member_count';
   $handler->display->display_options['fields']['field_forum_member_count']['label'] = '';
   $handler->display->display_options['fields']['field_forum_member_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_forum_member_count']['alter']['text'] = '[field_forum_member_count]<div class="forum-listing-suffix-label">Members</div>';
+  $handler->display->display_options['fields']['field_forum_member_count']['alter']['text'] = '[field_forum_member_count]<div class="forum-listing-suffix-label">Participants</div>';
   $handler->display->display_options['fields']['field_forum_member_count']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_forum_member_count']['empty'] = '0<div class="forum-listing-suffix-label">Members</div>';
   $handler->display->display_options['fields']['field_forum_member_count']['settings'] = array(
