@@ -703,17 +703,22 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     }
 
     $default_file = 'public://file.png';
-
-    $thumbnail_uri = $fields['field_thumbnail_uri']->content;
-    $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
-    $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
-    $thumbnail_pieces = explode('::', $thumbnail_uri);
-    $uri = $thumbnail_pieces[0];
-    $url = $thumbnail_pieces[1];
-
-    $ext = pathinfo($uri, PATHINFO_EXTENSION);
-    $type = _sbac_resource_determine_extension($ext);
-    if ($type != 'image') {
+    $uri = NULL; $url = NULL;
+    if (isset($fields['field_thumbnail_uri'])) {
+      $thumbnail_uri = $fields['field_thumbnail_uri']->content;
+      $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
+      $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
+      $thumbnail_pieces = explode('::', $thumbnail_uri);
+      $uri = $thumbnail_pieces[0];
+      $url = $thumbnail_pieces[1];
+      $ext = pathinfo($uri, PATHINFO_EXTENSION);
+      $type = _sbac_resource_determine_extension($ext);
+      if ($type != 'image') {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+    }
+    else {
       $url = $default_file;
       $uri = $default_file;
     }

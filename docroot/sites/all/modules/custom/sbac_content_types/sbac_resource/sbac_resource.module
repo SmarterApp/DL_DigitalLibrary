@@ -794,6 +794,7 @@ function _sbac_resource_preview_content(&$vars) {
     $url = file_create_url($source);
     $viewer['viewer_filename'] = ucwords($file_data['filename']);
     $viewer['viewer'] = '<iframe title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+    $viewer['viewer_class'] = '';
   }
 
   if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
@@ -1859,6 +1860,12 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   $default_file = 'public://file.png';
   $nid = $node->nid;
   if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
+    if (!isset($node->document['html5'])) {
+      $html5_item = sbac_media_load_html5_item($node->nid);
+      if ($html5_item !== FALSE) {
+        $node->document['html5'] = $html5_item;
+      }
+    }
     if (isset($node->document['html5'])) {
       $directory = "private://html5/" . floor($nid/32000) . "/" . $nid;
       $directory_thumbnail_uri = $directory . '/html5_module/dlcomponents/thumbnail.png';
