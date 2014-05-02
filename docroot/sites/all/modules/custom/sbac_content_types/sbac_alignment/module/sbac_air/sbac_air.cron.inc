@@ -57,5 +57,24 @@ function sbac_air_update_ccss($target_tid, $api_standard) {
  * @param  array  $api_standard Represents an imported CCSS tag.
  */
 function sbac_air_add_ccss($ccss_vid, $api_standard) {
-  // sbac_alignment_add_term($ccss_vid, $api_standard, $parent_tid);
+  $parent_tid = sbac_air_find_parent_tid($api_standard);
+  sbac_alignment_add_term($ccss_vid, $api_standard, $parent_tid);
+}
+
+/**
+ * Determines the Drupal Parent ID for a new Taxonomy Term
+ * @param  array  $api_standard Represents an imported CCSS tag.
+ * @return int                  Taxonomy ID for parent term .
+ */
+function sbac_air_find_parent_tid($api_standard) {
+  $parent_name  = explode(':', $api_standard['fkParent']);
+  $term_name    = array_pop($parent_name);
+  $term_list    = taxonomy_get_term_by_name($term_name);
+
+  foreach ($term_list as $tid => $contents) {
+    if ($contents->field_alignment_key['und'][0]['value'] == $api_standard['fkParent']) {
+      return $tid;
+    }
+  }
+  return -1;
 }

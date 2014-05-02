@@ -44,7 +44,6 @@ function sbac_air_test_data() {
   // dsm($status = $airclient->validate('SBAC-ELA-v1'));
   // dsm($airclient->validate('SBAC-MA-v1'));
 
-  dsm('nothing to see here');
   return;
 }
 
