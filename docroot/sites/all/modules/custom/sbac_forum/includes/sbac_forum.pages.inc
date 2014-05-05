@@ -202,7 +202,7 @@ function sbac_forum_view_forum_page($term) {
 
   $description_text = '';
   if (isset($forum_data->field_forum_description)) {
-    $description_text = $forum_data->field_forum_description->value();
+    $description_text = more_less_text($forum_data->field_forum_description->value());
   }
   $add_comma = FALSE;
   $is_facilitator = FALSE;
@@ -392,6 +392,35 @@ function sbac_forum_view_forum_page($term) {
     $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = '';
   }
 
+  // If this is a resource forum, then I am favoriting the resource itself (node)
+  // Otherwise I'm favoriting the forum (taxonomy term)
+  $resource_id = '';
+  $forum_id = $term->tid;
+  if (!empty($term->field_forum_resource_ref)){
+    $resource_id = $term->field_forum_resource_ref['und'][0]['target_id'];
+    $forum_id = '';
+  }
+  // if the user has this entity as a favorite.
+  $favorites_class = 'sbac-favorites-link-no';
+  $favorite_text = t('Add to Favorites');
+  $favorites = sbac_favorites_get_favorites($user->uid, $favorite_id);
+  if ($favorites) {
+    $favorites_class = 'sbac-favorites-link-yes';
+    $favorite_text = t('Unfavorite');
+  }
+
+  $favorite_link = l($favorite_text, $_GET['q'], array(
+    'attributes' => array(
+      'class' => array(
+        'sbac-favorites-link',
+        $favorites_class
+      ),
+      'nid' => $resource_id,
+      'tid' => $forum_id,
+      'uid' => $user->uid
+    )
+  ));
+
   // Add all the markup to variable for tpl.
   $fields = array(
     'welcome_message'      => $welcome_message,
@@ -404,6 +433,7 @@ function sbac_forum_view_forum_page($term) {
     'end_users'            => $end_user_text,
     'students'             => $student_text,
     'tabs'                 => $tab_output,
+    'favorites_link'       => $favorite_link,
   );
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );
