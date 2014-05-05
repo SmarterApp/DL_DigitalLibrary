@@ -75,6 +75,10 @@
 
 </div> <!--End top container -->
 
+<?php if(isset($fields['favorites_link'])): ?>
+  <?php print $fields['favorites_link']; ?>
+<?php endif; ?>
+
 <div class="sbac-forum-vp-tabs">
   <?php print $fields['tabs']; ?>
 </div>
