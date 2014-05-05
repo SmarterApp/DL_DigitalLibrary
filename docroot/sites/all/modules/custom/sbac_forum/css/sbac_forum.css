@@ -3650,9 +3650,43 @@ h2.title {
   display: none !important;
 }
 
+/* line 3218, ../sass/sbac_forum.scss */
+a.sbac-favorites-link {
+  background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
+  display: block;
+  padding-left: 20px;
+  vertical-align: middle;
+  font-size: 13px;
+  line-height: 15px;
+  height: 15px;
+  color: #62676e;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+/* line 3230, ../sass/sbac_forum.scss */
+a.sbac-favorites-link.sbac-favorites-link-yes {
+  background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
+  color: #62676e;
+}
+/* line 3235, ../sass/sbac_forum.scss */
+a.sbac-favorites-link.sbac-favorites-link-yes:hover {
+  background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
+  color: #0c84ad;
+}
+/* line 3240, ../sass/sbac_forum.scss */
+a.sbac-favorites-link.sbac-favorites-link-no {
+  background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
+  color: #62676e;
+}
+/* line 3245, ../sass/sbac_forum.scss */
+a.sbac-favorites-link.sbac-favorites-link-no:hover {
+  background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
+  color: #0c84ad;
+}
+
 /*Fixed for FF*/
 @-moz-document url-prefix() {
-  /* line 3220, ../sass/sbac_forum.scss */
+  /* line 3254, ../sass/sbac_forum.scss */
   .sbac-forum-vp-controls-popup:after {
     position: absolute;
     bottom: 30px;
@@ -3661,30 +3695,30 @@ h2.title {
 }
 
 /*Fix IE9 bugs*/
-/* line 3229, ../sass/sbac_forum.scss */
+/* line 3263, ../sass/sbac_forum.scss */
 .ie9 {
   /*Tooltip of Forum setting on Forum section*/
 }
-/* line 3232, ../sass/sbac_forum.scss */
+/* line 3266, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls {
   width: 140px;
 }
-/* line 3237, ../sass/sbac_forum.scss */
+/* line 3271, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper ul {
   padding: 3px 0 5px !important;
   line-height: 1.4 !important;
 }
-/* line 3241, ../sass/sbac_forum.scss */
+/* line 3275, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper ul li {
   margin-bottom: 0 !important;
 }
-/* line 3246, ../sass/sbac_forum.scss */
+/* line 3280, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper a {
   font-size: 15px;
   line-height: 1;
   height: 20px;
 }
-/* line 3254, ../sass/sbac_forum.scss */
+/* line 3288, ../sass/sbac_forum.scss */
 .ie9 .button.comment-direct-reply-form-cancel-link,
 .ie9 .button.comment-reply-form-cancel-link {
   margin-top: 25px !important;

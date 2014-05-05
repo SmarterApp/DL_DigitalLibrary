@@ -394,46 +394,92 @@ function sbac_forum_view_forum_page($term) {
 
   // If this is a resource forum, then I am favoriting the resource itself (node)
   // Otherwise I'm favoriting the forum (taxonomy term)
-  $resource_id = '';
-  $forum_id = $term->tid;
-  if (!empty($term->field_forum_resource_ref)){
-    $resource_id = $term->field_forum_resource_ref['und'][0]['target_id'];
-    $forum_id = '';
+  $id = $term->tid;
+  $type = 'term';
+  if (!empty($term->field_forum_resource_ref)) {
+    $resource_wrapper  = $forum_data->field_forum_resource_ref;
+    $id = $term->field_forum_resource_ref['und'][0]['target_id'];
+    $type = 'node';
+    $resource_link = l('View Resource', 'node/' . $id, array('attributes' => array('target' => '_blank')));
+
+    // resource image
+    $default_file = 'public://file.png';
+    $uri = $default_file;
+    if ($resource_wrapper->__isset('field_thumbnail_uri')) {
+      $thumbnail_uri = $forum_data->field_forum_resource_ref->field_thumbnail_uri->value();
+      $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
+      $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
+      $thumbnail_pieces = explode('::', $thumbnail_uri);
+      $uri = $thumbnail_pieces[0];
+      $ext = pathinfo($uri, PATHINFO_EXTENSION);
+      $file_type = _sbac_resource_determine_extension($ext);
+      if ($file_type != 'image') {
+        $uri = $default_file;
+      }
+    }
+    $resource_image = theme('image_style', array(
+      'style_name' => 'resource_image_grid',
+      'path' => $uri,
+      'attributes' => array('class' => array()),
+      'alt'=>'Resource thumbnail image'
+    ));
+
+    // resource rating
+    $resource_rating = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($id));
+    $resource_rating_count = sbac_resource_get_rating_count($id);
+
+    // views
+    $resource_views = 0;
+    if ($resource_wrapper->__isset('field_unique_views')){
+      $resource_views = $resource_wrapper->field_unique_views->value();
+    }
+
+    // downloads
+    $resource_downloads = 0;
+    if ($resource_wrapper->__isset('field_asset_downloads')){}
+    $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
   // if the user has this entity as a favorite.
   $favorites_class = 'sbac-favorites-link-no';
   $favorite_text = t('Add to Favorites');
-  $favorites = sbac_favorites_get_favorites($user->uid, $favorite_id);
+  $favorites = sbac_favorites_get_favorites($user->uid, $id, $type);
   if ($favorites) {
     $favorites_class = 'sbac-favorites-link-yes';
     $favorite_text = t('Unfavorite');
   }
 
+  drupal_add_js(drupal_get_path("module", "sbac_favorites") . "/js/sbac_favorites.js");
   $favorite_link = l($favorite_text, $_GET['q'], array(
     'attributes' => array(
       'class' => array(
         'sbac-favorites-link',
         $favorites_class
       ),
-      'nid' => $resource_id,
-      'tid' => $forum_id,
-      'uid' => $user->uid
+      'id' => $id,
+      'uid' => $user->uid,
+      'type' => $type,
     )
   ));
 
   // Add all the markup to variable for tpl.
   $fields = array(
-    'welcome_message'      => $welcome_message,
-    'controls_link_list'   => $forum_control_link_list,
-    'description'          => $description_text ,
-    'facilitators'         => $facilitator_text,
+    'welcome_message' => $welcome_message,
+    'controls_link_list' => $forum_control_link_list,
+    'description' => $description_text,
+    'facilitators' => $facilitator_text,
     'faciliatator_details' => $faci_details,
-    'grades'               => $grades_text,
-    'subjects'             => $subject_text,
-    'end_users'            => $end_user_text,
-    'students'             => $student_text,
-    'tabs'                 => $tab_output,
-    'favorites_link'       => $favorite_link,
+    'grades' => $grades_text,
+    'subjects' => $subject_text,
+    'end_users' => $end_user_text,
+    'students' => $student_text,
+    'tabs' => $tab_output,
+    'favorites_link' => $favorite_link,
+    'resource_link' => $resource_link,
+    'resource_image' => $resource_image,
+    'resource_rating' => $resource_rating,
+    'resource_rating_count' => $resource_rating_count,
+    'resource_views' => $resource_views,
+    'resource_downloads' => $resource_downloads,
   );
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );
