@@ -115,7 +115,7 @@ function sbac_favorites_ajax_delete() {
   }
 
   db_delete('sbac_favorites')
-    ->condition('id', $_POST['nid'])
+    ->condition('id', $_POST['id'])
     ->condition('uid', $_POST['uid'])
     ->condition('type', $_POST['type'])
     ->execute();
@@ -325,7 +325,7 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
       '#markup' => date('M jS g:ia', $favorite->created),
     );
     $element['delete'] = array(
-      '#markup' => '<i class="general foundicon-trash" "=""></i><a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $favorite->uid . '">Delete</a>',
+      '#markup' => '<i class="general foundicon-trash" "=""></i><a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" id="' . $resource->nid . '" uid="' . $favorite->uid . '">Delete</a>',
     );
 
     $element['weight'] = array(
