@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the SBAC User Export View feature.
- */
-
-include_once 'sbac_user_export_view.features.inc';
