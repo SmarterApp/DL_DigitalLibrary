@@ -403,7 +403,7 @@ function sbac_forum_view_forum_page($term) {
   // if the user has this entity as a favorite.
   $favorites_class = 'sbac-favorites-link-no';
   $favorite_text = t('Add to Favorites');
-  $favorites = sbac_favorites_get_favorites($user->uid, $id);
+  $favorites = sbac_favorites_get_favorites($user->uid, $id, $type);
   if ($favorites) {
     $favorites_class = 'sbac-favorites-link-yes';
     $favorite_text = t('Unfavorite');
