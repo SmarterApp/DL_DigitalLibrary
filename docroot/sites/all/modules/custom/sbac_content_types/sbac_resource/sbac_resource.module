@@ -738,8 +738,9 @@ function sbac_resource_preprocess_node(&$vars) {
           'sbac-favorites-link',
           $favorites_class
         ),
-        'nid' => $vars['nid'],
-        'uid' => $user->uid
+        'id' => $vars['nid'],
+        'uid' => $user->uid,
+        'type' => 'node'
       )
     ));
   }

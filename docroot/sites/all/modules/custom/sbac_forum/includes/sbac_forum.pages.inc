@@ -394,30 +394,31 @@ function sbac_forum_view_forum_page($term) {
 
   // If this is a resource forum, then I am favoriting the resource itself (node)
   // Otherwise I'm favoriting the forum (taxonomy term)
-  $resource_id = '';
-  $forum_id = $term->tid;
+  $id = $term->tid;
+  $type = 'term';
   if (!empty($term->field_forum_resource_ref)){
-    $resource_id = $term->field_forum_resource_ref['und'][0]['target_id'];
-    $forum_id = '';
+    $id = $term->field_forum_resource_ref['und'][0]['target_id'];
+    $type = 'node';
   }
   // if the user has this entity as a favorite.
   $favorites_class = 'sbac-favorites-link-no';
   $favorite_text = t('Add to Favorites');
-  $favorites = sbac_favorites_get_favorites($user->uid, $favorite_id);
+  $favorites = sbac_favorites_get_favorites($user->uid, $id);
   if ($favorites) {
     $favorites_class = 'sbac-favorites-link-yes';
     $favorite_text = t('Unfavorite');
   }
 
+  drupal_add_js(drupal_get_path("module", "sbac_favorites") . "/js/sbac_favorites.js");
   $favorite_link = l($favorite_text, $_GET['q'], array(
     'attributes' => array(
       'class' => array(
         'sbac-favorites-link',
         $favorites_class
       ),
-      'nid' => $resource_id,
-      'tid' => $forum_id,
-      'uid' => $user->uid
+      'id' => $id,
+      'uid' => $user->uid,
+      'type'=> $type,
     )
   ));
 

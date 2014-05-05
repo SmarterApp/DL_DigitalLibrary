@@ -8,11 +8,13 @@
         var the_favorite_link = $(this);
         var id = the_favorite_link.attr('id');
         var uid = the_favorite_link.attr('uid');
+        var type = the_favorite_link.attr('type');
+
         var is_favorite = 0;
         if (the_favorite_link.hasClass('sbac-favorites-link-yes')) {
           is_favorite = 1;
         }
-        submit_favorite(the_favorite_link, id, uid, is_favorite);
+        submit_favorite(the_favorite_link, id, uid, type, is_favorite);
         return false;
       });
 
@@ -36,11 +38,11 @@
    * @param uid
    * @param is_favorite
    */
-  submit_favorite = function (the_favorite_link, id, uid, is_favorite) {
+  submit_favorite = function (the_favorite_link, id, uid, type, is_favorite) {
     var ajax_request = $.ajax({
       type: 'POST',
       url: "/sbac-favorites-click",
-      data: {'id':id, 'uid':uid, 'is_favorite':is_favorite},
+      data: {'id':id, 'uid':uid, 'type':type, 'is_favorite':is_favorite},
       success: function(data) {
         ajax_request = null;
         if (is_favorite == 0) {
@@ -75,7 +77,8 @@
         var the_favorite_link = $(this);
         var id = the_favorite_link.attr('id');
         var uid = the_favorite_link.attr('uid');
-        delete_favorite(the_favorite_link, id, uid);
+        var type = the_favorite_link.attr('type');
+        delete_favorite(the_favorite_link, id, uid, type);
         return false;
       });
     }
@@ -88,11 +91,11 @@
    * @param id
    * @param uid
    */
-  delete_favorite = function (the_favorite_link, id, uid) {
+  delete_favorite = function (the_favorite_link, id, uid, type) {
     var ajax_delete_request = $.ajax({
       type: 'POST',
       url: the_favorite_link.attr('href'),
-      data: {'id':id, 'uid':uid},
+      data: {'id':id, 'uid':uid, 'type':type},
       success: function(data, textStatus, jqXHR) {
         var response = jQuery.parseJSON(data);
         ajax_delete_request = null;
