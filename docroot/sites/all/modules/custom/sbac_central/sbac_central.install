@@ -1017,6 +1017,18 @@ function sbac_central_update_7077() {
 }
 
 /**
+ * Implements hook_update_N().
+ * Disables sbac_user_export_view feature.
+ */
+function sbac_central_update_7078() {
+  $modules = array(
+    'sbac_user_export_view',
+  );
+
+  module_disable($modules);
+}
+
+/**
  * Connect to the Google Cloud Storage.
  *
  * @param $service
