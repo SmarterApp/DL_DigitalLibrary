@@ -12,10 +12,22 @@
  */
 function sbac_air_sync_standard($ccss_vid, $publisher = 'CC', $api_standard) {
   if ($ccss_tid = sbac_air_identify_tid($api_standard)) {
-    sbac_air_update_ccss($ccss_tid, $api_standard);
+    try {
+      sbac_air_update_ccss($ccss_tid, $api_standard);
+    }
+    catch (\Exception $e) {
+      watchdog('sbac_air', 'Failed to update CCSS', array(), WATCHDOG_NOTICE, 'link');
+      drupal_set_message($e->getMessage(), 'error');
+    }
   }
   else {
-    sbac_air_add_ccss($ccss_vid, $api_standard);
+    try {
+      sbac_air_add_ccss($ccss_vid, $api_standard);
+    }
+    catch (\Exception $e) {
+      watchdog('sbac_air', 'Failed to create CCSS', array(), WATCHDOG_NOTICE, 'link');
+      drupal_set_message($e->getMessage(), 'error');
+    }
   }
 }
 
@@ -42,13 +54,14 @@ function sbac_air_identify_tid($api_standard) {
  * @param  array  $api_standard Represents an imported CCSS tag.
  */
 function sbac_air_update_ccss($target_tid, $api_standard) {
-  $taxonomy_term = taxonomy_term_load($target_tid);
+  if ($taxonomy_term = taxonomy_term_load($target_tid)) {
+    $taxonomy_term->description = $api_standard['description'];
+    $taxonomy_term->field_alignment_shortname['und'][0]['value']      = $api_standard['shortName'];
+    $taxonomy_term->field_alignment_shortname['und'][0]['safe_value'] = $api_standard['shortName'];
 
-  $taxonomy_term->description = $api_standard['description'];
-  $taxonomy_term->field_alignment_shortname['und'][0]['value'] = $api_standard['shortName'];
-  $taxonomy_term->field_alignment_shortname['und'][0]['safe_value'] = $api_standard['shortName'];
-
-  taxonomy_term_save($taxonomy_term);
+    return taxonomy_term_save($taxonomy_term);
+  }
+  throw new Exception('TID: ' . $target_tid . ' does not exist');
 }
 
 /**
@@ -57,8 +70,10 @@ function sbac_air_update_ccss($target_tid, $api_standard) {
  * @param  array  $api_standard Represents an imported CCSS tag.
  */
 function sbac_air_add_ccss($ccss_vid, $api_standard) {
-  $parent_tid = sbac_air_find_parent_tid($api_standard);
-  sbac_alignment_add_term($ccss_vid, $api_standard, $parent_tid);
+  if ($parent_tid = sbac_air_find_parent_tid($api_standard) != -1) {
+    return sbac_alignment_add_term($ccss_vid, $api_standard, $parent_tid);
+  }
+  throw new Exception('Parent tid not found');
 }
 
 /**
@@ -67,9 +82,9 @@ function sbac_air_add_ccss($ccss_vid, $api_standard) {
  * @return int                  Taxonomy ID for parent term .
  */
 function sbac_air_find_parent_tid($api_standard) {
-  $parent_name  = explode(':', $api_standard['fkParent']);
-  $term_name    = array_pop($parent_name);
-  $term_list    = taxonomy_get_term_by_name($term_name);
+  $parent_name = explode(':', $api_standard['fkParent']);
+  $term_name   = array_pop($parent_name);
+  $term_list   = taxonomy_get_term_by_name($term_name);
 
   foreach ($term_list as $tid => $contents) {
     if ($contents->field_alignment_key['und'][0]['value'] == $api_standard['fkParent']) {

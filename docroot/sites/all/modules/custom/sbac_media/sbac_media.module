@@ -1267,6 +1267,9 @@ function sbac_media_create_file_record_html5_module($file_attributes) {
         $full_path = str_replace($file_attributes['zip_contents_path'], '', $path);
         $full_path_uri = $file_attributes['directory'] . '/html5_module' . $full_path . '/' . $filename;
         $mime_type = file_get_mimetype($full_path_uri);
+        if (strlen($mime_type) > 50) {
+          $mime_type = 'application/octet-stream';
+        }
         $dir_file = new stdClass();
         $dir_file->uid = $user->uid;
         $dir_file->filename = $filename;
