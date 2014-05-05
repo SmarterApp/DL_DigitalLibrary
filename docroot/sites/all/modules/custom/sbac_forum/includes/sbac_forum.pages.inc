@@ -396,9 +396,32 @@ function sbac_forum_view_forum_page($term) {
   // Otherwise I'm favoriting the forum (taxonomy term)
   $id = $term->tid;
   $type = 'term';
-  if (!empty($term->field_forum_resource_ref)){
+  if (!empty($term->field_forum_resource_ref)) {
     $id = $term->field_forum_resource_ref['und'][0]['target_id'];
     $type = 'node';
+    $resource_link = l('View Resource', 'node/' . $id, array('attributes' => array('target' => '_blank')));
+
+    // resource image
+    $default_file = 'public://file.png';
+    $uri = $default_file;
+    if ($forum_data->field_forum_resource_ref->__isset('field_thumbnail_uri')) {
+      $thumbnail_uri = $forum_data->field_forum_resource_ref->field_thumbnail_uri->value();
+      $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
+      $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
+      $thumbnail_pieces = explode('::', $thumbnail_uri);
+      $uri = $thumbnail_pieces[0];
+      $ext = pathinfo($uri, PATHINFO_EXTENSION);
+      $type = _sbac_resource_determine_extension($ext);
+      if ($type != 'image') {
+        $uri = $default_file;
+      }
+    }
+    $resource_image = theme('image_style', array(
+      'style_name' => 'resource_image_grid',
+      'path' => $uri,
+      'attributes' => array('class' => array()),
+      'alt'=>'Resource thumbnail image'
+    ));
   }
   // if the user has this entity as a favorite.
   $favorites_class = 'sbac-favorites-link-no';
@@ -435,6 +458,8 @@ function sbac_forum_view_forum_page($term) {
     'students'             => $student_text,
     'tabs'                 => $tab_output,
     'favorites_link'       => $favorite_link,
+    'resource_link'        => $resource_link,
+    'resource_image'       => $resource_image,
   );
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );
