@@ -46,11 +46,12 @@
     </div>
   <?php endif; ?>
   <?php if (!empty($fields['students'])): ?>
-    <div class="vp-students-field">
+    <div class="vp-students-field read-more">
       <div class="title-tags"><?php print t('Intended Student Populations'); ?></div>
       <?php print $fields['students']; ?>
     </div>
   <?php endif; ?>
+  <a class="read-more-link">More Attributes</a>
   <?php if (isset($fields['favorites_link'])): ?>
     <?php print $fields['favorites_link']; ?>
   <?php endif; ?>
