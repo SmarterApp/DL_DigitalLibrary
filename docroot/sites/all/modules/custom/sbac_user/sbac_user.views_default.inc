@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_user_export_view.views_default.inc
+ * sbac_user.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
-function sbac_user_export_view_views_default_views() {
+function sbac_user_views_default_views() {
   $export = array();
 
   $view = new view();
