@@ -133,6 +133,8 @@ function _learning_registry_send_to_registry($nid, $json, $service_num = LEARNIN
       return TRUE;
     }
     else {
+      // TODO: This is temp workaround until the learning registry returns proper error messages. Until then I'll assume that it went through properly
+      $result = _learning_registry_update_submission_status($nid, $result);
       watchdog('learning_registry', '<pre>'.print_r(json_decode($json), TRUE).'</pre><hr><pre>' . print_r(json_decode($result), TRUE) . '</pre>');
       // Allow other modules to act on FAILURE
       module_invoke_all('learning_registry_publish_failure');
