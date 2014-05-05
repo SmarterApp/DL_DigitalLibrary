@@ -9,7 +9,7 @@ function sbac_favorites_views_data() {
   $data['sbac_favorites']['table']['group'] = t('SBAC Favorites');
   // Base table.
   $data['sbac_favorites']['table']['base'] = array(
-    'field' => 'nid', // This is the identifier field for the view.
+    'field' => 'id', // This is the identifier field for the view.
     'title' => t('SBAC Favorites'),
     'help' => t('Custom data for user favorites.'),
     'weight' => -10,
@@ -17,8 +17,8 @@ function sbac_favorites_views_data() {
   // Join.
   $data['sbac_favorites']['table']['join'] = array(
     'node' => array(
-      'left_field' => 'nid',
-      'field' => 'nid',
+      'left_field' => 'id',
+      'field' => 'id',
     ),
     'users' => array(
       'left_field' => 'uid',
@@ -28,12 +28,12 @@ function sbac_favorites_views_data() {
 
 
   // Node ID table field.
-  $data['sbac_favorites']['nid'] = array(
-    'title' => t('Resource NID'),
-    'help' => t('The resource nid.'),
+  $data['sbac_favorites']['id'] = array(
+    'title' => t('Resource ID'),
+    'help' => t('The resource id.'),
     'relationship' => array(
       'base' => 'node', // The name of the table to join with.
-      'base field' => 'nid', // The name of the field on the joined table.
+      'base field' => 'id', // The name of the field on the joined table.
       'handler' => 'views_handler_relationship',
       'label' => t('Default label for the relationship'),
       'title' => t('Title shown when adding the relationship'),
