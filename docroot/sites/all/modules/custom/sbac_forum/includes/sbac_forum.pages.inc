@@ -397,6 +397,7 @@ function sbac_forum_view_forum_page($term) {
   $id = $term->tid;
   $type = 'term';
   if (!empty($term->field_forum_resource_ref)) {
+    $resource_wrapper  = $forum_data->field_forum_resource_ref;
     $id = $term->field_forum_resource_ref['und'][0]['target_id'];
     $type = 'node';
     $resource_link = l('View Resource', 'node/' . $id, array('attributes' => array('target' => '_blank')));
@@ -404,15 +405,15 @@ function sbac_forum_view_forum_page($term) {
     // resource image
     $default_file = 'public://file.png';
     $uri = $default_file;
-    if ($forum_data->field_forum_resource_ref->__isset('field_thumbnail_uri')) {
+    if ($resource_wrapper->__isset('field_thumbnail_uri')) {
       $thumbnail_uri = $forum_data->field_forum_resource_ref->field_thumbnail_uri->value();
       $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
       $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
       $thumbnail_pieces = explode('::', $thumbnail_uri);
       $uri = $thumbnail_pieces[0];
       $ext = pathinfo($uri, PATHINFO_EXTENSION);
-      $type = _sbac_resource_determine_extension($ext);
-      if ($type != 'image') {
+      $file_type = _sbac_resource_determine_extension($ext);
+      if ($file_type != 'image') {
         $uri = $default_file;
       }
     }
@@ -422,6 +423,21 @@ function sbac_forum_view_forum_page($term) {
       'attributes' => array('class' => array()),
       'alt'=>'Resource thumbnail image'
     ));
+
+    // resource rating
+    $resource_rating = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($id));
+    $resource_rating_count = sbac_resource_get_rating_count($id);
+
+    // views
+    $resource_views = 0;
+    if ($resource_wrapper->__isset('field_unique_views')){
+      $resource_views = $resource_wrapper->field_unique_views->value();
+    }
+
+    // downloads
+    $resource_downloads = 0;
+    if ($resource_wrapper->__isset('field_asset_downloads')){}
+    $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
   // if the user has this entity as a favorite.
   $favorites_class = 'sbac-favorites-link-no';
@@ -441,25 +457,29 @@ function sbac_forum_view_forum_page($term) {
       ),
       'id' => $id,
       'uid' => $user->uid,
-      'type'=> $type,
+      'type' => $type,
     )
   ));
 
   // Add all the markup to variable for tpl.
   $fields = array(
-    'welcome_message'      => $welcome_message,
-    'controls_link_list'   => $forum_control_link_list,
-    'description'          => $description_text ,
-    'facilitators'         => $facilitator_text,
+    'welcome_message' => $welcome_message,
+    'controls_link_list' => $forum_control_link_list,
+    'description' => $description_text,
+    'facilitators' => $facilitator_text,
     'faciliatator_details' => $faci_details,
-    'grades'               => $grades_text,
-    'subjects'             => $subject_text,
-    'end_users'            => $end_user_text,
-    'students'             => $student_text,
-    'tabs'                 => $tab_output,
-    'favorites_link'       => $favorite_link,
-    'resource_link'        => $resource_link,
-    'resource_image'       => $resource_image,
+    'grades' => $grades_text,
+    'subjects' => $subject_text,
+    'end_users' => $end_user_text,
+    'students' => $student_text,
+    'tabs' => $tab_output,
+    'favorites_link' => $favorite_link,
+    'resource_link' => $resource_link,
+    'resource_image' => $resource_image,
+    'resource_rating' => $resource_rating,
+    'resource_rating_count' => $resource_rating_count,
+    'resource_views' => $resource_views,
+    'resource_downloads' => $resource_downloads,
   );
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );

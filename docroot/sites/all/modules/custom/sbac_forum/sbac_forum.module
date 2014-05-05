@@ -1623,34 +1623,46 @@ function sbac_forum_get_posted_with_distinction_resources() {
  * @param $vid
  */
 function sbac_forum_create_resource_forum($nid, $vid = NULL) {
-  $node = node_load($nid);
-  if (!$vid){
-    $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
-    $vid = $vocab->vid;
-  }
-  if ($node && $node->type == 'resource') {
-    $term = (object) array(
-      'vid' => $vid,
-      'name' => $node->title,
-      'description' => '',
-      'format' => 1,
-      'field_forum_resource_ref' => array(
-        LANGUAGE_NONE => array(
-          0 => array(
-            'target_id' => $node->nid
+  // Check to make sure this forum doesn't exist already
+  $query = "
+      SELECT
+        count(*)
+      FROM {taxonomy_term_data} term
+        LEFT JOIN {field_data_field_forum_resource_ref} ref
+          ON term.tid = ref.entity_id
+      WHERE ref.entity_type = 'taxonomy_term'
+            AND ref.field_forum_resource_ref_target_id = :nid";
+  $exists = db_query($query, array(':nid' => $nid))->fetchField();
+  if (!$exists) {
+    $node = node_load($nid);
+    if (!$vid) {
+      $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
+      $vid = $vocab->vid;
+    }
+    if ($node && $node->type == 'resource') {
+      $term = (object) array(
+        'vid' => $vid,
+        'name' => $node->title,
+        'description' => '',
+        'format' => 1,
+        'field_forum_resource_ref' => array(
+          LANGUAGE_NONE => array(
+            0 => array(
+              'target_id' => $node->nid
+            )
           )
-        )
-      ),
-      'field_forum_description' => $node->field_alt_body,
-      'field_subject' => $node->field_subject,
-      'field_grades' => $node->field_grades,
-      'field_intended_end_user' => $node->field_intended_end_user,
-      'field_intended_student' => $node->field_intended_student,
-    );
-    taxonomy_term_save($term);
-    if (isset($term->tid)) {
-      sbac_forum_create_forum_topic($term->tid, 'Use and Implementation', 'General discussion for questions and comments about the use and implementation of this resource');
-      sbac_forum_create_forum_topic($term->tid, 'Suggested Improvements', 'Discussion for suggested improvements and revisions for this resource');
+        ),
+        'field_forum_description' => $node->field_alt_body,
+        'field_subject' => $node->field_subject,
+        'field_grades' => $node->field_grades,
+        'field_intended_end_user' => $node->field_intended_end_user,
+        'field_intended_student' => $node->field_intended_student,
+      );
+      taxonomy_term_save($term);
+      if (isset($term->tid)) {
+        sbac_forum_create_forum_topic($term->tid, 'Use and Implementation', 'General discussion for questions and comments about the use and implementation of this resource');
+        sbac_forum_create_forum_topic($term->tid, 'Suggested Improvements', 'Discussion for suggested improvements and revisions for this resource');
+      }
     }
   }
 }
@@ -1682,19 +1694,16 @@ function sbac_forum_create_all_resource_forums() {
   $resources = sbac_forum_get_posted_with_distinction_resources();
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
   foreach ($resources as $nid) {
-    // Check to make sure this forum doesn't exist already
-    $query = "
-      SELECT
-        count(*)
-      FROM {taxonomy_term_data} term
-        LEFT JOIN {field_data_field_forum_resource_ref} ref
-          ON term.tid = ref.entity_id
-      WHERE ref.entity_type = 'taxonomy_term'
-            AND ref.field_forum_resource_ref_target_id = :nid";
-    $exists = db_query($query, array(':nid' => $nid))->fetchField();
-    if (!$exists) {
-      sbac_forum_create_resource_forum($nid, $vocab->vid);
-    }
+    sbac_forum_create_resource_forum($nid, $vocab->vid);
+  }
+}
+
+/**
+ * Implements hook_workbench_moderation_transition()
+ */
+function sbac_forum_workbench_moderation_transition($node, $previous_state, $new_state) {
+  if ($node->type == 'resource' && $new_state == 'published' && $node->sticky == 1) {
+    sbac_forum_create_resource_forum($node->nid);
   }
 }
 

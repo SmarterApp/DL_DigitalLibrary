@@ -62,6 +62,15 @@
   <?php if (!empty($fields['resource_image'])): ?>
     <?php print $fields['resource_image']; ?>
   <?php endif; ?>
+  <?php if (!empty($fields['resource_rating'])): ?>
+    <?php print $fields['resource_rating']; ?> (<?php print $fields['resource_rating_count']; ?>)
+  <?php endif; ?>
+  <?php if (isset($fields['resource_views'])): ?>
+    <?php print $fields['resource_views']; ?> views
+  <?php endif; ?>
+  <?php if (isset($fields['resource_downloads'])): ?>
+    <?php print $fields['resource_downloads']; ?> downloads
+  <?php endif; ?>
 </div>
 <div class="sbac-forum-vp-tabs">
   <?php print $fields['tabs']; ?>
