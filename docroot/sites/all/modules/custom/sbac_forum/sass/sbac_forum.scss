@@ -505,11 +505,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			@include border-radius(6px);
     }
 
-		button#edit-all-forums {
+		button#edit-resource-forums {
 			@include border-radius(6px 0 0 6px);
 		}
 
-		button#edit-my-forum {
+		button#edit-topic-forums {
 			@include border-radius(0 6px 6px 0);
 		}
 
@@ -520,18 +520,18 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    -moz-border-top-colors: none;
 	    background-color: $darkblue;
 	    background-image: none;
-	    border-color: #003142 rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.6) #003142;
+	    border-color: #003142 rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.4) #003142;
 	    border-image: none;
 	    border-style: solid;
 	    border-width: 1px;
-	    box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, 0.3) inset;
+	    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.3) inset;
 	    color: #FFFFFF;
 	    cursor: default;
 	    text-shadow: 0 1px 0 #000000;
     }
 
-		button#edit-all-forums.is-pressed {
-			border-color: #003142 #003142 rgba(255, 255, 255, 0.6) #003142;
+		button#edit-resource-forums.is-pressed {
+			border-color: #003142 #003142 rgba(255, 255, 255, 0.4) #003142;
 		}
   }
 
@@ -695,7 +695,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    box-shadow: -1px 0 0 0 #CECECE;
 		    color: #464B54;
 		    display: block;
-				width: 110px;
+				width: 95px;
 		    height: 100%;
 		    list-style-type: none;
 		    padding: 0;
@@ -706,15 +706,16 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			}
 
 			.views-field-field-forum-topic-count {
-				right: 220px;
+				right: 245px;
 			}
 
 			.views-field-field-forum-topic-comment-count {
-				right: 110px;
+				right: 150px;
 			}
 
 			.views-field-field-forum-member-count {
 				@include border-radius(0 6px 6px 0);
+				width: 150px;
 			}
 
 			.field-content {
