@@ -31,18 +31,95 @@ function sbac_air_menu() {
  * @return string
  */
 function sbac_air_test_data() {
-  module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
-  $airclient = new AIRAPIClient();
+  // module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
+  // $airclient = new AIRAPIClient();
 
   // Main functions to test the data stream.
-  dsm($airclient->test_data('CC-ELA-v1'));
+  // dsm($airclient->test_data('CC-ELA-v1'));
   // dsm($airclient->test_data('CC-MA-v1'));
 
   // More test functions if you need to verify certain aspects of the API data.
   // dsm($airclient->getSubjectsSBAC());
-  // dsm($airclient->getStandards('SBAC-ELA-v1'));
+  // dsm($airclient->getStandards('CC-ELA-v1'));
   // dsm($status = $airclient->validate('SBAC-ELA-v1'));
   // dsm($airclient->validate('SBAC-MA-v1'));
 
-  return '';
+  return;
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Used to update CCSS Taxonomy terms at 2AM (Server time).
+ */
+function sbac_air_cron() {
+  //  Get standards at 2AM.
+  if (date('G') == 2) {
+    //  Load all standards
+    $publisher    = 'CC';
+    $api_ela_key  = 'ELA';
+    $api_ma_key   = 'MA';
+
+    module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
+    $api_client   = new AIRAPIClient();
+
+    $api_pub_ela  = $api_client->getPublications($publisher, $api_ela_key);
+    $api_pub_ma   = $api_client->getPublications($publisher, $api_ma_key);
+
+    $api_pub_ela  = array_pop($api_pub_ela);
+    $api_pub_ma   = array_pop($api_pub_ma);
+
+    $api_ela_tree = $api_client->getStandards($api_pub_ela['key'], 2);
+    $api_ma_tree  = $api_client->getStandards($api_pub_ma['key'],  2);
+
+    $cc_standards = array_merge($api_ela_tree, $api_ma_tree);
+    usort($cc_standards, 'sbac_air_sort_api_tree');
+    unset($api_ela_tree);
+    unset($api_ma_tree);
+
+    $queue = DrupalQueue::get('sbac_air_cron_queue');
+    $queue->createQueue();  //  Not a constructor.
+
+    foreach ($cc_standards as $api_standard) {
+      $queue->createItem($api_standard);
+    }
+  }
+}
+
+/**
+ * Implements hook_cron_queue_info()
+ *
+ * Defines worker callback for sbac_air_cron().
+ */
+function sbac_air_cron_queue_info() {
+  $queues['sbac_air_cron_queue'] = array(
+    'worker callback' => 'sbac_air_start_sync',
+    'time' => 60,
+  );
+  return $queues;
+}
+
+/**
+ * Sorts the tree.
+ */
+function sbac_air_sort_api_tree($a, $b) {
+  if ($a['treeLevel'] == $b['treeLevel']) {
+    return 0;
+  }
+  return ($a['treeLevel'] < $b['treeLevel']) ? -1 : 1;
+}
+
+/**
+ * Function that initiates syncing of a CCSS Import.
+ */
+function sbac_air_start_sync($item) {
+  $ccss_vocab_name = 'education_alignment';
+  $publisher = 'CC';
+
+  if (!($ccss_vocab = taxonomy_vocabulary_machine_name_load($ccss_vocab_name))) {
+    return;
+  }
+
+  module_load_include('inc', 'sbac_air', 'sbac_air.cron');
+  sbac_air_sync_standard($ccss_vocab->vid, $publisher, $item);
 }

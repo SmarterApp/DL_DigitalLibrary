@@ -556,6 +556,8 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 $conf['cache_backends'][] = './sites/all/modules/contrib/memcache/memcache.inc';
 $conf['cache_default_class'] = 'MemCacheDrupal';
 $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
+$conf['memcache_key_prefix'] = 'sbactraining';
+
 
 // Acquia DB String
 if (file_exists('/var/www/site-php')) {

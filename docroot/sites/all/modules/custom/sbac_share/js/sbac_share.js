@@ -7,8 +7,12 @@
 
   Drupal.behaviors.sbac_share = {
     attach: function (context, settings) {
+      var secure = 'http://';
+      if (window.location.protocol == 'https:') {
+        secure = 'https://';
+      }
       var clip = new ZeroClipboard(document.getElementById('sbac-permanent-link-button'), {
-        moviePath: 'http://' + location.hostname + '/sites/all/libraries/zeroclipboard/ZeroClipboard.swf'
+        moviePath: secure + location.hostname + '/sites/all/libraries/zeroclipboard/ZeroClipboard.swf'
       });
 
       clip.on('complete', function (client, args) {

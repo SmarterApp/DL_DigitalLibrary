@@ -1323,13 +1323,11 @@ a.sbac-grid-layout {
     text-shadow: none;
     vertical-align: top;
 
-    &:hover {/*
-          @include box-shadow (none);
-          background: transparent;
-          color: inherit;
-          text-shadow: none !important;*/
-			background: transparent;
+    &:hover, &:active, &:focus {
+	    box-shadow: none !important;
 			background-image: none !important;
+			outline: none;
+			background-color: #0684AD !important;
     }
   }
 

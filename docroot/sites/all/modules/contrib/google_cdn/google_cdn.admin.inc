@@ -8,21 +8,74 @@
 /**
  * Implements hook_admin().
  */
-function google_cdn_admin() {
-  $form = array();
+function google_cdn_admin($form, &$form_state) {
+  $errors = FALSE;
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'google_cdn') . '/css/google_cdn.css',
+  );
+
+  $openssl = extension_loaded('openssl');
+  $directory = 'private://';
+  $private_directory = file_prepare_directory($directory, 'FILE_EXIST');
+  $version = variable_get('google_cdn_library_version');
+  if ($version) {
+    $info = libraries_load('google-api-php-client');
+  }
+  if (!$openssl || !$private_directory || (isset($info['loaded']) && !$info['loaded'])) {
+    $errors = TRUE;
+    $form['google_cdn_warning_details'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Configuration Issues'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+    );
+    $documentation_link = l(t('documentation'), GOOGLE_CDN_ONLINE_DOCUMENTATION_LINK);
+    $form['google_cdn_warning_details']['general'] = array(
+      '#type' => 'item',
+      '#markup' => t('We have detected issues with the requirements of the
+        modules installation. Please fix the issues below before continuing
+        with the configuration of the module. Check the online !documentation
+        and/or readme.txt located in the module folder.',
+        array('!documentation' => $documentation_link)),
+    );
+    $error_messages = array();
+    if (isset($info['loaded']) && !$info['loaded']) {
+      $error_messages[] = t('Unable to load the Google API PHP Library.
+        Please download and install the library.');
+    }
+    if (!$openssl) {
+      $error_messages[] = t('Unable to detect the OpenSSL PHP module.
+        Ensure this module is installed on your server.');
+    }
+    if (!$private_directory) {
+      $file_system_link = l(t('here'), 'admin/config/media/file-system');
+      $error_messages[] = t('The private directory is not writable.
+        Please configure this directory !here.', array('!here' => $file_system_link));
+    }
+    $list = theme('item_list', array(
+      'items' => $error_messages,
+      'title' => t('Issues Found'),
+      'type' => 'ul',
+    ));
+    $form['google_cdn_warning_details']['errors'] = array(
+      '#type' => 'item',
+      '#markup' => $list,
+    );
+  }
 
   $form['google_cdn_connection_details'] = array(
     '#type' => 'fieldset',
     '#title' => t('Connection Details'),
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => $errors,
   );
 
   $form['google_cdn_connection_details']['google_cdn_public_key_file'] = array(
     '#type' => 'managed_file',
     '#title' => t('Public Key'),
     '#default_value' => variable_get('google_cdn_public_key'),
-    '#description' => t('The public p12 key that allows access to your Google Cloud Storage account.'),
+    '#description' => t('The public p12 key that allows access to
+      your Google Cloud Storage account.'),
     '#required' => TRUE,
     '#upload_validators' => array(
       'file_validate_extensions' => array('p12'),
@@ -35,7 +88,8 @@ function google_cdn_admin() {
     '#type' => 'textfield',
     '#title' => t('Service Account Client ID'),
     '#default_value' => variable_get('google_cdn_client_id'),
-    '#description' => t('The service account client ID credential. Should follow this pattern "xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"'),
+    '#description' => t('The service account client ID credential. Should
+      follow this pattern "xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"'),
     '#required' => TRUE,
   );
 
@@ -43,7 +97,8 @@ function google_cdn_admin() {
     '#type' => 'textfield',
     '#title' => t('Service Account Name'),
     '#default_value' => variable_get('google_cdn_service_account_name'),
-    '#description' => t('The service account name credential. This is the email address that should look like xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@developer.gserviceaccount.com'),
+    '#description' => t('The service account name credential. This is the email
+      address that should look like xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@developer.gserviceaccount.com'),
     '#required' => TRUE,
   );
 
@@ -51,7 +106,8 @@ function google_cdn_admin() {
     '#type' => 'textfield',
     '#title' => t('Bucket Name'),
     '#default_value' => variable_get('google_cdn_bucket_name'),
-    '#description' => t('The bucket name within Google Cloud Storage.'),
+    '#description' => t('The bucket name within Google Cloud Storage. This
+      module only supports one bucket currently.'),
     '#required' => TRUE,
   );
 
@@ -59,7 +115,9 @@ function google_cdn_admin() {
     '#type' => 'textfield',
     '#title' => t('Folder Name'),
     '#default_value' => variable_get('google_cdn_folder'),
-    '#description' => t('The folder name within Google Cloud Storage.'),
+    '#description' => t('The folder name within Google Cloud Storage.
+      Required in order to separate out environments. For example, local,
+      dev, staging, prod etc.'),
     '#required' => TRUE,
   );
 
@@ -67,14 +125,15 @@ function google_cdn_admin() {
     '#type' => 'fieldset',
     '#title' => t('Library Options'),
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => $errors,
   );
 
   $form['google_cdn_library_options']['google_cdn_signed_url_expiry'] = array(
     '#type' => 'textfield',
     '#title' => t('Expiry'),
     '#default_value' => variable_get('google_cdn_signed_url_expiry'),
-    '#description' => t('The amount of time in seconds that the signed url will expire. (Example: 300 = 5 minutes)'),
+    '#description' => t('The amount of time in seconds that the
+      signed url will expire. (Example: 300 = 5 minutes)'),
     '#required' => TRUE,
   );
 
@@ -93,8 +152,53 @@ function google_cdn_admin() {
     ),
   );
 
+  // Determine which has been selected.
+  $version = 0;
+  if (isset($form_state['values']) && $form_state['values']['google_cdn_library_version'] == GOOGLE_CDN_LIBRARY_VERSION_067) {
+    $version = GOOGLE_CDN_LIBRARY_VERSION_067;
+  }
+  elseif (isset($form_state['values']) && $form_state['values']['google_cdn_library_version'] == GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
+    $version = GOOGLE_CDN_LIBRARY_VERSION_105BETA;
+  }
+  elseif (variable_get('google_cdn_library_version') != NULL) {
+    $version = variable_get('google_cdn_library_version');
+  }
+
+  if ($version == GOOGLE_CDN_LIBRARY_VERSION_067) {
+    $link = l(t('link'), GOOGLE_CDN_GITHUB_LINK, array('external' => TRUE));
+    $message = '<p>' . t('This version of the Google PHP API Client Library
+      is deprecated and no longer supported by Google. This version does
+      work however, and if you would like to use the old library, the
+      choice is yours. We recommend upgrading your version to the latest
+      using this !link', array('!link' => $link)) . '</p>';
+  }
+  elseif ($version = GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
+    $is_installed = module_exists('xautoload');
+    $x_auto_load_link = l(t('XAutoload'), 'https://drupal.org/project/xautoload', array('external' => TRUE));
+    if (!$is_installed) {
+      $information = t('The latest version of the Google PHP API Client
+      Library requires a Drupal contrib module called !XAutoload_link. We
+      have checked your system and identified that XAutoload is not
+      installed. Please download
+      and enable.', array('!XAutoload_link' => $x_auto_load_link));
+    }
+    else {
+      $information = t('The latest version of the Google PHP API Client
+      Library requires a Drupal contrib module called !XAutoload_link. We
+      have checked your system and identified that XAutoload is
+      installed.', array('!XAutoload_link' => $x_auto_load_link));
+    }
+    $message = '<p>' . t('!information', array('!information' => $information)) . '</p>';
+  }
+  else {
+    $message = '<p>' . t('Please select a library version.') . '</p>';
+  }
+
   $form['google_cdn_library_options']['message_container'] = array(
-    '#markup' => '<div id="google-cdn-messsage-container"></div>',
+    '#type' => 'item',
+    '#markup' => $message,
+    '#prefix' => '<div id="google-cdn-message-container">',
+    '#suffix' => '</div>',
   );
 
   if (variable_get('google_cdn_public_key', NULL) != NULL) {
@@ -113,16 +217,20 @@ function google_cdn_admin() {
   return $form;
 }
 
+
 /**
  * Ajax Callback for admin form.
  *
- * @param $form
- * @param $form_state
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form_state array.
+ *
  * @return mixed
+ *   The message container.
  */
-function google_cdn_admin_form_callback($form, $form_state) {
-  $var = '';
-  return $form['revision_information']['workflow_email'];
+function google_cdn_admin_form_callback($form, &$form_state) {
+  return $form['google_cdn_library_options']['message_container'];
 }
 
 /**
@@ -141,11 +249,9 @@ function google_cdn_admin_form_callback($form, $form_state) {
 function google_cdn_admin_public_key_file_element_process($element, &$form_state, $form) {
   $element = file_managed_file_process($element, $form_state, $form);
   $element['upload_button']['#access'] = FALSE;
-
   if (isset($element['remove_button']['#submit'])) {
     $element['remove_button']['#submit'][] = 'google_cdn_delete_key_file';
   }
-
   return $element;
 }
 
@@ -160,7 +266,7 @@ function google_cdn_admin_public_key_file_element_process($element, &$form_state
  *   The form_state array.
  */
 function google_cdn_admin_validate($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
+  if (isset($form_state['clicked_button']) && $form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
     $info = libraries_load('google-api-php-client');
     $version = variable_get('google_cdn_library_version');
     if ($version && $info['loaded']) {
@@ -173,7 +279,7 @@ function google_cdn_admin_validate($form, &$form_state) {
       }
     }
     else {
-      form_set_error('', t("Google API Client Library for PHP was unable loaded."));
+      form_set_error('form', t("The Google API PHP Client library was unable to be loaded."));
     }
   }
 }
@@ -242,11 +348,11 @@ function google_cdn_admin_save_pem_file($file, $real_path) {
   $uri_to_pem = "private://google_cdn/google_key.pem";
 
   if (!file_exists($path_to_pem)) {
-    $password = 'notasecret';
+    $password = GOOGLE_CDN_PROVIDED_KEY;
     $pkey_result = array();
     $pkcs12_read = openssl_pkcs12_read(file_get_contents($real_path), $pkey_result, $password);
     if ($pkcs12_read) {
-      $new_password = 'notasecret';
+      $new_password = GOOGLE_CDN_PROVIDED_KEY;
       $pem_result = NULL;
       $pem_export = openssl_pkey_export($pkey_result['pkey'], $pem_result, $new_password);
       if ($pem_export) {
