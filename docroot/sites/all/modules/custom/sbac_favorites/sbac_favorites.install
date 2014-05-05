@@ -66,6 +66,7 @@ function sbac_favorites_update_7001() {
   );
   db_add_field('sbac_favorites', 'type', $column);
   db_add_index('sbac_favorites', 'type', array('type'));
+  db_query("update sbac_favorites set type = 'node'");
   db_query("drop index nid on sbac_favorites");
   db_query("alter table sbac_favorites change nid id int");
   db_add_index('sbac_favorites', 'id', array('id'));
