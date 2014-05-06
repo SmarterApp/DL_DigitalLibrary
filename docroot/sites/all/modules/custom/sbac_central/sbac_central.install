@@ -1017,6 +1017,17 @@ function sbac_central_update_7077() {
 }
 
 /**
+ * Add an index into the legal conditions.
+ */
+function sbac_central_update_7078() {
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX version (version)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX revision (revision)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX language (language)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX multi (version, revision)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX all (version, revision, language)");
+}
+
+/**
  * Connect to the Google Cloud Storage.
  *
  * @param $service
