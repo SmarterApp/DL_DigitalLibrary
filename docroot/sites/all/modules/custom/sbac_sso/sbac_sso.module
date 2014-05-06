@@ -11,15 +11,25 @@ function sbac_sso_menu() {
   $items = array();
 
   $items['sbac-sso-consume'] = array(
-    'title' => 'SBAC Favorites',
+    'title' => 'SBAC Consume',
     'page callback' => 'sbac_sso_consume',
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sbac-sso-logout'] = array(
+    'title' => 'SBAC Logout',
+    'page callback' => 'sbac_sso_logout',
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
   return $items;
 }
 
+/**
+ * Consumes the SAML Assertion.
+ */
 function sbac_sso_consume() {
   $saml_token = sbac_sso_get_saml_token();
   if (!$saml_token) {
@@ -30,90 +40,277 @@ function sbac_sso_consume() {
     $url = SBAC_SSO_IDP . '?SAMLRequest=' . base64_encode(urlencode($saml_assertion)) . '&RelayState=' . $original_access_url;
     drupal_goto($url);
   }
-  else {
-    // continue to dl page.
-  }
 
   // validate SAML.
-  sbac_sso_validate_saml_response($saml_token);
-
-  // Log user in.
-
-  // If the user is marked as blocked.
-//  if () {
-//
-//  }
-
-  // update last access record.
-
-  // If user is first login, show terms of service.
-
-  // If user has agreed to terms of service
-
-  // If user has yet to fill in required fields (title, subjects, grades, student populations etc)
-
+  $user = sbac_sso_validate_saml_response($saml_token);
+  if ($user) {
+    // If the user is marked as blocked.
+    if ($user->access == 1) {
+      // error page.
+    }
+    // Log user in.
+    $form_state['uid'] = $user->uid;
+    user_login_submit(array(), $form_state);
+  }
 }
 
-function sbac_sso_validate_saml_response($saml_token) {
-  $errors = array();
+function sbac_sso_logout() {
+  // Destroy the current session, and reset $user to the anonymous user.
+  global $user;
+  watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+  module_invoke_all('user_logout', $user);
+  session_destroy();
 
+  // Redirect user to SSO Login.
+  $original_access_url = $_GET['q'];
+  $saml_assertion = sbac_sso_saml_assertion();
+  $url = SBAC_SSO_IDP . '?SAMLRequest=' . base64_encode(urlencode($saml_assertion)) . '&RelayState=' . $original_access_url;
+  drupal_goto($url);
+}
+
+/**
+ * Validates the SAML response.
+ *
+ * @param string $saml_token
+ *   The SAML assertion.
+ *
+ * @return bool
+ */
+function sbac_sso_validate_saml_response($saml_token) {
+  $response = array();
   $saml_strings = explode("\n", $saml_token);
   foreach ($saml_strings as $row) {
     if (strpos($row, '<saml:Attribute Name="sbacUUID">')) {
-      $start = strpos($row, '<saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">');
-      $end = strpos($row, '</saml:AttributeValue></saml:Attribute>');
-      $sbac_uuid = substr($row, $start, $end);
+      $row = trim(str_replace('<saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
+      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
+      if ($row) {
+        $response['sbac_uuid'] = $row;
+      }
     }
     if (strpos($row, '<saml:Attribute Name="sn">') !== FALSE) {
-
+      $row = trim(str_replace('<saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
+      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
+      if ($row) {
+        $response['sn'] = $row;
+      }
     }
     if (strpos($row, '<saml:Attribute Name="entryuuid">') !== FALSE) {
-
+      $row = trim(str_replace('<saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
+      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
+      if ($row) {
+        $response['entry_uuid'] = $row;
+      }
     }
     if (strpos($row, '<saml:Attribute Name="email">') !== FALSE) {
-
+      $row = trim(str_replace('<saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
+      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
+      if ($row) {
+        $response['email'] = $row;
+      }
     }
     if (strpos($row, '<saml:Attribute Name="cn">') !== FALSE) {
-
+      $row = trim(str_replace('<saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
+      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
+      if ($row) {
+        $response['cn'] = $row;
+      }
     }
     if (strpos($row, '<saml:Attribute Name="sbacTenancyChain">') !== FALSE) {
-
+      $row = trim(str_replace('<saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
+      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
+      if ($row) {
+        $length = strlen($row);
+        if ($row[$length -1] == '|') {
+          $row = substr($row, 0, $length -1);
+        }
+        if ($row[0] == '|') {
+          $row = substr($row, 1);
+        }
+        $response['sbac_tenancy_chain'] = $row;
+      }
     }
     if (strpos($row, '<saml:Attribute Name="givenName">') !== FALSE) {
-
+      $row = trim(str_replace('<saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
+      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
+      if ($row) {
+        $response['given_name'] = $row;
+      }
     }
   }
 
   // If SAML assertion does not match expected definition or signature:
-  if (strpos($saml_token, 'sbacTenancyChain') === FALSE) {
+  if (!$response) {
     // If you do not find a matching tenancy chain, kick the user to an error page
     // with Smarter Balanced Contact information and a custom error code
     // ERROR CODE 100: Problem processing Assertion
     drupal_goto('sbac-sso-error');
   }
 
+  $user_attributes = array();
+  if ($response && isset($response['sbac_tenancy_chain']) && $response['sbac_tenancy_chain']) {
+    $attributes = explode('|', $response['sbac_tenancy_chain']);
+    if ($attributes) {
+      $user_fields = array(
+        'role_id' => 'role_id',
+        'name' => 'name',
+        'level' => 'level',
+        'client_id' => 'client_id',
+        'client' => 'client',
+        'group_of_state_ids' => 'group_of_state_ids',
+        'group_of_states' => 'group_of_states',
+        'state_id' => 'state_id',
+        'state' => 'state',
+        'group_of_district_ids' => 'group_of_district_ids',
+        'group_of_districts' => 'group_of_districts',
+        'district_id' => 'district_id',
+        'district' => 'district',
+        'group_of_institution_ids' => 'group_of_institution_ids',
+        'group_of_institutions' => 'group_of_institutions',
+        'institution_id' => 'institution_id',
+        'institution' => 'institution',
+      );
+      $user_attributes = array_combine($user_fields, $attributes);
+      unset($user_fields);
+      unset($attributes);
+    }
+  }
+
   // If SAML assertion does not match expected definition or signature:
-  if (strpos($saml_token, 'DL_EndUser') === FALSE) {
+  if (!$user_attributes || !isset($user_attributes['role_id']) || $user_attributes['role_id'] == NULL) {
     // If you do not find a matching tenancy chain, kick the user to an error page
     // with Smarter Balanced Contact information and a custom error code
     // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
     drupal_goto('sbac-sso-error');
   }
 
-//  // If SAML assertion entryuuid is found in DL user table on record for a specific user
-//  if () {
-//    // Update all users fields.
-//  }
-//  else if () {
-//    // SAML assertion entryuuid is not found but mail address was found.
-//  }
-//  else {
-//    // email and uuid not found.
-//  }
+  if ($user = sbac_sso_load_user_by_uuid($user_attributes['role_id'])) {
+    // First Name = givenName
+    // Last Name = sn
+    // Email = email
+    // Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
+    // The format of the sbacTenancyChain is as follows:  |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
+    // Preform a string split on this pile delimited string, and grab the
+    // value from the positions for State, District, Insitution and update those
+    // on the user record. If any are blank, update the DL User record accordingly.
+    // If some error occurs in the data updating a user: Kick the user to an error
+    // page with Smarter Balanced Contact information and a custom error code
+    // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
+    $user->field_first_name['und'][0]['value'] = $response['given_name'];
+    $user->field_last_name['und'][0]['value'] = $response['sn'];
+    $user->mail = $response['mail'];
+    if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
+      $user->field_state['und'][0]['tid'] = $valid;
+    }
+    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
+    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+    $user = user_save($user);
+    if (!$user) {
+      // error;
+    }
+  }
+  elseif ($user = user_load_by_mail($response['email'])) {
+    // Record entryuuid to record for specified email address
+    // Update all other fields passed in SAML assertion as described
+    // in the first clause above. If some error occurs in the data updating a
+    // user: Kick the user to an error page with Smarter Balanced Contact
+    // information and a custom error code ( do not include the details pertaining
+    // to what the error code is connected to, just the ERROR CODE and NUMBER :
+    // ERROR CODE 103: Error updating user with user attributes that were passed.
+    $user->field_first_name['und'][0]['value'] = $response['given_name'];
+    $user->field_last_name['und'][0]['value'] = $response['sn'];
+    $user->mail = $response['mail'];
+    if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
+      $user->field_state['und'][0]['tid'] = $valid;
+    }
+    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
+    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+    $user->field_sso_uuid[] = '';
+    $user = user_save($user);
+    if (!$user) {
+      // error;
+    }
+  }
+  else {
+    // Create a user record for this user with the end user role, and record
+    // their userUUID to that record. Use all attributes that were updated
+    // in first clause to create the record. If some error occurs in the data
+    // creating a user: Kick the user to an error page with Smarter Balanced
+    // Contact information and a custom error code ( do not include the details
+    // pertaining to what the error code is connected to, just the ERROR CODE and NUMBER :
+    // ERROR CODE 104: Error creating user with user attributes that were passed.
+    $user = sbac_sso_create_user_record($response, $user_attributes);
+    if (!$user) {
+      // error page.
+    }
+  }
+  return $user;
 }
 
-function sbac_sso_parse_attributes($saml_token) {
+/**
+ * Validates the state id.
+ *
+ * @param int $state_id
+ *   The possible term ID.
+ *
+ * @return string
+ */
+function sbac_sso_validate_state_id($state_id) {
+  $term = taxonomy_term_load($state_id);
+  if ($term) {
+    return $state_id;
+  }
+  return '';
+}
 
+/**
+ * Create the user record.
+ *
+ * @param array $response
+ *   The response from SAML.
+ * @param array $user_attributes
+ *   The response from the tenancy chain.
+ *
+ * @return bool|stdClass
+ */
+function sbac_sso_create_user_record($response, $user_attributes) {
+  $new_user = new stdClass();
+  $new_user->uid = 0;
+  $new_user->cache = 0;
+
+  $edit['name'] = $response['email'];
+  $edit['pass'] = user_password(10);
+  $edit['mail'] = $response['email'];
+  $edit['status'] = 1;
+  $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
+  $edit['field_last_name']['und'][0]['value'] = $response['sn'];
+  if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
+    $edit['field_state']['und'][0]['tid'] = $user_attributes['state_id'];
+  }
+  $edit['field_district']['und'][0]['value'] = $user_attributes['district'];
+  $edit['field_institution']['und'][0]['value'] = $user_attributes['institution'];
+  $edit['field_sso_uuid']['und'][0]['value'] = $user_attributes['role_id'];
+
+  return user_save($new_user, $edit);
+}
+
+/**
+ * Load the user by UUID.
+ *
+ * @param string $uuid
+ *   The uuid to lookup
+ *
+ * @return bool
+ */
+function sbac_sso_load_user_by_uuid($uuid) {
+  $user = FALSE;
+  $sql  = "SELECT u.uid AS uid FROM {users} u ";
+  $sql .= "JOIN {field_data_field_sso_uuid} uuid ON u.uid = uuid.entity_id ";
+  $sql .= "WHERE uuid.field_sso_uuid_value = :uuid";
+  $result = db_query($sql, array(':uuid' => $uuid))->fetchObject();
+  if ($result) {
+    $user = user_load($result->uid);
+  }
+  return $user;
 }
 
 /**
