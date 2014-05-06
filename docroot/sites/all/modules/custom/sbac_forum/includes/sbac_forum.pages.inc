@@ -318,54 +318,17 @@ function sbac_forum_view_forum_page($term) {
   );
   $tab_classes[] = 'sbac-qt-show';
 
-
-  $is_member = sbac_forum__api__check_user_is_forum_member($term->tid, $user->uid);
-  if ($is_member === TRUE) {
-    $show_members = 'sbac-qt-show';
-  } elseif ($is_member === FALSE) {
-    $show_members = 'sbac-qt-hide';
-  } elseif ($is_member == 'removed') {
-    $show_members = '';
-  }
-
-  if (!empty($show_members)) {
-    $current_member_count = $forum_data->field_forum_member_count->value();
-    $member_count_text = '';
-    if ($current_member_count) {
-      $member_count_text = '(' .$current_member_count .')';
-    }
-    $tabs[] = array(
-      'vid' => 'forum_member_list',
-      'display' => 'block',
-      'args' => $term->tid,
-      'title' => t('Members '.$member_count_text),
-      'weight' => -98,
-      'type' => 'view',
-    );
-    $tab_classes[] = 'sbac-forum-vp-member-tab-item ' . $show_members;
-  }
-
-
-  if (in_array('facilitator', $user->roles)) { // User is a facilitator
-    if (($is_member === TRUE) ||
-        ($is_member === FALSE) ){ // Show tab as long as user is not removed.
-      $removed_member_count = $forum_data->field_forum_removed_member_count->value();
-      $removed_member_count_text = '';
-      if ($removed_member_count) {
-        $removed_member_count_text = '(' .$removed_member_count .')';
-      }
-      $tabs[] = array(
-        'vid' => 'forum_member_list',
-        'display' => 'block_1',
-        'args' => $term->tid,
-        'title' => t('Removed Members '. $removed_member_count_text),
-        'weight' => -97,
-        'type' => 'view',
-      );
-      $tab_classes[] = 'sbac-forum-vp-rem-members-tab-item ' . $show_members;
-    }
-  }
-
+  $current_member_count = $forum_data->field_forum_member_count->value();
+  $member_count_text = '(' . $current_member_count . ')';
+  $tabs[] = array(
+    'vid' => 'forum_member_list',
+    'display' => 'block',
+    'args' => $term->tid,
+    'title' => t('Participants ' . $member_count_text),
+    'weight' => -98,
+    'type' => 'view',
+  );
+  $tab_classes[] = 'sbac-forum-vp-member-tab-item ';
 
   $qtname = 'forum_content';
   $default_tab = 0;
@@ -382,7 +345,7 @@ function sbac_forum_view_forum_page($term) {
 
   // Controls.
   $forum_control_links = array();
-  $forum_control_link_list = sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term->tid);
+  $forum_control_link_list = sbac_forum__api__create_forum_controls($is_facilitator, $term->tid);
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.view_page.js");
 
   // Check if user had just joined. Show welcome message and then unset the variable.
