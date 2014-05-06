@@ -16,6 +16,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $back_link = '';
   $delete_link = '';
   $edit_link = '';
+  $flag_link = '';
   $author_image_markup = '';
   $author_info = '';
   $posted = '';
@@ -79,6 +80,27 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
   }
 
+  if (!$can_edit && !$can_delete) {
+    $link_ops_flag = array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
+        'id'    => 'sbac-forum-flag-post-link',
+      ),
+    );
+    $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
+    $flag_link = '<span class="tertiary-flag-link">' . l('Flag Post', $flag_link, $link_ops_flag) . '</span>';
+    $js_settings_flag = array(
+      'sbac-forum-flag-post-link' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 500,
+          'height' => 600,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+  }
+
   // Author Pane Info.
   $topic_author = $node_data->author->value();
   $author_image_markup = sbac_forum__api__get_author_picture($topic_author, 'forum_profile_image_120x120');
@@ -136,6 +158,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'back'             => $back_link,
     'delete'           => $delete_link,
     'edit'             => $edit_link,
+    'flag'             => $flag_link,
   );
   $vars['tertiary_nav'] = $tertiary_nav;
 
@@ -243,6 +266,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       ctools_add_js('ajax-responder');
       ctools_modal_add_js();
     }
+    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
+      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
+      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
+      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    }
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
       if ($comment_entity->uid != $user->uid) { // can only edit your own. facilitators have comment admin privs, have to hide edit link.
         unset($vars['content']['links']['comment']['#links']['comment-edit']);
@@ -250,10 +278,10 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
       }
     }
-    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
-      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
-      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
-      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    if (!isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
+      $vars['content']['links']['comment']['#links']['flag_post']['title'] = 'Flag';
+      $flag_url = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
+      $vars['content']['links']['comment']['#links']['flag_post']['href'] = $flag_url;
     }
   }
 }
