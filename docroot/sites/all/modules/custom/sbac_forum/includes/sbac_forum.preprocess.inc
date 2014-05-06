@@ -279,9 +279,27 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       }
     }
     if (!isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
-      $vars['content']['links']['comment']['#links']['flag_post']['title'] = 'Flag';
-      $flag_url = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
-      $vars['content']['links']['comment']['#links']['flag_post']['href'] = $flag_url;
+      $link_ops = array(
+        'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+        'id'    => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+
+      );
+      $js_settings = array(
+        'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 500,
+            'height' => 600,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings, 'setting'); // Styles the modal.
+
+      $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
+
+      $vars['content']['links']['comment']['#links']['flag_post']['href']       = $flag_link;
+      $vars['content']['links']['comment']['#links']['flag_post']['title']      = 'Flag';
+      $vars['content']['links']['comment']['#links']['flag_post']['attributes'] = $link_ops;
     }
   }
 }
