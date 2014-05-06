@@ -54,6 +54,9 @@ function sbac_sso_consume() {
   }
 }
 
+/**
+ * Custom logout callback.
+ */
 function sbac_sso_logout() {
   // Destroy the current session, and reset $user to the anonymous user.
   global $user;
