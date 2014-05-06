@@ -256,7 +256,7 @@ function sbac_sso_validate_saml_response($saml_token) {
     // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
-    $user->mail = $response['mail'];
+    $user->mail = $response['email'];
     if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
       $user->field_state['und'][0]['tid'] = $valid;
     }
@@ -277,7 +277,7 @@ function sbac_sso_validate_saml_response($saml_token) {
     // ERROR CODE 103: Error updating user with user attributes that were passed.
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
-    $user->mail = $response['mail'];
+    $user->mail = $response['email'];
     if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
       $user->field_state['und'][0]['tid'] = $valid;
     }
@@ -473,7 +473,7 @@ function sbac_sso_get_saml_token() {
         <saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">3b0d0640-8cd1-44b4-9889-0dd4eb2c2828</saml:AttributeValue></saml:Attribute>
         <saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">fwalsh@amplify.com</saml:AttributeValue></saml:Attribute>
         <saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Frank Walsh</saml:AttributeValue></saml:Attribute>
-        <saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">15|14334|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|</saml:AttributeValue></saml:Attribute>
+        <saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">15|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|</saml:AttributeValue></saml:Attribute>
         <saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Frank</saml:AttributeValue></saml:Attribute>
     </saml:AttributeStatement>
   </saml:Assertion>
