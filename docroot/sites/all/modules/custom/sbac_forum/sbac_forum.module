@@ -1542,16 +1542,16 @@ function sbac_forum_node_delete($node) {
  * Implements hook_comment_insert
  */
 function sbac_forum_comment_insert($comment) {
-  $related_nid = $comment->nid;
+  $topic_nid = $comment->nid;
   $comment_author_id = $comment->uid;
-  if (!empty($related_nid)) {
-    $topic_node = node_load($related_nid);
-    $node_wrapper = entity_metadata_wrapper('node', $topic_node);
-    if (isset($node_wrapper->field_topic_forum_parent)) {
-      $forum_obj = $node_wrapper->field_topic_forum_parent->value();
-      if (!empty($forum_obj)) {
+  if (!empty($topic_nid)) {
+    $topic_node = node_load($topic_nid);
+    $topic_wrapper = entity_metadata_wrapper('node', $topic_node);
+    if (isset($topic_wrapper->field_topic_forum_parent)) {
+      $forum_term = $topic_wrapper->field_topic_forum_parent->value();
+      if (!empty($forum_term)) {
         // Update Reply counter field on forum.
-        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_term);
         if (isset($forum_wrapper->field_forum_topic_count)) {
           $current_count = $forum_wrapper->field_forum_topic_comment_count->value();
           $current_count++;
@@ -1561,8 +1561,32 @@ function sbac_forum_comment_insert($comment) {
           $date = strtotime('today');
           $forum_wrapper->field_forum_last_activity->set($date);
         }
+
+        $is_participant = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $comment_author_id);
+        if (!$is_participant) {
+          $params = array(
+            'field_name' => 'field_fc_forum_members'
+          );
+          $new_member_item = entity_create('field_collection_item', $params);
+          $new_member_item->setHostEntity('taxonomy_term', $forum_term);
+          $new_member_data = entity_metadata_wrapper('field_collection_item', $new_member_item);
+          $new_member_data->field_fc_forum_member->set($comment_author_id);
+          $date = strtotime('today');
+          $new_member_data->field_fc_forum_member_joined->set($date);
+          $new_member_data->save(TRUE);
+
+          $current_member_count = $forum_wrapper->field_forum_member_count->value();
+          $current_member_count++;
+          $forum_wrapper->field_forum_member_count->set($current_member_count);
+
+          // invalidate member list cache when a new user joins.
+          $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $forum_term->tid;
+          if (cache_get($cid)) {
+            cache_clear_all($cid, 'cache');
+          }
+        }
         $forum_wrapper->save(TRUE);
-        taxonomy_term_save($forum_obj);
+        taxonomy_term_save($forum_term);
         $_SESSION[SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE] = $comment->cid;
       }
     }
@@ -1705,6 +1729,20 @@ function sbac_forum_workbench_moderation_transition($node, $previous_state, $new
   if ($node->type == 'resource' && $new_state == 'published' && $node->sticky == 1) {
     sbac_forum_create_resource_forum($node->nid);
   }
+}
+
+/**
+ * Get the forum (term) ID from the resource ID
+ * @param $resource_nid
+ * @return mixed
+ */
+function sbac_forum_get_resource_forum($resource_nid) {
+  $query = "
+    SELECT
+      entity_id
+    FROM {field_data_field_forum_resource_ref}
+    WHERE field_forum_resource_ref_target_id = :nid";
+  return db_query($query, array(':nid' => $resource_nid))->fetchField();
 }
 
 function sbac_forum_init() {
