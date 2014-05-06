@@ -1847,6 +1847,16 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		input[type="file"] {
 			width: 80%;
 		}
+		
+		span {
+			display: inline-block;
+			vertical-align: middle !important;
+			
+			img, a {
+				display: inline-block !important;
+			}
+		}
+			
 	}
 
 	table.field-multiple-table,
@@ -1926,9 +1936,9 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    font-size: 15px;
 		    line-height: 20px;
 		    margin: 5px 0 5px;
-		    vertical-align: top;
+		    vertical-align: middle;
 				color: #0583AC;
-				height: 25px;
+				height: 20px;
 
 				&:hover {text-decoration: underline;}
 			}
@@ -1960,7 +1970,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				span {
 					display: inline;
 					margin-top: 5px;
-					vertical-align: bottom;
+					vertical-align: middle;
 
 					img, a {display: inline;}
 				}
@@ -2477,9 +2487,11 @@ View Topic Page, Comment Page
 		  display: block;
 	    font-size: 15px;
 	    line-height: 25px;
-	    margin: 5px 0 5px;
-	    vertical-align: top;
+	    margin: 0;
+	    vertical-align: middle;
 			color: #0583AC;
+			
+			.handle {margin-top: 0;}
 
 			&:hover {text-decoration: underline;}
 		}
@@ -3224,7 +3236,7 @@ a.sbac-favorites-link {
 	line-height: 15px;
 	height: 15px;
 	color: #62676e;
-	text-transform:uppercase;
+	/*text-transform:uppercase;*/
 	margin-top: 10px;
 
 	&.sbac-favorites-link-yes {

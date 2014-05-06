@@ -22,20 +22,24 @@
   width: 400px;
   padding: 20px 20px 30px;
 }
-/* line 24, ../sass/tooltip.scss */
+/* line 21, ../sass/tooltip.scss */
+.devtools-tooltip .devtools-tooltip-body .profile-pic a {
+  width: 80px  !important;
+}
+/* line 25, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile {
   float: right !important;
   text-align: left;
   font-weight: normal;
 }
-/* line 31, ../sass/tooltip.scss */
+/* line 32, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .name .field {
   color: #04384E;
   font-size: 16px;
   font-weight: bold;
   display: inline;
 }
-/* line 42, ../sass/tooltip.scss */
+/* line 43, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-title,
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-school,
 .devtools-tooltip .devtools-tooltip-body .user-profile .introduction,
@@ -47,28 +51,37 @@
   margin: 0;
   padding: 7px 0 0;
 }
-/* line 51, ../sass/tooltip.scss */
+/* line 52, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .introduction {
   padding-top: 15px;
 }
-/* line 54, ../sass/tooltip.scss */
+/* line 55, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .introduction .field {
   font-size: 0.85em;
   line-height: 1.2;
 }
-/* line 60, ../sass/tooltip.scss */
+/* line 61, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-email-address {
   color: #0583AC;
   cursor: pointer;
   text-decoration: none;
 }
 /* line 66, ../sass/tooltip.scss */
+.devtools-tooltip .devtools-tooltip-body .user-profile .profile-email-address a {
+  width: 265px !important;
+  font-weight: normal !important;
+}
+/* line 72, ../sass/tooltip.scss */
+.devtools-tooltip .devtools-tooltip-body .user-profile .profile-details {
+  margin-top: 10px;
+}
+/* line 76, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-details > div {
   clear: both;
   padding-top: 20px;
   margin-bottom: 0;
 }
-/* line 71, ../sass/tooltip.scss */
+/* line 81, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-details > div span {
   background-color: #F2F2F2;
   border-radius: 2px;
@@ -79,7 +92,7 @@
   margin-top: 7px;
   padding: 0 5px;
 }
-/* line 82, ../sass/tooltip.scss */
+/* line 92, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-details > div span.title {
   background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
   border-image: none;
@@ -95,11 +108,11 @@
   padding: 0 0 3px;
   text-transform: uppercase;
 }
-/* line 99, ../sass/tooltip.scss */
+/* line 109, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body .user-profile .profile-details > div:first-child {
   padding-top: 0;
 }
-/* line 105, ../sass/tooltip.scss */
+/* line 115, ../sass/tooltip.scss */
 .devtools-tooltip .devtools-tooltip-body:after {
   border-left: 12px solid rgba(0, 0, 0, 0);
   border-right: 12px solid rgba(0, 0, 0, 0);
