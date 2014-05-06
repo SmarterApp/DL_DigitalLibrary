@@ -94,7 +94,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 500,
-          'height' => 600,
+          'height' => 650,
         ),
       ),
     );
@@ -284,16 +284,16 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         'id'    => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
 
       );
-      $js_settings = array(
+      $js_settings_flag = array(
         'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
           'modalSize' => array(
             'type' => 'fixed',
             'width' => 500,
-            'height' => 600,
+            'height' => 650,
           ),
         ),
       );
-      drupal_add_js($js_settings, 'setting'); // Styles the modal.
+      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
 
       $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
 
