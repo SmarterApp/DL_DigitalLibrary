@@ -169,18 +169,15 @@ function sbac_favorites_get_count($uid) {
  */
 function sbac_favorites_get_favorites($uid, $id = FALSE, $type = 'node') {
   $favorites = array();
-  $args = array();
-  $sql = "SELECT sf.id AS id, sf.uid AS uid, sf.type AS type, sf.weight AS weight, sf.created AS created
-          FROM {sbac_favorites} sf
-          WHERE sf.uid = :uid AND sf.type = :type";
-  $args[':uid'] = $uid;
-  $args[':type'] = $type;
-  if ($id) {
-    $sql .= " AND sf.id = :id";
-    $args[':id'] = $id;
+  $query = db_select('sbac_favorites','sf')
+    ->fields('sf', array('id', 'uid','type','weight','created'))
+    ->condition('sf.uid', $uid)
+    ->condition('sf.type',$type);
+  if($id){
+    $query->condition('sf.id',$id);
   }
-  $sql .= " ORDER BY sf.created DESC";
-  $result = db_query($sql, $args);
+  $result = $query->orderBy('sf.created', 'DESC')
+    ->execute();
   foreach ($result as $row) {
     $favorites[] = $row;
   }
@@ -462,4 +459,36 @@ function sbac_favorites_preprocess_page(&$vars) {
  */
 function sbac_favorites_views_api($module = NULL, $api = NULL) {
   return array("api" => "3.0");
+}
+
+/**
+ * Generate the 'Add to Favorite' link for a content
+ *
+ * @param $uid
+ * @param $id
+ * @param $type
+ * @return string
+ */
+function sbac_favorites_get_favorite_link($uid, $id, $type){
+  $favorites_class = 'sbac-favorites-link-no';
+  $favorite_text = t('Add to Favorites');
+  $favorites = sbac_favorites_get_favorites($uid, $id, $type);
+  if ($favorites) {
+    $favorites_class = 'sbac-favorites-link-yes';
+    $favorite_text = t('Unfavorite');
+  }
+
+  drupal_add_js(drupal_get_path("module", "sbac_favorites") . "/js/sbac_favorites.js");
+  $favorite_link = l($favorite_text, $_GET['q'], array(
+    'attributes' => array(
+      'class' => array(
+        'sbac-favorites-link',
+        $favorites_class
+      ),
+      'id' => $id,
+      'uid' => $uid,
+      'type' => $type,
+    )
+  ));
+  return $favorite_link;
 }

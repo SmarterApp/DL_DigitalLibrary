@@ -10,6 +10,12 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $node_data = entity_metadata_wrapper('node', $vars['node']);
   $forum_term = $node_data->field_topic_forum_parent->value();
 
+  $id = $forum_term->tid;
+  $type = 'term';
+  if(!empty($forum_term->field_forum_resource_ref)){
+    $id = $forum_term->field_forum_resource_ref['und'][0]['target_id'];
+    $type = 'node';
+  }
   // Declare variables.
   $forum_name_text = '';
   $control_data = array();
@@ -136,6 +142,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'back'             => $back_link,
     'delete'           => $delete_link,
     'edit'             => $edit_link,
+    'favorite'         => sbac_favorites_get_favorite_link($user->uid, $id, $type),
   );
   $vars['tertiary_nav'] = $tertiary_nav;
 

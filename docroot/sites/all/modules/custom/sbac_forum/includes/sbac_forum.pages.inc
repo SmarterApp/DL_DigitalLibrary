@@ -439,27 +439,8 @@ function sbac_forum_view_forum_page($term) {
     if ($resource_wrapper->__isset('field_asset_downloads')){}
     $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
-  // if the user has this entity as a favorite.
-  $favorites_class = 'sbac-favorites-link-no';
-  $favorite_text = t('Add to Favorites');
-  $favorites = sbac_favorites_get_favorites($user->uid, $id, $type);
-  if ($favorites) {
-    $favorites_class = 'sbac-favorites-link-yes';
-    $favorite_text = t('Unfavorite');
-  }
 
-  drupal_add_js(drupal_get_path("module", "sbac_favorites") . "/js/sbac_favorites.js");
-  $favorite_link = l($favorite_text, $_GET['q'], array(
-    'attributes' => array(
-      'class' => array(
-        'sbac-favorites-link',
-        $favorites_class
-      ),
-      'id' => $id,
-      'uid' => $user->uid,
-      'type' => $type,
-    )
-  ));
+  $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $type);
 
   // Add all the markup to variable for tpl.
   $fields = array(
