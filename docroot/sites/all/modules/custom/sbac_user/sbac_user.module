@@ -764,7 +764,6 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
  * @param $account
  */
 function sbac_user_user_login(&$edit, $account) {
-  global $user;
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -781,15 +780,14 @@ function sbac_user_user_login(&$edit, $account) {
   }
   // Disable feedback flag.
   if(!isset($account->field_feedback_flag['und'][0])) {
-    $account->field_feedback_flag['und'][0]['value'] = (int) 0;
-    user_save($account);
+    db_query('UPDATE {field_revision_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
   }
   // guest account
   if (isset($edit['sbac-share'])) {
     $account->data['disable_help'] = TRUE;
   }
-
-  user_save($account, array());
+  $data = $account->data;
+  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
   if (!isset($edit['sbac-share'])) {
@@ -798,7 +796,7 @@ function sbac_user_user_login(&$edit, $account) {
     else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
     }
     else{
-      if (!isset($user->data['disable_help'])) {
+      if (!isset($account->data['disable_help'])) {
         drupal_goto('user');
       }
       else {
