@@ -1,0 +1,223 @@
+<?php
+
+define('SBAC_SSO_IDP', 'http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp');
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function sbac_sso_menu() {
+  $items = array();
+
+  $items['sbac-sso-consume'] = array(
+    'title' => 'SBAC Favorites',
+    'page callback' => 'sbac_sso_consume',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function sbac_sso_consume() {
+  $saml_token = sbac_sso_get_saml_token();
+  if (!$saml_token) {
+    $original_access_url = $_GET['q'];
+    // Record original access URL (URL Encoded) to the SAML request in the relayState variable
+    // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
+    $saml_assertion = sbac_sso_saml_assertion();
+    $url = SBAC_SSO_IDP . '?SAMLRequest=' . base64_encode(urlencode($saml_assertion)) . '&RelayState=' . $original_access_url;
+    drupal_goto($url);
+  }
+  else {
+    // continue to dl page.
+  }
+
+  // validate SAML.
+  sbac_sso_validate_saml_response($saml_token);
+
+  // Log user in.
+
+  // If the user is marked as blocked.
+//  if () {
+//
+//  }
+
+  // update last access record.
+
+  // If user is first login, show terms of service.
+
+  // If user has agreed to terms of service
+
+  // If user has yet to fill in required fields (title, subjects, grades, student populations etc)
+
+}
+
+function sbac_sso_validate_saml_response($saml_token) {
+  $errors = array();
+
+  $saml_strings = explode("\n", $saml_token);
+  foreach ($saml_strings as $row) {
+    if (strpos($row, '<saml:Attribute Name="sbacUUID">')) {
+      $start = strpos($row, '<saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">');
+      $end = strpos($row, '</saml:AttributeValue></saml:Attribute>');
+      $sbac_uuid = substr($row, $start, $end);
+    }
+    if (strpos($row, '<saml:Attribute Name="sn">') !== FALSE) {
+
+    }
+    if (strpos($row, '<saml:Attribute Name="entryuuid">') !== FALSE) {
+
+    }
+    if (strpos($row, '<saml:Attribute Name="email">') !== FALSE) {
+
+    }
+    if (strpos($row, '<saml:Attribute Name="cn">') !== FALSE) {
+
+    }
+    if (strpos($row, '<saml:Attribute Name="sbacTenancyChain">') !== FALSE) {
+
+    }
+    if (strpos($row, '<saml:Attribute Name="givenName">') !== FALSE) {
+
+    }
+  }
+
+  // If SAML assertion does not match expected definition or signature:
+  if (strpos($saml_token, 'sbacTenancyChain') === FALSE) {
+    // If you do not find a matching tenancy chain, kick the user to an error page
+    // with Smarter Balanced Contact information and a custom error code
+    // ERROR CODE 100: Problem processing Assertion
+    drupal_goto('sbac-sso-error');
+  }
+
+  // If SAML assertion does not match expected definition or signature:
+  if (strpos($saml_token, 'DL_EndUser') === FALSE) {
+    // If you do not find a matching tenancy chain, kick the user to an error page
+    // with Smarter Balanced Contact information and a custom error code
+    // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
+    drupal_goto('sbac-sso-error');
+  }
+
+//  // If SAML assertion entryuuid is found in DL user table on record for a specific user
+//  if () {
+//    // Update all users fields.
+//  }
+//  else if () {
+//    // SAML assertion entryuuid is not found but mail address was found.
+//  }
+//  else {
+//    // email and uuid not found.
+//  }
+}
+
+function sbac_sso_parse_attributes($saml_token) {
+
+}
+
+/**
+ * Get the SAML assertion.
+ *
+ * @return string
+ */
+function sbac_sso_saml_assertion() {
+  $saml_assertion = '
+    <samlp:AuthnRequest ID="_0A7DBFDF7C93449E56356BA4855B150C" Version="2.0" IssueInstant="2014-04-25T13:13:31.073Z" Destination="http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" AssertionConsumerServiceURL="https://www.frankbwalsh.com/sso_poc/saml" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+        <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">https://www.frankbwalsh.com</saml:Issuer>
+        <samlp:NameIDPolicy AllowCreate="true" />
+    </samlp:AuthnRequest>';
+  return $saml_assertion;
+}
+
+/**
+ * Get authenticated session.
+ *
+ * @return array
+ */
+function sbac_sso_get_authenticated_session() {
+  $session = array();
+  $session['valid'] = TRUE;
+  return $session;
+}
+
+/**
+ * Get endpoint assertion.
+ *
+ * @return string
+ */
+function sbac_sso_get_saml_token() {
+  $saml_endpoint_assertion = '
+  <samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s2c10bb352a7e3d6ed3b4fbcc7f9fa5a0ff3652e3c" InResponseTo="_166BA43BEBF8109A962D91A64191BE14" Version="2.0" IssueInstant="2014-04-28T16:18:54Z" Destination="https://www.frankbwalsh.com/sso_poc/saml">
+  <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer>
+  <samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+    <samlp:StatusCode xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" Value="urn:oasis:names:tc:SAML:2.0:status:Success"></samlp:StatusCode>
+  </samlp:Status>
+  <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s2e319f7bfa5f587485b5bd8ebc8d23a26159c0400" IssueInstant="2014-04-28T16:18:54Z" Version="2.0">
+    <saml:Issuer>http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer>
+    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:SignedInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
+      <ds:Reference URI="#s2e319f7bfa5f587485b5bd8ebc8d23a26159c0400" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+          <ds:Transforms xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+              <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
+              <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
+          </ds:Transforms>
+          <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
+          <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">w6hUHbT/PwLxhTFe8X+OHa6Af88=</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      Wh40oeQyxtYAI8M+kwtNp2F2zZGX5E4Q4MC8vIFXL2e8tcQpMR6PAHTq5KiNHh3TlgQOA7zfLvm0
+      a7FaxjAhc+JbQlmuQKDKbY89MHNSZL3CUVQQT5jp+6Rxv/3MnmIBLjh1fbm2xiFdHb35COsdFRr1
+      4uS2E94sK7jFjjOu9Mc=
+    </ds:SignatureValue>
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <ds:X509Certificate xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+          MIICQDCCAakCBEeNB0swDQYJKoZIhvcNAQEEBQAwZzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNh
+      bGlmb3JuaWExFDASBgNVBAcTC1NhbnRhIENsYXJhMQwwCgYDVQQKEwNTdW4xEDAOBgNVBAsTB09w
+      ZW5TU08xDTALBgNVBAMTBHRlc3QwHhcNMDgwMTE1MTkxOTM5WhcNMTgwMTEyMTkxOTM5WjBnMQsw
+      CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEUMBIGA1UEBxMLU2FudGEgQ2xhcmExDDAK
+      BgNVBAoTA1N1bjEQMA4GA1UECxMHT3BlblNTTzENMAsGA1UEAxMEdGVzdDCBnzANBgkqhkiG9w0B
+      AQEFAAOBjQAwgYkCgYEArSQc/U75GB2AtKhbGS5piiLkmJzqEsp64rDxbMJ+xDrye0EN/q1U5Of+
+      RkDsaN/igkAvV1cuXEgTL6RlafFPcUX7QxDhZBhsYF9pbwtMzi4A4su9hnxIhURebGEmxKW9qJNY
+      Js0Vo5+IgjxuEWnjnnVgHTs1+mq5QYTA7E6ZyL8CAwEAATANBgkqhkiG9w0BAQQFAAOBgQB3Pw/U
+      QzPKTPTYi9upbFXlrAKMwtFf2OW4yvGWWvlcwcNSZJmTJ8ARvVYOMEVNbsT4OFcfu2/PeYoAdiDA
+      cGy/F2Zuj8XJJpuQRSE6PtQqBuDEHjjmOQJ0rV/r8mO1ZCtHRhpZ5zYRjhRC9eCbjx9VrFax0JDC
+      /FfwWigmrW0Y0Q==
+      </ds:X509Certificate>
+      </ds:X509Data>
+        </ds:KeyInfo>
+    </ds:Signature>
+    <saml:Subject>
+      <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" NameQualifier="http://drcamp-dev.opentestsystem.org:8080/auth">ujd+QyxIfZdiEs25oTa8vQKpybk3</saml:NameID>
+      <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+          <saml:SubjectConfirmationData InResponseTo="_166BA43BEBF8109A962D91A64191BE14" NotOnOrAfter="2014-04-28T16:28:54Z" Recipient="https://www.frankbwalsh.com/sso_poc/saml" />
+      </saml:SubjectConfirmation>
+    </saml:Subject>
+    <saml:Conditions NotBefore="2014-04-28T16:08:54Z" NotOnOrAfter="2014-04-28T16:28:54Z">
+        <saml:AudienceRestriction>
+            <saml:Audience>https://www.frankbwalsh.com</saml:Audience>
+        </saml:AudienceRestriction>
+    </saml:Conditions>
+    <saml:AuthnStatement AuthnInstant="2014-04-28T16:08:31Z" SessionIndex="s205f8489a59e75b0ed74f8b787507591064a23501">
+        <saml:AuthnContext>
+            <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef>
+        </saml:AuthnContext>
+    </saml:AuthnStatement>
+    <saml:AttributeStatement>
+        <saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">amplify_00001</saml:AttributeValue></saml:Attribute>
+        <saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Walsh</saml:AttributeValue></saml:Attribute>
+        <saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">3b0d0640-8cd1-44b4-9889-0dd4eb2c2828</saml:AttributeValue></saml:Attribute>
+        <saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">fwalsh@amplify.com</saml:AttributeValue></saml:Attribute>
+        <saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Frank Walsh</saml:AttributeValue></saml:Attribute>
+        <saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">|DL_EndUser|CONSORTIUM_EDUCATION_ADMINISTRATOR_1|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|</saml:AttributeValue></saml:Attribute>
+        <saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Frank</saml:AttributeValue></saml:Attribute>
+    </saml:AttributeStatement>
+  </saml:Assertion>
+  </samlp:Response>';
+
+  return $saml_endpoint_assertion;
+}
