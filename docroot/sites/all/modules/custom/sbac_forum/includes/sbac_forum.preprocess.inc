@@ -41,6 +41,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
+      module_load_include('module', 'sbac_flag');
     }
 
     $link_ops = array(
@@ -284,22 +285,33 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         'id'    => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
 
       );
-      $js_settings_flag = array(
-        'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
-          'modalSize' => array(
-            'type' => 'fixed',
-            'width' => 500,
-            'height' => 650,
+
+      $flagged = FALSE;
+      $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid);
+
+      if ($flagged) {
+        $reason = taxonomy_term_load($flagged['flag_selected']);
+        $vars['content']['flags']['comments']['reason'] = 'You flagged this post because it ' . strtolower($reason->name) . '.';
+        $vars['content']['flags']['comments']['comment'] = '"' . $flagged['flag_comment'] . '"';
+      }
+      else {
+        $js_settings_flag = array(
+          'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 500,
+              'height' => 650,
+            ),
           ),
-        ),
-      );
-      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+        );
+        drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
 
-      $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
+        $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
 
-      $vars['content']['links']['comment']['#links']['flag_post']['href']       = $flag_link;
-      $vars['content']['links']['comment']['#links']['flag_post']['title']      = 'Flag';
-      $vars['content']['links']['comment']['#links']['flag_post']['attributes'] = $link_ops;
+        $vars['content']['links']['comment']['#links']['flag_post']['href']       = $flag_link;
+        $vars['content']['links']['comment']['#links']['flag_post']['title']      = 'Flag';
+        $vars['content']['links']['comment']['#links']['flag_post']['attributes'] = $link_ops;
+      }
     }
   }
 }
