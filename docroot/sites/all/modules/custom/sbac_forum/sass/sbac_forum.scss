@@ -1081,7 +1081,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 
 		.sbac-forum-vp-controls-popup.hover-over-large-popup {
-			margin-top: -117px;
+			margin-top: -87px;
 			margin-left: -10px;
 		}
 
@@ -1137,11 +1137,98 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 
 		.narrow {
-		   width: 260px;
+		  width: 268px;
+			margin-top: -15px;
+			
+			.sbac-favorites-link {
+				float: right;
+				margin: 3px 0 10px;
+			}
+			
+			.paradata-numbers {
+				color: #62676e;
+		    display: block;
+				font-size: 13px;
+		    letter-spacing: 1px;
+				padding-top: 10px;
+		
+				.stat-views, .stat-downloads {
+					display: inline-block;
+					vertical-align: top;
+				}
+				
+				.stat-views:before,
+				.stat-downloads:before {
+					background-position: center center;
+					content: " ";
+			    display: inline-block;
+			    margin-right: 7px;
+			    position: relative;
+			    top: -2px;
+			    vertical-align: middle;
+				}
+				
+				.stat-views:before {
+					background: url(../images/icons/icon-statviews.png) no-repeat 0 0;
+					width: 20px;
+					height: 13px;
+				}
+				
+				.stat-downloads:before {
+					background: url(../images/icons/icon-statdownloads.png) no-repeat 0 0;
+					width: 18px;
+					height: 15px;
+				}
+				
+				.rating-count, .fivestar-static-form-item {
+					display: inline-block;
+					vertical-align: top;
+					float: right;
+				}
+			}
+			
+			.view-resource-bttn {
+				background-color: #C8E9F7;
+				margin-top: 15px;
+				width: 268px;
+				height: 40px;
+				text-align: center;
+				line-height: 30px;
+				font-weight: 600;
+				padding: 5px 0;
+				
+				a {color: #0583AC;}
+			}
+			
+			.view-resource-bttn a:after {
+			  font-family: 'sbac';
+		    content: "\e61a";
+		    display: inline-block;
+		    height: 18px;
+		    margin-left: 12px;
+		    margin-top: -12px;
+		    vertical-align: middle;
+		    width: 17px;
+			}
 		}
 
 		.col + .col {
 		   margin-left: 40px;
+		}
+		
+		.half {
+			width: 46.3%;
+			float: left;
+			display: inline-block;
+			margin-right: 40px;
+		}
+		
+		.half:nth-child(2n) {
+			margin-right: 0;
+		}
+		
+		.half:nth-child(2n+1) {
+		    clear: left;
 		}
 
 		.vp-desc-field {
@@ -1149,6 +1236,27 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			line-height: 1.6;
 	    margin: 0 0 15px;
 	    padding: 0;
+	
+			a {
+				display: block;
+				clear: both;
+				color: #0583AC;
+			}
+			 
+			.more-less-text-trigger-more:after,
+			.more-less-text-trigger-less:after  {
+			  content: "\e610";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    position: relative;
+		    top: 4px;
+			}
+			
+			.more-less-text-trigger-less:after  {
+			  content: "\e611";
+			}
 		}
 
 		.vp-faci-field {
@@ -1160,7 +1268,6 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				display: inline-block;
 				vertical-align: top;
 			}
-
 			.item-list {
 				display: inline-block;
 
@@ -1181,6 +1288,26 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					}
 				}
 			}
+		}
+		
+		.vp-students-field.read-more {
+			height: auto;
+		}
+		
+		.read-more-link {
+			display: block;
+			clear: both;
+			color: #0583AC;
+		}
+		
+		.read-more-link:after  {
+		  content: "\e610";
+	    display: inline-block;
+	    font-family: 'sbac';
+	    font-size: 20px;
+	    font-weight: normal;
+	    position: relative;
+	    top: 4px;
 		}
 
 		.vp-grades-field,
