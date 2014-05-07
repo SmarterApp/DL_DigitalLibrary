@@ -1128,7 +1128,7 @@ function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
  * @param  integer $cid        [description]
  * @return [type]              [description]
  */
-function sbac_flag_collaboration_form($form, &$form_state, $node = 8957, $cid = 0) {
+function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
   $form['header'] = array(
     '#type'   => 'item',
     '#markup' => '<h2>Flag a Post</h2>',
