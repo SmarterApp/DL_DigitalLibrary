@@ -78,11 +78,12 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
 function sbac_sso_consume() {
   $saml_token = sbac_sso_get_saml_token();
   if (!$saml_token) {
-    $original_access_url = $_GET['q'];
+    global $base_url;
+    $original_access_url = $base_url . '/' . $_GET['q'];
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
     $saml_assertion = sbac_sso_saml_assertion();
-    $url = SBAC_SSO_IDP . '?SAMLRequest=' . base64_encode(urlencode($saml_assertion . '&RelayState=' . $original_access_url));
+    $url = SBAC_SSO_IDP . '?SAMLRequest=' . base64_encode(urlencode($saml_assertion)); // . '&RelayState=' . urlencode($original_access_url);
     drupal_custom_goto($url);
   }
 
@@ -479,5 +480,6 @@ function sbac_sso_get_saml_token() {
   </saml:Assertion>
   </samlp:Response>';
 
+  $saml_endpoint_assertion = FALSE;
   return $saml_endpoint_assertion;
 }

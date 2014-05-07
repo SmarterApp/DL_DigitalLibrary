@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EntityDescriptor entityID="https://integration.smarterbalancedlibrary.org" xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+    <SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:X509Data>
+                    <ds:X509Certificate>MIIFPzCCBCegAwIBAgIDAnJpMA0GCSqGSIb3DQEBBQUAMEAxCzAJBgNVBAYTAlVT
+MRcwFQYDVQQKEw5HZW9UcnVzdCwgSW5jLjEYMBYGA1UEAxMPR2VvVHJ1c3QgU1NM
+IENBMB4XDTEzMDgxODE1MDAwOFoXDTE1MDgyMjA1NTE0M1owgbsxKTAnBgNVBAUT
+IGZLWG1NaC00S09qc2ZTbTk1UU80R3B0UnVBNkhYTHIxMQswCQYDVQQGEwJVUzER
+MA8GA1UECBMITmV3IFlvcmsxETAPBgNVBAcTCEJyb29rbHluMR8wHQYDVQQKExZB
+bXBsaWZ5IEVkdWNhdGlvbiBJbmMuMRMwEQYDVQQLEwpDb25zdWx0aW5nMSUwIwYD
+VQQDDBwqLnNtYXJ0ZXJiYWxhbmNlZGxpYnJhcnkub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEA3hfZYj+0LIGQMXd9dXOHS1lTI92IU/W1npLBHdTl
+eqwX4yeHnMowx5LpNGtYCXcPbuBixTaoEDxBYRaPRZko+Wl+PQoRP305OY8KoPo5
+5/40PUK8JXVQm9IvlMbBILBuRK3I/5de4L2FCRZjLpC3/Ov72kTAaNbLZgF/qk4I
+VidcU0mPYB250GR3HocKbBVS0YwkW574YmF9zWYwQTCKMWZLKw+waDmykdxxPDMg
+QZmc6fdCViXPrtkHptgfFApvl0X2mQ0vCRJ43dz7YrWMogyrLv7b0ULEBlsb4aoq
+U7PbPC6Vw+xxAf8MZntC2N+jLDxYrlKyoc+AVQer7TFHUQIDAQABo4IBxDCCAcAw
+HwYDVR0jBBgwFoAUQnlUG2HNVSs+Y9U8SFf1n/tFzkowDgYDVR0PAQH/BAQDAgSw
+MB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjBDBgNVHREEPDA6ghwqLnNt
+YXJ0ZXJiYWxhbmNlZGxpYnJhcnkub3JnghpzbWFydGVyYmFsYW5jZWRsaWJyYXJ5
+Lm9yZzA9BgNVHR8ENjA0MDKgMKAuhixodHRwOi8vZ3Rzc2wtY3JsLmdlb3RydXN0
+LmNvbS9jcmxzL2d0c3NsLmNybDAdBgNVHQ4EFgQUyZf/CJoXiywuooXOsCRYG721
+Cc0wDAYDVR0TAQH/BAIwADBvBggrBgEFBQcBAQRjMGEwKgYIKwYBBQUHMAGGHmh0
+dHA6Ly9ndHNzbC1vY3NwLmdlb3RydXN0LmNvbTAzBggrBgEFBQcwAoYnaHR0cDov
+L2d0c3NsLWFpYS5nZW90cnVzdC5jb20vZ3Rzc2wuY3J0MEwGA1UdIARFMEMwQQYK
+YIZIAYb4RQEHNjAzMDEGCCsGAQUFBwIBFiVodHRwOi8vd3d3Lmdlb3RydXN0LmNv
+bS9yZXNvdXJjZXMvY3BzMA0GCSqGSIb3DQEBBQUAA4IBAQAPpRai/pv9BA3AtWY7
+0+cvbUhJkMEB8SwTLVe0wO77rtrfz+n38Wd3cSsFG9ZNE0Z7q5pNJduj4nJ5LmSb
+Nd6OBOQ82gnHgW9TZt3OaXjOz72xielmVr0rrtKZuDwXlY86N2GxysO4BydytO1c
+Z3CijcLUAyDEoQzEgj2/UXAmUogaFqXbSP8SLSBr1ZGFAd7QEFrI7E8B5T6MWen1
+iu+JoSPwoQu5KpLXr7UDPC90sB/Mdb3RhISQHQYjaf/VHkuer/gvoWWzC72TvQKC
+n0pBpejVxgAbEFcFh4P9lIf9EZck5lUYTZ3UWOYVdoBRcGbUW12MeRtyGY9LYi7O
+gfIU</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://integration.smarterbalancedlibrary.org/sbac-sso-logout"/>
+        <AssertionConsumerService index="1" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://integration.smarterbalancedlibrary.org/sbac-sso-consume"/>
+    </SPSSODescriptor>
+</EntityDescriptor>
