@@ -1139,6 +1139,7 @@ function sbac_flag_get_collaboration_flag($nid, $cid) {
   $query->condition('nid', $nid, '=');
   $query->condition('target_id', ($cid ? $cid : $nid), '=');
   $query->condition('uid', $user->uid, '=');
+  $query->condition('resolved', 0, '=');
   $report = $query->execute()->fetchAssoc();
   return $report;
 }
