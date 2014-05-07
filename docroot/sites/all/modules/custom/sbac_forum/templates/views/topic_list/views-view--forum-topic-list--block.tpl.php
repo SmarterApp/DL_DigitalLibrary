@@ -54,8 +54,8 @@
     </div>
   <?php endif; ?>
 
-  <?php if(isset($participant_count)): ?>
-    Participants (<?php print $participant_count; ?>)
+  <?php if(isset($participants)): ?>
+    <?php print $participants; ?>
   <?php endif; ?>
 
   <?php if ($join_button): ?>

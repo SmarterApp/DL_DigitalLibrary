@@ -396,7 +396,8 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
   if ($view->current_display == 'collaboration') {
     $forum_wrapper = entity_metadata_wrapper('taxonomy_term', taxonomy_term_load($forum_id));
     $vars['topic_count'] = $view->total_rows;
-    $vars['participant_count'] = $forum_wrapper->__isset('field_forum_member_count') ? $forum_wrapper->field_forum_member_count->value() : 0;
+    $participant_count = $forum_wrapper->__isset('field_forum_member_count') ? $forum_wrapper->field_forum_member_count->value() : 0;
+    $vars['participants'] = l("Participants ({$participant_count})", 'forums/term/' . $forum_id, array('query' => array('qt-forum_content' => 1), 'fragment' => 'qt-forum_content'));
     if ($forum_wrapper->__isset('field_forum_resource_ref')) {
       $resource_id = $forum_wrapper->field_forum_resource_ref->nid->value();
       $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
