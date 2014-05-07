@@ -1024,8 +1024,18 @@ function sbac_central_update_7078() {
   $modules = array(
     'sbac_user_export_view',
   );
-
   module_disable($modules);
+}
+
+/**
+ * Add an index into the legal conditions.
+ */
+function sbac_central_update_7079() {
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX version (version)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX revision (revision)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX language (language)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX multi (version, revision)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX entire (version, revision, language)");
 }
 
 /**
