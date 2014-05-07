@@ -82,24 +82,32 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   }
 
   if (!$can_edit && !$can_delete) {
-    $link_ops_flag = array(
-      'attributes' => array(
-        'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
-        'id'    => 'sbac-forum-flag-post-link',
-      ),
-    );
-    $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
-    $flag_link = '<span class="tertiary-flag-link">' . l('Flag Post', $flag_link, $link_ops_flag) . '</span>';
-    $js_settings_flag = array(
-      'sbac-forum-flag-post-link' => array(
-        'modalSize' => array(
-          'type' => 'fixed',
-          'width' => 500,
-          'height' => 650,
+    $flagged = FALSE;
+    $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0);
+
+    if ($flagged) {
+      // TO DO: FLAG CONTENT HERE
+    }
+    else {
+      $link_ops_flag = array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
+          'id'    => 'sbac-forum-flag-post-link',
         ),
-      ),
-    );
-    drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+      );
+      $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
+      $flag_link = '<span class="tertiary-flag-link">' . l('Flag Post', $flag_link, $link_ops_flag) . '</span>';
+      $js_settings_flag = array(
+        'sbac-forum-flag-post-link' => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 500,
+            'height' => 650,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+    }
   }
 
   // Author Pane Info.

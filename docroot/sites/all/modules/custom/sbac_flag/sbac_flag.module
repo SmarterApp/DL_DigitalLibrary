@@ -1137,7 +1137,7 @@ function sbac_flag_get_collaboration_flag($nid, $cid) {
   $query = db_select('eck_flag', 'ef');
   $query->fields('ef', array('type', 'target_type', 'flag_selected', 'flag_comment'));
   $query->condition('nid', $nid, '=');
-  $query->condition('target_id', $cid, '=');
+  $query->condition('target_id', ($cid ? $cid : $nid), '=');
   $query->condition('uid', $user->uid, '=');
   $report = $query->execute()->fetchAssoc();
   return $report;
