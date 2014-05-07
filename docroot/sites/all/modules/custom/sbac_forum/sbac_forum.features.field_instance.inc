@@ -551,6 +551,76 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-forum-field_alignment_term'
+  $field_instances['taxonomy_term-forum-field_alignment_term'] = array(
+    'bundle' => 'forum',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 19,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_alignment_term',
+    'label' => 'Common Core Standard(s)',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 12,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-forum-field_attributes'
+  $field_instances['taxonomy_term-forum-field_attributes'] = array(
+    'bundle' => 'forum',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 18,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_attributes',
+    'label' => 'Attributes',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 11,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-forum-field_fc_forum_members'
   $field_instances['taxonomy_term-forum-field_fc_forum_members'] = array(
     'bundle' => 'forum',
@@ -614,7 +684,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
@@ -688,7 +758,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
@@ -1059,6 +1129,41 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-forum-field_geographical_settings'
+  $field_instances['taxonomy_term-forum-field_geographical_settings'] = array(
+    'bundle' => 'forum',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 20,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_geographical_settings',
+    'label' => 'Geographical Setting(s)',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 0,
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 10,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-forum-field_grades'
   $field_instances['taxonomy_term-forum-field_grades'] = array(
     'bundle' => 'forum',
@@ -1235,7 +1340,9 @@ function sbac_forum_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Attributes');
   t('Comment');
+  t('Common Core Standard(s)');
   t('Created');
   t('Date Joined');
   t('Date Removed');
@@ -1244,6 +1351,7 @@ function sbac_forum_field_default_field_instances() {
   t('Files');
   t('Forum');
   t('Forum resource ref');
+  t('Geographical Setting(s)');
   t('Grade(s)');
   t('Intended Forum Participants');
   t('Intended Student Population(s)');

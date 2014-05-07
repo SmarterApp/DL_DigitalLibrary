@@ -50,8 +50,8 @@
       <div class="title-tags"><?php print t('Intended Student Populations'); ?></div>
       <?php print $fields['students']; ?>
     </div>
+    <a class="read-more-link">More Attributes</a>
   <?php endif; ?>
-  <a class="read-more-link">More Attributes</a>
   <?php if (isset($fields['favorites_link'])): ?>
     <?php print $fields['favorites_link']; ?>
   <?php endif; ?>

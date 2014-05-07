@@ -23,6 +23,7 @@ function resource_feedback_page($node) {
       'access about process' => array(
         'feedback' => array(
           'about',  // about tab
+          'collaboration',
         ),
       ),
       'access review comments' => array(

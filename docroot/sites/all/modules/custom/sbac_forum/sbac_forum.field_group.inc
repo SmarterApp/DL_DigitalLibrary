@@ -21,12 +21,12 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Who Can View and Join This Forum?',
-    'weight' => '8',
+    'weight' => '5',
     'children' => array(
-      0 => 'field_state',
+      0 => 'field_forum_access_role_list',
       1 => 'field_forum_access_states',
       2 => 'field_forum_access_user_roles',
-      3 => 'field_forum_access_role_list',
+      3 => 'field_state',
     ),
     'format_type' => 'div',
     'format_settings' => array(
@@ -57,7 +57,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Members',
-    'weight' => '10',
+    'weight' => '7',
     'children' => array(
       0 => 'field_fc_forum_members',
     ),
@@ -84,7 +84,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Facilitators',
-    'weight' => '9',
+    'weight' => '6',
     'children' => array(
       0 => 'field_forum_facilitators',
     ),
@@ -112,14 +112,15 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Administrative (hidden)',
-    'weight' => '12',
+    'weight' => '9',
     'children' => array(
-      0 => 'field_forum_topic_count',
-      1 => 'field_forum_topic_comment_count',
+      0 => 'field_forum_created',
+      1 => 'field_forum_last_activity',
       2 => 'field_forum_member_count',
-      3 => 'field_forum_last_activity',
-      4 => 'field_forum_removed_member_count',
-      5 => 'field_forum_created',
+      3 => 'field_forum_removed_member_count',
+      4 => 'field_forum_topic_comment_count',
+      5 => 'field_forum_topic_count',
+      6 => 'field_forum_resource_ref',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -150,6 +151,9 @@ function sbac_forum_field_group_info() {
       1 => 'field_intended_end_user',
       2 => 'field_intended_student',
       3 => 'field_subject',
+      4 => 'field_attributes',
+      5 => 'field_alignment_term',
+      6 => 'field_geographical_settings',
     ),
     'format_type' => 'div',
     'format_settings' => array(

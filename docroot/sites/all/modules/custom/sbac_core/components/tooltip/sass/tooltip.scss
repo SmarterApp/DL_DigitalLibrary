@@ -18,7 +18,8 @@
     width: 400px;
 		padding: 20px 20px 30px;
 		
-		.profile-pic {
+		.profile-pic a {
+			width: 80px  !important;
 		}
 			
 		.user-profile {
@@ -61,6 +62,15 @@
 				color: #0583AC;
 		    cursor: pointer;
 		    text-decoration: none;
+		
+				a {
+					width: 265px !important;
+					font-weight: normal !important;
+				}
+			}
+			
+			.profile-details {
+				margin-top: 10px;
 			}
 			
 			.profile-details > div {

@@ -10,6 +10,12 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $node_data = entity_metadata_wrapper('node', $vars['node']);
   $forum_term = $node_data->field_topic_forum_parent->value();
 
+  $id = $forum_term->tid;
+  $type = 'term';
+  if(!empty($forum_term->field_forum_resource_ref)){
+    $id = $forum_term->field_forum_resource_ref['und'][0]['target_id'];
+    $type = 'node';
+  }
   // Declare variables.
   $forum_name_text = '';
   $control_data = array();
@@ -32,15 +38,8 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $is_faci = TRUE;
   }
 
-  $is_member = FALSE;
   if (!empty($forum_term)) {
     $forum_name_text = $forum_term->name;
-    $is_member = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $user->uid);
-    if ($is_member === TRUE) {
-      $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
-      drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
-      drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
-    }
 
     $link_ops = array(
       'attributes' => array(
@@ -104,22 +103,16 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   }
 
   // action section.
-  $action_section = '';
-  if ($is_member === TRUE) {
-    $action_link_ops = array(
-      'attributes' => array(
-        'class' => 'button blue sbac-forum-topic-node-direct-comment-link',
-      ),
-    );
-    $new_comment_url = 'sbac-forum/custom/comment-reply/'. $node_data->nid->value() . '/0';
-    $action_section = l('Post a Reply', $new_comment_url, $action_link_ops);
-
-  } elseif($is_member === FALSE) { // User not a member.
-    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-    $join_form = drupal_get_form('sbac_forum_join_button_form', $forum_term->tid, $user->uid);
-    $join_button = drupal_render($join_form);
-    $action_section = $join_button;
-  }
+  $action_link_ops = array(
+    'attributes' => array(
+      'class' => 'button blue sbac-forum-topic-node-direct-comment-link',
+    ),
+  );
+  $new_comment_url = 'sbac-forum/custom/comment-reply/' . $node_data->nid->value() . '/0';
+  $action_section = l('Post a Reply', $new_comment_url, $action_link_ops);
+  $control_data = sbac_forum__api__create_forum_controls($is_faci, $forum_term->tid);
+  drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
+  drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
   $vars['action_section'] = $action_section;
 
 
@@ -136,6 +129,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'back'             => $back_link,
     'delete'           => $delete_link,
     'edit'             => $edit_link,
+    'favorite'         => sbac_favorites_get_favorite_link($user->uid, $id, $type),
   );
   $vars['tertiary_nav'] = $tertiary_nav;
 
@@ -413,24 +407,8 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
  * views_view preprocess
  */
 function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
-  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-
-  global $user;
-  $join_button = '';
-
   $forum_id = array_shift($vars['view']->args);
-  $is_member = sbac_forum__api__check_user_is_forum_member($forum_id, $user->uid);
-
-  if ($is_member === TRUE) {
-    $join_button = sbac_forum__api__create_start_new_topic_link($forum_id);
-  } elseif ($is_member === FALSE) {
-    $join_form = drupal_get_form('sbac_forum_join_button_form', $forum_id, $user->uid);
-    $join_button = drupal_render($join_form);
-  } elseif ($is_member === 'removed') {
-    // There is nothing for removed members.
-  }
-
-  $vars['join_button'] = $join_button;
+  $vars['join_button'] = sbac_forum__api__create_start_new_topic_link($forum_id);;
 }
 
 /**
