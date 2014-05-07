@@ -38,11 +38,24 @@
       <?php print $header; ?>
     </div>
   <?php endif; ?>
+  <?php if ($warning): ?>
+    <h1><?php print $warning; ?></h1>
+  <?php endif; ?>
+  <?php if($review): ?>
+    <p><?php print $review; ?></p>
+  <?php endif; ?>
+  <?php if ($topic_count): ?>
+    <?php print $topic_count; ?> Topics:
+  <?php endif; ?>
 
   <?php if ($exposed): ?>
     <div class="view-filters">
       <?php print $exposed; ?>
     </div>
+  <?php endif; ?>
+
+  <?php if(isset($participant_count)): ?>
+    Participants (<?php print $participant_count; ?>)
   <?php endif; ?>
 
   <?php if ($join_button): ?>

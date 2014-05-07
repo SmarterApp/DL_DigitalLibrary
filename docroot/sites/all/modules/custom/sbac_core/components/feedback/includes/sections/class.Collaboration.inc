@@ -12,7 +12,7 @@ class Collaboration extends Base {
    */
   public function getContent() {
     $forum_id = sbac_forum_get_resource_forum($this->_node->nid);
-    $output = views_embed_view('forum_topic_list', 'block', $forum_id);
+    $output = views_embed_view('forum_topic_list', 'collaboration', $forum_id);
     return $output;
   }
 }

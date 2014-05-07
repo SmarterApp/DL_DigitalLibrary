@@ -407,8 +407,24 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
  * views_view preprocess
  */
 function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
-  $forum_id = array_shift($vars['view']->args);
-  $vars['join_button'] = sbac_forum__api__create_start_new_topic_link($forum_id);;
+  $view = $vars['view'];
+  $forum_id = array_shift($view->args);
+  if ($view->current_display == 'collaboration') {
+    $forum_wrapper = entity_metadata_wrapper('taxonomy_term', taxonomy_term_load($forum_id));
+    $vars['topic_count'] = $view->total_rows;
+    $vars['participant_count'] = $forum_wrapper->__isset('field_forum_member_count') ? $forum_wrapper->field_forum_member_count->value() : 0;
+    if ($forum_wrapper->__isset('field_forum_resource_ref')) {
+      $resource_id = $forum_wrapper->field_forum_resource_ref->nid->value();
+      $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
+      $vars['review'] = t('Have you used this resource? If so, please take a moment to !review it | !rating (!count)',
+        array(
+          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click()">review</a>',
+          '!rating' => sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($resource_id)),
+          '!count' => sbac_resource_get_rating_count($resource_id)
+        ));
+    }
+  }
+  $vars['join_button'] = sbac_forum__api__create_start_new_topic_link($forum_id);
 }
 
 /**

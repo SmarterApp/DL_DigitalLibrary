@@ -1146,10 +1146,7 @@ function _sbac_forum__topic_form__default_parent_term_validate($form, &$form_sta
       global $user;
       // Check user has access to do this.
       $has_access = sbac_forum__api__check_forum_view_access($user, $parent_term);
-      $is_member = sbac_forum__api__check_user_is_forum_member($parent_term->tid, $user->uid);
-      if (($has_access) &&
-        ($is_member === TRUE)
-      ) {
+      if ($has_access) {
         $form_state['values']['field_topic_forum_parent'][LANGUAGE_NONE][0] = get_object_vars($parent_term);
       }
       else {
