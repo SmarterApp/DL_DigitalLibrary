@@ -91,7 +91,9 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0);
 
     if ($flagged) {
-      // TO DO: FLAG CONTENT HERE
+      $flag = taxonomy_term_load($flagged['flag_selected']);
+      $vars['content']['flags']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($flag->name) . '</span>';
+      $vars['content']['flags']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
     }
     else {
       $link_ops_flag = array(
@@ -299,7 +301,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
       if ($flagged) {
         $reason = taxonomy_term_load($flagged['flag_selected']);
-        $vars['content']['flags']['comments']['reason'] = 'You flagged this post because it ' . strtolower($reason->name) . '.';
+        $vars['content']['flags']['comments']['reason'] = 'You flagged this post because it ' . lcfirst($reason->name) . '.';
         $vars['content']['flags']['comments']['comment'] = '"' . $flagged['flag_comment'] . '"';
       }
       else {
