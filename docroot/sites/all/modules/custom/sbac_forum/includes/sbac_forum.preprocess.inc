@@ -306,15 +306,7 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
     $facilitator_text .= '</div>';
   }
 
-  if (!$is_faci) {
-    $forum_tid = $row_data->tid;
-    $is_member = sbac_forum__api__check_user_is_forum_member($forum_tid, $current_user->uid);
-    if ($is_member === TRUE) {
-      $member_text = '<div class="sbac-forum-membership-status-label">You are a <span class="sbac-forum-is-member-highlight">member</span></div>';
-    }
-  }
-
-  $vars['fields']['nothing']->content = $member_text . $facilitator_text ;
+  $vars['fields']['nothing']->content = $facilitator_text ;
 
   if (!empty($row_data->field_field_forum_resource_ref)) {
     $favorites = sbac_favorites_get_favorites($user->uid, $row_data->field_field_forum_resource_ref[0]['raw']['target_id']);
@@ -388,15 +380,7 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
     $facilitator_text .= '</div>';
   }
 
-  if (!$is_faci) {
-    $forum_tid = $row_data->tid;
-    $is_member = sbac_forum__api__check_user_is_forum_member($forum_tid, $current_user->uid);
-    if ($is_member === TRUE) {
-      $member_text = '<div class="sbac-forum-membership-status-label">You are a <span class="sbac-forum-is-member-highlight">member</span></div>';
-    }
-  }
-
-  $vars['fields']['nothing']->content = $member_text . $facilitator_text ;
+  $vars['fields']['nothing']->content = $facilitator_text ;
 }
 
 /**
@@ -722,15 +706,7 @@ function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$
           $facilitator_text .= '</div>';
         }
 
-        if (!$is_faci) {
-          $forum_tid = $forum_term->tid;
-          $is_member = sbac_forum__api__check_user_is_forum_member($forum_tid, $current_user->uid);
-          if ($is_member === TRUE) {
-            $member_text = '<div class="sbac-forum-membership-status-label">You are a <span class="sbac-forum-is-member-highlight">member</span></div>';
-          }
-        }
-
-        $membership_output = $member_text . $facilitator_text ;
+        $membership_output =  $facilitator_text ;
         $params['membership'] = $membership_output;
 
         // Last activity
