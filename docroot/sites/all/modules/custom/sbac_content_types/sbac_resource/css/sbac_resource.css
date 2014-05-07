@@ -2593,7 +2593,7 @@ a.more-less-text-trigger-less:after {
   width: 560px;
 }
 /* line 2534, ../sass/sbac_resource.scss */
-#review .section-revisions .feedback-item .comments-content {
+#review .section-revisions .feedback-item .feedback .comments-content {
   width: auto !important;
 }
 /* line 2538, ../sass/sbac_resource.scss */
