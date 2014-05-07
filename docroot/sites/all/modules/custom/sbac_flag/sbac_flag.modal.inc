@@ -1110,6 +1110,10 @@ function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
   if ($can_close) {
     $output = array();
     $output[] = ctools_modal_command_dismiss();
+    if ($form_state['triggering_element']['#value'] == 'Flag') {
+      $url = drupal_get_path_alias('node/' . $nid);
+      $output[] = ctools_ajax_command_redirect($url);
+    }
   }
   print ajax_render($output);
   exit();
@@ -1220,6 +1224,6 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
      $flag_txt = $form_state['input']['comment'];
      $flag_nid = $form_state['info']['nid'];
      $flag_cid = $form_state['info']['cid'];
-    sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
+     sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
   }
 }
