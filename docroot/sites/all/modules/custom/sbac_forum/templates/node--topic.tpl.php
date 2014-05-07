@@ -135,7 +135,8 @@
     <div class="topic-node-main-content-right">
       <?php print render($title_prefix); ?>
       <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
-      <?php print render($title_suffix); ?>
+    <?php print render($title_suffix); ?>
+    <?php print $tertiary_nav['flag']; ?>
 
       <?php
       // We hide the comments and links now so that we can render them later.
