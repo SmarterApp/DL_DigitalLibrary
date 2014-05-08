@@ -9,7 +9,7 @@ global $user;
         <?php
         global $base_url;
         $home_url = $base_url;
-        if ($user->uid && in_array(SBAC_SHARE_GUEST, $user->roles)) {
+        if (($user->uid && in_array(SBAC_SHARE_GUEST, $user->roles)) || (arg(0) == 'sbac-sso-error')) {
           $home_url = '#';
         }
         ?>
