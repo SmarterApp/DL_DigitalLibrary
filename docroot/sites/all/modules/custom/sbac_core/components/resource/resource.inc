@@ -182,8 +182,8 @@ function resource_access($op, $node, $account = NULL) {
       // is this a resubmission?
       $resubmission_timestamp = db_query("SELECT
                                             max(history.stamp)
-                                          FROM node
-                                            LEFT JOIN workbench_moderation_node_history history
+                                          FROM {node}
+                                            LEFT JOIN {workbench_moderation_node_history history}
                                               ON history.nid = node.nid
                                           WHERE node.nid = :nid AND from_state = 'draft' AND state = 'needs_review'
                                           group by history.nid
@@ -191,24 +191,9 @@ function resource_access($op, $node, $account = NULL) {
       if ($resubmission_timestamp) {
         // if we're still within the 2 weeks (FEEDBACK_RESUBMISSION_TIMEOUT) limit
         if (time() - FEEDBACK_RESUBMISSION_TIMEOUT < $resubmission_timestamp) {
-          // are there any original reviewers
-          $original_reviewers = db_query("SELECT
-                                            field_recent_reviewers_target_id
-                                          FROM field_data_field_recent_reviewers
-                                          WHERE entity_id = :nid", array(':nid' => $node->nid));
-          if ($original_reviewers->rowCount()) {
-            // deny anyone who's not an original reviewer
-            $is_reviewer = FALSE;
-            foreach ($original_reviewers as $reviewer) {
-              if ($reviewer->field_recent_reviewers_target_id == $account->uid) {
-                $is_reviewer = TRUE;
-                break;
-              }
-            }
-            if (!$is_reviewer) {
-              return FALSE;
-            }
-          }
+          $query = "SELECT count(*) FROM {eck_feedback} WHERE node_id = :nid AND uid = :uid";
+          $reviewers = db_query($query, array(':nid' => $node->nid, ':uid' => $account->uid))->fetchField();
+          return $reviewers > 0;
         }
       }
       // read-only access
