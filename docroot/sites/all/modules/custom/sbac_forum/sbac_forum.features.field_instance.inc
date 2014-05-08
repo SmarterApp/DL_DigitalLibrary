@@ -267,6 +267,188 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 8,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_partip_scr',
+    'label' => 'Participation score',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 7,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_post_count',
+    'label' => 'Post Count',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+        ),
+        'type' => 'date_default',
+        'weight' => 9,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_rcnt_actvt',
+    'label' => 'Recent activity',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'increment' => 15,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_help_description' => '',
+        'label_position' => 'above',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_text',
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_reco_count',
+    'label' => 'Recommendation Count',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 6,
+    ),
+  );
+
   // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'] = array(
     'bundle' => 'field_fc_forum_members',
@@ -355,6 +537,49 @@ function sbac_forum_field_default_field_instances() {
       'weight' => 5,
     ),
     'xss' => 0,
+  );
+
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 6,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_tpic_count',
+    'label' => 'Topics Count',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 7,
+    ),
   );
 
   // Exported field_instance: 'node-topic-body'
@@ -1360,6 +1585,10 @@ function sbac_forum_field_default_field_instances() {
   t('Member');
   t('Member Count');
   t('Members');
+  t('Participation score');
+  t('Post Count');
+  t('Recent activity');
+  t('Recommendation Count');
   t('Remove message');
   t('Removed');
   t('Removed Member Count');
@@ -1371,6 +1600,7 @@ function sbac_forum_field_default_field_instances() {
   t('Topic Comment Files');
   t('Topic Comment Links');
   t('Topic Count');
+  t('Topics Count');
   t('User Roles');
 
   return $field_instances;

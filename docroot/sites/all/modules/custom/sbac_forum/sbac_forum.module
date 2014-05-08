@@ -1560,6 +1560,7 @@ function sbac_forum_comment_insert($comment) {
         }
 
         $is_participant = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $comment_author_id);
+        // add this user to the participant list
         if (!$is_participant) {
           $params = array(
             'field_name' => 'field_fc_forum_members'
@@ -1581,6 +1582,21 @@ function sbac_forum_comment_insert($comment) {
           if (cache_get($cid)) {
             cache_clear_all($cid, 'cache');
           }
+        } else {
+           if($forum_wrapper->field_fc_forum_members->count()){
+             foreach($forum_wrapper->field_fc_forum_members as $member_wrapper){
+               if($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id){
+                 // Increment the post count
+                 $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
+                 $current_post_count++;
+                 $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
+                 // Set the date
+                 $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+                 $member_wrapper->save(TRUE);
+
+               }
+             }
+           }
         }
         $forum_wrapper->save(TRUE);
         taxonomy_term_save($forum_term);
@@ -1740,6 +1756,18 @@ function sbac_forum_get_resource_forum($resource_nid) {
     FROM {field_data_field_forum_resource_ref}
     WHERE field_forum_resource_ref_target_id = :nid";
   return db_query($query, array(':nid' => $resource_nid))->fetchField();
+}
+
+/**
+ * Formula for calculating the participation score
+ *
+ * @param $recommendations
+ * @param $topics
+ * @param $replies
+ * @return int
+ */
+function sbac_forum_calculate_participation_score($recommendations, $topics, $replies){
+  return (5 * $recommendations) + (2 * $topics) + $replies;
 }
 
 function sbac_forum_init() {
