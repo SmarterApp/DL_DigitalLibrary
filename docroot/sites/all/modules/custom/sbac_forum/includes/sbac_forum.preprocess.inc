@@ -22,6 +22,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $back_link = '';
   $delete_link = '';
   $edit_link = '';
+  $flag_link = '';
   $author_image_markup = '';
   $author_info = '';
   $posted = '';
@@ -41,6 +42,13 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   if (!empty($forum_term)) {
     $forum_name_text = $forum_term->name;
 
+    $is_member = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $user->uid);
+    if ($is_member === TRUE) {
+      $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
+      drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
+      drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
+      module_load_include('module', 'sbac_flag');
+    }
     $link_ops = array(
       'attributes' => array(
         'class' => 'topic-node-back-link',
@@ -76,6 +84,37 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       ),
     );
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
+  }
+
+  if (!$can_edit && !$can_delete) {
+    $flagged = FALSE;
+    $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0);
+
+    if ($flagged) {
+      $flag = taxonomy_term_load($flagged['flag_selected']);
+      $vars['content']['flags']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($flag->name) . '</span>';
+      $vars['content']['flags']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
+    }
+    else {
+      $link_ops_flag = array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
+          'id'    => 'sbac-forum-flag-post-link',
+        ),
+      );
+      $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
+      $flag_link = '<span class="tertiary-flag-link">' . l('Flag Post', $flag_link, $link_ops_flag) . '</span>';
+      $js_settings_flag = array(
+        'sbac-forum-flag-post-link' => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 500,
+            'height' => 650,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+    }
   }
 
   // Author Pane Info.
@@ -130,6 +169,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'delete'           => $delete_link,
     'edit'             => $edit_link,
     'favorite'         => sbac_favorites_get_favorite_link($user->uid, $id, $type),
+    'flag'             => $flag_link,
   );
   $vars['tertiary_nav'] = $tertiary_nav;
 
@@ -237,6 +277,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       ctools_add_js('ajax-responder');
       ctools_modal_add_js();
     }
+    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
+      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
+      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
+      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    }
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
       if ($comment_entity->uid != $user->uid) { // can only edit your own. facilitators have comment admin privs, have to hide edit link.
         unset($vars['content']['links']['comment']['#links']['comment-edit']);
@@ -244,10 +289,39 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
       }
     }
-    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
-      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
-      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
-      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    if (!isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
+      $link_ops = array(
+        'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+        'id'    => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+
+      );
+
+      $flagged = FALSE;
+      $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid);
+
+      if ($flagged) {
+        $reason = taxonomy_term_load($flagged['flag_selected']);
+        $vars['content']['flags']['comments']['reason'] = 'You flagged this post because it ' . lcfirst($reason->name) . '.';
+        $vars['content']['flags']['comments']['comment'] = '"' . $flagged['flag_comment'] . '"';
+      }
+      else {
+        $js_settings_flag = array(
+          'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 500,
+              'height' => 650,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+
+        $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
+
+        $vars['content']['links']['comment']['#links']['flag_post']['href']       = $flag_link;
+        $vars['content']['links']['comment']['#links']['flag_post']['title']      = 'Flag';
+        $vars['content']['links']['comment']['#links']['flag_post']['attributes'] = $link_ops;
+      }
     }
   }
 }

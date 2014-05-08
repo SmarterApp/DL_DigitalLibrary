@@ -1070,3 +1070,160 @@ function sbac_flag_session_expire_form($form, &$form_state) {
 
   return $form;
 }
+
+/**
+ * Form callback for collaboration flagging.
+ * @param  boolean $js  ctools_js
+ * @param  int     $nid Node ID.
+ * @param  int     $cid Comment ID. 0 if topic.
+ */
+function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
+  if (!$js) {
+    return;
+  }
+  $can_close = FALSE;
+  drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.collaboration.js');
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+
+  $form_state = array(
+    'ajax' => TRUE,
+    'title' => t('Flag a Post'),
+    'info' => array(
+      'nid' => $nid,
+      'cid' => $cid,
+    ),
+  );
+
+  $output = ctools_modal_form_wrapper('sbac_flag_collaboration_form', $form_state, $nid, $cid);
+
+  if (!empty($form_state['executed'])) {
+    if ($form_state['triggering_element']['#value'] == 'Cancel') {
+      $can_close = TRUE;
+    }
+    else if ($form_state['triggering_element']['#value'] == 'Flag') {
+      $can_close = TRUE;
+    }
+  }
+  if ($can_close) {
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    if ($form_state['triggering_element']['#value'] == 'Flag') {
+      $url = drupal_get_path_alias('node/' . $nid);
+      $output[] = ctools_ajax_command_redirect($url);
+    }
+  }
+  print ajax_render($output);
+  exit();
+}
+
+/**
+ * Implements hook_form().
+ * Creates form for flagging modal.
+ * @param  [type]  $form       [description]
+ * @param  [type]  $form_state [description]
+ * @param  integer $node       [description]
+ * @param  integer $cid        [description]
+ * @return [type]              [description]
+ */
+function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
+  $form['header'] = array(
+    '#type'   => 'item',
+    '#markup' => '<h2>Flag a Post</h2>',
+    '#prefix' => '<div class="form-item-title">',
+    '#suffix' => '</div>',
+  );
+
+  $form['comment'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Details',
+    '#prefix' => '<div id="sbac-flag-optional-comment" style="display:none">',
+    '#suffix' => '</div>',
+    '#maxlength' => 600,
+    '#maxlength_js' => TRUE,
+    '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
+  );
+
+  $vocab = taxonomy_vocabulary_machine_name_load('forum_flags');
+  $terms = taxonomy_get_tree($vocab->vid);
+  $options = array();
+  foreach ($terms as $term) {
+    $options[$term->tid] = $term->name;
+  }
+
+  $form['flag_options'] = array(
+    '#type' => 'radios',
+    '#title' => 'What issue did you find with this post? ' . theme('form_required_marker'),
+    '#options' => $options,
+    '#prefix' => '<div id="sbac-flag-options">',
+    '#suffix' => '</div>',
+  );
+
+  $form['footer'] = array(
+    '#type' => 'item',
+    '#markup' => 'Flagged reviews and users are reviewed by the Smarter Balanced Assesment Consortium to determine whether they violate the terms of service. Violations can lead to account termination.',
+    '#prefix' => '<div id="form-item-footer">',
+    '#suffix' => '</div>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Flag'),
+    '#attributes' => array('class' => array('button', 'flag-resource-submit')),
+    '#ajax' => array(
+      'wrapper' => 'sbac-flag-collaboration-form',
+      'method' => 'replace',
+      'effect' => 'fade',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Form validation for sbac_flag_collaboration_form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ */
+function sbac_flag_collaboration_form_validate(&$form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Cancel') {
+    return;
+  }
+  if ($form_state['values']['flag_options'] == NULL) {
+    form_set_error('flag_options', 'Please select a reason to flag this post.');
+  }
+  else {
+    if ($form_state['values']['comment'] != NULL) {
+      if (profanity_validate_text($form_state['values']['comment'])) {
+        form_set_error('optional_comment', 'Please remove any inappropriate language.');
+      }
+    }
+    if ($form_state['values']['comment'] == NULL) {
+      form_set_error('optional_comment', 'Please validate your reason for flagging.');
+    }
+  }
+}
+
+/**
+ * Submission handler for sbac_flag_collaboration_form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Flag') {
+     $flag_tid = $form_state['input']['flag_options'];
+     $flag_txt = $form_state['input']['comment'];
+     $flag_nid = $form_state['info']['nid'];
+     $flag_cid = $form_state['info']['cid'];
+     sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
+  }
+}

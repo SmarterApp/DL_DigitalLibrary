@@ -111,8 +111,10 @@
     </div>
     <div class="topic-node-view-tertiary-nav-right">
       <?php print $tertiary_nav['favorite'];?>
-      <?php print $tertiary_nav['edit']; ?>
-      <?php print $tertiary_nav['delete']; ?>
+			<div class="action">
+     	 	<?php print $tertiary_nav['edit']; ?>
+	      <?php print $tertiary_nav['delete']; ?>
+			</div>
     </div>
   </div>
   <!-- end tertiary-nav -->
@@ -135,7 +137,7 @@
     <div class="topic-node-main-content-right">
       <?php print render($title_prefix); ?>
       <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
-      <?php print render($title_suffix); ?>
+    <?php print render($title_suffix); ?>
 
       <?php
       // We hide the comments and links now so that we can render them later.
@@ -146,6 +148,15 @@
       hide($content['field_topic_files']);
       print render($content);
       ?>
+      <?php print $tertiary_nav['flag']; ?>
+      <?php if (!empty($content['flags'])): ?>
+        <div class='flag-header flag-header-reason'>
+          <?php print render($content['flags']['reason']); ?>
+        </div>
+        <div class='flag-header flag-header-comment'>
+          <?php print render($content['flags']['comment']); ?>
+        </div>
+      <?php endif; ?>
 
       <div class="topic-node-main-content-materials-wrapper">
         <?php if ($main_content['has_materials']): ?>
