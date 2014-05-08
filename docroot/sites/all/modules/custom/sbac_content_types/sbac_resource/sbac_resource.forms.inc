@@ -242,6 +242,8 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
     $form_state['values']['field_html5']['und'][0]['value'] = 1;
   }
 
+  _sbac_resource_save_contributor_comments($form, $form_state);
+
   // Save the node.
   node_form_submit($form, $form_state);
 
@@ -451,20 +453,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     // Save node and rebuild form.
     node_form_submit($form, $form_state);
     // Save the contributor's comments
-    if (!empty($form_state['values']['sbac_revisions'])) {
-      foreach ($form_state['values']['sbac_revisions'] as $feedback) {
-        $question_ids = explode('::', $feedback['question_id']);
-        foreach ($question_ids as $item_id) {
-          $question = field_collection_item_load($item_id);
-          if ($question) {
-            $question_wrapper = entity_metadata_wrapper('field_collection_item', $question);
-            $question_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
-            $question_wrapper->field_contributor_comment_date->set(time());
-            $question_wrapper->save();
-          }
-        }
-      }
-    }
+    _sbac_resource_save_contributor_comments($form, $form_state);
   }
   // Rebuild form.
   $form = drupal_rebuild_form('resource_node_form', $form_state, $form);
@@ -2000,7 +1989,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
-                '#default_value' => field_entity_value($questions[0], 'field_contributor_comment') ? field_entity_value($questions[0], 'field_contributor_comment') : ''
+                '#default_value' => field_entity_value($questions[$i], 'field_contributor_comment') ? field_entity_value($questions[$i], 'field_contributor_comment') : ''
               );
               $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
                 '#type' => 'hidden',
@@ -3553,4 +3542,26 @@ function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
   }
 }
 
-
+/**
+ * Save the contributor's comments on the Revisions tab
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_save_contributor_comments(&$form, &$form_state){
+  // Save the contributor's comments
+  if (!empty($form_state['values']['sbac_revisions'])) {
+    foreach ($form_state['values']['sbac_revisions'] as $feedback) {
+      $question_ids = explode('::', $feedback['question_id']);
+      foreach ($question_ids as $item_id) {
+        $question = field_collection_item_load($item_id);
+        if ($question) {
+          $question_wrapper = entity_metadata_wrapper('field_collection_item', $question);
+          $question_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
+          $question_wrapper->field_contributor_comment_date->set(time());
+          $question_wrapper->save();
+        }
+      }
+    }
+  }
+}
