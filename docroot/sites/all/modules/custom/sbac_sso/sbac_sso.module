@@ -83,7 +83,7 @@ function sbac_sso_consume() {
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
     $saml_assertion = sbac_sso_saml_assertion();
-    $url = SBAC_SSO_IDP . '?SAMLRequest=' . urlencode(base64_encode($saml_assertion)) . '&RelayState=' . urlencode($original_access_url);
+    $url = SBAC_SSO_IDP . '?SAMLRequest=' . urlencode(base64_encode(gzcompress($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
     drupal_custom_goto($url);
   }
 
