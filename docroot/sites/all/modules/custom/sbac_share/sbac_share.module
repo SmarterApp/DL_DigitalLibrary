@@ -104,6 +104,7 @@ function sbac_share_page_alter(&$page) {
       $provided_key = $_GET['key'];
     }
     if (!$provided_key) {
+      // SEND USER TO SSO
       drupal_goto('user');
       $_SESSION['sbac-share-not-found'] = TRUE;
       sbac_share_get_outta_here();
