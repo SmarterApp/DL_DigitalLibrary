@@ -685,6 +685,23 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					}
 				}
 			}
+			
+			.views-field-nothing-1 {
+				display: inline-block;
+				margin-left: 10px;
+				
+				.favorites-link {
+					background: url("../images/icons/icon-favorite.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+					color: #62676E;
+			    display: block;
+			    font-size: 10px;
+			    height: 15px;
+			    letter-spacing: 1px;
+			    line-height: 14px;
+			    padding-left: 20px;
+			    vertical-align: middle;
+				}
+			}
 
 			.views-field-field-forum-topic-count,
 			.views-field-field-forum-member-count,
@@ -1150,7 +1167,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    display: block;
 				font-size: 13px;
 		    letter-spacing: 1px;
-				padding-top: 10px;
+				padding-top: 13px;
 		
 				.stat-views, .stat-downloads {
 					display: inline-block;
@@ -2247,7 +2264,7 @@ View Topic Page, Comment Page
 
 			.sbac-forum-topic-node-view-controls-popup.hover-over-large-popup {
 			    margin-left: -10px;
-			    margin-top: -60px;
+			    margin-top: -90px;
 			    width: 160px;
 			}
 		}
@@ -2293,6 +2310,17 @@ View Topic Page, Comment Page
 
 			span {
 				float: right;
+			}
+			
+			a.sbac-favorites-link {
+				float: right;
+				clear: both;
+			}
+			
+			.action {
+				clear: both;
+				display: block;
+				padding-top: 10px;
 			}
 
 			.tertiary-edit-link a:before {

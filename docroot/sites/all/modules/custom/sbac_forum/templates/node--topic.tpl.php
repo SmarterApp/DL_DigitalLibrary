@@ -111,8 +111,10 @@
     </div>
     <div class="topic-node-view-tertiary-nav-right">
       <?php print $tertiary_nav['favorite'];?>
-      <?php print $tertiary_nav['edit']; ?>
-      <?php print $tertiary_nav['delete']; ?>
+			<div class="action">
+     	 	<?php print $tertiary_nav['edit']; ?>
+	      <?php print $tertiary_nav['delete']; ?>
+			</div>
     </div>
   </div>
   <!-- end tertiary-nav -->
