@@ -1201,69 +1201,6 @@ function _sbac_resource_digital_library_links($fields) {
  * @param $uid
  * @param $nid
  */
-function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE, $archived = FALSE) {
-  $feedback = array();
-  if ($nid) {
-    $query = db_select('eck_feedback', 'f');
-    $query->fields('f', array('id', 'uid', 'node_id', 'created', 'changed', 'title', 'status', 'completed', 'met_criteria', 'current'));
-    $query->condition('f.node_id', $nid);
-    $query->condition('f.type', $type);
-    if ($uid !== FALSE) {
-      if ($uid_not) {
-        $query->condition('f.uid', array($uid), 'NOT IN');
-      }
-      else{
-        $query->condition('f.uid', $uid);
-      }
-    }
-    if ($status !== FALSE) {
-      if ($archived == FALSE) {
-        $query->condition('f.status', $status);
-      }
-      else {
-        $condition1 = db_and()->condition('f.status', 1);
-        $condition2 = db_and()->condition('f.status', 0)->condition('f.archived', 1);
-        $query->condition(db_or()->condition($condition1)->condition($condition2));
-        unset($condition1);
-        unset($condition2);
-      }
-    }
-    if ($completed !== FALSE) {
-      $query->condition('f.completed', $completed);
-    }
-    if ($current !== FALSE) {
-      $query->condition('f.current', $current);
-    }
-
-    if ($return_type == 'single') { // get the latest result.
-      $query->orderBy('f.id', 'DESC');
-      $query->range(0, 1);
-      $single = $query->execute()->fetchAssoc();
-
-      unset($query);
-      return $single;
-    }
-    else {
-      $result = $query->execute();
-      foreach ($result as $record) {
-        $feedback[] = $record;
-      }
-
-      unset($query);
-      unset($result);
-      unset($record);
-    }
-  }
-  return $feedback;
-}
-
-/**
- * Selects the number of feedback review items from the table for
- * the given nid / uid.
- *
- * @param $uid
- * @param $nid
- */
 function _sbac_resource_determine_gate_keeper($nid, $uid = FALSE) {
   if ($nid) {
     $query = db_select('eck_feedback', 'f');
