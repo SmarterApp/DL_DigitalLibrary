@@ -218,7 +218,7 @@ function sbac_forum_views_default_views() {
     27 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -408,7 +408,7 @@ function sbac_forum_views_default_views() {
     27 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -769,13 +769,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_state']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_state']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_state']['delta_offset'] = '0';
-  /* Field: User: E-mail */
-  $handler->display->display_options['fields']['mail']['id'] = 'mail';
-  $handler->display->display_options['fields']['mail']['table'] = 'users';
-  $handler->display->display_options['fields']['mail']['field'] = 'mail';
-  $handler->display->display_options['fields']['mail']['relationship'] = 'field_fc_forum_member_target_id';
-  $handler->display->display_options['fields']['mail']['label'] = '';
-  $handler->display->display_options['fields']['mail']['element_label_colon'] = FALSE;
   /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
@@ -783,6 +776,13 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['name']['relationship'] = 'field_position_tid';
   $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Field: User: E-mail */
+  $handler->display->display_options['fields']['mail']['id'] = 'mail';
+  $handler->display->display_options['fields']['mail']['table'] = 'users';
+  $handler->display->display_options['fields']['mail']['field'] = 'mail';
+  $handler->display->display_options['fields']['mail']['relationship'] = 'field_fc_forum_member_target_id';
+  $handler->display->display_options['fields']['mail']['label'] = '';
+  $handler->display->display_options['fields']['mail']['element_label_colon'] = FALSE;
   /* Field: Field collection item: Recommendation Count */
   $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['id'] = 'field_fc_forum_member_reco_count';
   $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['table'] = 'field_data_field_fc_forum_member_reco_count';
