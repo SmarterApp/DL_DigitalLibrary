@@ -2874,3 +2874,18 @@ function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $st
   }
   return $feedback;
 }
+
+/**
+ * Implements image_style_create_derivative_alter.
+ *
+ * @param $style
+ * @param $image_uri
+ * @param $derivative_uri
+ */
+function sbac_resource_image_style_create_derivative_alter(&$style, &$image_uri, &$derivative_uri) {
+  if ($style['name'] == 'resource_image_grid') {
+    if (strpos($derivative_uri, 'gs://') !== FALSE) {
+      $derivative_uri = str_replace('gs://', 'private://', $derivative_uri);
+    }
+  }
+}
