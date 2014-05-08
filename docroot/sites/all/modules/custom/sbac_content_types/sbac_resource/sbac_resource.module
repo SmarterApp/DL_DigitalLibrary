@@ -2678,6 +2678,28 @@ function sbac_resource_get_url_alias($nid) {
 /**
  * Selects the number of feedback review items from the table for
  * the given nid / uid.
+ *
+ * @param $nid
+ *   The node id.
+ * @param string $type
+ *   The type to search for (qc, gk, post)
+ * @param bool $uid
+ *   A user id.
+ * @param bool $status
+ *   The status of the feedback.
+ * @param bool $completed
+ *   The completed flag of the feedback.
+ * @param bool $current
+ *   The current flag on the feedback.
+ * @param string $return_type
+ *   The type of return set to return.
+ * @param bool $uid_not
+ *   If you wish to include or not include that given uid param.
+ * @param bool $archived
+ *   If you wish to search for archived feedback.
+ *
+ * @return array
+ *   An array of feedback or an empty array.
  */
 function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE, $archived = FALSE) {
   $feedback = array();
