@@ -475,11 +475,11 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
     if ($forum_wrapper->__isset('field_forum_resource_ref')) {
       $resource_id = $forum_wrapper->field_forum_resource_ref->nid->value();
       $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
-      $vars['review'] = t('Have you used this resource? If so, please take a moment to !review it | !rating (!count)',
+      $vars['review'] = t('Have you used this resource? If so, please take a moment to !review  !rating !count ',
         array(
-          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click()">review</a>',
+          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click()">review it</a>',
           '!rating' => sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($resource_id)),
-          '!count' => sbac_resource_get_rating_count($resource_id)
+          '!count' => '<span class="count">'.sbac_resource_get_rating_count($resource_id).' reviewers</span>'
         ));
     }
   }
