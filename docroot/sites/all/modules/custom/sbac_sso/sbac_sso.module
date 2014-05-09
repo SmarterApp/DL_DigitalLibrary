@@ -1,6 +1,7 @@
 <?php
 
-define('SBAC_SSO_IDP', 'http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp');
+define('SBAC_SSO_URL', 'http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp');
+define('SBAC_SSO_PROGRAM_API', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain');
 
 /**
  * Implements hook_menu().
@@ -76,14 +77,17 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
-  $saml_token = $_POST['SAMLResponse'];
+  $saml_token = sbac_sso_get_saml_token2();
+//  if (isset($_POST['SAMLResponse'])) {
+//    $saml_token = urldecode(base64_decode($_POST['SAMLResponse']));
+//  }
   if (!$saml_token) {
     global $base_url;
     $original_access_url = $base_url . '/' . $_GET['q'];
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
     $saml_assertion = sbac_sso_saml_assertion();
-    $url = SBAC_SSO_IDP . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
+    $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
     drupal_custom_goto($url);
   }
 
@@ -127,68 +131,102 @@ function sbac_sso_logout() {
  */
 function sbac_sso_validate_saml_response($saml_token) {
   $response = array();
+  $value = NULL;
   $saml_strings = explode("\n", $saml_token);
   foreach ($saml_strings as $row) {
-    if (strpos($row, '<saml:Attribute Name="sbacUUID">')) {
-      $row = trim(str_replace('<saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
-      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
-      if ($row) {
-        $response['sbac_uuid'] = $row;
+    if (strpos($row, '<saml:Attribute Name="sbacUUID">') !== FALSE) {
+      $attribute = '<saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+      $pos = strpos($row, $attribute);
+      $half_value = substr($row, $pos + strlen($attribute));
+      $last_pos = strpos($half_value, '</saml:AttributeValue');
+      $value = substr($half_value, 0, $last_pos);
+      if ($value) {
+        $response['sbac_uuid'] = $value;
+        $value = NULL;
       }
     }
     if (strpos($row, '<saml:Attribute Name="sn">') !== FALSE) {
-      $row = trim(str_replace('<saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
-      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
-      if ($row) {
-        $response['sn'] = $row;
+      $attribute = '<saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+      $pos = strpos($row, $attribute);
+      $half_value = substr($row, $pos + strlen($attribute));
+      $last_pos = strpos($half_value, '</saml:AttributeValue');
+      $value = substr($half_value, 0, $last_pos);
+      if ($value) {
+        $response['sn'] = $value;
+        $value = NULL;
       }
     }
     if (strpos($row, '<saml:Attribute Name="entryuuid">') !== FALSE) {
-      $row = trim(str_replace('<saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
-      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
-      if ($row) {
-        $response['entry_uuid'] = $row;
+      $attribute = '<saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+      $pos = strpos($row, $attribute);
+      $half_value = substr($row, $pos + strlen($attribute));
+      $last_pos = strpos($half_value, '</saml:AttributeValue');
+      $value = substr($half_value, 0, $last_pos);
+      if ($value) {
+        $response['entry_uuid'] = $value;
+        $value = NULL;
       }
     }
     if (strpos($row, '<saml:Attribute Name="email">') !== FALSE) {
-      $row = trim(str_replace('<saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
-      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
-      if ($row) {
-        $response['email'] = $row;
+      $attribute = '<saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+      $pos = strpos($row, $attribute);
+      $half_value = substr($row, $pos + strlen($attribute));
+      $last_pos = strpos($half_value, '</saml:AttributeValue');
+      $value = substr($half_value, 0, $last_pos);
+      if ($value) {
+        $response['email'] = $value;
+        $value = NULL;
       }
     }
     if (strpos($row, '<saml:Attribute Name="cn">') !== FALSE) {
-      $row = trim(str_replace('<saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
-      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
-      if ($row) {
-        $response['cn'] = $row;
+      $attribute = '<saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+      $pos = strpos($row, $attribute);
+      $half_value = substr($row, $pos + strlen($attribute));
+      $last_pos = strpos($half_value, '</saml:AttributeValue');
+      $value = substr($half_value, 0, $last_pos);
+      if ($value) {
+        $response['cn'] = $value;
+        $value = NULL;
       }
     }
     if (strpos($row, '<saml:Attribute Name="sbacTenancyChain">') !== FALSE) {
-      $row = trim(str_replace('<saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
-      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
-      if ($row) {
-        $length = strlen($row);
-        if ($row[$length -1] == '|') {
-          $row = substr($row, 0, $length -1);
+      $attribute = '<saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+      $pos = strpos($row, $attribute);
+      $half_value = substr($row, $pos + strlen($attribute));
+      $last_pos = strpos($half_value, '</saml:AttributeValue');
+      $value = substr($half_value, 0, $last_pos);
+      if ($value) {
+        $length = strlen($value);
+        if ($value[$length -1] == '|') {
+          $value = substr($value, 0, $length -1);
         }
-        if ($row[0] == '|') {
-          $row = substr($row, 1);
+        if ($value[0] == '|') {
+          $value = substr($value, 1);
         }
-        $response['sbac_tenancy_chain'] = $row;
+        $response['sbac_tenancy_chain'] = $value;
+        $value = NULL;
       }
     }
     if (strpos($row, '<saml:Attribute Name="givenName">') !== FALSE) {
-      $row = trim(str_replace('<saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">', '', $row));
-      $row = trim(str_replace('</saml:AttributeValue></saml:Attribute>', '', $row));
-      if ($row) {
-        $response['given_name'] = $row;
+      $attribute = '<saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+      $pos = strpos($row, $attribute);
+      $half_value = substr($row, $pos + strlen($attribute));
+      $last_pos = strpos($half_value, '</saml:AttributeValue');
+      $value = substr($half_value, 0, $last_pos);
+      if ($value) {
+        $response['given_name'] = $value;
+        $value = NULL;
       }
     }
   }
   unset($row);
   unset($length);
   unset($saml_strings);
+  unset($attribute);
+  unset($half_value);
+  unset($last_pos);
+  unset($pos);
+  unset($value);
 
   // If SAML assertion does not match expected definition or signature:
   if (!$response) {
@@ -231,79 +269,122 @@ function sbac_sso_validate_saml_response($saml_token) {
   }
 
   // If SAML assertion does not match expected definition or signature:
-  if (!$user_attributes || !isset($user_attributes['role_id']) || $user_attributes['role_id'] == NULL) {
+  if (!$user_attributes || !isset($user_attributes['role_id']) || $user_attributes['role_id'] == NULL || $user_attributes['role_id'] != 'DL_EndUser') {
     // If you do not find a matching tenancy chain, kick the user to an error page
     // with Smarter Balanced Contact information and a custom error code
     // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
     drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
   }
-  // Check if the role is valid.
-  $role = user_role_load($user_attributes['role_id']);
-  if (!$role) {
-    drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
+
+  // program manager api calls.
+//  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
+//  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
+//  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
+//  All of which are in the tenancy chains received in an SSO Assertion.
+
+  $query_string = '';
+  $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
+  foreach ($user_attributes as $index => $attribute) {
+    if (in_array($index, $valid_tenancy_chain_indexes) && $attribute) {
+      switch ($index) {
+        case 'client':
+          $query_string['CLIENT'] = $attribute;
+          break;
+        case 'group_of_states':
+          $query_string['STATE_GROUP'] = $attribute;
+          break;
+        case 'state':
+          $query_string['STATE'] = $attribute;
+          break;
+        case 'group_of_districts':
+          $query_string['DISTRICT_GROUP'] = $attribute;
+          break;
+        case 'district':
+          $query_string['DISTRICT'] = $attribute;
+          break;
+        case 'group_of_institutions':
+          $query_string['INSTITUTION_GROUP'] = $attribute;
+          break;
+        case 'institution':
+          $query_string['INSTITUTION'] = $attribute;
+          break;
+      }
+    }
   }
 
-  if ($user = sbac_sso_load_user_by_uuid($user_attributes['role_id'])) {
-    // First Name = givenName
-    // Last Name = sn
-    // Email = email
-    // Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
-    // The format of the sbacTenancyChain is as follows:  |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
-    // Preform a string split on this pile delimited string, and grab the
-    // value from the positions for State, District, Insitution and update those
-    // on the user record. If any are blank, update the DL User record accordingly.
-    // If some error occurs in the data updating a user: Kick the user to an error
-    // page with Smarter Balanced Contact information and a custom error code
-    // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
-    $user->field_first_name['und'][0]['value'] = $response['given_name'];
-    $user->field_last_name['und'][0]['value'] = $response['sn'];
-    $user->mail = $response['email'];
-    if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
-      $user->field_state['und'][0]['tid'] = $valid;
-    }
-    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
-    $user = user_save($user);
-    if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 103)));
-    }
-  }
-  elseif ($user = user_load_by_mail($response['email'])) {
-    // Record entryuuid to record for specified email address
-    // Update all other fields passed in SAML assertion as described
-    // in the first clause above. If some error occurs in the data updating a
-    // user: Kick the user to an error page with Smarter Balanced Contact
-    // information and a custom error code ( do not include the details pertaining
-    // to what the error code is connected to, just the ERROR CODE and NUMBER :
-    // ERROR CODE 103: Error updating user with user attributes that were passed.
-    $user->field_first_name['und'][0]['value'] = $response['given_name'];
-    $user->field_last_name['und'][0]['value'] = $response['sn'];
-    $user->mail = $response['email'];
-    if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
-      $user->field_state['und'][0]['tid'] = $valid;
-    }
-    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
-    $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
-    $user = user_save($user);
-    if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 103)));
-    }
-  }
-  else {
-    // Create a user record for this user with the end user role, and record
-    // their userUUID to that record. Use all attributes that were updated
-    // in first clause to create the record. If some error occurs in the data
-    // creating a user: Kick the user to an error page with Smarter Balanced
-    // Contact information and a custom error code ( do not include the details
-    // pertaining to what the error code is connected to, just the ERROR CODE and NUMBER :
-    // ERROR CODE 104: Error creating user with user attributes that were passed.
-    $user = sbac_sso_create_user_record($response, $user_attributes);
-    if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 104)));
-    }
-  }
-  return $user;
+  $data = http_build_query($query_string);
+  $post = SBAC_SSO_PROGRAM_API . '?' . $data;
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $post);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($curl, CURLOPT_SSLVERSION,3);
+  $result = curl_exec($curl);
+  curl_close($curl);
+  print $result;
+  exit();
+
+//  if ($user = sbac_sso_load_user_by_uuid($user_attributes['role_id'])) {
+//    // First Name = givenName
+//    // Last Name = sn
+//    // Email = email
+//    // Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
+//    // The format of the sbacTenancyChain is as follows:  |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
+//    // Preform a string split on this pile delimited string, and grab the
+//    // value from the positions for State, District, Insitution and update those
+//    // on the user record. If any are blank, update the DL User record accordingly.
+//    // If some error occurs in the data updating a user: Kick the user to an error
+//    // page with Smarter Balanced Contact information and a custom error code
+//    // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
+//    $user->field_first_name['und'][0]['value'] = $response['given_name'];
+//    $user->field_last_name['und'][0]['value'] = $response['sn'];
+//    $user->mail = $response['email'];
+//    if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
+//      $user->field_state['und'][0]['tid'] = $valid;
+//    }
+//    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
+//    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+//    $user = user_save($user);
+//    if (!$user) {
+//      drupal_goto('sbac-sso-error', array('query' => array('key' => 103)));
+//    }
+//  }
+//  elseif ($user = user_load_by_mail($response['email'])) {
+//    // Record entryuuid to record for specified email address
+//    // Update all other fields passed in SAML assertion as described
+//    // in the first clause above. If some error occurs in the data updating a
+//    // user: Kick the user to an error page with Smarter Balanced Contact
+//    // information and a custom error code ( do not include the details pertaining
+//    // to what the error code is connected to, just the ERROR CODE and NUMBER :
+//    // ERROR CODE 103: Error updating user with user attributes that were passed.
+//    $user->field_first_name['und'][0]['value'] = $response['given_name'];
+//    $user->field_last_name['und'][0]['value'] = $response['sn'];
+//    $user->mail = $response['email'];
+//    if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
+//      $user->field_state['und'][0]['tid'] = $valid;
+//    }
+//    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
+//    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+//    $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
+//    $user = user_save($user);
+//    if (!$user) {
+//      drupal_goto('sbac-sso-error', array('query' => array('key' => 103)));
+//    }
+//  }
+//  else {
+//    // Create a user record for this user with the end user role, and record
+//    // their userUUID to that record. Use all attributes that were updated
+//    // in first clause to create the record. If some error occurs in the data
+//    // creating a user: Kick the user to an error page with Smarter Balanced
+//    // Contact information and a custom error code ( do not include the details
+//    // pertaining to what the error code is connected to, just the ERROR CODE and NUMBER :
+//    // ERROR CODE 104: Error creating user with user attributes that were passed.
+//    $user = sbac_sso_create_user_record($response, $user_attributes);
+//    if (!$user) {
+//      drupal_goto('sbac-sso-error', array('query' => array('key' => 104)));
+//    }
+//  }
+//  return $user;
 }
 
 /**
@@ -483,5 +564,107 @@ function sbac_sso_get_saml_token() {
   </samlp:Response>';
 
   $saml_endpoint_assertion = FALSE;
+  return $saml_endpoint_assertion;
+}
+
+function sbac_sso_get_saml_token2() {
+  $saml_endpoint_assertion = '<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s2fa1e9be60ad4f5a8902001acb02d0c68c8744cb2" InResponseTo="_CLJdQsjvWF536cf91b562641.57765611" Version="2.0" IssueInstant="2014-05-09T15:49:55Z" Destination="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+<samlp:StatusCode  xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+Value="urn:oasis:names:tc:SAML:2.0:status:Success">
+</samlp:StatusCode>
+</samlp:Status><saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s292acacdcc3ce104de9fc557d98830d6eb458701f" IssueInstant="2014-05-09T15:49:55Z" Version="2.0">
+<saml:Issuer>http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:SignedInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+<ds:Reference URI="#s292acacdcc3ce104de9fc557d98830d6eb458701f" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:Transforms xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+<ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">n2hc8VdIdepTDBAxTKW eJapVds=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+P1TGOgO9jglaCKZpfSijGOVKwlF8cGPeKHhpn op6sVAbBOfbEBmoxE9ORWEjCTYn9SXT88wenFF
+4Qd9j1NhDnsSI3z wlaus lmds3xm8hAvpMIVFwxJVzId6bcl1lMf/8Cuwof8yHf//r6TdzFFoTj
+E RM7y f6CskU TPhRQ=
+</ds:SignatureValue>
+<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:X509Certificate xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+MIICQDCCAakCBEeNB0swDQYJKoZIhvcNAQEEBQAwZzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNh
+bGlmb3JuaWExFDASBgNVBAcTC1NhbnRhIENsYXJhMQwwCgYDVQQKEwNTdW4xEDAOBgNVBAsTB09w
+ZW5TU08xDTALBgNVBAMTBHRlc3QwHhcNMDgwMTE1MTkxOTM5WhcNMTgwMTEyMTkxOTM5WjBnMQsw
+CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEUMBIGA1UEBxMLU2FudGEgQ2xhcmExDDAK
+BgNVBAoTA1N1bjEQMA4GA1UECxMHT3BlblNTTzENMAsGA1UEAxMEdGVzdDCBnzANBgkqhkiG9w0B
+AQEFAAOBjQAwgYkCgYEArSQc/U75GB2AtKhbGS5piiLkmJzqEsp64rDxbMJ xDrye0EN/q1U5Of
+RkDsaN/igkAvV1cuXEgTL6RlafFPcUX7QxDhZBhsYF9pbwtMzi4A4su9hnxIhURebGEmxKW9qJNY
+Js0Vo5 IgjxuEWnjnnVgHTs1 mq5QYTA7E6ZyL8CAwEAATANBgkqhkiG9w0BAQQFAAOBgQB3Pw/U
+QzPKTPTYi9upbFXlrAKMwtFf2OW4yvGWWvlcwcNSZJmTJ8ARvVYOMEVNbsT4OFcfu2/PeYoAdiDA
+cGy/F2Zuj8XJJpuQRSE6PtQqBuDEHjjmOQJ0rV/r8mO1ZCtHRhpZ5zYRjhRC9eCbjx9VrFax0JDC
+/FfwWigmrW0Y0Q==
+</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+</ds:Signature><saml:Subject>
+<saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" NameQualifier="http://drcamp-dev.opentestsystem.org:8080/auth">fWsFE57C7NC7V/f4UB357verSC7u</saml:NameID><saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+<saml:SubjectConfirmationData InResponseTo="_CLJdQsjvWF536cf91b562641.57765611" NotOnOrAfter="2014-05-09T15:59:55Z" Recipient="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"/></saml:SubjectConfirmation>
+</saml:Subject><saml:Conditions NotBefore="2014-05-09T15:39:55Z" NotOnOrAfter="2014-05-09T15:59:55Z">
+<saml:AudienceRestriction>
+<saml:Audience>https://dev.smarterbalancedlibrary.org</saml:Audience>
+</saml:AudienceRestriction>
+</saml:Conditions>
+<saml:AuthnStatement AuthnInstant="2014-05-09T15:49:55Z" SessionIndex="s2ed5ce5f354c498a7efa1d3d6c403e3a703897d01"><saml:AuthnContext><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml:AuthnContext></saml:AuthnStatement><saml:AttributeStatement><saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">appno_00002</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">|DL_EndUser|CONSORTIUM_EDUCATION_ADMINISTRATOR_1|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|</saml:AttributeValue></saml:Attribute><saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon</saml:AttributeValue></saml:Attribute></saml:AttributeStatement></saml:Assertion></samlp:Response>
+[09-May-2014 08:49:56 America/Vancouver] The Token: <samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s2fa1e9be60ad4f5a8902001acb02d0c68c8744cb2" InResponseTo="_CLJdQsjvWF536cf91b562641.57765611" Version="2.0" IssueInstant="2014-05-09T15:49:55Z" Destination="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+<samlp:StatusCode  xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+Value="urn:oasis:names:tc:SAML:2.0:status:Success">
+</samlp:StatusCode>
+</samlp:Status><saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s292acacdcc3ce104de9fc557d98830d6eb458701f" IssueInstant="2014-05-09T15:49:55Z" Version="2.0">
+<saml:Issuer>http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:SignedInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+<ds:Reference URI="#s292acacdcc3ce104de9fc557d98830d6eb458701f" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:Transforms xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+<ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">n2hc8VdIdepTDBAxTKW eJapVds=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+P1TGOgO9jglaCKZpfSijGOVKwlF8cGPeKHhpn op6sVAbBOfbEBmoxE9ORWEjCTYn9SXT88wenFF
+4Qd9j1NhDnsSI3z wlaus lmds3xm8hAvpMIVFwxJVzId6bcl1lMf/8Cuwof8yHf//r6TdzFFoTj
+E RM7y f6CskU TPhRQ=
+</ds:SignatureValue>
+<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:X509Certificate xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+MIICQDCCAakCBEeNB0swDQYJKoZIhvcNAQEEBQAwZzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNh
+bGlmb3JuaWExFDASBgNVBAcTC1NhbnRhIENsYXJhMQwwCgYDVQQKEwNTdW4xEDAOBgNVBAsTB09w
+ZW5TU08xDTALBgNVBAMTBHRlc3QwHhcNMDgwMTE1MTkxOTM5WhcNMTgwMTEyMTkxOTM5WjBnMQsw
+CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEUMBIGA1UEBxMLU2FudGEgQ2xhcmExDDAK
+BgNVBAoTA1N1bjEQMA4GA1UECxMHT3BlblNTTzENMAsGA1UEAxMEdGVzdDCBnzANBgkqhkiG9w0B
+AQEFAAOBjQAwgYkCgYEArSQc/U75GB2AtKhbGS5piiLkmJzqEsp64rDxbMJ xDrye0EN/q1U5Of
+RkDsaN/igkAvV1cuXEgTL6RlafFPcUX7QxDhZBhsYF9pbwtMzi4A4su9hnxIhURebGEmxKW9qJNY
+Js0Vo5 IgjxuEWnjnnVgHTs1 mq5QYTA7E6ZyL8CAwEAATANBgkqhkiG9w0BAQQFAAOBgQB3Pw/U
+QzPKTPTYi9upbFXlrAKMwtFf2OW4yvGWWvlcwcNSZJmTJ8ARvVYOMEVNbsT4OFcfu2/PeYoAdiDA
+cGy/F2Zuj8XJJpuQRSE6PtQqBuDEHjjmOQJ0rV/r8mO1ZCtHRhpZ5zYRjhRC9eCbjx9VrFax0JDC
+/FfwWigmrW0Y0Q==
+</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+</ds:Signature><saml:Subject>
+<saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" NameQualifier="http://drcamp-dev.opentestsystem.org:8080/auth">fWsFE57C7NC7V/f4UB357verSC7u</saml:NameID><saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+<saml:SubjectConfirmationData InResponseTo="_CLJdQsjvWF536cf91b562641.57765611" NotOnOrAfter="2014-05-09T15:59:55Z" Recipient="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"/></saml:SubjectConfirmation>
+</saml:Subject><saml:Conditions NotBefore="2014-05-09T15:39:55Z" NotOnOrAfter="2014-05-09T15:59:55Z">
+<saml:AudienceRestriction>
+<saml:Audience>https://dev.smarterbalancedlibrary.org</saml:Audience>
+</saml:AudienceRestriction>
+</saml:Conditions>
+<saml:AuthnStatement AuthnInstant="2014-05-09T15:49:55Z" SessionIndex="s2ed5ce5f354c498a7efa1d3d6c403e3a703897d01"><saml:AuthnContext><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml:AuthnContext></saml:AuthnStatement><saml:AttributeStatement><saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">appno_00002</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">|DL_EndUser|CONSORTIUM_EDUCATION_ADMINISTRATOR_1|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|</saml:AttributeValue></saml:Attribute><saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon</saml:AttributeValue></saml:Attribute></saml:AttributeStatement></saml:Assertion></samlp:Response>';
   return $saml_endpoint_assertion;
 }
