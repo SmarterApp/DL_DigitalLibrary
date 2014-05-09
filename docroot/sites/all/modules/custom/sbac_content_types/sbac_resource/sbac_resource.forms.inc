@@ -1924,7 +1924,27 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $i++;
             }
             // QC questions
-            $focus = field_get_value($form_state['node'], 'field_focus', 'tid');
+            // get the resource type at the point where it was rejected. This is because the set of questions is determined by this value at that time.
+            $query = "
+              SELECT
+                focus.field_focus_tid
+              FROM {field_revision_field_focus} focus
+              WHERE focus.entity_id = :nid
+                    AND focus.revision_id =
+                        (
+                          SELECT
+                            max(revision.vid)
+                          FROM {node_revision} revision
+                          WHERE revision.nid = :nid
+                                AND revision.timestamp <
+                                    (
+                                      SELECT
+                                        max(history.stamp)
+                                      FROM {workbench_moderation_node_history} history
+                                      WHERE history.state = 'rejected' AND history.nid = :nid
+                                    )
+                        )";
+            $focus = db_query($query, array(':nid' => $form['#node']->nid))->fetchField();
             $questions_count = sizeof(field_entity_value(reset($qc_entities), 'field_review_set'));
             for ($i = 0; $i < $questions_count; $i++) {
               $question_title = variable_get('qc_' . $focus . '_criteria_' . ($i + 1) . '_title');
