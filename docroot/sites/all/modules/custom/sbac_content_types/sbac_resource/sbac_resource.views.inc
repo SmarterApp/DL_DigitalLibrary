@@ -675,6 +675,9 @@ function _sbac_resource_resources_view_query_alter(&$view, &$query) {
 function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
   global $user;
   $view->query->add_table('sbac_node_resource_state');
+  $view->query->add_field('sbac_node_resource_state', 'uid', 'sbac_node_resource_state_uid');
+  $view->query->add_field('sbac_node_resource_state', 'state', 'sbac_node_resource_state_state');
+  $view->query->add_field('sbac_node_resource_state', 'flag', 'sbac_node_resource_state_flag');
   $user_condition = db_and()->condition('sbac_node_resource_state.state', "author")->condition('sbac_node_resource_state.uid', $user->uid);
   $view->query->add_where('AND', $user_condition);
   $node_condition = db_or()->condition('node.uid', $user->uid);
@@ -695,6 +698,9 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   // only allow the user to see nodes if they are in the following states.
   // (gk_need_review, gk_being_reviewed, qc_needs_review, qc_being_reviewed, qc_reviewed, gk_view_rejected, post_being_reviewed, post_needs_review)
   $view->query->add_table('sbac_node_resource_state');
+  $view->query->add_field('sbac_node_resource_state', 'uid', 'sbac_node_resource_state_uid');
+  $view->query->add_field('sbac_node_resource_state', 'state', 'sbac_node_resource_state_state');
+  $view->query->add_field('sbac_node_resource_state', 'flag', 'sbac_node_resource_state_flag');
   $view->query->add_table('field_data_field_recent_reviewers');
 
   $roles = array();

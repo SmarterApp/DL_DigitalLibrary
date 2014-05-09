@@ -701,7 +701,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['exposed_form']['options']['expose_sort_order'] = FALSE;
   $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
   $handler->display->display_options['pager']['type'] = 'load_more';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '24';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '12';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '2';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
@@ -769,13 +769,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_state']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_state']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_state']['delta_offset'] = '0';
-  /* Field: User: E-mail */
-  $handler->display->display_options['fields']['mail']['id'] = 'mail';
-  $handler->display->display_options['fields']['mail']['table'] = 'users';
-  $handler->display->display_options['fields']['mail']['field'] = 'mail';
-  $handler->display->display_options['fields']['mail']['relationship'] = 'field_fc_forum_member_target_id';
-  $handler->display->display_options['fields']['mail']['label'] = '';
-  $handler->display->display_options['fields']['mail']['element_label_colon'] = FALSE;
   /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
@@ -783,6 +776,13 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['name']['relationship'] = 'field_position_tid';
   $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Field: User: E-mail */
+  $handler->display->display_options['fields']['mail']['id'] = 'mail';
+  $handler->display->display_options['fields']['mail']['table'] = 'users';
+  $handler->display->display_options['fields']['mail']['field'] = 'mail';
+  $handler->display->display_options['fields']['mail']['relationship'] = 'field_fc_forum_member_target_id';
+  $handler->display->display_options['fields']['mail']['label'] = '';
+  $handler->display->display_options['fields']['mail']['element_label_colon'] = FALSE;
   /* Field: Field collection item: Recommendation Count */
   $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['id'] = 'field_fc_forum_member_reco_count';
   $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['table'] = 'field_data_field_fc_forum_member_reco_count';
