@@ -117,8 +117,10 @@
 	    </div>
 	    <div class="topic-node-comment-region-right-bottm-comment flagged-post-for-<?php print $comment->cid; ?>">
 	      <?php if (!empty($content['flags']['comments']) && $is_member === TRUE): ?>
+				<div class='flag-section'>
 	        <?php print render($content['flags']['comments']['reason']); ?>
 	        <?php print render($content['flags']['comments']['comment']); ?>
+				</div>
 	      <?php endif; ?>
 	    </div>
 	    <div class="topic-node-comment-region-right-reply-form">

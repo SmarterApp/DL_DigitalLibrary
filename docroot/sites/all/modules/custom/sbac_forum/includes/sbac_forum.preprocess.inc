@@ -301,8 +301,8 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
       if ($flagged) {
         $reason = taxonomy_term_load($flagged['flag_selected']);
-        $vars['content']['flags']['comments']['reason'] = 'You flagged this post because it ' . lcfirst($reason->name) . '.';
-        $vars['content']['flags']['comments']['comment'] = '"' . $flagged['flag_comment'] . '"';
+        $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
+        $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
       }
       else {
         $js_settings_flag = array(

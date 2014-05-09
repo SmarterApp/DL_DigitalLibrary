@@ -3976,9 +3976,35 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
   color: #0c84ad;
 }
 
+/*Flag section*/
+/* line 3491, ../sass/sbac_forum.scss */
+.flag-section {
+  background-color: #f2f2f2;
+  padding: 15px 20px;
+  font-size: 14px;
+  margin-top: 20px;
+}
+/* line 3497, ../sass/sbac_forum.scss */
+.flag-section .tertiary-flag-head {
+  color: #333;
+  font-weight: bold;
+}
+/* line 3502, ../sass/sbac_forum.scss */
+.flag-section .tertiary-flag-head:before {
+  content: "\e602";
+  display: inline-block;
+  font-family: 'sbac';
+  font-size: 20px;
+  font-weight: normal;
+  margin-right: 7px;
+  opacity: 1;
+  position: relative;
+  text-decoration: none;
+}
+
 /*Fixed for FF*/
 @-moz-document url-prefix() {
-  /* line 3492, ../sass/sbac_forum.scss */
+  /* line 3517, ../sass/sbac_forum.scss */
   .sbac-forum-vp-controls-popup:after {
     position: absolute;
     bottom: 30px;
@@ -3987,30 +4013,30 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
 }
 
 /*Fix IE9 bugs*/
-/* line 3501, ../sass/sbac_forum.scss */
+/* line 3526, ../sass/sbac_forum.scss */
 .ie9 {
   /*Tooltip of Forum setting on Forum section*/
 }
-/* line 3504, ../sass/sbac_forum.scss */
+/* line 3529, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls {
   width: 140px;
 }
-/* line 3509, ../sass/sbac_forum.scss */
+/* line 3534, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper ul {
   padding: 3px 0 5px !important;
   line-height: 1.4 !important;
 }
-/* line 3513, ../sass/sbac_forum.scss */
+/* line 3538, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper ul li {
   margin-bottom: 0 !important;
 }
-/* line 3518, ../sass/sbac_forum.scss */
+/* line 3543, ../sass/sbac_forum.scss */
 .ie9 .sbac-forum-topic-node-view-controls-wrapper a {
   font-size: 15px;
   line-height: 1;
   height: 20px;
 }
-/* line 3526, ../sass/sbac_forum.scss */
+/* line 3551, ../sass/sbac_forum.scss */
 .ie9 .button.comment-direct-reply-form-cancel-link,
 .ie9 .button.comment-reply-form-cancel-link {
   margin-top: 25px !important;

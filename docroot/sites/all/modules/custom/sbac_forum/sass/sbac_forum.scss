@@ -3487,6 +3487,31 @@ a.sbac-favorites-link {
 }
 
 
+/*Flag section*/
+.flag-section {
+	background-color: #f2f2f2;
+	padding: 15px 20px;
+	font-size: 14px;
+	margin-top: 20px;
+	
+	.tertiary-flag-head {
+		color: #333;
+		font-weight: bold;
+	}
+	
+	.tertiary-flag-head:before {
+	  content:"\e602";
+    display: inline-block;
+    font-family: 'sbac';
+    font-size: 20px;
+    font-weight: normal;
+    margin-right: 7px;
+    opacity: 1;
+    position: relative;
+    text-decoration: none;
+	}
+}
+
 /*Fixed for FF*/
 @-moz-document url-prefix() {
   .sbac-forum-vp-controls-popup:after {
