@@ -271,6 +271,9 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
     elseif ($state == 'rejected') {
       $state_output = t('Returned');
     }
+    elseif ($state == 'approved') {
+      $state_output = t('In Review');
+    }
     $row->state = $state_output;
     $title = truncate($row->node_title, 55, array('check_markup' => FALSE));
     $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => array('sec' => '1')));

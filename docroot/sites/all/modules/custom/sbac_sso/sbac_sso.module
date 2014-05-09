@@ -76,14 +76,14 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
-  $saml_token = sbac_sso_get_saml_token();
+  $saml_token = $_POST['SAMLResponse'];
   if (!$saml_token) {
     global $base_url;
     $original_access_url = $base_url . '/' . $_GET['q'];
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
     $saml_assertion = sbac_sso_saml_assertion();
-    $url = SBAC_SSO_IDP . '?SAMLRequest=' . urlencode(base64_encode(gzcompress($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
+    $url = SBAC_SSO_IDP . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
     drupal_custom_goto($url);
   }
 
@@ -383,8 +383,10 @@ function sbac_sso_load_user_by_uuid($uuid) {
  */
 function sbac_sso_saml_assertion() {
   global $base_url;
+  $string = user_password(10);
+  $date = date('Y-m-d') . 'T' . date('H:i:s') . '.073Z';
   $saml_assertion = '
-    <samlp:AuthnRequest ID="_0A7DBFDF7C93449E56356BA4855B150C" Version="2.0" IssueInstant="2014-04-25T13:13:31.073Z" Destination="http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+    <samlp:AuthnRequest ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" IssueInstant="' . $date . '" Destination="http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
         <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer>
         <samlp:NameIDPolicy AllowCreate="true" />
     </samlp:AuthnRequest>';
