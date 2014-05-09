@@ -150,12 +150,15 @@
       ?>
       <?php print $tertiary_nav['flag']; ?>
       <?php if (!empty($content['flags'])): ?>
+			<div class='flag-section'>
         <div class='flag-header flag-header-reason'>
-          <?php print render($content['flags']['reason']); ?>
+          <?php print $content['flags']['reason']; ?>
+					<?php dpm($content['flags']); ?>
         </div>
         <div class='flag-header flag-header-comment'>
           <?php print render($content['flags']['comment']); ?>
         </div>
+			</div>
       <?php endif; ?>
 
       <div class="topic-node-main-content-materials-wrapper">
