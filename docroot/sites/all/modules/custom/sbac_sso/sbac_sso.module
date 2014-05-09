@@ -77,10 +77,10 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
-  $saml_token = sbac_sso_get_saml_token2();
-//  if (isset($_POST['SAMLResponse'])) {
-//    $saml_token = urldecode(base64_decode($_POST['SAMLResponse']));
-//  }
+  $saml_token = FALSE;
+  if (isset($_POST['SAMLResponse'])) {
+    $saml_token = urldecode(base64_decode($_POST['SAMLResponse']));
+  }
   if (!$saml_token) {
     global $base_url;
     $original_access_url = $base_url . '/' . $_GET['q'];
@@ -146,12 +146,8 @@ function sbac_sso_validate_saml_response($saml_token) {
     // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
     drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
   }
+  // program manager api call.
   $api_response = sbac_sso_program_management_api_request($user_attributes);
-  // program manager api calls.
-//  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
-//  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
-//  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
-//  All of which are in the tenancy chains received in an SSO Assertion.
   $user = sbac_sso_determine_user($user_attributes, $response);
   return $user;
 }
@@ -305,6 +301,11 @@ function sbac_sso_create_user_attributes($response) {
  * @return array
  */
 function sbac_sso_program_management_api_request($user_attributes) {
+  //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
+  //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
+  //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
+  //  All of which are in the tenancy chains received in an SSO Assertion.
+
   $api_response = array();
   $query_string = '';
   $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
