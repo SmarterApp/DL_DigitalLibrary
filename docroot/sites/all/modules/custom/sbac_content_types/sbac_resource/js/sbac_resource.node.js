@@ -8,40 +8,40 @@
    * @type {{attach: Function}}
    */
   Drupal.behaviors.sbac_resource_load_media = {
-    check: function (resource, local_url) {
-      if (ajax_request == null){
-        ajax_request = $.ajax({
-          type: 'POST',
-          url: "/sbac-resource/url-exists",
-          data: {'url' : local_url},
-          success: function(data) {
-            var response = jQuery.parseJSON(data);
-            if (response.result == true) {
-              var google_url = 'http://docs.google.com/viewer';
-              if (window.location.protocol == 'https:') {
-                google_url = 'https://docs.google.com/viewer';
-              }
-              local_url +=  '&embedded=true';
-              // var google_viewer = '<iframe src="' + google_url + '?url=' + local_url + '" width="880" height="400" style="border: none;"></iframe>';
-              var google_viewer = '<iframe title="resource-preview" src="' + google_url + '?url=' + encodeURIComponent(local_url) + '&embedded=true' + '" width="880" height="400" style="border: none;">Alternative Content</iframe>';
-              resource.empty().append(google_viewer);
-              resource.addClass('google-doc');
-              $('.infobar .ajax-progress').hide();
-            }
-            else {
-              var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
-              var img = $('<img>');
-              img.attr('src', url);
-              img.attr('height', 400);
-              img.attr('width', 850);
-              resource.empty().append(img);
-              $('.infobar .ajax-progress').hide();
-            }
-            ajax_request = null;
-          }
-        });
-      }
-    },
+//    check: function (resource, local_url) {
+//      if (ajax_request == null){
+//        ajax_request = $.ajax({
+//          type: 'POST',
+//          url: "/sbac-resource/url-exists",
+//          data: {'url' : local_url},
+//          success: function(data) {
+//            var response = jQuery.parseJSON(data);
+//            if (response.result == true) {
+//              var google_url = 'http://docs.google.com/viewer';
+//              if (window.location.protocol == 'https:') {
+//                google_url = 'https://docs.google.com/viewer';
+//              }
+//              local_url +=  '&embedded=true';
+//              // var google_viewer = '<iframe src="' + google_url + '?url=' + local_url + '" width="880" height="400" style="border: none;"></iframe>';
+//              var google_viewer = '<iframe title="resource-preview" src="' + google_url + '?url=' + encodeURIComponent(local_url) + '&embedded=true' + '" width="880" height="400" style="border: none;">Alternative Content</iframe>';
+//              resource.empty().append(google_viewer);
+//              resource.addClass('google-doc');
+//              $('.infobar .ajax-progress').hide();
+//            }
+//            else {
+//              var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
+//              var img = $('<img>');
+//              img.attr('src', url);
+//              img.attr('height', 400);
+//              img.attr('width', 850);
+//              resource.empty().append(img);
+//              $('.infobar .ajax-progress').hide();
+//            }
+//            ajax_request = null;
+//          }
+//        });
+//      }
+//    },
     attach: function (context, settings) {
       $('#sbac-materials li a').click( function (event) {
         event.stopPropagation();
@@ -51,7 +51,14 @@
         var resource = $('#resource-element');
         switch (type) {
           case 'document':
-            Drupal.behaviors.sbac_resource_load_media.check(resource, local_url);
+            var google_url = 'http://docs.google.com/viewer';
+            if (window.location.protocol == 'https:') {
+              google_url = 'https://docs.google.com/viewer';
+            }
+            local_url +=  '&embedded=true';
+            var google_viewer = '<iframe title="resource-preview" src="' + google_url + '?url=' + encodeURIComponent(local_url) + '&embedded=true' + '" width="880" height="400" style="border: none;">Alternative Content</iframe>';
+            resource.empty().append(google_viewer);
+            resource.addClass('google-doc');
             break;
           case 'html5':
             resource.empty().append('<iframe title="resource-preview" src="' + local_url + '" width="880" height="600" style="border: none;"></iframe>');
