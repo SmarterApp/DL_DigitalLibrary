@@ -86,7 +86,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
   }
 
-  if (!$can_edit && !$can_delete) {
+  if (!$can_edit && !$can_delete && $is_member) {
     $flagged = FALSE;
     $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0);
 
@@ -169,7 +169,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'delete'           => $delete_link,
     'edit'             => $edit_link,
     'favorite'         => sbac_favorites_get_favorite_link($user->uid, $id, $type),
-    'flag'             => (!$can_edit && !$can_delete ? $flag_link : ''),
+    'flag'             => $flag_link,
   );
   $vars['tertiary_nav'] = $tertiary_nav;
 
