@@ -103,7 +103,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
         ),
       );
       $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
-      $flag_link = '<span class="tertiary-flag-link">' . l('Flag Post', $flag_link, $link_ops_flag) . '</span>';
+      $flag_link = '<span class="tertiary-flag-link">' . l('Flag', $flag_link, $link_ops_flag) . '</span>';
       $js_settings_flag = array(
         'sbac-forum-flag-post-link' => array(
           'modalSize' => array(
