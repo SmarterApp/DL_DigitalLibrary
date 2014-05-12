@@ -25,7 +25,7 @@ class Reviews extends Base {
 
       $collab_markup  =  '<div class="collab-markup">';
       $collab_markup .=   '<div class="collab-text-container">';
-      $collab_markup .=     '<span class="collab-text">Questions? Suggestions?</span>';
+      $collab_markup .=     '<span class="collab-text">Questions? Suggestions?</span> ';
       $collab_markup .=     '<span class="collab-link"><a href="' . $js_link . '">Collaborate on this resource</a>.</span>';
       $collab_markup .=   '</div>';
       $collab_markup .=   '<div class="collab-participants">';
