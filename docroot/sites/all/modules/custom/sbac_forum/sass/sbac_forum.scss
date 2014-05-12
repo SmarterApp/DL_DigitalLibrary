@@ -1818,7 +1818,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 /*Review  tab*/
 	
-.collab-markup { 
+.review-markup { 
 	background: #f3fbfe;
 	border-top: 1px solid #8ab6c6;
 	border-bottom: 1px solid #8ab6c6;
@@ -1826,16 +1826,37 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	height: 40px;
 	margin-top: 10px;
 	
-	.collab-text-container, .collab-participants {
+	.review-text-container, .review-participants {
 		display: inline-block;
 		font-size: 13px;
 		vertical-align: top;
 	}
 	
-	.collab-participants {
+	.review-participants {
 		border-left: 1px solid #8AB6C6;
 	  margin: 2px 20px 0;
    	padding-left: 18px;
+		color: #62676e;
+		height: 20px;
+		line-height: 20px;
+		
+		.review-num-participants {
+			font-weight: bold;
+			
+			span {display: inline-block;}
+		}
+		
+		.review-num-participants:before {
+			content:"\e630";
+			font-family: "SBAC";
+			opacity: 1;
+			font-size: 20px;
+	    display: inline-block;
+	    font-weight: normal;
+	    position: relative;
+	    top: 1px;
+			margin-right: 3px;
+		}
 	}
 	
 	a {
