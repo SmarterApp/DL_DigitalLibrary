@@ -1746,10 +1746,12 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			padding: 10px 20px;
 			height: 40px;
 			margin-top: 20px;
+			font-size: 13px;
 			
-			p, .fivestar-static-form-item, .count {
+			p, .fivestar-static-form-item {
 				display: inline-block;
 				float: left;
+				font-size: 13px;
 			}
 			
 			p a {
@@ -1762,7 +1764,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				border-left: 1px #8ab6c6 solid;
 			}
 			
-			.count {font-size: 13px;}
+			.collab-num-participants {font-weight: bold;}
 		}
 		
 		.filter-bar {
@@ -1832,18 +1834,21 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		vertical-align: top;
 	}
 	
+	.review-text-container {
+		border-right: 1px solid #8AB6C6;
+	  margin: 3px 20px 0;
+   	padding-right: 18px;
+		height: 15px;
+		line-height: 15px;
+	}
+	
 	.review-participants {
-		border-left: 1px solid #8AB6C6;
-	  margin: 2px 20px 0;
-   	padding-left: 18px;
+		margin-top: -9px;
 		color: #62676e;
-		height: 20px;
-		line-height: 20px;
 		
 		.review-num-participants {
 			font-weight: bold;
-			
-			span {display: inline-block;}
+			margin-right: 3px;
 		}
 		
 		.review-num-participants:before {
@@ -1854,8 +1859,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    display: inline-block;
 	    font-weight: normal;
 	    position: relative;
-	    top: 1px;
-			margin-right: 3px;
+	    top: 5px;
+			margin-right: 5px;
 		}
 	}
 	
