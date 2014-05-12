@@ -23,13 +23,13 @@ class Reviews extends Base {
 
       $js_link = "javascript:jQuery('a[href=#review-collaboration]').click()";
 
-      $collab_markup  =  '<div id="collab-markup">';
-      $collab_markup .=   '<div id="collab-text-container">';
+      $collab_markup  =  '<div class="collab-markup">';
+      $collab_markup .=   '<div class="collab-text-container">';
       $collab_markup .=     '<span class="collab-text">Questions? Suggestions?</span>';
       $collab_markup .=     '<span class="collab-link"><a href="' . $js_link . '">Collaborate on this resource</a>.</span>';
       $collab_markup .=   '</div>';
-      $collab_markup .=   '<div id="collab-participants">';
-      $collab_markup .=     '<span id="collab-num-participants">' . $num_participants . '</span>' . ' ';
+      $collab_markup .=   '<div class="collab-participants">';
+      $collab_markup .=     '<span class="collab-num-participants">' . $num_participants . '</span>' . ' ';
       $collab_markup .=     ($num_participants == 1 ? 'participant' : 'participants');
       $collab_markup .=   '</div>';
       $collab_markup .= '</div>';
