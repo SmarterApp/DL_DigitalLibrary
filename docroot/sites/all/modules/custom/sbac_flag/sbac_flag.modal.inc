@@ -1171,7 +1171,7 @@ function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
-    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
+    '#attributes' => array('class' => array('button', 'gray', 'cancel', 'flag-resource-cancel')),
   );
 
   $form['submit'] = array(
