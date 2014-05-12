@@ -1981,6 +1981,31 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 }
 
+/*Modal for flag*/
+form[id*='sbac-flag-collaboration-form']{
+	#form-item-footer {
+		
+		margin-top: 15px;
+		
+		.form-item {
+		  font-size: 13px;
+			line-height: 1.4;
+		}
+	}
+	
+	#flag-edit-cancel{
+		margin-right: 15px;
+	}
+	
+	.flag-resource-submit {
+		padding-right: 40px;
+	}
+	
+	.flag-resource-submit:before {
+		content: '';
+	}
+}
+
 // --------------------- Add, View Topic Page ------------------------------
 
 .page-node-add-topic,
