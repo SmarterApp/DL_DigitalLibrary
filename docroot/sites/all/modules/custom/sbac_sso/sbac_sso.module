@@ -81,7 +81,7 @@ function sbac_sso_consume() {
   $saml_token = FALSE;
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = urldecode(base64_decode($_POST['SAMLResponse']));
-    error_log("SAML: " . $_POST['SAMLResponse']);
+    error_log("SAML: " . $saml_token);
   }
   if (!$saml_token) {
     global $base_url;
