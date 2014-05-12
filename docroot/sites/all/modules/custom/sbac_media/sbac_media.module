@@ -274,14 +274,10 @@ function sbac_media_download_contents($node) {
                     $target = str_replace('gs://', '', $file->uri);
                     $target_path = explode('/', $target);
                     $target_file = rawurlencode(array_pop($target_path));
-
-                    $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
-
                     $target = implode('/', $target_path) . '/' . $target_file;
-
+                    $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
                     if ($response) {
                       $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
-
                       $request = new Google_Http_Request($download_url, 'GET');
                       $signed_request = $services['client']->getAuth()->sign($request);
                       $httpRequest = $services['client']->getIo()->makeRequest($signed_request);
