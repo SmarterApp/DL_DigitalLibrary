@@ -1185,6 +1185,10 @@ function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
     ),
   );
 
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css',
+  );
+
   return $form;
 }
 
