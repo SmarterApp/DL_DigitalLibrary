@@ -479,7 +479,7 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
         array(
           '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click()">review it</a>',
           '!rating' => sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($resource_id)),
-          '!count' => '<span class="count">'.sbac_resource_get_rating_count($resource_id).' reviewers</span>'
+          '!count' => '<span class="collab-num-participants">' . ($collab_count = sbac_resource_get_rating_count($resource_id)) . '</span> ' . ($collab_count == 1 ? 'reviewer' : 'reviewers'),
         ));
     }
   }
