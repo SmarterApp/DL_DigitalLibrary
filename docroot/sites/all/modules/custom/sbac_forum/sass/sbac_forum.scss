@@ -2761,6 +2761,15 @@ View Topic Page, Comment Page
 	}
 }
 
+.inline-comment-page {
+	
+	.form-textarea-wrapper {
+		textarea {
+	    width: 560px;
+		}
+	}
+}
+
 #edit-field-topic-comment-files-und-ajax-wrapper {
 
 	.form-item.form-type-managed-file {margin-top: 0;}
