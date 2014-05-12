@@ -10,12 +10,19 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $node_data = entity_metadata_wrapper('node', $vars['node']);
   $forum_term = $node_data->field_topic_forum_parent->value();
 
+  $id = $forum_term->tid;
+  $type = 'term';
+  if(!empty($forum_term->field_forum_resource_ref)){
+    $id = $forum_term->field_forum_resource_ref['und'][0]['target_id'];
+    $type = 'node';
+  }
   // Declare variables.
   $forum_name_text = '';
   $control_data = array();
   $back_link = '';
   $delete_link = '';
   $edit_link = '';
+  $flag_link = '';
   $author_image_markup = '';
   $author_info = '';
   $posted = '';
@@ -32,16 +39,16 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $is_faci = TRUE;
   }
 
-  $is_member = FALSE;
   if (!empty($forum_term)) {
     $forum_name_text = $forum_term->name;
+
     $is_member = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $user->uid);
     if ($is_member === TRUE) {
       $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
+      module_load_include('module', 'sbac_flag');
     }
-
     $link_ops = array(
       'attributes' => array(
         'class' => 'topic-node-back-link',
@@ -79,6 +86,37 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
   }
 
+  if (!$can_edit && !$can_delete) {
+    $flagged = FALSE;
+    $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0);
+
+    if ($flagged) {
+      $flag = taxonomy_term_load($flagged['flag_selected']);
+      $vars['content']['flags']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($flag->name) . '</span>';
+      $vars['content']['flags']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
+    }
+    else {
+      $link_ops_flag = array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
+          'id'    => 'sbac-forum-flag-post-link',
+        ),
+      );
+      $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
+      $flag_link = '<span class="tertiary-flag-link">' . l('Flag Post', $flag_link, $link_ops_flag) . '</span>';
+      $js_settings_flag = array(
+        'sbac-forum-flag-post-link' => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 500,
+            'height' => 650,
+          ),
+        ),
+      );
+      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+    }
+  }
+
   // Author Pane Info.
   $topic_author = $node_data->author->value();
   $author_image_markup = sbac_forum__api__get_author_picture($topic_author, 'forum_profile_image_120x120');
@@ -104,22 +142,16 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   }
 
   // action section.
-  $action_section = '';
-  if ($is_member === TRUE) {
-    $action_link_ops = array(
-      'attributes' => array(
-        'class' => 'button blue sbac-forum-topic-node-direct-comment-link',
-      ),
-    );
-    $new_comment_url = 'sbac-forum/custom/comment-reply/'. $node_data->nid->value() . '/0';
-    $action_section = l('Post a Reply', $new_comment_url, $action_link_ops);
-
-  } elseif($is_member === FALSE) { // User not a member.
-    module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-    $join_form = drupal_get_form('sbac_forum_join_button_form', $forum_term->tid, $user->uid);
-    $join_button = drupal_render($join_form);
-    $action_section = $join_button;
-  }
+  $action_link_ops = array(
+    'attributes' => array(
+      'class' => 'button blue sbac-forum-topic-node-direct-comment-link',
+    ),
+  );
+  $new_comment_url = 'sbac-forum/custom/comment-reply/' . $node_data->nid->value() . '/0';
+  $action_section = l('Post a Reply', $new_comment_url, $action_link_ops);
+  $control_data = sbac_forum__api__create_forum_controls($is_faci, $forum_term->tid);
+  drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
+  drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
   $vars['action_section'] = $action_section;
 
 
@@ -136,6 +168,8 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'back'             => $back_link,
     'delete'           => $delete_link,
     'edit'             => $edit_link,
+    'favorite'         => sbac_favorites_get_favorite_link($user->uid, $id, $type),
+    'flag'             => $flag_link,
   );
   $vars['tertiary_nav'] = $tertiary_nav;
 
@@ -243,6 +277,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       ctools_add_js('ajax-responder');
       ctools_modal_add_js();
     }
+    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
+      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
+      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
+      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    }
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
       if ($comment_entity->uid != $user->uid) { // can only edit your own. facilitators have comment admin privs, have to hide edit link.
         unset($vars['content']['links']['comment']['#links']['comment-edit']);
@@ -250,10 +289,39 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
       }
     }
-    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
-      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
-      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
-      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    if (!isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
+      $link_ops = array(
+        'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+        'id'    => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+
+      );
+
+      $flagged = FALSE;
+      $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid);
+
+      if ($flagged) {
+        $reason = taxonomy_term_load($flagged['flag_selected']);
+        $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
+        $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
+      }
+      else {
+        $js_settings_flag = array(
+          'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 500,
+              'height' => 650,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+
+        $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
+
+        $vars['content']['links']['comment']['#links']['flag_post']['href']       = $flag_link;
+        $vars['content']['links']['comment']['#links']['flag_post']['title']      = 'Flag';
+        $vars['content']['links']['comment']['#links']['flag_post']['attributes'] = $link_ops;
+      }
     }
   }
 }
@@ -279,6 +347,7 @@ function sbac_forum_preprocess_views_view_unformatted__forum_list__block(&$vars)
  * views_view_fields preprocess
  */
 function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
+  global $user;
   $current_user = $vars['user'];
   $row_data = $vars['row'];
 
@@ -311,15 +380,14 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
     $facilitator_text .= '</div>';
   }
 
-  if (!$is_faci) {
-    $forum_tid = $row_data->tid;
-    $is_member = sbac_forum__api__check_user_is_forum_member($forum_tid, $current_user->uid);
-    if ($is_member === TRUE) {
-      $member_text = '<div class="sbac-forum-membership-status-label">You are a <span class="sbac-forum-is-member-highlight">member</span></div>';
+  $vars['fields']['nothing']->content = $facilitator_text ;
+
+  if (!empty($row_data->field_field_forum_resource_ref)) {
+    $favorites = sbac_favorites_get_favorites($user->uid, $row_data->field_field_forum_resource_ref[0]['raw']['target_id']);
+    if ($favorites) {
+      $vars['fields']['nothing_1']->content = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
     }
   }
-
-  $vars['fields']['nothing']->content = $member_text . $facilitator_text ;
 }
 
 
@@ -386,15 +454,7 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
     $facilitator_text .= '</div>';
   }
 
-  if (!$is_faci) {
-    $forum_tid = $row_data->tid;
-    $is_member = sbac_forum__api__check_user_is_forum_member($forum_tid, $current_user->uid);
-    if ($is_member === TRUE) {
-      $member_text = '<div class="sbac-forum-membership-status-label">You are a <span class="sbac-forum-is-member-highlight">member</span></div>';
-    }
-  }
-
-  $vars['fields']['nothing']->content = $member_text . $facilitator_text ;
+  $vars['fields']['nothing']->content = $facilitator_text ;
 }
 
 /**
@@ -405,24 +465,25 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
  * views_view preprocess
  */
 function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
-  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-
-  global $user;
-  $join_button = '';
-
-  $forum_id = array_shift($vars['view']->args);
-  $is_member = sbac_forum__api__check_user_is_forum_member($forum_id, $user->uid);
-
-  if ($is_member === TRUE) {
-    $join_button = sbac_forum__api__create_start_new_topic_link($forum_id);
-  } elseif ($is_member === FALSE) {
-    $join_form = drupal_get_form('sbac_forum_join_button_form', $forum_id, $user->uid);
-    $join_button = drupal_render($join_form);
-  } elseif ($is_member === 'removed') {
-    // There is nothing for removed members.
+  $view = $vars['view'];
+  $forum_id = array_shift($view->args);
+  if ($view->current_display == 'collaboration') {
+    $forum_wrapper = entity_metadata_wrapper('taxonomy_term', taxonomy_term_load($forum_id));
+    $vars['topic_count'] = $view->total_rows;
+    $participant_count = $forum_wrapper->__isset('field_forum_member_count') ? $forum_wrapper->field_forum_member_count->value() : 0;
+    $vars['participants'] = l("Participants ({$participant_count})", 'forums/term/' . $forum_id, array('query' => array('qt-forum_content' => 1), 'fragment' => 'qt-forum_content'));
+    if ($forum_wrapper->__isset('field_forum_resource_ref')) {
+      $resource_id = $forum_wrapper->field_forum_resource_ref->nid->value();
+      $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
+      $vars['review'] = t('Have you used this resource? If so, please take a moment to !review  !rating !count ',
+        array(
+          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click()">review it</a>',
+          '!rating' => sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($resource_id)),
+          '!count' => '<span class="count">'.sbac_resource_get_rating_count($resource_id).' reviewers</span>'
+        ));
+    }
   }
-
-  $vars['join_button'] = $join_button;
+  $vars['join_button'] = sbac_forum__api__create_start_new_topic_link($forum_id);
 }
 
 /**
@@ -720,15 +781,7 @@ function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$
           $facilitator_text .= '</div>';
         }
 
-        if (!$is_faci) {
-          $forum_tid = $forum_term->tid;
-          $is_member = sbac_forum__api__check_user_is_forum_member($forum_tid, $current_user->uid);
-          if ($is_member === TRUE) {
-            $member_text = '<div class="sbac-forum-membership-status-label">You are a <span class="sbac-forum-is-member-highlight">member</span></div>';
-          }
-        }
-
-        $membership_output = $member_text . $facilitator_text ;
+        $membership_output =  $facilitator_text ;
         $params['membership'] = $membership_output;
 
         // Last activity

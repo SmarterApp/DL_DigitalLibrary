@@ -57,6 +57,16 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['tid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['tid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['tid']['separator'] = '';
+  /* Field: Taxonomy term: Forum resource ref */
+  $handler->display->display_options['fields']['field_forum_resource_ref']['id'] = 'field_forum_resource_ref';
+  $handler->display->display_options['fields']['field_forum_resource_ref']['table'] = 'field_data_field_forum_resource_ref';
+  $handler->display->display_options['fields']['field_forum_resource_ref']['field'] = 'field_forum_resource_ref';
+  $handler->display->display_options['fields']['field_forum_resource_ref']['label'] = '';
+  $handler->display->display_options['fields']['field_forum_resource_ref']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_forum_resource_ref']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_forum_resource_ref']['settings'] = array(
+    'link' => 0,
+  );
   /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
@@ -109,6 +119,12 @@ function sbac_forum_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = '';
+  $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   /* Field: Taxonomy term: Topic Count */
   $handler->display->display_options['fields']['field_forum_topic_count']['id'] = 'field_forum_topic_count';
   $handler->display->display_options['fields']['field_forum_topic_count']['table'] = 'field_data_field_forum_topic_count';
@@ -128,7 +144,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['field'] = 'field_forum_topic_comment_count';
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['label'] = '';
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_forum_topic_comment_count']['alter']['text'] = '[field_forum_topic_comment_count]<div class="forum-listing-suffix-label">Replies</div>';
+  $handler->display->display_options['fields']['field_forum_topic_comment_count']['alter']['text'] = '[field_forum_topic_comment_count]<div class="forum-listing-suffix-label">Posts</div>';
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['empty'] = '0<div class="forum-listing-suffix-label">Replies</div>';
   $handler->display->display_options['fields']['field_forum_topic_comment_count']['settings'] = array(
@@ -143,7 +159,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_forum_member_count']['field'] = 'field_forum_member_count';
   $handler->display->display_options['fields']['field_forum_member_count']['label'] = '';
   $handler->display->display_options['fields']['field_forum_member_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_forum_member_count']['alter']['text'] = '[field_forum_member_count]<div class="forum-listing-suffix-label">Members</div>';
+  $handler->display->display_options['fields']['field_forum_member_count']['alter']['text'] = '[field_forum_member_count]<div class="forum-listing-suffix-label">Participants</div>';
   $handler->display->display_options['fields']['field_forum_member_count']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_forum_member_count']['empty'] = '0<div class="forum-listing-suffix-label">Members</div>';
   $handler->display->display_options['fields']['field_forum_member_count']['settings'] = array(
@@ -202,7 +218,7 @@ function sbac_forum_views_default_views() {
     27 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -313,6 +329,141 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['arguments']['field_fc_forum_member_is_removed_value']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_fc_forum_member_is_removed_value']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_fc_forum_member_is_removed_value']['summary_options']['items_per_page'] = '25';
+
+  /* Display: Resource Forums */
+  $handler = $view->new_display('block', 'Resource Forums', 'block_2');
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<div class="my-forum-empty-text"><h2>You Are Not A Member Of Any Forums Yet</h2>
+<a href="forums-main-page/reset/my-forums/default">Find a forum </a>to participate in our vibrant community.</div>';
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Taxonomy term: Members (field_fc_forum_members) */
+  $handler->display->display_options['relationships']['field_fc_forum_members_value']['id'] = 'field_fc_forum_members_value';
+  $handler->display->display_options['relationships']['field_fc_forum_members_value']['table'] = 'field_data_field_fc_forum_members';
+  $handler->display->display_options['relationships']['field_fc_forum_members_value']['field'] = 'field_fc_forum_members_value';
+  $handler->display->display_options['relationships']['field_fc_forum_members_value']['delta'] = '-1';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Taxonomy term: Last Activity (field_forum_last_activity) */
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['id'] = 'field_forum_last_activity_value';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['table'] = 'field_data_field_forum_last_activity';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['field'] = 'field_forum_last_activity_value';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Reply (comment) Count (field_forum_topic_comment_count) */
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['id'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['table'] = 'field_data_field_forum_topic_comment_count';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['field'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Created (field_forum_created) */
+  $handler->display->display_options['sorts']['field_forum_created_value']['id'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['table'] = 'field_data_field_forum_created';
+  $handler->display->display_options['sorts']['field_forum_created_value']['field'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Member Count (field_forum_member_count) */
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['id'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['table'] = 'field_data_field_forum_member_count';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['field'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Taxonomy vocabulary: Machine name */
+  $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
+  $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['value'] = array(
+    'forum' => 'forum',
+  );
+  $handler->display->display_options['filters']['machine_name']['group'] = 1;
+  /* Filter criterion: Field: Grade(s) (field_grades) */
+  $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
+  $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_grades_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator_id'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['label'] = 'Grade(s) (field_grades)';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['operator'] = 'field_grades_tid_op';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['identifier'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    27 => 0,
+  );
+  $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
+  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator_id'] = 'field_intended_end_user_tid_op';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['label'] = 'Intended Forum Participants (field_intended_end_user)';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator'] = 'field_intended_end_user_tid_op';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['identifier'] = 'field_intended_end_user_tid';
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    27 => 0,
+  );
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['vocabulary'] = 'intended_end_user';
+  /* Filter criterion: Field: Intended Student Population(s) (field_intended_student) */
+  $handler->display->display_options['filters']['field_intended_student_tid']['id'] = 'field_intended_student_tid';
+  $handler->display->display_options['filters']['field_intended_student_tid']['table'] = 'field_data_field_intended_student';
+  $handler->display->display_options['filters']['field_intended_student_tid']['field'] = 'field_intended_student_tid';
+  $handler->display->display_options['filters']['field_intended_student_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_intended_student_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['operator_id'] = 'field_intended_student_tid_op';
+  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['label'] = 'Intended Student Population(s) (field_intended_student)';
+  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['operator'] = 'field_intended_student_tid_op';
+  $handler->display->display_options['filters']['field_intended_student_tid']['expose']['identifier'] = 'field_intended_student_tid';
+  $handler->display->display_options['filters']['field_intended_student_tid']['vocabulary'] = 'intended_student_populations';
+  /* Filter criterion: Field: Subjects and Domains (field_subject) */
+  $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
+  $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_subject_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
+  /* Filter criterion: Taxonomy term: Forum resource ref (field_forum_resource_ref) */
+  $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['id'] = 'field_forum_resource_ref_target_id';
+  $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['table'] = 'field_data_field_forum_resource_ref';
+  $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['field'] = 'field_forum_resource_ref_target_id';
+  $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['operator'] = 'not empty';
+
+  /* Display: Topic Forums */
+  $handler = $view->new_display('block', 'Topic Forums', 'block_3');
   $export['forum_list'] = $view;
 
   $view = new view();
@@ -550,7 +701,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['exposed_form']['options']['expose_sort_order'] = FALSE;
   $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
   $handler->display->display_options['pager']['type'] = 'load_more';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '24';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '12';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '2';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
@@ -572,6 +723,11 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['relationships']['field_fc_forum_member_target_id']['id'] = 'field_fc_forum_member_target_id';
   $handler->display->display_options['relationships']['field_fc_forum_member_target_id']['table'] = 'field_data_field_fc_forum_member';
   $handler->display->display_options['relationships']['field_fc_forum_member_target_id']['field'] = 'field_fc_forum_member_target_id';
+  /* Relationship: User: Title (field_position) */
+  $handler->display->display_options['relationships']['field_position_tid']['id'] = 'field_position_tid';
+  $handler->display->display_options['relationships']['field_position_tid']['table'] = 'field_data_field_position';
+  $handler->display->display_options['relationships']['field_position_tid']['field'] = 'field_position_tid';
+  $handler->display->display_options['relationships']['field_position_tid']['relationship'] = 'field_fc_forum_member_target_id';
   /* Field: Field collection item: Field collection item ID */
   $handler->display->display_options['fields']['item_id']['id'] = 'item_id';
   $handler->display->display_options['fields']['item_id']['table'] = 'field_collection_item';
@@ -613,32 +769,83 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_state']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_state']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_state']['delta_offset'] = '0';
-  /* Field: Field collection item: Date Joined */
-  $handler->display->display_options['fields']['field_fc_forum_member_joined']['id'] = 'field_fc_forum_member_joined';
-  $handler->display->display_options['fields']['field_fc_forum_member_joined']['table'] = 'field_data_field_fc_forum_member_joined';
-  $handler->display->display_options['fields']['field_fc_forum_member_joined']['field'] = 'field_fc_forum_member_joined';
-  $handler->display->display_options['fields']['field_fc_forum_member_joined']['label'] = 'Joined';
-  $handler->display->display_options['fields']['field_fc_forum_member_joined']['settings'] = array(
-    'format_type' => 'short',
-    'fromto' => 'both',
-    'multiple_number' => '',
-    'multiple_from' => '',
-    'multiple_to' => '',
+  /* Field: Taxonomy term: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'field_position_tid';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Field: User: E-mail */
+  $handler->display->display_options['fields']['mail']['id'] = 'mail';
+  $handler->display->display_options['fields']['mail']['table'] = 'users';
+  $handler->display->display_options['fields']['mail']['field'] = 'mail';
+  $handler->display->display_options['fields']['mail']['relationship'] = 'field_fc_forum_member_target_id';
+  $handler->display->display_options['fields']['mail']['label'] = '';
+  $handler->display->display_options['fields']['mail']['element_label_colon'] = FALSE;
+  /* Field: Field collection item: Recommendation Count */
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['id'] = 'field_fc_forum_member_reco_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['table'] = 'field_data_field_fc_forum_member_reco_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['field'] = 'field_fc_forum_member_reco_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['label'] = '';
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['alter']['text'] = '[field_fc_forum_member_reco_count] <div class="forum-member-recommendation-count">Recommendations</div>';
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['element_type'] = 'div';
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['empty'] = '0<div class="forum-member-recommendation-count">Recommendations</div>';
+  $handler->display->display_options['fields']['field_fc_forum_member_reco_count']['settings'] = array(
+    'thousand_separator' => ',',
+    'prefix_suffix' => 0,
   );
-  /* Sort criterion: Field collection item: Date Joined (field_fc_forum_member_joined) */
-  $handler->display->display_options['sorts']['field_fc_forum_member_joined_value']['id'] = 'field_fc_forum_member_joined_value';
-  $handler->display->display_options['sorts']['field_fc_forum_member_joined_value']['table'] = 'field_data_field_fc_forum_member_joined';
-  $handler->display->display_options['sorts']['field_fc_forum_member_joined_value']['field'] = 'field_fc_forum_member_joined_value';
-  $handler->display->display_options['sorts']['field_fc_forum_member_joined_value']['order'] = 'DESC';
-  $handler->display->display_options['sorts']['field_fc_forum_member_joined_value']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['field_fc_forum_member_joined_value']['expose']['label'] = 'Newest';
-  /* Sort criterion: User: Name (field_first_name) */
-  $handler->display->display_options['sorts']['field_first_name_value']['id'] = 'field_first_name_value';
-  $handler->display->display_options['sorts']['field_first_name_value']['table'] = 'field_data_field_first_name';
-  $handler->display->display_options['sorts']['field_first_name_value']['field'] = 'field_first_name_value';
-  $handler->display->display_options['sorts']['field_first_name_value']['relationship'] = 'field_fc_forum_member_target_id';
-  $handler->display->display_options['sorts']['field_first_name_value']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['field_first_name_value']['expose']['label'] = 'Alphabetical';
+  /* Field: Field collection item: Topics Count */
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['id'] = 'field_fc_forum_member_tpic_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['table'] = 'field_data_field_fc_forum_member_tpic_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['field'] = 'field_fc_forum_member_tpic_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['label'] = '';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['alter']['text'] = '[field_fc_forum_member_tpic_count] <div class="forum-member-topic-count">Topics</div>';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['element_type'] = 'div';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['empty'] = '0<div class="forum-member-topic-count">Topics</div>';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['settings'] = array(
+    'thousand_separator' => ',',
+    'prefix_suffix' => 0,
+  );
+  /* Field: Field collection item: Post Count */
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['id'] = 'field_fc_forum_member_post_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['table'] = 'field_data_field_fc_forum_member_post_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['field'] = 'field_fc_forum_member_post_count';
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['label'] = '';
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['alter']['text'] = '[field_fc_forum_member_post_count] <div class="forum-member-post-count">Posts</div>';
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['element_type'] = 'div';
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['empty'] = '0<div class="forum-member-post-count">Posts</div>';
+  $handler->display->display_options['fields']['field_fc_forum_member_post_count']['settings'] = array(
+    'thousand_separator' => ',',
+    'prefix_suffix' => 0,
+  );
+  /* Sort criterion: Field collection item: Participation score (field_fc_forum_member_partip_scr) */
+  $handler->display->display_options['sorts']['field_fc_forum_member_partip_scr_value']['id'] = 'field_fc_forum_member_partip_scr_value';
+  $handler->display->display_options['sorts']['field_fc_forum_member_partip_scr_value']['table'] = 'field_data_field_fc_forum_member_partip_scr';
+  $handler->display->display_options['sorts']['field_fc_forum_member_partip_scr_value']['field'] = 'field_fc_forum_member_partip_scr_value';
+  $handler->display->display_options['sorts']['field_fc_forum_member_partip_scr_value']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['field_fc_forum_member_partip_scr_value']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['field_fc_forum_member_partip_scr_value']['expose']['label'] = 'Participation';
+  /* Sort criterion: Field collection item: Recommendation Count (field_fc_forum_member_reco_count) */
+  $handler->display->display_options['sorts']['field_fc_forum_member_reco_count_value']['id'] = 'field_fc_forum_member_reco_count_value';
+  $handler->display->display_options['sorts']['field_fc_forum_member_reco_count_value']['table'] = 'field_data_field_fc_forum_member_reco_count';
+  $handler->display->display_options['sorts']['field_fc_forum_member_reco_count_value']['field'] = 'field_fc_forum_member_reco_count_value';
+  $handler->display->display_options['sorts']['field_fc_forum_member_reco_count_value']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['field_fc_forum_member_reco_count_value']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['field_fc_forum_member_reco_count_value']['expose']['label'] = 'Most Recommended';
+  /* Sort criterion: Field collection item: Recent activity (field_fc_forum_member_rcnt_actvt) */
+  $handler->display->display_options['sorts']['field_fc_forum_member_rcnt_actvt_value']['id'] = 'field_fc_forum_member_rcnt_actvt_value';
+  $handler->display->display_options['sorts']['field_fc_forum_member_rcnt_actvt_value']['table'] = 'field_data_field_fc_forum_member_rcnt_actvt';
+  $handler->display->display_options['sorts']['field_fc_forum_member_rcnt_actvt_value']['field'] = 'field_fc_forum_member_rcnt_actvt_value';
+  $handler->display->display_options['sorts']['field_fc_forum_member_rcnt_actvt_value']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['field_fc_forum_member_rcnt_actvt_value']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['field_fc_forum_member_rcnt_actvt_value']['expose']['label'] = 'Most Recent Activity';
   /* Contextual filter: Taxonomy term: Term ID */
   $handler->display->display_options['arguments']['tid']['id'] = 'tid';
   $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_term_data';
@@ -649,14 +856,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
-  /* Filter criterion: Field collection item: Removed (field_fc_forum_member_is_removed) */
-  $handler->display->display_options['filters']['field_fc_forum_member_is_removed_value']['id'] = 'field_fc_forum_member_is_removed_value';
-  $handler->display->display_options['filters']['field_fc_forum_member_is_removed_value']['table'] = 'field_data_field_fc_forum_member_is_removed';
-  $handler->display->display_options['filters']['field_fc_forum_member_is_removed_value']['field'] = 'field_fc_forum_member_is_removed_value';
-  $handler->display->display_options['filters']['field_fc_forum_member_is_removed_value']['operator'] = 'not';
-  $handler->display->display_options['filters']['field_fc_forum_member_is_removed_value']['value'] = array(
-    1 => '1',
-  );
 
   /* Display: Members */
   $handler = $view->new_display('block', 'Members', 'block');
@@ -715,7 +914,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '1';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
-  $handler->display->display_options['pager']['options']['more_button_text'] = 'Load Most Topics';
+  $handler->display->display_options['pager']['options']['more_button_text'] = 'Show More Topics';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* No results behavior: Global: Text area */
@@ -764,13 +963,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['comment_count']['alter']['text'] = '[comment_count] <div class="topic-listing-suffix-label">Replies</div>';
   $handler->display->display_options['fields']['comment_count']['element_type'] = 'div';
   $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
-  /* Sort criterion: Content: Comment count */
-  $handler->display->display_options['sorts']['comment_count']['id'] = 'comment_count';
-  $handler->display->display_options['sorts']['comment_count']['table'] = 'node_comment_statistics';
-  $handler->display->display_options['sorts']['comment_count']['field'] = 'comment_count';
-  $handler->display->display_options['sorts']['comment_count']['order'] = 'DESC';
-  $handler->display->display_options['sorts']['comment_count']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['comment_count']['expose']['label'] = 'Most Replies';
   /* Sort criterion: Content: Last comment time */
   $handler->display->display_options['sorts']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
   $handler->display->display_options['sorts']['last_comment_timestamp']['table'] = 'node_comment_statistics';
@@ -778,13 +970,13 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['sorts']['last_comment_timestamp']['order'] = 'DESC';
   $handler->display->display_options['sorts']['last_comment_timestamp']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['last_comment_timestamp']['expose']['label'] = 'Most Recent Activity';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  $handler->display->display_options['sorts']['created']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['created']['expose']['label'] = 'Newest';
+  /* Sort criterion: Content: Comment count */
+  $handler->display->display_options['sorts']['comment_count']['id'] = 'comment_count';
+  $handler->display->display_options['sorts']['comment_count']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['sorts']['comment_count']['field'] = 'comment_count';
+  $handler->display->display_options['sorts']['comment_count']['order'] = 'DESC';
+  $handler->display->display_options['sorts']['comment_count']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['comment_count']['expose']['label'] = 'Most Posts';
   /* Contextual filter: Content: Forum (field_topic_forum_parent) */
   $handler->display->display_options['arguments']['field_topic_forum_parent_tid']['id'] = 'field_topic_forum_parent_tid';
   $handler->display->display_options['arguments']['field_topic_forum_parent_tid']['table'] = 'field_data_field_topic_forum_parent';
@@ -811,6 +1003,9 @@ function sbac_forum_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
+
+  /* Display: Collaboration */
+  $handler = $view->new_display('block', 'Collaboration', 'collaboration');
   $export['forum_topic_list'] = $view;
 
   $view = new view();

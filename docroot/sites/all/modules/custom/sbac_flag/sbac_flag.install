@@ -102,3 +102,38 @@ function sbac_flag_update_7007() {
   db_query('ALTER TABLE {eck_flag} MODIFY moderation_comment VARCHAR(1000)');
   return 'Updated moderation size';
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * Adds taxonomy terms for forum flagging.
+ */
+function sbac_flag_update_7008() {
+  $vocab = array(
+    'name' => 'Forum Flags',
+    'machine_name' => 'forum_flags',
+    'description' => 'The flags that are available when a user wishes to flag a forum topic or comment.',
+    'hierarchy' => 0,
+  );
+
+  taxonomy_vocabulary_save($vocab);
+
+  $flag_obj = taxonomy_vocabulary_machine_name_load($vocab['machine_name']);
+
+  $forum_flags = array(
+    'Outdated or inactive',
+    'Inaccurate / misleading',
+    'Unintelligible',
+    'Biased and objectionable or culturally insensitive. <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>',
+    'Contains personally identifiable information (PII)',
+    'Appears to be spam',
+  );
+
+  foreach ($forum_flags as $idx => $flag) {
+    $flag_term = new stdClass();
+    $flag_term->vid = $flag_obj->vid;
+    $flag_term->name = $flag;
+    $flag_term->weight = $idx - count($forum_flags);
+    taxonomy_term_save($flag_term);
+  }
+}

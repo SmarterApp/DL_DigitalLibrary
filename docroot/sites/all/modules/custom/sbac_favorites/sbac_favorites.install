@@ -7,12 +7,19 @@ function sbac_favorites_schema() {
   $schema['sbac_favorites'] = array(
     'description' => t('Stores data for a users favorite resources.'),
     'fields' => array(
-      'nid' => array(
+      'id' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
         'auto_increment' => FALSE,
-        'description' => t('The nid of the resource.'),
+        'description' => t('The id of the item being favorited.'),
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => FALSE,
+        'description' => t('The type of the content being favorited.'),
       ),
       'uid' => array(
         'type' => 'int',
@@ -34,13 +41,34 @@ function sbac_favorites_schema() {
         'not null' => TRUE,
       ),
     ),
-    'primary key' => array('nid', 'uid'),
+    'primary key' => array('id', 'uid', 'type'),
     'indexes' => array(
-      'nid' => array('nid'),
+      'id' => array('id'),
       'uid' => array('uid'),
+      'type' => array('type'),
       'weight' => array('weight'),
     ),
   );
 
   return $schema;
+}
+
+/**
+ * Add type column to sbac_favorites table and rename the nid column to id
+ */
+function sbac_favorites_update_7001() {
+  $column = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'default' => '',
+    'not null' => FALSE,
+    'description' => t('The type of the content being favorited.'),
+  );
+  db_add_field('sbac_favorites', 'type', $column);
+  db_add_index('sbac_favorites', 'type', array('type'));
+  db_query("update sbac_favorites set type = 'node'");
+  db_query("drop index nid on sbac_favorites");
+  db_query("alter table sbac_favorites change nid id int");
+  db_add_index('sbac_favorites', 'id', array('id'));
+  db_query("alter table sbac_favorites drop primary key, add primary key (id, uid, type)");
 }

@@ -77,62 +77,69 @@
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
-<div class="sbac-forum-confirm-message-region">
-  <?php if (!empty($parent_forum_markup['welcome_message'])) : ?>
+  <div class="sbac-forum-confirm-message-region">
+    <?php if (!empty($parent_forum_markup['welcome_message'])) : ?>
       <div style="display:block">
         <?php print $parent_forum_markup['welcome_message']; ?>
       </div>
-  <?php endif;?>
-</div>
-
-<div class="topic-node--forum-parent-info">
-
-  <div class="topic-node-forum-parent-name-wrapper">
-    <h1><?php print $parent_forum_markup['forum_name']; ?></h1>
+    <?php endif; ?>
   </div>
 
-  <div class="sbac-forum-topic-node-view-controls-wrapper">
-    <?php if(!empty($parent_forum_markup['controls']['markup'])) : ?>
-      <div class="sbac-forum-topic-node-view-controls">
-        <?php print t('Forum Settings');?>
+  <div class="topic-node--forum-parent-info">
+
+    <div class="topic-node-forum-parent-name-wrapper">
+      <h1><?php print $parent_forum_markup['forum_name']; ?></h1>
+    </div>
+
+    <div class="sbac-forum-topic-node-view-controls-wrapper">
+      <?php if (!empty($parent_forum_markup['controls']['markup'])) : ?>
+        <div class="sbac-forum-topic-node-view-controls">
+          <?php print t('Forum Settings'); ?>
+        </div>
+        <div class="sbac-forum-topic-node-view-controls-popup <?php print $parent_forum_markup['controls']['classes']; ?>">
+          <?php print $parent_forum_markup['controls']['markup']; ?>
+        </div>
+      <?php endif; ?>
+    </div>
+    <!-- end vp-controls-wrapper -->
+  </div>
+  <!-- end parent-info -->
+
+  <div class="topic-node-view-tertiary-nav">
+    <div class="topic-node-view-tertiary-nav-left">
+      <?php print $tertiary_nav['back']; ?>
+    </div>
+    <div class="topic-node-view-tertiary-nav-right">
+      <?php print $tertiary_nav['favorite'];?>
+			<div class="action">
+     	 	<?php print $tertiary_nav['edit']; ?>
+	      <?php print $tertiary_nav['delete']; ?>
+			</div>
+    </div>
+  </div>
+  <!-- end tertiary-nav -->
+
+  <div class="topic-node-main-content">
+
+    <div class="topic-node-main-content-left">
+      <div class="topic-node-auhor-pane">
+        <?php print $main_content['author_image']; ?>
       </div>
-      <div class="sbac-forum-topic-node-view-controls-popup <?php print $parent_forum_markup['controls']['classes']; ?>">
-        <?php print $parent_forum_markup['controls']['markup']; ?>
+      <div class="topic-node-author-pane-name">
+        <?php print $main_content['author_name_popup']; ?>
       </div>
-    <?php endif;?>
-  </div> <!-- end vp-controls-wrapper -->
-</div> <!-- end parent-info -->
-
-<div class="topic-node-view-tertiary-nav">
-  <div class="topic-node-view-tertiary-nav-left">
-    <?php print $tertiary_nav['back']; ?>
-  </div>
-  <div class="topic-node-view-tertiary-nav-right">
-		<?php print $tertiary_nav['edit']; ?>
-    <?php print $tertiary_nav['delete']; ?>
-  </div>
-</div> <!-- end tertiary-nav -->
-
-<div class="topic-node-main-content">
-
-  <div class="topic-node-main-content-left">
-    <div class="topic-node-auhor-pane">
-      <?php print $main_content['author_image']; ?>
+      <div class="topic-node-author-pane-post-date">
+        <?php print $main_content['posted']; ?>
+      </div>
     </div>
-    <div class="topic-node-author-pane-name">
-      <?php print $main_content['author_name_popup']; ?>
-    </div>
-    <div class="topic-node-author-pane-post-date">
-      <?php print $main_content['posted']; ?>
-    </div>
-  </div> <!-- end main content left-->
+    <!-- end main content left-->
 
-  <div class="topic-node-main-content-right">
-    <?php print render($title_prefix); ?>
+    <div class="topic-node-main-content-right">
+      <?php print render($title_prefix); ?>
       <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
     <?php print render($title_suffix); ?>
 
-    <?php
+      <?php
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
       hide($content['links']);
@@ -140,41 +147,56 @@
       hide($content['field_topic_links']);
       hide($content['field_topic_files']);
       print render($content);
-    ?>
+      ?>
+      <?php print $tertiary_nav['flag']; ?>
+      <?php if (!empty($content['flags'])): ?>
+			<div class='flag-section'>
+        <div class='flag-header flag-header-reason'>
+          <?php print $content['flags']['reason']; ?>
+					<?php dpm($content['flags']); ?>
+        </div>
+        <div class='flag-header flag-header-comment'>
+          <?php print render($content['flags']['comment']); ?>
+        </div>
+			</div>
+      <?php endif; ?>
 
-    <div class="topic-node-main-content-materials-wrapper">
-      <?php if($main_content['has_materials']): ?>
-        <div class="topic-node-main-content-materials-label">Material(s)</div>
-        <?php
+      <div class="topic-node-main-content-materials-wrapper">
+        <?php if ($main_content['has_materials']): ?>
+          <div class="topic-node-main-content-materials-label">Material(s)</div>
+          <?php
           print render($content['field_topic_files']);
           print render($content['field_topic_links']);
-        ?>
-      <?php endif;?>
+          ?>
+        <?php endif; ?>
+      </div>
     </div>
-  </div> <!-- end main content right-->
-</div> <!-- end main content-->
-
-<div class="topic-node-comments-region">
-  <div class="topic-node-reply-direct-wrapper">
-    <?php //print render($content['comments']['comment_form']); ?>
+    <!-- end main content right-->
   </div>
-  <div class="topic-node-controls">
-    <?php print $action_section; ?>
-  </div>
+  <!-- end main content-->
 
-  <?php if (!empty($content['field_tags']) && !$is_front): ?>
-    <?php print render($content['field_tags']) ?>
-  <?php endif; ?>
-
-  <?php if (!empty($comment_count)): ?>
-    <div class="topic-node-comments-counter">
-      <h2><?php print format_plural($comment_count, '1 Reply', '@count Replies'); ?></h2>
+  <div class="topic-node-comments-region">
+    <div class="topic-node-reply-direct-wrapper">
+      <?php //print render($content['comments']['comment_form']); ?>
     </div>
-  <?php endif ?>
+    <div class="topic-node-controls">
+      <?php print $action_section; ?>
+    </div>
 
-  <?php //print render($content['links']); ?>
-  <?php print render($content['comments']); ?>
-</div> <!--end comments-section -->
+    <?php if (!empty($content['field_tags']) && !$is_front): ?>
+      <?php print render($content['field_tags']) ?>
+    <?php endif; ?>
+
+    <?php if (!empty($comment_count)): ?>
+      <div class="topic-node-comments-counter">
+        <h2><?php print format_plural($comment_count, '1 Reply', '@count Replies'); ?></h2>
+      </div>
+    <?php endif ?>
+
+    <?php //print render($content['links']); ?>
+    <?php print render($content['comments']); ?>
+  </div>
+  <!--end comments-section -->
 
 
 </article>
