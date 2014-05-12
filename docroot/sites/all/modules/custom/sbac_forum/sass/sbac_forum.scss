@@ -1816,6 +1816,35 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 }
 
+/*Review  tab*/
+	
+.collab-markup { 
+	background: #f3fbfe;
+	border-top: 1px solid #8ab6c6;
+	border-bottom: 1px solid #8ab6c6;
+	padding: 10px 20px;
+	height: 40px;
+	margin-top: 10px;
+	
+	.collab-text-container, .collab-participants {
+		display: inline-block;
+		font-size: 13px;
+		vertical-align: top;
+	}
+	
+	.collab-participants {
+		border-left: 1px solid #8AB6C6;
+	  margin: 2px 20px 0;
+   	padding-left: 18px;
+	}
+	
+	a {
+		color:#0583AC;
+	}
+}
+
+
+
 /*Members's tab*/
 .page-forums-term {
 
