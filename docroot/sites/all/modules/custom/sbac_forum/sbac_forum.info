@@ -89,7 +89,6 @@ features[field_instance][] = node-topic-body
 features[field_instance][] = node-topic-field_topic_files
 features[field_instance][] = node-topic-field_topic_forum_parent
 features[field_instance][] = node-topic-field_topic_links
-features[field_instance][] = taxonomy_term-forum-field_alignment_term
 features[field_instance][] = taxonomy_term-forum-field_attributes
 features[field_instance][] = taxonomy_term-forum-field_fc_forum_members
 features[field_instance][] = taxonomy_term-forum-field_forum_access_role_list

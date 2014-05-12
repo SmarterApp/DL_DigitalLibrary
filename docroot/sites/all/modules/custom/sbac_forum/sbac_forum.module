@@ -870,9 +870,9 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
 
       // Tags fields. Add wrapper to group them
       $form['field_subject']['#prefix'] = '<div class="forum-tags-left">';
-      $form['field_intended_end_user']['#suffix'] = '</div>';
+      $form['field_intended_student']['#suffix'] = '</div>';
       $form['field_grades']['#prefix'] = '<div class="forum-tags-right">';
-      $form['field_intended_student']['#suffix'] = '</div><div class="clearfix"></div>';
+      $form['field_geographical_settings']['#suffix'] = '</div><div class="clearfix"></div>';
 
 
       // Access fields. Modify behaviour.
