@@ -227,6 +227,7 @@ function sbac_favorites_get_favorites_list($uid, $type = NULL) {
   }
   $result = $query
     ->orderBy('sf.weight', 'ASC')
+    ->orderBy('sf.created', 'DESC')
     ->execute();
   foreach ($result as $row) {
     $favorites[] = $row;
@@ -352,11 +353,13 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
       '#type' => 'submit',
       '#value' => t('Save Order'),
       '#attributes' => array('id' => 'sbac-favorites-resource-submit'),
+      '#name' => 'sbac-favorites-resource-submit'
     );
     $form['tab_container']['resource_tab']['buttons']['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel'),
       '#attributes' => array('id' => 'sbac-favorites-resource-cancel'),
+      '#name'=> 'sbac-favorites-resource-cancel'
     );
   }
   // Forum Tab
@@ -401,11 +404,13 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
       '#type' => 'submit',
       '#value' => t('Save Order'),
       '#attributes' => array('id' => 'sbac-favorites-forum-submit'),
+      '#name' => 'sbac-favorites-forum-submit'
     );
     $form['tab_container']['forum_tab']['buttons']['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel'),
       '#attributes' => array('id' => 'sbac-favorites-forum-cancel'),
+      '#name' => 'sbac-favorites-forum-cancel'
     );
   }
   return $form;
