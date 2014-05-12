@@ -1083,6 +1083,7 @@ function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
   }
   $can_close = FALSE;
   drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.collaboration.js');
+  ctools_add_css('sbac_flag.css', 'sbac_flag');
   ctools_include('ajax');
   ctools_include('modal');
   ctools_add_js('ajax-responder');
@@ -1171,7 +1172,17 @@ function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
-    '#attributes' => array('class' => array('button', 'gray', 'cancel')),
+    '#attributes' => array(
+      'class' => array(
+        'button',
+        'gray',
+        'cancel',
+        'flag-resource-cancel',
+      ),
+      'id' => array(
+        'flag-edit-cancel',
+      ),
+    ),
   );
 
   $form['submit'] = array(

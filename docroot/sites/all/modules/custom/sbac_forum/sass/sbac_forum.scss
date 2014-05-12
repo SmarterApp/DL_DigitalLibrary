@@ -1746,10 +1746,12 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			padding: 10px 20px;
 			height: 40px;
 			margin-top: 20px;
+			font-size: 13px;
 			
-			p, .fivestar-static-form-item, .count {
+			p, .fivestar-static-form-item {
 				display: inline-block;
 				float: left;
+				font-size: 13px;
 			}
 			
 			p a {
@@ -1762,7 +1764,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				border-left: 1px #8ab6c6 solid;
 			}
 			
-			.count {font-size: 13px;}
+			.collab-num-participants {font-weight: bold;}
 		}
 		
 		.filter-bar {
@@ -1815,6 +1817,59 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		}
 	}
 }
+
+/*Review  tab*/
+	
+.review-markup { 
+	background: #f3fbfe;
+	border-top: 1px solid #8ab6c6;
+	border-bottom: 1px solid #8ab6c6;
+	padding: 10px 20px;
+	height: 40px;
+	margin-top: 10px;
+	
+	.review-text-container, .review-participants {
+		display: inline-block;
+		font-size: 13px;
+		vertical-align: top;
+	}
+	
+	.review-text-container {
+		border-right: 1px solid #8AB6C6;
+	  margin: 3px 20px 0;
+   	padding-right: 18px;
+		height: 15px;
+		line-height: 15px;
+	}
+	
+	.review-participants {
+		margin-top: -9px;
+		color: #62676e;
+		
+		.review-num-participants {
+			font-weight: bold;
+			margin-right: 3px;
+		}
+		
+		.review-num-participants:before {
+			content:"\e630";
+			font-family: "SBAC";
+			opacity: 1;
+			font-size: 20px;
+	    display: inline-block;
+	    font-weight: normal;
+	    position: relative;
+	    top: 5px;
+			margin-right: 5px;
+		}
+	}
+	
+	a {
+		color:#0583AC;
+	}
+}
+
+
 
 /*Members's tab*/
 .page-forums-term {
@@ -1978,6 +2033,31 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
    left: 15px;
    position: absolute;
    top: 4px;
+	}
+}
+
+/*Modal for flag*/
+form[id*='sbac-flag-collaboration-form']{
+	#form-item-footer {
+		
+		margin-top: 15px;
+		
+		.form-item {
+		  font-size: 13px;
+			line-height: 1.4;
+		}
+	}
+	
+	#flag-edit-cancel{
+		margin-right: 15px;
+	}
+	
+	.flag-resource-submit {
+		padding-right: 40px;
+	}
+	
+	.flag-resource-submit:before {
+		content: '';
 	}
 }
 
@@ -2453,6 +2533,7 @@ View Topic Page, Comment Page
 		.topic-node-main-content-left {
 			float: left;
 			margin-right: 40px;
+			width: 14%;
 
 			.topic-node-auhor-pane {
 				background-image: url("../images/avatar.png");
@@ -2495,9 +2576,13 @@ View Topic Page, Comment Page
 
 		.topic-node-main-content-right {
 			float: left;
+			position: relative;
+			width: 65%;
 
 			h2 {
 				margin-bottom: 5px;
+				margin-right: 50px;
+				width: 80%;
 
 				&.node-title a {
 					color: #000000;
@@ -2570,6 +2655,33 @@ View Topic Page, Comment Page
 				    margin-right: 5px;
 				    position: relative;
 					}
+				}
+			}
+			
+			.tertiary-flag-link {
+				position: absolute;
+				top: 5px;
+				right: 0;
+				
+				a  {
+					color: #5A5A5A;
+					opacity: 0.5;
+				}
+				
+				a:before {
+					content:"\e602";
+				  display: inline-block;
+			    font-family: 'sbac';
+			    font-size: 20px;
+			    font-weight: normal;
+			    margin-right: 7px;
+			    opacity: 0.5;
+			    position: relative;
+			    text-decoration: none;
+				}
+				
+				a:hover, a:hover:before {
+					opacity: 1;
 				}
 			}
 		}

@@ -21,18 +21,17 @@ class Reviews extends Base {
       $forum_taxonomy = taxonomy_term_load($forum_id);
       $num_participants = $forum_taxonomy->field_forum_member_count['und'][0]['value'];
 
-
       $js_link = "javascript:jQuery('a[href=#review-collaboration]').click()";
 
-      $collab_markup  = '<div id="collab-markup">';
-      $collab_markup .= '<div id="collab-text-container">';
-      $collab_markup .= '<span class="collab-text">Questions? Suggestions?</span>';
-      $collab_markup .= '<span class="collab-link"><a href="' . $js_link . '">Collaborate on this resource</a>.</span>';
-      $collab_markup .= '</div>';
-      $collab_markup .= '<div id="collab-participants">';
-      $collab_markup .= '<span id="collab-num-participants">' . $num_participants . '</span>' . ' ';
-      $collab_markup .= ($num_participants == 1 ? 'participant' : 'participants');
-      $collab_markup .= '</div>';
+      $collab_markup  =  '<div class="review-markup">';
+      $collab_markup .=   '<div class="review-text-container">';
+      $collab_markup .=     '<span class="review-text">Questions? Suggestions?</span> ';
+      $collab_markup .=     '<span class="review-link"><a href="' . $js_link . '">Collaborate on this resource</a>.</span>';
+      $collab_markup .=   '</div>';
+      $collab_markup .=   '<div class="review-participants">';
+      $collab_markup .=     '<span class="review-num-participants">' . $num_participants . '</span>' . ' ';
+      $collab_markup .=     ($num_participants == 1 ? 'participant' : 'participants');
+      $collab_markup .=   '</div>';
       $collab_markup .= '</div>';
 
       $output .= $collab_markup;
