@@ -810,6 +810,7 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $user_states = array('gk_being_reviewed', 'qc_being_reviewed');
                     $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
                     $view->query->add_where('AND', $user_condition);
+                    $needs_stock_filter = FALSE;
                   }
                   break;
               }

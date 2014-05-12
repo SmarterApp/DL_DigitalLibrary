@@ -53,7 +53,7 @@
   // has to append email field description here as the problem lies deep inside the theme element function
   $('#user-profile-form #edit-account .form-item-mail div.description').insertAfter('#user-profile-form #edit-account .form-item-mail label');
 
-  $(".row.second button:submit:not(#sbac-favorites-submit, #sbac-favorites-cancel)").attr("disabled", true);
+  $(".row.second button:submit:not(#sbac-favorites-resource-submit, #sbac-favorites-resource-cancel, #sbac-favorites-forum-submit, #sbac-favorites-forum-cancel)").attr("disabled", true);
   $("input, textarea, select").live('keydown change', function () {
     $(".row.second button:submit").removeAttr("disabled");
   });
