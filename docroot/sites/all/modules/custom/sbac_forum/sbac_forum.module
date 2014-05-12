@@ -828,6 +828,8 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       //   Use our own descrition field, more control.
       $form['description']['#access'] = FALSE;
 
+      $form['field_forum_resource_ref']['#access'] = FALSE;
+
       // Add length restriction.
       $form['name']['#maxlength'] = 75;
       $form['name']['#attributes']['maxlength_js_label'][0] = 'Character count: @remaining';
@@ -1298,7 +1300,6 @@ function sbac_forum_taxonomy_term_insert($term) {
     global $user;
     $term->field_forum_facilitators[LANGUAGE_NONE][0]['target_id'] = $user->uid;
 
-
     // Add faci to member list.
     $member_fc = $term->field_fc_forum_members[LANGUAGE_NONE][0]['value'];
     if ($member_fc) {
@@ -1310,6 +1311,9 @@ function sbac_forum_taxonomy_term_insert($term) {
       $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = 1;
       taxonomy_term_save($term);
     }
+
+    // Add forum to favorite
+    sbac_forum_add_to_favorite($term->tid, $user->uid);
   }
 }
 
@@ -1481,6 +1485,7 @@ function sbac_forum_node_insert($node) {
       $forum_obj = $node_wrapper->field_topic_forum_parent->value();
       if (!empty($forum_obj)) {
         // Update topic counter field on forum.
+        global $user;
         $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
         if (isset($forum_wrapper->field_forum_topic_count)) {
           $current_count = $forum_wrapper->field_forum_topic_count->value();
@@ -1493,6 +1498,8 @@ function sbac_forum_node_insert($node) {
         }
         $forum_wrapper->save(TRUE);
         taxonomy_term_save($forum_obj);
+        // Add forum to favorite
+        sbac_forum_add_to_favorite($forum_obj->tid, $user->uid);
       }
     }
   }
@@ -1582,28 +1589,57 @@ function sbac_forum_comment_insert($comment) {
           if (cache_get($cid)) {
             cache_clear_all($cid, 'cache');
           }
-        } else {
-           if($forum_wrapper->field_fc_forum_members->count()){
-             foreach($forum_wrapper->field_fc_forum_members as $member_wrapper){
-               if($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id){
-                 // Increment the post count
-                 $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
-                 $current_post_count++;
-                 $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
-                 // Set the date
-                 $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
-                 $member_wrapper->save(TRUE);
+        }
+        else {
+          if ($forum_wrapper->field_fc_forum_members->count()) {
+            foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
+              if ($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id) {
+                // Increment the post count
+                $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
+                $current_post_count++;
+                $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
+                // Set the date
+                $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+                $member_wrapper->save(TRUE);
 
-               }
-             }
-           }
+              }
+            }
+          }
         }
         $forum_wrapper->save(TRUE);
         taxonomy_term_save($forum_term);
         $_SESSION[SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE] = $comment->cid;
+
+        // Add the forum to favorite
+        sbac_forum_add_to_favorite($forum_term->tid, $comment_author_id);
       }
     }
   }
+}
+
+/**
+ * Add the forum to the user's favorite list
+ *
+ * @param $forum_id
+ * @param $uid
+ */
+function sbac_forum_add_to_favorite($forum_id, $uid) {
+  $forum_term = taxonomy_term_load($forum_id);
+  // Add the forum to favorite
+  $type = 'term';
+  $id = $forum_term->tid;
+  if (!empty($forum_term->field_forum_resource_ref)) {
+    $id = $forum_term->field_forum_resource_ref['und'][0]['target_id'];
+    $type = 'node';
+  }
+  $query = "INSERT IGNORE INTO {sbac_favorites} (id, uid, weight, created, type) VALUES (:id, :uid, :weight, :created, :type)";
+  db_query($query, array(
+    ':id' => $id,
+    ':uid' => $uid,
+    ':weight' => -1000,
+    ':created' => time(),
+    ':type' => $type,
+  ));
 }
 
 /**
@@ -1765,7 +1801,7 @@ function sbac_forum_get_resource_forum($resource_nid) {
  * @param $replies
  * @return int
  */
-function sbac_forum_calculate_participation_score($recommendations, $topics, $replies){
+function sbac_forum_calculate_participation_score($recommendations, $topics, $replies) {
   return (5 * $recommendations) + (2 * $topics) + $replies;
 }
 
