@@ -2453,6 +2453,7 @@ View Topic Page, Comment Page
 		.topic-node-main-content-left {
 			float: left;
 			margin-right: 40px;
+			width: 14%;
 
 			.topic-node-auhor-pane {
 				background-image: url("../images/avatar.png");
@@ -2495,9 +2496,13 @@ View Topic Page, Comment Page
 
 		.topic-node-main-content-right {
 			float: left;
+			position: relative;
+			width: 65%;
 
 			h2 {
 				margin-bottom: 5px;
+				margin-right: 50px;
+				width: 80%;
 
 				&.node-title a {
 					color: #000000;
@@ -2570,6 +2575,33 @@ View Topic Page, Comment Page
 				    margin-right: 5px;
 				    position: relative;
 					}
+				}
+			}
+			
+			.tertiary-flag-link {
+				position: absolute;
+				top: 5px;
+				right: 0;
+				
+				a  {
+					color: #5A5A5A;
+					opacity: 0.5;
+				}
+				
+				a:before {
+					content:"\e602";
+				  display: inline-block;
+			    font-family: 'sbac';
+			    font-size: 20px;
+			    font-weight: normal;
+			    margin-right: 7px;
+			    opacity: 0.5;
+			    position: relative;
+			    text-decoration: none;
+				}
+				
+				a:hover, a:hover:before {
+					opacity: 1;
 				}
 			}
 		}
