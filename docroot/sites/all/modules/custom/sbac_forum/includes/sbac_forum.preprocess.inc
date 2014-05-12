@@ -169,7 +169,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'delete'           => $delete_link,
     'edit'             => $edit_link,
     'favorite'         => sbac_favorites_get_favorite_link($user->uid, $id, $type),
-    'flag'             => $flag_link,
+    'flag'             => (!$can_edit && !$can_delete ? $flag_link : ''),
   );
   $vars['tertiary_nav'] = $tertiary_nav;
 
