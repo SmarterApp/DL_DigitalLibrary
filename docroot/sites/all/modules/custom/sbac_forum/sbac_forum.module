@@ -1648,8 +1648,7 @@ function sbac_forum_get_posted_with_distinction_resources() {
           AND n.sticky = 1
           AND history.current = 1
           AND history.state = 'published'
-          ORDER BY n.nid ASC
-          LIMIT 0, 13"; // TODO: Only load a few for testing purposes only. Remove this limit to load all when in production.
+          ORDER BY n.nid ASC";
   return db_query($query)->fetchCol();
 }
 
