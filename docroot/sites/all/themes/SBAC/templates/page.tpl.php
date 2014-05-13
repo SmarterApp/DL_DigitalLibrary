@@ -302,4 +302,9 @@ global $user;
       <?php print drupal_render($form); ?>
     </div>
   </div>
+  <?php if (isset($session_expire)): ?>
+    <div class="sbac-sso-session-expire" style="display:none">
+      <?php echo $session_expire; ?>
+    </div>
+  <?php endif; ?>
 <?php endif; ?>
