@@ -68,6 +68,21 @@ function sbac_sso_session_expire_modal($js = FALSE) {
       if ($form_state['triggering_element']['#value'] == 'OK') {
         sbac_sso_session_regenerate();
       }
+      else {
+        global $user;
+        watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+        module_invoke_all('user_logout', $user);
+        session_destroy();
+
+        // Redirect user to SSO Login.
+        global $base_url;
+        $original_access_url = $base_url . '/' . $_GET['q'];
+        // Record original access URL (URL Encoded) to the SAML request in the relayState variable
+        // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
+        $saml_assertion = sbac_sso_saml_assertion();
+        $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
+        $output[] = ctools_ajax_command_redirect($url);
+      }
     }
     print ajax_render($output);
     exit();
@@ -191,15 +206,20 @@ function sbac_sso_session_regenerate() {
  */
 function sbac_sso_preprocess_page(&$vars) {
   if (arg(0) != 'admin') {
-    drupal_add_js(drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.session.js');
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    drupal_add_library('system', 'drupal.ajax');
+    drupal_add_js(drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.ctools.js');
+    drupal_add_js(drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.js');
     $session_button = l(t('Session Expire (modal)'), 'sbac-sso/nojs/session-expire', array(
       'attributes' => array(
         'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-sso-session-expire',
         'id' => 'sbac-sso-session-expire'
       ),
     ));
-
-    $js_settings = array('sbac-sso-session-expire' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 160), 'modalTheme' => 'CtoolSbacFlagCancelModeration'));
+    $js_settings = array('sbac-sso-session-expire' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 160), 'modalTheme' => 'CtoolSbacSSOExpire'));
     drupal_add_js($js_settings, 'setting');
     $vars['session_expire'] = $session_button;
   }
@@ -291,10 +311,13 @@ function sbac_sso_logout() {
   session_destroy();
 
   // Redirect user to SSO Login.
-  $original_access_url = $_GET['q'];
+  global $base_url;
+  $original_access_url = $base_url . '/' . $_GET['q'];
+  // Record original access URL (URL Encoded) to the SAML request in the relayState variable
+  // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
   $saml_assertion = sbac_sso_saml_assertion();
-  $url = SBAC_SSO_URL . '?SAMLRequest=' . base64_encode(urlencode($saml_assertion)) . '&RelayState=' . $original_access_url;
-  drupal_goto($url);
+  $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
+  drupal_custom_goto($url);
 }
 
 /**
