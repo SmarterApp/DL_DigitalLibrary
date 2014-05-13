@@ -291,9 +291,8 @@ function sbac_help_query_alter(&$query) {
       'system administrator',
     );
 
-    $intersect = array_intersect($roles, $can_view_all);
-
-    if ($user->uid == 1 || count($intersect)) {
+    // Do not alter view if user is allowed to view all or site admin.
+    if ($user->uid == 1 || array_intersect($roles, $can_view_all)) {
       return;
     }
 
