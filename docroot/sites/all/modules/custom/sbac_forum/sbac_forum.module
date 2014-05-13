@@ -44,6 +44,11 @@ define('SBAC_FORUM_CUSTOM_SOLR_FILTER_FIELD_STATE_OPEN', 'im_forum_access__custo
 
 define('SBAC_FORUM_VOCAB_NAME', 'forum');
 
+define('SBAC_FORUM_DEFAULT_FORUM_1_TITLE', 'Use and Implementation');
+define('SBAC_FORUM_DEFAULT_FORUM_1_DESC', 'General discussion for questions and comments about the use and implementation of this resource');
+define('SBAC_FORUM_DEFAULT_FORUM_2_TITLE', 'Suggested Improvements');
+define('SBAC_FORUM_DEFAULT_FORUM_2_DESC', 'Discussion for suggested improvements and revisions for this resource');
+
 /**
  * =============================================================================
  *
@@ -1729,11 +1734,13 @@ function sbac_forum_create_resource_forum($nid, $vid = NULL) {
         'field_grades' => $node->field_grades,
         'field_intended_end_user' => $node->field_intended_end_user,
         'field_intended_student' => $node->field_intended_student,
+        'field_attributes' => $node->field_attributes,
+        'field_geographical_settings' => $node->field_geographical_settings,
       );
       taxonomy_term_save($term);
       if (isset($term->tid)) {
-        sbac_forum_create_forum_topic($term->tid, 'Use and Implementation', 'General discussion for questions and comments about the use and implementation of this resource');
-        sbac_forum_create_forum_topic($term->tid, 'Suggested Improvements', 'Discussion for suggested improvements and revisions for this resource');
+        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC);
+        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC);
       }
     }
   }
@@ -1746,11 +1753,11 @@ function sbac_forum_create_resource_forum($nid, $vid = NULL) {
  * @param $topic
  * @param $description
  */
-function sbac_forum_create_forum_topic($forum_id, $topic, $description) {
+function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description) {
   $node = new stdClass;
   $node->type = 'topic';
   $node->title = $topic;
-  $node->uid = 1;
+  $node->uid = $uid;
   $node->status = 1;
   $node->comment = 2;
   $node->language = LANGUAGE_NONE;
@@ -1784,7 +1791,7 @@ function sbac_forum_workbench_moderation_transition($node, $previous_state, $new
  * @param $resource_nid
  * @return mixed
  */
-function sbac_forum_get_resource_forum($resource_nid) {
+function sbac_forum_get_resource_forum_id($resource_nid) {
   $query = "
     SELECT
       entity_id
@@ -1805,11 +1812,30 @@ function sbac_forum_calculate_participation_score($recommendations, $topics, $re
   return (5 * $recommendations) + (2 * $topics) + $replies;
 }
 
-function sbac_forum_init() {
-  // TODO: This is for dev purposes only. Remove this when done.
-//  $term = taxonomy_term_load(60412);
-//  $term2 = taxonomy_term_load(60456);
-//  sbac_forum_create_all_resource_forums();
-//  taxonomy_term_delete(60465);
-//  $topic = node_load(133523);
+/**
+ * Update the default Resource forum topics to use the Resource author as the uid
+ */
+function sbac_forum_update_resource_forum_topic_authors() {
+  $query = "
+    SELECT
+      topic.nid,
+      resource.uid
+    FROM {node} topic
+      LEFT JOIN {field_data_field_topic_forum_parent} forum
+        ON topic.nid = forum.entity_id
+      LEFT JOIN {field_data_field_forum_resource_ref} ref
+        ON ref.entity_id = forum.field_topic_forum_parent_tid
+      LEFT JOIN {node} resource
+        ON ref.field_forum_resource_ref_target_id = resource.nid
+    WHERE (topic.title = 'Use and Implementation'
+           OR topic.title = 'Suggested Improvements')
+          AND topic.uid = 1";
+  $results = db_query($query);
+  foreach ($results as $result) {
+    $node = node_load($result->nid);
+    if ($node) {
+      $node->uid = $result->uid;
+      node_save($node);
+    }
+  }
 }

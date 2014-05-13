@@ -22,16 +22,17 @@
 	      <?php print $fields['description']; ?>
 	    </div>
 	  <?php endif; ?>
-		<?php if (!empty($fields['subjects'])): ?>
+      <?php if (!empty($fields['facilitators'])): ?>
+        <div class="vp-faci-field">
+          <div class="title-tags"><?php print t('Facilitator(s):'); ?></div>
+          <?php print $fields['facilitators']; ?>
+        </div>
+      <?php endif; ?>
+
+      <?php if (!empty($fields['subjects'])): ?>
 	    <div class="vp-subjects-field  whole">
 	      <div class="title-tags"><?php print t('Subjects and Domains'); ?></div>
 	      <?php print $fields['subjects']; ?>
-	    </div>
-	  <?php endif; ?>
-	  <?php if (!empty($fields['facilitators'])): ?>
-	    <div class="vp-faci-field half">
-	      <div class="title-tags"><?php print t('Facilitator(s):'); ?></div>
-	      <?php print $fields['facilitators']; ?>
 	    </div>
 	  <?php endif; ?>
 	  <?php if (!empty($fields['grades'])): ?>

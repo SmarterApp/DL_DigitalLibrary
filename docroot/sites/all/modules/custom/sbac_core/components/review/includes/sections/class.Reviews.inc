@@ -17,7 +17,7 @@ class Reviews extends Base {
     // create header & new review form
       $output = '';
 
-      $forum_id = sbac_forum_get_resource_forum($this->_node->nid);
+      $forum_id = sbac_forum_get_resource_forum_id($this->_node->nid);
       $forum_taxonomy = taxonomy_term_load($forum_id);
       $num_participants = $forum_taxonomy->field_forum_member_count['und'][0]['value'];
 
