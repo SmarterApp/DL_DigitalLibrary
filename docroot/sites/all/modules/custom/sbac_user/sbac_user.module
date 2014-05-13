@@ -785,12 +785,11 @@ function sbac_user_user_login(&$edit, $account) {
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
-  // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-  if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s) || empty($account->field_grade_level_s) || empty($account->field_special_populations))) {
-    drupal_goto('user');
-  }
-
   if (!isset($edit['sbac-share'])) {
+    // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
+    if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s) || empty($account->field_grade_level_s) || empty($account->field_special_populations))) {
+      drupal_goto('user');
+    }
     if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
     }
     else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
