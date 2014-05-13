@@ -297,6 +297,13 @@ function sbac_help_query_alter(&$query) {
 
     $user_roles = array();
 
+    // Add 'All User Roles'
+    $all_roles = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+    $all_roles = array_pop($all_roles);
+    if ($all_roles) {
+      $user_roles[] = $all_roles->tid;
+    }
+
     foreach($roles as $rid => $role) {
       $term = taxonomy_get_term_by_name($role, 'sbac_user_roles');
       $term = array_pop($term);
