@@ -318,3 +318,19 @@ function sbac_help_query_alter(&$query) {
     $query->groupBy('node.nid');
   }
 }
+
+/**
+ * Implements hook_post_features_revert().
+ * @param  String   $component String name of the component that has just been reverted.
+ */
+function sbac_help_post_features_revert($component) {
+  if ($component == 'field_instance') {
+    $instance_info = field_info_instance('node', 'field_help_user_roles', 'help_page');
+    if (isset($instance_info['default_value'][0]['tid'])) {
+      $term = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+      $term = array_pop($term);
+      $instance_info['default_value'][0]['tid'] = $term->tid;
+      field_update_instance($instance_info);
+    }
+  }
+}

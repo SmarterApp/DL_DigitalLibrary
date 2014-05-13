@@ -188,7 +188,7 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => '',
+        'label_help_description' => 'Allow only Digital Library members with certain user roles to view this topic.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
