@@ -65,7 +65,7 @@ function sbac_sso_session_expire_modal($js = FALSE) {
     if (!empty($form_state['executed'])) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
-      if ($form_state['triggering_element']['#value'] == 'Continue Moderation') {
+      if ($form_state['triggering_element']['#value'] == 'OK') {
         sbac_sso_session_regenerate();
       }
     }
@@ -85,20 +85,21 @@ function sbac_sso_session_expire_form($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => "<p>If you don't click continue moderation, the
-    session will timeout and the resource review will be returned to
-    moderation queue in its initial state."
+    '#markup' => "<p>You've been on this page for close to 60 minutes, would
+        you like to extend your session on the digital libraryn? Select OK to
+        extend your session. Pressing CANCEL or failing to respond in the next
+        two minutes will require site reauthentication.</p>"
   );
 
   $form['continue'] = array(
     '#type' => 'submit',
-    '#value' => 'Continue Moderation',
+    '#value' => 'OK',
     '#attributes' => array('class' => array('button', 'blue'))
   );
 
   $form['cancel'] = array(
     '#type' => 'submit',
-    '#value' => 'Cancel Moderation',
+    '#value' => 'CANCEL',
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 

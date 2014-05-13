@@ -151,7 +151,7 @@ function sbac_flag_moderation_access() {
  */
 function sbac_flag_init() {
   if (user_is_logged_in() && strpos($_GET['q'], 'ajax') === FALSE) {
-    sbac_flag_session_regenerate();
+    // sbac_flag_session_regenerate();
   }
 }
 
