@@ -11053,28 +11053,24 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
 .page-node-add-help-page .form-textarea-wrapper textarea {
   max-width: none;
 }
-/* line 3472, ../sass/custom.scss */
-.page-node-add-help-page #body-add-more-wrapper {
-  margin-top: -5px;
-}
-/* line 3474, ../sass/custom.scss */
+/* line 3473, ../sass/custom.scss */
 .page-node-add-help-page #body-add-more-wrapper .filter-wrapper {
   padding-top: 5px;
 }
-/* line 3479, ../sass/custom.scss */
+/* line 3478, ../sass/custom.scss */
 .page-node-add-help-page .image-widget-data {
   width: 100%;
 }
-/* line 3482, ../sass/custom.scss */
+/* line 3481, ../sass/custom.scss */
 .page-node-add-help-page .image-widget-data input, .page-node-add-help-page .image-widget-data button {
   display: inline-block;
 }
-/* line 3486, ../sass/custom.scss */
+/* line 3485, ../sass/custom.scss */
 .page-node-add-help-page .image-widget-data input {
   width: 50%;
   margin-right: 20px;
 }
-/* line 3492, ../sass/custom.scss */
+/* line 3491, ../sass/custom.scss */
 .page-node-add-help-page #edit-actions {
   float: right;
 }
