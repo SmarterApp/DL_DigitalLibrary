@@ -287,7 +287,6 @@ function sbac_help_query_alter(&$query) {
 
     $can_view_all = array(
       'DLRB member',
-      'help desk',
       'digital library administrator',
       'system administrator',
     );
