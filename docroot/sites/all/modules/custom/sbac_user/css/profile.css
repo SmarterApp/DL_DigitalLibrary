@@ -94,11 +94,7 @@ h2.name .field {
 .page-user .row.second .section-container.auto {
   visibility: visible !important;
 }
-/* line 100, ../sass/profile.scss */
-.page-user .row.second .section-container.auto .vertical-tabs {
-  border: none;
-}
-/* line 107, ../sass/profile.scss */
+/* line 104, ../sass/profile.scss */
 .page-user .row.second .section-container.auto > section.active > .content .helpful-info,
 .page-user .row.second .section-container.auto > .section.active > .content .helpful-info,
 .page-user .row.second #notifications .helpful-info {
@@ -110,7 +106,7 @@ h2.name .field {
   padding: 10px 20px 15px;
   position: relative;
 }
-/* line 117, ../sass/profile.scss */
+/* line 114, ../sass/profile.scss */
 .page-user .row.second .section-container.auto > section.active > .content .helpful-info h2,
 .page-user .row.second .section-container.auto > .section.active > .content .helpful-info h2,
 .page-user .row.second #notifications .helpful-info h2 {
@@ -119,7 +115,7 @@ h2.name .field {
   padding-top: 0;
   font-size: 18px;
 }
-/* line 124, ../sass/profile.scss */
+/* line 121, ../sass/profile.scss */
 .page-user .row.second .section-container.auto > section.active > .content .helpful-info p,
 .page-user .row.second .section-container.auto > .section.active > .content .helpful-info p,
 .page-user .row.second #notifications .helpful-info p {
@@ -128,7 +124,7 @@ h2.name .field {
   position: relative;
   margin-bottom: 38px;
 }
-/* line 131, ../sass/profile.scss */
+/* line 128, ../sass/profile.scss */
 .page-user .row.second .section-container.auto > section.active > .content .helpful-info a.more-less-text-trigger-more, .page-user .row.second .section-container.auto > section.active > .content .helpful-info a.more-less-text-trigger-less,
 .page-user .row.second .section-container.auto > .section.active > .content .helpful-info a.more-less-text-trigger-more,
 .page-user .row.second .section-container.auto > .section.active > .content .helpful-info a.more-less-text-trigger-less,
@@ -148,7 +144,7 @@ h2.name .field {
   bottom: -35px;
   left: 0;
 }
-/* line 146, ../sass/profile.scss */
+/* line 143, ../sass/profile.scss */
 .page-user .row.second .section-container.auto > section.active > .content .helpful-info a.more-less-text-trigger-more:after, .page-user .row.second .section-container.auto > section.active > .content .helpful-info a.more-less-text-trigger-less:after,
 .page-user .row.second .section-container.auto > .section.active > .content .helpful-info a.more-less-text-trigger-more:after,
 .page-user .row.second .section-container.auto > .section.active > .content .helpful-info a.more-less-text-trigger-less:after,
@@ -165,31 +161,31 @@ h2.name .field {
   vertical-align: middle;
   width: 10px;
 }
-/* line 160, ../sass/profile.scss */
+/* line 157, ../sass/profile.scss */
 .page-user .row.second .section-container.auto > section.active > .content .helpful-info a.more-less-text-trigger-less:after,
 .page-user .row.second .section-container.auto > .section.active > .content .helpful-info a.more-less-text-trigger-less:after,
 .page-user .row.second #notifications .helpful-info a.more-less-text-trigger-less:after {
   background-image: url("../images/arrowUp.svg");
 }
-/* line 164, ../sass/profile.scss */
+/* line 161, ../sass/profile.scss */
 .page-user .row.second .section-container.auto .content h2 {
   color: #63666a;
 }
-/* line 181, ../sass/profile.scss */
+/* line 178, ../sass/profile.scss */
 .page-user .row.second .section-container.auto > section:first-child > .title a {
   border-left: 1px solid #cecece;
 }
-/* line 186, ../sass/profile.scss */
+/* line 183, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture {
   border: none;
   padding: 0px;
   clear: left;
 }
-/* line 191, ../sass/profile.scss */
+/* line 188, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture legend {
   margin-bottom: 10px;
 }
-/* line 194, ../sass/profile.scss */
+/* line 191, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture .fieldset-legend {
   color: #101010;
   font-size: 14px;
@@ -197,7 +193,7 @@ h2.name .field {
   padding-top: 25px;
   position: relative;
 }
-/* line 201, ../sass/profile.scss */
+/* line 198, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture .user-picture {
   display: inline-block;
   float: left;
@@ -205,32 +201,32 @@ h2.name .field {
   border-radius: 5px;
   overflow: hidden;
 }
-/* line 208, ../sass/profile.scss */
+/* line 205, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture .user-picture img {
   width: 100%;
 }
-/* line 213, ../sass/profile.scss */
+/* line 210, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture .form-item-files-picture-upload {
   display: inline-block;
   width: 300px;
   margin-left: 20px;
 }
-/* line 219, ../sass/profile.scss */
+/* line 216, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture .form-item-files-picture-upload label,
 .page-user .row.second #account #edit-picture .form-item-files-picture-upload div.description {
   display: none;
 }
-/* line 223, ../sass/profile.scss */
+/* line 220, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture .form-item-picture-delete {
   display: none;
   margin-top: 130px;
   margin-left: 20px;
 }
-/* line 229, ../sass/profile.scss */
+/* line 226, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture #upload-cover {
   display: none;
 }
-/* line 233, ../sass/profile.scss */
+/* line 230, ../sass/profile.scss */
 .page-user .row.second #account #edit-picture .remove-picture {
   background: #e2e2e2;
   border: 1px #646464 solid;
@@ -259,7 +255,7 @@ h2.name .field {
   color: white;
   text-shadow: 0px -1px 0px black, 0px 1px 0px rgba(255, 255, 255, 0);
 }
-/* line 245, ../sass/profile.scss */
+/* line 242, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text,
 .page-user .row.second #account #edit-account {
   display: inline-block;
@@ -269,34 +265,34 @@ h2.name .field {
   margin-right: 30px;
   margin-bottom: 20px;
 }
-/* line 252, ../sass/profile.scss */
+/* line 249, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text.field-widget-ldap-user-hidden,
 .page-user .row.second #account #edit-account.field-widget-ldap-user-hidden {
   display: none;
 }
-/* line 257, ../sass/profile.scss */
+/* line 254, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text .form-disabled input,
 .page-user .row.second #account #edit-account .form-disabled input {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
-/* line 261, ../sass/profile.scss */
+/* line 258, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text .form-disabled .form-required,
 .page-user .row.second #account #edit-account .form-disabled .form-required {
   display: none;
 }
-/* line 268, ../sass/profile.scss */
+/* line 265, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-first-name .description {
   width: 500px;
   position: relative;
 }
-/* line 273, ../sass/profile.scss */
+/* line 270, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position {
   display: inline-block;
   width: 47%;
   /*margin-left: 33%;*/
 }
-/* line 277, ../sass/profile.scss */
+/* line 274, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position select {
   height: 35px;
   width: 100%;
@@ -305,11 +301,11 @@ h2.name .field {
   font-size: 16px;
   padding: 6px 5px 5px;
 }
-/* line 285, ../sass/profile.scss */
+/* line 282, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position .chzn-container-single {
   width: 47% !important;
 }
-/* line 287, ../sass/profile.scss */
+/* line 284, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position .chzn-container-single a {
   border: 1px #808080 solid;
   border-radius: 5px;
@@ -317,73 +313,73 @@ h2.name .field {
   height: 50px;
   font-size: 20px;
 }
-/* line 293, ../sass/profile.scss */
+/* line 290, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position .chzn-container-single a span {
   padding: 10px;
   margin-right: 45px;
 }
-/* line 297, ../sass/profile.scss */
+/* line 294, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position .chzn-container-single a div {
   width: 50px;
 }
-/* line 299, ../sass/profile.scss */
+/* line 296, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position .chzn-container-single a div b {
   background: url("../../../../sites/all/themes/SBAC/images/arrow-down-large.png") no-repeat;
 }
-/* line 305, ../sass/profile.scss */
+/* line 302, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position .form-item .error {
   border: 2px solid red;
 }
-/* line 310, ../sass/profile.scss */
+/* line 307, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-last-name {
   margin-right: 0px;
 }
-/* line 313, ../sass/profile.scss */
+/* line 310, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text-long {
   clear: both;
   padding-top: 1px;
 }
-/* line 316, ../sass/profile.scss */
+/* line 313, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text-long textarea.error {
   border: 2px solid red;
 }
-/* line 320, ../sass/profile.scss */
+/* line 317, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-retired {
   display: inline-block;
   width: 47%;
 }
-/* line 323, ../sass/profile.scss */
+/* line 320, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-retired label {
   display: none;
 }
-/* line 327, ../sass/profile.scss */
+/* line 324, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-retired .form-type-checkbox label {
   display: inline-block;
   color: #5a5a5a;
   font-size: 14px;
 }
-/* line 336, ../sass/profile.scss */
+/* line 333, ../sass/profile.scss */
 .page-user .row.second #account .form-item-roles,
 .page-user .row.second #account fieldset#edit-timezone {
   display: none;
 }
-/* line 340, ../sass/profile.scss */
+/* line 337, ../sass/profile.scss */
 .page-user .row.second #account .form-item label {
   color: #101010;
   font-size: 14px;
   font-weight: bold;
   position: relative;
 }
-/* line 346, ../sass/profile.scss */
+/* line 343, ../sass/profile.scss */
 .page-user .row.second #account .form-item .error {
   border: 2px solid red;
 }
-/* line 350, ../sass/profile.scss */
+/* line 347, ../sass/profile.scss */
 .page-user .row.second #account .form-item-field-last-name-und-0-value label {
   height: 35px;
   font-size: 0px;
 }
-/* line 355, ../sass/profile.scss */
+/* line 352, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text input[type="text"],
 .page-user .row.second #account #edit-account input[type="text"] {
   /*border: 1px #808080 solid;
@@ -393,16 +389,16 @@ h2.name .field {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-/* line 364, ../sass/profile.scss */
+/* line 361, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text input.error,
 .page-user .row.second #account #edit-account input.error {
   border: 2px solid red;
 }
-/* line 368, ../sass/profile.scss */
+/* line 365, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text-long .form-textarea-wrapper {
   clear: both;
 }
-/* line 371, ../sass/profile.scss */
+/* line 368, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text-long textarea {
   /*border: 1px #b8b8b8 solid;
           border-radius: 5px;
@@ -412,7 +408,7 @@ h2.name .field {
   font-size: 16px;
   margin-bottom: 10px;
 }
-/* line 381, ../sass/profile.scss */
+/* line 378, ../sass/profile.scss */
 .page-user .row.second #account #edit-actions {
   text-align: right;
   float: right;
@@ -420,7 +416,7 @@ h2.name .field {
   padding-top: 20px;
   width: 67%;
 }
-/* line 388, ../sass/profile.scss */
+/* line 385, ../sass/profile.scss */
 .page-user .row.second #account .counter {
   position: absolute;
   right: 5px;
@@ -428,21 +424,21 @@ h2.name .field {
   margin: 0;
   font-size: 12px;
 }
-/* line 395, ../sass/profile.scss */
+/* line 392, ../sass/profile.scss */
 .page-user .row.second #account .counter.warning {
   border: none;
   background: none;
 }
-/* line 400, ../sass/profile.scss */
+/* line 397, ../sass/profile.scss */
 .page-user .row.second #account .description {
   display: inline-block;
 }
-/* line 403, ../sass/profile.scss */
+/* line 400, ../sass/profile.scss */
 .page-user .row.second #account .remaining {
   font-size: 14px;
   padding-left: 5px;
 }
-/* line 407, ../sass/profile.scss */
+/* line 404, ../sass/profile.scss */
 .page-user .row.second #account select {
   border: 1px #CECECE solid;
   /* border-radius: 5px;*/
@@ -453,16 +449,16 @@ h2.name .field {
   width: 540px;
   color: #5A5A5A;
 }
-/* line 419, ../sass/profile.scss */
+/* line 416, ../sass/profile.scss */
 .page-user .row.second #account #edit-field-privacy .description {
   margin: 15px 0;
   line-height: 1.4em;
 }
-/* line 425, ../sass/profile.scss */
+/* line 422, ../sass/profile.scss */
 .page-user .row.second #account #edit-actions #edit-submit {
   cursor: pointer;
 }
-/* line 428, ../sass/profile.scss */
+/* line 425, ../sass/profile.scss */
 .page-user .row.second #account #edit-actions #edit-cancel {
   color: #7f7f7f;
   height: 40px;
@@ -480,7 +476,7 @@ h2.name .field {
   padding: 5px;
   text-shadow: 1px 1px 1px #fff;
 }
-/* line 440, ../sass/profile.scss */
+/* line 437, ../sass/profile.scss */
 .page-user .row.second #account #edit-actions #edit-cancel:hover:enabled {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #c8edf5), color-stop(25%, #95dff3), color-stop(50%, #6dd0ee), color-stop(75%, #56c2e3), color-stop(100%, #41b2d4));
   background-image: -webkit-linear-gradient(top, #c8edf5 0%, #95dff3 25%, #6dd0ee 50%, #56c2e3 75%, #41b2d4 100%);
@@ -491,106 +487,31 @@ h2.name .field {
   background-image: -moz-linear-gradient(top, #c8edf5 0%, #95dff3 25%, #6dd0ee 50%, #56c2e3 75%, #41b2d4 100%);
   border: 1px #38bfde solid;
 }
-/* line 448, ../sass/profile.scss */
+/* line 445, ../sass/profile.scss */
 .page-user .row.second #account .vertical-tabs-pane {
   padding: 0px;
 }
-/* line 452, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list {
-  margin-left: -240px;
-  width: 270px;
-  border: none;
-}
-/* line 456, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li {
-  border: none;
-  background: none;
-}
-/* line 459, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li.first a {
-  border-top: 1px #bbb solid;
-}
-/* line 462, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li.selected {
-  background: none;
-}
-/* line 465, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li a {
-  font-size: 17px;
-  color: #040404;
-  width: 250px;
-  border: 1px #bbb solid;
-  border-top: none;
-  background: #f7f7f7;
-  padding: 0.5em 0.6em;
-  text-align: left;
-  line-height: 1.6;
-}
-/* line 476, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li a span {
-  display: inline-block;
-}
-/* line 479, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li a span.form-required {
-  color: #FF0000;
-}
-/* line 484, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li a:hover {
-  outline: none;
-}
-/* line 486, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li a:hover strong {
-  text-decoration: none;
-}
-/* line 488, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li a:hover strong:after {
-  content: url(/sites/all/themes/SBAC/images/arrow-hover.png);
-}
-/* line 494, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li a strong:after {
-  content: url(/sites/all/themes/SBAC/images/arrow-gray.png);
-  display: block;
-  height: 21px;
-  width: 21px;
-  float: right;
-}
-/* line 501, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li a strong:hover {
-  text-decoration: none;
-}
-/* line 507, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li.selected strong:after {
-  content: url(/sites/all/themes/SBAC/images/arrow-blue.png);
-}
-/* line 511, ../sass/profile.scss */
-.page-user .row.second #account .vertical-tabs-list li:focus {
-  outline: none;
-}
-/* line 517, ../sass/profile.scss */
+/* line 449, ../sass/profile.scss */
 .page-user .row.second .chzn-container-multi .chzn-choices .search-field input {
   height: auto;
 }
-/* line 520, ../sass/profile.scss */
-.page-user .row.second .vertical-tabs ul.vertical-tabs-list li.selected a strong {
-  color: #18577e;
-}
 
 /*updated styles - Jan 20, 2014*/
-/* line 527, ../sass/profile.scss */
+/* line 456, ../sass/profile.scss */
 .page-user .main-container {
   background-color: #fff;
 }
-/* line 531, ../sass/profile.scss */
+/* line 460, ../sass/profile.scss */
 .page-user .section-container.auto:before {
   left: -55px;
 }
 
-/* line 537, ../sass/profile.scss */
+/* line 466, ../sass/profile.scss */
 .user-profile h2 {
   margin: 0;
   padding-bottom: 0;
 }
-/* line 542, ../sass/profile.scss */
+/* line 471, ../sass/profile.scss */
 .user-profile .profile-title {
   border: medium none;
   color: #464B54;
@@ -599,16 +520,16 @@ h2.name .field {
   margin: 0;
   padding: 10px 0 0;
 }
-/* line 551, ../sass/profile.scss */
+/* line 480, ../sass/profile.scss */
 .user-profile .profile-details {
   margin: 15px 0;
   padding: 5px 0;
 }
-/* line 553, ../sass/profile.scss */
+/* line 482, ../sass/profile.scss */
 .user-profile .profile-details .field {
   margin: 0 0 10px;
 }
-/* line 561, ../sass/profile.scss */
+/* line 490, ../sass/profile.scss */
 .user-profile .name {
   border: medium none;
   color: #04384E;
@@ -618,11 +539,11 @@ h2.name .field {
   padding: 0;
   text-transform: capitalize;
 }
-/* line 570, ../sass/profile.scss */
+/* line 499, ../sass/profile.scss */
 .user-profile .name > .field {
   font-size: 22px;
 }
-/* line 575, ../sass/profile.scss */
+/* line 504, ../sass/profile.scss */
 .user-profile .profile-school {
   border: medium none;
   color: #464B54;
@@ -631,22 +552,22 @@ h2.name .field {
   margin: 0;
   padding: 10px 0 0;
 }
-/* line 584, ../sass/profile.scss */
+/* line 513, ../sass/profile.scss */
 .user-profile .profile-email-address {
   font-size: 15px;
   text-decoration: none;
   margin-top: 9px;
 }
-/* line 589, ../sass/profile.scss */
+/* line 518, ../sass/profile.scss */
 .user-profile .profile-email-address a {
   color: #0583AC;
 }
 
-/* line 593, ../sass/profile.scss */
+/* line 522, ../sass/profile.scss */
 .row.first {
   padding: 25px 35px;
 }
-/* line 596, ../sass/profile.scss */
+/* line 525, ../sass/profile.scss */
 .row.first .user-picture {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -656,16 +577,16 @@ h2.name .field {
   text-align: center;
   overflow: hidden;
 }
-/* line 601, ../sass/profile.scss */
+/* line 530, ../sass/profile.scss */
 .row.first .user-picture img {
   width: 100%;
 }
-/* line 606, ../sass/profile.scss */
+/* line 535, ../sass/profile.scss */
 .row.first .introduction {
   margin-top: 10px;
   padding-top: 10px;
 }
-/* line 613, ../sass/profile.scss */
+/* line 542, ../sass/profile.scss */
 .row.first .profile-details span {
   background-color: #F2F2F2;
   border-radius: 2px;
@@ -676,7 +597,7 @@ h2.name .field {
   margin-top: 7px;
   padding: 0 5px;
 }
-/* line 623, ../sass/profile.scss */
+/* line 552, ../sass/profile.scss */
 .row.first .profile-details span.title {
   -moz-border-bottom-colors: none;
   -moz-border-left-colors: none;
@@ -699,7 +620,7 @@ h2.name .field {
   text-transform: uppercase;
 }
 
-/* line 648, ../sass/profile.scss */
+/* line 577, ../sass/profile.scss */
 .line {
   position: relative;
   width: 930px;
@@ -708,19 +629,21 @@ h2.name .field {
   border-bottom: 1px #ccc solid;
 }
 
-/* line 656, ../sass/profile.scss */
+/* line 585, ../sass/profile.scss */
 .page-user .section-container.auto > section .content {
   margin: 0 -55px;
   padding: 10px 50px;
 }
 
 /*overwrite from global*/
-/* line 664, ../sass/profile.scss */
-#user-profile-form .vertical-tabs ul.vertical-tabs-list {
+/* line 594, ../sass/profile.scss */
+#user-profile-form .vertical-tabs ul.vertical-tabs-list,
+#sbac-favorites-user-favorites .vertical-tabs ul.vertical-tabs-list {
   padding-left: 0;
 }
-/* line 668, ../sass/profile.scss */
-#user-profile-form .vertical-tabs ul.vertical-tabs-list li.selected a:after {
+/* line 598, ../sass/profile.scss */
+#user-profile-form .vertical-tabs ul.vertical-tabs-list li.selected a:after,
+#sbac-favorites-user-favorites .vertical-tabs ul.vertical-tabs-list li.selected a:after {
   background: none repeat scroll 0 0 #FFFFFF;
   box-shadow: none;
   content: " ";
@@ -732,8 +655,9 @@ h2.name .field {
   width: 0;
   z-index: 2;
 }
-/* line 680, ../sass/profile.scss */
-#user-profile-form .vertical-tabs ul.vertical-tabs-list li a:after {
+/* line 610, ../sass/profile.scss */
+#user-profile-form .vertical-tabs ul.vertical-tabs-list li a:after,
+#sbac-favorites-user-favorites .vertical-tabs ul.vertical-tabs-list li a:after {
   background: none repeat scroll 0 0 #FFFFFF;
   box-shadow: none;
   content: " ";
@@ -745,7 +669,83 @@ h2.name .field {
   width: 0;
   z-index: 1;
 }
-/* line 692, ../sass/profile.scss */
-#user-profile-form .vertical-tabs ul.vertical-tabs-list li.selected a {
+/* line 622, ../sass/profile.scss */
+#user-profile-form .vertical-tabs ul.vertical-tabs-list li.selected a,
+#sbac-favorites-user-favorites .vertical-tabs ul.vertical-tabs-list li.selected a {
   box-shadow: none;
+  background-color: #006082;
+  border: 1px solid #006082;
+  color: #FFFFFF;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* line 633, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs {
+  border: none;
+}
+/* line 637, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list {
+  margin-left: -240px;
+  width: 270px;
+  border: none;
+}
+/* line 641, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li {
+  border: none;
+  background: none;
+}
+/* line 644, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li.first a {
+  border-radius: 6px 6px 0 0;
+}
+/* line 647, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li.last a {
+  border-radius: 0 0 6px 6px;
+}
+/* line 650, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li.selected {
+  background: none;
+}
+/* line 653, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li.selected a strong {
+  color: #fff;
+}
+/* line 657, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li a {
+  background-color: #F7F7F7;
+  border-color: #FFFFFF #CECECE #CECECE;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 0 1px 0 0 #FFFFFF;
+  color: #464B54;
+  display: block;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 15px 20px;
+  text-shadow: 0 1px 0 #FFFFFF;
+  text-align: left;
+  width: 250px;
+}
+/* line 672, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li a span {
+  display: inline-block;
+}
+/* line 675, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li a span.form-required {
+  color: #FF0000;
+}
+/* line 680, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li a:hover {
+  outline: none;
+  background-color: #F2F2F2;
+  color: #006082;
+}
+/* line 686, ../sass/profile.scss */
+.page-user .row.second .vertical-tabs-list li:focus {
+  outline: none;
+}
+
+/* line 693, ../sass/profile.scss */
+#sbac-favorites-resource-table-drag-drop {
+  margin-top: 10px;
 }

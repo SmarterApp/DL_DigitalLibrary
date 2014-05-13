@@ -97,9 +97,6 @@ h2.name {
     
     .form-item-mail {
     }
-    .vertical-tabs {
-      border: none;
-    }
   }
 
   .section-container.auto > section.active > .content .helpful-info,
@@ -448,77 +445,9 @@ h2.name {
     .vertical-tabs-pane {
       padding: 0px;
     }
-
-    .vertical-tabs-list {
-      margin-left: -240px;
-      width: 270px;
-      border: none;
-      li {
-        border: none;
-        background: none;
-        &.first a {
-          border-top: 1px #bbb solid;
-        }
-        &.selected {
-          background: none;
-        }
-        a {
-          font-size: 17px;
-          color: #040404;
-          width: 250px;
-          border: 1px #bbb solid;
-          border-top: none;
-          background: #f7f7f7;
-					padding: 0.5em 0.6em;
-					text-align: left;
-					line-height: 1.6;
-					
-						span {
-							display: inline-block; 
-							
-					 		&.form-required {
-						    color: #FF0000;
-							}
-						}
-					
-          &:hover {
-            outline: none;
-            strong {
-              text-decoration: none;
-              &:after {
-                content: url(/sites/all/themes/SBAC/images/arrow-hover.png);
-              }
-            }
-          }
-          strong {
-            &:after {
-              content: url(/sites/all/themes/SBAC/images/arrow-gray.png);
-              display: block;
-              height: 21px;
-              width: 21px;
-              float: right;
-            }
-            &:hover {
-              text-decoration: none;
-            }
-          }
-        }
-        &.selected {
-          strong:after {
-            content: url(/sites/all/themes/SBAC/images/arrow-blue.png);
-          }
-        }
-        &:focus {
-          outline: none;
-        }
-      }
-    }
   }
   .chzn-container-multi .chzn-choices .search-field input {
     height: auto;
-  }
-  .vertical-tabs ul.vertical-tabs-list li.selected a strong {
-    color: #18577e;
   }
 }
 
@@ -659,7 +588,8 @@ h2.name {
 }
 
 /*overwrite from global*/
-#user-profile-form {
+#user-profile-form,
+#sbac-favorites-user-favorites {
 	
 	.vertical-tabs ul.vertical-tabs-list {
 		padding-left: 0;
@@ -691,12 +621,78 @@ h2.name {
 	}
 	.vertical-tabs ul.vertical-tabs-list li.selected a {
 			box-shadow: none;
+			background-color: #006082;
+		  border: 1px solid #006082;
+	    color: #FFFFFF;
+	    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 	}
 }
 
+.page-user .row.second {
+	
+  .vertical-tabs {
+     border: none;
+   }
 
+	.vertical-tabs-list {
+	  margin-left: -240px;
+	  width: 270px;
+	  border: none;
+	  li {
+	    border: none;
+	    background: none;
+	    &.first a {
+	      border-radius: 6px 6px 0 0;
+	    }
+			&.last a  {
+	      border-radius: 0 0 6px 6px;
+	    }
+	    &.selected {
+	      background: none;
+	
+				a strong {
+			    color: #fff;
+			  }
+	    }
+	    a {
+	      background-color: #F7F7F7;
+			  border-color: #FFFFFF #CECECE #CECECE;
+		    border-style: solid;
+		    border-width: 1px;
+		    box-shadow: 0 1px 0 0 #FFFFFF;
+		    color: #464B54;
+		    display: block;
+		    font-size: 15px;
+		    font-weight: bold;
+		    padding: 15px 20px;
+		    text-shadow: 0 1px 0 #FFFFFF;
+				text-align: left;
+				width: 250px;
+			
+				span {
+					display: inline-block; 
+			
+			 		&.form-required {
+				    color: #FF0000;
+					}
+				}
+			
+	      &:hover {
+	        outline: none;
+	        background-color: #F2F2F2;
+					color: #006082;
+	      }
+	    }
+	    &:focus {
+	      outline: none;
+	    }
+	  }
+	}
+}
 
-
+#sbac-favorites-resource-table-drag-drop {
+	margin-top: 10px;
+}
 
 
 
