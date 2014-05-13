@@ -94,7 +94,7 @@ function sbac_forum_listing_apply_sorts(&$view, $current_sorting, $default_sort)
       case 'forum-newest':
         $sort_field_key = 'field_forum_created_value';
         break;
-      case 'forum-most-members' :
+      case 'forum-most-participants':
         $sort_field_key = 'field_forum_member_count_value';
         break;
     }
