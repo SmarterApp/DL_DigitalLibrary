@@ -102,7 +102,7 @@ function sbac_help_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 8,
+      'weight' => 10,
     ),
   );
 
@@ -148,6 +148,51 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
       ),
       'type' => 'options_buttons',
       'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'node-help_page-field_help_user_roles'
+  $field_instances['node-help_page-field_help_user_roles'] = array(
+    'bundle' => 'help_page',
+    'default_value' => array(
+      0 => array(
+        'tid' => 60402,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_help_user_roles',
+    'label' => 'User Roles',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 1,
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 9,
     ),
   );
 
@@ -197,6 +242,7 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
   t('Help Page Topic');
   t('Provides a summary on what this help topic is about.');
   t('Summary');
+  t('User Roles');
 
   return $field_instances;
 }
