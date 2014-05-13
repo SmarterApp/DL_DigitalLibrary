@@ -30,7 +30,7 @@ class Reviews extends Base {
       $collab_markup .=   '</div>';
       $collab_markup .=   '<div class="review-participants">';
       $collab_markup .=     '<span class="review-num-participants">' . $num_participants . '</span>' . ' ';
-      $collab_markup .=     ($num_participants == 1 ? 'participant' : 'participants');
+      $collab_markup .=     '<span class="participants">'. ($num_participants == 1 ? 'participant' : 'participants') . '<span>';
       $collab_markup .=   '</div>';
       $collab_markup .= '</div>';
 

@@ -450,7 +450,6 @@ html.js {
 				border: 1px solid #CECECE;
 				border-top: 1px solid #fff;
 				padding: 20px 40px 20px 20px;
-				/*cursor: pointer !important;*/
 			}
 			&:hover strong {
 				text-decoration: none;
@@ -468,8 +467,6 @@ html.js {
 			    z-index: 1;
 			}
 			&:focus {
-				/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */
-				/*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
 				@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 			}
 		}
@@ -480,12 +477,16 @@ html.js {
 		    font-weight: normal;
 		    padding-top: 6px;
 		}
+		
+		a span.form-required {
+			display: inline-block;
+			color: #FF0000;
+		}
 	}
 
 	li.selected {
 		a {
 			background: none repeat scroll 0 0 #FFFFFF;
-			/*border: 1px solid #CECECE;*/
 	    box-shadow: 0 1px 4px 0 rgba(0, 95, 130, 0.5);
 	    color: #464B54;
 	    position: relative;
@@ -503,8 +504,6 @@ html.js {
 		    z-index: 2;
 		}
 		&:focus {
-			/*background-color:#BFD8E5; border: 2px solid #BFD8E5; */
-			/*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
 			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 		}
 	}
@@ -3367,7 +3366,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 }
 
 /* ---------------------------------------------------------------------
-    SBAC Resource Access Denied page
+    SBAC Resource Access Denied page 
 ------------------------------------------------------------------------ */
 .sbac-resource-access-denied {
 	.top-bar.last-top {
@@ -3458,8 +3457,41 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	}
 }
 
-
-
+/* ---------------------------------------------------------------------
+    Create Help Page
+------------------------------------------------------------------------ */
+.page-node-add-help-page {
+	.description {
+		line-height: 1.4;
+	}
+	
+	.form-textarea-wrapper textarea {
+		max-width: none;
+	}
+	
+	#body-add-more-wrapper {
+		.filter-wrapper {
+			padding-top: 5px;
+		}
+	}
+	
+	.image-widget-data {
+		width: 100%;
+		
+		input, button {
+			display: inline-block;
+		}
+		
+		input {
+			width: 50%;
+			margin-right: 20px;
+		}
+	}
+	
+	#edit-actions {
+		float: right;
+	}
+}
 
 
 

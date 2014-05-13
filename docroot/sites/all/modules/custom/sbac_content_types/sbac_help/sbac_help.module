@@ -184,6 +184,7 @@ function sbac_help_get_node_content() {
  */
 function sbac_help_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'help_page_node_form') {
+    unset($form['field_help_permissions']);
     $form['actions']['submit']['#submit'][] = 'sbac_help_remove_previous_resource_tutorial';
   }
 }
@@ -272,4 +273,64 @@ function sbac_help_delete_draggableviews_weights(&$form, &$form_state) {
     ->condition('view_name', 'help_topics')
     ->condition('view_display', 'page_2')
     ->execute();
+}
+
+/**
+ * Implements hook_query_alter().
+ * Only displays help topics associated to user roles.
+ * @param  QueryAlterableInterface $query A Query object describing the composite parts of a SQL query.
+ */
+function sbac_help_query_alter(&$query) {
+  if ($query->hasTag('views_help_topics')) {
+    global $user;
+    $roles = $user->roles;
+
+    $can_view_all = array(
+      'DLRB member',
+      'digital library administrator',
+      'system administrator',
+    );
+
+    // Do not alter view if user is allowed to view all or site admin.
+    if ($user->uid == 1 || array_intersect($roles, $can_view_all)) {
+      return;
+    }
+
+    $user_roles = array();
+
+    // Add 'All User Roles'
+    $all_roles = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+    $all_roles = array_pop($all_roles);
+    if ($all_roles) {
+      $user_roles[] = $all_roles->tid;
+    }
+
+    foreach($roles as $rid => $role) {
+      $term = taxonomy_get_term_by_name($role, 'sbac_user_roles');
+      $term = array_pop($term);
+      $user_roles[] = $term->tid;
+    }
+
+    $query->innerJoin('field_data_field_help_user_roles',
+                      'sur',
+                      'node.nid = sur.entity_id');
+    $query->condition('sur.field_help_user_roles_tid', $user_roles, 'IN');
+    $query->groupBy('node.nid');
+  }
+}
+
+/**
+ * Implements hook_post_features_revert().
+ * @param  String   $component String name of the component that has just been reverted.
+ */
+function sbac_help_post_features_revert($component) {
+  if ($component == 'field_instance') {
+    $instance_info = field_info_instance('node', 'field_help_user_roles', 'help_page');
+    if (isset($instance_info['default_value'][0]['tid'])) {
+      $term = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+      $term = array_pop($term);
+      $instance_info['default_value'][0]['tid'] = $term->tid;
+      field_update_instance($instance_info);
+    }
+  }
 }

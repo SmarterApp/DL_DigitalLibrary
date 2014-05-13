@@ -2038,6 +2038,36 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 /*Modal for flag*/
 form[id*='sbac-flag-collaboration-form']{
+	
+	padding-top: 10px;
+	
+	div[id*="edit-flag-options"] {
+			
+		.form-item-flag-options {
+			clear: both;
+			margin-bottom: 10px;
+			
+			input {
+				display: table-cell;
+				float: left;
+				margin-right: 5px;
+			}
+			
+			> label {
+				display: table-cell;
+				line-height: 1.4;
+				padding-top: 3px;
+			}
+		}
+	}
+	
+	#sbac-flag-optional-comment {
+		margin-top: 5px;
+		
+		textarea[id*="edit-comment"] {
+			margin-top: 2px;
+		}
+	}
 	#form-item-footer {
 		
 		margin-top: 15px;
