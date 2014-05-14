@@ -39,7 +39,9 @@
       redirect_to_login = setTimeout(Drupal.behaviors.sbac_sso_session_expire.redirectToLogin, php_session_lifetime);
     },
     displayModal: function() {
-      $('#sbac-sso-session-expire').click();
+      if (!$('#sbac-sso-session-expire-form').length) {
+        $('#sbac-sso-session-expire').click();
+      }
     },
     // redirect the user to the main page.
     redirectToLogin: function() {
@@ -48,7 +50,7 @@
         data: {'ajax' : true},
         success: function (data) {
           var response = jQuery.parseJSON(data);
-          window.location(response.url);
+          window.location.href = response.url;
         }
       });
     }
