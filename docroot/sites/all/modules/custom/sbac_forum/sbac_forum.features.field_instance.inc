@@ -776,42 +776,6 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_alignment_term'
-  $field_instances['taxonomy_term-forum-field_alignment_term'] = array(
-    'bundle' => 'forum',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 19,
-      ),
-    ),
-    'entity_type' => 'taxonomy_term',
-    'field_name' => 'field_alignment_term',
-    'label' => 'Common Core Standard(s)',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'label_help_description' => '',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 12,
-    ),
-  );
-
   // Exported field_instance: 'taxonomy_term-forum-field_attributes'
   $field_instances['taxonomy_term-forum-field_attributes'] = array(
     'bundle' => 'forum',
@@ -829,7 +793,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_attributes',
-    'label' => 'Attributes',
+    'label' => 'Attributes of the Formative Assessment Process',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -838,11 +802,12 @@ function sbac_forum_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
+        'apply_chosen' => 0,
         'label_help_description' => '',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
-      'type' => 'options_buttons',
-      'weight' => 11,
+      'type' => 'options_select',
+      'weight' => 7,
     ),
   );
 
@@ -1371,7 +1336,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_geographical_settings',
-    'label' => 'Geographical Setting(s)',
+    'label' => 'Geographic Settings',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1385,7 +1350,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 10,
+      'weight' => 11,
     ),
   );
 
@@ -1406,7 +1371,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_grades',
-    'label' => 'Grade(s)',
+    'label' => 'Grades',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1420,7 +1385,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 
@@ -1441,7 +1406,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_intended_end_user',
-    'label' => 'Intended Forum Participants',
+    'label' => 'Intended Participants',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1455,7 +1420,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 7,
+      'weight' => 10,
     ),
   );
 
@@ -1476,7 +1441,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_intended_student',
-    'label' => 'Intended Student Population(s)',
+    'label' => 'Student Populations',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1490,7 +1455,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 9,
+      'weight' => 8,
     ),
   );
 
@@ -1565,9 +1530,8 @@ function sbac_forum_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Attributes');
+  t('Attributes of the Formative Assessment Process');
   t('Comment');
-  t('Common Core Standard(s)');
   t('Created');
   t('Date Joined');
   t('Date Removed');
@@ -1576,10 +1540,9 @@ function sbac_forum_field_default_field_instances() {
   t('Files');
   t('Forum');
   t('Forum resource ref');
-  t('Geographical Setting(s)');
-  t('Grade(s)');
-  t('Intended Forum Participants');
-  t('Intended Student Population(s)');
+  t('Geographic Settings');
+  t('Grades');
+  t('Intended Participants');
   t('Last Activity');
   t('Links');
   t('Member');
@@ -1596,6 +1559,7 @@ function sbac_forum_field_default_field_instances() {
   t('Role');
   t('State');
   t('States');
+  t('Student Populations');
   t('Subjects and Domains');
   t('Topic Comment Files');
   t('Topic Comment Links');

@@ -1234,6 +1234,27 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			}
 		}
 
+		/*begin no resource block*/
+		.no-resource {
+			.col.narrow {
+				margin-top: 0;
+			}
+			
+			.col.wide {
+
+				.sbac-favorites-link {
+					float: right;
+					margin: -15px 0 10px;
+				}
+				
+				.vp-students-field.read-more {
+					width: 100%;
+				}
+			}
+		}
+		/*end no resource block*/
+		
+		
 		.col + .col {
 		   margin-left: 40px;
 		}

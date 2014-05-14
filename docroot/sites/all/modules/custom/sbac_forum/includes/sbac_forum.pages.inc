@@ -24,35 +24,6 @@ function sbac_forum_main_landing_page() {
   }
   // Get correct set of category filters based on subnav.
   switch($active_tab) { // Get correct current filter.
-    case SBAC_FORUM_SUBNAV_ALL:
-      $active_display = 'block';
-      $passive_display = 'block_1';
-      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
-        $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
-      }
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
-        $passive_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
-      }
-      if (isset($_SESSION[SBAC_FORUM_ALL_FORUM_SORTS]) &&
-          $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] != '') {
-        $current_sorts = $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS];
-      }
-      break;
-    case SBAC_FORUM_SUBNAV_OWN:
-      $active_display = 'block_1';
-      $passive_display = 'block';
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
-        $current_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
-      }
-      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
-        $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
-      }
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_SORTS]) &&
-          $_SESSION[SBAC_FORUM_MY_FORUM_SORTS] != '') {
-        $current_sorts = $_SESSION[SBAC_FORUM_MY_FORUM_SORTS];
-        $default_sort = 'forum-recent-activity';
-      }
-      break;
     case SBAC_FORUM_SUBNAV_RESOURCE:
       $active_display = 'block_2';
       $passive_display = 'block_3';

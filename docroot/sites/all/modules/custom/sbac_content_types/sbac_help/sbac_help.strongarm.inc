@@ -93,7 +93,7 @@ function sbac_help_strongarm() {
           'weight' => '4',
         ),
         'path' => array(
-          'weight' => '9',
+          'weight' => '11',
         ),
       ),
       'display' => array(),
