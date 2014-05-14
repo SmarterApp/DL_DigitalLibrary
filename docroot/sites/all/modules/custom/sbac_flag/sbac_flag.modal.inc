@@ -1133,7 +1133,7 @@ function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
   $form['header'] = array(
     '#type'   => 'item',
     // '#markup' => '<h2>Flag a Post</h2>',
-    '#prefix' => '<div class="form-item-title">',
+    '#prefix' => '<div class="form-flag-content"><div class="form-item-title">',
     '#suffix' => '</div>',
   );
 
@@ -1166,7 +1166,7 @@ function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
     '#type' => 'item',
     '#markup' => 'Flagged reviews and users are reviewed by the Smarter Balanced Assesment Consortium to determine whether they violate the terms of service. Violations can lead to account termination.',
     '#prefix' => '<div id="form-item-footer">',
-    '#suffix' => '</div>',
+    '#suffix' => '</div></div>',
   );
 
   $form['submit'] = array(
