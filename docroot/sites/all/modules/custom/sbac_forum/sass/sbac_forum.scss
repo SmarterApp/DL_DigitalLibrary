@@ -2157,8 +2157,8 @@ form[id*='sbac-flag-collaboration-form']{
 		z-index: 4;
 		height: 69px;
 		
-		button {float: right;#flag-edit-cancel{
-			margin-right: 15px;
+		button {
+			float: right;
 		}
 
 		#flag-edit-cancel:before {
@@ -2174,10 +2174,17 @@ form[id*='sbac-flag-collaboration-form']{
 
 		.flag-resource-submit:before {
 			content: '';
-		}}
+		}
 		
-		#flag-edit-cancel{
+		#flag-edit-cancel {
 			margin-right: 30px;
+		}
+		
+		button#flag-edit-cancel:hover,
+		button#flag-edit-cancel:focus, 
+		button#flag-edit-cancel:active {
+			background-color:#6E7379 !important;
+		  background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%) !important;
 		}
 
 		#flag-edit-cancel:before {
