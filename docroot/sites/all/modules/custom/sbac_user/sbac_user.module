@@ -1056,10 +1056,18 @@ function sbac_user_user_profile_default_tab_submit($form, &$form_state) {
  * Implements hook_menu_alter
  */
 function sbac_user_menu_alter(&$items) {
-  $items['legal']['title'] = 'Terms of Service';
-  $items['legal_accept/%/%']['title'] = 'Terms of Service';
-  $items['user/password']['title'] = 'Password Reset or Account Activation';
-  $items['user/password']['access callback'] = FALSE;
+  if (isset($items['legal']['title'])) {
+    $items['legal']['title'] = 'Terms of Service';
+  }
+  if (isset($items['legal_accept/%/%']['title'])) {
+    $items['legal_accept/%/%']['title'] = 'Terms of Service';
+  }
+  if (isset($items['user/password']['title'])) {
+    $items['user/password']['title'] = 'Password Reset or Account Activation';
+  }
+  if (isset($items['user/password']['access callback'])) {
+    $items['user/password']['access callback'] = FALSE;
+  }
 }
 
 /*
