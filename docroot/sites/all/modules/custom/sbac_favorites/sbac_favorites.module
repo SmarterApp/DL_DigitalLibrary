@@ -358,8 +358,8 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     $form['tab_container']['resource_tab']['buttons']['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel'),
-      '#attributes' => array('id' => 'sbac-favorites-resource-cancel'),
-      '#name'=> 'sbac-favorites-resource-cancel'
+      '#attributes' => array('id' => 'sbac-favorites-resource-cancel', 'class' => array('gray')),
+      '#name' => 'sbac-favorites-resource-cancel'
     );
   }
   // Forum Tab
@@ -409,7 +409,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     $form['tab_container']['forum_tab']['buttons']['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel'),
-      '#attributes' => array('id' => 'sbac-favorites-forum-cancel'),
+      '#attributes' => array('id' => 'sbac-favorites-forum-cancel', 'class' => array('gray')),
       '#name' => 'sbac-favorites-forum-cancel'
     );
   }
@@ -536,7 +536,8 @@ function theme_sbac_favorites_resource_tabledrag($vars) {
     ));
     $output .= drupal_render_children($form);
     drupal_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
-  } else {
+  }
+  else {
     $output = theme('sbac_favorites_no_favorites_resource');
   }
   return $output;
