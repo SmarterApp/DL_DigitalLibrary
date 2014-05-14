@@ -353,8 +353,11 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
 
   $facilitator_text = '';
   $member_text = '';
+  $faci_field = array();
 
-  $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
+  if (isset($row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE])) {
+    $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
+  }
   $is_faci = FALSE;
 
   if (!empty($faci_field)) {
