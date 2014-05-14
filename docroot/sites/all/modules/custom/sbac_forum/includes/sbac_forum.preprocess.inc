@@ -255,6 +255,8 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
     $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
   }
 
+  $vars['content']['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
+
   if ($is_comment_author) {
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
       $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
@@ -276,7 +278,6 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         )
       ));
     }
-    $vars['content']['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
 
     // Flag link
     $link_ops = array(
