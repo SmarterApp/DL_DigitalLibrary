@@ -1232,7 +1232,7 @@ function sbac_flag_collaboration_form_validate(&$form, &$form_state) {
   }
   if ($error = drupal_get_messages('error', TRUE)) {
     $error = array_pop($error);
-    $form['error']['#markup'] = array_pop($error);
+    $form['error']['#markup'] = '<div class="sbac-flag-error-msg">' . array_pop($error) . '</div>';
   }
 }
 
