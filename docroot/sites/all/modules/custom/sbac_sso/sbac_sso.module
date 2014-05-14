@@ -334,7 +334,7 @@ function sbac_sso_logout() {
     exit;
   }
   else {
-l;    drupal_custom_goto($url);
+    drupal_custom_goto($url);
   }
 }
 

@@ -29,12 +29,12 @@
       if (redirect_to_login != null) {
         clearTimeout(redirect_to_login);
       }
-      // 600 seconds = 10 minutes, warn at 5 mins.
-      var php_cookie_lifetime = 30;
+      // 300 seconds = 5 minutes, warn at 200 seconds
+      var php_cookie_lifetime = 300;
       // - 5 minutes to give the user time to make a decision.
-      var session_lifetime = (php_cookie_lifetime - 10) * 1000;
+      var session_lifetime = (php_cookie_lifetime - 100) * 1000;
       // minus 10 seconds to the session life time to give the system time to kick the user out completely.
-      var php_session_lifetime = php_cookie_lifetime * 1000 - 6;
+      var php_session_lifetime = php_cookie_lifetime * 1000 - 10;
       display_modal_timer = setInterval(Drupal.behaviors.sbac_sso_session_expire.displayModal, session_lifetime);
       redirect_to_login = setTimeout(Drupal.behaviors.sbac_sso_session_expire.redirectToLogin, php_session_lifetime);
     },
