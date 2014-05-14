@@ -1286,6 +1286,18 @@ function sbac_resource_node_load($nodes, $types) {
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
+      // Grab the alignemnt terms.
+      $sql  = 'SELECT r.*, a.field_education_alignment_tid ';
+      $sql .= 'FROM field_data_field_resource_reference r ';
+      $sql .= 'JOIN field_data_field_education_alignment a ON r.entity_id = a.entity_id ';
+      $sql .= 'WHERE field_resource_reference_target_id = :nid';
+      $result = db_query($sql, array(':nid' => $node->nid));
+      $terms = array();
+      foreach ($result as $row) {
+        $terms[]['tid'] = $row->field_education_alignment_tid;
+      }
+      $node->field_alignment_term = $terms;
+
       //make sure we are only viewing through the content/* path
       global $user;
       //update the raw data table
