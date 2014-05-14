@@ -310,6 +310,11 @@ function sbac_sso_consume() {
  * Custom logout callback.
  */
 function sbac_sso_logout() {
+  $ajax = FALSE;
+  if (isset($_POST['ajax'])) {
+    $ajax = TRUE;
+  }
+
   // Destroy the current session, and reset $user to the anonymous user.
   global $user;
   watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
@@ -322,7 +327,15 @@ function sbac_sso_logout() {
   // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
   $saml_assertion = sbac_sso_saml_assertion();
   $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($base_url);
-  drupal_custom_goto($url);
+  if ($ajax) {
+    $output = array();
+    $output['url'] = $url;
+    print drupal_json_encode($output);
+    exit;
+  }
+  else {
+    drupal_custom_goto($url);
+  }
 }
 
 /**

@@ -45,6 +45,11 @@
     redirectToLogin: function() {
       ajax_request = $.ajax({
         url: "/sbac-sso-logout",
+        data: {'ajax' : true},
+        success: function (data) {
+          var response = jQuery.parseJSON(data);
+          window.location(response.url);
+        }
       });
     }
   };
