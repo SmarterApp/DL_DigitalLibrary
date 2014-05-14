@@ -204,7 +204,14 @@ function sbac_sso_session_regenerate() {
  * @param $vars
  */
 function sbac_sso_preprocess_page(&$vars) {
-  if (user_is_logged_in() && arg(0) != 'admin') {
+  if (user_is_logged_in() && strpos($_GET['q'], 'ajax') === FALSE) {
+    sbac_sso_session_regenerate();
+  }
+
+  if (isset($_GET['flag']) && ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
+    return;
+  }
+  elseif (user_is_logged_in() && arg(0) != 'admin') {
     ctools_include('modal');
     ctools_include('ajax');
     ctools_add_js('ajax-responder');
@@ -218,7 +225,7 @@ function sbac_sso_preprocess_page(&$vars) {
         'id' => 'sbac-sso-session-expire'
       ),
     ));
-    $js_settings = array('sbac-sso-session-expire' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 160), 'modalTheme' => 'CtoolSbacSSOExpire'));
+    $js_settings = array('sbac-sso-session-expire' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260), 'modalTheme' => 'CtoolSbacSSOExpire'));
     drupal_add_js($js_settings, 'setting');
     $vars['session_expire'] = $session_button;
   }
@@ -266,7 +273,7 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
-  // $saml_token = sbac_sso_get_saml_token2();
+//  $saml_token = sbac_sso_get_saml_token2();
   $saml_token = FALSE;
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = urldecode(base64_decode($_POST['SAMLResponse']));
@@ -733,7 +740,8 @@ function sbac_sso_create_user_record($response, $user_attributes) {
   if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
     $edit['field_state']['und'][0]['tid'] = $user_attributes['state_id'];
   }
-  $edit['roles'] = array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID);
+  $role_id = user_role_load_by_name('basic end user');
+  $edit['roles'] = array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID, $role_id => $role_id);
   $edit['field_district']['und'][0]['value'] = $user_attributes['district'];
   $edit['field_institution']['und'][0]['value'] = $user_attributes['institution'];
   $edit['field_sso_uuid']['und'][0]['value'] = $user_attributes['role_id'];

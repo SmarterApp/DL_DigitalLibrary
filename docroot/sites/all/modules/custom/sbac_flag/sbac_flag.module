@@ -144,18 +144,6 @@ function sbac_flag_moderation_access() {
 }
 
 /**
- * Implements hook_init().
- *
- * If the url is not the session expire, regenerate the users
- * cookie expiry so that it behaves like a true session should.
- */
-function sbac_flag_init() {
-  if (user_is_logged_in() && strpos($_GET['q'], 'ajax') === FALSE) {
-    // sbac_flag_session_regenerate();
-  }
-}
-
-/**
  * Called when an anonymous user becomes authenticated or vice-versa.
  *
  * Pretty much a carbon copy of drupal's own session_regenerate. Except,
