@@ -703,14 +703,18 @@ h2.name {
 	button {
 		float: right;
 		margin-left: 20px;
-	}
-	
-	#sbac-favorites-resource-submit {
 		padding-left: 40px;
 	}
 	
 	#sbac-favorites-resource-submit:before {
 	  content: url("../images/icon-buttonAccept.png");
+    left: 15px;
+    position: absolute;
+    top: 4px;
+	}
+	
+	#sbac-favorites-resource-cancel:before {
+	  content: url("../images/icon-buttonCancel.png");
     left: 15px;
     position: absolute;
     top: 4px;
