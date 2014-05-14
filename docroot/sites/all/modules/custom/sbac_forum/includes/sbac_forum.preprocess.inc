@@ -107,8 +107,8 @@ function sbac_forum_preprocess_node__topic(&$vars) {
         'sbac-forum-flag-post-link' => array(
           'modalSize' => array(
             'type' => 'fixed',
-            'width' => 500,
-            'height' => 650,
+            'width' => 700,
+            'height' => 500,
           ),
         ),
       );
@@ -294,8 +294,8 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
           'modalSize' => array(
             'type' => 'fixed',
-            'width' => 500,
-            'height' => 650,
+            'width' => 700,
+            'height' => 500,
           ),
         ),
       );
@@ -338,8 +338,11 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
 
   $facilitator_text = '';
   $member_text = '';
+  $faci_field = array();
 
-  $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
+  if (isset($row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE])) {
+    $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
+  }
   $is_faci = FALSE;
 
   if (!empty($faci_field)) {

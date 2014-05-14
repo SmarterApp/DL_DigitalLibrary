@@ -748,7 +748,29 @@ h2.name .field {
   text-decoration: none;
 }
 
-/* line 697, ../sass/profile.scss */
+/*Favorites Tab*/
+/* line 698, ../sass/profile.scss */
 #sbac-favorites-resource-table-drag-drop {
   margin-top: 10px;
+}
+
+/* line 703, ../sass/profile.scss */
+#edit-tab-container-resource-tab-buttons button {
+  float: right;
+  margin-left: 20px;
+  padding-left: 40px;
+}
+/* line 709, ../sass/profile.scss */
+#edit-tab-container-resource-tab-buttons #sbac-favorites-resource-submit:before {
+  content: url("../images/icon-buttonAccept.png");
+  left: 15px;
+  position: absolute;
+  top: 4px;
+}
+/* line 716, ../sass/profile.scss */
+#edit-tab-container-resource-tab-buttons #sbac-favorites-resource-cancel:before {
+  content: url("../images/icon-buttonCancel.png");
+  left: 15px;
+  position: absolute;
+  top: 4px;
 }

@@ -942,7 +942,7 @@ function sbac_flag_resource_modal_form($form, $form_state) {
  * @param $comment
  * @param $nid
  */
-function sbac_flag_save_flag($flag, $comment, $nid, $cid) {
+function sbac_flag_save_flag($flag, $comment, $nid, $cid = NULL) {
   global $user;
   $node = node_load($nid);
 
