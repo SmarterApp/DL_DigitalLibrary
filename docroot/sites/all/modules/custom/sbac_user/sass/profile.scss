@@ -108,7 +108,7 @@ h2.name {
     box-shadow: 0 1px 4px 0 rgba(4, 56, 78, 0.3);
     color: #464B54;
     margin-top: 15px;
-    padding: 10px 20px 15px;
+    padding: 10px 20px 15px !important;
     position: relative;
 		
 		h2 {
@@ -116,6 +116,7 @@ h2.name {
 		  font-weight: bold;
 	    padding-top: 0;
 			font-size: 18px;
+			margin-bottom: 10px;
 		}
 		
 		p {
@@ -442,9 +443,6 @@ h2.name {
         }
       }
     }
-    .vertical-tabs-pane {
-      padding: 0px;
-    }
   }
   .chzn-container-multi .chzn-choices .search-field input {
     height: auto;
@@ -632,6 +630,10 @@ h2.name {
 	
   .vertical-tabs {
      border: none;
+
+		 fieldset.vertical-tabs-pane {
+			 padding: 0 0 0 1em;	
+		 }
    }
 
 	.vertical-tabs-list {
@@ -643,6 +645,7 @@ h2.name {
 	    background: none;
 	    &.first a {
 	      border-radius: 6px 6px 0 0;
+				border-color: #CECECE #CECECE;
 	    }
 			&.last a  {
 	      border-radius: 0 0 6px 6px;
@@ -682,9 +685,10 @@ h2.name {
 	        background-color: #F2F2F2;
 					color: #006082;
 	      }
-	    }
-	    &:focus {
-	      outline: none;
+				&:focus strong, &:active strong {
+		      outline: none;
+					text-decoration: none;
+		    }
 	    }
 	  }
 	}
