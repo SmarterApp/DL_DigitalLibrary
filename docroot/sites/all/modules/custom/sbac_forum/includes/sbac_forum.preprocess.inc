@@ -108,7 +108,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
           'modalSize' => array(
             'type' => 'fixed',
             'width' => 700,
-            'height' => 500,
+            'height' => 414,
           ),
         ),
       );
@@ -296,7 +296,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
           'modalSize' => array(
             'type' => 'fixed',
             'width' => 700,
-            'height' => 500,
+            'height' => 414,
           ),
         ),
       );

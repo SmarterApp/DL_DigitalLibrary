@@ -2062,6 +2062,23 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	#modalContent .ctools-modal-content {
 		padding: 0;
 		
+		.modal-header {
+			box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+			padding: 17px 40px 15px !important;
+			position: relative;
+			z-index: 3;
+			display: block;
+			
+			.modal-title {
+				font-size: 22px !important;
+				font-weight: bold;
+				margin: 0;
+				text-transform: capitalize;
+				padding: 0 !important;
+				color: #04384E !important;
+			}
+		}
+		
 		#modal-content {
 			padding: 0;
 		}
@@ -2070,33 +2087,18 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 form[id*='sbac-flag-collaboration-form']{
 	
-	.form-item-title {
-		width: 100%;
-		
-		#edit-header {
-			box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-			padding: 17px 40px !important;
-			position: relative;
-			z-index: 3;
-			
-			h2 {
-				font-size: 22px !important;
-				line-height: 22px;
-				height: 22px;
-				font-weight: bold;
-				margin: 0;
-				text-transform: capitalize;
-				padding: 0 !important;
-				color: #04384E !important;
-			}
-		}
+	.form-flag-content {
+		height: 300px;
+		overflow-y: scroll;
+		padding: 5px 40px 0;
+		background-color: #F2F2F2;
 	}
 	
 	label[for="edit-flag-options"] {
 		font-size: 18px;
 		color: #000;
 		padding-top: 10px;
-		margin-bottom: 5px;
+		margin-bottom: 10px;
 	}
 	
 	div[id*="edit-flag-options"] {
@@ -2135,25 +2137,56 @@ form[id*='sbac-flag-collaboration-form']{
 			line-height: 1.4;
 		}
 	}
-	
-	#flag-edit-cancel{
-		margin-right: 15px;
-	}
-	
-	#flag-edit-cancel:before {
-		content: url(../images/icon-buttonCancel.png);
-		position: absolute;
-		left: 15px;
-		top: 4px;
-	}
-	
-	.flag-resource-submit {
-		padding-right: 40px;
-	}
-	
-	.flag-resource-submit:before {
-		content: '';
-	}
+
+	.flag-button-container {
+		-moz-box-sizing: border-box;
+		border-top: 1px solid #F2F2F2;
+		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+		display: block;
+		padding: 17px 40px;
+		position: relative;
+		width: 100%;
+		z-index: 4;
+		height: 69px;
+		
+		button {float: right;#flag-edit-cancel{
+			margin-right: 15px;
+		}
+
+		#flag-edit-cancel:before {
+			content: url(../images/icon-buttonCancel.png);
+			position: absolute;
+			left: 15px;
+			top: 4px;
+		}
+
+		.flag-resource-submit {
+			padding-right: 40px;
+		}
+
+		.flag-resource-submit:before {
+			content: '';
+		}}
+		
+		#flag-edit-cancel{
+			margin-right: 30px;
+		}
+
+		#flag-edit-cancel:before {
+			content: url(../images/icon-buttonCancel.png);
+			position: absolute;
+			left: 15px;
+			top: 4px;
+		}
+
+		.flag-resource-submit {
+			padding-right: 40px;
+		}
+
+		.flag-resource-submit:before {
+			content: '';
+		}
+	}	
 }
 
 // --------------------- Add, View Topic Page ------------------------------
