@@ -2058,9 +2058,39 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 }
 
 /*Modal for flag*/
+.node-type-topic {
+	#modalContent .ctools-modal-content {
+		padding: 0;
+		
+		#modal-content {
+			padding: 0;
+		}
+	}
+}
+
 form[id*='sbac-flag-collaboration-form']{
 	
-	padding-top: 10px;
+	.form-item-title {
+		width: 100%;
+		
+		#edit-header {
+			box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+			padding: 17px 40px !important;
+			position: relative;
+			z-index: 3;
+			
+			h2 {
+				font-size: 22px !important;
+				line-height: 22px;
+				height: 22px;
+				font-weight: bold;
+				margin: 0;
+				text-transform: capitalize;
+				padding: 0 !important;
+				color: #04384E !important;
+			}
+		}
+	}
 	
 	div[id*="edit-flag-options"] {
 			

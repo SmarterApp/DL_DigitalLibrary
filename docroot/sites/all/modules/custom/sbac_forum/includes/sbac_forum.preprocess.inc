@@ -108,8 +108,8 @@ function sbac_forum_preprocess_node__topic(&$vars) {
         'sbac-forum-flag-post-link' => array(
           'modalSize' => array(
             'type' => 'fixed',
-            'width' => 500,
-            'height' => 650,
+            'width' => 700,
+            'height' => 500,
           ),
         ),
       );
@@ -310,8 +310,8 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
           'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
             'modalSize' => array(
               'type' => 'fixed',
-              'width' => 500,
-              'height' => 650,
+              'width' => 700,
+              'height' => 500,
             ),
           ),
         );
