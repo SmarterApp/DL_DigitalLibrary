@@ -204,10 +204,13 @@ function sbac_sso_session_regenerate() {
  * @param $vars
  */
 function sbac_sso_preprocess_page(&$vars) {
+  // Regenerate the user session per page.
   if (user_is_logged_in() && strpos($_GET['q'], 'ajax') === FALSE) {
     sbac_sso_session_regenerate();
   }
 
+  // If the page requested is a moderation page, do not include this timer. As there
+  // is already a timer for the moderation functionality. Look at sbac_flag module. 
   if (isset($_GET['flag']) && ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
     return;
   }
