@@ -1136,7 +1136,7 @@ function sbac_flag_collaboration_form($form, &$form_state) {//, $node, $cid = 0)
 
   $form['error'] = array(
     '#type' => 'markup',
-    '#markup' => '<div class="sbac-flag-error-msg"></div>',
+    '#markup' => '',
   );
 
   $form['comment'] = array(
