@@ -1098,7 +1098,7 @@ function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
     ),
   );
 
-  $output = ctools_modal_form_wrapper('sbac_flag_collaboration_form', $form_state, $nid, $cid);
+  $output = ctools_modal_form_wrapper('sbac_flag_collaboration_form', $form_state);
 
   if (!empty($form_state['executed'])) {
     if ($form_state['triggering_element']['#value'] == 'Cancel') {
@@ -1125,16 +1125,18 @@ function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
  * Creates form for flagging modal.
  * @param  [type]  $form       [description]
  * @param  [type]  $form_state [description]
- * @param  integer $node       [description]
- * @param  integer $cid        [description]
  * @return [type]              [description]
  */
-function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
+function sbac_flag_collaboration_form($form, &$form_state) {//, $node, $cid = 0) {
   $form['header'] = array(
     '#type'   => 'item',
-    // '#markup' => '<h2>Flag a Post</h2>',
     '#prefix' => '<div class="form-flag-content"><div class="form-item-title">',
     '#suffix' => '</div>',
+  );
+
+  $form['error'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="sbac-flag-error-msg"></div>',
   );
 
   $form['comment'] = array(
@@ -1227,6 +1229,10 @@ function sbac_flag_collaboration_form_validate(&$form, &$form_state) {
     if ($form_state['values']['comment'] == NULL) {
       form_set_error('comment', 'Please validate your reason for flagging.');
     }
+  }
+  if ($error = drupal_get_messages('error', TRUE)) {
+    $error = array_pop($error);
+    $form['error']['#markup'] = array_pop($error);
   }
 }
 
