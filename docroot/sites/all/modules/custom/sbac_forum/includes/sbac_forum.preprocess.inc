@@ -12,7 +12,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
   $id = $forum_term->tid;
   $type = 'term';
-  if(!empty($forum_term->field_forum_resource_ref)){
+  if (!empty($forum_term->field_forum_resource_ref)) {
     $id = $forum_term->field_forum_resource_ref['und'][0]['target_id'];
     $type = 'node';
   }
@@ -29,7 +29,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $has_materials = FALSE;
 
   $welcome_message = '';
-  if (isset($_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE]) ) {
+  if (isset($_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE])) {
     $welcome_message = $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE];
     $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = '';
   }
@@ -59,9 +59,9 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   }
 
   // Access Check this.
-	$can_edit = node_access('update', $vars['node']);
+  $can_edit = node_access('update', $vars['node']);
   if ($can_edit) {
-    $edit_link = '<span class="tertiary-edit-link">' . l('Edit Topic', $node_data->edit_url->value()). '</span>';
+    $edit_link = '<span class="tertiary-edit-link">' . l('Edit Topic', $node_data->edit_url->value()) . '</span>';
   }
 
   $can_delete = node_access('delete', $vars['node']);
@@ -69,10 +69,10 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $link_ops = array(
       'attributes' => array(
         'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-delete-topic-link',
-        'id'    => 'sbac-forum-delete-topic-link'
+        'id' => 'sbac-forum-delete-topic-link'
       ),
     );
-    $delete_link = 'sbac-forum/nojs/topic-delete/'.$forum_term->tid .'/' . $node_data->nid->value();
+    $delete_link = 'sbac-forum/nojs/topic-delete/' . $forum_term->tid . '/' . $node_data->nid->value();
     $delete_link = '<span class="tertiary-delete-link">' . l('Delete Topic', $delete_link, $link_ops) . '</span>';
     $js_settings = array(
       'sbac-forum-delete-topic-link' => array( // Link has to have ctools-modal- namespace class along with this id.
@@ -86,8 +86,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
   }
 
-  if (!$can_edit && !$can_delete && $is_member) {
-    $flagged = FALSE;
+  if (!$can_edit && !$can_delete) {
     $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0);
 
     if ($flagged) {
@@ -99,7 +98,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       $link_ops_flag = array(
         'attributes' => array(
           'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
-          'id'    => 'sbac-forum-flag-post-link',
+          'id' => 'sbac-forum-flag-post-link',
         ),
       );
       $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
@@ -159,34 +158,37 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   // Put everything into arrays and register in vars for tpl. ------------
 
   $parent_forum_markup = array(
-    'welcome_message'  => $welcome_message,
-    'forum_name'       => $forum_name_text,
-    'controls'         => $control_data, // Has key "markup" and "classes"
+    'welcome_message' => $welcome_message,
+    'forum_name' => $forum_name_text,
+    'controls' => $control_data, // Has key "markup" and "classes"
   );
   $vars['parent_forum_markup'] = $parent_forum_markup;
 
   $tertiary_nav = array(
-    'back'             => $back_link,
-    'delete'           => $delete_link,
-    'edit'             => $edit_link,
-    'favorite'         => sbac_favorites_get_favorite_link($user->uid, $id, $type),
-    'flag'             => $flag_link,
+    'back' => $back_link,
+    'delete' => $delete_link,
+    'edit' => $edit_link,
+    'favorite' => sbac_favorites_get_favorite_link($user->uid, $id, $type),
+    'flag' => $flag_link,
   );
   $vars['tertiary_nav'] = $tertiary_nav;
 
   $main_content = array(
-    'author_image'      => $author_image_markup,
+    'author_image' => $author_image_markup,
     'author_name_popup' => $author_info,
-    'posted'            => $posted,
-    'has_materials'     => $has_materials,
+    'posted' => $posted,
+    'has_materials' => $has_materials,
   );
   $vars['main_content'] = $main_content;
 }
 
 
 function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
+  global $user;
   $comment_entity = $vars['comment'];
   $comment_data = entity_metadata_wrapper('comment', $comment_entity);
+
+  $vars['comment_id'] = $comment_entity->cid;
 
   $new_status_message = '';
   if (isset($_SESSION[SBAC_FORUM_SHOW_NEW_COMMENT_MESSAGE])) {
@@ -200,10 +202,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   }
 
   $comment_auth_uid = $comment_entity->uid;
+  $is_comment_author = $comment_auth_uid == $user->uid;
   $user_image = sbac_forum__api__get_author_picture($comment_auth_uid, 'forum_profile_image_60x60');
   $user_name_w_hoverover = sbac_forum__api__get_authpane_hoverover($comment_auth_uid);
 
-  $posted_date = date('M jS, Y g:ia' , $comment_entity->created);
+  $posted_date = date('M jS, Y g:ia', $comment_entity->created);
 
   $depth_extra = '';
   $depth = $comment_entity->depth;
@@ -242,90 +245,71 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   $vars['posted_date'] = $posted_date;
   $vars['has_materials'] = $has_materials;
 
-  global $user;
-  $is_member = FALSE;
-  $topic_node = $vars['node'];
-  $parent_forum = $topic_node->field_topic_forum_parent[LANGUAGE_NONE][0]['tid'];
-  if (!empty($parent_forum)) {
-    $is_member = sbac_forum__api__check_user_is_forum_member($parent_forum, $user->uid);
-  }
-  $vars['is_member'] = $is_member;
+  // Remove delete link
+  unset($vars['content']['links']['comment']['#links']['comment-delete']);
 
-  if ($is_member === TRUE) {
-    if (isset($vars['content']['links']['comment']['#links']['comment-delete'])) {
-      $vars['content']['links']['comment']['#links']['comment-delete']['title'] = 'Delete';
-      $new_url = 'sbac-forum/nojs/custom/comment-delete/' . $comment_entity->cid;
-      $vars['content']['links']['comment']['#links']['comment-delete']['href'] = $new_url;
-      $del_link_class = 'sbac-forum-del-comment-link-'.$comment_entity->cid;
-      $link_ops = array(
-        'class' => 'ctools-use-modal ctools-modal-' . $del_link_class,
-        'id'    => $del_link_class,
-      );
-      $vars['content']['links']['comment']['#links']['comment-delete']['attributes'] = $link_ops;
-      // Modal requirements.
-      $js_settings = array(
-        $del_link_class => array( // Link has to have ctools-modal- namespace class along with this id.
+  // Override reply link
+  if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
+    $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
+    $new_url = 'sbac-forum/custom/comment-reply/' . $comment_entity->nid . '/' . $comment_entity->cid;
+    $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+  }
+
+  if ($is_comment_author) {
+    if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
+      $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
+    }
+  }
+  else {
+    // Remove edit link
+    unset($vars['content']['links']['comment']['#links']['comment-edit']);
+
+    // Recommend link
+    if (!sbac_forum_user_has_recommended($comment_entity->cid, $user->uid)) {
+      $vars['content']['recommend_link'] = l(t('Recommend'), current_path(), array(
+        'attributes' => array(
+          'cid' => $comment_entity->cid,
+          'id' => 'sbac-recommend-' . $comment_entity->cid,
+          'class' => array(
+            'sbac-recommend-link'
+          )
+        )
+      ));
+    }
+    $vars['content']['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
+
+    // Flag link
+    $link_ops = array(
+      'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+      'id' => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+    );
+    $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid);
+    if ($flagged) {
+      $reason = taxonomy_term_load($flagged['flag_selected']);
+      $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
+      $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
+    }
+    else {
+      $js_settings_flag = array(
+        'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
           'modalSize' => array(
             'type' => 'fixed',
-            'width' => 560,
-            'height' => 230,
+            'width' => 500,
+            'height' => 650,
           ),
         ),
       );
-      drupal_add_js($js_settings, 'setting'); // Styles the modal.
-      ctools_include('ajax');
-      ctools_include('modal');
-      ctools_add_js('ajax-responder');
-      ctools_modal_add_js();
-    }
-    if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
-      $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
-      $new_url = 'sbac-forum/custom/comment-reply/'. $comment_entity->nid . '/' . $comment_entity->cid;
-      $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
-    }
-    if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
-      if ($comment_entity->uid != $user->uid) { // can only edit your own. facilitators have comment admin privs, have to hide edit link.
-        unset($vars['content']['links']['comment']['#links']['comment-edit']);
-      } else {
-        $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
-      }
-    }
-    if (!isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
-      $link_ops = array(
-        'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
-        'id'    => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
 
-      );
+      $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
 
-      $flagged = FALSE;
-      $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid);
-
-      if ($flagged) {
-        $reason = taxonomy_term_load($flagged['flag_selected']);
-        $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
-        $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
-      }
-      else {
-        $js_settings_flag = array(
-          'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
-            'modalSize' => array(
-              'type' => 'fixed',
-              'width' => 500,
-              'height' => 650,
-            ),
-          ),
-        );
-        drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
-
-        $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
-
-        $vars['content']['links']['comment']['#links']['flag_post']['href']       = $flag_link;
-        $vars['content']['links']['comment']['#links']['flag_post']['title']      = 'Flag';
-        $vars['content']['links']['comment']['#links']['flag_post']['attributes'] = $link_ops;
-      }
+      $vars['content']['links']['comment']['#links']['flag_post']['href'] = $flag_link;
+      $vars['content']['links']['comment']['#links']['flag_post']['title'] = 'Flag';
+      $vars['content']['links']['comment']['#links']['flag_post']['attributes'] = $link_ops;
     }
   }
 }
+
 /**
  * ---------- Forum list View.---------------
  */
@@ -371,17 +355,19 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
         $first_item = array_shift($faci_field);
         $first_faci_user_id = $first_item['target_id'];
         $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
-        $facilitator_text .= 'Facilitator: '. $faci_link;
-      } else { // No facilitator set
+        $facilitator_text .= 'Facilitator: ' . $faci_link;
+      }
+      else { // No facilitator set
         $facilitator_text .= 'Facilitator: None';
       }
-    } else{
+    }
+    else {
       $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
     }
     $facilitator_text .= '</div>';
   }
 
-  $vars['fields']['nothing']->content = $facilitator_text ;
+  $vars['fields']['nothing']->content = $facilitator_text;
 
   if (!empty($row_data->field_field_forum_resource_ref)) {
     $favorites = sbac_favorites_get_favorites($user->uid, $row_data->field_field_forum_resource_ref[0]['raw']['target_id']);
@@ -445,17 +431,18 @@ function sbac_forum_preprocess_views_view_fields__forum_list_empty__block(&$vars
         }
       }
       $full_name = $fn . $ln;
-      $link = 'forum-auth-pane/'. $first_faci_user_id;
+      $link = 'forum-auth-pane/' . $first_faci_user_id;
       $link_ops = array('attributes' => array('class' => 'forum-list-auth-pane-item'));
       $faci_link = l($full_name, $link, $link_ops);
-      $facilitator_text .= 'Facilitator: '. $faci_link;
-    } else{
+      $facilitator_text .= 'Facilitator: ' . $faci_link;
+    }
+    else {
       $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
     }
     $facilitator_text .= '</div>';
   }
 
-  $vars['fields']['nothing']->content = $facilitator_text ;
+  $vars['fields']['nothing']->content = $facilitator_text;
 }
 
 /**
@@ -554,48 +541,50 @@ function sbac_forum_preprocess_views_view_fields__forum_member_list(&$vars) {
   $output = '';
   $current_user = $vars['user'];
   $row_uid = $vars['row']->users_field_data_field_fc_forum_member_uid;
-  if ((in_array('facilitator', $current_user->roles) ) &&
-      ($row_uid != $current_user->uid) ) { // Only show controls for facilitator users.
+  if ((in_array('facilitator', $current_user->roles)) &&
+    ($row_uid != $current_user->uid)
+  ) { // Only show controls for facilitator users.
 
-      $args = $vars['view']->args;
-      $term_id = array_shift($args);
-      $link_dom_id = '';
-      $link_text = '';
-      $link_url = '';
+    $args = $vars['view']->args;
+    $term_id = array_shift($args);
+    $link_dom_id = '';
+    $link_text = '';
+    $link_url = '';
 
-      if ($vars['view']->current_display == 'block') { // Only add member controls for member list.
-        $link_dom_id = 'forum-remove-member-link-'. $term_id . '-' . $row_uid;
-        $link_text = t('Remove Member');
-        $link_url = 'sbac-forum/nojs/' . $term_id . '/members-edit/' . $row_uid . '/remove';
-      } elseif ($vars['view']->current_display == 'block_1') { // Add "re-add" controls to removed member list.
-        $link_dom_id = 'forum-readd-member-link-'. $term_id . '-' . $row_uid;
-        $link_text = t('Re-Add User');
-        $link_url = 'sbac-forum/nojs/' . $term_id . '/members-edit/' . $row_uid . '/restore';
-      }
+    if ($vars['view']->current_display == 'block') { // Only add member controls for member list.
+      $link_dom_id = 'forum-remove-member-link-' . $term_id . '-' . $row_uid;
+      $link_text = t('Remove Member');
+      $link_url = 'sbac-forum/nojs/' . $term_id . '/members-edit/' . $row_uid . '/remove';
+    }
+    elseif ($vars['view']->current_display == 'block_1') { // Add "re-add" controls to removed member list.
+      $link_dom_id = 'forum-readd-member-link-' . $term_id . '-' . $row_uid;
+      $link_text = t('Re-Add User');
+      $link_url = 'sbac-forum/nojs/' . $term_id . '/members-edit/' . $row_uid . '/restore';
+    }
 
-      $link_ops = array(
-        'attributes' => array(
-          'class' => 'members-control-link ctools-use-modal ctools-modal-'.$link_dom_id,
-          'id'    => $link_dom_id,
+    $link_ops = array(
+      'attributes' => array(
+        'class' => 'members-control-link ctools-use-modal ctools-modal-' . $link_dom_id,
+        'id' => $link_dom_id,
+      ),
+    );
+    $link = l($link_text, $link_url, $link_ops);
+    $output = $link;
+    $js_settings = array(
+      $link_dom_id => array( // Link has to have ctools-modal- namespace class along with this id.
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 660,
+          'height' => 320,
         ),
-      );
-      $link = l($link_text, $link_url, $link_ops);
-      $output = $link;
-      $js_settings = array(
-        $link_dom_id => array( // Link has to have ctools-modal- namespace class along with this id.
-          'modalSize' => array(
-            'type' => 'fixed',
-            'width' => 660,
-            'height' => 320,
-          ),
-        ),
-      );
-      drupal_add_js($js_settings, 'setting'); // Styles the modal.
-      // attach all modal requirements.
-      ctools_include('ajax');
-      ctools_include('modal');
-      ctools_add_js('ajax-responder');
-      ctools_modal_add_js();
+      ),
+    );
+    drupal_add_js($js_settings, 'setting'); // Styles the modal.
+    // attach all modal requirements.
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
   }
 
   $vars['sbac_forum_indv_member_controls'] = $output;
@@ -635,7 +624,6 @@ function sbac_forum_preprocess_views_view_field__forum_member_list__uid(&$vars) 
 }
 
 
-
 /**
  * =============================================================================
  *    Preprocessors for keyword search.
@@ -668,7 +656,7 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
     )
   );
   if (isset($count_values['block']) && !empty($count_values['block'])) {
-    $all_forums_count_text = ' ('.$count_values['block'].')';
+    $all_forums_count_text = ' (' . $count_values['block'] . ')';
   }
   $link_all_forums = l('All Forums' . $all_forums_count_text, 'keyword-search-redirect/all-forums', $link_ops);
 
@@ -679,7 +667,7 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
     )
   );
   if (isset($count_values['block_1']) && !empty($count_values['block_1'])) {
-    $my_forums_count_text = ' ('.$count_values['block_1'].')';
+    $my_forums_count_text = ' (' . $count_values['block_1'] . ')';
   }
   $link_my_forums = l('My Forums' . $my_forums_count_text, 'keyword-search-redirect/my-forums', $link_ops);
 
@@ -692,7 +680,7 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
   if ($access_to_add) {
     $link_options = array(
       'attributes' => array(
-        'class'=> 'new-forum-link',
+        'class' => 'new-forum-link',
       ),
     );
     $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
@@ -720,7 +708,7 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
     $empty_text_content .= '<h2>Your search returned no results</h2>';
     $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below ';
     $empty_text_content .= 'that have been identified for you by using the subject(s) and grade(s) in your profile</p>';
-    $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">'.$empty_text_link.'</div>';
+    $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">' . $empty_text_link . '</div>';
     $empty_text_content .= '</div>';
 
     $view_e = views_get_view('forum_list_empty');
@@ -772,17 +760,19 @@ function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$
               $first_item = array_shift($faci_field);
               $first_faci_user_id = $first_item['target_id'];
               $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
-              $facilitator_text .= 'Facilitator: '. $faci_link;
-            } else { // No facilitator set
+              $facilitator_text .= 'Facilitator: ' . $faci_link;
+            }
+            else { // No facilitator set
               $facilitator_text .= 'Facilitator: None';
             }
-          } else{
+          }
+          else {
             $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
           }
           $facilitator_text .= '</div>';
         }
 
-        $membership_output =  $facilitator_text ;
+        $membership_output = $facilitator_text;
         $params['membership'] = $membership_output;
 
         // Last activity
@@ -814,7 +804,7 @@ function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$
 
         // Title
         $node_title = $topic_wrapper->title->value();
-        $params['title'] = l($node_title, 'node/'.$topic_node->nid);
+        $params['title'] = l($node_title, 'node/' . $topic_node->nid);
 
         // Forum parent
         $forum_parent = $topic_wrapper->field_topic_forum_parent->value();

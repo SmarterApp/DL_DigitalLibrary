@@ -61,71 +61,80 @@
 
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  <?php if(!empty($new_comment_status_message)) : ?>
-		<div class="topic-node-comment-region-status-message">
-    	<?php print $new_comment_status_message;?>
-  	</div>
-	<?php endif; ?>
-	
+  <?php if (!empty($new_comment_status_message)) : ?>
+    <div class="topic-node-comment-region-status-message">
+      <?php print $new_comment_status_message; ?>
+    </div>
+  <?php endif; ?>
+
   <div class="row-comment-content">
-  	<div class="topic-node-comment-region-left">
-	    <div class="topic-node-comment-author-img">
-	      <?php print $picture ?>
-	    </div>
-	  </div>
+    <div class="topic-node-comment-region-left">
+      <div class="topic-node-comment-author-img">
+        <?php print $picture ?>
+      </div>
+    </div>
 
-	  <div class="topic-node-comment-region-right">
-	    <?php if ($new): ?>
-	      <span class="new"><?php //print $new ?></span>
-	    <?php endif; ?>
+    <div class="topic-node-comment-region-right">
+      <?php if ($new): ?>
+        <span class="new"><?php //print $new ?></span>
+      <?php endif; ?>
 
-	    <div class="topic-node-comment-region-right-top">
-	      <?php print $auth_name_hover; ?>
-	      <?php print ' ' . $posted_date; ?>
-	      <?php print $depth_extra; ?>
-	    </div> <!-- END region right top -->
+      <div class="topic-node-comment-region-right-top">
+        <?php print $auth_name_hover; ?>
+        <?php print ' ' . $posted_date; ?>
+        <?php print $depth_extra; ?>
+      </div>
+      <!-- END region right top -->
 
 
-	    <div class="content"<?php print $content_attributes; ?>>
-	      <?php
-	        // We hide the comments and links now so that we can render them later.
-	        hide($content['links']);
-	        hide($content['field_topic_comment_links']);
-	        hide($content['field_topic_comment_files']);
-	        print render($content);
-	      ?>
-	      <div class="topic-node-comment-materials-wrapper">
-	        <?php if($has_materials): ?>
-	          <div class="topic-node-comment-materials-label">Material(s)</div>
-	          <?php
-	            print render($content['field_topic_comment_files']);
-	            print render($content['field_topic_comment_links']);
-	          ?>
-	        <?php endif;?>
-	      </div>
-	      <?php if ($signature): ?>
-	      <div class="user-signature clearfix">
-	        <?php print $signature ?>
-	      </div>
-	      <?php endif; ?>
-	    </div>
+      <div class="content"<?php print $content_attributes; ?>>
+        <?php
+        // We hide the comments and links now so that we can render them later.
+        hide($content['links']);
+        hide($content['field_topic_comment_links']);
+        hide($content['field_topic_comment_files']);
+        print render($content);
+        ?>
+        <div class="topic-node-comment-materials-wrapper">
+          <?php if ($has_materials): ?>
+            <div class="topic-node-comment-materials-label">Material(s)</div>
+            <?php
+            print render($content['field_topic_comment_files']);
+            print render($content['field_topic_comment_links']);
+            ?>
+          <?php endif; ?>
+        </div>
+        <?php if ($signature): ?>
+          <div class="user-signature clearfix">
+            <?php print $signature ?>
+          </div>
+        <?php endif; ?>
+      </div>
 
-	    <div class="topic-node-comment-region-right-bottom reply-links-for-<?php print $comment->cid; ?>">
-	      <?php if($is_member === TRUE): ?>
-	        <?php print render($content['links']); ?>
-	      <?php endif; ?>
-	    </div>
-	    <div class="topic-node-comment-region-right-bottm-comment flagged-post-for-<?php print $comment->cid; ?>">
-	      <?php if (!empty($content['flags']['comments']) && $is_member === TRUE): ?>
-				<div class='flag-section'>
-	        <?php print render($content['flags']['comments']['reason']); ?>
-	        <?php print render($content['flags']['comments']['comment']); ?>
-				</div>
-	      <?php endif; ?>
-	    </div>
-	    <div class="topic-node-comment-region-right-reply-form">
-	    </div> <!-- END region reply form-->
-	  </div> <!-- END region right-->
-	</div>
+      <div class="topic-node-comment-region-right-bottom reply-links-for-<?php print $comment->cid; ?>">
+        <?php print render($content['links']); ?>
+      </div>
+      <?php if (!empty($content['recommend_link'])): ?>
+        <?php print $content['recommend_link']; ?>
+      <?php endif; ?>
+      <div id="recommend-info-<?php print $comment_id; ?>">
+        <?php if (!empty($content['recommend_count'])): ?>
+          <?php if (!empty($content['recommend_link'])): ?> - <?php endif; ?><?php print $content['recommend_count']; ?> recommended
+        <?php endif; ?>
+      </div>
+      <div class="topic-node-comment-region-right-bottm-comment flagged-post-for-<?php print $comment->cid; ?>">
+        <?php if (!empty($content['flags']['comments'])): ?>
+          <div class='flag-section'>
+            <?php print render($content['flags']['comments']['reason']); ?>
+            <?php print render($content['flags']['comments']['comment']); ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="topic-node-comment-region-right-reply-form">
+      </div>
+      <!-- END region reply form-->
+    </div>
+    <!-- END region right-->
+  </div>
 </div>
 

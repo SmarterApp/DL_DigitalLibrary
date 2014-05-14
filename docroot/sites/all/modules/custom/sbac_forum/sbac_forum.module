@@ -166,6 +166,13 @@ function sbac_forum_menu() {
     'access arguments' => array(3, 4),
   );
 
+  $items['sbac-forum/recommend'] = array(
+    'title' => 'SBAC Forum',
+    'page callback' => 'sbac_forum_recommend_ajax_click',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -1266,6 +1273,8 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
   );
 
   $form['actions']['submit']['#value'] = 'Submit';
+
+  $form['field_topic_comment_recommended']['#access'] = FALSE;
 }
 
 // ----------
@@ -1838,4 +1847,59 @@ function sbac_forum_update_resource_forum_topic_authors() {
       node_save($node);
     }
   }
+}
+
+/**
+ * Recommend a post
+ */
+function sbac_forum_recommend_ajax_click() {
+  if (!$_POST['cid']) {
+    exit;
+  }
+
+  global $user;
+  $cid = check_plain($_POST['cid']);
+  $comment = comment_load($cid);
+  $count = 0;
+  if ($comment) {
+    $comment_wrapper = entity_metadata_wrapper('comment', $comment);
+    $count = $comment_wrapper->field_topic_comment_recommended->count();
+    if (empty($count)) {
+      $comment_wrapper->field_topic_comment_recommended[] = $user->uid;
+      $count = 1;
+    }
+    else {
+      $recommended = FALSE;
+      foreach ($comment_wrapper->field_topic_comment_recommended as $account) {
+        if ($account->uid->value() == $user->uid) {
+          $recommended = TRUE;
+        }
+      }
+      if (!$recommended) {
+        $comment_wrapper->field_topic_comment_recommended[] = $user->uid;
+        $count++;
+      }
+    }
+    $comment_wrapper->save();
+  }
+
+  $output = array('recommendations' => $count);
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Check to see if a user has already recommended a post
+ *
+ * @param $cid
+ * @param $uid
+ * @return mixed
+ */
+function sbac_forum_user_has_recommended($cid, $uid) {
+  $query = "
+    SELECT
+      *
+    FROM {field_data_field_topic_comment_recommended}
+    WHERE entity_id = :cid AND field_topic_comment_recommended_target_id = :uid";
+  return db_query($query, array(':cid' => $cid, ':uid' => $uid))->rowCount();
 }
