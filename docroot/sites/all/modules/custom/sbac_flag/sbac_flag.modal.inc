@@ -1132,7 +1132,7 @@ function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
 function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
   $form['header'] = array(
     '#type'   => 'item',
-    '#markup' => '<h2>Flag a Post</h2>',
+    // '#markup' => '<h2>Flag a Post</h2>',
     '#prefix' => '<div class="form-item-title">',
     '#suffix' => '</div>',
   );
@@ -1169,9 +1169,27 @@ function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
     '#suffix' => '</div>',
   );
 
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Flag'),
+    '#prefix' => '<div class="flag-button-container">',
+    '#attributes' => array(
+      'class' => array(
+        'button',
+        'flag-resource-submit',
+      ),
+    ),
+    '#ajax' => array(
+      'wrapper' => 'sbac-flag-collaboration-form',
+      'method' => 'replace',
+      'effect' => 'fade',
+    ),
+  );
+
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
+    '#suffix' => '</div>',
     '#attributes' => array(
       'class' => array(
         'button',
@@ -1182,17 +1200,6 @@ function sbac_flag_collaboration_form($form, &$form_state, $node, $cid = 0) {
       'id' => array(
         'flag-edit-cancel',
       ),
-    ),
-  );
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Flag'),
-    '#attributes' => array('class' => array('button', 'flag-resource-submit')),
-    '#ajax' => array(
-      'wrapper' => 'sbac-flag-collaboration-form',
-      'method' => 'replace',
-      'effect' => 'fade',
     ),
   );
 
@@ -1214,11 +1221,11 @@ function sbac_flag_collaboration_form_validate(&$form, &$form_state) {
   else {
     if ($form_state['values']['comment'] != NULL) {
       if (profanity_validate_text($form_state['values']['comment'])) {
-        form_set_error('optional_comment', 'Please remove any inappropriate language.');
+        form_set_error('comment', 'Please remove any inappropriate language.');
       }
     }
     if ($form_state['values']['comment'] == NULL) {
-      form_set_error('optional_comment', 'Please validate your reason for flagging.');
+      form_set_error('comment', 'Please validate your reason for flagging.');
     }
   }
 }
