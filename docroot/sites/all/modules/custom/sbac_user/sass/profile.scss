@@ -694,11 +694,28 @@ h2.name {
 	}
 }
 
+/*Favorites Tab*/
 #sbac-favorites-resource-table-drag-drop {
 	margin-top: 10px;
 }
 
-
+#edit-tab-container-resource-tab-buttons {
+	button {
+		float: right;
+		margin-left: 20px;
+	}
+	
+	#sbac-favorites-resource-submit {
+		padding-left: 40px;
+	}
+	
+	#sbac-favorites-resource-submit:before {
+	  content: url("../images/icon-buttonAccept.png");
+    left: 15px;
+    position: absolute;
+    top: 4px;
+	}
+}
 
 
 
