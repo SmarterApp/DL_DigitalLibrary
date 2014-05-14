@@ -2092,9 +2092,17 @@ form[id*='sbac-flag-collaboration-form']{
 		overflow-y: scroll;
 		padding: 5px 40px 0;
 		background-color: #F2F2F2;
+		
+		.sbac-flag-error-msg {
+			background-color: rgba(138, 21, 56, 0.1);
+		  border: 2px solid #ED1C24;
+	    color: #8A1538;
+	    margin: 9px 0;
+	    padding: 10px;
+		}
 	}
 	
-	label[for="edit-flag-options"] {
+	label:first-child {
 		font-size: 18px;
 		color: #000;
 		padding-top: 10px;
