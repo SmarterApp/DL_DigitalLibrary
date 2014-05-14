@@ -140,6 +140,42 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'comment-comment_node_topic-field_topic_comment_recommended'
+  $field_instances['comment-comment_node_topic-field_topic_comment_recommended'] = array(
+    'bundle' => 'comment_node_topic',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
+    ),
+    'entity_type' => 'comment',
+    'field_name' => 'field_topic_comment_recommended',
+    'label' => 'Recommended',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'label_help_description' => '',
+        'match_operator' => 'CONTAINS',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member'] = array(
     'bundle' => 'field_fc_forum_members',
@@ -1552,6 +1588,7 @@ function sbac_forum_field_default_field_instances() {
   t('Post Count');
   t('Recent activity');
   t('Recommendation Count');
+  t('Recommended');
   t('Remove message');
   t('Removed');
   t('Removed Member Count');
