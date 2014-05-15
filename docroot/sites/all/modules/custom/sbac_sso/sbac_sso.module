@@ -294,11 +294,11 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
-//  $saml_token = sbac_sso_get_saml_token2();
-  $saml_token = FALSE;
-  if (isset($_POST['SAMLResponse'])) {
-    $saml_token = base64_decode($_POST['SAMLResponse']);
-  }
+  $saml_token = sbac_sso_get_saml_token2();
+//  $saml_token = FALSE;
+//  if (isset($_POST['SAMLResponse'])) {
+//    $saml_token = base64_decode($_POST['SAMLResponse']);
+//  }
   error_log("SAML: " . $saml_token);
   if (!$saml_token) {
     // Destroy the current session, and reset $user to the anonymous user.
@@ -321,6 +321,7 @@ function sbac_sso_consume() {
 
   // validate SAML.
   $user = sbac_sso_validate_saml_response($saml_token);
+  error_log("USER: " . print_r($user, TRUE));
   if ($user) {
     // If the user is marked as blocked.
     if ($user->access == 1) {
