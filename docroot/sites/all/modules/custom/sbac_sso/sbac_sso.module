@@ -301,6 +301,12 @@ function sbac_sso_consume() {
   }
   error_log("SAML: " . $saml_token);
   if (!$saml_token) {
+    // Destroy the current session, and reset $user to the anonymous user.
+    global $user;
+    watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+    module_invoke_all('user_logout', $user);
+    session_destroy();
+
     global $base_url;
     $original_access_url = $base_url . '/' . $_GET['q'];
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
@@ -308,6 +314,7 @@ function sbac_sso_consume() {
     $saml_assertion = sbac_sso_saml_assertion();
     $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
     drupal_custom_goto($url);
+    exit;
   }
 
   // validate SAML.

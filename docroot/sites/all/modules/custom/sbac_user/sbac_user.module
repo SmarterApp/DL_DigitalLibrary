@@ -93,27 +93,20 @@ function sbac_user_access_check() {
  * Implements hook_init().
  */
 function sbac_user_init() {
-  global $user;
-//  if (!user_is_logged_in()) {
-//    variable_set('site_404', 'user');
-//  }
-//  else {
-//    variable_set('site_404', '');
-//  }
-
+//  global $user;
   // Intercept page request to user/uid/edit with pass-reset-token query value and send to change-password instead.
   // Is this the best place to do this? Can't seem to use hook_user_login() because there is no way to
   // retrieve the pass-reset-token value.
-  if (isset($_GET['pass-reset-token'])) {
-    $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
-    if ($pass_reset && arg(0) == 'user' && arg(1) == $user->uid && arg(2) == 'edit') {
-      drupal_goto('change-password', array('query' => array('pass-reset-token' => $_GET['pass-reset-token'])));
-    }
-  }
+//  if (isset($_GET['pass-reset-token'])) {
+//    $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
+//    if ($pass_reset && arg(0) == 'user' && arg(1) == $user->uid && arg(2) == 'edit') {
+//      drupal_goto('change-password', array('query' => array('pass-reset-token' => $_GET['pass-reset-token'])));
+//    }
+//  }
   // redirect any user not admin from the user/id/edit screen to user
-  if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
-    drupal_goto('user/' . $user->uid);
-  }
+//  if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
+//    drupal_goto('user/' . $user->uid);
+//  }
 }
 
 /*
@@ -790,18 +783,18 @@ function sbac_user_user_login(&$edit, $account) {
     if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s) || empty($account->field_grade_level_s) || empty($account->field_special_populations))) {
       drupal_goto('user/' . $account->uid);
     }
-    if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
-    }
-    else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
-    }
-    else{
+//    if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
+//    }
+//    else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
+//    }
+//    else{
       if (!isset($account->data['disable_help'])) {
         drupal_goto('user/' . $account->uid);
       }
       else {
         drupal_goto('digital-library-resources');
       }
-    }
+//    }
   }
 }
 
