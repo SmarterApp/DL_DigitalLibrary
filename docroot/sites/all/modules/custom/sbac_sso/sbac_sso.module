@@ -324,7 +324,7 @@ function sbac_sso_consume() {
   error_log("USER: " . print_r($user, TRUE));
   if ($user) {
     // If the user is marked as blocked.
-    if ($user->access == 1) {
+    if ($user->status == 0) {
       // Kick the user to an error page with Smarter Balanced Contact information
       // and a custom error code ( do not include the details pertaining to what
       // the error code is connected to, just the ERROR CODE and NUMBER :
