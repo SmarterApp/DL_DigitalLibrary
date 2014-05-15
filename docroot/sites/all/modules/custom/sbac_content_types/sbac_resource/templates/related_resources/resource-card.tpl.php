@@ -61,11 +61,11 @@
 
       <div class="paradata-numbers">
         <?php if (isset($fields['views']) && $fields['views']): ?>
-          <?php print $fields['views'] . ','; ?>
+          <?php print $fields['views'] . ' Views,'; ?>
         <?php endif; ?>
 
         <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-          <?php print $fields['downloads']; ?>
+          <?php print $fields['downloads'] . ' Downloads'; ?>
         <?php endif; ?>
 
         <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
