@@ -478,13 +478,11 @@ function sbac_resource_get_related_resources($baseline_node) {
     global $user;
     $account = $user;
     foreach ($related_resources as $nid => $total_score) {
-      $node = node_load($nid);
       // filter out resources that dont exist, or that the user does not have access to see.
-      if (!$node || _sbac_resource_determine_state_access($node, $account) == FALSE) {
+      if (_sbac_resource_determine_state_access_via_sql($nid, $account) == FALSE) {
         unset($related_resources[$nid]);
       }
     }
-
     arsort($related_resources);
   }
 
@@ -2586,6 +2584,47 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
     }
   }
 
+  return $access;
+}
+
+/**
+ * Given the node and account, see if the user has access
+ * to view given the state of the node.
+ *
+ * @param $node
+ * @param $account
+ * @param $op
+ * @return bool
+ */
+function _sbac_resource_determine_state_access_via_sql($nid, $account) {
+  $all_states = array();
+  $access = FALSE;
+  $sql  = "SELECT * FROM {field_data_field_view_permissions} p ";
+  $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
+  $state_permission = db_query($sql, array(':nid' => $nid))->fetchObject();
+  if ($state_permission->field_view_permissions_value == 1) {
+    $sql  = "SELECT * FROM {field_data_field_view_permissions_per_state} p ";
+    $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
+    $result = db_query($sql, array(':nid' => $nid));
+    foreach ($result as $row) {
+      $all_states[] = $row->field_view_permission_per_state_tid;
+    }
+  }
+  else {
+    $all_states = array();
+  }
+
+  // if the array is empty, then the user has access.
+  if (empty($all_states)) {
+    $access = TRUE;
+    return $access;
+  }
+  else {
+    $user = sbac_central_get_user_with_states($all_states, $account->uid);
+    if ($user) {
+      $access = TRUE;
+    }
+  }
   return $access;
 }
 
