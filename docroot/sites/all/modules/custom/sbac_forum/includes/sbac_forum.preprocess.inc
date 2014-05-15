@@ -27,6 +27,10 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $author_info = '';
   $posted = '';
   $has_materials = FALSE;
+  $moderation_topic_header = '';
+  $moderation_topic_content = '';
+  $moderation_post_header = '';
+  $moderation_post_content = '';
 
   $welcome_message = '';
   if (isset($_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE])) {
@@ -86,8 +90,8 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
   }
 
-  if (!$can_edit && !$can_delete) {
-    $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0);
+  if (!$can_edit && !$can_delete && !isset($_GET['flag'])) {
+    $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0, $user->uid);
 
     if ($flagged) {
       $flag = taxonomy_term_load($flagged['flag_selected']);
@@ -154,6 +158,45 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
   $vars['action_section'] = $action_section;
 
+  $flag_property = isset($_GET['flag']) ? $_GET['flag'] : 0;
+  if ($flag_property) {
+    $flags = sbac_flag_get_forum_flags($node_data->nid->value(), $_GET['cid']);
+    $flag_out = array();
+
+    while ($flag = $flags->fetchAssoc()) {
+      $flag_out[$flag['flag_selected']][] = $flag;
+    }
+
+    // Moderator view
+    if ($flag_property == 'view-topic-flags') {
+      $moderation_topic_header = '<div class="sbac-forum-flagged-topic-header"><span class="sbac-forum-flagged-text">Flagged</span></div>';
+      $moderation_topic_content = '<div class="sbac-forum-flagged-topic-content-container">';
+      foreach ($flag_out as $tid => $flag_reports) {
+        $num_flags = count($flag_reports);
+        $flag_term = taxonomy_term_load($tid);
+        $moderation_topic_content .= '<div class="sbac-forum-flagged-topic-subheader">';
+        $moderation_topic_content .= '<div class="sbac-forum-flagged-type">' . $flag_term->name . '</div>';
+        $moderation_topic_content .= '<div class="sbac-forum-flagged-num">' . $num_flags . ' ' . ($num_flags == 1 ? 'flag' : 'flags') . '</div>';
+        foreach ($flag_reports as $flag_report) {
+          $flag_auth = entity_metadata_wrapper('user', $flag_report['uid']);
+          $moderation_topic_content .= '<div class="sbac-forum-report-header">';
+          $moderation_topic_content .= '<div class="sbac-forum-report-details">';
+          $moderation_topic_content .= 'By <span class="sbac-forum-report-author">' . $flag_auth->field_first_name->value() . ' ' . $flag_auth->field_last_name->value() . '</span>';
+          $moderation_topic_content .= ' on ' . date('M d, Y', $flag_report['created']);
+          $moderation_topic_content .= '</div>';
+          $moderation_topic_content .= '<div class="sbac-forum-report-content">' . $flag_report['flag_comment'] . '</div>';
+          $moderation_topic_content .= '</div>';
+        }
+        $moderation_topic_content .= '</div>';
+      }
+      $moderation_topic_content .= '</div>';
+    }
+    elseif ($flag_property == 'view-post-flags') {
+      $moderation_content_header = '<div class="sbac-forum-flagged-content-header"><span class="sbac-forum-flagged-text">Flagged</span></div>';
+    }
+  // Moderator moderate
+  }
+
 
   // Put everything into arrays and register in vars for tpl. ------------
 
@@ -180,6 +223,16 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'has_materials' => $has_materials,
   );
   $vars['main_content'] = $main_content;
+  $vars['moderation'] = array(
+    'topic' => array(
+      'header'  => $moderation_topic_header,
+      'content' => $moderation_topic_content,
+    ),
+    'post' => array(
+      'header'  => $moderation_post_header,
+      'content' => $moderation_post_content,
+    ),
+  );
 }
 
 
@@ -284,7 +337,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
       'id' => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
     );
-    $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid);
+    $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid, $user->uid);
     if ($flagged) {
       $reason = taxonomy_term_load($flagged['flag_selected']);
       $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';

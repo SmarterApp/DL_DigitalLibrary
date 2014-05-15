@@ -118,7 +118,7 @@
     </div>
   </div>
   <!-- end tertiary-nav -->
-
+  <?php print $moderation['topic']['header']; ?>
   <div class="topic-node-main-content">
 
     <div class="topic-node-main-content-left">
@@ -137,7 +137,7 @@
     <div class="topic-node-main-content-right">
       <?php print render($title_prefix); ?>
       <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
-    <?php print render($title_suffix); ?>
+      <?php print render($title_suffix); ?>
 
       <?php
       // We hide the comments and links now so that we can render them later.
@@ -169,6 +169,7 @@
           ?>
         <?php endif; ?>
       </div>
+      <?php print $moderation['topic']['content']; ?>
     </div>
     <!-- end main content right-->
   </div>

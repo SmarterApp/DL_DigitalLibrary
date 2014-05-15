@@ -948,7 +948,7 @@ function sbac_flag_resource_modal_form($form, $form_state) {
  * @param $comment
  * @param $nid
  */
-function sbac_flag_save_flag($flag, $comment, $nid, $cid = NULL) {
+function sbac_flag_save_flag($flag, $comment, $nid, $cid = 0) {
   global $user;
   $node = node_load($nid);
 
@@ -1136,17 +1136,40 @@ function sbac_flag_get_all_flags_for_node($node, $type = NULL, $review_id = NULL
   return $flags;
 }
 
-
-function sbac_flag_get_collaboration_flag($nid, $cid) {
-  global $user;
+/**
+ * Get collaboration flags by current user.
+ * @param  int $nid Node ID.
+ * @param  int $cid Comment ID.
+ * @return [type]   [description]
+ */
+function sbac_flag_get_collaboration_flag($nid, $cid, $uid) {
   $report = array();
   $query = db_select('eck_flag', 'ef');
   $query->fields('ef', array('type', 'target_type', 'flag_selected', 'flag_comment'));
   $query->condition('nid', $nid, '=');
   $query->condition('target_id', ($cid ? $cid : $nid), '=');
-  $query->condition('uid', $user->uid, '=');
+  $query->condition('uid', $uid, '=');
   $query->condition('resolved', 0, '=');
   $report = $query->execute()->fetchAssoc();
+  return $report;
+}
+
+/**
+ * Get all forum flags of a specific topic/post and grouped by flag and ordered
+ * by date.
+ * @param  int $nid Node ID.
+ * @param  int $cid Comment ID.
+ * @return [type]      [description]
+ */
+function sbac_flag_get_forum_flags($nid, $cid) {
+  $report = array();
+  $query = db_select('eck_flag', 'ef');
+  $query->fields('ef');
+  $query->condition('nid', $nid, '=');
+  $query->condition('target_id', ($cid ? $cid : $nid), '=');
+  $query->orderBy('flag_selected');
+  $query->orderBy('created', 'DESC');
+  $report = $query->execute();
   return $report;
 }
 
