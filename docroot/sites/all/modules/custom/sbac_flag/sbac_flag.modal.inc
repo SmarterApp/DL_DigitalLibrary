@@ -76,12 +76,17 @@ function sbac_flag_start_moderation($js = FALSE) {
     if (isset($_GET['eck_review'])) {
       $title = 'You are about to start resource review moderation';
     }
+    elseif (isset($_GET['forum_type'])) {
+      $title = 'You are about to start forum moderation.';
+    }
 
     $form_state = array(
       'title' => $title,
       'ajax' => TRUE,
       'nid' => $_GET['nid'],
       'eck_review' => $_GET['eck_review'],
+      'forum_type' => $_GET['forum_type'],
+      'cid' => $_GET['cid'],
     );
 
     module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
@@ -90,13 +95,28 @@ function sbac_flag_start_moderation($js = FALSE) {
     if (!empty($form_state['executed'])) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
-
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
         $node = node_load($form_state['nid']);
         if ($form_state['eck_review']) {
-          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-resource-review-flags', 'review' => $form_state['eck_review']), 'fragment' => 'review-Moderate_flag'));
+          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array(
+            'query' => array(
+              'flag' => 'view-resource-review-flags',
+              'review' => $form_state['eck_review']
+            ),
+            'fragment' => 'review-Moderate_flag'
+          ));
         }
-        else {
+        elseif ($form_state['forum_type']) {
+          $path_alias = drupal_get_path_alias('node/' . $node->nid);
+          $output[] = ctools_ajax_command_redirect($path_alias, 0, array(
+            'query' => array(
+              'flag' => 'view-' . $form_state['forum_type'] . '-flags',
+              'cid' => $form_state['cid'],
+            ),
+            'fragment' => 'review-moderate_flag',
+          ));
+        }
+        elseif (!$form_state['eck_review'] && !$form_state['forum_type']) {
           $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-resource-flags'), 'fragment' => 'review-Moderate_flag'));
         }
       }
@@ -107,7 +127,17 @@ function sbac_flag_start_moderation($js = FALSE) {
           sbac_flag_set_being_moderated($node, $form_state['eck_review']);
           $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review'], 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
         }
-        else {
+        elseif ($form_state['forum_type']) {
+          $path_alias = drupal_get_path_alias('node/' . $node->nid);
+          $output[] = ctools_ajax_command_redirect($path_alias, 0, array(
+            'query' => array(
+              'flag' => 'resolve-' . $form_state['forum_type'] . '-flags',
+              'cid' => $form_state['cid'],
+            ),
+            'fragment' => 'review-moderate_flag',
+          ));
+        }
+        elseif (!$form_state['eck_review'] && !$form_state['forum_type']) {
           sbac_flag_set_being_moderated($node);
           $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'resolve-resource-flags', 'node' => $node->nid), 'fragment' => 'something-Moderate_flag'));
         }

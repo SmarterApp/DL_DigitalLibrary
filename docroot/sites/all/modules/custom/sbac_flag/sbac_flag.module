@@ -1565,7 +1565,6 @@ function sbac_flag_block_view($delta = '') {
         $count = $_SESSION['sbac-flag']['count'];
       }
       $block['subject'] = NULL;
-      // $block['content'] = '<h3 class="left">' . t('Flagged Items (' . $count . ')') . '</h3>';
       $block['content'] = '<span class="flagged-items left"><span class="flagged-count">' . $count . '</span> items</span>';
       break;
   }

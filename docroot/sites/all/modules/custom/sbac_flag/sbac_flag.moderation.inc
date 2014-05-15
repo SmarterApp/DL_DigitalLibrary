@@ -292,16 +292,34 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
     }
   }
   else {
-    $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
-      'attributes' => array(
-        'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
-        'id' => 'sbac-flag-start-moderation'
-      ),
-      'query' => array(
-        'nid' => $node->nid,
-        'eck_review' => ($eck_review ? $eck_review->id : 0),
-      ),
-    ));
+    if ($row->type == 'resource' || $row->type == 'review_end_use') {
+      $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
+          'id' => 'sbac-flag-start-moderation'
+        ),
+        'query' => array(
+          'nid' => $node->nid,
+          'eck_review' => ($eck_review ? $eck_review->id : 0),
+          'forum_type' => 0,
+          'cid' => 0,
+        ),
+      ));
+    }
+    elseif ($row->type == 'topic' || $row->type == 'comment') {
+      $moderation_button = l(t('Start Moderation'), 'sbac-flag/nojs/start-moderation', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-start-moderation',
+          'id' => 'sbac-flag-start-moderation'
+        ),
+        'query' => array(
+          'eck_review' => 0,
+          'forum_type' => $row->type,
+          'nid' => $node->nid,
+          'cid' => ($node->nid == $row->target_id ? 0 : $row->target_id),
+        ),
+      ));
+    }
     $js_settings = array(
       'sbac-flag-start-moderation' => array(
         'modalSize' => array(
