@@ -112,7 +112,7 @@ function sbac_user_init() {
   }
   // redirect any user not admin from the user/id/edit screen to user
   if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
-    drupal_goto('user');
+    drupal_goto('user/' . $user->uid);
   }
 }
 
@@ -788,7 +788,7 @@ function sbac_user_user_login(&$edit, $account) {
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
     if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s) || empty($account->field_grade_level_s) || empty($account->field_special_populations))) {
-      drupal_goto('user');
+      drupal_goto('user/' . $account->uid);
     }
     if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
     }
@@ -796,7 +796,7 @@ function sbac_user_user_login(&$edit, $account) {
     }
     else{
       if (!isset($account->data['disable_help'])) {
-        drupal_goto('user');
+        drupal_goto('user/' . $account->uid);
       }
       else {
         drupal_goto('digital-library-resources');
