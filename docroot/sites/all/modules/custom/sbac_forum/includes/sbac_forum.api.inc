@@ -346,7 +346,7 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
 
   $tooltip = '
               <div class="devtools-tooltip account-tooltip">
-                <a href="#" class="devtools-tooltip-trigger">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
+                <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
                 <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
               </div>
              ';

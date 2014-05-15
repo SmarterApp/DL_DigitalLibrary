@@ -103,7 +103,12 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
       // resource node flag
       $node = node_load($row->nid);
     }
-    else {
+    else if ($row->type == 'topic') {
+      // topic or comment flag
+      $node = node_load($row->nid);
+      $row->type = $row->target_type;
+    }
+    else if ($row->type == 'review_end_use') {
       // review flag
       $eck_review = entity_load_single('review', $row->target_id);
       $eck_review_wrapper = entity_metadata_wrapper('review', $row->target_id);
@@ -145,8 +150,22 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
   $outputted = array();
 
   // Remove dupicate nodes from y_urgent, as they already show up on urgent.
-  $unique_flags = array_diff_key($sorted_flags['y_urgent']['resource'], $sorted_flags['urgent']['resource']);
-  $sorted_flags['y_urgent']['resource'] = $unique_flags;
+  if (isset($sorted_flags['y_urgent']['resource']) && isset($sorted_flags['urgent']['resource'])) {
+    $unique_flags = array_diff_key($sorted_flags['y_urgent']['resource'], $sorted_flags['urgent']['resource']);
+    $sorted_flags['y_urgent']['resource'] = $unique_flags;
+  }
+  if (isset($sorted_flags['y_urgent']['review_end_use']) && isset($sorted_flags['urgent']['review_end_use'])) {
+    $unique_flags = array_diff_key($sorted_flags['y_urgent']['review_end_use'], $sorted_flags['urgent']['review_end_use']);
+    $sorted_flags['y_urgent']['review_end_use'] = $unique_flags;
+  }
+  if (isset($sorted_flags['y_urgent']['topic']) && isset($sorted_flags['urgent']['topic'])) {
+    $unique_flags = array_diff_key($sorted_flags['y_urgent']['topic'], $sorted_flags['urgent']['topic']);
+    $sorted_flags['y_urgent']['topic'] = $unique_flags;
+  }
+  if (isset($sorted_flags['y_urgent']['comment']) && isset($sorted_flags['urgent']['comment'])) {
+    $unique_flags = array_diff_key($sorted_flags['y_urgent']['comment'], $sorted_flags['urgent']['comment']);
+    $sorted_flags['y_urgent']['comment'] = $unique_flags;
+  }
 
   foreach ($sorted_flags as $type => $rows) {
     foreach ($rows as $flag_type => $nodes) {
@@ -157,11 +176,16 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
           if ($count > $start && $count <= $end) {
             $variables = $element['variables'];
             if ($node && $variables) {
-              $list_output .= theme('sbac_flag_list_card', array('node' => $node, 'flag_content' => $variables));
+              if ($node->type == 'resource') {
+                $list_output .= theme('sbac_flag_list_card', array('node' => $node, 'flag_content' => $variables));
+              }
+              elseif ($node->type == 'topic') {
+                $list_output .= theme('sbac_flag_list_card_topic', array('node' => $node, 'flag_content' => $variables));
+              }
             }
           }
         }
-        $outputted[] = $type . '::' . $node->nid;
+        $outputted[] = $type . '::' . $flag_type . '::' . $node->nid;
       }
     }
   }
@@ -210,7 +234,6 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
 
 
   $variables['eck_flag']['urgent'] = $row->urgent;
-  $eck_flag = entity_load_single('flag', $row->id);
   if ($eck_flag) {
     $issue_type = field_entity_value($eck_flag, 'field_issue_type');
     if ($issue_type == 'pii') {
@@ -219,7 +242,29 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
   }
 
   if ($eck_review) {
-    $variables['eck_review']['title'] = $eck_review_wrapper->title->value();
+    $variables['eck_review']['title'] = ($eck_review_wrapper->title->value() ? $eck_review_wrapper->title->value() : $node->title);
+  }
+
+  if ($row->type == 'topic') {
+    $user_tooltip = sbac_forum__api__get_authpane_hoverover($node->uid);
+    $user = entity_metadata_wrapper('user', $node->uid);
+    $account = user_load($node->uid);
+    $account_renderable = user_view($account, 'tooltip');
+
+    $variables['eck_review']['topic_author'] = $user_tooltip;
+    $variables['eck_review']['topic_author_picture'] = render($account_renderable['user_picture']);
+    $variables['eck_review']['post_body'] = $node->body['und'][0]['safe_value'];
+  }
+
+  if ($row->type == 'comment') {
+    $post = entity_metadata_wrapper('comment', $row->target_id);
+    $user_tooltip = sbac_forum__api__get_authpane_hoverover($post->author->uid->value());
+    $account = user_load($post->author->uid->value());
+    $account_renderable = user_view($account, 'tooltip');
+
+    $variables['eck_review']['topic_author'] = $user_tooltip;
+    $variables['eck_review']['topic_author_picture'] = render($account_renderable['user_picture']);
+    $variables['eck_review']['post_body'] = $post->comment_body->value();
   }
 
   if ($variables['eck_flag']['urgent']) {
@@ -274,8 +319,15 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
       $variables['eck_flag']['title_href'] = $url;
     }
     else {
-      $url = url($node->path['alias'], array('query' => array('flag' => 'view-resource-flags'), 'fragment' => 'review-Moderate_flag'));
-      $variables['eck_flag']['title_href'] = $url;
+      if (isset($node->path)) {
+        $url = url($node->path['alias'], array('query' => array('flag' => 'view-resource-flags'), 'fragment' => 'review-Moderate_flag'));
+        $variables['eck_flag']['title_href'] = $url;
+      }
+      else {
+        $path = drupal_lookup_path('alias', 'node/' . $node->nid);
+        $url = url($path, array('query' => array('flag' => 'view-topic-flags')));
+        $variables['eck_flag']['title_href'] = $url;
+      }
     }
   }
 

@@ -1,13 +1,17 @@
 <div class="resource-card">
   <div class="row">
     <?php if (isset($flag_content['eck_review']['title'])): ?>
-      <div class="review-title"><a href="<?php echo $flag_content['eck_flag']['title_href']; ?>"><?php echo $flag_content['eck_review']['title']; ?></a></div>
       <div class="resource-title">
-        <?php echo htmlspecialchars_decode($node->title); ?>
+        <span class="resource-type">Review</span>
+      </div>
+      <div class="review-title"><a href="<?php echo $flag_content['eck_flag']['title_href']; ?>"><?php echo $flag_content['eck_review']['title']; ?></a></div>
+      <div class="resource-description">
+        <!-- <?php echo htmlspecialchars_decode($node->title); ?> -->
       </div>
     <?php endif; ?>
     <?php if (!isset($flag_content['eck_review'])): ?>
       <div class="resource-title">
+        <span class="resource-type">Resource</span>
         <a href="<?php echo $flag_content['eck_flag']['title_href'] ?>" ><?php echo htmlspecialchars_decode($node->title); ?></a>
       </div>
     <?php endif; ?>
