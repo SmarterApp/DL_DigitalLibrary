@@ -43,7 +43,7 @@ global $user;
           ?>
         </a>
         <ul id="drop3" class="f-dropdown">
-          <li><?php echo l('Account','user', array('attributes' => array('title' => 'Account'))); ?></li>
+          <li><?php echo l('Account','user/' . $user->uid, array('attributes' => array('title' => 'Account'))); ?></li>
           <li><?php echo l('Logout','user/logout', array('attributes' => array('title' => 'Logout')));?></li>
         </ul>
       </li>
@@ -56,7 +56,7 @@ global $user;
           $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
         }
 
-        echo l($text, 'user', array(
+        echo l($text, 'user/' . $user->uid, array(
           'html' => TRUE,
           'fragment' => 'profile-notifications',
           'attributes' => array('title' => 'Notifications'),
@@ -87,7 +87,7 @@ global $user;
           $favorites_count = 0;
         }
         $text .= ' (<span>' . $favorites_count . '</span>)';
-        echo l($text, 'user', array(
+        echo l($text, 'user/' . $user->uid, array(
           'html' => TRUE,
           'fragment' => 'profile-favorites',
           'attributes' => array('title' => 'Favorites'),
