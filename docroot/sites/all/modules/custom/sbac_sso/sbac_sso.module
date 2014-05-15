@@ -329,7 +329,7 @@ function sbac_sso_consume() {
       // and a custom error code ( do not include the details pertaining to what
       // the error code is connected to, just the ERROR CODE and NUMBER :
       // ERROR CODE 200: Error updating user with user attributes that were passed.
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 200)));
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
     }
     // Log user in.
     $form_state['uid'] = $user->uid;
@@ -681,7 +681,7 @@ function sbac_sso_determine_user($user_attributes, $response) {
     $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
     $user = user_save($user);
     if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 103)));
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
     }
   }
   elseif ($user = user_load_by_mail($response['email'])) {
@@ -704,7 +704,7 @@ function sbac_sso_determine_user($user_attributes, $response) {
     $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
     $user = user_save($user);
     if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 103)));
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
     }
   }
   else {
@@ -717,7 +717,7 @@ function sbac_sso_determine_user($user_attributes, $response) {
     // ERROR CODE 104: Error creating user with user attributes that were passed.
     $user = sbac_sso_create_user_record($response, $user_attributes);
     if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 104)));
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
     }
   }
   return $user;
