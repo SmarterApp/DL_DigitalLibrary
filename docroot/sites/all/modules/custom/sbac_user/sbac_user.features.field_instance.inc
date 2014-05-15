@@ -628,6 +628,51 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_sso_uuid'
+  $field_instances['user-user-field_sso_uuid'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 30,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_sso_uuid',
+    'label' => 'SSO UUID',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => '',
+        'size' => 255,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 29,
+    ),
+    'xss' => 0,
+  );
+
   // Exported field_instance: 'user-user-field_state'
   $field_instances['user-user-field_state'] = array(
     'bundle' => 'user',
@@ -726,6 +771,7 @@ function sbac_user_field_default_field_instances() {
   t('Retired');
   t('SLT Member');
   t('SNE Member');
+  t('SSO UUID');
   t('School Name');
   t('Select the personal information and expertise you’d like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown at the top of this page. Note that no educators can access your full account and no information will be displayed publicly.');
   t('State');
