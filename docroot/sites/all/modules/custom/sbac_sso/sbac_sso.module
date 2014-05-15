@@ -299,6 +299,7 @@ function sbac_sso_consume() {
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = base64_decode($_POST['SAMLResponse']);
   }
+  error_log("SAML: " . $saml_token);
   if (!$saml_token) {
     // Destroy the current session, and reset $user to the anonymous user.
     if (user_is_logged_in()) {
@@ -358,7 +359,7 @@ function sbac_sso_logout() {
     exit;
   }
   else {
-    drupal_custom_goto($url);
+    drupal_goto($url);
   }
 }
 
@@ -672,7 +673,8 @@ function sbac_sso_determine_user($user_attributes, $response) {
     $user->field_last_name['und'][0]['value'] = $response['sn'];
     $user->mail = $response['email'];
     if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-      $user->field_state['und'][0]['tid'] = $valid->tid;
+      $term = current($valid);
+      $user->field_state['und'][0]['tid'] = $term->tid;
     }
     $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
     $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
@@ -693,7 +695,8 @@ function sbac_sso_determine_user($user_attributes, $response) {
     $user->field_last_name['und'][0]['value'] = $response['sn'];
     $user->mail = $response['email'];
     if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-      $user->field_state['und'][0]['tid'] = $valid->tid;
+      $term = current($valid);
+      $user->field_state['und'][0]['tid'] = $term->tid;
     }
     $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
     $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
@@ -775,7 +778,8 @@ function sbac_sso_create_user_record($response, $user_attributes) {
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
   $edit['field_last_name']['und'][0]['value'] = $response['sn'];
   if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-    $edit['field_state']['und'][0]['tid'] = $valid->tid;
+    $term = current($valid);
+    $edit['field_state']['und'][0]['tid'] = $term->tid;
   }
   $role_id = user_role_load_by_name('basic end user');
   $edit['roles'] = array(DRUPAL_AUTHENTICATED_RID => 'Authenticated User', $role_id->rid => $role_id->name);
@@ -882,6 +886,6 @@ function sbac_sso_get_saml_token2() {
     <saml:Audience>https://dev.smarterbalancedlibrary.org</saml:Audience>
     </saml:AudienceRestriction>
     </saml:Conditions>
-    <saml:AuthnStatement AuthnInstant="2014-05-15T18:09:50Z" SessionIndex="s2d10a50e9f2d0cc7aa22c2a2d1b07cc87246daf01"><saml:AuthnContext><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml:AuthnContext></saml:AuthnStatement><saml:AttributeStatement><saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">appno_00004</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">brandont+4@appnovation.com</saml:AttributeValue></saml:Attribute><saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">3cdd4237-7a81-45b6-8e0e-1a8fe1952922</saml:AttributeValue></saml:Attribute><saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">|DL_EndUser|CONSORTIUM_EDUCATION_ADMINISTRATOR_1|INSTITUTION|Appnovation Client ID|Appnovation Client|Appnovation State Group ID|Appnovation State Group|Appnovation State|Appnovation State|Appnovation District Group ID|Appnovation District Group|Appnovation District ID|Appnovation District|Appnovation Insitution Group ID|Appnovation Institution Group|Appnovation Institution ID|Appnovation Institution|</saml:AttributeValue></saml:Attribute><saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon</saml:AttributeValue></saml:Attribute></saml:AttributeStatement></saml:Assertion></samlp:Response>';
+    <saml:AuthnStatement AuthnInstant="2014-05-15T18:09:50Z" SessionIndex="s2d10a50e9f2d0cc7aa22c2a2d1b07cc87246daf01"><saml:AuthnContext><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml:AuthnContext></saml:AuthnStatement><saml:AttributeStatement><saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">appno_00004</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">brandont+4@appnovation.com</saml:AttributeValue></saml:Attribute><saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">3cdd4237-7a81-45b6-8e0e-1a8fe1952922</saml:AttributeValue></saml:Attribute><saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">|DL_EndUser|CONSORTIUM_EDUCATION_ADMINISTRATOR_1|INSTITUTION|Appnovation Client ID|Appnovation Client|Appnovation State Group ID|Appnovation State Group|Alaska|Alaska|Appnovation District Group ID|Appnovation District Group|Appnovation District ID|Appnovation District|Appnovation Insitution Group ID|Appnovation Institution Group|Appnovation Institution ID|Appnovation Institution|</saml:AttributeValue></saml:Attribute><saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon</saml:AttributeValue></saml:Attribute></saml:AttributeStatement></saml:Assertion></samlp:Response>';
   return $saml_endpoint_assertion;
 }
