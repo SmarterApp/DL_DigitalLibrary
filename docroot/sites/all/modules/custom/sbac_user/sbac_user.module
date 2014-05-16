@@ -783,18 +783,12 @@ function sbac_user_user_login(&$edit, $account) {
     if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s) || empty($account->field_grade_level_s) || empty($account->field_special_populations))) {
       drupal_goto('user/' . $account->uid);
     }
-//    if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
-//    }
-//    else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
-//    }
-//    else{
-      if (!isset($account->data['disable_help'])) {
-        drupal_goto('user/' . $account->uid);
-      }
-      else {
-        drupal_goto('digital-library-resources');
-      }
-//    }
+    if (!isset($account->data['disable_help'])) {
+      drupal_goto('user/' . $account->uid);
+    }
+    else {
+      drupal_goto('digital-library-resources');
+    }
   }
 }
 
