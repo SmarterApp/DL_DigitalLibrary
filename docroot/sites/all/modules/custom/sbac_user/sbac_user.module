@@ -201,6 +201,13 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
 
   if ($form_id == 'user_profile_form') {
     $user = $form_state['user'];
+    if ($user->data['login_count'] == 1 && (empty($user->field_position) || empty($user->field_subject_s_) || empty($user->field_grade_level_s_) || empty($user->field_special_populations))) {
+      drupal_add_js(array('sbac_user_required_fields' => 0), 'setting');
+    }
+    elseif ($user->data['login_count'] == 1) {
+      drupal_add_js(array('sbac_user_required_fields' => 1), 'setting');
+    }
+
     if ($user && isset($user->data['login_count']) && $user->data['login_count'] == 1) {
       ctools_include('modal');
       ctools_include('ajax');
@@ -850,7 +857,7 @@ function sbac_user_user_login(&$edit, $account) {
 
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-    if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s) || empty($account->field_grade_level_s) || empty($account->field_special_populations))) {
+    if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
       drupal_goto('user/' . $account->uid);
     }
     if (!isset($account->data['disable_help'])) {

@@ -5,34 +5,41 @@
   Drupal.behaviors.sbac_user_first_time_login = {
     attach: function (context, settings) {
       $('#sbac-user-warn-user').hide();
+      var required_fields = Drupal.settings.sbac_user_required_fields;
 
       $('#sbac-user-warn-user-form button').click(function () {
         clicked = false;
       });
 
-      $('.main-top,.sub-top,.bottom-bar').click(function (event) {
-        var login_count = Drupal.settings.sbac_user_login_count;
-        if (login_count != null && login_count == 1 && clicked == false) {
-          var position = $('#edit-field-position-und').val();
-          var subjects = $('#edit-field-subject-s-und').val();
-          var grades = $('#edit-field-grade-level-s-und').val();
-          var student_populations = $('#edit-field-special-populations-und').val();
-          if (position == '_none' || subjects == null || grades == null || student_populations == null) {
-            event.stopPropagation();
-            event.preventDefault();
-            clicked = true;
-            $('#edit-submit').removeAttr('disabled');
-            $('#edit-submit').click();
-          }
-          else {
-            event.stopPropagation();
-            event.preventDefault();
-            clicked = true;
-            $('#edit-submit').removeAttr('disabled');
-            $('#sbac-user-warn-user').click();
-          }
-        }
+      $('#user-profile-form button').click(function () {
+        clicked = true;
       });
+
+      if (required_fields == 0) {
+        $('.main-top,.sub-top,.bottom-bar').click(function (event) {
+          var login_count = Drupal.settings.sbac_user_login_count;
+          if (login_count != null && login_count == 1 && clicked == false) {
+            var position = $('#edit-field-position-und').val();
+            var subjects = $('#edit-field-subject-s-und').val();
+            var grades = $('#edit-field-grade-level-s-und').val();
+            var student_populations = $('#edit-field-special-populations-und').val();
+            if (position == '_none' || subjects == null || grades == null || student_populations == null) {
+              event.stopPropagation();
+              event.preventDefault();
+              clicked = true;
+              $('#edit-submit').removeAttr('disabled');
+              $('#edit-submit').click();
+            }
+            else {
+              event.stopPropagation();
+              event.preventDefault();
+              clicked = true;
+              $('#edit-submit').removeAttr('disabled');
+              $('#sbac-user-warn-user').click();
+            }
+          }
+        });
+      }
     }
   };
 
