@@ -93,27 +93,20 @@ function sbac_user_access_check() {
  * Implements hook_init().
  */
 function sbac_user_init() {
-  global $user;
-//  if (!user_is_logged_in()) {
-//    variable_set('site_404', 'user');
-//  }
-//  else {
-//    variable_set('site_404', '');
-//  }
-
+//  global $user;
   // Intercept page request to user/uid/edit with pass-reset-token query value and send to change-password instead.
   // Is this the best place to do this? Can't seem to use hook_user_login() because there is no way to
   // retrieve the pass-reset-token value.
-  if (isset($_GET['pass-reset-token'])) {
-    $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
-    if ($pass_reset && arg(0) == 'user' && arg(1) == $user->uid && arg(2) == 'edit') {
-      drupal_goto('change-password', array('query' => array('pass-reset-token' => $_GET['pass-reset-token'])));
-    }
-  }
+//  if (isset($_GET['pass-reset-token'])) {
+//    $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
+//    if ($pass_reset && arg(0) == 'user' && arg(1) == $user->uid && arg(2) == 'edit') {
+//      drupal_goto('change-password', array('query' => array('pass-reset-token' => $_GET['pass-reset-token'])));
+//    }
+//  }
   // redirect any user not admin from the user/id/edit screen to user
-  if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
-    drupal_goto('user');
-  }
+//  if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
+//    drupal_goto('user/' . $user->uid);
+//  }
 }
 
 /*
@@ -785,24 +778,23 @@ function sbac_user_user_login(&$edit, $account) {
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
-  // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-  if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s) || empty($account->field_grade_level_s) || empty($account->field_special_populations))) {
-    drupal_goto('user');
-  }
-
   if (!isset($edit['sbac-share'])) {
-    if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
+    // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
+    if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s) || empty($account->field_grade_level_s) || empty($account->field_special_populations))) {
+      drupal_goto('user/' . $account->uid);
     }
-    else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
-    }
-    else{
+//    if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
+//    }
+//    else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
+//    }
+//    else{
       if (!isset($account->data['disable_help'])) {
-        drupal_goto('user');
+        drupal_goto('user/' . $account->uid);
       }
       else {
         drupal_goto('digital-library-resources');
       }
-    }
+//    }
   }
 }
 
@@ -1057,10 +1049,18 @@ function sbac_user_user_profile_default_tab_submit($form, &$form_state) {
  * Implements hook_menu_alter
  */
 function sbac_user_menu_alter(&$items) {
-  $items['legal']['title'] = 'Terms of Service';
-  $items['legal_accept/%/%']['title'] = 'Terms of Service';
-  $items['user/password']['title'] = 'Password Reset or Account Activation';
-  $items['user/password']['access callback'] = FALSE;
+  if (isset($items['legal']['title'])) {
+    $items['legal']['title'] = 'Terms of Service';
+  }
+  if (isset($items['legal_accept/%/%']['title'])) {
+    $items['legal_accept/%/%']['title'] = 'Terms of Service';
+  }
+  if (isset($items['user/password']['title'])) {
+    $items['user/password']['title'] = 'Password Reset or Account Activation';
+  }
+  if (isset($items['user/password']['access callback'])) {
+    $items['user/password']['access callback'] = FALSE;
+  }
 }
 
 /*

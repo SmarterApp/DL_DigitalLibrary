@@ -32,7 +32,224 @@ function sbac_sso_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-sso/%ctools_js/session-expire'] = array(
+    'title' => 'Session Expire',
+    'page callback' => 'sbac_sso_session_expire_modal',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+  );
+
   return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * @param $items
+ */
+function sbac_sso_menu_alter(&$items) {
+  if (isset($items['user'])) {
+    $items['user']['page callback'] = 'sbac_sso_consume';
+    $items['user']['module'] = 'sbac_sso';
+    $items['user']['file'] = NULL;
+  }
+  if (isset($items['user/logout'])) {
+    $items['user/logout']['page callback'] = 'sbac_sso_logout';
+    $items['user/logout']['module'] = 'sbac_sso';
+    $items['user/logout']['file'] = NULL;
+  }
+}
+
+/**
+ * Session expire modal.
+ *
+ * @param bool $js
+ */
+function sbac_sso_session_expire_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $title = 'Your session is about to end';
+    $form_state = array(
+      'title' => $title,
+      'ajax' => TRUE,
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_sso_session_expire_form', $form_state);
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] == 'OK') {
+        sbac_sso_session_regenerate();
+      }
+      else {
+        global $user;
+        watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+        module_invoke_all('user_logout', $user);
+        session_destroy();
+
+        // Redirect user to SSO Login.
+        global $base_url;
+        $original_access_url = $base_url . '/' . $_GET['q'];
+        // Record original access URL (URL Encoded) to the SAML request in the relayState variable
+        // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
+        $saml_assertion = sbac_sso_saml_assertion();
+        $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
+        $output[] = ctools_ajax_command_redirect($url);
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+}
+
+/**
+ * Session expire form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_sso_session_expire_form($form, &$form_state) {
+  $form = array();
+
+  $form['submit_description'] = array(
+    '#markup' => "<p>You've been on this page for close to 60 minutes, would
+        you like to extend your session on the digital libraryn? Select OK to
+        extend your session. Pressing CANCEL or failing to respond in the next
+        two minutes will require site reauthentication.</p>"
+  );
+
+  $form['continue'] = array(
+    '#type' => 'submit',
+    '#value' => 'OK',
+    '#attributes' => array('class' => array('button', 'blue'))
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'CANCEL',
+    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
+  );
+
+  $form['button_suffix'] = array(
+    '#suffix' => '</div>',
+  );
+
+  return $form;
+}
+
+/**
+ * Called when an anonymous user becomes authenticated or vice-versa.
+ *
+ * Pretty much a carbon copy of drupal's own session_regenerate. Except,
+ * I removed the session_id regeneration so that if a session is extended,
+ * the id stays the same.
+ *
+ * @ingroup php_wrappers
+ */
+function sbac_sso_session_regenerate() {
+  global $user, $is_https;
+  // Nothing to do if we are not allowed to change the session.
+  if (!drupal_save_session()) {
+    return;
+  }
+
+  if ($is_https && variable_get('https', FALSE)) {
+    $insecure_session_name = substr(session_name(), 1);
+    if (!isset($GLOBALS['lazy_session']) && isset($_COOKIE[$insecure_session_name])) {
+      $old_insecure_session_id = $_COOKIE[$insecure_session_name];
+    }
+    $params = session_get_cookie_params();
+    $session_id = drupal_random_key();
+    // If a session cookie lifetime is set, the session will expire
+    // $params['lifetime'] seconds from the current request. If it is not set,
+    // it will expire when the browser is closed.
+    $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
+    setcookie($insecure_session_name, $session_id, $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
+    $_COOKIE[$insecure_session_name] = $session_id;
+  }
+
+  if (drupal_session_started()) {
+    $old_session_id = session_id();
+  }
+  //  session_id(drupal_random_key());
+
+  if (isset($old_session_id)) {
+    $params = session_get_cookie_params();
+    $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
+    setcookie(session_name(), $old_session_id, $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    $fields = array('sid' => session_id());
+    if ($is_https) {
+      $fields['ssid'] = session_id();
+      // If the "secure pages" setting is enabled, use the newly-created
+      // insecure session identifier as the regenerated sid.
+      if (variable_get('https', FALSE)) {
+        $fields['sid'] = $session_id;
+      }
+    }
+    db_update('sessions')
+      ->fields($fields)
+      ->condition($is_https ? 'ssid' : 'sid', $old_session_id)
+      ->execute();
+  }
+  elseif (isset($old_insecure_session_id)) {
+    // If logging in to the secure site, and there was no active session on the
+    // secure site but a session was active on the insecure site, update the
+    // insecure session with the new session identifiers.
+    db_update('sessions')
+      ->fields(array('sid' => $session_id, 'ssid' => session_id()))
+      ->condition('sid', $old_insecure_session_id)
+      ->execute();
+  }
+  else {
+    // Start the session when it doesn't exist yet.
+    // Preserve the logged in user, as it will be reset to anonymous
+    // by _drupal_session_read.
+    $account = $user;
+    drupal_session_start();
+    $user = $account;
+  }
+  date_default_timezone_set(drupal_get_user_timezone());
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * @param $vars
+ */
+function sbac_sso_preprocess_page(&$vars) {
+  // Regenerate the user session per page.
+  if (user_is_logged_in() && strpos($_GET['q'], 'ajax') === FALSE) {
+    sbac_sso_session_regenerate();
+  }
+
+  // If the page requested is a moderation page, do not include this timer. As there
+  // is already a timer for the moderation functionality. Look at sbac_flag module.
+  if (isset($_GET['flag']) && ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
+    return;
+  }
+  elseif (user_is_logged_in() && arg(0) != 'admin') {
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    drupal_add_library('system', 'drupal.ajax');
+    drupal_add_js(drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.ctools.js');
+    drupal_add_js(drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.js');
+    $session_button = l(t('Session Expire (modal)'), 'sbac-sso/nojs/session-expire', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-sso-session-expire',
+        'id' => 'sbac-sso-session-expire'
+      ),
+    ));
+    $js_settings = array('sbac-sso-session-expire' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260), 'modalTheme' => 'CtoolSbacSSOExpire'));
+    drupal_add_js($js_settings, 'setting');
+    $vars['session_expire'] = $session_button;
+  }
 }
 
 /**
@@ -77,28 +294,42 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
-  $saml_token = sbac_sso_get_saml_token2();
-//  $saml_token = FALSE;
-//  if (isset($_POST['SAMLResponse'])) {
-//    $saml_token = urldecode(base64_decode($_POST['SAMLResponse']));
-//    error_log("SAML: " . $saml_token);
-//  }
+  //$saml_token = sbac_sso_get_saml_token2();
+  $saml_token = FALSE;
+  if (isset($_POST['SAMLResponse'])) {
+    $saml_token = base64_decode($_POST['SAMLResponse']);
+  }
+  error_log("SAML: " . $saml_token);
   if (!$saml_token) {
+    // Destroy the current session, and reset $user to the anonymous user.
+    if (user_is_logged_in()) {
+      global $user;
+      watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+      module_invoke_all('user_logout', $user);
+      session_destroy();
+    }
+
     global $base_url;
     $original_access_url = $base_url . '/' . $_GET['q'];
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
     $saml_assertion = sbac_sso_saml_assertion();
     $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
-    drupal_custom_goto($url);
+    header('Location: ' . $url, TRUE, 302);
+    drupal_exit($url);
   }
 
   // validate SAML.
   $user = sbac_sso_validate_saml_response($saml_token);
+  error_log("USER: " . print_r($user, TRUE));
   if ($user) {
     // If the user is marked as blocked.
-    if ($user->access == 1) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 200)));
+    if ($user->status == 0) {
+      // Kick the user to an error page with Smarter Balanced Contact information
+      // and a custom error code ( do not include the details pertaining to what
+      // the error code is connected to, just the ERROR CODE and NUMBER :
+      // ERROR CODE 200: Error updating user with user attributes that were passed.
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
     }
     // Log user in.
     $form_state['uid'] = $user->uid;
@@ -110,17 +341,27 @@ function sbac_sso_consume() {
  * Custom logout callback.
  */
 function sbac_sso_logout() {
+  $ajax = FALSE;
+  if (isset($_GET['ajax'])) {
+    $ajax = TRUE;
+  }
+
   // Destroy the current session, and reset $user to the anonymous user.
   global $user;
   watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
   module_invoke_all('user_logout', $user);
   session_destroy();
 
-  // Redirect user to SSO Login.
-  $original_access_url = $_GET['q'];
-  $saml_assertion = sbac_sso_saml_assertion();
-  $url = SBAC_SSO_URL . '?SAMLRequest=' . base64_encode(urlencode($saml_assertion)) . '&RelayState=' . $original_access_url;
-  drupal_goto($url);
+  $url = 'http://www.smarterbalanced.org/';
+  if ($ajax) {
+    $output = array();
+    $output['url'] = $url;
+    print drupal_json_encode($output);
+    exit;
+  }
+  else {
+    drupal_goto($url);
+  }
 }
 
 /**
@@ -155,7 +396,6 @@ function sbac_sso_validate_saml_response($saml_token) {
     // and a custom error code ( do not include the details pertaining to what
     // the error code is connected to, just the ERROR CODE and NUMBER :
     // ERROR CODE 102: Program Management returned INVALID ACCESS
-
     drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
   }
   $user = sbac_sso_determine_user($user_attributes, $response);
@@ -212,11 +452,11 @@ function sbac_sso_parse_saml_assertion($saml_token) {
     }
     if (strpos($row, '<saml:Attribute Name="email">') !== FALSE) {
       $attribute = '<saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
-      sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'entry_uuid');
+      sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'email');
     }
     if (strpos($row, '<saml:Attribute Name="cn">') !== FALSE) {
       $attribute = '<saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
-      sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'entry_uuid');
+      sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'cn');
     }
     if (strpos($row, '<saml:Attribute Name="sbacTenancyChain">') !== FALSE) {
       $attribute = '<saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
@@ -358,16 +598,25 @@ function sbac_sso_program_management_api_request($user_attributes) {
   $result = curl_exec($curl);
   curl_close($curl);
 
+  error_log("The Program API Response: " . $post);
+
   if ($result) {
     $api_response = sbac_sso_parse_program_api_result($result);
   }
   return $api_response;
 }
 
-
+/**
+ * Parses the Program Management API response.
+ *
+ * @param $result
+ *
+ * @return array
+ */
 function sbac_sso_parse_program_api_result($result) {
   $api_response = array();
   $json = drupal_json_decode($result);
+  $error = FALSE;
 
   if ($json) {
     if (isset($json['searchInput']) === FALSE || isset($json['tenants']) === FALSE) {
@@ -391,6 +640,10 @@ function sbac_sso_parse_program_api_result($result) {
     }
   }
 
+  if (!$error) {
+    $api_response = $result;
+  }
+
   return $api_response;
 }
 
@@ -404,12 +657,13 @@ function sbac_sso_parse_program_api_result($result) {
  * @return bool|mixed|stdClass
  */
 function sbac_sso_determine_user($user_attributes, $response) {
-  if ($user = sbac_sso_load_user_by_uuid($user_attributes['role_id'])) {
+  if ($user = sbac_sso_load_user_by_uuid($response['entry_uuid'])) {
     // First Name = givenName
     // Last Name = sn
     // Email = email
     // Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
-    // The format of the sbacTenancyChain is as follows:  |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
+    // The format of the sbacTenancyChain is as follows:
+    // |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
     // Preform a string split on this pile delimited string, and grab the
     // value from the positions for State, District, Insitution and update those
     // on the user record. If any are blank, update the DL User record accordingly.
@@ -419,14 +673,15 @@ function sbac_sso_determine_user($user_attributes, $response) {
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
     $user->mail = $response['email'];
-    if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
-      $user->field_state['und'][0]['tid'] = $valid;
+    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+      $term = current($valid);
+      $user->field_state['und'][0]['tid'] = $term->tid;
     }
     $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
     $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
     $user = user_save($user);
     if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 103)));
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
     }
   }
   elseif ($user = user_load_by_mail($response['email'])) {
@@ -440,15 +695,16 @@ function sbac_sso_determine_user($user_attributes, $response) {
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
     $user->mail = $response['email'];
-    if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
-      $user->field_state['und'][0]['tid'] = $valid;
+    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+      $term = current($valid);
+      $user->field_state['und'][0]['tid'] = $term->tid;
     }
     $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
     $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
     $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
     $user = user_save($user);
     if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 103)));
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
     }
   }
   else {
@@ -461,7 +717,7 @@ function sbac_sso_determine_user($user_attributes, $response) {
     // ERROR CODE 104: Error creating user with user attributes that were passed.
     $user = sbac_sso_create_user_record($response, $user_attributes);
     if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('key' => 104)));
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
     }
   }
   return $user;
@@ -484,6 +740,22 @@ function sbac_sso_validate_state_id($state_id) {
 }
 
 /**
+ * Validates the state name.
+ *
+ * @param string $state_name
+ *   The possible term name.
+ *
+ * @return string
+ */
+function sbac_sso_validate_state_by_name($state_name) {
+  $term = taxonomy_get_term_by_name($state_name, 'states');
+  if ($term) {
+    return $term;
+  }
+  return '';
+}
+
+/**
  * Create the user record.
  *
  * @param array $response
@@ -501,19 +773,20 @@ function sbac_sso_create_user_record($response, $user_attributes) {
   $edit['name'] = $response['email'];
   $edit['pass'] = user_password(10);
   $edit['mail'] = $response['email'];
+  $edit['init'] = $response['email'];
+  $edit['timezone'] = date_default_timezone(TRUE);
   $edit['status'] = 1;
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
   $edit['field_last_name']['und'][0]['value'] = $response['sn'];
-  if ($valid = sbac_sso_validate_state_id($user_attributes['state_id'])) {
-    $edit['field_state']['und'][0]['tid'] = $user_attributes['state_id'];
+  if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+    $term = current($valid);
+    $edit['field_state']['und'][0]['tid'] = $term->tid;
   }
-  $role = user_role_load($user_attributes['role_id']);
-  if ($role) {
-    $edit['roles'] = array($role->rid => $role->name);
-  }
+  $role_id = user_role_load_by_name('basic end user');
+  $edit['roles'] = array(DRUPAL_AUTHENTICATED_RID => 'Authenticated User', $role_id->rid => $role_id->name);
   $edit['field_district']['und'][0]['value'] = $user_attributes['district'];
   $edit['field_institution']['und'][0]['value'] = $user_attributes['institution'];
-  $edit['field_sso_uuid']['und'][0]['value'] = $user_attributes['role_id'];
+  $edit['field_sso_uuid']['und'][0]['value'] = $response['entry_uuid'];
   return user_save($new_user, $edit);
 }
 
@@ -565,139 +838,55 @@ function sbac_sso_get_authenticated_session() {
   return $session;
 }
 
-/**
- * Get endpoint assertion.
- *
- * @return string
- */
-function sbac_sso_get_saml_token() {
-  // SAMLRequest=jZLNbtswEITveQqCd4n0ryQiNqDGCGogbQTLDYpeCpraOCwoUuVSbv32oaW0SHMIusfF7sx8XF6RWNcoW9OJsg9Pdgc%2Fe8BAtpsV%2FT6%2FPf34KjNrj4vZslnO82LxmPMsS7NiMuPTRUHJA3jUzq7oNOWUbBF72FoM0obY4pN5whcJL%2FaTpZjmghcpz2bfKNlEC21lGDafQugEY41Xsu2SBk6p68CGOIJnDNCmzh9FznPOZEzI6vp%2BB432oAJrIcjSaIkMD1Ix3XSU3DqvYGBZ0UdpEC6xKomoT%2FC3U3kXnHLmg7aNtscV7b0VTqJGYWULKIISdfnpTkQscRiHUHzc76ukuq%2F3lJSI4C%2F5b5zFvgVfgz9pBV92dyMRXpAiC7bSB%2FAHaaRV0Bh98NKfL0xD5gTRJWrUoOR3ayyK4RzvR%2Bpe8tP1FXmp4YpiuIB%2FJfS%2BjvyDQdf%2FF%2FqavbJ5Y96Jz9Fgu6mc0epMSmPcrxsPMsR3D76PfGzcGEX%2B%2FXHrZw%3D%3D&RelayState=https%3A%2F%2Fdev.smarterbalancedlibrary.org%2Fsbac-sso-consume
-
-  $saml_endpoint_assertion = '
-  <samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s2c10bb352a7e3d6ed3b4fbcc7f9fa5a0ff3652e3c" InResponseTo="_166BA43BEBF8109A962D91A64191BE14" Version="2.0" IssueInstant="2014-04-28T16:18:54Z" Destination="https://www.frankbwalsh.com/sso_poc/saml">
-  <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer>
-  <samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
-    <samlp:StatusCode xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" Value="urn:oasis:names:tc:SAML:2.0:status:Success"></samlp:StatusCode>
-  </samlp:Status>
-  <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s2e319f7bfa5f587485b5bd8ebc8d23a26159c0400" IssueInstant="2014-04-28T16:18:54Z" Version="2.0">
-    <saml:Issuer>http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer>
-    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+function sbac_sso_get_saml_token2() {
+  $saml_endpoint_assertion = '<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s2aa7130026636fddb349d65a0a3eb87974dbd8fe9" InResponseTo="_e7ExFFADbj5375072941bb05.53739435" Version="2.0" IssueInstant="2014-05-15T18:27:53Z" Destination="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+    <samlp:StatusCode  xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+    Value="urn:oasis:names:tc:SAML:2.0:status:Success">
+    </samlp:StatusCode>
+    </samlp:Status><saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s2c98d149104b623906f89595db3b29193483f96e5" IssueInstant="2014-05-15T18:27:53Z" Version="2.0">
+    <saml:Issuer>http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
     <ds:SignedInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
-      <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
-      <ds:Reference URI="#s2e319f7bfa5f587485b5bd8ebc8d23a26159c0400" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-          <ds:Transforms xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-              <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
-              <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
-          </ds:Transforms>
-          <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" />
-          <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">w6hUHbT/PwLxhTFe8X+OHa6Af88=</ds:DigestValue>
-      </ds:Reference>
+    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+    <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+    <ds:Reference URI="#s2c98d149104b623906f89595db3b29193483f96e5" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:Transforms xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+    <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+    </ds:Transforms>
+    <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+    <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">oV3BhSUC2d8+7SCid0l8W26ySc8=</ds:DigestValue>
+    </ds:Reference>
     </ds:SignedInfo>
     <ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-      Wh40oeQyxtYAI8M+kwtNp2F2zZGX5E4Q4MC8vIFXL2e8tcQpMR6PAHTq5KiNHh3TlgQOA7zfLvm0
-      a7FaxjAhc+JbQlmuQKDKbY89MHNSZL3CUVQQT5jp+6Rxv/3MnmIBLjh1fbm2xiFdHb35COsdFRr1
-      4uS2E94sK7jFjjOu9Mc=
+    QgGX/KKOvdAXiMWCf8ffuOv91bVlhrN8W8ZxIoU83CBveN6nwWVbdMzkVbIdV7DFIIx052HkX+DK
+    KsaTuxFY+vdZ8ZY27vb+qqkCJwGlkwLEKUxbgig6NToEFmITZjizyMI5X+thO9sQQoWemkuZETai
+    LmqaPNdHtchKJ+xVbIQ=
     </ds:SignatureValue>
-      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-      <ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-      <ds:X509Certificate xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-          MIICQDCCAakCBEeNB0swDQYJKoZIhvcNAQEEBQAwZzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNh
-      bGlmb3JuaWExFDASBgNVBAcTC1NhbnRhIENsYXJhMQwwCgYDVQQKEwNTdW4xEDAOBgNVBAsTB09w
-      ZW5TU08xDTALBgNVBAMTBHRlc3QwHhcNMDgwMTE1MTkxOTM5WhcNMTgwMTEyMTkxOTM5WjBnMQsw
-      CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEUMBIGA1UEBxMLU2FudGEgQ2xhcmExDDAK
-      BgNVBAoTA1N1bjEQMA4GA1UECxMHT3BlblNTTzENMAsGA1UEAxMEdGVzdDCBnzANBgkqhkiG9w0B
-      AQEFAAOBjQAwgYkCgYEArSQc/U75GB2AtKhbGS5piiLkmJzqEsp64rDxbMJ+xDrye0EN/q1U5Of+
-      RkDsaN/igkAvV1cuXEgTL6RlafFPcUX7QxDhZBhsYF9pbwtMzi4A4su9hnxIhURebGEmxKW9qJNY
-      Js0Vo5+IgjxuEWnjnnVgHTs1+mq5QYTA7E6ZyL8CAwEAATANBgkqhkiG9w0BAQQFAAOBgQB3Pw/U
-      QzPKTPTYi9upbFXlrAKMwtFf2OW4yvGWWvlcwcNSZJmTJ8ARvVYOMEVNbsT4OFcfu2/PeYoAdiDA
-      cGy/F2Zuj8XJJpuQRSE6PtQqBuDEHjjmOQJ0rV/r8mO1ZCtHRhpZ5zYRjhRC9eCbjx9VrFax0JDC
-      /FfwWigmrW0Y0Q==
-      </ds:X509Certificate>
-      </ds:X509Data>
-        </ds:KeyInfo>
-    </ds:Signature>
-    <saml:Subject>
-      <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" NameQualifier="http://drcamp-dev.opentestsystem.org:8080/auth">ujd+QyxIfZdiEs25oTa8vQKpybk3</saml:NameID>
-      <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-          <saml:SubjectConfirmationData InResponseTo="_166BA43BEBF8109A962D91A64191BE14" NotOnOrAfter="2014-04-28T16:28:54Z" Recipient="https://www.frankbwalsh.com/sso_poc/saml" />
-      </saml:SubjectConfirmation>
-    </saml:Subject>
-    <saml:Conditions NotBefore="2014-04-28T16:08:54Z" NotOnOrAfter="2014-04-28T16:28:54Z">
-        <saml:AudienceRestriction>
-            <saml:Audience>https://www.frankbwalsh.com</saml:Audience>
-        </saml:AudienceRestriction>
+    <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:X509Certificate xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    MIICQDCCAakCBEeNB0swDQYJKoZIhvcNAQEEBQAwZzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNh
+    bGlmb3JuaWExFDASBgNVBAcTC1NhbnRhIENsYXJhMQwwCgYDVQQKEwNTdW4xEDAOBgNVBAsTB09w
+    ZW5TU08xDTALBgNVBAMTBHRlc3QwHhcNMDgwMTE1MTkxOTM5WhcNMTgwMTEyMTkxOTM5WjBnMQsw
+    CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEUMBIGA1UEBxMLU2FudGEgQ2xhcmExDDAK
+    BgNVBAoTA1N1bjEQMA4GA1UECxMHT3BlblNTTzENMAsGA1UEAxMEdGVzdDCBnzANBgkqhkiG9w0B
+    AQEFAAOBjQAwgYkCgYEArSQc/U75GB2AtKhbGS5piiLkmJzqEsp64rDxbMJ+xDrye0EN/q1U5Of+
+    RkDsaN/igkAvV1cuXEgTL6RlafFPcUX7QxDhZBhsYF9pbwtMzi4A4su9hnxIhURebGEmxKW9qJNY
+    Js0Vo5+IgjxuEWnjnnVgHTs1+mq5QYTA7E6ZyL8CAwEAATANBgkqhkiG9w0BAQQFAAOBgQB3Pw/U
+    QzPKTPTYi9upbFXlrAKMwtFf2OW4yvGWWvlcwcNSZJmTJ8ARvVYOMEVNbsT4OFcfu2/PeYoAdiDA
+    cGy/F2Zuj8XJJpuQRSE6PtQqBuDEHjjmOQJ0rV/r8mO1ZCtHRhpZ5zYRjhRC9eCbjx9VrFax0JDC
+    /FfwWigmrW0Y0Q==
+    </ds:X509Certificate>
+    </ds:X509Data>
+    </ds:KeyInfo>
+    </ds:Signature><saml:Subject>
+    <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" NameQualifier="http://drcamp-dev.opentestsystem.org:8080/auth">SMMBFU5TqdsfACJaIOzEObGQquLr</saml:NameID><saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+    <saml:SubjectConfirmationData InResponseTo="_e7ExFFADbj5375072941bb05.53739435" NotOnOrAfter="2014-05-15T18:37:53Z" Recipient="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"/></saml:SubjectConfirmation>
+    </saml:Subject><saml:Conditions NotBefore="2014-05-15T18:17:53Z" NotOnOrAfter="2014-05-15T18:37:53Z">
+    <saml:AudienceRestriction>
+    <saml:Audience>https://dev.smarterbalancedlibrary.org</saml:Audience>
+    </saml:AudienceRestriction>
     </saml:Conditions>
-    <saml:AuthnStatement AuthnInstant="2014-04-28T16:08:31Z" SessionIndex="s205f8489a59e75b0ed74f8b787507591064a23501">
-        <saml:AuthnContext>
-            <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef>
-        </saml:AuthnContext>
-    </saml:AuthnStatement>
-    <saml:AttributeStatement>
-        <saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">amplify_00001</saml:AttributeValue></saml:Attribute>
-        <saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Walsh</saml:AttributeValue></saml:Attribute>
-        <saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">3b0d0640-8cd1-44b4-9889-0dd4eb2c2828</saml:AttributeValue></saml:Attribute>
-        <saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">fwalsh@amplify.com</saml:AttributeValue></saml:Attribute>
-        <saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Frank Walsh</saml:AttributeValue></saml:Attribute>
-        <saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">15|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|</saml:AttributeValue></saml:Attribute>
-        <saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Frank</saml:AttributeValue></saml:Attribute>
-    </saml:AttributeStatement>
-  </saml:Assertion>
-  </samlp:Response>';
-
-  $saml_endpoint_assertion = FALSE;
-  return $saml_endpoint_assertion;
-}
-
-function sbac_sso_get_saml_token2() {
-  $saml_endpoint_assertion = '<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s2a46a4bc5bef4b939856628dddebaa0921f213c39" InResponseTo="_25cq5eaLdm53712f1f580fd0.94638016" Version="2.0" IssueInstant="2014-05-12T20:29:26Z" Destination="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
-  <samlp:StatusCode  xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
-  Value="urn:oasis:names:tc:SAML:2.0:status:Success">
-  </samlp:StatusCode>
-  </samlp:Status><saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s2dd4ed84de8bf1f0e8a6c5c6634d6e80d7f16bec1" IssueInstant="2014-05-12T20:29:26Z" Version="2.0">
-  <saml:Issuer>http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-  <ds:SignedInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-  <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
-  <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
-  <ds:Reference URI="#s2dd4ed84de8bf1f0e8a6c5c6634d6e80d7f16bec1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-  <ds:Transforms xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-  <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
-  <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
-  </ds:Transforms>
-  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
-  <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">9A1knblr/jx/hixq0wGXZvw4RsI=</ds:DigestValue>
-  </ds:Reference>
-  </ds:SignedInfo>
-  <ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-  Az4qabE4iTqQsqODQsxIVkpY2m7nhU14n6JKO9ZwvnDnQWiToQJSYss9fMU4PBinB8pe1yY/MUzH
-  7Zk1VWF6sZKkcgoSyRfWvkjOXygdYG9P1ve3jI/IXYFFp3qMtKAGgntK6G939ZLGmhZHsuZY96X5
-  3zlLWG4tvHSX5XDKNWI=
-  </ds:SignatureValue>
-  <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-  <ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-  <ds:X509Certificate xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-  MIICQDCCAakCBEeNB0swDQYJKoZIhvcNAQEEBQAwZzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNh
-  bGlmb3JuaWExFDASBgNVBAcTC1NhbnRhIENsYXJhMQwwCgYDVQQKEwNTdW4xEDAOBgNVBAsTB09w
-  ZW5TU08xDTALBgNVBAMTBHRlc3QwHhcNMDgwMTE1MTkxOTM5WhcNMTgwMTEyMTkxOTM5WjBnMQsw
-  CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEUMBIGA1UEBxMLU2FudGEgQ2xhcmExDDAK
-  BgNVBAoTA1N1bjEQMA4GA1UECxMHT3BlblNTTzENMAsGA1UEAxMEdGVzdDCBnzANBgkqhkiG9w0B
-  AQEFAAOBjQAwgYkCgYEArSQc/U75GB2AtKhbGS5piiLkmJzqEsp64rDxbMJ xDrye0EN/q1U5Of
-  RkDsaN/igkAvV1cuXEgTL6RlafFPcUX7QxDhZBhsYF9pbwtMzi4A4su9hnxIhURebGEmxKW9qJNY
-  Js0Vo5 IgjxuEWnjnnVgHTs1 mq5QYTA7E6ZyL8CAwEAATANBgkqhkiG9w0BAQQFAAOBgQB3Pw/U
-  QzPKTPTYi9upbFXlrAKMwtFf2OW4yvGWWvlcwcNSZJmTJ8ARvVYOMEVNbsT4OFcfu2/PeYoAdiDA
-  cGy/F2Zuj8XJJpuQRSE6PtQqBuDEHjjmOQJ0rV/r8mO1ZCtHRhpZ5zYRjhRC9eCbjx9VrFax0JDC
-  /FfwWigmrW0Y0Q==
-  </ds:X509Certificate>
-  </ds:X509Data>
-  </ds:KeyInfo>
-  </ds:Signature><saml:Subject>
-  <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" NameQualifier="http://drcamp-dev.opentestsystem.org:8080/auth">tbChDdMDviswcb7pvNcKwNtXziPS</saml:NameID><saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-  <saml:SubjectConfirmationData InResponseTo="_25cq5eaLdm53712f1f580fd0.94638016" NotOnOrAfter="2014-05-12T20:39:26Z" Recipient="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"/></saml:SubjectConfirmation>
-  </saml:Subject><saml:Conditions NotBefore="2014-05-12T20:19:26Z" NotOnOrAfter="2014-05-12T20:39:26Z">
-  <saml:AudienceRestriction>
-  <saml:Audience>https://dev.smarterbalancedlibrary.org</saml:Audience>
-  </saml:AudienceRestriction>
-  </saml:Conditions>
-  <saml:AuthnStatement AuthnInstant="2014-05-12T20:29:26Z" SessionIndex="s2bf232ec789f4aa45ec3a2aec8f3791ce92e93101"><saml:AuthnContext><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml:AuthnContext></saml:AuthnStatement><saml:AttributeStatement><saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">appno_00004</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">|DL_EndUser|CONSORTIUM_EDUCATION_ADMINISTRATOR_1|INSTITUTION|Appnovation Client ID|Appnovation Client|Appnovation State Group ID|Appnovation State Group|Appnovation State|Appnovation State|Appnovation District Group ID|Appnovation District Group|Appnovation District ID|Appnovation District|Appnovation Insitution Group ID|Appnovation Institution Group|Appnovation Institution ID|Appnovation Institution|</saml:AttributeValue></saml:Attribute><saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon</saml:AttributeValue></saml:Attribute></saml:AttributeStatement></saml:Assertion></samlp:Response>';
+    <saml:AuthnStatement AuthnInstant="2014-05-15T18:09:50Z" SessionIndex="s2d10a50e9f2d0cc7aa22c2a2d1b07cc87246daf01"><saml:AuthnContext><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml:AuthnContext></saml:AuthnStatement><saml:AttributeStatement><saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">appno_00004</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">brandont+4@appnovation.com</saml:AttributeValue></saml:Attribute><saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">3cdd4237-7a81-45b6-8e0e-1a8fe1952922</saml:AttributeValue></saml:Attribute><saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">|DL_EndUser|CONSORTIUM_EDUCATION_ADMINISTRATOR_1|INSTITUTION|Appnovation Client ID|Appnovation Client|Appnovation State Group ID|Appnovation State Group|Alaska|Alaska|Appnovation District Group ID|Appnovation District Group|Appnovation District ID|Appnovation District|Appnovation Insitution Group ID|Appnovation Institution Group|Appnovation Institution ID|Appnovation Institution|</saml:AttributeValue></saml:Attribute><saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon</saml:AttributeValue></saml:Attribute></saml:AttributeStatement></saml:Assertion></samlp:Response>';
   return $saml_endpoint_assertion;
 }
