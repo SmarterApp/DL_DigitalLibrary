@@ -194,7 +194,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     elseif ($flag_property == 'view-post-flags') {
       $moderation_content_header = '<div class="sbac-forum-flagged-content-header"><span class="sbac-forum-flagged-text">Flagged</span></div>';
     }
-  // Moderator moderate
+    // Moderator moderate
   }
 
 
@@ -225,11 +225,11 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $vars['main_content'] = $main_content;
   $vars['moderation'] = array(
     'topic' => array(
-      'header'  => $moderation_topic_header,
+      'header' => $moderation_topic_header,
       'content' => $moderation_topic_content,
     ),
     'post' => array(
-      'header'  => $moderation_post_header,
+      'header' => $moderation_post_header,
       'content' => $moderation_post_content,
     ),
   );
@@ -298,27 +298,21 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   $vars['posted_date'] = $posted_date;
   $vars['has_materials'] = $has_materials;
 
-  // Remove delete link
-  unset($vars['content']['links']['comment']['#links']['comment-delete']);
-
   // Override reply link
   if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
-    $vars['content']['links']['comment']['#links']['comment-reply']['title'] = 'Reply';
     $new_url = 'sbac-forum/custom/comment-reply/' . $comment_entity->nid . '/' . $comment_entity->cid;
-    $vars['content']['links']['comment']['#links']['comment-reply']['href'] = $new_url;
+    $vars['content']['reply_link'] = l(t('Reply'), $new_url, array('attributes' => array('class' => array('comment-reply'))));
   }
 
+  // Recommend count
   $vars['content']['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
 
   if ($is_comment_author) {
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
-      $vars['content']['links']['comment']['#links']['comment-edit']['title'] = 'Edit';
+      $vars['content']['edit_link'] = l(t('Edit'), $vars['content']['links']['comment']['#links']['comment-edit']['href'], array('attributes' => array('class' => array('comment-edit'))));
     }
   }
   else {
-    // Remove edit link
-    unset($vars['content']['links']['comment']['#links']['comment-edit']);
-
     // Recommend link
     if (!sbac_forum_user_has_recommended($comment_entity->cid, $user->uid)) {
       $vars['content']['recommend_link'] = l(t('Recommend'), current_path(), array(
@@ -356,10 +350,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
 
       $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
-
-      $vars['content']['links']['comment']['#links']['flag_post']['href'] = $flag_link;
-      $vars['content']['links']['comment']['#links']['flag_post']['title'] = 'Flag';
-      $vars['content']['links']['comment']['#links']['flag_post']['attributes'] = $link_ops;
+      $vars['content']['flag_link'] = l(t('Flag'), $flag_link, array('attributes' => $link_ops));
     }
   }
 }

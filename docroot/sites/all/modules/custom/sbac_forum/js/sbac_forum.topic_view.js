@@ -95,7 +95,7 @@
         $(this).click(direct_comment_open);
       });
 
-      $(".comment-reply a, .comment-add a").once('comment-click', function () {
+      $(".comment-reply, .comment-add a").once('comment-click', function () {
         $(this).click(comment_open);
       });
 
