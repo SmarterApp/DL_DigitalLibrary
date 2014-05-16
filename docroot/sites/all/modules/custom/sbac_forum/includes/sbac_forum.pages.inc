@@ -20,7 +20,7 @@ function sbac_forum_main_landing_page() {
 
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
-    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
   }
   // Get correct set of category filters based on subnav.
   switch($active_tab) { // Get correct current filter.
@@ -76,6 +76,7 @@ function sbac_forum_main_landing_page() {
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
+  dpq($view->build_info['query']);
   $forum_list_output = $view->preview();
   $active_view_count = $view->total_rows;
   $count_values[$active_display] = $active_view_count;
@@ -142,14 +143,14 @@ function sbac_forum_main_landing_page_reset($item, $severity) {
  */
 function sbac_forum_keyword_search_redirect($where = FALSE) {
   switch($where) {
-    case 'all-forums':
-      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+    case 'resource-forums':
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
       break;
-    case 'my-forums':
-      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_OWN);
+    case 'topic-forums':
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
       break;
     default:
-      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
       break;
   }
   drupal_goto('forums');

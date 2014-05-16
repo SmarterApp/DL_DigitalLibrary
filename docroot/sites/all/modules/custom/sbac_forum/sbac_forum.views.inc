@@ -2,11 +2,11 @@
 
 
 function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $active_display = 'block') {
-  // $arg_definitions = $view->display_handler->get_option('arguments');
   $view_filters = $view->display_handler->get_option('filters');
   $empty_text_url = 'forums-main-page/reset/all-forums/all';
 
   // Current filter session - create the args where needed.
+  unset($view_filters['sticky']);
   if (!empty($current_filters)) {
     $filters = explode('::', $current_filters);
     $views_filters = array();
@@ -16,34 +16,72 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
         if ($filter_info && sizeof($filter_info) == 2) {
           $vid = $filter_info[0];
           $tid = $filter_info[1];
+          $view->test = 'test';
           if ($vid && $tid) {
-            $vocabulary = taxonomy_vocabulary_load($vid);
-            $term = taxonomy_term_load($tid);
-            if ($vocabulary && $term) {
-              switch ($vocabulary->machine_name) {
-                case 'grades':
-                  $view_filters['field_grades_tid']['value'][] = $tid;
-                  $view_filters['field_grades_tid']['operator'] = 'and';
+            if ($vid == 'distinctions') {
+              // These are just custom filters, they don't really exist as taxonomy terms
+              switch ($tid) {
+                // We're just piggybacking the view so that the hook_views_query_alter can see them and join the appropriate tables.
+                case 'Posted with Distinction':
+                  $view->custom_filters[] = 'distinction';
                   break;
-                case 'intended_student_populations':
-                  $view_filters['field_intended_student_tid']['value'][] = $tid;
-                  $view_filters['field_intended_student_tid']['operator'] = 'and';
+                case 'Favorite':
+                  $view->custom_filters[] = 'favorite';
                   break;
-                case 'subject':
-                  $view_filters['field_subject_tid']['value'][] = $tid;
-                  $view_filters['field_subject_tid']['operator'] = 'and';
-                  break;
-                case 'intended_end_user':
-                  $view_filters['field_intended_end_user_tid']['value'][] = $tid;
-                  $view_filters['field_intended_end_user_tid']['operator'] = 'and';
-                  break;
+              }
+            }
+            else {
+              $vocabulary = taxonomy_vocabulary_load($vid);
+              $term = taxonomy_term_load($tid);
+              if ($vocabulary && $term) {
+                switch ($vocabulary->machine_name) {
+                  case 'grades':
+                    $view_filters['field_grades_tid']['value'][] = $tid;
+                    $view_filters['field_grades_tid']['operator'] = 'and';
+                    break;
+                  case 'intended_student_populations':
+                    $view_filters['field_intended_student_tid']['value'][] = $tid;
+                    $view_filters['field_intended_student_tid']['operator'] = 'and';
+                    break;
+                  case 'subject':
+                    $view_filters['field_subject_tid']['value'][] = $tid;
+                    $view_filters['field_subject_tid']['operator'] = 'and';
+                    break;
+                  case 'intended_end_user':
+                    $view_filters['field_intended_end_user_tid']['value'][] = $tid;
+                    $view_filters['field_intended_end_user_tid']['operator'] = 'and';
+                    break;
+                  case 'geographical_settings':
+                    $view_filters['field_geographical_settings_tid']['value'][] = $tid;
+                    $view_filters['field_geographical_settings_tid']['operator'] = 'and';
+                    break;
+                  case 'attributes':
+                    $view_filters['field_attributes_tid']['value'][] = $tid;
+                    $view_filters['field_attributes_tid']['operator'] = 'and';
+                    break;
+                  case 'digital_media_type':
+                    $view_filters['field_digital_media_type_tid']['value'][] = $tid;
+                    $view_filters['field_digital_media_type_tid']['operator'] = 'and';
+                    break;
+                  case 'focus':
+                    $view_filters['field_focus_tid']['value'][] = $tid;
+                    $view_filters['field_focus_tid']['operator'] = 'and';
+                    break;
+                  case 'educational_use':
+                    $view_filters['field_educational_use_tid']['value'][] = $tid;
+                    $view_filters['field_educational_use_tid']['operator'] = 'and';
+                    break;
+                  case 'smarter_balanced_keyword':
+                    $view_filters['field_smarter_balanced_keyword_tid']['value'][] = $tid;
+                    $view_filters['field_smarter_balanced_keyword_tid']['operator'] = 'and';
+                    break;
+                }
               }
             }
           }
         }
       }
     }
-
     $view->display_handler->set_option('filters', $view_filters);
   }
 
@@ -64,7 +102,7 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
     $empty_text_content .= '<h2>Your search returned no results</h2>';
     $empty_text_content .= '<p>Please try different search criteria or browse any of the forums below ';
     $empty_text_content .= 'that have been identified for you by using the subject(s) and grade(s) in your profile</p>';
-    $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">'.$empty_text_link.'</div>';
+    $empty_text_content .= '<div class="sbac-forum-filter-no-result-button-link">' . $empty_text_link . '</div>';
     $empty_text_content .= '</div>';
     $empty_text_class['area']['content'] = $empty_text_content;
     $view->display_handler->set_option('empty', $empty_text_class);
@@ -113,7 +151,7 @@ function sbac_forum_listing_apply_sorts(&$view, $current_sorting, $default_sort)
 
 
 function sbac_forum_forum_listing_empty_apply_filters(&$view, $account = NULL) {
- if (is_null($account)) {
+  if (is_null($account)) {
     global $user;
     $account = $user;
   }
@@ -123,7 +161,7 @@ function sbac_forum_forum_listing_empty_apply_filters(&$view, $account = NULL) {
 
   $view_filters = $view->display_handler->get_option('filters');
 
-  $get_tid = function($element) {
+  $get_tid = function ($element) {
     return $element['tid'];
   };
 
@@ -133,19 +171,21 @@ function sbac_forum_forum_listing_empty_apply_filters(&$view, $account = NULL) {
 
 
   $subject_all_term_obj = taxonomy_get_term_by_name('Not Subject Specific', 'subject');
-  if (!empty($subject_all_term_obj) ){
+  if (!empty($subject_all_term_obj)) {
     $subject_all_term = array_shift($subject_all_term_obj);
     $subject_tid_all = $subject_all_term->tid;
-  } else {
+  }
+  else {
     $subject_tid_all = 153; // fallback to hardcoded??
   }
 
 
   $grade_all_term_obj = taxonomy_get_term_by_name('Not Grade Specific', 'grades');
-  if (!empty($grade_all_term_obj) ){
+  if (!empty($grade_all_term_obj)) {
     $grade_all_term = array_shift($grade_all_term_obj);
     $grade_tid_all = $grade_all_term->tid;
-  } else {
+  }
+  else {
     $grade_tid_all = 122; // fallback to hardcoded??
   }
 
@@ -218,8 +258,7 @@ function sbac_forum_forum_listing_empty_apply_filters(&$view, $account = NULL) {
 
 
 function sbac_forum_views_query_alter(&$view, &$query) {
-  if (($view->name == 'forum_list') ||
-      ($view->name == 'forum_list_empty')) {
+  if (in_array($view->name, array('forum_list', 'forum_list_empty'))) {
 
     $condition_groups = count($query->where) + 1;
 
@@ -248,13 +287,13 @@ function sbac_forum_views_query_alter(&$view, &$query) {
 
     // create the join object. STATE
     $join = new views_join;
-    $join->table ='field_data_field_state';
+    $join->table = 'field_data_field_state';
     $join->left_table = 'taxonomy_term_data';
     $join->left_field = 'tid';
     $join->field = 'entity_id';
     $join->extra = array(
-       0 => array('field' => 'entity_type', 'value' => 'taxonomy_term'),
-       1 => array('field' => 'deleted', 'value' => 0),
+      0 => array('field' => 'entity_type', 'value' => 'taxonomy_term'),
+      1 => array('field' => 'deleted', 'value' => 0),
     );
     $join->type = "LEFT";
     $join->extra_type = 'AND';
@@ -278,13 +317,13 @@ function sbac_forum_views_query_alter(&$view, &$query) {
 
     // create the join object. ROLE
     $join = new views_join;
-    $join->table ='field_data_field_forum_access_role_list';
+    $join->table = 'field_data_field_forum_access_role_list';
     $join->left_table = 'taxonomy_term_data';
     $join->left_field = 'tid';
     $join->field = 'entity_id';
     $join->extra = array(
-       0 => array('field' => 'entity_type', 'value' => 'taxonomy_term'),
-       1 => array('field' => 'deleted', 'value' => 0),
+      0 => array('field' => 'entity_type', 'value' => 'taxonomy_term'),
+      1 => array('field' => 'deleted', 'value' => 0),
     );
     $join->type = "LEFT";
     $join->extra_type = 'AND';
@@ -302,6 +341,63 @@ function sbac_forum_views_query_alter(&$view, &$query) {
     $query->add_where($role_condition_group, 'field_data_field_forum_access_role_list.field_forum_access_role_list_value', $users_roles, 'IN');
     $query->add_where($role_condition_group, 'field_data_field_forum_access_role_list.field_forum_access_role_list_value', array(), 'IS NULL');
     $query->where[$role_condition_group]['type'] = "OR";
+
+    if (!empty($view->custom_filters)) {
+      foreach ($view->custom_filters as $filter) {
+        switch ($filter) {
+          case 'favorite':
+            // create the join object. FAVORITES
+            $join = new views_join;
+            $join->table = 'sbac_favorites';
+            if ($view->current_display == 'block_2') { // Resource forums
+              $join->left_table = 'field_data_field_forum_resource_ref';
+              $join->left_field = 'field_forum_resource_ref_target_id';
+            }
+            elseif ($view->current_display == 'block_3') { // Topic forums
+              $join->left_table = 'taxonomy_term_data';
+              $join->left_field = 'tid';
+            }
+            if (!empty($join->left_table)) {
+              $join->field = 'id';
+              $join->type = "LEFT";
+              $join->adjusted = 'TRUE';
+
+              $view->query->table_queue['sbac_favorites'] = array(
+                'table' => 'sbac_favorites',
+                'num' => 1,
+                'alias' => 'sbac_favorites',
+                'join' => $join,
+                'relationship' => 'taxonomy_term'
+              );
+
+              $fav_condition_group = $condition_groups++;
+              $query->add_where($fav_condition_group, 'sbac_favorites.uid', $user->uid, '=');
+            }
+            break;
+          case 'distinction':
+            $join = new views_join();
+            $join->table = 'node';
+            $join->left_table = 'field_data_field_forum_resource_ref';
+            $join->left_field = 'field_forum_resource_ref_target_id';
+            $join->field = 'nid';
+            $join->type = "LEFT";
+            $join->adjusted = 'TRUE';
+
+            $view->query->table_queue['node'] = array(
+              'table' => 'node',
+              'num' => 1,
+              'alias' => 'node',
+              'join' => $join,
+              'relationship' => 'node'
+            );
+
+            $resource_condition_group = $condition_groups++;
+            $query->add_where($resource_condition_group, 'node.sticky', 1, '=');
+
+            break;
+        }
+      }
+    }
 
     // Should have group on its own.
     if (!empty($user_removed_from_forum_list)) { // Exclude all forums user has been removed from.

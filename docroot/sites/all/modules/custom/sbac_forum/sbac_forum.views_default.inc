@@ -218,7 +218,7 @@ function sbac_forum_views_default_views() {
     27 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
+  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -408,7 +408,7 @@ function sbac_forum_views_default_views() {
     27 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended Forum Participants (field_intended_end_user) */
+  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -461,6 +461,42 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['table'] = 'field_data_field_forum_resource_ref';
   $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['field'] = 'field_forum_resource_ref_target_id';
   $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['operator'] = 'not empty';
+  /* Filter criterion: Field: Attributes (field_attributes) */
+  $handler->display->display_options['filters']['field_attributes_tid']['id'] = 'field_attributes_tid';
+  $handler->display->display_options['filters']['field_attributes_tid']['table'] = 'field_data_field_attributes';
+  $handler->display->display_options['filters']['field_attributes_tid']['field'] = 'field_attributes_tid';
+  $handler->display->display_options['filters']['field_attributes_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_attributes_tid']['vocabulary'] = 'attributes';
+  /* Filter criterion: Field: Geographical Setting(s) (field_geographical_settings) */
+  $handler->display->display_options['filters']['field_geographical_settings_tid']['id'] = 'field_geographical_settings_tid';
+  $handler->display->display_options['filters']['field_geographical_settings_tid']['table'] = 'field_data_field_geographical_settings';
+  $handler->display->display_options['filters']['field_geographical_settings_tid']['field'] = 'field_geographical_settings_tid';
+  $handler->display->display_options['filters']['field_geographical_settings_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_geographical_settings_tid']['vocabulary'] = 'geographical_settings';
+  /* Filter criterion: Field: Digital Media Type(s) (field_digital_media_type) */
+  $handler->display->display_options['filters']['field_digital_media_type_tid']['id'] = 'field_digital_media_type_tid';
+  $handler->display->display_options['filters']['field_digital_media_type_tid']['table'] = 'field_data_field_digital_media_type';
+  $handler->display->display_options['filters']['field_digital_media_type_tid']['field'] = 'field_digital_media_type_tid';
+  $handler->display->display_options['filters']['field_digital_media_type_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_digital_media_type_tid']['vocabulary'] = 'digital_media_type';
+  /* Filter criterion: Field: Resource Type (field_focus) */
+  $handler->display->display_options['filters']['field_focus_tid']['id'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['table'] = 'field_data_field_focus';
+  $handler->display->display_options['filters']['field_focus_tid']['field'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
+  /* Filter criterion: Field: Educational Use (field_educational_use) */
+  $handler->display->display_options['filters']['field_educational_use_tid']['id'] = 'field_educational_use_tid';
+  $handler->display->display_options['filters']['field_educational_use_tid']['table'] = 'field_data_field_educational_use';
+  $handler->display->display_options['filters']['field_educational_use_tid']['field'] = 'field_educational_use_tid';
+  $handler->display->display_options['filters']['field_educational_use_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
+  /* Filter criterion: Field: Smarter Balanced Keyword(s) (field_smarter_balanced_keyword) */
+  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['id'] = 'field_smarter_balanced_keyword_tid';
+  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['table'] = 'field_data_field_smarter_balanced_keyword';
+  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['field'] = 'field_smarter_balanced_keyword_tid';
+  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['vocabulary'] = 'smarter_balanced_keyword';
 
   /* Display: Topic Forums */
   $handler = $view->new_display('block', 'Topic Forums', 'block_3');

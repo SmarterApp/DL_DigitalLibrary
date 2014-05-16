@@ -769,6 +769,13 @@ function sbac_search_resource_review_categories() {
   return $output;
 }
 
+function _sbac_search_create_taxonomy_filter(&$categories, $vocab_name, $display_name) {
+  $vocab = taxonomy_vocabulary_machine_name_load($vocab_name);
+  $categories[$vocab_name]['display_name'] = $display_name;
+  $categories[$vocab_name]['vocabulary'] = $vocab;
+  $categories[$vocab_name]['terms'] = taxonomy_get_tree($vocab->vid);
+}
+
 /**
  * Returns the category filters.
  *
@@ -779,55 +786,16 @@ function sbac_search_digital_library_categories() {
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
 
-  $subject = taxonomy_vocabulary_machine_name_load('subject');
-  $categories['subject']['display_name'] = 'Subjects';
-  $categories['subject']['vocabulary'] = $subject;
-  $categories['subject']['terms'] = taxonomy_get_tree($subject->vid);
-
-  $grades = taxonomy_vocabulary_machine_name_load('grades');
-  $categories['grades']['display_name'] = 'Grades';
-  $categories['grades']['vocabulary'] = $grades;
-  $categories['grades']['terms'] = taxonomy_get_tree($grades->vid);
-
-  $attributes = taxonomy_vocabulary_machine_name_load('attributes');
-  $categories['attributes']['display_name'] = 'Attributes of the Formative Assessment Process';
-  $categories['attributes']['vocabulary'] = $attributes;
-  $categories['attributes']['terms'] = taxonomy_get_tree($attributes->vid);
-
-  $digital_media_type = taxonomy_vocabulary_machine_name_load('digital_media_type');
-  $categories['digital_media_type']['display_name'] = 'Media Types';
-  $categories['digital_media_type']['vocabulary'] = $digital_media_type;
-  $categories['digital_media_type']['terms'] = taxonomy_get_tree($digital_media_type->vid);
-
-  $focus = taxonomy_vocabulary_machine_name_load('focus');
-  $categories['focus']['display_name'] = 'Resource Type';
-  $categories['focus']['vocabulary'] = $focus;
-  $categories['focus']['terms'] = taxonomy_get_tree($focus->vid);
-
-  $intended_end_user = taxonomy_vocabulary_machine_name_load('intended_end_user');
-  $categories['intended_end_user']['display_name'] = 'Intended End Users';
-  $categories['intended_end_user']['vocabulary'] = $intended_end_user;
-  $categories['intended_end_user']['terms'] = taxonomy_get_tree($intended_end_user->vid);
-
-  $intended_student_populations = taxonomy_vocabulary_machine_name_load('intended_student_populations');
-  $categories['intended_student_populations']['display_name'] = 'Intended Student Populations';
-  $categories['intended_student_populations']['vocabulary'] = $intended_student_populations;
-  $categories['intended_student_populations']['terms'] = taxonomy_get_tree($intended_student_populations->vid);
-
-  $educational_use = taxonomy_vocabulary_machine_name_load('educational_use');
-  $categories['educational_use']['display_name'] = 'Educational Use';
-  $categories['educational_use']['vocabulary'] = $educational_use;
-  $categories['educational_use']['terms'] = taxonomy_get_tree($educational_use->vid);
-
-  $smarter_balanced_keyword = taxonomy_vocabulary_machine_name_load('smarter_balanced_keyword');
-  $categories['smarter_balanced_keyword']['display_name'] = 'Smarter Balanced Keywords';
-  $categories['smarter_balanced_keyword']['vocabulary'] = $smarter_balanced_keyword;
-  $categories['smarter_balanced_keyword']['terms'] = taxonomy_get_tree($smarter_balanced_keyword->vid);
-
-  $geographical_settings = taxonomy_vocabulary_machine_name_load('geographical_settings');
-  $categories['geographical_settings']['display_name'] = 'Geographic Settings';
-  $categories['geographical_settings']['vocabulary'] = $geographical_settings;
-  $categories['geographical_settings']['terms'] = taxonomy_get_tree($geographical_settings->vid);
+  _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
+  _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
+  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Attributes of the Formative Assessment Process');
+  _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
+  _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
+  _sbac_search_create_taxonomy_filter($categories, 'intended_end_user', 'Intended End Users');
+  _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
+  _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
+  _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Smarter Balanced Keywords');
+  _sbac_search_create_taxonomy_filter($categories, 'geographical_settings', 'Geographic Settings');
 
   $attrs = array(
     'attributes' => array(

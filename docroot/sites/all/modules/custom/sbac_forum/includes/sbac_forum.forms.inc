@@ -22,25 +22,25 @@ function sbac_forum_category_forum_form($form, &$form_state) {
 
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
-    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
   }
 
   $current_filters = NULL;
   // Get correct set of category filters based on subnav.
-  switch($active_tab) { // Get correct current filter.
-    case SBAC_FORUM_SUBNAV_ALL:
-      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
-        $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+  switch ($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_RESOURCE:
+      if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS];
       }
-      if (isset($_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) {
+      if (isset($_COOKIE[SBAC_FORUM_RESOURCE_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_RESOURCE_FORUM_FILTERS_CLOSED]) {
         $should_hide_categories = ' style="display:none;"';
       }
       break;
-    case SBAC_FORUM_SUBNAV_OWN:
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
-        $current_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
+    case SBAC_FORUM_SUBNAV_TOPIC:
+      if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS];
       }
-      if (isset($_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED]) {
+      if (isset($_COOKIE[SBAC_FORUM_TOPIC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_TOPIC_FORUM_FILTERS_CLOSED]) {
         $should_hide_categories = ' style="display:none;"';
       }
       break;
@@ -54,7 +54,7 @@ function sbac_forum_category_forum_form($form, &$form_state) {
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide '. $hide_categories_class .'" href="#">' . $hide_categories_text . '</a>',
+    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-forum-current-filters'),
@@ -70,11 +70,11 @@ function sbac_forum_category_forum_form($form, &$form_state) {
     '#attributes' => array(
       'id' => 'sbac-forum-filter-button',
       'class' => array(
-        ($current_filters != NULL) ? 'is-edit': 'is-apply',
-        ($current_filters == NULL) ? 'js-hide': ''
+        ($current_filters != NULL) ? 'is-edit' : 'is-apply',
+        ($current_filters == NULL) ? 'js-hide' : ''
       ),
     ),
-    '#prefix' => '<div class="category-buttons slideable" '. $should_hide_categories .'>',
+    '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
@@ -103,50 +103,64 @@ function sbac_forum_category_forum_form($form, &$form_state) {
   return $form;
 }
 
-
+/**
+ * Create the filter categories for the forums
+ *
+ * @return null|string
+ */
 function _sbac_forum_filter_categories() {
   $categories = array();
   drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.filter_categories.js');
 
-  $subject = taxonomy_vocabulary_machine_name_load('subject');
-  $categories['subject']['display_name'] = 'Subjects';
-  $categories['subject']['vocabulary'] = $subject;
-  $categories['subject']['terms'] = taxonomy_get_tree($subject->vid);
+  $active_tab = sbac_forum__api__get_active_subnav();
+  if (empty($active_tab)) {
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
+  }
 
-  $grades = taxonomy_vocabulary_machine_name_load('grades');
-  $categories['grades']['display_name'] = 'Grades';
-  $categories['grades']['vocabulary'] = $grades;
-  $categories['grades']['terms'] = taxonomy_get_tree($grades->vid);
+  _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
+  _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
+  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Attributes of the Formative Assessment Process');
+  _sbac_search_create_taxonomy_filter($categories, 'intended_end_user', 'Intended End Users');
+  _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
+  _sbac_search_create_taxonomy_filter($categories, 'geographical_settings', 'Geographic Settings');
+  if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
+    _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
+    _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
+    _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
+    _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Smarter Balanced Keywords');
+  }
 
-  $intended_student_populations = taxonomy_vocabulary_machine_name_load('intended_student_populations');
-  $categories['intended_student_populations']['display_name'] = 'Intended Student Populations';
-  $categories['intended_student_populations']['vocabulary'] = $intended_student_populations;
-  $categories['intended_student_populations']['terms'] = taxonomy_get_tree($intended_student_populations->vid);
-
-  $intended_end_user = taxonomy_vocabulary_machine_name_load('intended_end_user');
-  $categories['intended_end_user']['display_name'] = 'Intended Forum Participants';
-  $categories['intended_end_user']['vocabulary'] = $intended_end_user;
-  $categories['intended_end_user']['terms'] = taxonomy_get_tree($intended_end_user->vid);
+  // Our custom filters
+  $categories['distinctions']['display_name'] = 'Distinctions';
+  $categories['distinctions']['vocabulary'] = (object) array(
+    'vid' => 'distinctions'
+  );
+  if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
+    $categories['distinctions']['terms'][] = (object) array(
+      'tid' => 'Posted with Distinction',
+      'name' => 'Posted with Distinction',
+    );
+  }
+  $categories['distinctions']['terms'][] = (object) array(
+    'tid' => 'Favorite',
+    'name' => 'Favorite',
+  );
 
   $cf_value = NULL;
   $cf_html = array();
 
-  $active_tab = sbac_forum__api__get_active_subnav();
-  if (empty($active_tab)) {
-    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
-  }
 
   $current_filters = NULL;
   // Get correct set of category filters based on subnav.
-  switch($active_tab) { // Get correct current filter.
-    case SBAC_FORUM_SUBNAV_ALL:
-      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
-        $cf_value = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+  switch ($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_RESOURCE:
+      if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS])) {
+        $cf_value = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS];
       }
       break;
-    case SBAC_FORUM_SUBNAV_OWN:
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
-        $cf_value = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
+    case SBAC_FORUM_SUBNAV_TOPIC:
+      if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS])) {
+        $cf_value = $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS];
       }
       break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
@@ -162,9 +176,14 @@ function _sbac_forum_filter_categories() {
           $vid = $filter_info[0];
           $tid = $filter_info[1];
           if ($vid && $tid) {
-            $term = taxonomy_term_load($tid);
-            if ($term) {
-              $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+            if ($vid == 'distinctions') {
+              $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $tid . '</span></div>';
+            }
+            else {
+              $term = taxonomy_term_load($tid);
+              if ($term) {
+                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+              }
             }
           }
         }
@@ -190,16 +209,16 @@ function sbac_forum_category_forum_form_submit($form, &$form_state) {
 
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
-    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
   }
 
   // Get correct set of category filters based on subnav.
-  switch($active_tab) { // Get correct current filter.
-    case SBAC_FORUM_SUBNAV_ALL:
-      $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
+  switch ($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_RESOURCE:
+      $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
       break;
-    case SBAC_FORUM_SUBNAV_OWN:
-      $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
+    case SBAC_FORUM_SUBNAV_TOPIC:
+      $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
       break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
       break;
@@ -215,16 +234,16 @@ function sbac_forum_category_forum_form_submit($form, &$form_state) {
 function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
-    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
   }
 
   // Get correct set of category filters based on subnav.
-  switch($active_tab) { // Get correct current filter.
-    case SBAC_FORUM_SUBNAV_ALL:
-      $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
+  switch ($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_RESOURCE:
+      $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = '';
       break;
-    case SBAC_FORUM_SUBNAV_OWN:
-      $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
+    case SBAC_FORUM_SUBNAV_TOPIC:
+      $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = '';
       break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
       break;
@@ -244,49 +263,12 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   $default = '';
   $options = array();
 
-  $all_forums_classes = '';
-  $all_forums_count_text = '';
-  $my_forums_classes = '';
-  $my_forums_count_text = '';
   $resource_forums_classes = '';
   $resource_forums_count_text = '';
   $topic_forums_classes = '';
   $topic_forums_count_text = '';
   $active_tab = sbac_forum__api__get_active_subnav();
-  switch($active_tab) {
-    case SBAC_FORUM_SUBNAV_ALL:
-      $all_forums_classes = 'is-pressed';
-
-      $default = 'forum-most-active';
-      // If session var is set, make it the default.
-      if (isset($_SESSION[SBAC_FORUM_ALL_FORUM_SORTS]) &&
-          $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] != '') {
-        $default = $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS];
-      }
-      $options = array(
-        'forum-most-active'   => t('Most Active'),
-        'forum-newest'        => t('Newest'),
-        'forum-most-members'  => t('Most Members'),
-      );
-      $sort_ajax_callback = 'sbac_forum__ajax__all_forums_sort_form_change';
-      break;
-    case SBAC_FORUM_SUBNAV_OWN:
-      $my_forums_classes = 'is-pressed';
-
-      $default = 'forum-recent-activity';
-      // If session var is set, make it the default.
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_SORTS]) &&
-          $_SESSION[SBAC_FORUM_MY_FORUM_SORTS] != '') {
-        $default = $_SESSION[SBAC_FORUM_MY_FORUM_SORTS];
-      }
-      $options = array(
-        'forum-recent-activity' => t('Recent Activity'),
-        'forum-most-active'     => t('Most Active'),
-        'forum-newest'          => t('Newest'),
-        'forum-most-members'    => t('Most Members'),
-      );
-      $sort_ajax_callback = 'sbac_forum__ajax__my_forum_sort_form_change';
-      break;
+  switch ($active_tab) {
     case SBAC_FORUM_SUBNAV_KEYWORD:
       // both should be off. Keyword search was performed.
       break;
@@ -295,7 +277,8 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
       $default = 'forum-recent-activity';
       // If session var is set, make it the default.
       if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS]) &&
-        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != '') {
+        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != ''
+      ) {
         $default = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS];
       }
       $options = array(
@@ -311,18 +294,17 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
       $topic_forums_classes = 'is-pressed';
       break;
     default:
-      // set all forums if it ends up empty.
-      $all_forums_classes = 'is-pressed';
       $default = 'forum-most-active';
       // If session var is set, make it the default.
       if (isset($_SESSION[SBAC_FORUM_ALL_FORUM_SORTS]) &&
-          $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] != '') {
+        $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] != ''
+      ) {
         $default = $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS];
       }
       $options = array(
-        'forum-most-active'   => t('Most Active'),
-        'forum-newest'        => t('Newest'),
-        'forum-most-members'  => t('Most Members'),
+        'forum-most-active' => t('Most Active'),
+        'forum-newest' => t('Newest'),
+        'forum-most-members' => t('Most Members'),
       );
       break;
   }
@@ -333,42 +315,15 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     $resource_forums_count_text = '(' . $count_values[$resource_forums_display] . ')';
   }
   $form['resource_forums'] = array(
-    '#prefix'       => '<div class="forum-subnav-primary-wrapper">',
-    '#type'         => 'submit',
-    '#value'        => t('Resource Forums'). ' '. $resource_forums_count_text,
-    '#title'        => t('Resource Forums '),
-    '#attributes'   => array(
+    '#prefix' => '<div class="forum-subnav-primary-wrapper">',
+    '#type' => 'submit',
+    '#value' => t('Resource Forums') . ' ' . $resource_forums_count_text,
+    '#title' => t('Resource Forums '),
+    '#attributes' => array(
       'class' => array($resource_forums_classes),
     ),
     '#submit' => array('_sbac_forum_sub_nav__set_resource__submit'),
   );
-
-  // All forums tab
-//  if (isset($count_values['block']) && !empty($count_values['block'])) {
-//    $all_forums_count_text = '('.$count_values['block'].')';
-//  }
-//  $form['all_forums'] = array(
-//    '#type'         => 'submit',
-//    '#value'        => t('All Forums'). ' ' . $all_forums_count_text,
-//    '#attributes'   => array(
-//      'class'   => array($all_forums_classes),
-//    ),
-//    '#submit' => array('_sbac_forum_sub_nav__set_all__submit'),
-//  );
-
-  // My Forums tab
-//  if (isset($count_values['block_1']) && !empty($count_values['block_1'])) {
-//    $my_forums_count_text = '('.$count_values['block_1'].')';
-//  }
-//  $form['my_forum'] = array(
-//    '#type'         => 'submit',
-//    '#value'        => t('My Forums'). ' '. $my_forums_count_text,
-//    '#title'        => t('My forums'),
-//    '#attributes'   => array(
-//      'class' => array($my_forums_classes),
-//    ),
-//    '#submit' => array('_sbac_forum_sub_nav__set_own__submit'),
-//  );
 
   // Topic Forums tab
   $topic_forums_display = 'block_3';
@@ -376,14 +331,14 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     $topic_forums_count_text = '(' . $count_values[$topic_forums_display] . ')';
   }
   $form['topic_forums'] = array(
-    '#type'         => 'submit',
-    '#value'        => t('Topic Forums'). ' '. $topic_forums_count_text,
-    '#title'        => t('Topic forums'),
-    '#attributes'   => array(
+    '#type' => 'submit',
+    '#value' => t('Topic Forums') . ' ' . $topic_forums_count_text,
+    '#title' => t('Topic forums'),
+    '#attributes' => array(
       'class' => array($topic_forums_classes),
     ),
     '#submit' => array('_sbac_forum_sub_nav__set_topic__submit'),
-    '#suffix'       => '</div>',
+    '#suffix' => '</div>',
   );
 
   // Ajax submitted. Set Text if selected.
@@ -391,41 +346,42 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     $new_value_key = $form_state['values']['forum_sort_order'];
     $old_value_text = $options[$new_value_key];
     $options[$new_value_key] = t('Sort by: ' . $old_value_text);
-  } else {
+  }
+  else {
     $options[$default] = t('Sort by: ' . $options[$default]);
   }
 
   // Needs to ajax submit to set the session variable that tracks default state.
   $form['forum_sort_order'] = array(
-    '#prefix'         => '<div class="forum-subnav-sort-wrapper">',
-    '#suffix'         => '</div>',
-    '#type'           => 'select',
-    '#title'          => t('Sort forum by'),
-    '#required'       => FALSE,
-    '#options'        => $options,
-    '#default_value'  => $default,
-    '#ajax'           => array(
-      'callback'  => $sort_ajax_callback,
-      'event'     => 'change',
-      'wrapper'   => 'form-wrapper-forums-sort-element',
-      'progress'  => array('type' => 'none'),
+    '#prefix' => '<div class="forum-subnav-sort-wrapper">',
+    '#suffix' => '</div>',
+    '#type' => 'select',
+    '#title' => t('Sort forum by'),
+    '#required' => FALSE,
+    '#options' => $options,
+    '#default_value' => $default,
+    '#ajax' => array(
+      'callback' => $sort_ajax_callback,
+      'event' => 'change',
+      'wrapper' => 'form-wrapper-forums-sort-element',
+      'progress' => array('type' => 'none'),
     )
   );
 
   drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.subnav_form.js');
   $form['forum_keyword'] = array(
-    '#prefix'         => '<div class="forum-subnav-keyword-wrapper">',
-    '#suffix'         => '</div>',
-    '#type'           => 'textfield',
-    '#title'          => t('Search forums'),
-    '#default_value'  => 'Search Forums',
-    '#size'           => 30,
-    '#ajax'           => array(
-      'callback'  => 'sbac_forum__ajax__keyword_search_trigger',
-      'event'     => 'blur',
-      'wrapper'   => 'form-subnav-keyword-wrapper',
-      'progress'  => array('type' => 'none'),
-      'keypress'  => TRUE,
+    '#prefix' => '<div class="forum-subnav-keyword-wrapper">',
+    '#suffix' => '</div>',
+    '#type' => 'textfield',
+    '#title' => t('Search forums'),
+    '#default_value' => 'Search Forums',
+    '#size' => 30,
+    '#ajax' => array(
+      'callback' => 'sbac_forum__ajax__keyword_search_trigger',
+      'event' => 'blur',
+      'wrapper' => 'form-subnav-keyword-wrapper',
+      'progress' => array('type' => 'none'),
+      'keypress' => TRUE,
     )
   );
 
@@ -434,7 +390,7 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   if ($access_to_add) {
     $link_options = array(
       'attributes' => array(
-        'class'=> 'new-forum-link',
+        'class' => 'new-forum-link',
       ),
     );
     $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
@@ -457,11 +413,11 @@ function _sbac_forum_sub_nav__set_own__submit($form, &$form_state) {
   sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_OWN);
 }
 
-function _sbac_forum_sub_nav__set_resource__submit($form, &$form_state){
+function _sbac_forum_sub_nav__set_resource__submit($form, &$form_state) {
   sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
 }
 
-function _sbac_forum_sub_nav__set_topic__submit($form, &$form_state){
+function _sbac_forum_sub_nav__set_topic__submit($form, &$form_state) {
   sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
 }
 
@@ -471,7 +427,7 @@ function _sbac_forum_sub_nav__set_topic__submit($form, &$form_state){
  * =============================================================================
  */
 
-function sbac_forum_keyword_search_sub_nav_form($form, &$form_state ) {
+function sbac_forum_keyword_search_sub_nav_form($form, &$form_state) {
   $form = array();
 
   $all_forums_classes = '';
@@ -482,30 +438,30 @@ function sbac_forum_keyword_search_sub_nav_form($form, &$form_state ) {
   $count_values = $_SESSION[SBAC_FORUM_FILTER_RESULTS_COUNTER];
 
   if (isset($count_values['block']) && !empty($count_values['block'])) {
-    $all_forums_count_text = '('.$count_values['block'].')';
+    $all_forums_count_text = '(' . $count_values['block'] . ')';
   }
   $form['all_forums'] = array(
-    '#prefix'       => '<div class="forum-kw-search-subnav-primary-wrapper">',
-    '#type'         => 'submit',
-    '#value'        => t('All Forums'). ' ' . $all_forums_count_text,
-    '#attributes'   => array(
-      'class'   => array($all_forums_classes),
+    '#prefix' => '<div class="forum-kw-search-subnav-primary-wrapper">',
+    '#type' => 'submit',
+    '#value' => t('All Forums') . ' ' . $all_forums_count_text,
+    '#attributes' => array(
+      'class' => array($all_forums_classes),
     ),
     '#submit' => array('_sbac_forum_kw_search_sub_nav__set_all__submit'),
   );
 
   if (isset($count_values['block_1']) && !empty($count_values['block_1'])) {
-    $my_forums_count_text = '('.$count_values['block_1'].')';
+    $my_forums_count_text = '(' . $count_values['block_1'] . ')';
   }
   $form['my_forum'] = array(
-    '#type'         => 'submit',
-    '#value'        => t('My Forums'). ' '. $my_forums_count_text,
-    '#title'        => t('My forums'),
-    '#attributes'   => array(
+    '#type' => 'submit',
+    '#value' => t('My Forums') . ' ' . $my_forums_count_text,
+    '#title' => t('My forums'),
+    '#attributes' => array(
       'class' => array($my_forums_classes),
     ),
     '#submit' => array('_sbac_forum_kw_search_sub_nav__set_own__submit'),
-    '#suffix'       => '</div>',
+    '#suffix' => '</div>',
   );
 
   return $form;
@@ -531,7 +487,7 @@ function sbac_forum_delete_forum_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>'.t('You are about to delete this forum').'</h2><p>' . t('
+    '#markup' => '<h2>' . t('You are about to delete this forum') . '</h2><p>' . t('
     If you continue, the forum and all its content will be permanently deleted. Members will receive a notification that the forum is no longer available.') . '</p>',
   );
 
@@ -596,11 +552,11 @@ function sbac_forum_leave_forum_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>'.t('You are about to leave this forum').'</h2><p>' . t('
+    '#markup' => '<h2>' . t('You are about to leave this forum') . '</h2><p>' . t('
     If you leave this forum you will no longer be able to post topics or participate in group discussions.') . '</p>',
   );
 
-	$form['submit'] = array(
+  $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Leave Forum',
     '#attributes' => array('class' => array('edit-leave-overlay', 'blue'))
@@ -626,7 +582,7 @@ function sbac_forum_remove_member_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>'.t('You are about to remove this user').'</h2><p>' . t('
+    '#markup' => '<h2>' . t('You are about to remove this user') . '</h2><p>' . t('
     If you continue this user will no longer be able to participate in the forum. Please provide rationale as to why they have been removed. This will be sent to the user via notification.') . '</p>',
   );
 
@@ -663,7 +619,7 @@ function sbac_forum_restore_member_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>'.t('You are about to re-add this user').'</h2><p>' . t('
+    '#markup' => '<h2>' . t('You are about to re-add this user') . '</h2><p>' . t('
     If you continue, this user will recieve a notification indicating that they may once again participate in this forum') . '</p>',
   );
 
@@ -692,7 +648,7 @@ function sbac_forum_delete_topic_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>'.t('You are about to delete this discussion topic').'</h2><p>' . t('
+    '#markup' => '<h2>' . t('You are about to delete this discussion topic') . '</h2><p>' . t('
     If you continue, all discusson information (including topic details and any replies) will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
   );
 
@@ -726,7 +682,7 @@ function sbac_forum_delete_comment_confirm($form, &$form_state, $target_comment_
   );
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>'.t('You are about to delete this discussion topic reply').'</h2><p>' . t('
+    '#markup' => '<h2>' . t('You are about to delete this discussion topic reply') . '</h2><p>' . t('
     If you continue, this reply along with all related replies will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
   );
 
@@ -750,7 +706,8 @@ function sbac_forum_delete_comment_confirm_submit($form, &$form_state) {
 
   if (!isset($form_state['ajax'])) { // If not ajax, the value is stored within formstate values like normal submit.
     $comment_id_to_remove = $form_state['values']['target_comment_to_delete'];
-  } else {
+  }
+  else {
     $comment_id_to_remove = $form_state['target_comment_to_delete'];
   }
 
@@ -759,10 +716,10 @@ function sbac_forum_delete_comment_confirm_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#value'] != 'Cancel') {
     // Params for task.
     $from_user_id = $user->uid; // TriggeringUser
-    $for_user_id = $comment_entity->uid;    // OwningUser
+    $for_user_id = $comment_entity->uid; // OwningUser
 
     if ($from_user_id != $for_user_id) { // no need to notify if youre deleting your own comment
-    // Create task notification.
+      // Create task notification.
       if ($task = taskit_get_object('deleted_forum_comment')) {
         $task->addVisibility($task::VISIBILITY_USER);
         $task->addEntity('comment', $comment_id_to_remove);

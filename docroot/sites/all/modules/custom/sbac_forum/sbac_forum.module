@@ -29,6 +29,8 @@ define('SBAC_FORUM_SUBNAV_KEYWORD', 'keyword-search');
 
 define('SBAC_FORUM_FILTERS_CLOSED', 'sbac-forum-filters-closed');
 define('SBAC_FORUM_MY_FORUM_FILTERS_CLOSED', 'sbac-forum-my-forum-filters-closed');
+define('SBAC_FORUM_RESOURCE_FORUM_FILTERS_CLOSED', 'sbac-forum-resource-forum-filters-closed');
+define('SBAC_FORUM_TOPIC_FORUM_FILTERS_CLOSED', 'sbac-forum-topic-forum-filters-closed');
 
 define('SBAC_FORUM_FILTER_RESULTS_COUNTER', 'sbac-forum-filters-result-counter-values');
 
@@ -841,6 +843,10 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       $form['description']['#access'] = FALSE;
 
       $form['field_forum_resource_ref']['#access'] = FALSE;
+      $form['field_digital_media_type']['#access'] = FALSE;
+      $form['field_focus']['#access'] = FALSE;
+      $form['field_educational_use']['#access'] = FALSE;
+      $form['field_smarter_balanced_keyword']['#access'] = FALSE;
 
       // Add length restriction.
       $form['name']['#maxlength'] = 75;
@@ -1687,7 +1693,7 @@ function sbac_forum_comment_delete($comment) {
  *
  * @return mixed
  */
-function sbac_forum_get_posted_with_distinction_resources() {
+function sbac_forum_get_posted_resources() {
   $query = "
     SELECT
       n.nid
@@ -1695,10 +1701,10 @@ function sbac_forum_get_posted_with_distinction_resources() {
       LEFT JOIN {workbench_moderation_node_history} history
         ON history.nid = n.nid
     WHERE n.status = 1
-          AND n.sticky = 1
+          AND n.type = 'resource'
           AND history.current = 1
           AND history.state = 'published'
-          ORDER BY n.nid ASC";
+    ORDER BY n.nid ASC";
   return db_query($query)->fetchCol();
 }
 
@@ -1745,6 +1751,10 @@ function sbac_forum_create_resource_forum($nid, $vid = NULL) {
         'field_intended_student' => $node->field_intended_student,
         'field_attributes' => $node->field_attributes,
         'field_geographical_settings' => $node->field_geographical_settings,
+        'field_digital_media_type' => $node->field_digital_media_type,
+        'field_focus' => $node->field_focus,
+        'field_educational_use' => $node->field_educational_use,
+        'field_smarter_balanced_keyword' => $node->field_smarter_balanced_keyword,
       );
       taxonomy_term_save($term);
       if (isset($term->tid)) {
@@ -1779,7 +1789,7 @@ function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description) {
  * Retrospectively create all resource forums
  */
 function sbac_forum_create_all_resource_forums() {
-  $resources = sbac_forum_get_posted_with_distinction_resources();
+  $resources = sbac_forum_get_posted_resources();
   $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
   foreach ($resources as $nid) {
     sbac_forum_create_resource_forum($nid, $vocab->vid);

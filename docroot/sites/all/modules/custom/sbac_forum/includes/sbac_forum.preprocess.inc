@@ -712,10 +712,10 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
       'class' => 'button kw-search-all-forums-button-link',
     )
   );
-  if (isset($count_values['block']) && !empty($count_values['block'])) {
-    $all_forums_count_text = ' (' . $count_values['block'] . ')';
+  if (isset($count_values['block_2']) && !empty($count_values['block_2'])) {
+    $all_forums_count_text = ' (' . $count_values['block_2'] . ')';
   }
-  $link_all_forums = l('All Forums' . $all_forums_count_text, 'keyword-search-redirect/all-forums', $link_ops);
+  $link_all_forums = l('Resource Forums' . $all_forums_count_text, 'keyword-search-redirect/resource-forums', $link_ops);
 
   $my_forums_count_text = '';
   $link_ops = array(
@@ -723,10 +723,10 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
       'class' => 'button kw-search-my-forums-button-link',
     )
   );
-  if (isset($count_values['block_1']) && !empty($count_values['block_1'])) {
-    $my_forums_count_text = ' (' . $count_values['block_1'] . ')';
+  if (isset($count_values['block_3']) && !empty($count_values['block_3'])) {
+    $my_forums_count_text = ' (' . $count_values['block_3'] . ')';
   }
-  $link_my_forums = l('My Forums' . $my_forums_count_text, 'keyword-search-redirect/my-forums', $link_ops);
+  $link_my_forums = l('Topic Forums' . $my_forums_count_text, 'keyword-search-redirect/topic-forums', $link_ops);
 
   $kw_subnav = $link_all_forums . $link_my_forums;
   $vars['keyword_subnav'] = $kw_subnav;

@@ -4,18 +4,18 @@
   <div class="categories-filter clearfix slideable <?php print $hide_filters; ?>" <?php
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
-    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
   }
 
   // Get correct set of category filters based on subnav.
-  switch($active_tab) { // Get correct current filter.
-    case SBAC_FORUM_SUBNAV_ALL:
-      if (isset($_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_FILTERS_CLOSED]) {
+  switch ($active_tab) { // Get correct current filter.
+    case SBAC_FORUM_SUBNAV_RESOURCE:
+      if (isset($_COOKIE[SBAC_FORUM_RESOURCE_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_RESOURCE_FORUM_FILTERS_CLOSED]) {
         print 'style="display:none;"';
       }
       break;
-    case SBAC_FORUM_SUBNAV_OWN:
-      if (isset($_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED]) {
+    case SBAC_FORUM_SUBNAV_TOPIC:
+      if (isset($_COOKIE[SBAC_FORUM_TOPIC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_TOPIC_FORUM_FILTERS_CLOSED]) {
         print 'style="display:none;"';
       }
       break;
@@ -48,7 +48,7 @@
           $class = ' current ';
         }
         echo '<li class="category-filter category-filter-' . $category_vid . '-' . $term->tid . ' ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '"><span class="highlight"></span><span class="filter-name ' . $class . '" vid="' . $category_vid . '" tid="' . $term->tid . '">' . $term->name . '</span></li>';
-      }
+        }
 
       echo '</ul>';
       echo '</div>';

@@ -16,10 +16,6 @@ function sbac_favorites_views_data() {
   );
   // Join.
   $data['sbac_favorites']['table']['join'] = array(
-    'node' => array(
-      'left_field' => 'id',
-      'field' => 'id',
-    ),
     'users' => array(
       'left_field' => 'uid',
       'field' => 'uid',
@@ -27,17 +23,19 @@ function sbac_favorites_views_data() {
   );
 
 
-  // Node ID table field.
+  // Entity ID table field.
   $data['sbac_favorites']['id'] = array(
-    'title' => t('Resource ID'),
-    'help' => t('The resource id.'),
-    'relationship' => array(
-      'base' => 'node', // The name of the table to join with.
-      'base field' => 'id', // The name of the field on the joined table.
-      'handler' => 'views_handler_relationship',
-      'label' => t('Default label for the relationship'),
-      'title' => t('Title shown when adding the relationship'),
-      'help' => t('More information on this relationship'),
+    'title' => t('Entity ID'),
+    'help' => t('The entity id.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
     ),
   );
 
