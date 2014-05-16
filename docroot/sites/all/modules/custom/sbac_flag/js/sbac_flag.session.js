@@ -65,8 +65,8 @@
         url: "/sbac-flag/logout-user",
         data: {'type' : type, 'nid' : nid, 'eck_review': review},
         success: function(data) {
-          var url = location.protocol + '//' + location.hostname;
-          window.location.assign(url);
+          var response = jQuery.parseJSON(data);
+          window.location.href = response.url;
         }
       });
     }
