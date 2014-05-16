@@ -1512,19 +1512,20 @@ function sbac_flag_block_view($delta = '') {
  * Logs out the current user.
  */
 function sbac_flag_logout_user() {
-  global $user;
-
   $node = node_load($_POST['nid']);
   $eck_review = $_POST['eck_review'];
   if ($node) {
     sbac_flag_unset_being_moderated($node, $eck_review);
   }
 
+  global $user;
   watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
   module_invoke_all('user_logout', $user);
-  // Destroy the current session, and reset $user to the anonymous user.
   session_destroy();
-  $output = array('result' => TRUE);
+
+  $url = SBAC_SSO_LOGOUT_URL;
+  $output = array();
+  $output['url'] = $url;
   print drupal_json_encode($output);
   exit;
 }

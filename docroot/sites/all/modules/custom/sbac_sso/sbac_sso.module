@@ -2,6 +2,7 @@
 
 define('SBAC_SSO_URL', 'http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp');
 define('SBAC_SSO_PROGRAM_API', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain');
+define('SBAC_SSO_LOGOUT_URL', 'http://www.smarterbalanced.org');
 
 /**
  * Implements hook_menu().
@@ -91,13 +92,7 @@ function sbac_sso_session_expire_modal($js = FALSE) {
         module_invoke_all('user_logout', $user);
         session_destroy();
 
-        // Redirect user to SSO Login.
-        global $base_url;
-        $original_access_url = $base_url . '/' . $_GET['q'];
-        // Record original access URL (URL Encoded) to the SAML request in the relayState variable
-        // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
-        $saml_assertion = sbac_sso_saml_assertion();
-        $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
+        $url = SBAC_SSO_LOGOUT_URL;
         $output[] = ctools_ajax_command_redirect($url);
       }
     }
@@ -118,7 +113,7 @@ function sbac_sso_session_expire_form($form, &$form_state) {
 
   $form['submit_description'] = array(
     '#markup' => "<p>You've been on this page for close to 60 minutes, would
-        you like to extend your session on the digital libraryn? Select OK to
+        you like to extend your session on the Digital Library? Select OK to
         extend your session. Pressing CANCEL or failing to respond in the next
         two minutes will require site reauthentication.</p>"
   );
@@ -352,7 +347,7 @@ function sbac_sso_logout() {
   module_invoke_all('user_logout', $user);
   session_destroy();
 
-  $url = 'http://www.smarterbalanced.org/';
+  $url = SBAC_SSO_LOGOUT_URL;
   if ($ajax) {
     $output = array();
     $output['url'] = $url;
