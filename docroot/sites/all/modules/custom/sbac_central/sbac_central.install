@@ -1038,6 +1038,19 @@ function sbac_central_update_7079() {
   db_query("ALTER TABLE {legal_conditions} ADD INDEX entire (version, revision, language)");
 }
 
+
+/**
+ * Enable SSO on Acquia sites.
+ */
+function sbac_central_update_7080() {
+  if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    $modules = array(
+      'sbac_sso',
+    );
+    module_enable($modules);
+  }
+}
+
 /**
  * Connect to the Google Cloud Storage.
  *
