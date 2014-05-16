@@ -3303,6 +3303,38 @@ h2.title {
 					opacity: 1;
 				}
 			}
+			
+			.recommend-box {
+				float: left; 
+				margin-top: 20px;
+				
+				a.sbac-recommend-link {
+					color: #0583AC;
+					display: inline-block;
+					float: left;
+				}
+				
+				a.sbac-recommend-link:before {
+					color: #0583AC;
+					content: "\f000";
+				  display: inline-block;
+			    font-family: "SocialFoundicons";
+			    font-size: 20px;
+			    font-weight: normal;
+			    margin-right: 7px;
+		      top: 5px;
+			    position: relative;
+			    text-decoration: none;
+				}
+				
+				div[id*="recommend-info"] {
+					display: inline-block;
+					float: left;
+					margin: 9px 0 0 10px;
+				}
+			}
+			
+			ul.links {float: right;}
 		}
 	}
 }
@@ -3752,11 +3784,15 @@ a.sbac-favorites-link {
 
 
 /*Flag section*/
+.topic-node-comment-region-right-bottm-comment {
+	clear: both;
+	float: left;
+}
 .flag-section {
 	background-color: #f2f2f2;
 	padding: 15px 20px;
 	font-size: 14px;
-	margin-top: 20px;
+	margin-top: 10px;
 	
 	.tertiary-flag-head {
 		color: #333;
