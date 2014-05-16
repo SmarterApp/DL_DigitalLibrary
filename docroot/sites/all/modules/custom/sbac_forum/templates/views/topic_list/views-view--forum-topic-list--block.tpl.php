@@ -38,18 +38,39 @@
       <?php print $header; ?>
     </div>
   <?php endif; ?>
-
-  <?php if ($exposed): ?>
-    <div class="view-filters">
-      <?php print $exposed; ?>
-    </div>
+  <?php if ($warning): ?>
+    <h2><?php print $warning; ?></h2>
   <?php endif; ?>
+	<div class="review-it">
+  	<?php if($review): ?>
+	    <p><?php print $review; ?></p>
+	  <?php endif; ?>
+	</div>
+	<div class="filter-bar">
+  	<?php if ($topic_count): ?>
+			<div class="topic-count">
+	    <?php print $topic_count; ?> Topics:
+			</div>
+	  <?php endif; ?>
 
-  <?php if ($join_button): ?>
-    <div id="join-forum-form-wrapper">
-      <?php print $join_button; ?>
-    </div>
-  <?php endif; ?>
+	  <?php if ($exposed): ?>
+	    <div class="view-filters">
+	      <?php print $exposed; ?>
+	    </div>
+	  <?php endif; ?>
+
+	  <?php if(isset($participants)): ?>
+			<div class="participants-count">
+	    <?php print $participants; ?>
+			</div>
+	  <?php endif; ?>
+
+	  <?php if ($join_button): ?>
+	    <div id="join-forum-form-wrapper">
+	      <?php print $join_button; ?>
+	    </div>
+	  <?php endif; ?>
+	</div>
 
   <?php if ($attachment_before): ?>
     <div class="attachment attachment-before">

@@ -733,7 +733,6 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
     // apply stock
     if (isset($roles['rp']) && $roles['rp']) {
       _sbac_resource_resource_review_apply_stock_rp_role($view);
-
     }
     if (isset($roles['rr']) && $roles['rr']) {
       _sbac_resource_resource_review_apply_stock_rr_role($view);

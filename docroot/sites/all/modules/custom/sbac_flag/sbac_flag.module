@@ -127,6 +127,13 @@ function sbac_flag_menu() {
     'access callback' => TRUE,
   );
 
+  $items['sbac-forum/flag/%ctools_js/%/%'] = array(
+    'page callback' => 'sbac_flag_collaboration_callback',
+    'page arguments' => array(2, 3, 4),
+    'access callback' => array('sbac_flag_collaboration_access'),
+    'file' => 'sbac_flag.modal.inc',
+  );
+
   return $items;
 }
 
@@ -138,6 +145,14 @@ function sbac_flag_menu() {
 function sbac_flag_moderation_access() {
   global $user;
   if (in_array('moderator', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+function sbac_flag_collaboration_access() {
+  global $user;
+  if ($user->uid) {
     return TRUE;
   }
   return FALSE;
@@ -207,7 +222,7 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
     drupal_add_js(array('sbac_flag_lifetime' => $session_info['lifetime']), 'setting');
     drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.session.js');
     drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.form.js');
-    drupal_add_css(drupal_get_path('module','sbac_flag'). '/css/sbac_flag.css');
+    drupal_add_css(drupal_get_path('module','sbac_flag') . '/css/sbac_flag.css');
     drupal_add_js(array('flag_moderation' => 1), 'setting');
     $form_state['sbac-flag'] = TRUE;
 
@@ -364,6 +379,12 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
   $items['sbac_flag_list_card'] = array(
     'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
     'template' => 'flag-list-card',
+    'variables' => array('node' => NULL, 'flag_content' => NULL),
+  );
+
+  $items['sbac_flag_list_card_topic'] = array(
+    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'template' => 'flag-list-card-topic',
     'variables' => array('node' => NULL, 'flag_content' => NULL),
   );
 
@@ -841,20 +862,30 @@ function sbac_flag_resource_modal_form($form, $form_state) {
  * @param $comment
  * @param $nid
  */
-function sbac_flag_save_flag($flag, $comment, $nid) {
+function sbac_flag_save_flag($flag, $comment, $nid, $cid = 0) {
   global $user;
+  $node = node_load($nid);
+
+  if ($node->type == 'topic') {
+    $target_type = ($cid ? 'comment' : 'topic');
+    $target_id = ($cid ? $cid : $nid);
+  }
+  else {
+    $target_type = $node->type;
+    $target_id = $nid;
+  }
 
   $entity = new stdClass();
-  $entity->type = 'resource';
+  $entity->type = $node->type;
   $entity->uid = $user->uid;
   $entity->created = time();
   $entity->changed = time();
-  $entity->target_type = 'resource';
-  $entity->target_id = $nid;
+  $entity->target_type = $target_type;
+  $entity->target_id = $target_id;
   $entity->nid = $nid;
   $entity->flag_selected = $flag;
   $entity->flag_comment = $comment;
-  $urgent = sbac_flag_determine_urgent($flag);
+  $urgent = sbac_flag_determine_urgent($flag, $target_type);
   $entity->urgent = $urgent;
   drupal_write_record('eck_flag', $entity);
 
@@ -953,23 +984,33 @@ function sbac_flag_determine_access_for_user($node, $uid) {
  */
 function sbac_flag_determine_urgent($flag_option, $type = 'resource') {
   $urgent = FALSE;
+  if ($flag_option == 'pii') {
+    return TRUE;
+  }
+
+  $term = taxonomy_term_load($flag_option);
+
   if ($type == 'resource') {
-    $term = taxonomy_term_load($flag_option);
     if ($term) {
       if ($term->name == 'Contains personally identifiable information (PII)') {
-        $urgent = TRUE;
+        return TRUE;
       }
       if ($term->name == 'May be in violation of intellectual property rights') {
-        $urgent = TRUE;
+        return TRUE;
       }
       if ($term->name == "Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>") {
-        $urgent = TRUE;
+        return TRUE;
       }
     }
   }
-  else {
-    if ($flag_option == 'pii') {
-      $urgent = TRUE;
+  elseif ($type == 'comment' || $type == 'topic') {
+    if ($term) {
+      if ($term->name == 'Biased and objectionable or culturally insensitive. <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>') {
+        return TRUE;
+      }
+      if ($term->name == 'Contains personally identifiable information (PII)') {
+        return TRUE;
+      }
     }
   }
 
@@ -1007,6 +1048,43 @@ function sbac_flag_get_all_flags_for_node($node, $type = NULL, $review_id = NULL
   }
 
   return $flags;
+}
+
+/**
+ * Get collaboration flags by current user.
+ * @param  int $nid Node ID.
+ * @param  int $cid Comment ID.
+ * @return [type]   [description]
+ */
+function sbac_flag_get_collaboration_flag($nid, $cid, $uid) {
+  $report = array();
+  $query = db_select('eck_flag', 'ef');
+  $query->fields('ef', array('type', 'target_type', 'flag_selected', 'flag_comment'));
+  $query->condition('nid', $nid, '=');
+  $query->condition('target_id', ($cid ? $cid : $nid), '=');
+  $query->condition('uid', $uid, '=');
+  $query->condition('resolved', 0, '=');
+  $report = $query->execute()->fetchAssoc();
+  return $report;
+}
+
+/**
+ * Get all forum flags of a specific topic/post and grouped by flag and ordered
+ * by date.
+ * @param  int $nid Node ID.
+ * @param  int $cid Comment ID.
+ * @return [type]      [description]
+ */
+function sbac_flag_get_forum_flags($nid, $cid) {
+  $report = array();
+  $query = db_select('eck_flag', 'ef');
+  $query->fields('ef');
+  $query->condition('nid', $nid, '=');
+  $query->condition('target_id', ($cid ? $cid : $nid), '=');
+  $query->orderBy('flag_selected');
+  $query->orderBy('created', 'DESC');
+  $report = $query->execute();
+  return $report;
 }
 
 /**
@@ -1424,7 +1502,7 @@ function sbac_flag_block_view($delta = '') {
         $count = $_SESSION['sbac-flag']['count'];
       }
       $block['subject'] = NULL;
-      $block['content'] = '<h3 class="left">' . t('Flagged Items (' . $count . ')') . '</h3>';
+      $block['content'] = '<span class="flagged-items left"><span class="flagged-count">' . $count . '</span> items</span>';
       break;
   }
   return $block;

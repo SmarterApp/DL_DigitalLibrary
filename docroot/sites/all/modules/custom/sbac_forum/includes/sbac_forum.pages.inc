@@ -24,32 +24,33 @@ function sbac_forum_main_landing_page() {
   }
   // Get correct set of category filters based on subnav.
   switch($active_tab) { // Get correct current filter.
-    case SBAC_FORUM_SUBNAV_ALL:
-      $active_display = 'block';
-      $passive_display = 'block_1';
-      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
-        $current_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
-      }
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
-        $passive_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
-      }
-      if (isset($_SESSION[SBAC_FORUM_ALL_FORUM_SORTS]) &&
-          $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS] != '') {
-        $current_sorts = $_SESSION[SBAC_FORUM_ALL_FORUM_SORTS];
-      }
-      break;
-    case SBAC_FORUM_SUBNAV_OWN:
-      $active_display = 'block_1';
-      $passive_display = 'block';
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS])) {
-        $current_filters = $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS];
+    case SBAC_FORUM_SUBNAV_RESOURCE:
+      $active_display = 'block_2';
+      $passive_display = 'block_3';
+      if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS];
       }
       if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
         $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
       }
-      if (isset($_SESSION[SBAC_FORUM_MY_FORUM_SORTS]) &&
-          $_SESSION[SBAC_FORUM_MY_FORUM_SORTS] != '') {
-        $current_sorts = $_SESSION[SBAC_FORUM_MY_FORUM_SORTS];
+      if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS]) &&
+        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != '') {
+        $current_sorts = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS];
+        $default_sort = 'forum-recent-activity';
+      }
+      break;
+    case SBAC_FORUM_SUBNAV_TOPIC:
+      $active_display = 'block_3';
+      $passive_display = 'block_2';
+      if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS])) {
+        $current_filters = $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
+        $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+      }
+      if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS]) &&
+        $_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS] != '') {
+        $current_sorts = $_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS];
         $default_sort = 'forum-recent-activity';
       }
       break;
@@ -172,7 +173,7 @@ function sbac_forum_view_forum_page($term) {
 
   $description_text = '';
   if (isset($forum_data->field_forum_description)) {
-    $description_text = $forum_data->field_forum_description->value();
+    $description_text = more_less_text($forum_data->field_forum_description->value());
   }
   $add_comma = FALSE;
   $is_facilitator = FALSE;
@@ -288,54 +289,17 @@ function sbac_forum_view_forum_page($term) {
   );
   $tab_classes[] = 'sbac-qt-show';
 
-
-  $is_member = sbac_forum__api__check_user_is_forum_member($term->tid, $user->uid);
-  if ($is_member === TRUE) {
-    $show_members = 'sbac-qt-show';
-  } elseif ($is_member === FALSE) {
-    $show_members = 'sbac-qt-hide';
-  } elseif ($is_member == 'removed') {
-    $show_members = '';
-  }
-
-  if (!empty($show_members)) {
-    $current_member_count = $forum_data->field_forum_member_count->value();
-    $member_count_text = '';
-    if ($current_member_count) {
-      $member_count_text = '(' .$current_member_count .')';
-    }
-    $tabs[] = array(
-      'vid' => 'forum_member_list',
-      'display' => 'block',
-      'args' => $term->tid,
-      'title' => t('Members '.$member_count_text),
-      'weight' => -98,
-      'type' => 'view',
-    );
-    $tab_classes[] = 'sbac-forum-vp-member-tab-item ' . $show_members;
-  }
-
-
-  if (in_array('facilitator', $user->roles)) { // User is a facilitator
-    if (($is_member === TRUE) ||
-        ($is_member === FALSE) ){ // Show tab as long as user is not removed.
-      $removed_member_count = $forum_data->field_forum_removed_member_count->value();
-      $removed_member_count_text = '';
-      if ($removed_member_count) {
-        $removed_member_count_text = '(' .$removed_member_count .')';
-      }
-      $tabs[] = array(
-        'vid' => 'forum_member_list',
-        'display' => 'block_1',
-        'args' => $term->tid,
-        'title' => t('Removed Members '. $removed_member_count_text),
-        'weight' => -97,
-        'type' => 'view',
-      );
-      $tab_classes[] = 'sbac-forum-vp-rem-members-tab-item ' . $show_members;
-    }
-  }
-
+  $current_member_count = $forum_data->field_forum_member_count->value();
+  $member_count_text = '(' . $current_member_count . ')';
+  $tabs[] = array(
+    'vid' => 'forum_member_list',
+    'display' => 'block',
+    'args' => $term->tid,
+    'title' => t('Participants ' . $member_count_text),
+    'weight' => -98,
+    'type' => 'view',
+  );
+  $tab_classes[] = 'sbac-forum-vp-member-tab-item ';
 
   $qtname = 'forum_content';
   $default_tab = 0;
@@ -352,7 +316,7 @@ function sbac_forum_view_forum_page($term) {
 
   // Controls.
   $forum_control_links = array();
-  $forum_control_link_list = sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term->tid);
+  $forum_control_link_list = sbac_forum__api__create_forum_controls($is_facilitator, $term->tid);
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.view_page.js");
 
   // Check if user had just joined. Show welcome message and then unset the variable.
@@ -362,18 +326,75 @@ function sbac_forum_view_forum_page($term) {
     $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = '';
   }
 
+  // If this is a resource forum, then I am favoriting the resource itself (node)
+  // Otherwise I'm favoriting the forum (taxonomy term)
+  $id = $term->tid;
+  $type = 'term';
+  if (!empty($term->field_forum_resource_ref)) {
+    $resource_wrapper  = $forum_data->field_forum_resource_ref;
+    $id = $term->field_forum_resource_ref['und'][0]['target_id'];
+    $type = 'node';
+    $resource_link = l('View Resource', 'node/' . $id, array('attributes' => array('target' => '_blank')));
+
+    // resource image
+    $default_file = 'public://file.png';
+    $uri = $default_file;
+    if ($resource_wrapper->__isset('field_thumbnail_uri')) {
+      $thumbnail_uri = $forum_data->field_forum_resource_ref->field_thumbnail_uri->value();
+      $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
+      $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
+      $thumbnail_pieces = explode('::', $thumbnail_uri);
+      $uri = $thumbnail_pieces[0];
+      $ext = pathinfo($uri, PATHINFO_EXTENSION);
+      $file_type = _sbac_resource_determine_extension($ext);
+      if ($file_type != 'image') {
+        $uri = $default_file;
+      }
+    }
+    $resource_image = theme('image_style', array(
+      'style_name' => 'resource_image_grid',
+      'path' => $uri,
+      'attributes' => array('class' => array()),
+      'alt'=>'Resource thumbnail image'
+    ));
+
+    // resource rating
+    $resource_rating = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($id));
+    $resource_rating_count = sbac_resource_get_rating_count($id);
+
+    // views
+    $resource_views = 0;
+    if ($resource_wrapper->__isset('field_unique_views')){
+      $resource_views = $resource_wrapper->field_unique_views->value();
+    }
+
+    // downloads
+    $resource_downloads = 0;
+    if ($resource_wrapper->__isset('field_asset_downloads')){}
+    $resource_downloads = $resource_wrapper->field_asset_downloads->value();
+  }
+
+  $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $type);
+
   // Add all the markup to variable for tpl.
   $fields = array(
-    'welcome_message'      => $welcome_message,
-    'controls_link_list'   => $forum_control_link_list,
-    'description'          => $description_text ,
-    'facilitators'         => $facilitator_text,
+    'welcome_message' => $welcome_message,
+    'controls_link_list' => $forum_control_link_list,
+    'description' => $description_text,
+    'facilitators' => $facilitator_text,
     'faciliatator_details' => $faci_details,
-    'grades'               => $grades_text,
-    'subjects'             => $subject_text,
-    'end_users'            => $end_user_text,
-    'students'             => $student_text,
-    'tabs'                 => $tab_output,
+    'grades' => $grades_text,
+    'subjects' => $subject_text,
+    'end_users' => $end_user_text,
+    'students' => $student_text,
+    'tabs' => $tab_output,
+    'favorites_link' => $favorite_link,
+    'resource_link' => $resource_link,
+    'resource_image' => $resource_image,
+    'resource_rating' => $resource_rating,
+    'resource_rating_count' => $resource_rating_count,
+    'resource_views' => $resource_views,
+    'resource_downloads' => $resource_downloads,
   );
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );

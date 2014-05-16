@@ -119,7 +119,6 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_form_alter(&$form, &$form_state, $form_id) {
     $args = func_get_args();
-
     // feedback add/edit form
     if (preg_match('/^eck__entity__form_(edit|add)_review_(' . implode('|', $this->_bundles) . ')$/', $form_id, $matches)) {
       // wrap in a selector that'll be targeted for AJAX replacement on form submissions
@@ -259,7 +258,7 @@ class Hooks extends \devtools\Hooks {
     // add intro text
     $form['state_create']['intro']['#markup'] = t('
       Have you used this resource? If so, share your feedback in the space provided below. Be sure to
-      give your review a title, enter your feedback and rate the resource. Your feedback is valuable and helps insure
+      give your review a title, enter your feedback and rate the resource. Your feedback is valuable and helps ensure
       that the Digital Library continues to meet your needs.
     ');
 
@@ -282,6 +281,9 @@ class Hooks extends \devtools\Hooks {
     // character count
     $form['state_create']['title']['#weight'] = -10;
     element_maxlength($form['state_create']['title'], 100, 'Character count: <strong>@remaining</strong>');
+    // Title and details are no longer mandatory.
+    $form['state_create']['title']['#required'] = FALSE;
+    $form['field_details']['und'][0]['value']['#required'] = FALSE;
 
     // disable access to properties
     $form['status']['#access'] = FALSE;

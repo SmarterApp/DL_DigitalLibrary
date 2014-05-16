@@ -4,7 +4,7 @@
 
 
 function sbac_forum__api__get_active_subnav() {
-  $active_subnav = '';
+  $active_subnav = SBAC_FORUM_SUBNAV_RESOURCE;
 
   if (isset($_SESSION[SBAC_FORUM_SUBNAV_ACTIVE])) {
     if (!empty($_SESSION[SBAC_FORUM_SUBNAV_ACTIVE])) {
@@ -230,69 +230,58 @@ function sbac_forum__api__create_start_new_topic_link($forum_id) {
  *
  * @return string themed list elements or empty string.
  */
-function sbac_forum__api__create_forum_controls($is_member, $is_facilitator, $term_id) {
+function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
   global $user;
   $forum_control_link_list = '';
   $extra_classes = '';
-  if ($is_member === TRUE) {
-    if (($is_facilitator) ||
-        ($user->uid == 1) ) { // Edit and delete forum
-      $link_ops = array(
-        'attributes' => array(
-          'class' => 'vp-control-link',
-        ),
-      );
-
-      $link_text = t('Edit Forum');
-      $link_url = 'taxonomy/term/' . $term_id . '/edit';
-      $link = l($link_text, $link_url, $link_ops);
-      $forum_control_links[] = $link;
-
-      $link_text = t('Delete Forum');
-      $link_ops = array(
-        'attributes' => array(
-          'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-delete-forum-link',
-          'id'    => 'sbac-forum-delete-forum-link'
-        ),
-      );
-      $link_url = 'sbac-forum/nojs/forum-delete/'.$term_id;
-      $link = l($link_text, $link_url, $link_ops);
-      $forum_control_links[] = $link;
-      $js_settings = array(
-        'sbac-forum-delete-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
-          'modalSize' => array(
-            'type' => 'fixed',
-            'width' => 560,
-            'height' => 240,
-          ),
-        ),
-      );
-      drupal_add_js($js_settings, 'setting'); // Styles the modal.
-      $extra_classes = 'hover-over-large-popup';
-    }
-
-    $link_text = t('Leave this Forum');
-    $link_url = 'sbac-forum/nojs/forum-leave/' . $term_id;
+  if (($is_facilitator) ||
+    ($user->uid == 1)
+  ) { // Edit and delete forum
     $link_ops = array(
       'attributes' => array(
-        'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-leave-forum-link',
-        'id'    => 'sbac-forum-leave-forum-link'
+        'class' => 'vp-control-link',
       ),
     );
+
+    $link_text = t('Edit Forum');
+    $link_url = 'taxonomy/term/' . $term_id . '/edit';
+    $link = l($link_text, $link_url, $link_ops);
+    $forum_control_links[] = $link;
+
+    $link_text = t('Delete Forum');
+    $link_ops = array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-delete-forum-link',
+        'id' => 'sbac-forum-delete-forum-link'
+      ),
+    );
+    $link_url = 'sbac-forum/nojs/forum-delete/' . $term_id;
     $link = l($link_text, $link_url, $link_ops);
     $forum_control_links[] = $link;
     $js_settings = array(
-      'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
+      'sbac-forum-delete-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 560,
-          'height' => 230,
+          'height' => 240,
         ),
       ),
     );
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
-
+    $extra_classes = 'hover-over-large-popup';
   }
+
+  $js_settings = array(
+    'sbac-forum-leave-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 560,
+        'height' => 230,
+      ),
+    ),
+  );
+  drupal_add_js($js_settings, 'setting'); // Styles the modal.
+
   if (!empty($forum_control_links)) {
     $list_args = array(
       'type'  => 'ul',
@@ -357,7 +346,7 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
 
   $tooltip = '
               <div class="devtools-tooltip account-tooltip">
-                <a href="#" class="devtools-tooltip-trigger">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
+                <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
                 <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
               </div>
              ';

@@ -76,12 +76,17 @@ function sbac_flag_start_moderation($js = FALSE) {
     if (isset($_GET['eck_review'])) {
       $title = 'You are about to start resource review moderation';
     }
+    elseif (isset($_GET['forum_type'])) {
+      $title = 'You are about to start forum moderation.';
+    }
 
     $form_state = array(
       'title' => $title,
       'ajax' => TRUE,
       'nid' => $_GET['nid'],
       'eck_review' => $_GET['eck_review'],
+      'forum_type' => $_GET['forum_type'],
+      'cid' => $_GET['cid'],
     );
 
     module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
@@ -90,13 +95,28 @@ function sbac_flag_start_moderation($js = FALSE) {
     if (!empty($form_state['executed'])) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
-
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
         $node = node_load($form_state['nid']);
         if ($form_state['eck_review']) {
-          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-resource-review-flags', 'review' => $form_state['eck_review']), 'fragment' => 'review-Moderate_flag'));
+          $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array(
+            'query' => array(
+              'flag' => 'view-resource-review-flags',
+              'review' => $form_state['eck_review']
+            ),
+            'fragment' => 'review-Moderate_flag'
+          ));
         }
-        else {
+        elseif ($form_state['forum_type']) {
+          $path_alias = drupal_get_path_alias('node/' . $node->nid);
+          $output[] = ctools_ajax_command_redirect($path_alias, 0, array(
+            'query' => array(
+              'flag' => 'view-' . $form_state['forum_type'] . '-flags',
+              'cid' => $form_state['cid'],
+            ),
+            'fragment' => 'review-moderate_flag',
+          ));
+        }
+        elseif (!$form_state['eck_review'] && !$form_state['forum_type']) {
           $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'view-resource-flags'), 'fragment' => 'review-Moderate_flag'));
         }
       }
@@ -107,7 +127,17 @@ function sbac_flag_start_moderation($js = FALSE) {
           sbac_flag_set_being_moderated($node, $form_state['eck_review']);
           $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review'], 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
         }
-        else {
+        elseif ($form_state['forum_type']) {
+          $path_alias = drupal_get_path_alias('node/' . $node->nid);
+          $output[] = ctools_ajax_command_redirect($path_alias, 0, array(
+            'query' => array(
+              'flag' => 'resolve-' . $form_state['forum_type'] . '-flags',
+              'cid' => $form_state['cid'],
+            ),
+            'fragment' => 'review-moderate_flag',
+          ));
+        }
+        elseif (!$form_state['eck_review'] && !$form_state['forum_type']) {
           sbac_flag_set_being_moderated($node);
           $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'resolve-resource-flags', 'node' => $node->nid), 'fragment' => 'something-Moderate_flag'));
         }
@@ -1069,4 +1099,185 @@ function sbac_flag_session_expire_form($form, &$form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Form callback for collaboration flagging.
+ * @param  boolean $js  ctools_js
+ * @param  int     $nid Node ID.
+ * @param  int     $cid Comment ID. 0 if topic.
+ */
+function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
+  if (!$js) {
+    return;
+  }
+  $can_close = FALSE;
+  drupal_add_js(drupal_get_path('module', 'sbac_flag') . '/js/sbac_flag.collaboration.js');
+  ctools_add_css('sbac_flag.css', 'sbac_flag');
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+
+  $form_state = array(
+    'ajax' => TRUE,
+    'title' => t('Flag a Post'),
+    'info' => array(
+      'nid' => $nid,
+      'cid' => $cid,
+    ),
+  );
+
+  $output = ctools_modal_form_wrapper('sbac_flag_collaboration_form', $form_state);
+
+  if (!empty($form_state['executed'])) {
+    if ($form_state['triggering_element']['#value'] == 'Cancel') {
+      $can_close = TRUE;
+    }
+    else if ($form_state['triggering_element']['#value'] == 'Flag') {
+      $can_close = TRUE;
+    }
+  }
+  if ($can_close) {
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    if ($form_state['triggering_element']['#value'] == 'Flag') {
+      $url = drupal_get_path_alias('node/' . $nid);
+      $output[] = ctools_ajax_command_redirect($url);
+    }
+  }
+  print ajax_render($output);
+  exit();
+}
+
+/**
+ * Implements hook_form().
+ * Creates form for flagging modal.
+ * @param  [type]  $form       [description]
+ * @param  [type]  $form_state [description]
+ * @return [type]              [description]
+ */
+function sbac_flag_collaboration_form($form, &$form_state) {//, $node, $cid = 0) {
+  $form['header'] = array(
+    '#type'   => 'item',
+    '#prefix' => '<div class="form-flag-content"><div class="form-item-title">',
+    '#suffix' => '</div>',
+  );
+
+  $form['error'] = array(
+    '#type' => 'markup',
+    '#markup' => '',
+  );
+
+  $form['comment'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Details',
+    '#prefix' => '<div id="sbac-flag-optional-comment" style="display:none">',
+    '#suffix' => '</div>',
+    '#maxlength' => 600,
+    '#maxlength_js' => TRUE,
+    '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
+  );
+
+  $vocab = taxonomy_vocabulary_machine_name_load('forum_flags');
+  $terms = taxonomy_get_tree($vocab->vid);
+  $options = array();
+  foreach ($terms as $term) {
+    $options[$term->tid] = $term->name;
+  }
+
+  $form['flag_options'] = array(
+    '#type' => 'radios',
+    '#title' => 'What issue did you find with this post? ' . theme('form_required_marker'),
+    '#options' => $options,
+    '#prefix' => '<div id="sbac-flag-options">',
+    '#suffix' => '</div>',
+  );
+
+  $form['footer'] = array(
+    '#type' => 'item',
+    '#markup' => 'Flagged reviews and users are reviewed by the Smarter Balanced Assesment Consortium to determine whether they violate the terms of service. Violations can lead to account termination.',
+    '#prefix' => '<div id="form-item-footer">',
+    '#suffix' => '</div></div>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Flag'),
+    '#prefix' => '<div class="flag-button-container">',
+    '#attributes' => array(
+      'class' => array(
+        'button',
+        'flag-resource-submit',
+      ),
+    ),
+    '#ajax' => array(
+      'wrapper' => 'sbac-flag-collaboration-form',
+      'method' => 'replace',
+      'effect' => 'fade',
+    ),
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#suffix' => '</div>',
+    '#attributes' => array(
+      'class' => array(
+        'button',
+        'gray',
+        'cancel',
+        'flag-resource-cancel',
+      ),
+      'id' => array(
+        'flag-edit-cancel',
+      ),
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Form validation for sbac_flag_collaboration_form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ */
+function sbac_flag_collaboration_form_validate(&$form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Cancel') {
+    return;
+  }
+  if ($form_state['values']['flag_options'] == NULL) {
+    form_set_error('flag_options', 'Please select a reason to flag this post.');
+  }
+  else {
+    if ($form_state['values']['comment'] != NULL) {
+      if (profanity_validate_text($form_state['values']['comment'])) {
+        form_set_error('comment', 'Please remove any inappropriate language.');
+      }
+    }
+    if ($form_state['values']['comment'] == NULL) {
+      form_set_error('comment', 'Please validate your reason for flagging.');
+    }
+  }
+  if ($error = drupal_get_messages('error', TRUE)) {
+    $error = array_pop($error);
+    $form['error']['#markup'] = '<div class="sbac-flag-error-msg">' . array_pop($error) . '</div>';
+  }
+}
+
+/**
+ * Submission handler for sbac_flag_collaboration_form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Flag') {
+     $flag_tid = $form_state['input']['flag_options'];
+     $flag_txt = $form_state['input']['comment'];
+     $flag_nid = $form_state['info']['nid'];
+     $flag_cid = $form_state['info']['cid'];
+     sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
+  }
 }

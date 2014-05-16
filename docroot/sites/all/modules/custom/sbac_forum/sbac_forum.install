@@ -137,3 +137,11 @@ function sbac_forum_update_7007() {
   db_create_table('sbac_forum_deleted_log', $schema);
   return $ret;
 }
+
+/**
+ * Delete field_alignment_term from the Forum taxonomy
+ */
+function sbac_forum_update_7008() {
+  $instance = field_info_instance('taxonomy_term', 'field_alignment_term', 'forum');
+  field_delete_instance($instance);
+}

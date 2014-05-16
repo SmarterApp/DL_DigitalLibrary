@@ -140,6 +140,42 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'comment-comment_node_topic-field_topic_comment_recommended'
+  $field_instances['comment-comment_node_topic-field_topic_comment_recommended'] = array(
+    'bundle' => 'comment_node_topic',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
+    ),
+    'entity_type' => 'comment',
+    'field_name' => 'field_topic_comment_recommended',
+    'label' => 'Recommended',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'label_help_description' => '',
+        'match_operator' => 'CONTAINS',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member'] = array(
     'bundle' => 'field_fc_forum_members',
@@ -267,6 +303,188 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 8,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_partip_scr',
+    'label' => 'Participation score',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 7,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_post_count',
+    'label' => 'Post Count',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+        ),
+        'type' => 'date_default',
+        'weight' => 9,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_rcnt_actvt',
+    'label' => 'Recent activity',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'increment' => 15,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_help_description' => '',
+        'label_position' => 'above',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_text',
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_reco_count',
+    'label' => 'Recommendation Count',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 6,
+    ),
+  );
+
   // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'] = array(
     'bundle' => 'field_fc_forum_members',
@@ -355,6 +573,49 @@ function sbac_forum_field_default_field_instances() {
       'weight' => 5,
     ),
     'xss' => 0,
+  );
+
+  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'
+  $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'] = array(
+    'bundle' => 'field_fc_forum_members',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 6,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_fc_forum_member_tpic_count',
+    'label' => 'Topics Count',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 7,
+    ),
   );
 
   // Exported field_instance: 'node-topic-body'
@@ -551,6 +812,41 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-forum-field_attributes'
+  $field_instances['taxonomy_term-forum-field_attributes'] = array(
+    'bundle' => 'forum',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 18,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_attributes',
+    'label' => 'Attributes of the Formative Assessment Process',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 0,
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 7,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-forum-field_fc_forum_members'
   $field_instances['taxonomy_term-forum-field_fc_forum_members'] = array(
     'bundle' => 'forum',
@@ -614,7 +910,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
@@ -688,7 +984,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
@@ -938,6 +1234,45 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_resource_ref'
+  $field_instances['taxonomy_term-forum-field_forum_resource_ref'] = array(
+    'bundle' => 'forum',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 17,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_forum_resource_ref',
+    'label' => 'Forum resource ref',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'label_help_description' => '',
+        'match_operator' => 'CONTAINS',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 20,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-forum-field_forum_topic_comment_count'
   $field_instances['taxonomy_term-forum-field_forum_topic_comment_count'] = array(
     'bundle' => 'forum',
@@ -1020,6 +1355,41 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-forum-field_geographical_settings'
+  $field_instances['taxonomy_term-forum-field_geographical_settings'] = array(
+    'bundle' => 'forum',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 20,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_geographical_settings',
+    'label' => 'Geographic Settings',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 0,
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 11,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-forum-field_grades'
   $field_instances['taxonomy_term-forum-field_grades'] = array(
     'bundle' => 'forum',
@@ -1037,7 +1407,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_grades',
-    'label' => 'Grade(s)',
+    'label' => 'Grades',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1051,7 +1421,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 
@@ -1072,7 +1442,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_intended_end_user',
-    'label' => 'Intended Forum Participants',
+    'label' => 'Intended Participants',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1086,7 +1456,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 7,
+      'weight' => 10,
     ),
   );
 
@@ -1107,7 +1477,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_intended_student',
-    'label' => 'Intended Student Population(s)',
+    'label' => 'Student Populations',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1121,7 +1491,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 9,
+      'weight' => 8,
     ),
   );
 
@@ -1196,6 +1566,7 @@ function sbac_forum_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Attributes of the Formative Assessment Process');
   t('Comment');
   t('Created');
   t('Date Joined');
@@ -1204,14 +1575,20 @@ function sbac_forum_field_default_field_instances() {
   t('Facilitators');
   t('Files');
   t('Forum');
-  t('Grade(s)');
-  t('Intended Forum Participants');
-  t('Intended Student Population(s)');
+  t('Forum resource ref');
+  t('Geographic Settings');
+  t('Grades');
+  t('Intended Participants');
   t('Last Activity');
   t('Links');
   t('Member');
   t('Member Count');
   t('Members');
+  t('Participation score');
+  t('Post Count');
+  t('Recent activity');
+  t('Recommendation Count');
+  t('Recommended');
   t('Remove message');
   t('Removed');
   t('Removed Member Count');
@@ -1219,10 +1596,12 @@ function sbac_forum_field_default_field_instances() {
   t('Role');
   t('State');
   t('States');
+  t('Student Populations');
   t('Subjects and Domains');
   t('Topic Comment Files');
   t('Topic Comment Links');
   t('Topic Count');
+  t('Topics Count');
   t('User Roles');
 
   return $field_instances;
