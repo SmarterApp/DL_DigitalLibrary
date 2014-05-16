@@ -4,6 +4,12 @@
 
   Drupal.behaviors.sbac_user_first_time_login = {
     attach: function (context, settings) {
+      $('#sbac-user-warn-user').hide();
+
+      $('#sbac-user-warn-user-form button').click(function () {
+        clicked = false;
+      });
+
       $('.main-top,.sub-top,.bottom-bar').click(function (event) {
         var login_count = Drupal.settings.sbac_user_login_count;
         if (login_count != null && login_count == 1 && clicked == false) {
@@ -21,7 +27,9 @@
           else {
             event.stopPropagation();
             event.preventDefault();
-            confirm('You will lose any unsaved changes');
+            clicked = true;
+            $('#edit-submit').removeAttr('disabled');
+            $('#sbac-user-warn-user').click();
           }
         }
       });
@@ -79,7 +87,7 @@
       // has to append email field description here as the problem lies deep inside the theme element function
       $('#user-profile-form #edit-account .form-item-mail div.description').insertAfter('#user-profile-form #edit-account .form-item-mail label');
 
-      $(".row.second button:submit:not(#sbac-favorites-resource-submit, #sbac-favorites-resource-cancel, #sbac-favorites-forum-submit, #sbac-favorites-forum-cancel)").attr("disabled", true);
+      // $(".row.second button:submit:not(#sbac-favorites-resource-submit, #sbac-favorites-resource-cancel, #sbac-favorites-forum-submit, #sbac-favorites-forum-cancel)").attr("disabled", true);
       $("input, textarea, select").live('keydown change', function () {
         $(".row.second button:submit").removeAttr("disabled");
       });
