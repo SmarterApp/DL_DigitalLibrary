@@ -2,6 +2,7 @@
 
 define('SBAC_SSO_URL', 'http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp');
 define('SBAC_SSO_PROGRAM_API', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain');
+define('SBAC_SSO_LOGOUT_URL', 'http://www.smarterbalanced.org');
 
 /**
  * Implements hook_menu().
@@ -352,7 +353,7 @@ function sbac_sso_logout() {
   module_invoke_all('user_logout', $user);
   session_destroy();
 
-  $url = 'http://www.smarterbalanced.org/';
+  $url = SBAC_SSO_LOGOUT_URL;
   if ($ajax) {
     $output = array();
     $output['url'] = $url;
