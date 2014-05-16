@@ -857,6 +857,8 @@ function sbac_user_user_view($account, $view_mode, $langcode) {
     if ($account->data && isset($account->data['login_count'])) {
       $login_count = $account->data['login_count'];
     }
+    // login count will be 1 or greater.
+    drupal_add_js(array('sbac_user_login_count' => $login_count), 'setting');
     $account->content['summary']['login_count'] = array(
       '#type' => 'user_profile_item',
       '#title' => t('Login Count'),
