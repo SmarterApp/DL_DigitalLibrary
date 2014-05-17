@@ -115,15 +115,27 @@
 
       <div class="topic-node-comment-region-right-bottom reply-links-for-<?php print $comment->cid; ?>">
         <?php print render($content['links']); ?>
-      </div>
-      <?php if (!empty($content['recommend_link'])): ?>
-        <?php print $content['recommend_link']; ?>
-      <?php endif; ?>
-      <div id="recommend-info-<?php print $comment_id; ?>">
-        <?php if (!empty($content['recommend_count'])): ?>
-          <?php if (!empty($content['recommend_link'])): ?> - <?php endif; ?><?php print $content['recommend_count']; ?> recommended
-        <?php endif; ?>
-      </div>
+        
+				<div class="recommend-box">
+      		<?php if (!empty($content['recommend_link'])): ?>
+		        <?php //print $content['recommend_link']; ?>
+		<?php print 				l(t('Recommend'), current_path(), array(
+			        'attributes' => array(
+			          'cid' => $comment_entity->cid,
+			          'id' => 'sbac-recommend-' . $comment_entity->cid,
+			          'class' => array(
+			            'sbac-recommend-link'
+			          )
+			        )
+			      ));?>
+		      <?php endif; ?>
+		      <div id="recommend-info-<?php print $comment_id; ?>">
+		        <?php if (!empty($content['recommend_count'])): ?>
+		          <?php if (!empty($content['recommend_link'])): ?> - <?php endif; ?><?php print $content['recommend_count']; ?> recommended
+		        <?php endif; ?>
+		      </div>
+				</div>
+			</div>
       <div class="topic-node-comment-region-right-bottm-comment flagged-post-for-<?php print $comment->cid; ?>">
         <?php if (!empty($content['flags']['comments'])): ?>
           <div class='flag-section'>
