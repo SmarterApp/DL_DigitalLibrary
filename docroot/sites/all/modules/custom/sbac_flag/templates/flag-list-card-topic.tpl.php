@@ -1,19 +1,19 @@
 <div class="resource-card">
   <div class="row">
-    <?php if (isset($flag_content['eck_review'])): ?>
+    <?php if (isset($flag_content['eck_post'])): ?>
       <div class="user-photo">
-        <?php echo $flag_content['eck_review']['topic_author_picture']; ?>
+        <?php echo $flag_content['eck_post']['topic_author_picture']; ?>
       </div>
       <div class="post-details">
         <div class="resource-type">
           <span class="resource-type-text">Post</span>
         </div>
         <div class="post-author">
-          <?php print $flag_content['eck_review']['topic_author']; ?>
+          <?php print $flag_content['eck_post']['topic_author']; ?>
         </div>
         <div class="post-body">
           <span class="post-body-text">
-            <?php echo $flag_content['eck_review']['post_body']; ?>
+            <?php echo $flag_content['eck_post']['post_body']; ?>
           </span>
         </div>
       </div>
