@@ -3268,12 +3268,17 @@ h2.title {
 				margin-left: 20px;
 				padding-left: 15px;
 				padding-top: 2px;
+			}
+			
+			a.recommend_link {
+				display: inline-block;
+				float: left;
+				margin: 9px 0 0 0;
+				color: #0583AC;
+				font-size: 13px;
+				line-height: 20px;
 				
-				a {
-					color: #0583AC;
-					
-					&:hover {text-decoration: underline;}
-				}
+				&:hover {text-decoration: underline;}
 			}
 				
 			a.comment-reply:before {
