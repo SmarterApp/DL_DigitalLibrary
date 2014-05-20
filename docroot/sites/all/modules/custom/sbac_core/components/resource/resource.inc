@@ -32,7 +32,7 @@ function resource_access($op, $node, $account = NULL) {
     }
 
     if (in_array($op, array('view collaboration'))) {
-      return $node->sticky == 1;
+      return TRUE;
     }
 
     // TODO: maybe we should just load & statically cache all feedback records

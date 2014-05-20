@@ -63,13 +63,13 @@ class Hooks extends \devtools\Hooks {
     );
 
     $items['user/%user/notifications/read'] = array(
-      'title' => 'Mark all notificatons read',
-      'page callback' => 'taskit_mark_all_read',
-      'page arguments' => array(1),
-      'access callback' => 'taskit_mark_all_read_access',
-      'access arguments' => array(1),
-      'type' => MENU_CALLBACK
-    ) + $base;
+        'title' => 'Mark all notificatons read',
+        'page callback' => 'taskit_mark_all_read',
+        'page arguments' => array(1),
+        'access callback' => 'taskit_mark_all_read_access',
+        'access arguments' => array(1),
+        'type' => MENU_CALLBACK
+      ) + $base;
 
     return $items;
   }
@@ -174,6 +174,24 @@ class Hooks extends \devtools\Hooks {
         'name' => 'deleted_topic_node',
         'description' => t('Deleted Topic Node'),
         'class' => 'DeletedTopicNode',
+      ),
+      // creating a topic node
+      array(
+        'name' => 'created_topic_node',
+        'description' => t('Created Topic Node'),
+        'class' => 'CreatedTopicNode',
+      ),
+      // recommending a comment
+      array(
+        'name' => 'recommended_forum_comment',
+        'description' => t('Recommended Forum Comment'),
+        'class' => 'RecommendedForumComment',
+      ),
+      // creating a topic comment
+      array(
+        'name' => 'created_forum_comment',
+        'description' => t('Created Forum Comment'),
+        'class' => 'CreatedForumComment',
       ),
       // deleting a forum comment
       array(
