@@ -119,6 +119,7 @@
         <?php endif; ?>
         <?php if (!empty($content['recommend_link'])): ?>
           <?php print $content['recommend_link']; ?>
+					
         <?php endif; ?>
         <div id="recommend-info-<?php print $comment_id; ?>">
           <?php if (!empty($content['recommend_count'])): ?>
