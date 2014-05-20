@@ -3255,13 +3255,20 @@ h2.title {
 				line-height: 20px;
 			}
 			
-			a.comment-reply:hover, a.recommend-box:hover {
+			a.comment-reply:hover {
 				text-decoration: underline;
 			}
 			
 			.recommend-box {
 				margin-left: 20px;
-				padding-left: 5px;
+				padding-left: 15px;
+				padding-top: 2px;
+				
+				a {
+					color: #0583AC;
+					
+					&:hover {text-decoration: underline;}
+				}
 			}
 				
 			a.comment-reply:before {
@@ -3277,13 +3284,12 @@ h2.title {
 			
 			.recommend-box:before {
 				background: url(../images/icon-recommend.png) no-repeat 0 1px;
-				content: "Recommend";
+				content: "";
 				display: inline-block;
 		    font-weight: normal;
 		    margin-right: 7px;
-				width: 95px;
+				width: 15px;
 				height: 17px;
-				text-align: right;
 		    position: relative;
 		    text-decoration: none;
 				cursor: pointer;

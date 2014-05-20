@@ -384,7 +384,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   else {
     // Recommend link
     if (!sbac_forum_user_has_recommended($comment_entity->cid, $user->uid)) {
-      $vars['content']['recommend_link'] = l(t(''), current_path(), array(
+      $vars['content']['recommend_link'] = l(t('Recommend'), current_path(), array(
         'attributes' => array(
           'cid' => $comment_entity->cid,
           'id' => 'sbac-recommend-' . $comment_entity->cid,
