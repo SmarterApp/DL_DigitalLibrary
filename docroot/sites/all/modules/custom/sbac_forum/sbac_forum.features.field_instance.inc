@@ -670,6 +670,50 @@ function sbac_forum_field_default_field_instances() {
     'xss' => 0,
   );
 
+  // Exported field_instance: 'node-topic-field_topic_default'
+  $field_instances['node-topic-field_topic_default'] = array(
+    'bundle' => 'topic',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_topic_default',
+    'label' => 'Default topic',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_buttons',
+      'weight' => 7,
+    ),
+  );
+
   // Exported field_instance: 'node-topic-field_topic_files'
   $field_instances['node-topic-field_topic_files'] = array(
     'bundle' => 'topic',
@@ -1710,6 +1754,7 @@ function sbac_forum_field_default_field_instances() {
   t('Created');
   t('Date Joined');
   t('Date Removed');
+  t('Default topic');
   t('Description');
   t('Educational Use');
   t('Facilitators');
