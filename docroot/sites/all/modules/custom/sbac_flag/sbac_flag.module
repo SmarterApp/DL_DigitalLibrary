@@ -134,6 +134,10 @@ function sbac_flag_menu() {
     'file' => 'sbac_flag.modal.inc',
   );
 
+  $items['sbac-flag/forum/$ctools_js/%/%'] = array(
+    'page arguments' => array(2, 3, 4),
+  );
+
   return $items;
 }
 

@@ -251,9 +251,9 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
     $account = user_load($node->uid);
     $account_renderable = user_view($account, 'tooltip');
 
-    $variables['eck_review']['topic_author'] = $user_tooltip;
-    $variables['eck_review']['topic_author_picture'] = render($account_renderable['user_picture']);
-    $variables['eck_review']['post_body'] = $node->body['und'][0]['safe_value'];
+    $variables['eck_post']['topic_author'] = $user_tooltip;
+    $variables['eck_post']['topic_author_picture'] = render($account_renderable['user_picture']);
+    $variables['eck_post']['post_body'] = $node->body['und'][0]['safe_value'];
   }
 
   if ($row->type == 'comment') {
@@ -262,9 +262,9 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
     $account = user_load($post->author->uid->value());
     $account_renderable = user_view($account, 'tooltip');
 
-    $variables['eck_review']['topic_author'] = $user_tooltip;
-    $variables['eck_review']['topic_author_picture'] = render($account_renderable['user_picture']);
-    $variables['eck_review']['post_body'] = $post->comment_body->value();
+    $variables['eck_post']['topic_author'] = $user_tooltip;
+    $variables['eck_post']['topic_author_picture'] = render($account_renderable['user_picture']);
+    $variables['eck_post']['post_body'] = $post->comment_body->value();
   }
 
   if ($variables['eck_flag']['urgent']) {
