@@ -3234,7 +3234,7 @@ h2.title {
 			}
 		}
 		
-		.field-name-field-topic-comment-files .file-widget form-managed-file .file :before {
+		.field-name-field-topic-comment-files .file-widget form-managed-file .file:before {
 	    content: "" !important;
 		}
 
@@ -3243,37 +3243,71 @@ h2.title {
 		}
 		
 		.topic-node-comment-region-right-bottom {
-			text-align: right;
+			position: relative;
 			clear: both;
 			
-			ul{
-				list-style-type: none;
-				margin-bottom: 0;
-
-				li {
-					display: inline-block;
-			    margin: 20px 0 0 0;
-					line-height: 1;
-
-					a {
-						margin-left: 30px;
-						color: #62676E;
-						font-size: 13px;
-						line-height: 20px;
-
-						&:hover {text-decoration: underline;}
-					}
-				}
-
-				li.comment-reply a {
+			a.comment-reply, .recommend-box, div[id*="recommend-info"] {
+				display: inline-block;
+				float: left;
+				margin: 9px 0 0 0;
+				color: #0583AC;
+				font-size: 13px;
+				line-height: 20px;
+			}
+			
+			a.comment-reply:hover {
+				text-decoration: underline;
+			}
+			
+			.recommend-box {
+				margin-left: 20px;
+				padding-left: 15px;
+				padding-top: 2px;
+				
+				a {
 					color: #0583AC;
+					
+					&:hover {text-decoration: underline;}
+				}
+			}
+				
+			a.comment-reply:before {
+				content:"\e630";
+				font-family: 'sbac';
+				display: inline-block;
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    position: relative;
+		    text-decoration: none;
+			}
+			
+			.recommend-box:before {
+				background: url(../images/icon-recommend.png) no-repeat 0 1px;
+				content: "";
+				display: inline-block;
+		    font-weight: normal;
+		    margin-right: 7px;
+				width: 15px;
+				height: 17px;
+		    position: relative;
+		    text-decoration: none;
+				cursor: pointer;
+				padding-top: 3px;
+			}
+			
+			.tertiary-flag-link {
+				position: absolute;
+				top: 7px;
+				right: 0;
+
+				a  {
+					color: #5A5A5A;
+					opacity: 0.5;
 				}
 
-				li.comment-delete a:before,
-				li.comment-edit a:before,
-				li.comment-reply a:before,
-				li.flag_post a:before {
-					content:"\e632";
+				a:before {
+					content:"\e602";
 				  display: inline-block;
 			    font-family: 'sbac';
 			    font-size: 20px;
@@ -3284,57 +3318,148 @@ h2.title {
 			    text-decoration: none;
 				}
 
-				li.comment-edit a:before {
-					content:"\e61d";
-				}
-
-				li.comment-reply a:before {
-					content:"\e630";
-					opacity: 1;
-				}
-				
-				li.flag_post a:before {
-					content: "\e602";
-				}
-
-				li.comment-edit a:hover:before,
-				li.comment-delete a:hover:before,
-				li.flag_post a:hover:before {
+				a:hover, a:hover:before {
 					opacity: 1;
 				}
 			}
 			
-			.recommend-box {
-				float: left; 
-				margin-top: 20px;
-				
-				a.sbac-recommend-link {
-					color: #0583AC;
-					display: inline-block;
-					float: left;
-				}
-				
-				a.sbac-recommend-link:before {
-					color: #0583AC;
-					content: "\f000";
-				  display: inline-block;
-			    font-family: "SocialFoundicons";
-			    font-size: 20px;
-			    font-weight: normal;
-			    margin-right: 7px;
-		      top: 5px;
-			    position: relative;
-			    text-decoration: none;
-				}
-				
-				div[id*="recommend-info"] {
-					display: inline-block;
-					float: left;
-					margin: 9px 0 0 10px;
-				}
+		  a[id*="sbac-forum-flag-post"] {
+				position: absolute;
+				top: 7px;
+				right: 0;
+				color: #5A5A5A;
+				opacity: 0.5;
 			}
 			
-			ul.links {float: right;}
+			a[id*="sbac-forum-flag-post"]:before {
+				content:"\e602";
+			  display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    opacity: 0.5;
+		    position: relative;
+		    text-decoration: none;
+			}
+			
+			a[id*="sbac-forum-flag-post"]:hover,
+			a[id*="sbac-forum-flag-post"]:hover:before {
+				opacity: 1;
+			}
+			
+			a.comment-edit {
+				color: #0583AC;
+				position: absolute;
+				top: 9px;
+				right: 0;
+			}
+			
+			a.comment-edit:hover {
+				text-decoration: underline;
+			}
+			
+			.comment-edit:before {
+				content:"\e61d";
+				display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    position: relative;
+		    text-decoration: none;
+			}
+			
+			
+			/*ul{
+							list-style-type: none;
+							margin-bottom: 0;
+
+							li {
+								display: inline-block;
+						    margin: 20px 0 0 0;
+								line-height: 1;
+
+								a {
+									margin-left: 30px;
+									color: #62676E;
+									font-size: 13px;
+									line-height: 20px;
+
+									&:hover {text-decoration: underline;}
+								}
+							}
+
+							li.comment-reply a {
+								color: #0583AC;
+							}
+
+							li.comment-delete a:before,
+							li.comment-edit a:before,
+							li.comment-reply a:before,
+							li.flag_post a:before {
+								content:"\e632";
+							  display: inline-block;
+						    font-family: 'sbac';
+						    font-size: 20px;
+						    font-weight: normal;
+						    margin-right: 7px;
+						    opacity: 0.5;
+						    position: relative;
+						    text-decoration: none;
+							}
+
+							li.comment-edit a:before {
+								content:"\e61d";
+							}
+
+							li.comment-reply a:before {
+								content:"\e630";
+								opacity: 1;
+							}
+							
+							li.flag_post a:before {
+								content: "\e602";
+							}
+
+							li.comment-edit a:hover:before,
+							li.comment-delete a:hover:before,
+							li.flag_post a:hover:before {
+								opacity: 1;
+							}
+						}
+						
+						.recommend-box {
+							float: left; 
+							margin-top: 20px;
+							
+							a.sbac-recommend-link {
+								color: #0583AC;
+								display: inline-block;
+								float: left;
+							}
+							
+							a.sbac-recommend-link:before {
+								color: #0583AC;
+								content: "\f000";
+							  display: inline-block;
+						    font-family: "SocialFoundicons";
+						    font-size: 20px;
+						    font-weight: normal;
+						    margin-right: 7px;
+					      top: 5px;
+						    position: relative;
+						    text-decoration: none;
+							}
+							
+							div[id*="recommend-info"] {
+								display: inline-block;
+								float: left;
+								margin: 9px 0 0 10px;
+							}
+						}
+						
+						ul.links {float: right;}*/
 		}
 	}
 }

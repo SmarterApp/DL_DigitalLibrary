@@ -66,9 +66,7 @@
       <?php print $new_comment_status_message; ?>
     </div>
   <?php endif; ?>
-  <?php if (!empty($content['flags']['moderation'])): ?>
-    <?php print render($content['flags']['moderation']['post']['header']); ?>
-  <?php endif; ?>
+
   <div class="row-comment-content">
     <div class="topic-node-comment-region-left">
       <div class="topic-node-comment-author-img">
@@ -117,14 +115,16 @@
         <?php if (!empty($content['reply_link'])): ?>
           <?php print $content['reply_link']; ?>
         <?php endif; ?>
-        <?php if (!empty($content['recommend_link'])): ?>
-          <?php print $content['recommend_link']; ?>
+				<div class="recommend-box">
+        <?php if (!empty($content['recommend_link'])): ?>			
         <?php endif; ?>
+				</div>
         <div id="recommend-info-<?php print $comment_id; ?>">
           <?php if (!empty($content['recommend_count'])): ?>
             <?php if (!empty($content['recommend_link'])): ?> - <?php endif; ?><?php print $content['recommend_count']; ?> recommended
           <?php endif; ?>
         </div>
+				
         <?php if (!empty($content['edit_link'])): ?>
           <?php print $content['edit_link']; ?>
         <?php endif; ?>
@@ -138,9 +138,6 @@
             <?php print render($content['flags']['comments']['reason']); ?>
             <?php print render($content['flags']['comments']['comment']); ?>
           </div>
-        <?php endif; ?>
-        <?php if (!empty($content['flags']['moderation']['post'])): ?>
-          <?php print render($content['flags']['moderation']['post']['content']); ?>
         <?php endif; ?>
       </div>
       <div class="topic-node-comment-region-right-reply-form">
