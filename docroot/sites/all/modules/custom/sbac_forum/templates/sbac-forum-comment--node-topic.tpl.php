@@ -66,7 +66,9 @@
       <?php print $new_comment_status_message; ?>
     </div>
   <?php endif; ?>
-
+  <?php if (!empty($content['flags']['moderation'])): ?>
+    <?php print render($content['flags']['moderation']['post']['header']); ?>
+  <?php endif; ?>
   <div class="row-comment-content">
     <div class="topic-node-comment-region-left">
       <div class="topic-node-comment-author-img">
@@ -139,6 +141,10 @@
             <?php print render($content['flags']['comments']['comment']); ?>
           </div>
         <?php endif; ?>
+        <?php if (!empty($content['flags']['moderation']['post'])): ?>
+          <?php print render($content['flags']['moderation']['post']['content']); ?>
+        <?php endif; ?>
+
       </div>
       <div class="topic-node-comment-region-right-reply-form">
       </div>
