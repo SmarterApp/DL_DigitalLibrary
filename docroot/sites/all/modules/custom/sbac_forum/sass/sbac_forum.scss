@@ -3257,7 +3257,8 @@ h2.title {
 			
 			div[id*="recommend-info"] {
 				color: #62676E;
-				margin-top: 9px;
+				margin-left: 2px;
+				margin-top: 3px;
 			}
 			
 			a.comment-reply:hover {
@@ -3270,14 +3271,12 @@ h2.title {
 				padding-top: 2px;
 			}
 			
-			a.recommend_link {
+			a.sbac-recommend-link  {
 				display: inline-block;
 				float: left;
-				margin: 9px 0 0 0;
 				color: #0583AC;
 				font-size: 13px;
 				line-height: 20px;
-				margin-top: 9px;
 				
 				&:hover {text-decoration: underline;}
 			}
