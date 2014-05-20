@@ -215,28 +215,17 @@ function sbac_forum_preprocess_node__topic(&$vars) {
         );
       }
       else {
-        $resolve_button = l(t('Resolve Flags'), 'sbac-flag/forum/nojs/resolve-all/topic/' . $node_data->nid->value(), array(
+        // $resolve_button = l(t('Resolve Flags'), 'sbac-flag/forum/nojs/resolve-all/topic', array(
+        $resolve_button = l(t('Resolve Flags'), 'sbac-forum/flag/resolve/nojs/topic/' . $node_data->nid->value() . '/' . $_GET['cid'], array(
           'attributes' => array(
             'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-resolve-button',
             'id' => 'sbac-flag-resolve-button',
           ),
-          'query' => array(
-            'eck_review' => 0,
-            'forum_type' => 'topic',
-            'nid' => $node_data->nid->value(),
-            'cid' => $_GET['cid'],
-          ),
         ));
-        $remove_button = l(t('Remove Topic'), 'sbac-flag/forum/nojs/remove/topic/' . $node_data->nid->value(), array(
+        $remove_button = l(t('Remove Topic'), 'sbac-forum/flag/remove/nojs/topic/' . $node_data->nid->value() . '/' . $_GET['cid'], array(
           'attributes' => array(
             'class' => 'ctools-use-modal red button use-ajax ctools-modal-sbac-flag-remove-button',
             'id' => 'sbac-flag-remove-button',
-          ),
-          'query' => array(
-            'eck_review' => 0,
-            'forum_type' => 'topic',
-            'nid' => $node_data->nid->value(),
-            'cid' => $_GET['cid'],
           ),
         ));
         $js_settings = array(
@@ -488,28 +477,16 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         );
       }
       elseif ($moderation_type == 'resolve-comment-flags') {
-        $resolve_button = l(t('Resolve Flags'), 'sbac-flag/forum/nojs/resolve-all/topic/' . $comment_entity->nid, array(
+        $resolve_button = l(t('Resolve Flags'), 'sbac-forum/flag/resolve/nojs/comment/' . $comment_entity->nid . '/' . $moderate_cid, array(
           'attributes' => array(
             'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-resolve-button',
             'id' => 'sbac-flag-resolve-button',
           ),
-          'query' => array(
-            'eck_review' => 0,
-            'forum_type' => 'topic',
-            'nid' => $comment_entity->nid,
-            'cid' => $moderate_cid,
-          ),
         ));
-        $remove_button = l(t('Remove Topic'), 'sbac-flag/forum/nojs/remove/topic/' . $comment_entity->nid, array(
+        $remove_button = l(t('Remove Post'), 'sbac-forum/flag/remove/nojs/comment/' . $comment_entity->nid . '/' . $moderate_cid, array(
           'attributes' => array(
             'class' => 'ctools-use-modal red button use-ajax ctools-modal-sbac-flag-remove-button',
             'id' => 'sbac-flag-remove-button',
-          ),
-          'query' => array(
-            'eck_review' => 0,
-            'forum_type' => 'topic',
-            'nid' => $comment_entity->nid,
-            'cid' => $moderate_cid,
           ),
         ));
         $js_settings = array(
