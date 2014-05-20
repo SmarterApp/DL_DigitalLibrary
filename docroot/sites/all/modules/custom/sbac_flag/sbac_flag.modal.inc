@@ -128,6 +128,7 @@ function sbac_flag_start_moderation($js = FALSE) {
           $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review'], 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
         }
         elseif ($form_state['forum_type']) {
+          sbac_flag_collaboration_set_being_moderated($node, $form_state['cid']);
           $path_alias = drupal_get_path_alias('node/' . $node->nid);
           $output[] = ctools_ajax_command_redirect($path_alias, 0, array(
             'query' => array(
@@ -1157,7 +1158,7 @@ function sbac_flag_collaboration_callback($js = FALSE, $nid, $cid = 0) {
  * @param  [type]  $form_state [description]
  * @return [type]              [description]
  */
-function sbac_flag_collaboration_form($form, &$form_state) {//, $node, $cid = 0) {
+function sbac_flag_collaboration_form($form, &$form_state) {
   $form['header'] = array(
     '#type'   => 'item',
     '#prefix' => '<div class="form-flag-content"><div class="form-item-title">',
@@ -1280,4 +1281,180 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
      $flag_cid = $form_state['info']['cid'];
      sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
   }
+}
+
+function sbac_flag_collaboration_resolve_callback($js = FALSE, $type, $nid, $cid) {
+  if (!$js) {
+    return;
+  }
+
+  ctools_add_css('sbac_flag.css', 'sbac_flag');
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+
+  $form_state = array(
+    'title' => t('You are about to resolve all flags'),
+    'ajax' => TRUE,
+    'info' => array(
+      'form_type' => $type,
+      'nid' => $nid,
+      'cid' => $cid,
+    ),
+  );
+
+  $output = ctools_modal_form_wrapper('sbac_flag_collaboration_resolve_form', $form_state);
+
+  if (!empty($form_state['executed'])) {
+
+    if ($form_state['triggering_element']['#value'] == 'Resolve Flags') {
+      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+      sbac_flag_collaboration_resolve_forum($nid, $cid);
+      $url = drupal_get_path_alias('node/' . $nid);
+      $output[] = ctools_ajax_command_redirect($url);
+    }
+    $output[] = ctools_modal_command_dismiss();
+  }
+
+  print ajax_render($output);
+  exit;
+}
+
+function sbac_flag_collaboration_resolve_form($form, &$form_state) {
+  $form = array();
+  $flags = sbac_flag_get_forum_flags($form_state['info']['nid'], $form_state['info']['cid']);
+  $flag_list = array();
+
+  $form['header'] = array(
+    '#type' => 'item',
+    '#prefix' => '<div class="sbac-flag-collaboration-resolve-header">',
+    '#markup' => '<span class="sbac-resolve-text">You are resolving the following flags</span>',
+    '#suffix' => '</div>',
+  );
+
+  while ($flag = $flags->fetchAssoc()) {
+    $flag_list[$flag['flag_selected']][] = $flag;
+  }
+
+  foreach ($flag_list as $tid => $flag_reports) {
+    $flag_count = count($flag_reports);
+    $num_text = $flag_count . ' ' . ($flag_count == 1 ? 'flag' : 'flags');
+    $flag_term = taxonomy_term_load($tid);
+
+    $form['flag' . $tid] = array(
+      '#type' => 'item',
+      '#markup' => $flag_term->name . ' <span class="sbac-flag-collaboration-flag-num"> - ' . $num_text,
+    );
+  }
+
+  $form['warning'] = array(
+    '#type' => 'item',
+    '#prefix' => '<div class="sbac-flag-collaboration-resolve-warning">',
+    '#markup' => t('If you continue, all flags will be dismissed.'),
+    '#suffix' => '</span>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+  );
+
+  $form['resolve'] = array(
+    '#type' => 'submit',
+    '#value' => 'Resolve Flags',
+  );
+
+  return $form;
+}
+
+function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid) {
+  if (!$js) {
+    return;
+  }
+
+  ctools_add_css('sbac_flag.css', 'sbac_flag');
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_add_js('ajax-responder');
+  ctools_modal_add_js();
+
+  $title = 'You are about to remove this ' . ($type == 'topic' ? 'topic' : 'post');
+
+  $form_state = array(
+    'title' => $title,
+    'ajax' => TRUE,
+    'info' => array(
+      'type' => $type,
+      'nid' => $nid,
+      'cid' => $cid,
+    ),
+  );
+
+  $output = ctools_modal_form_wrapper('sbac_flag_collaboration_remove_form', $form_state);
+
+  if (!empty($form_state['executed'])) {
+    $output[] = ctools_modal_command_dismiss();
+  }
+
+  print ajax_render($output);
+  exit();
+}
+
+function sbac_flag_collaboration_remove_form($form, &$form_state) {
+  $form = array();
+
+  if ($form_state['info']['type'] == 'topic') {
+    $node = entity_metadata_wrapper('node', $form_state['info']['nid']);
+    $post_count = $node->comment_count->value();
+    $header_markup = $post_count . ' ' . ($post_count == 1 ? 'post' : 'posts');
+
+    $form['header'] = array(
+      '#type' => 'item',
+      '#markup' => 'This topic contains ' . $header_markup . ' . If you remove the topic, the posts will be removed as well.'
+    );
+
+    $message_box = array(
+      '#type' => 'textarea',
+      '#title' => 'Please leave a message for the topic creator',
+      '#rows' => 3,
+      '#required' => TRUE,
+      '#maxlength' => 1000,
+      '#maxlength_js' => TRUE,
+      '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
+
+    );
+
+    $remove_button = array(
+      '#type' => 'submit',
+      '#value' => 'Remove Topic',
+    );
+  }
+  elseif ($form_state['info']['type'] == 'comment') {
+    $message_box = array(
+      '#type' => 'textarea',
+      '#title' => 'Please leave a message for the poster',
+      '#rows' => 3,
+      '#required' => TRUE,
+      '#maxlength' => 1000,
+      '#maxlength_js' => TRUE,
+      '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
+    );
+
+    $remove_button = array(
+      '#type' => 'submit',
+      '#value' => 'Remove Post',
+    );
+  }
+
+  $form['message'] = $message_box;
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+  );
+
+  $form['remove'] = $remove_button;
+
+  return $form;
 }
