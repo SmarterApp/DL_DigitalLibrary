@@ -263,7 +263,18 @@ function sbac_sso_error() {
     104 => t('Error code 104'),
     200 => t('Error code 200'),
   );
-  drupal_set_title($possible_titles[0]);
+
+  switch ($code) {
+    case 102:
+    case 200:
+      $title = 0;
+      break;
+    default:
+      $title = 1;
+      break;
+  }
+
+  drupal_set_title($possible_titles[$title]);
   $output = $possible_messages[$code];
   return $output;
 }
