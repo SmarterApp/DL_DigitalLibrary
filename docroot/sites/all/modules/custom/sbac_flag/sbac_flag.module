@@ -134,8 +134,18 @@ function sbac_flag_menu() {
     'file' => 'sbac_flag.modal.inc',
   );
 
-  $items['sbac-flag/forum/$ctools_js/%/%'] = array(
-    'page arguments' => array(2, 3, 4),
+  $items['sbac-forum/flag/resolve/%ctools_js/%/%/%'] = array(
+    'page callback' => 'sbac_flag_collaboration_resolve_callback',
+    'page arguments' => array(3, 4, 5, 6),
+    'access callback' => array('sbac_flag_moderation_access'),
+    'file' => 'sbac_flag.modal.inc',
+  );
+
+  $items['sbac-forum/flag/remove/%ctools_js/%/%/%'] = array(
+    'page callback' => 'sbac_flag_collaboration_remove_callback',
+    'page arguments' => array(3, 4, 5, 6),
+    'access callback' => array('sbac_flag_moderation_access'),
+    'file' => 'sbac_flag.modal.inc',
   );
 
   return $items;
@@ -1150,6 +1160,63 @@ function sbac_flag_unset_being_moderated($node, $eck_review = FALSE) {
   else {
     db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :being_moderated, ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':being_moderated' => 0, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
   }
+}
+/**
+ * Sets the being moderated on forum eck_flag
+ */
+function sbac_flag_collaboration_set_being_moderated($node, $cid) {
+  global $user;
+  $update = db_update('eck_flag');
+  $update->fields(array(
+    'being_moderated' => $user->uid,
+    'changed' => time(),
+  ));
+  $update->condition('nid', $node->nid, '=');
+  if ($cid) {
+    $update->condition('target_type', 'comment', '=');
+    $update->condition('target_id', $cid, '=');
+  }
+  else {
+    $update->condition('target_type', 'topic', '=');
+    $update->condition('target_id', $node->nid, '=');
+  }
+  $update->execute();
+}
+
+function sbac_flag_collaboration_unset_being_moderated($nid, $cid) {
+  $update = db_update('eck_flag');
+  $update->fields(array(
+    'being_moderated' => 0,
+    'changed' => time(),
+  ));
+  $update->condition('nid', $nid, '=');
+  if ($cid) {
+    $update->condition('target_type', 'comment', '=');
+    $update->condition('target_id', $cid, '=');
+  }
+  else {
+    $update->condition('target_type', 'topic', '=');
+    $update->condition('target_id', $nid, '=');
+  }
+  $update->execute();
+}
+
+function sbac_flag_collaboration_resolve_forum($nid, $cid) {
+  $update = db_update('eck_flag');
+  $update->fields(array(
+    'resolved' => 1,
+    'changed' => time(),
+  ));
+  $update->condition('nid', $nid, '=');
+  if ($cid) {
+    $update->condition('target_type', 'comment', '=');
+    $update->condition('target_id', $cid, '=');
+  }
+  else {
+    $update->condition('target_type', 'topic', '=');
+    $update->condition('target_id', $nid, '=');
+  }
+  $update->execute();
 }
 
 /**

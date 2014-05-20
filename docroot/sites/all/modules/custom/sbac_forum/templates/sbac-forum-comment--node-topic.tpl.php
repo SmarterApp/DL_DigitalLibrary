@@ -116,7 +116,8 @@
           <?php print $content['reply_link']; ?>
         <?php endif; ?>
 				<div class="recommend-box">
-        <?php if (!empty($content['recommend_link'])): ?>			
+        <?php if (!empty($content['recommend_link'])): ?>	
+					<?php print $content['recommend_link']; ?>
         <?php endif; ?>
 				</div>
         <div id="recommend-info-<?php print $comment_id; ?>">
