@@ -85,6 +85,9 @@
         <?php print $auth_name_hover; ?>
         <?php print ' ' . $posted_date; ?>
         <?php print $depth_extra; ?>
+        <?php if ($go_to_thread_link): ?>
+          <?php print $go_to_thread_link; ?>
+        <?php endif; ?>
       </div>
       <!-- END region right top -->
 

@@ -742,3 +742,47 @@ function sbac_forum_delete_comment_confirm_submit($form, &$form_state) {
     $form_state['redirect'] = $redirect_to;
   }
 }
+
+/**
+ * =============================================================================
+ *    Comment Sort Form
+ * =============================================================================
+ */
+function sbac_forum_comment_sort_form($form, &$form_state) {
+  $form = array();
+  $default = 'comment-most-recent-activity';
+  // If session var is set, make it the default.
+  if (isset($_SESSION[SBAC_FORUM_TOPIC_COMMENT_SORTS]) &&
+    $_SESSION[SBAC_FORUM_TOPIC_COMMENT_SORTS] != ''
+  ) {
+    $default = $_SESSION[SBAC_FORUM_TOPIC_COMMENT_SORTS];
+  }
+  $options = array(
+    'comment-most-recent-activity' => t('Most Recent Activty'),
+    'comment-most-recommended' => t('Most Recommended'),
+    'comment-oldest' => t('Oldest'),
+  );
+  // Ajax submitted. Set Text if selected.
+  if (isset($form_state['values']['comment_sort_order'])) {
+    $new_value_key = $form_state['values']['comment_sort_order'];
+    $old_value_text = $options[$new_value_key];
+    $options[$new_value_key] = t('Sort by: ' . $old_value_text);
+  }
+  else {
+    $options[$default] = t('Sort by: ' . $options[$default]);
+  }
+
+  // Needs to ajax submit to set the session variable that tracks default state.
+  $form['comment_sort_order'] = array(
+    '#type' => 'select',
+    '#required' => FALSE,
+    '#options' => $options,
+    '#default_value' => $default,
+    '#ajax' => array(
+      'callback' => 'sbac_forum__ajax__topic_comment_sort_form_change',
+      'event' => 'change',
+      'progress' => array('type' => 'none'),
+    )
+  );
+  return $form;
+}
