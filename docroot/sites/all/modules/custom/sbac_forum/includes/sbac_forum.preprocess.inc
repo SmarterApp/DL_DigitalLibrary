@@ -302,6 +302,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   global $user;
   $comment_entity = $vars['comment'];
   $comment_data = entity_metadata_wrapper('comment', $comment_entity);
+  $vars['removed'] = FALSE;
 
   $vars['comment_id'] = $comment_entity->cid;
 
@@ -359,6 +360,22 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   $vars['depth_extra'] = $depth_extra;
   $vars['posted_date'] = $posted_date;
   $vars['has_materials'] = $has_materials;
+
+  // If post was removed by moderator
+  $resolved_query = sbac_flag_get_forum_flags($comment_entity->nid, $comment_entity->cid);
+  while ($resolved = $resolved_query->fetchAssoc()) {
+    if ($resolved['resolved'] == 2) {
+      $vars['removed'] = TRUE;
+      $vars['new_comment_status_message'] = '';
+      $vars['picture'] = '';
+      $vars['auth_name_hover'] = '';
+      $vars['depth_extra'] = '';
+      $vars['posted_date'] = '';
+      $vars['has_materials'] = '';
+      $vars['content']['comment_body'][0]['#markup'] = '<span class="sbac-forum-post-removed">Post removed by moderator.</span>';
+      return;
+    }
+  }
 
   // Override reply link
   if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
