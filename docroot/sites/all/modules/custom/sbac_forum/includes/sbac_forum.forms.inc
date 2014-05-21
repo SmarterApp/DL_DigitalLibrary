@@ -298,7 +298,7 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
         'forum-newest' => t('Newest'),
         'forum-most-participants' => t('Most Participants'),
       );
-      $sort_ajax_callback = 'sbac_forum__ajax__resource_forum_sort_form_change';
+      $sort_ajax_callback = 'sbac_forum__ajax__topic_forum_sort_form_change';
       break;
     default:
       $default = 'forum-most-active';
