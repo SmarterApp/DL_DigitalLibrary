@@ -1,5 +1,7 @@
 (function($) {
 
+var ajax_request = null;
+
 Drupal.behaviors.sections = {
   attach: function (context, settings) {
     // check for tab hash and switch the active tab
@@ -14,12 +16,37 @@ Drupal.behaviors.sections = {
     var container = $('.section-container');
     if (container.length) {
       $('section', container).each(function(i, el) {
-        var el = $(el);
+        var section = $(el);
 
-        el.click(function(e) {
-          if (el.hasClass('disabled')) {
+        section.click(function(e) {
+          if (section.hasClass('disabled')) {
             e.preventDefault();
             return false;
+          }
+
+
+          var section_href = $(this).find('a');
+          var title = section_href.attr('title');
+          var section_id = section_href.attr('section_id');
+          var source = section_href.attr('source');
+          var tab = section_href.attr('tab');
+          var nid = section_href.attr('nid');
+
+
+
+          if (ajax_request == null && !$.trim( $('#' + section_id).html() ).length) {
+            ajax_request = $.ajax({
+              url: "/section-get-content",
+              data: {'source' : source, 'tab' : tab, 'nid' : nid},
+              success: function (data) {
+                var response = jQuery.parseJSON(data);
+                if (response.response != null) {
+                  $('#' + section_id).empty().append(response.response);
+                  Drupal.attachBehaviors(context, settings);
+                }
+                ajax_request = null;
+              }
+            });
           }
         });
       });

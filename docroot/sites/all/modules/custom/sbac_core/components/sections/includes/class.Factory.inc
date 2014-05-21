@@ -90,18 +90,22 @@ class Factory {
 
   /**
    * Logs new section.
+   *
    * @param [type] $section [description]
    */
-  public function add(iSection $section) {
+  public function add(iSection $section, $source = NULL, $tab = NULL, $visible = TRUE) {
     if (($access = $section->access()) || $section->show_disabled()) {
       $add = array(
         'title'     => t($section::title),
         'content'   => '',
         'disabled'  => !$access,
+        'source' => $source,
+        'tab' => $tab,
+        'nid' => $this->_node->nid,
       );
 
       // don't generate content if the user doesn't have access to the tab
-      if ($access) {
+      if ($access && $visible) {
         $add['content'] = $section->getContent();
       }
 

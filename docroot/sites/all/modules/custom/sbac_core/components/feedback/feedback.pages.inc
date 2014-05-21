@@ -22,51 +22,52 @@ function resource_feedback_page($node) {
     $tabs = array(
       'access about process' => array(
         'feedback' => array(
-          'about',  // about tab
+          'about' => TRUE,
+          'collaboration' => FALSE,
         ),
       ),
       'access review comments' => array(
         'feedback' => array(
-          'gk_comments',  // gate keeper comments
-          'qc_comments',  // quality criteria comments
+          'gk_comments' => FALSE,
+          'qc_comments' => FALSE,
         ),
       ),
       'access review process' => array(
         'review' => array(
-          'reviews', // reviews tab
+          'reviews' => FALSE,
         ),
       ),
       'access quality criteria process' => array(
         'feedback' => array(
-          'revisions', // revisions tab
-          'gk',     // gate keeper tab
-          'qc',     // quality criteria review tab
+          'revisions' => FALSE,
+          'gk' => FALSE,
+          'qc' => FALSE,
         ),
       ),
       'access post process' => array(
         'feedback' => array(
-          'tags',   // edit resource tags
-          'post',   // quality criteria review (publisher) tab
+          'tags' => FALSE,
+          'post' => FALSE,
         ),
       ),
       'access share process' => array(
         'feedback' => array(
-          'share',
+          'share' => FALSE,
         )
       ),
       'access related resources' => array(
         'feedback' => array(
-          'related_resources',
+          'related_resources' => FALSE,
         ),
       ),
       'access flag' => array(
         'feedback' => array(
-          'flag',
+          'flag' => FALSE,
         ),
       ),
       'access moderate flag' => array(
         'feedback' => array(
-          'moderate_flag',
+          'moderate_flag' => FALSE,
         )
       ),
     );
@@ -74,15 +75,19 @@ function resource_feedback_page($node) {
     foreach ($tabs as $permission => $sources) {
       if ($factory->access($permission)) {
         foreach ($sources as $source => $items) {
-          foreach ($items as $tab) {
+          foreach ($items as $tab => $visible) {
             $section = $factory->get($source, $tab);
             if ($section && ($section->access() || $section->show_disabled())) {
-              $factory->add($section);
+              $factory->add($section, $source, $tab, $visible);
             }
           }
         }
       }
     }
+
+    // on click, send source and tab ('feedback', 'about')
+    // to ajax callback, render factory using source and tab
+    // place into content div for that tab....
 
     if ($sections = $factory->getSections()) {
       // we don't want to display the Edit Resource Tags section if the

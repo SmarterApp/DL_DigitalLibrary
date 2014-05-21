@@ -4,9 +4,9 @@
   <?php foreach ($sections as $key => $section): ?>
     <section class="<?php echo $section['class']; ?> <?php echo "section-" . $n; ?> ">
       <p class="title" data-section-title data-options="deep_linking: true">
-        <a title="<?php echo $section['title']; ?>" href="#<?php echo $name . '-' . $key; ?>"><?php echo $section['title']; ?></a>
+        <a nid="<?php echo $section['nid']; ?>" section_id="<?php echo $section['class']; ?>" source="<?php echo $section['source']; ?>" tab="<?php echo $section['tab']; ?>" title="<?php echo $section['title']; ?>" href="#<?php echo $name . '-' . $key; ?>"><?php echo $section['title']; ?></a>
       </p>
-      <div class="content" data-section-content>
+      <div id="<?php echo $section['class']; ?>" class="content" data-section-content>
         <?php echo $section['content']; ?>
       </div>
     </section>

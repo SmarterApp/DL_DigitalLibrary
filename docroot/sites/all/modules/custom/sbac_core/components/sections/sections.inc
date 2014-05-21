@@ -31,3 +31,30 @@ function sections_preprocess(&$vars) {
     $section['class'] = $class;
   }
 }
+
+function section_get_content() {
+  $output = array();
+  $content = null;
+  if (!isset($_GET['source']) || !isset($_GET['tab']) || !isset($_GET['nid'])) {
+    $output['response'] = null;
+  }
+
+  $node = node_load($_GET['nid']);
+  module_load_include('inc', 'sbac_core', '/components/sections/includes/class.Factory');
+  $factory = new \sbac_core\components\sections\Factory($node);
+  $source = $_GET['source'];
+  $tab = $_GET['tab'];
+  $section = $factory->get($source, $tab);
+  if ($section && $section->access()) {
+    $content = $section->getContent();
+  }
+
+  if ($content) {
+    $output['response'] = $content;
+  }
+  else {
+    $output['response'] = null;
+  }
+  print drupal_json_encode($output);
+  exit;
+}
