@@ -23,12 +23,11 @@ function resource_feedback_page($node) {
       'access about process' => array(
         'feedback' => array(
           'about' => TRUE,
-          'collaboration' => FALSE,
         ),
       ),
       'access review comments' => array(
         'feedback' => array(
-          'gk_comments' => FALSE,
+          'gk_comments' => TRUE,
           'qc_comments' => FALSE,
         ),
       ),
@@ -62,7 +61,7 @@ function resource_feedback_page($node) {
       ),
       'access flag' => array(
         'feedback' => array(
-          'flag' => FALSE,
+          'flag' => TRUE,
         ),
       ),
       'access moderate flag' => array(
