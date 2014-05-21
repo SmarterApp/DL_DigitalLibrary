@@ -232,15 +232,15 @@ function sbac_forum_preprocess_node__topic(&$vars) {
           'sbac-flag-resolve-button' => array(
             'modalSize' => array(
               'type' => 'fixed',
-              'width' => 600,
-              'height' => 230,
+              'width' => 640,
+              'height' => 310,
             ),
           ),
           'sbac-flag-remove-button' => array(
             'modalSize' => array(
               'type' => 'fixed',
-              'width' => 600,
-              'height' => 230,
+              'width' => 640,
+              'height' => 310,
             ),
           ),
         );

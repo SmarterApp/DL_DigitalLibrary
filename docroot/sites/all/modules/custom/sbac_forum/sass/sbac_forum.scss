@@ -2057,7 +2057,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 }
 
-/*Modal for flag*/
+/*Modals for flag, moderation*/
 .node-type-topic {
 	#modalContent .ctools-modal-content {
 		padding: 0;
@@ -2073,7 +2073,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				font-size: 22px !important;
 				font-weight: bold;
 				margin: 0;
-				text-transform: capitalize;
+				/*text-transform: capitalize;*/
 				padding: 0 !important;
 				color: #04384E !important;
 			}
@@ -2081,6 +2081,62 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		
 		#modal-content {
 			padding: 0;
+			
+			.flag-modal-cont {
+				background-color: #F2F2F2;
+				height: 200px;
+		    overflow-y: scroll;
+		    padding: 15px 40px 0;
+		
+				#edit-header {
+					margin-top: 20px;
+				}
+				
+				.form-type-textarea, .form-textarea {
+					width: 560px;
+				}
+			}
+			
+			.flag-modal-buttons {
+		    border-top: 1px solid #F2F2F2;
+		    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+		    box-sizing: border-box;
+		    display: block;
+		    height: 69px;
+		    padding: 17px 40px;
+		    position: relative;
+		    width: 100%;
+		    z-index: 4;
+		
+				button {
+					float: right;
+					margin-left: 30px;
+				}
+				
+				#edit-cancel-collaboration.form-submit:before {
+				  content: url("../images/icon-buttonCancel.png");
+			    left: 15px;
+			    position: absolute;
+			    top: 4px;
+				}
+			}
+			
+			.button.remove {
+				padding-left: 18px !important;
+				line-height: 20px;
+			}
+			
+			.remove:before {
+				content:"\e632";
+		    display: inline-block;
+		    font-family: 'sbac';
+		    font-size: 20px;
+		    font-weight: normal;
+		    margin-right: 7px;
+		    position: relative;
+		    top: 2px;
+				left: 0;
+			}
 		}
 	}
 }
@@ -2811,7 +2867,7 @@ View Topic Page, Comment Page
 				}
 				
 				a:before {
-					content:"\e602";
+					content:"\e62b";
 				  display: inline-block;
 			    font-family: 'sbac';
 			    font-size: 20px;
@@ -3293,16 +3349,15 @@ h2.title {
 			}
 			
 			.recommend-box:before {
-				background: url(../images/icon-recommend.png) no-repeat 0 1px;
-				content: "";
+				/*background: url(../images/icon-recommend.png) no-repeat 0 1px;*/
+				content:"\e635";
+				font-family: 'sbac';
 				display: inline-block;
 		    font-weight: normal;
 		    margin-right: 7px;
-				width: 15px;
-				height: 17px;
+				font-size: 20px;
 		    position: relative;
 		    text-decoration: none;
-				cursor: pointer;
 				padding-top: 3px;
 			}
 			
@@ -3317,7 +3372,7 @@ h2.title {
 				}
 
 				a:before {
-					content:"\e602";
+					content:"\e62b";
 				  display: inline-block;
 			    font-family: 'sbac';
 			    font-size: 20px;
@@ -3342,7 +3397,7 @@ h2.title {
 			}
 			
 			a[id*="sbac-forum-flag-post"]:before {
-				content:"\e602";
+				content:"\e62b";
 			  display: inline-block;
 		    font-family: 'sbac';
 		    font-size: 20px;
@@ -3935,10 +3990,10 @@ a.sbac-favorites-link {
 	}
 	
 	.tertiary-flag-head:before {
-	  content:"\e602";
+	  content:"\e62b";
     display: inline-block;
     font-family: 'sbac';
-    font-size: 20px;
+    font-size: 16px;
     font-weight: normal;
     margin-right: 7px;
     opacity: 1;
@@ -3965,16 +4020,16 @@ a.sbac-favorites-link {
 	
 	.sbac-forum-flagged-text {
 		color: #fff;
-		line-height: 30px;
+		line-height: 34px;
 		font-size: 13px;
 		padding-left: 20px;
 	}
 	
 	.sbac-forum-flagged-text:before {
-	  content:"\e602";
+	  content:"\e62b";
     display: inline-block;
     font-family: 'sbac';
-    font-size: 20px;
+    font-size: 16px;
     font-weight: normal;
     margin-right: 7px;
     opacity: 1;
@@ -4002,10 +4057,10 @@ a.sbac-favorites-link {
 		}
 		
 		.sbac-forum-flagged-type:before {
-		  content:"\e602";
+		  content:"\e62b";
 	    display: inline-block;
 	    font-family: 'sbac';
-	    font-size: 20px;
+	    font-size: 16px;
 	    font-weight: normal;
 	    margin-right: 7px;
 	    opacity: 1;
@@ -4037,8 +4092,39 @@ a.sbac-favorites-link {
 			margin-top: 5px;
 		}
 	}
+	
+	#sbac-flag-resolve-button, #sbac-flag-remove-button {
+		margin-right: 30px;
+		padding-left: 18px;
+		position: relative;
+		line-height: 27px;
+	}
+	
+	#sbac-flag-resolve-button:before, 
+	#sbac-flag-remove-button:before {
+	  content:"\e61c";
+    display: inline-block;
+    font-family: 'sbac';
+    font-size: 20px;
+    font-weight: normal;
+    margin-right: 7px;
+    opacity: 1;
+    position: relative;
+    text-decoration: none;
+		top: 4px;
+	}
+	#sbac-flag-remove-button:before {
+	  content:"\e632";
+	}
 }
 
+/*Modal of Moderation section*/
+#sbac-flag-start-moderation-form {
+	button {
+		float: right;
+		margin-left: 20px;
+	}
+}
 
 /*Fixed for FF*/
 @-moz-document url-prefix() {

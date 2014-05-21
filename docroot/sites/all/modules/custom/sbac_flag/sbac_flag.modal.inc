@@ -1451,6 +1451,13 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
     $remove_button = array(
       '#type' => 'submit',
       '#value' => 'Remove Topic',
+			'#attributes' => array(
+	      'class' => array(
+	        'button',
+	        'red',
+	        'remove',
+	      ),
+			),
     );
   }
   elseif ($form_state['info']['type'] == 'comment') {
@@ -1467,6 +1474,13 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
     $remove_button = array(
       '#type' => 'submit',
       '#value' => 'Remove Post',
+			'#attributes' => array(
+	      'class' => array(
+	        'button',
+	        'red',
+	        'remove',
+	      ),
+			),
     );
   }
 
@@ -1482,12 +1496,19 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
     '#markup' => '<div class="flag-modal-buttons">',
   );
 
-  $form['cancel'] = array(
+	$form['remove_collaboration'] = $remove_button;
+	
+  $form['cancel_collaboration'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
+		'#attributes' => array(
+      'class' => array(
+        'button',
+        'gray',
+        'cancel',
+      ),
+		),
   );
-
-  $form['remove'] = $remove_button;
 
   $form['button_container_close'] = array(
     '#type' => 'markup',
