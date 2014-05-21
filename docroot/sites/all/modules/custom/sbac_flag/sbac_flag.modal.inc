@@ -1357,8 +1357,9 @@ function sbac_flag_collaboration_resolve_form($form, &$form_state) {
     '#type' => 'item',
     '#prefix' => '<div class="sbac-flag-collaboration-resolve-warning">',
     '#markup' => t('If you continue, all flags will be dismissed.'),
-    '#suffix' => '</span>',
+    '#suffix' => '</span></div>',
   );
+
   $form['content_container_close'] = array(
     '#type' => 'markup',
     '#markup' => '</div>',
