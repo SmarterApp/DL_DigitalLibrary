@@ -395,30 +395,38 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
     }
 
     // Flag link
-    $link_ops = array(
-      'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
-      'id' => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
-    );
-    $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid, $user->uid);
-    if ($flagged) {
-      $reason = taxonomy_term_load($flagged['flag_selected']);
-      $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
-      $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
+    $is_default_topic = FALSE;
+    try {
+      $is_default_topic = $comment_data->node->field_topic_default->value();
+    } catch (EntityMetadataWrapperException $e) {
+      // Don't worry about it, not all topics are default topics
     }
-    else {
-      $js_settings_flag = array(
-        'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
-          'modalSize' => array(
-            'type' => 'fixed',
-            'width' => 700,
-            'height' => 414,
-          ),
-        ),
+    if (!$is_default_topic) {
+      $link_ops = array(
+        'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+        'id' => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
       );
-      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+      $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid, $user->uid);
+      if ($flagged) {
+        $reason = taxonomy_term_load($flagged['flag_selected']);
+        $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
+        $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
+      }
+      else {
+        $js_settings_flag = array(
+          'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 700,
+              'height' => 414,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
 
-      $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
-      $vars['content']['flag_link'] = l(t('Flag'), $flag_link, array('attributes' => $link_ops));
+        $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
+        $vars['content']['flag_link'] = l(t('Flag'), $flag_link, array('attributes' => $link_ops));
+      }
     }
     $moderation_type = isset($_GET['flag']) ? $_GET['flag'] : '';
     $moderate_cid = isset($_GET['cid']) ? $_GET['cid'] : '';
