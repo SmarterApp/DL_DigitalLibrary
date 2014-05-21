@@ -1326,6 +1326,11 @@ function sbac_flag_collaboration_resolve_form($form, &$form_state) {
   $flags = sbac_flag_get_forum_flags($form_state['info']['nid'], $form_state['info']['cid']);
   $flag_list = array();
 
+  $form['content_container_open'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="flag-modal-cont">',
+  );
+
   $form['header'] = array(
     '#type' => 'item',
     '#prefix' => '<div class="sbac-flag-collaboration-resolve-header">',
@@ -1354,6 +1359,15 @@ function sbac_flag_collaboration_resolve_form($form, &$form_state) {
     '#markup' => t('If you continue, all flags will be dismissed.'),
     '#suffix' => '</span>',
   );
+  $form['content_container_close'] = array(
+    '#type' => 'markup',
+    '#markup' => '</div>',
+  );
+
+  $form['button_container_open'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="flag-modal-buttons">',
+  );
 
   $form['cancel'] = array(
     '#type' => 'submit',
@@ -1363,6 +1377,11 @@ function sbac_flag_collaboration_resolve_form($form, &$form_state) {
   $form['resolve'] = array(
     '#type' => 'submit',
     '#value' => 'Resolve Flags',
+  );
+
+  $form['button_container_close'] = array(
+    '#type' => 'markup',
+    '#value' => '</div>',
   );
 
   return $form;
@@ -1404,6 +1423,11 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
 function sbac_flag_collaboration_remove_form($form, &$form_state) {
   $form = array();
 
+  $form['content_container_open'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="flag-modal-cont">',
+  );
+
   if ($form_state['info']['type'] == 'topic') {
     $node = entity_metadata_wrapper('node', $form_state['info']['nid']);
     $post_count = $node->comment_count->value();
@@ -1418,7 +1442,6 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
       '#type' => 'textarea',
       '#title' => 'Please leave a message for the topic creator',
       '#rows' => 3,
-      '#required' => TRUE,
       '#maxlength' => 1000,
       '#maxlength_js' => TRUE,
       '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
@@ -1449,6 +1472,16 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
 
   $form['message'] = $message_box;
 
+  $form['content_container_close'] = array(
+    '#type' => 'markup',
+    '#markup' => '</div>',
+  );
+
+  $form['button_container_open'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="flag-modal-buttons">',
+  );
+
   $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
@@ -1456,5 +1489,16 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
 
   $form['remove'] = $remove_button;
 
+  $form['button_container_close'] = array(
+    '#type' => 'markup',
+    '#value' => '</div>',
+  );
+
   return $form;
+}
+
+function sbac_flag_collaboration_remove_form_validate(&$form, &$form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Cancel') {
+    return;
+  }
 }

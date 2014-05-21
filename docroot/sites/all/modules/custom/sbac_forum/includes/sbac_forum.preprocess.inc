@@ -438,6 +438,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         $moderation_post_content .= '<div class="sbac-forum-flagged-topic-subheader">';
         $moderation_post_content .= '<div class="sbac-forum-flagged-type">' . $flag_term->name . '</div>';
         $moderation_post_content .= '<div class="sbac-forum-flagged-num>' . $num_flags . ' ' . ($num_flags == 1 ? 'flag' : 'flags') . '</div>';
+        $moderation_post_content .= '</div>';
 
         foreach ($flag_reports as $flag_report) {
           $flag_auth = entity_metadata_wrapper('user', $flag_report['uid']);
@@ -448,7 +449,6 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
           $moderation_post_content .= '</div>';
           $moderation_post_content .= '<div class="sbac-forum-report-content">' . $flag_report['flag_comment'] . '</div>';
         }
-        $moderation_post_content .= '</div>';
         $moderation_post_content .= '</div>';
       }
       $moderation_button = '';

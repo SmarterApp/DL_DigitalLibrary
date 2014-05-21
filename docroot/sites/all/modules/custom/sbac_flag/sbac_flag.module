@@ -1219,6 +1219,24 @@ function sbac_flag_collaboration_resolve_forum($nid, $cid) {
   $update->execute();
 }
 
+function sbac_flag_collaboration_remove_forum($nid, $cid) {
+  $update = db_update('eck_flag');
+  $update->fields(array(
+    'resolved' => 2,
+    'changed' => time(),
+  ));
+  $update->condition('nid', $nid, '=');
+  if ($cid) {
+    $update->condition('target_type', 'comment', '=');
+    $update->condition('target_id', $cid, '=');
+  }
+  else {
+    $update->condition('target_type', 'topic', '=');
+    $update->condition('target_id', $nid, '=');
+  }
+  $update->execute();
+}
+
 /**
  * Resolves all resource flags for a given node.
  *
