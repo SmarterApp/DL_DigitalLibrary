@@ -1370,16 +1370,28 @@ function sbac_flag_collaboration_resolve_form($form, &$form_state) {
     '#markup' => '<div class="flag-modal-buttons">',
   );
 
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-  );
-
-  $form['resolve'] = array(
+	$form['resolve'] = array(
     '#type' => 'submit',
     '#value' => 'Resolve Flags',
+		'#attributes' => array(
+      'class' => array(
+        'button',
+      ),
+		),
   );
-
+ 
+  $form['cancel-resolve'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+		'#attributes' => array(
+      'class' => array(
+        'button',
+        'gray',
+        'cancel',
+      ),
+		),
+  );
+ 
   $form['button_container_close'] = array(
     '#type' => 'markup',
     '#value' => '</div>',
@@ -1436,7 +1448,7 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
 
     $form['header'] = array(
       '#type' => 'item',
-      '#markup' => 'This topic contains ' . $header_markup . ' . If you remove the topic, the posts will be removed as well.'
+      '#markup' => 'This topic contains <span class="sbac-forum-flagged-text">' . $header_markup . '</span> . If you remove the topic, the posts will be removed as well.'
     );
 
     $message_box = array(

@@ -372,7 +372,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   if ($_SESSION['sbac-topic-comment-sorts'] == 'comment-most-recommended') {
     $nid = $comment_entity->nid;
     $cid = $comment_entity->cid;
-    $vars['go_to_thread_link'] = l(t('Go to Thread'), "sbac-forum/go-to-thread/$nid/$cid");
+    $vars['go_to_thread_link'] = l(t('Go to Thread'), "sbac-forum/go-to-thread/$nid/$cid", array('attributes' => array('class' => array('sbac-forum-go-thread'))));
   }
 
   if ($is_comment_author) {
@@ -442,7 +442,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
       $moderation_post_header = '<div class="sbac-flag-section">';
       $moderation_post_header .= '<div class="sbac-forum-flagged-post-header">';
-      $moderation_post_header .= '<span class=sbac-forum-flagged-text">Flagged</span>';
+      $moderation_post_header .= '<span class="sbac-forum-flagged-text">Flagged</span>';
       $moderation_post_header .= '</div>';
       $moderation_post_header .= '</div>';
       $vars['content']['flags']['moderation']['post']['header'] = $moderation_post_header;
