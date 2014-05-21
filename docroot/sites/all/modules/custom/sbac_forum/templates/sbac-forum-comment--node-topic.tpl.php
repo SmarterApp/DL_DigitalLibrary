@@ -117,16 +117,19 @@
         <?php if (!empty($content['reply_link'])): ?>
           <?php print $content['reply_link']; ?>
         <?php endif; ?>
-				<div class="recommend-box">
-        <?php if (!empty($content['recommend_link'])): ?>			
+        <?php if (!empty($content['recommend_link']) || !empty($content['recommend_count'])): ?>
+          <div class="recommend-box">
+          </div>
         <?php endif; ?>
-				</div>
+        <?php if (!empty($content['recommend_link'])): ?>
+          <?php print $content['recommend_link']; ?>
+        <?php endif; ?>
         <div id="recommend-info-<?php print $comment_id; ?>">
           <?php if (!empty($content['recommend_count'])): ?>
             <?php if (!empty($content['recommend_link'])): ?> - <?php endif; ?><?php print $content['recommend_count']; ?> recommended
           <?php endif; ?>
         </div>
-				
+
         <?php if (!empty($content['edit_link'])): ?>
           <?php print $content['edit_link']; ?>
         <?php endif; ?>

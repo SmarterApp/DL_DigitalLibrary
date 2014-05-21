@@ -1142,6 +1142,7 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
   }
 
   $form['field_topic_forum_parent']['#access'] = $has_access;
+  $form['field_topic_default']['#access'] = $has_access;
   $form['author']['#access'] = $has_access;
   $form['options']['#access'] = $has_access;
   $form['revision_information']['#access'] = $has_access;
@@ -1351,9 +1352,11 @@ function sbac_forum_taxonomy_term_presave($term) {
       $term->field_state[LANGUAGE_NONE] = array(); // Unset the selection for state lists.
     }
     else { // forum has been state restricted. Get states.
-      $raw = $term->field_state[LANGUAGE_NONE];
-      foreach ($raw as $key => $value) {
-        $state_restrictions[$value['tid']] = $value['tid'];
+      if (!empty($term->field_state[LANGUAGE_NONE])) {
+        $raw = $term->field_state[LANGUAGE_NONE];
+        foreach ($raw as $key => $value) {
+          $state_restrictions[$value['tid']] = $value['tid'];
+        }
       }
     }
 
@@ -1364,9 +1367,11 @@ function sbac_forum_taxonomy_term_presave($term) {
       $term->field_forum_access_role_list[LANGUAGE_NONE] = array(); // Unset the selection for role lists.
     }
     else {
-      $raw = $term->field_forum_access_role_list[LANGUAGE_NONE];
-      foreach ($raw as $key => $value) {
-        $role_restrictions[$value['value']] = $value['value'];
+      if (!empty($term->field_forum_access_role_list[LANGUAGE_NONE])) {
+        $raw = $term->field_forum_access_role_list[LANGUAGE_NONE];
+        foreach ($raw as $key => $value) {
+          $role_restrictions[$value['value']] = $value['value'];
+        }
       }
     }
 
@@ -1520,6 +1525,14 @@ function sbac_forum_node_insert($node) {
         taxonomy_term_save($forum_obj);
         // Add forum to favorite
         sbac_forum_add_to_favorite($forum_obj->tid, $user->uid);
+        // Notify contributor.
+        if ($task = taskit_get_object('created_topic_node')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $node->nid);
+          $task->addOwningUser(143);
+          $task->addTriggeringUser($node->uid);
+          $task->save();
+        }
       }
     }
   }
@@ -1632,6 +1645,48 @@ function sbac_forum_comment_insert($comment) {
 
         // Add the forum to favorite
         sbac_forum_add_to_favorite($forum_term->tid, $comment_author_id);
+
+        // Notify people
+        $recipients = array();
+
+        // Notify topic creator
+        $recipients[] = $topic_node->uid;
+
+        // Notify the person being replied to
+        if (!empty($comment->pid)) {
+          $parent_comment = comment_load($comment->pid);
+          $recipients[] = $parent_comment->uid;
+        }
+
+        // Notify the resource contributor
+        if ($resource = $forum_wrapper->field_forum_resource_ref->value()) {
+          $recipients[] = $resource->uid;
+        }
+        // Notify people who have favorited this forum/resource
+        $fav_id = $forum_term->tid;
+        $fav_type = 'term';
+        if ($resource = $forum_wrapper->field_forum_resource_ref->value()) {
+          $fav_id = $resource->nid;
+          $fav_type = 'node';
+        }
+        $query = "SELECT uid FROM {sbac_favorites} WHERE id = :id AND type = :type AND uid <> 0";
+        $results = db_query($query, array(':id' => $fav_id, ':type' => $fav_type))->fetchCol();
+        $recipients = array_merge($recipients, $results);
+
+        $recipients = array_unique($recipients);
+
+        foreach ($recipients as $recipient) {
+          if ($recipient != $comment_author_id) { // don't send to yourself
+            if ($task = taskit_get_object('created_forum_comment')) {
+              $task->addVisibility($task::VISIBILITY_USER);
+              $task->addEntity('node', $topic_nid);
+              $task->addEntity('comment', $comment->cid);
+              $task->addOwningUser($recipient);
+              $task->addTriggeringUser($comment_author_id);
+              $task->save();
+            }
+          }
+        }
       }
     }
   }
@@ -1689,23 +1744,23 @@ function sbac_forum_comment_delete($comment) {
 }
 
 /**
- * Get the resources that are posted with distinction
+ * Get the posted resources
  *
  * @return mixed
  */
-function sbac_forum_get_posted_resources() {
-  $query = "
-    SELECT
-      n.nid
-    FROM {node} n
-      LEFT JOIN {workbench_moderation_node_history} history
-        ON history.nid = n.nid
-    WHERE n.status = 1
-          AND n.type = 'resource'
-          AND history.current = 1
-          AND history.state = 'published'
-    ORDER BY n.nid ASC";
-  return db_query($query)->fetchCol();
+function sbac_forum_get_posted_resources($limit = NULL) {
+  $query = db_select('node', 'n');
+  $query->leftJoin('workbench_moderation_node_history', 'history', 'history.nid = n.nid');
+  $query->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'resource')
+    ->condition('history.current', 1)
+    ->condition('history.state', 'published')
+    ->orderBy('n.nid', 'ASC');
+  if ($limit) {
+    $query->range(0, $limit);
+  }
+  return $query->execute()->fetchCol();
 }
 
 /**
@@ -1758,21 +1813,22 @@ function sbac_forum_create_resource_forum($nid, $vid = NULL) {
       );
       taxonomy_term_save($term);
       if (isset($term->tid)) {
-        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC);
-        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC);
+        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC, 1);
+        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC, 1);
       }
     }
   }
 }
 
 /**
- * Programmatically create a forum topic
+ * Create a forum topic
  *
  * @param $forum_id
+ * @param $uid
  * @param $topic
  * @param $description
  */
-function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description) {
+function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description, $default = 0) {
   $node = new stdClass;
   $node->type = 'topic';
   $node->title = $topic;
@@ -1782,18 +1838,8 @@ function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description) {
   $node->language = LANGUAGE_NONE;
   $node->body[LANGUAGE_NONE][0]['value'] = $description;
   $node->field_topic_forum_parent[LANGUAGE_NONE][0]['tid'] = $forum_id;
+  $node->field_topic_default[LANGUAGE_NONE][0]['value'] = $default;
   node_save($node);
-}
-
-/**
- * Retrospectively create all resource forums
- */
-function sbac_forum_create_all_resource_forums() {
-  $resources = sbac_forum_get_posted_resources();
-  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
-  foreach ($resources as $nid) {
-    sbac_forum_create_resource_forum($nid, $vocab->vid);
-  }
 }
 
 /**
@@ -1832,34 +1878,6 @@ function sbac_forum_calculate_participation_score($recommendations, $topics, $re
 }
 
 /**
- * Update the default Resource forum topics to use the Resource author as the uid
- */
-function sbac_forum_update_resource_forum_topic_authors() {
-  $query = "
-    SELECT
-      topic.nid,
-      resource.uid
-    FROM {node} topic
-      LEFT JOIN {field_data_field_topic_forum_parent} forum
-        ON topic.nid = forum.entity_id
-      LEFT JOIN {field_data_field_forum_resource_ref} ref
-        ON ref.entity_id = forum.field_topic_forum_parent_tid
-      LEFT JOIN {node} resource
-        ON ref.field_forum_resource_ref_target_id = resource.nid
-    WHERE (topic.title = 'Use and Implementation'
-           OR topic.title = 'Suggested Improvements')
-          AND topic.uid = 1";
-  $results = db_query($query);
-  foreach ($results as $result) {
-    $node = node_load($result->nid);
-    if ($node) {
-      $node->uid = $result->uid;
-      node_save($node);
-    }
-  }
-}
-
-/**
  * Recommend a post
  */
 function sbac_forum_recommend_ajax_click() {
@@ -1891,6 +1909,16 @@ function sbac_forum_recommend_ajax_click() {
       }
     }
     $comment_wrapper->save();
+
+    // Notify user
+    if ($task = taskit_get_object('recommended_forum_comment')) {
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('node', $comment->nid);
+      $task->addEntity('comment', $cid);
+      $task->addOwningUser($comment->uid);
+      $task->addTriggeringUser($user->uid);
+      $task->save();
+    }
   }
 
   $output = array('recommendations' => $count);
