@@ -1426,6 +1426,36 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
   $output = ctools_modal_form_wrapper('sbac_flag_collaboration_remove_form', $form_state);
 
   if (!empty($form_state['executed'])) {
+    if ($form_state['triggering_element']['#value'] == 'Remove Topic') {
+      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+      sbac_flag_collaboration_remove_forum($nid, $cid);
+      // Notify poster
+      $node = entity_metadata_wrapper('node', $nid);
+      $forum_poster = $node->author->uid->value();
+
+      //  Notify participants
+      $posters = array();
+      $query = db_select('comment', 'c');
+      $query->fields('c', array('uid'));
+      $query->condition('nid', $nid, '=');
+      $result = $query->execute();
+      while ($poster = $result->fetchAssoc()) {
+        $posters[] = $poster;
+      }
+      //  sbac_flag_notify_posters($posters);
+
+      //  Delete Topic
+      // node_delete($nid);
+      //  Redirect
+      $output[] = ctools_ajax_command_redirect('moderation');
+    }
+    elseif ($form_state['triggering_element']['#value'] == 'Remove Post') {
+      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+      sbac_flag_collaboration_remove_forum($nid, $cid);
+      $comment = entity_metadata_wrapper('comment', $cid);
+      $forum_poster = $comment->author->uid->value();
+      $output[] = ctools_ajax_command_redirect('moderation');
+    }
     $output[] = ctools_modal_command_dismiss();
   }
 

@@ -70,12 +70,13 @@
     <?php print render($content['flags']['moderation']['post']['header']); ?>
   <?php endif; ?>
   <div class="row-comment-content">
+    <?php if (!$removed): ?>
     <div class="topic-node-comment-region-left">
       <div class="topic-node-comment-author-img">
         <?php print $picture ?>
       </div>
     </div>
-
+    <?php endif; ?>
     <div class="topic-node-comment-region-right">
       <?php if ($new): ?>
         <span class="new"><?php //print $new ?></span>

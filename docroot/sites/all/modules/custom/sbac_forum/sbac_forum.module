@@ -1290,6 +1290,24 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
   $form['actions']['submit']['#value'] = 'Submit';
 
   $form['field_topic_comment_recommended']['#access'] = FALSE;
+  $form['#validate'] = array('sbac_forum_comment_node_topic_form_validate');
+}
+
+function sbac_forum_comment_node_topic_form_validate(&$form, &$form_state) {
+  $nid = $form_state['values']['nid'];
+  $pid = $form_state['values']['pid'];
+  $query = db_select('eck_flag', 'ef');
+  $query->fields('ef', array('target_id'));
+  $query->distinct();
+  $query->condition('target_type', 'comment', '=');
+  $query->condition('resolved', 2, '=');
+  $query->condition('nid', $nid, '=');
+  $query->condition('target_id', $pid, '=');
+  $results = $query->execute();
+
+  if ($results->fetchAssoc()) {
+    // form_set_error('comment_body', 'The post you responded to has been removed. Sorry for any inconvenience.');
+  }
 }
 
 // ----------
