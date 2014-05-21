@@ -244,6 +244,8 @@ function sbac_sso_preprocess_page(&$vars) {
     $js_settings = array('sbac-sso-session-expire' => array('modalSize' => array('type' => 'fixed', 'width' => 600, 'height' => 260), 'modalTheme' => 'CtoolSbacSSOExpire'));
     drupal_add_js($js_settings, 'setting');
     $vars['session_expire'] = $session_button;
+    $session_info = session_get_cookie_params();
+    drupal_add_js(array('sbac_session_lifetime' => $session_info['lifetime']), 'setting');
   }
 }
 
