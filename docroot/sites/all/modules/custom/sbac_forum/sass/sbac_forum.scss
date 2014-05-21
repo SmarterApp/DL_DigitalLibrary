@@ -2711,7 +2711,6 @@ View Topic Page, Comment Page
 			.topic-node-author-pane-post-date {
 				font-size: 13px;
 				line-height: 1.6;
-				margin-top: 5px;
 				clear: both;
 				display: block;
 			}
@@ -3954,6 +3953,92 @@ a.sbac-favorites-link {
 		margin-left: 27px;
 	}				
 }
+
+
+// --------------------- Moderation Section ------------------------------
+.sbac-forum-flagged-topic-header {
+	background-color: #8a1538;
+	width: 100%;
+	height: 40px;
+	clear: both;
+	margin-bottom: 20px;
+	
+	.sbac-forum-flagged-text {
+		color: #fff;
+		line-height: 30px;
+		font-size: 13px;
+		padding-left: 20px;
+	}
+	
+	.sbac-forum-flagged-text:before {
+	  content:"\e602";
+    display: inline-block;
+    font-family: 'sbac';
+    font-size: 20px;
+    font-weight: normal;
+    margin-right: 7px;
+    opacity: 1;
+    position: relative;
+    text-decoration: none;
+		top: 4px;
+	}
+}
+
+.sbac-forum-flagged-topic-content-container {
+	background-color: #F7F7F7;
+	padding: 10px 20px 5px ;
+	
+	.sbac-forum-flagged-topic-subheader {
+		margin-bottom: 20px;
+		position: relative;
+		font-size: 13px;
+		
+		.sbac-forum-flagged-type {
+			border-bottom: 1px #62676e solid;
+			color: #101010;
+			padding-bottom: 5px;
+			margin-bottom: 10px;
+			font-weight: bold;
+		}
+		
+		.sbac-forum-flagged-type:before {
+		  content:"\e602";
+	    display: inline-block;
+	    font-family: 'sbac';
+	    font-size: 20px;
+	    font-weight: normal;
+	    margin-right: 7px;
+	    opacity: 1;
+	    position: relative;
+	    text-decoration: none;
+			top: 4px;
+		}
+		
+		.sbac-forum-flagged-num {
+			position: absolute;
+			right: 0;
+			top: 4px;
+			font-style: italic;
+		}
+		
+		.sbac-forum-report-details {
+			margin-top: 5px;
+			padding-top: 5px;
+			border-top: 1px #CECECE solid;
+		}
+		
+		.sbac-forum-report-details:first-child {
+			margin-top: none;
+			padding-top: none;
+			border-top: none;
+		}
+		
+		.sbac-forum-report-content {
+			margin-top: 5px;
+		}
+	}
+}
+
 
 /*Fixed for FF*/
 @-moz-document url-prefix() {
