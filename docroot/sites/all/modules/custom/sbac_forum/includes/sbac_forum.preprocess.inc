@@ -460,6 +460,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
           $moderation_post_content .= '<div class="sbac-forum-report-content">' . $flag_report['flag_comment'] . '</div>';
         }
         $moderation_post_content .= '</div>';
+        $moderation_post_content .= '</div>';
       }
       $moderation_button = '';
       $resolve_button = '';
