@@ -19,6 +19,7 @@ define('SBAC_FORUM_ALL_FORUM_SORTS', 'sbac-all-forum-sorts');
 define('SBAC_FORUM_MY_FORUM_SORTS', 'sbac-my-forum-sorts');
 define('SBAC_FORUM_RESOURCE_FORUM_SORTS', 'sbac-resource-forum-sorts');
 define('SBAC_FORUM_TOPIC_FORUM_SORTS', 'sbac-topic-forum-sorts');
+define('SBAC_FORUM_TOPIC_COMMENT_SORTS', 'sbac-topic-comment-sorts');
 
 define('SBAC_FORUM_SUBNAV_ACTIVE', 'sbac-forum-sub-nav-active');
 define('SBAC_FORUM_SUBNAV_ALL', 'all-forums');
@@ -175,6 +176,13 @@ function sbac_forum_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-forum/go-to-thread/%/%'] = array(
+    'title' => 'Go to thread',
+    'page callback' => 'sbac_forum_go_to_thread',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -1940,4 +1948,83 @@ function sbac_forum_user_has_recommended($cid, $uid) {
     FROM {field_data_field_topic_comment_recommended}
     WHERE entity_id = :cid AND field_topic_comment_recommended_target_id = :uid";
   return db_query($query, array(':cid' => $cid, ':uid' => $uid))->rowCount();
+}
+
+/**
+ * Implements hook_query_TAG_alter()
+ */
+function sbac_forum_query_comment_filter_alter(QueryAlterableInterface $query) {
+  if (($node = $query->getMetaData('node')) && (get_class($query) == 'PagerDefault')) {
+    if (!empty($_SESSION['sbac-topic-comment-sorts'])) {
+      switch ($_SESSION['sbac-topic-comment-sorts']) {
+        case 'comment-oldest':
+          // Do nothing, the comments are sorted by oldest->newest by default
+          break;
+        case 'comment-most-recent-activity':
+          // Copied from comment_goodness_query_comment_filter_alter()
+          $orderby = & $query->getOrderBy();
+          $expressions = & $query->getExpressions();
+          // Sorting for threaded comments.
+          if (isset($orderby['torder'])) {
+            // Get rid of the expressions that prepare the threads for ASC ordering.
+            unset($expressions['torder']);
+            unset($orderby['torder']);
+            // Simply order by the thread field.
+            $orderby['c.thread'] = 'DESC';
+          }
+          // Sorting for flat comments.
+          else {
+            $direction = 'DESC';
+            if (isset($orderby['c.cid'])) {
+              unset($orderby['c.cid']);
+            }
+            $orderby['c.created'] = $direction;
+            $orderby['c.cid'] = $direction;
+          }
+          break;
+        case 'comment-most-recommended':
+          // remove the old ordering
+          $orderby = & $query->getOrderBy();
+          unset($orderby['torder']);
+
+          // sort by most recommended
+          $query->leftJoin('field_data_field_topic_comment_recommended', 'recommended', 'recommended.entity_id = c.cid');
+          $query->groupBy('c.cid');
+          $query->orderBy('count(recommended.field_topic_comment_recommended_target_id)', 'DESC');
+          $query->orderBy('c.created', 'DESC');
+          break;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_comment_view_alter()
+ */
+function sbac_forum_comment_view_alter(&$build) {
+  if ($_SESSION['sbac-topic-comment-sorts'] == 'comment-most-recommended') {
+    // Remove the indentation for sort by recommended
+    $build['#prefix'] = '<a id="comment-' . $build['#comment']->cid . '"></a>';
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter()
+ */
+function sbac_forum_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'query_alter') {
+    // we don't need comment_goodness, we are doing our own sorting
+    unset($implementations['comment_goodness']);
+  }
+}
+
+/**
+ * Redirect the user to the threaded version of the comment
+ *
+ * @param $nid
+ * @param $cid
+ */
+function sbac_forum_go_to_thread($nid, $cid) {
+  $_SESSION['sbac-topic-comment-sorts'] = 'comment-most-recent-activity';
+  drupal_goto('node/' . $nid, array('fragment' => 'comment-' . $cid));
 }

@@ -217,17 +217,17 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       else {
         // $resolve_button = l(t('Resolve Flags'), 'sbac-flag/forum/nojs/resolve-all/topic', array(
         $resolve_button = l(t('Resolve Flags'), 'sbac-forum/flag/resolve/nojs/topic/' . $node_data->nid->value() . '/' . $_GET['cid'], array(
-          'attributes' => array(
-            'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-resolve-button',
-            'id' => 'sbac-flag-resolve-button',
-          ),
-        ));
+            'attributes' => array(
+              'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-resolve-button',
+              'id' => 'sbac-flag-resolve-button',
+            ),
+          ));
         $remove_button = l(t('Remove Topic'), 'sbac-forum/flag/remove/nojs/topic/' . $node_data->nid->value() . '/' . $_GET['cid'], array(
-          'attributes' => array(
-            'class' => 'ctools-use-modal red button use-ajax ctools-modal-sbac-flag-remove-button',
-            'id' => 'sbac-flag-remove-button',
-          ),
-        ));
+            'attributes' => array(
+              'class' => 'ctools-use-modal red button use-ajax ctools-modal-sbac-flag-remove-button',
+              'id' => 'sbac-flag-remove-button',
+            ),
+          ));
         $js_settings = array(
           'sbac-flag-resolve-button' => array(
             'modalSize' => array(
@@ -291,6 +291,10 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       'content' => $moderation_post_content,
     ),
   );
+
+  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  $sort_form = drupal_get_form('sbac_forum_comment_sort_form');
+  $vars['sort_by'] = drupal_render($sort_form);
 }
 
 
@@ -364,6 +368,12 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
   // Recommend count
   $vars['content']['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
+
+  if ($_SESSION['sbac-topic-comment-sorts'] == 'comment-most-recommended') {
+    $nid = $comment_entity->nid;
+    $cid = $comment_entity->cid;
+    $vars['go_to_thread_link'] = l(t('Go to Thread'), "sbac-forum/go-to-thread/$nid/$cid");
+  }
 
   if ($is_comment_author) {
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
@@ -478,17 +488,17 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       }
       elseif ($moderation_type == 'resolve-comment-flags') {
         $resolve_button = l(t('Resolve Flags'), 'sbac-forum/flag/resolve/nojs/comment/' . $comment_entity->nid . '/' . $moderate_cid, array(
-          'attributes' => array(
-            'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-resolve-button',
-            'id' => 'sbac-flag-resolve-button',
-          ),
-        ));
+            'attributes' => array(
+              'class' => 'ctools-use-modal blue button use-ajax ctools-modal-sbac-flag-resolve-button',
+              'id' => 'sbac-flag-resolve-button',
+            ),
+          ));
         $remove_button = l(t('Remove Post'), 'sbac-forum/flag/remove/nojs/comment/' . $comment_entity->nid . '/' . $moderate_cid, array(
-          'attributes' => array(
-            'class' => 'ctools-use-modal red button use-ajax ctools-modal-sbac-flag-remove-button',
-            'id' => 'sbac-flag-remove-button',
-          ),
-        ));
+            'attributes' => array(
+              'class' => 'ctools-use-modal red button use-ajax ctools-modal-sbac-flag-remove-button',
+              'id' => 'sbac-flag-remove-button',
+            ),
+          ));
         $js_settings = array(
           'sbac-flag-resolve-button' => array(
             'modalSize' => array(

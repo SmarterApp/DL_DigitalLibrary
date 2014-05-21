@@ -507,6 +507,28 @@ function sbac_forum__ajax__resource_forum_sort_form_change($form, $form_state) {
   exit();
 }
 
+/**
+ * Ajax Callback - Topic comment sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_forum__ajax__topic_comment_sort_form_change($form, $form_state) {
+  // Set session variable here. Session only gets set when form submits a change.
+  $new_value_key = $form_state['values']['comment_sort_order'];
+  $_SESSION[SBAC_FORUM_TOPIC_COMMENT_SORTS] = $new_value_key;
+
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit();
+}
+
 function sbac_forum__ajax__keyword_search_trigger($form, $form_state) {
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   $keyword = $form_state['values']['forum_keyword'];
