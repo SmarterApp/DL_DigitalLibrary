@@ -471,9 +471,6 @@ function sbac_forum__ajax__my_forum_sort_form_change($form, $form_state) {
   $new_value_key = $form_state['values']['forum_sort_order'];
   $_SESSION[SBAC_FORUM_MY_FORUM_SORTS] = $new_value_key;
 
-  // Just return the form, dont force page refresh.
-  // return $form['dl_sort_order'];
-
   // Ctools ajax implementation using commands to refresh page.
   ctools_include('ajax');
   $commands = array();
@@ -496,8 +493,27 @@ function sbac_forum__ajax__resource_forum_sort_form_change($form, $form_state) {
   $new_value_key = $form_state['values']['forum_sort_order'];
   $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] = $new_value_key;
 
-  // Just return the form, dont force page refresh.
-  // return $form['dl_sort_order'];
+  // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit();
+}
+
+/**
+ * Ajax Callback - Topic Forum sort form
+ *
+ *  Ajax callback for the sort form. Sets corresponding session variable value
+ *  that tracks the desired sorting method. On submission, triggers a page refresh.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_forum__ajax__topic_forum_sort_form_change($form, $form_state) {
+  // Set session variable here. Session only gets set when form submits a change.
+  $new_value_key = $form_state['values']['forum_sort_order'];
+  $_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS] = $new_value_key;
 
   // Ctools ajax implementation using commands to refresh page.
   ctools_include('ajax');
