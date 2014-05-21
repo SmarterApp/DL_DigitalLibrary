@@ -1357,8 +1357,9 @@ function sbac_flag_collaboration_resolve_form($form, &$form_state) {
     '#type' => 'item',
     '#prefix' => '<div class="sbac-flag-collaboration-resolve-warning">',
     '#markup' => t('If you continue, all flags will be dismissed.'),
-    '#suffix' => '</span>',
+    '#suffix' => '</span></div>',
   );
+
   $form['content_container_close'] = array(
     '#type' => 'markup',
     '#markup' => '</div>',
@@ -1413,6 +1414,36 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
   $output = ctools_modal_form_wrapper('sbac_flag_collaboration_remove_form', $form_state);
 
   if (!empty($form_state['executed'])) {
+    if ($form_state['triggering_element']['#value'] == 'Remove Topic') {
+      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+      sbac_flag_collaboration_remove_forum($nid, $cid);
+      // Notify poster
+      $node = entity_metadata_wrapper('node', $nid);
+      $forum_poster = $node->author->uid->value();
+
+      //  Notify participants
+      $posters = array();
+      $query = db_select('comment', 'c');
+      $query->fields('c', array('uid'));
+      $query->condition('nid', $nid, '=');
+      $result = $query->execute();
+      while ($poster = $result->fetchAssoc()) {
+        $posters[] = $poster;
+      }
+      //  sbac_flag_notify_posters($posters);
+
+      //  Delete Topic
+      // node_delete($nid);
+      //  Redirect
+      $output[] = ctools_ajax_command_redirect('moderation');
+    }
+    elseif ($form_state['triggering_element']['#value'] == 'Remove Post') {
+      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+      sbac_flag_collaboration_remove_forum($nid, $cid);
+      $comment = entity_metadata_wrapper('comment', $cid);
+      $forum_poster = $comment->author->uid->value();
+      $output[] = ctools_ajax_command_redirect('moderation');
+    }
     $output[] = ctools_modal_command_dismiss();
   }
 
@@ -1451,6 +1482,13 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
     $remove_button = array(
       '#type' => 'submit',
       '#value' => 'Remove Topic',
+			'#attributes' => array(
+	      'class' => array(
+	        'button',
+	        'red',
+	        'remove',
+	      ),
+			),
     );
   }
   elseif ($form_state['info']['type'] == 'comment') {
@@ -1467,6 +1505,13 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
     $remove_button = array(
       '#type' => 'submit',
       '#value' => 'Remove Post',
+			'#attributes' => array(
+	      'class' => array(
+	        'button',
+	        'red',
+	        'remove',
+	      ),
+			),
     );
   }
 
@@ -1482,12 +1527,19 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
     '#markup' => '<div class="flag-modal-buttons">',
   );
 
-  $form['cancel'] = array(
+	$form['remove_collaboration'] = $remove_button;
+	
+  $form['cancel_collaboration'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
+		'#attributes' => array(
+      'class' => array(
+        'button',
+        'gray',
+        'cancel',
+      ),
+		),
   );
-
-  $form['remove'] = $remove_button;
 
   $form['button_container_close'] = array(
     '#type' => 'markup',

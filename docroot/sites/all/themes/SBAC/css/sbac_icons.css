@@ -152,14 +152,29 @@
 	content: "\e627";
 }
 .icon-flag2:before {
-	content: "\e628";
+	content: "\e62b";
 }
 .icon-eye2:before {
-	content: "\e629";
+	content: "\e62c";
 }
 .icon-arrow-right4:before {
-	content: "\e62a";
+	content: "\e62d";
 }
 .icon-arrow-left4:before {
-	content: "\e62b";
+	content: "\e62e";
+}
+.icon-arrow-right5:before {
+	content: "\e62f";
+}
+.icon-trash:before {
+	content: "\e632";
+}
+.icon-important:before {
+	content: "\e633";
+}
+.icon-link2:before {
+	content: "\e634";
+}
+.icon-thumbs-up:before {
+	content: "\e635";
 }
