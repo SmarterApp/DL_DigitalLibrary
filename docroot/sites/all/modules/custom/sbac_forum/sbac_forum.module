@@ -47,10 +47,10 @@ define('SBAC_FORUM_CUSTOM_SOLR_FILTER_FIELD_STATE_OPEN', 'im_forum_access__custo
 
 define('SBAC_FORUM_VOCAB_NAME', 'forum');
 
-define('SBAC_FORUM_DEFAULT_FORUM_1_TITLE', 'Use and Implementation');
-define('SBAC_FORUM_DEFAULT_FORUM_1_DESC', 'General discussion for questions and comments about the use and implementation of this resource');
-define('SBAC_FORUM_DEFAULT_FORUM_2_TITLE', 'Suggested Improvements');
-define('SBAC_FORUM_DEFAULT_FORUM_2_DESC', 'Discussion for suggested improvements and revisions for this resource');
+define('SBAC_FORUM_DEFAULT_FORUM_1_TITLE', 'Implementation');
+define('SBAC_FORUM_DEFAULT_FORUM_1_DESC', 'Have you used this resource?  Please join the discussion to share how you have implemented this resource so that other educators can benefit from your experience.');
+define('SBAC_FORUM_DEFAULT_FORUM_2_TITLE', 'Suggested Modifications to Support a Range of Learners');
+define('SBAC_FORUM_DEFAULT_FORUM_2_DESC', 'How have you modified this resource to differentiate for a range of learners?  Please share your ideas.');
 
 /**
  * =============================================================================
