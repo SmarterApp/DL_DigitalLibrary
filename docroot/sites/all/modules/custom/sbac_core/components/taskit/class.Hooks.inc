@@ -205,6 +205,24 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Forum Access Change'),
         'class' => 'ForumAccessChange',
       ),
+      // removed topic
+      array(
+        'name' => 'topic_removed',
+        'description' => t('Removed Forum Topic'),
+        'class' => 'TopicRemoved',
+      ),
+      // notify topic creator
+      array(
+        'name' => 'topic_removed_creator',
+        'description' => t('Notify topic creator'),
+        'class' => 'TopicRemovedCreator',
+      ),
+      // notify post creator
+      array(
+        'name' => 'post_removed_creator',
+        'description' => t('Notify Post creator'),
+        'class' => 'PostRemovedCreator',
+      ),
     );
 
     foreach ($types as &$type) {

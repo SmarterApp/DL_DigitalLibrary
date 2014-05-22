@@ -1294,19 +1294,23 @@ function sbac_forum_form_comment_node_topic_form_alter(&$form, &$form_state, $fo
 }
 
 function sbac_forum_comment_node_topic_form_validate(&$form, &$form_state) {
-  $nid = $form_state['values']['nid'];
-  $pid = $form_state['values']['pid'];
-  $query = db_select('eck_flag', 'ef');
-  $query->fields('ef', array('target_id'));
-  $query->distinct();
-  $query->condition('target_type', 'comment', '=');
-  $query->condition('resolved', 2, '=');
-  $query->condition('nid', $nid, '=');
-  $query->condition('target_id', $pid, '=');
-  $results = $query->execute();
+  if ($form_state['triggering_element']['#value'] == 'Submit') {
+    $nid = $form_state['values']['nid'];
+    $pid = $form_state['values']['pid'];
+    $query = db_select('eck_flag', 'ef');
+    $query->fields('ef', array('target_id'));
+    $query->distinct();
+    $query->condition('target_type', 'comment', '=');
+    $query->condition('resolved', 2, '=');
+    $query->condition('nid', $nid, '=');
+    $query->condition('target_id', $pid, '=');
+    $results = $query->execute();
 
-  if ($results->fetchAssoc()) {
-    // form_set_error('comment_body', 'The post you responded to has been removed. Sorry for any inconvenience.');
+    while ($results->fetchAssoc()) {
+      $url = drupal_get_path_alias('node/' . $nid);
+      drupal_set_message(t('The post you responded to has been removed. Sorry for any inconvenience.'), 'error', FALSE);
+      drupal_goto($url);
+    }
   }
 }
 

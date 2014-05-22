@@ -1405,6 +1405,8 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
     return;
   }
 
+  global $user;
+
   ctools_add_css('sbac_flag.css', 'sbac_flag');
   ctools_include('ajax');
   ctools_include('modal');
@@ -1428,32 +1430,65 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
   if (!empty($form_state['executed'])) {
     if ($form_state['triggering_element']['#value'] == 'Remove Topic') {
       sbac_flag_collaboration_unset_being_moderated($nid, $cid);
-      sbac_flag_collaboration_remove_forum($nid, $cid);
+      sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
+
       // Notify poster
       $node = entity_metadata_wrapper('node', $nid);
       $forum_poster = $node->author->uid->value();
 
+
+      if ($task = taskit_get_object('topic_removed_creator')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $nid);
+        $task->addOwningUser($forum_poster);
+        $task->addTriggeringUser($user->uid);
+        $task->save();
+      }
+
       //  Notify participants
-      $posters = array();
+      $recipients = array();
+
       $query = db_select('comment', 'c');
       $query->fields('c', array('uid'));
+      $query->distinct();
       $query->condition('nid', $nid, '=');
       $result = $query->execute();
+
       while ($poster = $result->fetchAssoc()) {
-        $posters[] = $poster;
+        $recipients[] = $poster;
       }
-      //  sbac_flag_notify_posters($posters);
+
+      foreach ($recipients as $recipient) {
+        if ($recipient['uid'] != $forum_poster && $task = taskit_get_object('topic_removed')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $nid);
+          $task->addOwningUser($recipient['uid']);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+        }
+      }
 
       //  Delete Topic
-      // node_delete($nid);
+      node_delete($nid);
+
       //  Redirect
       $output[] = ctools_ajax_command_redirect('moderation');
     }
     elseif ($form_state['triggering_element']['#value'] == 'Remove Post') {
       sbac_flag_collaboration_unset_being_moderated($nid, $cid);
-      sbac_flag_collaboration_remove_forum($nid, $cid);
+      sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
       $comment = entity_metadata_wrapper('comment', $cid);
       $forum_poster = $comment->author->uid->value();
+
+      if ($task = taskit_get_object('post_removed_creator')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $nid);
+          $task->addEntity('comment', $cid);
+          $task->addOwningUser($forum_poster);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+      }
+
       $output[] = ctools_ajax_command_redirect('moderation');
     }
     $output[] = ctools_modal_command_dismiss();
