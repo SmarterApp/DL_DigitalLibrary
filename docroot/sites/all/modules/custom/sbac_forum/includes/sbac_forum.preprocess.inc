@@ -90,7 +90,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
   }
 
-  if (!$can_edit && !$can_delete && !isset($_GET['flag'])) {
+  if (!$can_edit && !$can_delete) {
     $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0, $user->uid);
 
     if ($flagged) {
