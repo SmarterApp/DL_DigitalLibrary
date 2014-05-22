@@ -38,7 +38,7 @@ Drupal.behaviors.sections = {
                 var response = jQuery.parseJSON(data);
                 if (response.response != null) {
                   $('#' + section_id).empty().append(response.response);
-                  Drupal.attachBehaviors('#' + section_id);
+                  Drupal.attachBehaviors(context, settings);
                 }
                 ajax_request = null;
               }
