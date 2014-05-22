@@ -28,25 +28,25 @@ function resource_feedback_page($node) {
       'access review comments' => array(
         'feedback' => array(
           'gk_comments' => TRUE,
-          'qc_comments' => FALSE,
+          'qc_comments' => TRUE,
         ),
       ),
       'access review process' => array(
         'review' => array(
-          'reviews' => FALSE,
+          'reviews' => TRUE,
         ),
       ),
       'access quality criteria process' => array(
         'feedback' => array(
-          'revisions' => FALSE,
-          'gk' => FALSE,
-          'qc' => FALSE,
+          'revisions' => TRUE,
+          'gk' => TRUE,
+          'qc' => TRUE,
         ),
       ),
       'access post process' => array(
         'feedback' => array(
-          'tags' => FALSE,
-          'post' => FALSE,
+          'tags' => TRUE,
+          'post' => TRUE,
         ),
       ),
       'access share process' => array(
@@ -61,7 +61,7 @@ function resource_feedback_page($node) {
       ),
       'access flag' => array(
         'feedback' => array(
-          'flag' => TRUE,
+          'flag' => FALSE,
         ),
       ),
       'access moderate flag' => array(
