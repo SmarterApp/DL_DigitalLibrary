@@ -282,7 +282,7 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
     $variables['eck_flag']['display_status_css'] = '';
     if ($row->type == 'topic' || $row->type == 'comment') {
       $path_alias = drupal_get_path_alias('node/' . $node->nid);
-\      $url = l('Continue Moderation', $path_alias, array(
+      $url = l('Continue Moderation', $path_alias, array(
         'attributes' => array(
           'class' => array(
             'button',
