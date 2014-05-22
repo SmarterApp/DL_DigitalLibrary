@@ -1508,11 +1508,15 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
       '#type' => 'textarea',
       '#title' => 'Please leave a message for the poster',
       '#rows' => 3,
-      '#required' => TRUE,
       '#maxlength' => 1000,
       '#maxlength_js' => TRUE,
       '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
     );
+
+  $form['error'] = array(
+    '#type' => 'markup',
+    '#markup' => '',
+  );
 
     $remove_button = array(
       '#type' => 'submit',
@@ -1564,5 +1568,19 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
 function sbac_flag_collaboration_remove_form_validate(&$form, &$form_state) {
   if ($form_state['triggering_element']['#value'] == 'Cancel') {
     return;
+  }
+  else {
+    if ($form_state['values']['message'] != NULL) {
+      if (profanity_validate_text($form_state['values']['message'])) {
+        form_set_error('message', 'Please remove any inappropriate language.');
+      }
+    }
+    if ($form_state['values']['message'] == NULL) {
+      form_set_error('message', 'Please validate your reason for removal.');
+    }
+  }
+  if ($error = drupal_get_messages('error', TRUE)) {
+    $error = array_pop($error);
+    $form['error']['#markup'] = '<div class="sbac-flag-error-msg">' . array_pop($error) . '</div>';
   }
 }
