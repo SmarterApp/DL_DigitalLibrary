@@ -32,6 +32,9 @@ function sections_preprocess(&$vars) {
   }
 }
 
+/**
+ * Returns the sections content via ajax.
+ */
 function section_get_content() {
   $output = array();
   $content = null;

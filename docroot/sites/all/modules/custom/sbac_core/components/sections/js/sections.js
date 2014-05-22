@@ -24,16 +24,12 @@ Drupal.behaviors.sections = {
             return false;
           }
 
-
           var section_href = $(this).find('a');
           var title = section_href.attr('title');
           var section_id = section_href.attr('section_id');
           var source = section_href.attr('source');
           var tab = section_href.attr('tab');
           var nid = section_href.attr('nid');
-
-
-
           if (ajax_request == null && !$.trim( $('#' + section_id).html() ).length) {
             ajax_request = $.ajax({
               url: "/section-get-content",
@@ -42,7 +38,7 @@ Drupal.behaviors.sections = {
                 var response = jQuery.parseJSON(data);
                 if (response.response != null) {
                   $('#' + section_id).empty().append(response.response);
-                  Drupal.attachBehaviors(context, settings);
+                  Drupal.attachBehaviors('#' + section_id);
                 }
                 ajax_request = null;
               }
