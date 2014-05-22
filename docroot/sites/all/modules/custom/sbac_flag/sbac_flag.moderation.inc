@@ -293,6 +293,7 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
           'flag' => 'resolve-' . $row->type . '-flags',
           'cid' => ($node->nid == $row->target_id ? 0 : $row->target_id),
         ),
+        'fragment' => 'review-moderate_flag',
       ));
       $variables['eck_flag']['button'] = $url;
 
