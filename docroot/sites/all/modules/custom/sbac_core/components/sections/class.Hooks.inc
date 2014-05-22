@@ -47,7 +47,7 @@ class Hooks extends \devtools\Hooks {
     $items['section-get-content'] = array(
       'title' => 'Get Section Content',
       'page callback' => 'section_get_content',
-      'access arguments' => array('configure sbac'),
+      'access arguments' => array('access content'),
       'file' => 'sections.inc',
     ) + $base;
 
