@@ -99,6 +99,12 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       $vars['content']['flags']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
     }
     else {
+      if (!$is_member) {
+        ctools_include('ajax');
+        ctools_include('modal');
+        ctools_modal_add_js();
+      }
+
       $link_ops_flag = array(
         'attributes' => array(
           'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
@@ -430,6 +436,9 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
       }
       else {
+        ctools_include('ajax');
+        ctools_include('modal');
+        ctools_modal_add_js();
         $js_settings_flag = array(
           'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
             'modalSize' => array(
