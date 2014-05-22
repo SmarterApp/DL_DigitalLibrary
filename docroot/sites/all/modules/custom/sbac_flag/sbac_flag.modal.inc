@@ -1489,6 +1489,15 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
           $task->save();
       }
 
+      // Check to see if it has children
+      $comment_query = db_select('comment', 'c');
+      $comment_query->fields('c');
+      $comment_query->condition('pid', $cid, '=');
+      $comment_results = $comment_query->execute();
+      if (!($result = $comment_results->fetchAssoc())) {
+        comment_delete($cid);
+      }
+
       $output[] = ctools_ajax_command_redirect('moderation');
     }
     $output[] = ctools_modal_command_dismiss();
