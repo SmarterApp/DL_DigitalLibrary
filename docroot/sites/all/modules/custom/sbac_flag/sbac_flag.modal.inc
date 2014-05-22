@@ -1479,7 +1479,7 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
       sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
       $comment = entity_metadata_wrapper('comment', $cid);
       $forum_poster = $comment->author->uid->value();
-dpm($cid);
+
       if ($task = taskit_get_object('post_removed_creator')) {
         $task->addVisibility($task::VISIBILITY_USER);
         $task->addEntity('node', $nid);
