@@ -9,11 +9,11 @@ class CreatedForumComment extends \taskit\sbac_core\BaseTask {
     $comment = comment_load(current($entities['comment']));
     if ($comment) {
       $comment_wrapper = entity_metadata_wrapper('comment', $comment);
-      $account = user_load(current($accounts));
-      $triggering_users = $this->getTriggeringUsers();
-      if ($topic && $account) {
-        $topic_wrapper = entity_metadata_wrapper('node', $topic);
-        if ($topic_wrapper->__isset('field_topic_forum_parent')) {
+      try {
+        $account = user_load(current($accounts));
+        $triggering_users = $this->getTriggeringUsers();
+        if ($topic && $account) {
+          $topic_wrapper = entity_metadata_wrapper('node', $topic);
           $type = 'in forum';
           $forum_wrapper = $topic_wrapper->field_topic_forum_parent;
           $link = l($forum_wrapper->name->value(), 'forums/term/' . $forum_wrapper->tid->value());
@@ -32,6 +32,8 @@ class CreatedForumComment extends \taskit\sbac_core\BaseTask {
           $output .= '<div class="taskit-content-toggle">' . $comment_wrapper->comment_body->value() . ' </div > ';
           return $output;
         }
+      } catch (\EntityMetadataWrapperException $e) {
+        return '';
       }
     }
     return '';

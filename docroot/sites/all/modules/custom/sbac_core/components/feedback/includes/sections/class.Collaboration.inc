@@ -11,9 +11,12 @@ class Collaboration extends Base {
    * @return string [type] [description]
    */
   public function getContent() {
-    drupal_add_css(drupal_get_path('module','sbac_forum') . '/css/sbac_forum.css');
+    $output = '';
+    drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
     $forum_id = sbac_forum_get_resource_forum_id($this->_node->nid);
-    $output = views_embed_view('forum_topic_list', 'collaboration', $forum_id);
+    if ($forum_id) {
+      $output = views_embed_view('forum_topic_list', 'collaboration', $forum_id);
+    }
     return $output;
   }
 }

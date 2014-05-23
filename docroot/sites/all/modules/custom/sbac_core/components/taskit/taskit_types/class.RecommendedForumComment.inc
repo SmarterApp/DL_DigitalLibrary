@@ -11,7 +11,7 @@ class RecommendedForumComment extends \taskit\sbac_core\BaseTask {
       $account = user_load(current($accounts));
       if ($topic && $account) {
         $topic_wrapper = entity_metadata_wrapper('node', $topic);
-        if ($topic_wrapper->__isset('field_topic_forum_parent')) {
+        try {
           $type = 'in forum';
           $forum_wrapper = $topic_wrapper->field_topic_forum_parent;
           $link = l($forum_wrapper->name->value(), 'forums/term/' . $forum_wrapper->tid->value());
@@ -27,6 +27,8 @@ class RecommendedForumComment extends \taskit\sbac_core\BaseTask {
           ));
           $output .= '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format) . '</span> ';
           return $output;
+        } catch (\EntityMetadataWrapperException $e) {
+          return '';
         }
       }
     }

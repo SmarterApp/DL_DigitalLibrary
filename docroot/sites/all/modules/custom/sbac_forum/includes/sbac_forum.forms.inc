@@ -370,7 +370,12 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
       'event' => 'change',
       'wrapper' => 'form-wrapper-forums-sort-element',
       'progress' => array('type' => 'none'),
-    )
+    ),
+    '#attributes' => array(
+      'class' => array(
+        'no-chosen'
+      )
+    ),
   );
 
   drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.subnav_form.js');
@@ -787,6 +792,11 @@ function sbac_forum_comment_sort_form($form, &$form_state) {
       'callback' => 'sbac_forum__ajax__topic_comment_sort_form_change',
       'event' => 'change',
       'progress' => array('type' => 'none'),
+    ),
+    '#attributes' => array(
+      'class' => array(
+        'no-chosen'
+      )
     )
   );
   return $form;

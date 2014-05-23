@@ -63,7 +63,7 @@ function _sbac_resource_setup_form(&$form, &$form_state) {
     libraries_get_path('jquery.more') . '/jquery.more.js',
   );
   $form['#attached']['css'] = array(
-    drupal_get_path('module','sbac_resource').'/css/sbac_resource.css',
+    drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css',
     libraries_get_path('jquery.more') . '/jquery.more.css',
   );
 
@@ -89,8 +89,10 @@ function _sbac_resource_setup_form(&$form, &$form_state) {
   if (isset($form_state['triggering_element']) && $form_state['triggering_element']['#value'] != 'Upload') {
     $generate = TRUE;
   }
-  else if (!isset($form_state['triggering_element'])) {
-    $generate = TRUE;
+  else {
+    if (!isset($form_state['triggering_element'])) {
+      $generate = TRUE;
+    }
   }
 
   $form_state['html5'] = FALSE;
@@ -166,14 +168,16 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   $form_state['values']['path']['pathauto'] = TRUE;
   $active_tab = NULL;
   if (isset($form_state['values']['additional_settings__active_tab']) &&
-    $form_state['values']['additional_settings__active_tab']) {
+    $form_state['values']['additional_settings__active_tab']
+  ) {
     $active_tab = $form_state['values']['additional_settings__active_tab'];
   }
 
   // If the save button was clicked via the modal, do the following.
   if ($active_tab == 'edit-group_advanced' &&
     isset($_SESSION['post_resource_clicked'])
-    && $_SESSION['post_resource_clicked']) {
+    && $_SESSION['post_resource_clicked']
+  ) {
 
     $original_posting_option = $_SESSION['sbac-original-posting-option'];
     $posting_option = $_SESSION['sbac-posting-option'];
@@ -225,7 +229,8 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   }
   else { // User clicked the button.
     if (isset($form_state['values']['workbench_moderation_state_current']) &&
-      $form_state['values']['workbench_moderation_state_current'] == 'published') {
+      $form_state['values']['workbench_moderation_state_current'] == 'published'
+    ) {
       // Keep it in Published State.
       $form_state['values']['workbench_moderation_state_new'] = 'published';
     }
@@ -255,7 +260,7 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
   else {
     // Check for an active tab, there should always be one.
     $active_tab = '';
-    if (isset($form_state['values']['additional_settings__active_tab'])){
+    if (isset($form_state['values']['additional_settings__active_tab'])) {
       $active_tab = $form_state['values']['additional_settings__active_tab'];
     }
 
@@ -301,7 +306,8 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     foreach ($errors AS $field_name => $error_message) {
       if ($field_name == 'title' || $field_name == 'field_attributes' ||
         $field_name == 'field_focus' || $field_name == 'field_student_agency' ||
-        $field_name == 'field_alt_body' || $field_name == 'field_connection_to_fap') {
+        $field_name == 'field_alt_body' || $field_name == 'field_connection_to_fap'
+      ) {
         $selector = ".vertical-tabs-list li:nth-child(1) a";
         break;
       }
@@ -311,7 +317,8 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       }
       if ($field_name == 'field_contexts' || $field_name == 'field_connection_to_ccss' || $field_name == 'field_learning_goals' ||
         $field_name == 'field_success_criteria' || $field_name == 'field_supporting_evidence' || $field_name == 'field_principles' ||
-        $field_name == 'field_subject' || $field_name == 'field_grades') {
+        $field_name == 'field_subject' || $field_name == 'field_grades'
+      ) {
         $selector = ".vertical-tabs-list li:nth-child(3) a";
         break;
       }
@@ -386,13 +393,14 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
               ->execute();
             if ($submitted) {
               $valid = FALSE;
-            } else {
+            }
+            else {
               $valid = TRUE;
             }
           }
         }
         $selector = ".vertical-tabs-list li:nth-child(5) a";
-      break;
+        break;
       case 'edit-group_summary':
         $valid = FALSE;
         $selector = ".vertical-tabs-list li:nth-child(4) a";
@@ -400,7 +408,8 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     }
 
     if (isset($form_state['values']['workbench_moderation_state_current']) &&
-      $form_state['values']['workbench_moderation_state_current'] == 'published') {
+      $form_state['values']['workbench_moderation_state_current'] == 'published'
+    ) {
       // Keep it in Published State.
       $form_state['values']['workbench_moderation_state_new'] = 'published';
     }
@@ -465,33 +474,38 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       '#markup' => '<script>jQuery("#sbac-resource-save-all-changes").click();</script>',
     );
   }
-  else if ($duplicates) {
-    $form['run_js'] = array(
-      '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
-    );
-  }
-  else if ($sbac_flag) {
-    if ($chosen_option == 1) { // resolve all flags.
+  else {
+    if ($duplicates) {
       $form['run_js'] = array(
-        '#markup' => '<script>jQuery("#sbac-flag-resolve-all-flags").click();</script>',
+        '#markup' => '<script>jQuery("#sbac-media-modal-duplicates").click();</script>',
       );
     }
     else {
-      $form['run_js'] = array(
-        '#markup' => '<script>jQuery("#sbac-flag-remove-resource").click();</script>',
-      );
-    }
-  }
-  else {
-    // Add appropriate JS.
-    drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
-    if ($selector) {
-      drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
+      if ($sbac_flag) {
+        if ($chosen_option == 1) { // resolve all flags.
+          $form['run_js'] = array(
+            '#markup' => '<script>jQuery("#sbac-flag-resolve-all-flags").click();</script>',
+          );
+        }
+        else {
+          $form['run_js'] = array(
+            '#markup' => '<script>jQuery("#sbac-flag-remove-resource").click();</script>',
+          );
+        }
+      }
+      else {
+        // Add appropriate JS.
+        drupal_add_js(array('sbac_resource_valid_state' => $valid), 'setting');
+        if ($selector) {
+          drupal_add_js(array('sbac_save_continue_tab' => $selector), 'setting');
+        }
+      }
     }
   }
 
   return $form;
 }
+
 /**
  * Cancels the changes and redirects.
  *
@@ -941,10 +955,10 @@ function sbac_resource_validate_materials(&$form, &$form_state) {
  * @param $form
  * @param $form_state
  */
-function sbac_resource_validate_revisions(&$form, &$form_state){
-  if(!empty($form_state['values']['sbac_revisions'])){
+function sbac_resource_validate_revisions(&$form, &$form_state) {
+  if (!empty($form_state['values']['sbac_revisions'])) {
     $i = 1;
-    foreach($form_state['values']['sbac_revisions'] as $index => $feedback) {
+    foreach ($form_state['values']['sbac_revisions'] as $index => $feedback) {
       $text = $feedback['contributor_comment'];
       if ($text == '') {
         $error = "Please add a comment to question $i.";
@@ -958,8 +972,8 @@ function sbac_resource_validate_revisions(&$form, &$form_state){
       if ($error) {
         form_set_error('sbac_revisions][' . $index . '][contributor_comment', $error);
         _sbac_resource_remove_error_message($error);
-        drupal_set_message('revisions:field_contributor_comment_'.$index.':single:' . $error, 'sbac_resource_error');
-        drupal_set_message('revisions:field_contributor_comment_'.$index.':group:' . $error, 'sbac_resource_error');
+        drupal_set_message('revisions:field_contributor_comment_' . $index . ':single:' . $error, 'sbac_resource_error');
+        drupal_set_message('revisions:field_contributor_comment_' . $index . ':group:' . $error, 'sbac_resource_error');
       }
       $i++;
     }
@@ -1068,7 +1082,7 @@ function sbac_resource_modal_callback($js = FALSE) {
     ), 'setting');
     $output = array();
     $output[] = ctools_modal_command_dismiss();
-    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
+    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view', theme('status_messages'));
     $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
 
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
@@ -1107,7 +1121,7 @@ function sbac_resource_filter_modal_callback($js = FALSE) {
     ), 'setting');
     $output = array();
     $output[] = ctools_modal_command_dismiss();
-    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view',theme('status_messages'));
+    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view', theme('status_messages'));
     $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', 0));
 
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
@@ -1276,7 +1290,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               $task->addTriggeringUser($user->uid);
               $task->save();
 
-              if(!empty($recipients)){
+              if (!empty($recipients)) {
                 send_review_notifications($task, $node, $recipients);
               }
             }
@@ -1488,10 +1502,10 @@ function _sbac_resource_create_resource_title(&$form, &$form_state) {
   $form['#group_children']['title_of_resource_tags'] = "group_tags";
 
   $form['title_of_resource_advanced'] = array(
-      '#markup' => $default_value,
-      '#prefix' => '<h2 class="title-of-resource">',
-      '#suffix' => '</h2>'
-    );
+    '#markup' => $default_value,
+    '#prefix' => '<h2 class="title-of-resource">',
+    '#suffix' => '</h2>'
+  );
   $form['#group_children']['title_of_resource_advanced'] = "group_advanced";
 }
 
@@ -1508,38 +1522,38 @@ function _sbac_resource_content_type_description(&$form, &$form_state) {
   $submission_summary_guidelines = variable_get('sbac_resource_summary_guide');
   $submission_advanced_guidelines = variable_get('sbac_resource_advanced_guide');
 
-  $form['submisison_general_guidelines'] = array (
-    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_general_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_general_guidelines .'<a href="#" class="less">Read Less</a></div>',
-    '#prefix'   => '<div id="submission-general-guidelines">',
-    '#suffix'   => '</div>'
+  $form['submisison_general_guidelines'] = array(
+    '#markup' => '<div class="short more-less active">' . sbac_resource_truncate($submission_general_guidelines, 300) . '<a href="#" class="more">Read More</a></div><div class="long more-less">' . $submission_general_guidelines . '<a href="#" class="less">Read Less</a></div>',
+    '#prefix' => '<div id="submission-general-guidelines">',
+    '#suffix' => '</div>'
   );
   $form['#group_children']['submisison_general_guidelines'] = "group_basic";
 
-  $form['submisison_material_guidelines'] = array (
-    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_material_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_material_guidelines .'<a href="#" class="less">Read Less</a></div>',
-    '#prefix'   => '<div id="submission-materials-guidelines">',
-    '#suffix'   => '</div>'
+  $form['submisison_material_guidelines'] = array(
+    '#markup' => '<div class="short more-less active">' . sbac_resource_truncate($submission_material_guidelines, 300) . '<a href="#" class="more">Read More</a></div><div class="long more-less">' . $submission_material_guidelines . '<a href="#" class="less">Read Less</a></div>',
+    '#prefix' => '<div id="submission-materials-guidelines">',
+    '#suffix' => '</div>'
   );
   $form['#group_children']['submisison_material_guidelines'] = "group_materials";
 
-  $form['submisison_tags_guidelines'] = array (
-    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_tags_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_tags_guidelines .'<a href="#" class="less">Read Less</a></div>',
-    '#prefix'   => '<div id="submission-tags-guidelines">',
-    '#suffix'   => '</div>'
+  $form['submisison_tags_guidelines'] = array(
+    '#markup' => '<div class="short more-less active">' . sbac_resource_truncate($submission_tags_guidelines, 300) . '<a href="#" class="more">Read More</a></div><div class="long more-less">' . $submission_tags_guidelines . '<a href="#" class="less">Read Less</a></div>',
+    '#prefix' => '<div id="submission-tags-guidelines">',
+    '#suffix' => '</div>'
   );
   $form['#group_children']['submisison_tags_guidelines'] = "group_tags";
 
-  $form['submisison_summary_guidelines'] = array (
-    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_summary_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_summary_guidelines .'<a href="#" class="less">Read Less</a></div>',
-    '#prefix'   => '<div id="submission-summary-guidelines">',
-    '#suffix'   => '</div>'
+  $form['submisison_summary_guidelines'] = array(
+    '#markup' => '<div class="short more-less active">' . sbac_resource_truncate($submission_summary_guidelines, 300) . '<a href="#" class="more">Read More</a></div><div class="long more-less">' . $submission_summary_guidelines . '<a href="#" class="less">Read Less</a></div>',
+    '#prefix' => '<div id="submission-summary-guidelines">',
+    '#suffix' => '</div>'
   );
   $form['#group_children']['submisison_summary_guidelines'] = "group_summary";
 
-  $form['submisison_advanced_guidelines'] = array (
-    '#markup'   => '<div class="short more-less active">'.sbac_resource_truncate($submission_advanced_guidelines, 300).'<a href="#" class="more">Read More</a></div><div class="long more-less">'.$submission_advanced_guidelines .'<a href="#" class="less">Read Less</a></div>',
-    '#prefix'   => '<div id="submission-advanced-guidelines">',
-    '#suffix'   => '</div>'
+  $form['submisison_advanced_guidelines'] = array(
+    '#markup' => '<div class="short more-less active">' . sbac_resource_truncate($submission_advanced_guidelines, 300) . '<a href="#" class="more">Read More</a></div><div class="long more-less">' . $submission_advanced_guidelines . '<a href="#" class="less">Read Less</a></div>',
+    '#prefix' => '<div id="submission-advanced-guidelines">',
+    '#suffix' => '</div>'
   );
   $form['#group_children']['submisison_advanced_guidelines'] = "group_advanced";
 }
@@ -1679,7 +1693,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
 
   // Title
   $form['alignment_tag_title'] = array(
-    '#markup' => '<h2>'.t('Common Core State Standard(s)').'</h2>',
+    '#markup' => '<h2>' . t('Common Core State Standard(s)') . '</h2>',
     '#prefix' => '<div class="form-item-title alignment-tag-title">',
     '#suffix' => '</div>',
     '#weight' => 22,
@@ -1687,7 +1701,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   $form['#group_children']['alignment_tag_title'] = "group_summary";
   // Description
   $form['alignment_tag_description'] = array(
-    '#markup' => '<p>'.t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards and Mathematical Practices are included alongside content standards for all grades.').'</p>',
+    '#markup' => '<p>' . t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards and Mathematical Practices are included alongside content standards for all grades.') . '</p>',
     '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
     '#suffix' => '</div>',
     '#weight' => 23,
@@ -1707,7 +1721,8 @@ function _sbac_resource_form_summary(&$form, $form_state) {
     $form['add_alignment_tag_button'] = array(
       '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
         'attributes' => array('title' => 'Add Standard(s)', 'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
-        'query' => array('nid' => $form['#node']->nid))),
+        'query' => array('nid' => $form['#node']->nid)
+      )),
       '#weight' => 23.6,
     );
     $form['#group_children']['add_alignment_tag_button'] = "group_summary";
@@ -1793,7 +1808,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
       $owner_match = TRUE;
     }
   }
-  if ((!empty($has_role)) || ($user->uid == 1) || ($owner_match)){
+  if ((!empty($has_role)) || ($user->uid == 1) || ($owner_match)) {
     $copyright_access = TRUE;
   }
   $form['field_copyright_clearace_forms']['#access'] = $copyright_access;
@@ -1825,8 +1840,8 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   $form['group_license_information']['field_license'] = $form['field_license'];
   $form['group_license_information']['field_license_secondary'] = $form['field_license_secondary'];
   // $form['group_license_information']['field_license_text'] = $form['field_license_text'];
-  unset($form['field_author'], $form['field_publisher'], $form['field_license'], $form['field_license_secondary']/*, $form['field_license_text']*/);
-  unset($form['#group_children']['field_author'], $form['#group_children']['field_publisher'], $form['#group_children']['field_license'], $form['#group_children']['field_license_secondary']/*, $form['#group_children']['field_license_text']*/);
+  unset($form['field_author'], $form['field_publisher'], $form['field_license'], $form['field_license_secondary'] /*, $form['field_license_text']*/);
+  unset($form['#group_children']['field_author'], $form['#group_children']['field_publisher'], $form['#group_children']['field_license'], $form['#group_children']['field_license_secondary'] /*, $form['#group_children']['field_license_text']*/);
 
   $form['no license'] = array(
     '#markup' => sbac_resource_licensing_form_has_no_license(),
@@ -2136,7 +2151,7 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   // Resource Title
   $form['resource_tag_title'] = array(
     '#type' => 'item',
-    '#markup' => '<h2>'.t('Resource Tags') . ' ' . theme('form_required_marker').'</h2>',
+    '#markup' => '<h2>' . t('Resource Tags') . ' ' . theme('form_required_marker') . '</h2>',
     '#description' => t('Select tags that best describe this resource. You may choose as many as apply.'),
     '#prefix' => '<div class="form-item-title resource-tag-title">',
     '#suffix' => '</div>',
@@ -2144,8 +2159,8 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   $form['#group_children']['resource_tag_title'] = "group_tags";
 
   $form['tag_wrapper'] = array(
-    '#prefix'=>'<div id="sbac-tags-wrapper">',
-    '#suffix'=>'</div>',
+    '#prefix' => '<div id="sbac-tags-wrapper">',
+    '#suffix' => '</div>',
   );
   $form['#group_children']['tag_wrapper'] = "group_tags";
 
@@ -2222,7 +2237,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   // Sharing options
   $form['resource_sharing_options'] = array(
     '#type' => 'item',
-    '#markup' => '<h2>'.t('Sharing Options') . '</h2>',
+    '#markup' => '<h2>' . t('Sharing Options') . '</h2>',
     '#description' => t('By default, all resources have permanent private link that could be shared only with other users of the Digital Library.'),
     '#prefix' => '<div class="form-item-title resource-sharing-options">',
     '#suffix' => '</div>',
@@ -2368,7 +2383,8 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
   if ($user->uid == 1 ||
     in_array('DLRB member', $user->roles) ||
     in_array('digital library administrator', $user->roles) ||
-    in_array('system administrator', $user->roles)) {
+    in_array('system administrator', $user->roles)
+  ) {
 
     if (isset($form_state['node']->workbench_moderation['current']->state) && $form_state['node']->workbench_moderation['current']->state == 'published') {
       return;
@@ -2427,11 +2443,12 @@ function _sbac_resource_form_submit_resource(&$form, &$form_state) {
 function _sbac_resource_form_cancel_all_changes_button(&$form, &$form_state) {
   global $user;
   if (($user->uid == 1 ||
-    in_array('DLRB member', $user->roles) ||
-    in_array('digital library administrator', $user->roles) ||
-    in_array('system administrator', $user->roles)) &&
+      in_array('DLRB member', $user->roles) ||
+      in_array('digital library administrator', $user->roles) ||
+      in_array('system administrator', $user->roles)) &&
     isset($form['#node']->workbench_moderation['current']->state) &&
-    $form['#node']->workbench_moderation['current']->state == 'published') {
+    $form['#node']->workbench_moderation['current']->state == 'published'
+  ) {
 
     $form['actions']['cancel_all_changes'] = array(
       '#type' => 'submit',
@@ -2502,35 +2519,35 @@ function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_required_fields(&$form, &$form_state) {
-  $form['required_fields_basic'] = array (
-    '#markup'   => 'Required Information',
-    '#prefix'   => '<p class="sbac-resource-required">',
-    '#suffix'   => '</p>',
-    '#weight'   => 150,
+  $form['required_fields_basic'] = array(
+    '#markup' => 'Required Information',
+    '#prefix' => '<p class="sbac-resource-required">',
+    '#suffix' => '</p>',
+    '#weight' => 150,
   );
   $form['#group_children']['required_fields_basic'] = "group_basic";
 
-  $form['required_fields_summary'] = array (
-    '#markup'   => 'Required Information',
-    '#prefix'   => '<p class="sbac-resource-required">',
-    '#suffix'   => '</p>',
-    '#weight'   => 150,
+  $form['required_fields_summary'] = array(
+    '#markup' => 'Required Information',
+    '#prefix' => '<p class="sbac-resource-required">',
+    '#suffix' => '</p>',
+    '#weight' => 150,
   );
   $form['#group_children']['required_fields_summary'] = "group_summary";
 
-  $form['required_fields_materials'] = array (
-    '#markup'   => 'Required Information',
-    '#prefix'   => '<p class="sbac-resource-required">',
-    '#suffix'   => '</p>',
-    '#weight'   => 150,
+  $form['required_fields_materials'] = array(
+    '#markup' => 'Required Information',
+    '#prefix' => '<p class="sbac-resource-required">',
+    '#suffix' => '</p>',
+    '#weight' => 150,
   );
   $form['#group_children']['required_fields_materials'] = "group_materials";
 
-  $form['required_fields_tags'] = array (
-    '#markup'   => 'Required Information',
-    '#prefix'   => '<p class="sbac-resource-required">',
-    '#suffix'   => '</p>',
-    '#weight'   => 150,
+  $form['required_fields_tags'] = array(
+    '#markup' => 'Required Information',
+    '#prefix' => '<p class="sbac-resource-required">',
+    '#suffix' => '</p>',
+    '#weight' => 150,
   );
   $form['#group_children']['required_fields_tags'] = "group_tags";
 }
@@ -2656,7 +2673,7 @@ function sbac_resource_check_general($form, $form_state) {
 function sbac_resource_check_summary($form, $form_state) {
   $valid = TRUE;
 
-  if(isset($form_state['values'])) {
+  if (isset($form_state['values'])) {
     if (!$form_state['values']['field_subject']['und'][0]['tid']) {
       $valid = FALSE;
     }
@@ -2729,7 +2746,7 @@ function sbac_resource_check_materials($form, $form_state) {
           return FALSE;
         }
       }
-      else{
+      else {
         $media_items = sbac_media_load_items($form_state['node']->nid);
         if (!$media_items) {
           // $valid = FALSE;
@@ -2854,7 +2871,7 @@ function sbac_resource_save_all_changes_form($form, $form_state) {
   }
 
   $form['submit_description'] = array(
-    '#markup' => '<p>'.t($description).'</p>',
+    '#markup' => '<p>' . t($description) . '</p>',
   );
 
   $form['cancel'] = array(
@@ -2881,8 +2898,8 @@ function sbac_resource_submit_resource_form() {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<p>'.t('
-    Submitting this resource may make it accessible to Smarter Balanced Digital Library resource reviewers. You cannot edit your resource once it is submitted unless a reviewer returns it to you.').'</p>',
+    '#markup' => '<p>' . t('
+    Submitting this resource may make it accessible to Smarter Balanced Digital Library resource reviewers. You cannot edit your resource once it is submitted unless a reviewer returns it to you.') . '</p>',
   );
 
   $form['submit'] = array(
@@ -2891,7 +2908,7 @@ function sbac_resource_submit_resource_form() {
     '#attributes' => array('id' => array('edit-submit-overlay'))
   );
 
-	$form['cancel'] = array(
+  $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
     '#attributes' => array('id' => array('edit-cancel-overlay'))
@@ -2919,7 +2936,7 @@ function sbac_resource_delete_resource_form() {
     '#attributes' => array('id' => array('edit-delete-overlay'))
   );
 
-	$form['cancel'] = array(
+  $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
     '#attributes' => array('id' => array('edit-cancel-overlay'))
@@ -2984,14 +3001,15 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
 
   // If session var is set, make it the default.
   if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
-      $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
+    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != ''
+  ) {
     $default = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
   }
 
   $options = array(
-    'dl-newest'         => t('Newest'),
-    'dl-most-viewed'    => t('Most Viewed'),
-    'dl-highest-rated'  => t('Highest Rated'),
+    'dl-newest' => t('Newest'),
+    'dl-most-viewed' => t('Most Viewed'),
+    'dl-highest-rated' => t('Highest Rated'),
   );
 
   // Ajax submitted. Set Text if selected.
@@ -2999,27 +3017,33 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
     $new_value_key = $form_state['values']['dl_sort_order'];
     $old_value_text = $options[$new_value_key];
     $options[$new_value_key] = t('Sort by: ' . $old_value_text);
-  } else {
+  }
+  else {
     $options[$default] = t('Sort by: ' . $options[$default]);
   }
 
 
   // Needs to ajax submit to set the session variable that tracks default state.
   $form['dl_sort_order'] = array(
-    '#prefix'         => '<div id="form-wrapper-dl-sort-element">',
-    '#suffix'         => '</div>',
-    '#type'           => 'select',
-    '#title'          => t('Sort'),
-    '#title_display'  => 'invisible',
-    '#required'       => FALSE,
-    '#options'        => $options,
-    '#default_value'  => $default,
-    '#ajax'           => array(
-      'callback'  => '_sbac_resource_digital_library_sort_form__ajax__change',
-      'event'     => 'change',
-      'wrapper'   => 'form-wrapper-dl-sort-element',
-      'progress'  => array('type' => 'none'),
+    '#prefix' => '<div id="form-wrapper-dl-sort-element">',
+    '#suffix' => '</div>',
+    '#type' => 'select',
+    '#title' => t('Sort'),
+    '#title_display' => 'invisible',
+    '#required' => FALSE,
+    '#options' => $options,
+    '#default_value' => $default,
+    '#ajax' => array(
+      'callback' => '_sbac_resource_digital_library_sort_form__ajax__change',
+      'event' => 'change',
+      'wrapper' => 'form-wrapper-dl-sort-element',
+      'progress' => array('type' => 'none'),
+    ),'#attributes' => array(
+      'class' => array(
+        'no-chosen'
+      )
     )
+
   );
 
   return $form;
@@ -3066,13 +3090,14 @@ function sbac_resource_resource_review_sort_form($form, $form_state) {
 
   // If session var is set, make it the default.
   if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS]) &&
-      $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != '') {
+    $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != ''
+  ) {
     $default = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS];
   }
 
   $options = array(
-    'rr-oldest'         => t('Oldest'),
-    'rr-newest'         => t('Newest'),
+    'rr-oldest' => t('Oldest'),
+    'rr-newest' => t('Newest'),
   );
 
   // Ajax submitted. Set Text if selected.
@@ -3080,26 +3105,27 @@ function sbac_resource_resource_review_sort_form($form, $form_state) {
     $new_value_key = $form_state['values']['rr_sort_order'];
     $old_value_text = $options[$new_value_key];
     $options[$new_value_key] = t('Sort by: ' . $old_value_text);
-  } else {
+  }
+  else {
     $options[$default] = t('Sort by: ' . $options[$default]);
   }
 
 
   // Needs to ajax submit to set the session variable that tracks default state.
   $form['rr_sort_order'] = array(
-    '#prefix'         => '<div id="form-wrapper-rr-sort-element">',
-    '#suffix'         => '</div>',
-    '#type'           => 'select',
-    '#title'          => t('Sort'),
-    '#title_display'  => 'invisible',
-    '#required'       => FALSE,
-    '#options'        => $options,
-    '#default_value'  => $default,
-    '#ajax'           => array(
-      'callback'  => '_sbac_resource_resource_review_sort_form__ajax__change',
-      'event'     => 'change',
-      'wrapper'   => 'form-wrapper-rr-sort-element',
-      'progress'  => array('type' => 'none'),
+    '#prefix' => '<div id="form-wrapper-rr-sort-element">',
+    '#suffix' => '</div>',
+    '#type' => 'select',
+    '#title' => t('Sort'),
+    '#title_display' => 'invisible',
+    '#required' => FALSE,
+    '#options' => $options,
+    '#default_value' => $default,
+    '#ajax' => array(
+      'callback' => '_sbac_resource_resource_review_sort_form__ajax__change',
+      'event' => 'change',
+      'wrapper' => 'form-wrapper-rr-sort-element',
+      'progress' => array('type' => 'none'),
     )
   );
 
@@ -3146,14 +3172,15 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
 
   // If session var is set, make it the default.
   if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS]) &&
-      $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != '') {
+    $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != ''
+  ) {
     $default = $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS];
   }
 
   $options = array(
-    'mr-newest'         => t('Newest'),
-    'mr-oldest'         => t('Oldest'),
-    'mr-alpha'          => t('Alphabetical (A-Z)'),
+    'mr-newest' => t('Newest'),
+    'mr-oldest' => t('Oldest'),
+    'mr-alpha' => t('Alphabetical (A-Z)'),
   );
 
   // Ajax submitted. Set Text if selected.
@@ -3161,26 +3188,32 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
     $new_value_key = $form_state['values']['mr_sort_order'];
     $old_value_text = $options[$new_value_key];
     $options[$new_value_key] = t('Sort by: ' . $old_value_text);
-  } else {
+  }
+  else {
     $options[$default] = t('Sort by: ' . $options[$default]);
   }
 
 
   // Needs to ajax submit to set the session variable that tracks default state.
   $form['mr_sort_order'] = array(
-    '#prefix'         => '<div id="form-wrapper-mr-sort-element">',
-    '#suffix'         => '</div>',
-    '#type'           => 'select',
-    '#title'          => t('Sort'),
-    '#title_display'  => 'invisible',
-    '#required'       => FALSE,
-    '#options'        => $options,
-    '#default_value'  => $default,
-    '#ajax'           => array(
-      'callback'  => '_sbac_resource_my_resources_sort_form__ajax__change',
-      'event'     => 'change',
-      'wrapper'   => 'form-wrapper-mr-sort-element',
-      'progress'  => array('type' => 'none'),
+    '#prefix' => '<div id="form-wrapper-mr-sort-element">',
+    '#suffix' => '</div>',
+    '#type' => 'select',
+    '#title' => t('Sort'),
+    '#title_display' => 'invisible',
+    '#required' => FALSE,
+    '#options' => $options,
+    '#default_value' => $default,
+    '#ajax' => array(
+      'callback' => '_sbac_resource_my_resources_sort_form__ajax__change',
+      'event' => 'change',
+      'wrapper' => 'form-wrapper-mr-sort-element',
+      'progress' => array('type' => 'none'),
+    ),
+    '#attributes' => array(
+      'class' => array(
+        'no-chosen'
+      )
     )
   );
 
@@ -3270,7 +3303,7 @@ function sbac_resource_unsubmit_resource_form($form, &$form_state) {
     '#attributes' => array('class' => array('button', 'blue'))
   );
 
-	$form['cancel'] = array(
+  $form['cancel'] = array(
     '#type' => 'submit',
     '#value' => 'Cancel',
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
@@ -3290,16 +3323,16 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
   $form = array();
 
   $vocabs = array(
-    'subject'                      => t('Subjects'),
-    'grades'                       => t('Grades'),
-    'attributes'                   => t('Attributes of the Formative Assessment Process'),
-    'digital_media_type'           => t('Media Types'),
-    'focus'                        => t('Resource Type'),
-    'intended_end_user'            => t('Intended End Users'),
+    'subject' => t('Subjects'),
+    'grades' => t('Grades'),
+    'attributes' => t('Attributes of the Formative Assessment Process'),
+    'digital_media_type' => t('Media Types'),
+    'focus' => t('Resource Type'),
+    'intended_end_user' => t('Intended End Users'),
     'intended_student_populations' => t('Intended Student Populations'),
-    'educational_use'              => t('Educational Use'),
-    'smarter_balanced_keyword'     => t('Smarter Balanced Keywords'),
-    'geographical_settings'        => t('Geographic Settings'),
+    'educational_use' => t('Educational Use'),
+    'smarter_balanced_keyword' => t('Smarter Balanced Keywords'),
+    'geographical_settings' => t('Geographic Settings'),
   );
   $form['help_text'] = array(
     '#markup' => '<p>Select filters from the available options to create a url</p>',
@@ -3326,7 +3359,7 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
 
   // Process any current filter settings. This is to set the default so user can see what the url filters by.
   $current_filters = array();
-  $raw_url = explode('?',$current_value);
+  $raw_url = explode('?', $current_value);
   if (count($raw_url) == 2) {
     $current_filters = drupal_get_query_array($raw_url[1]);
   }
@@ -3568,7 +3601,7 @@ function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
  * @param $form
  * @param $form_state
  */
-function _sbac_resource_save_contributor_comments(&$form, &$form_state){
+function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
   // Save the contributor's comments
   if (!empty($form_state['values']['sbac_revisions'])) {
     foreach ($form_state['values']['sbac_revisions'] as $feedback) {

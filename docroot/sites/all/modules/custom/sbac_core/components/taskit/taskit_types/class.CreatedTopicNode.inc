@@ -10,7 +10,7 @@ class CreatedTopicNode extends \taskit\sbac_core\BaseTask {
     $triggering_users = $this->getTriggeringUsers();
     if ($topic && $account) {
       $topic_wrapper = entity_metadata_wrapper('node', $topic);
-      if ($topic_wrapper->__isset('field_topic_forum_parent')) {
+      try {
         $type = 'in forum';
         $forum_wrapper = $topic_wrapper->field_topic_forum_parent;
         $link = l($forum_wrapper->name->value(), 'forums/term/' . $forum_wrapper->tid->value());
@@ -28,6 +28,8 @@ class CreatedTopicNode extends \taskit\sbac_core\BaseTask {
         $output .= '<div class="taskit-content-toggle">' . $topic_wrapper->body->value->value() . ' </div > ';
 
         return $output;
+      } catch (\EntityMetadataWrapperException $e) {
+        return '';
       }
     }
     return '';
