@@ -351,7 +351,7 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
               </div>
              ';
 
-  $created = isset($entity->created) ? $entity->created : time();
+  $created = isset($account->created) ? $account->created : time();
 
   $output = t('!name', array(
     '!name' => $tooltip,

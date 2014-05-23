@@ -1560,7 +1560,7 @@ function sbac_forum_node_insert($node) {
         // Notify contributor.
         try {
           $contributor_uid = $forum_wrapper->field_forum_resource_ref->value()->uid;
-          if ($contributor_uid) {
+          if ($contributor_uid && $contributor_uid != $node->uid) {
             if ($task = taskit_get_object('created_topic_node')) {
               $task->addVisibility($task::VISIBILITY_USER);
               $task->addEntity('node', $node->nid);
