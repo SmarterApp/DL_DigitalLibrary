@@ -100,6 +100,9 @@
         hide($content['field_topic_comment_links']);
         hide($content['field_topic_comment_files']);
         print render($content);
+        if (isset($removed)) {
+          print $removed;
+        }
         ?>
         <div class="topic-node-comment-materials-wrapper">
           <?php if ($has_materials): ?>
