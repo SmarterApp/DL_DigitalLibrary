@@ -144,8 +144,17 @@
   color: #0085AD;
   font-weight: bold;
 }
+/* line 149, ../sass/taskit.scss */
+.taskit-interval.interval-today .taskit-timestamp,
+.taskit-interval.interval-yesterday .taskit-timestamp,
+.taskit-interval.interval-prior .taskit-timestamp {
+  text-align: right;
+  margin-right: 30px;
+  float: right;
+  color: #62676E;
+}
 
-/* line 151, ../sass/taskit.scss */
+/* line 158, ../sass/taskit.scss */
 .devtools-tooltip-body .line {
   border-bottom: none;
 }
