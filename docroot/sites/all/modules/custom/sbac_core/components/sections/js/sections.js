@@ -5,12 +5,9 @@ var ajax_request = null;
 Drupal.behaviors.sections = {
   attach: function (context, settings) {
     $('.section-link').click(function(e) {
-      if ($(this).hasClass('use-ajax')) {
-        $('.specific-section').removeClass('active').css('padding-top', 0);
-        $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
-        $(this).removeClass('use-ajax');
-        $(this).removeClass('ajax-processed');
-      }
+      $('.specific-section').removeClass('active').css('padding-top', 0);
+      $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
+      $(this).removeClass('use-ajax');
     });
 
     // check for tab hash and switch the active tab
