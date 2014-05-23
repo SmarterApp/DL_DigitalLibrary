@@ -90,18 +90,14 @@ function sbac_media_get_url() {
       if ($media->fid) {
         $file = file_load($media->fid);
         $url = file_create_url($file->uri);
-        $type = file_get_mimetype($file->uri);
       }
       else {
         $url = sbac_media_create_embed_url($media);
-        $type = 'application/octet-stream';
       }
-      $data = file_get_contents($url);
 
-      header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT', true, 200);
-      header('Content-Length: '.filesize($data));
-      header('Content-Type:' . $type);
-      echo $data;
+      $output['url'] = $url;
+      print drupal_json_encode($output);
+      exit;
     }
   }
 }
