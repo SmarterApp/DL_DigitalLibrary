@@ -14,17 +14,17 @@ global $user;
         }
         ?>
         <a title="Smarter Balanced Assessment Consortium" href="<?php echo $home_url; ?>">
-          <img src="<?php echo $logo; ?>" alt="Smarter Balanced Assessment Consortium Logo" />
+          <img src="<?php echo $logo; ?>" alt="Smarter Balanced Assessment Consortium Logo"/>
         </a>
       </h1></li>
     <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   </ul>
   <h1 class="title left">Digital Library</h1>
   <?php if ($user->uid && !in_array('guest', $user->roles)): ?>
-  <ul class="inline-list right user-nav">
-    <li class="user-info">
-       <a title='<?php echo sbac_user_format_username($user); ?>' data-dropdown="drop3" href="#">
-        <?php
+    <ul class="inline-list right user-nav">
+      <li class="user-info">
+        <a title='<?php echo sbac_user_format_username($user); ?>' data-dropdown="drop3" href="#">
+          <?php
           $user_item = user_load($user->uid);
           if (isset($user_item->picture->uri)) {
             $uri = $user_item->picture->uri;
@@ -43,8 +43,8 @@ global $user;
           ?>
         </a>
         <ul id="drop3" class="f-dropdown">
-          <li><?php echo l('Account','user/' . $user->uid, array('attributes' => array('title' => 'Account'))); ?></li>
-          <li><?php echo l('Logout','user/logout', array('attributes' => array('title' => 'Logout')));?></li>
+          <li><?php echo l('Account', 'user/' . $user->uid, array('attributes' => array('title' => 'Account'))); ?></li>
+          <li><?php echo l('Logout', 'user/logout', array('attributes' => array('title' => 'Logout'))); ?></li>
         </ul>
       </li>
       <li class="notifications">
@@ -57,58 +57,58 @@ global $user;
         }
 
         echo l($text, 'user/' . $user->uid, array(
-          'html' => TRUE,
-          'fragment' => 'profile-notifications',
-          'attributes' => array('title' => 'Notifications'),
-        ));
-      ?>
-    </li>
-    <li>
-      <a title='Feedback' id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
-      <?php
+            'html' => TRUE,
+            'fragment' => 'profile-notifications',
+            'attributes' => array('title' => 'Notifications'),
+          ));
+        ?>
+      </li>
+      <li>
+        <a title='Feedback' id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
+        <?php
         // set $class_feedback open if variable enable_feedback is on and the user hasn't disabled feedback flag on their profile yet, otherwise empty
         $class_feedback = (variable_get('enable_feedback') == 1 && !$user_item->field_feedback_flag['und'][0]['value'] ? ' open' : '');
-      ?>
-      <div id="feedback-dropdown" class="f-dropdown content small<?php print $class_feedback; ?>">
-      <a href='#' title='Remove' id="disable-feedback" class="small right"> x </a>
-      <?php
-        $feedback_block = block_load('sbac_central','feedback-box');
-        $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
-        print render($render_array);
-      ?>
-      </div>
-    </li>
-    <li>
-      <div class="sbac-favorites-menu">
-      <?php
-        $favorites_count = sbac_favorites_get_count($user->uid);
-        $text = t('Favorites');
-        if (!$favorites_count) {
-          $favorites_count = 0;
-        }
-        $text .= ' (<span>' . $favorites_count . '</span>)';
-        echo l($text, 'user/' . $user->uid, array(
-          'html' => TRUE,
-          'fragment' => 'profile-favorites',
-          'attributes' => array('title' => 'Favorites'),
-        ));
-        echo '<div class="sbac-favorites-menu-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
-      ?>
-      </div>
-    </li>
-    <li>
-      <?php if ($help_dropdown) :?>
-        <?php print $help_dropdown; ?>
-      <?php endif; ?>
-    </li>
-  </ul>
+        ?>
+        <div id="feedback-dropdown" class="f-dropdown content small<?php print $class_feedback; ?>">
+          <a href='#' title='Remove' id="disable-feedback" class="small right"> x </a>
+          <?php
+          $feedback_block = block_load('sbac_central', 'feedback-box');
+          $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
+          print render($render_array);
+          ?>
+        </div>
+      </li>
+      <li>
+        <div class="sbac-favorites-menu">
+          <?php
+          $favorites_count = sbac_favorites_get_count($user->uid);
+          $text = t('Favorites');
+          if (!$favorites_count) {
+            $favorites_count = 0;
+          }
+          $text .= ' (<span>' . $favorites_count . '</span>)';
+          echo l($text, 'user/' . $user->uid, array(
+              'html' => TRUE,
+              'fragment' => 'profile-favorites',
+              'attributes' => array('title' => 'Favorites'),
+            ));
+          echo '<div class="sbac-favorites-menu-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+          ?>
+        </div>
+      </li>
+      <li>
+        <?php if ($help_dropdown) : ?>
+          <?php print $help_dropdown; ?>
+        <?php endif; ?>
+      </li>
+    </ul>
   <?php endif; ?>
   <?php if ($user->uid && in_array('guest', $user->roles)): ?>
-  <ul class="inline-list right user-nav">
-    <li class="user-info">
-      <a title='Sign In' href="/user">Sign In</a>
-    </li>
-  </ul>
+    <ul class="inline-list right user-nav">
+      <li class="user-info">
+        <a title='Sign In' href="/user">Sign In</a>
+      </li>
+    </ul>
   <?php endif; ?>
 </nav>
 
@@ -204,14 +204,12 @@ global $user;
         <?php print render($page['sidebar_second']); ?>
       </div>
     <?php endif; ?>
-
-		<?php if('digital-library-resources' == current_path()): ?>
-		<div class="experimental-feature">
-		  <div class="title">EXPERIMENTAL FEATURE</div>
-		  <div class="additional-resoutces">Need additional resources? You may try searching <a href="/external-resources" title="External Resources" target="_blank">external resources</a></div>
-		</div>
-		<?php endif; ?>
-		
+    <?php /*if ('digital-library-resources' == current_path()): */?><!--
+      <div class="experimental-feature">
+        <div class="title">EXPERIMENTAL FEATURE</div>
+        <div class="additional-resoutces">Need additional resources? You may try searching <a href="/external-resources" title="External Resources" target="_blank">external resources</a></div>
+      </div>
+    --><?php /*endif; */?>
   </div>
 </div>
 <?php if (!empty($page['footer_first']) || !empty($page['footer_middle']) || !empty($page['footer_last'])): ?>
@@ -249,21 +247,21 @@ global $user;
       }
       ?>
       <?php if ($user && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
-      <ul class="footer-links inline-list right">
-        <li>
-          <?php if (user_is_logged_in() && !in_array('guest', $user->roles)) : ?>
-          <div class="footer-help">
-            <a title="Help Menu" class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
-            <ul id="drop2" class="f-dropdown" data-dropdown-content>
-              <li><a title="Welcome Tutorial" href="#helpmodal" class="help-modal">Welcome Tutorial</a></li>
-              <li><?php print l(t('Glossary'), 'glossary', array('absolute' => TRUE, 'attributes' => array('title' => 'Glossary'))); ?></li>
-              <li><a title='Help Topics' href="help-topics">Help Topics</a></li>
-            </ul>
-          </div>
-          <?php endif; ?>
-        </li>
-        <li><a title="Terms of Service" class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
-      </ul>
+        <ul class="footer-links inline-list right">
+          <li>
+            <?php if (user_is_logged_in() && !in_array('guest', $user->roles)) : ?>
+              <div class="footer-help">
+                <a title="Help Menu" class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
+                <ul id="drop2" class="f-dropdown" data-dropdown-content>
+                  <li><a title="Welcome Tutorial" href="#helpmodal" class="help-modal">Welcome Tutorial</a></li>
+                  <li><?php print l(t('Glossary'), 'glossary', array('absolute' => TRUE, 'attributes' => array('title' => 'Glossary'))); ?></li>
+                  <li><a title='Help Topics' href="help-topics">Help Topics</a></li>
+                </ul>
+              </div>
+            <?php endif; ?>
+          </li>
+          <li><a title="Terms of Service" class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
+        </ul>
       <?php endif; ?>
     </div>
   </div>
@@ -274,8 +272,8 @@ global $user;
     <div id="helpmodal">
       <?php
       if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
-      <div class="sort-link"><a title="Reorganize Help" href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>
-    <?php endif; ?>
+        <div class="sort-link"><a title="Reorganize Help" href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>
+      <?php endif; ?>
       <h2 class="helpmodal-title">Welcome to the Smarter Balanced Digital Library</h2>
 
       <p class="helpmodal-desc">The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate
@@ -293,9 +291,11 @@ global $user;
       <a title="Continue" class="otherClose button right" href="#">Continue</a>
       <a title="Cancel" class="button right secondary backButton" href="#">Cancel</a>
     </div>
-  <div id="current-help-topic-modal">
-    <a class= "helpBack small button left" >Back</a>
+    <div id="current-help-topic-modal">
+      <a class="helpBack small button left">Back</a>
+
       <h2><span id="sbac-help-title">Welcome to the Smarter Balanced Digital Library</span></h2>
+
       <div id="current-help-topic">
       </div>
       <?php $form = drupal_get_form('sbac_help_disable_help'); ?>
