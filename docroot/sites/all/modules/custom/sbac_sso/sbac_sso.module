@@ -302,7 +302,7 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
-  //$saml_token = sbac_sso_get_saml_token2();
+//  $saml_token = sbac_sso_get_saml_token2();
   $saml_token = FALSE;
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = base64_decode($_POST['SAMLResponse']);
@@ -391,7 +391,7 @@ function sbac_sso_validate_saml_response($saml_token) {
   }
   $user_attributes = sbac_sso_create_user_attributes($response);
   // If SAML assertion does not match expected definition or signature:
-  if (!$user_attributes || !isset($user_attributes['role_id']) || $user_attributes['role_id'] == NULL || $user_attributes['role_id'] != 'DL_EndUser') {
+  if (!$user_attributes || !isset($user_attributes['name']) || $user_attributes['name'] == NULL || $user_attributes['name'] != 'DL_EndUser') {
     // If you do not find a matching tenancy chain, kick the user to an error page
     // with Smarter Balanced Contact information and a custom error code
     // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
@@ -847,28 +847,28 @@ function sbac_sso_get_authenticated_session() {
 }
 
 function sbac_sso_get_saml_token2() {
-  $saml_endpoint_assertion = '<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s2aa7130026636fddb349d65a0a3eb87974dbd8fe9" InResponseTo="_e7ExFFADbj5375072941bb05.53739435" Version="2.0" IssueInstant="2014-05-15T18:27:53Z" Destination="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+  $saml_endpoint_assertion = '<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s28d30c7c006c519561767ba178e6953d0645dfc5b" InResponseTo="_7MG85SP6ow537fd51a5318b7.01741455" Version="2.0" IssueInstant="2014-05-23T23:09:22Z" Destination="https://staging.smarterbalancedlibrary.org/sbac-sso-consume"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
     <samlp:StatusCode  xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
     Value="urn:oasis:names:tc:SAML:2.0:status:Success">
     </samlp:StatusCode>
-    </samlp:Status><saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s2c98d149104b623906f89595db3b29193483f96e5" IssueInstant="2014-05-15T18:27:53Z" Version="2.0">
+    </samlp:Status><saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s237e7a8eb49bd9cf05c6832afd40c9dfb3aa4835d" IssueInstant="2014-05-23T23:09:22Z" Version="2.0">
     <saml:Issuer>http://drcamp-dev.opentestsystem.org:8080/auth</saml:Issuer><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
     <ds:SignedInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
     <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
     <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
-    <ds:Reference URI="#s2c98d149104b623906f89595db3b29193483f96e5" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:Reference URI="#s237e7a8eb49bd9cf05c6832afd40c9dfb3aa4835d" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
     <ds:Transforms xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
     <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
     <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
     </ds:Transforms>
     <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
-    <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">oV3BhSUC2d8+7SCid0l8W26ySc8=</ds:DigestValue>
+    <ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">jhBSuiqRiNCZHL1A5J9uJxWqRrY=</ds:DigestValue>
     </ds:Reference>
     </ds:SignedInfo>
     <ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-    QgGX/KKOvdAXiMWCf8ffuOv91bVlhrN8W8ZxIoU83CBveN6nwWVbdMzkVbIdV7DFIIx052HkX+DK
-    KsaTuxFY+vdZ8ZY27vb+qqkCJwGlkwLEKUxbgig6NToEFmITZjizyMI5X+thO9sQQoWemkuZETai
-    LmqaPNdHtchKJ+xVbIQ=
+    k8dQ//rOp6AnSFecwZsxMKV3M+oSHjV8rd/+Qnjp5d9GBR09CsNdu+YETyh8KC3WY+pha9vyj9A4
+    os3Lr7Hgowr+h0G95av9nCFLYM5iKu/NVB55Aa8YcV28881NRdrHd+FXip0wDxnGQD2Hbs2dd0X2
+    IGP48DRPBqBnHGTm4ww=
     </ds:SignatureValue>
     <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
     <ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -888,13 +888,13 @@ function sbac_sso_get_saml_token2() {
     </ds:X509Data>
     </ds:KeyInfo>
     </ds:Signature><saml:Subject>
-    <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" NameQualifier="http://drcamp-dev.opentestsystem.org:8080/auth">SMMBFU5TqdsfACJaIOzEObGQquLr</saml:NameID><saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-    <saml:SubjectConfirmationData InResponseTo="_e7ExFFADbj5375072941bb05.53739435" NotOnOrAfter="2014-05-15T18:37:53Z" Recipient="https://dev.smarterbalancedlibrary.org/sbac-sso-consume"/></saml:SubjectConfirmation>
-    </saml:Subject><saml:Conditions NotBefore="2014-05-15T18:17:53Z" NotOnOrAfter="2014-05-15T18:37:53Z">
+    <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" NameQualifier="http://drcamp-dev.opentestsystem.org:8080/auth">8G0jO3luqXtxBLrOfjhJw5UKXEP9</saml:NameID><saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+    <saml:SubjectConfirmationData InResponseTo="_7MG85SP6ow537fd51a5318b7.01741455" NotOnOrAfter="2014-05-23T23:19:22Z" Recipient="https://staging.smarterbalancedlibrary.org/sbac-sso-consume"/></saml:SubjectConfirmation>
+    </saml:Subject><saml:Conditions NotBefore="2014-05-23T22:59:22Z" NotOnOrAfter="2014-05-23T23:19:22Z">
     <saml:AudienceRestriction>
-    <saml:Audience>https://dev.smarterbalancedlibrary.org</saml:Audience>
+    <saml:Audience>https://staging.smarterbalancedlibrary.org</saml:Audience>
     </saml:AudienceRestriction>
     </saml:Conditions>
-    <saml:AuthnStatement AuthnInstant="2014-05-15T18:09:50Z" SessionIndex="s2d10a50e9f2d0cc7aa22c2a2d1b07cc87246daf01"><saml:AuthnContext><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml:AuthnContext></saml:AuthnStatement><saml:AttributeStatement><saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">appno_00004</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">brandont+4@appnovation.com</saml:AttributeValue></saml:Attribute><saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">3cdd4237-7a81-45b6-8e0e-1a8fe1952922</saml:AttributeValue></saml:Attribute><saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon Tate</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">|DL_EndUser|CONSORTIUM_EDUCATION_ADMINISTRATOR_1|INSTITUTION|Appnovation Client ID|Appnovation Client|Appnovation State Group ID|Appnovation State Group|Alaska|Alaska|Appnovation District Group ID|Appnovation District Group|Appnovation District ID|Appnovation District|Appnovation Insitution Group ID|Appnovation Institution Group|Appnovation Institution ID|Appnovation Institution|</saml:AttributeValue></saml:Attribute><saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Brandon</saml:AttributeValue></saml:Attribute></saml:AttributeStatement></saml:Assertion></samlp:Response>';
+    <saml:AuthnStatement AuthnInstant="2014-05-23T23:09:22Z" SessionIndex="s2f6c2a5c1be3b36c49075bde8dda99236e9b5a401"><saml:AuthnContext><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml:AuthnContext></saml:AuthnStatement><saml:AttributeStatement><saml:Attribute Name="sbacUUID"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">dlcontributor@gmail.com</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Contributor</saml:AttributeValue></saml:Attribute><saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">dlcontributor@gmail.com</saml:AttributeValue></saml:Attribute><saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">8276ad03-e1c6-40a2-9058-bc2b861d9064</saml:AttributeValue></saml:Attribute><saml:Attribute Name="cn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Thomas Contributor</saml:AttributeValue></saml:Attribute><saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">||DL_EndUser|STATE||||||TS|||||||||</saml:AttributeValue></saml:Attribute><saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Thomas</saml:AttributeValue></saml:Attribute></saml:AttributeStatement></saml:Assertion></samlp:Response>';
   return $saml_endpoint_assertion;
 }
