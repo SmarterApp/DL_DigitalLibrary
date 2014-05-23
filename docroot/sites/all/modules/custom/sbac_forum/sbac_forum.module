@@ -1316,17 +1316,19 @@ function sbac_forum_comment_node_topic_form_validate(&$form, &$form_state) {
  * Implements hook_form_FORM-ID_alter
  */
 function sbac_forum_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'views_exposed_form') {
-    if (($form['#id'] == 'views-exposed-form-forum-topic-list-block') ||
-      ($form['#id'] == 'views-exposed-form-forum-member-list-block') ||
-      ($form['#id'] == 'views-exposed-form-forum-member-list-block-1')
-    ) {
-      // Add words "sort by" to active selected sort options
-      if (isset($form_state['input']['sort_by'])) {
-        $selected_sort_by = $form_state['input']['sort_by'];
-        $sort_by_label = $form['sort_by']['#options'][$selected_sort_by];
-        $form['sort_by']['#options'][$selected_sort_by] = 'Sort by: ' . $sort_by_label;
-      }
+  if (in_array($form['#id'], array(
+    'views-exposed-form-forum-topic-list-block',
+    'views-exposed-form-forum-member-list-block',
+    'views-exposed-form-forum-member-list-block-1',
+    'views-exposed-form-forum-topic-list-collaboration',
+  ))
+  ) {
+    // Add words "sort by" to active selected sort options
+    if (isset($form_state['input']['sort_by'])) {
+      $selected_sort_by = $form_state['input']['sort_by'];
+      $sort_by_label = $form['sort_by']['#options'][$selected_sort_by];
+      $form['sort_by']['#options'][$selected_sort_by] = 'Sort by: ' . $sort_by_label;
+      $form['sort_by']['#attributes']['class'][] = 'no-chosen';
     }
   }
 }
@@ -1552,12 +1554,16 @@ function sbac_forum_node_insert($node) {
         // Add forum to favorite
         sbac_forum_add_to_favorite($forum_obj->tid, $user->uid);
         // Notify contributor.
-        if ($task = taskit_get_object('created_topic_node')) {
-          $task->addVisibility($task::VISIBILITY_USER);
-          $task->addEntity('node', $node->nid);
-          $task->addOwningUser(143);
-          $task->addTriggeringUser($node->uid);
-          $task->save();
+        try {
+          $contributor_uid = $forum_wrapper->field_forum_resource_ref->value()->uid;
+          if ($task = taskit_get_object('created_topic_node')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addEntity('node', $node->nid);
+            $task->addOwningUser($contributor_uid);
+            $task->addTriggeringUser($node->uid);
+            $task->save();
+          }
+        } catch (EntityMetadataWrapperException $e) {
         }
       }
     }
