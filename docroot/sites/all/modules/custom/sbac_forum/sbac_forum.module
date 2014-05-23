@@ -1560,12 +1560,14 @@ function sbac_forum_node_insert($node) {
         // Notify contributor.
         try {
           $contributor_uid = $forum_wrapper->field_forum_resource_ref->value()->uid;
-          if ($task = taskit_get_object('created_topic_node')) {
-            $task->addVisibility($task::VISIBILITY_USER);
-            $task->addEntity('node', $node->nid);
-            $task->addOwningUser($contributor_uid);
-            $task->addTriggeringUser($node->uid);
-            $task->save();
+          if ($contributor_uid) {
+            if ($task = taskit_get_object('created_topic_node')) {
+              $task->addVisibility($task::VISIBILITY_USER);
+              $task->addEntity('node', $node->nid);
+              $task->addOwningUser($contributor_uid);
+              $task->addTriggeringUser($node->uid);
+              $task->save();
+            }
           }
         } catch (EntityMetadataWrapperException $e) {
         }
