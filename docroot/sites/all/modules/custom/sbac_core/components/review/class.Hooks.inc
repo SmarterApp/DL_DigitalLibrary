@@ -135,7 +135,7 @@ class Hooks extends \devtools\Hooks {
       // we store the node in state because it won't always be available for grabs (ex. ajax requests, which have
       // a non-node URI)
         if (!isset($form_state['node_object'])) {
-          if ($node = current_node()) {
+          if ($node = current_node(TRUE)) {
             $form_state['node_object'] = $node;
           }
           elseif ($node = node_load($form['#entity']->node_id)) {

@@ -2698,6 +2698,19 @@ function sbac_resource_get_url_alias($nid) {
 }
 
 /**
+ * @param $nid
+ * @return null
+ */
+function sbac_resource_get_url_source($alias) {
+  $source = NULL;
+
+  $sql = "SELECT source FROM {url_alias} WHERE alias = :alias";
+  $source = db_query($sql, array(':alias' => $alias))->fetchField();
+
+  return $source;
+}
+
+/**
  * Selects the number of feedback review items from the table for
  * the given nid / uid.
  *
