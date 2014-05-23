@@ -797,7 +797,7 @@ function _sbac_resource_preview_content(&$vars) {
     $type = _sbac_resource_determine_type($media);
     $viewer['viewer_filename'] = $media->filename;
     if ($media->transcript) {
-      $viewer['viewer_filename'] .= ' (Transcipt Included)';
+      $viewer['viewer_filename'] .= ' (Transcript Included)';
     }
 
     if ($media->fid) {
@@ -807,13 +807,6 @@ function _sbac_resource_preview_content(&$vars) {
     else {
       $url = sbac_media_create_embed_url($media);
     }
-
-//    if ($type == 'document' && !sbac_resource_url_exist($url)) {
-//      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-//      $viewer['viewer'] = theme('image', array('path' => $url));
-//      $viewer['viewer_class'] = '';
-//      return $viewer;
-//    }
 
     if ($type == 'document') {
       $google_url = 'http://docs.google.com/viewer';
@@ -873,6 +866,11 @@ function _sbac_resource_preview_content(&$vars) {
 /**
  * Creates the materials dropdown.
  *
+ * The drop down list of materials.
+ * No need to check for HTML5 since business logic
+ * states there can only be one and its handled in
+ * _sbac_resource_previou_content(&$vars)
+ *
  * @param $vars
  * @return array
  */
@@ -880,48 +878,16 @@ function _sbac_resource_preview_materials(&$vars) {
   $materials = '';
   $material_urls = array();
 
-  if (isset($vars['document']['html5'])) {
-    $type = 'html5';
-    $media = $vars['document']['html5'];
-    $file = file_load($media->fid);
-    $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
-    $real_path = drupal_realpath($directory) . '/' . $file->filename;
-    $file_data = pathinfo($real_path);
-    $source = $directory . '/html5_module/dlcomponents/CoverPage.html';
-    $url = file_create_url($source);
-    $material_urls[] = l(ucwords($file_data['filename']), $url, array('attributes' => array('sbac-type' => $type)));
-  }
-
   if (isset($vars['document'][0])) {
     foreach ($vars['document'] as $key => $media) {
       if (is_numeric($key)) {
         $type = _sbac_resource_determine_type($media);
-        if ($type == 'none') {
-          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-        }
-        else if ($media->fid) {
-          $file = file_load($media->fid);
-          $url = file_create_url($file->uri);
-        }
-        else {
-          $url = sbac_media_create_embed_url($media);
-        }
-
         $transcript = 0;
         if ($media->transcript) {
           $transcript = 1;
         }
-
-        // check to see whether its public scheme or not, if so not external
-        if ($media->fid) {
-          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript)));
-        }
-        else { // embedded media
-          if (strpos($media->embed_url, 'youtube')) {
-            $url .= '?rel=0';
-          }
-          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript), 'absolute' => TRUE, 'external' => TRUE));
-        }
+        $url = 'sbac-get-media/' . $media->id;
+        $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript)));
       }
     }
   }
