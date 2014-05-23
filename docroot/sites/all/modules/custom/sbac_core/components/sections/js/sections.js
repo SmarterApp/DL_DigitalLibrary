@@ -71,4 +71,49 @@ Drupal.behaviors.sections = {
   }
 };
 
+if (Drupal.ajax) {
+  /**
+   * Handle an event that triggers an AJAX response.
+   *
+   * We unfortunately need to override this function, which originally comes from
+   * misc/ajax.js, in order to be able to cache loaded tabs, i.e. once a tab
+   * content has loaded it should not need to be loaded again.
+   *
+   * I have removed all comments that were in the original core function, so that
+   * the only comments inside this function relate to the MY MUH TRUCKIN CODE modification
+   * of it.
+   */
+  Drupal.ajax.prototype.eventResponse = function (element, event) {
+    var ajax = this;
+    if (ajax.ajaxing) {
+      return false;
+    }
+    try {
+      if (ajax.form) {
+        if (ajax.setClick) {
+          element.form.clk = element;
+        }
+        ajax.form.ajaxSubmit(ajax.options);
+      }
+      else {
+        if (!$(element).hasClass('section-loaded')) {
+          ajax.beforeSerialize(ajax.element, ajax.options);
+          $.ajax(ajax.options);
+          $(element).addClass('section-loaded');
+        }
+      }
+    }
+    catch (e) {
+      ajax.ajaxing = false;
+      alert("An error occurred while attempting to process " + ajax.options.url + ": " + e.message);
+    }
+    if (typeof element.type != 'undefined' && (element.type == 'checkbox' || element.type == 'radio')) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  };
+}
+
 })(jQuery);
