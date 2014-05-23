@@ -33,7 +33,7 @@ function resource_feedback_page($node) {
       ),
       'access review process' => array(
         'review' => array(
-          'reviews' => TRUE,
+          'reviews' => FALSE,
         ),
       ),
       'access quality criteria process' => array(

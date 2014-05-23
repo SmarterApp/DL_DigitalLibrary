@@ -114,6 +114,7 @@ class Hooks extends \devtools\Hooks {
     }
   }
 
+
   /**
    * Extends hook_form_alter().
    */

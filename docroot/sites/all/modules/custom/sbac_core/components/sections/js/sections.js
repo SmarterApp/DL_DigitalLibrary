@@ -4,6 +4,15 @@ var ajax_request = null;
 
 Drupal.behaviors.sections = {
   attach: function (context, settings) {
+    $('.section-link').click(function(e) {
+      if ($(this).hasClass('use-ajax')) {
+        $('.specific-section').removeClass('active').css('padding-top', 0);
+        $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
+        $(this).removeClass('use-ajax');
+        $(this).removeClass('ajax-processed');
+      }
+    });
+
     // check for tab hash and switch the active tab
     if (window.location.hash) {
       $('body').once('switch-section', function() {
@@ -13,40 +22,18 @@ Drupal.behaviors.sections = {
     }
 
     // add support for disabling sections via class name
-    var container = $('.section-container');
-    if (container.length) {
-      $('section', container).each(function(i, el) {
-        var section = $(el);
-
-        section.click(function(e) {
-          if (section.hasClass('disabled')) {
-            e.preventDefault();
-            return false;
-          }
-
-          var section_href = $(this).find('a');
-          var title = section_href.attr('title');
-          var section_id = section_href.attr('section_id');
-          var source = section_href.attr('source');
-          var tab = section_href.attr('tab');
-          var nid = section_href.attr('nid');
-          if (ajax_request == null && !$.trim( $('#' + section_id).html() ).length) {
-            ajax_request = $.ajax({
-              url: "/section-get-content",
-              data: {'source' : source, 'tab' : tab, 'nid' : nid},
-              success: function (data) {
-                var response = jQuery.parseJSON(data);
-                if (response.response != null) {
-                  $('#' + section_id).empty().append(response.response);
-                  Drupal.attachBehaviors(context, settings);
-                }
-                ajax_request = null;
-              }
-            });
-          }
-        });
-      });
-    }
+//    var container = $('.section-container');
+//    if (container.length) {
+//      $('section', container).each(function(i, el) {
+//        var section = $(el);
+//        section.click(function(e) {
+//          if (section.hasClass('disabled')) {
+//            e.preventDefault();
+//            return false;
+//          }
+//        });
+//      });
+//    }
   },
 
   /**

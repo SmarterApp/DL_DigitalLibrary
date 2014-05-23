@@ -7,11 +7,16 @@
  */
 function sections_preprocess(&$vars) {
   $path = drupal_get_path('module', 'sbac_core') . '/components/sections/';
-
+  drupal_add_library('system', 'drupal.ajax');
   drupal_add_js($path . 'js/sections.js');
   drupal_add_css($path . 'css/sections.css');
 
   foreach ($vars['sections'] as $key => &$section) {
+    $section['use-ajax'] = 'use-ajax';
+    if ($section['title'] == 'About This Resource') {
+      $section['use-ajax'] = '';
+    }
+
     // remove properties
     if ($key{0} == '#') {
       unset($vars['sections'][$key]);
@@ -38,8 +43,8 @@ function sections_preprocess(&$vars) {
 function section_get_content() {
   $output = array();
   $content = null;
-  if (!isset($_GET['source']) || !isset($_GET['tab']) || !isset($_GET['nid'])) {
-    $output['response'] = null;
+  if (!isset($_GET['source']) || !isset($_GET['tab']) || !isset($_GET['nid']) || !isset($_GET['section_id'])) {
+    print ajax_render($output);
   }
 
   $node = node_load($_GET['nid']);
@@ -52,12 +57,8 @@ function section_get_content() {
     $content = $section->getContent();
   }
 
-  if ($content) {
-    $output['response'] = $content;
-  }
-  else {
-    $output['response'] = null;
-  }
-  print drupal_json_encode($output);
-  exit;
+  $output[] = ajax_command_invoke('#' . $_GET['section_id'], 'empty');
+  $output[] = ajax_command_append('#' . $_GET['section_id'], $content);
+  print ajax_render($output);
+  exit();
 }
