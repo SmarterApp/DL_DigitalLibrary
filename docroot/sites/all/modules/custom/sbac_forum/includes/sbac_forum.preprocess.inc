@@ -378,7 +378,8 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       $vars['depth_extra'] = '';
       $vars['posted_date'] = '';
       $vars['has_materials'] = '';
-      $vars['content']['comment_body'][0]['#markup'] = '<span class="sbac-forum-post-removed">Post removed by moderator.</span>';
+      $vars['content']['comment_body'][0]['#markup'] = '';
+      $vars['removed'] = '<span class="sbac-forum-post-removed">Post removed by moderator.</span>';
       return;
     }
   }
