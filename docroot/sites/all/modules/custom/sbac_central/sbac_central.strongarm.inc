@@ -28,7 +28,7 @@ function sbac_central_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'chosen_minimum_single';
-  $strongarm->value = 'Always Apply';
+  $strongarm->value = '20';
   $export['chosen_minimum_single'] = $strongarm;
 
   $strongarm = new stdClass();
