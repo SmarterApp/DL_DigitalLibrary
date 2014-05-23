@@ -327,6 +327,14 @@ button:hover, button:focus, .button:hover, .button:focus {
 	@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 }
 
+button.gray:hover, .button.gray:hover, button.gray:active, .button.gray:active, button.gray:focus, .button.gray:focus {
+	background-color: #6E7379;
+}
+
+button.red:hover, .button.red:hover, button.red:active, .button.red:active, button.red:focus, .button.red:focus {
+  background-color: #8A1538;
+}
+
 .alert-box {
   @include border-radius (12px);
   padding: 30px;

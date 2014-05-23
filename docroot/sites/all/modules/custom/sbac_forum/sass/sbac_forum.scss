@@ -341,7 +341,7 @@ select {
   text-indent: 0.01px;
   text-overflow: "";
   vertical-align: top;
-  width: 200px !important;
+  width: 250px !important;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	height: 34px;
@@ -2141,6 +2141,15 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 }
 
+/*Drupal error message for Modal*/
+.sbac-flag-error-msg {
+	background-color: rgba(138, 21, 56, 0.1);
+  border: 2px solid #ED1C24;
+  color: #8A1538;
+  margin: 9px 0;
+  padding: 10px;
+}
+
 form[id*='sbac-flag-collaboration-form']{
 	
 	.form-flag-content {
@@ -2148,14 +2157,6 @@ form[id*='sbac-flag-collaboration-form']{
 		overflow-y: scroll;
 		padding: 5px 40px 0;
 		background-color: #F2F2F2;
-		
-		.sbac-flag-error-msg {
-			background-color: rgba(138, 21, 56, 0.1);
-		  border: 2px solid #ED1C24;
-	    color: #8A1538;
-	    margin: 9px 0;
-	    padding: 10px;
-		}
 	}
 	
 	label:first-child {
@@ -3186,6 +3187,12 @@ h2.title {
 	.row-comment-content {
 		padding: 15px;
 		float: left;
+	}
+	
+	.sbac-forum-post-removed {
+		font-style: italic;
+		float: left;
+		padding-top: 5px;
 	}
 
 	.topic-node-comment-region-status-message {

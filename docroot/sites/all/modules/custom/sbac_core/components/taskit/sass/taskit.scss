@@ -68,6 +68,7 @@
           color: #5a5a5a;
           display: block;
           padding: 10px;
+					line-height: 1.3;
 
           &:hover {
             background-color: #eee;
@@ -106,7 +107,7 @@
             padding: 10px;
           }
         }
-      }
+      }			
 
       .remove {
         display: none;
@@ -127,4 +128,26 @@
       }
     }
   }
+}
+
+.taskit-interval.interval-today,
+.taskit-interval.interval-yesterday,
+.taskit-interval.interval-prior {
+	.taskit-forum-cont {
+		padding: 10px;
+		
+		.taskit-content-toggle,
+		.taskit-topic-removed-message {
+			margin-top: 3px;
+		}
+		
+		a {
+			color: #0085AD;
+		  font-weight: bold;
+		}
+	}
+}
+
+.devtools-tooltip-body {
+	.line {border-bottom:none;}
 }
