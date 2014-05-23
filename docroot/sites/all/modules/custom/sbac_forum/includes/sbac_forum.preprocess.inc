@@ -90,7 +90,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
   }
 
-  if (!$can_edit && !$can_delete && !isset($_GET['flag'])) {
+  if (!$can_edit && !$can_delete) {
     $flagged = sbac_flag_get_collaboration_flag($node_data->nid->value(), 0, $user->uid);
 
     if ($flagged) {
@@ -99,6 +99,12 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       $vars['content']['flags']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
     }
     else {
+      if (!$is_member) {
+        ctools_include('ajax');
+        ctools_include('modal');
+        ctools_modal_add_js();
+      }
+
       $link_ops_flag = array(
         'attributes' => array(
           'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
@@ -389,7 +395,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   if ($_SESSION['sbac-topic-comment-sorts'] == 'comment-most-recommended') {
     $nid = $comment_entity->nid;
     $cid = $comment_entity->cid;
-    $vars['go_to_thread_link'] = l(t('Go to Thread'), "sbac-forum/go-to-thread/$nid/$cid");
+    $vars['go_to_thread_link'] = l(t('Go to Thread'), "sbac-forum/go-to-thread/$nid/$cid", array('attributes' => array('class' => array('sbac-forum-go-thread'))));
   }
 
   if ($is_comment_author) {
@@ -430,6 +436,9 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
         $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
       }
       else {
+        ctools_include('ajax');
+        ctools_include('modal');
+        ctools_modal_add_js();
         $js_settings_flag = array(
           'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
             'modalSize' => array(
@@ -459,7 +468,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
       $moderation_post_header = '<div class="sbac-flag-section">';
       $moderation_post_header .= '<div class="sbac-forum-flagged-post-header">';
-      $moderation_post_header .= '<span class=sbac-forum-flagged-text">Flagged</span>';
+      $moderation_post_header .= '<span class="sbac-forum-flagged-text">Flagged</span>';
       $moderation_post_header .= '</div>';
       $moderation_post_header .= '</div>';
       $vars['content']['flags']['moderation']['post']['header'] = $moderation_post_header;
@@ -529,15 +538,15 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
           'sbac-flag-resolve-button' => array(
             'modalSize' => array(
               'type' => 'fixed',
-              'width' => 600,
-              'height' => 230,
+              'width' => 640,
+              'height' => 310,
             ),
           ),
           'sbac-flag-remove-button' => array(
             'modalSize' => array(
               'type' => 'fixed',
-              'width' => 600,
-              'height' => 230,
+              'width' => 640,
+              'height' => 310,
             ),
           ),
         );

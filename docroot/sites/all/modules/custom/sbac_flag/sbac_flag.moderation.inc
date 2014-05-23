@@ -280,15 +280,35 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
   if ($row->being_moderated) {
     $variables['eck_flag']['display_status'] = 'Being Moderated';
     $variables['eck_flag']['display_status_css'] = '';
-    if ($eck_review) {
-      $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id, 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
+    if ($row->type == 'topic' || $row->type == 'comment') {
+      $path_alias = drupal_get_path_alias('node/' . $node->nid);
+      $url = l('Continue Moderation', $path_alias, array(
+        'attributes' => array(
+          'class' => array(
+            'button',
+            'blue',
+          ),
+        ),
+        'query' => array(
+          'flag' => 'resolve-' . $row->type . '-flags',
+          'cid' => ($node->nid == $row->target_id ? 0 : $row->target_id),
+        ),
+        'fragment' => 'review-moderate_flag',
+      ));
       $variables['eck_flag']['button'] = $url;
-      $variables['eck_flag']['title_href'] = url($node->path['alias'], array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id, 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
+
     }
     else {
-      $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-flags', 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
-      $variables['eck_flag']['button'] = $url;
-      $variables['eck_flag']['title_href'] = url('node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-flags', 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
+      if ($eck_review) {
+        $url = l('Continue Moderation', $node->path['alias'], array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id, 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
+        $variables['eck_flag']['button'] = $url;
+        $variables['eck_flag']['title_href'] = url($node->path['alias'], array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-review-flags', 'review' => $eck_review->id, 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
+      }
+      else {
+        $url = l('Continue Moderation', 'node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-flags', 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
+        $variables['eck_flag']['button'] = $url;
+        $variables['eck_flag']['title_href'] = url('node/' . $node->nid . '/edit', array('attributes' => array('class' => array('button', 'blue')), 'query' => array('flag' => 'resolve-resource-flags', 'node' => $node->nid), 'fragment' => 'review-Moderate_flag'));
+      }
     }
   }
   else {

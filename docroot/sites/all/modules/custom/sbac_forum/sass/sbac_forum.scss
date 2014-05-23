@@ -3221,6 +3221,7 @@ h2.title {
 		margin-left: 15px;
 		font-size: 13px;
 		line-height: 1.2;
+		position: relative;
 
 		a.devtools-tooltip-trigger {
 			color: #0583AC;
@@ -3355,7 +3356,7 @@ h2.title {
 				display: inline-block;
 		    font-weight: normal;
 		    margin-right: 7px;
-				font-size: 20px;
+				font-size: 18px;
 		    position: relative;
 		    text-decoration: none;
 				padding-top: 3px;
@@ -3434,97 +3435,27 @@ h2.title {
 		    position: relative;
 		    text-decoration: none;
 			}
+		}
+		
+		.topic-node-comment-region-right-top {
+			.sbac-forum-go-thread {
+				text-align: right;
+				color: #0583AC;
+				position: absolute;
+				top: 0;
+				right: 0;
+			}
 			
-			
-			/*ul{
-							list-style-type: none;
-							margin-bottom: 0;
-
-							li {
-								display: inline-block;
-						    margin: 20px 0 0 0;
-								line-height: 1;
-
-								a {
-									margin-left: 30px;
-									color: #62676E;
-									font-size: 13px;
-									line-height: 20px;
-
-									&:hover {text-decoration: underline;}
-								}
-							}
-
-							li.comment-reply a {
-								color: #0583AC;
-							}
-
-							li.comment-delete a:before,
-							li.comment-edit a:before,
-							li.comment-reply a:before,
-							li.flag_post a:before {
-								content:"\e632";
-							  display: inline-block;
-						    font-family: 'sbac';
-						    font-size: 20px;
-						    font-weight: normal;
-						    margin-right: 7px;
-						    opacity: 0.5;
-						    position: relative;
-						    text-decoration: none;
-							}
-
-							li.comment-edit a:before {
-								content:"\e61d";
-							}
-
-							li.comment-reply a:before {
-								content:"\e630";
-								opacity: 1;
-							}
-							
-							li.flag_post a:before {
-								content: "\e602";
-							}
-
-							li.comment-edit a:hover:before,
-							li.comment-delete a:hover:before,
-							li.flag_post a:hover:before {
-								opacity: 1;
-							}
-						}
-						
-						.recommend-box {
-							float: left; 
-							margin-top: 20px;
-							
-							a.sbac-recommend-link {
-								color: #0583AC;
-								display: inline-block;
-								float: left;
-							}
-							
-							a.sbac-recommend-link:before {
-								color: #0583AC;
-								content: "\f000";
-							  display: inline-block;
-						    font-family: "SocialFoundicons";
-						    font-size: 20px;
-						    font-weight: normal;
-						    margin-right: 7px;
-					      top: 5px;
-						    position: relative;
-						    text-decoration: none;
-							}
-							
-							div[id*="recommend-info"] {
-								display: inline-block;
-								float: left;
-								margin: 9px 0 0 10px;
-							}
-						}
-						
-						ul.links {float: right;}*/
+			.sbac-forum-go-thread:after {
+			  background: url("../images/icon-blue-arrow-right.png") no-repeat scroll 0 -1px rgba(0, 0, 0, 0);
+		    content: " ";
+		    display: inline-block;
+		    height: 12px;
+		    margin-left: 12px;
+		    margin-top: 0;
+		    vertical-align: middle;
+		    width: 18px;
+			}
 		}
 	}
 }
@@ -4010,8 +3941,9 @@ a.sbac-favorites-link {
 }
 
 
-// --------------------- Moderation Section ------------------------------
-.sbac-forum-flagged-topic-header {
+/* --------------------- Moderation Section ------------------------------ */
+.sbac-forum-flagged-topic-header,
+.sbac-forum-flagged-post-header {
 	background-color: #8a1538;
 	width: 100%;
 	height: 40px;
@@ -4039,7 +3971,12 @@ a.sbac-favorites-link {
 	}
 }
 
-.sbac-forum-flagged-topic-content-container {
+.sbac-forum-flagged-post-header {
+	@include border-radius(6px 6px 0 0);
+}
+
+.sbac-forum-flagged-topic-content-container,
+.sbac-forum-flagged-post-container {
 	background-color: #F7F7F7;
 	padding: 10px 20px 5px ;
 	
@@ -4100,10 +4037,21 @@ a.sbac-favorites-link {
 		line-height: 27px;
 	}
 	
-	#sbac-flag-resolve-button:before, 
+	#sbac-flag-resolve-button {
+		padding-left: 40px !important;
+		line-height: 32px;
+	}
+		
+	#sbac-flag-resolve-button:before {
+	  content: url("../images/icon-buttonAccept.png");
+    left: 15px;
+    position: absolute;
+    top: 4px;
+	}
+	
 	#sbac-flag-remove-button:before {
-	  content:"\e61c";
-    display: inline-block;
+	  content:"\e632";
+		display: inline-block;
     font-family: 'sbac';
     font-size: 20px;
     font-weight: normal;
@@ -4111,20 +4059,75 @@ a.sbac-favorites-link {
     opacity: 1;
     position: relative;
     text-decoration: none;
-		top: 4px;
+		top: 3px;
 	}
-	#sbac-flag-remove-button:before {
-	  content:"\e632";
+}
+.sbac-forum-flagged-post-container {
+	.tertiary-flag-head {
+		font-weight: normal;
 	}
 }
 
+
 /*Modal of Moderation section*/
+//--Start Modal --
 #sbac-flag-start-moderation-form {
 	button {
 		float: right;
 		margin-left: 20px;
 	}
 }
+
+//--Remove Modal --
+#sbac-flag-collaboration-remove-form {
+	.sbac-forum-flag-remove-count {
+		font-weight: bold;
+	}
+}
+
+//--Resolve Modal --
+#sbac-flag-collaboration-resolve-form {
+	
+	.sbac-resolve-text {
+		font-weight: bold;
+		padding-bottom: 5px;
+	}
+	
+	div[id*="edit-flag"] {
+		margin-left: 20px;
+	}
+	
+	div[id*="edit-flag"]:before {
+	  content: "\e62b";
+    display: inline-block;
+    font-family: 'sbac';
+    font-size: 16px;
+    font-weight: normal;
+    margin-right: 7px;
+    opacity: 1;
+    position: relative;
+    text-decoration: none;
+    top: 3px;
+	}
+	
+	.sbac-flag-collaboration-flag-num {
+	  font-style: italic;
+		text-align: right;
+		color: #62676e;
+	}
+	
+	.sbac-flag-collaboration-resolve-warning {
+		padding-top: 10px;
+	}
+	
+	button.cancel:before {
+	  content: url("../images/icon-buttonCancel.png");
+    left: 15px;
+    position: absolute;
+    top: 4px;
+	}
+}
+
 
 /*Fixed for FF*/
 @-moz-document url-prefix() {

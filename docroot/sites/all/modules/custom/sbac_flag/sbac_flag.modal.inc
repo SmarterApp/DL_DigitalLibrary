@@ -1370,16 +1370,28 @@ function sbac_flag_collaboration_resolve_form($form, &$form_state) {
     '#markup' => '<div class="flag-modal-buttons">',
   );
 
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-  );
-
-  $form['resolve'] = array(
+	$form['resolve'] = array(
     '#type' => 'submit',
     '#value' => 'Resolve Flags',
+		'#attributes' => array(
+      'class' => array(
+        'button',
+      ),
+		),
   );
-
+ 
+  $form['cancel-resolve'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+		'#attributes' => array(
+      'class' => array(
+        'button',
+        'gray',
+        'cancel',
+      ),
+		),
+  );
+ 
   $form['button_container_close'] = array(
     '#type' => 'markup',
     '#value' => '</div>',
@@ -1392,6 +1404,8 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
   if (!$js) {
     return;
   }
+
+  global $user;
 
   ctools_add_css('sbac_flag.css', 'sbac_flag');
   ctools_include('ajax');
@@ -1416,32 +1430,74 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
   if (!empty($form_state['executed'])) {
     if ($form_state['triggering_element']['#value'] == 'Remove Topic') {
       sbac_flag_collaboration_unset_being_moderated($nid, $cid);
-      sbac_flag_collaboration_remove_forum($nid, $cid);
+      sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
+
       // Notify poster
       $node = entity_metadata_wrapper('node', $nid);
       $forum_poster = $node->author->uid->value();
 
+
+      if ($task = taskit_get_object('topic_removed_creator')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $nid);
+        $task->addOwningUser($forum_poster);
+        $task->addTriggeringUser($user->uid);
+        $task->save();
+      }
+
       //  Notify participants
-      $posters = array();
+      $recipients = array();
+
       $query = db_select('comment', 'c');
       $query->fields('c', array('uid'));
+      $query->distinct();
       $query->condition('nid', $nid, '=');
       $result = $query->execute();
+
       while ($poster = $result->fetchAssoc()) {
-        $posters[] = $poster;
+        $recipients[] = $poster;
       }
-      //  sbac_flag_notify_posters($posters);
+
+      foreach ($recipients as $recipient) {
+        if ($recipient['uid'] != $forum_poster && $task = taskit_get_object('topic_removed')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $nid);
+          $task->addOwningUser($recipient['uid']);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+        }
+      }
 
       //  Delete Topic
-      // node_delete($nid);
+      node_delete($nid);
+
       //  Redirect
       $output[] = ctools_ajax_command_redirect('moderation');
     }
     elseif ($form_state['triggering_element']['#value'] == 'Remove Post') {
       sbac_flag_collaboration_unset_being_moderated($nid, $cid);
-      sbac_flag_collaboration_remove_forum($nid, $cid);
+      sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
       $comment = entity_metadata_wrapper('comment', $cid);
       $forum_poster = $comment->author->uid->value();
+
+      if ($task = taskit_get_object('post_removed_creator')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $nid);
+        $task->addEntity('comment', $cid);
+        $task->addOwningUser($forum_poster);
+        $task->addTriggeringUser($user->uid);
+        $task->save();
+      }
+
+      // Check to see if it has children
+      $comment_query = db_select('comment', 'c');
+      $comment_query->fields('c');
+      $comment_query->condition('pid', $cid, '=');
+      $comment_results = $comment_query->execute();
+      if (!($result = $comment_results->fetchAssoc())) {
+        comment_delete($cid);
+      }
+
       $output[] = ctools_ajax_command_redirect('moderation');
     }
     $output[] = ctools_modal_command_dismiss();
@@ -1466,7 +1522,7 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
 
     $form['header'] = array(
       '#type' => 'item',
-      '#markup' => 'This topic contains ' . $header_markup . ' . If you remove the topic, the posts will be removed as well.'
+      '#markup' => 'This topic contains <span class="sbac-forum-flagged-text">' . $header_markup . '</span> . If you remove the topic, the posts will be removed as well.'
     );
 
     $message_box = array(
@@ -1496,11 +1552,15 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
       '#type' => 'textarea',
       '#title' => 'Please leave a message for the poster',
       '#rows' => 3,
-      '#required' => TRUE,
       '#maxlength' => 1000,
       '#maxlength_js' => TRUE,
       '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
     );
+
+  $form['error'] = array(
+    '#type' => 'markup',
+    '#markup' => '',
+  );
 
     $remove_button = array(
       '#type' => 'submit',
@@ -1552,5 +1612,19 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
 function sbac_flag_collaboration_remove_form_validate(&$form, &$form_state) {
   if ($form_state['triggering_element']['#value'] == 'Cancel') {
     return;
+  }
+  else {
+    if ($form_state['values']['message'] != NULL) {
+      if (profanity_validate_text($form_state['values']['message'])) {
+        form_set_error('message', 'Please remove any inappropriate language.');
+      }
+    }
+    if ($form_state['values']['message'] == NULL) {
+      form_set_error('message', 'Please validate your reason for removal.');
+    }
+  }
+  if ($error = drupal_get_messages('error', TRUE)) {
+    $error = array_pop($error);
+    $form['error']['#markup'] = '<div class="sbac-flag-error-msg">' . array_pop($error) . '</div>';
   }
 }
