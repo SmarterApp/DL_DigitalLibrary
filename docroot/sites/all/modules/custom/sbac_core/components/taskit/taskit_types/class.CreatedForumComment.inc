@@ -30,6 +30,7 @@ class CreatedForumComment extends \taskit\sbac_core\BaseTask {
           ));
           $output .= '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format) . '</span> ';
           $output .= '<div class="taskit-content-toggle">' . $comment_wrapper->comment_body->value() . ' </div > ';
+          $output = '<div class="testtt">' . $output . '</div>';
           return $output;
         }
       } catch (\EntityMetadataWrapperException $e) {
