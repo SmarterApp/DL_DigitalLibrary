@@ -30,6 +30,8 @@
   border-bottom: 1px #ccc solid;
   font-size: 0.8em;
   position: relative;
+  float: left;
+  width: 100%;
       /*
       &.taskit-collapsed {
         .remove {
@@ -52,36 +54,40 @@
       }
       */
 }
-/* line 33, ../sass/taskit.scss */
+/* line 35, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row.taskit-new {
   background: #eee;
 }
-/* line 59, ../sass/taskit.scss */
+/* line 61, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .ajax-progress-throbber {
   display: none;
 }
-/* line 63, ../sass/taskit.scss */
+/* line 65, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item {
   /*padding-right: 30px;*/
+  float: left;
+  width: 100%;
 }
-/* line 66, ../sass/taskit.scss */
+/* line 70, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item .taskit-content {
   background: url("/sites/all/themes/SBAC/images/arrow-right.png") 99% center no-repeat;
   color: #5a5a5a;
   display: block;
   padding: 10px;
-  line-height: 1.3;
+  line-height: 1.5;
+  float: left;
+  width: 100%;
 }
-/* line 73, ../sass/taskit.scss */
+/* line 79, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item .taskit-content:hover {
   background-color: #eee;
 }
-/* line 77, ../sass/taskit.scss */
+/* line 83, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item .taskit-content .taskit-title {
   color: #0085ad;
   font-weight: bold;
 }
-/* line 86, ../sass/taskit.scss */
+/* line 92, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item .taskit-content .taskit-expand {
   display: block;
   height: 14px;
@@ -91,20 +97,20 @@
   top: 10px;
   width: 14px;
 }
-/* line 95, ../sass/taskit.scss */
+/* line 101, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item .taskit-content .taskit-expand .taskit-expand-trigger {
   background: url("/sites/all/themes/SBAC/images/arrow-down.png") center center no-repeat;
   display: block;
   height: 100%;
   width: 100%;
 }
-/* line 103, ../sass/taskit.scss */
+/* line 109, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item .taskit-content .taskit-content-toggle {
   display: block;
   line-height: 1.5em;
   margin-right: -30px;
 }
-/* line 111, ../sass/taskit.scss */
+/* line 117, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .remove {
   display: none;
   bottom: 10px;
@@ -112,24 +118,24 @@
   right: 10px;
   z-index: 2;
 }
-/* line 119, ../sass/taskit.scss */
+/* line 125, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .remove.collapsed {
   display: none;
 }
-/* line 123, ../sass/taskit.scss */
+/* line 129, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .remove a {
   display: block;
   text-transform: uppercase;
 }
 
-/* line 136, ../sass/taskit.scss */
+/* line 142, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-forum-cont,
 .taskit-interval.interval-yesterday .taskit-forum-cont,
 .taskit-interval.interval-older .taskit-forum-cont,
 .taskit-interval.interval-prior .taskit-forum-cont {
   padding: 10px;
 }
-/* line 140, ../sass/taskit.scss */
+/* line 146, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-forum-cont .taskit-content-toggle,
 .taskit-interval.interval-today .taskit-forum-cont .taskit-topic-removed-message,
 .taskit-interval.interval-yesterday .taskit-forum-cont .taskit-content-toggle,
@@ -140,7 +146,7 @@
 .taskit-interval.interval-prior .taskit-forum-cont .taskit-topic-removed-message {
   margin-top: 3px;
 }
-/* line 144, ../sass/taskit.scss */
+/* line 150, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-forum-cont a,
 .taskit-interval.interval-yesterday .taskit-forum-cont a,
 .taskit-interval.interval-older .taskit-forum-cont a,
@@ -148,7 +154,7 @@
   color: #0085AD;
   font-weight: bold;
 }
-/* line 150, ../sass/taskit.scss */
+/* line 156, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-timestamp,
 .taskit-interval.interval-yesterday .taskit-timestamp,
 .taskit-interval.interval-older .taskit-timestamp,
@@ -159,7 +165,7 @@
   color: #62676E;
 }
 
-/* line 159, ../sass/taskit.scss */
+/* line 165, ../sass/taskit.scss */
 .devtools-tooltip-body .line {
   border-bottom: none;
 }
