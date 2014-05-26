@@ -3807,8 +3807,9 @@ h2.title {
   margin-right: 7px;
   position: relative;
   text-decoration: none;
+  top: 1px;
 }
-/* line 3362, ../sass/sbac_forum.scss */
+/* line 3363, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom .recommend-box:before {
   /*background: url(../images/icon-recommend.png) no-repeat 0 1px;*/
   content: "\e635";
@@ -3819,7 +3820,6 @@ h2.title {
   font-size: 18px;
   position: relative;
   text-decoration: none;
-  padding-top: 3px;
 }
 /* line 3375, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom .tertiary-flag-link {
