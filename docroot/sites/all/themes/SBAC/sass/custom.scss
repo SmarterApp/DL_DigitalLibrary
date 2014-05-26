@@ -187,9 +187,7 @@ h3, h4, h5, h6 {
 }
 
 button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus, button.disabled.secondary, button[disabled].secondary, .button.disabled.secondary, .button[disabled].secondary {
-  /*background: rgba(191, 216, 229, 0.9);
-    border: 1px rgba(0, 98, 152, .5) solid;*/
-	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+ 	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
   .button {
@@ -230,8 +228,6 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 	font-weight: normal;
 	height: 34px;
 	line-height: 34px;
-	/*margin: 15px 30px 0 0;
-		min-width: 125px;*/
 	padding: 0 18px;
 	text-align: center;
 	background-color: #2AA549;
@@ -269,28 +265,16 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 
   &:hover, &:focus  {
     @include box-shadow(inset 0px 1px 0px 0px #006184);
-    /*background: #006184;*/
-		/*background: #0084B0;*/
-		/*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
 		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
   }
 }
 
 button, .button, .button.form-submit, button.form-submit, #edit-submit, #edit-continue, button.disabled, button[disabled], .button.disabled, .button[disabled] {
   @include global-button;
-	/*background-color: #0084B0;
-	  border: 1px solid #0D6785;*/
 }
 
 button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-search-close-button, button.sbac-cancel-blue, .button.devtools-dialog-close, #gate-keeper-cancel, #review-cancel, #edit-delete-overlay, #edit-cancel-overlay, #post-cancel, div.ctools-modal-content a.close, a.remove, a.fake-cancel {
   @include global-button-negative;
-/*	@include global-button;
-  border: 1px solid #4D5457;
-	margin-bottom: 10px;
-	margin-right: 30px !important;
-	padding-left: 40px;
-	background: #6E7379 url(../images/buttonCancel.png) no-repeat 15px 8px;
-	*/
 	&:hover {
 		 @include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 	}
@@ -321,9 +305,6 @@ button.small, .button.small {
 }
 
 button:hover, button:focus, .button:hover, .button:focus {
-	/*background-color: #0084B0 !important;*/
-	/*background-color: #2AA549 !important;*/
-	/*background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
 	@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
 }
 
@@ -334,6 +315,11 @@ button.gray:hover, .button.gray:hover, button.gray:active, .button.gray:active, 
 button.red:hover, .button.red:hover, button.red:active, .button.red:active, button.red:focus, .button.red:focus {
   background-color: #8A1538;
 }
+
+button.blue:hover, .button.blue:hover, button.blue:active, .button.blue:active, button.blue:focus, .button.blue:focus {
+  background-color: #0084B0;
+}
+
 
 .alert-box {
   @include border-radius (12px);
@@ -404,28 +390,7 @@ html.js {
 /* -----------------------------------------
   Vertical Tabs
   ------------------------------------------ */
-/*.vertical-tabs ul.vertical-tabs-list {
-  li {
-    a {
-      &:hover{
-        background:#bfd8e5;
-        text-decoration: none !important;
-      }
-      color: #717880;
-      background:white;
-    }
 
-    &.selected {
-      a {
-        background: #0085ad;
-
-        strong, span {
-          color: white;
-        }
-      }
-    }
-  }
-}*/
 .vertical-tabs ul.vertical-tabs-list {
 	overflow: hidden;
 	position: relative;
@@ -530,6 +495,7 @@ div.vertical-tabs {
 		border-radius:5px;
 		background-color: #FFFFFF;
 }
+
 /* -----------------------------------------
    Forms
    ----------------------------------------- */
@@ -661,11 +627,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
 			float: left;
 			top: 18px;
 			margin-left: 8px;
-
-			/*&:hover {
-							background-color: transparent;
-							background-image: none;
-						}*/
 		}
 
   .user-nav {
