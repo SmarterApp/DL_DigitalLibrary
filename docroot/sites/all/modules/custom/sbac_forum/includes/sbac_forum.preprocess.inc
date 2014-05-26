@@ -6,6 +6,10 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   drupal_add_js('/misc/form.js');
   drupal_add_js('/misc/collapse.js');
 
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
+
   global $user;
   $node_data = entity_metadata_wrapper('node', $vars['node']);
   $forum_term = $node_data->field_topic_forum_parent->value();
@@ -433,9 +437,6 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
     }
     else {
-      ctools_include('ajax');
-      ctools_include('modal');
-      ctools_modal_add_js();
       $js_settings_flag = array(
         'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
           'modalSize' => array(
