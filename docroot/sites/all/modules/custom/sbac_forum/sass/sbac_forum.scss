@@ -1654,6 +1654,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
 	    display: block;
 	    margin: 0 0 15px;
+			line-height: 20px;
 	    /*overflow: hidden;*/
 	    padding: 15px 114px 15px 15px;
 	    position: relative;
@@ -1694,9 +1695,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    display: block;
 		    float: left;
 		    font-size: 13px;
-		    height: 20px;
-		    line-height: 20px;
-		    margin: 4px 10px 0 0;
+		    margin: 1px 10px 0 0;
 		    padding: 0 10px 0 0;
 			}
 
@@ -2879,6 +2878,10 @@ View Topic Page, Comment Page
 			    text-decoration: none;
 				}
 				
+				a:hover {
+					text-decoration: underline;
+				}
+				
 				a:hover, a:hover:before {
 					opacity: 1;
 				}
@@ -3416,6 +3419,10 @@ h2.title {
 		    text-decoration: none;
 			}
 			
+			a[id*="sbac-forum-flag-post"]:hover {
+				text-decoration: underline;
+			}
+			
 			a[id*="sbac-forum-flag-post"]:hover,
 			a[id*="sbac-forum-flag-post"]:hover:before {
 				opacity: 1;
@@ -3666,6 +3673,7 @@ h2.title {
 		    box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
 		    display: block;
 		    margin: 0 0 15px;
+				line-height: 20px;
 		    padding: 15px 114px 15px 15px;
 		    position: relative;
 		
