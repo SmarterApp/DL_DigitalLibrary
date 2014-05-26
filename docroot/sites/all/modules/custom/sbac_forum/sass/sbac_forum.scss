@@ -2188,10 +2188,18 @@ form[id*='sbac-flag-collaboration-form']{
 	#sbac-flag-optional-comment {
 		margin-top: 5px;
 		
+		.form-type-textarea {width: 560px;}
+		
 		textarea[id*="edit-comment"] {
 			margin-top: 2px;
+			width: 560px;
+		}
+		
+		#edit-comment-counter.counter {
+			top: 16px;
 		}
 	}
+		
 	#form-item-footer {
 		
 		margin-top: 15px;
