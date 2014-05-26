@@ -122,31 +122,36 @@
   text-transform: uppercase;
 }
 
-/* line 135, ../sass/taskit.scss */
+/* line 136, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-forum-cont,
 .taskit-interval.interval-yesterday .taskit-forum-cont,
+.taskit-interval.interval-older .taskit-forum-cont,
 .taskit-interval.interval-prior .taskit-forum-cont {
   padding: 10px;
 }
-/* line 139, ../sass/taskit.scss */
+/* line 140, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-forum-cont .taskit-content-toggle,
 .taskit-interval.interval-today .taskit-forum-cont .taskit-topic-removed-message,
 .taskit-interval.interval-yesterday .taskit-forum-cont .taskit-content-toggle,
 .taskit-interval.interval-yesterday .taskit-forum-cont .taskit-topic-removed-message,
+.taskit-interval.interval-older .taskit-forum-cont .taskit-content-toggle,
+.taskit-interval.interval-older .taskit-forum-cont .taskit-topic-removed-message,
 .taskit-interval.interval-prior .taskit-forum-cont .taskit-content-toggle,
 .taskit-interval.interval-prior .taskit-forum-cont .taskit-topic-removed-message {
   margin-top: 3px;
 }
-/* line 143, ../sass/taskit.scss */
+/* line 144, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-forum-cont a,
 .taskit-interval.interval-yesterday .taskit-forum-cont a,
+.taskit-interval.interval-older .taskit-forum-cont a,
 .taskit-interval.interval-prior .taskit-forum-cont a {
   color: #0085AD;
   font-weight: bold;
 }
-/* line 149, ../sass/taskit.scss */
+/* line 150, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-timestamp,
 .taskit-interval.interval-yesterday .taskit-timestamp,
+.taskit-interval.interval-older .taskit-timestamp,
 .taskit-interval.interval-prior .taskit-timestamp {
   text-align: right;
   margin-right: 30px;
@@ -154,7 +159,7 @@
   color: #62676E;
 }
 
-/* line 158, ../sass/taskit.scss */
+/* line 159, ../sass/taskit.scss */
 .devtools-tooltip-body .line {
   border-bottom: none;
 }
