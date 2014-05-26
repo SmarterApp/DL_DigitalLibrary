@@ -29,6 +29,8 @@
       border-bottom: 1px #ccc solid;
       font-size: 0.8em;
       position: relative;
+			float: left;
+			width: 100%;
 
       &.taskit-new {
         background: #eee;
@@ -62,13 +64,17 @@
 
       .item {
         /*padding-right: 30px;*/
+				float: left;
+				width: 100%;
 
         .taskit-content {
           background: url('/sites/all/themes/SBAC/images/arrow-right.png') 99% center no-repeat;
           color: #5a5a5a;
           display: block;
           padding: 10px;
-					line-height: 1.3;
+					line-height: 1.5;
+					float: left;
+					width: 100%;
 
           &:hover {
             background-color: #eee;
