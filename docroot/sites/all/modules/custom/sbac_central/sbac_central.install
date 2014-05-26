@@ -1204,3 +1204,10 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
     }
   }
 }
+
+/**
+ * Enable sbac_forum module
+ */
+function sbac_central_update_7081() {
+  module_enable(array('sbac_forum'));
+}
