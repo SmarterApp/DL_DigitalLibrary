@@ -404,6 +404,22 @@ function theme_sbac_favorites_user_list($variables) {
  * @param $vars
  */
 function sbac_favorites_preprocess_page(&$vars) {
+  if (user_is_logged_in()) {
+    global $user;
+    $favorites_count = sbac_favorites_get_count($user->uid);
+    $text = t('Favorites');
+    if (!$favorites_count) {
+      $favorites_count = 0;
+    }
+    $text .= ' (<span>' . $favorites_count . '</span>)';
+    $vars['user']->favorites_link = l($text, 'user', array(
+      'html' => TRUE,
+      'fragment' => 'profile-favorites',
+      'attributes' => array('title' => 'Favorites'),
+    ));
+    $vars['user']->favorites_added = '<div class="sbac-favorites-menu-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+  }
+
   if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources') {
     drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js');
     drupal_add_css(drupal_get_path('module', 'sbac_favorites') . '/css/sbac_favorites.css');

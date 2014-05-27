@@ -23,23 +23,12 @@ global $user;
   <?php if ($user->uid && !in_array('guest', $user->roles)): ?>
   <ul class="inline-list right user-nav">
     <li class="user-info">
-       <a title='<?php echo sbac_user_format_username($user); ?>' data-dropdown="drop3" href="#">
-        <?php
-          $user_item = user_load($user->uid);
-          if (isset($user_item->picture->uri)) {
-            $uri = $user_item->picture->uri;
-            $path = drupal_realpath($uri);
-            if (file_exists($path)) {
-              echo theme('image_style', array(
-                'path' => $user_item->picture->uri,
-                'style_name' => 'small',
-                'attributes' => array(
-                  'class' => 'left'
-                )
-              ));
-            }
+       <a title='<?php echo $user->full_name ?>' data-dropdown="drop3" href="#">
+       <?php
+          if (isset($user->picture->uri)) {
+            echo $user->image_thumb;
           }
-          echo sbac_user_format_username($user);
+          echo $user->full_name;
           ?>
         </a>
         <ul id="drop3" class="f-dropdown">
@@ -51,11 +40,9 @@ global $user;
         <?php
         $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
         $text = t('Notifications');
-
         if ($taskit_counts['_no_role_'] != 0) {
           $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
         }
-
         echo l($text, 'user', array(
           'html' => TRUE,
           'fragment' => 'profile-notifications',
@@ -81,18 +68,8 @@ global $user;
     <li>
       <div class="sbac-favorites-menu">
       <?php
-        $favorites_count = sbac_favorites_get_count($user->uid);
-        $text = t('Favorites');
-        if (!$favorites_count) {
-          $favorites_count = 0;
-        }
-        $text .= ' (<span>' . $favorites_count . '</span>)';
-        echo l($text, 'user', array(
-          'html' => TRUE,
-          'fragment' => 'profile-favorites',
-          'attributes' => array('title' => 'Favorites'),
-        ));
-        echo '<div class="sbac-favorites-menu-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+        echo $user->favorites_link;
+        echo $user->favorites_added;
       ?>
       </div>
     </li>
@@ -264,38 +241,3 @@ global $user;
     </div>
   </div>
 </div>
-
-<?php //if (user_is_logged_in()) : ?>
-<!--  <div style='display:none;'>-->
-<!--    <div id="helpmodal">-->
-<!--      --><?php
-//      if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
-<!--      <div class="sort-link"><a title="Reorganize Help" href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>-->
-<!--    --><?php //endif; ?>
-<!--      <h2 class="helpmodal-title">Welcome to the Smarter Balanced Digital Library</h2>-->
-<!---->
-<!--      <p class="helpmodal-desc">The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate-->
-<!--        resources and collaborate. To learn more, click through the various welcome tutorials provided below:</p>-->
-<!--      --><?php //print views_embed_view('help_topics', 'block'); ?>
-<!--      --><?php //$form = drupal_get_form('sbac_help_disable_help'); ?>
-<!--      --><?php //print drupal_render($form); ?>
-<!--    </div>-->
-<!--    <div id="resource-help-box">-->
-<!--      <h2 class="resource-help-box-title">You're About to Create a Resource</h2>-->
-<!---->
-<!--      <div id="resource-help-body">-->
-<!--        --><?php //print views_embed_view('resource_tutorial', 'resource_tutorial'); ?>
-<!--      </div>-->
-<!--      <a title="Continue" class="otherClose button right" href="#">Continue</a>-->
-<!--      <a title="Cancel" class="button right secondary backButton" href="#">Cancel</a>-->
-<!--    </div>-->
-<!--  <div id="current-help-topic-modal">-->
-<!--    <a class= "helpBack small button left" >Back</a>-->
-<!--      <h2><span id="sbac-help-title">Welcome to the Smarter Balanced Digital Library</span></h2>-->
-<!--      <div id="current-help-topic">-->
-<!--      </div>-->
-<!--      --><?php //$form = drupal_get_form('sbac_help_disable_help'); ?>
-<!--      --><?php //print drupal_render($form); ?>
-<!--    </div>-->
-<!--  </div>-->
-<?php //endif; ?>
