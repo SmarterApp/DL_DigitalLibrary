@@ -715,7 +715,7 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
       $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
       $vars['review'] = t('Have you used this resource? If so, please take a moment to !review  !rating !count ',
         array(
-          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click()">review it</a>',
+          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click(); void(0);">review it</a>',
           '!rating' => sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($resource_id)),
           '!count' => '<span class="collab-num-participants">' . ($collab_count = sbac_resource_get_rating_count($resource_id)) . '</span> ' . ($collab_count == 1 ? 'reviewer' : 'reviewers'),
         ));
