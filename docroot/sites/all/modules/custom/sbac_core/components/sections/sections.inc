@@ -17,6 +17,16 @@ function sections_preprocess(&$vars) {
       $section['use-ajax'] = '';
     }
 
+    if (!isset($section['source'])) {
+      $section['source'] = NULL;
+    }
+    if (!isset($section['tab'])) {
+      $section['tab'] = NULL;
+    }
+    if (!isset($section['nid'])) {
+      $section['nid'] = NULL;
+    }
+
     // remove properties
     if ($key{0} == '#') {
       unset($vars['sections'][$key]);

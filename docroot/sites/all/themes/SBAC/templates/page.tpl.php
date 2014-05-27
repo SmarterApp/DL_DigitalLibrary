@@ -1,6 +1,3 @@
-<?php
-global $user;
-?>
 <!-- Header and Nav -->
 <div class="page-wrap">
 <nav class="top-bar main-top clearfix">

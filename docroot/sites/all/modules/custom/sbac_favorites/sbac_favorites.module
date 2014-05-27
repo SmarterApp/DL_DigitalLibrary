@@ -271,44 +271,46 @@ function sbac_favorites_user_list($form, &$form_state, $favorites) {
 
   foreach ($favorites as $favorite) {
     $resource = node_load($favorite->nid);
-    $element = array();
+    if ($resource) {
+      $element = array();
 
-    $element['name'] = array(
-      '#markup' => l($resource->title, $resource->path['alias']),
-    );
+      $element['name'] = array(
+        '#markup' => l($resource->title, $resource->path['alias']),
+      );
 
-    $term = taxonomy_term_load($resource->field_focus['und'][0]['tid']);
-    $type_value = '';
-    switch ($term->name) {
-      case 'Combination of Instructional and Professional Learning Resource';
-        $type_value = 'Combination';
-        break;
-      case 'Professional Learning Resource';
-        $type_value = 'Professional Learning';
-        break;
-      case 'Instructional Resource';
-        $type_value = 'Instructional';
-        break;
+      $term = taxonomy_term_load($resource->field_focus['und'][0]['tid']);
+      $type_value = '';
+      switch ($term->name) {
+        case 'Combination of Instructional and Professional Learning Resource';
+          $type_value = 'Combination';
+          break;
+        case 'Professional Learning Resource';
+          $type_value = 'Professional Learning';
+          break;
+        case 'Instructional Resource';
+          $type_value = 'Instructional';
+          break;
+      }
+      $element['type'] = array(
+        '#markup' => $type_value,
+      );
+      $element['created'] = array(
+        '#markup' => date('M jS g:ia', $favorite->created),
+      );
+      $element['delete'] = array(
+        '#markup' => '<i class="general foundicon-trash" "=""></i><a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $favorite->uid . '">Delete</a>',
+      );
+
+      $element['weight'] = array(
+        '#type' => 'weight',
+        '#title' => t('Weight'),
+        '#default_value' => $favorite->weight,
+        '#delta' => 100,
+        '#title_display' => 'invisible',
+      );
+
+      $form['favorites'][$favorite->nid . ':' . $favorite->uid] = $element;
     }
-    $element['type'] = array(
-      '#markup' => $type_value,
-    );
-    $element['created'] = array(
-      '#markup' => date('M jS g:ia', $favorite->created),
-    );
-    $element['delete'] = array(
-      '#markup' => '<i class="general foundicon-trash" "=""></i><a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" nid="' . $resource->nid . '" uid="' . $favorite->uid . '">Delete</a>',
-    );
-
-    $element['weight'] = array(
-      '#type' => 'weight',
-      '#title' => t('Weight'),
-      '#default_value' => $favorite->weight,
-      '#delta' => 100,
-      '#title_display' => 'invisible',
-    );
-
-    $form['favorites'][$favorite->nid . ':' . $favorite->uid] = $element;
   }  
 
   $form['submit'] = array(

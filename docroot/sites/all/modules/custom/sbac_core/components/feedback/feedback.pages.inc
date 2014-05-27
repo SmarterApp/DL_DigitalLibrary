@@ -87,7 +87,6 @@ function resource_feedback_page($node) {
     // on click, send source and tab ('feedback', 'about')
     // to ajax callback, render factory using source and tab
     // place into content div for that tab....
-
     if ($sections = $factory->getSections()) {
       // we don't want to display the Edit Resource Tags section if the
       // Publisher doesn't have access to the Post process

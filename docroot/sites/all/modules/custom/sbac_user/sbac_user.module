@@ -1126,12 +1126,13 @@ function sbac_user_cron() {
 function sbac_user_preprocess_page(&$vars) {
   if (isset($vars['user'])) {
     $user = $vars['user'];
-    sbac_user_preprocess_username($vars, $user);
-    sbac_user_preprocess_favorites($vars, $user);
-    sbac_user_preprocess_notifications($vars, $user);
+    $account = user_load($user->uid, TRUE);
+    sbac_user_preprocess_username($vars, $account);
+    sbac_user_preprocess_favorites($vars, $account);
+    sbac_user_preprocess_notifications($vars, $account);
     global $base_url;
     $vars['home_url'] = $base_url;
-    if ($user->uid && in_array(SBAC_SHARE_GUEST, $user->roles)) {
+    if ($user->uid && in_array(SBAC_SHARE_GUEST, $account->roles)) {
       $vars['home_url'] = '#';
     }
   }
