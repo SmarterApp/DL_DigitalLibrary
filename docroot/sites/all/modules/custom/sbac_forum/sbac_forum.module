@@ -1891,7 +1891,7 @@ function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description, $d
  * Implements hook_workbench_moderation_transition()
  */
 function sbac_forum_workbench_moderation_transition($node, $previous_state, $new_state) {
-  if ($node->type == 'resource' && $new_state == 'published' && $node->sticky == 1) {
+  if ($node->type == 'resource' && $new_state == 'published') {
     sbac_forum_create_resource_forum($node->nid);
   }
 }
