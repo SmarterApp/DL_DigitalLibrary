@@ -193,9 +193,11 @@ function sbac_favorites_get_favorites_list($uid) {
  */
 function sbac_favorites_module_implements_alter(&$implementations, $hook) {
   if ($hook == 'user_view') {
-    $group = $implementations['sbac_favorites'];
-    unset($implementations['sbac_favorites']);
-    $implementations['sbac_favorites'] = $group;
+    if (isset($implementations['sbac_favorites'])) {
+      $group = $implementations['sbac_favorites'];
+      unset($implementations['sbac_favorites']);
+      $implementations['sbac_favorites'] = $group;
+    }
   }
 }
 

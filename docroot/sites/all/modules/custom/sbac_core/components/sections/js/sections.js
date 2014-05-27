@@ -1,6 +1,6 @@
 (function($) {
 
-var ajax_request = null;
+var clicked = false;
 
 Drupal.behaviors.sections = {
   attach: function (context, settings) {
@@ -11,11 +11,22 @@ Drupal.behaviors.sections = {
     });
 
     // check for tab hash and switch the active tab
+    var hash = window.location.hash;
     if (window.location.hash) {
-      $('body').once('switch-section', function() {
-        var hash = window.location.hash;
-        Drupal.behaviors.sections.switch_tab(hash);
-      });
+      if (hash == '#profile-favorites' && clicked == false) {
+        $('.section-favorites a').click();
+        clicked = true;
+      }
+      else if (hash == '#profile-notifications' && clicked == false) {
+        $('.section-notifications a').click();
+        clicked = true;
+      }
+      else {
+        $('body').once('switch-section', function() {
+          var hash = window.location.hash;
+          Drupal.behaviors.sections.switch_tab(hash);
+        });
+      }
     }
 
     // add support for disabling sections via class name
