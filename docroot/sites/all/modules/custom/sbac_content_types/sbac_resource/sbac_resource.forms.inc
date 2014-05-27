@@ -21,16 +21,13 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     drupal_set_title('');
     $form['#id'] = 'sbac-resource-form';
 
-    $form['#attached']['js'] = array(
-      drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js',
-      drupal_get_path('module', 'sbac_alignment') . '/js/sbac_alignment.js',
-      drupal_get_path('module', 'ctools') . "/js/ajax-responder.js",
-      libraries_get_path('jquery.more') . '/jquery.more.js',
-    );
-    $form['#attached']['css'] = array(
-      drupal_get_path('module','sbac_resource').'/css/sbac_resource.css',
-      libraries_get_path('jquery.more') . '/jquery.more.css',
-    );
+    $form['#attached']['js'][] = drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.form.js';
+    $form['#attached']['js'][] = drupal_get_path('module', 'sbac_alignment') . '/js/sbac_alignment.js';
+    $form['#attached']['js'][] = drupal_get_path('module', 'ctools') . "/js/ajax-responder.js";
+    $form['#attached']['js'][] = libraries_get_path('jquery.more') . '/jquery.more.js';
+
+    $form['#attached']['css'][] = drupal_get_path('module','sbac_resource').'/css/sbac_resource.css';
+    $form['#attached']['css'][] = libraries_get_path('jquery.more') . '/jquery.more.css';
 
     // Set the state in JS for later use.
     if (isset($form['#node']->workbench_moderation['current']->state)) {
@@ -38,10 +35,6 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     }
     else {
       drupal_add_js(array('resource_workbench_current_state' => 'creation'), 'setting');
-    }
-
-    if (!isset($form['#node']->nid)) {
-      drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
     }
 
     // Setup the form

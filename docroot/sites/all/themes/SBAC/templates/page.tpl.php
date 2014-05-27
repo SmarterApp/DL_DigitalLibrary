@@ -97,7 +97,7 @@ global $user;
       </div>
     </li>
     <li>
-      <?php if ($help_dropdown) :?>
+      <?php if (isset($help_dropdown)) :?>
         <?php print $help_dropdown; ?>
       <?php endif; ?>
     </li>
