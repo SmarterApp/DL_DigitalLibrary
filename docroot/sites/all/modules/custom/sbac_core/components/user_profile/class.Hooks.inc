@@ -89,41 +89,10 @@ class Hooks extends \devtools\Hooks {
       );
     }
 
-    /*
-    // add activity tab
-      $activity_content = '';
-      $help_content = variable_get('user_activity_help', input_default_full_html());
-      $activity_content .= '<div id="activity">';
-      $activity_content .= '<div class="helpful-info">';
-      $activity_content .= '<h2>' . t('Helpful Information') . '</h2>';
-      $activity_content .= more_less_text(filter_text($help_content));
-      $activity_content .= '</div>';
-      $activity_content .= '</div>';
-
-      $account->content['sections']['activity'] = array(
-        'title' => t('Activity'),
-        'content' => $activity_content,
-        'disabled' => FALSE,
-      );
-    */
-
-
-
     // add notificatons tab (pulled in via taskit module)
     if (taskit_task_access($account)) {
       drupal_add_js($this->_components_path . '/taskit/js/taskit.js');
       drupal_add_css($this->_components_path . '/taskit/css/taskit.css');
-
-//      $help_content = variable_get('user_notifications_help', input_default_full_html());
-//
-//      $notifications_content = '';
-//      $notifications_content .= '<div id="notifications">';
-//      $notifications_content .= '<div class="helpful-info">';
-//      $notifications_content .= '<h2>' . t('Helpful Information') . '</h2>';
-//      $notifications_content .= more_less_text(filter_text($help_content));
-//      $notifications_content .= '</div>';
-//      $notifications_content .= taskit_page($account);
-//      $notifications_content .= '</div>';
 
       $account->content['sections']['notifications'] = array(
         'title' => t('Notifications'),

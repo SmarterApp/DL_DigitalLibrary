@@ -376,6 +376,8 @@ function sbac_core_update_projects_alter(&$projects) {
 
 /**
  * Returns the notifications content for the profile view.
+ *
+ * @return string
  */
 function sbac_core_notifications_get_html_content() {
   global $user;
