@@ -143,7 +143,7 @@ function _sbac_forum_filter_categories() {
   }
   $categories['distinctions']['terms'][] = (object) array(
     'tid' => 'Favorite',
-    'name' => 'Favorite',
+    'name' => 'Favorited',
   );
 
   $cf_value = NULL;
