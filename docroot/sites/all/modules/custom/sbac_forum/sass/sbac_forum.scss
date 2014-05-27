@@ -2140,6 +2140,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 }
 
+
 /*Drupal error message for Modal*/
 .sbac-flag-error-msg {
 	background-color: rgba(138, 21, 56, 0.1);
@@ -3559,6 +3560,41 @@ h2.title {
 	}
 }
 
+//Delete topic
+.node-type-topic {
+	#modalContent {
+		.ctools-modal-content.small {
+
+			.modal-header {
+		    box-shadow: none !important;
+
+				.modal-title {
+					font-size: 18px !important;
+				}
+			}
+
+			.modal-content {
+				padding: 0 40px !important;
+			}
+
+			.edit-delete-topic-overlay {
+				line-height: 20px;
+			}
+
+			.edit-delete-topic-overlay:before {
+				content:"\e632";
+			  display: inline-block;
+			  font-family: 'sbac';
+			  font-size: 20px;
+			  font-weight: normal;
+			  margin-right: 7px;
+			  position: relative;
+			  top: 2px;
+				left: 0;
+			}
+		}
+	}
+}
 // --------------------- Page Forums Search ------------------------------
 .page-forums-search {
 	

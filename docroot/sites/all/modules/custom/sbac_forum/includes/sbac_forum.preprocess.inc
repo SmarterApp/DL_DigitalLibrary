@@ -88,7 +88,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 560,
-          'height' => 260,
+          'height' => 200,
         ),
         'modalTheme' => 'CtoolSbacForumDeleteTopic',
       ),
