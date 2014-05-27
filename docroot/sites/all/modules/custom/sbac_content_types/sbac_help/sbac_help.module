@@ -134,7 +134,7 @@ function sbac_help_get_node_content() {
       $node_view = node_view($node, $view_mode = 'full', $langcode = NULL);
       $data = array(
         'results' => array(
-          'body' => drupal_render($node_view['body']),
+          'body' => '<a class= "helpBack small button left" >Back</a>' . drupal_render($node_view['body']),
           'title' => $node->title
         )
       );
@@ -278,12 +278,15 @@ function sbac_help_welcome_tutorial_modal($js = FALSE) {
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
 
-    $title = 'Welcome to the Smarter Balanced Digital Library';
+    $title = '<h2 class="helpmodal-title">Welcome to the Smarter Balanced Digital Library</h2>';
     $form_state = array(
       'title' => $title,
       'ajax' => TRUE,
     );
     $output = ctools_modal_form_wrapper('sbac_help_disable_help', $form_state);
+    $rendered_form = $output[0]['output'];
+    $final_form = '<div class="sbac-help-topics">' . $rendered_form . '</div>';
+    $output[0]['output'] =  $final_form . '<div class="sbac-help-node-content"></div>';
     // This means the form has been executed
     if (!empty($form_state['executed'])) {
       $output = array();
@@ -310,12 +313,14 @@ function sbac_help_welcome_tutorial_modal($js = FALSE) {
  */
 function sbac_help_disable_help($form, $form_state) {
   global $user;
+
+  $form['prefix']['#markup'] = '<div class="sbac-help-container">';
   if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) {
     $output = '<div class="sort-link"><a title="Reorganize Help" href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>';
     $form['admin_button']['#markup'] = $output;
   }
-  $form['message']['#markup'] = t('"The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate resources and collaborate. To learn more, click through the various welcome tutorials provided below:');
-  $form['view']['#markup'] = views_embed_view('help_topics', 'block');
+  $form['message']['#markup'] = '<p class="helpmodal-desc">' . t('The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate resources and collaborate. To learn more, click through the various welcome tutorials provided below:') . '</p>';
+  $form['view']['#markup'] = '<div class="sbac-help-modal-view">' . views_embed_view('help_topics', 'block') . '</div>';
   $form['disable_help'] = array (
     '#type' => 'checkbox',
     '#title' => t('Do not show this screen after next Log in') . '<br /><i>' . t('View this screen again by selecting Welcome Tutorial from Help on top menu') . '</i>',
@@ -323,6 +328,7 @@ function sbac_help_disable_help($form, $form_state) {
   $form['submit'] = array (
     '#type' => 'submit',
     '#value' => 'Close Welcome Tutorial',
+    '#suffix' => '</div>',
   );
   if (!isset($user->data['disable_help'])) {
     $form['disable_help']['#default_value'] = 0;
