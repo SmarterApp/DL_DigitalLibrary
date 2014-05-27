@@ -134,7 +134,7 @@ function sbac_help_get_node_content() {
       $node_view = node_view($node, $view_mode = 'full', $langcode = NULL);
       $data = array(
         'results' => array(
-          'body' => '<a class= "helpBack small button left" >Back</a>' . drupal_render($node_view['body']),
+          'body' => drupal_render($node_view['body']),
           'title' => $node->title
         )
       );
@@ -286,7 +286,7 @@ function sbac_help_welcome_tutorial_modal($js = FALSE) {
     $output = ctools_modal_form_wrapper('sbac_help_disable_help', $form_state);
     $rendered_form = $output[0]['output'];
     $final_form = '<div class="sbac-help-topics">' . $rendered_form . '</div>';
-    $output[0]['output'] =  $final_form . '<div class="sbac-help-node-content"></div>';
+    $output[0]['output'] =  $final_form . '<div class="sbac-modal-node-content"><div class="sbac-help-node-content" style="display:none"></div><a class="sbac-help-back helpBack small button left" >Back</a></div>';
     // This means the form has been executed
     if (!empty($form_state['executed'])) {
       $output = array();

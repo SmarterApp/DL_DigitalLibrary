@@ -20,19 +20,42 @@
 
   Drupal.behaviors.sbac_help_modal = {
     attach: function (context, settings) {
+      $('.sbac-help-back').hide();
       $('#modal-content .views-field-field-help-icon a').click(function (e) {
         var nid = $(this).parents('.views-field-field-help-icon').next('.views-field-title').next('.views-field-nid').find('.field-content').html();
-        sbacHelpAjax(nid);
+        Drupal.behaviors.sbac_help_modal.sbacHelpAjax(nid);
         return false;
       });
 
       $('#modal-content .views-field-title a').click(function (e) {
         var nid = $(this).parents('.views-field-title').next('.views-field-nid').find('.field-content').html();
-        sbacHelpAjax(nid);
+        Drupal.behaviors.sbac_help_modal.sbacHelpAjax(nid);
         return false;
       });
 
-     function initTextify(){
+      $('.sbac-help-back').click( function () {
+        $('.sbac-help-topics').show();
+        $('.sbac-help-node-content').hide().empty();
+        $('.sbac-help-back').hide();
+        $('.helpmodal-title').html('Welcome to the Smarter Balanced Digital Library');
+        return false;
+      });
+    },
+    sbacHelpAjax: function (nid) {
+      $.ajax({
+        url: Drupal.settings.basePath + 'get-node-content',
+        data: {nid: nid},
+        success: function (data, textStatus, jqXHR) {
+          var response = jQuery.parseJSON(data);
+          $('.sbac-help-topics').hide();
+          $('.sbac-help-node-content').show().html(response.results.body);
+          $('.sbac-help-back').show();
+          $('.helpmodal-title').html(response.results.title);
+          Drupal.behaviors.sbac_help_modal.initTextify();
+        }
+      });
+    },
+    initTextify: function () {
       $('.sbac-help-node-content')
         .textify({
           numberOfColumn: 2,
@@ -40,24 +63,9 @@
           padding: 32,
           width: "auto",
           height: "400",
-          showArrows : true,
+          showArrows: true,
           showNavigation: true
         });
-      }
-
-      function sbacHelpAjax(nid) {
-        $.ajax({
-          url: Drupal.settings.basePath + 'get-node-content',
-          data: {nid: nid},
-          success: function (data, textStatus, jqXHR) {
-            var response = jQuery.parseJSON(data);
-            $('.sbac-help-topics').hide();
-            $('.sbac-help-node-content').html(response.results.body);
-            $('.helpmodal-title').html(response.results.title);
-            initTextify();
-          }
-        });
-      }
     }
   };
 
