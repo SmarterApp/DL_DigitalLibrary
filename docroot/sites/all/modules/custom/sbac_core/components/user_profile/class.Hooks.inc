@@ -85,6 +85,7 @@ class Hooks extends \devtools\Hooks {
         'disabled' => FALSE,
         'source' => 'people',
         'tab' => 'account',
+        'section_loaded' => 'section-loaded',
       );
     }
 

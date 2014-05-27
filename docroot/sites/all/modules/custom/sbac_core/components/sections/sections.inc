@@ -36,14 +36,16 @@ function sections_preprocess(&$vars) {
     $class = '';
     $class .= 'section-' . strtolower(str_replace(' ', '-', $section['title']));
     if (isset($section['class'])) {
-      $class = $section['class'];
+      $class .= ' ' . $section['class'];
     }
-
+    if (isset($section['content']) && $section['content'] != NULL) {
+      $class .= ' section-loaded';
+    }
     if (isset($section['disabled']) && $section['disabled']) {
       $class .= ' disabled';
     }
-
     $section['class'] = $class;
+    $section['id'] = 'section-' . strtolower(str_replace(' ', '-', $section['title']));
   }
 }
 
