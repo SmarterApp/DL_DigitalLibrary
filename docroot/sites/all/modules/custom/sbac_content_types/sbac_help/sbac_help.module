@@ -166,6 +166,7 @@ function sbac_help_form_alter(&$form, &$form_state, $form_id) {
 
   if ($form_id == 'resource_node_form') {
     $form['#attached']['js'][] = drupal_get_path('module', 'sbac_help') . '/js/sbac_help.resource.js';
+    $form['#attached']['css'][] = drupal_get_path('module', 'sbac_help') . '/css/help.css';
     $form['actions']['resource_help_modal'] = array(
       '#markup' => l(t('Resource Help Modal (modal)'), 'sbac-help/nojs/resource-help-modal', array(
         'attributes' => array(
@@ -407,10 +408,12 @@ function sbac_help_resource_help_form($form, $form_state) {
   $form['submit'] = array (
     '#type' => 'submit',
     '#value' => 'Continue',
+    '#attributes' => array('class' => array('otherClose', 'button', 'right')),
   );
   $form['cancel'] = array (
     '#type' => 'submit',
     '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'right', 'secondary', 'backButton')),
   );
   return $form;
 }
