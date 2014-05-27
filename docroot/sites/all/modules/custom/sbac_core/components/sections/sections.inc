@@ -57,14 +57,24 @@ function section_get_content() {
     print ajax_render($output);
   }
 
-  $node = node_load($_GET['nid']);
-  module_load_include('inc', 'sbac_core', '/components/sections/includes/class.Factory');
-  $factory = new \sbac_core\components\sections\Factory($node);
   $source = $_GET['source'];
   $tab = $_GET['tab'];
-  $section = $factory->get($source, $tab);
-  if ($section && $section->access()) {
-    $content = $section->getContent();
+  if ($source == 'people') {
+    if ($tab == 'notifications') {
+      $content = sbac_core_notifications_get_html_content();
+    }
+    elseif ($tab == 'favorites') {
+      $content = sbac_favorites_get_html_content();
+    }
+  }
+  else {
+    $node = node_load($_GET['nid']);
+    module_load_include('inc', 'sbac_core', '/components/sections/includes/class.Factory');
+    $factory = new \sbac_core\components\sections\Factory($node);
+    $section = $factory->get($source, $tab);
+    if ($section && $section->access()) {
+      $content = $section->getContent();
+    }
   }
 
   $output[] = ajax_command_invoke('#' . $_GET['section_id'], 'empty');
