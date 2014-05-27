@@ -17,17 +17,17 @@
 
   Drupal.behaviors.helpTextify = {
     attach: function (context, settings) {
-      function initTextify(){
-        jQuery('#current-help-topic article .body').textify({
-          numberOfColumn: 2,
-          margin: 20,
-          padding: 32,
-          width: "auto",
-          height: "400",
-          showArrows : true,
-          showNavigation: true
-        });
-      }
+//      function initTextify(){
+//        jQuery('#current-help-topic article .body').textify({
+//          numberOfColumn: 2,
+//          margin: 20,
+//          padding: 32,
+//          width: "auto",
+//          height: "400",
+//          showArrows : true,
+//          showNavigation: true
+//        });
+//      }
 
       // if (jQuery().foundation) {
       //   jQuery('#current-help-topic-modal').foundation('reveal', {

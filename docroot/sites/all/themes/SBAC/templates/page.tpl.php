@@ -248,18 +248,14 @@ global $user;
         print render($page['bottom_menu']);
       }
       ?>
+      <?php if (isset($welcome_tutorial_modal_button)) : ?>
+        <?php echo $welcome_tutorial_modal_button; ?>
+      <?php endif; ?>
       <?php if ($user && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
       <ul class="footer-links inline-list right">
         <li>
-          <?php if (user_is_logged_in() && !in_array('guest', $user->roles)) : ?>
-          <div class="footer-help">
-            <a title="Help Menu" class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
-            <ul id="drop2" class="f-dropdown" data-dropdown-content>
-              <li><a title="Welcome Tutorial" href="#helpmodal" class="help-modal">Welcome Tutorial</a></li>
-              <li><?php print l(t('Glossary'), 'glossary', array('absolute' => TRUE, 'attributes' => array('title' => 'Glossary'))); ?></li>
-              <li><a title='Help Topics' href="help-topics">Help Topics</a></li>
-            </ul>
-          </div>
+          <?php if (isset($help_dropdown_footer)) : ?>
+            <?php echo $help_dropdown_footer; ?>
           <?php endif; ?>
         </li>
         <li><a title="Terms of Service" class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
@@ -269,37 +265,37 @@ global $user;
   </div>
 </div>
 
-<?php if (user_is_logged_in()) : ?>
-  <div style='display:none;'>
-    <div id="helpmodal">
-      <?php
-      if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
-      <div class="sort-link"><a title="Reorganize Help" href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>
-    <?php endif; ?>
-      <h2 class="helpmodal-title">Welcome to the Smarter Balanced Digital Library</h2>
-
-      <p class="helpmodal-desc">The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate
-        resources and collaborate. To learn more, click through the various welcome tutorials provided below:</p>
-      <?php print views_embed_view('help_topics', 'block'); ?>
-      <?php $form = drupal_get_form('sbac_help_disable_help'); ?>
-      <?php print drupal_render($form); ?>
-    </div>
-    <div id="resource-help-box">
-      <h2 class="resource-help-box-title">You're About to Create a Resource</h2>
-
-      <div id="resource-help-body">
-        <?php print views_embed_view('resource_tutorial', 'resource_tutorial'); ?>
-      </div>
-      <a title="Continue" class="otherClose button right" href="#">Continue</a>
-      <a title="Cancel" class="button right secondary backButton" href="#">Cancel</a>
-    </div>
-  <div id="current-help-topic-modal">
-    <a class= "helpBack small button left" >Back</a>
-      <h2><span id="sbac-help-title">Welcome to the Smarter Balanced Digital Library</span></h2>
-      <div id="current-help-topic">
-      </div>
-      <?php $form = drupal_get_form('sbac_help_disable_help'); ?>
-      <?php print drupal_render($form); ?>
-    </div>
-  </div>
-<?php endif; ?>
+<?php //if (user_is_logged_in()) : ?>
+<!--  <div style='display:none;'>-->
+<!--    <div id="helpmodal">-->
+<!--      --><?php
+//      if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
+<!--      <div class="sort-link"><a title="Reorganize Help" href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>-->
+<!--    --><?php //endif; ?>
+<!--      <h2 class="helpmodal-title">Welcome to the Smarter Balanced Digital Library</h2>-->
+<!---->
+<!--      <p class="helpmodal-desc">The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate-->
+<!--        resources and collaborate. To learn more, click through the various welcome tutorials provided below:</p>-->
+<!--      --><?php //print views_embed_view('help_topics', 'block'); ?>
+<!--      --><?php //$form = drupal_get_form('sbac_help_disable_help'); ?>
+<!--      --><?php //print drupal_render($form); ?>
+<!--    </div>-->
+<!--    <div id="resource-help-box">-->
+<!--      <h2 class="resource-help-box-title">You're About to Create a Resource</h2>-->
+<!---->
+<!--      <div id="resource-help-body">-->
+<!--        --><?php //print views_embed_view('resource_tutorial', 'resource_tutorial'); ?>
+<!--      </div>-->
+<!--      <a title="Continue" class="otherClose button right" href="#">Continue</a>-->
+<!--      <a title="Cancel" class="button right secondary backButton" href="#">Cancel</a>-->
+<!--    </div>-->
+<!--  <div id="current-help-topic-modal">-->
+<!--    <a class= "helpBack small button left" >Back</a>-->
+<!--      <h2><span id="sbac-help-title">Welcome to the Smarter Balanced Digital Library</span></h2>-->
+<!--      <div id="current-help-topic">-->
+<!--      </div>-->
+<!--      --><?php //$form = drupal_get_form('sbac_help_disable_help'); ?>
+<!--      --><?php //print drupal_render($form); ?>
+<!--    </div>-->
+<!--  </div>-->
+<?php //endif; ?>
