@@ -438,11 +438,6 @@ function sbac_central_block_view($delta = '') {
   return $block;
 }
 
-function sbac_central_preprocess_block(&$vars) {
-  $var = '';
-}
-
-
 /**
  * Implements hook_block_info_alter().
  *
