@@ -227,6 +227,7 @@ function sbac_forum__ajax__delete_topic_modal_callback($js = FALSE, $term, $topi
     ctools_modal_add_js();
 
     $form_state = array(
+      'title' => t('You are about to delete this discussion topic'),
       'ajax' => TRUE,
     );
 

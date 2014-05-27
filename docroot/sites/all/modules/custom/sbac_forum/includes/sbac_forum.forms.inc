@@ -658,7 +658,7 @@ function sbac_forum_delete_topic_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>' . t('You are about to delete this discussion topic') . '</h2><p>' . t('
+    '#markup' => '<p>' . t('
     If you continue, all discusson information (including topic details and any replies) will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
   );
 

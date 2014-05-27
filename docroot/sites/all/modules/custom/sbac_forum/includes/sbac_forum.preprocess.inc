@@ -55,6 +55,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
+      drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.ctools.js");
       module_load_include('module', 'sbac_flag');
     }
     $link_ops = array(
@@ -89,6 +90,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
           'width' => 560,
           'height' => 260,
         ),
+        'modalTheme' => 'CtoolSbacForumDeleteTopic',
       ),
     );
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
@@ -715,7 +717,7 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
       $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
       $vars['review'] = t('Have you used this resource? If so, please take a moment to !review  !rating !count ',
         array(
-          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click()">review it</a>',
+          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click(); void(0);">review it</a>',
           '!rating' => sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($resource_id)),
           '!count' => '<span class="collab-num-participants">' . ($collab_count = sbac_resource_get_rating_count($resource_id)) . '</span> ' . ($collab_count == 1 ? 'reviewer' : 'reviewers'),
         ));
