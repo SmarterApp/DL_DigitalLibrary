@@ -752,22 +752,23 @@ h2.name .field {
 /* line 698, ../sass/profile.scss */
 #sbac-favorites-resource-table-drag-drop {
   margin-top: 10px;
+  width: 100%;
 }
 
-/* line 703, ../sass/profile.scss */
+/* line 704, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons button {
   float: right;
   margin-left: 20px;
   padding-left: 40px;
 }
-/* line 709, ../sass/profile.scss */
+/* line 710, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons #sbac-favorites-resource-submit:before {
   content: url("../images/icon-buttonAccept.png");
   left: 15px;
   position: absolute;
   top: 4px;
 }
-/* line 716, ../sass/profile.scss */
+/* line 717, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons #sbac-favorites-resource-cancel:before {
   content: url("../images/icon-buttonCancel.png");
   left: 15px;
