@@ -7,7 +7,6 @@
       $('.sbac-help-welcome-tutorial-modal').click( function() {
         $('#sbac-help-welcome-tutorial').click();
       });
-
       $(".flexslider").flexslider({
         animation: "slide",
         animationLoop: false,
@@ -26,13 +25,11 @@
         Drupal.behaviors.sbac_help_modal.sbacHelpAjax(nid);
         return false;
       });
-
       $('#modal-content .views-field-title a').click(function (e) {
         var nid = $(this).parents('.views-field-title').next('.views-field-nid').find('.field-content').html();
         Drupal.behaviors.sbac_help_modal.sbacHelpAjax(nid);
         return false;
       });
-
       $('.sbac-help-back').click( function () {
         $('.sbac-help-topics').show();
         $('.sbac-help-node-content').hide().empty();
