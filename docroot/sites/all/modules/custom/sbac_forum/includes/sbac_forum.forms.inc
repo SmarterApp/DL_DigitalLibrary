@@ -131,18 +131,18 @@ function _sbac_forum_filter_categories() {
   }
 
   // Our custom filters
-  $categories['distinctions']['display_name'] = 'Distinctions';
-  $categories['distinctions']['vocabulary'] = (object) array(
-    'vid' => 'distinctions'
+  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['display_name'] = 'Distinctions';
+  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['vocabulary'] = (object) array(
+    'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID
   );
   if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
-    $categories['distinctions']['terms'][] = (object) array(
-      'tid' => 'Posted with Distinction',
+    $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
+      'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
       'name' => 'Posted with Distinction',
     );
   }
-  $categories['distinctions']['terms'][] = (object) array(
-    'tid' => 'Favorite',
+  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
+    'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
     'name' => 'Favorited',
   );
 

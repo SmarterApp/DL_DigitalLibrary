@@ -16,17 +16,16 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
         if ($filter_info && sizeof($filter_info) == 2) {
           $vid = $filter_info[0];
           $tid = $filter_info[1];
-          $view->test = 'test';
           if ($vid && $tid) {
-            if ($vid == 'distinctions') {
+            if ($vid == SBAC_FORUM_FILTER_DISTINCTION_VID) {
               // These are just custom filters, they don't really exist as taxonomy terms
               switch ($tid) {
                 // We're just piggybacking the view so that the hook_views_query_alter can see them and join the appropriate tables.
-                case 'Posted with Distinction':
-                  $view->custom_filters[] = 'distinction';
+                case SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID:
+                  $view->custom_filters[] = SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_VIEWS_FILTER;
                   break;
-                case 'Favorite':
-                  $view->custom_filters[] = 'favorite';
+                case SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID:
+                  $view->custom_filters[] = SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_VIEWS_FILTER;
                   break;
               }
             }
@@ -345,7 +344,7 @@ function sbac_forum_views_query_alter(&$view, &$query) {
     if (!empty($view->custom_filters)) {
       foreach ($view->custom_filters as $filter) {
         switch ($filter) {
-          case 'favorite':
+          case SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_VIEWS_FILTER:
             // create the join object. FAVORITES
             $join = new views_join;
             $join->table = 'sbac_favorites';
@@ -374,7 +373,7 @@ function sbac_forum_views_query_alter(&$view, &$query) {
               $query->add_where($fav_condition_group, 'sbac_favorites.uid', $user->uid, '=');
             }
             break;
-          case 'distinction':
+          case SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_VIEWS_FILTER:
             $join = new views_join();
             $join->table = 'node';
             $join->left_table = 'field_data_field_forum_resource_ref';

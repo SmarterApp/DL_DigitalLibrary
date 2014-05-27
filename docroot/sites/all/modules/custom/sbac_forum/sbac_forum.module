@@ -52,6 +52,13 @@ define('SBAC_FORUM_DEFAULT_FORUM_1_DESC', 'Have you used this resource?  Please 
 define('SBAC_FORUM_DEFAULT_FORUM_2_TITLE', 'Suggested Modifications to Support a Range of Learners');
 define('SBAC_FORUM_DEFAULT_FORUM_2_DESC', 'How have you modified this resource to differentiate for a range of learners?  Please share your ideas.');
 
+define('SBAC_FORUM_FILTER_DISTINCTION_CATEGORY', 'distinctions');
+define('SBAC_FORUM_FILTER_DISTINCTION_VID', 'distinctions');
+define('SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID', 'Posted with Distinction');
+define('SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID', 'Favorite');
+define('SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_VIEWS_FILTER', 'favorite');
+define('SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_VIEWS_FILTER', 'distinction');
+
 /**
  * =============================================================================
  *
