@@ -90,7 +90,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
           'width' => 560,
           'height' => 200,
         ),
-        'modalTheme' => 'CtoolSbacForumDeleteTopic',
+        'modalTheme' => 'CtoolSbacForumModal',
       ),
     );
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
