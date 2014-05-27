@@ -1125,20 +1125,71 @@ function sbac_user_cron() {
  */
 function sbac_user_preprocess_page(&$vars) {
   if (isset($vars['user'])) {
-    $user_item = $vars['user'];
-    if (isset($user_item->picture->uri)) {
-      $uri = $user_item->picture->uri;
-      $path = drupal_realpath($uri);
-      if (file_exists($path)) {
-        $vars['user']->image_thumb = theme('image_style', array(
-          'path' => $user_item->picture->uri,
-          'style_name' => 'small',
-          'attributes' => array(
-            'class' => 'left'
-          )
-        ));
-      }
+    $user = $vars['user'];
+    sbac_user_preprocess_username($vars, $user);
+    sbac_user_preprocess_favorites($vars, $user);
+    sbac_user_preprocess_notifications($vars, $user);
+    global $base_url;
+    $vars['home_url'] = $base_url;
+    if ($user->uid && in_array(SBAC_SHARE_GUEST, $user->roles)) {
+      $vars['home_url'] = '#';
     }
-    $vars['user']->full_name = sbac_user_format_username($user_item);
   }
+}
+
+/**
+ * @param $vars
+ * @param $user
+ */
+function sbac_user_preprocess_username(&$vars, $user) {
+  if (isset($user->picture->uri)) {
+    $uri = $user->picture->uri;
+    $path = drupal_realpath($uri);
+    if (file_exists($path)) {
+      $vars['user']->image_thumb = theme('image_style', array(
+        'path' => $user->picture->uri,
+        'style_name' => 'small',
+        'attributes' => array(
+          'class' => 'left'
+        )
+      ));
+    }
+  }
+  $vars['user']->full_name = sbac_user_format_username($user);
+}
+
+/**
+ * @param $vars
+ * @param $user
+ */
+function sbac_user_preprocess_favorites(&$vars, $user) {
+  $favorites_count = sbac_favorites_get_count($user->uid);
+  $text = t('Favorites');
+  if (!$favorites_count) {
+    $favorites_count = 0;
+  }
+  $text .= ' (<span>' . $favorites_count . '</span>)';
+  $vars['user']->favorites_link = l($text, 'user', array(
+    'html' => TRUE,
+    'fragment' => 'profile-favorites',
+    'attributes' => array('title' => 'Favorites'),
+  ));
+  $vars['user']->favorites_added = '<div class="sbac-favorites-menu-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+}
+
+/**
+ * @param $vars
+ * @param $user
+ */
+function sbac_user_preprocess_notifications(&$vars, $user) {
+  $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
+  $text = t('Notifications');
+  if ($taskit_counts['_no_role_'] != 0) {
+    $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
+  }
+  $vars['user']->notifications = l($text, 'user', array(
+    'html' => TRUE,
+    'fragment' => 'profile-notifications',
+    'attributes' => array('title' => 'Notifications'),
+  ));
 }

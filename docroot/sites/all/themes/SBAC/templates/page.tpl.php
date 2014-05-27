@@ -6,13 +6,6 @@ global $user;
 <nav class="top-bar main-top clearfix">
   <ul class="title-area">
     <li class="name"><h1>
-        <?php
-        global $base_url;
-        $home_url = $base_url;
-        if ($user->uid && in_array(SBAC_SHARE_GUEST, $user->roles)) {
-          $home_url = '#';
-        }
-        ?>
         <a title="Smarter Balanced Assessment Consortium" href="<?php echo $home_url; ?>">
           <img src="<?php echo $logo; ?>" alt="Smarter Balanced Assessment Consortium Logo" />
         </a>
@@ -21,10 +14,10 @@ global $user;
   </ul>
   <h1 class="title left">Digital Library Beta</h1>
   <?php if ($user->uid && !in_array('guest', $user->roles)): ?>
-  <ul class="inline-list right user-nav">
-    <li class="user-info">
-       <a title='<?php echo $user->full_name ?>' data-dropdown="drop3" href="#">
-       <?php
+    <ul class="inline-list right user-nav">
+      <li class="user-info">
+        <a title='<?php echo $user->full_name ?>' data-dropdown="drop3" href="#">
+          <?php
           if (isset($user->picture->uri)) {
             echo $user->image_thumb;
           }
@@ -32,53 +25,33 @@ global $user;
           ?>
         </a>
         <ul id="drop3" class="f-dropdown">
-          <li><?php echo l('Account','user', array('attributes' => array('title' => 'Account'))); ?></li>
-          <li><?php echo l('Logout','user/logout', array('attributes' => array('title' => 'Logout')));?></li>
+          <li><?php echo l('Account', 'user', array('attributes' => array('title' => 'Account'))); ?></li>
+          <li><?php echo l('Logout', 'user/logout', array('attributes' => array('title' => 'Logout'))); ?></li>
         </ul>
       </li>
       <li class="notifications">
         <?php
-        $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
-        $text = t('Notifications');
-        if ($taskit_counts['_no_role_'] != 0) {
-          $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
-        }
-        echo l($text, 'user', array(
-          'html' => TRUE,
-          'fragment' => 'profile-notifications',
-          'attributes' => array('title' => 'Notifications'),
-        ));
-      ?>
-    </li>
-    <li>
-      <a title='Feedback' id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
-      <?php
-        // set $class_feedback open if variable enable_feedback is on and the user hasn't disabled feedback flag on their profile yet, otherwise empty
-        $class_feedback = (variable_get('enable_feedback') == 1 && !$user_item->field_feedback_flag['und'][0]['value'] ? ' open' : '');
-      ?>
-      <div id="feedback-dropdown" class="f-dropdown content small<?php print $class_feedback; ?>">
-      <a href='#' title='Remove' id="disable-feedback" class="small right"> x </a>
-      <?php
-        $feedback_block = block_load('sbac_central','feedback-box');
-        $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
-        print render($render_array);
-      ?>
-      </div>
-    </li>
-    <li>
-      <div class="sbac-favorites-menu">
-      <?php
-        echo $user->favorites_link;
-        echo $user->favorites_added;
-      ?>
-      </div>
-    </li>
-    <li>
-      <?php if (isset($help_dropdown)) :?>
-        <?php print $help_dropdown; ?>
-      <?php endif; ?>
-    </li>
-  </ul>
+        echo $user->notifications;
+        ?>
+      </li>
+      <li>
+        <a title='Feedback' id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
+        <?php print render($page['feedback']); ?>
+      </li>
+      <li>
+        <div class="sbac-favorites-menu">
+          <?php
+          echo $user->favorites_link;
+          echo $user->favorites_added;
+          ?>
+        </div>
+      </li>
+      <li>
+        <?php if (isset($help_dropdown)) : ?>
+          <?php print $help_dropdown; ?>
+        <?php endif; ?>
+      </li>
+    </ul>
   <?php endif; ?>
   <?php if ($user->uid && in_array('guest', $user->roles)): ?>
   <ul class="inline-list right user-nav">

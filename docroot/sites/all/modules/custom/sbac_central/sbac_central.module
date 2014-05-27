@@ -409,10 +409,12 @@ function theme_sbac_central_taxonomy_overview_vocabularies($variables) {
 function sbac_central_block_info() {
   $blocks['feedback-box'] = array(
     'info' => t('Feedback Box'),
-    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
-    'cache' => DRUPAL_CACHE_GLOBAL,
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_CACHE_PER_USER,
     'weight' => -23,
-    'status' => 0,
+    'status' => 1,
+    'region' => 'feedback',
+    'pages' => '*'
   );
 
   return $blocks;
@@ -420,21 +422,39 @@ function sbac_central_block_info() {
 
 /**
  * Implements hook_block_view().
+ *
  */
 function sbac_central_block_view($delta = '') {
   $block = array();
 
   switch ($delta) {
     case 'feedback-box':
+      global $user;
+      $class_feedback = (variable_get('enable_feedback') == 1 && !$user->field_feedback_flag['und'][0]['value'] ? ' open' : '');
+      $div_open = '<div id="feedback-dropdown" class="f-dropdown content small ' . $class_feedback . '">';
+      $link = '<a href="#" title="Remove" id="disable-feedback" class="small right"> x </a>';
       $body = variable_get('feedback_block_body', array('value' => '', 'format' => 'full_html'));
+      $div_close = '</div>';
 
       $block['subject'] = t('Feedback Block');
-      $block['content'] = $body['value'];
-
+      $block['content'] = $div_open . $link . $body['value'] . $div_close;
       break;
   }
 
   return $block;
+}
+
+/**
+ * Implements hook_block_info_alter().
+ *
+ * @param $blocks
+ * @param $theme
+ * @param $code_blocks
+ */
+function sbac_central_block_info_alter(&$blocks, $theme, $code_blocks) {
+  if (isset($blocks['feedback-box']) && $theme == 'SBAC') {
+    $blocks['feedback-box']['region'] = 'feedback';
+  }
 }
 
 /**
