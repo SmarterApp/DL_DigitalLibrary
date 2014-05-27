@@ -429,20 +429,19 @@ function sbac_central_block_view($delta = '') {
 
   switch ($delta) {
     case 'feedback-box':
-      global $user;
-      $class_feedback = (variable_get('enable_feedback') == 1 && !$user->field_feedback_flag['und'][0]['value'] ? ' open' : '');
-      $div_open = '<div id="feedback-dropdown" class="f-dropdown content small ' . $class_feedback . '">';
-      $link = '<a href="#" title="Remove" id="disable-feedback" class="small right"> x </a>';
       $body = variable_get('feedback_block_body', array('value' => '', 'format' => 'full_html'));
-      $div_close = '</div>';
-
       $block['subject'] = t('Feedback Block');
-      $block['content'] = $div_open . $link . $body['value'] . $div_close;
+      $block['content'] = $body['value'];
       break;
   }
 
   return $block;
 }
+
+function sbac_central_preprocess_block(&$vars) {
+  $var = '';
+}
+
 
 /**
  * Implements hook_block_info_alter().
