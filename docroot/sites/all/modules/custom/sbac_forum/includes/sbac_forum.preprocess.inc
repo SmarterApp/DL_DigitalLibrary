@@ -55,7 +55,6 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
-      drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.ctools.js");
       module_load_include('module', 'sbac_flag');
     }
     $link_ops = array(
@@ -75,6 +74,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
   $can_delete = node_access('delete', $vars['node']);
   if ($can_delete) {
+    drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.ctools.js");
     $link_ops = array(
       'attributes' => array(
         'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-delete-topic-link',
