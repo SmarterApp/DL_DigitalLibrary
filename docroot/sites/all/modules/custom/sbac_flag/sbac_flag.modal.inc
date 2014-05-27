@@ -1014,7 +1014,7 @@ function sbac_flag_remove_resource_review_form($form, &$form_state) {
     '#prefix' => '<div class="flag-button-cont">',
   );
 
-  $form['finish_moderation'] = array(
+  $form['finish_moderation_review'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Resource Review',
     '#attributes' => array('class' => array('button', 'red'))
