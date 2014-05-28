@@ -20,7 +20,7 @@ function sbac_forum_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Who Can View and Join This Forum?',
+    'label' => 'Who Can Participate?',
     'weight' => '5',
     'children' => array(
       0 => 'field_forum_access_role_list',
@@ -30,12 +30,12 @@ function sbac_forum_field_group_info() {
     ),
     'format_type' => 'div',
     'format_settings' => array(
-      'label' => 'Who Can View and Join This Forum?',
+      'label' => 'Who Can Participate?',
       'instance_settings' => array(
         'required_fields' => 0,
         'id' => '',
         'classes' => '',
-        'description' => 'By default, a forum is visible to all Digital Library members and any member can choose to join',
+        'description' => 'By default, a forum is visible to all Digital Library members and any member can participate.',
         'show_label' => '1',
         'label_element' => 'h3',
         'effect' => 'none',
