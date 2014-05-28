@@ -497,7 +497,7 @@ function sbac_forum_delete_forum_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>' . t('You are about to delete this forum') . '</h2><p>' . t('
+    '#markup' => '<p>' . t('
     If you continue, the forum and all its content will be permanently deleted. Members will receive a notification that the forum is no longer available.') . '</p>',
   );
 

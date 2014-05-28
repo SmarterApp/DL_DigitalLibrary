@@ -9,7 +9,7 @@
  * @constructor
  */
 
-Drupal.theme.prototype.CtoolSbacForumDeleteTopic = function () {
+Drupal.theme.prototype.CtoolSbacForumModal = function () {
   var html = ''
   html += '  <div id="ctools-modal" class="small">'
   html += '    <div class="ctools-modal-content small">' // panels-modal-content

@@ -56,28 +56,35 @@ function sbac_air_cron() {
   //  Get standards at 2AM.
   if (date('G') == 2) {
     //  Load all standards
-    // $publisher    = 'CC';
-    // $api_ela_key  = 'ELA';
-    // $api_ma_key   = 'MA';
+    $publisher    = 'CC';
+    $api_ela_key  = 'ELA';
+    $api_ma_key   = 'MA';
 
     module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
     $api_client   = new AIRAPIClient();
 
-    // $api_pub_ela  = $api_client->getPublications($publisher, $api_ela_key);
-    // $api_pub_ma   = $api_client->getPublications($publisher, $api_ma_key);
+    $api_pub_ela  = $api_client->getPublications($publisher, $api_ela_key);
+    $api_pub_ma   = $api_client->getPublications($publisher, $api_ma_key);
 
-    // $api_pub_ela  = array_pop($api_pub_ela);
-    // $api_pub_ma   = array_pop($api_pub_ma);
+    $api_pub_ela  = array_pop($api_pub_ela);
+    $api_pub_ma   = array_pop($api_pub_ma);
 
-    // $api_ela_tree = $api_client->getStandards($api_pub_ela['key'], 2);
-    // $api_ma_tree  = $api_client->getStandards($api_pub_ma['key'],  2);
+    $api_ela_tree = $api_client->getStandards($api_pub_ela['key'], 2);
+    $api_ma_tree  = $api_client->getStandards($api_pub_ma['key'],  2);
 
-    $api_pub_ela = 'CC-ELA-v1';
-    $api_pub_ma  = 'CC-MA-v1';
+    /**
+     * MAGIC BOX WORK AROUND.
+     */
 
-    $api_ela_tree = $api_client->getStandards($api_pub_ela, 2);
-    $api_ma_tree  = $api_client->getStandards($api_pub_ma,  2);
+    // $api_pub_ela = 'CC-ELA-v1';
+    // $api_pub_ma  = 'CC-MA-v1';
 
+    // $api_ela_tree = $api_client->getStandards($api_pub_ela, 2);
+    // $api_ma_tree  = $api_client->getStandards($api_pub_ma,  2);
+
+    /**
+     * END OF WORK AROUND.
+     */
 
     $cc_standards = array_merge($api_ela_tree, $api_ma_tree);
     usort($cc_standards, 'sbac_air_sort_api_tree');
