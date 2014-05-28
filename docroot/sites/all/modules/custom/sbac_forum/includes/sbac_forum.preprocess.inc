@@ -796,56 +796,7 @@ function sbac_forum_preprocess_views_view_unformatted__forum_member_list(&$vars)
  * views_view_fields preprocess
  */
 function sbac_forum_preprocess_views_view_fields__forum_member_list(&$vars) {
-  $output = '';
-  $current_user = $vars['user'];
-  $row_uid = $vars['row']->users_field_data_field_fc_forum_member_uid;
-  if ((in_array('facilitator', $current_user->roles)) &&
-    ($row_uid != $current_user->uid)
-  ) { // Only show controls for facilitator users.
 
-    $args = $vars['view']->args;
-    $term_id = array_shift($args);
-    $link_dom_id = '';
-    $link_text = '';
-    $link_url = '';
-
-    if ($vars['view']->current_display == 'block') { // Only add member controls for member list.
-      $link_dom_id = 'forum-remove-member-link-' . $term_id . '-' . $row_uid;
-      $link_text = t('Remove Member');
-      $link_url = 'sbac-forum/nojs/' . $term_id . '/members-edit/' . $row_uid . '/remove';
-    }
-    elseif ($vars['view']->current_display == 'block_1') { // Add "re-add" controls to removed member list.
-      $link_dom_id = 'forum-readd-member-link-' . $term_id . '-' . $row_uid;
-      $link_text = t('Re-Add User');
-      $link_url = 'sbac-forum/nojs/' . $term_id . '/members-edit/' . $row_uid . '/restore';
-    }
-
-    $link_ops = array(
-      'attributes' => array(
-        'class' => 'members-control-link ctools-use-modal ctools-modal-' . $link_dom_id,
-        'id' => $link_dom_id,
-      ),
-    );
-    $link = l($link_text, $link_url, $link_ops);
-    $output = $link;
-    $js_settings = array(
-      $link_dom_id => array( // Link has to have ctools-modal- namespace class along with this id.
-        'modalSize' => array(
-          'type' => 'fixed',
-          'width' => 660,
-          'height' => 320,
-        ),
-      ),
-    );
-    drupal_add_js($js_settings, 'setting'); // Styles the modal.
-    // attach all modal requirements.
-    ctools_include('ajax');
-    ctools_include('modal');
-    ctools_add_js('ajax-responder');
-    ctools_modal_add_js();
-  }
-
-  $vars['sbac_forum_indv_member_controls'] = $output;
 }
 
 /**
