@@ -1564,16 +1564,35 @@ function sbac_forum_node_insert($node) {
         taxonomy_term_save($forum_obj);
         // Add forum to favorite
         sbac_forum_add_to_favorite($forum_obj->tid, $user->uid);
-        // Notify contributor.
+
         try {
-          $contributor_uid = $forum_wrapper->field_forum_resource_ref->value()->uid;
-          if ($contributor_uid && $contributor_uid != $node->uid) {
-            if ($task = taskit_get_object('created_topic_node')) {
-              $task->addVisibility($task::VISIBILITY_USER);
-              $task->addEntity('node', $node->nid);
-              $task->addOwningUser($contributor_uid);
-              $task->addTriggeringUser($node->uid);
-              $task->save();
+          // Notify people
+          $recipients = array();
+          // Notify contributor.
+          $recipients[] = $forum_wrapper->field_forum_resource_ref->value()->uid;
+
+          // Notify people who have favorited this forum/resource
+          $fav_id = $forum_obj->tid;
+          $fav_type = 'term';
+          if ($resource = $forum_wrapper->field_forum_resource_ref->value()) {
+            $fav_id = $resource->nid;
+            $fav_type = 'node';
+          }
+          $query = "SELECT uid FROM {sbac_favorites} WHERE id = :id AND type = :type AND uid <> 0";
+          $results = db_query($query, array(':id' => $fav_id, ':type' => $fav_type))->fetchCol();
+          $recipients = array_merge($recipients, $results);
+
+          $recipients = array_unique($recipients);
+
+          foreach ($recipients as $recipient) {
+            if ($recipient && $recipient != $node->uid) { // don't send to yourself
+              if ($task = taskit_get_object('created_topic_node')) {
+                $task->addVisibility($task::VISIBILITY_USER);
+                $task->addEntity('node', $node->nid);
+                $task->addOwningUser($recipient);
+                $task->addTriggeringUser($node->uid);
+                $task->save();
+              }
             }
           }
         } catch (EntityMetadataWrapperException $e) {
