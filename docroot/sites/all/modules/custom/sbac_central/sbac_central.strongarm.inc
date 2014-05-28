@@ -28,7 +28,7 @@ function sbac_central_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'file_default_scheme';
-  $strongarm->value = 'gs';
+  $strongarm->value = 'private';
   $export['file_default_scheme'] = $strongarm;
 
   $strongarm = new stdClass();
