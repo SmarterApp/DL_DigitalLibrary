@@ -126,6 +126,7 @@ function sbac_forum__ajax__delete_forum_modal_callback($js = FALSE, $term) {
     ctools_modal_add_js();
 
     $form_state = array(
+      'title' => 'You Are About To Delete This Forum',
       'ajax' => TRUE,
     );
 
