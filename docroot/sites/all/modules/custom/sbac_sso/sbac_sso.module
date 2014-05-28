@@ -368,6 +368,9 @@ function sbac_sso_logout() {
   curl_close($curl);
   error_log("LOGOUT RESPONSE: " . $result);
 
+  $object = drupal_http_request(SBAC_SSO_DESTROY_SESSION_URL);
+  error_log("LOGOUT2: " . $object);
+
   $url = SBAC_SSO_LOGOUT_URL;
   if ($ajax) {
     $output = array();
