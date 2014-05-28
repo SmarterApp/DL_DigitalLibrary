@@ -647,7 +647,7 @@ function sbac_forum_field_default_field_bases() {
     'settings' => array(
       'display_default' => 0,
       'display_field' => 0,
-      'uri_scheme' => 'private',
+      'uri_scheme' => 'gs',
     ),
     'translatable' => 0,
     'type' => 'file',
@@ -775,7 +775,7 @@ function sbac_forum_field_default_field_bases() {
     'settings' => array(
       'display_default' => 0,
       'display_field' => 0,
-      'uri_scheme' => 'private',
+      'uri_scheme' => 'gs',
     ),
     'translatable' => 0,
     'type' => 'file',
