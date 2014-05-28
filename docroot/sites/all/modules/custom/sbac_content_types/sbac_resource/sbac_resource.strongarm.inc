@@ -21,7 +21,7 @@ function sbac_resource_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'chosen_jquery_selector';
-  $strongarm->value = 'select:not(.no-chosen)';
+  $strongarm->value = 'select:not(.no-chosen, [name*=\'field_student_learning\'], [name*=\'field_pro_dev\'], [name*=\'field_ease_use\'])';
   $export['chosen_jquery_selector'] = $strongarm;
 
   $strongarm = new stdClass();
