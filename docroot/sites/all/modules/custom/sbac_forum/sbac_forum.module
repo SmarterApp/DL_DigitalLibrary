@@ -1640,8 +1640,7 @@ function sbac_forum_comment_insert($comment) {
           $forum_wrapper->field_forum_topic_comment_count->set($current_count);
         }
         if (isset($forum_wrapper->field_forum_last_activity)) {
-          $date = strtotime('today');
-          $forum_wrapper->field_forum_last_activity->set($date);
+          $forum_wrapper->field_forum_last_activity->set(time());
         }
 
         $is_participant = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $comment_author_id);
@@ -1654,8 +1653,7 @@ function sbac_forum_comment_insert($comment) {
           $new_member_item->setHostEntity('taxonomy_term', $forum_term);
           $new_member_data = entity_metadata_wrapper('field_collection_item', $new_member_item);
           $new_member_data->field_fc_forum_member->set($comment_author_id);
-          $date = strtotime('today');
-          $new_member_data->field_fc_forum_member_joined->set($date);
+          $new_member_data->field_fc_forum_member_joined->set(time());
           $new_member_data->save(TRUE);
 
           $current_member_count = $forum_wrapper->field_forum_member_count->value();
