@@ -159,13 +159,13 @@
           ?>
         <?php endif; ?>
       </div>
-      <?php if (!empty($content['flags'])): ?>
+      <?php if (!empty($flags)): ?>
       <div class='flag-section'>
         <div class='flag-header flag-header-reason'>
-          <?php print $content['flags']['reason']; ?>
+          <?php print $flags['reason']; ?>
         </div>
         <div class='flag-header flag-header-comment'>
-          <?php print render($content['flags']['comment']); ?>
+          <?php print render($flags['comment']); ?>
         </div>
       </div>
       <?php endif; ?>
