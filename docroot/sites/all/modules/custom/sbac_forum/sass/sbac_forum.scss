@@ -3512,13 +3512,17 @@ h2.title {
 	
 	#modalContent {
 		.ctools-modal-content.small {
+			height: 235px  !important;
+			padding: 10px 0 0 0;
 			
 			.modal-content {
 				overflow: hidden;
+				padding: 0 40px !important;
 			}
 
 			.modal-header {
 		    box-shadow: none !important;
+				padding-left: 40px !important;
 
 				.modal-title {
 					font-size: 18px !important;
