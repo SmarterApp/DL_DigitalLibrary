@@ -77,7 +77,7 @@
   background: url("/sites/all/themes/SBAC/images/arrow-right.png") 99% center no-repeat;
   color: #5a5a5a;
   display: block;
-  padding: 10px 40px 10px 0;
+  padding: 10px 40px 10px 10px;
   line-height: 1.5;
   float: left;
   width: 100%;
@@ -137,7 +137,7 @@
 .taskit-interval.interval-yesterday .taskit-forum-cont,
 .taskit-interval.interval-older .taskit-forum-cont,
 .taskit-interval.interval-prior .taskit-forum-cont {
-  padding: 10px 40px 10px 0;
+  padding: 10px 40px 10px 10px;
 }
 /* line 151, ../sass/taskit.scss */
 .taskit-interval.interval-today .taskit-forum-cont .taskit-content-toggle,
