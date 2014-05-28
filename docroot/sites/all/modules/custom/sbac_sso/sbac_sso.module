@@ -2,6 +2,7 @@
 
 define('SBAC_SSO_URL', 'http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp');
 define('SBAC_SSO_PROGRAM_API', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain');
+define('SBAC_SSO_DESTROY_SESSION_URL', 'http://drcamp-dev.opentestsystem.org:8080/auth/UI/Logout');
 define('SBAC_SSO_LOGOUT_URL', 'http://www.smarterbalanced.org');
 
 /**
@@ -360,6 +361,13 @@ function sbac_sso_logout() {
   module_invoke_all('user_logout', $user);
   session_destroy();
 
+  // kill user session on IDP
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, SBAC_SSO_DESTROY_SESSION_URL);
+  $result = curl_exec($curl);
+  curl_close($curl);
+  error_log("LOGOUT RESPONSE: " . $result);
+
   $url = SBAC_SSO_LOGOUT_URL;
   if ($ajax) {
     $output = array();
@@ -606,7 +614,8 @@ function sbac_sso_program_management_api_request($user_attributes) {
   $result = curl_exec($curl);
   curl_close($curl);
 
-  error_log("The Program API Response: " . $post);
+  error_log("The Program API URL: " . $post);
+  error_log("The Program API Reponse: " . $result);
 
   if ($result) {
     $api_response = sbac_sso_parse_program_api_result($result);
