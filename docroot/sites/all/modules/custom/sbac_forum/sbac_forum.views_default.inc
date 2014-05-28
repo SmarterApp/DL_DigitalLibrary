@@ -500,6 +500,27 @@ function sbac_forum_views_default_views() {
 
   /* Display: Topic Forums */
   $handler = $view->new_display('block', 'Topic Forums', 'block_3');
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Taxonomy term: Reply (comment) Count (field_forum_topic_comment_count) */
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['id'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['table'] = 'field_data_field_forum_topic_comment_count';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['field'] = 'field_forum_topic_comment_count_value';
+  $handler->display->display_options['sorts']['field_forum_topic_comment_count_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Created (field_forum_created) */
+  $handler->display->display_options['sorts']['field_forum_created_value']['id'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['table'] = 'field_data_field_forum_created';
+  $handler->display->display_options['sorts']['field_forum_created_value']['field'] = 'field_forum_created_value';
+  $handler->display->display_options['sorts']['field_forum_created_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Member Count (field_forum_member_count) */
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['id'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['table'] = 'field_data_field_forum_member_count';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['field'] = 'field_forum_member_count_value';
+  $handler->display->display_options['sorts']['field_forum_member_count_value']['order'] = 'DESC';
+  /* Sort criterion: Taxonomy term: Last Activity (field_forum_last_activity) */
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['id'] = 'field_forum_last_activity_value';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['table'] = 'field_data_field_forum_last_activity';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['field'] = 'field_forum_last_activity_value';
+  $handler->display->display_options['sorts']['field_forum_last_activity_value']['order'] = 'DESC';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Taxonomy vocabulary: Machine name */
