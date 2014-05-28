@@ -45,7 +45,7 @@
 
       <?php if (!empty($fields['end_users'])): ?>
         <div class="vp-end-users-field  half">
-          <div class="title-tags"><?php print t('Intended Forum Participants'); ?></div>
+          <div class="title-tags"><?php print t('Intended End Users'); ?></div>
           <?php print $fields['end_users']; ?>
         </div>
       <?php endif; ?>
@@ -115,7 +115,7 @@
 
 	      <?php if (!empty($fields['end_users'])): ?>
 	        <div class="vp-end-users-field">
-	          <div class="title-tags"><?php print t('Intended Forum Participants'); ?></div>
+	          <div class="title-tags"><?php print t('Intended End Users'); ?></div>
 	          <?php print $fields['end_users']; ?>
 	        </div>
 	      <?php endif; ?>
