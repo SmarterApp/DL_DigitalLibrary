@@ -1,14 +1,14 @@
 <?php
 
-define('FEEDBACK_DEFAULT_SET_COUNT',    2);  // default number of gate keeper items;
-define('FEEDBACK_REVIEW_TIMEOUT',       72); // value in hours;
-define('FEEDBACK_REVIEW_REMINDER',      24); // value in hours
+define('FEEDBACK_DEFAULT_SET_COUNT', 2); // default number of gate keeper items;
+define('FEEDBACK_REVIEW_TIMEOUT', 72); // value in hours;
+define('FEEDBACK_REVIEW_REMINDER', 24); // value in hours
 define('FEEDBACK_RESUBMISSION_TIMEOUT', 1209600); // 2 weeks in seconds
-define('FEEDBACK_MAX_REVIEW',           3); // number of reviews before publishing
-define('FEEDBACK_REVIEW_NOTIFICATION',  1); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
-define('FEEDBACK_REVIEWER_RID',         17); // id of the 'resource reviewer' role;
-define('FEEDBACK_PUBLISHER_RID',        16); // id of the 'resource publisher' role;
-define('FEEDBACK_AUTHENTICATED_RID',    2);  // id of the 'authenticated' role;
+define('FEEDBACK_MAX_REVIEW', 3); // number of reviews before publishing
+define('FEEDBACK_REVIEW_NOTIFICATION', 1); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
+define('FEEDBACK_REVIEWER_RID', 17); // id of the 'resource reviewer' role;
+define('FEEDBACK_PUBLISHER_RID', 16); // id of the 'resource publisher' role;
+define('FEEDBACK_AUTHENTICATED_RID', 2); // id of the 'authenticated' role;
 
 /**
  * Access callback for custom Resource operations.
@@ -32,7 +32,9 @@ function resource_access($op, $node, $account = NULL) {
     }
 
     if (in_array($op, array('view collaboration'))) {
-      return TRUE;
+      if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
+        return TRUE;
+      }
     }
 
     // TODO: maybe we should just load & statically cache all feedback records
@@ -50,7 +52,7 @@ function resource_access($op, $node, $account = NULL) {
     if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
       if (($op == 'access about process' || $op == 'view about') || ($op == 'access review process' || $op == 'view reviews') || ($op == 'access share process' || $op == 'view share') || $op == 'access related resources' || $op == 'access flag') {
         // Only show the About This Resource tab for guests
-        if (in_array(SBAC_SHARE_GUEST, $account->roles) && !in_array($op, array('view about','access about process'))) {
+        if (in_array(SBAC_SHARE_GUEST, $account->roles) && !in_array($op, array('view about', 'access about process'))) {
           return FALSE;
         }
         return TRUE;
@@ -85,19 +87,22 @@ function resource_access($op, $node, $account = NULL) {
     if (!in_array(SBAC_SHARE_GUEST, $account->roles) &&
       isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state == 'published' &&
-      $op == 'access share process' || $op == 'view share') {
+      $op == 'access share process' || $op == 'view share'
+    ) {
       return TRUE;
     }
 
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state == 'published' &&
-      $op == 'access flag' || $op == 'view flag') {
+      $op == 'access flag' || $op == 'view flag'
+    ) {
       return TRUE;
     }
 
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state == 'published' &&
-      $op == 'access related resources' || $op == 'view related resources') {
+      $op == 'access related resources' || $op == 'view related resources'
+    ) {
       return TRUE;
     }
 
@@ -135,7 +140,6 @@ function resource_access($op, $node, $account = NULL) {
       'view gate keeper',
       'start gate keeper',
       'edit gate keeper',
-
       'view quality criteria',
       'edit quality criteria',
     );
@@ -170,12 +174,13 @@ function resource_access($op, $node, $account = NULL) {
       && isset($node->workbench_moderation['current']->state)
       && $node->workbench_moderation['current']->state == 'published'
       && isset($node->field_html5['und'][0]['value'])
-      && $node->field_html5['und'][0]['value']) {
+      && $node->field_html5['und'][0]['value']
+    ) {
       return FALSE;
     }
 
     if (in_array($op, array('view gate keeper', 'start gate keeper', 'edit gate keeper'))) {
-      if ($node->workbench_moderation['current']->state == 'draft'){
+      if ($node->workbench_moderation['current']->state == 'draft') {
         return FALSE;
       }
 
@@ -304,12 +309,14 @@ function resource_access($op, $node, $account = NULL) {
             return TRUE;
           }
           // otherwise we're requesting edit, and that's allowed only on non-completed entities
-          else if ($row->completed == 0) {
-            return TRUE;
-          }
-          // edit on completed entity; not allowed
           else {
-            return FALSE;
+            if ($row->completed == 0) {
+              return TRUE;
+            }
+            // edit on completed entity; not allowed
+            else {
+              return FALSE;
+            }
           }
         }
       }
