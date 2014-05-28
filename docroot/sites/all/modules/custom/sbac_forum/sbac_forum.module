@@ -1339,7 +1339,6 @@ function sbac_forum_form_views_exposed_form_alter(&$form, &$form_state, $form_id
       $selected_sort_by = $form_state['input']['sort_by'];
       $sort_by_label = $form['sort_by']['#options'][$selected_sort_by];
       $form['sort_by']['#options'][$selected_sort_by] = 'Sort by: ' . $sort_by_label;
-      $form['sort_by']['#attributes']['class'][] = 'no-chosen';
     }
   }
 }

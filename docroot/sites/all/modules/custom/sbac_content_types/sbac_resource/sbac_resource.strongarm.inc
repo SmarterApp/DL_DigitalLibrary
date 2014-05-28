@@ -21,7 +21,7 @@ function sbac_resource_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'chosen_jquery_selector';
-  $strongarm->value = 'select:not(.no-chosen, [name*=\'field_student_learning\'], [name*=\'field_pro_dev\'], [name*=\'field_ease_use\'])';
+  $strongarm->value = 'select:visible';
   $export['chosen_jquery_selector'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -35,14 +35,14 @@ function sbac_resource_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'chosen_minimum_multiple';
-  $strongarm->value = 'Always Apply';
+  $strongarm->value = '20';
   $export['chosen_minimum_multiple'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'chosen_minimum_single';
-  $strongarm->value = 'Always Apply';
+  $strongarm->value = '20';
   $export['chosen_minimum_single'] = $strongarm;
 
   $strongarm = new stdClass();
