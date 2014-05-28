@@ -363,6 +363,8 @@ function sbac_sso_logout() {
 
   // kill user session on IDP
   $curl = curl_init();
+  $strCookie = 'PHPSESSID=' . $_COOKIE['PHPSESSID'] . '; path=/';
+  curl_setopt($curl, CURLOPT_COOKIE, $strCookie);
   curl_setopt($curl, CURLOPT_URL, SBAC_SSO_DESTROY_SESSION_URL);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($curl, CURLOPT_VERBOSE, 1);
