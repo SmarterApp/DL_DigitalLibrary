@@ -749,27 +749,35 @@ h2.name .field {
 }
 
 /*Favorites Tab*/
-/* line 698, ../sass/profile.scss */
+/* line 699, ../sass/profile.scss */
+#sbac-favorites-forum-table-drag-drop,
 #sbac-favorites-resource-table-drag-drop {
   margin-top: 10px;
   width: 100%;
 }
 
-/* line 704, ../sass/profile.scss */
-#edit-tab-container-resource-tab-buttons button {
+/* line 706, ../sass/profile.scss */
+#edit-tab-container-resource-tab-buttons button,
+#edit-tab-container-forum-tab-buttons button {
   float: right;
   margin-left: 20px;
   padding-left: 40px;
 }
-/* line 710, ../sass/profile.scss */
-#edit-tab-container-resource-tab-buttons #sbac-favorites-resource-submit:before {
+/* line 713, ../sass/profile.scss */
+#edit-tab-container-resource-tab-buttons #sbac-favorites-forum-submit:before,
+#edit-tab-container-resource-tab-buttons #sbac-favorites-resource-submit:before,
+#edit-tab-container-forum-tab-buttons #sbac-favorites-forum-submit:before,
+#edit-tab-container-forum-tab-buttons #sbac-favorites-resource-submit:before {
   content: url("../images/icon-buttonAccept.png");
   left: 15px;
   position: absolute;
   top: 4px;
 }
-/* line 717, ../sass/profile.scss */
-#edit-tab-container-resource-tab-buttons #sbac-favorites-resource-cancel:before {
+/* line 721, ../sass/profile.scss */
+#edit-tab-container-resource-tab-buttons #sbac-favorites-forum-cancel:before,
+#edit-tab-container-resource-tab-buttons #sbac-favorites-resource-cancel:before,
+#edit-tab-container-forum-tab-buttons #sbac-favorites-forum-cancel:before,
+#edit-tab-container-forum-tab-buttons #sbac-favorites-resource-cancel:before {
   content: url("../images/icon-buttonCancel.png");
   left: 15px;
   position: absolute;

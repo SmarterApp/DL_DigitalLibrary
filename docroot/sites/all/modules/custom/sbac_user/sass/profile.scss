@@ -695,18 +695,21 @@ h2.name {
 }
 
 /*Favorites Tab*/
+#sbac-favorites-forum-table-drag-drop,
 #sbac-favorites-resource-table-drag-drop {
 	margin-top: 10px;
 	width: 100%;
 }
 
-#edit-tab-container-resource-tab-buttons {
+#edit-tab-container-resource-tab-buttons,
+#edit-tab-container-forum-tab-buttons {
 	button {
 		float: right;
 		margin-left: 20px;
 		padding-left: 40px;
 	}
 	
+	#sbac-favorites-forum-submit:before,
 	#sbac-favorites-resource-submit:before {
 	  content: url("../images/icon-buttonAccept.png");
     left: 15px;
@@ -714,6 +717,7 @@ h2.name {
     top: 4px;
 	}
 	
+	#sbac-favorites-forum-cancel:before,
 	#sbac-favorites-resource-cancel:before {
 	  content: url("../images/icon-buttonCancel.png");
     left: 15px;
