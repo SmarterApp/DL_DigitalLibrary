@@ -73,7 +73,7 @@
 
       var comment_reply_cancel = function (e) {
         var linkContSelector = '.' + $(this).attr('comment-form-sec');
-        var activeFormCont = $(this).parents("[class~=topic-node-comment-region-right-reply-form]");
+        var activeFormCont = $(this).parents("[class~=topic-node-comment-region-right-bottm-comment]");
         activeFormCont.slideUp('1000', function () {
           activeFormCont.html('');
           $(linkContSelector).show('fast');
