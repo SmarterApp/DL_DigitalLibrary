@@ -396,11 +396,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   // Override reply link
   if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
     $new_url = 'sbac-forum/custom/comment-reply/' . $comment_entity->nid . '/' . $comment_entity->cid;
-    $vars['content']['reply_link'] = l(t('Reply'), $new_url, array('attributes' => array('class' => array('comment-reply'))));
+    $vars['reply_link'] = l(t('Reply'), $new_url, array('attributes' => array('class' => array('comment-reply'))));
   }
 
   // Recommend count
-  $vars['content']['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
+  $vars['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
 
   if ($_SESSION['sbac-topic-comment-sorts'] == 'comment-most-recommended') {
     $nid = $comment_entity->nid;
@@ -410,13 +410,13 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
   if ($is_comment_author) {
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
-      $vars['content']['edit_link'] = l(t('Edit'), $vars['content']['links']['comment']['#links']['comment-edit']['href'], array('attributes' => array('class' => array('comment-edit'))));
+      $vars['edit_link'] = l(t('Edit'), $vars['content']['links']['comment']['#links']['comment-edit']['href'], array('attributes' => array('class' => array('comment-edit'))));
     }
   }
   else {
     // Recommend link
     if (!sbac_forum_user_has_recommended($comment_entity->cid, $user->uid)) {
-      $vars['content']['recommend_link'] = l(t('Recommend'), current_path(), array(
+      $vars['recommend_link'] = l(t('Recommend'), current_path(), array(
         'attributes' => array(
           'cid' => $comment_entity->cid,
           'id' => 'sbac-recommend-' . $comment_entity->cid,
@@ -451,7 +451,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
 
       $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
-      $vars['content']['flag_link'] = l(t('Flag'), $flag_link, array('attributes' => $link_ops));
+      $vars['flag_link'] = l(t('Flag'), $flag_link, array('attributes' => $link_ops));
     }
     $moderation_type = isset($_GET['flag']) ? $_GET['flag'] : '';
     $moderate_cid = isset($_GET['cid']) ? $_GET['cid'] : '';
