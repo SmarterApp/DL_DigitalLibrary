@@ -101,8 +101,8 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
     if ($flagged) {
       $flag = taxonomy_term_load($flagged['flag_selected']);
-      $vars['content']['flags']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($flag->name) . '</span>';
-      $vars['content']['flags']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
+      $vars['flags']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($flag->name) . '</span>';
+      $vars['flags']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
     }
     else {
       // Flag link
@@ -435,8 +435,8 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
     $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid, $user->uid);
     if ($flagged) {
       $reason = taxonomy_term_load($flagged['flag_selected']);
-      $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
-      $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
+      $vars['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
+      $vars['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
     }
     else {
       $js_settings_flag = array(
@@ -470,7 +470,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       $moderation_post_header .= '<span class="sbac-forum-flagged-text">Flagged</span>';
       $moderation_post_header .= '</div>';
       $moderation_post_header .= '</div>';
-      $vars['content']['flags']['moderation']['post']['header'] = $moderation_post_header;
+      $vars['flags']['moderation']['post']['header'] = $moderation_post_header;
 
       $moderation_post_content = '<div class="sbac-forum-flagged-post-container">';
 
@@ -553,7 +553,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       drupal_add_js($js_settings, 'setting');
       $moderation_post_content .= $moderation_button . $resolve_button . $remove_button;
       $moderation_post_content .= '</div>';
-      $vars['content']['flags']['moderation']['post']['content'] = $moderation_post_content;
+      $vars['flags']['moderation']['post']['content'] = $moderation_post_content;
 
     }
   }

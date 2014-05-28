@@ -66,8 +66,8 @@
       <?php print $new_comment_status_message; ?>
     </div>
   <?php endif; ?>
-  <?php if (!empty($content['flags']['moderation'])): ?>
-    <?php print render($content['flags']['moderation']['post']['header']); ?>
+  <?php if (!empty($flags['moderation'])): ?>
+    <?php print render($flags['moderation']['post']['header']); ?>
   <?php endif; ?>
   <div class="row-comment-content">
     <?php if (!$removed): ?>
@@ -145,14 +145,14 @@
         <?php endif; ?>
       </div>
       <div class="topic-node-comment-region-right-bottm-comment flagged-post-for-<?php print $comment->cid; ?>">
-        <?php if (!empty($content['flags']['comments'])): ?>
+        <?php if (!empty($flags['comments'])): ?>
           <div class='flag-section'>
-            <?php print render($content['flags']['comments']['reason']); ?>
-            <?php print render($content['flags']['comments']['comment']); ?>
+            <?php print render($flags['comments']['reason']); ?>
+            <?php print render($flags['comments']['comment']); ?>
           </div>
         <?php endif; ?>
-        <?php if (!empty($content['flags']['moderation']['post'])): ?>
-          <?php print render($content['flags']['moderation']['post']['content']); ?>
+        <?php if (!empty($flags['moderation']['post'])): ?>
+          <?php print render($flags['moderation']['post']['content']); ?>
         <?php endif; ?>
 
       </div>
