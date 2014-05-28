@@ -121,27 +121,27 @@
       </div>
 
       <div class="topic-node-comment-region-right-bottom reply-links-for-<?php print $comment->cid; ?>">
-        <?php if (!empty($content['reply_link'])): ?>
-          <?php print $content['reply_link']; ?>
+        <?php if ($reply_link): ?>
+          <?php print $reply_link; ?>
         <?php endif; ?>
-        <?php if (!empty($content['recommend_link']) || !empty($content['recommend_count'])): ?>
+        <?php if ($recommend_link || $recommend_count): ?>
           <div class="recommend-box">
           </div>
         <?php endif; ?>
-        <?php if (!empty($content['recommend_link'])): ?>
-          <?php print $content['recommend_link']; ?>
+        <?php if ($recommend_link): ?>
+          <?php print $recommend_link; ?>
         <?php endif; ?>
         <div id="recommend-info-<?php print $comment_id; ?>">
-          <?php if (!empty($content['recommend_count'])): ?>
-            <?php if (!empty($content['recommend_link'])): ?> - <?php endif; ?><?php print $content['recommend_count']; ?> recommended
+          <?php if ($recommend_count): ?>
+            <?php if ($recommend_link): ?> - <?php endif; ?><?php print $recommend_count; ?> recommended
             <?php endif; ?>
         </div>
 
-        <?php if (!empty($content['edit_link'])): ?>
-          <?php print $content['edit_link']; ?>
+        <?php if ($edit_link): ?>
+          <?php print $edit_link; ?>
         <?php endif; ?>
-        <?php if (!empty($content['flag_link'])): ?>
-          <?php print $content['flag_link']; ?>
+        <?php if ($flag_link): ?>
+          <?php print $flag_link; ?>
         <?php endif; ?>
       </div>
       <div class="topic-node-comment-region-right-bottm-comment flagged-post-for-<?php print $comment->cid; ?>">

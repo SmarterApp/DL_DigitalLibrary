@@ -131,19 +131,19 @@ function _sbac_forum_filter_categories() {
   }
 
   // Our custom filters
-  $categories['distinctions']['display_name'] = 'Distinctions';
-  $categories['distinctions']['vocabulary'] = (object) array(
-    'vid' => 'distinctions'
+  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['display_name'] = 'Distinctions';
+  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['vocabulary'] = (object) array(
+    'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID
   );
   if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
-    $categories['distinctions']['terms'][] = (object) array(
-      'tid' => 'Posted with Distinction',
+    $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
+      'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
       'name' => 'Posted with Distinction',
     );
   }
-  $categories['distinctions']['terms'][] = (object) array(
-    'tid' => 'Favorite',
-    'name' => 'Favorite',
+  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
+    'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
+    'name' => 'Favorited',
   );
 
   $cf_value = NULL;
@@ -497,7 +497,7 @@ function sbac_forum_delete_forum_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>' . t('You are about to delete this forum') . '</h2><p>' . t('
+    '#markup' => '<p>' . t('
     If you continue, the forum and all its content will be permanently deleted. Members will receive a notification that the forum is no longer available.') . '</p>',
   );
 
@@ -658,7 +658,7 @@ function sbac_forum_delete_topic_confirm($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>' . t('You are about to delete this discussion topic') . '</h2><p>' . t('
+    '#markup' => '<p>' . t('
     If you continue, all discusson information (including topic details and any replies) will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
   );
 

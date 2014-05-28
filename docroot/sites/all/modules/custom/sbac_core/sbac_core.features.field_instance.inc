@@ -957,7 +957,6 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_details',
     'label' => 'Add some details',
     'profanity' => 1,
-    'required' => 1,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,

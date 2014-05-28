@@ -2140,6 +2140,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	}
 }
 
+
 /*Drupal error message for Modal*/
 .sbac-flag-error-msg {
 	background-color: rgba(138, 21, 56, 0.1);
@@ -2188,10 +2189,18 @@ form[id*='sbac-flag-collaboration-form']{
 	#sbac-flag-optional-comment {
 		margin-top: 5px;
 		
+		.form-type-textarea {width: 560px;}
+		
 		textarea[id*="edit-comment"] {
 			margin-top: 2px;
+			width: 560px;
+		}
+		
+		#edit-comment-counter.counter {
+			top: 16px;
 		}
 	}
+		
 	#form-item-footer {
 		
 		margin-top: 15px;
@@ -3357,6 +3366,7 @@ h2.title {
 		    margin-right: 7px;
 		    position: relative;
 		    text-decoration: none;
+				top: 1px;
 			}
 			
 			.recommend-box:before {
@@ -3369,7 +3379,6 @@ h2.title {
 				font-size: 18px;
 		    position: relative;
 		    text-decoration: none;
-				padding-top: 3px;
 			}
 			
 			.tertiary-flag-link {
@@ -3500,54 +3509,78 @@ h2.title {
 /*Modal of Comment & Topic Delete Form; Modal of Leave Forum*/
 .node-type-topic,
 .page-forums-term {
-	#modalContent .ctools-modal-content .modal-content {
-		overflow: hidden;
-	}
 	
-	div.ctools-modal-content .modal-header {
-		padding: 0 !important;
-		display: none;
-	}
-}
+	#modalContent {
+		.ctools-modal-content.small {
+			height: 235px  !important;
+			padding: 10px 0 0 0;
+			
+			.modal-content {
+				overflow: hidden;
+				padding: 0 40px !important;
+			}
 
-#sbac-forum-delete-forum-confirm,
-#sbac-forum-delete-comment-confirm,
-#sbac-forum-delete-topic-confirm,
-#sbac-forum-leave-forum-confirm {
-	
-	h2 {
-	  padding-bottom: 15px;
-    color: #000000;
-    display: block;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-    padding: 12px 0;
-    text-transform: capitalize;
-	}
-	
-	button{
-		float: right;
-		margin-left: 30px;
-	}
-	
-	button#edit-cancel.gray {
-	  background-color: #6E7379;
-    border: 1px solid #4D5457;
-		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
-		padding-left: 40px !important;
-	}
-	
-	button#edit-cancel.gray:before {
-   	content: url("../images/icon-buttonCancel.png");
-		left: 15px;
-		position: absolute;
-		top: 4px;
-	}
-	
-	button.form-submit.red:hover,
-	button.form-submit.red:focus  {
-		background-color: #8A1538 !important;
+			.modal-header {
+		    box-shadow: none !important;
+				padding-left: 40px !important;
+
+				.modal-title {
+					font-size: 18px !important;
+				}
+			}
+			
+			h2 {
+			  padding-bottom: 15px;
+		    color: #000000;
+		    display: block;
+		    font-size: 18px;
+		    font-weight: bold;
+		    margin: 0;
+		    padding: 12px 0;
+		    text-transform: capitalize;
+			}
+
+			button{
+				float: right;
+				margin-left: 30px;
+			}
+
+			button#edit-cancel.gray {
+			  background-color: #6E7379;
+		    border: 1px solid #4D5457;
+				box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+				padding-left: 40px !important;
+			}
+
+			button#edit-cancel.gray:before {
+		   	content: url("../images/icon-buttonCancel.png");
+				left: 15px;
+				position: absolute;
+				top: 4px;
+			}
+						
+			button.form-submit.red {
+				line-height: 20px;
+				background-color: #8A1538 !important;
+			}
+
+			button.form-submit.red:before {
+				content:"\e632";
+			  display: inline-block;
+			  font-family: 'sbac';
+			  font-size: 20px;
+			  font-weight: normal;
+			  margin-right: 7px;
+			  position: relative;
+			  top: 2px;
+				left: 0;
+			}
+
+			button.form-submit.red:hover,
+			button.form-submit.red:focus  {
+				background-color: #8A1538 !important;
+			}
+		}
 	}
 }
 

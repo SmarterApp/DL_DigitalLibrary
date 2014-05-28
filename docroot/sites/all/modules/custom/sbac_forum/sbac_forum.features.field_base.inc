@@ -350,8 +350,8 @@ function sbac_forum_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        1 => '<span class="forum-access-state-val">All States</span><p>Allow all Smarter Balanced member states to view and join this forum</p>',
-        0 => '<span class="forum-access-state-val">Only Some States</span><p class="forum-state-warning-message">Once you apply changes, participants from other states will no longer have access to the forum.</p><p>Allow only certain Smarter Balanced states to view and join this forum</p>',
+        1 => '<span class="forum-access-state-val">All States</span><p>Allow all Smarter Balanced member states to participate in this forum</p>',
+        0 => '<span class="forum-access-state-val">Only Some States</span><p class="forum-state-warning-message">Once you apply changes, participants from other states will no longer have access to the forum.</p><p>Allow only certain Smarter Balanced states to participate in this forum</p>',
       ),
       'allowed_values_function' => '',
     ),
@@ -376,8 +376,8 @@ function sbac_forum_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        1 => '<span class="forum-access-role-val">All Users</span><p>Allow all Digital Library members to view and join this forum</p>',
-        0 => '<span class="forum-access-role-val">Only Some Users</span><p class="forum-role-warning-message">Once you apply changes, some users may no longer have access to the forum.</p><p>Allow only Digital Library members with certain user roles to view and join this forum</p>',
+        1 => '<span class="forum-access-role-val">All Users</span><p>Allow all Digital Library members to participate in this forum</p>',
+        0 => '<span class="forum-access-role-val">Only Some Users</span><p class="forum-role-warning-message">Once you apply changes, some users may no longer have access to the forum.</p><p>Allow only Digital Library members with certain user roles to participate in this forum</p>',
       ),
       'allowed_values_function' => '',
     ),

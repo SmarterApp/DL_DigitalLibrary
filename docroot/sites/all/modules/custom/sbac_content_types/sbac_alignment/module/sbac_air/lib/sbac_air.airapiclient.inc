@@ -3,7 +3,8 @@
  * AIR API CLIENT
  */
 class AIRAPIClient {
-  var $URL = "http://web-dev.opentestsystem.org:8080/corestandards/api/"; //should end with a /
+  // var $URL = "http://web-dev.opentestsystem.org:8080/corestandards/api/";
+  var $URL = "https://cs.smarterbalanced.org/corestandards/api/"; //should end with a /
   var $curl = NULL;
   var $HEADERS = array("Accept: application/json", "Content-Type: application/json", "Connection: TE, close");
 
@@ -13,8 +14,8 @@ class AIRAPIClient {
   function __construct() {
     $this->curl = curl_init();
     curl_setopt($this->curl, CURLOPT_URL, $this->URL);
-    curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
-    #curl_setopt($this->curl, CURLOPT_POST, 1);
+    curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($this->curl, CURLOPT_POST, 0);
     curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 10);
     curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->HEADERS);

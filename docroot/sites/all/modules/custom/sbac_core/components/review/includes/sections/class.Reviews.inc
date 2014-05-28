@@ -21,7 +21,7 @@ class Reviews extends Base {
       $forum_taxonomy = taxonomy_term_load($forum_id);
       $num_participants = $forum_taxonomy->field_forum_member_count['und'][0]['value'];
 
-      $js_link = "javascript:jQuery('a[href=#review-collaboration]').click()";
+      $js_link = "javascript:jQuery('a[href=#review-collaboration]').click(); void(0);";
 
       $collab_markup  =  '<div class="review-markup">';
       $collab_markup .=   '<div class="review-text-container">';

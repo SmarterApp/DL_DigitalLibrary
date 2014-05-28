@@ -6,6 +6,10 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   drupal_add_js('/misc/form.js');
   drupal_add_js('/misc/collapse.js');
 
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
+
   global $user;
   $node_data = entity_metadata_wrapper('node', $vars['node']);
   $forum_term = $node_data->field_topic_forum_parent->value();
@@ -70,6 +74,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
   $can_delete = node_access('delete', $vars['node']);
   if ($can_delete) {
+    drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.ctools.js");
     $link_ops = array(
       'attributes' => array(
         'class' => 'ctools-use-modal vp-control-link ctools-modal-sbac-forum-delete-topic-link',
@@ -83,8 +88,9 @@ function sbac_forum_preprocess_node__topic(&$vars) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 560,
-          'height' => 260,
+          'height' => 200,
         ),
+        'modalTheme' => 'CtoolSbacForumModal',
       ),
     );
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
@@ -99,30 +105,33 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       $vars['content']['flags']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
     }
     else {
-      if (!$is_member) {
-        ctools_include('ajax');
-        ctools_include('modal');
-        ctools_modal_add_js();
+      // Flag link
+      $is_default_topic = FALSE;
+      try {
+        $is_default_topic = $node_data->field_topic_default->value();
+      } catch (EntityMetadataWrapperException $e) {
+        // Don't worry about it, not all topics are default topics
       }
-
-      $link_ops_flag = array(
-        'attributes' => array(
-          'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
-          'id' => 'sbac-forum-flag-post-link',
-        ),
-      );
-      $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
-      $flag_link = '<span class="tertiary-flag-link">' . l('Flag', $flag_link, $link_ops_flag) . '</span>';
-      $js_settings_flag = array(
-        'sbac-forum-flag-post-link' => array(
-          'modalSize' => array(
-            'type' => 'fixed',
-            'width' => 700,
-            'height' => 414,
+      if (!$is_default_topic) {
+        $link_ops_flag = array(
+          'attributes' => array(
+            'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-link',
+            'id' => 'sbac-forum-flag-post-link',
           ),
-        ),
-      );
-      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+        );
+        $flag_link = 'sbac-forum/flag/nojs/' . $node_data->nid->value() . '/0';
+        $flag_link = '<span class="tertiary-flag-link">' . l('Flag', $flag_link, $link_ops_flag) . '</span>';
+        $js_settings_flag = array(
+          'sbac-forum-flag-post-link' => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 700,
+              'height' => 414,
+            ),
+          ),
+        );
+        drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+      }
     }
   }
 
@@ -387,11 +396,11 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
   // Override reply link
   if (isset($vars['content']['links']['comment']['#links']['comment-reply'])) {
     $new_url = 'sbac-forum/custom/comment-reply/' . $comment_entity->nid . '/' . $comment_entity->cid;
-    $vars['content']['reply_link'] = l(t('Reply'), $new_url, array('attributes' => array('class' => array('comment-reply'))));
+    $vars['reply_link'] = l(t('Reply'), $new_url, array('attributes' => array('class' => array('comment-reply'))));
   }
 
   // Recommend count
-  $vars['content']['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
+  $vars['recommend_count'] = $comment_data->field_topic_comment_recommended->count();
 
   if ($_SESSION['sbac-topic-comment-sorts'] == 'comment-most-recommended') {
     $nid = $comment_entity->nid;
@@ -401,13 +410,13 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
   if ($is_comment_author) {
     if (isset($vars['content']['links']['comment']['#links']['comment-edit'])) {
-      $vars['content']['edit_link'] = l(t('Edit'), $vars['content']['links']['comment']['#links']['comment-edit']['href'], array('attributes' => array('class' => array('comment-edit'))));
+      $vars['edit_link'] = l(t('Edit'), $vars['content']['links']['comment']['#links']['comment-edit']['href'], array('attributes' => array('class' => array('comment-edit'))));
     }
   }
   else {
     // Recommend link
     if (!sbac_forum_user_has_recommended($comment_entity->cid, $user->uid)) {
-      $vars['content']['recommend_link'] = l(t('Recommend'), current_path(), array(
+      $vars['recommend_link'] = l(t('Recommend'), current_path(), array(
         'attributes' => array(
           'cid' => $comment_entity->cid,
           'id' => 'sbac-recommend-' . $comment_entity->cid,
@@ -419,41 +428,30 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
     }
 
     // Flag link
-    $is_default_topic = FALSE;
-    try {
-      $is_default_topic = $comment_data->node->field_topic_default->value();
-    } catch (EntityMetadataWrapperException $e) {
-      // Don't worry about it, not all topics are default topics
+    $link_ops = array(
+      'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+      'id' => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
+    );
+    $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid, $user->uid);
+    if ($flagged) {
+      $reason = taxonomy_term_load($flagged['flag_selected']);
+      $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
+      $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
     }
-    if (!$is_default_topic) {
-      $link_ops = array(
-        'class' => 'ctools-use-modal ctools-modal-sbac-forum-flag-post-' . $comment_entity->cid . '-link',
-        'id' => 'sbac-forum-flag-post-' . $comment_entity->cid . '-link',
-      );
-      $flagged = sbac_flag_get_collaboration_flag($comment_entity->nid, $comment_entity->cid, $user->uid);
-      if ($flagged) {
-        $reason = taxonomy_term_load($flagged['flag_selected']);
-        $vars['content']['flags']['comments']['reason'] = '<span class="tertiary-flag-head">You flagged this post because ' . lcfirst($reason->name) . '</span>';
-        $vars['content']['flags']['comments']['comment'] = '<span class="tertiary-flag-desc">"' . $flagged['flag_comment'] . '"</span>';
-      }
-      else {
-        ctools_include('ajax');
-        ctools_include('modal');
-        ctools_modal_add_js();
-        $js_settings_flag = array(
-          'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
-            'modalSize' => array(
-              'type' => 'fixed',
-              'width' => 700,
-              'height' => 414,
-            ),
+    else {
+      $js_settings_flag = array(
+        'sbac-forum-flag-post-' . $comment_entity->cid . '-link' => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 700,
+            'height' => 414,
           ),
-        );
-        drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
+        ),
+      );
+      drupal_add_js($js_settings_flag, 'setting'); // Styles the modal.
 
-        $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
-        $vars['content']['flag_link'] = l(t('Flag'), $flag_link, array('attributes' => $link_ops));
-      }
+      $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
+      $vars['flag_link'] = l(t('Flag'), $flag_link, array('attributes' => $link_ops));
     }
     $moderation_type = isset($_GET['flag']) ? $_GET['flag'] : '';
     $moderate_cid = isset($_GET['cid']) ? $_GET['cid'] : '';
@@ -719,7 +717,7 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
       $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
       $vars['review'] = t('Have you used this resource? If so, please take a moment to !review  !rating !count ',
         array(
-          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click()">review it</a>',
+          '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click(); void(0);">review it</a>',
           '!rating' => sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($resource_id)),
           '!count' => '<span class="collab-num-participants">' . ($collab_count = sbac_resource_get_rating_count($resource_id)) . '</span> ' . ($collab_count == 1 ? 'reviewer' : 'reviewers'),
         ));

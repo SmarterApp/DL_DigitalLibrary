@@ -16,7 +16,10 @@
 
   .taskit-interval {
     margin-bottom: 20px;
-
+		clear: both;
+		float: left;
+		width: 100%;
+		
     &:last-child {
       margin-bottom: 0;
     }
@@ -140,6 +143,7 @@
 .taskit-interval.interval-yesterday,
 .taskit-interval.interval-older,
 .taskit-interval.interval-prior {
+	
 	.taskit-forum-cont {
 		padding: 10px 40px 10px 0;
 		

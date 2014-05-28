@@ -1014,7 +1014,7 @@ function sbac_flag_remove_resource_review_form($form, &$form_state) {
     '#prefix' => '<div class="flag-button-cont">',
   );
 
-  $form['finish_moderation'] = array(
+  $form['finish_moderation_review'] = array(
     '#type' => 'submit',
     '#value' => 'Delete Resource Review',
     '#attributes' => array('class' => array('button', 'red'))
@@ -1515,6 +1515,11 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
     '#markup' => '<div class="flag-modal-cont">',
   );
 
+  $form['error'] = array(
+    '#type' => 'markup',
+    '#markup' => '',
+  );
+
   if ($form_state['info']['type'] == 'topic') {
     $node = entity_metadata_wrapper('node', $form_state['info']['nid']);
     $post_count = $node->comment_count->value();
@@ -1538,13 +1543,13 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
     $remove_button = array(
       '#type' => 'submit',
       '#value' => 'Remove Topic',
-			'#attributes' => array(
-	      'class' => array(
-	        'button',
-	        'red',
-	        'remove',
-	      ),
-			),
+      '#attributes' => array(
+        'class' => array(
+          'button',
+          'red',
+          'remove',
+        ),
+      ),
     );
   }
   elseif ($form_state['info']['type'] == 'comment') {
@@ -1556,11 +1561,6 @@ function sbac_flag_collaboration_remove_form($form, &$form_state) {
       '#maxlength_js' => TRUE,
       '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
     );
-
-  $form['error'] = array(
-    '#type' => 'markup',
-    '#markup' => '',
-  );
 
     $remove_button = array(
       '#type' => 'submit',

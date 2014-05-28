@@ -258,6 +258,7 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
     $link_url = 'sbac-forum/nojs/forum-delete/' . $term_id;
     $link = l($link_text, $link_url, $link_ops);
     $forum_control_links[] = $link;
+    drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.ctools.js");
     $js_settings = array(
       'sbac-forum-delete-forum-link' => array( // Link has to have ctools-modal- namespace class along with this id.
         'modalSize' => array(
@@ -265,6 +266,7 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
           'width' => 560,
           'height' => 240,
         ),
+        'modalTheme' => 'CtoolSbacForumModal'
       ),
     );
     drupal_add_js($js_settings, 'setting'); // Styles the modal.
