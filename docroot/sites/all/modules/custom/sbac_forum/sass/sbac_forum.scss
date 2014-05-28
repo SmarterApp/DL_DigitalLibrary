@@ -3509,61 +3509,13 @@ h2.title {
 /*Modal of Comment & Topic Delete Form; Modal of Leave Forum*/
 .node-type-topic,
 .page-forums-term {
-	#modalContent .ctools-modal-content .modal-content {
-		overflow: hidden;
-	}
 	
-	div.ctools-modal-content .modal-header {
-		padding: 0 !important;
-		display: none;
-	}
-}
-
-#sbac-forum-delete-forum-confirm,
-#sbac-forum-delete-comment-confirm,
-#sbac-forum-delete-topic-confirm,
-#sbac-forum-leave-forum-confirm {
-	
-	h2 {
-	  padding-bottom: 15px;
-    color: #000000;
-    display: block;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-    padding: 12px 0;
-    text-transform: capitalize;
-	}
-	
-	button{
-		float: right;
-		margin-left: 30px;
-	}
-	
-	button#edit-cancel.gray {
-	  background-color: #6E7379;
-    border: 1px solid #4D5457;
-		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
-		padding-left: 40px !important;
-	}
-	
-	button#edit-cancel.gray:before {
-   	content: url("../images/icon-buttonCancel.png");
-		left: 15px;
-		position: absolute;
-		top: 4px;
-	}
-	
-	button.form-submit.red:hover,
-	button.form-submit.red:focus  {
-		background-color: #8A1538 !important;
-	}
-}
-
-//Delete topic
-.node-type-topic {
 	#modalContent {
 		.ctools-modal-content.small {
+			
+			.modal-content {
+				overflow: hidden;
+			}
 
 			.modal-header {
 		    box-shadow: none !important;
@@ -3572,16 +3524,43 @@ h2.title {
 					font-size: 18px !important;
 				}
 			}
-
-			.modal-content {
-				padding: 0 40px !important;
+			
+			h2 {
+			  padding-bottom: 15px;
+		    color: #000000;
+		    display: block;
+		    font-size: 18px;
+		    font-weight: bold;
+		    margin: 0;
+		    padding: 12px 0;
+		    text-transform: capitalize;
 			}
 
-			.edit-delete-topic-overlay {
+			button{
+				float: right;
+				margin-left: 30px;
+			}
+
+			button#edit-cancel.gray {
+			  background-color: #6E7379;
+		    border: 1px solid #4D5457;
+				box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+				padding-left: 40px !important;
+			}
+
+			button#edit-cancel.gray:before {
+		   	content: url("../images/icon-buttonCancel.png");
+				left: 15px;
+				position: absolute;
+				top: 4px;
+			}
+						
+			button.form-submit.red {
 				line-height: 20px;
+				background-color: #8A1538 !important;
 			}
 
-			.edit-delete-topic-overlay:before {
+			button.form-submit.red:before {
 				content:"\e632";
 			  display: inline-block;
 			  font-family: 'sbac';
@@ -3592,9 +3571,15 @@ h2.title {
 			  top: 2px;
 				left: 0;
 			}
+
+			button.form-submit.red:hover,
+			button.form-submit.red:focus  {
+				background-color: #8A1538 !important;
+			}
 		}
 	}
 }
+
 // --------------------- Page Forums Search ------------------------------
 .page-forums-search {
 	
