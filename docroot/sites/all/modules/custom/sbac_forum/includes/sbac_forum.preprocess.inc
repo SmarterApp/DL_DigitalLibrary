@@ -167,7 +167,8 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   );
   $new_comment_url = 'sbac-forum/custom/comment-reply/' . $node_data->nid->value() . '/0';
   $topic_author_first_name = $topic_author->field_first_name['und'][0]['value'];
-  $action_section = l('Reply to Topic Contributor, ' . $topic_author_first_name, $new_comment_url, $action_link_ops);
+  $reply_to = ($type == 'node' ? 'Resource' : 'Topic');
+  $action_section = l('Reply to ' . $reply_to . ' Contributor, ' . $topic_author_first_name, $new_comment_url, $action_link_ops);
   $control_data = sbac_forum__api__create_forum_controls($is_faci, $forum_term->tid);
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
@@ -714,7 +715,7 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
     $vars['participants'] = l("Participants ({$participant_count})", 'forums/term/' . $forum_id, array('query' => array('qt-forum_content' => 1), 'fragment' => 'qt-forum_content'));
     if ($forum_wrapper->__isset('field_forum_resource_ref')) {
       $resource_id = $forum_wrapper->field_forum_resource_ref->nid->value();
-      $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
+      $vars['warning'] = t('Be aware this is a public site. You are participating as an employee of your district or institution.');
       $vars['review'] = t('Have you used this resource? If so, please take a moment to !review  !rating !count ',
         array(
           '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click(); void(0);">review it</a>',
