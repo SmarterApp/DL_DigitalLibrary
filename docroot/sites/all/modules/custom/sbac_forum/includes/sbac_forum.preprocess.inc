@@ -715,7 +715,7 @@ function sbac_forum_preprocess_views_view__forum_topic_list__block(&$vars) {
     $vars['participants'] = l("Participants ({$participant_count})", 'forums/term/' . $forum_id, array('query' => array('qt-forum_content' => 1), 'fragment' => 'qt-forum_content'));
     if ($forum_wrapper->__isset('field_forum_resource_ref')) {
       $resource_id = $forum_wrapper->field_forum_resource_ref->nid->value();
-      $vars['warning'] = t('Beware this is a public site. You are participating as an employee of your district or institution.');
+      $vars['warning'] = t('Be aware this is a public site. You are participating as an employee of your district or institution.');
       $vars['review'] = t('Have you used this resource? If so, please take a moment to !review  !rating !count ',
         array(
           '!review' => '<a href="javascript:jQuery(\'a[href=#review-reviews]\').click(); void(0);">review it</a>',
