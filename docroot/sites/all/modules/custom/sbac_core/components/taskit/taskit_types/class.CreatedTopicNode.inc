@@ -26,6 +26,7 @@ class CreatedTopicNode extends \taskit\sbac_core\BaseTask {
         ));
         $output .= '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format) . '</span> ';
         $output .= '<div class="taskit-content-toggle">' . $topic_wrapper->body->value->value() . ' </div > ';
+        $output = '<div class="taskit-forum-cont">' . $output . '</div>';
 
         return $output;
       } catch (\EntityMetadataWrapperException $e) {
