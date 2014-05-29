@@ -3,7 +3,6 @@
  * AIR API CLIENT
  */
 class AIRAPIClient {
-  // var $URL = "http://web-dev.opentestsystem.org:8080/corestandards/api/";
   var $URL = "https://cs.smarterbalanced.org/corestandards/api/"; //should end with a /
   var $curl = NULL;
   var $HEADERS = array("Accept: application/json", "Content-Type: application/json", "Connection: TE, close");
