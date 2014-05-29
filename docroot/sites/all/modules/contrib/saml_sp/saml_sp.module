@@ -286,6 +286,8 @@ function saml_sp_start($idp, $callback) {
   saml_sp__track_request($id, $idp, $callback);
 
   // Redirect the user to the IDP.
+  global $base_url;
+  $url .= '&RelayState=' . urlencode($base_url);
   header("Location: $url");
 }
 
