@@ -259,7 +259,7 @@ function sbac_sso_preprocess_page(&$vars) {
     drupal_add_js(drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.js');
     $session_button = l(t('Session Expire (modal)'), 'sbac-sso/nojs/session-expire', array(
       'attributes' => array(
-        'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-sso-session-expire',
+        'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-sso-session-expire small',
         'id' => 'sbac-sso-session-expire'
       ),
     ));
