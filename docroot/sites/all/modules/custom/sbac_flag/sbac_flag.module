@@ -1155,7 +1155,7 @@ function sbac_flag_set_being_moderated($node, $eck_review = FALSE) {
  */
 function sbac_flag_unset_being_moderated($node, $eck_review = FALSE) {
   if ($eck_review) {
-    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :being_moderated, ef.changed = :changed WHERE ef.target_id = :target_id AND ef.target_type = :type", array(':being_moderated' => 0, ':changed' => time(), ':target_id' => $eck_review, ':type' => 'review'));
+    db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :being_moderated, ef.changed = :changed WHERE ef.target_id = :target_id", array(':being_moderated' => 0, ':changed' => time(), ':target_id' => $eck_review,));
   }
   else {
     db_query("UPDATE {eck_flag} ef SET ef.being_moderated = :being_moderated, ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':being_moderated' => 0, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
