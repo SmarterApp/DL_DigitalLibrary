@@ -639,6 +639,11 @@ h2.name .field {
   padding-left: 0;
 }
 /* line 596, ../sass/profile.scss */
+#user-profile-form .vertical-tabs ul.vertical-tabs-list li,
+#sbac-favorites-user-favorites .vertical-tabs ul.vertical-tabs-list li {
+  width: 250px;
+}
+/* line 600, ../sass/profile.scss */
 #user-profile-form .vertical-tabs ul.vertical-tabs-list li.selected a:after,
 #sbac-favorites-user-favorites .vertical-tabs ul.vertical-tabs-list li.selected a:after {
   background: none repeat scroll 0 0 #FFFFFF;
@@ -652,7 +657,7 @@ h2.name .field {
   width: 0;
   z-index: 2;
 }
-/* line 608, ../sass/profile.scss */
+/* line 612, ../sass/profile.scss */
 #user-profile-form .vertical-tabs ul.vertical-tabs-list li a:after,
 #sbac-favorites-user-favorites .vertical-tabs ul.vertical-tabs-list li a:after {
   background: none repeat scroll 0 0 #FFFFFF;
@@ -666,7 +671,7 @@ h2.name .field {
   width: 0;
   z-index: 1;
 }
-/* line 620, ../sass/profile.scss */
+/* line 624, ../sass/profile.scss */
 #user-profile-form .vertical-tabs ul.vertical-tabs-list li.selected a,
 #sbac-favorites-user-favorites .vertical-tabs ul.vertical-tabs-list li.selected a {
   box-shadow: none;
@@ -676,43 +681,43 @@ h2.name .field {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
 
-/* line 631, ../sass/profile.scss */
+/* line 635, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs {
   border: none;
 }
-/* line 634, ../sass/profile.scss */
+/* line 638, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs fieldset.vertical-tabs-pane {
   padding: 0 0 0 1em;
 }
-/* line 639, ../sass/profile.scss */
+/* line 643, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list {
   margin-left: -240px;
   width: 270px;
   border: none;
 }
-/* line 643, ../sass/profile.scss */
+/* line 647, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li {
   border: none;
   background: none;
 }
-/* line 646, ../sass/profile.scss */
+/* line 650, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li.first a {
   border-radius: 6px 6px 0 0;
   border-color: #CECECE #CECECE;
 }
-/* line 650, ../sass/profile.scss */
+/* line 654, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li.last a {
   border-radius: 0 0 6px 6px;
 }
-/* line 653, ../sass/profile.scss */
+/* line 657, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li.selected {
   background: none;
 }
-/* line 656, ../sass/profile.scss */
+/* line 660, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li.selected a strong {
   color: #fff;
 }
-/* line 660, ../sass/profile.scss */
+/* line 664, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li a {
   background-color: #F7F7F7;
   border-color: #FFFFFF #CECECE #CECECE;
@@ -728,42 +733,42 @@ h2.name .field {
   text-align: left;
   width: 250px;
 }
-/* line 675, ../sass/profile.scss */
+/* line 679, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li a span {
   display: inline-block;
 }
-/* line 678, ../sass/profile.scss */
+/* line 682, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li a span.form-required {
   color: #FF0000;
 }
-/* line 683, ../sass/profile.scss */
+/* line 687, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li a:hover {
   outline: none;
   background-color: #F2F2F2;
   color: #006082;
 }
-/* line 688, ../sass/profile.scss */
+/* line 692, ../sass/profile.scss */
 .page-user .row.second .vertical-tabs-list li a:focus strong, .page-user .row.second .vertical-tabs-list li a:active strong {
   outline: none;
   text-decoration: none;
 }
 
 /*Favorites Tab*/
-/* line 699, ../sass/profile.scss */
+/* line 703, ../sass/profile.scss */
 #sbac-favorites-forum-table-drag-drop,
 #sbac-favorites-resource-table-drag-drop {
   margin-top: 10px;
   width: 100%;
 }
 
-/* line 706, ../sass/profile.scss */
+/* line 710, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons button,
 #edit-tab-container-forum-tab-buttons button {
   float: right;
   margin-left: 20px;
   padding-left: 40px;
 }
-/* line 713, ../sass/profile.scss */
+/* line 717, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons #sbac-favorites-forum-submit:before,
 #edit-tab-container-resource-tab-buttons #sbac-favorites-resource-submit:before,
 #edit-tab-container-forum-tab-buttons #sbac-favorites-forum-submit:before,
@@ -773,7 +778,7 @@ h2.name .field {
   position: absolute;
   top: 4px;
 }
-/* line 721, ../sass/profile.scss */
+/* line 725, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons #sbac-favorites-forum-cancel:before,
 #edit-tab-container-resource-tab-buttons #sbac-favorites-resource-cancel:before,
 #edit-tab-container-forum-tab-buttons #sbac-favorites-forum-cancel:before,

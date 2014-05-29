@@ -241,6 +241,7 @@
             $('.slideable').hide();
             Drupal.settings.sbac_forum.isEdit = 0;
             $('#sbac-forum-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
+            $('#sbac-forum-category-forum-form').submit();
           }
         }
         return false;
