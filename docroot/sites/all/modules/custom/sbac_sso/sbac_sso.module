@@ -259,7 +259,7 @@ function sbac_sso_preprocess_page(&$vars) {
     drupal_add_js(drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.js');
     $session_button = l(t('Session Expire (modal)'), 'sbac-sso/nojs/session-expire', array(
       'attributes' => array(
-        'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-sso-session-expire',
+        'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-sso-session-expire small',
         'id' => 'sbac-sso-session-expire'
       ),
     ));
@@ -340,7 +340,11 @@ function sbac_sso_consume() {
     }
 
     global $base_url;
-    $original_access_url = $base_url . '/' . $_GET['q'];
+    $original_access_url = $base_url;
+    if (isset($_SERVER['REQUEST_URI'])) {
+      $original_access_url .= '/' . $_SERVER['REQUEST_URI'];
+    }
+    error_log("GET: " . print_r($_SERVER, TRUE));
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
     $saml_assertion = sbac_sso_saml_assertion();
@@ -361,6 +365,10 @@ function sbac_sso_consume() {
         // ERROR CODE 200: Error updating user with user attributes that were passed.
         drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
       }
+      error_log("REQUEST: " . print_r($_REQUEST, TRUE));
+      error_log("GET: " . print_r($_GET, TRUE));
+      error_log("SERVER: " . print_r($_SERVER, TRUE));
+
       // Log user in.
       $form_state['uid'] = $user->uid;
       user_login_submit(array(), $form_state);
@@ -450,6 +458,7 @@ function sbac_sso_validate_saml_assertion($saml_token) {
   $objDSig = $objXMLSecDSig->locateSignature($doc);
   if (!$objDSig) {
     watchdog('sbac_sso', 'Cannot locate Signature Node');
+    return FALSE;
   }
   $objXMLSecDSig->canonicalizeSignedInfo();
   $objXMLSecDSig->idKeys = array('ID');
@@ -457,20 +466,24 @@ function sbac_sso_validate_saml_assertion($saml_token) {
   $retVal = $objXMLSecDSig->validateReference();
   if (!$retVal) {
     watchdog('sbac_sso', 'Reference Validation Failed');
+    return FALSE;
   }
   $objKey = $objXMLSecDSig->locateKey();
   if (!$objKey) {
     watchdog('sbac_sso', 'We have no idea about the key');
+    return FALSE;
   }
   $key = NULL;
   $objKeyInfo = XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
   if (!$objKeyInfo->key && empty($key)) {
+    watchdog('sbac_sso', 'Key could not be found.');
     return FALSE;
   }
   if ($objXMLSecDSig->verify($objKey)) {
     return TRUE;
   }
   else {
+    watchdog('sbac_sso', 'Key could not be verified.');
     return FALSE;
   }
 }

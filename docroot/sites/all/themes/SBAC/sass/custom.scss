@@ -2220,7 +2220,7 @@ a.tabledrag-handle .handle {
 
 #modalContent {
 	.ctools-modal-content.small {
-		height: 250px !important;
+		height: 235px !important;
 		padding: 10px 0 0 0;
 		
 		.modal-content {
@@ -2304,16 +2304,18 @@ a.tabledrag-handle .handle {
 
 //SSO session expire modal
 #sbac-sso-session-expire-form {
-	margin-top: -5px;
+	p {
+		margin-bottom: 30px;
+	}
 }
 
-//Delete forum and topic modal
+/*//Delete forum and topic modal
 #sbac-forum-delete-forum-confirm,
 #sbac-forum-delete-topic-confirm {
 	p {
 		margin-bottom: 30px;
 	}
-}
+}*/
 
 /* -----------------------------------------
   Textify

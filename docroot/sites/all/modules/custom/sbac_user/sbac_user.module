@@ -864,6 +864,8 @@ function sbac_user_user_login(&$edit, $account) {
       drupal_goto('user/' . $account->uid);
     }
     else {
+      error_log("GET: " . print_r($_GET, TRUE));
+      error_log("SERVER: " . print_r($_SERVER, TRUE));
       drupal_goto('digital-library-resources');
     }
   }
