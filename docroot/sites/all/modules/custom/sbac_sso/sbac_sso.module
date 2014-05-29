@@ -327,31 +327,70 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
 function sbac_sso_consume() {
   $is_valid = FALSE;
   $saml_token = NULL;
-  //$saml_token = sbac_sso_get_saml_token2();
+//  $saml_token = sbac_sso_get_saml_token2();
   if (isset($_POST['SAMLResponse'])) {
+//  if ($saml_token) {
+//    error_log("SAML TOKEN: " . $saml_token);
+//    error_log("1");
+//    if ($inbound_id = _saml_sp__extract_inbound_id($saml_token)) {
+//      error_log("12");
+//        $idp = saml_sp_idp_load('dev');
+//        $settings = saml_sp__get_settings($idp);
+//        $samlResponse = new OneLogin_Saml_Response($settings, $saml_token);
+//      error_log("13");
+//        // Try to check the validity of the samlResponse.
+//        try {
+//          // $samlResponse->isValid() will throw various exceptions to communicate
+//          // any errors. Sadly, these are all of type Exception - no subclassing.
+//          error_log("14");
+//          $is_valid = $samlResponse->isValid();
+//          error_log("valid111111abc: " . $is_valid);
+//        }
+//        catch (Exception $e) {
+//          error_log("WHAT THE HELL");
+//          // @TODO: inspect the Exceptions, and log a meaningful error condition.
+//          $is_valid = FALSE;
+//        }
+//    }
+
+    require(drupal_get_path('module', 'sbac_sso'). '/xmlseclibs/xmlseclibs.php');
     $saml_token = base64_decode($_POST['SAMLResponse']);
-    error_log("SAML TOKEN: " . $saml_token);
-    error_log("1");
-    if ($inbound_id = _saml_sp__extract_inbound_id($_POST['SAMLResponse'])) {
-      error_log("12");
-        $idp = saml_sp_idp_load('dev');
-        $settings = saml_sp__get_settings($idp);
-        $samlResponse = new OneLogin_Saml_Response($settings, $_POST['SAMLResponse']);
-      error_log("13");
-        // Try to check the validity of the samlResponse.
-        try {
-          // $samlResponse->isValid() will throw various exceptions to communicate
-          // any errors. Sadly, these are all of type Exception - no subclassing.
-          error_log("14");
-          $is_valid = $samlResponse->isValid();
-          error_log("valid111111abc: " . $is_valid);
-        }
-        catch (Exception $e) {
-          error_log("WHAT THE HELL");
-          // @TODO: inspect the Exceptions, and log a meaningful error condition.
-          $is_valid = FALSE;
-        }
+    $doc = new DOMDocument();
+    $doc->loadXML($saml_token);
+    $objXMLSecDSig = new XMLSecurityDSig();
+    $objDSig = $objXMLSecDSig->locateSignature($doc);
+    if (!$objDSig) {
+      throw new Exception("Cannot locate Signature Node");
     }
+    $objXMLSecDSig->canonicalizeSignedInfo();
+    $objXMLSecDSig->idKeys = array('ID');
+    $objXMLSecDSig->idNS = array('wsu' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
+
+    $retVal = $objXMLSecDSig->validateReference();
+
+    if (!$retVal) {
+      throw new Exception("Reference Validation Failed");
+    }
+
+    $objKey = $objXMLSecDSig->locateKey();
+    if (!$objKey) {
+      throw new Exception("We have no idea about the key");
+    }
+    $key = NULL;
+
+    $objKeyInfo = XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
+
+    if (!$objKeyInfo->key && empty($key)) {
+      $objKey->loadKey(dirname(__FILE__) . '/mycert.pem', TRUE);
+    }
+
+    if ($objXMLSecDSig->verify($objKey)) {
+      $is_valid = TRUE;
+    }
+    else {
+      $is_valid = FALSE;
+    }
+
   }
   else {
     error_log("15");

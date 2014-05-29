@@ -92,12 +92,12 @@ class OneLogin_Saml_XmlSec
             throw new Exception('Multiple assertions are not supported');
         }
       error_log("valid14");
-        $validTimestamps = $this->validateTimestamps();
-        if (!$validTimestamps) {
-          error_log("invalid14");
-            throw new Exception('Timing issues (please check your clock settings)
-            ');
-        }
+//        $validTimestamps = $this->validateTimestamps();
+//        if (!$validTimestamps) {
+//          error_log("invalid14");
+//            throw new Exception('Timing issues (please check your clock settings)
+//            ');
+//        }
       error_log("valid15");
         $objKey = $objXMLSecDSig->locateKey();
         if (!$objKey) {
@@ -110,14 +110,8 @@ class OneLogin_Saml_XmlSec
         $objKey->loadKey($this->_settings->idpPublicCertificate, FALSE, TRUE);
       error_log("valid17");
 
-      if ($objXMLSecDSig->verify($objKey)) {
-        error_log("valid18");
-        return true;
-      }
-      else {
-        error_log("valid19");
-        return false;
-      }
+      return ($objXMLSecDSig->verify($objKey) === 1);
+
 
 
     }
