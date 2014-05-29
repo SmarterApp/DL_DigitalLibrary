@@ -30,9 +30,9 @@
         clearTimeout(redirect_to_login);
       }
       // 300 seconds = 5 minutes, warn at 200 seconds
-      var php_cookie_lifetime = Drupal.settings.sbac_session_lifetime;
+      var php_cookie_lifetime = 300; // Drupal.settings.sbac_session_lifetime;
       // - 5 minutes to give the user time to make a decision.
-      var session_lifetime = (php_cookie_lifetime - 300) * 1000;
+      var session_lifetime = (php_cookie_lifetime - 280) * 1000;
       // minus 10 seconds to the session life time to give the system time to kick the user out completely.
       var php_session_lifetime = php_cookie_lifetime * 1000 - 10;
       display_modal_timer = setInterval(Drupal.behaviors.sbac_sso_session_expire.displayModal, session_lifetime);
