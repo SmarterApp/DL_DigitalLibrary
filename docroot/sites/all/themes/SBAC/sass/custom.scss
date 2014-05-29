@@ -2216,6 +2216,98 @@ a.tabledrag-handle .handle {
 	overflow-y: hidden !important;
 }
 
+//small modal
+
+#modalContent {
+	.ctools-modal-content.small {
+		height: 250px !important;
+		padding: 10px 0 0 0;
+		
+		.modal-content {
+			overflow: hidden;
+			padding: 0 40px !important;
+		}
+
+		.modal-header {
+	    box-shadow: none !important;
+			padding-left: 40px !important;
+
+			.modal-title {
+				font-size: 18px !important;
+			}
+		}
+		
+		h2 {
+		  padding-bottom: 15px;
+	    color: #000000;
+	    display: block;
+	    font-size: 18px;
+	    font-weight: bold;
+	    margin: 0;
+	    padding: 12px 0;
+	    text-transform: capitalize;
+		}
+
+		button{
+			float: right;
+			margin-left: 30px;
+		}
+		
+		.button.form-submit {
+			padding-left: 40px !important;
+		}
+		
+		.button.form-submit:before {
+		 content: url("../images/buttonAccept.png");
+		 left: 15px;
+		 position: absolute;
+		 top: 4px;
+		}
+		
+		button[id*="edit-cancel"].gray {
+		  background-color: #6E7379;
+	    border: 1px solid #4D5457;
+			box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+			padding-left: 40px !important;
+		}
+
+		button[id*="edit-cancel"].gray:before {
+	   	content: url("../images/buttonCancel.png");
+			left: 15px;
+			position: absolute;
+			top: 4px;
+		}
+					
+		button.form-submit.red {
+			line-height: 20px;
+			background-color: #8A1538 !important;
+		}
+
+		button.form-submit.red:before {
+			content:"\e632";
+		  display: inline-block;
+		  font-family: 'sbac';
+		  font-size: 20px;
+		  font-weight: normal;
+		  margin-right: 7px;
+		  position: relative;
+		  top: 2px;
+			left: 0;
+		}
+
+		button.form-submit.red:hover,
+		button.form-submit.red:focus  {
+			background-color: #8A1538 !important;
+		}
+	}
+}
+
+//SSO session expire modal
+
+#sbac-sso-session-expire-form {
+	margin-top: -5px;
+}
+
 /* -----------------------------------------
   Textify
   ------------------------------------------  */
