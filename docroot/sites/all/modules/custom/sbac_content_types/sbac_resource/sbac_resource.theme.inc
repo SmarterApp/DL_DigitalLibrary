@@ -1086,7 +1086,13 @@ function _sbac_resource_resource_review_links($fields, $row) {
         // -- gate keeper needs review or in review.
         // gk_being_reviewed, gk_needs_review
         // no completed GK, so start or continue
-        if ($row->sbac_node_resource_state_uid == 0 && $row->sbac_node_resource_state_flag != 'qc_needs_review') {
+        if ($row->sbac_node_resource_state_uid == 0 && strstr($row->sbac_node_resource_state_flag, 'gk_needs_review') !== FALSE) {
+          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper');
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', 'link');
+          $variables['text'] = t('Needs Review');
+        }
+        elseif ($row->sbac_node_resource_state_uid == 0 && $row->sbac_node_resource_state_flag != 'qc_needs_review') {
           $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc');
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
           $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', 'link');
