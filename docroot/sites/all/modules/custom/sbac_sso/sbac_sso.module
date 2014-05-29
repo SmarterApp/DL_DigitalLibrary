@@ -327,7 +327,8 @@ function sbac_sso_consume() {
   $is_valid = FALSE;
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
-    $is_valid = sbac_sso_validate_saml_assertion($_POST['SAMLResponse']);
+    $saml_token = base64_decode($_POST['SAMLResponse']);
+    $is_valid = sbac_sso_validate_saml_assertion($saml_token);
   }
   else {
     // Destroy the current session, and reset $user to the anonymous user.
@@ -438,17 +439,18 @@ function sbac_sso_validate_saml_response($saml_token) {
 /**
  * Validate the SAML assertion.
  *
- * @param $saml_token_encoded
+ * @param $saml_token
  * @return bool
  */
-function sbac_sso_validate_saml_assertion($saml_token_encoded) {
+function sbac_sso_validate_saml_assertion($saml_token) {
+  error_log("1");
   require(drupal_get_path('module', 'sbac_sso') . '/xmlseclibs/xmlseclibs.php');
-  $saml_token = base64_decode($saml_token_encoded);
   $doc = new DOMDocument();
   $doc->loadXML($saml_token);
   $objXMLSecDSig = new XMLSecurityDSig();
   $objDSig = $objXMLSecDSig->locateSignature($doc);
   if (!$objDSig) {
+    error_log("2");
     watchdog('sbac_sso', 'Cannot locate Signature Node');
   }
   $objXMLSecDSig->canonicalizeSignedInfo();
@@ -456,21 +458,26 @@ function sbac_sso_validate_saml_assertion($saml_token_encoded) {
   $objXMLSecDSig->idNS = array('wsu' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
   $retVal = $objXMLSecDSig->validateReference();
   if (!$retVal) {
+    error_log("3");
     watchdog('sbac_sso', 'Reference Validation Failed');
   }
   $objKey = $objXMLSecDSig->locateKey();
   if (!$objKey) {
+    error_log("4");
     watchdog('sbac_sso', 'We have no idea about the key');
   }
   $key = NULL;
   $objKeyInfo = XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
   if (!$objKeyInfo->key && empty($key)) {
+    error_log("5");
     return FALSE;
   }
   if ($objXMLSecDSig->verify($objKey)) {
+    error_log("6");
     return TRUE;
   }
   else {
+    error_log("7");
     return FALSE;
   }
 }
