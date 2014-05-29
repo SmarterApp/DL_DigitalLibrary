@@ -135,8 +135,7 @@ function sbac_sso_session_expire_form($form, &$form_state) {
   $form = array();
 
   $form['submit_description'] = array(
-    '#markup' => "<p>You've been on this page for close to 60 minutes, would
-        you like to extend your session on the Digital Library? Select OK to
+    '#markup' => "<p>Select OK to
         extend your session. Pressing CANCEL or failing to respond in the next
         two minutes will require site reauthentication.</p>"
   );
@@ -149,7 +148,7 @@ function sbac_sso_session_expire_form($form, &$form_state) {
 
   $form['cancel'] = array(
     '#type' => 'submit',
-    '#value' => 'CANCEL',
+    '#value' => 'Cancel',
     '#attributes' => array('class' => array('button', 'gray', 'cancel'))
   );
 
@@ -327,31 +326,54 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
 function sbac_sso_consume() {
   $is_valid = FALSE;
   $saml_token = NULL;
-  //$saml_token = sbac_sso_get_saml_token2();
   if (isset($_POST['SAMLResponse'])) {
-    $saml_token = base64_decode($_POST['SAMLResponse']);
-    error_log("SAML TOKEN: " . $saml_token);
+    require(drupal_get_path('module', 'sbac_sso'). '/xmlseclibs/xmlseclibs.php');
     error_log("1");
-    if ($inbound_id = _saml_sp__extract_inbound_id($_POST['SAMLResponse'])) {
-      error_log("12");
-        $idp = saml_sp_idp_load('dev');
-        $settings = saml_sp__get_settings($idp);
-        $samlResponse = new OneLogin_Saml_Response($settings, $_POST['SAMLResponse']);
-      error_log("13");
-        // Try to check the validity of the samlResponse.
-        try {
-          // $samlResponse->isValid() will throw various exceptions to communicate
-          // any errors. Sadly, these are all of type Exception - no subclassing.
-          error_log("14");
-          $is_valid = $samlResponse->isValid();
-          error_log("valid111111abc: " . $is_valid);
-        }
-        catch (Exception $e) {
-          error_log("WHAT THE HELL");
-          // @TODO: inspect the Exceptions, and log a meaningful error condition.
-          $is_valid = FALSE;
-        }
+    $saml_token = base64_decode($_POST['SAMLResponse']);
+    $doc = new DOMDocument();
+    $doc->loadXML($saml_token);
+    $objXMLSecDSig = new XMLSecurityDSig();
+    $objDSig = $objXMLSecDSig->locateSignature($doc);
+    error_log("12");
+    if (!$objDSig) {
+      throw new Exception("Cannot locate Signature Node");
     }
+    $objXMLSecDSig->canonicalizeSignedInfo();
+    $objXMLSecDSig->idKeys = array('ID');
+    $objXMLSecDSig->idNS = array('wsu' => 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
+
+    $retVal = $objXMLSecDSig->validateReference();
+
+    if (!$retVal) {
+      throw new Exception("Reference Validation Failed");
+    }
+    error_log("13");
+
+    $objKey = $objXMLSecDSig->locateKey();
+    if (!$objKey) {
+      throw new Exception("We have no idea about the key");
+    }
+    $key = NULL;
+    error_log("14");
+
+    $objKeyInfo = XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
+
+    if (!$objKeyInfo->key && empty($key)) {
+//      $objKey->loadKey(dirname(__FILE__) . '/mycert.pem', TRUE);
+    }
+    error_log("515");
+
+    if ($objXMLSecDSig->verify($objKey)) {
+      error_log("61");
+
+      $is_valid = TRUE;
+    }
+    else {
+      error_log("71");
+
+      $is_valid = FALSE;
+    }
+
   }
   else {
     error_log("15");
