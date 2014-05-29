@@ -39,7 +39,7 @@ class OneLogin_Saml_AuthRequest
       $id = user_password(10);
       $destination = 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp';
       $request = '
-      <samlp:AuthnRequest ID="' . $id . '" Version="2.0" IssueInstant="' . $issueInstant . '" Destination="' . $des . '" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $this->_settings->spReturnUrl . '" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+      <samlp:AuthnRequest ID="' . $id . '" Version="2.0" IssueInstant="' . $issueInstant . '" Destination="' . $destination . '" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $this->_settings->spReturnUrl . '" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
         <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer>
         <samlp:NameIDPolicy AllowCreate="true" />
     </samlp:AuthnRequest>';
