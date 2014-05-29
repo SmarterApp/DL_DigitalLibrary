@@ -436,14 +436,14 @@ function sbac_sso_validate_saml_response($saml_token) {
 }
 
 /**
- * Validate the SAML assertion. 
+ * Validate the SAML assertion.
  *
- * @param $saml_token
+ * @param $saml_token_encoded
  * @return bool
  */
-function sbac_sso_validate_saml_assertion($saml_token) {
+function sbac_sso_validate_saml_assertion($saml_token_encoded) {
   require(drupal_get_path('module', 'sbac_sso') . '/xmlseclibs/xmlseclibs.php');
-  $saml_token = base64_decode($_POST['SAMLResponse']);
+  $saml_token = base64_decode($saml_token_encoded);
   $doc = new DOMDocument();
   $doc->loadXML($saml_token);
   $objXMLSecDSig = new XMLSecurityDSig();
