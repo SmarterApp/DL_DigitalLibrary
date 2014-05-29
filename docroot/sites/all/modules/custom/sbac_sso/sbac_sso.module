@@ -413,6 +413,10 @@ function sbac_sso_validate_saml_response($saml_token) {
     drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
   }
   $user_attributes = sbac_sso_create_user_attributes($response);
+
+  error_log("RESPONSE: " . print_r($response, TRUE));
+  error_log("USERATTRIBUTES: " . print_r($user_attributes, TRUE));
+
   // If SAML assertion does not match expected definition or signature:
   if (!$user_attributes || !isset($user_attributes['name']) || $user_attributes['name'] == NULL || $user_attributes['name'] != 'DL_EndUser') {
     // If you do not find a matching tenancy chain, kick the user to an error page
