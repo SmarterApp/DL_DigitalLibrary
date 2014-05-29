@@ -328,15 +328,18 @@ function sbac_sso_consume() {
   $is_valid = FALSE;
   //$saml_token = sbac_sso_get_saml_token2();
   if (isset($_POST['SAMLResponse'])) {
+    error_log("1");
     if ($inbound_id = _saml_sp__extract_inbound_id($_POST['SAMLResponse'])) {
+      error_log("12");
         $idp = saml_sp_idp_load('dev');
         $settings = saml_sp__get_settings($idp);
         $samlResponse = new OneLogin_Saml_Response($settings, $_POST['SAMLResponse']);
-
+      error_log("13");
         // Try to check the validity of the samlResponse.
         try {
           // $samlResponse->isValid() will throw various exceptions to communicate
           // any errors. Sadly, these are all of type Exception - no subclassing.
+          error_log("14");
           $is_valid = $samlResponse->isValid();
         }
         catch (Exception $e) {
@@ -345,8 +348,9 @@ function sbac_sso_consume() {
         }
     }
   }
-  error_log("SAML: " . $saml_token);
-  if (!$is_valid) {
+  else {
+    error_log("15");
+
     // Destroy the current session, and reset $user to the anonymous user.
     if (user_is_logged_in()) {
       global $user;
@@ -354,6 +358,8 @@ function sbac_sso_consume() {
       module_invoke_all('user_logout', $user);
       session_destroy();
     }
+
+    error_log("16");
 
     global $base_url;
     $original_access_url = $base_url . '/' . $_GET['q'];
@@ -364,6 +370,8 @@ function sbac_sso_consume() {
     header('Location: ' . $url, TRUE, 302);
     drupal_exit($url);
   }
+
+  error_log("1");
 
   // validate SAML.
   $user = sbac_sso_validate_saml_response($saml_token);
