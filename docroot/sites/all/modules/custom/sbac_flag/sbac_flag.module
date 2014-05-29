@@ -1672,7 +1672,7 @@ function sbac_arg($index = NULL, $path = NULL) {
 function sbac_flag_preprocess_sbac_flag_list_card_topic(&$vars) {
   $body = $vars['flag_content']['eck_post']['post_body'];
   if (strlen($body) > 160) {
-    $body = substr($body, 0, 180);
+    $body = substr($body, 0, 165);
     $body = substr($body, 0, strrpos($body, ' ')) . '...';
     $vars['flag_content']['eck_post']['post_body'] = $body;
   }
