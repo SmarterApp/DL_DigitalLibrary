@@ -189,7 +189,7 @@ function sbac_share_login_redirect_view() {
       if ($stored_key) {
         $node = node_load($stored_key['nid']);
         if ($node) {
-          drupal_goto($node->path['alias']);
+          drupal_custom_goto($node->path['alias'] . '?key=' . $stored_key['key']);
         }
       }
     }

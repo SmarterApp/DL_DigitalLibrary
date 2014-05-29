@@ -33,7 +33,7 @@ function resource_access($op, $node, $account = NULL) {
 
     if (in_array($op, array('view collaboration'))) {
       if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published' && !in_array(SBAC_SHARE_GUEST, $account->roles)) {
-        return TRUE;
+        return sbac_forum_get_resource_forum_id($node->nid);
       }
     }
 
