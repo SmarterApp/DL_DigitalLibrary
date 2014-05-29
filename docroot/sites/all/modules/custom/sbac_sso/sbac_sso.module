@@ -259,7 +259,7 @@ function sbac_sso_preprocess_page(&$vars) {
     drupal_add_js(drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.js');
     $session_button = l(t('Session Expire (modal)'), 'sbac-sso/nojs/session-expire', array(
       'attributes' => array(
-        'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-sso-session-expire',
+        'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-sso-session-expire small',
         'id' => 'sbac-sso-session-expire'
       ),
     ));
@@ -327,7 +327,8 @@ function sbac_sso_consume() {
   $is_valid = FALSE;
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
-    $is_valid = sbac_sso_validate_saml_assertion($_POST['SAMLResponse']);
+    $saml_token = base64_decode($_POST['SAMLResponse']);
+    $is_valid = sbac_sso_validate_saml_assertion($saml_token);
   }
   else {
     // Destroy the current session, and reset $user to the anonymous user.
@@ -436,20 +437,20 @@ function sbac_sso_validate_saml_response($saml_token) {
 }
 
 /**
- * Validate the SAML assertion. 
+ * Validate the SAML assertion.
  *
  * @param $saml_token
  * @return bool
  */
 function sbac_sso_validate_saml_assertion($saml_token) {
   require(drupal_get_path('module', 'sbac_sso') . '/xmlseclibs/xmlseclibs.php');
-  $saml_token = base64_decode($_POST['SAMLResponse']);
   $doc = new DOMDocument();
   $doc->loadXML($saml_token);
   $objXMLSecDSig = new XMLSecurityDSig();
   $objDSig = $objXMLSecDSig->locateSignature($doc);
   if (!$objDSig) {
     watchdog('sbac_sso', 'Cannot locate Signature Node');
+    return FALSE;
   }
   $objXMLSecDSig->canonicalizeSignedInfo();
   $objXMLSecDSig->idKeys = array('ID');
@@ -457,20 +458,24 @@ function sbac_sso_validate_saml_assertion($saml_token) {
   $retVal = $objXMLSecDSig->validateReference();
   if (!$retVal) {
     watchdog('sbac_sso', 'Reference Validation Failed');
+    return FALSE;
   }
   $objKey = $objXMLSecDSig->locateKey();
   if (!$objKey) {
     watchdog('sbac_sso', 'We have no idea about the key');
+    return FALSE;
   }
   $key = NULL;
   $objKeyInfo = XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
   if (!$objKeyInfo->key && empty($key)) {
+    watchdog('sbac_sso', 'Key could not be found.');
     return FALSE;
   }
   if ($objXMLSecDSig->verify($objKey)) {
     return TRUE;
   }
   else {
+    watchdog('sbac_sso', 'Key could not be verified.');
     return FALSE;
   }
 }
