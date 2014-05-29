@@ -365,6 +365,7 @@ function sbac_sso_consume() {
         // ERROR CODE 200: Error updating user with user attributes that were passed.
         drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
       }
+      error_log("GET: " . print_r($_REQUEST, TRUE));
       error_log("GET: " . print_r($_GET, TRUE));
       error_log("SERVER: " . print_r($_SERVER, TRUE));
 
