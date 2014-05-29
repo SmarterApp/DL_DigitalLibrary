@@ -71,7 +71,7 @@ function sbac_forum_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'description_field' => 0,
-      'file_directory' => '',
+      'file_directory' => 'sbac_forum',
       'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf jpg jpeg gif png',
       'max_filesize' => '100 MB',
       'user_register_form' => FALSE,
@@ -739,7 +739,7 @@ function sbac_forum_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'description_field' => 0,
-      'file_directory' => '',
+      'file_directory' => 'sbac_forum',
       'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf jpg jpeg gif png',
       'max_filesize' => '100 MB',
       'user_register_form' => FALSE,
@@ -881,7 +881,7 @@ function sbac_forum_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'apply_chosen' => 0,
+        'apply_chosen' => 1,
         'label_help_description' => '',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
@@ -1528,7 +1528,7 @@ function sbac_forum_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'apply_chosen' => 0,
+        'apply_chosen' => 1,
         'label_help_description' => '',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),

@@ -1339,7 +1339,6 @@ function sbac_forum_form_views_exposed_form_alter(&$form, &$form_state, $form_id
       $selected_sort_by = $form_state['input']['sort_by'];
       $sort_by_label = $form['sort_by']['#options'][$selected_sort_by];
       $form['sort_by']['#options'][$selected_sort_by] = 'Sort by: ' . $sort_by_label;
-      $form['sort_by']['#attributes']['class'][] = 'no-chosen';
     }
   }
 }
@@ -1597,6 +1596,24 @@ function sbac_forum_node_insert($node) {
           }
         } catch (EntityMetadataWrapperException $e) {
         }
+
+        // Update user's topic count
+        if ($forum_wrapper->field_fc_forum_members->count()) {
+          foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
+            if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid) {
+              // Increment the recommend count
+              $current_topic_count = $member_wrapper->field_fc_forum_member_tpic_count->value();
+              $current_topic_count++;
+              $member_wrapper->field_fc_forum_member_tpic_count->set($current_topic_count);
+              // Set the date
+              $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+              // Update the participation score
+              $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $current_topic_count, $member_wrapper->field_fc_forum_member_post_count->value());
+              $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+              $member_wrapper->save(TRUE);
+            }
+          }
+        }
       }
     }
   }
@@ -1685,19 +1702,19 @@ function sbac_forum_comment_insert($comment) {
             cache_clear_all($cid, 'cache');
           }
         }
-        else {
-          if ($forum_wrapper->field_fc_forum_members->count()) {
-            foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
-              if ($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id) {
-                // Increment the post count
-                $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
-                $current_post_count++;
-                $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
-                // Set the date
-                $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
-                $member_wrapper->save(TRUE);
-
-              }
+        if ($forum_wrapper->field_fc_forum_members->count()) {
+          foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
+            if ($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id) {
+              // Increment the post count
+              $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
+              $current_post_count++;
+              $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
+              // Set the date
+              $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+              // Update the participation score
+              $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $member_wrapper->field_fc_forum_member_tpic_count->value(), $current_post_count);
+              $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+              $member_wrapper->save(TRUE);
             }
           }
         }
@@ -1936,6 +1953,15 @@ function sbac_forum_get_resource_forum_id($resource_nid) {
  * @return int
  */
 function sbac_forum_calculate_participation_score($recommendations, $topics, $replies) {
+  if (!$recommendations) {
+    $recommendations = 0;
+  }
+  if (!$topics) {
+    $topics = 0;
+  }
+  if (!$replies) {
+    $replies = 0;
+  }
   return (5 * $recommendations) + (2 * $topics) + $replies;
 }
 
@@ -1980,6 +2006,25 @@ function sbac_forum_recommend_ajax_click() {
       $task->addOwningUser($comment->uid);
       $task->addTriggeringUser($user->uid);
       $task->save();
+    }
+
+    // Increment user's recommend count
+    $forum_wrapper = $comment_wrapper->node->field_topic_forum_parent;
+    if ($forum_wrapper->field_fc_forum_members->count()) {
+      foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
+        if ($member_wrapper->field_fc_forum_member->uid->value() == $comment->uid) {
+          // Increment the recommend count
+          $current_recommend_count = $member_wrapper->field_fc_forum_member_reco_count->value();
+          $current_recommend_count++;
+          $member_wrapper->field_fc_forum_member_reco_count->set($current_recommend_count);
+          // Set the date
+          $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+          // Update the participation score
+          $participation_score = sbac_forum_calculate_participation_score($current_recommend_count, $member_wrapper->field_fc_forum_member_tpic_count->value(), $member_wrapper->field_fc_forum_member_post_count->value());
+          $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+          $member_wrapper->save(TRUE);
+        }
+      }
     }
   }
 

@@ -3039,12 +3039,6 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
       'wrapper' => 'form-wrapper-dl-sort-element',
       'progress' => array('type' => 'none'),
     ),
-    '#attributes' => array(
-      'class' => array(
-        'no-chosen'
-      )
-    )
-
   );
 
   return $form;
@@ -3216,11 +3210,6 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
       'wrapper' => 'form-wrapper-mr-sort-element',
       'progress' => array('type' => 'none'),
     ),
-    '#attributes' => array(
-      'class' => array(
-        'no-chosen'
-      )
-    )
   );
 
   return $form;
