@@ -1024,11 +1024,7 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
   global $user;
   $user_profile = user_load($user->uid);
   $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
-  $users_roles = array();
-  if (isset($user_profile_wrapper->field_position)) {
-    $position_term = $user_profile_wrapper->field_position->value();
-    $users_roles[] = $position_term->tid;
-  }
+  $users_roles = array_keys($user_profile->roles);
   $users_states = array();
   if (isset($user_profile_wrapper->field_state)) {
     $state_terms = $user_profile_wrapper->field_state->value();

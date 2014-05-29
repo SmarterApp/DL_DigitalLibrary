@@ -390,23 +390,23 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     )
   );
 
-  $vocab = taxonomy_vocabulary_machine_name_load('forum');
-  $access_to_add = _sbac_forum_add_forum_user_access($vocab);
-  if ($access_to_add) {
-    $link_options = array(
-      'attributes' => array(
-        'class' => 'new-forum-link',
-      ),
-    );
-    $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
-    $new_forum_link_text .= l('Start a Forum', 'forums/forum/add', $link_options);
-    $new_forum_link_text .= '</div>';
-    $form['forum_start'] = array(
-      '#markup' => $new_forum_link_text,
-    );
+  if ($active_tab == SBAC_FORUM_SUBNAV_TOPIC) {
+    $vocab = taxonomy_vocabulary_machine_name_load('forum');
+    $access_to_add = _sbac_forum_add_forum_user_access($vocab);
+    if ($access_to_add) {
+      $link_options = array(
+        'attributes' => array(
+          'class' => 'new-forum-link',
+        ),
+      );
+      $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
+      $new_forum_link_text .= l('Start a Forum', 'forums/forum/add', $link_options);
+      $new_forum_link_text .= '</div>';
+      $form['forum_start'] = array(
+        '#markup' => $new_forum_link_text,
+      );
+    }
   }
-
-
   return $form;
 }
 

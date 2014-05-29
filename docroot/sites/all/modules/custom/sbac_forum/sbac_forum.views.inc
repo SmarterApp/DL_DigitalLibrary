@@ -265,11 +265,7 @@ function sbac_forum_views_query_alter(&$view, &$query) {
     global $user;
     $user_profile = user_load($user->uid);
     $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
-    $users_roles = array();
-    if (isset($user_profile_wrapper->field_position)) {
-      $position_term = $user_profile_wrapper->field_position->value();
-      $users_roles[] = $position_term->tid;
-    }
+    $users_roles = array_keys($user_profile->roles);
     $users_states = array();
     if (isset($user_profile_wrapper->field_state)) {
       $state_terms = $user_profile_wrapper->field_state->value();
