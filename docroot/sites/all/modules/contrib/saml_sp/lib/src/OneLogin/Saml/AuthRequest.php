@@ -36,13 +36,33 @@ class OneLogin_Saml_AuthRequest
         $issueInstant = $this->_getTimestamp();
 
       global $base_url;
+      $id = user_password(10);
       $destination = 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp';
       $request = '
-      <samlp:AuthnRequest ID="' . $id . '" Version="2.0" IssueInstant="' . $issueInstant . '" Destination="' . $destination . '" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+      <samlp:AuthnRequest ID="' . $id . '" Version="2.0" IssueInstant="' . $issueInstant . '" Destination="' . $destination . '" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $this->_settings->spReturnUrl . '" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
         <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer>
         <samlp:NameIDPolicy AllowCreate="true" />
     </samlp:AuthnRequest>';
 
+
+//        $request = <<<AUTHNREQUEST
+//<samlp:AuthnRequest
+//    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+//    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+//    ID="$id"
+//    Version="2.0"
+//    IssueInstant="$issueInstant"
+//    ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+//    AssertionConsumerServiceURL="{$this->_settings->spReturnUrl}">
+//    <saml:Issuer>{$this->_settings->spIssuer}</saml:Issuer>
+//    <samlp:NameIDPolicy
+//        Format="{$this->_settings->requestedNameIdFormat}"
+//        AllowCreate="true"></samlp:NameIDPolicy>
+//    <samlp:RequestedAuthnContext Comparison="exact">
+//        <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef>
+//    </samlp:RequestedAuthnContext>
+//</samlp:AuthnRequest>
+//AUTHNREQUEST;
 
         $deflatedRequest = gzdeflate($request);
         $base64Request = base64_encode($deflatedRequest);

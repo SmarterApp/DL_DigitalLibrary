@@ -1670,10 +1670,5 @@ function sbac_arg($index = NULL, $path = NULL) {
  * @param  array  $vars Teh variables array.
  */
 function sbac_flag_preprocess_sbac_flag_list_card_topic(&$vars) {
-  $body = $vars['flag_content']['eck_post']['post_body'];
-  if (strlen($body) > 160) {
-    $body = substr($body, 0, 165);
-    $body = substr($body, 0, strrpos($body, ' ')) . '...';
-    $vars['flag_content']['eck_post']['post_body'] = $body;
-  }
+  $vars['flag_content']['eck_post']['post_body'] = truncate_utf8($vars['flag_content']['eck_post']['post_body'], 170, TRUE, TRUE);
 }
