@@ -2303,9 +2303,16 @@ a.tabledrag-handle .handle {
 }
 
 //SSO session expire modal
-
 #sbac-sso-session-expire-form {
 	margin-top: -5px;
+}
+
+//Delete forum and topic modal
+#sbac-forum-delete-forum-confirm,
+#sbac-forum-delete-topic-confirm {
+	p {
+		margin-bottom: 30px;
+	}
 }
 
 /* -----------------------------------------
