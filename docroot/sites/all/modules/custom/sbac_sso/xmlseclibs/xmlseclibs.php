@@ -1380,6 +1380,41 @@ class XMLSecurityDSig {
     public function getValidatedNodes() {
         return $this->validatedNodes;
     }
+
+    /**
+     * Verify that the document only contains a single Assertion
+     *
+     * @return bool TRUE if the document passes.
+     */
+    public function validateNumAssertions()
+    {
+      $rootNode = $this->sigNode;
+      $assertionNodes = $rootNode->getElementsByTagName('Assertion');
+      return ($assertionNodes->length == 1);
+    }
+
+    /**
+     * Verify that the document is still valid according
+     *
+     * @return bool
+     */
+    public function validateTimestamps()
+    {
+      $rootNode = $this->sigNode;
+      $timestampNodes = $rootNode->getElementsByTagName('Conditions');
+      for ($i = 0; $i < $timestampNodes->length; $i++) {
+        $nbAttribute = $timestampNodes->item($i)->attributes->getNamedItem("NotBefore");
+        $naAttribute = $timestampNodes->item($i)->attributes->getNamedItem("NotOnOrAfter");
+        if ($nbAttribute && strtotime($nbAttribute->textContent) > time()) {
+          return false;
+        }
+        if ($naAttribute && strtotime($naAttribute->textContent) <= time()) {
+          return false;
+        }
+      }
+      return true;
+  }
+
 }
 
 class XMLSecEnc {

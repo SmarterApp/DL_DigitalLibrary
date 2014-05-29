@@ -450,6 +450,7 @@ function sbac_sso_validate_saml_assertion($saml_token) {
   $objDSig = $objXMLSecDSig->locateSignature($doc);
   if (!$objDSig) {
     watchdog('sbac_sso', 'Cannot locate Signature Node');
+    return FALSE;
   }
   $objXMLSecDSig->canonicalizeSignedInfo();
   $objXMLSecDSig->idKeys = array('ID');
@@ -457,28 +458,34 @@ function sbac_sso_validate_saml_assertion($saml_token) {
   $retVal = $objXMLSecDSig->validateReference();
   if (!$retVal) {
     watchdog('sbac_sso', 'Reference Validation Failed');
+    return FALSE;
   }
-  $singleAssertion = $this->validateNumAssertions();
+  $singleAssertion = $objXMLSecDSig->validateNumAssertions();
   if (!$singleAssertion) {
     watchdog('sbac_sso', 'Multiple assertions are not supported');
+    return FALSE;
   }
-  $validTimestamps = $this->validateTimestamps();
+  $validTimestamps = $objXMLSecDSig->validateTimestamps();
   if (!$validTimestamps) {
     watchdog('sbac_sso', 'Invalid timestamp in assertion.');
+    return FALSE;
   }
   $objKey = $objXMLSecDSig->locateKey();
   if (!$objKey) {
     watchdog('sbac_sso', 'We have no idea about the key');
+    return FALSE;
   }
   $key = NULL;
   $objKeyInfo = XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
   if (!$objKeyInfo->key && empty($key)) {
+    watchdog('sbac_sso', 'Key could not be found.');
     return FALSE;
   }
   if ($objXMLSecDSig->verify($objKey)) {
     return TRUE;
   }
   else {
+    watchdog('sbac_sso', 'Key could not be verified.');
     return FALSE;
   }
 }
