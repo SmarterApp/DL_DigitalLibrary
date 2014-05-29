@@ -442,7 +442,7 @@ function sbac_favorites_user_favorites_submit($form, &$form_state) {
       );
     }
   }
-  drupal_custom_goto('/user#profile-favorites');
+  drupal_goto(current_path(), array('fragment' => 'profile-favorites'));
 }
 
 /**
