@@ -32,7 +32,7 @@ function resource_access($op, $node, $account = NULL) {
     }
 
     if (in_array($op, array('view collaboration'))) {
-      if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
+      if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published' && !in_array(SBAC_SHARE_GUEST, $account->roles)) {
         return TRUE;
       }
     }
