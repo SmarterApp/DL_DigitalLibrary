@@ -13,7 +13,7 @@
         </div>
         <div class="post-body">
           <span class="post-body-text">
-            <?php echo $flag_content['eck_post']['post_body']; ?>
+            <?php echo substr($flag_content['eck_post']['post_body'], 0, 180) . ' ...'; ?>
           </span>
         </div>
       </div>
