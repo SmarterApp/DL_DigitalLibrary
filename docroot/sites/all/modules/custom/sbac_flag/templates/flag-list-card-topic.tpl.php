@@ -13,7 +13,7 @@
         </div>
         <div class="post-body">
           <span class="post-body-text">
-            <?php echo $flag_content['eck_post']['post_body']; ?>
+            <?php echo truncate_utf8($flag_content['eck_post']['post_body'], 150, TRUE, TRUE); ?>
           </span>
         </div>
       </div>
