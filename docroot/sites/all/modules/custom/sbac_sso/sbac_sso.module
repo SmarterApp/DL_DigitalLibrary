@@ -115,7 +115,7 @@ function sbac_sso_session_expire_modal($js = FALSE) {
         module_invoke_all('user_logout', $user);
         session_destroy();
 
-        $url = SBAC_SSO_LOGOUT_URL;
+        $url = SBAC_SSO_DESTROY_SESSION_URL;
         $output[] = ctools_ajax_command_redirect($url);
       }
     }
