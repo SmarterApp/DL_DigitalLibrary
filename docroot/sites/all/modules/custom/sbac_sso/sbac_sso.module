@@ -458,6 +458,14 @@ function sbac_sso_validate_saml_assertion($saml_token) {
   if (!$retVal) {
     watchdog('sbac_sso', 'Reference Validation Failed');
   }
+  $singleAssertion = $this->validateNumAssertions();
+  if (!$singleAssertion) {
+    watchdog('sbac_sso', 'Multiple assertions are not supported');
+  }
+  $validTimestamps = $this->validateTimestamps();
+  if (!$validTimestamps) {
+    watchdog('sbac_sso', 'Invalid timestamp in assertion.');
+  }
   $objKey = $objXMLSecDSig->locateKey();
   if (!$objKey) {
     watchdog('sbac_sso', 'We have no idea about the key');
