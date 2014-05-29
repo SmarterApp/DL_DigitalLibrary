@@ -2397,6 +2397,7 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
     '#weight' => 0,
     '#attributes' => array('class' => array('sbac-cancel-blue', 'sbac-resource-cancel-button')),
     '#limit_validation_errors' => array(),
+    '#submit' => array('_sbac_resource_my_resource_redirect'),
   );
 }
 
@@ -3612,4 +3613,11 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
       }
     }
   }
+}
+
+/**
+ * Submit action for 'Close' button.
+ */
+function _sbac_resource_my_resource_redirect() {
+  drupal_goto('my-resources');
 }
