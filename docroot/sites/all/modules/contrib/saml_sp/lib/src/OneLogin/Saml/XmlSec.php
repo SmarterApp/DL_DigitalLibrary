@@ -104,6 +104,14 @@ class OneLogin_Saml_XmlSec
 
         $objKey->loadKey($this->_settings->idpPublicCertificate, FALSE, TRUE);
       error_log("valid17");
-        return ($objXMLSecDSig->verify($objKey) === 1);
+
+      if ($objXMLSecDSig->verify($objKey)) {
+        return true;
+      }
+      else {
+        return false;
+      }
+
+
     }
 }

@@ -343,7 +343,7 @@ function sbac_sso_consume() {
           // any errors. Sadly, these are all of type Exception - no subclassing.
           error_log("14");
           $is_valid = $samlResponse->isValid();
-          error_log("valid: " . $is_valid);
+          error_log("valid111111abc: " . $is_valid);
         }
         catch (Exception $e) {
           // @TODO: inspect the Exceptions, and log a meaningful error condition.
