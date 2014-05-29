@@ -664,7 +664,7 @@ function sbac_sso_parse_program_api_result($result) {
         foreach ($tenant_subscriptions as $key => $subscription) {
           if (isset($subscription['component'])) {
             $component = $subscription['component'];
-            if (($component['name'] != 'Digital Library' || $component['name'] != 'DigitalLibrary' ) || $subscription['inGoodStanding'] != TRUE) {
+            if (($component['name'] != 'Digital Library' && $component['name'] != 'DigitalLibrary' ) || $subscription['inGoodStanding'] != TRUE) {
               $error = TRUE;
               break;
             }
