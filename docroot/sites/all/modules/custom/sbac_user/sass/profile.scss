@@ -593,6 +593,10 @@ h2.name {
 		padding-left: 0;
 	}
 	
+	.vertical-tabs ul.vertical-tabs-list li {
+		width: 250px;
+	}
+	
 	.vertical-tabs ul.vertical-tabs-list li.selected a:after {
 	    background: none repeat scroll 0 0 #FFFFFF;
 	    box-shadow: none;
