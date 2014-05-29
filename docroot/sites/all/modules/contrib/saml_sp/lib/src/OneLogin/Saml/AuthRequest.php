@@ -68,7 +68,8 @@ class OneLogin_Saml_AuthRequest
         $base64Request = base64_encode($deflatedRequest);
         $encodedRequest = urlencode($base64Request);
 
-        return $this->_settings->idpSingleSignOnUrl . "?SAMLRequest=" . $encodedRequest;
+        $original_access_url = $base_url . '/' . $_GET['q'];
+        return $this->_settings->idpSingleSignOnUrl . "?SAMLRequest=" . $encodedRequest . '&RelayState=' . urlencode($original_access_url);
     }
 
     protected function _generateUniqueID()
