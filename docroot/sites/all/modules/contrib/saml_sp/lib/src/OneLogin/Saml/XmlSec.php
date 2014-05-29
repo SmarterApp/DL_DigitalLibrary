@@ -74,6 +74,7 @@ class OneLogin_Saml_XmlSec
       error_log("valid1");
         $objDSig = $objXMLSecDSig->locateSignature($this->_document);
         if (!$objDSig) {
+          error_log("invalid1");
             throw new Exception('Cannot locate Signature Node');
         }
         $objXMLSecDSig->canonicalizeSignedInfo();
@@ -81,22 +82,26 @@ class OneLogin_Saml_XmlSec
       error_log("valid12");
         $retVal = $objXMLSecDSig->validateReference();
         if (!$retVal) {
+          error_log("invalid12");
             throw new Exception('Reference Validation Failed');
         }
       error_log("valid13");
         $singleAssertion = $this->validateNumAssertions();
         if (!$singleAssertion) {
+          error_log("invalid13");
             throw new Exception('Multiple assertions are not supported');
         }
       error_log("valid14");
         $validTimestamps = $this->validateTimestamps();
         if (!$validTimestamps) {
+          error_log("invalid14");
             throw new Exception('Timing issues (please check your clock settings)
             ');
         }
       error_log("valid15");
         $objKey = $objXMLSecDSig->locateKey();
         if (!$objKey) {
+          error_log("invalid15");
             throw new Exception('We have no idea about the key');
         }
       error_log("valid16");
@@ -106,9 +111,11 @@ class OneLogin_Saml_XmlSec
       error_log("valid17");
 
       if ($objXMLSecDSig->verify($objKey)) {
+        error_log("valid18");
         return true;
       }
       else {
+        error_log("valid19");
         return false;
       }
 
