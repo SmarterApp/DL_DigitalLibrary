@@ -1368,7 +1368,9 @@ function sbac_forum_taxonomy_term_insert($term) {
     }
 
     // Add forum to favorite
-    sbac_forum_add_to_favorite($term->tid, $user->uid);
+    if (!empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
+      sbac_forum_add_to_favorite($term->tid, $user->uid);
+    }
   }
 }
 

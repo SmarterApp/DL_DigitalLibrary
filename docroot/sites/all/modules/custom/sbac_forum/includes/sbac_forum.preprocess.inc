@@ -167,13 +167,13 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   );
   $new_comment_url = 'sbac-forum/custom/comment-reply/' . $node_data->nid->value() . '/0';
   $topic_author_first_name = $topic_author->field_first_name['und'][0]['value'];
-  if ($type == 'node' && ($vars['node']->uid == $topic_author->uid)) {
-    $reply_to = 'Resource';
+  if ($node_data->field_topic_default->value()) {
+    $reply_to = 'Resource Contributor';
   }
   else {
-    $reply_to = 'Topic';
+    $reply_to = 'Topic Creator';
   }
-  $action_section = l('Reply to ' . $reply_to . ' Contributor, ' . $topic_author_first_name, $new_comment_url, $action_link_ops);
+  $action_section = l('Reply to ' . $reply_to . ', ' . $topic_author_first_name, $new_comment_url, $action_link_ops);
   $control_data = sbac_forum__api__create_forum_controls($is_faci, $forum_term->tid);
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
