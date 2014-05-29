@@ -594,29 +594,26 @@ function sbac_sso_program_management_api_request($user_attributes) {
 
   $api_response = array();
   $query_string = '';
-  $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
+  $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state_id', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
   foreach ($user_attributes as $index => $attribute) {
     if (in_array($index, $valid_tenancy_chain_indexes) && $attribute) {
       switch ($index) {
-        case 'client':
-          $query_string['CLIENT'] = 'DL_EndUser';
-          break;
         case 'group_of_states':
           $query_string['STATE_GROUP'] = $attribute;
           break;
-        case 'state':
+        case 'state_id':
           $query_string['STATE'] = $attribute;
           break;
         case 'group_of_districts':
           $query_string['DISTRICT_GROUP'] = $attribute;
           break;
-        case 'district':
+        case 'district_id':
           $query_string['DISTRICT'] = $attribute;
           break;
         case 'group_of_institutions':
           $query_string['INSTITUTION_GROUP'] = $attribute;
           break;
-        case 'institution':
+        case 'institution_id':
           $query_string['INSTITUTION'] = $attribute;
           break;
       }
