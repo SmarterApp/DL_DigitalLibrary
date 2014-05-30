@@ -330,6 +330,10 @@ function sbac_sso_consume() {
   error_log("REQUEST: " . print_r($_REQUEST, TRUE));
   error_log("SERVER: " . print_r($_SERVER, TRUE));
 
+  if (user_is_logged_in() && isset($_SESSION['sbac_sso_relay'])) {
+    drupal_goto($_SESSION['sbac_sso_relay']);
+  }
+
   $is_valid = FALSE;
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
