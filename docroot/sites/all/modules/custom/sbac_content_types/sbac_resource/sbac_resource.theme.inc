@@ -730,7 +730,7 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       'alt'=>'Resource thumbnail image'
     ));
     $variables['mime-type'] = file_get_mimetype($url);
-    $variables['file-type-icon'] = _sbac_resource_determine_file_type_icon($ext);
+    $variables['file-type-icon'] = 'document'; //_sbac_resource_determine_file_type_icon($ext);
   }
   return $variables;
 }
