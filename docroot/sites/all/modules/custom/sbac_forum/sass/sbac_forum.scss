@@ -868,6 +868,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	input#edit-name, .form-textarea {
 		width: 410px;
 		margin: 15px 0 25px;
+		font-size: 13px;
+		line-height: 1.2;
 	}
 
 	.form-textarea {
@@ -878,6 +880,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 	.form-type-textarea {
 		width: 410px;
 		position: relative;
+		font-size: 13px;
+		line-height: 1.2;
 
 		.counter {
 			display: block;
@@ -2114,6 +2118,8 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				
 				.form-type-textarea, .form-textarea {
 					width: 560px;
+					font-size: 13px;
+					line-height: 1.2;
 				}
 			}
 			
@@ -2215,6 +2221,8 @@ form[id*='sbac-flag-collaboration-form']{
 		textarea[id*="edit-comment"] {
 			margin-top: 2px;
 			width: 560px;
+			font-size: 13px;
+			line-height: 1.2;
 		}
 		
 		#edit-comment-counter.counter {
@@ -2337,12 +2345,16 @@ form[id*='sbac-flag-collaboration-form']{
 	.form-textarea {
 	  margin: 15px 0 25px;
     width: 410px;
+		font-size: 13px;
+		line-height: 1.2;
 	}
 	
 	.form-item-title,
 	.form-type-textarea {
 		position: relative;
 	 	width: 410px;
+		font-size: 13px;
+		line-height: 1.2;
 
 		.counter {
 		  display: block;
@@ -3004,6 +3016,8 @@ View Topic Page, Comment Page
 		  margin: 0;
 	    padding: 0;
 	    width: 665px;
+			font-size: 13px;
+			line-height: 1.2;
 		}
 	}
 
@@ -3110,6 +3124,8 @@ View Topic Page, Comment Page
 	.form-textarea-wrapper {
 		textarea {
 	    width: 560px;
+			font-size: 13px;
+			line-height: 1.2;
 		}
 	}
 }
