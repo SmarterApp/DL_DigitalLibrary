@@ -68,11 +68,17 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
   // Access Check this.
   $can_edit = node_access('update', $vars['node']);
+  $can_delete = node_access('delete', $vars['node']);
+  try {
+    if ($node_data->field_topic_default->value()) {
+      $can_edit = $can_delete = sbac_central_user_has_role(array(SBAC_RESOURCE_FACILITATOR_ROLE, SBAC_RESOURCE_ADMINISTRATOR_ROLE));
+    }
+  } catch (EntityMetadataWrapperException $e) {
+  }
   if ($can_edit) {
     $edit_link = '<span class="tertiary-edit-link">' . l('Edit Topic', $node_data->edit_url->value()) . '</span>';
   }
 
-  $can_delete = node_access('delete', $vars['node']);
   if ($can_delete) {
     drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.ctools.js");
     $link_ops = array(
