@@ -864,7 +864,7 @@ function sbac_user_user_login(&$edit, $account) {
     if (!isset($account->data['disable_help'])) {
       drupal_goto('user/' . $account->uid);
     }
-    elseif (isset($edit['relay_state']) && $edit['relay_state'] != NULL) {
+    elseif (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
       global $base_url;
       $relay_state = str_replace($base_url, '', $edit['sbac_sso_relay']);
       error_log("RELAYSTATE: " . $relay_state);
