@@ -365,7 +365,9 @@ function sbac_sso_consume() {
         drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
       }
 
-      if ($_REQUEST['RelayState'])
+      if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
+        $form_state['relays_state'] = $_REQUEST['RelayState'];
+      }
 
       // Log user in.
       $form_state['uid'] = $user->uid;
