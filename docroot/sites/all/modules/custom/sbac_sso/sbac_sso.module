@@ -367,7 +367,7 @@ function sbac_sso_consume() {
 
       error_log("relay_state: " . $_REQUEST['RelayState']);
       if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
-        $form_state['relay_state'] = $_REQUEST['RelayState'];
+        $form_state['sbac_sso_relay'] = $_REQUEST['RelayState'];
       }
 
       // Log user in.
