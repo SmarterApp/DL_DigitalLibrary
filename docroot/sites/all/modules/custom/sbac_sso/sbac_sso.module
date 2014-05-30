@@ -371,13 +371,13 @@ function sbac_sso_consume() {
         drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
       }
 
-      error_log("relay_state: " . $_REQUEST['RelayState']);
-      if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
-        global $base_url;
-        $relay_state = $_REQUEST['RelayState'];
-        $relay_state = str_replace($base_url, '', $relay_state);
-        $form_state['sbac_sso_relay'] = $relay_state;
-      }
+//      error_log("relay_state: " . $_REQUEST['RelayState']);
+//      if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
+//        global $base_url;
+//        $relay_state = $_REQUEST['RelayState'];
+//        $relay_state = str_replace($base_url, '', $relay_state);
+//        $form_state['sbac_sso_relay'] = $relay_state;
+//      }
 
       // Log user in.
       $form_state['uid'] = $user->uid;
