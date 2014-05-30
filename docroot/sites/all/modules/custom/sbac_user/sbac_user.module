@@ -855,7 +855,6 @@ function sbac_user_user_login(&$edit, $account) {
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
-  error_log(print_r($edit['sbac_sso_relay'], TRUE));
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
     if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
@@ -865,9 +864,17 @@ function sbac_user_user_login(&$edit, $account) {
       drupal_goto('user/' . $account->uid);
     }
     elseif (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
-      error_log("RELAYSTATE: " . $edit['sbac_sso_relay']);
       // drupal_goto($edit['sbac_sso_relay']);
-      $_SESSION['sbac_sso_relay'] = $edit['sbac_sso_relay'];
+      $relay = $edit['sbac_sso_relay'];
+      error_log("RELAY: " . $relay);
+      $path = drupal_lookup_path('source', $relay);
+      error_log("OUTPUT: " . $path);
+      if ($path) {
+        drupal_goto($relay);
+      }
+      else {
+        drupal_not_found();
+      }
     }
     else {
       error_log("redirecting");
