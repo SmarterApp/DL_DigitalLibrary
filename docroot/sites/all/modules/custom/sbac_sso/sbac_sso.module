@@ -455,7 +455,7 @@ function sbac_sso_validate_saml_response($saml_token) {
  * @return bool
  */
 function sbac_sso_validate_saml_assertion($saml_token) {
-  require(drupal_get_path('module', 'sbac_sso') . '/xmlseclibs/xmlseclibs.php');
+  require_once(drupal_get_path('module', 'sbac_sso') . '/xmlseclibs/xmlseclibs.php');
   $doc = new DOMDocument();
   $doc->loadXML($saml_token);
   $objXMLSecDSig = new XMLSecurityDSig();
