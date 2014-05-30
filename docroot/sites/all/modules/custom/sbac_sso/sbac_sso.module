@@ -342,9 +342,8 @@ function sbac_sso_consume() {
     global $base_url;
     $original_access_url = $base_url;
     if (isset($_SERVER['REQUEST_URI'])) {
-      $original_access_url .= '/' . $_SERVER['REQUEST_URI'];
+      $original_access_url .= $_SERVER['REQUEST_URI'];
     }
-    error_log("GET: " . print_r($_SERVER, TRUE));
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
     $saml_assertion = sbac_sso_saml_assertion();
@@ -365,9 +364,8 @@ function sbac_sso_consume() {
         // ERROR CODE 200: Error updating user with user attributes that were passed.
         drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
       }
-      error_log("REQUEST: " . print_r($_REQUEST, TRUE));
-      error_log("GET: " . print_r($_GET, TRUE));
-      error_log("SERVER: " . print_r($_SERVER, TRUE));
+
+      if ($_REQUEST['RelayState'])
 
       // Log user in.
       $form_state['uid'] = $user->uid;
