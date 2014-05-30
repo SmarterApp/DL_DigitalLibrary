@@ -1350,7 +1350,14 @@ function sbac_forum_taxonomy_term_insert($term) {
           $member_fc_wrapper->save(TRUE);
         }
         $term_wrapper->field_forum_member_count->set(1);
+
         $term_wrapper->field_forum_created->set(time());
+        try {
+          if ($resource = $term_wrapper->field_forum_resource_ref->value()) {
+            $term_wrapper->field_forum_created->set($resource->created);
+          }
+        } catch (EntityMetadataWrapperException $e) {
+        }
         $term_wrapper->save();
       }
 
