@@ -855,6 +855,7 @@ function sbac_user_user_login(&$edit, $account) {
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
+  error_log(print_r($edit, TRUE));
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
     if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
