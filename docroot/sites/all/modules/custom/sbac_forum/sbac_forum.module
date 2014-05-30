@@ -245,8 +245,11 @@ function _sbac_forum_view_forum_user_access($term) {
   if ($user->uid == 1) { // Allow superadmin bypass
     return TRUE;
   }
+  if (sbac_central_user_has_role(array(SBAC_RESOURCE_FACILITATOR_ROLE, SBAC_RESOURCE_ADMINISTRATOR_ROLE))) {
+    return true;
+  }
 
-  if ($user->uid == 0) { // Anon users have no access.
+    if ($user->uid == 0) { // Anon users have no access.
     return FALSE;
   }
 
@@ -1066,16 +1069,6 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
       $selected_value = array_shift($temp);
       if (empty($selected_value['value'])) {
         form_set_error('field_forum_access_role_list', 'At least one Role must be selected');
-      }
-      else {
-        $roles_array = array();
-        foreach ($selected_roles[LANGUAGE_NONE] as $key => $value) {
-          $roles_array[] = $value['value'];
-        }
-        $has_role = array_intersect($roles_array, $users_roles);
-        if (empty($has_role)) {
-          form_set_error('field_forum_access_role_list', 'You must have at least your own role/title selected.');
-        }
       }
     }
   }
