@@ -324,6 +324,7 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
+  error_log("CONSUMING");
   $is_valid = FALSE;
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
@@ -342,7 +343,7 @@ function sbac_sso_consume() {
     global $base_url;
     $original_access_url = $base_url;
     if (isset($_SERVER['REQUEST_URI'])) {
-      $original_access_url .= $_SERVER['REQUEST_URI'];
+      $original_access_url = $base_url . $_SERVER['REQUEST_URI'];
     }
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
