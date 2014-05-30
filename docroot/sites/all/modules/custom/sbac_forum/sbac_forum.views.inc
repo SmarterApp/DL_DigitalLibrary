@@ -117,34 +117,32 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
  *
  */
 function sbac_forum_listing_apply_sorts(&$view, $current_sorting, $default_sort) {
-  if (!empty($current_sorting)) {
-    $view_sorts = $view->display_handler->get_option('sorts');
+  $view_sorts = $view->display_handler->get_option('sorts');
 
-    $sort_field_key = $default_sort;
-    switch ($current_sorting) {
-      case 'forum-recent-activity':
-        $sort_field_key = 'field_forum_last_activity_value';
-        break;
-      case 'forum-most-active':
-        $sort_field_key = 'field_forum_topic_comment_count_value';
-        break;
-      case 'forum-newest':
-        $sort_field_key = 'field_forum_created_value';
-        break;
-      case 'forum-most-participants':
-        $sort_field_key = 'field_forum_member_count_value';
-        break;
-    }
+  switch ($current_sorting) {
+    case 'forum-most-active':
+      $sort_field_key = 'field_forum_topic_comment_count_value';
+      break;
+    case 'forum-newest':
+      $sort_field_key = 'field_forum_created_value';
+      break;
+    case 'forum-most-participants':
+      $sort_field_key = 'field_forum_member_count_value';
+      break;
+    case 'forum-recent-activity':
+    default:
+      $sort_field_key = 'field_forum_last_activity_value';
+      break;
+  }
 
-    $new_sorts = array();
-    foreach ($view_sorts as $key => $value) {
-      if ($key == $sort_field_key) {
-        $new_sorts[$key] = $value;
-      }
+  $new_sorts = array();
+  foreach ($view_sorts as $key => $value) {
+    if ($key == $sort_field_key) {
+      $new_sorts[$key] = $value;
     }
-    if (!empty($new_sorts)) {
-      $view->display_handler->set_option('sorts', $new_sorts);
-    }
+  }
+  if (!empty($new_sorts)) {
+    $view->display_handler->set_option('sorts', $new_sorts);
   }
 }
 
