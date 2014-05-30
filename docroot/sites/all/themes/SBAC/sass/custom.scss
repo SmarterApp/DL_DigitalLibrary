@@ -65,6 +65,11 @@ body {
 
   &#tinymce {
     background-color: #fff;
+
+		p {
+			font-size: 13px !important;
+			line-height: 1.2;
+		}
   }
 }
 
@@ -822,7 +827,8 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   @include border-radius(12px); // border radius
   @include background-clip(padding-box); // prevents bg color from leaking outside the border
   margin: emCalc(25px) auto emCalc(75px);
-  background-color: #f9f9f9; // layer fill content + color overlay
+  /*background-color: #f9f9f9; */// layer fill content + color overlay
+	background-color: #FFF;
   padding: 15px 0;
 }
 
@@ -1350,6 +1356,10 @@ a.tabledrag-handle .handle {
 	&:focus {
 		outline: 0;
 	}
+}
+
+.section-container.auto > section:first-child > .title a {
+    border-left: 1px solid #CECECE;
 }
 
 .section-container.auto > section.active > .title a {
@@ -2508,6 +2518,7 @@ a.tabledrag-handle .handle {
 #views-form-help-topics-page-4,
 #views-form-help-topics-page-2 {
   margin-bottom: 50px;
+	padding-bottom: 10px;
 }
 
 .help-topic-link,
@@ -2550,13 +2561,13 @@ a.tabledrag-handle .handle {
 .page-help-topics .help-topic-link {
   top: 10px;
   position: absolute;
-  right: 10px;
+  right: 40px;
 }
 
 .view-id-help_topics .help-topic-link1 {
 
   position: absolute;
-  right: 10px;
+  right: 40px;
   top: 10px;
 }
 
@@ -2564,13 +2575,13 @@ a.tabledrag-handle .handle {
 .welcome-tutorial-topic-link {
   bottom: 20px; 
   position: absolute;
-  right: 150px;
+  right: 190px;
 }
 
 .view-id-help_topics #edit-submit,
 .view-id-help_topics #edit-submit--2 {
   position: absolute;
-  right: 10px;
+  right: 40px;
   bottom: 0px;
 }
 
@@ -2609,7 +2620,6 @@ a.tabledrag-handle .handle {
 .page-help-topics h1#page-title {
   margin-bottom: 20px;
   margin-top: 30px;
-  padding-left: 22px;
 }
 
 #admin-welcome-tab-message {
@@ -3531,6 +3541,11 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
     Create Help Page
 ------------------------------------------------------------------------ */
 .page-node-add-help-page {
+	
+	h1#page-title {
+		padding-left: 22px;
+	}
+	
 	.description {
 		line-height: 1.4;
 	}
@@ -3563,8 +3578,56 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	}
 }
 
+#helpmodal, 
+#current-help-topic-modal {
+	h2 {
+		text-align: center;
+		font-size: 18px;
+		font-family: Arial,sans-serif;
+	}
+}
 
+p.helpmodal-desc {
+	font-size: 13px !important;
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
 
+.page-help-topics {
+	#main.columns {
+		padding: 0 40px;
+		
+		.view-help-topics {
+			li {margin-left: 0;}
+		}
+	}
+}
 
+.page-admin-help-topics {
+	.main-container {
+		padding: 40px 45px 10px;
+		
+		.content {
+			width: 960px; 
+			margin-left: -45px;
+			padding: 10px 40px !important;
+	 	}
+	}
+}
 
+.node-type-help-page {
+	
+	#main {
+		padding: 0 20px;
+	}
+	
+	.form-textarea-wrapper textarea {
+		max-width: 100%;
+	}
+}
 
+#current-help-topic {
+	.body {
+		span {font-size: 13px !important;}
+	}
+}

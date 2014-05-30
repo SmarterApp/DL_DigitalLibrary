@@ -224,6 +224,12 @@ function sbac_favorites_get_favorites_list($uid, $type = NULL) {
     ->condition('sf.uid', $uid);
   if ($type) {
     $query->condition('sf.type', $type);
+    if ($type == 'node') {
+      $query->innerJoin('node', 'n', 'n.nid = sf.id'); // make sure the node hasn't been deleted
+    }
+    elseif ($type == 'term') {
+      $query->innerJoin('taxonomy_term_data', 'term', 'term.tid = sf.id');
+    }
   }
   $result = $query
     ->orderBy('sf.weight', 'ASC')
