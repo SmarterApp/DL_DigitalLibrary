@@ -246,10 +246,10 @@ function _sbac_forum_view_forum_user_access($term) {
     return TRUE;
   }
   if (sbac_central_user_has_role(array(SBAC_RESOURCE_FACILITATOR_ROLE, SBAC_RESOURCE_ADMINISTRATOR_ROLE))) {
-    return true;
+    return TRUE;
   }
 
-    if ($user->uid == 0) { // Anon users have no access.
+  if ($user->uid == 0) { // Anon users have no access.
     return FALSE;
   }
 
@@ -804,6 +804,9 @@ function sbac_forum_node_access($node, $op, $account) {
     if ($node->type == 'topic') {
       switch ($op) {
         case 'view':
+          if (sbac_central_user_has_role(array(SBAC_RESOURCE_ADMINISTRATOR_ROLE, SBAC_RESOURCE_FACILITATOR_ROLE))) {
+            return NODE_ACCESS_ALLOW;
+          }
           // Check if the parent forum has access restrictions. (role or state)
           $node_data = entity_metadata_wrapper('node', $node);
           if (isset($node_data->field_topic_forum_parent)) {
@@ -1685,17 +1688,20 @@ function sbac_forum_comment_insert($comment) {
         }
         if ($forum_wrapper->field_fc_forum_members->count()) {
           foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
-            if ($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id) {
-              // Increment the post count
-              $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
-              $current_post_count++;
-              $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
-              // Set the date
-              $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
-              // Update the participation score
-              $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $member_wrapper->field_fc_forum_member_tpic_count->value(), $current_post_count);
-              $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
-              $member_wrapper->save(TRUE);
+            try {
+              if ($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id) {
+                // Increment the post count
+                $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
+                $current_post_count++;
+                $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
+                // Set the date
+                $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+                // Update the participation score
+                $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $member_wrapper->field_fc_forum_member_tpic_count->value(), $current_post_count);
+                $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+                $member_wrapper->save(TRUE);
+              }
+            } catch (EntityMetadataWrapperException $e) {
             }
           }
         }
@@ -2035,45 +2041,44 @@ function sbac_forum_user_has_recommended($cid, $uid) {
  */
 function sbac_forum_query_comment_filter_alter(QueryAlterableInterface $query) {
   if (($node = $query->getMetaData('node')) && (get_class($query) == 'PagerDefault')) {
-    if (!empty($_SESSION['sbac-topic-comment-sorts'])) {
-      switch ($_SESSION['sbac-topic-comment-sorts']) {
-        case 'comment-oldest':
-          // Do nothing, the comments are sorted by oldest->newest by default
-          break;
-        case 'comment-most-recent-activity':
-          // Copied from comment_goodness_query_comment_filter_alter()
-          $orderby = & $query->getOrderBy();
-          $expressions = & $query->getExpressions();
-          // Sorting for threaded comments.
-          if (isset($orderby['torder'])) {
-            // Get rid of the expressions that prepare the threads for ASC ordering.
-            unset($expressions['torder']);
-            unset($orderby['torder']);
-            // Simply order by the thread field.
-            $orderby['c.thread'] = 'DESC';
-          }
-          // Sorting for flat comments.
-          else {
-            $direction = 'DESC';
-            if (isset($orderby['c.cid'])) {
-              unset($orderby['c.cid']);
-            }
-            $orderby['c.created'] = $direction;
-            $orderby['c.cid'] = $direction;
-          }
-          break;
-        case 'comment-most-recommended':
-          // remove the old ordering
-          $orderby = & $query->getOrderBy();
-          unset($orderby['torder']);
+    switch ($_SESSION['sbac-topic-comment-sorts']) {
+      case 'comment-oldest':
+        // Do nothing, the comments are sorted by oldest->newest by default
+        break;
+      case 'comment-most-recommended':
+        // remove the old ordering
+        $orderby = & $query->getOrderBy();
+        unset($orderby['torder']);
 
-          // sort by most recommended
-          $query->leftJoin('field_data_field_topic_comment_recommended', 'recommended', 'recommended.entity_id = c.cid');
-          $query->groupBy('c.cid');
-          $query->orderBy('count(recommended.field_topic_comment_recommended_target_id)', 'DESC');
-          $query->orderBy('c.created', 'DESC');
-          break;
-      }
+        // sort by most recommended
+        $query->leftJoin('field_data_field_topic_comment_recommended', 'recommended', 'recommended.entity_id = c.cid');
+        $query->groupBy('c.cid');
+        $query->orderBy('count(recommended.field_topic_comment_recommended_target_id)', 'DESC');
+        $query->orderBy('c.created', 'DESC');
+        break;
+      case 'comment-most-recent-activity':
+      default;
+        // Copied from comment_goodness_query_comment_filter_alter()
+        $orderby = & $query->getOrderBy();
+        $expressions = & $query->getExpressions();
+        // Sorting for threaded comments.
+        if (isset($orderby['torder'])) {
+          // Get rid of the expressions that prepare the threads for ASC ordering.
+          unset($expressions['torder']);
+          unset($orderby['torder']);
+          // Simply order by the thread field.
+          $orderby['c.thread'] = 'DESC';
+        }
+        // Sorting for flat comments.
+        else {
+          $direction = 'DESC';
+          if (isset($orderby['c.cid'])) {
+            unset($orderby['c.cid']);
+          }
+          $orderby['c.created'] = $direction;
+          $orderby['c.cid'] = $direction;
+        }
+        break;
     }
   }
 }
