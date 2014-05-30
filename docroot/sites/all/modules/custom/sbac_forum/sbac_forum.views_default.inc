@@ -161,7 +161,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_forum_member_count']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_forum_member_count']['alter']['text'] = '[field_forum_member_count]<div class="forum-listing-suffix-label">Participants</div>';
   $handler->display->display_options['fields']['field_forum_member_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_forum_member_count']['empty'] = '0<div class="forum-listing-suffix-label">Members</div>';
+  $handler->display->display_options['fields']['field_forum_member_count']['empty'] = '0<div class="forum-listing-suffix-label">Participants</div>';
   $handler->display->display_options['fields']['field_forum_member_count']['settings'] = array(
     'thousand_separator' => ',',
     'prefix_suffix' => 1,
@@ -741,9 +741,9 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_forum_member_count']['field'] = 'field_forum_member_count';
   $handler->display->display_options['fields']['field_forum_member_count']['label'] = '';
   $handler->display->display_options['fields']['field_forum_member_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_forum_member_count']['alter']['text'] = '[field_forum_member_count]<div class="forum-listing-suffix-label">Members</div>';
+  $handler->display->display_options['fields']['field_forum_member_count']['alter']['text'] = '[field_forum_member_count]<div class="forum-listing-suffix-label">Participants</div>';
   $handler->display->display_options['fields']['field_forum_member_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_forum_member_count']['empty'] = '0<div class="forum-listing-suffix-label">Members</div>';
+  $handler->display->display_options['fields']['field_forum_member_count']['empty'] = '0<div class="forum-listing-suffix-label">Participants</div>';
   $handler->display->display_options['fields']['field_forum_member_count']['settings'] = array(
     'thousand_separator' => ',',
     'prefix_suffix' => 1,
@@ -862,7 +862,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = '<div class="forum-members-empty-message">There are no members yet</div>';
+  $handler->display->display_options['empty']['area']['content'] = '<div class="forum-members-empty-message">There are no participants yet</div>';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Relationship: Field collection item: Entity with the Members (field_fc_forum_members) */
   $handler->display->display_options['relationships']['field_fc_forum_members_taxonomy_term']['id'] = 'field_fc_forum_members_taxonomy_term';
@@ -1024,7 +1024,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = '<div class="forum-removed-members-empty-message">There are no removed members for this forum</div>';
+  $handler->display->display_options['empty']['area']['content'] = '<div class="forum-removed-members-empty-message">There are no removed participants for this forum</div>';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;

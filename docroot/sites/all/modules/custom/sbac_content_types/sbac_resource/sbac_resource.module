@@ -23,6 +23,8 @@ define('SBAC_RESOURCE_ALL_USER_FLAG', 0);
 
 define('SBAC_RESOURCE_REVIEWER_ROLE', 'resource_reviewer');
 define('SBAC_RESOURCE_PUBLISHER_ROLE', 'resource publisher');
+define('SBAC_RESOURCE_FACILITATOR_ROLE', 'facilitator');
+define('SBAC_RESOURCE_ADMINISTRATOR_ROLE', 'administrator');
 
 define('SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME', 'sbac-smart-search-last-url');
 define('SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME', 'sbac-smart-search-url-history');

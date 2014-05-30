@@ -220,6 +220,12 @@ function sbac_central_get_users_with_roles($roles) {
   return $users;
 }
 
+function sbac_central_user_has_role($roles_arr) {
+  global $user;
+  $check = array_intersect($roles_arr, array_values($user->roles));
+  return empty ($check) ? FALSE : TRUE;
+}
+
 /**
  * Gets all users with specific roles and states.
  *
