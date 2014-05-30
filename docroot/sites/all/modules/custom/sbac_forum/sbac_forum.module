@@ -1048,16 +1048,6 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
       if (empty($selected_value['tid'])) {
         form_set_error('field_state', 'At least one State must be selected');
       }
-      else {
-        $states_array = array();
-        foreach ($selected_states[LANGUAGE_NONE] as $key => $value) {
-          $states_array[] = $value['tid'];
-        }
-        $has_state = array_intersect($states_array, $users_states);
-        if (empty($has_state)) {
-          form_set_error('field_state', 'You must have at least 1 of your own states selected.');
-        }
-      }
     }
   }
 
