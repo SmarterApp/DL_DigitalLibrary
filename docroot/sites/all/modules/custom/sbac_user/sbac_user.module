@@ -867,7 +867,7 @@ function sbac_user_user_login(&$edit, $account) {
       // drupal_goto($edit['sbac_sso_relay']);
       $relay = $edit['sbac_sso_relay'];
       error_log("RELAY: " . $relay);
-      $path = drupal_lookup_path('source', $relay);
+      $path = drupal_valid_path($relay);
       error_log("OUTPUT: " . $path);
       if ($path) {
         error_log("FOUND");
