@@ -611,9 +611,13 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
     if (!$is_faci) { // Current user is not set as facilitator
       if (!empty($faci_field)) {
         $first_item = array_shift($faci_field);
-        $first_faci_user_id = $first_item['target_id'];
-        $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
-        $facilitator_text .= 'Facilitator: ' . $faci_link;
+        if ($first_faci_user_id = $first_item['target_id']) {
+          $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
+          $facilitator_text .= 'Facilitator: ' . $faci_link;
+        }
+        else { // No facilitator set
+          $facilitator_text .= 'Facilitator: None';
+        }
       }
       else { // No facilitator set
         $facilitator_text .= 'Facilitator: None';
