@@ -699,7 +699,7 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
   $options['absolute'] = TRUE;
 
   $url = url($path, $options);
-
+  error_log("GOTO: " . $url);;
   header('Location: ' . $url, TRUE, $http_response_code);
 
   // The "Location" header sends a redirect status code to the HTTP daemon. In

@@ -331,6 +331,7 @@ function sbac_sso_consume() {
   error_log("SERVER: " . print_r($_SERVER, TRUE));
 
   if (user_is_logged_in() && isset($_SESSION['sbac_sso_relay'])) {
+    error_log("TRUE, redirecting");
     drupal_goto($_SESSION['sbac_sso_relay']);
   }
 
