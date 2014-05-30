@@ -1542,8 +1542,6 @@ function sbac_forum_node_insert($node) {
         if (isset($forum_wrapper->field_forum_last_activity)) {
           $forum_wrapper->field_forum_last_activity->set(time());
         }
-        $forum_wrapper->save(TRUE);
-        taxonomy_term_save($forum_obj);
         // Add forum to favorite
         sbac_forum_add_to_favorite($forum_obj->tid, $user->uid);
 
@@ -1580,21 +1578,42 @@ function sbac_forum_node_insert($node) {
         } catch (EntityMetadataWrapperException $e) {
         }
 
+        // add the user to the participant list
+        if (!sbac_forum__api__check_user_is_forum_member($forum_obj->tid, $node->uid)) {
+          $params = array(
+            'field_name' => 'field_fc_forum_members'
+          );
+          $new_member_item = entity_create('field_collection_item', $params);
+          $new_member_item->setHostEntity('taxonomy_term', $forum_obj);
+          $new_member_data = entity_metadata_wrapper('field_collection_item', $new_member_item);
+          $new_member_data->field_fc_forum_member->set($node->uid);
+          $new_member_data->field_fc_forum_member_joined->set(time());
+          $new_member_data->save(TRUE);
+
+          $current_member_count = $forum_wrapper->field_forum_member_count->value();
+          $current_member_count++;
+          $forum_wrapper->field_forum_member_count->set($current_member_count);
+          $forum_wrapper->save(TRUE);
+
+          // invalidate member list cache when a new user joins.
+          $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $forum_obj->tid;
+          if (cache_get($cid)) {
+            cache_clear_all($cid, 'cache');
+          }
+        }
         // Update user's topic count
-        if ($forum_wrapper->field_fc_forum_members->count()) {
-          foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
-            if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid) {
-              // Increment the recommend count
-              $current_topic_count = $member_wrapper->field_fc_forum_member_tpic_count->value();
-              $current_topic_count++;
-              $member_wrapper->field_fc_forum_member_tpic_count->set($current_topic_count);
-              // Set the date
-              $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
-              // Update the participation score
-              $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $current_topic_count, $member_wrapper->field_fc_forum_member_post_count->value());
-              $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
-              $member_wrapper->save(TRUE);
-            }
+        foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
+          if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid) {
+            // Increment the recommend count
+            $current_topic_count = $member_wrapper->field_fc_forum_member_tpic_count->value();
+            $current_topic_count++;
+            $member_wrapper->field_fc_forum_member_tpic_count->set($current_topic_count);
+            // Set the date
+            $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+            // Update the participation score
+            $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $current_topic_count, $member_wrapper->field_fc_forum_member_post_count->value());
+            $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+            $member_wrapper->save(TRUE);
           }
         }
       }
@@ -1877,7 +1896,7 @@ function sbac_forum_create_resource_forum($nid, $vid = NULL) {
         'field_smarter_balanced_keyword' => $node->field_smarter_balanced_keyword,
       );
       taxonomy_term_save($term);
-      $term_wrapper = entity_metadata_wrapper('taxonomy_term',$term);
+      $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
       $term_wrapper->field_forum_last_activity->set(time());
       $term_wrapper->save(TRUE);
       if (isset($term->tid)) {
