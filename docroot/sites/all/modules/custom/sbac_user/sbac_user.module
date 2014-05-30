@@ -870,10 +870,12 @@ function sbac_user_user_login(&$edit, $account) {
       $path = drupal_lookup_path('source', $relay);
       error_log("OUTPUT: " . $path);
       if ($path) {
+        error_log("FOUND");
         drupal_goto($relay);
       }
       else {
-        drupal_not_found();
+        error_log("GOING HERE");
+        drupal_goto('digital-library-resources');
       }
     }
     else {
