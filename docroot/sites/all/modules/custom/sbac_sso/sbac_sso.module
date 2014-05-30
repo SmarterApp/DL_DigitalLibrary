@@ -136,7 +136,7 @@ function sbac_sso_session_expire_form($form, &$form_state) {
 
   $form['submit_description'] = array(
     '#markup' => "<p>Select OK to
-        extend your session. Pressing CANCEL or failing to respond in the next
+        extend your session. Pressing Cancel or failing to respond in the next
         two minutes will require site reauthentication.</p>"
   );
 
