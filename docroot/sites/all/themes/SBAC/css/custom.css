@@ -11155,47 +11155,46 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
 #current-help-topic-modal h2 {
   text-align: center;
   font-size: 18px;
-  color: #000;
   font-family: Arial,sans-serif;
 }
 
-/* line 3591, ../sass/custom.scss */
+/* line 3590, ../sass/custom.scss */
 p.helpmodal-desc {
   font-size: 13px !important;
   margin-top: 20px;
   margin-bottom: 40px;
 }
 
-/* line 3598, ../sass/custom.scss */
+/* line 3597, ../sass/custom.scss */
 .page-help-topics #main.columns {
   padding: 0 40px;
 }
-/* line 3602, ../sass/custom.scss */
+/* line 3601, ../sass/custom.scss */
 .page-help-topics #main.columns .view-help-topics li {
   margin-left: 0;
 }
 
-/* line 3608, ../sass/custom.scss */
+/* line 3607, ../sass/custom.scss */
 .page-admin-help-topics .main-container {
   padding: 40px 45px 10px;
 }
-/* line 3611, ../sass/custom.scss */
+/* line 3610, ../sass/custom.scss */
 .page-admin-help-topics .main-container .content {
   width: 960px;
   margin-left: -45px;
   padding: 10px 40px !important;
 }
 
-/* line 3621, ../sass/custom.scss */
+/* line 3620, ../sass/custom.scss */
 .node-type-help-page #main {
   padding: 0 20px;
 }
-/* line 3625, ../sass/custom.scss */
+/* line 3624, ../sass/custom.scss */
 .node-type-help-page .form-textarea-wrapper textarea {
   max-width: 100%;
 }
 
-/* line 3632, ../sass/custom.scss */
+/* line 3631, ../sass/custom.scss */
 #current-help-topic .body span {
   font-size: 13px !important;
 }
