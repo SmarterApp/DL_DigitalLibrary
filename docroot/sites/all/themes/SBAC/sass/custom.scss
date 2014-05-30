@@ -3631,3 +3631,11 @@ p.helpmodal-desc {
 		span {font-size: 13px !important;}
 	}
 }
+
+/*Glossary Terms Page*/
+.section-glossary,
+.page-admin-structure-taxonomy {
+	#main.columns {
+		padding: 15px 40px 0;
+	}
+}

@@ -11198,3 +11198,10 @@ p.helpmodal-desc {
 #current-help-topic .body span {
   font-size: 13px !important;
 }
+
+/*Glossary Terms Page*/
+/* line 3638, ../sass/custom.scss */
+.section-glossary #main.columns,
+.page-admin-structure-taxonomy #main.columns {
+  padding: 15px 40px 0;
+}
