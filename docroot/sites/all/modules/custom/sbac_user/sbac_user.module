@@ -866,7 +866,10 @@ function sbac_user_user_login(&$edit, $account) {
     }
     elseif (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
       error_log("RELAYSTATE: " . $edit['sbac_sso_relay']);
-      drupal_goto($edit['sbac_sso_relay']);
+      // drupal_goto($edit['sbac_sso_relay']);
+      $edit['redirect'] = $edit['sbac_sso_relay'];
+//      $_GET['destination'] = $edit['sbac_sso_relay'];
+//      $GLOBALS['destination'] = $edit['sbac_sso_relay'];
     }
     else {
       error_log("redirecting");
