@@ -1338,33 +1338,34 @@ function sbac_forum_form_views_exposed_form_alter(&$form, &$form_state, $form_id
  */
 function sbac_forum_taxonomy_term_insert($term) {
   if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
-    $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
-    if ($term_wrapper) {
-      global $user;
-      $term_wrapper->field_forum_facilitators[0]->set($user->uid);
-      // Add faci to member list.
-      $member_fc_wrapper = $term_wrapper->field_fc_forum_members[0];
-      if ($member_fc_wrapper) {
-        if (isset($member_fc_wrapper->field_fc_forum_member)) {
-          $member_fc_wrapper->field_fc_forum_member->set($user->uid);
-          $member_fc_wrapper->save(TRUE);
-        }
-        $term_wrapper->field_forum_member_count->set(1);
+    global $user;
+    $term->field_forum_facilitators[LANGUAGE_NONE][0]['target_id'] = $user->uid;
 
-        $term_wrapper->field_forum_created->set(time());
-        try {
-          if ($resource = $term_wrapper->field_forum_resource_ref->value()) {
-            $term_wrapper->field_forum_created->set($resource->created);
-          }
-        } catch (EntityMetadataWrapperException $e) {
-        }
+    // Add faci to member list.
+    $member_fc = $term->field_fc_forum_members[LANGUAGE_NONE][0]['value'];
+    if ($member_fc) {
+      $member_fc_wrapper = entity_metadata_wrapper('field_collection_item', $member_fc);
+      if (isset($member_fc_wrapper->field_fc_forum_member)) {
+        $member_fc_wrapper->field_fc_forum_member->set($user->uid);
+        $member_fc_wrapper->save(TRUE);
+      }
+      $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = 1;
+      taxonomy_term_save($term);
+
+    }
+    $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+    $term_wrapper->field_forum_created->set(time());
+    try {
+      if ($resource = $term_wrapper->field_forum_resource_ref->value()) {
+        $term_wrapper->field_forum_created->set($resource->created);
         $term_wrapper->save();
       }
+    } catch (EntityMetadataWrapperException $e) {
+    }
 
-      // Add forum to favorite
-      if (!empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
-        sbac_forum_add_to_favorite($term->tid, $user->uid);
-      }
+    // Add forum to favorite
+    if (!empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
+      sbac_forum_add_to_favorite($term->tid, $user->uid);
     }
   }
 }
