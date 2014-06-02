@@ -342,7 +342,7 @@ function sbac_sso_consume() {
     global $base_url;
     $original_access_url = $base_url;
     if (isset($_GET['destination'])) {
-      $original_access_url = $base_url . $_GET['destination'];
+      $original_access_url = $base_url . '/' . $_GET['destination'];
     }
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
