@@ -8,10 +8,6 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     case 'stage2':
     case 'stage3':
     case 'loadtest':
-//    define('SBAC_SSO_URL', 'https://sso.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-//    define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
-//    define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso.smarterbalanced.org/auth/UI/Logout');
-
       define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
@@ -346,7 +342,7 @@ function sbac_sso_consume() {
     global $base_url;
     $original_access_url = $base_url;
     if (isset($_GET['destination'])) {
-      $original_access_url = $base_url . $_GET['destination'];
+      $original_access_url = $base_url . '/' . $_GET['destination'];
     }
     // Record original access URL (URL Encoded) to the SAML request in the relayState variable
     // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
