@@ -2546,6 +2546,15 @@ a.more-less-text-trigger-less:after {
 			border-bottom: none;
 		}
 	}
+	
+	/*3 cloumns view*/
+	.feedback-item {
+		.feedback-item-triplet {
+			.comments-content, .comments {
+				width: auto !important;
+			}
+		}
+	}
 }
 
 
