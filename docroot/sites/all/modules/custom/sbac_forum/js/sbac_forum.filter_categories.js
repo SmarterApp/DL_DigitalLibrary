@@ -9,6 +9,7 @@
   Drupal.behaviors.sbac_forum_js_filter_categories = {
     attach: function (context, settings) {
       $('#views-exposed-form-forum-list-block-2').hide();
+      $('#views-exposed-form-forum-list-block-3').hide();
 
       $(document).click(function() {
         if (!$(this).hasClass('selectedDiv')) {
