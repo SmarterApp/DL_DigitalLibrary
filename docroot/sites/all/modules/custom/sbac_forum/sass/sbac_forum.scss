@@ -387,6 +387,10 @@ select {
 
 /*Row list view*/
 .sbac-forum-main-container {
+	
+	form[id*="views-exposed-form-forum-list-block"] {
+		display: none;
+	}
 
 	.view-forum-list,
 	.view-forum-list-empty {
