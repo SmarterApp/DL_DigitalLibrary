@@ -29,6 +29,7 @@ class PostRemovedCreator extends \taskit\sbac_core\BaseTask {
 
       $output .= ' <span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format). '</span> ';
       $output .= '<div class="taskit-topic-removed-message">' . $message . '</div>';
+      $output = '<div class="taskit-forum-cont">' . $output . '</div>';
       return $output;
     }
 
