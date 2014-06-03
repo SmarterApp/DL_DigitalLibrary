@@ -3000,3 +3000,14 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
   font-style: uppercase;
   letter-spacing: 1px;
 }
+
+/*Counter of  Resourec title input box*/
+/* line 2954, ../sass/sbac_resource.scss */
+#edit-title-counter.counter {
+  bottom: 40px !important;
+}
+
+/* line 2958, ../sass/sbac_resource.scss */
+#edit-title-counter.counter.messages {
+  bottom: 36px !important;
+}
