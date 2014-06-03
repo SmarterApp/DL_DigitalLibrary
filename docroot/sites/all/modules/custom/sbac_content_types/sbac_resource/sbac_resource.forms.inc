@@ -1801,7 +1801,7 @@ function _sbac_resource_form_materials(&$form, $form_state) {
 
   $copyright_access = FALSE;
   $owner_match = FALSE;
-  $has_role = array_intersect($user->roles, array('administrator', 'DLRB member'));
+  $has_role = array_intersect($user->roles, array('administrator', 'DLRB member', 'moderator'));
   if (isset($form['#node'])) {
     $owner_uid = $form['#node']->uid;
     if ($user->uid == $owner_uid) {
