@@ -103,6 +103,11 @@ AddType video/mp4 .mov
   # To redirect all users to access the site WITH the 'www.' prefix,
   # (http://example.com/... will be redirected to http://www.example.com/...)
   # uncomment the following:
+  RewriteCond %{HTTP_HOST} !dev.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} !integration.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} !stage.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} !staging.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} !training.smarterbalancedlibrary.org$ [OR]
   RewriteCond %{HTTP_HOST} !^www\.smarterbalancedlibrary.org$ [NC]
 #  RewriteCond %{HTTP_HOST} .
 #  RewriteCond %{HTTP_HOST} !^www\. [NC]
