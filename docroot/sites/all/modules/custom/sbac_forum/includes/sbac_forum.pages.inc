@@ -23,7 +23,7 @@ function sbac_forum_main_landing_page() {
     sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
   }
   // Get correct set of category filters based on subnav.
-  switch($active_tab) { // Get correct current filter.
+  switch ($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_RESOURCE:
       $active_display = 'block_2';
       $passive_display = 'block_3';
@@ -34,7 +34,8 @@ function sbac_forum_main_landing_page() {
         $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
       }
       if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS]) &&
-        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != '') {
+        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != ''
+      ) {
         $current_sorts = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS];
         $default_sort = 'forum-recent-activity';
       }
@@ -49,7 +50,8 @@ function sbac_forum_main_landing_page() {
         $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
       }
       if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS]) &&
-        $_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS] != '') {
+        $_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS] != ''
+      ) {
         $current_sorts = $_SESSION[SBAC_FORUM_TOPIC_FORUM_SORTS];
         $default_sort = 'forum-recent-activity';
       }
@@ -81,22 +83,23 @@ function sbac_forum_main_landing_page() {
   $count_values[$active_display] = $active_view_count;
 
   // Empty
-  if ((!$active_view_count) && (!empty($current_filters)) ) {
-      if ($active_display == 'block') {
-        $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
-        $_COOKIE[SBAC_FORUM_FILTERS_CLOSED] = TRUE;
-      } else {
-        $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
-        $_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED] = TRUE;
-      }
-      $view_e = views_get_view('forum_list_empty');
-      $view_e->set_display('block');
-      sbac_forum_forum_listing_empty_apply_filters($view_e); // Set filters here.
-      $view_e->pre_execute();
-      $view_e->execute();
-      $view_e->_post_execute();
-      $forum_list_empty_output = $view_e->preview();
-      $forum_list_output .= $forum_list_empty_output;
+  if ((!$active_view_count) && (!empty($current_filters))) {
+    if ($active_display == 'block') {
+      $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
+      $_COOKIE[SBAC_FORUM_FILTERS_CLOSED] = TRUE;
+    }
+    else {
+      $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
+      $_COOKIE[SBAC_FORUM_MY_FORUM_FILTERS_CLOSED] = TRUE;
+    }
+    $view_e = views_get_view('forum_list_empty');
+    $view_e->set_display('block');
+    sbac_forum_forum_listing_empty_apply_filters($view_e); // Set filters here.
+    $view_e->pre_execute();
+    $view_e->execute();
+    $view_e->_post_execute();
+    $forum_list_empty_output = $view_e->preview();
+    $forum_list_output .= $forum_list_empty_output;
   }
 
   $_SESSION[SBAC_FORUM_FILTER_RESULTS_COUNTER] = $count_values;
@@ -126,10 +129,14 @@ function sbac_forum_main_landing_page_reset($item, $severity) {
     case 'my-forums':
       if ($severity == 'default') {
         sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
-      } else {
+      }
+      else {
         $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
         // sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
       }
+      break;
+    case 'topic-forums':
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
       break;
   }
   drupal_goto('forums');
@@ -141,7 +148,7 @@ function sbac_forum_main_landing_page_reset($item, $severity) {
  * @param string $where where to redirect to.
  */
 function sbac_forum_keyword_search_redirect($where = FALSE) {
-  switch($where) {
+  switch ($where) {
     case 'resource-forums':
       sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
       break;
@@ -163,7 +170,7 @@ function sbac_forum_keyword_search_redirect($where = FALSE) {
  * @return [type] [description]
  */
 function sbac_forum_view_forum_page($term) {
-	global $user;
+  global $user;
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
 
@@ -192,7 +199,7 @@ function sbac_forum_view_forum_page($term) {
       }
 
       $list_args = array(
-        'type'  => 'ul',
+        'type' => 'ul',
         'items' => $item_list,
         'attributes' => array('class' => 'vp-auth-pane'),
       );
@@ -210,7 +217,7 @@ function sbac_forum_view_forum_page($term) {
         $item_list[] = $subject->name;
       }
       $list_args = array(
-        'type'  => 'ul',
+        'type' => 'ul',
         'items' => $item_list,
         'attributes' => array('class' => 'vp-subject-list'),
       );
@@ -228,7 +235,7 @@ function sbac_forum_view_forum_page($term) {
         $item_list[] = $grade->name;
       }
       $list_args = array(
-        'type'  => 'ul',
+        'type' => 'ul',
         'items' => $item_list,
         'attributes' => array('class' => 'vp-grades-list'),
       );
@@ -246,7 +253,7 @@ function sbac_forum_view_forum_page($term) {
         $item_list[] = $end_user->name;
       }
       $list_args = array(
-        'type'  => 'ul',
+        'type' => 'ul',
         'items' => $item_list,
         'attributes' => array('class' => 'vp-grades-list'),
       );
@@ -264,7 +271,7 @@ function sbac_forum_view_forum_page($term) {
         $item_list[] = $student->name;
       }
       $list_args = array(
-        'type'  => 'ul',
+        'type' => 'ul',
         'items' => $item_list,
         'attributes' => array('class' => 'vp-grades-list'),
       );
@@ -277,13 +284,13 @@ function sbac_forum_view_forum_page($term) {
   $current_topic_count = $forum_data->field_forum_topic_count->value();
   $topic_count_text = ' (0)';
   if ($current_topic_count) {
-    $topic_count_text = ' (' .$current_topic_count .')';
+    $topic_count_text = ' (' . $current_topic_count . ')';
   }
   $tabs[] = array(
     'vid' => 'forum_topic_list',
     'display' => 'block',
     'args' => $term->tid,
-    'title' => t('Topics'). $topic_count_text,
+    'title' => t('Topics') . $topic_count_text,
     'weight' => -99,
     'type' => 'view',
   );
@@ -321,7 +328,7 @@ function sbac_forum_view_forum_page($term) {
 
   // Check if user had just joined. Show welcome message and then unset the variable.
   $welcome_message = '';
-  if (isset($_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE]) ) {
+  if (isset($_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE])) {
     $welcome_message = $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE];
     $_SESSION[SBAC_FORUM_SHOW_JOIN_MESSAGE] = '';
   }
@@ -331,7 +338,7 @@ function sbac_forum_view_forum_page($term) {
   $id = $term->tid;
   $type = 'term';
   if (!empty($term->field_forum_resource_ref)) {
-    $resource_wrapper  = $forum_data->field_forum_resource_ref;
+    $resource_wrapper = $forum_data->field_forum_resource_ref;
     $id = $term->field_forum_resource_ref['und'][0]['target_id'];
     $type = 'node';
     $resource_link = l('View Resource', 'node/' . $id, array('attributes' => array('target' => '_blank')));
@@ -341,8 +348,8 @@ function sbac_forum_view_forum_page($term) {
     $uri = $default_file;
     if ($resource_wrapper->__isset('field_thumbnail_uri')) {
       $thumbnail_uri = $forum_data->field_forum_resource_ref->field_thumbnail_uri->value();
-      $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
-      $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
+      $thumbnail_uri = str_replace('<div class="field-content">', '', $thumbnail_uri);
+      $thumbnail_uri = str_replace('</div>', '', $thumbnail_uri);
       $thumbnail_pieces = explode('::', $thumbnail_uri);
       $uri = $thumbnail_pieces[0];
       $ext = pathinfo($uri, PATHINFO_EXTENSION);
@@ -355,7 +362,7 @@ function sbac_forum_view_forum_page($term) {
       'style_name' => 'resource_image_grid',
       'path' => $uri,
       'attributes' => array('class' => array()),
-      'alt'=>'Resource thumbnail image'
+      'alt' => 'Resource thumbnail image'
     ));
 
     // resource rating
@@ -364,13 +371,14 @@ function sbac_forum_view_forum_page($term) {
 
     // views
     $resource_views = 0;
-    if ($resource_wrapper->__isset('field_unique_views')){
+    if ($resource_wrapper->__isset('field_unique_views')) {
       $resource_views = $resource_wrapper->field_unique_views->value();
     }
 
     // downloads
     $resource_downloads = 0;
-    if ($resource_wrapper->__isset('field_asset_downloads')){}
+    if ($resource_wrapper->__isset('field_asset_downloads')) {
+    }
     $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
 
@@ -397,6 +405,6 @@ function sbac_forum_view_forum_page($term) {
     'resource_downloads' => $resource_downloads,
   );
 
-  $output = theme('sbac_forum_render_target_forum', array('fields' => $fields) );
+  $output = theme('sbac_forum_render_target_forum', array('fields' => $fields));
   return $output;
 }
