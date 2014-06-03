@@ -227,9 +227,9 @@ function sbac_resource_profile_fields(&$node) {
     $resource_node->resource_profile_left['geo']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_geographical_settings);
   }
 
-  // Smarter Balanced Keywords
+  // Module Type
   if (isset($resource_node->field_smarter_balanced_keyword['und']['0'])) {
-    $resource_node->resource_profile_left['smarter']['title'] = 'Smarter Balanced Keywords';
+    $resource_node->resource_profile_left['smarter']['title'] = 'Module Type';
     $resource_node->resource_profile_left['smarter']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_smarter_balanced_keyword);
   }
 

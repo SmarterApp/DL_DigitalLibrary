@@ -1434,7 +1434,7 @@ function set_report_columns() {
           array('field_intended_end_user', 'Intended End User(s)'),
           array('field_intended_student', 'Intended Student Population(s)'),
           array('field_geographical_settings', 'Geographic Setting(s)'),
-          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
+          array('field_smarter_balanced_keyword', 'Module Type'),
           array('field_digital_media_type', 'Media Type(s)'),
           array('field_educational_use', 'Educational Use'),
           array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),

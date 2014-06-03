@@ -1659,7 +1659,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_smarter_balanced_keyword',
-    'label' => 'Smarter Balanced Keyword(s)',
+    'label' => 'Module Type',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1780,7 +1780,7 @@ function sbac_forum_field_default_field_instances() {
   t('Reply (comment) Count');
   t('Resource Type');
   t('Role');
-  t('Smarter Balanced Keyword(s)');
+  t('Module Type');
   t('State');
   t('States');
   t('Student Populations');

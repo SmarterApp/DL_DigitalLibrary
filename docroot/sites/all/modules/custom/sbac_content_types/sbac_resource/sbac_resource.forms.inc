@@ -2140,7 +2140,7 @@ function sbac_resource_license_url(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_tags(&$form, &$form_state) {
-  // Hide access to smarter balanced keywords to non DLRB members or above.
+  // Hide access to Module Type to non DLRB members or above.
   global $user;
   if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
   }
@@ -3327,7 +3327,7 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     'intended_end_user' => t('Intended End Users'),
     'intended_student_populations' => t('Intended Student Populations'),
     'educational_use' => t('Educational Use'),
-    'smarter_balanced_keyword' => t('Smarter Balanced Keywords'),
+    'smarter_balanced_keyword' => t('Module Type'),
     'geographical_settings' => t('Geographic Settings'),
   );
   $form['help_text'] = array(

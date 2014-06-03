@@ -1963,7 +1963,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Identifiers aligned to Smarter Balanced topics. Select all that apply.',
+    'description' => 'The type of Smarter Balanced Commissioned Module.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1997,7 +1997,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_smarter_balanced_keyword',
-    'label' => 'Smarter Balanced Keyword(s)',
+    'label' => 'Module Type',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -2007,7 +2007,7 @@ function sbac_resource_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Identifiers aligned to Smarter Balanced topics. Select all that apply.',
+        'label_help_description' => 'The type of Smarter Balanced Commissioned Module',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
@@ -2850,7 +2850,6 @@ function sbac_resource_field_default_field_instances() {
   t('Geographical Setting(s)');
   t('Grade(s)');
   t('HTML5');
-  t('Identifiers aligned to Smarter Balanced topics. Select all that apply.');
   t('Identify how this includes, reflects, and addresses the formative assessment process.');
   t('Identify how this resource addresses the Common Core State Standards (e.g., how it addresses particular claims, clusters, targets, and/or “standards”). Pay special attention to the interconnectedness of claims.');
   t('Identify the Success Criteria that describe what success looks like from a learner’s perspective when the learning target is reached. The learner can be a student and/or educator depending on whether a resource is a professional learning resource or an instructional resource.');
@@ -2868,6 +2867,7 @@ function sbac_resource_field_default_field_instances() {
 <ol type=\'A\'><li>the principles of adult learning or professional development reflected in the resource; and/or</li>
 <li>the literature, research, or widely accepted practices used to inform the content in the resource. </li>
 </ol>');
+  t('Module Type');
   t('Node Avg Rating');
   t('Owner');
   t('Per FERPA regulations, resources in the Digital Library cannot contain student records and other information that identify to specific students.');
@@ -2879,7 +2879,6 @@ function sbac_resource_field_default_field_instances() {
   t('Resource State');
   t('Resource Type');
   t('Setting(s) for which this resource is appropriate. Select all that apply.');
-  t('Smarter Balanced Keyword(s)');
   t('Student Engagement in the Formative Assessment Process');
   t('Student population(s) for which the resource is best suited. Select all that apply.');
   t('Subjects and Domains');
@@ -2897,6 +2896,7 @@ function sbac_resource_field_default_field_instances() {
   t('The name(s) of the person/people/entities/publishers who own the copyright for the resource:');
   t('The purpose of the instructional resources in the context of a lesson. Select all that apply.');
   t('The technologies required to use this resource in the classroom. Select all that apply.');
+  t('The type of Smarter Balanced Commissioned Module.');
   t('The type(s) of media included in the resource. Select all that apply.');
   t('Thumbnail URI');
   t('To contributor');

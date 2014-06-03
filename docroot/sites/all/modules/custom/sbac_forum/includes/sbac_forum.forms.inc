@@ -127,7 +127,7 @@ function _sbac_forum_filter_categories() {
     _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
     _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
     _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
-    _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Smarter Balanced Keywords');
+    _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Module Type');
   }
 
   // Our custom filters
