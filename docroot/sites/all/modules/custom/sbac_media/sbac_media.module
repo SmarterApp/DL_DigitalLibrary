@@ -268,8 +268,8 @@ function sbac_media_download_contents($node) {
                 if ($key > 0 && $result['secondary'] == TRUE) {
                   $add_file = TRUE;
                 }
-
                 if ($add_file) {
+                  ini_set('memory_limit', '1024M');
                   try {
                     $target = str_replace('gs://', '', $file->uri);
                     $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
