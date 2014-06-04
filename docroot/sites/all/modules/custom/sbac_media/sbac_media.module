@@ -318,7 +318,7 @@ function sbac_media_download_contents($node) {
         }
       }
       else {
-        drupal_set_message("There are not files to download.");
+        drupal_set_message("There are no files to download.");
         drupal_goto('node/' . $node->nid);
       }
     }
