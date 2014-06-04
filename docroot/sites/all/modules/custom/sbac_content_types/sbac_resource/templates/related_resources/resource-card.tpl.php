@@ -82,15 +82,15 @@
     <?php if (isset($fields['subject']) || isset($fields['grades']) || isset($fields['media_types'])): ?>
       <div class="paradata-info">
         <?php if (isset($fields['subject']) && $fields['subject']): ?>
-          <div><div class="clearfix">Subjects:</div><?php print $fields['subject']; ?></div>
+          <div class="info-item"><div class="field-subject">Subjects:</div><div class="field-content"><?php print $fields['subject']; ?></div></div>
         <?php endif; ?>
 
         <?php if (isset($fields['grades']) && $fields['grades']): ?>
-          <div><div class="clearfix">Grades:</div><?php print $fields['grades']; ?></div>
+          <div class="info-item"><div class="field-grades">Grades:</div><div class="field-content"><?php print $fields['grades']; ?></div></div>
         <?php endif; ?>
 
         <?php if (isset($fields['media_types']) && $fields['media_types']): ?>
-          <div><div class="clearfix">Media Types:</div><?php print $fields['media_types']; ?></div>
+          <div class="info-item"><div class="field-media-types">Media Types:</div><div class="field-content"><?php print $fields['media_types']; ?></div></div>
         <?php endif; ?>
       </div>
     <?php endif; ?>
