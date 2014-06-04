@@ -317,9 +317,14 @@ function sbac_media_download_contents($node) {
           unlink($real_path); // delete the temp zip.
         }
       }
+      else {
+        drupal_set_message("There are not files to download.");
+        drupal_goto('node/' . $node->nid);
+      }
     }
     else {
-      return "There are no files to download."; // no downloadable file schemes (public://)
+      drupal_set_message("There are no files to download.");
+      drupal_goto('node/' . $node->nid);
     }
   }
 }
