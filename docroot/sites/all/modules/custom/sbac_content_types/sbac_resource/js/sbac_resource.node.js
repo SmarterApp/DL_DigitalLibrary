@@ -24,17 +24,14 @@
             local_url +=  '&embedded=true';
             var google_viewer = '<iframe title="resource-preview" src="' + google_url + '?url=' + encodeURIComponent(local_url) + '&embedded=true' + '" width="880" height="400" style="border: none;">Alternative Content</iframe>';
             resource.empty().append(google_viewer);
-            resource.addClass('google-doc');
             break;
           case 'html5':
             resource.empty().append('<iframe title="resource-preview" src="' + local_url + '" width="880" height="600" style="border: none;"></iframe>');
-            resource.removeClass('google-doc');
             break;
           case 'video':
             resource.empty().append('<div id="sbac-jwplayer"></div>');
             jwplayer('sbac-jwplayer').setup({ file: local_url, height: 400, width: 880, primary: "flash" });
             jwplayer('sbac-jwplayer').play();
-            resource.removeClass('google-doc');
             break;
           case 'image':
             var img = $('<img>');
@@ -42,23 +39,18 @@
             img.attr('height', 400);
             img.attr('width', 850);
             resource.empty().append(img);
-            resource.removeClass('google-doc');
             break;
           case 'schooltube':
             resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="500" height="375" src="' + local_url + '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen">Alternative Content</iframe></div>');
-            resource.removeClass('google-doc');
             break;
           case 'teachertube':
             resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' + local_url + '" frameborder="0" allowfullscreen/>Alternative Content</iframe>');
-            resource.removeClass('google-doc');
             break;
           case 'slideshare':
             resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + local_url + '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen>Alternative Content</iframe></div>');
-            resource.removeClass('google-doc');
             break;
           case 'vimeo':
             resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>Alternative Content</iframe></div>');
-            resource.removeClass('google-doc');
             break;
           case 'youtube':
             if (local_url.indexOf('youtube') == -1) {
@@ -71,7 +63,6 @@
             }
             else {
               resource.empty().append('<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' + local_url + '" frameborder="0" allowfullscreen>Alternative Content</iframe></div>');
-              resource.removeClass('google-doc');
             }
             break;
           default:
@@ -80,7 +71,6 @@
             img.attr('height', 400);
             img.attr('width', 850);
             resource.empty().append(img);
-            resource.removeClass('google-doc');
             break;
         }
 
