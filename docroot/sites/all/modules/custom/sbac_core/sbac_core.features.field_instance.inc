@@ -975,7 +975,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 0,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'review-end_use-field_ease_use'
