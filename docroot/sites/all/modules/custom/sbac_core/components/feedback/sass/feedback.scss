@@ -643,6 +643,29 @@
   }
 }
 
+/*Edit Resource Tags*/
+.section-edit-resource-tags {
+	#feedback-wrap-edit-tags {
+		.vertical-tabs {
+			margin: 0;
+			
+			.field-widget-options-select:nth-child(2n) {
+			   clear: right !important;
+			}
+			
+			.vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .chzn-container {
+				width: 310px !important;
+			}
+		}
+		
+		#edit-tags-cancel {
+			margin-left: 0;
+			margin-right: 15px;
+		}
+	}
+}
+
+
 @media all and (max-width: 980px) {
   .field-name-resource-slideshow .flexslider  {
      margin: 0 auto;
