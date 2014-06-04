@@ -778,7 +778,6 @@ function _sbac_resource_preview_content(&$vars) {
     $url = file_create_url($source);
     $viewer['viewer_filename'] = ucwords($file_data['filename']);
     $viewer['viewer'] = '<iframe title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
-    $viewer['viewer_class'] = '';
   }
 
   if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
@@ -801,26 +800,17 @@ function _sbac_resource_preview_content(&$vars) {
     }
 
     if ($url) {
-      if ($type == 'document' && !sbac_resource_url_exist($url)) {
-        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-        $viewer['viewer'] = theme('image', array('path' => $url));
-        $viewer['viewer_class'] = '';
-        return $viewer;
-      }
-
       if ($type == 'document') {
         $google_url = 'http://docs.google.com/viewer';
         if (isset($_SERVER['HTTPS'])) {
           $google_url = 'https://docs.google.com/viewer';
         }
         $viewer['viewer'] = '<iframe title="resource-preview" src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;">Alternative Content</iframe>';
-        $viewer['viewer_class'] = 'google-doc';
       }
       else if ($type == 'video') {
         $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 880});});';
         drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999, 'preprocess' => FALSE));
         $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
-        $viewer['viewer_class'] = '';
       }
       else if ($type == 'image') {
         $viewer['viewer'] = theme('image_style', array(
@@ -828,46 +818,37 @@ function _sbac_resource_preview_content(&$vars) {
           'path' => $file->uri,
           'alt' => 'Resource preview"'
         ));
-        $viewer['viewer_class'] = '';
       }
       else if ($type == 'schooltube') {
         $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen">Alternative Content</iframe></div>';
-        $viewer['viewer_class'] = '';
       }
       else if ($type == 'teachertube') {
         $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/>Alternative Content</iframe></div>';
-        $viewer['viewer_class'] = '';
       }
       else if ($type == 'slideshare') {
         $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen>Alternative Content</iframe></div>';
-        $viewer['viewer_class'] = '';
       }
       else if ($type == 'vimeo') {
         $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>Alternative Content</iframe></div>';
-        $viewer['viewer_class'] = '';
       }
       else if ($type == 'youtube') {
         if (strpos($url, 'youtube') !== FALSE) {
           $url .= '?rel=0'; // Disable related videos.
           $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen>Alternative Content</iframe></div>';
-          $viewer['viewer_class'] = '';
         }
         else {
           $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
           $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
-          $viewer['viewer_class'] = '';
         }
       }
       else {
         $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
         $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
-        $viewer['viewer_class'] = '';
       }
     }
     else {
       $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
       $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
-      $viewer['viewer_class'] = '';
     }
   }
   return $viewer;
