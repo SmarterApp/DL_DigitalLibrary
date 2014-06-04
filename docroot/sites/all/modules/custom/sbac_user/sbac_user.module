@@ -1067,9 +1067,15 @@ function sbac_user_menu_alter(&$items) {
  * We are not using hook_username_alter and format_username because
  * it has far reaching effects and its just before demo time
  */
-function sbac_user_format_username($user) {
+function sbac_user_format_username($user_object) {
   $username = '';
+
+  global $user;
   $account = user_load($user->uid);
+  if (is_object($user_object)) {
+    $account = user_load($user_object->uid);
+  }
+
   if (sbac_user_privacy_check('field_first_name', $account) && isset($account->field_first_name['und'][0]['value']) && $account->field_first_name['und'][0]['value']) {
     $username = $account->field_first_name['und'][0]['value'];
   }
@@ -1156,7 +1162,9 @@ function sbac_user_preprocess_username(&$vars, $user) {
       ));
     }
   }
-  $vars['user']->full_name = sbac_user_format_username($user);
+  if (is_object($user)) {
+    $vars['user']->full_name = sbac_user_format_username($user);
+  }
 }
 
 /**

@@ -102,6 +102,7 @@ class Factory {
         'source' => $source,
         'tab' => $tab,
         'nid' => $this->_node->nid,
+        'section_loaded' => ($visible ? 'section-loaded' : ''),
       );
 
       // don't generate content if the user doesn't have access to the tab
