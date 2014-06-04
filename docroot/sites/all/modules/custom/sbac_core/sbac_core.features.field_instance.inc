@@ -370,7 +370,7 @@ function sbac_core_field_default_field_instances() {
       'type' => 'text_textarea',
       'weight' => 5,
     ),
-    'xss' => 1,
+    'xss' => 0,
   );
 
   // Exported field_instance: 'feedback-qc-field_review_set'
