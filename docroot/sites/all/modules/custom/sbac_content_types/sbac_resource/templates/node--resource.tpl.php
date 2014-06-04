@@ -104,7 +104,7 @@
 
   <?php if (isset($viewer)) : ?>
   <div id="resource-element-wrapper">
-    <img src
+    <img src="http://www.radioparts.com.au/images/loader_wide.gif" />
     <div id="resource-element"><?php echo $viewer; ?></div>
   </div>
     <div class="infobar">
