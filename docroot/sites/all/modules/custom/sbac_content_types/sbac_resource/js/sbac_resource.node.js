@@ -19,7 +19,8 @@
           img.attr('src', url);
           img.attr('height', 400);
           img.attr('width', 850);
-          $('#resource-element').empty().append(img);
+          $('#sbac-google-previewer').hide();
+          $('#resource-element').append(img);
         }
         $('#sbac-loader-image').hide();
       });
@@ -112,7 +113,8 @@
               img.attr('src', url);
               img.attr('height', 400);
               img.attr('width', 850);
-              $('#resource-element').empty().append(img);
+              $('#sbac-google-previewer').hide();
+              $('#resource-element').append(img);
             }
             $('#sbac-loader-image').hide();
           });
