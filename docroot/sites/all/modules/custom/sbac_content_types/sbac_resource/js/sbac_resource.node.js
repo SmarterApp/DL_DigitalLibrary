@@ -9,23 +9,6 @@
    */
   Drupal.behaviors.sbac_resource_load_media = {
     attach: function (context, settings) {
-      // on click of the menu item
-      // display the loader, do the check once loaded, and display the correct content
-      // then hide the loader gif.
-      $('#sbac-google-previewer').load( function() {
-        if ($('#sbac-google-previewer:contains("we were unable to find the document at the original source")').length) {
-          var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
-          var img = $('<img>');
-          img.attr('src', url);
-          img.attr('height', 400);
-          img.attr('width', 850);
-          $('#sbac-google-previewer').hide();
-          $('#resource-element').append(img);
-        }
-        $('#sbac-loader-image').hide();
-      });
-
-
       $('#sbac-materials li a').click( function (event) {
         event.stopPropagation();
         event.preventDefault();
@@ -34,8 +17,6 @@
         var resource = $('#resource-element');
         switch (type) {
           case 'document':
-            $('#sbac-loader-image').show();
-
             var google_url = 'http://docs.google.com/viewer';
             if (window.location.protocol == 'https:') {
               google_url = 'https://docs.google.com/viewer';
@@ -104,21 +85,6 @@
         doc_type.removeClass();
         doc_type.addClass(type);
         doc_type.empty().append(type);
-
-        if (type == 'document') {
-          $('#sbac-google-previewer').load( function() {
-            if ($('#sbac-google-previewer:contains("we were unable to find the document at the original source")').length) {
-              var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
-              var img = $('<img>');
-              img.attr('src', url);
-              img.attr('height', 400);
-              img.attr('width', 850);
-              $('#sbac-google-previewer').hide();
-              $('#resource-element').append(img);
-            }
-            $('#sbac-loader-image').hide();
-          });
-        }
 
         return false;
       });
