@@ -154,10 +154,10 @@ function google_cdn_admin($form, &$form_state) {
 
   // Determine which has been selected.
   $version = 0;
-  if (isset($form_state['values']) && $form_state['values']['google_cdn_library_version'] == GOOGLE_CDN_LIBRARY_VERSION_067) {
+  if (isset($form_state['values']['google_cdn_library_version']) && $form_state['values']['google_cdn_library_version'] == GOOGLE_CDN_LIBRARY_VERSION_067) {
     $version = GOOGLE_CDN_LIBRARY_VERSION_067;
   }
-  elseif (isset($form_state['values']) && $form_state['values']['google_cdn_library_version'] == GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
+  elseif (isset($form_state['values']['google_cdn_library_version']) && $form_state['values']['google_cdn_library_version'] == GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
     $version = GOOGLE_CDN_LIBRARY_VERSION_105BETA;
   }
   elseif (variable_get('google_cdn_library_version') != NULL) {
@@ -410,4 +410,7 @@ function google_cdn_delete_key_file($form, &$form_state) {
     }
     unset($file);
   }
+  // just in case, migrating sometimes leaves files behind
+  db_query('DELETE FROM {file_managed} WHERE filename = :filename', array(':filename' => '886355e5443f9575c7ddc9740191a7b43bafd5aa-privatekey.p12'));
+  db_query('DELETE FROM {file_managed} WHERE filename = :filename', array(':filename' => 'google_key.pem'));
 }

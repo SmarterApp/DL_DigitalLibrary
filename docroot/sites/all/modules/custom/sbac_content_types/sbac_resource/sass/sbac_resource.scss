@@ -1895,16 +1895,39 @@ a.sbac-grid-layout {
 /*Related Resource tab on Resource content Page*/
 .section-related-resources {
 	
-	.resource-top {
-		padding-bottom: 0 !important;
+	.resoruce-bottom {
+		padding-bottom: 50px !important;
 	}
 	
 	.paradata-numbers {
-		display: none !important;
-	}
-	
-	.paradata-info {
-		padding-bottom: 10px !important;
+	  .stat-views, 
+		.stat-downloads {
+      display: inline-block;
+			vertical-align: top;
+    }
+
+		.stat-downloads:before,
+		.stat-views:before {
+			background-position: center center;
+			content: " ";
+	    display: inline-block;
+	    margin-right: 7px;
+	    position: relative;
+	    top: -2px;
+	    vertical-align: middle;
+    }
+
+		.stat-views:before {
+			background: url(../images/icons/icon-statviews.png) no-repeat 0 0;
+			width: 20px;
+			height: 13px;
+		}
+		
+		.stat-downloads:before {
+			background: url(../images/icons/icon-statdownloads.png) no-repeat 0 0;
+			width: 18px;
+			height: 15px;
+		}
 	}
 }
 

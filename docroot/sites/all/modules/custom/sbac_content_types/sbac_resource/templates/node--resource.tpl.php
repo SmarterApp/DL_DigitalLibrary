@@ -104,7 +104,7 @@
 
   <?php if (isset($viewer)) : ?>
   <div id="resource-element-wrapper">
-    <div id="resource-element" class="<?php echo $viewer_class; ?>"><?php echo $viewer; ?></div>
+    <div id="resource-element"><?php echo $viewer; ?></div>
   </div>
     <div class="infobar">
     <div class="row">
