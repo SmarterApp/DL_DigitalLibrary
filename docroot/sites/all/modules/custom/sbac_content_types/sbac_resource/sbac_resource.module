@@ -805,7 +805,7 @@ function _sbac_resource_preview_content(&$vars) {
         if (isset($_SERVER['HTTPS'])) {
           $google_url = 'https://docs.google.com/viewer';
         }
-        $viewer['viewer'] = '<iframe title="resource-preview" src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;">Alternative Content</iframe>';
+        $viewer['viewer'] = '<iframe id="sbac-google-previewer" title="resource-preview" src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;">Alternative Content</iframe>';
       }
       else if ($type == 'video') {
         $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 880});});';
