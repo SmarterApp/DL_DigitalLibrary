@@ -1263,6 +1263,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               $query = new EntityFieldQuery();
               $feedbacks = $query->entityCondition('entity_type', 'feedback')
                 ->propertyCondition('completed', 1)
+                ->propertyCondition('type', array('qc', 'gate_keeper', 'IN'))
                 ->propertyCondition('node_id', $node->nid)
                 ->propertyCondition('current', 1)
                 ->propertyCondition('status', 1)
@@ -1272,7 +1273,6 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                   $recipients[] = entity_load_single('feedback', $feedback->id);
                 }
               }
-
             }
             else {
               $task_type = 'resource_submitted';
