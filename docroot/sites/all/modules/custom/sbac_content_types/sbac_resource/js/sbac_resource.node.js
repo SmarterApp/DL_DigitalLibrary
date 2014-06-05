@@ -13,7 +13,7 @@
       // display the loader, do the check once loaded, and display the correct content
       // then hide the loader gif.
       $('#sbac-google-previewer').load( function() {
-        if ('#sbac-google-previewer:contains("we were unable to find the document at the original source")') {
+        if ($('#sbac-google-previewer:contains("we were unable to find the document at the original source")')) {
           var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
           var img = $('<img>');
           img.attr('src', url);
@@ -107,7 +107,7 @@
 
         if (type == 'document') {
           $('#sbac-google-previewer').load( function() {
-            if ('#sbac-google-previewer:contains("we were unable to find the document at the original source")') {
+            if ($('#sbac-google-previewer:contains("we were unable to find the document at the original source")')) {
               var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
               var img = $('<img>');
               img.attr('src', url);
