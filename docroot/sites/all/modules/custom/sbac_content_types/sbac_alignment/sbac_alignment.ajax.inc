@@ -203,11 +203,6 @@ function sbac_alignment_ajax_alignment_crud_callback() {
 
         $term = taxonomy_term_load($tid);
         $standards_terms[] = $term->name;
-
-        // $resource_node = node_load($alignment_ref, NULL, FALSE);
-        // $resource_node = node_load($alignment_ref);
-        // $resource_node->field_alignment_term['und'][]['tid'] = $tid;
-        // entity_save_field('field_alignment_term', $resource_node, 'node', $resource_node->nid);
       }
 
       $data = array(
