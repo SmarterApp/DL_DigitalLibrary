@@ -101,6 +101,7 @@ class Hooks extends \devtools\Hooks {
         'class' => 'section-notifications',
         'source' => 'people',
         'tab' => 'notifications',
+        'section_loaded' => '',
       );
     }
 
@@ -112,6 +113,7 @@ class Hooks extends \devtools\Hooks {
       'weight' => -100,
       'source' => 'people',
       'tab' => 'favorites',
+      'section_loaded' => '',
     );
   }
 
