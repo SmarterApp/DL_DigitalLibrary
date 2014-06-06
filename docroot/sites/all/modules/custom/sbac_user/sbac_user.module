@@ -186,7 +186,6 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     $form['#validate'][] = 'sbac_user_email_validate';
     $form['#validate'][] = 'user_validate_picture';
     $form['#validate'][] = 'user_register_validate';
-    $form['#validate'][] = 'ldap_user_form_register_form_validate';
     $is_create_page = strpos($_GET['q'], '/create');
     if ($is_create_page !== FALSE) {
       $form['field_alternate_email_address']['#access'] = TRUE;
@@ -633,12 +632,14 @@ function sbac_user_entity_presave($entity, $type) {
       $params = sbac_user_mail_format($entity);
       // send email
       $result = sbac_user_mail_send($entity, $params);
-    } elseif (isset($entity->is_new) && !$entity->is_new
+    }
+    elseif (isset($entity->is_new) && !$entity->is_new
       && array_key_exists($rid, $entity->original->roles)
-      && !array_key_exists($rid, $entity->roles)) {
+      && !array_key_exists($rid, $entity->roles)
+    ) {
       global $user;
       if ($user->uid != 1 || !in_array('system administrator', $entity->roles)) {
-      // prevent on-boarding role from being removed if not admin
+        // prevent on-boarding role from being removed if not admin
         $entity->roles[$rid] = 'on-boarding';
       }
     }
@@ -646,7 +647,8 @@ function sbac_user_entity_presave($entity, $type) {
     // egregious @HACK: only allow picture change if base path = user/id
     if (arg(0) == 'user' && arg(1) && is_numeric(arg(1)) && isset($entity->picture->fid)) {
       // user edit page, allow picture change
-    } else {
+    }
+    else {
       // don't allow picture change
       if (isset($entity->original->picture)) {
         $entity->picture = $entity->original->picture;
