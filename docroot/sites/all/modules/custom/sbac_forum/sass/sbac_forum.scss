@@ -513,10 +513,14 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 		button#edit-resource-forums {
 			@include border-radius(6px 0 0 6px);
+			padding: 0 23px;
+			width: auto;
 		}
 
 		button#edit-topic-forums {
 			@include border-radius(0 6px 6px 0);
+			padding: 0 23px;
+			width: auto;
 		}
 
     button.is-pressed {
