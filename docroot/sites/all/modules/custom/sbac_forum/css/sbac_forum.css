@@ -543,7 +543,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
   -ms-border-radius: 6px 0 0 6px;
   -o-border-radius: 6px 0 0 6px;
   border-radius: 6px 0 0 6px;
-  padding: 0 23px;
+  padding: 0 22px;
   width: auto;
 }
 /* line 520, ../sass/sbac_forum.scss */
@@ -553,7 +553,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
   -ms-border-radius: 0 6px 6px 0;
   -o-border-radius: 0 6px 6px 0;
   border-radius: 0 6px 6px 0;
-  padding: 0 23px;
+  padding: 0 22px;
   width: auto;
 }
 /* line 526, ../sass/sbac_forum.scss */
