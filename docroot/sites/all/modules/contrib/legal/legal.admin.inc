@@ -117,18 +117,18 @@ function legal_administration($form_state) {
   }
 
   // Notes about changes to T&C.
-  // $form['changes'] = array(
-  //   '#type'        => 'fieldset',
-  //   '#title'       => t('Explain Changes'),
-  //   '#description' => t('Explain what changes were made to the T&C since the last version. This will only be shown to users who accepted a previous version. Each line will automatically be shown as a bullet point.'),
-  //   '#collapsible' => TRUE,
-  //   '#collapsed'   => TRUE,
-  // );
+  $form['changes'] = array(
+    '#type'        => 'fieldset',
+    '#title'       => t('Explain Changes'),
+    '#description' => t('Explain what changes were made to the T&C since the last version. This will only be shown to users who accepted a previous version. Each line will automatically be shown as a bullet point.'),
+    '#collapsible' => TRUE,
+    '#collapsed'   => TRUE,
+  );
 
-  // $form['changes']['changes'] = array(
-  //   '#type'  => 'textarea',
-  //   '#title' => t('Changes'),
-  // );
+  $form['changes']['changes'] = array(
+    '#type'  => 'textarea',
+    '#title' => t('Changes'),
+  );
 
   $form['#after_build'] = array('legal_preview');
 
@@ -259,7 +259,7 @@ function legal_administration_submit($form, &$form_state) {
       'conditions' => $values['conditions'],
       'date'       => time(),
       'extras'     => serialize($values['extras']),
-      // 'changes'    => $values['changes'],
+      'changes'    => $values['changes'],
     ))
       ->execute();
 
