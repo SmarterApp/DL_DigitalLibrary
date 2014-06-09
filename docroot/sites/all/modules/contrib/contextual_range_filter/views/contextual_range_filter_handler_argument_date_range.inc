@@ -6,7 +6,7 @@
  */
 
 /**
- * Argument handler for arguments that are numeric or numeric ranges.
+ * Argument handler for arguments that are date ranges.
  *
  * @ingroup views_argument_handlers
  */
@@ -17,49 +17,6 @@ class contextual_range_filter_handler_argument_date_range extends views_handler_
    */
   public function construct() {
     parent::construct();
-
-    switch ($this->definition['title']) {
-
-      case 'Created year':
-      case 'Updated year':
-        $this->arg_format = 'Y';
-        $this->formula = views_date_sql_extract('YEAR', "***table***.$this->real_field");
-        break;
-
-      case 'Created year + month':
-      case 'Updated year + month':
-        $this->format = 'F Y';
-        $this->arg_format = 'Ym';
-        $this->formula = views_date_sql_format($this->arg_format, "***table***.$this->real_field");
-        break;
-
-      case 'Created month':
-      case 'Updated month':
-        $this->format = 'F';
-        $this->arg_format = 'm';
-        $this->formula = views_date_sql_extract('MONTH', "***table***.$this->real_field");
-        break;
-
-      case 'Created day':
-      case 'Updated day':
-        $this->format = 'j';
-        $this->arg_format = 'd';
-        $this->formula = views_date_sql_extract('DAY', "***table***.$this->real_field");
-        break;
-
-      case 'Created week':
-      case 'Updated week':
-        $this->arg_format = 'w';
-        $this->formula = views_date_sql_extract('WEEK', "***table***.$this->real_field");
-        break;
-
-      default:
-        // Assume full date.
-        $this->format = 'F j, Y';
-        $this->arg_format = 'Ymd';
-        $this->formula = views_date_sql_format($this->arg_format, "***table***.$this->real_field");
-        break;
-    }
   }
 
   /**
@@ -67,6 +24,7 @@ class contextual_range_filter_handler_argument_date_range extends views_handler_
    */
   public function option_definition() {
     $options = parent::option_definition();
+    $options['relative_dates'] = array('default' => TRUE);
     $options['break_phrase'] = array('default' => FALSE);
     $options['not'] = array('default' => FALSE);
     return $options;
@@ -82,11 +40,18 @@ class contextual_range_filter_handler_argument_date_range extends views_handler_
 
     $form['more']['#collapsed'] = FALSE;
 
-    // Allow passing multiple values.
+    $form['relative_dates'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Allow relative date ranges'),
+      '#description' => t('If ticked, offsets from the current date may be specified.<br/>Example: <strong>2 weeks ago--yesterday"</strong>'),
+      '#default_value' => $this->options['relative_dates'],
+      '#fieldset' => 'more',
+    );
+    // Allow passing multiple values (ranges).
     $form['break_phrase'] = array(
       '#type' => 'checkbox',
       '#title' => t('Allow multiple date ranges'),
-      '#description' => t('If selected, multiple ranges may be specified by stringing them together with plus signs.<br/>Example: <strong>19990101--20051231+20130701--20140630</strong>'),
+      '#description' => t('If ticked, multiple ranges may be specified by stringing them together with plus signs.<br/>Example: <strong>19990101--20051231+20130701--20140630</strong>'),
       '#default_value' => $this->options['break_phrase'],
       '#fieldset' => 'more',
     );
@@ -126,7 +91,7 @@ class contextual_range_filter_handler_argument_date_range extends views_handler_
   }
 
   /**
-   * Prepare the range query where clause.
+   * Prepare the range query WHERE-clause.
    */
   public function query($group_by = FALSE) {
     $this->ensure_my_table();
@@ -138,7 +103,32 @@ class contextual_range_filter_handler_argument_date_range extends views_handler_
     else {
       $this->value = array($this->argument);
     }
-    contextual_range_filter_build_range_query($this, $this->get_formula());
+    $this->set_formula(NULL);
+    $range_conversion = empty($this->options['relative_dates']) ? NULL : array($this, 'convert_relative_date_range');
+    contextual_range_filter_build_range_query($this, $this->get_formula(), $range_conversion);
+  }
+
+  /**
+   * Converts relative date range, "six months ago--now" to absolute date range.
+   *
+   * The format used for the absolute date range is the one set on this handler.
+   *
+   * @param string $from, start date of the range
+   * @param string $to, end date of the range
+   *
+   * @return array of 2 strings
+   */
+  public function convert_relative_date_range($from, $to) {
+    $format = $this->arg_format;
+    if (!empty($from)) {
+      $abs_from = strtotime($from);
+      $from = empty($abs_from) ? date($format) : date($format, $abs_from);
+    }
+    if (!empty($to)) {
+      $abs_to = strtotime($to);
+      $to = empty($abs_to) ? date($format) : date($format, $abs_to);
+    }
+    return array($from, $to);
   }
 
   /**
@@ -159,5 +149,74 @@ class contextual_range_filter_handler_argument_date_range extends views_handler_
       // Used in $this->title().
       $this->value = FALSE;
     }
+  }
+
+  /**
+   * Sets the SQL formula to use for this contextual filter handler.
+   *
+   * @param string $offset
+   *    The name of a field that holds the timezone offset or NULL.
+   *
+   * @see views/modules/node/views_handler_argument_dates_various.inc
+   */
+  private function set_formula($offset = NULL) {
+    $field_type = 'int';
+    if (!empty($this->definition['is date'])) {
+      // Date module field comes in three flavours.
+      // Date (default) is stored on the database like: Y-m-d H:i:s
+      // Date (ISO format) is stored like so: Y-m-dTH:i:s (T replaces space)
+      // Date (Unix timestamp) is stored as an int, e.g., 1389789000
+      $this->arg_format = 'Y-m-d H:i:s';
+      $field_info = field_info_field($this->definition['field_name']);
+      $field_type = ($field_info['type'] == 'datestamp') ? 'int' : 'datetime';
+    }
+    elseif (isset($this->field)) {
+      // Suspect node property. Can only tell heuristically via $this->field...
+      switch ($this->field) {
+
+        case 'created_year':
+        case 'changed_year':
+          $this->arg_format = 'Y';
+          $extract_type = 'YEAR';
+          break;
+
+        case 'created_year_month':
+        case 'changed_year_month':
+          $this->format = 'F Y';
+          $this->arg_format = 'Ym';
+          break;
+
+        case 'created_month':
+        case 'changed_month':
+          $this->format = 'F';
+          $this->arg_format = 'm';
+          $extract_type = 'MONTH';
+          break;
+
+        case 'created_day':
+        case 'changed_day':
+          $this->format = 'j';
+          $this->arg_format = 'd';
+          $extract_type = 'DAY';
+          break;
+
+        case 'created_week':
+        case 'changed_week':
+          $this->arg_format = 'w';
+          $extract_type = 'WEEK';
+          break;
+
+        // created_fulldate
+        // changed_fulldate
+        default:
+          $this->format = 'F j, Y';
+          $this->arg_format = 'Ymd'; // or : 'Ymd H:i:s' ?
+      }
+    }
+    $field = isset($this->real_field) ? $this->real_field : $this->name_field;
+
+    return $this->formula = empty($extract_type)
+      ? views_date_sql_format($this->arg_format, "***table***.$field", $field_type, $offset)
+      : views_date_sql_extract($extract_type, "***table***.$field", $field_type, $offset);
   }
 }
