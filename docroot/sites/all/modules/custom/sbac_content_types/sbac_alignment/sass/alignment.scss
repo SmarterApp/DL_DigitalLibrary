@@ -11,9 +11,12 @@
   padding: 0 !important;
 }
 
-#alignment-page {
+#modal-content.alignment-container-no-scroll {	
 	overflow-y: hidden;
-	
+}
+
+
+#alignment-page {
   .form-item {
     margin: 5px 0;
   }
