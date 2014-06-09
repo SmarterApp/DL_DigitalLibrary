@@ -11,10 +11,9 @@
   padding: 0 !important;
 }
 
-#modal-content.alignment-container-no-scroll {	
-	overflow-y: hidden;
+.alignment-container-no-scroll {	
+	overflow-y: hidden !important;
 }
-
 
 #alignment-page {
   .form-item {
