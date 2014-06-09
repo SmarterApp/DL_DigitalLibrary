@@ -3,6 +3,7 @@
 
   Drupal.behaviors.sbac_alignment_everything = {
     attach: function (context, settings) {
+      $('#modal-content').addClass('alignment-container-no-scroll');
       read_more_less = function (element) {
         var term_id = $(element).attr('term');
         var container = $(element).parent().parent();
