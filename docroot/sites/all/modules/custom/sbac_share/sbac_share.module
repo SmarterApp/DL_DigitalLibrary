@@ -15,6 +15,15 @@ define('SBAC_SHARE_PERMANENT_LINK_TYPE', 0);
 define('SBAC_SHARE_TEMPORARY_LINK_TYPE', 1);
 
 /**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_share_update_projects_alter(&$projects) {
+  unset($projects['sbac_share']);
+}
+
+/**
  * Implementation of hook_menu().
  */
 function sbac_share_menu() {

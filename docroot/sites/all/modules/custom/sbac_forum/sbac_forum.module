@@ -68,6 +68,15 @@ define('SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_VIEWS_FILTER', 'distinc
  */
 
 /**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_forum_update_projects_alter(&$projects) {
+  unset($projects['sbac_forum']);
+}
+
+/**
  * Implements hook_menu().
  */
 function sbac_forum_menu() {
