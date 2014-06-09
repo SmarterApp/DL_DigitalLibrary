@@ -196,9 +196,15 @@ function resource_access($op, $node, $account = NULL) {
       if ($resubmission_timestamp) {
         // if we're still within the 2 weeks (FEEDBACK_RESUBMISSION_TIMEOUT) limit
         if (time() - FEEDBACK_RESUBMISSION_TIMEOUT < $resubmission_timestamp) {
-          $query = "SELECT count(*) FROM {eck_feedback} WHERE node_id = :nid AND uid = :uid";
-          $reviewers = db_query($query, array(':nid' => $node->nid, ':uid' => $account->uid))->fetchField();
-          return $reviewers > 0;
+          $count = db_select('eck_feedback', 'f')->condition('node_id', $node->nid)->fields('f')->countQuery()->execute()->fetchField();
+          if ($count == 0) {
+            return TRUE;
+          }
+          else {
+            $query = "SELECT count(*) FROM {eck_feedback} WHERE node_id = :nid AND uid = :uid";
+            $reviewers = db_query($query, array(':nid' => $node->nid, ':uid' => $account->uid))->fetchField();
+            return $reviewers > 0;
+          }
         }
       }
       // read-only access
