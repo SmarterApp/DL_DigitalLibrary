@@ -18,7 +18,8 @@ function sbac_forum__api__get_active_subnav() {
 function sbac_forum__api__set_active_subnav($value = NULL) {
   if (!empty($value)) {
     $_SESSION[SBAC_FORUM_SUBNAV_ACTIVE] = $value;
-  } else {
+  }
+  else {
     $_SESSION[SBAC_FORUM_SUBNAV_ACTIVE] = '';
   }
 }
@@ -57,8 +58,9 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
   // Compare the forum restrictions to target user's roles.
   $has_role = array();
   if (($validate_user_role) &&
-      (!empty($user_obj)) &&
-      (!empty($allowed_roles)) ){
+    (!empty($user_obj)) &&
+    (!empty($allowed_roles))
+  ) {
     if (isset($user_profile_wrapper->field_position)) {
       $title_terms = $user_profile_wrapper->field_position->value();
       if (!empty($title_terms)) {
@@ -90,8 +92,9 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
   // Compare the forum restrictions with the target user's profile setting for state.
   $has_state = array();
   if (($validate_user_state) &&
-      (!empty($user_obj)) &&
-      (!empty($allowed_states)) ) {
+    (!empty($user_obj)) &&
+    (!empty($allowed_states))
+  ) {
     $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
     if (isset($user_profile_wrapper->field_state)) {
       $state_terms = $user_profile_wrapper->field_state->value();
@@ -109,13 +112,15 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
   // Bring it all together
   if ((!$validate_user_role && !$validate_user_state)) { // Forum is wide open.
     $access = TRUE;
-  } else { // Forum needs to restrict by something.
+  }
+  else { // Forum needs to restrict by something.
     $pass = 0; // Both need to match. Its an "AND", role AND state.
     if ($validate_user_role) {
       if (!empty($has_role)) {
         $pass++;
       }
-    } else { // Forum isnt role restricted.
+    }
+    else { // Forum isnt role restricted.
       $pass++;
     }
 
@@ -123,7 +128,8 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
       if (!empty($has_state)) {
         $pass++;
       }
-    }else {
+    }
+    else {
       $pass++;
     }
 
@@ -141,18 +147,20 @@ function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
   $cid = '';
   $forum_details = array(
     'members' => array(),
-    'removed'=> array(),
+    'removed' => array(),
   );
 
   if (!empty($forum_id)) {
-    $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME. $forum_id;
-  } else {
+    $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $forum_id;
+  }
+  else {
     return $is_member;
   }
 
   if ($cache = cache_get($cid)) {
     $forum_details = $cache->data;
-  } else {
+  }
+  else {
     $forum_term = taxonomy_term_load($forum_id);
     $forum_data = entity_metadata_wrapper('taxonomy_term', $forum_term);
 
@@ -176,7 +184,8 @@ function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
         if ($member_id) {
           if ($member_is_removed) {
             $blocked_list[$member_id] = $member_id;
-          } else {
+          }
+          else {
             $member_id_list[$member_id] = $member_id;
           }
 
@@ -194,7 +203,8 @@ function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
   if (!empty($forum_details)) {
     if (in_array($uid, $forum_details['members'])) {
       $is_member = TRUE;
-    } else {
+    }
+    else {
       $is_member = FALSE;
     }
 
@@ -286,7 +296,7 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
 
   if (!empty($forum_control_links)) {
     $list_args = array(
-      'type'  => 'ul',
+      'type' => 'ul',
       'items' => $forum_control_links,
       'attributes' => array('class' => 'vp-control-links'),
     );
@@ -309,7 +319,8 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
   $target_user = NULL;
   if (is_numeric($user_id)) {
     $target_user = user_load($user_id);
-  } else {
+  }
+  else {
     $target_user = $user_id; // Account is already passed in.
   }
 
@@ -412,14 +423,16 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
               $new_member_count = $current_member_count - 1;
               $forum_term_wrapper->field_forum_member_count->set($new_member_count);
 
-            } elseif ($operation == 'remove') {
+            }
+            elseif ($operation == 'remove') {
               // Set the current member flag to "removed".
               $member_wrapper->field_fc_forum_member_is_removed->set(1);
               $date = strtotime('today');
               $member_wrapper->field_fc_forum_member_removed->set($date);
               if (!empty($reason_message)) {
                 $member_wrapper->field_fc_forum_member_removedmsg->set($reason_message);
-              } else {
+              }
+              else {
                 $member_wrapper->field_fc_forum_member_removedmsg->set('');
               }
               $member_wrapper->save(TRUE);
@@ -440,7 +453,8 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
               if (isset($this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME])) {
                 $existing_removed_list = $this_user->data[SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME];
                 $existing_removed_list[$forum_term->tid] = $forum_term->tid;
-              } else {
+              }
+              else {
                 $existing_removed_list = array($forum_term->tid => $forum_term->tid);
               }
               $data = array(
@@ -448,7 +462,8 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
               );
               user_save($this_user, array('data' => $data));
 
-            } elseif ($operation == 'restore') {
+            }
+            elseif ($operation == 'restore') {
               // UnSet the current removed member flag.
               $member_wrapper->field_fc_forum_member_is_removed->set(0);
               $date = strtotime('today');
@@ -484,7 +499,7 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
             taxonomy_term_save($forum_term);
 
             // invalidate memberlist cache when a user is removed or leaves.
-            $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME. $forum_term->tid;
+            $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $forum_term->tid;
             if (cache_get($cid)) {
               cache_clear_all($cid, 'cache');
             }
@@ -525,20 +540,20 @@ function sbac_forum__api__send_bulk_notifications($forum_term, $op, $users_to_no
           }
           if (!$is_removed) { // only notify non-removed members.
             if (isset($fci_wrapper->field_fc_forum_member)) {
-              $member_info = $fci_wrapper->field_fc_forum_member->value();
-              if ($member_info->uid != $user->uid) { // No need to notify person deleting the forum.
-                // Create task notification.
-                if ($task = taskit_get_object('deleted_forum_term')) {
-                  $task->addVisibility($task::VISIBILITY_USER);
-                  $task->addEntity('taxonomy_term', $forum_term->tid);
-                  $task->addOwningUser($member_info->uid);
-                  $task->addTriggeringUser($user->uid);
-                  $task->save();
+              if ($member_info = $fci_wrapper->field_fc_forum_member->value()) {
+                if ($member_info->uid != $user->uid) { // No need to notify person deleting the forum.
+                  // Create task notification.
+                  if ($task = taskit_get_object('deleted_forum_term')) {
+                    $task->addVisibility($task::VISIBILITY_USER);
+                    $task->addEntity('taxonomy_term', $forum_term->tid);
+                    $task->addOwningUser($member_info->uid);
+                    $task->addTriggeringUser($user->uid);
+                    $task->save();
+                  }
                 }
               }
             }
           }
-
         }
       }
       break;

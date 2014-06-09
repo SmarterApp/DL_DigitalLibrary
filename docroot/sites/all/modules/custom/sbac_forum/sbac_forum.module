@@ -1532,6 +1532,13 @@ function sbac_forum_taxonomy_term_presave($term) {
   }
 }
 
+/**
+ * Implements hook_taxonomy_term_delete()
+ */
+function sbac_forum_taxonomy_term_delete($term) {
+  // Delete favorite
+  db_delete('sbac_favorites')->condition('type', 'term')->condition('id', $term->tid)->execute();
+}
 
 /**
  * =============================================================================
