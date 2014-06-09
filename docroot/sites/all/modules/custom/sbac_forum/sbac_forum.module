@@ -1599,25 +1599,25 @@ function sbac_forum_node_insert($node) {
 
         // add the user to the participant list
         if (!sbac_forum__api__check_user_is_forum_member($forum_obj->tid, $node->uid)) {
-              $params = array(
-                'field_name' => 'field_fc_forum_members'
-              );
-              $new_member_item = entity_create('field_collection_item', $params);
-              $new_member_item->setHostEntity('taxonomy_term', $forum_obj);
-              $new_member_data = entity_metadata_wrapper('field_collection_item', $new_member_item);
-              $new_member_data->field_fc_forum_member->set($node->uid);
-              $new_member_data->field_fc_forum_member_joined->set(time());
-              $new_member_data->save(TRUE);
+          $params = array(
+            'field_name' => 'field_fc_forum_members'
+          );
+          $new_member_item = entity_create('field_collection_item', $params);
+          $new_member_item->setHostEntity('taxonomy_term', $forum_obj);
+          $new_member_data = entity_metadata_wrapper('field_collection_item', $new_member_item);
+          $new_member_data->field_fc_forum_member->set($node->uid);
+          $new_member_data->field_fc_forum_member_joined->set(time());
+          $new_member_data->save(TRUE);
 
-              $current_member_count = $forum_wrapper->field_forum_member_count->value();
-              $current_member_count++;
-              $forum_wrapper->field_forum_member_count->set($current_member_count);
-              $forum_wrapper->save(TRUE);
+          $current_member_count = $forum_wrapper->field_forum_member_count->value();
+          $current_member_count++;
+          $forum_wrapper->field_forum_member_count->set($current_member_count);
+          $forum_wrapper->save(TRUE);
 
-              // invalidate member list cache when a new user joins.
-              $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $forum_obj->tid;
-              if (cache_get($cid)) {
-                cache_clear_all($cid, 'cache');
+          // invalidate member list cache when a new user joins.
+          $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $forum_obj->tid;
+          if (cache_get($cid)) {
+            cache_clear_all($cid, 'cache');
           }
         }
         // Update user's topic count
@@ -1927,6 +1927,27 @@ function sbac_forum_create_resource_forum($nid, $vid = NULL) {
       }
     }
   }
+}
+
+/**
+ * Delete a resource forum along with all its topics
+ *
+ * @param $tid
+ * The forum term ID
+ */
+function sbac_forum_delete_resource_forum($tid) {
+  $topics_query = "
+      SELECT
+        n.nid
+      FROM {node} n
+        LEFT JOIN {field_data_field_topic_forum_parent} parent
+          ON parent.entity_id = n.nid
+      WHERE parent.field_topic_forum_parent_tid = :tid AND n.type = 'topic'";
+  $topics = db_query($topics_query, array(
+    ':tid' => $tid,
+  ))->fetchCol();
+  node_delete_multiple($topics);
+  taxonomy_term_delete($tid);
 }
 
 /**

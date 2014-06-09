@@ -438,11 +438,11 @@ function sbac_resource_get_related_resources($baseline_node) {
                   if ($result->views == 0) {
                     $related_views = FALSE;
                   }
-                  else{
+                  else {
                     $related_resources[$nid] = $result->views;
                   }
                 }
-                else{
+                else {
                   $related_views = FALSE;
                 }
 
@@ -628,7 +628,7 @@ function sbac_resource_url_exists_ajax() {
  * @param $url
  * @return bool
  */
-function sbac_resource_url_exist($url){
+function sbac_resource_url_exist($url) {
   // Curl the google docs viewer url
   // if response contains the wrong message
   // then return false and output the no-preview image.
@@ -653,7 +653,7 @@ function sbac_resource_url_exist($url){
   curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
   curl_setopt($curl, CURLOPT_REFERER, $base_url);
   curl_setopt($curl, CURLOPT_ENCODING, "gzip,deflate");
-  curl_setopt($curl, CURLOPT_AUTOREFERER, true);
+  curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($curl, CURLOPT_TIMEOUT, 30);
   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -681,7 +681,10 @@ function sbac_resource_preprocess_node(&$vars) {
     drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.node.js');
     drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js');
 
-    $vars['author'] = ''; $vars['license'] = ''; $vars['owner'] = ''; $vars['resource_type'] = '';
+    $vars['author'] = '';
+    $vars['license'] = '';
+    $vars['owner'] = '';
+    $vars['resource_type'] = '';
 
     if (isset($vars['field_focus'][0]['tid'])) {
       $resource_types = array();
@@ -770,7 +773,7 @@ function _sbac_resource_preview_content(&$vars) {
     $html5 = TRUE;
     $media = $vars['document']['html5'];
     $file = file_load($media->fid);
-    $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
+    $directory = "private://html5/" . floor($vars['nid'] / 32000) . "/" . $vars['nid'];
     $real_path = drupal_realpath($directory) . '/' . $file->filename;
     $file_data = pathinfo($real_path);
     $source = $directory . '/html5_module/dlcomponents/CoverPage.html';
@@ -806,31 +809,31 @@ function _sbac_resource_preview_content(&$vars) {
         }
         $viewer['viewer'] = '<iframe title="resource-preview" src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;">Alternative Content</iframe>';
       }
-      else if ($type == 'video') {
+      elseif ($type == 'video') {
         $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 880});});';
         drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999, 'preprocess' => FALSE));
         $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
       }
-      else if ($type == 'image') {
+      elseif ($type == 'image') {
         $viewer['viewer'] = theme('image_style', array(
           'style_name' => 'resource_profile',
           'path' => $file->uri,
           'alt' => 'Resource preview"'
         ));
       }
-      else if ($type == 'schooltube') {
+      elseif ($type == 'schooltube') {
         $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen">Alternative Content</iframe></div>';
       }
-      else if ($type == 'teachertube') {
+      elseif ($type == 'teachertube') {
         $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/>Alternative Content</iframe></div>';
       }
-      else if ($type == 'slideshare') {
+      elseif ($type == 'slideshare') {
         $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen>Alternative Content</iframe></div>';
       }
-      else if ($type == 'vimeo') {
+      elseif ($type == 'vimeo') {
         $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>Alternative Content</iframe></div>';
       }
-      else if ($type == 'youtube') {
+      elseif ($type == 'youtube') {
         if (strpos($url, 'youtube') !== FALSE) {
           $url .= '?rel=0'; // Disable related videos.
           $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen>Alternative Content</iframe></div>';
@@ -867,7 +870,7 @@ function _sbac_resource_preview_materials(&$vars) {
     $type = 'html5';
     $media = $vars['document']['html5'];
     $file = file_load($media->fid);
-    $directory = "private://html5/" . floor($vars['nid']/32000) . "/" . $vars['nid'];
+    $directory = "private://html5/" . floor($vars['nid'] / 32000) . "/" . $vars['nid'];
     $real_path = drupal_realpath($directory) . '/' . $file->filename;
     $file_data = pathinfo($real_path);
     $source = $directory . '/html5_module/dlcomponents/CoverPage.html';
@@ -883,7 +886,7 @@ function _sbac_resource_preview_materials(&$vars) {
         if ($type == 'none') {
           $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
         }
-        else if ($media->fid) {
+        elseif ($media->fid) {
           $file = file_load($media->fid);
           if ($file) {
             $url = file_create_url($file->uri);
@@ -916,7 +919,7 @@ function _sbac_resource_preview_materials(&$vars) {
   }
 
   if ($material_urls) {
-    $materials = '<a title="View All Materials" class="button small arrow sbac-materials-dropdown" data-dropdown="sbac-materials">'. t('View All Materials'). '<span></span></a>';
+    $materials = '<a title="View All Materials" class="button small arrow sbac-materials-dropdown" data-dropdown="sbac-materials">' . t('View All Materials') . '<span></span></a>';
     $materials .= theme('item_list', array(
       'items' => $material_urls,
       'attributes' => array(
@@ -1361,7 +1364,7 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
   }
-  else if ($node->type == 'resource' && $new_state == 'removed') {
+  elseif ($node->type == 'resource' && $new_state == 'removed') {
     $node->status = 0;
   }
 
@@ -1408,7 +1411,7 @@ function sbac_resource_save_current_state($node) {
         sbac_resource_save_resource_state($entity, $new_record);
         sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
       }
-      else if (!$completed_gate_keeper && !$gate_keeper) {
+      elseif (!$completed_gate_keeper && !$gate_keeper) {
         sbac_resource_delete_resource_state_given_state($node, 'gk_being_reviewed');
         if (!$completed_gate_keeper) {
           sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
@@ -1562,7 +1565,8 @@ function sbac_resource_save_current_state($node) {
     // If the node is in neither state, delete all records associated to this role and node.
     if (isset($node->workbench_moderation['current']->state) &&
       $node->workbench_moderation['current']->state != 'being_reviewed' &&
-      $node->workbench_moderation['current']->state != 'needs_review') {
+      $node->workbench_moderation['current']->state != 'needs_review'
+    ) {
       sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_being_reviewed');
       sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
       sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_being_reviewed');
@@ -1571,7 +1575,8 @@ function sbac_resource_save_current_state($node) {
 
     // if the node is in neither state, delete all records associated to this role and node.
     if (isset($node->workbench_moderation['current']->state) &&
-      $node->workbench_moderation['current']->state != 'approved') {
+      $node->workbench_moderation['current']->state != 'approved'
+    ) {
       sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_being_reviewed');
       sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_needs_review');
     }
@@ -1590,8 +1595,8 @@ function sbac_resource_save_current_state($node) {
  *
  * @param $query
  */
-function sbac_resource_query_alter( &$query) {
-  if(isset($query->alterMetaData['view']->name) && $query->alterMetaData['view']->name == "resource_review"){
+function sbac_resource_query_alter(&$query) {
+  if (isset($query->alterMetaData['view']->name) && $query->alterMetaData['view']->name == "resource_review") {
     $query->groupBy("node.nid");
   }
 }
@@ -1772,7 +1777,7 @@ function sbac_resource_delete_resource_state($entity) {
  * @param $entity
  * @return bool
  */
-function sbac_resource_get_state(&$entity, $nid, $uid = NULL, $state = NULL, $flag = NULL){
+function sbac_resource_get_state(&$entity, $nid, $uid = NULL, $state = NULL, $flag = NULL) {
   $query = db_select('sbac_node_resource_state', 'snrs');
   $query->fields('snrs');
   $query->condition('nid', $nid);
@@ -1829,6 +1834,17 @@ function sbac_resource_node_insert($node) {
 }
 
 /**
+ * Implements hook_node_delete()
+ */
+function sbac_resource_node_delete($node) {
+  if ($node->type == 'resource') {
+    if ($forum_id = sbac_forum_get_resource_forum_id($node->nid)) {
+      sbac_forum_delete_resource_forum($forum_id);
+    }
+  }
+}
+
+/**
  * Saves the node thumbnail into the resource field.
  *
  * @param $node
@@ -1844,7 +1860,7 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
       }
     }
     if (isset($node->document['html5'])) {
-      $directory = "private://html5/" . floor($nid/32000) . "/" . $nid;
+      $directory = "private://html5/" . floor($nid / 32000) . "/" . $nid;
       $directory_thumbnail_uri = $directory . '/html5_module/dlcomponents/thumbnail.png';
       $directory_thumbnail_path = drupal_realpath($directory) . '/html5_module/dlcomponents/thumbnail.png';
       if (file_exists($directory_thumbnail_path)) {
@@ -1861,7 +1877,7 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
       $uri = $default_file;
     }
   }
-  else if (isset($node->document[0])) {
+  elseif (isset($node->document[0])) {
     $media = $node->document[0];
     if ($media->fid) {
       $file = file_load($media->fid);
@@ -2174,7 +2190,7 @@ function sbac_resource_create_button() {
   if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
     $create_urls[] = l('Resource', 'node/add/resource', array('attributes' => array('class' => array('create-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resource', 'destination' => arg(0))));
     $create_urls[] = l('Content Module', 'node/add/resource', array('attributes' => array('class' => array('create-module')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'module', 'destination' => arg(0))));
-    $content = '<a id="admin-create-menu" class="button small arrow sbac-create-resource-dropdown" data-dropdown="sbac-create-resource">'. t('Create New'). '<span></span></a>';
+    $content = '<a id="admin-create-menu" class="button small arrow sbac-create-resource-dropdown" data-dropdown="sbac-create-resource">' . t('Create New') . '<span></span></a>';
     $content .= theme('item_list', array(
       'items' => $create_urls,
       'attributes' => array(
@@ -2536,7 +2552,8 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
           if ((in_array('admininstrator', $account->roles) ||
               in_array('DLRB member', $account->roles) ||
               in_array('moderator', $account->roles)) && (
-              $op == 'view' || $op == 'update' || $op == 'delete')) {
+              $op == 'view' || $op == 'update' || $op == 'delete')
+          ) {
             $access = TRUE;
           }
         }
@@ -2717,7 +2734,7 @@ function sbac_resource_get_rating_count($nid) {
  * @param $nid
  * @return mixed
  */
-function sbac_resource_get_rating_average($nid){
+function sbac_resource_get_rating_average($nid) {
   $average_query = "
     SELECT
       (avg(student.field_student_learning_rating) +
@@ -2732,7 +2749,7 @@ function sbac_resource_get_rating_average($nid){
         ON ease.entity_id = review.id
     WHERE student.bundle = 'end_use'
           AND review.node_id = :nid";
-  return db_query($average_query, array(':nid'=>$nid))->fetchField();
+  return db_query($average_query, array(':nid' => $nid))->fetchField();
 }
 
 /**
@@ -2741,7 +2758,7 @@ function sbac_resource_get_rating_average($nid){
  * @param $rating
  * @return string
  */
-function sbac_resource_display_fivestar_rating($rating){
+function sbac_resource_display_fivestar_rating($rating) {
   return theme('fivestar_formatter_default', array(
     'element' => array(
       '#theme' => 'fivestar_formatter_default',
@@ -2807,7 +2824,7 @@ function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $st
       if ($uid_not) {
         $query->condition('f.uid', array($uid), 'NOT IN');
       }
-      else{
+      else {
         $query->condition('f.uid', $uid);
       }
     }

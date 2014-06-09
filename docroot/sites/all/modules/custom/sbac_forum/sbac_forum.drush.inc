@@ -39,20 +39,6 @@ function drush_sbac_forum_delete_all_resource_forums() {
   $results = db_query($forum_query)->fetchCol();
   foreach ($results as $tid) {
     echo '.';
-    $topics_query = "
-      SELECT
-        n.nid
-      FROM {node} n
-        LEFT JOIN {field_data_field_topic_forum_parent} parent
-          ON parent.entity_id = n.nid
-        LEFT JOIN {field_data_field_topic_default} topic_default
-          ON topic_default.entity_id = n.nid
-      WHERE parent.field_topic_forum_parent_tid = :tid
-            AND topic_default.field_topic_default_value = 1";
-    $topics = db_query($topics_query, array(
-      ':tid' => $tid,
-    ))->fetchCol();
-    node_delete_multiple($topics);
-    taxonomy_term_delete($tid);
+    sbac_forum_delete_resource_forum($tid);
   }
 }
