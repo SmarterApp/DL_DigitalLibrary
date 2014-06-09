@@ -1838,9 +1838,12 @@ function sbac_resource_node_insert($node) {
  */
 function sbac_resource_node_delete($node) {
   if ($node->type == 'resource') {
+    // Delete resource forum and topics
     if ($forum_id = sbac_forum_get_resource_forum_id($node->nid)) {
       sbac_forum_delete_resource_forum($forum_id);
     }
+    // Delete favorite
+    db_delete('sbac_favorites')->condition('type', 'node')->condition('id', $node->nid)->execute();
   }
 }
 
