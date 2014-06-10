@@ -779,6 +779,28 @@ function _sbac_resource_my_resources_admin_links($fields) {
     $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
     $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
     $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+    $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+      'html' => TRUE,
+      'attributes' => array(
+        'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource-button-' . $nid,
+        'id' => 'sbac-resource-modal-delete-resource-button-' . $nid,
+      ),
+      'query' => array('nid' => $nid),
+    ));
+
+    // JS to properly size the modal when submit resource is clicked.
+    $js_settings = array(
+      'sbac-resource-modal-delete-resource-button-' . $nid => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 160,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
+
+
     $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
     $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
     $html5 = db_query("SELECT field_html5_value FROM {field_data_field_html5} WHERE entity_id = :entity_id", array(':entity_id' => $nid))->fetchField();
