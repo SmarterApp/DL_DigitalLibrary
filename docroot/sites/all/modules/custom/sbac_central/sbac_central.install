@@ -1019,7 +1019,7 @@ function sbac_central_update_7076() {
 }
 
 /**
- * Enable views content cache.
+ * Disable acquia agent, views ui, and taxonomy manager. Enable elysia_cron.
  */
 function sbac_central_update_7077() {
   $modules = array(
