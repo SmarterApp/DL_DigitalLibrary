@@ -1019,6 +1019,24 @@ function sbac_central_update_7076() {
 }
 
 /**
+ * Enable views content cache.
+ */
+function sbac_central_update_7077() {
+  $modules = array(
+    'acquia_agent',
+    'views_ui',
+    'taxonomy_manager',
+  );
+  module_disable($modules);
+  unset($modules);
+
+  $modules = array(
+    'elysia_cron',
+  );
+  module_enable($modules);
+}
+
+/**
  * Connect to the Google Cloud Storage.
  *
  * @param $service
