@@ -84,10 +84,18 @@ Feedback.utilities = {
 
     // update the action which took place
     if (Feedback[type] && Feedback[type]['form']) {
+      var modal_popup = document.getElementById("dialog-feedback_gate_keeper_form-wrapper");
+      var buttons = modal_popup.getElementsByTagName("button");
+      var button = buttons[0];
+      var buttonID = button.getAttribute("id");
+
       // by triggering the form's submit() and not doing a click/mousedown on an 
       // actual button, we bypass the AJAX form submission and do a regular page
       // reload, which will show the 'completed' version of content
       $(Feedback[type]['form']).submit();
+
+      // Disables button to prevent multiple button presses.
+      buttonID.classList.add("form-button-disabled");
     }
   },
 
