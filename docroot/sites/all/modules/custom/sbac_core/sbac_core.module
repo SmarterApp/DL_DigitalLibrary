@@ -50,6 +50,9 @@ function sbac_core_init() {
   * calls, if it is required then the call should be made one and cached or 
    * preferably the race condition should be identified and fixed more elegantly
    */
+/*
+* BRANDON!
+*/
   /*
   $registry = cache_get('theme_registry:SBAC');
   if (!isset($registry->data['resource_slideshow'])) {
