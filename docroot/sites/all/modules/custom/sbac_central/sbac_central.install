@@ -1023,7 +1023,6 @@ function sbac_central_update_7076() {
  */
 function sbac_central_update_7077() {
   $modules = array(
-    'acquia_agent',
     'views_ui',
     'taxonomy_manager',
   );
