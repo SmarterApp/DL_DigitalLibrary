@@ -418,9 +418,8 @@ function sbac_user_warn_user_form($form, &$form_state) {
  */
 function sbac_user_email_validate(&$form, &$form_state) {
   $email= strtolower($form_state['values']['mail']);
-  //allow a-z, 0-9 and the special chars /+#~ in email addresses but not in domain names.
-  $regex = '/^[\/\+\#\~_a-z0-9-]+(\.[\/\+\#\~_a-z0-9-]+)*@[\/\+\#\~_a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/';
-  if (!preg_match($regex, $email)) {
+  $valid = valid_email_address($email);
+  if (!$valid) {
     form_set_error('', t('The email address :email is not valid.', array(':email' => $email)));
   }
 }
