@@ -68,7 +68,7 @@
             <ul id="unique-views-drop-<?php echo $fields['nid']->raw ?>" class="f-dropdown" data-dropdown-content>
               <li>Views</li>
             </ul>
-            <?php print $fields['views']; ?>
+            <div class="field-content"><?php print $fields['views']; ?></div>
           </div>
         <?php endif; ?>
 
@@ -80,7 +80,7 @@
             <li>Downloads</li>
           </ul>
           <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-            <?php print $fields['downloads']; ?>
+            <div class="field-content"><?php print $fields['downloads']; ?></div>
           <?php else: ?>
             <div class="field-content">0</div>
           <?php endif; ?>
