@@ -177,7 +177,7 @@ function user_logout() {
   // Destroy the current session, and reset $user to the anonymous user.
   session_destroy();
 
-  drupal_goto();
+  drupal_goto('user');
 }
 
 /**
