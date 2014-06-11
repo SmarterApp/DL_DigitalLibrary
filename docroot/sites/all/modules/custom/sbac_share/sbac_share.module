@@ -194,7 +194,7 @@ function sbac_share_login_redirect_view() {
     }
   }
   // if not logged in, go to 404 or 403 page.
-  m4032404_callback();
+  drupal_not_found();
 }
 
 /**
