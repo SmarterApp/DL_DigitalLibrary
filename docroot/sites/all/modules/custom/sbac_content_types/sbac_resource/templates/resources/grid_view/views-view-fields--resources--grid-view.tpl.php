@@ -104,18 +104,19 @@
           <?php print $fields['views']; ?>
         </div>
       <?php endif; ?>
-      <a href="#" data-dropdown="total-downloads-<?php echo $fields['nid']->raw; ?>">
-        <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statdownloads.png" alt="Downloads">
-      </a>
-      <ul id ="total-downloads-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
-        <li>Downloads</li>
-      </ul>
-      <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-        <div class="stat-downloads"><?php print $fields['downloads']; ?></div>
-      <?php else: ?>
-        <div class="stat-downloads"><div class="field-content">0</div></div>
-      <?php endif; ?>
-
+      <div class="stat-downloads">
+        <a href="#" data-dropdown="total-downloads-<?php echo $fields['nid']->raw; ?>">
+          <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statdownloads.png" alt="Downloads">
+        </a>
+        <ul id ="total-downloads-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
+          <li>Downloads</li>
+        </ul>
+        <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
+          <?php print $fields['downloads']; ?>
+        <?php else: ?>
+          <div class="field-content">0</div>
+        <?php endif; ?>
+      </div>
       <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
         <?php // print $fields['collaborators']; ?>
       <?php endif; ?>
