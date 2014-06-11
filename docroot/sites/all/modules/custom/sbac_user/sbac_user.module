@@ -789,9 +789,9 @@ function sbac_user_user_login(&$edit, $account) {
   $data = $account->data;
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
-/**
-* steev - this if statement needs to be changed so it redirects to digital-library-resources much earlier in the process
-*/
+  /**
+  * steev - this if statement needs to be changed so it redirects to digital-library-resources much earlier in the process
+  */
   if (!isset($edit['sbac-share'])) {
     if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
     }
