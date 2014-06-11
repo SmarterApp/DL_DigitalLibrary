@@ -810,7 +810,7 @@ function _sbac_resource_preview_content(&$vars) {
 
     if ($type == 'document') {
       $google_url = 'http://docs.google.com/viewer';
-      if (isset($_SERVER['HTTPS']) == 'on') {
+      if (isset($_SERVER['HTTPS']) && $_SERVER['HTTP'] == 'on') {
         $google_url = 'https://docs.google.com/viewer';
       }
       $viewer['viewer'] = '<iframe title="resource-preview" src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;">Alternative Content</iframe>';
