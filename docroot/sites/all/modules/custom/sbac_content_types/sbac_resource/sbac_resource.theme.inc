@@ -559,6 +559,12 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
   if (isset($variables['favorites_tooltip'])) {
     $vars['fields']['favorites_tooltip'] = $variables['favorites_tooltip'];
   }
+  if (isset($variables['rating'])) {
+    $vars['fields']['rating'] = $variables['rating'];
+  }
+  if (isset($variables['rating_count'])) {
+    $vars['fields']['rating_count'] = $variables['rating_count'];
+  }
   global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);

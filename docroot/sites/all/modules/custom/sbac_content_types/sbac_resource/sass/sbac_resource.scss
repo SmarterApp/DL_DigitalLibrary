@@ -657,6 +657,7 @@ a.sbac-grid-layout {
 
         .field-content {
           display: inline-block;
+					vertical-align: top;
         }
       }
 
@@ -880,11 +881,31 @@ a.sbac-grid-layout {
 			    top: -12px;
 			    width: 222px;
 			    z-index: 98;
+			
+					.stat-views {
+						margin-left: 20px;
+					}
+					
+					.rating {
+					  border-top: 1px solid #FFFFFF;
+				    box-shadow: 0 -1px 0 0 #CECECE;
+				    clear: both;
+				    margin-top: 5px;
+				    padding-bottom: 5px;
+				    padding-top: 14px;
+						
+						.rating-count {
+							margin-left: 20px;
+						}
+						.star {
+						   margin-right: 5px;
+						}
+					}
 				}
 			}
 			
 			.favorites-link {
-			  bottom: -40px;
+			  bottom: -20px;
 		    left: 15px;
 			}
 			
@@ -2866,7 +2887,8 @@ div[id*="edit-field-copyright-clearace-forms"] {
 
 /*View & download icons of resource card*/
 .stat-views, 
-.stat-downloads {
+.stat-downloads,
+.rating-count {
   display: inline-block;
 	vertical-align: top;
 	position: relative;
@@ -2875,13 +2897,13 @@ div[id*="edit-field-copyright-clearace-forms"] {
 	    border-color: #FFFFFF rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 	    border-style: solid inset inset;
 	    left: 43px !important;
-	    top: 36px !important;
+	    top: 35px !important;
 	}
 	
 	.f-dropdown:after {
 	    border-color: #5E5E5E rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 	    left: 44px;
-	    top: 37px;
+	    top: 36px;
 	}
 	
 	.f-dropdown, .f-dropdown.open {
@@ -2900,6 +2922,10 @@ div[id*="edit-field-copyright-clearace-forms"] {
 
 	a, .field-content {
 		display: inline-block;
+		
+		&:focus, &:visited, &:active {
+			outline: none;
+		}
 	}
  }
 
@@ -2919,5 +2945,24 @@ div[id*="edit-field-copyright-clearace-forms"] {
 		width: 18px !important;
 		height: 15px !important;
 		margin-top: 6px !important;;
+	}
+}
+
+.rating-count {
+	
+	.f-dropdown, .f-dropdown.open {
+		left: -10px !important;
+	}
+	.field-content { 
+		position: relative;
+		top: -3px;
+	}
+}
+
+.page-digital-library-resources.list-view {
+	.rating-count {
+		.f-dropdown {
+		left: 13px !important;
+		} 
 	}
 }
