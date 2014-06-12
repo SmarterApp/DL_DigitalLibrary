@@ -351,38 +351,6 @@ a.sbac-grid-layout {
 		    position: absolute;
 				bottom: 0;
 				left: 0;
-								
-				.stat-views, 
-				.stat-downloads {
-          display: inline-block;
-					vertical-align: top;
-
-					.field-content {
-						display: block;
-					}
-
-					.field-content:before {
-						background-position: center center;
-						content: " ";
-				    display: inline-block;
-				    margin-right: 7px;
-				    position: relative;
-				    top: -2px;
-				    vertical-align: middle;
-	        }
-        }
-
-				.stat-views .field-content:before {
-					background: url(../images/icons/icon-statviews.png) no-repeat 0 0;
-					width: 20px;
-					height: 13px;
-				}
-				
-				.stat-downloads .field-content:before {
-					background: url(../images/icons/icon-statdownloads.png) no-repeat 0 0;
-					width: 18px;
-					height: 15px;
-				}
 				
 				.fivestar-static-form-item,
 				.rating-count {
@@ -797,38 +765,8 @@ a.sbac-grid-layout {
 					z-index: 98;
 					margin-top: 0;
 					
-					.stat-views, 
-					.stat-downloads {
-	          display: inline-block;
-						vertical-align: top;
+					.stat-views {
 						margin-left: 20px;
-						margin-bottom: 5px;
-
-						.field-content {
-							display: block;
-						}
-
-						.field-content:before {
-							background-position: center center;
-							content: " ";
-					    display: inline-block;
-					    margin-right: 7px;
-					    position: relative;
-					    top: -2px;
-					    vertical-align: middle;
-		        }
-	        }
-
-					.stat-views .field-content:before {
-						background: url(../images/icons/icon-statviews.png) no-repeat 0 0;
-						width: 20px;
-						height: 13px;
-					}
-
-					.stat-downloads .field-content:before {
-						background: url(../images/icons/icon-statdownloads.png) no-repeat 0 0;
-						width: 18px;
-						height: 15px;
 					}
 					
 					.rating {
@@ -942,40 +880,6 @@ a.sbac-grid-layout {
 			    top: -12px;
 			    width: 222px;
 			    z-index: 98;
-			
-					.stat-views, 
-					.stat-downloads {
-	          display: inline-block;
-						vertical-align: top;
-						margin-left: 20px;
-						margin-bottom: 5px;
-
-						.field-content {
-							display: block;
-						}
-
-						.field-content:before {
-							background-position: center center;
-							content: " ";
-					    display: inline-block;
-					    margin-right: 7px;
-					    position: relative;
-					    top: -2px;
-					    vertical-align: middle;
-		        }
-	        }
-
-					.stat-views .field-content:before {
-						background: url(../images/icons/icon-statviews.png) no-repeat 0 0;
-						width: 20px;
-						height: 13px;
-					}
-
-					.stat-downloads .field-content:before {
-						background: url(../images/icons/icon-statdownloads.png) no-repeat 0 0;
-						width: 18px;
-						height: 15px;
-					}
 				}
 			}
 			
@@ -1905,34 +1809,7 @@ a.sbac-grid-layout {
 	}
 	
 	.paradata-numbers {
-	  .stat-views, 
-		.stat-downloads {
-      display: inline-block;
-			vertical-align: top;
-    }
-
-		.stat-downloads:before,
-		.stat-views:before {
-			background-position: center center;
-			content: " ";
-	    display: inline-block;
-	    margin-right: 7px;
-	    position: relative;
-	    top: -2px;
-	    vertical-align: middle;
-    }
-
-		.stat-views:before {
-			background: url(../images/icons/icon-statviews.png) no-repeat 0 0;
-			width: 20px;
-			height: 13px;
-		}
-		
-		.stat-downloads:before {
-			background: url(../images/icons/icon-statdownloads.png) no-repeat 0 0;
-			width: 18px;
-			height: 15px;
-		}
+	  
 	}
 }
 
@@ -2985,4 +2862,62 @@ div[id*="edit-field-copyright-clearace-forms"] {
 
 #edit-title-counter.counter.messages {
 	bottom: 36px !important;
+}
+
+/*View & download icons of resource card*/
+.stat-views, 
+.stat-downloads {
+  display: inline-block;
+	vertical-align: top;
+	position: relative;
+	
+	.f-dropdown:before {
+	    border-color: #FFFFFF rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+	    border-style: solid inset inset;
+	    left: 43px !important;
+	    top: 36px !important;
+	}
+	
+	.f-dropdown:after {
+	    border-color: #5E5E5E rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+	    left: 44px;
+	    top: 37px;
+	}
+	
+	.f-dropdown, .f-dropdown.open {
+		top: -49px !important;
+		left: -42px !important;
+		width: 100px;
+		
+		li {
+			text-align: center;
+			font-size: 14px !important;
+			font-weight: normal;
+			text-transform: none;
+			width: 80px !important;
+		}
+	}
+
+	a, .field-content {
+		display: inline-block;
+	}
+ }
+
+.stat-views, .stat-downloads {
+	img {
+		width: 20px !important;
+		height: 13px !important;
+		border: none !important;
+		margin-top: 5px !important;;
+		vertical-align: top !important;
+	}
+}
+
+.stat-downloads {
+	margin-left: 15px;
+	img {
+		width: 18px !important;
+		height: 15px !important;
+		margin-top: 6px !important;;
+	}
 }
