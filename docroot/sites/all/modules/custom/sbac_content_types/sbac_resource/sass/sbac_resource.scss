@@ -2866,7 +2866,8 @@ div[id*="edit-field-copyright-clearace-forms"] {
 
 /*View & download icons of resource card*/
 .stat-views, 
-.stat-downloads {
+.stat-downloads,
+.rating-count {
   display: inline-block;
 	vertical-align: top;
 	position: relative;
@@ -2919,5 +2920,16 @@ div[id*="edit-field-copyright-clearace-forms"] {
 		width: 18px !important;
 		height: 15px !important;
 		margin-top: 6px !important;;
+	}
+}
+
+.rating-count {
+	
+	.f-dropdown, .f-dropdown.open {
+		left: -10px !important;
+	}
+	.field-content { 
+		position: relative;
+		top: -3px;
 	}
 }

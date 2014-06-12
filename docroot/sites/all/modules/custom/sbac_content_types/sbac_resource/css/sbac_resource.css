@@ -2903,54 +2903,63 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 }
 
 /*View & download icons of resource card*/
-/* line 2869, ../sass/sbac_resource.scss */
+/* line 2870, ../sass/sbac_resource.scss */
 .stat-views,
-.stat-downloads {
+.stat-downloads,
+.rating-count {
   display: inline-block;
   vertical-align: top;
   position: relative;
 }
-/* line 2874, ../sass/sbac_resource.scss */
+/* line 2875, ../sass/sbac_resource.scss */
 .stat-views .f-dropdown:before,
-.stat-downloads .f-dropdown:before {
+.stat-downloads .f-dropdown:before,
+.rating-count .f-dropdown:before {
   border-color: white rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
   border-style: solid inset inset;
   left: 43px !important;
   top: 36px !important;
 }
-/* line 2881, ../sass/sbac_resource.scss */
+/* line 2882, ../sass/sbac_resource.scss */
 .stat-views .f-dropdown:after,
-.stat-downloads .f-dropdown:after {
+.stat-downloads .f-dropdown:after,
+.rating-count .f-dropdown:after {
   border-color: #5e5e5e rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
   left: 44px;
   top: 37px;
 }
-/* line 2887, ../sass/sbac_resource.scss */
+/* line 2888, ../sass/sbac_resource.scss */
 .stat-views .f-dropdown, .stat-views .f-dropdown.open,
 .stat-downloads .f-dropdown,
-.stat-downloads .f-dropdown.open {
+.stat-downloads .f-dropdown.open,
+.rating-count .f-dropdown,
+.rating-count .f-dropdown.open {
   top: -49px !important;
   left: -42px !important;
   width: 100px;
 }
-/* line 2892, ../sass/sbac_resource.scss */
+/* line 2893, ../sass/sbac_resource.scss */
 .stat-views .f-dropdown li, .stat-views .f-dropdown.open li,
 .stat-downloads .f-dropdown li,
-.stat-downloads .f-dropdown.open li {
+.stat-downloads .f-dropdown.open li,
+.rating-count .f-dropdown li,
+.rating-count .f-dropdown.open li {
   text-align: center;
   font-size: 14px !important;
   font-weight: normal;
   text-transform: none;
   width: 80px !important;
 }
-/* line 2901, ../sass/sbac_resource.scss */
+/* line 2902, ../sass/sbac_resource.scss */
 .stat-views a, .stat-views .field-content,
 .stat-downloads a,
-.stat-downloads .field-content {
+.stat-downloads .field-content,
+.rating-count a,
+.rating-count .field-content {
   display: inline-block;
 }
 
-/* line 2907, ../sass/sbac_resource.scss */
+/* line 2908, ../sass/sbac_resource.scss */
 .stat-views img, .stat-downloads img {
   width: 20px !important;
   height: 13px !important;
@@ -2959,13 +2968,23 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
   vertical-align: top !important;
 }
 
-/* line 2916, ../sass/sbac_resource.scss */
+/* line 2917, ../sass/sbac_resource.scss */
 .stat-downloads {
   margin-left: 15px;
 }
-/* line 2918, ../sass/sbac_resource.scss */
+/* line 2919, ../sass/sbac_resource.scss */
 .stat-downloads img {
   width: 18px !important;
   height: 15px !important;
   margin-top: 6px !important;
+}
+
+/* line 2928, ../sass/sbac_resource.scss */
+.rating-count .f-dropdown, .rating-count .f-dropdown.open {
+  left: -10px !important;
+}
+/* line 2931, ../sass/sbac_resource.scss */
+.rating-count .field-content {
+  position: relative;
+  top: -3px;
 }
