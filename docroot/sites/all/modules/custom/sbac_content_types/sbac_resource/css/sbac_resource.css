@@ -2958,8 +2958,24 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 .rating-count .field-content {
   display: inline-block;
 }
+/* line 2905, ../sass/sbac_resource.scss */
+.stat-views a:focus, .stat-views a:visited, .stat-views a:active, .stat-views .field-content:focus, .stat-views .field-content:visited, .stat-views .field-content:active,
+.stat-downloads a:focus,
+.stat-downloads a:visited,
+.stat-downloads a:active,
+.stat-downloads .field-content:focus,
+.stat-downloads .field-content:visited,
+.stat-downloads .field-content:active,
+.rating-count a:focus,
+.rating-count a:visited,
+.rating-count a:active,
+.rating-count .field-content:focus,
+.rating-count .field-content:visited,
+.rating-count .field-content:active {
+  outline: none;
+}
 
-/* line 2908, ../sass/sbac_resource.scss */
+/* line 2912, ../sass/sbac_resource.scss */
 .stat-views img, .stat-downloads img {
   width: 20px !important;
   height: 13px !important;
@@ -2968,22 +2984,22 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
   vertical-align: top !important;
 }
 
-/* line 2917, ../sass/sbac_resource.scss */
+/* line 2921, ../sass/sbac_resource.scss */
 .stat-downloads {
   margin-left: 15px;
 }
-/* line 2919, ../sass/sbac_resource.scss */
+/* line 2923, ../sass/sbac_resource.scss */
 .stat-downloads img {
   width: 18px !important;
   height: 15px !important;
   margin-top: 6px !important;
 }
 
-/* line 2928, ../sass/sbac_resource.scss */
+/* line 2932, ../sass/sbac_resource.scss */
 .rating-count .f-dropdown, .rating-count .f-dropdown.open {
   left: -10px !important;
 }
-/* line 2931, ../sass/sbac_resource.scss */
+/* line 2935, ../sass/sbac_resource.scss */
 .rating-count .field-content {
   position: relative;
   top: -3px;

@@ -2901,6 +2901,10 @@ div[id*="edit-field-copyright-clearace-forms"] {
 
 	a, .field-content {
 		display: inline-block;
+		
+		&:focus, &:visited, &:active {
+			outline: none;
+		}
 	}
  }
 
