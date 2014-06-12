@@ -87,3 +87,10 @@ function sbac_help_update_7202() {
     node_save($raw_node);
   }
 }
+
+/**
+ * Enable publishcontent module
+ */
+function sbac_help_update_7203() {
+  module_enable(array('publishcontent'));
+}
