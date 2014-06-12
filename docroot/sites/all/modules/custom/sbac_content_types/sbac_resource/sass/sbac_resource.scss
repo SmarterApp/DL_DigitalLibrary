@@ -880,11 +880,15 @@ a.sbac-grid-layout {
 			    top: -12px;
 			    width: 222px;
 			    z-index: 98;
+			
+					.stat-views {
+						margin-left: 20px;
+					}
 				}
 			}
 			
 			.favorites-link {
-			  bottom: -40px;
+			  bottom: -20px;
 		    left: 15px;
 			}
 			
@@ -2935,5 +2939,13 @@ div[id*="edit-field-copyright-clearace-forms"] {
 	.field-content { 
 		position: relative;
 		top: -3px;
+	}
+}
+
+.page-digital-library-resources.list-view {
+	.rating-count {
+		.f-dropdown {
+		left: 13px !important;
+		} 
 	}
 }
