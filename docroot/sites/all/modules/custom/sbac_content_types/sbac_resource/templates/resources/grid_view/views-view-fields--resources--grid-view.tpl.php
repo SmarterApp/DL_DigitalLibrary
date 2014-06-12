@@ -122,7 +122,13 @@
       <?php endif; ?>
 
       <?php if (isset($fields['rating']) && $fields['rating']): ?>
-        <div class="rating-count">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div><?php print $fields['rating']; ?> 
+        <div class="rating-count">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div>
+        <a href="#" data-dropdown="rating-dropdown-<?php echo $fields['nid']->raw; ?>">
+          <?php print $fields['rating']; ?>
+        </a>
+        <ul id="rating-dropdown-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
+          <li>Rating</li>
+        </ul>
       <?php endif; ?>
     </div>
 
