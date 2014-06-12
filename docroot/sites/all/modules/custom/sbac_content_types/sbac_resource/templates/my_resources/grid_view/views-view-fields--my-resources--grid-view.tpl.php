@@ -96,21 +96,45 @@
 
       <div class="paradata-numbers">
         <?php if (isset($fields['views']) && $fields['views']): ?>
-          <div class="stat-views"><?php print $fields['views']; ?></div>
+          <div class="stat-views">
+            <a href="#" data-dropdown="unique-views-drop-<?php echo $fields['nid']->raw; ?>">
+              <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statviews.png" alt="Views">
+            </a>
+            <ul id="unique-views-drop-<?php echo $fields['nid']->raw ?>" class="f-dropdown" data-dropdown-content>
+              <li>Views</li>
+            </ul>
+            <?php print $fields['views']; ?>
+          </div>
         <?php endif; ?>
 
-        <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
-          <div class="stat-downloads"><?php print $fields['downloads']; ?></div>
-        <?php else: ?>
-          <div class="stat-downloads"><div class="field-content">0</div></div>
-        <?php endif; ?>
+        <div class="stat-downloads">
+          <a href="#" data-dropdown="total-downloads-<?php echo $fields['nid']->raw; ?>">
+            <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statdownloads.png" alt="Downloads">
+          </a>
+          <ul id ="total-downloads-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
+            <li>Downloads</li>
+          </ul>
+          <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
+            <?php print $fields['downloads']; ?>
+          <?php else: ?>
+            <div class="field-content">0</div>
+          <?php endif; ?>
+        </div>
 
         <?php if (isset($fields['collaborators']) && $fields['collaborators']): ?>
           <?php // print $fields['collaborators']; ?>
         <?php endif; ?>
 
         <?php if (isset($fields['rating']) && $fields['rating']): ?>
-          <div class="rating-count">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div><?php print $fields['rating']; ?>
+          <div class="rating-count">
+            <a href="#" data-dropdown="rating-dropdown-<?php echo $fields['nid']->raw; ?>">
+              <?php print $fields['rating']; ?>
+            </a>
+            <ul id="rating-dropdown-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
+              <li>Rating</li>
+            </ul>
+            <div class="field-content">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div>
+          </div>
         <?php endif; ?>
       </div>
 
