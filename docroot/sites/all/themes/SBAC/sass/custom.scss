@@ -3079,14 +3079,18 @@ a.tabledrag-handle .handle {
 /*Global sort select box*/
 .block-sbac-resource-sbac-resource-dl-sort-form,
 .block-sbac-resource-sbac-resource-rr-sort-form,
-.block-sbac-resource-sbac-resource-mr-sort-form  {
+.block-sbac-resource-sbac-resource-mr-sort-form,
+#views-exposed-form-forum-topic-list-block,
+#views-exposed-form-forum-member-list-block,
+#sbac-resource-digital-library-sort-form,
+#sbac-forum-sub-nav-form {
 
 	select {
-		background: url(../images/icons/icon-arrow-down.png) no-repeat top 12px right 6px;
+		/*background: url(../images/icons/icon-arrow-down.png) no-repeat top 12px right 6px;*/
 		color: #464B54;
     font-size: 15px;
 		line-height:1;
-    margin: 6px 0 0;
+    margin: 0;
     padding: 6px 3px 0 3px; /* use this to set a specific height for your dropdown (DO NOT use the attribute 'height') */
     cursor: pointer;
     /*for firefox*/
@@ -3100,6 +3104,44 @@ a.tabledrag-handle .handle {
 		border-radius: 6px;
 		width: 210px;
 		vertical-align: top;
+		height: 34x;
+	}
+	
+	.form-type-select {
+	    display: inline-block;
+	    position: relative;
+	    vertical-align: middle;
+			margin-top: 22px;
+	}
+	
+	.form-type-select:before {
+		background-color: #fff;
+		content: "";
+	  pointer-events: none;
+		border-left: 1px solid rgba(255, 255, 255, 0.3);
+		box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.1);
+	  position: absolute;
+    border-radius: 0 6px 6px 0;
+    top: 1px;
+    right: 0;
+    width: 2em;
+		height: 33px;
+		z-index:99;
+	}
+	
+	.form-type-select:after {
+		content: "\e610";
+	 	display: inline-block;
+    font-family: 'sbac';
+	  pointer-events: none;
+	  position: absolute;
+		color: #0684AD;
+		z-index:100;
+		font-size: 1.2em;
+    line-height: 34px;
+    margin-top: 1px;
+    right: 7px;
+		top: 0;
 	}
 
 	option {
@@ -3127,6 +3169,26 @@ a.tabledrag-handle .handle {
 			padding: 6px;
 			width: 220px;
 	  }
+	}
+}
+
+#sbac-forum-sub-nav-form,
+#views-exposed-form-forum-topic-list-block,
+#views-exposed-form-forum-member-list-block {
+	
+	select {
+		border: 1px solid #CECECE;
+	}
+	
+	.form-type-select:before {
+		border-radius: 0;
+		height: 32px;
+		right: 1px;
+	}
+	
+	select {
+		width: auto;
+		border-radius: 0;
 	}
 }
 
@@ -3638,4 +3700,9 @@ p.helpmodal-desc {
 	#main.columns {
 		padding: 15px 40px 0;
 	}
+}
+
+/*Override the radius of gobal button*/
+button.radius, .button.radius {
+  @include border-radius (6px);
 }
