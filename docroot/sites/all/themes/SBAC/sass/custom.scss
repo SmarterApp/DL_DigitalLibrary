@@ -3083,7 +3083,8 @@ a.tabledrag-handle .handle {
 #views-exposed-form-forum-topic-list-block,
 #views-exposed-form-forum-member-list-block,
 #sbac-resource-digital-library-sort-form,
-#sbac-forum-sub-nav-form {
+#sbac-forum-sub-nav-form,
+#views-exposed-form-forum-topic-list-collaboration {
 
 	select {
 		/*background: url(../images/icons/icon-arrow-down.png) no-repeat top 12px right 6px;*/
@@ -3174,7 +3175,8 @@ a.tabledrag-handle .handle {
 
 #sbac-forum-sub-nav-form,
 #views-exposed-form-forum-topic-list-block,
-#views-exposed-form-forum-member-list-block {
+#views-exposed-form-forum-member-list-block,
+#views-exposed-form-forum-topic-list-collaboration {
 	
 	select {
 		border: 1px solid #CECECE;
@@ -3191,6 +3193,11 @@ a.tabledrag-handle .handle {
 		border-radius: 0;
 	}
 }
+
+#views-exposed-form-forum-topic-list-collaboration .form-type-select {
+		margin-top: 0;
+}
+
 
 /*Overwrite foundation/components/_grid.scss*/
 .row {
