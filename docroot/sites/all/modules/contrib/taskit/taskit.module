@@ -377,6 +377,7 @@ function taskit_load_more() {
     exit;
   }
 
+  $interval_count = 0;
   $row_count = 0;
   $remove_load_more = TRUE;
   if ($types = taskit_types()) {
@@ -421,22 +422,23 @@ function taskit_load_more() {
       if (!empty($interval_output)) {
         // TODO: move this dependency out of here
         drupal_add_library('dialog', 'dialog');
-        $output .= theme('taskit_interval', array(
+        $output = theme('taskit_interval', array(
           'content' => $interval_output,
           'interval' => $interval,
           'js_interval' => $js_interval,
         ));
+        $json_response['intervals'][$interval_count]['name'] = 'interval-' . $interval['name'];
+        $json_response['intervals'][$interval_count]['content'] = $output;
+        $interval_count++;
       }
 
-      if ($row_count == TASKIT_PER_PAGE) {
+      if ($row_count >= TASKIT_PER_PAGE) {
         $remove_load_more = FALSE;
         break;
       }
     }
   }
 
-  $json_response['result'] = $output;
-  $json_response['new_interval'] = 'interval-' . $interval['name'];
   $json_response['remove_load_more'] = $remove_load_more;
   print drupal_json_encode($json_response);
   exit;
@@ -702,7 +704,7 @@ function taskit_get_tasks($from, $to, $rid, $uid, $breakdown, $page = NULL) {
   $run_query = "SELECT  t.task_id, t.type FROM taskit t";
   $run_query .= $query;
   if ($page) {
-    $page = $page * TASKIT_PER_PAGE + 1;
+    $page = $page * TASKIT_PER_PAGE;
     $results = db_query_range($run_query, $page, TASKIT_PER_PAGE, $args);
   }
   else {
@@ -877,7 +879,7 @@ function taskit_get_history($from, $to, $roles, $uid, $page = NULL) {
   $run_query = "SELECT  t.task_id, t.type FROM taskit t";
   $run_query .= $query;
   if ($page) {
-    $page = $page * TASKIT_PER_PAGE + 1;
+    $page = $page * TASKIT_PER_PAGE;
     $results = db_query($run_query, $page, TASKIT_PER_PAGE, $args);
   }
   else {
