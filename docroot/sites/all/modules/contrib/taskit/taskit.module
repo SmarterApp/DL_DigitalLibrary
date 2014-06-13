@@ -702,7 +702,7 @@ function taskit_get_tasks($from, $to, $rid, $uid, $breakdown, $page = NULL) {
   $run_query = "SELECT  t.task_id, t.type FROM taskit t";
   $run_query .= $query;
   if ($page) {
-    $page = $page * TASKIT_PER_PAGE;
+    $page = $page * TASKIT_PER_PAGE + 1;
     $results = db_query_range($run_query, $page, TASKIT_PER_PAGE, $args);
   }
   else {
@@ -877,7 +877,7 @@ function taskit_get_history($from, $to, $roles, $uid, $page = NULL) {
   $run_query = "SELECT  t.task_id, t.type FROM taskit t";
   $run_query .= $query;
   if ($page) {
-    $page = $page * TASKIT_PER_PAGE;
+    $page = $page * TASKIT_PER_PAGE + 1;
     $results = db_query($run_query, $page, TASKIT_PER_PAGE, $args);
   }
   else {
