@@ -19,16 +19,18 @@
               success: function(data) {
                 page++;
                 var response = jQuery.parseJSON(data);
-                for (var i=0;i<response.intervals.length;i++) {
-                  var current_interval = response.intervals[i];
-                  if (current_interval.name != interval) {
-                    $('.taskit-interval.' + interval).after(current_interval.content);
+                if("intervals" in response) {
+                  for (var i=0;i<response.intervals.length;i++) {
+                    var current_interval = response.intervals[i];
+                    if (current_interval.name != interval) {
+                      $('.taskit-interval.' + interval).after(current_interval.content);
+                    }
+                    else {
+                      $('.taskit-interval.' + interval).append(current_interval.content);
+                    }
                   }
-                  else {
-                    $('.taskit-interval.' + interval).append(current_interval.content);
-                  }
+                  load_more_button.attr('interval', current_interval.name);
                 }
-                load_more_button.attr('interval', current_interval.name);
                 load_more_button.attr('page', page);
                 if (response.remove_load_more == true) {
                   load_more_button.hide();
