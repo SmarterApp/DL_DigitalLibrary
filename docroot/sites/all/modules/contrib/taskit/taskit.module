@@ -434,7 +434,7 @@ function taskit_load_more() {
   }
 
   $json_response['result'] = $output;
-  $json_response['new_interval'] = $interval['name'];
+  $json_response['new_interval'] = 'interval-' . $interval['name'];
   print drupal_json_encode($json_response);
   exit;
 }
