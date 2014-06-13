@@ -4,7 +4,7 @@
       DRUPAL HOOKS
 ----------------------------------------------------------------------------*/
 
-define('TASKIT_PER_PAGE', 40);
+define('TASKIT_PER_PAGE', 20);
 
 /**
  * Implements hook_menu().
@@ -255,7 +255,6 @@ function taskit_page($account, $role = NULL) {
     return FALSE;
   }
 
-  $count = 0;
   $row_count = 0;
   if ($types = taskit_types()) {
     $breakdown = variable_get('taskit_breakdown');
@@ -292,11 +291,7 @@ function taskit_page($account, $role = NULL) {
         $taskit_results = taskit_get_tasks($interval['from'], $interval['to'], $role->rid, $account->uid, $breakdown);
       }
 
-      $count += $taskit_results['count'];
       foreach($taskit_results['results'] as $row) {
-        if ($row_count == TASKIT_PER_PAGE) {
-          break;
-        }
         $task = taskit_get_object($row->type, $row->task_id);
         if (!$task) {
           continue;
@@ -330,6 +325,10 @@ function taskit_page($account, $role = NULL) {
           'js_interval' => NULL,
         ));
       }
+
+      if ($row_count == TASKIT_PER_PAGE) {
+        break;
+      }
     }
   }
 
@@ -337,7 +336,7 @@ function taskit_page($account, $role = NULL) {
     $output = '<div id="taskit-empty">' . t('No notifications.') . '</div>';
   }
 
-  if ($count > $row_count) {
+  if ($row_count >= TASKIT_PER_PAGE) {
     drupal_add_js(drupal_get_path('module', 'taskit') . '/js/taskit.js');
     $output .= '<a href="#" id="taskit-load-more" interval="interval-' . $interval['name'] . '" page="1" role="' . $role->rid . '" class="button green">Load More</a>';
   }
@@ -378,7 +377,6 @@ function taskit_load_more() {
     exit;
   }
 
-  $count = 0;
   $row_count = 0;
   if ($types = taskit_types()) {
     $breakdown = variable_get('taskit_breakdown');
@@ -394,11 +392,7 @@ function taskit_load_more() {
         $taskit_results = taskit_get_tasks($interval['from'], $interval['to'], $role->rid, $account->uid, $breakdown, $page);
       }
 
-      $count += $taskit_results['count'];
       foreach($taskit_results['results'] as $row) {
-        if ($row_count == TASKIT_PER_PAGE) {
-          break;
-        }
         $task = taskit_get_object($row->type, $row->task_id);
         if (!$task) {
           continue;
@@ -432,10 +426,15 @@ function taskit_load_more() {
           'js_interval' => $js_interval,
         ));
       }
+
+      if ($row_count == TASKIT_PER_PAGE) {
+        break;
+      }
     }
   }
 
   $json_response['result'] = $output;
+  $json_response['new_interval'] = $interval['name'];
   print drupal_json_encode($json_response);
   exit;
 }
@@ -697,9 +696,7 @@ function taskit_get_tasks($from, $to, $rid, $uid, $breakdown, $page = NULL) {
     $args[':rid'] = $rid;
   }
 
-  $count_query = "SELECT COUNT(t.task_id) FROM taskit t";
   $run_query = "SELECT  t.task_id, t.type FROM taskit t";
-  $count_query .= $query;
   $run_query .= $query;
   if ($page) {
     $page = $page * TASKIT_PER_PAGE;
@@ -708,8 +705,7 @@ function taskit_get_tasks($from, $to, $rid, $uid, $breakdown, $page = NULL) {
   else {
     $results = db_query_range($run_query, 0, TASKIT_PER_PAGE, $args);
   }
-  $count_results = db_query($count_query, $args)->rowCount();
-  return array('results' => $results, 'count' => $count_results);
+  return array('results' => $results);
 }
 
 /**
@@ -875,9 +871,7 @@ function taskit_get_history($from, $to, $roles, $uid, $page = NULL) {
     ':visibility_role' => taskit\Task::VISIBILITY_ROLE,
   );
 
-  $count_query = "SELECT COUNT(t.task_id) FROM taskit t";
   $run_query = "SELECT  t.task_id, t.type FROM taskit t";
-  $count_query .= $query;
   $run_query .= $query;
   if ($page) {
     $page = $page * TASKIT_PER_PAGE;
@@ -886,8 +880,7 @@ function taskit_get_history($from, $to, $roles, $uid, $page = NULL) {
   else {
     $results = db_query_range($run_query, 0, TASKIT_PER_PAGE, $args);
   }
-  $count_results = db_query($count_query, $args)->rowCount();
-  return array('result' => $results, 'count' => $count_results);
+  return array('result' => $results);
 }
 
 /*----------------------------------------------------------------------------

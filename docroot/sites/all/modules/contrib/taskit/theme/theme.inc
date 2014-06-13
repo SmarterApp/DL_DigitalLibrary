@@ -34,12 +34,6 @@ function theme_taskit_interval($variables) {
 function theme_taskit_row($variables) {
   $task_id = $variables['task']->getTaskId();
 
-  /*
-                <div class="complete">
-                  ' . l(t('Mark as Completed'), 'taskit/state/nojs/' . $task_id . '/complete', array('attributes' => array('class' => 'content use-ajax'))) . '
-                </div>
-   */
-
   $output = '
               <div id="taskit-' . $task_id . '" class="taskit-row ' . $variables['task']->getClasses() . '">
                 <div class="item">

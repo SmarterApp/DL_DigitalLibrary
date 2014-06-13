@@ -17,9 +17,15 @@
               url: "/taskit-load-more",
               data: {'page' : page, 'role' : role, 'interval' : interval},
               success: function(data) {
-                var response = jQuery.parseJSON(data);
-                $('.taskit-interval.' + interval).append(response.result);
                 page++;
+                var response = jQuery.parseJSON(data);
+                if (response.new_interval != interval) {
+                  $('.taskit-interval.' + interval).after(response.result);
+                }
+                else {
+                  $('.taskit-interval.' + interval).append(response.result);
+                }
+                load_more_button.attr('interval', 'interval-' + response.new_interval);
                 load_more_button.attr('page', page);
                 ajax_request = null;
               },
