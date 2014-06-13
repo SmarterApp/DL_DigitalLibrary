@@ -14,25 +14,20 @@ function theme_taskit_tabs($variables) {
 }
 
 function theme_taskit_interval($variables) {
-  $output = '';
-
   $name = $variables['interval']['name'];
   $class = $name;
-
   if ($name == 'prior') {
     $name = t(strtolower(date('l', $variables['interval']['from'])));
   }
-
-  if (!empty($name)) {
-    $variables['content'] = '<h3>' . $name . '</h3>' . $variables['content'];
+  if ($variables['js_interval'] != NULL && $variables['js_interval'] == 'interval-' . $class) {
+    $output = $variables['content'];
   }
-
-  $output = '
-              <div class="taskit-interval interval-' . $class . '">
-                ' . $variables['content'] . '
-              </div>
-            ';
-
+  else {
+    if (!empty($name)) {
+      $variables['content'] = '<h3>' . $name . '</h3>' . $variables['content'];
+    }
+    $output = '<div class="taskit-interval interval-' . $class . '">' . $variables['content'] . '</div>';
+  }
   return $output;
 }
 
