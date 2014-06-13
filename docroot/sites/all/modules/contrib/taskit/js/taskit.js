@@ -25,8 +25,11 @@
                 else {
                   $('.taskit-interval.' + interval).append(response.result);
                 }
-                load_more_button.attr('interval', 'interval-' + response.new_interval);
+                load_more_button.attr('interval', response.new_interval);
                 load_more_button.attr('page', page);
+                if (response.remove_load_more == true) {
+                  load_more_button.hide();
+                }
                 ajax_request = null;
               },
               error: function(data) {
