@@ -338,6 +338,7 @@ function taskit_page($account, $role = NULL) {
 
   if ($row_count >= TASKIT_PER_PAGE) {
     drupal_add_js(drupal_get_path('module', 'taskit') . '/js/taskit.js');
+    drupal_add_css(drupal_get_path('module', 'taskit') . '/css/taskit.css');
     $output .= '<a href="#" id="taskit-load-more" interval="interval-' . $interval['name'] . '" page="1" role="' . $role->rid . '" class="button green">Load More</a>';
   }
 
