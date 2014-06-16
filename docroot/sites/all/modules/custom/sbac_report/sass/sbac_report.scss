@@ -577,10 +577,15 @@ i.icon-info {
       margin: 20px auto 50px;
       text-align: left;
       width: 580px;
+			border-bottom: 0;
 
       .slides {
+				margin-bottom: 0;
+				
         li {
           margin: 0;
+					height: 350px;
+					overflow-y: auto;
 
           .slide-title,
           .inline-title {
@@ -670,3 +675,7 @@ i.icon-info {
 		}
 	}
 } 
+
+form[id*="sbac-report-individual-modal-form"] {
+	margin-bottom: 0;
+}
