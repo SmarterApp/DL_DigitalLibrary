@@ -79,20 +79,7 @@ function sbac_central_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/test'] = array(
-    'title'            => t('Admin Test'),
-    'page callback'    => 'sbac_central_dev_test',
-    'access arguments' => array('administer content'),
-    'type'             => MENU_CALLBACK,
-  );
-
   return $items;
-}
-
-function sbac_central_dev_test() {
-  global $drupal_hash_salt;
-  print $drupal_hash_salt;
-  return;
 }
 
 /**
