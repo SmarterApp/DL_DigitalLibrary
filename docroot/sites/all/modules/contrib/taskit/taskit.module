@@ -4,6 +4,8 @@
       DRUPAL HOOKS
 ----------------------------------------------------------------------------*/
 
+define('TASKIT_PER_PAGE', 20);
+
 /**
  * Implements hook_menu().
  */
@@ -50,15 +52,6 @@ function taskit_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
-  // $items['user/%user/taskit/%'] = array(
-  //   'title' => 'Tasks', 
-  //   'page callback' => 'taskit_page', 
-  //   'page arguments' => array(1, 3),
-  //   'access callback' => 'taskit_task_access',
-  //   'access arguments' => array(1),
-  //   'type' => MENU_DEFAULT_LOCAL_TASK,
-  // );
-
   $items['taskit/state/%/%taskit/%'] = array(
     'title' => 'Task state callback', 
     'page callback' => 'taskit_state', 
@@ -70,6 +63,13 @@ function taskit_menu() {
   $items['taskit/view'] = array(
     'title' => 'View task',
     'page callback' => 'taskit_view',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+  );
+
+  $items['taskit-load-more'] = array(
+    'title' => 'Taskit Load More',
+    'page callback' => 'taskit_load_more',
     'type' => MENU_CALLBACK,
     'access callback' => TRUE,
   );
@@ -96,6 +96,7 @@ function taskit_theme($existing, $type, $theme, $path) {
       'variables' => array(
         'interval' => NULL,
         'content' => NULL,
+        'js_interval' => NULL,
       ),
     ),
     'taskit_row' => array(
@@ -254,97 +255,194 @@ function taskit_page($account, $role = NULL) {
     return FALSE;
   }
 
+  $row_count = 0;
   if ($types = taskit_types()) {
     $breakdown = variable_get('taskit_breakdown');
-
     if ($breakdown == 'role') {
-    // build role tabs
+      // build role tabs
       $tabs = array();
-
       $roles = taskit_role_priority();
       $counts = taskit_count_tasks($account->uid, array_keys($roles));
-
       // remove any roles the user is not assigned to
       $roles = array_intersect($roles, $account->roles);
-
       foreach ($roles as $rid => $role_name) {
         $count = 0;
-
         if (isset($counts[$rid])) {
           $count = $counts[$rid];
         }
 
         $extra = '<span class="count">' . $count . '</span><span class="bottom"></span>';
-
         $tabs[] = l($role_name . $extra, 'user/' . $account->uid . '/taskit/' . $rid, array('html' => TRUE));
       }
-
       $tabs[] = l(t('history'), 'user/' . $account->uid . '/taskit/history');
-
       $tabs = theme('item_list', array('items' => $tabs));
-
       $output .= theme('taskit_tabs', array('tabs' => $tabs));
     }
 
     // get time intervals & display content
-      foreach (taskit_time_intervals() as $interval) {
-        $interval_output = '';
+    foreach (taskit_time_intervals() as $interval) {
+      $interval_output = '';
+      if ($history) {
+        $theme_callback = 'taskit_row_historical';
+        $taskit_results = taskit_get_history($interval['from'], $interval['to'], $account->roles, $account->uid);
+      }
+      else {
+        $theme_callback = 'taskit_row';
+        $taskit_results = taskit_get_tasks($interval['from'], $interval['to'], $role->rid, $account->uid, $breakdown);
+      }
 
-        if ($history) {
-          $theme_callback = 'taskit_row_historical';
-          $result = taskit_get_history($interval['from'], $interval['to'], $account->roles, $account->uid);
+      foreach($taskit_results['results'] as $row) {
+        $task = taskit_get_object($row->type, $row->task_id);
+        if (!$task) {
+          continue;
+        }
+        if (in_array($interval['name'], array('today', 'yesterday', 'prior'))) {
+          $task->setDateFormat('g:ia');
         }
         else {
-          $theme_callback = 'taskit_row';
-          $result = taskit_get_tasks($interval['from'], $interval['to'], $role->rid, $account->uid, $breakdown);
+          $task->setDateFormat('M j, g:ia');
         }
-
-        foreach ($result as $row) {
-          $task = taskit_get_object($row->type, $row->task_id);
-
-          if (!$task) {
-            continue;
-          }
-
-          if (in_array($interval['name'], array('today', 'yesterday', 'prior'))) {
-            $task->setDateFormat('g:ia');
-          }
-          else {
-            $task->setDateFormat('M j, g:ia');
-          }
-
-          if ($task->getState() & taskit\Task::STATE_COMPLETED) {
-            $task->is_completed = TRUE;
-          }
-
-          if ($rendered_taskit = $task->processDisplay($task->getEntities(), $task->getTriggeringUsers())) {
-            $vars = array(
-              'class' => taskit_zebra($interval['name']),
-              'rendered' => $rendered_taskit,
-              'task' => $task,
-            );
-
-            $interval_output .= theme($theme_callback, $vars);
-          }
+        if ($task->getState() & taskit\Task::STATE_COMPLETED) {
+          $task->is_completed = TRUE;
         }
-
-        if (!empty($interval_output)) {
-          // TODO: move this dependency out of here
-          drupal_add_library('dialog', 'dialog');
-
-          $output .= theme('taskit_interval', array(
-            'content' => $interval_output,
-            'interval' => $interval,
-          ));
+        if ($rendered_taskit = $task->processDisplay($task->getEntities(), $task->getTriggeringUsers())) {
+          $vars = array(
+            'class' => taskit_zebra($interval['name']),
+            'rendered' => $rendered_taskit,
+            'task' => $task,
+          );
+          $interval_output .= theme($theme_callback, $vars);
         }
+        $row_count++;
       }
+
+      if (!empty($interval_output)) {
+        // TODO: move this dependency out of here
+        drupal_add_library('dialog', 'dialog');
+        $output .= theme('taskit_interval', array(
+          'content' => $interval_output,
+          'interval' => $interval,
+          'js_interval' => NULL,
+        ));
+      }
+
+      if ($row_count == TASKIT_PER_PAGE) {
+        break;
+      }
+    }
   }
 
   if (empty($output)) {
     $output = '<div id="taskit-empty">' . t('No notifications.') . '</div>';
   }
 
+  if ($row_count >= TASKIT_PER_PAGE) {
+    drupal_add_js(drupal_get_path('module', 'taskit') . '/js/taskit_module.js');
+    drupal_add_css(drupal_get_path('module', 'taskit') . '/css/taskit_module.css');
+    $output .= '<div class="bottom-load-more"><a href="#" id="taskit-load-more" interval="interval-' . $interval['name'] . '" page="1" role="' . $role->rid . '" class="button green">' . t('Load More Notifications') . '</a></div>';
+  }
+
   return $output;
+}
+
+/**
+ * Loads more content for the ajax call.
+ *
+ */
+function taskit_load_more() {
+  $output = '';
+  $json_response = '';
+  $role = NULL;
+  global $user;
+  $account = $user;
+  $role = $_POST['role'];
+  $page = $_POST['page'];
+  $js_interval = $_POST['interval'];
+
+  // if the role is still null, then we couldn't find an appropriate role id
+  // and the user isn't allowed to access the page
+  if (is_null($role) || is_null($page)) {
+    $json_response['result'] = FALSE;
+    print drupal_json_encode($output);
+    exit;
+  }
+
+  // when requesting task history, set a flag
+  $history = FALSE;
+  if ($role === 'history') {
+    $history = TRUE;
+  }
+  elseif (!$role = user_role_load($role)) {
+    $json_response['result'] = FALSE;
+    print drupal_json_encode($output);
+    exit;
+  }
+
+  $interval_count = 0;
+  $row_count = 0;
+  $remove_load_more = TRUE;
+  if ($types = taskit_types()) {
+    $breakdown = variable_get('taskit_breakdown');
+    // get time intervals & display content
+    foreach (taskit_time_intervals() as $interval) {
+      $interval_output = '';
+      if ($history) {
+        $theme_callback = 'taskit_row_historical';
+        $taskit_results = taskit_get_history($interval['from'], $interval['to'], $account->roles, $account->uid, $page);
+      }
+      else {
+        $theme_callback = 'taskit_row';
+        $taskit_results = taskit_get_tasks($interval['from'], $interval['to'], $role->rid, $account->uid, $breakdown, $page);
+      }
+
+      foreach($taskit_results['results'] as $row) {
+        $task = taskit_get_object($row->type, $row->task_id);
+        if (!$task) {
+          continue;
+        }
+        if (in_array($interval['name'], array('today', 'yesterday', 'prior'))) {
+          $task->setDateFormat('g:ia');
+        }
+        else {
+          $task->setDateFormat('M j, g:ia');
+        }
+        if ($task->getState() & taskit\Task::STATE_COMPLETED) {
+          $task->is_completed = TRUE;
+        }
+        if ($rendered_taskit = $task->processDisplay($task->getEntities(), $task->getTriggeringUsers())) {
+          $vars = array(
+            'class' => taskit_zebra($interval['name']),
+            'rendered' => $rendered_taskit,
+            'task' => $task,
+          );
+          $interval_output .= theme($theme_callback, $vars);
+        }
+        $row_count++;
+      }
+
+      if (!empty($interval_output)) {
+        // TODO: move this dependency out of here
+        drupal_add_library('dialog', 'dialog');
+        $output = theme('taskit_interval', array(
+          'content' => $interval_output,
+          'interval' => $interval,
+          'js_interval' => $js_interval,
+        ));
+        $json_response['intervals'][$interval_count]['name'] = 'interval-' . $interval['name'];
+        $json_response['intervals'][$interval_count]['content'] = $output;
+        $interval_count++;
+      }
+
+      if ($row_count >= TASKIT_PER_PAGE) {
+        $remove_load_more = FALSE;
+        break;
+      }
+    }
+  }
+
+  $json_response['remove_load_more'] = $remove_load_more;
+  print drupal_json_encode($json_response);
+  exit;
 }
 
 /**
@@ -534,12 +632,8 @@ function taskit_load($task_id) {
  * @param  string $breakdown  The task breakdown type.
  * @return object    Database result
  */
-function taskit_get_tasks($from, $to, $rid, $uid, $breakdown) {
-  $query = "  SELECT      t.task_id,
-                          t.type
-              FROM        taskit t
-           ";
-           
+function taskit_get_tasks($from, $to, $rid, $uid, $breakdown, $page = NULL) {
+  $query = '';
   if ($breakdown == 'role') {
     $query .= " LEFT JOIN   taskit_role tr
                   ON        tr.type = t.type
@@ -608,7 +702,16 @@ function taskit_get_tasks($from, $to, $rid, $uid, $breakdown) {
     $args[':rid'] = $rid;
   }
 
-  return db_query($query, $args);
+  $run_query = "SELECT  t.task_id, t.type FROM taskit t";
+  $run_query .= $query;
+  if ($page) {
+    $page = $page * TASKIT_PER_PAGE;
+    $results = db_query_range($run_query, $page, TASKIT_PER_PAGE, $args);
+  }
+  else {
+    $results = db_query_range($run_query, 0, TASKIT_PER_PAGE, $args);
+  }
+  return array('results' => $results);
 }
 
 /**
@@ -728,12 +831,8 @@ function taskit_count_tasks($uid, $rids, $new = FALSE) {
  * @param  int $uid  User id
  * @return object    Database result
  */
-function taskit_get_history($from, $to, $roles, $uid) {
-  $query = "  SELECT      t.task_id,
-                          t.type
-              FROM        taskit t
-
-              LEFT JOIN   taskit_role tr
+function taskit_get_history($from, $to, $roles, $uid, $page = NULL) {
+  $query = "  LEFT JOIN   taskit_role tr
                 ON        tr.type = t.type
 
               LEFT JOIN   taskit_user_owner tuo
@@ -766,8 +865,7 @@ function taskit_get_history($from, $to, $roles, $uid) {
 
               -- group by task id to eliminate duplicates
               GROUP BY    t.task_id
-              ORDER BY    t.created DESC
-           ";
+              ORDER BY    t.created DESC";
 
   $args = array(
     ':from' => $from,
@@ -779,7 +877,16 @@ function taskit_get_history($from, $to, $roles, $uid) {
     ':visibility_role' => taskit\Task::VISIBILITY_ROLE,
   );
 
-  return db_query($query, $args);
+  $run_query = "SELECT  t.task_id, t.type FROM taskit t";
+  $run_query .= $query;
+  if ($page) {
+    $page = $page * TASKIT_PER_PAGE;
+    $results = db_query($run_query, $page, TASKIT_PER_PAGE, $args);
+  }
+  else {
+    $results = db_query_range($run_query, 0, TASKIT_PER_PAGE, $args);
+  }
+  return array('result' => $results);
 }
 
 /*----------------------------------------------------------------------------
