@@ -3180,17 +3180,15 @@ a.tabledrag-handle .handle {
 	
 	select {
 		border: 1px solid #CECECE;
+		width: auto;
+		border-radius: 0;
+		height: 34px;
 	}
 	
 	.form-type-select:before {
 		border-radius: 0;
 		height: 32px;
 		right: 1px;
-	}
-	
-	select {
-		width: auto;
-		border-radius: 0;
 	}
 }
 
