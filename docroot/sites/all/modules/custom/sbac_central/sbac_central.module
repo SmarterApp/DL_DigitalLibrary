@@ -49,16 +49,19 @@ function sbac_central_entity_info_alter(&$entity_info) {
 //    $entity_info['field_collection_item']['controller class'] = 'EntityAPIController';
 //    $entity_info['field_collection_item']['field cache'] = TRUE;
 //  }
-  if (isset($entity_info['file']['entity cache'])) {
-    $entity_info['file']['entity cache'] = FALSE;
-    $entity_info['file']['controller class'] = 'DrupalDefaultEntityController';
-    $entity_info['file']['field cache'] = TRUE;
-  }
-  if (isset($entity_info['taxonomy_vocabulary']['entity cache'])) {
-    $entity_info['taxonomy_vocabulary']['entity cache'] = FALSE;
-    $entity_info['taxonomy_vocabulary']['controller class'] = 'TaxonomyVocabularyController';
-    $entity_info['taxonomy_vocabulary']['field cache'] = TRUE;
-  }
+// Going to cache for now.
+//  if (isset($entity_info['file']['entity cache'])) {
+//    $entity_info['file']['entity cache'] = FALSE;
+//    $entity_info['file']['controller class'] = 'DrupalDefaultEntityController';
+//    $entity_info['file']['field cache'] = TRUE;
+//  }
+// Going to cache for now.
+//  if (isset($entity_info['taxonomy_vocabulary']['entity cache'])) {
+//    $entity_info['taxonomy_vocabulary']['entity cache'] = FALSE;
+//    $entity_info['taxonomy_vocabulary']['controller class'] = 'TaxonomyVocabularyController';
+//    $entity_info['taxonomy_vocabulary']['field cache'] = TRUE;
+//  }
+// Going to cache for now.
 //  if (isset($entity_info['user']['entity cache'])) {
 //    $entity_info['user']['entity cache'] = FALSE;
 //    $entity_info['user']['controller class'] = 'UserController';
