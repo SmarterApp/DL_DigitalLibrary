@@ -164,7 +164,7 @@ function sbac_user_admin_account() {
   $guest_role = user_role_load_by_name('guest');
   if ($guest_role) {
     $query->leftJoin('users_roles', 'ur', 'u.uid = ur.uid');
-    $query->condition('ur.rid', $guest_role->rid, '<>');
+    $query->condition(db_or()->condition('ur.rid', $guest_role->rid, '<>')->isNull('ur.rid'));
     $query->groupBy('u.uid');
   }
   
