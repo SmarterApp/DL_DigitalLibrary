@@ -1668,22 +1668,28 @@ function sbac_forum_node_delete($node) {
           $forum_wrapper->save(TRUE);
         }
 
-        // Update user's topic count
-        foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
-          try {
-            if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid) {
-              // Increment the recommend count
-              $current_topic_count = $member_wrapper->field_fc_forum_member_tpic_count->value();
-              $current_topic_count--;
-              $member_wrapper->field_fc_forum_member_tpic_count->set($current_topic_count);
-              // Set the date
-              $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
-              // Update the participation score
-              $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $current_topic_count, $member_wrapper->field_fc_forum_member_post_count->value());
-              $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
-              $member_wrapper->save(TRUE);
+        if (sbac_forum_user_has_participated($forum_obj->tid, $node->uid) <= 1) { // 1 because the current node is not yet deleted
+          // remove the user
+          sbac_forum__api__leave_forum($forum_obj, 'leave', $node->uid);
+        }
+        else {
+          // Update user's topic count
+          foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
+            try {
+              if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid) {
+                // decrement the recommend count
+                $current_topic_count = $member_wrapper->field_fc_forum_member_tpic_count->value();
+                $current_topic_count--;
+                $member_wrapper->field_fc_forum_member_tpic_count->set($current_topic_count);
+                // Set the date
+                $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+                // Update the participation score
+                $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $current_topic_count, $member_wrapper->field_fc_forum_member_post_count->value());
+                $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+                $member_wrapper->save(TRUE);
+              }
+            } catch (EntityMetadataWrapperException $e) {
             }
-          } catch (EntityMetadataWrapperException $e) {
           }
         }
       }
@@ -1695,6 +1701,29 @@ function sbac_forum_node_delete($node) {
     );
     drupal_write_record('sbac_forum_deleted_log', $edit);
   }
+}
+
+/**
+ * Check to see if a user has created a topic or has commented on a forum
+ * @param $forum_tid
+ * @param $uid
+ * @return bool
+ */
+function sbac_forum_user_has_participated($forum_tid, $uid) {
+  $query = "
+    SELECT
+      *
+    FROM node n
+      LEFT JOIN {field_data_field_topic_forum_parent} parent
+        ON parent.entity_id = n.nid
+      LEFT JOIN {comment} c
+        ON c.nid = n.nid
+    WHERE
+      n.type = 'topic'
+      AND parent.field_topic_forum_parent_tid = :tid
+      AND (n.uid = :uid OR c.uid = :uid)
+      ";
+  return db_query($query, array(':tid' => $forum_tid, ':uid' => $uid))->rowCount();
 }
 
 /**
@@ -1869,22 +1898,28 @@ function sbac_forum_comment_delete($comment) {
           $forum_wrapper->save(TRUE);
           taxonomy_term_save($forum_obj);
         }
-        if ($forum_wrapper->field_fc_forum_members->count()) {
-          foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
-            try {
-              if ($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id) {
-                // Increment the post count
-                $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
-                $current_post_count--;
-                $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
-                // Set the date
-                $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
-                // Update the participation score
-                $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $member_wrapper->field_fc_forum_member_tpic_count->value(), $current_post_count);
-                $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
-                $member_wrapper->save(TRUE);
+        if (sbac_forum_user_has_participated($forum_obj->tid, $comment_author_id) <= 1) { // 1 because the current comment is not yet deleted
+          // remove the user
+          sbac_forum__api__leave_forum($forum_obj, 'leave', $comment_author_id);
+        }
+        else {
+          if ($forum_wrapper->field_fc_forum_members->count()) {
+            foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
+              try {
+                if ($member_wrapper->field_fc_forum_member->uid->value() == $comment_author_id) {
+                  // Increment the post count
+                  $current_post_count = $member_wrapper->field_fc_forum_member_post_count->value();
+                  $current_post_count--;
+                  $member_wrapper->field_fc_forum_member_post_count->set($current_post_count);
+                  // Set the date
+                  $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+                  // Update the participation score
+                  $participation_score = sbac_forum_calculate_participation_score($member_wrapper->field_fc_forum_member_reco_count->value(), $member_wrapper->field_fc_forum_member_tpic_count->value(), $current_post_count);
+                  $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+                  $member_wrapper->save(TRUE);
+                }
+              } catch (EntityMetadataWrapperException $e) {
               }
-            } catch (EntityMetadataWrapperException $e) {
             }
           }
         }
