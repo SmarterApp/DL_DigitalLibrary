@@ -717,7 +717,7 @@ a.sbac-grid-layout {
 /* line 679, ../sass/sbac_resource.scss */
 .digital-library .pager.pager-load-more .button, .page-digital-library-resources .pager.pager-load-more .button, .node-resource .pager.pager-load-more .button {
   margin-top: 2em;
-  width: 282px;
+  width: 480px;
 }
 /* line 687, ../sass/sbac_resource.scss */
 .digital-library .no-results, .page-digital-library-resources .no-results, .node-resource .no-results {
