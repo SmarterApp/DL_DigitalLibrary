@@ -3084,6 +3084,7 @@ a.tabledrag-handle .handle {
 #views-exposed-form-forum-member-list-block,
 #sbac-resource-digital-library-sort-form,
 #sbac-forum-sub-nav-form,
+#sbac-forum-comment-sort-form,
 #views-exposed-form-forum-topic-list-collaboration {
 
 	select {
@@ -3105,7 +3106,7 @@ a.tabledrag-handle .handle {
 		border-radius: 6px;
 		width: 210px;
 		vertical-align: top;
-		height: 34px;
+		height: 35px;
 	}
 	
 	.form-type-select {
@@ -3173,6 +3174,7 @@ a.tabledrag-handle .handle {
 	}
 }
 
+#sbac-forum-comment-sort-form,
 #sbac-forum-sub-nav-form,
 #views-exposed-form-forum-topic-list-block,
 #views-exposed-form-forum-member-list-block,
@@ -3180,17 +3182,15 @@ a.tabledrag-handle .handle {
 	
 	select {
 		border: 1px solid #CECECE;
+		width: auto;
+		border-radius: 0;
+		height: 34px;
 	}
 	
 	.form-type-select:before {
 		border-radius: 0;
 		height: 32px;
 		right: 1px;
-	}
-	
-	select {
-		width: auto;
-		border-radius: 0;
 	}
 }
 

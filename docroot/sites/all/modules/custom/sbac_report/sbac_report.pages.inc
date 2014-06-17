@@ -1341,9 +1341,7 @@ function sbac_report_individual_modal_form($form, &$form_state, $node, $state, $
 
       $output .= '
                   <div class="flexslider item-list">
-                    <div class="flex-viewport">
-                      ' . $item_list . '
-                    </div>
+                    ' . $item_list . '
                   </div>
                 ';
 
