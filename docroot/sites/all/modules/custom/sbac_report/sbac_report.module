@@ -978,17 +978,21 @@ function sbac_report_get_current_completed_reviews($uid, $date_range) {
 
   $sql = <<<SQL
 
-  SELECT
-    id,
-    uid,
-    node_id
-  FROM {eck_feedback}
-  WHERE
-    type = :type AND
-    uid = :uid AND
-    status = :status AND
-    completed = :completed AND
-    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+SELECT
+  f.id,
+  f.uid,
+  f.node_id
+FROM {eck_feedback} f
+  LEFT JOIN {workbench_moderation_node_history} h
+    ON f.node_id = h.nid
+WHERE
+  type = :type
+  AND f.uid = :uid
+  AND f.status = :status
+  AND f.completed = :completed
+  AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+  AND h.current = 1
+  AND h.state IN ('published', 'rejected')
 
 SQL;
 
