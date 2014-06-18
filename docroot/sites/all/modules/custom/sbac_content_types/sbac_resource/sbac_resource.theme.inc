@@ -781,8 +781,6 @@ function _sbac_resource_my_resources_admin_links($fields) {
     $variables['rating_count'] = sbac_resource_get_rating_count($fields['nid']->raw);
   }
   else {
-    $url = url('node/' . $nid, array('absolute' => TRUE));
-    $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
     $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
     $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
     $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
@@ -806,9 +804,29 @@ function _sbac_resource_my_resources_admin_links($fields) {
     );
     drupal_add_js($js_settings, 'setting');
 
-
-    $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
     $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+    $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+      'html' => TRUE,
+      'query' => array(
+        'nid' => $nid
+      ),
+      'attributes' => array(
+        'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource-link-' . $nid,
+        'id' => 'sbac-resource-modal-delete-resource-link-' . $nid,
+      )
+    ));
+
+    // JS to properly size the modal when submit resource is clicked.
+    $js_settings = array(
+      'sbac-resource-modal-delete-resource-link-' . $nid => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 160,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
     $html5 = db_query("SELECT field_html5_value FROM {field_data_field_html5} WHERE entity_id = :entity_id", array(':entity_id' => $nid))->fetchField();
     if ($html5) {
       $variables['text'] = t('Draft Content Module');
