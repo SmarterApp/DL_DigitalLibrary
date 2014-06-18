@@ -123,7 +123,7 @@
 
       <?php if (isset($fields['rating']) && $fields['rating']): ?>
         <div class="rating-count">
-          <a href="#" data-dropdown="rating-dropdown-<?php echo $fields['nid']->raw; ?>">
+          <a href="#" class="sbac-hover" data-dropdown="rating-dropdown-<?php echo $fields['nid']->raw; ?>">
             <?php print $fields['rating']; ?>
           </a>
           <ul id="rating-dropdown-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
