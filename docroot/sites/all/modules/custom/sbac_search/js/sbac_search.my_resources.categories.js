@@ -8,7 +8,14 @@
    */
   Drupal.behaviors.sbac_my_resources_categories = {
     attach: function (context, settings) {
-      $("img.lazy").lazy();
+      $('.sbac-hover').hover(
+        function() {
+          $(this).next('ul').addClass('open');
+        },
+        function() {
+          $(this).next('ul').removeClass('open');
+        }
+      );
 
       if ($('#admin-create-menu').length) {
         var admin_create_menu = $('#admin-create-menu');

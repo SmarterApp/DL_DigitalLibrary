@@ -8,7 +8,14 @@
    */
   Drupal.behaviors.sbac_search_categories = {
     attach: function (context, settings) {
-      $("img.lazy").lazy();
+      $('.sbac-hover').hover(
+        function() {
+          $(this).next('ul').addClass('open');
+        },
+        function() {
+          $(this).next('ul').removeClass('open');
+        }
+      );
 
       $(document).click(function() {
         if (!$(this).hasClass('selectedDiv')) {

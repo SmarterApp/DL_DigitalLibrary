@@ -43,7 +43,7 @@
   <div class="list-view-info">
     <?php if (isset($fields['views']) && $fields['views']): ?>
       <div class="stat-views">
-        <a href="#" data-dropdown="unique-views-drop-<?php echo $fields['nid']->raw; ?>">
+        <a href="#" class="sbac-hover" data-dropdown="unique-views-drop-<?php echo $fields['nid']->raw; ?>">
           <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statviews.png" alt="Views">
         </a>
         <ul id="unique-views-drop-<?php echo $fields['nid']->raw ?>" class="f-dropdown" data-dropdown-content>
@@ -54,7 +54,7 @@
     <?php endif; ?>
 
     <div class="stat-downloads">
-      <a href="#" data-dropdown="total-downloads-<?php echo $fields['nid']->raw; ?>">
+      <a href="#" class="sbac-hover" data-dropdown="total-downloads-<?php echo $fields['nid']->raw; ?>">
         <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statdownloads.png" alt="Downloads">
       </a>
       <ul id ="total-downloads-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
