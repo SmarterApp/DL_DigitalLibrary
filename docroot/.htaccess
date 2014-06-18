@@ -65,21 +65,21 @@ AddType video/mp4 .mov
   # Set "protossl" to "s" if we were accessed via https://.  This is used later
   # if you enable "www." stripping or enforcement, in order to ensure that
   # you don't bounce between http and https.
-  # RewriteRule ^ - [E=protossl]
-  #   RewriteCond %{HTTPS} on
-  #   RewriteRule ^ - [E=protossl:s]
+  RewriteRule ^ - [E=protossl]
+  RewriteCond %{HTTPS} on
+  RewriteRule ^ - [E=protossl:s]
 
   # Redirect to HTTPS
-  # RewriteCond %{HTTP_HOST} ^dev.smarterbalancedlibrary.org$ [OR]
-  #   RewriteCond %{HTTP_HOST} ^stage.smarterbalancedlibrary.org$ [OR]
-  #   RewriteCond %{HTTP_HOST} ^staging.smarterbalancedlibrary.org$ [OR]
-  #   RewriteCond %{HTTP_HOST} ^training.smarterbalancedlibrary.org$ [OR]
-  #   RewriteCond %{HTTP_HOST} ^integration.smarterbalancedlibrary.org$ [OR]
-  #   RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [OR]
-  #   RewriteCond %{HTTP_HOST} ^smarterbalancedlibrary.org$
-  #   RewriteCond %{HTTPS} off
-  #   RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTP_HOST} ^dev.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^stage.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^staging.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^training.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^integration.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^smarterbalancedlibrary.org$
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
   # Block access to "hidden" directories whose names begin with a period. This
   # includes directories used by version control systems such as Subversion or
