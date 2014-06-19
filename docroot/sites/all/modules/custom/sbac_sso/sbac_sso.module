@@ -417,7 +417,7 @@ function sbac_sso_logout() {
     error_log("TESTING TO SEE IF IT EXISTS: " . $user->session_index);
     error_log('user->session: ' . $user->session['session_index']);
     $session1 = unserialize($user->session);
-    error_log("SESSION UN: " . print_r($session1));
+    error_log("SESSION UN: " . print_r($session1, TRUE));
     error_log("user object: " . print_r($user, TRUE));
 
     // Destroy the current session, and reset $user to the anonymous user.
