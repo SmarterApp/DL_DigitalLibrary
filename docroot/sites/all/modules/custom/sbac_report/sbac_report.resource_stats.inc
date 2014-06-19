@@ -949,9 +949,9 @@ function get_counts_for_resource_stats($node, &$data) {
   $data['count_uploaded_materials'] = count_with_nodes_query($sql, $node, TRUE);
 
   # Return date
-  $sql = "SELECT nid, stamp FROM workbench_moderation_node_history where state = 'rejected' and
-          nid not in (SELECT nid FROM workbench_moderation_node_history where state = 'approved')";
-  $data['return_date'] = count_with_nodes_query($sql, $node, FALSE);
+  $sql = "SELECT nid, max(stamp) as stamp FROM workbench_moderation_node_history where state = 'rejected' and
+          nid = :nid";
+  $data['return_date'] = count_with_nodes_query($sql, $node, TRUE);
 
   # Review cycle number
   $sql = "SELECT nid, count(nid) as review_cycle FROM workbench_moderation_node_history where state = 'rejected' group by nid";
