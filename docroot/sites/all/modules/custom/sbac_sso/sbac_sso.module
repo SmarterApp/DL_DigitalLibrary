@@ -396,6 +396,7 @@ function sbac_sso_consume() {
  */
 function sbac_sso_user_login(&$edit, $account) {
   if (isset($edit['session_index'])) {
+    $account->session_index = $edit['session_index'];
     error_log("SESSION INDEX after login: " . $edit['session_index']);
     $_SESSION['session_index'] = $edit['session_index'];
   }
@@ -416,6 +417,7 @@ function sbac_sso_logout() {
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
     module_invoke_all('user_logout', $user);
     session_destroy();
+    error_log("TESTING TO SEE IF IT EXISTS: " . $user->session_index);
 
     $logout_assertion = sbac_sso_logout_assertion();
     error_log('1: ' . $logout_assertion);
