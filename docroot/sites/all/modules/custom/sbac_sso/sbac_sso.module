@@ -437,7 +437,7 @@ function sbac_sso_logout() {
 function sbac_sso_validate_saml_response($saml_token) {
   $response = sbac_sso_parse_saml_assertion($saml_token);
   // If SAML assertion does not match expected definition or signature:
-  if (!$response) {
+  if (!$response || !isset($response['session_index'])) {
     // If you do not find a matching tenancy chain, kick the user to an error page
     // with Smarter Balanced Contact information and a custom error code
     // ERROR CODE 100: Problem processing Assertion
@@ -445,7 +445,7 @@ function sbac_sso_validate_saml_response($saml_token) {
   }
   $user_attributes = sbac_sso_create_user_attributes($response);
   // If SAML assertion does not match expected definition or signature:
-  if (!$user_attributes || !isset($user_attributes['name']) || $user_attributes['name'] == NULL || $user_attributes['name'] != 'DL_EndUser' || isset($user_attributes['session_index']) == FALSE || $user_attributes['session_index'] == NULL) {
+  if (!$user_attributes || !isset($user_attributes['name']) || $user_attributes['name'] == NULL || $user_attributes['name'] != 'DL_EndUser') {
     // If you do not find a matching tenancy chain, kick the user to an error page
     // with Smarter Balanced Contact information and a custom error code
     // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
@@ -642,7 +642,6 @@ function sbac_sso_create_user_attributes($response) {
         'group_of_institutions' => 'group_of_institutions',
         'institution_id' => 'institution_id',
         'institution' => 'institution',
-        'session_index' => 'session_index',
       );
 
       if (count($user_fields) == count($attributes)) {
