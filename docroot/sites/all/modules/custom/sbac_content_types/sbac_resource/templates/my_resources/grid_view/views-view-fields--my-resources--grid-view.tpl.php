@@ -97,7 +97,7 @@
       <div class="paradata-numbers">
         <?php if (isset($fields['views']) && $fields['views']): ?>
           <div class="stat-views">
-            <a href="#" data-dropdown="unique-views-drop-<?php echo $fields['nid']->raw; ?>">
+            <a href="#" class="sbac-hover" data-dropdown="unique-views-drop-<?php echo $fields['nid']->raw; ?>">
               <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statviews.png" alt="Views">
             </a>
             <ul id="unique-views-drop-<?php echo $fields['nid']->raw ?>" class="f-dropdown" data-dropdown-content>
@@ -108,7 +108,7 @@
         <?php endif; ?>
 
         <div class="stat-downloads">
-          <a href="#" data-dropdown="total-downloads-<?php echo $fields['nid']->raw; ?>">
+          <a href="#" class="sbac-hover" data-dropdown="total-downloads-<?php echo $fields['nid']->raw; ?>">
             <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statdownloads.png" alt="Downloads">
           </a>
           <ul id ="total-downloads-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
@@ -127,7 +127,7 @@
 
         <?php if (isset($fields['rating']) && $fields['rating']): ?>
           <div class="rating-count">
-            <a href="#" data-dropdown="rating-dropdown-<?php echo $fields['nid']->raw; ?>">
+            <a href="#" class="sbac-hover" data-dropdown="rating-dropdown-<?php echo $fields['nid']->raw; ?>">
               <?php print $fields['rating']; ?>
             </a>
             <ul id="rating-dropdown-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>

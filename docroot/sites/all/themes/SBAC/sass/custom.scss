@@ -2150,6 +2150,10 @@ a.tabledrag-handle .handle {
       }
     }
 
+		.modal-content.alignment-container-no-scroll {
+			overflow-y: hidden;
+		}
+
     .field-type-taxonomy-term-reference {
       //width: 48%;
       //margin-right: 15px;
