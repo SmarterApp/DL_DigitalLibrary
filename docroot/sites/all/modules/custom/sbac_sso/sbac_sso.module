@@ -396,6 +396,7 @@ function sbac_sso_consume() {
  */
 function sbac_sso_user_login(&$edit, $account) {
   if (isset($edit['session_index'])) {
+    error_log("SESSION INDEX after login: " . $edit['session_index']);
     $_SESSION['session_index'] = $edit['session_index'];
   }
 }
@@ -481,6 +482,7 @@ function sbac_sso_validate_saml_response($saml_token) {
     drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
   }
   $user = sbac_sso_determine_user($user_attributes, $response);
+  error_log("SESSION INDEX 22: " . $response['session_index']);
   $user->session_index = $response['session_index'];
   return $user;
 }
@@ -726,9 +728,6 @@ function sbac_sso_program_management_api_request($user_attributes) {
   $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
   curl_close($curl);
 
-  error_log("The Program API URL: " . $post);
-  error_log("The Program API Reponse: " . $result);
-  error_log("The HTTP Status: " . $http_status);
   if ($result && $http_status == 200) {
     $api_response = sbac_sso_parse_program_api_result($result);
   }

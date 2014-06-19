@@ -125,7 +125,6 @@ function sbac_central_fix_broken_ccss() {
       }
     }
   }
-  error_log($logmsg, 3, $LOGFILE);
 }
 
 /**
