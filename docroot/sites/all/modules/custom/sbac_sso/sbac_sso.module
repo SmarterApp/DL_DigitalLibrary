@@ -439,7 +439,7 @@ function sbac_sso_logout() {
       error_log(print_r('Result: ' . $result));
       error_log(print_r('HTTP STATUS: ' . $http_status));
 
-      drupal_goto('user');
+//      drupal_goto('user');
 //    }
   }
   else {
