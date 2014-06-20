@@ -396,9 +396,7 @@ function sbac_sso_consume() {
  */
 function sbac_sso_user_login(&$edit, $account) {
   if (isset($edit['session_index'])) {
-    $account->session_index = $edit['session_index'];
-    error_log("SESSION INDEX after login: " . $edit['session_index']);
-    $_SESSION['session_index'] = $edit['session_index'];
+    $account->data['session_index'] = $edit['session_index'];
   }
 }
 
@@ -419,6 +417,7 @@ function sbac_sso_logout() {
     $session1 = unserialize($user->session);
     error_log("SESSION UN: " . print_r($session1, TRUE));
     error_log("user object: " . print_r($user, TRUE));
+    error_log("LAST TIME RIGHT?: " . print_r($user->data, TRUE));
 
     // Destroy the current session, and reset $user to the anonymous user.
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
