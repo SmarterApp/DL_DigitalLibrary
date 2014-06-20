@@ -404,7 +404,7 @@ function sbac_sso_user_login(&$edit, $account) {
  * Custom logout callback.
  */
 function sbac_sso_logout() {
-  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] == 'dev') {
+  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'dev') {
     $ajax = FALSE;
     if (isset($_GET['ajax'])) {
       $ajax = TRUE;
