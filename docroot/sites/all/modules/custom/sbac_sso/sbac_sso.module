@@ -404,22 +404,47 @@ function sbac_sso_user_login(&$edit, $account) {
  * Custom logout callback.
  */
 function sbac_sso_logout() {
-//  $ajax = FALSE;
-//  if (isset($_GET['ajax'])) {
-//    $ajax = TRUE;
-//  }
+  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] == 'dev') {
+    $ajax = FALSE;
+    if (isset($_GET['ajax'])) {
+      $ajax = TRUE;
+    }
 
-  if (user_is_logged_in()) {
-    global $user;
-    $logout_assertion = sbac_sso_logout_assertion();
     // Destroy the current session, and reset $user to the anonymous user.
+    global $user;
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
     module_invoke_all('user_logout', $user);
     session_destroy();
 
-    error_log('1: ' . $logout_assertion);
-    $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion))));
-    error_log('2: ' . $logout_url);
+//  <samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="RANDOM GENERATED HASH" Version="2.0" Destination="IDP LOGOUT DESTINATION WE PROVIDED WHEN BEING ADDED TO CoT" IssueInstant="2008-06-03T12:59:57Z">
+//  <saml:Issuer>ISSUER ON FILE WITH IDP</saml:Issuer>
+//  <samlp:SessionIndex>SESSION INDEX THAT WAS PASSED IN LOGIN SAML RESPONSE</samlp:SessionIndex>
+//  <saml:NameID>RANDOM GENERATED HASH</saml:NameID>
+//  </samlp:LogoutRequest>
+
+    $url = SBAC_SSO_DESTROY_SESSION_URL;
+    if ($ajax) {
+      $output = array();
+      $output['url'] = $url;
+      print drupal_json_encode($output);
+      exit;
+    }
+    else {
+      drupal_goto($url);
+    }
+  }
+  else {
+    if (user_is_logged_in()) {
+      global $user;
+      $logout_assertion = sbac_sso_logout_assertion();
+      // Destroy the current session, and reset $user to the anonymous user.
+      watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+      module_invoke_all('user_logout', $user);
+      session_destroy();
+
+      error_log('1: ' . $logout_assertion);
+      $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion))));
+      error_log('2: ' . $logout_url);
 //    if ($ajax) {
 //      $output = array();
 //      $output['url'] = $logout_url;
@@ -440,9 +465,10 @@ function sbac_sso_logout() {
 
 //      drupal_goto('user');
 //    }
-  }
-  else {
-    error_log("IM ALREADY LOGGED OUT");
+    }
+    else {
+      error_log("IM ALREADY LOGGED OUT");
+    }
   }
 }
 
