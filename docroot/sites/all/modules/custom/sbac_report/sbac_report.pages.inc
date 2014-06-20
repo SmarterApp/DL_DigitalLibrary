@@ -989,23 +989,30 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
       }
     }
 
-    drupal_add_library('dialog', 'dialog');
-    $trigger_id = 'report-' . $resource->nid;
-    $url = 'reports/' . $resource->nid . '/info/default/' . $trigger_id . '/' . $uid;
+    $url = 'reports/info/nojs/' . $resource->nid . '/' . $uid;
 
     $options = array(
       'attributes' => array(
-        'class' => array(
-          'use-ajax',
-          'use-dialog',
-        ),
-        'id' => $trigger_id,
+        'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-report-ct-individual-modal-form',
+        'id' => 'sbac-report-ct-individual-modal-form',
       ),
       'html'=> true,
     );
 
     $info_link = l('<i class="icon-info">Info</i>', $url, $options);
 
+    $modal_settings = array(
+      'sbac-report-ct-individual-modal-form' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 700,
+          'height' => 1047,
+        ),
+        'modalTheme' => 'CtoolSbacReportModal',
+      ),
+    );
+    drupal_add_js($modal_settings, 'setting');
+    drupal_add_js(drupal_get_path('module', 'sbac_report') . '/js/sbac_report.ctools.js');
     // info tooltip
     $item[] = array(
       'data' => $info_link,
@@ -1089,6 +1096,291 @@ function sbac_report_build_gk_table_display_form_ajax($form, &$form_state) {
   $output = sbac_report_build_summation_table($values['uid'], $values['date_range'], $values['display']);
 
   return $output;
+}
+
+/**
+ * Menu callback for individual report.
+ * @param  [type] $js   [description]
+ * @param  [type] $node [description]
+ * @param  [type] $user [description]
+ * @return [type]       [description]
+ */
+function sbac_report_ct_individual_modal_callback($js = NULL, $node, $user) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $form_state = array(
+      'ajax' => TRUE,
+      'title' => t($node->title),
+      'report' => array(
+        'node' => $node,
+        'user' => $user,
+      ),
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_report_ct_individual_modal_form', $form_state);
+
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+    }
+
+    print ajax_render($output);
+    drupal_exit();
+
+  }
+}
+
+/**
+ * Implements hook_form().
+ * Makes form for report modal popup.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_report_ct_individual_modal_form($form, &$form_state) {
+  $form = array();
+  $slides = array();
+  $node = $form_state['report']['node'];
+
+  $gk_entities = entity_load('feedback', FALSE, array(
+    'node_id' => $node->nid,
+    'type' => 'gate_keeper',
+    'status' => 1,
+    'current' => 1,
+    'completed' => 1,
+  ));
+
+  $gk = current($gk_entities);
+
+  $qc_entities = entity_load('feedback', FALSE, array(
+    'node_id' => $node->nid,
+    'type' => 'qc',
+    'status' => 1,
+    'current' => 1,
+    'completed' => 1,
+  ));
+
+  $post_entities = entity_load('feedback', FALSE, array(
+    'node_id' => $node->nid,
+    'type' => 'post',
+    'status' => 1,
+    'current' => 1,
+    'completed' => 1,
+  ));
+
+  $post = FALSE;
+  if ($post_entities) {
+    $post = current($post_entities);
+  }
+
+  $user_review = FALSE;
+  $recommendation = '';
+
+  // try to find the QC created by the user we're looking at
+  foreach ($qc_entities as $qc) {
+    if ($qc->uid == $uid) {
+      $user_review = $qc;
+    }
+  }
+
+  // if we still didn't find a QC, then the user must have a GK, and it'll be the one we
+  // already loaded
+  if (!$user_review) {
+    $user_review = $gk;
+  }
+
+  $form['intro']['review_date'] = array(
+    '#type' => 'item',
+    '#prefix' => '<div class="intro"><div class="review-date">',
+    '#suffix' => '</div>',
+    '#markup' => 'Review date: ' . format_date($user_review->created, 'custom', 'm/d/y'),
+  );
+
+  $form['intro']['user_recommendation'] = array(
+    '#type' => 'item',
+    '#prefix' => '<div class="recommendation">',
+    '#suffix' => '</div><div class="clear"></div></div>',
+    '#markup' => 'Recommendation: ' . rec_friendly_name($user_review),
+  );
+
+  // Add GK slide
+  $gk_slide = '<div class="slide-title">' . t('Gate-Keeping Criteria') . '</div>';
+
+  $focus = field_entity_value($node, 'field_focus');
+
+  $gk_slide = '<div class="resource-type">' . t('Resource Type: !type', array('!type' => $focus->name)) . '</div>';
+
+  foreach (field_entity_value($gk, 'field_quality_set') as $count => $question) {
+    $comments = field_entity_value($question, 'field_comments');
+    $decision = field_entity_value($question, 'field_meets_criterion');
+
+    $gk_slide .= '
+                    <div class="gk-item">
+                      <span class="item-num">' . ($count + 1) . '</span>
+                      <span class="item-decision">' . ($decision ? t('Y') : t('N')) . '</span>
+                      <span class="item-comments">' . $comments . '</span>
+                    </div>
+                 ';
+  }
+
+  $slides[] = $gk_slide;
+
+  // Add QC slide
+  if ($qc_entities) {
+    $qc_rec_slide = '';
+    $qc_count = 1;
+    foreach ($qc_entities as $qc) {
+      $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
+      $qc_account = user_load($qc->uid);
+
+      $location = l(full_name($qc_account), 'user/' . $qc_account->uid);
+
+      if ($states = field_entity_value($qc_account, 'field_state')) {
+        $term = current($states);
+        $location .= t(', State of !state', array(
+          '!state' => $term->name
+        ));
+      }
+
+      $qc_rec_slide .= '
+                        <div class="qc-item">
+                          <div class="qc-rec-name">
+                            ' . $location . '
+                          </div>
+
+                          <div class="qc-rec-value">
+                           <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
+                          </div>
+
+                          <div class="qc-rec-con">
+                            <span>' . t('Resource Consistency Rate:') . '</span> ' .
+                            rec_consistency_rate($qc_entities, $qc) . '
+                          </div>
+
+                          <div class="qc-rec-rationale">
+                            <span>' . t('Rationale:') . '</span> ' .
+                            field_entity_value($qc, 'field_rec_rationale') . '
+                          </div>
+                        </div>
+                       ';
+
+      $qc_count++;
+    }
+
+    $slides[] = $qc_rec_slide;
+  }
+
+  // Add Poster comments and recommendations.
+  if ($post) {
+    $post_options = field_allowed_values('field_post_options');
+    $post_value = field_entity_value($post, 'field_post_options');
+
+    $post_slide = '
+                    <div class="slide-title">' . t('SLT') . '</div>
+                    <div class="post-decision">' . t('Posting decision: !dec', array('!dec' => $post_options[$post_value])) . '</div>
+                  ';
+
+    $fields = array(
+      'field_to_contributor' => t('Comment to Contributor'),
+      'field_to_reviewer_1' => t('Comment to Reviewer 1'),
+      'field_to_reviewer_2' => t('Comment to Reviewer 2'),
+      'field_to_reviewer_3' => t('Comment to Reviewer 3'),
+    );
+
+    foreach ($fields as $field_name => $title) {
+      $post_slide .=  '
+                        <div class="post-item">
+                          <span class="inline-title">' . $title . ': </span>
+                          ' . field_entity_value($post, $field_name) . '
+                        </div>
+                      ';
+    }
+
+    $slides[] = $post_slide;
+  }
+
+  // Add Quality Criteria question slides.
+  if ($qc_entities) {
+    $questions = field_entity_value(reset($qc_entities), 'field_review_set');
+    $questions_count = sizeof($questions);
+
+    for ($i = 0; $i < $questions_count; $i++) {
+      $qc_title = variable_get('qc_' . field_entity_value($node, 'field_focus')->tid . '_criteria_' . ($i + 1) . '_title', '');
+
+      $slide = '<div class="slide-title">' . filter_text($qc_title) . '</div>';
+
+      $levels = array();
+      $comments = '';
+
+      $j = 1;
+      foreach ($qc_entities as $qc) {
+        $questions = field_entity_value($qc, 'field_review_set');
+
+        $level = field_entity_value($questions[$i], 'field_level');
+
+        if ($qc->uid == $uid) {
+          array_unshift($levels, '<strong>' . $level . '</strong>');
+        }
+        else {
+          $levels[] = $level;
+        }
+
+        $comments .= '
+                    <div class="qc-question-item">
+                      <span class="inline-title">' . t('Reviewer !count Comment', array('!count' => $j)) . ': </span>
+                      ' . field_entity_value($questions[$i], 'field_comments') . '
+                    </div>
+                  ';
+
+        $j++;
+      }
+
+      $slide .= '<div class="qc-question-levels">' . t('- Level: ') . implode(' / ', $levels) . '</div>';
+      $slide .= $comments;
+
+      $slides[] = $slide;
+    }
+  }
+
+  // render slides
+  $slide_list = theme('item_list', array(
+    'items' => $slides,
+    'attributes' => array(
+      'class' => array(
+        'slides',
+      ),
+    ),
+  ));
+
+  $content = '
+              <div class="flexslider item-list">
+                ' . $slide_list . '
+              </div>
+            ';
+  $form['report']['content'] = array(
+    '#markup' => $content,
+  );
+
+  $form['report']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+  );
+
+  $form['report']['continue'] = array(
+    '#type' => 'button',
+    '#value' => t('Continue'),
+    '#attributes' => array(
+      'class' => array(
+        'flexslider-continue',
+      ),
+    ),
+  );
+
+  return $form;
 }
 
 /**
