@@ -412,13 +412,6 @@ function sbac_sso_logout() {
   if (user_is_logged_in()) {
     global $user;
     $logout_assertion = sbac_sso_logout_assertion();
-    error_log("TESTING TO SEE IF IT EXISTS: " . $user->session_index);
-    error_log('user->session: ' . $user->session['session_index']);
-    $session1 = unserialize($user->session);
-    error_log("SESSION UN: " . print_r($session1, TRUE));
-    error_log("user object: " . print_r($user, TRUE));
-    error_log("LAST TIME RIGHT?: " . print_r($user->data, TRUE));
-
     // Destroy the current session, and reset $user to the anonymous user.
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
     module_invoke_all('user_logout', $user);
@@ -968,6 +961,7 @@ function sbac_sso_saml_assertion() {
  */
 function sbac_sso_logout_assertion() {
   global $base_url;
+  global $user;
   $string = user_password(10);
   $date = date('Y-m-d') . 'T' . date('H:i:s') . '.073Z';
   $logout_url = $base_url . '/sbac-sso-logout';
@@ -975,7 +969,7 @@ function sbac_sso_logout_assertion() {
   $logout_assertion = '
   <samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" Destination="' . $logout_url . '" IssueInstant="' . $date . '">
   <saml:Issuer>' . $base_url . '</saml:Issuer>
-  <samlp:SessionIndex>' . $_SESSION['session_index'] . '</samlp:SessionIndex>
+  <samlp:SessionIndex>' . $user->data['session_index'] . '</samlp:SessionIndex>
   <saml:NameID>' . sha1($string) . '</saml:NameID>
   </samlp:LogoutRequest>';
   return $logout_assertion;
