@@ -990,11 +990,12 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
     }
 
     $url = 'reports/info/nojs/' . $resource->nid . '/' . $uid;
+    $trigger_id = 'sbac-report-ct-individual-modal-form-' . $resource->nid;
 
     $options = array(
       'attributes' => array(
         'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-report-ct-individual-modal-form',
-        'id' => 'sbac-report-ct-individual-modal-form',
+        'id' => $trigger_id,
       ),
       'html'=> true,
     );
@@ -1145,6 +1146,7 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
   $form = array();
   $slides = array();
   $node = $form_state['report']['node'];
+  $uid  = $form_state['report']['user']->uid;
 
   $gk_entities = entity_load('feedback', FALSE, array(
     'node_id' => $node->nid,
@@ -1197,7 +1199,7 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
     '#type' => 'item',
     '#prefix' => '<div class="intro"><div class="review-date">',
     '#suffix' => '</div>',
-    '#markup' => 'Review date: ' . format_date($user_review->created, 'custom', 'm/d/y'),
+    '#markup' => 'Review Date: ' . format_date($user_review->created, 'custom', 'm/d/y'),
   );
 
   $form['intro']['user_recommendation'] = array(
