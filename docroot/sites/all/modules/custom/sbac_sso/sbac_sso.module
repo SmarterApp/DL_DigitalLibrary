@@ -409,7 +409,6 @@ function sbac_sso_logout() {
     $ajax = TRUE;
   }
 
-  error_log("LOGOUT CALLED");
   if (user_is_logged_in()) {
     global $base_url;
     global $user;
@@ -427,12 +426,10 @@ function sbac_sso_logout() {
       exit;
     }
     else {
-      error_log("CALLING URL");
       drupal_goto($logout_url);
     }
   }
   else {
-    error_log("IM ALREADY LOGGED OUT");
     drupal_goto('user');
   }
 }
