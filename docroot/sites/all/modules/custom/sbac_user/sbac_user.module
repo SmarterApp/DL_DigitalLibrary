@@ -417,10 +417,16 @@ function sbac_user_warn_user_form($form, &$form_state) {
  * @param $form_state
  */
 function sbac_user_email_validate(&$form, &$form_state) {
-  $email= strtolower($form_state['values']['mail']);
+  $account = $form['#user'];
+  $email = strtolower($form_state['values']['mail']);
+  $email = trim($email);
   $valid = valid_email_address($email);
   if (!$valid) {
     form_set_error('', t('The email address :email is not valid.', array(':email' => $email)));
+  }
+  // Check for duplicate emails.
+  elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($form_state['values']['mail']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+    form_set_error('', t('The email address :email is already in use.', array(':email' => $email)));
   }
 }
 
