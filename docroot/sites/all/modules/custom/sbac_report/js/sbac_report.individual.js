@@ -58,7 +58,7 @@
 
       var dialog = $('.sbac-report-modal');
       if (dialog.length) {
-        var slider_width = 572;
+        var slider_width = 655;
 
         $('.flexslider', dialog).flexslider({
           animation: "slide",
