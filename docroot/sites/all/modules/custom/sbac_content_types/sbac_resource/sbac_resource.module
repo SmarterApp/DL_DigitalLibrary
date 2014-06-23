@@ -1368,6 +1368,12 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
   }
   elseif ($node->type == 'resource' && $new_state == 'removed') {
     $node->status = 0;
+    // Delete resource forum and topics
+    if ($forum_id = sbac_forum_get_resource_forum_id($node->nid)) {
+      sbac_forum_delete_resource_forum($forum_id);
+    }
+    // Delete favorite
+    db_delete('sbac_favorites')->condition('type', 'node')->condition('id', $node->nid)->execute();
   }
 
   // issue, i need to create records for everyone during state transitions, could limit this to "being_reviewed" and "approved".
