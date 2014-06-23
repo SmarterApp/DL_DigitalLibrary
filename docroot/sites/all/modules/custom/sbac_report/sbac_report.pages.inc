@@ -1372,11 +1372,6 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
     '#markup' => $content,
   );
 
-  $form['report']['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => t('Cancel'),
-  );
-
   $form['report']['continue'] = array(
     '#type' => 'button',
     '#value' => t('Continue'),
@@ -1385,6 +1380,11 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
         'flexslider-continue',
       ),
     ),
+  );
+
+  $form['report']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
   );
 
   return $form;
