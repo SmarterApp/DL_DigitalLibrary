@@ -416,12 +416,6 @@ function sbac_sso_logout() {
     module_invoke_all('user_logout', $user);
     session_destroy();
 
-//  <samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="RANDOM GENERATED HASH" Version="2.0" Destination="IDP LOGOUT DESTINATION WE PROVIDED WHEN BEING ADDED TO CoT" IssueInstant="2008-06-03T12:59:57Z">
-//  <saml:Issuer>ISSUER ON FILE WITH IDP</saml:Issuer>
-//  <samlp:SessionIndex>SESSION INDEX THAT WAS PASSED IN LOGIN SAML RESPONSE</samlp:SessionIndex>
-//  <saml:NameID>RANDOM GENERATED HASH</saml:NameID>
-//  </samlp:LogoutRequest>
-
     $url = SBAC_SSO_DESTROY_SESSION_URL;
     if ($ajax) {
       $output = array();
@@ -445,29 +439,29 @@ function sbac_sso_logout() {
       error_log('1: ' . $logout_assertion);
       $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion))));
       error_log('2: ' . $logout_url);
-//    if ($ajax) {
-//      $output = array();
-//      $output['url'] = $logout_url;
-//      print drupal_json_encode($output);
-//      exit;
-//    }
-//    else {
-      $curl = curl_init();
-      curl_setopt($curl, CURLOPT_URL, $logout_url);
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-      curl_setopt($curl, CURLOPT_SSLVERSION,3);
-      $result = curl_exec($curl);
-      $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-      curl_close($curl);
-      error_log('Result: ' . print_r($result, TRUE));
-      error_log('HTTP STATUS: ' . print_r($http_status, TRUE));
-
-//      drupal_goto('user');
-//    }
+      if ($ajax) {
+        $output = array();
+        $output['url'] = $logout_url;
+        print drupal_json_encode($output);
+        exit;
+      }
+      else {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $logout_url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curl, CURLOPT_SSLVERSION,3);
+        $result = curl_exec($curl);
+        $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        error_log('Result: ' . print_r($result, TRUE));
+        error_log('HTTP STATUS: ' . print_r($http_status, TRUE));
+        drupal_goto('user');
+      }
     }
     else {
       error_log("IM ALREADY LOGGED OUT");
+      drupal_goto('user');
     }
   }
 }
