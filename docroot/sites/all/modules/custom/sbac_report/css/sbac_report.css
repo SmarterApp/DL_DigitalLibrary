@@ -660,33 +660,32 @@ i.icon-info {
 }
 /* line 690, ../sass/sbac_report.scss */
 .sbac-report-modal.ctools-modal-content .modal-content {
-  height: auto !important;
   padding: 0;
   overflow-y: hidden !important;
 }
-/* line 696, ../sass/sbac_report.scss */
+/* line 695, ../sass/sbac_report.scss */
 .sbac-report-modal.ctools-modal-content .modal-content .intro .review-date {
   width: 50%;
   float: left;
 }
-/* line 700, ../sass/sbac_report.scss */
+/* line 699, ../sass/sbac_report.scss */
 .sbac-report-modal.ctools-modal-content .modal-content .intro .recommendation {
   width: 50%;
   float: right;
   text-align: right;
 }
-/* line 708, ../sass/sbac_report.scss */
+/* line 707, ../sass/sbac_report.scss */
 .sbac-report-modal.ctools-modal-content .modal-content .flexslider .flex-viewport {
   overflow-y: hidden;
   overflow-x: hidden;
   max-height: 420px;
   border-bottom: 0;
 }
-/* line 716, ../sass/sbac_report.scss */
+/* line 713, ../sass/sbac_report.scss */
 .sbac-report-modal.ctools-modal-content .modal-content .flexslider .flex-viewport li {
   margin: 0;
   overflow-y: scroll !important;
-  max-height: 400px;
+  max-height: 420px;
 }
 
 /* line 723, ../sass/sbac_report.scss */

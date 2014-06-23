@@ -688,7 +688,6 @@ i.icon-info {
 	}
 	
 	.modal-content {
-		height: auto !important;
 		padding: 0;
 		overflow-y: hidden !important;
 		
@@ -709,12 +708,13 @@ i.icon-info {
 				overflow-y: hidden;
 				overflow-x: hidden;
 				max-height: 420px;
-				
-			  
 				border-bottom: 0;
 				
-				li {margin: 0; overflow-y: scroll !important;max-height: 400px;}
-				
+				li {
+					margin: 0; 
+					overflow-y: scroll !important;
+					max-height: 420px;
+				}
 			}
 		}
 	}	
