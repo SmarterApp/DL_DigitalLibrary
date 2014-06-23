@@ -57,11 +57,11 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['reports/%node/info'] = array(
+  $items['reports/info/%ctools_js/%node/%user'] = array(
     'title' => 'Resource Report Information',
     'file' => 'sbac_report.pages.inc',
-    'page callback' => 'sbac_report_individual_modal',
-    'page arguments' => array(1),
+    'page callback' => 'sbac_report_ct_individual_modal_callback',
+    'page arguments' => array(2, 3, 4),
     'access callback' => 'sbac_report_user_access',
     'type' => MENU_CALLBACK,
   );

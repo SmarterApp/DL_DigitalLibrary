@@ -11,11 +11,13 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
+      define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
       break;
     case 'prod':
       define('SBAC_SSO_URL', 'https://sso.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso.smarterbalanced.org/auth/UI/Logout');
+      define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
       break;
   }
 }
@@ -23,9 +25,8 @@ else {
   define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
   define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
   define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
+  define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
 }
-
-define('SBAC_SSO_LOGOUT_URL', 'http://www.smarterbalanced.org');
 
 /**
  * Implements hook_menu().
@@ -395,7 +396,7 @@ function sbac_sso_consume() {
  */
 function sbac_sso_user_login(&$edit, $account) {
   if (isset($edit['session_index'])) {
-    $_SESSION['session_index'] = $edit['session_index'];
+    $account->data['session_index'] = $edit['session_index'];
   }
 }
 
@@ -403,26 +404,71 @@ function sbac_sso_user_login(&$edit, $account) {
  * Custom logout callback.
  */
 function sbac_sso_logout() {
-  $ajax = FALSE;
-  if (isset($_GET['ajax'])) {
-    $ajax = TRUE;
-  }
+  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'dev') {
+    $ajax = FALSE;
+    if (isset($_GET['ajax'])) {
+      $ajax = TRUE;
+    }
 
-  // Destroy the current session, and reset $user to the anonymous user.
-  global $user;
-  watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
-  module_invoke_all('user_logout', $user);
-  session_destroy();
+    // Destroy the current session, and reset $user to the anonymous user.
+    global $user;
+    watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+    module_invoke_all('user_logout', $user);
+    session_destroy();
 
-  $url = SBAC_SSO_DESTROY_SESSION_URL;
-  if ($ajax) {
-    $output = array();
-    $output['url'] = $url;
-    print drupal_json_encode($output);
-    exit;
+//  <samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="RANDOM GENERATED HASH" Version="2.0" Destination="IDP LOGOUT DESTINATION WE PROVIDED WHEN BEING ADDED TO CoT" IssueInstant="2008-06-03T12:59:57Z">
+//  <saml:Issuer>ISSUER ON FILE WITH IDP</saml:Issuer>
+//  <samlp:SessionIndex>SESSION INDEX THAT WAS PASSED IN LOGIN SAML RESPONSE</samlp:SessionIndex>
+//  <saml:NameID>RANDOM GENERATED HASH</saml:NameID>
+//  </samlp:LogoutRequest>
+
+    $url = SBAC_SSO_DESTROY_SESSION_URL;
+    if ($ajax) {
+      $output = array();
+      $output['url'] = $url;
+      print drupal_json_encode($output);
+      exit;
+    }
+    else {
+      drupal_goto($url);
+    }
   }
   else {
-    drupal_goto($url);
+    if (user_is_logged_in()) {
+      global $user;
+      $logout_assertion = sbac_sso_logout_assertion();
+      // Destroy the current session, and reset $user to the anonymous user.
+      watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+      module_invoke_all('user_logout', $user);
+      session_destroy();
+
+      error_log('1: ' . $logout_assertion);
+      $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion))));
+      error_log('2: ' . $logout_url);
+//    if ($ajax) {
+//      $output = array();
+//      $output['url'] = $logout_url;
+//      print drupal_json_encode($output);
+//      exit;
+//    }
+//    else {
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, $logout_url);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+      curl_setopt($curl, CURLOPT_SSLVERSION,3);
+      $result = curl_exec($curl);
+      $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+      curl_close($curl);
+      error_log('Result: ' . print_r($result, TRUE));
+      error_log('HTTP STATUS: ' . print_r($http_status, TRUE));
+
+//      drupal_goto('user');
+//    }
+    }
+    else {
+      error_log("IM ALREADY LOGGED OUT");
+    }
   }
 }
 
@@ -461,6 +507,7 @@ function sbac_sso_validate_saml_response($saml_token) {
     drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
   }
   $user = sbac_sso_determine_user($user_attributes, $response);
+  error_log("SESSION INDEX 22: " . $response['session_index']);
   $user->session_index = $response['session_index'];
   return $user;
 }
@@ -706,9 +753,6 @@ function sbac_sso_program_management_api_request($user_attributes) {
   $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
   curl_close($curl);
 
-  error_log("The Program API URL: " . $post);
-  error_log("The Program API Reponse: " . $result);
-  error_log("The HTTP Status: " . $http_status);
   if ($result && $http_status == 200) {
     $api_response = sbac_sso_parse_program_api_result($result);
   }
@@ -937,15 +981,26 @@ function sbac_sso_saml_assertion() {
 }
 
 /**
- * Get authenticated session.
+ * Get the SAML Logout Assertion.
  *
- * @return array
+ * @return string
  */
-function sbac_sso_get_authenticated_session() {
-  $session = array();
-  $session['valid'] = TRUE;
-  return $session;
+function sbac_sso_logout_assertion() {
+  global $base_url;
+  global $user;
+  $string = user_password(10);
+  $date = date('Y-m-d') . 'T' . date('H:i:s') . '.073Z';
+  $logout_url = $base_url . '/sbac-sso-logout';
+
+  $logout_assertion = '
+  <samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" Destination="' . $logout_url . '" IssueInstant="' . $date . '">
+  <saml:Issuer>' . $base_url . '</saml:Issuer>
+  <samlp:SessionIndex>' . $user->data['session_index'] . '</samlp:SessionIndex>
+  <saml:NameID>' . sha1($string) . '</saml:NameID>
+  </samlp:LogoutRequest>';
+  return $logout_assertion;
 }
+
 
 function sbac_sso_get_saml_token2() {
   $stuff = 'PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6

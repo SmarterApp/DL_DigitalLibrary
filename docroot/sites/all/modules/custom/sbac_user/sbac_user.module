@@ -875,7 +875,6 @@ function sbac_user_user_login(&$edit, $account) {
       }
     }
     else {
-      error_log("redirecting");
       drupal_goto('digital-library-resources');
     }
   }
