@@ -684,7 +684,7 @@ i.icon-info {
 /* line 713, ../sass/sbac_report.scss */
 .sbac-report-modal.ctools-modal-content .modal-content .flexslider .flex-viewport li {
   margin: 0;
-  overflow-y: scroll !important;
+  overflow-y: auto !important;
   max-height: 420px;
 }
 
