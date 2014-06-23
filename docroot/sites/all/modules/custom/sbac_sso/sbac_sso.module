@@ -438,7 +438,7 @@ function sbac_sso_logout() {
       session_destroy();
 
       error_log('1: ' . $logout_assertion);
-      $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . 'RelayState=' . $base_url;
+      $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url;
       error_log('2: ' . $logout_url);
       if ($ajax) {
         $output = array();
