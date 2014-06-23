@@ -404,66 +404,36 @@ function sbac_sso_user_login(&$edit, $account) {
  * Custom logout callback.
  */
 function sbac_sso_logout() {
-  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'dev') {
-    $ajax = FALSE;
-    if (isset($_GET['ajax'])) {
-      $ajax = TRUE;
-    }
+  $ajax = FALSE;
+  if (isset($_GET['ajax'])) {
+    $ajax = TRUE;
+  }
 
-    // Destroy the current session, and reset $user to the anonymous user.
+  error_log("LOGOUT CALLED");
+  if (user_is_logged_in()) {
+    global $base_url;
     global $user;
+    $logout_assertion = sbac_sso_logout_assertion();
+    // Destroy the current session, and reset $user to the anonymous user.
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
     module_invoke_all('user_logout', $user);
     session_destroy();
 
-    $url = SBAC_SSO_DESTROY_SESSION_URL;
+    $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url;
     if ($ajax) {
       $output = array();
-      $output['url'] = $url;
+      $output['url'] = $logout_url;
       print drupal_json_encode($output);
       exit;
     }
     else {
-      drupal_goto($url);
+      error_log("CALLING URL");
+      drupal_goto($logout_url);
     }
   }
   else {
-    if (user_is_logged_in()) {
-      global $base_url;
-      global $user;
-      $logout_assertion = sbac_sso_logout_assertion();
-      // Destroy the current session, and reset $user to the anonymous user.
-      watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
-      module_invoke_all('user_logout', $user);
-      session_destroy();
-
-      error_log('1: ' . $logout_assertion);
-      $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url;
-      error_log('2: ' . $logout_url);
-      if ($ajax) {
-        $output = array();
-        $output['url'] = $logout_url;
-        print drupal_json_encode($output);
-        exit;
-      }
-      else {
-        drupal_goto($logout_url);
-//        $curl = curl_init();
-//        curl_setopt($curl, CURLOPT_URL, $logout_url);
-//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-//        curl_setopt($curl, CURLOPT_SSLVERSION,3);
-//        $result = curl_exec($curl);
-//        $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-//        curl_close($curl);
-//        error_log('Result: ' . print_r($result, TRUE));
-//        error_log('HTTP STATUS: ' . print_r($http_status, TRUE));
-        // drupal_goto('user');
-      }
-    }
-    else {
-      error_log("IM ALREADY LOGGED OUT");
-      drupal_goto('user');
-    }
+    error_log("IM ALREADY LOGGED OUT");
+    drupal_goto('user');
   }
 }
 
