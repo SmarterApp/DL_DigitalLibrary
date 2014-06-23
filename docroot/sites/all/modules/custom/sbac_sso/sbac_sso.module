@@ -447,15 +447,16 @@ function sbac_sso_logout() {
         exit;
       }
       else {
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $logout_url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_SSLVERSION,3);
-        $result = curl_exec($curl);
-        $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        error_log('Result: ' . print_r($result, TRUE));
-        error_log('HTTP STATUS: ' . print_r($http_status, TRUE));
+        drupal_goto($logout_url);
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_URL, $logout_url);
+//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+//        curl_setopt($curl, CURLOPT_SSLVERSION,3);
+//        $result = curl_exec($curl);
+//        $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+//        curl_close($curl);
+//        error_log('Result: ' . print_r($result, TRUE));
+//        error_log('HTTP STATUS: ' . print_r($http_status, TRUE));
         // drupal_goto('user');
       }
     }
