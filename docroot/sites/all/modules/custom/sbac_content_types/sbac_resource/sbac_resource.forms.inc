@@ -2505,7 +2505,7 @@ function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 160,
+          'height' => 210,
         ),
       ),
     );
