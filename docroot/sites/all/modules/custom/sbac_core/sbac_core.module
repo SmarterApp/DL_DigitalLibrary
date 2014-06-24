@@ -373,3 +373,12 @@ function match_uri($needle, $haystack = NULL) {
 function sbac_core_update_projects_alter(&$projects) {
   unset($projects['sbac_core']);
 }
+
+function sbac_core_form_eck__entity__form_add_review_end_use_alter(&$form, &$form_state, &$form_id) {
+  $form['state_create']['field_student_learning']['#prefix'] = '<label class="element-invisible" for="edit-field-student-learning-und-0-rating--2">Helps Improve Student Learning</label>';
+  $form['state_create']['field_pro_dev']['#prefix'] = '<label class="element-invisible" for="edit-field-pro-dev-und-0-rating--2">Helps My Professional Development</label>';
+  $form['state_create']['field_ease_use']['#prefix'] = '<label class="element-invisible" for="edit-field-ease-use-und-0-rating--2">Is Easy To Use</label>';
+  $form['state_create']['hidden_markup'] = array(
+    '#markup' => '<div id="edit-field-student-learning-und-0-rating" class="element-invisible"></div><div id="edit-field-pro-dev-und-0-rating" class="element-invisible"></div><div id="edit-field-ease-use-und-0-rating" class="element-invisible"></div>',
+  );
+}
