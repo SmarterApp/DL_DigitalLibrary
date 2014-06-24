@@ -1012,7 +1012,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 700,
-          'height' => 572,
+          'height' => 625,
         ),
         'modalTheme' => 'CtoolSbacReportModal',
       ),
