@@ -646,7 +646,55 @@ i.icon-info {
   box-shadow: 0 0 10px #9ecaed !important;
 }
 
-/* line 679, ../sass/sbac_report.scss */
-form[id*="sbac-report-individual-modal-form"] {
+/*Report individual modal*/
+/* line 680, ../sass/sbac_report.scss */
+.sbac-report-modal.ctools-modal-content {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  position: relative;
+  z-index: 99;
+}
+/* line 686, ../sass/sbac_report.scss */
+.sbac-report-modal.ctools-modal-content #modal-title {
+  margin-left: 20px;
+}
+/* line 690, ../sass/sbac_report.scss */
+.sbac-report-modal.ctools-modal-content .modal-content {
+  padding: 0;
+  overflow-y: hidden !important;
+}
+/* line 695, ../sass/sbac_report.scss */
+.sbac-report-modal.ctools-modal-content .modal-content .intro .review-date {
+  width: 50%;
+  float: left;
+}
+/* line 699, ../sass/sbac_report.scss */
+.sbac-report-modal.ctools-modal-content .modal-content .intro .recommendation {
+  width: 50%;
+  float: right;
+  text-align: right;
+}
+/* line 707, ../sass/sbac_report.scss */
+.sbac-report-modal.ctools-modal-content .modal-content .flexslider .flex-viewport {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  max-height: 420px;
+  border-bottom: 0;
+}
+/* line 713, ../sass/sbac_report.scss */
+.sbac-report-modal.ctools-modal-content .modal-content .flexslider .flex-viewport li {
+  margin: 0;
+  overflow-y: auto !important;
+  max-height: 420px;
+}
+
+/* line 723, ../sass/sbac_report.scss */
+form[id*="sbac-report-ct-individual-modal-form"] {
   margin-bottom: 0;
+  padding: 0 40px;
+}
+/* line 727, ../sass/sbac_report.scss */
+form[id*="sbac-report-ct-individual-modal-form"] button {
+  float: right;
+  margin-left: 20px;
 }

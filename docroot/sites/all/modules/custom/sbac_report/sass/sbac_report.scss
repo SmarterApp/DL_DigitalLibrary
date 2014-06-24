@@ -676,6 +676,62 @@ i.icon-info {
 	}
 } 
 
-form[id*="sbac-report-individual-modal-form"] {
-	margin-bottom: 0;
+/*Report individual modal*/
+.sbac-report-modal.ctools-modal-content {
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+	position: relative;
+	z-index: 99;
+	
+	#modal-title {
+		margin-left: 20px;
+	}
+	
+	.modal-content {
+		padding: 0;
+		overflow-y: hidden !important;
+		
+		.intro {
+			.review-date {
+				width: 50%;
+				float: left;
+			}
+			.recommendation {
+				width: 50%;
+				float: right;
+				text-align: right;
+			}
+		}
+		
+		.flexslider {
+			.flex-viewport {
+				overflow-y: hidden;
+				overflow-x: hidden;
+				max-height: 420px;
+				border-bottom: 0;
+				
+				li {
+					margin: 0; 
+					overflow-y: auto !important;
+					max-height: 420px;
+				}
+			}
+		}
+	}	
 }
+	
+form[id*="sbac-report-ct-individual-modal-form"] {
+	margin-bottom: 0;
+	padding: 0 40px;
+	
+	button {
+		float: right;
+		margin-left: 20px;
+	}
+}
+
+
+
+
+
+
