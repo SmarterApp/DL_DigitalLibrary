@@ -416,6 +416,7 @@ function sbac_sso_user_login(&$edit, $account) {
  * Custom logout callback.
  */
 function sbac_sso_logout() {
+  error_log("sso 1");
   if (user_is_logged_in()) {
     global $base_url;
     global $user;
@@ -424,11 +425,14 @@ function sbac_sso_logout() {
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
     module_invoke_all('user_logout', $user);
     session_destroy();
-    
+    error_log("sso 12");
     $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url . '/user';
+    error_log("sso 13");
+    error_log("Logout URL: " . $logout_url);
     drupal_goto($logout_url);
   }
   else {
+    error_log("sso 14");
     drupal_goto('user');
   }
 }
