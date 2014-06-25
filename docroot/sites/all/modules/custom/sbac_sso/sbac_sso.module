@@ -294,7 +294,6 @@ function sbac_sso_preprocess_page(&$vars) {
     drupal_add_js($js_settings, 'setting');
     $vars['session_expire'] = $session_button;
     $session_info = session_get_cookie_params();
-    $session_info['lifetime'] = 330;
     drupal_add_js(array('sbac_session_lifetime' => $session_info['lifetime']), 'setting');
   }
 }
