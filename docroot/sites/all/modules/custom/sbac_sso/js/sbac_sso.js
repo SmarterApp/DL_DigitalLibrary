@@ -45,14 +45,15 @@
     },
     // redirect the user to the main page.
     redirectToLogin: function() {
-      ajax_request = $.ajax({
-        url: "/sbac-sso-logout",
-        data: {'ajax' : true},
-        success: function (data) {
-          var response = jQuery.parseJSON(data);
-          window.location.href = response.url;
-        }
-      });
+      window.location.href = window.location.protocol + window.location.hostname + '/sbac-sso-logout';
+//      ajax_request = $.ajax({
+//        url: "/sbac-sso-logout",
+//        data: {'ajax' : true},
+//        success: function (data) {
+//          var response = jQuery.parseJSON(data);
+//          window.location.href = response.url;
+//        }
+//      });
     }
   };
 
