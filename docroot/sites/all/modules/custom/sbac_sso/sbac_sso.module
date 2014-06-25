@@ -188,10 +188,12 @@ function sbac_sso_session_regenerate() {
   global $user, $is_https;
   // Nothing to do if we are not allowed to change the session.
   if (!drupal_save_session()) {
+    error_log("NOOOOO");
     return;
   }
 
   if ($is_https && variable_get('https', FALSE)) {
+    error_log("WHAT1");
     $insecure_session_name = substr(session_name(), 1);
     if (!isset($GLOBALS['lazy_session']) && isset($_COOKIE[$insecure_session_name])) {
       $old_insecure_session_id = $_COOKIE[$insecure_session_name];
@@ -204,6 +206,7 @@ function sbac_sso_session_regenerate() {
     $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
     setcookie($insecure_session_name, $session_id, $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
     $_COOKIE[$insecure_session_name] = $session_id;
+    error_log("WHAT2");
   }
 
   if (drupal_session_started()) {
@@ -236,6 +239,7 @@ function sbac_sso_session_regenerate() {
     error_log("sess: 5");
   }
   elseif (isset($old_insecure_session_id)) {
+    error_log("HERE?");
     // If logging in to the secure site, and there was no active session on the
     // secure site but a session was active on the insecure site, update the
     // insecure session with the new session identifiers.
@@ -245,6 +249,7 @@ function sbac_sso_session_regenerate() {
       ->execute();
   }
   else {
+    error_log("REALLY?");
     // Start the session when it doesn't exist yet.
     // Preserve the logged in user, as it will be reset to anonymous
     // by _drupal_session_read.
@@ -289,6 +294,7 @@ function sbac_sso_preprocess_page(&$vars) {
     drupal_add_js($js_settings, 'setting');
     $vars['session_expire'] = $session_button;
     $session_info = session_get_cookie_params();
+    $session_info['lifetime'] = 330;
     drupal_add_js(array('sbac_session_lifetime' => $session_info['lifetime']), 'setting');
   }
 }
