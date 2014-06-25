@@ -92,7 +92,7 @@
 
         <?php if (isset($fields['rating']) && $fields['rating']): ?>
           <div class="rating-count">
-            <div onclick="location.href='#';" onkeypress="void(0);" tabindex="-1" style="cursor: pointer;" class="sbac-hover" data-dropdown="rating-dropdown-<?php echo $fields['nid']->raw; ?>">
+            <div style="cursor: pointer;" class="sbac-hover" data-dropdown="rating-dropdown-<?php echo $fields['nid']->raw; ?>">
               <?php print $fields['rating']; ?>
             </div>
             <ul id="rating-dropdown-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
