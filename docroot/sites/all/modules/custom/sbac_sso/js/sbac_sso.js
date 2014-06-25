@@ -45,7 +45,9 @@
     },
     // redirect the user to the main page.
     redirectToLogin: function() {
-      window.location.href = window.location.protocol + window.location.hostname + '/sbac-sso-logout';
+      var logout_url = window.location.protocol + window.location.hostname + '/sbac-sso-logout';
+      alert(logout_url);
+      window.location.href = logout_url;
 //      ajax_request = $.ajax({
 //        url: "/sbac-sso-logout",
 //        data: {'ajax' : true},
