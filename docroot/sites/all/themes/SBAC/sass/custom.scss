@@ -2206,6 +2206,23 @@ a.tabledrag-handle .handle {
 	}
 }
 
+
+/*Remove Resource*/
+#modalContent {
+	.ctools-modal-content.sbac-resource-changes-modal {
+		height: 255px !important;
+		
+		#modal-content {
+			height: 215px !important;
+			
+			button#edit-cancel-overlay {
+				margin-left: 225px;
+			}
+		}
+	}
+}
+
+
 #sbac-resource-delete-resource-form {
   > div {
 
