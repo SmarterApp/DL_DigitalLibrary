@@ -45,7 +45,7 @@
     },
     // redirect the user to the main page.
     redirectToLogin: function() {
-      var logout_url = window.location.protocol + window.location.hostname + '/user/logout';
+      var logout_url = window.location.protocol + '//' + window.location.hostname + '/user/logout';
       alert(logout_url);
       window.location.href = logout_url;
 //      ajax_request = $.ajax({
