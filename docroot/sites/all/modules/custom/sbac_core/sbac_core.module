@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * @file.
+ * Module to handle all review related functionality
+ *
+ * Provides:
+ *  - Resource Review Gate Keeping and Resource Review workflow and administrative inputs.
+ *  - The user notifications
+ *  - Profanity filter
+ *  - More or less wrapper
+ *  - Sections (tabs) that are displayed on the resource node view
+ */
+
 /*----------------------------------------------------------------------------
       SETUP & CONFIG
 ----------------------------------------------------------------------------*/

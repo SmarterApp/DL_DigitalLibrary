@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * @file.
+ * Module to handle all favoriting functionality.
+ *
+ * Provides:
+ *  - Exports the favorite entity type
+ *  - Displays and handles the click even to add / remove a favorite
+ *  - Creates the favorite listing on the user profile page.
+ */
+
+/**
  * Implements hook_menu().
  *
  * @return array

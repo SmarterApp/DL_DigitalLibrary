@@ -612,8 +612,6 @@ function sbac_user_util_compute_thumbnail_dir($orgdir) {
  * @param $new_name
  */
 function sbac_user_util_move_file($old_name, $new_name) {
-  //error_log("moving [$old_name] to [$new_name]\n", 3, "/tmp/sbac.log");
-
   $dir_needed = dirname($new_name);
   umask(0);
   if (!is_dir($dir_needed) && !mkdir($dir_needed, 0777, true)) {
@@ -813,7 +811,6 @@ function sbac_user_entity_update($entity, $type) {
   // on 2nd call the image was already hashed so preg_match will fail and cause this to skip.
   if ($type == 'file' && isset($entity->source) && $entity->source == 'picture_upload' &&
       preg_match('/public\:\/\/pictures\/picture-/', $entity->uri)) {
-    //error_log("====================\n". var_export($entity, true) ."\n", 3, "/tmp/sbac.log");
     $userid = sbac_user_util_parse_user_id($entity->filename);
     $hashdir = sbac_user_util_compute_hash_dir($userid);
 

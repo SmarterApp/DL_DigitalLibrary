@@ -1,6 +1,14 @@
 <?php
 
 /**
+ * @file.
+ * Module to handle the connection and consumption of  CCSS (Common Core State Standards)
+ *
+ * Provides:
+ *  - Connect to the CCSS API and consume the results into Drupal
+ */
+
+/**
  * Implements hook_update_projects_alter().
  *
  * @param $projects
@@ -32,19 +40,6 @@ function sbac_air_menu() {
  */
 function sbac_air_test_data() {
   module_load_include('inc', 'sbac_air', 'lib/sbac_air.airapiclient');
-
-  // $airclient = new AIRAPIClient();
-  // Main functions to test the data stream.
-  // dsm($airclient->test_data('CC-ELA-v1'));
-  // dsm($airclient->test_data('CC-MA-v1'));
-  // dsm($airclient->getPublications('CC', 'ELA'));
-  // More test functions if you need to verify certain aspects of the API data.
-  // dpm($airclient->getSubjectsSBAC('CC'));
-  // dsm($airclient->getStandards('CC-ELA-v1'));
-  // dsm($status = $airclient->validate('SBAC-ELA-v1'));
-  // dsm($airclient->validate('SBAC-MA-v1'));
-
-
 }
 
 /**

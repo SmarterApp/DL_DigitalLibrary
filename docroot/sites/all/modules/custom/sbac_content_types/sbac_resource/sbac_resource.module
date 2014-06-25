@@ -1,7 +1,12 @@
 <?php
 /**
- * @file
- * Code for the SBAC resource feature.
+ * @file.
+ * Module to handle all resource functionality.
+ *
+ * Provides:
+ *  - Exports the resource content type
+ *  - The Digital Library, Related Resources and My Resources tabs.
+ *  - The Resource contribution form and workflow
  */
 
 include_once 'sbac_resource.features.inc';
