@@ -416,11 +416,6 @@ function sbac_sso_user_login(&$edit, $account) {
  * Custom logout callback.
  */
 function sbac_sso_logout() {
-  $ajax = FALSE;
-  if (isset($_GET['ajax'])) {
-    $ajax = TRUE;
-  }
-
   if (user_is_logged_in()) {
     global $base_url;
     global $user;
@@ -429,17 +424,9 @@ function sbac_sso_logout() {
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
     module_invoke_all('user_logout', $user);
     session_destroy();
-
+    
     $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url . '/user';
-    if ($ajax) {
-      $output = array();
-      $output['url'] = $logout_url;
-      print drupal_json_encode($output);
-      exit;
-    }
-    else {
-      drupal_goto($logout_url);
-    }
+    drupal_goto($logout_url);
   }
   else {
     drupal_goto('user');
