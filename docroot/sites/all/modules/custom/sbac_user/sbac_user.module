@@ -1,7 +1,14 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC User feature.
+ * @file.
+ * Module to handle all user features.
+ *
+ * Provides:
+ *  - Creates UI for Account page
+ *  - Handles validation for account creation / updating
+ *  - Handles user data that is custom to SBAC
+ *  - User import related hooks
  */
 
 include_once 'sbac_user.features.inc';

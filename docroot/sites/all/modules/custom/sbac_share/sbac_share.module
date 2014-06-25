@@ -1,12 +1,14 @@
 <?php
-/**
- * @file
- * Code for the SBAC Share feature.
- */
 
 /**
- * @file
- * Code for the SBAC Anonymous URL features.
+ * @file.
+ * Module to handle "guest" user functionality
+ *
+ * Provides:
+ *  - Handles creation of Share tab on resource node view
+ *  - Creates custom table to track related data
+ *  - Allows guest users to view content that has been shared
+ *  - Controls guest user movement
  */
 
 define('SBAC_SHARE_GUEST', 'guest');

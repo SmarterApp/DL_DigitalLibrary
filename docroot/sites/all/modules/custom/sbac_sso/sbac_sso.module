@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * @file.
+ * Module to handle all SSO related functionality.
+ *
+ * Provides:
+ *  - Consumes SAML assertions and validates assertion
+ *  - Logs user in depending on SAML credentials or creates a new user
+ *  - Logs user out, destroying session on Drupal and SSO system
+ *  - Handles UI requirement for session extension
+ */
+
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':

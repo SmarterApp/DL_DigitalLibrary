@@ -1,7 +1,12 @@
 <?php
+
 /**
- * @file
- * Drupal needs this blank file.
+ * @file.
+ * Module to handle all Learning Registry related functionality.
+ *
+ * Provides:
+ *  - Provides UI for flagging resources on node view
+ *  -
  */
 
 define('SBAC_LEARNING_REGISTRY_PUBLISHER', 'Smarter Balanced Assessment Consortium');
