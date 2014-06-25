@@ -1830,7 +1830,27 @@ a.sbac-grid-layout {
 	}
 	
 	.paradata-numbers {
-	  
+		.stat-views .f-dropdown, 
+		.stat-views .f-dropdown.open, 
+		.stat-downloads .f-dropdown, 
+		.stat-downloads .f-dropdown.open {
+			left: -25px !important;
+		}
+		
+	  .rating-count {
+			width:92px;
+			
+			.sbac-hover {
+				text-align: left;
+				width: 75px;
+			}
+			
+			.field-content {
+				float: right;
+				top: -20px;
+				right: -1px;
+			}
+		}
 	}
 }
 
