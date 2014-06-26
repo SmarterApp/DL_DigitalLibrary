@@ -1,6 +1,17 @@
 <?php
 
+/**
+ * @file.
+ * Module to handle all central functions related to this project.
+ *
+ * Provides:
+ *  - Common functions that are called throughout the custom codebase
+ *  - A central repository of install scripts that enable site wide configurations
+ *  - Exports common site wide configurations
+ */
+
 include_once 'sbac_central.features.inc';
+
 /**
  * Implements hook_update_projects_alter().
  *

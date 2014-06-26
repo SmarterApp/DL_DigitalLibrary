@@ -1,7 +1,15 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC Workbench feature.
+ * @file.
+ *
+ *
+ * Provides:
+ *  - Handles add / delete for materials (doc, pdf, excel, ppt etc)
+ *  - Creates UI for add / delete
+ *  - Hanldes upload / deletion of HTML5 modules
+ *  - Handles vimeo, youtube, schooltube, teachertube and slideshare adding / deleting
+ *  - Exports custom entity type for media
  */
 
 include_once 'sbac_workbench.features.inc';

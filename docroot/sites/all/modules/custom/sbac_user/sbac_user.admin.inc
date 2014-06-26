@@ -77,8 +77,6 @@ function sbac_user_login_report($arg1='', $arg2='') {
         '#empty' => t('No people available.'),
     );
 
-    #print "<pre>"; var_dump($datatable); print "</pre>";
-
     return $datatable;
 }
 

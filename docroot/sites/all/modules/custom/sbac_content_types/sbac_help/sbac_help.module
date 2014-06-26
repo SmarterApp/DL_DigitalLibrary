@@ -1,8 +1,15 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC Help feature.
+ * @file.
+ * Module to handle the Welcome Tutorial and related help topics.
+ *
+ * Provides:
+ *  - Welcome tutorial output.
+ *  - Exports the help topic alignment type.
+ *  - Management related to the help topics nodes.
  */
+
 include_once 'sbac_help.features.inc';
 
 /**

@@ -2507,9 +2507,11 @@ function _sbac_resource_form_save_all_changes_button(&$form, &$form_state) {
           'width' => 600,
           'height' => 160,
         ),
+        'modalTheme' => 'CtoolSbacResourceChangesModal',
       ),
     );
     drupal_add_js($js_settings, 'setting');
+    drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.ctools.js');
   }
 }
 

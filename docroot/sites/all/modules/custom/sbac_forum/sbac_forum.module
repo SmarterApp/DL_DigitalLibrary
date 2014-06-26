@@ -1,7 +1,12 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC Forum feature.
+ * @file.
+ * Module to handle all Forum (Collaboration) related functionality.
+ *
+ * Provides:
+ *  - Provides UI for flagging resources on node view
+ *  -
  */
 
 include_once 'sbac_forum.features.inc';

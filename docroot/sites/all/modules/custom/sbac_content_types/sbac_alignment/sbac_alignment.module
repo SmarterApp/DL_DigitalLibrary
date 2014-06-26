@@ -1,8 +1,14 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC Alignment feature.
+ * @file.
+ * Module to handle the alignment content type AKA Common Core State Standards.
+ *
+ * Provides:
+ *  - The wizard functionality of selecting a CCSS item.
+ *  - Export the alignment content type.
  */
+
 include_once 'sbac_alignment.features.inc';
 include_once 'sbac_alignment.theme.inc';
 /**

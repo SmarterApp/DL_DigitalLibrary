@@ -1,7 +1,13 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC Lexicon feature.
+ * @file.
+ * Module to handle all Glossary related functionality.
+ *
+ * Provides:
+ *  - Exports glosssary taxonomy
+ *  - Creates UI and functionality for glossary page.
+ *  - Handles Administrative ability to update / delete items from the Glossary.
  */
 
 include_once 'sbac_lexicon.features.inc';

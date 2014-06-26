@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * @file.
+ * Module to handle all resource media functionality.
+ *
+ * Provides:
+ *  - Handles add / delete for materials (doc, pdf, excel, ppt etc)
+ *  - Creates UI for add / delete
+ *  - Hanldes upload / deletion of HTML5 modules
+ *  - Handles vimeo, youtube, schooltube, teachertube and slideshare adding / deleting
+ *  - Exports custom entity type for media
+ */
+
 // Hooks and callbacks for integrating with File Entity module for display.
 include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/includes/sbac_media.formatters.inc';
 include_once 'sbac_media.features.inc';

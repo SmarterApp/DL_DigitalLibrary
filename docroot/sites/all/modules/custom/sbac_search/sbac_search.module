@@ -1,7 +1,14 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC Search feature.
+ * @file.
+ * Module to handle all resource searching.
+ *
+ * Provides:
+ *  - Exports search related configuration
+ *  - Creates search filters for DL page, RR page and My Resources page
+ *  - Handles UI and JS components of searching
+ *  - Handles session variables, form submissions and validation.
  */
 
 include_once 'sbac_search.features.inc';

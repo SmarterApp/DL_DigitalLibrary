@@ -1,7 +1,13 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC Report feature.
+ * @file.
+ * Module to handle all report functionality.
+ *
+ * Provides:
+ *  - Creates UI for reports (individual report, resource activity, user statistics)
+ *  - Handles creation and export of the CSV files
+ *  - Creates the SQL required for report generation
  */
 
 define('SBAC_REPORT_TAB_INDIVIDUAL', 'individual');

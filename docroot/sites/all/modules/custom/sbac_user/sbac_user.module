@@ -1,7 +1,14 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC User feature.
+ * @file.
+ * Module to handle all user features.
+ *
+ * Provides:
+ *  - Creates UI for Account page
+ *  - Handles validation for account creation / updating
+ *  - Handles user data that is custom to SBAC
+ *  - User import related hooks
  */
 
 include_once 'sbac_user.features.inc';
@@ -183,6 +190,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
   //when creating a new user, expose some additional fields that generally come from a csv import
   if ($form_id == 'user_register_form') {
     $form['#validate'] = array();
+    $form['#validate'][] = 'sbac_user_username_validate';
     $form['#validate'][] = 'sbac_user_email_validate';
     $form['#validate'][] = 'user_validate_picture';
     $form['#validate'][] = 'user_register_validate';
@@ -235,6 +243,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     }
     $is_edit_page = strpos($_GET['q'], '/edit');
     $form['#validate'] = array();
+    $form['#validate'][] = 'sbac_user_username_validate';
     $form['#validate'][] = 'sbac_user_email_validate';
     $form['#validate'][] = 'user_validate_picture';
     $form['#validate'][] = 'user_profile_form_validate';
@@ -431,6 +440,18 @@ function sbac_user_email_validate(&$form, &$form_state) {
 }
 
 /**
+ * Validates user's username.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ */
+function sbac_user_username_validate(&$form, &$form_state) {
+  $account = $form['#user'];
+  if ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('name', db_like($form_state['values']['name']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+        form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
+      }
+}
+
+/**
  * Custom validation error message handler for legal field
  */
 function sbac_user_legal_accept_validate($element, &$form_state, $form) {
@@ -598,8 +619,6 @@ function sbac_user_util_compute_thumbnail_dir($orgdir) {
  * @param $new_name
  */
 function sbac_user_util_move_file($old_name, $new_name) {
-  //error_log("moving [$old_name] to [$new_name]\n", 3, "/tmp/sbac.log");
-
   $dir_needed = dirname($new_name);
   umask(0);
   if (!is_dir($dir_needed) && !mkdir($dir_needed, 0777, true)) {
@@ -799,7 +818,6 @@ function sbac_user_entity_update($entity, $type) {
   // on 2nd call the image was already hashed so preg_match will fail and cause this to skip.
   if ($type == 'file' && isset($entity->source) && $entity->source == 'picture_upload' &&
       preg_match('/public\:\/\/pictures\/picture-/', $entity->uri)) {
-    //error_log("====================\n". var_export($entity, true) ."\n", 3, "/tmp/sbac.log");
     $userid = sbac_user_util_parse_user_id($entity->filename);
     $hashdir = sbac_user_util_compute_hash_dir($userid);
 

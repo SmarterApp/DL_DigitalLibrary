@@ -1,7 +1,14 @@
 <?php
+
 /**
- * @file
- * Code for the SBAC Flag feature.
+ * @file.
+ * Module to handle all flag / moderation functionality.
+ *
+ * Provides:
+ *  - Provides UI for flagging resources on node view
+ *  - Provides UI for flagging resource reviews on node view
+ *  - Creates UI for Moderation Queue
+ *  - Handles all moderation functionality for resources and resource reviews.
  */
 
 include_once 'sbac_flag.features.inc';
