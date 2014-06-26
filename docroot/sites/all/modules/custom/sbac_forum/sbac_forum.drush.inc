@@ -13,6 +13,9 @@ function sbac_forum_drush_command() {
   $items['sbac-forum-delete-all-resource-forums'] = array(
     'description' => 'Delete all the resource forums'
   );
+  $items['sbac-forum-update-participant-count'] = array(
+    'description' => 'Update participant count'
+  );
 
   return $items;
 }
@@ -40,5 +43,28 @@ function drush_sbac_forum_delete_all_resource_forums() {
   foreach ($results as $tid) {
     echo '.';
     sbac_forum_delete_resource_forum($tid);
+  }
+}
+
+function drush_sbac_forum_update_participant_count() {
+  $query = "
+    SELECT
+      t.tid
+    FROM {taxonomy_vocabulary} v
+      LEFT JOIN {taxonomy_term_data} t
+        ON v.vid = t.vid
+    WHERE v.machine_name = 'forum'";
+  $forum_ids = db_query($query)->fetchCol();
+  foreach ($forum_ids as $tid) {
+    $term = taxonomy_term_load($tid);
+    $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+    if ($term_wrapper->field_forum_member_count->value() > 1) {
+      foreach ($term_wrapper->field_fc_forum_members as $member_wrapper) {
+        $uid = $member_wrapper->field_fc_forum_member->uid->value();
+        if(!sbac_forum_user_has_participated($tid, $uid)){
+          sbac_forum__api__leave_forum($term, 'leave', $uid);
+        }
+      }
+    }
   }
 }
