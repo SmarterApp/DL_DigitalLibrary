@@ -598,41 +598,42 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
   $row_data = $vars['row'];
 
   $facilitator_text = '';
-  $member_text = '';
-  $faci_field = array();
 
-  if (isset($row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE])) {
-    $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
-  }
-  $is_faci = FALSE;
-
-  if (!empty($faci_field)) {
-    foreach ($faci_field as $index => $values) {
-      $faci_user_id = $values['target_id'];
-      if ($current_user->uid == $faci_user_id) {
-        $is_faci = TRUE;
-      }
+  if (empty($row_data->field_field_forum_resource_ref)) { // only facilitator for Topic forums
+    $faci_field = array();
+    if (isset($row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE])) {
+      $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
     }
-    $facilitator_text = '<div class="sbac-forum-faci-status-label">';
-    if (!$is_faci) { // Current user is not set as facilitator
-      if (!empty($faci_field)) {
-        $first_item = array_shift($faci_field);
-        if ($first_faci_user_id = $first_item['target_id']) {
-          $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
-          $facilitator_text .= 'Facilitator: ' . $faci_link;
+    $is_faci = FALSE;
+
+    if (!empty($faci_field)) {
+      foreach ($faci_field as $index => $values) {
+        $faci_user_id = $values['target_id'];
+        if ($current_user->uid == $faci_user_id) {
+          $is_faci = TRUE;
+        }
+      }
+      $facilitator_text = '<div class="sbac-forum-faci-status-label">';
+      if (!$is_faci) { // Current user is not set as facilitator
+        if (!empty($faci_field)) {
+          $first_item = array_shift($faci_field);
+          if ($first_faci_user_id = $first_item['target_id']) {
+            $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
+            $facilitator_text .= 'Facilitator: ' . $faci_link;
+          }
+          else { // No facilitator set
+            $facilitator_text .= 'Facilitator: None';
+          }
         }
         else { // No facilitator set
           $facilitator_text .= 'Facilitator: None';
         }
       }
-      else { // No facilitator set
-        $facilitator_text .= 'Facilitator: None';
+      else {
+        $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
       }
+      $facilitator_text .= '</div>';
     }
-    else {
-      $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
-    }
-    $facilitator_text .= '</div>';
   }
 
   $vars['fields']['nothing']->content = $facilitator_text;
