@@ -79,8 +79,11 @@ function sbac_report_pmr_batch_process($nids, &$context) {
     if ($context['sandbox']['nodes']) {
       $nid = array_shift($context['sandbox']['nodes']);
       $csv_info = array();
+      $material = sbac_report_get_primary_material($nid, $csv_info);
+      if (!$material || $nid == 1419) {
+        continue;
+      }
       sbac_report_get_node_title($nid, $csv_info);
-      sbac_report_get_primary_material($nid, $csv_info);
       sbac_report_get_direct_url($nid, $csv_info);
 
       // initialize
@@ -155,7 +158,9 @@ function sbac_report_get_primary_material($nid, &$csv_info) {
       $ext = substr(strrchr($media->filename,'.'), 1);
       $csv_info[$nid]['media']['file_extension'] = $ext;
     }
+    return TRUE;
   }
+  return FALSE;
 }
 
 /**
