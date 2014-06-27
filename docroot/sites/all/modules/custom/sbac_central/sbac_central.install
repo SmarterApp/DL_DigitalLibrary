@@ -1019,7 +1019,7 @@ function sbac_central_update_7076() {
 }
 
 /**
- * Disable acquia agent, views ui, and taxonomy manager. Enable elysia_cron.
+ * Disable views ui, and taxonomy manager. Enable elysia_cron.
  */
 function sbac_central_update_7077() {
   $modules = array(
@@ -1033,6 +1033,16 @@ function sbac_central_update_7077() {
     'elysia_cron',
   );
   module_enable($modules);
+}
+
+/**
+ * Disable m4032404
+ */
+function sbac_central_update_7078() {
+  $modules = array(
+    'm4032404',
+  );
+  module_disable($modules);
 }
 
 /**
