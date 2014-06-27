@@ -72,7 +72,7 @@
   <?php endif; ?>
 </div>
 
-<?php if (!in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
+<?php if ($user->uid && !in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
   <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
     <?php print render($page['filter']); ?>
   </div>
@@ -86,7 +86,7 @@
   </div>
 <?php endif; ?>
 
-<?php if (!in_array(SBAC_SHARE_GUEST, $user->roles) && ($page['sub-header'] || $page['toggle'])): ?>
+<?php if ($user->uid && !in_array(SBAC_SHARE_GUEST, $user->roles) && ($page['sub-header'] || $page['toggle'])): ?>
   <div class="top-bar last-top">
     <div class="toggle right">
       <?php print render($page['toggle']); ?>
