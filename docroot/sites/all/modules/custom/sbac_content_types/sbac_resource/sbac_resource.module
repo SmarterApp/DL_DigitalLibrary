@@ -1073,7 +1073,10 @@ function sbac_resource_preprocess_page(&$vars) {
       );
       $reason_list = theme('item_list', array('items' => $reason_list_items));
       $message = '' . t('Possible reasons include:') . $reason_list . '';
-      $button = l('Browse Resources', 'digital-library-resources', array('attributes' => array('class' => array('medium', 'button'))));
+      $button = '';
+      if (user_is_logged_in()) {
+        $button = l('Browse Resources', 'digital-library-resources', array('attributes' => array('class' => array('medium', 'button'))));
+      }
       $vars['page']['content']['system_main']['main']['#markup'] = $message . $button;
     }
   }
