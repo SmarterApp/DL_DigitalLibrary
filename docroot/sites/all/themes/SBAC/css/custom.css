@@ -7358,8 +7358,8 @@ body#tinymce {
   background-color: #fff;
 }
 /* line 69, ../sass/custom.scss */
-body#tinymce p {
-  font-size: 13px !important;
+body#tinymce p, body#tinymce ul, body#tinymce ol, body#tinymce dl, body#tinymce li {
+  font-size: 1em !important;
   line-height: 1.2;
 }
 
@@ -11327,42 +11327,43 @@ p.helpmodal-desc {
 /* line 3691, ../sass/custom.scss */
 .page-help-topics #main.columns .view-help-topics li {
   margin-left: 0;
+  font-size: 15px;
 }
 
-/* line 3697, ../sass/custom.scss */
+/* line 3700, ../sass/custom.scss */
 .page-admin-help-topics .main-container {
   padding: 40px 45px 10px;
 }
-/* line 3700, ../sass/custom.scss */
+/* line 3703, ../sass/custom.scss */
 .page-admin-help-topics .main-container .content {
   width: 960px;
   margin-left: -45px;
   padding: 10px 40px !important;
 }
 
-/* line 3710, ../sass/custom.scss */
+/* line 3713, ../sass/custom.scss */
 .node-type-help-page #main {
   padding: 0 20px;
 }
-/* line 3714, ../sass/custom.scss */
+/* line 3717, ../sass/custom.scss */
 .node-type-help-page .form-textarea-wrapper textarea {
   max-width: 100%;
 }
 
-/* line 3721, ../sass/custom.scss */
+/* line 3724, ../sass/custom.scss */
 #current-help-topic .body span {
   font-size: 13px !important;
 }
 
 /*Glossary Terms Page*/
-/* line 3728, ../sass/custom.scss */
+/* line 3731, ../sass/custom.scss */
 .section-glossary #main.columns,
 .page-admin-structure-taxonomy #main.columns {
   padding: 15px 40px 0;
 }
 
 /*Override the radius of gobal button*/
-/* line 3734, ../sass/custom.scss */
+/* line 3737, ../sass/custom.scss */
 button.radius, .button.radius {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
