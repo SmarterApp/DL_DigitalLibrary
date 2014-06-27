@@ -66,8 +66,8 @@ body {
   &#tinymce {
     background-color: #fff;
 
-		p {
-			font-size: 13px !important;
+		p, ul, ol, dl, li {
+			font-size: 1em !important;
 			line-height: 1.2;
 		}
   }
@@ -3688,7 +3688,10 @@ p.helpmodal-desc {
 		padding: 0 40px;
 		
 		.view-help-topics {
-			li {margin-left: 0;}
+			li {
+				margin-left: 0;
+				font-size: 15px;
+			}
 		}
 	}
 }

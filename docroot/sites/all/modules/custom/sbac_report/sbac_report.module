@@ -104,6 +104,14 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['reports/pmr-report'] = array(
+    'title' => 'PMR Report',
+    'file' => 'sbac_report.pmr.inc',
+    'page callback' => 'sbac_report_pmr_report',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
