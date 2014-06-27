@@ -141,18 +141,18 @@
 
       <?php print render($page['content']); ?>
     </div>
-    <?php if (!empty($page['sidebar_first'])): ?>
+    <?php if ($user->uid && !empty($page['sidebar_first'])): ?>
       <div id="sidebar-first" class="<?php print $sidebar_first_grid; ?> columns sidebar ">
         <?php print render($page['sidebar_first']); ?>
       </div>
     <?php endif; ?>
-    <?php if (!empty($page['sidebar_second'])): ?>
+    <?php if ($user->uid && !empty($page['sidebar_second'])): ?>
       <div id="sidebar-second" class="<?php print $sidebar_sec_grid; ?> columns sidebar">
         <?php print render($page['sidebar_second']); ?>
       </div>
     <?php endif; ?>
 
-		<?php if('digital-library-resources' == current_path()): ?>
+		<?php if($user->uid && 'digital-library-resources' == current_path()): ?>
 		<div class="experimental-feature">
 		  <div class="title">EXPERIMENTAL FEATURE</div>
 		  <div class="additional-resoutces">Need additional resources? You may try searching <a href="/external-resources" title="External Resources" target="_blank">external resources</a></div>
