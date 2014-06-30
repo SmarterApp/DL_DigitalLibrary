@@ -1137,18 +1137,36 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
   }
 
   // Hide fields
-  global $user;
+  /**
+   * global $user;
+   * $has_access = FALSE;
+   * if ($user->uid == 1) {
+   *   $has_access = TRUE; // Only allow superadmin to see fields.
+   * }
+   */
   $has_access = FALSE;
-  if ($user->uid == 1) {
-    $has_access = TRUE; // Only allow superadmin to see fields.
-  }
-
+  /**
+   * 73847886 - Creating forum topic as an admin is displaying extra fields
+   * Steps to Reproduce:
+   * 1.  Log into DL as an admin
+   * 2.  Navigate to a resource collaboration tab and click to start a topic
+   *
+   * Expected Results:
+   * Start a Topic should only display topic title and description
+   *
+   * Actual Results:
+   * See attached image
+   *
+   */
   $form['field_topic_forum_parent']['#access'] = $has_access;
   $form['field_topic_default']['#access'] = $has_access;
   $form['author']['#access'] = $has_access;
   $form['options']['#access'] = $has_access;
   $form['revision_information']['#access'] = $has_access;
   $form['comment_settings']['#access'] = $has_access;
+  $form['menu']['#access'] = $has_access;
+  $form['path']['#access'] = $has_access;
+  $form['print']['#access'] = $has_access;
 
   $path_to_css_file = drupal_get_path('module', 'sbac_forum');
   $path_to_css_file .= '/css/sbac_forum.css';
