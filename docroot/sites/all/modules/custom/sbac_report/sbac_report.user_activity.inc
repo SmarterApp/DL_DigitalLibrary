@@ -110,16 +110,12 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
  */
 
 function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
-  // State.
   if ($form_state) {
     $_SESSION['sbac_report']['state']['tid'] = $form_state['values']['state'];
-    // Time range.
     $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
-    // user groups.
     $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
     $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne_slt_filter'];
   }
-  # todo: set these above rather than retrieve them again.
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range1', 'range');
   $user_groups = sbac_report_get_session_value('usergroups', 'user_ids');
@@ -194,11 +190,9 @@ function sbac_report_user_activity_batch($users, $date_range, &$context) {
     unset($filename);
   }
   unset($users);
-  unset($user_profiles);
 
   // Open the file for writing ('a' puts pointer at end of file).
   $handle = fopen($context['sandbox']['file'], 'a');
-
   if (!isset($context['results']['count'])) {
     $context['results']['count'] = 0;
   }
@@ -222,7 +216,6 @@ function sbac_report_user_activity_batch($users, $date_range, &$context) {
 
   fclose($handle);
   unset($handle);
-
   // Show message updating user on how many subscribers have been exported.
   $context['message'] = t('Exported @count of @total users.', array(
     '@count' => $context['results']['count'],
@@ -261,7 +254,7 @@ function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
 
   $user_groups = implode(',', $user_groups_ids);
 
-  $sql  = "SELECT * FROM {users} AS u ";
+  $sql  = "SELECT u.uid FROM {users} AS u ";
   $sql .= "JOIN {users_roles} AS ur ON u.uid = ur.uid ";
   $sql .= "JOIN {field_data_field_sne_member} AS sne ON u.uid = sne.entity_id ";
   $sql .= "JOIN {field_data_field_slt_member} AS slt ON u.uid = slt.entity_id ";
@@ -459,6 +452,10 @@ function get_user_activity($user, $date_range) {
           AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL create_datetime SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
   $user_activity['unique_temporary_link_generated'] = count_with_users_query($sql, $user, $from_date, $to_date, TRUE);
 
+  if ($user->uid == 144) {
+    $var = '';
+  }
+
   # Resources with Pending Flags
   $sql = "SELECT count(n.nid) as count, n.uid FROM {node} n JOIN {eck_flag} ef ON n.nid = ef.nid
           WHERE n.uid IN (%s) AND n.type = 'resource' AND ef.type = 'resource' AND ef.being_moderated = 0 AND ef.resolved = 0
@@ -508,7 +505,7 @@ function create_user_activity_from_data($user, $user_activity) {
   $separator = '';
   $encloseer = '';
   $quote_arrays = TRUE;
-  $subseparator = '';
+  $subseparator = ',';
   $subquote = "";
   $fieldkeys = array();
   $foreignidkeys = array();
@@ -519,10 +516,9 @@ function create_user_activity_from_data($user, $user_activity) {
   $flagkeys = array();
 
   // get the fields for the report and clean up the data.
-  validate_and_fill_out_user_activity($user, $user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys, $countkeys, $flagkeys);
+  $account = validate_and_fill_out_user_activity($user, $user_activity, $fieldkeys, $foreignidkeys, $stringkeys, $uidcountkeys, $toskeys, $countkeys, $flagkeys);
 
   $row = array();
-  $account = user_load($user->uid);
   foreach ($fieldkeys as $fieldkey) {
     $is_date = (array_key_exists(2, $fieldkey) ? $fieldkey[2] == 'date' : FALSE);
     $string = '';
@@ -571,12 +567,12 @@ function create_user_activity_from_data($user, $user_activity) {
   }
 
   foreach ($countkeys as $countkey) {
-    if (isset($user_activity[$countkey[0]][$uid]->count) && !is_null($user_activity[$countkey[0]][$uid]->count)) {
-      $value = $user_activity[$countkey[0]][$uid]->count;
+    if (isset($user_activity[$countkey[0]][$user->uid]->count) && !is_null($user_activity[$countkey[0]][$user->uid]->count)) {
+      $value = $user_activity[$countkey[0]][$user->uid]->count;
     }
     else {
-      if (isset($user_activity[$countkey[0]][$uid]) && !is_null($user_activity[$countkey[0]][$uid])) {
-        $value = $user_activity[$countkey[0]][$uid];
+      if (isset($user_activity[$countkey[0]][$user->uid]) && !is_null($user_activity[$countkey[0]][$user->uid])) {
+        $value = $user_activity[$countkey[0]][$user->uid];
       }
       else {
         $value = 0;
@@ -586,12 +582,12 @@ function create_user_activity_from_data($user, $user_activity) {
   }
 
   foreach ($flagkeys as $flagkey) {
-    if (isset($user_activity[$flagkey[0]][$uid]->count) && !is_null($user_activity[$flagkey[0]][$uid]->count)) {
-      $value = $user_activity[$flagkey[0]][$uid]->count;
+    if (isset($user_activity[$flagkey[0]][$user->uid]->count) && !is_null($user_activity[$flagkey[0]][$user->uid]->count)) {
+      $value = $user_activity[$flagkey[0]][$user->uid]->count;
     }
     else {
-      if (isset($user_activity[$flagkey[0]][$uid]) && !is_null($user_activity[$flagkey[0]][$uid])) {
-        $value = $user_activity[$flagkey[0]][$uid];
+      if (isset($user_activity[$flagkey[0]][$user->uid]) && !is_null($user_activity[$flagkey[0]][$user->uid])) {
+        $value = $user_activity[$flagkey[0]][$user->uid];
       }
       else {
         $value = 0;
@@ -677,77 +673,74 @@ function validate_and_fill_out_user_activity($user, &$user_activity, &$fieldkeys
   array_push($flagkeys, array('resource_reviews_flagged', 'Resource Reviews Flagged'));
 
   // replace missing values with ' ' or 0
-//  $missing_string = ' ';
-//  $missing_integer = 0;
-//
-//  $used_tids = array();
-//
-//  $uid = $user->uid;
-//  foreach ($fieldkeys as $fieldkey) {
-//    format_value_property($user_profile, $fieldkey[0], $missing_string);
-//  }
-//  // build taxonomy index table while validating. grab all the ids then
-//  // load them all in one has table for quick reference.
-//  foreach ($foreignidkeys as $foreignidkey) {
-//    format_tid_property($user_profile, $foreignidkey[0], $missing_string, $used_tids);
-//  }
-//  foreach ($stringkeys as $stringkey) {
-//    if (!property_exists($user_profile, $stringkey[0])) {
-//      $user_profile->{$stringkey[0]} = $missing_string;
-//    }
-//  }
-//  foreach ($uidcountkeys as $uidcountkey) {
-//    if (!array_key_exists($uidcountkey[0], $user_activity) or
-//      !array_key_exists($uid, $user_activity[$uidcountkey[0]]) or
-//      is_null($user_activity[$uidcountkey[0]][$uid])
-//    ) {
-//      if (!array_key_exists($uidcountkey[0], $user_activity)) {
-//        $user_activity[$uidcountkey[0]] = array();
-//      }
-//      $user_activity[$uidcountkey[0]][$uid] = new stdClass();
-//      $user_activity[$uidcountkey[0]][$uid]->count = $missing_integer;
-//      $user_activity[$uidcountkey[0]][$uid]->uid = $uid;
-//    }
-//  }
-//
-//  foreach ($toskeys as $toskey) {
-//    if (!array_key_exists('tos', $user_activity)) {
-//      $user_activity['tos'] = array();
-//    }
-//    if (!array_key_exists($uid, $user_activity['tos']) or
-//      is_null($user_activity['tos'][$uid])
-//    ) {
-//
-//      $user_activity['tos'][$uid] = new stdClass();
-//      $user_activity['tos'][$uid]->tos_accepted = '';
-//      $user_activity['tos'][$uid]->tos_version = '';
-//      $user_activity['tos'][$uid]->tos_revision = '';
-//      $user_activity['tos'][$uid]->tos_revision_date = '';
-//      $user_activity['tos'][$uid]->uid = $uid;
-//    }
-//    if (is_null($user_activity['tos'][$uid]->{$toskey[0]})) {
-//      $user_activity['tos'][$uid]->{$toskey[0]} = '';
-//    }
-//  }
-//
-//  // have all the tids, now get the term data and set the report values:
-//  # terms of service.
-//  if (count($used_tids) > 0) {
-//    $sql = sprintf("SELECT tid,name from taxonomy_term_data where tid in (%s)",
-//      implode(',', array_keys($used_tids)));
-//    $result = db_query($sql);
-//    $values = array();
-//    foreach ($result as $record) {
-//      $values[$record->tid] = $record;
-//    }
-//    $tid_terms = $values;
-//
-//    foreach ($user_activity['user_profiles'] as $user_profile) {
-//      foreach ($foreignidkeys as $foreignidkey) {
-//        set_tid_property($user_profile, $foreignidkey[0], $tid_terms);
-//      }
-//    }
-//  }
+  $missing_string = ' ';
+  $missing_integer = 0;
+
+  $used_tids = array();
+  $account = user_load($user->uid);
+  foreach ($fieldkeys as $fieldkey) {
+    format_value_property($account, $fieldkey[0], $missing_string);
+  }
+  // build taxonomy index table while validating. grab all the ids then
+  // load them all in one has table for quick reference.
+  foreach ($foreignidkeys as $foreignidkey) {
+    format_tid_property($account, $foreignidkey[0], $missing_string, $used_tids);
+  }
+  foreach ($stringkeys as $stringkey) {
+    if (!property_exists($account, $stringkey[0])) {
+      $account->{$stringkey[0]} = $missing_string;
+    }
+  }
+  foreach ($uidcountkeys as $uidcountkey) {
+    if (!array_key_exists($uidcountkey[0], $user_activity) or
+      !array_key_exists($user->uid, $user_activity[$uidcountkey[0]]) or
+      is_null($user_activity[$uidcountkey[0]][$user->uid])
+    ) {
+      if (!array_key_exists($uidcountkey[0], $user_activity)) {
+        $user_activity[$uidcountkey[0]] = array();
+      }
+      $user_activity[$uidcountkey[0]][$user->uid] = new stdClass();
+      $user_activity[$uidcountkey[0]][$user->uid]->count = $missing_integer;
+      $user_activity[$uidcountkey[0]][$user->uid]->uid = $user->uid;
+    }
+  }
+
+  foreach ($toskeys as $toskey) {
+    if (!array_key_exists('tos', $user_activity)) {
+      $user_activity['tos'] = array();
+    }
+    if (!array_key_exists($user->uid, $user_activity['tos']) or
+      is_null($user_activity['tos'][$user->uid])
+    ) {
+
+      $user_activity['tos'][$user->uid] = new stdClass();
+      $user_activity['tos'][$user->uid]->tos_accepted = '';
+      $user_activity['tos'][$user->uid]->tos_version = '';
+      $user_activity['tos'][$user->uid]->tos_revision = '';
+      $user_activity['tos'][$user->uid]->tos_revision_date = '';
+      $user_activity['tos'][$user->uid]->uid = $user->uid;
+    }
+    if (is_null($user_activity['tos'][$user->uid]->{$toskey[0]})) {
+      $user_activity['tos'][$user->uid]->{$toskey[0]} = '';
+    }
+  }
+
+  // have all the tids, now get the term data and set the report values:
+  # terms of service.
+  if (count($used_tids) > 0) {
+    $sql = sprintf("SELECT tid,name from taxonomy_term_data where tid in (%s)",
+      implode(',', array_keys($used_tids)));
+    $result = db_query($sql);
+    $values = array();
+    foreach ($result as $record) {
+      $values[$record->tid] = $record;
+    }
+    $tid_terms = $values;
+    foreach ($foreignidkeys as $foreignidkey) {
+      set_tid_property($account, $foreignidkey[0], $tid_terms);
+    }
+  }
+  return $account;
 }
 
 /*
