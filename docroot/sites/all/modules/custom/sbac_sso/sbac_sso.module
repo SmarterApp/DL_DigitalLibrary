@@ -215,7 +215,11 @@ function sbac_sso_session_regenerate() {
     $params = session_get_cookie_params();
     $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
     setcookie(session_name(), $old_session_id, $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    $fields = array('sid' => $old_session_id);
+    $fields = array(
+      'sid' => $old_session_id,
+      'timestamp' => time(),
+    );
+
     if ($is_https) {
       $fields['ssid'] = $old_session_id;
       // If the "secure pages" setting is enabled, use the newly-created
