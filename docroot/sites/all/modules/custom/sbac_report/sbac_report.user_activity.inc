@@ -220,6 +220,49 @@ function sbac_report_user_activity_batch($users, $date_range, &$context) {
   ));
 }
 
+/**
+ * Once finished, allow the user to download the csv.
+ *
+ * @param $success
+ * @param $results
+ * @param $operations
+ */
+function sbac_report_user_activity_finished_batch($success, $results, $operations) {
+  if ($success) {
+    $directory = "private://user_activity_stats_csv/";
+    $directory .= $results['filename'];
+    $directory_real_path = drupal_realpath($directory);
+    $mime_type = file_get_mimetype($directory);
+
+    global $user;
+    $dir_file = new stdClass();
+    $dir_file->uid = $user->uid;
+    $dir_file->filename = $results['filename'];
+    $dir_file->uri = $directory;
+    $dir_file->filemime = $mime_type;
+    $dir_file->filesize = filesize($directory_real_path);
+    $dir_file->status = 1;
+    $dir_file->timestamp = time();
+    $dir_file->type = $mime_type;
+    drupal_write_record('file_managed', $dir_file);
+
+    $web_url = file_create_url($directory);
+    $download_link = l(t('click here to download the file'), $web_url, array('attributes' => array('class' => array('sbac-report-download-link'))));
+    $message = '<span class="sbac-report-download">' . t('The User Activity Report file is now ready for download. Please !download_link.', array('!download_link' => $download_link)) . '</span>';
+
+    gc_enable();
+    gc_collect_cycles();
+    gc_disable();
+    //_cex_download($csv_resource_stats_result, 'output.csv');
+    $_SESSION['sbac_report']['error_message'] = '';
+    $_SESSION['sbac_report']['first_time'] = 0;
+  }
+  else {
+    $message = t('Finished with an error. Please try again.');
+  }
+  drupal_set_message($message);
+}
+
 /*
  * Get the user groups for a given user group.  Note that a query with 'in (%s)' in the string doesn't work
  * properly with Drupals perpared statement support.
