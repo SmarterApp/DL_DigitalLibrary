@@ -48,6 +48,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Filter for SNE or SLT Members'),
     '#options' => $options,
+    '#multiple' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
     '#default_value' => sbac_report_get_default_sne_slt(),
     '#required' => TRUE,
@@ -93,10 +94,6 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
 
   if (empty($form_state['values']['date_range1'])) {
     form_set_error('date_range', t('Choose a time period field is required.'));
-  }
-
-  if (FALSE) {
-    // TODO: validate csv form
   }
 }
 
@@ -260,20 +257,31 @@ function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
   $sql .= "JOIN {field_data_field_slt_member} AS slt ON u.uid = slt.entity_id ";
   $sql .= "JOIN {field_data_field_state} AS state ON u.uid = state.entity_id ";
   $sql .= "WHERE ur.rid IN ($user_groups) ";
-  switch ($sne_filter) {
-    case 1:
-      $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 0 ";
-      break;
-    case 2;
-      $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
-      break;
-    case 3:
-      $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 1 ";
-      break;
-    case 4:
-      $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 1 ";
-      break;
+
+  $look_for_both_sne_and_slt = in_array(4, $sne_filter);
+  $look_for_slt = in_array(3, $sne_filter);
+  $look_for_sne = in_array(2, $sne_filter);
+  $look_for_neither = in_array(1, $sne_filter);
+
+  if ($look_for_both_sne_and_slt) { // both
+    $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
   }
+  else {
+    if ($look_for_slt) { // slt only.
+      $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 1 ";
+    }
+    else {
+      if ($look_for_sne) { // sne only.
+        $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
+      }
+      else {
+        if ($look_for_neither) { // niether.
+          $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 0 ";
+        }
+      }
+    }
+  }
+
   if (in_array('all', $state_tid)) {
     // nothing, they want all users.
   }
@@ -288,6 +296,56 @@ function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
     $users[$record->uid] = $record;
   }
   return $users;
+}
+
+/*
+ * Fitler the users by the sne/slt value in the dropdown menu.
+ */
+function filter_users_by_sne_slt($user_profiles, $sne_slt_filter) {
+  // sne filter: 0=>neither, 1=>sne, 2=>slt, 2=>both
+  $filtered_user_profiles = array();
+// the all condition if it ever gets requested:
+//  if (in_array(4, $sne_slt_filter)) { // both, nothing to filter.
+//    return $user_profiles;
+//  }
+  $look_for_both_sne_and_slt = in_array(3, $sne_slt_filter);
+  $look_for_slt = in_array(2, $sne_slt_filter);
+  $look_for_sne = in_array(1, $sne_slt_filter);
+  $look_for_neither = in_array(0, $sne_slt_filter);
+
+  foreach ($user_profiles as $user_profile) {
+    if ($look_for_both_sne_and_slt &&
+      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
+      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
+    ) { // both
+      $filtered_user_profiles[$user_profile->uid] = $user_profile;
+    }
+    else {
+      if ($look_for_slt &&
+        ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '0') &&
+        ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
+      ) { // slt only.
+        $filtered_user_profiles[$user_profile->uid] = $user_profile;
+      }
+      else {
+        if ($look_for_sne &&
+          ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
+          ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '0')
+        ) { // sne only.
+          $filtered_user_profiles[$user_profile->uid] = $user_profile;
+        }
+        else {
+          if ($look_for_neither &&
+            ((bool) !$user_profile->field_sne_member || $user_profile->field_sne_member['und'][0]['value'] == '0') &&
+            ((bool) !$user_profile->field_slt_member || $user_profile->field_slt_member['und'][0]['value'] == '0')
+          ) { // niether.
+            $filtered_user_profiles[$user_profile->uid] = $user_profile;
+          }
+        }
+      }
+    }
+  }
+  return $filtered_user_profiles;
 }
 
 /*
