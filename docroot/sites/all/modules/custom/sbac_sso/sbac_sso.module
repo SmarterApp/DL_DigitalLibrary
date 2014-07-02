@@ -181,6 +181,9 @@ function sbac_sso_session_expire_form($form, &$form_state) {
  * Pretty much a carbon copy of drupal's own session_regenerate. Except,
  * I removed the session_id regeneration so that if a session is extended,
  * the id stays the same.
+ * Added the updating of timestamp to work with Drupal's garbage collector.
+ * Drupal would remove an entry from the [sessions] table causing users to lose
+ * their progress when working with forms.
  *
  * @ingroup php_wrappers
  */
