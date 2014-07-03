@@ -39,10 +39,11 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
   );
 
   $options = array(
-    1 => 'Neither SNE nor SLT',
-    2 => 'SNE members only',
-    3 => 'SLT members only',
-    4 => 'Combination SLT/SNE members',
+    1 => 'All',
+    2 => 'Neither SNE nor SLT',
+    3 => 'SNE members only',
+    4 => 'SLT members only',
+    5 => 'Combination SLT/SNE members',
   );
   $form['sne_slt_filter'] = array(
     '#type' => 'select',
@@ -293,33 +294,37 @@ function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
   }
 
   $user_groups = implode(',', $user_groups_ids);
+  $look_for_both_sne_and_slt = in_array(5, $sne_filter);
+  $look_for_slt = in_array(4, $sne_filter);
+  $look_for_sne = in_array(3, $sne_filter);
+  $look_for_neither = in_array(2, $sne_filter);
+  $look_for_all_users = in_array(1, $sne_filter);
 
   $sql  = "SELECT u.uid FROM {users} AS u ";
   $sql .= "JOIN {users_roles} AS ur ON u.uid = ur.uid ";
-  $sql .= "JOIN {field_data_field_sne_member} AS sne ON u.uid = sne.entity_id ";
-  $sql .= "JOIN {field_data_field_slt_member} AS slt ON u.uid = slt.entity_id ";
+  if (!$look_for_all_users) {
+    $sql .= "JOIN {field_data_field_sne_member} AS sne ON u.uid = sne.entity_id ";
+    $sql .= "JOIN {field_data_field_slt_member} AS slt ON u.uid = slt.entity_id ";
+  }
   $sql .= "JOIN {field_data_field_state} AS state ON u.uid = state.entity_id ";
   $sql .= "WHERE ur.rid IN ($user_groups) ";
 
-  $look_for_both_sne_and_slt = in_array(4, $sne_filter);
-  $look_for_slt = in_array(3, $sne_filter);
-  $look_for_sne = in_array(2, $sne_filter);
-  $look_for_neither = in_array(1, $sne_filter);
-
-  if ($look_for_both_sne_and_slt) { // both
-    $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
-  }
-  else {
-    if ($look_for_slt) { // slt only.
-      $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 1 ";
+  if (!$look_for_all_users) {
+    if ($look_for_both_sne_and_slt) { // both
+      $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 1 ";
     }
     else {
-      if ($look_for_sne) { // sne only.
-        $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
+      if ($look_for_slt) { // slt only.
+        $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 1 ";
       }
       else {
-        if ($look_for_neither) { // niether.
-          $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 0 ";
+        if ($look_for_sne) { // sne only.
+          $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
+        }
+        else {
+          if ($look_for_neither) { // niether.
+            $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 0 ";
+          }
         }
       }
     }
