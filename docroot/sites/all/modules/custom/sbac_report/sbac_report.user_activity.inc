@@ -207,7 +207,7 @@ function sbac_report_user_activity_batch($users, $date_range, &$context) {
       unset($user_activity);
 
       $context['results']['count']++;
-      $context['finished'] = $context['results']['count'] / $context['sandbox']['resources_total'];
+      $context['finished'] = $context['results']['count'] / $context['sandbox']['user_total'];
     }
   }
 
