@@ -23,10 +23,9 @@ function sbac_user_field_group_info() {
     'label' => 'Expertise',
     'weight' => '1',
     'children' => array(
-      0 => 'field_swd_ell',
+      0 => 'field_special_populations',
       1 => 'field_grade_level_s_',
-      2 => 'field_special_populations',
-      3 => 'field_subject_s_',
+      2 => 'field_subject_s_',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
