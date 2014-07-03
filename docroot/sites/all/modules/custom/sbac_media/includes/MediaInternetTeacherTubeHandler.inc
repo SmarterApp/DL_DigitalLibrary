@@ -18,7 +18,7 @@ class MediaInternetTeacherTubeHandler extends MediaInternetBaseHandler {
    *   Boolean.
    */
   public function parse($embedCode) {
-    if (preg_match('%teachertube\.com/video/(\d+)$%ix', $embedCode, $matches)) {
+    if (preg_match('%teachertube\.com/video/.*-(\d+)$%ix', $embedCode, $matches)) {
       return file_stream_wrapper_uri_normalize('teachertube://v/' . $matches[1]);
     }
   }
