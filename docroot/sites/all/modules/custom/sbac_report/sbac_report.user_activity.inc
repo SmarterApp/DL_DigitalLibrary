@@ -347,56 +347,6 @@ function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
 }
 
 /*
- * Fitler the users by the sne/slt value in the dropdown menu.
- */
-function filter_users_by_sne_slt($user_profiles, $sne_slt_filter) {
-  // sne filter: 0=>neither, 1=>sne, 2=>slt, 2=>both
-  $filtered_user_profiles = array();
-// the all condition if it ever gets requested:
-//  if (in_array(4, $sne_slt_filter)) { // both, nothing to filter.
-//    return $user_profiles;
-//  }
-  $look_for_both_sne_and_slt = in_array(3, $sne_slt_filter);
-  $look_for_slt = in_array(2, $sne_slt_filter);
-  $look_for_sne = in_array(1, $sne_slt_filter);
-  $look_for_neither = in_array(0, $sne_slt_filter);
-
-  foreach ($user_profiles as $user_profile) {
-    if ($look_for_both_sne_and_slt &&
-      ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
-      ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
-    ) { // both
-      $filtered_user_profiles[$user_profile->uid] = $user_profile;
-    }
-    else {
-      if ($look_for_slt &&
-        ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '0') &&
-        ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '1')
-      ) { // slt only.
-        $filtered_user_profiles[$user_profile->uid] = $user_profile;
-      }
-      else {
-        if ($look_for_sne &&
-          ($user_profile->field_sne_member && $user_profile->field_sne_member['und'][0]['value'] == '1') &&
-          ($user_profile->field_slt_member && $user_profile->field_slt_member['und'][0]['value'] == '0')
-        ) { // sne only.
-          $filtered_user_profiles[$user_profile->uid] = $user_profile;
-        }
-        else {
-          if ($look_for_neither &&
-            ((bool) !$user_profile->field_sne_member || $user_profile->field_sne_member['und'][0]['value'] == '0') &&
-            ((bool) !$user_profile->field_slt_member || $user_profile->field_slt_member['und'][0]['value'] == '0')
-          ) { // niether.
-            $filtered_user_profiles[$user_profile->uid] = $user_profile;
-          }
-        }
-      }
-    }
-  }
-  return $filtered_user_profiles;
-}
-
-/*
  * Local function that handles all the query logic for the count queries.  It injects the user list and optionally
  * a from/to date into the query.  It then performs the query and returns the resulting records in a hash by user
  * id (uid).
