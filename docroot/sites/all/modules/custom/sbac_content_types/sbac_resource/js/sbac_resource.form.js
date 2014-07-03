@@ -11,11 +11,6 @@
    */
   Drupal.behaviors.sbac_resource_all = {
     attach: function (context, settings) {
-      if (Drupal.settings.sbac_save_continue_tab != null) {
-        $(Drupal.settings.sbac_save_continue_tab).click();
-        Drupal.settings.sbac_save_continue_tab = null;
-      }
-
       control_form_buttons();
       $('.vertical-tabs-list li a').click(function () {
         control_form_buttons();
@@ -251,6 +246,11 @@
       if (!Drupal.settings.sbac_general) {
         $('.vertical-tabs-list li:nth-child(2) a').unbind('click');
         $('.vertical-tabs-list li:nth-child(2) a').addClass('sbac-disabled');
+      }
+
+      if (Drupal.settings.sbac_save_continue_tab != null) {
+        $(Drupal.settings.sbac_save_continue_tab).click();
+//        Drupal.settings.sbac_save_continue_tab = null;
       }
     }
   };
