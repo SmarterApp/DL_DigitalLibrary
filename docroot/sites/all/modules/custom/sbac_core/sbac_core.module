@@ -20,7 +20,7 @@ module_load_include('inc', 'sbac_core', 'core/class.Core');
   // override the devtools handler so we can gain access to the Debug object
   // and add more allowed IPs
   // steev - do we need this in production?
-  $GLOBALS['_devtools_handler_print_rr'] = 'sbac_core_print_rr';
+//  $GLOBALS['_devtools_handler_print_rr'] = 'sbac_core_print_rr';
 
   // this must happen as early as possible in order to load any files that
   // may have menu access callbacks
