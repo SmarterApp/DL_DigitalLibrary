@@ -764,6 +764,24 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
  * @param $account
  */
 function sbac_user_user_login(&$edit, $account) {
+  // steev - trying to get redirect for auth'd users earlier in the process so
+  // we avoid the db write later on
+  
+  // check if the user has account data
+  if(isset($account->data)){
+    $account->data['login_count'] +=1;
+    // steev - there has to be a way to avoid this write, its going to cane the performance.
+    // perhaps we can store logins in memcache and write once per minute?
+    db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($account->data), ':uid' => $account->uid));  
+      if (!isset($account->data['disable_help'])) {
+        drupal_goto('user');
+      }
+      else {
+        drupal_goto('digital-library-resources');
+      }
+  }
+  
+  
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -771,9 +789,7 @@ function sbac_user_user_login(&$edit, $account) {
   // Increment login count.
   if (!isset($account->data['login_count'])) {
     $account->data['login_count'] = 1;
-  } else {
-    $account->data['login_count'] +=1;
-  }
+  } 
   // Log the time the user first logged in.
   if (!isset($account->data['first_login'])) {
     $account->data['first_login'] = time();
@@ -786,24 +802,20 @@ function sbac_user_user_login(&$edit, $account) {
   if (isset($edit['sbac-share'])) {
     $account->data['disable_help'] = TRUE;
   }
-  $data = $account->data;
-  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
+  
+  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($account->data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
   /**
   * steev - this if statement needs to be changed so it redirects to digital-library-resources much earlier in the process
   */
+  // $edit['sbac-share'] seems to indicate the user is a guest or something?
+  // so this only executes if the user is not a guest
   if (!isset($edit['sbac-share'])) {
-    if (isset($_GET['destination']) && strpos($_GET['destination'], 'pass-reset') !== FALSE) {
+    if (!isset($account->data['disable_help'])) {
+      drupal_goto('user');
     }
-    else if (strpos($_GET['q'], 'user/reset/') !== FALSE) {
-    }
-    else{
-      if (!isset($account->data['disable_help'])) {
-        drupal_goto('user');
-      }
-      else {
-        drupal_goto('digital-library-resources');
-      }
+    else {
+      drupal_goto('digital-library-resources');
     }
   }
 }

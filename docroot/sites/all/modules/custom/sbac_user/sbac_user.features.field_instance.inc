@@ -325,6 +325,55 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_login_count'
+  $field_instances['user-user-field_login_count'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Records the number of successful logins for the user.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 30,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_login_count',
+    'label' => 'login count',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'number',
+      'weight' => 29,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_position'
   $field_instances['user-user-field_position'] = array(
     'bundle' => 'user',
@@ -723,6 +772,7 @@ function sbac_user_field_default_field_instances() {
   t('Last name');
   t('Name');
   t('Privacy');
+  t('Records the number of successful logins for the user.');
   t('Retired');
   t('SLT Member');
   t('SNE Member');
@@ -732,6 +782,7 @@ function sbac_user_field_default_field_instances() {
   t('Student Population(s)');
   t('Subject(s)');
   t('Title');
+  t('login count');
 
   return $field_instances;
 }
