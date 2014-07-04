@@ -59,7 +59,7 @@ AddType video/mp4 .mov
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-  RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [NC]
   RewriteRule ^(.*)$ https://www.smarterbalancedlibrary.org/$1 [L,R=301]
 
   # Set "protossl" to "s" if we were accessed via https://.  This is used later
