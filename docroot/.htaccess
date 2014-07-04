@@ -111,6 +111,7 @@ AddType video/mp4 .mov
   RewriteCond %{HTTP_HOST} !staging.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !training.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !beta.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !^www\. [NC]
   RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   #
