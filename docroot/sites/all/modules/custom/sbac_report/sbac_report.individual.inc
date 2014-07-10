@@ -37,8 +37,8 @@ function sbac_report_individual_form($form, &$form_state) {
   // If there was no date range stored in SESSION.
   // Default to the "Last 30 Days".
   if (empty($session_date_range)) {
-    $session_date_range = $date_options['Last 30 Days'];
-    $date_display = t('Last 30 Days');
+    $session_date_range = $date_options['Cumulative to date'];
+    $date_display = t('Cumulative to date');
   }
   // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
   elseif ($key = array_search($session_date_range, $date_options)) {
