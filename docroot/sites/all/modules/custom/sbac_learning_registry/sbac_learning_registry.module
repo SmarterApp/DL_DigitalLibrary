@@ -765,6 +765,19 @@ function sbac_learning_registry_learning_registry_prepared_submission_alter(&$re
 }
 
 /**
+ * Returns docid for a specific resource node.
+ * @param  int    $nid Node ID.
+ * @return string      docid associated with a node.
+ */
+function sbac_learning_registry_get_docid($nid) {
+  $query = db_select('learning_registry', 'lr');
+  $query->fields('lr', array('docid'));
+  $query->condition('nid', $nid, '=');
+  $doc_id = $query->execute()->fetchField();
+  return $doc_id;
+}
+
+/**
  * Add all resources to the queue to be pushed to the LR
  */
 function sbac_learning_registry_queue_all_resources() {

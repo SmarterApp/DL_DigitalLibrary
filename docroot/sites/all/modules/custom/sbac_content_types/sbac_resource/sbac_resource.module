@@ -989,6 +989,161 @@ function _sbac_resource_determine_media($media, $return_embed = FALSE) {
 }
 
 /**
+ * Determines the resource card characteristics.
+ * @param  string $ext file extension
+ * @return array       [Primary thumbnail, backup thumbnail]
+ */
+function _sbac_resource_determine_card_image($ext) {
+  switch (strtolower($ext)) {
+    case 'doc':
+    case 'docx':
+    case 'xls':
+    case 'xlsx':
+    case 'ppt':
+    case 'pptx':
+    case 'odt':
+    case 'odp':
+    case 'pdf':
+    case 'txt':
+      return array('cdn', 'no_img');
+    case 'ods':
+    case 'mov':
+    case 'avi':
+    case 'mpg':
+    case 'mp4':
+    case 'mp3':
+    case 'aac':
+      return array('no_img', 'no_img');
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+      return array('primary', 'na');
+    default:
+      return array('na', 'na');
+  }
+}
+
+/**
+ * Generates the external (Primary and Secondary) URLs for the thumbnail to be
+ * downloaded.
+ * @param  string $url  URL targetted.
+ * @param  string $uri  URI targetted.
+ * @param  array  $opts [(Primary Option), (Secondary Option)]
+ * @return array        uri::url
+ */
+function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
+  $has_thumb = FALSE;
+  $urls = array();
+
+  foreach ($opts AS $option) {
+    $url = '';
+    switch ($option) {
+      case 'cdn':
+        $url = 'https://docs.google.com/viewer?url=';
+        $url .= urlencode(file_create_url($uri));
+        $url .= '&a=bi&pagenumber=1&w=268';
+        break;
+      case 'primary':
+        $url = $uri;
+        break;
+      case 'no_img':
+        $url = 'public://file.png';
+        break;
+      case 'na':
+        $url = '';
+        break;
+      default:
+        $url = 'public://doc.png';
+        break;
+    }
+    $urls[] = $url;
+  }
+  return $urls;
+}
+
+/**
+ * Uses the embed URL id to generate a thumbnail from the service. 
+ * @param  Object $media Represents $node['document'][0]
+ * @return array         [(Primary option), (Secondary option)]
+ */
+function _sbac_resource_embed_vid_thumb_url($media) {
+  $embedded_url = $media->embed_url;
+  $file = new stdClass();
+
+  if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
+    $handler = new MediaInternetSlideShareHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'youtube') !== FALSE) {
+    $handler = new MediaInternetYouTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
+    $handler = new MediaInternetVimeoHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (isset($file_uri)) {
+    $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
+    $parts = $wrapper->get_parameters();
+    $id = check_plain($parts['v']);
+
+    switch ($file->filemime) {
+      case 'video/slideshare':
+        $url = $id;
+        break;
+      case 'video/vimeo':
+        $req_contents = unserialize(file_get_contents('http://vimeo.com/api/v2/video/$id.php'));
+        $url = $req_contents[0]['thumbnail_large'];
+        break;
+      case 'video/youtube':
+        $url = 'http://img.youtube.com/vi/' . $id . '1.jpg';
+        break;
+    }
+  }
+  return array($url, 'public://file.png');
+}
+
+/**
+ * Saves the thumbnail to private://thumbnail directory.
+ * @param  array  $urls     [(Primary option), (Secondary option)]
+ * @param  string $filename Filename or Title of ebmedded video
+ * @param  int    $nid      Node ID.
+ * @return string           uri::url
+ */
+function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
+  $thumbnail_exists = FALSE;
+  $uri_url = array();
+  $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
+  $default_file = 'public://file.png';
+  $dir = 'public://thumbnails/' . floor($nid / 32000) . '/' . $nid;
+
+  foreach ($urls as $url) {
+    if (url_is_external($url) && !$thumbnail_exists) {
+      $download = system_retrieve_file($url, $dir . '/' . $filename, FALSE, FILE_EXISTS_REPLACE);
+      if ($download) {
+        $uri_url['uri'] = $dir . '/' . $filename;
+        $uri_url['url'] = $url;
+        $thumbnail_exists = TRUE;
+      }
+    }
+    else {
+      if ($url = $default_file && !$thumbnail_exists) {
+        $uri_url['uri'] = $default_file;
+        $uri_url['url'] = $default_file;
+        $thumbnail_exists = TRUE;
+      }
+    }
+    if ($thumbnail_exists) {
+      break;
+    }
+  }
+  return $uri_url;
+}
+
+/**
  * Determine the filename extension.
  *
  * @param $ext
@@ -1866,6 +2021,7 @@ function sbac_resource_node_delete($node) {
  * @param $node
  */
 function sbac_resource_determine_thumbnail_uri(&$node) {
+  dpm($node);
   $default_file = 'public://file.png';
   $nid = $node->nid;
   if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
@@ -1904,6 +2060,21 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
         $url = $default_file;
         $uri = $default_file;
       }
+      else {
+        $ext = pathinfo($file->filename, PATHINFO_EXTENSION);
+        $thumb_opts = _sbac_resource_determine_card_image($ext);
+        $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
+        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid);
+        $url = $thumb_url['url'];
+        $uri = $thumb_url['uri'];
+      }
+    }
+    elseif (isset($media->embed_url)) {
+      $thumb_urls = _sbac_resource_embed_vid_thumb_url($media);
+      $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $media->filename, $nid);
+      $url = $thumb_url['url'];
+      $uri = $thumb_url['uri'];
+      dpm($thumb_url, 'thumb');
     }
     else {
       $url = $default_file;
