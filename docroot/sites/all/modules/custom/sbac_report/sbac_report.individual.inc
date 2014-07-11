@@ -4,6 +4,9 @@
  * Individual Report filter form.
  */
 function sbac_report_individual_form($form, &$form_state) {
+  global $user;
+  $account = user_load($user->uid);
+
   $form = array();
 
   // Make sure to load this after autocomplete.js
@@ -18,6 +21,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
     '#multiple' => FALSE,
+    '#disabled' => (!sbac_report_is_slt($account) && sbac_report_is_sne($account)),
     '#default_value' => sbac_report_get_default_state_tid(),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
@@ -48,9 +52,6 @@ function sbac_report_individual_form($form, &$form_state) {
   else {
     $date_display = sbac_report_format_date_range($session_date_range);
   }
-
-  global $user;
-  $account = user_load($user->uid);
 
   $form['sne'] = array(
     '#type' => 'textfield',
