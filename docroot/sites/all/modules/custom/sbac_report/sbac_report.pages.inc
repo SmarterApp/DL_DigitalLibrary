@@ -10,6 +10,8 @@
  */
 function sbac_report_individual() {
   drupal_set_title(t('Usage and Activity Reports'));
+  global $user;
+  $account = user_load($user->uid);
   $individual_form = drupal_get_form('sbac_report_individual_form');
 
   // Get SESSION values.
@@ -31,29 +33,39 @@ function sbac_report_individual() {
 
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
     $sne_details = sbac_report_build_sne_details($uid, $state_tid);
-    if (!empty($sne_details)) {
-      // Pass -1 as limit, summary should be "number of items per page" independent.
-      $contributed_summary = sbac_report_build_resource_summary($uid, $date_range, -1);
-      $contributed_details = sbac_report_build_resource_details($uid, $date_range);
+  }
+  else {
+    $uid = $user->uid;
+    $state_tid = $account->field_state['und'][0]['tid'];
+    $name = $account->field_first_name['und'][0]['safe_value'] . ' ' . $account->field_last_name['und'][0]['safe_value'];
+    $date_range = format_date(0, 'custom', 'Ymd') . '--' . format_date(time(), 'custom', 'Ymd');
+    $_SESSION['sbac_report']['sne']['uid'] = $uid;
+    $_SESSION['sbac_report']['sne']['name'] = $name;
 
-      // Gate-Keeping Reviews.
-      $name = sbac_report_get_session_value('sne', 'name');
-      $gk_ind_accepted = sbac_report_get_ind_accepted_gate_keeper($uid, $date_range);
-      $gk_ind_returned = sbac_report_get_ind_returned_gate_keeper($uid, $date_range);
-      $gk_all_accepted = sbac_report_get_all_accepted_gate_keeper($date_range);
-      $gk_all_returned = sbac_report_get_all_returned_gate_keeper($date_range);
-      $gate_keeping = sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned);
+    $sne_details = sbac_report_build_sne_details($uid, $state_tid);
+  }
+  if (!empty($sne_details)) {
+    // Pass -1 as limit, summary should be "number of items per page" independent.
+    $contributed_summary = sbac_report_build_resource_summary($uid, $date_range, -1);
+    $contributed_details = sbac_report_build_resource_details($uid, $date_range);
 
-      // All Reviews.
-      $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
-      $all_completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
-      $all_current_completed_reviews = sbac_report_get_current_completed_reviews($uid, $date_range);
-      $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $all_current_completed_reviews);
-      $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $all_completed_reviews, $average_consistency_rate);
+    // Gate-Keeping Reviews.
+    $name = sbac_report_get_session_value('sne', 'name');
+    $gk_ind_accepted = sbac_report_get_ind_accepted_gate_keeper($uid, $date_range);
+    $gk_ind_returned = sbac_report_get_ind_returned_gate_keeper($uid, $date_range);
+    $gk_all_accepted = sbac_report_get_all_accepted_gate_keeper($date_range);
+    $gk_all_returned = sbac_report_get_all_returned_gate_keeper($date_range);
+    $gate_keeping = sbac_report_build_gk_table($name, $gk_ind_accepted, $gk_ind_returned, $gk_all_accepted, $gk_all_returned);
 
-      // The big 'summation' table.
-      $summation = sbac_report_build_summation_table($uid, $date_range);
-    }
+    // All Reviews.
+    $reviews_in_progress = sbac_report_get_in_reviews($uid, $date_range);
+    $all_completed_reviews = sbac_report_get_completed_reviews($uid, $date_range);
+    $all_current_completed_reviews = sbac_report_get_current_completed_reviews($uid, $date_range);
+    $average_consistency_rate = sbac_report_get_average_consistency_rate_acr($uid, $all_current_completed_reviews);
+    $all_reviews = sbac_report_build_ar_table($reviews_in_progress, $all_completed_reviews, $average_consistency_rate);
+
+    // The big 'summation' table.
+    $summation = sbac_report_build_summation_table($uid, $date_range);
   }
 
   $individual_tab = theme('sbac_report_individual', array(

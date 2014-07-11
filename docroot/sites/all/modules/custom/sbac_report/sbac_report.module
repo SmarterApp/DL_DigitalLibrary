@@ -126,7 +126,11 @@ function sbac_report_user_access() {
   $account->entity_type = 'user';
   $account->entity_id = $account->uid;
   $slt = field_entity_value($account, 'field_slt_member');
+  $sne = field_entity_value($account, 'field_sne_member');
   if ($slt) {
+    return TRUE;
+  }
+  elseif ($sne) {
     return TRUE;
   }
 
@@ -401,7 +405,7 @@ function sbac_report_state_options() {
     }
   }
   // SLT user can only select their own states.
-  elseif (sbac_report_is_slt($user)) {
+  elseif (sbac_report_is_slt($user) || sbac_report_is_sne($user)) {
     $result = db_select('field_data_field_state', 'fs')
       ->fields('fs', array('field_state_tid'))
       ->condition('entity_type', 'user')
@@ -463,6 +467,30 @@ function sbac_report_is_slt($account) {
       ->condition('entity_type', 'user')
       ->condition('entity_id', $account->uid)
       ->condition('field_slt_member_value', '1')
+      ->execute();
+    $count = $result->rowCount();
+    return $result->rowCount();
+  }
+  return FALSE;
+}
+
+/**
+ * Check if the user is an SNE.
+ *
+ * @param object $account
+ *   User object.
+ *
+ * @return bool
+ *   True if an SNE. False otherwise.
+ */
+function sbac_report_is_sne($account) {
+  // First check if the user has resource contributor role.
+  if (in_array('resource contributor', $account->roles)) {
+    $result = db_select('field_data_field_sne_member', 'sne')
+      ->fields('sne', array('field_sne_member_value'))
+      ->condition('entity_type', 'user')
+      ->condition('entity_id', $account->uid)
+      ->condition('field_sne_member_value', '1')
       ->execute();
     $count = $result->rowCount();
     return $result->rowCount();
