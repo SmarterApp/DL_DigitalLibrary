@@ -126,7 +126,11 @@ function sbac_report_user_access() {
   $account->entity_type = 'user';
   $account->entity_id = $account->uid;
   $slt = field_entity_value($account, 'field_slt_member');
+  $sne = field_entity_value($account, 'field_sne_member');
   if ($slt) {
+    return TRUE;
+  }
+  elseif ($sne) {
     return TRUE;
   }
 
@@ -316,18 +320,35 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
     ),
   );
 
-  $form["date_range_dropdown$which"] = array(
-    '#type' => 'markup',
-    '#markup' => theme("sbac_report_date_range_dropdown",
-      array(
-        'which' => $which,
-        'date_display' => $date_display ? $date_display : t('Last 30 Days'),
-        'ago_30' => $date_options['Last 30 Days'],
-        'ago_60' => $date_options['Last 60 Days'],
-        'ago_90' => $date_options['Last 90 Days'],
+  if ($which) {
+    $form["date_range_dropdown$which"] = array(
+      '#type' => 'markup',
+      '#markup' => theme("sbac_report_date_range_dropdown",
+        array(
+          'which' => $which,
+          'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+          'ago_30' => $date_options['Last 30 Days'],
+          'ago_60' => $date_options['Last 60 Days'],
+          'ago_90' => $date_options['Last 90 Days'],
+        )
       )
-    )
-  );
+    );
+  }
+  else {
+    $form["date_range_dropdown"] = array(
+      '#type' => 'markup',
+      '#markup' => theme("sbac_report_date_range_dropdown",
+        array(
+          'which' => $which,
+          'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+          'cumulative' => $date_options['Cumulative to date'],
+          'ago_30' => $date_options['Last 30 Days'],
+          'ago_60' => $date_options['Last 60 Days'],
+          'ago_90' => $date_options['Last 90 Days'],
+        )
+      )
+    );
+  }
 
   $form["from_date$which"] = array(
     '#id' => "from-date$which",
@@ -384,7 +405,7 @@ function sbac_report_state_options() {
     }
   }
   // SLT user can only select their own states.
-  elseif (sbac_report_is_slt($user)) {
+  elseif (sbac_report_is_slt($user) || sbac_report_is_sne($user)) {
     $result = db_select('field_data_field_state', 'fs')
       ->fields('fs', array('field_state_tid'))
       ->condition('entity_type', 'user')
@@ -454,14 +475,40 @@ function sbac_report_is_slt($account) {
 }
 
 /**
+ * Check if the user is an SNE.
+ *
+ * @param object $account
+ *   User object.
+ *
+ * @return bool
+ *   True if an SNE. False otherwise.
+ */
+function sbac_report_is_sne($account) {
+  // First check if the user has resource contributor role.
+  if (in_array('resource contributor', $account->roles)) {
+    $result = db_select('field_data_field_sne_member', 'sne')
+      ->fields('sne', array('field_sne_member_value'))
+      ->condition('entity_type', 'user')
+      ->condition('entity_id', $account->uid)
+      ->condition('field_sne_member_value', '1')
+      ->execute();
+    $count = $result->rowCount();
+    return $result->rowCount();
+  }
+  return FALSE;
+}
+
+/**
  * Options for the date range field.
  */
 function sbac_report_date_range_options() {
   $today = format_date(REQUEST_TIME, 'custom', 'Ymd');
+  $beginning = format_date(0, 'custom', 'Ymd');
   $ago_30 = format_date(strtotime('30 days ago'), 'custom', 'Ymd');
   $ago_60 = format_date(strtotime('60 days ago'), 'custom', 'Ymd');
   $ago_90 = format_date(strtotime('90 days ago'), 'custom', 'Ymd');
   $options = array(
+    'Cumulative to date' => $beginning . '--' . $today,
     'Last 30 Days' => $ago_30 . '--' . $today,
     'Last 60 Days' => $ago_60 . '--' . $today,
     'Last 90 Days' => $ago_90 . '--' . $today,
