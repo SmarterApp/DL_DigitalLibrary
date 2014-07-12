@@ -47,6 +47,7 @@ function sbac_report_individual() {
   if (!empty($sne_details)) {
     // Pass -1 as limit, summary should be "number of items per page" independent.
     $contributed_summary = sbac_report_build_resource_summary($uid, $date_range, -1);
+    $resource_statistics = sbac_report_build_resource_statistics($uid, $date_range);
     $contributed_details = sbac_report_build_resource_details($uid, $date_range);
 
     // Gate-Keeping Reviews.
@@ -72,6 +73,7 @@ function sbac_report_individual() {
     'form' => $individual_form,
     'sne_details' => $sne_details,
     'contributed_summary' => $contributed_summary,
+    'resource_statistics' => $resource_statistics,
     'contributed_details' => $contributed_details,
     'gate_keeping' => $gate_keeping,
     'all_reviews' => $all_reviews,
@@ -210,6 +212,161 @@ function sbac_report_build_resource_summary($uid, $date_range, $limit = 5) {
   return theme('sbac_report_resource_summary', array('rows' => $rows));
 }
 
+function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
+  $sort = 'desc';
+  $order = 'title';
+  if (isset($_GET['order_rs'])) {
+    $order = $_GET['order_rs'];
+  }
+  if (isset($_GET['sort_rs'])) {
+    $sort = $_GET['sort_rs'];
+  }
+  $opp_sort = ($sort == 'asc' ? 'desc' : 'asc');
+  $url = '/reports?items_per_page_rs=';
+  $data['table_title_query'] = $url . $limit . '&order_rs=title&sort_rs=' . $opp_sort;
+  $data['table_posted_query'] = $url . $limit . '&order_rs=posted&sort_rs=' . $opp_sort;
+  $data['table_rating_query'] = $url . $limit . '&order_rs=rating&sort_rs=' . $opp_sort;
+  $data['table_reviewers_query'] = $url . $limit . '&order_rs=reviewers&sort_rs=' . $opp_sort;
+  $data['table_topics_query'] = $url . $limit . '&order_rs=topics&sort_rs=' . $opp_sort;
+  $data['table_posts_query'] = $url . $limit . '&order_rs=posts&sort_rs=' . $opp_sort;
+  $data['table_downloads_query'] = $url . $limit . '&order_rs=downloads&sort_rs=' . $opp_sort;
+  $data['table_views_query'] = $url . $limit . '&order_rs=views&sort_rs=' . $opp_sort;
+
+  $src = '/misc/arrow-' . $sort . '.png';
+  $data[$order . '_image'] = '<img typeof="foaf:Image" src="' . $src . '" width="13" height="13" alt="sort ascending" title="sort ascending">';
+
+  $query = "SELECT  node.title AS node_title,
+                    node.nid AS nid,
+                    node.created AS node_created,
+                    field_data_field_node_avg_rating.field_node_avg_rating_value AS field_data_field_node_avg_rating_field_node_avg_rating_value,
+                    field_data_field_unique_downloads.field_unique_downloads_value AS field_data_field_unique_downloads_field_unique_downloads_val,
+                    field_data_field_unique_views.field_unique_views_value AS field_data_field_unique_views_field_unique_views_value,
+                    MIN(node.nid) AS nid_1,
+                    'node' AS field_data_field_node_avg_rating_node_entity_type,
+                    COUNT(field_data_field_recent_reviewers.field_recent_reviewers_target_id) AS field_data_field_recent_reviewers_field_recent_reviewers_tar,
+                    COUNT(field_data_field_recent_reviewers.delta) AS field_data_field_recent_reviewers_delta,
+                    COUNT(field_data_field_recent_reviewers.language) AS field_data_field_recent_reviewers_language,
+                    COUNT(field_data_field_recent_reviewers.bundle) AS field_data_field_recent_reviewers_bundle,
+                    'node' AS field_data_field_unique_downloads_node_entity_type,
+                    'node' AS field_data_field_unique_views_node_entity_type
+            FROM        {node} node
+            LEFT JOIN   {node_revision} node_revision
+              ON node.vid = node_revision.vid
+            INNER JOIN  {workbench_moderation_node_history} workbench_moderation_node_history
+              ON node_revision.vid = workbench_moderation_node_history.vid
+            LEFT JOIN   {field_data_field_node_avg_rating} field_data_field_node_avg_rating
+              ON node.nid = field_data_field_node_avg_rating.entity_id
+                AND (field_data_field_node_avg_rating.entity_type = 'node'
+                  AND field_data_field_node_avg_rating.deleted = '0')
+            LEFT JOIN   {field_data_field_recent_reviewers} field_data_field_recent_reviewers
+              ON node.nid = field_data_field_recent_reviewers.entity_id
+              AND (field_data_field_recent_reviewers.entity_type = 'node'
+                AND field_data_field_recent_reviewers.deleted = '0')
+            LEFT JOIN   {field_data_field_unique_downloads} field_data_field_unique_downloads
+              ON node.nid = field_data_field_unique_downloads.entity_id
+              AND (field_data_field_unique_downloads.entity_type = 'node'
+                AND field_data_field_unique_downloads.deleted = '0')
+            LEFT JOIN   {field_data_field_unique_views} field_data_field_unique_views
+              ON node.nid = field_data_field_unique_views.entity_id
+              AND (field_data_field_unique_views.entity_type = 'node'
+                AND field_data_field_unique_views.deleted = '0')
+            WHERE ((node.uid = :uid))
+              AND ((  (node.status = '1')
+                AND   (node.type IN ('resource'))
+                AND   (node.sticky <> '0')
+                AND   (workbench_moderation_node_history.state IN ('published')) ))
+              AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))
+            GROUP BY  node_title,
+                      nid,
+                      node_created,
+                      field_data_field_node_avg_rating_node_entity_type,
+                      field_data_field_node_avg_rating_field_node_avg_rating_value,
+                      field_data_field_unique_downloads_node_entity_type,
+                      field_data_field_unique_downloads_field_unique_downloads_val,
+                      field_data_field_unique_views_node_entity_type,
+                      field_data_field_unique_views_field_unique_views_value
+            ";
+
+  switch ($order) {
+    case 'title':
+      $query .= "ORDER BY node_title " . $sort;
+      break;
+    case 'posted':
+      $query .= "ORDER BY node_created " . $sort;
+      break;
+    case 'rating':
+      $query .= "ORDER BY field_data_field_node_avg_rating_field_node_avg_rating_value " . $sort;
+      break;
+    case 'reviewers':
+      $query .= "ORDER BY " . $sort;
+      break;
+    case 'topics':
+      $query .= "ORDER BY " . $sort;
+      break;
+    case 'posts':
+      $query .= "ORDER BY " . $sort;
+      break;
+    case 'downloads':
+      $query .= "ORDER BY field_data_field_unique_downloads_field_unique_downloads_val " . $sort;
+      break;
+    case 'views':
+      $query .= "ORDER BY field_data_field_unique_views_field_unique_views_value " . $sort;
+      break;
+  }
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  if ($limit == -1) {
+    $results = db_query($query, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
+  }
+  else {
+    $results = db_query_range($query, 0, $limit, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
+  }
+
+  $rows = array();
+  foreach ($results as $row) {
+
+    $collab = array_pop(taxonomy_get_term_by_name($row->node_title, 'forum'));
+
+    $title = truncate($row->node_title, 55, array('check_markup' => FALSE));
+    $row->title = l($title, 'node/' . $row->nid, array('attributes' => array('target' => '_blank')));
+    $rows[] = array(
+      'title' => '<a href="http://google.com">' . $row->title . '</a>',
+      'posted' => date('m/d/y', $row->node_created),
+      'rating' => ($row->field_data_field_node_avg_rating_field_node_avg_rating_value
+ ? sbac_resource_display_fivestar_rating($row->field_data_field_node_avg_rating_field_node_avg_rating_value) : 'No Rating'),
+      'reviewers' => l(($row->field_data_field_recent_reviewers_delta ? $row->field_data_field_recent_reviewers_delta : '0'), 'node/' . $row->nid, array('fragment' => 'review-reviews')),
+      'topics' => l(($collab->topics ? $collab->topics : 0), 'node/' . $row->nid, array('fragment' => 'review-collaboration')),
+      'posts' => ($collab->posts? $collab->posts : 0),
+      'views' => $row->field_data_field_unique_views_field_unique_views_value,
+      'downloads' => $row->field_data_field_unique_downloads_field_unique_downloads_val,
+    );
+  }
+
+  $form = drupal_get_form('sbac_report_posted_resource_stats_pager_form', array(
+    'uid' => $uid,
+    'date_range' => $date_range,
+    'limit' => $limit,
+  ));
+  $form_output = drupal_render($form);
+
+  if (!$rows) {
+    return '';
+  }
+  return theme(
+    'sbac_report_posted_resource_stats',
+    array(
+      'rows' => $rows,
+      'form' => $form_output,
+      'data' => $data,
+    )
+  );
+
+}
+
+
 /**
  * @param $uid
  * @param $date_range
@@ -304,6 +461,61 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
     return theme('sbac_report_resource_details', array('rows' => $rows, 'form' => $form_output, 'data' => $data));
   }
   return '';
+}
+
+/**
+ * Form to change the number of items displayed in the summation table.
+ *
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @param  [type] $data       [description]
+ * @return [type]             [description]
+ */
+function sbac_report_posted_resource_stats_pager_form($form, &$form_state, $data) {
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#value' => $data['uid'],
+  );
+
+  $form['date_range'] = array(
+    '#type' => 'hidden',
+    '#value' => $data['date_range'],
+  );
+
+  $form['limit'] = array(
+    '#title' => t('Display'),
+    '#title_display' => 'before',
+    '#attributes' => array('class' => array('form-items-per-page')),
+    '#type' => 'select',
+    '#options' => array(
+      5 => t('Up to 5'),
+      10 => t('Up to 10'),
+      15 => t('Up to 15'),
+      -1 => t('All'),
+    ),
+    '#ajax' => array(
+      'callback' => 'sbac_report_posted_resource_stats_pager_form_ajax',
+      'wrapper' => 'posted-resources-stats',
+      'method' => 'replace',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * AJAX submit handler for sbac_report_build_gk_table_display_form
+ *
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_report_posted_resource_stats_pager_form_ajax($form, &$form_state) {
+  $values = $form_state['values'];
+  $output = '<div id="posted-resources-stats">';
+  $output .= sbac_report_build_resource_statistics($values['uid'], $values['date_range'], $values['limit']);
+  $output .= '</div>';
+  return $output;
 }
 
 /**

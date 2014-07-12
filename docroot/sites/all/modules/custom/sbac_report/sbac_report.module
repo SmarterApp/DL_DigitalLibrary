@@ -195,6 +195,17 @@ function sbac_report_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $themes['sbac_report_posted_resource_stats'] = array(
+    'template' => 'templates/sbac-report-user-posted-resources-stats',
+    'path' => $module_path,
+    'variables' => array(
+      'rows' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
   $themes['sbac_report_resource_details'] = array(
     'template' => 'templates/sbac-report-resource-details',
     'path' => $module_path,
