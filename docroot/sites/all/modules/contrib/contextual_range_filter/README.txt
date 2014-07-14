@@ -1,6 +1,6 @@
 
-CONTEXTUAL RANGE FILTER (D7)
-============================
+VIEWS CONTEXTUAL RANGE FILTER (D7)
+==================================
 
 This is a simple plugin for Views that adds the option to contextually filter
 a view not just by a single value, but also by RANGE.
@@ -9,6 +9,14 @@ Numeric (float, integer) and alphabetical (string) ranges are supported, as
 well as lists.
 
 Taxonomy term ids, node ids etc are special cases of integers so will work also.
+
+The node date PROPERTIES (i.e. created, last updated dates) are also supported
+by this module. Other dates, i.e. Date FIELDS (as in the Date module) are
+supported by the Date Views submodule that comes with the Date project. However
+the Date module does not support relative dates and natural language phrases
+such as "last month", "4 days ago" or "today noon". If you wish to use these,
+you DO need this Views Contextual Range Filter. In that case you may disable
+Date Views.
 
 You may use the OR ('+') and the negate operators. You negate by ticking the
 "Exclude" box on the Views Contextual filter configuration panel, in the "More"
@@ -28,12 +36,16 @@ session, and even after logout.
 To create a contextual range filter, first create a plain contextual filter as
 per normal. I.e. in the Views UI open the "Advanced" field set (upper right) and
 click "add" next to the heading "Contextual filters". On the next panel select
-the field or property that needs to be contextually filtered and "Apply". If you
-want to take advantage of Views Global Filter, then the next panel is where you
-press the "Provide default value" radio button to select the appropriate Global
-Filter option. If you don't use a global filter you may pick any of the other
-options. Fill out the remainder of the configuration panel, press "Apply" and
-"Save" the view.
+the field or property that needs to be contextually filtered and "Apply".
+If you want to take advantage of Views Global Filter, then the next panel is
+where you press the "Provide default value" radio button to select the
+appropriate Global Filter option.
+If you don't use a global filter you may pick any of the other options. For
+instance for dates of content creation and modification you may opt to allow
+relative dates in your ranges, so you can use phrases like "six months ago",
+"yesterday", "today noon" and "last Monday of July".
+Fill out the remainder of the configuration panel, press "Apply" and "Save" and
+save the view.
 
 Now visit the Contextual Range Filter configuration page,
 admin/config/content/contextual_range_filter, find your contextual filter name
@@ -46,6 +58,7 @@ as a range separator, you can filter your view output like so:
 
   http://yoursite.com/yourview/100--199.99  (numeric range)
   http://yoursite.com/yourotherview/k--qzz  (alphabetical range)
+  http://yoursite.com/somebodysview/3 months ago--yesterday (date range, using relative dates)
   http://yoursite.com/somebodysview/3--6    (list range, using list keys)
   http://yoursite.com/somebodysview/child--middle-aged (list range, using names)
 
@@ -98,6 +111,13 @@ filter:
 
   http://yoursite.com/yourthirdview/all/-100--999.99
 
+To see how Views processes your contextual filter ranges and passes them on to
+the database, tick the box "Show the SQL query" on page
+admin/structure/views/settings. This can be particularly revealing when
+experimenting with date ranges.
 
 ASCII AND UTF CHARACTER ORDERING
 o http://en.wikipedia.org/wiki/UTF-8
+
+WORDS AND PHRASES ALLOWED IN RELATIVE DATES
+o http://au2.php.net/manual/en/datetime.formats.relative.php

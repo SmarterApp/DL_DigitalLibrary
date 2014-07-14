@@ -11,6 +11,15 @@
  */
 
 /**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_favorites_update_projects_alter(&$projects) {
+  unset($projects['sbac_favorites']);
+}
+
+/**
  * Implements hook_menu().
  *
  * @return array

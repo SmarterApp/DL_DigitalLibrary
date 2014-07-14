@@ -357,7 +357,6 @@ function file_file_delete($file) {
  * support for a default value.
  */
 function file_managed_file_process($element, &$form_state, $form) {
-  $element['#id'] .= '-upload';
   $fid = isset($element['#value']['fid']) ? $element['#value']['fid'] : 0;
 
   // Set some default element properties.

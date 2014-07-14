@@ -11,3 +11,4 @@
 function date_migrate_example_disable() {
   Migration::deregisterMigration('DateExample');
 }
+
