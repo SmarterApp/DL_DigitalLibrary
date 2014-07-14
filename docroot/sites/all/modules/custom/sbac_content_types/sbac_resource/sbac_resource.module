@@ -1050,7 +1050,7 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
         $url_option = 'public://file.png';
         break;
       case 'na':
-        $url_option = '';
+        $url_option = 'na';
         break;
       default:
         $url_option = 'public://doc.png';
@@ -1135,14 +1135,16 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
         $thumbnail_exists = TRUE;
       }
     }
-    else {
-      if ($url = $default_file && !$thumbnail_exists) {
-        $uri_url['uri'] = $default_file;
-        $uri_url['url'] = $default_file;
-        $thumbnail_exists = TRUE;
-      }
+    elseif ($url == 'na' && !$thumbnail_exists) {
+      $uri_url['uri'] = 'na';
+      $uri_url['url'] = 'na';
     }
-    if ($thumbnail_exists) {
+    elseif ($url != 'na' && !$thumbnail_exists) {
+      $uri_url['uri'] = $default_file;
+      $uri_url['url'] = $default_file;
+      $thumbnail_exists = TRUE;
+    }
+    elseif ($thumbnail_exists) {
       break;
     }
   }
