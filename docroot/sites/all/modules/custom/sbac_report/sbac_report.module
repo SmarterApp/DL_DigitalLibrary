@@ -14,6 +14,7 @@ define('SBAC_REPORT_TAB_INDIVIDUAL', 'individual');
 define('SBAC_REPORT_TAB_USER', 'user_activity');
 define('SBAC_REPORT_TAB_STATES', 'resource_states');
 define('SBAC_REPORT_FILTER_ERROR', t('No data exists for the filters you have selected. Please choose a new combination of filters and attempt your export again.'));
+define('SBAC_REPORT_RESOURCE_DETAILS_PAGER', 'sbac_report_resource_details_pager');
 
 include_once('sbac_report.utils.inc');
 include_once('sbac_report.features.inc');

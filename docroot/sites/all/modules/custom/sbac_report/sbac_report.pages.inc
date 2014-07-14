@@ -381,6 +381,9 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   // Deal with the sort options on the "Contributed resources details" table.
   $sort = 'desc';
   $order = 'created';
+  if (!empty($_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER])) {
+    $limit = $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER];
+  }
   if (isset($_GET['order'])) {
     $order = $_GET['order'];
   }
@@ -554,6 +557,7 @@ function sbac_report_resource_details_pager_form($form, &$form_state, $data) {
       15 => t('Up to 15'),
       -1 => t('All'),
     ),
+    '#default_value' => $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] ? $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] : 5,
     '#ajax' => array(
       'callback' => 'sbac_report_resource_details_pager_form_ajax',
       'wrapper' => 'contributed-resources',
@@ -573,6 +577,7 @@ function sbac_report_resource_details_pager_form($form, &$form_state, $data) {
  */
 function sbac_report_resource_details_pager_form_ajax($form, &$form_state) {
   $values = $form_state['values'];
+  $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] = $values['limit'];
   $output = '<div id="contributed-resources">';
   // Pass -1 as limit, summary should be "number of items per page" independent.
   $output .= sbac_report_build_resource_summary($values['uid'], $values['date_range'], -1);
@@ -913,7 +918,7 @@ function sbac_report_build_ar_table($reviews_in_progress, $completed_reviews, $a
  * Builds the overall resource qc review summation table.
  * @param  [type]  $uid        [description]
  * @param  [type]  $date_range [description]
- * @param  integer $display    [description]
+ * @param  integer $display [description]
  * @return [type]              [description]
  */
 function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
@@ -981,7 +986,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
 
     for ($i = 1; $i <= $focus_data['count']; $i++) {
       $title = variable_get('qc_' . $focus_data['tid'] . '_criteria_' . $i . '_title');
-      $desc  = variable_get('qc_' . $focus_data['tid'] . '_criteria_' . $i . '_description');
+      $desc = variable_get('qc_' . $focus_data['tid'] . '_criteria_' . $i . '_description');
 
       $cell = '
                 <span class="devtools-tooltip report-qc-tooltip">
@@ -1232,7 +1237,7 @@ function sbac_report_build_summation_table($uid, $date_range, $display = 5) {
         'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-report-ct-individual-modal-form',
         'id' => $trigger_id,
       ),
-      'html'=> true,
+      'html' => TRUE,
     );
 
     $info_link = l('<i class="icon-info">Info</i>', $url, $options);
@@ -1381,7 +1386,7 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
   $form = array();
   $slides = array();
   $node = $form_state['report']['node'];
-  $uid  = $form_state['report']['user']->uid;
+  $uid = $form_state['report']['user']->uid;
 
   $gk_entities = entity_load('feedback', FALSE, array(
     'node_id' => $node->nid,
@@ -1495,12 +1500,12 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
 
                           <div class="qc-rec-con">
                             <span>' . t('Resource Consistency Rate:') . '</span> ' .
-                            rec_consistency_rate($qc_entities, $qc) . '
+        rec_consistency_rate($qc_entities, $qc) . '
                           </div>
 
                           <div class="qc-rec-rationale">
                             <span>' . t('Rationale:') . '</span> ' .
-                            field_entity_value($qc, 'field_rec_rationale') . '
+        field_entity_value($qc, 'field_rec_rationale') . '
                           </div>
                         </div>
                        ';
@@ -1529,7 +1534,7 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
     );
 
     foreach ($fields as $field_name => $title) {
-      $post_slide .=  '
+      $post_slide .= '
                         <div class="post-item">
                           <span class="inline-title">' . $title . ': </span>
                           ' . field_entity_value($post, $field_name) . '
@@ -1630,10 +1635,18 @@ function rec_friendly_name($entity) {
   $rec = '';
 
   switch ($rec_value) {
-    case 0: $rec = 'NR';  break;
-    case 1: $rec = 'R-';  break;
-    case 2: $rec = 'R';   break;
-    case 3: $rec = 'R+';  break;
+    case 0:
+      $rec = 'NR';
+      break;
+    case 1:
+      $rec = 'R-';
+      break;
+    case 2:
+      $rec = 'R';
+      break;
+    case 3:
+      $rec = 'R+';
+      break;
   }
 
   return $rec;
