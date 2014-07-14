@@ -1036,27 +1036,27 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
   $urls = array();
 
   foreach ($opts AS $option) {
-    $url = '';
+    $url_option = '';
     switch ($option) {
       case 'cdn':
-        $url = 'https://docs.google.com/viewer?url=';
-        $url .= urlencode(file_create_url($uri));
-        $url .= '&a=bi&pagenumber=1&w=268';
+        $url_option = 'https://docs.google.com/viewer?url=';
+        $url_option .= urlencode(file_create_url($uri));
+        $url_option .= '&a=bi&pagenumber=1&w=268';
         break;
       case 'primary':
-        $url = $uri;
+        $url_option = $url;
         break;
       case 'no_img':
-        $url = 'public://file.png';
+        $url_option = 'public://file.png';
         break;
       case 'na':
-        $url = '';
+        $url_option = '';
         break;
       default:
-        $url = 'public://doc.png';
+        $url_option = 'public://doc.png';
         break;
     }
-    $urls[] = $url;
+    $urls[] = $url_option;
   }
   return $urls;
 }
@@ -1070,22 +1070,22 @@ function _sbac_resource_embed_vid_thumb_url($media) {
   $embedded_url = $media->embed_url;
   $file = new stdClass();
 
-  if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
-    $handler = new MediaInternetSlideShareHandler($embedded_video_source);
+  if (strpos($embedded_url, 'slideshare') !== FALSE) {
+    $handler = new MediaInternetSlideShareHandler($embedded_url);
     $file = $handler->getFileObject();
   }
 
-  if (strpos($embedded_video_source, 'youtube') !== FALSE) {
-    $handler = new MediaInternetYouTubeHandler($embedded_video_source);
+  if (strpos($embedded_url, 'youtube') !== FALSE) {
+    $handler = new MediaInternetYouTubeHandler($embedded_url);
     $file = $handler->getFileObject();
   }
 
-  if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
-    $handler = new MediaInternetVimeoHandler($embedded_video_source);
+  if (strpos($embedded_url, 'vimeo') !== FALSE) {
+    $handler = new MediaInternetVimeoHandler($embedded_url);
     $file = $handler->getFileObject();
   }
 
-  if (isset($file_uri)) {
+  if (isset($file->uri)) {
     $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
     $parts = $wrapper->get_parameters();
     $id = check_plain($parts['v']);
@@ -1099,7 +1099,7 @@ function _sbac_resource_embed_vid_thumb_url($media) {
         $url = $req_contents[0]['thumbnail_large'];
         break;
       case 'video/youtube':
-        $url = 'http://img.youtube.com/vi/' . $id . '1.jpg';
+        $url = 'http://img.youtube.com/vi/' . $id . '/hqdefault.jpg';
         break;
     }
   }
@@ -1118,13 +1118,19 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
   $default_file = 'public://file.png';
-  $dir = 'public://thumbnails/' . floor($nid / 32000) . '/' . $nid;
 
   foreach ($urls as $url) {
     if (url_is_external($url) && !$thumbnail_exists) {
-      $download = system_retrieve_file($url, $dir . '/' . $filename, FALSE, FILE_EXISTS_REPLACE);
+      $finfo = new finfo(FILEINFO_MIME_TYPE);
+      $type = $finfo->buffer(file_get_contents($url));
+      $ext = array_pop(explode('/', $type));
+      $dir = 'private://thumbnails/' . floor($nid / 32000) . '/' . $nid;
+      $filename = $filename . '.' . $ext;
+
+      drupal_mkdir($dir, NULL, TRUE);
+      $download = system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_RENAME);
       if ($download) {
-        $uri_url['uri'] = $dir . '/' . $filename;
+        $uri_url['uri'] = $download->uri;
         $uri_url['url'] = $url;
         $thumbnail_exists = TRUE;
       }
@@ -2074,7 +2080,6 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
       $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $media->filename, $nid);
       $url = $thumb_url['url'];
       $uri = $thumb_url['uri'];
-      dpm($thumb_url, 'thumb');
     }
     else {
       $url = $default_file;
