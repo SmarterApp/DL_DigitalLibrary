@@ -1964,7 +1964,7 @@ CATEGORIES:Holiday
 X-MOZILLA-RECUR-DEFAULT-UNITS:years
 X-MOZ-GENERATION:2
 TRANSP:TRANSPARENT
-DESCRIPTION:Traditionally on January 15th.\nObserved on 3rd Monday of
+DESCRIPTION:Traditionally on January 15th.\nObserved on 3rd Monday of 
  January.
 END:VEVENT
 BEGIN:VEVENT
@@ -1983,7 +1983,7 @@ X-MOZILLA-RECUR-DEFAULT-INTERVAL:12
 CATEGORIES:Holiday
 X-MOZILLA-RECUR-DEFAULT-UNITS:months
 TRANSP:TRANSPARENT
-DESCRIPTION:Traditionally on October 12th.\nObserved on 2nd Monday of
+DESCRIPTION:Traditionally on October 12th.\nObserved on 2nd Monday of 
  October.
 X-MOZ-GENERATION:1
 END:VEVENT

@@ -182,6 +182,8 @@ function field_user_import_supported_fields($output = 'all') {
 //    );
 
     // hook to add functions to this array.
+    // Will call all modules implementing hook_field_user_import_supported_alter
+    drupal_alter('field_user_import_supported', $supported);
 
   }
 

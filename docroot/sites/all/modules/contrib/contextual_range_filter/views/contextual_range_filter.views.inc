@@ -66,9 +66,17 @@ function contextual_range_filter_views_plugins() {
 }
 
 /**
- * Build a range query based on the ranges passed in.
+ * Add to the query a WHERE-clause based on the range(s) passed in.
+ *
+ * @param object $views_handler_argument
+ *   The Views handler that holds one or more contextual filter ranges.
+ * @param string $field
+ *   Name or expression to be used left of the operator in the WHERE clause
+ * @param callback/callable $range_converter
+ *   Optional function to convert the from--to range, e.g., for relative date
+ *   ranges like "-3 months--last week" to be converted to "20140120--20140413".
  */
-function contextual_range_filter_build_range_query($views_handler_argument, $field = NULL) {
+function contextual_range_filter_build_range_query($views_handler_argument, $field = NULL, $range_converter = NULL) {
 
   if (!isset($views_handler_argument) || $views_handler_argument->value === FALSE) {
     return;
@@ -90,6 +98,10 @@ function contextual_range_filter_build_range_query($views_handler_argument, $fie
     $placeholder = $views_handler_argument->placeholder();
 
     list($from, $to) = contextual_range_filter_split($range);
+
+    if (is_callable($range_converter)) {
+      list($from, $to) = call_user_func($range_converter, $from, $to);
+    }
 
     if ($to === FALSE) {
       // Single value, not a range.

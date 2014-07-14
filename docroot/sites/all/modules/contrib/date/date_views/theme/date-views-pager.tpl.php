@@ -4,7 +4,7 @@
  * Template file for the example display.
  *
  * Variables available:
- *
+ * 
  * $plugin: The pager plugin object. This contains the view.
  *
  * $plugin->view

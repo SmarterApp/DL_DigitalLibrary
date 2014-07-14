@@ -147,7 +147,7 @@ function user_user_import_pre_save($settings, $account, $fields, $errors, $updat
   }
   else {
 
-    $account_add['timezone'] = '-18000';
+    $account_add['timezone'] = variable_get('date_default_timezone', @date_default_timezone_get());
     $account_add['status']   = 1;
     $account_add['init']     = $fields['user']['email'][0];
     $account_add['pass']     = (empty($fields['user']['password'][0])) ? user_password() : $fields['user']['password'][0];
