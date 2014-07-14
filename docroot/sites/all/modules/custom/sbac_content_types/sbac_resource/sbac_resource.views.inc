@@ -702,6 +702,7 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   $view->query->add_field('sbac_node_resource_state', 'state', 'sbac_node_resource_state_state');
   $view->query->add_field('sbac_node_resource_state', 'flag', 'sbac_node_resource_state_flag');
   $view->query->add_table('field_data_field_recent_reviewers');
+  $view->query->add_table('field_data_field_recent_publishers');
 
   $roles = array();
   if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
@@ -876,7 +877,14 @@ function _sbac_resource_resource_review_apply_stock_rp_role(&$view) {
   global $user;
   $all_states = array('post_needs_review');
   $user_states = array('post_being_reviewed', 'post_view_rejected');
-  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+  $publisher_condition = db_or()
+    // there are no original reviewers
+    ->isNull('field_data_field_recent_publishers.field_recent_publishers_target_id')
+    // or i'm the original publisher
+    ->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid)
+    // or 2 weeks have elapsed since the resource was resubmitted
+    ->condition('workbench_moderation_node_history.stamp', time() - FEEDBACK_RESUBMISSION_TIMEOUT, '<');
+  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition($publisher_condition);
   $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
   $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
 }

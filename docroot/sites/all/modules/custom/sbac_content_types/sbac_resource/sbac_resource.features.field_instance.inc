@@ -1785,6 +1785,63 @@ function sbac_resource_field_default_field_instances() {
     'xss' => 1,
   );
 
+  // Exported field_instance: 'node-resource-field_recent_publishers'
+  $field_instances['node-resource-field_recent_publishers'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 52,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_recent_publishers',
+    'label' => 'Recent publishers',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'label_help_description' => '',
+        'match_operator' => 'CONTAINS',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete_tags',
+      'weight' => 15,
+    ),
+  );
+
   // Exported field_instance: 'node-resource-field_recent_reviewers'
   $field_instances['node-resource-field_recent_reviewers'] = array(
     'bundle' => 'resource',
@@ -2875,6 +2932,7 @@ function sbac_resource_field_default_field_instances() {
   t('Personally Identifiable Student Information');
   t('Posting Options');
   t('Principles');
+  t('Recent publishers');
   t('Recent reviewers');
   t('Resource State');
   t('Resource Type');

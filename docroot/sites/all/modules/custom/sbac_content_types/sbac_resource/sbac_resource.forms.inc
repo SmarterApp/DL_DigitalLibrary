@@ -1256,21 +1256,41 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               ->propertyCondition('node_id', $node->nid)
               ->count()
               ->execute();
+            workbench_moderation_moderate($node, 'needs_review');
             if ($submitted) {
-              // if there is already a gatekeeper entry, then this is a re-submission
-              $task_type = 'resource_resubmitted';
-              // get the current feedback for this node so we can notify the gk/reviewers
-              $query = new EntityFieldQuery();
-              $feedbacks = $query->entityCondition('entity_type', 'feedback')
-                ->propertyCondition('completed', 1)
-                ->propertyCondition('type', array('qc', 'gate_keeper', 'IN'))
-                ->propertyCondition('node_id', $node->nid)
-                ->propertyCondition('current', 1)
-                ->propertyCondition('status', 1)
-                ->execute();
-              if (isset($feedbacks['feedback'])) {
-                foreach ($feedbacks['feedback'] as $feedback) {
-                  $recipients[] = entity_load_single('feedback', $feedback->id);
+              if (!empty($node->field_recent_publishers[LANGUAGE_NONE])) {
+                // If the node was returned by the poster, send them back to the poster, skip the QC and GK reviews
+                workbench_moderation_moderate($node, 'approved');
+                $task_type = 'resource_resubmitted';
+                // get the current feedback for this node so we can notify the gk/reviewers
+                $query = new EntityFieldQuery();
+                $feedbacks = $query->entityCondition('entity_type', 'feedback')
+                  ->propertyCondition('completed', 1)
+                  ->propertyCondition('type', 'post')
+                  ->propertyCondition('node_id', $node->nid)
+                  ->execute();
+                if (isset($feedbacks['feedback'])) {
+                  foreach ($feedbacks['feedback'] as $feedback) {
+                    $recipients[] = entity_load_single('feedback', $feedback->id);
+                  }
+                }
+              }
+              else {
+                // if there is already a gatekeeper entry, then this is a re-submission
+                $task_type = 'resource_resubmitted';
+                // get the current feedback for this node so we can notify the gk/reviewers
+                $query = new EntityFieldQuery();
+                $feedbacks = $query->entityCondition('entity_type', 'feedback')
+                  ->propertyCondition('completed', 1)
+                  ->propertyCondition('type', array('qc', 'gate_keeper'), 'IN')
+                  ->propertyCondition('node_id', $node->nid)
+                  ->propertyCondition('current', 1)
+                  ->propertyCondition('status', 1)
+                  ->execute();
+                if (isset($feedbacks['feedback'])) {
+                  foreach ($feedbacks['feedback'] as $feedback) {
+                    $recipients[] = entity_load_single('feedback', $feedback->id);
+                  }
                 }
               }
             }
@@ -1278,7 +1298,6 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               $task_type = 'resource_submitted';
             }
 
-            workbench_moderation_moderate($node, 'needs_review');
             sbac_resource_save_current_state($node);
 
             if ($task = taskit_get_object($task_type)) {
@@ -2585,8 +2604,8 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_resource_state']['#access'] = FALSE;
   $form['field_html5']['#access'] = FALSE;
   $form['field_thumbnail_uri']['#access'] = FALSE;
-  // hide recent reviewers field
   $form['field_recent_reviewers']['#access'] = FALSE;
+  $form['field_recent_publishers']['#access'] = FALSE;
 }
 
 /**
