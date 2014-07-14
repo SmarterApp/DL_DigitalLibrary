@@ -239,8 +239,11 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
                     node.nid AS nid,
                     node.created AS node_created,
                     field_data_field_node_avg_rating.field_node_avg_rating_value AS field_data_field_node_avg_rating_field_node_avg_rating_value,
+                    (SELECT COUNT(*) FROM eck_review WHERE node_id = node.nid) AS number_reviewers,
                     field_data_field_unique_downloads.field_unique_downloads_value AS field_data_field_unique_downloads_field_unique_downloads_val,
                     field_data_field_unique_views.field_unique_views_value AS field_data_field_unique_views_field_unique_views_value,
+                    field_data_field_forum_topic_count.field_forum_topic_count_value AS field_forum_topic_count_value,
+                    field_data_field_forum_topic_comment_count.field_forum_topic_comment_count_value AS field_forum_topic_comment_count_value,
                     MIN(node.nid) AS nid_1,
                     'node' AS field_data_field_node_avg_rating_node_entity_type,
                     COUNT(field_data_field_recent_reviewers.field_recent_reviewers_target_id) AS field_data_field_recent_reviewers_field_recent_reviewers_tar,
@@ -262,6 +265,12 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
               ON node.nid = field_data_field_recent_reviewers.entity_id
               AND (field_data_field_recent_reviewers.entity_type = 'node'
                 AND field_data_field_recent_reviewers.deleted = '0')
+            LEFT JOIN {taxonomy_term_data} taxonomy_term_data
+              ON node.title = taxonomy_term_data.name
+            LEFT JOIN {field_data_field_forum_topic_count} field_data_field_forum_topic_count
+              ON taxonomy_term_data.tid = field_data_field_forum_topic_count.entity_id
+            LEFT JOIN {field_data_field_forum_topic_comment_count} field_data_field_forum_topic_comment_count
+              ON taxonomy_term_data.tid = field_data_field_forum_topic_comment_count.entity_id
             LEFT JOIN   {field_data_field_unique_downloads} field_data_field_unique_downloads
               ON node.nid = field_data_field_unique_downloads.entity_id
               AND (field_data_field_unique_downloads.entity_type = 'node'
@@ -298,13 +307,13 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
       $query .= "ORDER BY field_data_field_node_avg_rating_field_node_avg_rating_value " . $sort;
       break;
     case 'reviewers':
-      $query .= "ORDER BY " . $sort;
+      $query .= "ORDER BY number_reviewers " . $sort;
       break;
     case 'topics':
-      $query .= "ORDER BY " . $sort;
+      $query .= "ORDER BY field_forum_topic_count_value " . $sort;
       break;
     case 'posts':
-      $query .= "ORDER BY " . $sort;
+      $query .= "ORDER BY field_forum_topic_comment_count_value " . $sort;
       break;
     case 'downloads':
       $query .= "ORDER BY field_data_field_unique_downloads_field_unique_downloads_val " . $sort;
@@ -327,9 +336,6 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
 
   $rows = array();
   foreach ($results as $row) {
-
-    $collab = array_pop(taxonomy_get_term_by_name($row->node_title, 'forum'));
-
     $title = truncate($row->node_title, 55, array('check_markup' => FALSE));
     $row->title = l($title, 'node/' . $row->nid, array('attributes' => array('target' => '_blank')));
     $rows[] = array(
@@ -337,9 +343,9 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
       'posted' => date('m/d/y', $row->node_created),
       'rating' => ($row->field_data_field_node_avg_rating_field_node_avg_rating_value
  ? sbac_resource_display_fivestar_rating($row->field_data_field_node_avg_rating_field_node_avg_rating_value) : 'No Rating'),
-      'reviewers' => l(($row->field_data_field_recent_reviewers_delta ? $row->field_data_field_recent_reviewers_delta : '0'), 'node/' . $row->nid, array('fragment' => 'review-reviews')),
-      'topics' => l(($collab->topics ? $collab->topics : 0), 'node/' . $row->nid, array('fragment' => 'review-collaboration')),
-      'posts' => ($collab->posts? $collab->posts : 0),
+      'reviewers' => l(($row->number_reviewers ? $row->number_reviewers : '0'), 'node/' . $row->nid, array('fragment' => 'review-reviews')),
+      'topics' => l(($row->field_forum_topic_count_value ? $row->field_forum_topic_count_value : 0), 'node/' . $row->nid, array('fragment' => 'review-collaboration')),
+      'posts' => ($row->field_forum_topic_comment_count_value? $row->field_forum_topic_comment_count_value : 0),
       'views' => $row->field_data_field_unique_views_field_unique_views_value,
       'downloads' => $row->field_data_field_unique_downloads_field_unique_downloads_val,
     );

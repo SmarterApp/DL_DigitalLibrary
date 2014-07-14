@@ -50,7 +50,7 @@
           </a>
         </th>
         <th class="views-field views-field-posts">
-          <a href="<?php echo $data['table_state_query']; ?>" title="sort by Number of Posts" class="active">Posts
+          <a href="<?php echo $data['table_posts_query']; ?>" title="sort by Number of Posts" class="active">Posts
             <?php
             if (isset($data['posts_image'])) {
               echo $data['posts_image'];
