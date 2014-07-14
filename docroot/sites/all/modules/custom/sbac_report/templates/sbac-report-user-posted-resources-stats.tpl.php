@@ -4,6 +4,19 @@
     <table class="views-table cols-8">
       <thead>
       <tr>
+        <th class="sbac_report_reviews_empty" colspan="2">
+        </th>
+        <th class="sbac_report_reviews_header" colspan="2">
+          Reviews
+        </th>
+        <th class="sbac_report_collaboration_header" colspan="2">
+          Collaboration
+        </th>
+        <th class="sbac_report_usage_header" colspan="2">
+          Usage
+        </th>
+      </tr>
+      <tr>
         <th class="views-field views-field-title">
           <a href="<?php echo $data['table_title_query']; ?>" title="sort by Title"class="active">Resource Title
           <?php
