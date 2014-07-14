@@ -706,6 +706,7 @@ function get_entities_for_resources($resource, $entity_type) {
   $query = new EntityFieldQuery();
   $entities = $query->entityCondition('entity_type', $entity_type)
     ->propertyCondition('node_id', $resource->nid->value())
+    ->propertyCondition('completed', 1)
     ->execute();
 
   $wrappers = array();
