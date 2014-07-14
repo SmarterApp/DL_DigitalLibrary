@@ -38,6 +38,19 @@ function sbac_resource_drush_command() {
     'callback' => 'drush_sbac_resource_update_node_review_averages',
   );
 
+  $items['sbac-resource-update-thumbnails'] = array(
+    'description' => 'Update the resource thumbnails.',
+    'examples' => array(
+      'drush sbac-resource-update-thumbnails',
+    ),
+    'options' => array(
+      'chunk-size' => array(
+        'description' => 'Number of entities to process at once.',
+      ),
+    ),
+    'callback' => 'drush_sbac_resource_update_thumbnails',
+  );
+
   return $items;
 }
 
@@ -200,4 +213,50 @@ function drush_sbac_resource_update_node_review_averages() {
   // Output metrics.
   drush_print("Total Resource nodes processed: $row");
   drush_print("Throughput: $throughput entities /sec");
+}
+
+function drush_sbac_resource_update_thumbnails() {
+  $row = 0;
+
+  $max_nid = db_query("SELECT MAX(n.nid)
+  FROM {node} n
+  LEFT JOIN {workbench_moderation_node_history} wb
+    ON n.nid = wb.nid
+  WHERE n.type = 'resource'
+    AND wb.state = 'published'
+    AND wb.published = 1
+    AND wb.current = 1 ")->fetchField();
+
+  $current_nid = 0;
+  $chunk_size = drush_get_option('chunk-size', 25);
+
+  drush_print(dt('Updating thumbnails for Resource nodes.'));
+
+  while ($current_nid <= $max_nid) {
+    $query = db_select('node', 'n');
+    $query->join('workbench_moderation_node_history', 'wb', 'n.nid = wb.nid');
+    $query->fields('n', array('nid'))
+      ->condition('n.nid', $current_nid, '>')
+      ->condition('n.type', 'resource', '=')
+      ->condition('wb.current', 1, '=') // Use workbench published status.
+      ->condition('wb.published', 1, '=') // Use workbench published status.
+      ->condition('wb.state', 'published', '=') // Use workbench published status.
+      ->orderBy('n.nid')
+      ->range(0, $chunk_size);
+    $nids = $query->execute()->fetchCol();
+
+    foreach ($nids as $nid) {
+      node_load($nid);
+      if ($node) {
+        $current_nid = $nid;
+        sbac_resource_determine_thumbnail_uri($node);
+        entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+        drush_print($node->nid . ' updated.');
+      }
+      // node_load(FALSE, NULL, TRUE);
+      entity_get_controller('node')->resetCache(array($node->nid));
+      unset($node);
+    }
+
+  }
 }
