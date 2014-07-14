@@ -1092,7 +1092,8 @@ function _sbac_resource_embed_vid_thumb_url($media) {
 
     switch ($file->filemime) {
       case 'video/slideshare':
-        $url = $id;
+        $api_req = $handler->getOEmbed();
+        $url = 'http:' . $api_req['thumbnail'];
         break;
       case 'video/vimeo':
         $req_contents = unserialize(file_get_contents('http://vimeo.com/api/v2/video/$id.php'));
@@ -2032,7 +2033,6 @@ function sbac_resource_node_delete($node) {
  * @param $node
  */
 function sbac_resource_determine_thumbnail_uri(&$node) {
-  dpm($node);
   $default_file = 'public://file.png';
   $nid = $node->nid;
   if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
