@@ -411,13 +411,15 @@ function sbac_share_resource_form($form, $form_state, $node) {
     '#suffix' => '</div>',
   );
 
-  $title = 'Permanent Link <span class="sbac-private"> - Private</span><i class="general foundicon-lock" "=""></i>';
+  $title = 'Permanent Link <span class="sbac-private"> - Private</span><i class="general foundicon-lock"></i>';
   if (isset($node->field_permanent_link_settings['und'][0]['value']) && $node->field_permanent_link_settings['und'][0]['value']) {
     $title = 'Permanent Link <span class="sbac-public"> - Public</span><i class="general foundicon-people" "=""></i>';
   }
   $form['permanent_link_text'] = array(
     '#type' => 'item',
     '#markup' => t($title),
+    '#title' => t('Permanent Link'),
+    '#title_display' => 'invisible',
     '#description' => t('Use the permanent link to share with people who have access to the Digital Library.'),
     '#prefix' => '<div class="form-item-title sbac-permanent-link">',
     '#suffix' => '</div>',
@@ -440,6 +442,7 @@ function sbac_share_resource_form($form, $form_state, $node) {
     '#type' => 'textfield',
     '#default_value' => $url,
     '#attributes' => array('id' => 'sbac-permanent-link-text', 'class' => array('clippable'), 'readonly' => 'readonly'),
+    '#prefix' => '<label class="element-invisible" for="sbac-permanent-link-text">Permanent Link</label>',
   );
 
   $form['permanent_link_button'] = array(
@@ -494,6 +497,8 @@ function sbac_share_resource_form($form, $form_state, $node) {
 
   $form['temporary_link_text'] = array(
     '#type' => 'item',
+    '#title' => t('Temporary Public Link'),
+    '#title_display' => 'invisible',
     '#markup' => '<h2>'.t('Temporary Public Link') . '</h2>',
     '#description' => t($title),
     '#prefix' => '<div class="form-item-title sbac-temporary-link">',
@@ -504,6 +509,7 @@ function sbac_share_resource_form($form, $form_state, $node) {
     '#type' => 'textfield',
     '#default_value' => '',
     '#attributes' => array('id' => 'sbac-temporary-link-text', 'readonly' => 'readonly'),
+    '#prefix' => '<label class="element-invisible" for="sbac-temporary-link-text">Temporary Public Link</label>',
   );
 
   $form['temporary_link_button'] = array(

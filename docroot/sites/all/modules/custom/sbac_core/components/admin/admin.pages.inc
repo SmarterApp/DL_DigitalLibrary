@@ -93,7 +93,7 @@ function sbac_user_filter_form() {
         $filter['element']['#default_value'] = $default_value;
         $filter['element']['#disabled'] = TRUE;
       }
-      
+
       $form['filters']['status']['filters'][$key] = $filter['element'];
     }
     else {
@@ -193,6 +193,10 @@ function sbac_user_admin_account() {
 
       case 'state':
         $query->condition($state_alias . '.field_state_tid', $value);
+        break;
+
+      case 'email':
+        $query->condition('u.mail', "%%".$value."%%", 'LIKE');
         break;
 
       case 'permission':
@@ -341,14 +345,21 @@ function sbac_user_filter_form_submit($form, &$form_state) {
       // Apply every filter that has a choice selected other than 'any'.
       foreach ($filters as $filter => $options) {
         if (isset($form_state['values'][$filter]) && $form_state['values'][$filter] != '[any]') {
-          // Merge an array of arrays into one if necessary.
-          $options = ($filter == 'permission') ? form_options_flatten($filters[$filter]['options']) : $filters[$filter]['options'];
-          // Only accept valid selections offered on the dropdown, block bad input.
-          if (isset($options[$form_state['values'][$filter]])) {
-            // disabled elements are showing previously-selected filters and we
-            // don't want to stack them
+          if ($filter == 'email') {
             if (!isset($form['filters']['status']['filters'][$filter]['#disabled']) || !$form['filters']['status']['filters'][$filter]['#disabled']) {
               $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
+            }
+          }
+          else {
+            // Merge an array of arrays into one if necessary.
+            $options = ($filter == 'permission') ? form_options_flatten($filters[$filter]['options']) : $filters[$filter]['options'];
+            // Only accept valid selections offered on the dropdown, block bad input.
+            if (isset($options[$form_state['values'][$filter]])) {
+              // disabled elements are showing previously-selected filters and we
+              // don't want to stack them
+              if (!isset($form['filters']['status']['filters'][$filter]['#disabled']) || !$form['filters']['status']['filters'][$filter]['#disabled']) {
+                $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
+              }
             }
           }
         }
@@ -378,6 +389,15 @@ function sbac_user_filters() {
       '#title' => t('state'),
       '#type' => 'select',
       '#options' => sbac_state_options(),
+    ),
+  );
+
+  $filters['email'] = array(
+    'title' => t('email'),
+    'field' => 'user.mail',
+    'element' => array(
+      '#title' => t('email'),
+      '#type' => 'textfield',
     ),
   );
 

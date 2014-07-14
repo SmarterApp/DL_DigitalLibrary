@@ -17,6 +17,11 @@
   <h2><?php print t('Contributed Resources'); ?></h2>
   <div id="contributed-resources">
   <?php print $contributed_summary; ?>
+  <?php if ($resource_statistics): ?>
+    <h2>Posted Resource Statistics</h2>
+    <?php print $resource_statistics; ?>
+  <?php endif; ?>
+  <h2>Contributed Resource Status</h2>
   <?php print $contributed_details; ?>
   </div>
   <div style="clear:both;"></div>

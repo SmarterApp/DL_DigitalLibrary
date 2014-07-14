@@ -4,6 +4,9 @@
  * Individual Report filter form.
  */
 function sbac_report_individual_form($form, &$form_state) {
+  global $user;
+  $account = user_load($user->uid);
+
   $form = array();
 
   // Make sure to load this after autocomplete.js
@@ -18,6 +21,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
     '#multiple' => FALSE,
+    '#disabled' => (!sbac_report_is_slt($account) && sbac_report_is_sne($account)),
     '#default_value' => sbac_report_get_default_state_tid(),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
@@ -35,10 +39,10 @@ function sbac_report_individual_form($form, &$form_state) {
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
 
   // If there was no date range stored in SESSION.
-  // Default to the "Last 30 Days".
+  // Default to the "Cumulative to date".
   if (empty($session_date_range)) {
-    $session_date_range = $date_options['Last 30 Days'];
-    $date_display = t('Last 30 Days');
+    $session_date_range = $date_options['Cumulative to date'];
+    $date_display = t('Cumulative to date');
   }
   // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
   elseif ($key = array_search($session_date_range, $date_options)) {
@@ -55,6 +59,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#autocomplete_path' => 'sne/autocomplete',
     '#required' => TRUE,
     '#size' => 30,
+    '#disabled' => (!sbac_report_is_slt($account) && sbac_report_is_sne($account)),
     '#default_value' => sbac_report_get_session_value('sne', 'name'),
     '#attributes' => array('aria-required' => "true"),
   );

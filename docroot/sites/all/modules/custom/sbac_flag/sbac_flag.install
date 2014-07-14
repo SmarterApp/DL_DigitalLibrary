@@ -137,3 +137,67 @@ function sbac_flag_update_7008() {
     taxonomy_term_save($flag_term);
   }
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * Adds new taxonomy terms for resource flagging.
+ */
+function sbac_flag_update_7009() {
+  if (!($vocab = taxonomy_vocabulary_machine_name_load('resource_flags'))) {
+    return;
+  }
+
+  $needs_update = array(
+    'May be in violation of intellectual property rights' => array(
+      'May be in violation of intellectual property rights (i.e., copyright infringement)',
+    ),
+    'Does not support implementation of Common Core Standards and/or formative assessment process' => array(
+      'Does not support implementation of Common Core Standards',
+      'Does not support the formative assessment process',
+    ),
+  );
+
+  foreach ($needs_update AS $old_name => $new_names) {
+    $updated = FALSE;
+    if ($current_term = array_pop(taxonomy_get_term_by_name($old_name, 'resource_flags'))) {
+      foreach ($new_names AS $idx => $new_name) {
+        $update = new stdClass();
+        $update->vid = $current_term->vid;
+        $update->name = $new_name;
+        if (!$updated) {
+          $update->tid = $current_term->tid;
+          $updated = TRUE;
+        }
+        taxonomy_term_save($update);
+      }
+    }
+  }
+
+  $new_order = array(
+    'Outdated',
+    'Duplicate', // NEW TERM
+    'Inaccurate / misleading',
+    'Unintelligible / not viewable / technology does not function properly',
+    'Accessibility and accommodation issues',
+    'Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>',
+    'Contains personally identifiable information (PII)',
+    'Summary information does not match the resource',
+    'May be in violation of intellectual property rights (i.e., copyright infringement)', // UPDATED TERM
+    'Does not support implementation of Common Core Standards', // UPDATED TERM
+    'Does not support the formative assessment process', // UPDATED TERM
+    'Resource is not available free of charge',
+  );
+
+  foreach ($new_order as $idx => $name) {
+    $update = new stdClass();
+    $update->vid = $vocab->vid;
+    $update->weight = $idx;
+    $update->name = $name;
+    if ($term = array_pop(taxonomy_get_term_by_name($name, 'resource_flags'))) {
+      $update->tid = $term->tid;
+    }
+    taxonomy_term_save($update);
+  }
+}
+

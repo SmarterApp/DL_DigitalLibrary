@@ -15,26 +15,32 @@ class Reviews extends Base {
     drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/profile.css');
 
     // create header & new review form
-    $output = '';
+      $output = '';
 
-    $forum_id = sbac_forum_get_resource_forum_id($this->_node->nid);
-    $forum_taxonomy = taxonomy_term_load($forum_id);
-    $num_participants = $forum_taxonomy->field_forum_member_count['und'][0]['value'];
+      $forum_id = sbac_forum_get_resource_forum_id($this->_node->nid);
+      $forum_taxonomy = taxonomy_term_load($forum_id);
+      $num_participants = $forum_taxonomy->field_forum_member_count['und'][0]['value'];
 
-    $js_link = "javascript:jQuery('a[href=#review-collaboration]').click(); void(0);";
+      $js_link = "javascript:jQuery('a[href=#review-collaboration]').click()";
 
-    $collab_markup = '<div class="review-markup">';
-    $collab_markup .= '<div class="review-text-container">';
-    $collab_markup .= '<span class="review-text">Questions? Suggestions?</span> ';
-    $collab_markup .= '<span class="review-link"><a href="' . $js_link . '">Collaborate on this resource</a>.</span>';
-    $collab_markup .= '</div>';
-    $collab_markup .= '<div class="review-participants">';
-    $collab_markup .= '<span class="review-num-participants">' . $num_participants . '</span>' . ' ';
-    $collab_markup .= '<span class="participants">' . ($num_participants == 1 ? 'participant' : 'participants') . '<span>';
-    $collab_markup .= '</div>';
-    $collab_markup .= '</div>';
+      $collab_markup  =  '<div class="review-markup">';
+      $collab_markup .=   '<div class="review-text-container">';
+      $collab_markup .=     '<span class="review-text">Questions? Suggestions?</span> ';
+      $collab_markup .=     '<span class="review-link"><a href="' . $js_link . '">Collaborate on this resource</a>.</span>';
+      $collab_markup .=   '</div>';
+      $collab_markup .=   '<div class="review-participants">';
+      $collab_markup .=     '<span class="review-num-participants">' . $num_participants . '</span>' . ' ';
+      $collab_markup .=     '<span class="participants">'. ($num_participants == 1 ? 'participant' : 'participants') . '</span>';
+      $collab_markup .=   '</div>';
+      $collab_markup .= '</div>';
 
-    $output .= $collab_markup;
+      $output .= $collab_markup;
+
+      // check access to review creation
+      $allowed_to_create = TRUE;
+      if (user_has_review($this->_node->nid, $this->_account->uid)) {
+        $allowed_to_create = FALSE;
+      }
 
     // check access to review creation
     $allowed_to_create = TRUE;

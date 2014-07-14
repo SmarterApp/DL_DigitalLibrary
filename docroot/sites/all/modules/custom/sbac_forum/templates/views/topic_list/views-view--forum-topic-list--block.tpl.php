@@ -44,6 +44,8 @@
 	<div class="review-it">
   	<?php if($review): ?>
 	    <p><?php print $review; ?></p>
+      <?php print $rating; ?>
+      <?php print $review_count; ?>
 	  <?php endif; ?>
 	</div>
 	<div class="filter-bar">
