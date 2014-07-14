@@ -246,7 +246,7 @@ function drush_sbac_resource_update_thumbnails() {
     $nids = $query->execute()->fetchCol();
 
     foreach ($nids as $nid) {
-      node_load($nid);
+      $node = node_load($nid);
       if ($node) {
         $current_nid = $nid;
         sbac_resource_determine_thumbnail_uri($node);
@@ -257,6 +257,5 @@ function drush_sbac_resource_update_thumbnails() {
       entity_get_controller('node')->resetCache(array($node->nid));
       unset($node);
     }
-
   }
 }
