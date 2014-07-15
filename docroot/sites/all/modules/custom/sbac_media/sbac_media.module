@@ -1097,6 +1097,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
     return $form['field_content_module_container'];
   }
 
+  $valid = FALSE;
   drupal_get_messages(); // clear messages if they were some from before.
   $file_attributes = array();
   sbac_media_save_temp_html5($file_attributes, $form, $form_state);
@@ -1104,23 +1105,66 @@ function sbac_media_html5_element_upload($form, $form_state) {
     // Check that the zip saved.
     $no_errors = sbac_media_check_zip($file_attributes, $form, $form_state);
     if ($no_errors) {
-      sbac_media_save_html5_record($file_attributes, $form_state);
-      sbac_media_create_file_record_html5_module($file_attributes);
+      $valid = sbac_media_save_html5_record($file_attributes, $form_state);
+      if ($valid) {
+        // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
+        $callback_options = array(
+          array(
+            'function' => 'sbac_media_html5_upload_asynchronous',
+            // Setup options array.
+            'options' => array(
+              'timeout' => 1200,
+              'global_timeout' => 1200,
+            ),
+          ),
+          $file_attributes,
+        );
+        // Queue up the request.
+        httprl_queue_background_callback($callback_options);
+        // Execute request.
+        httprl_send_request();
+      }
       // rebuild the form, output.
       $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
       $form['#node']->document['html5'] = $html5_media_item;
       sbac_media_build_html5_section($form, $form_state);
     }
-    else {
+
+    if (!$no_errors || !$valid) {
       // File content not there, create errors and delete temporary files (zip, zip contents, and file record).
       form_set_error('field_content_module_picker', t('The selected file ' . $file_attributes['file']->filename . ' cannot be uploaded as content module. It is not a valid module file. Only files with a zip extension are allowed for content module upload.'));
+      // delete the unzipped contents path
       file_unmanaged_delete_recursive($file_attributes['zip_contents_path']);
+      // delete the zip file
       unlink($file_attributes['zip_archive_path']);
+      // delete the file record
       file_delete($file_attributes['file']);
+      // rebuild the form
       $form = drupal_rebuild_form('resource_node_form', $form_state);
     }
   }
   return $form['field_content_module_container'];
+}
+
+/**
+ * Process the HTML5 module in the background.
+ *
+ * @param $file_attributes
+ */
+function sbac_media_html5_upload_asynchronous($file_attributes) {
+  $temp_path = $file_attributes['html5_temp_path'];
+  $gcs_location = 'gs://html5/' . uniqid();
+  // Create recursive dir iterator which skips dot folders
+  $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
+  // Flatten the recursive iterator, folders come before their files
+  $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+  // Basic loop displaying different messages based on file or folder
+  foreach ($it as $fileinfo) {
+    $full_path = $fileinfo->getPathname();
+    $path = str_replace($temp_path, '', $full_path);
+    error_log($gcs_location . $path);
+    file_put_contents($gcs_location . $path, $full_path);
+  }
 }
 
 /**
@@ -1155,26 +1199,18 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
           if ($saved) {
             $zip_foldername = $zip->getNameIndex(0);
             $pos = strpos($zip_foldername, '/');
+            $folder_name = $zip_foldername;
             if ($pos !== FALSE) {
               $folder_name = substr($zip_foldername, 0, $pos);
             }
-            else {
-              $folder_name = $zip_foldername;
-            }
             $zip->close();
             $full_html5_temp_path = drupal_realpath($drupal_html5_temp_path) . '/' . $folder_name;
-            if (file_exists($full_html5_temp_path)) {
-              $full_html5_path = drupal_realpath($directory . '/html5_module');
-              file_prepare_directory($full_html5_path, FILE_CREATE_DIRECTORY);
-              rename($full_html5_temp_path, $full_html5_path);
-              file_unmanaged_delete_recursive($drupal_html5_temp_path);
-
-              // Populate data
-              $file_attributes['file'] = $file;
-              $file_attributes['real_path'] = $real_path;
-              $file_attributes['directory'] = $directory;
-              return TRUE;
-            }
+            $file_attributes['file'] = $file;
+            $file_attributes['real_path'] = $real_path;
+            $file_attributes['directory'] = $directory;
+            $file_attributes['full_html5_temp_path'] = $full_html5_temp_path;
+            $file_attributes['html5_temp_path'] = drupal_realpath($drupal_html5_temp_path);
+            return TRUE;
           }
         }
       }
@@ -1199,16 +1235,15 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
 function sbac_media_check_zip(&$file_attributes, &$form, &$form_state) {
   $no_errors = FALSE;
   if (file_exists($file_attributes['real_path'])) {
-    $zip_file_path = drupal_realpath($file_attributes['directory']);
-    $file_data = pathinfo($file_attributes['real_path']); // provides filename with extension on it.
-    $file_attributes['zip_archive_path'] = $zip_archive_path = $zip_file_path . '/' . $file_data['basename'];
-    $file_attributes['zip_contents_path'] = $zip_contents_path = $zip_file_path . '/html5_module';
+    $zip_contents_path = $file_attributes['full_html5_temp_path'];
     // Check that the zip contents saved.
     if (file_exists($zip_contents_path)) {
       //Check the file contents.
       $index_html_path = $zip_contents_path . '/index.html';
-      $dlcomponents_path = $zip_contents_path . '/dlcomponents/CoverPage.html';
-      if (file_exists($index_html_path) && file_exists($dlcomponents_path)) {
+      $coverpage_path = $zip_contents_path . '/dlcomponents/CoverPage.html';
+      $framescale_path = $zip_contents_path . '/dlcomponents/frameScale.html';
+      $thumbnail_path = $zip_contents_path . '/dlcomponents/thumbnail.png';
+      if (file_exists($index_html_path) && file_exists($coverpage_path) && file_exists($framescale_path) && file_exists($thumbnail_path)) {
         // File contents do exists, save file correctly
         $no_errors = TRUE;
       }
@@ -1241,8 +1276,8 @@ function sbac_media_save_html5_record(&$file_attributes, $form_state) {
   $media->file_size = $file->filesize;
   $media->file_hash = $file_hash;
   $media->weight = 100;
-  $media->status = 0;
-  entity_save('media', $media);
+  $media->status = 1;
+  $return = entity_save('media', $media);
 
   // Delete old thumbnail image if any
   if (!empty($node->field_thumbnail_uri[LANGUAGE_NONE])) {
@@ -1253,6 +1288,8 @@ function sbac_media_save_html5_record(&$file_attributes, $form_state) {
     $real_path = drupal_realpath($image_path);
     file_unmanaged_delete($real_path);
   }
+
+  return $return;
 }
 
 /**
@@ -1462,7 +1499,7 @@ function sbac_media_temp_delete_media_record($id) {
  */
 function sbac_media_delete_html5_record($file) {
   $directory = "private://html5/" . floor($file->nid / 32000) . "/" . $file->nid;
-  $zip_contents_path = drupal_realpath($directory) . '/html5_module';
+  $zip_contents_path = drupal_realpath($directory) . '/html5_module_temp';
   if (file_exists($zip_contents_path)) {
     sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
     file_unmanaged_delete_recursive($zip_contents_path);
@@ -1529,21 +1566,21 @@ function sbac_media_delete_media($js = FALSE) {
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if ($form_state['html5']) {
           // Build path to delete file folder.
-//          $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
-//          $zip_contents_path = drupal_realpath($directory) . '/html5_module';
-//          if (file_exists($zip_contents_path)) {
+          $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
+          $zip_contents_path = drupal_realpath($directory) . '/html5_module_temp';
+          if (file_exists($zip_contents_path)) {
 //            sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
-//            file_unmanaged_delete_recursive($zip_contents_path);
-//            file_unmanaged_delete_recursive($directory);
-//          }
-//          else {
-//            watchdog('SBAC Media', 'Unable to remove HTML5 content module for node with nid of ' .  $form_state['values']['nid']);
-//            file_unmanaged_delete_recursive($directory);
-//          }
+            file_unmanaged_delete_recursive($zip_contents_path);
+            file_unmanaged_delete_recursive($directory);
+          }
+          else {
+            watchdog('SBAC Media', 'Unable to remove HTML5 content module for node with nid of ' .  $form_state['values']['nid']);
+            file_unmanaged_delete_recursive($directory);
+          }
 
           // Delete the record from file system (DB and File System)
-          sbac_media_temp_delete_media_record($form_state['values']['id']);
-//          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+//          sbac_media_temp_delete_media_record($form_state['values']['id']);
+          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
 
           // Rebuild the HTML5 section.
           $form = array();
