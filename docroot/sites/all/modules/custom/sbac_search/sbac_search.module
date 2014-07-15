@@ -630,7 +630,7 @@ function sbac_search_my_resources_categories() {
       unset($resource_states_terms[$key]);
     }
   }
-  $categories['resource_states']['display_name'] = 'Resource States';
+  $categories['resource_states']['display_name'] = 'Resource Status';
   $categories['resource_states']['vocabulary'] = $resource_states;
   $categories['resource_states']['terms'] = $resource_states_terms;
 
@@ -726,7 +726,7 @@ function sbac_search_resource_review_categories() {
       }
     }
   }
-  $categories['resource_states']['display_name'] = 'Resource States';
+  $categories['resource_states']['display_name'] = 'Resource Status';
   $categories['resource_states']['vocabulary'] = $resource_states;
   $categories['resource_states']['terms'] = $resource_states_terms;
 
