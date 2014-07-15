@@ -53,14 +53,19 @@ function sbac_report_individual_form($form, &$form_state) {
     $date_display = sbac_report_format_date_range($session_date_range);
   }
 
+  if ($only_sne = (!sbac_report_is_slt($account) && sbac_report_is_sne($account))) {
+    global $user;
+    $name_value = sbac_user_format_username($user);
+  }
+
   $form['sne'] = array(
     '#type' => 'textfield',
     '#title' => t('Choose a SNE'),
     '#autocomplete_path' => 'sne/autocomplete',
     '#required' => TRUE,
     '#size' => 30,
-    '#disabled' => (!sbac_report_is_slt($account) && sbac_report_is_sne($account)),
-    '#default_value' => sbac_report_get_session_value('sne', 'name'),
+    '#disabled' => $only_sne,
+    '#default_value' => $only_sne ? $name_value : sbac_report_get_session_value('sne', 'name'),
     '#attributes' => array('aria-required' => "true"),
   );
 
