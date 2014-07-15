@@ -54,9 +54,8 @@ function sbac_report_individual_form($form, &$form_state) {
   }
 
 
-  if (!($see_others = sbac_report_select_other_users($account))) {
-    $name_value = sbac_user_format_username($user);
-  }
+  $see_others = sbac_report_select_other_users($account);
+  $name_value = sbac_user_format_username($user);
 
   $form['sne'] = array(
     '#type' => 'textfield',
@@ -65,7 +64,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#required' => TRUE,
     '#size' => 30,
     '#disabled' => !$see_others,
-    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'name') : $name_value,
+    '#default_value' => sbac_report_get_session_value('sne', 'name') ? sbac_report_get_session_value('sne', 'name') : $name_value,
     '#attributes' => array('aria-required' => "true"),
   );
 
