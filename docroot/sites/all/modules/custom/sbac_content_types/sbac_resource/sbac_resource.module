@@ -1129,15 +1129,20 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
       $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
       $filename = $filename . '.' . $ext;
 
-      if (!file_prepare_directory($dir, FILE_MODIFY_PERMISSIONS)) {
-        drupal_mkdir($dir, NULL, TRUE);
-      }
+      if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+        $download = system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
 
-      $download = system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
-      if ($download) {
-        $uri_url['uri'] = $download->uri;
-        $uri_url['url'] = $url;
-        $thumbnail_exists = TRUE;
+        if ($download) {
+          $uri_url['uri'] = $download->uri;
+          $uri_url['url'] = $url;
+          $thumbnail_exists = TRUE;
+        }
+        else {
+          watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
+        }
+      }
+      else {
+        watchdog('sbac_resource', 'Unable to make dir: ' . $dir, array(), WATCHDOG_NOTICE);
       }
     }
     elseif ($url == 'na' && !$thumbnail_exists) {
@@ -2039,13 +2044,11 @@ function sbac_resource_node_delete($node) {
 function sbac_resource_determine_thumbnail_uri(&$node) {
   $default_file = 'public://file.png';
   $nid = $node->nid;
+  $media_items = sbac_media_load_items($node->nid);
+  $node->document = $media_items;
   if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
-    if (!isset($node->document['html5'])) {
-      $html5_item = sbac_media_load_html5_item($node->nid);
-      if ($html5_item !== FALSE) {
-        $node->document['html5'] = $html5_item;
-      }
-    }
+    $html5_item = sbac_media_load_html5_item($node->nid);
+    $node->document['html5'] = $html5_item;
     if (isset($node->document['html5'])) {
       $directory = "private://html5/" . floor($nid / 32000) . "/" . $nid;
       $directory_thumbnail_uri = $directory . '/html5_module/dlcomponents/thumbnail.png';
