@@ -1152,19 +1152,59 @@ function sbac_media_html5_element_upload($form, $form_state) {
  * @param $file_attributes
  */
 function sbac_media_html5_upload_asynchronous($file_attributes) {
+  sbac_media_html5_start_progress($file_attributes['nid']);
+
   $temp_path = $file_attributes['html5_temp_path'];
-  $gcs_location = 'gs://html5/' . uniqid();
+  // Generate unique path for HTML5 module.
+  $gcs_location = 'gs://html5/' . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'] . '/' . uniqid('', TRUE);
+
   // Create recursive dir iterator which skips dot folders
   $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
   // Flatten the recursive iterator, folders come before their files
   $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
   // Basic loop displaying different messages based on file or folder
   foreach ($it as $fileinfo) {
-    $full_path = $fileinfo->getPathname();
-    $path = str_replace($temp_path, '', $full_path);
-    error_log($gcs_location . $path);
-    file_put_contents($gcs_location . $path, $full_path);
+    // Don't try to upload directories, Google just creates a place holder.
+    // When the folder has content underneath it, Google will then create
+    // an actual foler.
+    if (!$fileinfo->isDir()) {
+      $full_path = $fileinfo->getPathname();
+      $path = str_replace($temp_path, '', $full_path);
+      file_put_contents($gcs_location . $path, $full_path);
+    }
   }
+
+  sbac_media_html5_finish_progress($file_attributes['nid']);
+}
+
+/**
+ * Creates a row in the progress table to indicate progress.
+ *
+ * @param $nid
+ */
+function sbac_media_html5_start_progress($nid) {
+  $query = 'INSERT INTO {sbac_html5_progress} VALUES(' . $nid . ', 1, ' . time() . ', 0)';
+  db_query($query);
+}
+
+/**
+ * Updates the row to indicate
+ *
+ * @param $nid
+ */
+function sbac_media_html5_finish_progress($nid) {
+  $query = 'UPDATE {sbac_html5_progress} SET status = 0, finished = ' . time() . ' WHERE nid = ' . $nid;
+  db_query($query);
+}
+
+/**
+ * Deletes the progress indicator row
+ *
+ * @param $nid
+ */
+function sbac_media_html5_delete_progress($nid) {
+  $query = 'DELETE FROM {sbac_html5_progress} WHERE nid = ' . $nid;
+  db_query($query);
 }
 
 /**
@@ -1210,6 +1250,7 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
             $file_attributes['directory'] = $directory;
             $file_attributes['full_html5_temp_path'] = $full_html5_temp_path;
             $file_attributes['html5_temp_path'] = drupal_realpath($drupal_html5_temp_path);
+            $file_attributes['nid'] = $form['#node']->nid;
             return TRUE;
           }
         }
@@ -1566,21 +1607,18 @@ function sbac_media_delete_media($js = FALSE) {
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if ($form_state['html5']) {
           // Build path to delete file folder.
-          $directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
-          $zip_contents_path = drupal_realpath($directory) . '/html5_module_temp';
-          if (file_exists($zip_contents_path)) {
-//            sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
-            file_unmanaged_delete_recursive($zip_contents_path);
-            file_unmanaged_delete_recursive($directory);
+          $local_directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
+          if (file_exists($local_directory)) {
+            file_unmanaged_delete_recursive($local_directory);
           }
-          else {
-            watchdog('SBAC Media', 'Unable to remove HTML5 content module for node with nid of ' .  $form_state['values']['nid']);
-            file_unmanaged_delete_recursive($directory);
-          }
-
-          // Delete the record from file system (DB and File System)
-//          sbac_media_temp_delete_media_record($form_state['values']['id']);
           sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+
+          // Delete folder from Google.
+          $google_directory = str_replace('private://', 'gs://', $local_directory);
+          unlink($google_directory);
+
+          // Delete any leftover progress indicator
+          sbac_media_html5_delete_progress($form_state['values']['nid']);
 
           // Rebuild the HTML5 section.
           $form = array();
@@ -1592,7 +1630,6 @@ function sbac_media_delete_media($js = FALSE) {
         }
         else {
           sbac_media_temp_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
-//          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
           // Rebuild the list of items.
           $media_items = sbac_media_load_items($form_state['values']['nid']);
           $media_list = _sbac_media_create_list($media_items, $form_state);
