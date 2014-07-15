@@ -21,7 +21,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
     '#multiple' => FALSE,
-    '#disabled' => (!sbac_report_is_slt($account) && sbac_report_is_sne($account)),
+    '#disabled' => !sbac_report_user_access_all($account),
     '#default_value' => sbac_report_get_default_state_tid(),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
@@ -53,8 +53,8 @@ function sbac_report_individual_form($form, &$form_state) {
     $date_display = sbac_report_format_date_range($session_date_range);
   }
 
-  if ($only_sne = (!sbac_report_is_slt($account) && sbac_report_is_sne($account))) {
-    global $user;
+
+  if (!($see_others = sbac_report_select_other_users($account))) {
     $name_value = sbac_user_format_username($user);
   }
 
@@ -64,8 +64,8 @@ function sbac_report_individual_form($form, &$form_state) {
     '#autocomplete_path' => 'sne/autocomplete',
     '#required' => TRUE,
     '#size' => 30,
-    '#disabled' => $only_sne,
-    '#default_value' => $only_sne ? $name_value : sbac_report_get_session_value('sne', 'name'),
+    '#disabled' => !$see_others,
+    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'name') : $name_value,
     '#attributes' => array('aria-required' => "true"),
   );
 

@@ -128,10 +128,20 @@ function sbac_report_user_access() {
   $account->entity_id = $account->uid;
   $slt = field_entity_value($account, 'field_slt_member');
   $sne = field_entity_value($account, 'field_sne_member');
-  if ($slt) {
+  if ($slt || $sne) {
     return TRUE;
   }
-  elseif ($sne) {
+
+  $allowed_roles = array(
+    'resource contributor',
+    'resource reviewer',
+    'resource publisher',
+    'administrator',
+    'digital library administrator',
+    'system administrator',
+  );
+
+  if (array_intersect($user->roles, $allowed_roles)) {
     return TRUE;
   }
 
@@ -155,6 +165,26 @@ function sbac_report_user_access_all($account = NULL) {
   );
 
   return (bool) array_intersect(array_keys($account->roles), array_keys($allowed_roles));
+}
+
+/**
+ * Checks to see if the current user is allowed to search for other users
+ * @return bool
+ */
+function sbac_report_select_other_users($account) {
+  if (is_null($account)) {
+    global $user;
+    $account = user_load($user);
+  }
+
+  $allowed_roles = array(
+    'resource publisher',
+    'administrator',
+    'digital library administrator',
+    'system administrator',
+  );
+
+  return array_intersect($account->roles, $allowed_roles);
 }
 
 /**
@@ -417,7 +447,7 @@ function sbac_report_state_options() {
     }
   }
   // SLT user can only select their own states.
-  elseif (sbac_report_is_slt($user) || sbac_report_is_sne($user)) {
+  else {
     $result = db_select('field_data_field_state', 'fs')
       ->fields('fs', array('field_state_tid'))
       ->condition('entity_type', 'user')
