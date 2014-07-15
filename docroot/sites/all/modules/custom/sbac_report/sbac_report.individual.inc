@@ -101,7 +101,14 @@ function sbac_report_individual_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
   
   if (empty($form_state['values']['uid']) || !is_numeric($form_state['values']['uid'])) {
-    form_set_error('sne', t('Please type and select an existing SNE'));
+    global $user;
+    $account = user_load($user->uid);
+    if ($only_sne = (!sbac_report_is_slt($account) && sbac_report_is_sne($account))) {
+      $form_state['values']['uid'] = $user->uid;
+    }
+    else {
+      form_set_error('sne', t('Please type and select an existing SNE'));
+    }
   }
 
   if (empty($form_state['values']['date_range'])) {
