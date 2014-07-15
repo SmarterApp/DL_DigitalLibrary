@@ -396,26 +396,39 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   $src = '/misc/arrow-' . $sort . '.png'; // up / down image.
   $data[$order . '_image'] = '<img typeof="foaf:Image" src="' . $src . '" width="13" height="13" alt="sort ascending" title="sort ascending">';
 
-  $query = "SELECT node.nid AS nid,
-            node.title AS node_title,
-            node.created AS node_created,
-            workbench_moderation_node_history.state AS workbench_moderation_node_history_state,
-            node.sticky AS node_sticky
-            FROM
-            {node} node
-            LEFT JOIN {node_revision} node_revision ON node.vid = node_revision.vid
-            INNER JOIN {workbench_moderation_node_history} workbench_moderation_node_history ON node_revision.vid = workbench_moderation_node_history.vid
-            WHERE (((node.uid = :uid))
-            AND (((node.type IN ('resource'))
-            AND (workbench_moderation_node_history.current <> '0')
-            AND (workbench_moderation_node_history.state NOT IN  ('draft')))
-            AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))))";
-
+  $query = "
+SELECT
+  n.nid                                      AS nid,
+  n.title                                    AS node_title,
+  n.created                                  AS node_created,
+  n.sticky                                   AS node_sticky,
+  CASE
+  WHEN history.state = 'needs_review' THEN 'Gate-Keeping Review'
+  WHEN history.state = 'rejected' THEN 'Returned'
+  WHEN history.state = 'published' AND n.sticky = 1 THEN 'Posted with Distinction'
+  WHEN history.state = 'published' AND n.sticky = 0 THEN 'Published'
+  WHEN history.state = 'approved' THEN 'Arbitration Review'
+  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Quality Criteria Review 1'
+  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 1 THEN 'Quality Criteria Review 2'
+  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) >= 2 THEN 'Quality Criteria Review 3'
+  END                                        AS state
+FROM
+    {node} n
+    LEFT JOIN {node_revision} rev ON n.vid = rev.vid
+    INNER JOIN {workbench_moderation_node_history} history ON rev.vid = history.vid
+    LEFT JOIN {field_data_field_recent_reviewers} r ON r.revision_id = rev.vid and r.field_recent_reviewers_target_id > 0
+WHERE
+  n.uid = :uid
+  AND n.type IN ('resource')
+  AND history.current <> '0'
+  AND history.state NOT IN ('draft')
+  AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+GROUP BY n.nid ";
   if ($order == 'state') {
-    $query .= "ORDER BY workbench_moderation_node_history.state " . $sort;
+    $query .= "ORDER BY state " . $sort;
   }
   else {
-    $query .= "ORDER BY node.created " . $sort;
+    $query .= "ORDER BY n.created " . $sort;
   }
 
   $dates = explode('--', $date_range);
@@ -432,27 +445,6 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   $rows = array();
   foreach ($results as $row) {
     $resource = node_load($row->nid);
-    $state = $row->workbench_moderation_node_history_state;
-    $state_output = $state;
-    if ($state == 'needs_review') {
-      $state_output = t('Submitted');
-    }
-    elseif ($state == 'being_reviewed') {
-      $state_output = t('In Review');
-    }
-    elseif ($state == 'published') {
-      $state_output = t('Posted');
-      if ($row->node_sticky == 1) {
-        $state_output = t('Posted with Distinction');
-      }
-    }
-    elseif ($state == 'rejected') {
-      $state_output = t('Returned');
-    }
-    elseif ($state == 'approved') {
-      $state_output = t('In Review');
-    }
-    $row->state = $state_output;
     $title = truncate($row->node_title, 55, array('check_markup' => FALSE));
     $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => array('sec' => '1')));
     $row->contribution_date = date('m/d/Y h:i a', $row->node_created);
