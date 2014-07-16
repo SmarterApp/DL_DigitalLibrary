@@ -1223,10 +1223,8 @@ function sbac_central_update_7082() {
  * Need this so that image_style can work with the image.
  */
 function sbac_central_update_7083() {
-  $theme_path = drupal_get_path('theme',$GLOBALS['theme']);
-  $default_file = $theme_path . '/images/no-preview-html5.png';
-  if (file_exists($default_file)) {
-    $public_path = drupal_realpath('public://');
-    copy($default_file, $public_path);
-  }
+  global $base_url;
+  $image_path = $base_url . base_path() . 'sites/all/themes/SBAC/images/no-preview-html5.jpg';
+  $public_path = drupal_realpath('public://') . '/no-preview-html5.jpg';
+  copy($image_path, $public_path);
 }
