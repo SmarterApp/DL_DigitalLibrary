@@ -64,7 +64,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#required' => TRUE,
     '#size' => 30,
     '#disabled' => !$see_others,
-    '#default_value' => sbac_report_get_session_value('sne', 'name') ? sbac_report_get_session_value('sne', 'name') : $name_value,
+    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'name') : $name_value,
     '#attributes' => array('aria-required' => "true"),
   );
 
@@ -76,7 +76,7 @@ function sbac_report_individual_form($form, &$form_state) {
   // @see sbac_report.js
   $form['uid'] = array(
     '#type' => 'hidden',
-    '#default_value' => sbac_report_get_session_value('sne', 'uid'),
+    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'uid') : $user->uid,
     '#attributes' => array(
       'id' => 'sne-uid-field',
     ),
@@ -102,7 +102,7 @@ function sbac_report_individual_form_validate($form, &$form_state) {
   if (empty($form_state['values']['uid']) || !is_numeric($form_state['values']['uid'])) {
     global $user;
     $account = user_load($user->uid);
-    if ($only_sne = (!sbac_report_is_slt($account) && sbac_report_is_sne($account))) {
+    if (!sbac_report_select_other_users($account)) {
       $form_state['values']['uid'] = $user->uid;
     }
     else {
