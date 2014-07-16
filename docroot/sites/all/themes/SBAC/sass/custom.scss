@@ -455,7 +455,7 @@ html.js {
 		    font-weight: normal;
 		    padding-top: 6px;
 		}
-		
+
 		a span.form-required {
 			display: inline-block;
 			color: #FF0000;
@@ -1554,11 +1554,11 @@ a.tabledrag-handle .handle {
 	.read-more,
 	.ccss-term-delete {
 		margin-left: 20px;
-		
+
 		span {
 			text-indent: -9999em;
 			float: left;
-		} 
+		}
 	}
 }
 
@@ -2211,10 +2211,10 @@ a.tabledrag-handle .handle {
 #modalContent {
 	.ctools-modal-content.sbac-resource-changes-modal {
 		height: 255px !important;
-		
+
 		#modal-content {
 			height: 215px !important;
-			
+
 			button#edit-cancel-overlay {
 				margin-left: 225px;
 			}
@@ -2253,7 +2253,7 @@ a.tabledrag-handle .handle {
 	.ctools-modal-content.small {
 		height: 235px !important;
 		padding: 10px 0 0 0;
-		
+
 		.modal-content {
 			overflow: hidden;
 			padding: 0 40px !important;
@@ -2267,7 +2267,7 @@ a.tabledrag-handle .handle {
 				font-size: 18px !important;
 			}
 		}
-		
+
 		h2 {
 		  padding-bottom: 15px;
 	    color: #000000;
@@ -2283,18 +2283,18 @@ a.tabledrag-handle .handle {
 			float: right;
 			margin-left: 30px;
 		}
-		
+
 		.button.form-submit {
 			padding-left: 40px !important;
 		}
-		
+
 		.button.form-submit:before {
 		 content: url("../images/buttonAccept.png");
 		 left: 15px;
 		 position: absolute;
 		 top: 4px;
 		}
-		
+
 		button[id*="edit-cancel"].gray {
 		  background-color: #6E7379;
 	    border: 1px solid #4D5457;
@@ -2308,7 +2308,7 @@ a.tabledrag-handle .handle {
 			position: absolute;
 			top: 4px;
 		}
-					
+
 		button.form-submit.red {
 			line-height: 20px;
 			background-color: #8A1538 !important;
@@ -2594,7 +2594,7 @@ a.tabledrag-handle .handle {
 
 .view-id-help_topics .help-topic-link2,
 .welcome-tutorial-topic-link {
-  bottom: 20px; 
+  bottom: 20px;
   position: absolute;
   right: 190px;
 }
@@ -3129,14 +3129,14 @@ a.tabledrag-handle .handle {
 		vertical-align: top;
 		height: 35px;
 	}
-	
+
 	.form-type-select {
 	    display: inline-block;
 	    position: relative;
 	    vertical-align: middle;
 			margin-top: 22px;
 	}
-	
+
 	.form-type-select:before {
 		background-color: #fff;
 		content: "";
@@ -3151,7 +3151,7 @@ a.tabledrag-handle .handle {
 		height: 33px;
 		z-index:99;
 	}
-	
+
 	.form-type-select:after {
 		content: "\e610";
 	 	display: inline-block;
@@ -3200,14 +3200,14 @@ a.tabledrag-handle .handle {
 #views-exposed-form-forum-topic-list-block,
 #views-exposed-form-forum-member-list-block,
 #views-exposed-form-forum-topic-list-collaboration {
-	
+
 	select {
 		border: 1px solid #CECECE;
 		width: auto;
 		border-radius: 0;
 		height: 34px;
 	}
-	
+
 	.form-type-select:before {
 		border-radius: 0;
 		height: 32px;
@@ -3289,7 +3289,7 @@ a.tabledrag-handle .handle {
 
 @media all and (max-width: 1280px) and (min-width: 961px){
 	.top-bar.last-top {
-		max-width: 960px; 
+		max-width: 960px;
 	}
 }
 
@@ -3483,7 +3483,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	color: #fff;
 	position: relative;
 	margin-left: 15px;
-	
+
 	.title {
 		font-family: Verdana,Geneva,sans-serif;
 	  font-size: 12px;
@@ -3499,18 +3499,18 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		position: relative;
 		border-top: 1px #50a8c4 solid;
 	}
-	
+
 	.additional-resoutces {
 		font-size: 15px;
 		margin-top: 10px;
 		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
 		position: relative;
-		
+
 		a {
 			color: #fff;
 			text-decoration: underline;
 		}
-		
+
 		a:after {
 		  background-image: url("../images/icons/icon-new-window.png");
 	    background-position: center center;
@@ -3522,7 +3522,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	    width: 12.5px;
 		}
 	}
-	
+
 	.title:before {
 		content: " ";
     display: inline-block;
@@ -3536,18 +3536,18 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 }
 
 /* ---------------------------------------------------------------------
-    SBAC Resource Access Denied page 
+    SBAC Resource Access Denied page
 ------------------------------------------------------------------------ */
 .sbac-resource-access-denied {
 	.top-bar.last-top {
 	  max-width: 960px;
 		padding: 0;
-	
+
 		.block-sbac-resource-sbac-resource-back-button {
 			width: 960px;
 			height: 50px;
 			position: relative;
-			
+
 			.button {
 			  background-color: #0684AD;
 		    border: medium none;
@@ -3565,13 +3565,13 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		    text-align: center;
 		    text-shadow: none;
 		    vertical-align: top;
-		
+
 				&:hover {
 					background-color: #0684AD;
 					background-image: none;
 				}
 			}
-	
+
 			.button:before {
 			  content: "\e620";
 		    display: inline;
@@ -3584,11 +3584,11 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 			}
 		}
 	}
-	
+
 	.main-container {
 		margin-top: 5px;
 	}
-	
+
 	/*Nav search box*/
 	.search {
 	  text-align: right;
@@ -3599,7 +3599,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	    vertical-align: top;
 	    width: 200px;
 
-			.form-text, 
+			.form-text,
 			.form-text:focus {
 			  background: url("../images/search.png") no-repeat scroll 5% center rgba(0, 0, 0, 0);
 			  border-radius: 20px;
@@ -3631,44 +3631,44 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
     Create Help Page
 ------------------------------------------------------------------------ */
 .page-node-add-help-page {
-	
+
 	h1#page-title {
 		padding-left: 22px;
 	}
-	
+
 	.description {
 		line-height: 1.4;
 	}
-	
+
 	.form-textarea-wrapper textarea {
 		max-width: none;
 	}
-	
+
 	#body-add-more-wrapper {
 		.filter-wrapper {
 			padding-top: 5px;
 		}
 	}
-	
+
 	.image-widget-data {
 		width: 100%;
-		
+
 		input, button {
 			display: inline-block;
 		}
-		
+
 		input {
 			width: 50%;
 			margin-right: 20px;
 		}
 	}
-	
+
 	#edit-actions {
 		float: right;
 	}
 }
 
-#helpmodal, 
+#helpmodal,
 #current-help-topic-modal {
 	h2 {
 		text-align: center;
@@ -3686,7 +3686,7 @@ p.helpmodal-desc {
 .page-help-topics {
 	#main.columns {
 		padding: 0 40px;
-		
+
 		.view-help-topics {
 			li {
 				margin-left: 0;
@@ -3699,9 +3699,9 @@ p.helpmodal-desc {
 .page-admin-help-topics {
 	.main-container {
 		padding: 40px 45px 10px;
-		
+
 		.content {
-			width: 960px; 
+			width: 960px;
 			margin-left: -45px;
 			padding: 10px 40px !important;
 	 	}
@@ -3709,11 +3709,11 @@ p.helpmodal-desc {
 }
 
 .node-type-help-page {
-	
+
 	#main {
 		padding: 0 20px;
 	}
-	
+
 	.form-textarea-wrapper textarea {
 		max-width: 100%;
 	}
@@ -3736,4 +3736,9 @@ p.helpmodal-desc {
 /*Override the radius of gobal button*/
 button.radius, .button.radius {
   @include border-radius (6px);
+}
+
+// Admin fix input email
+form#sbac-user-filter-form #edit-email {
+  clear: both;
 }

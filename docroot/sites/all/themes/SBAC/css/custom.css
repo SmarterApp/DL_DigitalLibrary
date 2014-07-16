@@ -2,7 +2,6 @@
 @import url(../css/general_enclosed_foundicons.css);
 @import url(../css/general_foundicons.css);
 @import url(../css/social_foundicons.css);
-@import url(../css/sbac_icons.css);
 /*! normalize.css v2.1.0 | MIT License | git.io/normalize */
 /* ==========================================================================
    HTML5 display definitions
@@ -10,6 +9,7 @@
 /**
  * Correct `block` display not defined in IE 8/9.
  */
+@import url(../css/sbac_icons.css);
 /* line 22, ../sass/normalize.scss */
 article,
 aside,
@@ -11175,7 +11175,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
 }
 
 /* ---------------------------------------------------------------------
-    SBAC Resource Access Denied page 
+    SBAC Resource Access Denied page
 ------------------------------------------------------------------------ */
 /* line 3541, ../sass/custom.scss */
 .sbac-resource-access-denied {
@@ -11370,4 +11370,9 @@ button.radius, .button.radius {
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
   border-radius: 6px;
+}
+
+/* line 3742, ../sass/custom.scss */
+form#sbac-user-filter-form #edit-email {
+  clear: both;
 }
