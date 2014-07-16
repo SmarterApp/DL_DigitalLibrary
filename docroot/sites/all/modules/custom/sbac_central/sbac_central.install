@@ -1217,3 +1217,16 @@ function sbac_central_update_7081() {
 function sbac_central_update_7082() {
   module_enable(array('httprl'));
 }
+
+/**
+ * Move no-preview-image.png to the file directory.
+ * Need this so that image_style can work with the image.
+ */
+function sbac_central_update_7083() {
+  $theme_path = drupal_get_path('theme',$GLOBALS['theme']);
+  $default_file = $theme_path . '/images/no-preview-html5.png';
+  if (file_exists($default_file)) {
+    $public_path = drupal_realpath('public://');
+    copy($default_file, $public_path);
+  }
+}

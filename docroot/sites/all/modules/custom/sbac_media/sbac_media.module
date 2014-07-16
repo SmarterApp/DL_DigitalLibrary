@@ -1169,7 +1169,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
   sbac_media_html5_start_progress($file_attributes['nid']);
   $temp_path = $file_attributes['html5_temp_path'];
   // Generate unique path for HTML5 module.
-  $gcs_location = 'gs://html5/' . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'] . '/' . uniqid('', TRUE);
+  $gcs_location = $file_attributes['gcs_location'];
 
   // Create recursive dir iterator which skips dot folders
   $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
@@ -1183,6 +1183,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     if (!$fileinfo->isDir()) {
       $full_path = $fileinfo->getPathname();
       $path = str_replace($temp_path, '', $full_path);
+      error_log($gcs_location . $path);
       $bytes_written = file_put_contents($gcs_location . $path, $full_path);
       if ($bytes_written === FALSE) {
         $error_uploading = TRUE;
@@ -1192,6 +1193,9 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
   }
 
   if (!$error_uploading) {
+    // Save thumbnail
+    sbac_media_move_html5_thumbnail($file_attributes);
+    // Finish the progress indicator
     sbac_media_html5_finish_progress($file_attributes['nid']);
     // Remove local HTML5 directory
     $local_directory = "private://html5/" . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'];
@@ -1213,6 +1217,24 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     // Set resource to draft state.
     $node = node_load($file_attributes['nid']);
     workbench_moderation_moderate($node, 'draft');
+  }
+}
+
+/**
+ * Take the HTML5 thumbnail and move it to the correct private location.
+ *
+ * @param $file_attributes
+ */
+function sbac_media_move_html5_thumbnail($file_attributes) {
+  $zip_contents_path = $file_attributes['full_html5_temp_path'];
+  $thumbnail_path = $zip_contents_path . '/dlcomponents/thumbnail.png';
+  $thumbnail_move_path = 'private://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'] . '/';
+  error_log($thumbnail_path);
+  error_log($thumbnail_move_path);
+  if (file_prepare_directory($thumbnail_move_path, FILE_CREATE_DIRECTORY)) {
+    $real_path = drupal_realpath($thumbnail_move_path);
+    error_log($real_path);
+    copy($thumbnail_path, $real_path);
   }
 }
 
@@ -1294,6 +1316,7 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
             }
             $zip->close();
             global $user;
+            $unique_id = uniqid('', TRUE);
             $full_html5_temp_path = drupal_realpath($drupal_html5_temp_path) . '/' . $folder_name;
             $file_attributes['file'] = $file;
             $file_attributes['real_path'] = $real_path;
@@ -1302,6 +1325,8 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
             $file_attributes['html5_temp_path'] = drupal_realpath($drupal_html5_temp_path);
             $file_attributes['nid'] = $form['#node']->nid;
             $file_attributes['uid'] = $user->uid;
+            $file_attributes['gcs_location'] = 'gs://html5/' . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'] . '/' . $unique_id;
+            $file_attributes['unique_id'] = $unique_id;
             return TRUE;
           }
         }
@@ -1684,6 +1709,9 @@ function sbac_media_delete_media($js = FALSE) {
           // Delete any leftover progress indicator
           sbac_media_html5_delete_progress($form_state['values']['nid']);
 
+          // Delete the HTML5 thumbnail
+          sbac_media_html5_delete_thumbnail($form_state['values']['nid']);
+
           // Rebuild the HTML5 section.
           $form = array();
           $form_state = array();
@@ -1726,6 +1754,20 @@ function sbac_media_html5_delete_asynchronous($directory) {
       error_log($url);
       $deleted = $gcs['service']->objects->delete('sbac_media', 'local/' . $url);
     }
+  }
+}
+
+/**
+ * Delete the thumbnail that exists for the HTML5 module.
+ *
+ * @param $nid
+ */
+function sbac_media_html5_delete_thumbnail($nid) {
+  $thumbnail_dir = 'private://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
+  error_log($thumbnail_dir);
+  if (file_exists($thumbnail_dir)) {
+    error_log('file existed, delete it');
+    file_unmanaged_delete_recursive($thumbnail_dir);
   }
 }
 
