@@ -347,7 +347,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
       'topics' => l(($row->field_forum_topic_count_value ? $row->field_forum_topic_count_value : 0), 'node/' . $row->nid, array('fragment' => 'review-collaboration')),
       'posts' => ($row->field_forum_topic_comment_count_value? $row->field_forum_topic_comment_count_value : 0),
       'views' => $row->field_data_field_unique_views_field_unique_views_value,
-      'downloads' => $row->field_data_field_unique_downloads_field_unique_downloads_val,
+      'downloads' => $row->field_data_field_unique_downloads_field_unique_downloads_val ? $row->field_data_field_unique_downloads_field_unique_downloads_val : 0,
     );
   }
 
