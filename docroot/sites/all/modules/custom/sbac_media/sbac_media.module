@@ -17,6 +17,9 @@ include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/inc
 include_once 'sbac_media.features.inc';
 
 define('SBAC_MEDIA_100MB', 104857600);
+define('SBAC_MEDIA_HTML5_IN_PROGRESS', 1);
+define('SBAC_MEDIA_HTML5_FINISHED', 0);
+define('SBAC_MEDIA_HTML5_ERROR', 2);
 
 /**
  * Implements hook_init().
@@ -686,7 +689,8 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
       );
 
       $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " . $form['#node']->nid)->fetchObject();
-      if (!$html5_progress || $html5_progress->status == 0) {
+      // If there is HTML5 progress record and its set to Finished or Error.
+      if (!$html5_progress || ($html5_progress->status == SBAC_MEDIA_HTML5_FINISHED || $html5_progress->status == SBAC_MEDIA_HTML5_ERROR)) {
         // Delete link.
         $delete_link = '<div class="columns large-1">'.l('<i class="general foundicon-trash"></i>', 'sbac-media/nojs/delete-media', array(
             'attributes' => array(
@@ -1196,6 +1200,8 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     }
   }
   else {
+    // Set an error on the progress
+    sbac_media_html5_error_progress($file_attributes['nid']);
     // Send notication to user who submitted HTML5 module
     // and needs to know about the problem.
     if ($task = taskit_get_object('html5UploadError')) {
@@ -1216,7 +1222,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
  * @param $nid
  */
 function sbac_media_html5_start_progress($nid) {
-  $query = 'INSERT INTO {sbac_html5_progress} VALUES(' . $nid . ', 1, ' . time() . ', 0)';
+  $query = 'INSERT INTO {sbac_html5_progress} VALUES(' . $nid . ',' . SBAC_MEDIA_HTML5_IN_PROGRESS .', ' . time() . ', 0)';
   db_query($query);
 }
 
@@ -1226,7 +1232,17 @@ function sbac_media_html5_start_progress($nid) {
  * @param $nid
  */
 function sbac_media_html5_finish_progress($nid) {
-  $query = 'UPDATE {sbac_html5_progress} SET status = 0, finish_time = ' . time() . ' WHERE nid = ' . $nid;
+  $query = 'UPDATE {sbac_html5_progress} SET status = ' . SBAC_MEDIA_HTML5_FINISHED .', finish_time = ' . time() . ' WHERE nid = ' . $nid;
+  db_query($query);
+}
+
+/**
+ * Deletes the progress indicator row
+ *
+ * @param $nid
+ */
+function sbac_media_html5_error_progress($nid) {
+  $query = 'UPDATE {sbac_html5_progress} SET status = ' . SBAC_MEDIA_HTML5_ERROR .', finish_time = ' . time() . ' WHERE nid = ' . $nid;
   db_query($query);
 }
 
@@ -1643,50 +1659,38 @@ function sbac_media_delete_media($js = FALSE) {
         if ($form_state['html5']) {
           // Build path to delete file folder.
           $local_directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
-          $google_directory = str_replace('private://', '', $directory);
-          $gcs = sbac_media_get_google_cloud_storage();
-          $response = $gcs['service']->objects->listObjects('sbac_media', array('prefix' => 'local/' . $google_directory));
-          if ($response && isset($response['modelData']) && isset($response['modelData']['items'])) {
-            foreach ($response['modelData']['items'] as $object) {
-              $url = urldecode($object['selfLink']);
-              $pos = strpos($url, 'html5/');
-              $url = substr($url, $pos);
-//      $deleted = $gcs['service']->objects->delete('sbac_media', 'local/' . $url);
-            }
+          if (file_exists($local_directory)) {
+            file_unmanaged_delete_recursive($local_directory);
           }
-
-//          if (file_exists($local_directory)) {
-//            file_unmanaged_delete_recursive($local_directory);
-//          }
-//          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
 
           // Delete folder from Google.
-//          $callback_options = array(
-//            array(
-//              'function' => 'sbac_media_html5_delete_asynchronous',
-//              // Setup options array.
-//              'options' => array(
-//                'timeout' => 1200,
-//                'global_timeout' => 1200,
-//              ),
-//            ),
-//            $local_directory,
-//          );
-//          // Queue up the request.
-//          httprl_queue_background_callback($callback_options);
-//          // Execute request.
-//          httprl_send_request();
+          $callback_options = array(
+            array(
+              'function' => 'sbac_media_html5_delete_asynchronous',
+              // Setup options array.
+              'options' => array(
+                'timeout' => 1200,
+                'global_timeout' => 1200,
+              ),
+            ),
+            $local_directory,
+          );
+          // Queue up the request.
+          httprl_queue_background_callback($callback_options);
+          // Execute request.
+          httprl_send_request();
 
           // Delete any leftover progress indicator
-//          sbac_media_html5_delete_progress($form_state['values']['nid']);
-//
-//          // Rebuild the HTML5 section.
-//          $form = array();
-//          $form_state = array();
-//          $form_state['html5'] = TRUE;
-//          sbac_media_build_html5_section($form, $form_state);
-//          $rendered_output = drupal_render($form['field_content_module_container']);
-//          $output[] = ajax_command_html('#sbac-content-module-container', $rendered_output);
+          sbac_media_html5_delete_progress($form_state['values']['nid']);
+
+          // Rebuild the HTML5 section.
+          $form = array();
+          $form_state = array();
+          $form_state['html5'] = TRUE;
+          sbac_media_build_html5_section($form, $form_state);
+          $rendered_output = drupal_render($form['field_content_module_container']);
+          $output[] = ajax_command_html('#sbac-content-module-container', $rendered_output);
         }
         else {
           sbac_media_temp_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
@@ -1719,7 +1723,8 @@ function sbac_media_html5_delete_asynchronous($directory) {
       $url = urldecode($object['selfLink']);
       $pos = strpos($url, 'html5/');
       $url = substr($url, $pos);
-//      $deleted = $gcs['service']->objects->delete('sbac_media', 'local/' . $url);
+      error_log($url);
+      $deleted = $gcs['service']->objects->delete('sbac_media', 'local/' . $url);
     }
   }
 }

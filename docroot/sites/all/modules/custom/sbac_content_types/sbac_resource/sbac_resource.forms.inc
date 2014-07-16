@@ -1005,6 +1005,19 @@ function sbac_resource_validate_tags(&$form, &$form_state) {
 function sbac_resource_validate_advanced($form, $form_state) {
   $error = FALSE;
   $required = FALSE;
+
+  if (isset($form_state['html5']) && $form_state['html5'] == TRUE) {
+    $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " . $form['#node']->nid)->fetchObject();
+    // If there is HTML5 progress record and its set to Finished or Error.
+    if ($html5_progress && $html5_progress->status == SBAC_MEDIA_HTML5_ERROR) {
+      $error = 'Module upload did not complete. Please try again.';
+      form_set_error('field_posting_options_comment', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('advanced:html5:single:' . $error, 'sbac_resource_error');
+      $error = TRUE;
+    }
+  }
+
   if (isset($form_state['values']['field_posting_options']['und'][0]['value'])) {
     if ($form_state['values']['field_posting_options']['und'][0]['value'] == 2) {
       $required = TRUE;
