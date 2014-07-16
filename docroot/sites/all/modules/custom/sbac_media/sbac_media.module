@@ -1232,7 +1232,7 @@ function sbac_media_move_html5_thumbnail($file_attributes) {
   error_log($thumbnail_path);
   error_log($thumbnail_move_path);
   if (file_prepare_directory($thumbnail_move_path, FILE_CREATE_DIRECTORY)) {
-    $real_path = drupal_realpath($thumbnail_move_path);
+    $real_path = drupal_realpath($thumbnail_move_path) . '/thumbnail.png';
     error_log($real_path);
     copy($thumbnail_path, $real_path);
   }
