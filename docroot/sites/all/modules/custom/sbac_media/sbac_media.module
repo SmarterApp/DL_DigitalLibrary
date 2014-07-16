@@ -1228,13 +1228,25 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
 function sbac_media_move_html5_thumbnail($file_attributes) {
   $zip_contents_path = $file_attributes['full_html5_temp_path'];
   $thumbnail_path = $zip_contents_path . '/dlcomponents/thumbnail.png';
-  $thumbnail_move_path = 'private://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'] . '/';
-  error_log($thumbnail_path);
-  error_log($thumbnail_move_path);
+  $thumbnail_move_path = 'private://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'];
   if (file_prepare_directory($thumbnail_move_path, FILE_CREATE_DIRECTORY)) {
-    $real_path = drupal_realpath($thumbnail_move_path) . '/thumbnail.png';
-    error_log($real_path);
-    copy($thumbnail_path, $real_path);
+    $thumbnail_move_path .= '/thumbnail.png';
+    $real_path = drupal_realpath($thumbnail_move_path);
+    $worked = copy($thumbnail_path, $real_path);
+    if ($worked) {
+      // create the file record for drupal
+      $mime_type = file_get_mimetype($real_path);
+      $file = new stdClass();
+      $file->uid = $file_attributes['uid'];
+      $file->filename = 'thumbnail.png';
+      $file->uri = $thumbnail_move_path;
+      $file->filemime = $mime_type;
+      $file->filesize = filesize($real_path);
+      $file->status = 1;
+      $file->timestamp = time();
+      $file->type = $mime_type;
+      drupal_write_record('file_managed', $dir_file);
+    }
   }
 }
 
