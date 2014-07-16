@@ -223,6 +223,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Notify Post creator'),
         'class' => 'PostRemovedCreator',
       ),
+      // notify poster of HTML5 content
+      array(
+        'name' => 'html5_upload_error',
+        'description' => t('Notify HTML5 Poster'),
+        'class' => 'HTML5UploadError',
+      ),
     );
 
     foreach ($types as &$type) {
