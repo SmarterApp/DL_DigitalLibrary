@@ -344,10 +344,10 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
       'rating' => ($row->field_data_field_node_avg_rating_field_node_avg_rating_value
  ? sbac_resource_display_fivestar_rating($row->field_data_field_node_avg_rating_field_node_avg_rating_value) : 'No Rating'),
       'reviewers' => l(($row->number_reviewers ? $row->number_reviewers : '0'), 'node/' . $row->nid, array('fragment' => 'review-reviews')),
-      'topics' => l(($row->field_forum_topic_count_value ? $row->field_forum_topic_count_value : 0), 'node/' . $row->nid, array('fragment' => 'review-collaboration')),
-      'posts' => ($row->field_forum_topic_comment_count_value? $row->field_forum_topic_comment_count_value : 0),
-      'views' => $row->field_data_field_unique_views_field_unique_views_value,
-      'downloads' => $row->field_data_field_unique_downloads_field_unique_downloads_val ? $row->field_data_field_unique_downloads_field_unique_downloads_val : 0,
+      'topics' => l(($row->field_forum_topic_count_value ? $row->field_forum_topic_count_value : '0'), 'node/' . $row->nid, array('fragment' => 'review-collaboration')),
+      'posts' => ($row->field_forum_topic_comment_count_value? $row->field_forum_topic_comment_count_value : '0'),
+      'views' => $row->field_data_field_unique_views_field_unique_views_value ? $row->field_data_field_unique_views_field_unique_views_value : '0',
+      'downloads' => $row->field_data_field_unique_downloads_field_unique_downloads_val ? $row->field_data_field_unique_downloads_field_unique_downloads_val : '0',
     );
   }
 
