@@ -1121,21 +1121,22 @@ function sbac_media_html5_element_upload($form, $form_state) {
       $valid = sbac_media_save_html5_record($file_attributes, $form_state);
       if ($valid) {
         // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
-        $callback_options = array(
-          array(
-            'function' => 'sbac_media_html5_upload_asynchronous',
-            // Setup options array.
-            'options' => array(
-              'timeout' => 1200,
-              'global_timeout' => 1200,
-            ),
-          ),
-          $file_attributes,
-        );
-        // Queue up the request.
-        httprl_queue_background_callback($callback_options);
-        // Execute request.
-        httprl_send_request();
+        sbac_media_html5_upload_asynchronous($file_attributes);
+//        $callback_options = array(
+//          array(
+//            'function' => 'sbac_media_html5_upload_asynchronous',
+//            // Setup options array.
+//            'options' => array(
+//              'timeout' => 1200,
+//              'global_timeout' => 1200,
+//            ),
+//          ),
+//          $file_attributes,
+//        );
+//        // Queue up the request.
+//        httprl_queue_background_callback($callback_options);
+//        // Execute request.
+//        httprl_send_request();
       }
       // rebuild the form, output.
       $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
@@ -1171,6 +1172,8 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
   // Generate unique path for HTML5 module.
   $gcs_location = $file_attributes['gcs_location'];
 
+  $gcs = sbac_media_get_google_cloud_storage();
+
   // Create recursive dir iterator which skips dot folders
   $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
   // Flatten the recursive iterator, folders come before their files
@@ -1184,7 +1187,8 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
       $full_path = $fileinfo->getPathname();
       $path = str_replace($temp_path, '', $full_path);
       error_log($gcs_location . $path);
-      $bytes_written = file_put_contents($gcs_location . $path, $full_path);
+      $bytes_written = sbac_media_upload_htmm5_file($gcs, $gcs_location . $path, $full_path);
+//      $bytes_written = file_put_contents($gcs_location . $path, $full_path);
       if ($bytes_written === FALSE) {
         $error_uploading = TRUE;
         break;
@@ -1221,6 +1225,78 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
 }
 
 /**
+ * Upload the HTML5 file via Google API PHP Library
+ *
+ * Sets the ACL to public as well.
+ *
+ * @param $gcs
+ * @param $gcs_location
+ * @param $file_to_upload
+ *
+ * @return bool
+ */
+function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
+  try {
+    $bucket = variable_get('google_cdn_bucket_name');
+    $folder = variable_get('google_cdn_folder');
+    $buffer = file_get_contents($file_to_upload);
+
+    // Create the ACL Object
+    $acl = new Google_Service_Storage_ObjectAccessControl();
+    $acl->setEntity('allUsers');
+    $acl->setRole('READER');
+
+    // Create the Storage Object
+    $file = new Google_Service_Storage_StorageObject();
+    $path  = str_replace('gs://', '', $gcs_location);
+    $path = trim($path, '/');
+    $file->setName($folder . '/' . $path);
+    $file->setAcl($acl);
+    $mime_type = mime_content_type($file_to_upload);
+    $post_body = array(
+      'mimeType' => $mime_type,
+      'data' => $buffer,
+    );
+
+    // Create the MediaFileUpload object
+    $chunk_size_bytes = 1 * 1024 * 1024;
+    $gcs['client']->setDefer(TRUE);
+    $request = $gcs['service']->objects->insert($bucket, $file, $post_body);
+    $media = new Google_Http_MediaFileUpload(
+      $gcs['client'],
+      $request,
+      $mime_type,
+      NULL,
+      TRUE,
+      $chunk_size_bytes
+    );
+    $file_size = strlen($buffer);
+    $media->setFileSize($file_size);
+
+    // Send the content in chunks.
+    $upload_result = FALSE;
+    $pos = 0;
+    while (!$upload_result && $pos < $file_size) {
+      $chunk = substr($buffer, $pos, $chunk_size_bytes);
+      $upload_result = $media->nextChunk($chunk);
+      $pos += $chunk_size_bytes;
+    }
+    // return the result
+    if ($upload_result) {
+      $response = $gcs['service']->objectAccessControls->insert($bucket, $folder . '/' . $path, $acl);
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('google_cdn', $e, 'HTML5 Upload Exception');
+    return FALSE;
+  }
+}
+
+/**
  * Take the HTML5 thumbnail and move it to the correct private location.
  *
  * @param $file_attributes
@@ -1245,7 +1321,7 @@ function sbac_media_move_html5_thumbnail($file_attributes) {
       $file->status = 1;
       $file->timestamp = time();
       $file->type = $mime_type;
-      drupal_write_record('file_managed', $dir_file);
+      file_save($file);
     }
   }
 }
@@ -1339,6 +1415,7 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
             $file_attributes['uid'] = $user->uid;
             $file_attributes['gcs_location'] = 'gs://html5/' . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'] . '/' . $unique_id;
             $file_attributes['unique_id'] = $unique_id;
+            $file_attributes['folder_name'] = $folder_name;
             return TRUE;
           }
         }
@@ -1406,6 +1483,7 @@ function sbac_media_save_html5_record(&$file_attributes, $form_state) {
   $media->file_hash = $file_hash;
   $media->weight = 100;
   $media->status = 1;
+  $media->document_id = $file_attributes['unique_id'] . '::' . $file_attributes['folder_name'];
   $return = entity_save('media', $media);
 
   // Delete old thumbnail image if any
