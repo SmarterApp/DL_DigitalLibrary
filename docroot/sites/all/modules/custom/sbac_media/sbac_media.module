@@ -1188,7 +1188,6 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
       $path = str_replace($temp_path, '', $full_path);
       error_log($gcs_location . $path);
       $bytes_written = sbac_media_upload_htmm5_file($gcs, $gcs_location . $path, $full_path);
-//      $bytes_written = file_put_contents($gcs_location . $path, $full_path);
       if ($bytes_written === FALSE) {
         $error_uploading = TRUE;
         break;
@@ -1283,7 +1282,27 @@ function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
     }
     // return the result
     if ($upload_result) {
-      $response = $gcs['service']->objectAccessControls->insert($bucket, $folder . '/' . $path, $acl);
+      /**
+       * Updates an ACL entry on the specified object. (objectAccessControls.update)
+       *
+       * @param string $bucket
+       * Name of a bucket.
+       * @param string $object
+       * Name of the object.
+       * @param string $entity
+       * The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-
+       * emailAddress, allUsers, or allAuthenticatedUsers.
+       * @param Google_ObjectAccessControl $postBody
+       * @param array $optParams Optional parameters.
+       *
+       * @opt_param string generation
+       * If present, selects a specific revision of this object (as opposed to the latest version, the
+       * default).
+       * @return Google_Service_Storage_ObjectAccessControl
+       */
+//      public function update($bucket, $object, $entity, Google_Service_Storage_ObjectAccessControl $postBody, $optParams = array())
+//      {
+      $response = $gcs['service']->objectAccessControls->update($bucket, $folder . '/' . $path, 'allUsers', $acl, array());
       return TRUE;
     }
     else {
