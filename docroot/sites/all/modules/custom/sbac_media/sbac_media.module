@@ -20,6 +20,7 @@ define('SBAC_MEDIA_100MB', 104857600);
 define('SBAC_MEDIA_HTML5_IN_PROGRESS', 1);
 define('SBAC_MEDIA_HTML5_FINISHED', 0);
 define('SBAC_MEDIA_HTML5_ERROR', 2);
+define('SBAC_MEDIA_HTML5_GOOGLE_URL', '//storage.googleapis.com/html5_modules/');
 
 /**
  * Implements hook_init().
