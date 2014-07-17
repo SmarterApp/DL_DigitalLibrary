@@ -1228,3 +1228,14 @@ function sbac_central_update_7083() {
   $public_path = drupal_realpath('public://') . '/no-preview-html5.jpg';
   copy($image_path, $public_path);
 }
+
+/**
+ * If cache_eck exits, drop the table.
+ *
+ * In place because we update the module but broke stuff, so reverted back to non-cache version.
+ */
+function sbac_central_update_7084() {
+  if (db_table_exists('cache_eck')) {
+    db_drop_table('cache_eck');
+  }
+}
