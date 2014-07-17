@@ -144,15 +144,13 @@ i.icon-info {
     select {
       width: 85px;
 			font-size: 0.8em;
-    }&
+    }
   }
 }
 
-#edit-limit {
-  select {
+select#edit-limit {
     width: 85px;
     font-size: 0.8em;
-  }
 }
 
 .view-filters {
