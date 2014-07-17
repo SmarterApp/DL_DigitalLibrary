@@ -64,7 +64,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#required' => TRUE,
     '#size' => 30,
     '#disabled' => !$see_others,
-    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'name') : $name_value,
+    '#default_value' => sbac_report_get_session_value('sne', 'name') ? sbac_report_get_session_value('sne', 'name') : $name_value,
     '#attributes' => array('aria-required' => "true"),
   );
 
@@ -76,7 +76,7 @@ function sbac_report_individual_form($form, &$form_state) {
   // @see sbac_report.js
   $form['uid'] = array(
     '#type' => 'hidden',
-    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'uid') : $user->uid,
+    '#default_value' => sbac_report_get_session_value('sne', 'uid') ? sbac_report_get_session_value('sne', 'uid') : $user->uid,
     '#attributes' => array(
       'id' => 'sne-uid-field',
     ),
