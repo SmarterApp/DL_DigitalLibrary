@@ -75,6 +75,8 @@ function views_load_more_views_ajax_data_alter(&$commands, $view) {
 function theme_views_load_more_pager($vars) {
   global $pager_page_array, $pager_total;
 
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
+
   $tags = $vars['tags'];
   $element = $vars['element'];
   $parameters = $vars['parameters'];

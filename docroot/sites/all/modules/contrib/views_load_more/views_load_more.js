@@ -13,7 +13,6 @@
     // our presets.
     var wrapper = response.selector ? $(response.selector) : $(ajax.wrapper);
     var method = response.method || ajax.method;
-    var targetList = response.targetList || '';
     var effect = ajax.getEffect(response);
 
     // We don't know what response.data contains: it might be a string of text
@@ -47,9 +46,7 @@
     // Set up our default query options. This is for advance users that might
     // change there views layout classes. This allows them to write there own
     // jquery selector to replace the content with.
-    // Provide sensible defaults for unordered list, ordered list and table
-    // view styles.
-    var content_query = targetList && !response.options.content ? '.view-content ' + targetList : response.options.content || '.view-content';
+    var content_query = response.options.content || '.view-content';
 
     // If we're using any effects. Hide the new content before adding it to the DOM.
     if (effect.showEffect != 'show') {
@@ -60,23 +57,6 @@
     wrapper.find('.pager a').remove();
     wrapper.find('.pager').parent('.item-list').html(new_content.find('.pager'));
     wrapper.find(content_query)[method](new_content.find(content_query).children());
-
-    // Re-class the loaded content.
-    wrapper.find(content_query).children()
-      .removeClass('views-row-first views-row-last views-row-odd views-row-even')
-      .filter(':first')
-        .addClass('views-row-first')
-        .end()
-      .filter(':last')
-        .addClass('views-row-last')
-        .end()
-      .filter(':even')
-        .addClass('views-row-odd')
-        .end()
-      .filter(':odd')
-        .addClass('views-row-even')
-        .end();
-
     if (effect.showEffect != 'show') {
       wrapper.find(content_query).children(':not(:visible)')[effect.showEffect](effect.showSpeed);
     }
