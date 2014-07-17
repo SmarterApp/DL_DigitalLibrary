@@ -408,6 +408,7 @@ SELECT
   WHEN history.state = 'published' AND n.sticky = 1 THEN 'Posted with Distinction'
   WHEN history.state = 'published' AND n.sticky = 0 THEN 'Published'
   WHEN history.state = 'approved' THEN 'Arbitration Review'
+  WHEN history.state = 'removed' THEN 'Removed'
   WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Quality Criteria Review 1'
   WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 1 THEN 'Quality Criteria Review 2'
   WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) >= 2 THEN 'Quality Criteria Review 3'
