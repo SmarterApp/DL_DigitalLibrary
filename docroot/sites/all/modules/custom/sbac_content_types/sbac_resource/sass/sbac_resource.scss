@@ -351,14 +351,14 @@ a.sbac-grid-layout {
 		    position: absolute;
 				bottom: 0;
 				left: 0;
-				
+
 				.fivestar-static-form-item,
 				.rating-count {
 					display: inline-block;
 					vertical-align: top;
 					float: right;
 				}
-				
+
 				.fivestar-static-form-item {
 					margin-top: 5px;
 					margin-right: 5px;
@@ -367,7 +367,7 @@ a.sbac-grid-layout {
 
       .paradata-info {
         padding: 10px 0 0;
-				
+
 				.info-item {
 					display: block;
 					margin-bottom: 15px;
@@ -383,7 +383,7 @@ a.sbac-grid-layout {
           color: $darkgreen;
           clear: left;
         }
-				
+
 				.field-subject,
 				.field-grades,
         .field-media-types {
@@ -415,7 +415,7 @@ a.sbac-grid-layout {
       font-size: 1em;
       font-weight: normal;
       font-family: Arial, sans-serif;
-      max-width: 223px; 
+      max-width: 223px;
       word-wrap: break-word;
 			display: table-cell;
 			height: 60px;
@@ -454,7 +454,7 @@ a.sbac-grid-layout {
 			width: 25px;
 			display: inline-block;
 			float: right;
-			
+
 			img {
 				box-shadow: none;
 				margin-top: 0;
@@ -465,7 +465,7 @@ a.sbac-grid-layout {
 				height: 51px;
 				border: none;
 			}
-			
+
       .f-dropdown.open {
         top: -47px !important;
         right: -65px !important;
@@ -579,14 +579,14 @@ a.sbac-grid-layout {
       height: 115px;
 			margin: 0 0 15px 0;
 			padding: 12px 25px 20px 29px;
-			
+
 			.column.large-2 {
 				padding: 0;
 				display: inline-block;
 				margin: 3px 0 3px 8px;
 				width: 15.5%;
 			}
-			
+
 			.column.large-10 {
 				position: relative;
 				display: inline-block;
@@ -630,14 +630,14 @@ a.sbac-grid-layout {
       }
 
 			.shield-drop {
-				
+
 				img{
 					right: 40px;
 			    top: 2px;
 					width: 50px;
 					height: 51px;
 				}
-		
+
 				.f-dropdown.open {
 					top: -60px !important;
 		      right: -65px !important;
@@ -648,7 +648,7 @@ a.sbac-grid-layout {
 			    left: 0;
 			    bottom: 5px;
 				}
-				
+
       .list-view-info {
         font-size: 0.75em;
         color: $darkgreen;
@@ -705,7 +705,7 @@ a.sbac-grid-layout {
 /*Digital Library Resources*/
 .page-digital-library-resources.grid-view {
 	 .resoruce-bottom {
-   
+
    	&.rejected{
    	}
 
@@ -713,7 +713,7 @@ a.sbac-grid-layout {
 			padding-bottom: 50px;
    	}
 	}
-	
+
 	.favorites-link {
 		position: relative;
 	  bottom: 0;
@@ -722,20 +722,20 @@ a.sbac-grid-layout {
 	}
 }
 .page-digital-library-resources {
-	
+
 	.view-display-id-list_view {
 
 	  .resource-card {
 	    .column.large-10 {
 				float: left;
 				height: 68px;
-				
+
 				h3, .resource-stats  {
 					height: auto;
 					width: 74%;
 					display: block;
 				}
-				
+
 				.shield-drop {
 					img {
 						top: -13px;
@@ -743,7 +743,7 @@ a.sbac-grid-layout {
 						z-index: 99;
 					}
 				}
-				
+
 				.list-view-info {
 					-moz-box-sizing: border-box;
 				  background-color: #F2F2F2;
@@ -765,11 +765,11 @@ a.sbac-grid-layout {
 					height: 113px;
 					z-index: 98;
 					margin-top: 0;
-					
+
 					.stat-views {
 						margin-left: 20px;
 					}
-					
+
 					.rating {
 						border-top: 1px solid #FFFFFF;
 						box-shadow: 0 -1px 0 0 #CECECE;
@@ -777,14 +777,14 @@ a.sbac-grid-layout {
 				    padding-bottom: 5px;
 				    padding-top: 14px;
 						clear: both;
-						
+
 						.fivestar-static-form-item,
 						.rating-count {
 							display: inline-block;
 							vertical-align: top;
 							float: left;
 						}
-						
+
 						.rating-count {
 							margin-top: -5px;
 						}
@@ -792,75 +792,75 @@ a.sbac-grid-layout {
 						.fivestar-static-form-item {
 							margin-left: 23px;
 							margin-right: 5px;
-							
+
 							.star {margin-right: 5px;}
 						}
 					}
 				}
-				
+
 				.resource-button {
 					position: absolute;
 					bottom: -25px;
 					right: 200px;
 					margin-bottom: 0;
 				}
-				
+
 				.favorites-link {
 				    bottom: -17px;
 				    left: 15px;
 				}
 			}
-		}	
-	}	
+		}
+	}
 }
 
 /*My Rsources Page*/
 .page-my-resources.grid-view {
-	
+
 	.favorites-link {
 		position: relative;
 	  bottom: 0;
 	  left: 0;
 		margin: 5px 0;
 	}
-	
+
 	.paradata-info {
     padding: 10px 0 50px !important;
 	}
 }
 
 .page-my-resources.list-view  {
-	
+
 	.view-display-id-grid_view {
-		
+
 		.resoruce-bottom {
-			
+
 			.paradata-info {
 				float: left;
 				display: block;
 				width: 100%;
 				padding-bottom: 50px;
 			}
-			
+
 			.resource-button {
 				margin-right: 10px;
 			}
 		}
 	}
-	
+
 	.view-display-id-list_view {
-		
+
 		.resource-card {
-			
+
 			.column.large-10 {
 				height: 55px;
-				
+
 				.shield-drop img {
 				    right: -14px;
 				    top: -13px;
 				    z-index: 99;
 				}
-				
+
 				.list-view-info {
 				  -moz-box-sizing: border-box;
 			    background-color: #F2F2F2;
@@ -881,11 +881,11 @@ a.sbac-grid-layout {
 			    top: -12px;
 			    width: 222px;
 			    z-index: 98;
-			
+
 					.stat-views {
 						margin-left: 20px;
 					}
-					
+
 					.rating {
 					  border-top: 1px solid #FFFFFF;
 				    box-shadow: 0 -1px 0 0 #CECECE;
@@ -893,7 +893,7 @@ a.sbac-grid-layout {
 				    margin-top: 5px;
 				    padding-bottom: 5px;
 				    padding-top: 14px;
-						
+
 						.rating-count {
 							margin-left: 20px;
 						}
@@ -903,15 +903,15 @@ a.sbac-grid-layout {
 					}
 				}
 			}
-			
+
 			.favorites-link {
 			  bottom: -20px;
 		    left: 15px;
 			}
-			
+
 			.column.large-4 {
 				width: 26%;
-				
+
 				.resource-button {
 					margin-top: 10px;
 					margin-bottom: 0;
@@ -923,7 +923,7 @@ a.sbac-grid-layout {
 
 /*Resource Review Page*/
 .page-resource-review {
-	
+
 	.resource-card {
 		.column.large-4 {
 			width: 26%;
@@ -1019,7 +1019,7 @@ a.sbac-grid-layout {
       a {
         color:#0684AD;
       }
-			
+
 			a.ctools-use-modal {
 				width: 100%;
 				display: block;
@@ -1376,7 +1376,7 @@ a.sbac-grid-layout {
 		height: 455px;
 		/*background-size: cover;*/
 	}
-	
+
 	img.jwlogo {
 		width: 84px;
 		height: 20px;
@@ -1409,7 +1409,7 @@ a.sbac-grid-layout {
 		color: #62676E;
 		display: inline-block;
 	}
-	
+
 	.favorites-link {
 		display: inline-block;
 		width: auto;
@@ -1756,14 +1756,14 @@ a.sbac-grid-layout {
 
 				.shield-drop  {
 					width: auto;
-					
+
 					.f-dropdown.open {
 						right: -5px !important;
 						top: 38px !important;
-						
+
 						li {width: auto !important;}
 					}
-					
+
 					.f-dropdown:before {
 						-moz-border-bottom-colors: none;
 					  -moz-border-left-colors: none;
@@ -1776,7 +1776,7 @@ a.sbac-grid-layout {
 						left: 139px !important;
 						top: -12px;
 					}
-					
+
 					.f-dropdown:after {
 						-moz-border-bottom-colors: none;
 					  -moz-border-left-colors: none;
@@ -1824,27 +1824,27 @@ a.sbac-grid-layout {
 }
 /*Related Resource tab on Resource content Page*/
 .section-related-resources {
-	
+
 	.resoruce-bottom {
 		padding-bottom: 50px !important;
 	}
-	
+
 	.paradata-numbers {
-		.stat-views .f-dropdown, 
-		.stat-views .f-dropdown.open, 
-		.stat-downloads .f-dropdown, 
+		.stat-views .f-dropdown,
+		.stat-views .f-dropdown.open,
+		.stat-downloads .f-dropdown,
 		.stat-downloads .f-dropdown.open {
 			left: -25px !important;
 		}
-		
+
 	  .rating-count {
 			width:92px;
-			
+
 			.sbac-hover {
 				text-align: left;
 				width: 75px;
 			}
-			
+
 			.field-content {
 				float: right;
 				top: -20px;
@@ -1939,7 +1939,7 @@ a.category-hide {
 }
 
 /*For Chrome*/
-@media screen and (-webkit-min-device-pixel-ratio:0) { 
+@media screen and (-webkit-min-device-pixel-ratio:0) {
  /*a.category-hide {top:15px;} */
 }
 
@@ -2129,7 +2129,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	.modal-header {
 		padding-left: 0 !important;
 	}
-	
+
 	#modal-content {
 		overflow: hidden !important;
 		padding-left: 0;
@@ -2480,7 +2480,7 @@ a.more-less-text-trigger-less:after {
 			.feedback .comments-content {
 				width: auto !important;
 			}
-			
+
 			.criteria-set-title-contributor {
 				font-size: 13px;
 			  font-weight: bold;
@@ -2492,7 +2492,7 @@ a.more-less-text-trigger-less:after {
 			border-bottom: none;
 		}
 	}
-	
+
 	/*3 cloumns view*/
 	.feedback-item {
 		.feedback-item-triplet {
@@ -2836,7 +2836,7 @@ div[id*="edit-field-copyright-clearace-forms"] {
 
 //add favorites star
 .favorites-link {
-	
+
 	a {
 		background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
 		display: block;
@@ -2852,17 +2852,17 @@ div[id*="edit-field-copyright-clearace-forms"] {
 			background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
 			color: #62676e;
 		}
-		
+
 		&.sbac-favorites-link-yes:hover {
 			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 			color: #0c84ad;
 		}
-		
+
 		&.sbac-favorites-link-no {
 			background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
 			color: #62676e;
 		}
-		
+
 		&.sbac-favorites-link-no:hover {
 			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 			color: #0c84ad;
@@ -2906,31 +2906,31 @@ div[id*="edit-field-copyright-clearace-forms"] {
 }
 
 /*View & download icons of resource card*/
-.stat-views, 
+.stat-views,
 .stat-downloads,
 .rating-count {
   display: inline-block;
 	vertical-align: top;
 	position: relative;
-	
+
 	.f-dropdown:before {
 	    border-color: #FFFFFF rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 	    border-style: solid inset inset;
 	    left: 43px !important;
 	    top: 35px !important;
 	}
-	
+
 	.f-dropdown:after {
 	    border-color: #5E5E5E rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 	    left: 44px;
 	    top: 36px;
 	}
-	
+
 	.f-dropdown, .f-dropdown.open {
 		top: -49px !important;
 		left: -42px !important;
 		width: 100px;
-		
+
 		li {
 			text-align: center;
 			font-size: 14px !important;
@@ -2942,7 +2942,7 @@ div[id*="edit-field-copyright-clearace-forms"] {
 
 	a, .field-content {
 		display: inline-block;
-		
+
 		&:focus, &:visited, &:active {
 			outline: none;
 		}
@@ -2969,13 +2969,14 @@ div[id*="edit-field-copyright-clearace-forms"] {
 }
 
 .rating-count {
-	
+
 	.f-dropdown, .f-dropdown.open {
 		left: -10px !important;
 	}
-	.field-content { 
+	.field-content {
 		position: relative;
-		top: -3px;
+		top: -21px;
+    line-height: 0px
 	}
 }
 
@@ -2983,6 +2984,6 @@ div[id*="edit-field-copyright-clearace-forms"] {
 	.rating-count {
 		.f-dropdown {
 		left: 13px !important;
-		} 
+		}
 	}
 }

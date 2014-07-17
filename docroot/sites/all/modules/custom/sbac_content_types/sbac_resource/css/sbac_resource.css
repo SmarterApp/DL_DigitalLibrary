@@ -3046,10 +3046,11 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 /* line 2976, ../sass/sbac_resource.scss */
 .rating-count .field-content {
   position: relative;
-  top: -3px;
+  top: -21px;
+  line-height: 0px;
 }
 
-/* line 2984, ../sass/sbac_resource.scss */
+/* line 2985, ../sass/sbac_resource.scss */
 .page-digital-library-resources.list-view .rating-count .f-dropdown {
   left: 13px !important;
 }
