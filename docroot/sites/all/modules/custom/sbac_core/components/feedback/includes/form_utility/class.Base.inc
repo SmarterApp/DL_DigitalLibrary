@@ -124,6 +124,7 @@ class Base {
       'current',
       'title',
       'reminder',
+      'archived',
     );
 
     foreach ($properties as $property) {
