@@ -1,31 +1,6 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
 
-  Drupal.behaviors.flexslider = {
-    attach: function (context, settings) {
-      initSlider = function() {
-        jQuery(".flexslider").flexslider({
-          animation: "slide",
-          animationLoop: false,
-          itemMargin: 0,
-          itemWidth: 245,
-          slideshow: false
-        });
-      }
-      helpColorBox = function() {
-        if ($(".help-modal").length) {
-          $(".help-modal").colorbox({
-              inline: true,
-              width: "80%",
-              height: "600px",
-              onComplete: initSlider
-          });
-        }
-      }
-      helpColorBox();
-    }
-  };
-
   Drupal.behaviors.sbac_help_area = {
     attach: function (context, settings) {
       $('#helpmodal .views-field-field-help-icon a').click(function (e) {
