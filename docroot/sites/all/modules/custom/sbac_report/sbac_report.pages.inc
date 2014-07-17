@@ -403,10 +403,10 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
 
   $query = "
 SELECT
-  n.nid                                      AS nid,
-  n.title                                    AS node_title,
-  n.created                                  AS node_created,
-  n.sticky                                   AS node_sticky,
+  n.nid     AS nid,
+  n.title   AS node_title,
+  n.created AS node_created,
+  n.sticky  AS node_sticky,
   CASE
   WHEN history.state = 'needs_review' THEN 'Gate-Keeping Review'
   WHEN history.state = 'rejected' THEN 'Returned'
@@ -414,15 +414,28 @@ SELECT
   WHEN history.state = 'published' AND n.sticky = 0 THEN 'Published'
   WHEN history.state = 'approved' THEN 'Arbitration Review'
   WHEN history.state = 'removed' THEN 'Removed'
-  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Quality Criteria Review 1'
-  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 1 THEN 'Quality Criteria Review 2'
-  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) >= 2 THEN 'Quality Criteria Review 3'
-  END                                        AS state
+  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Gate-Keeping Review'
+  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 1 THEN 'Quality Criteria Review 1'
+  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 2 THEN 'Quality Criteria Review 2'
+  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 3 THEN 'Quality Criteria Review 3'
+  END       AS state
 FROM
     {node} n
     LEFT JOIN {node_revision} rev ON n.vid = rev.vid
     INNER JOIN {workbench_moderation_node_history} history ON rev.vid = history.vid
-    LEFT JOIN {field_data_field_recent_reviewers} r ON r.revision_id = rev.vid and r.field_recent_reviewers_target_id > 0
+    LEFT JOIN {eck_feedback} f ON f.node_id = n.nid AND f.completed = 1 AND f.created > (
+      SELECT
+        max(history2.stamp)
+      FROM {node} n2
+        LEFT JOIN {workbench_moderation_node_history} history2 ON history2.nid = n2.nid
+      WHERE
+        n2.nid = n.nid
+        AND history2.from_state = 'draft'
+        AND history2.state = 'needs_review'
+      GROUP BY history2.nid
+      HAVING count(history2.nid) > 1)
+    LEFT JOIN field_data_field_recent_reviewers r
+      ON r.field_recent_reviewers_target_id = f.uid AND n.nid = r.entity_id
 WHERE
   n.uid = :uid
   AND n.type IN ('resource')
