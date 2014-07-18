@@ -423,7 +423,7 @@ FROM
     {node} n
     LEFT JOIN {node_revision} rev ON n.vid = rev.vid
     INNER JOIN {workbench_moderation_node_history} history ON rev.vid = history.vid
-    LEFT JOIN {eck_feedback} f ON f.node_id = n.nid AND f.completed = 1 AND f.created > (
+    LEFT JOIN {eck_feedback} f ON f.node_id = n.nid AND f.completed = 1 AND f.created > IFNULL((
       SELECT
         max(history2.stamp)
       FROM {node} n2
@@ -433,7 +433,7 @@ FROM
         AND history2.from_state = 'draft'
         AND history2.state = 'needs_review'
       GROUP BY history2.nid
-      HAVING count(history2.nid) > 1)
+      HAVING count(history2.nid) > 1),0)
     LEFT JOIN {field_data_field_recent_reviewers} r ON r.field_recent_reviewers_target_id = f.uid AND n.nid = r.entity_id
 WHERE
   n.uid = :uid
