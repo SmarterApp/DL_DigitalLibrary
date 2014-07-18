@@ -1373,6 +1373,8 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
   try {
     $allowed_file_types = array('zip');
     $allowed_size = array(SBAC_MEDIA_100MB, 0);
+    error_log($form['#node']->nid);
+    watchdog('sbac-media', $form['#node']->nid);
     $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
     error_log($directory);
     watchdog('sbac-media', $directory);
