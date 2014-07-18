@@ -1121,7 +1121,8 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
     if (url_is_external($url) && !$thumbnail_exists) {
       $finfo = new finfo(FILEINFO_MIME_TYPE);
       $type = $finfo->buffer(file_get_contents($url));
-      $ext = array_pop(explode('/', $type));
+      $ext = explode('/', $type);
+      $ext = array_pop($ext);
       $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
       $filename = $filename . '.' . $ext;
 

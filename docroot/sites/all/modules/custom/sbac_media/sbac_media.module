@@ -41,15 +41,6 @@ function sbac_media_update_projects_alter(&$projects) {
 }
 
 /**
- * Implements hook_ctools_plugin_api().
- */
-function sbac_media_ctools_plugin_api($module = NULL, $api = NULL) {
-  if ($module == "file_entity" && $api == "file_default_displays") {
-    return array("version" => "1");
-  }
-}
-
-/**
  * Implements hook_menu().
  *
  * @return mixed
@@ -646,6 +637,8 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_media_build_html5_section(&$form, &$form_state) {
+  error_log("WHAT THE CACHE");
+  watchdog('sbac-media', 'CACHE PROBLEM?');
   // Content Module Container.
   $form['field_content_module_container']['#tree'] = TRUE;
   $form['field_content_module_container'] = array(
@@ -1115,6 +1108,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
   $valid = FALSE;
   drupal_get_messages(); // clear messages if they were some from before.
   $file_attributes = array();
+  error_log("WHAT IS GOING ON");
   sbac_media_save_temp_html5($file_attributes, $form, $form_state);
   if ($file_attributes) {
     // Check that the zip saved.
@@ -1372,10 +1366,14 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
   try {
     $allowed_file_types = array('zip');
     $allowed_size = array(SBAC_MEDIA_100MB, 0);
+    error_log($form['#node']->nid);
+    watchdog('sbac-media', $form['#node']->nid);
     $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
     error_log($directory);
+    watchdog('sbac-media', $directory);
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     error_log('writable: ' . $writable);
+    watchdog('sbac-media', $writable);
     if ($writable) {
       $validators = array(
         'file_validate_extensions' => $allowed_file_types,

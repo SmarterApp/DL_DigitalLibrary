@@ -1385,6 +1385,18 @@ function get_resource_review_output_for_csv(&$data, &$row) {
 }
 
 /**
+ * Generates an absolute URL for the report generated.
+ * @param  [type] $fieldkey [description]
+ * @param  [type] $data     [description]
+ * @param  [type] $resource [description]
+ * @return string           Absolute URL for the report.
+ */
+function get_node_url($fieldkey, $data, $resource) {
+  $path = drupal_get_path_alias('node/' . $resource->nid->value());
+  return url($path, array('absolute' => TRUE));
+}
+
+/**
  *   Here is where the Resource Detail Statistics Report is defined.  The array created here defines where to find
  * the data for each column of the report within the queried data.
  *
@@ -1396,6 +1408,11 @@ function set_report_columns() {
     array(
       'node_schema' => array( // sheet 1
         'fieldkeys' => array( // row schema definition of the fields.
+          array(
+            '',
+            'URL',
+            'function' => 'get_node_url'
+          ),
           array('field_publisher', 'Owner'),
           array('field_author', 'Author'),
           array('field_alt_body', 'Resource Summary'),
