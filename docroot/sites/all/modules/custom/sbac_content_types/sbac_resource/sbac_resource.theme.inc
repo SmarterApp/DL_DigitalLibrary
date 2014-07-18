@@ -277,7 +277,7 @@ function sbac_resource_views_view__resources__grid_view__preprocess(&$vars) {
   ctools_add_js('ajax-responder');
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }
 
 /**
@@ -291,7 +291,7 @@ function sbac_resource_views_view__resources__list_view__preprocess(&$vars) {
   ctools_add_js('ajax-responder');
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }
 
 /**
@@ -424,7 +424,7 @@ function sbac_resource_views_view__my_resources__grid_view__preprocess(&$vars) {
   ctools_add_js('ajax-responder');
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }
 
 /**
@@ -438,7 +438,7 @@ function sbac_resource_views_view__my_resources__list_view__preprocess(&$vars) {
   ctools_add_js('ajax-responder');
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }
 
 /**
@@ -583,7 +583,7 @@ function sbac_resource_views_view__resource_review__grid_view__preprocess(&$vars
   ctools_add_js('ajax-responder');
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }
 
 /**
@@ -597,7 +597,7 @@ function sbac_resource_views_view__resource_review__list_view__preprocess(&$vars
   ctools_add_js('ajax-responder');
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }
 
 /**
@@ -710,11 +710,12 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     }
 
     $default_file = 'public://file.png';
-    $uri = NULL; $url = NULL;
+    $uri = NULL;
+    $url = NULL;
     if (isset($fields['field_thumbnail_uri'])) {
       $thumbnail_uri = $fields['field_thumbnail_uri']->content;
-      $thumbnail_uri  = str_replace('<div class="field-content">', '', $thumbnail_uri);
-      $thumbnail_uri  = str_replace('</div>', '', $thumbnail_uri);
+      $thumbnail_uri = str_replace('<div class="field-content">', '', $thumbnail_uri);
+      $thumbnail_uri = str_replace('</div>', '', $thumbnail_uri);
       $thumbnail_pieces = explode('::', $thumbnail_uri);
       $uri = $thumbnail_pieces[0];
       $url = $thumbnail_pieces[1];
@@ -734,7 +735,7 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       'style_name' => 'resource_image_grid',
       'path' => $uri,
       'attributes' => array('class' => $class),
-      'alt'=>'Resource thumbnail image'
+      'alt' => 'Resource thumbnail image'
     ));
     $variables['mime-type'] = file_get_mimetype($url);
     $variables['file-type-icon'] = 'document'; //_sbac_resource_determine_file_type_icon($ext);
@@ -971,7 +972,15 @@ function _sbac_resource_my_resources_links($fields) {
         $url = url('node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['text'] = t('In Review');
+        $results = _sbac_resource_get_review_progress($nid);
+        if ($results->rowCount()) {
+          $result = $results->fetchAssoc();
+         // they don't want the Quality Criteria Review 1,2,3 etc, so we'll remove the number at the end
+          $variables['text'] = preg_replace('/\s\d$/ix', '', $result['state']);
+        }
+        else {
+          $variables['text'] = t('In Review');
+        }
 
         $gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
         $completed_gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
@@ -1109,6 +1118,66 @@ function _sbac_resource_my_resources_links($fields) {
     }
   }
   return $variables;
+}
+
+/**
+ * Get the detailed review progress from the current state
+ *
+ * @param $nid
+ * @param null $uid
+ * @param $from_date
+ * @param $to_date
+ * @param null $order
+ * @param string $order_direction
+ * @param int $limit
+ * @return \DatabaseStatementInterface|null
+ */
+function _sbac_resource_get_review_progress($nid = NULL, $uid = NULL, $from_date = NULL, $to_date = NULL, $limit = NULL, $order = NULL, $order_direction = 'ASC') {
+  $query = db_select('node', 'n');
+  // get the history
+  $query->innerJoin('workbench_moderation_node_history', 'h', 'h.nid = n.nid');
+  // get the feedback. Make sure we're only getting the completed feedback since the submission/resubmission
+  $query->leftJoin('eck_feedback', 'f', "f.node_id = n.nid AND f.completed = 1 AND f.created > IFNULL((SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = n.nid AND h2.from_state = 'draft' and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1), 0)");
+  // get the reviewers
+  $query->leftJoin('field_data_field_recent_reviewers', 'r', 'r.field_recent_reviewers_target_id = f.uid AND n.nid = r.entity_id');
+  $query->fields('n', array('nid', 'title', 'created', 'sticky'));
+  $query->addExpression("
+  CASE
+  WHEN h.state = 'needs_review' THEN 'Gate-Keeping Review'
+  WHEN h.state = 'rejected' THEN 'Returned'
+  WHEN h.state = 'published' AND n.sticky = 1 THEN 'Posted with Distinction'
+  WHEN h.state = 'published' AND n.sticky = 0 THEN 'Published'
+  WHEN h.state = 'approved' THEN 'Arbitration Review'
+  WHEN h.state = 'removed' THEN 'Removed'
+  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Gate-Keeping Review'
+  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 1 THEN 'Quality Criteria Review 1'
+  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 2 THEN 'Quality Criteria Review 2'
+  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 3 THEN 'Quality Criteria Review 3'
+  END", 'state');
+  $query->condition('n.type', 'resource');
+  $query->condition('h.state', array('draft'), 'NOT IN');
+  $query->condition('h.current', 1);
+  if ($uid) {
+    $query->condition('n.uid', $uid);
+  }
+  if ($nid) {
+    $query->condition('n.nid', $nid);
+  }
+  $query->groupBy('n.nid');
+  if ($order && $order == 'state') {
+    $query->orderBy('state', $order_direction);
+  }
+  else {
+    $query->orderBy('n.created', $order_direction);
+  }
+  if ($limit && $limit != -1) {
+    $query->range(0, $limit);
+  }
+  if ($from_date && $to_date) {
+    $query->where("DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date", array(':from_date' => $from_date, ':to_date' => $to_date));
+  }
+//  dpq($query);
+  return $query->execute();
 }
 
 /**
@@ -1305,29 +1374,29 @@ function _sbac_resource_start_review_link($nid, $type, $style = 'button') {
   $link_text = t('Start Review');
   if ($style == 'button') {
     $content = l($link_text, 'node/' . $nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
-      'attributes' => array(
-        'class' => array(
-          'use-ajax',
-          'use-dialog',
-          'medium',
-          'button',
-          'start-review-trigger',
+        'attributes' => array(
+          'class' => array(
+            'use-ajax',
+            'use-dialog',
+            'medium',
+            'button',
+            'start-review-trigger',
+          ),
+          'id' => $trigger_id,
         ),
-        'id' => $trigger_id,
-      ),
-    ));
+      ));
   }
   else {
     $content = l($link_text, 'node/' . $nid . '/feedback/' . $stub . '/start/' . $trigger_id, array(
-      'attributes' => array(
-        'class' => array(
-          'use-ajax',
-          'use-dialog',
-          'start-review-trigger',
+        'attributes' => array(
+          'class' => array(
+            'use-ajax',
+            'use-dialog',
+            'start-review-trigger',
+          ),
+          'id' => $trigger_id,
         ),
-        'id' => $trigger_id,
-      ),
-    ));
+      ));
   }
   return $content;
 }
@@ -1338,17 +1407,17 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
   $edit_link = '';
 
   $vocab_labels = array(
-    'subject'                      => t('Subjects'),
-    'grades'                       => t('Grades'),
-    'attributes'                   => t('Attributes of the Formative Assessment Process'),
-    'digital_media_type'           => t('Media Types'),
-    'focus'                        => t('Resource Type'),
-    'intended_end_user'            => t('Intended End Users'),
+    'subject' => t('Subjects'),
+    'grades' => t('Grades'),
+    'attributes' => t('Attributes of the Formative Assessment Process'),
+    'digital_media_type' => t('Media Types'),
+    'focus' => t('Resource Type'),
+    'intended_end_user' => t('Intended End Users'),
     'intended_student_populations' => t('Intended Student Populations'),
-    'educational_use'              => t('Educational Use'),
-    'smarter_balanced_keyword'     => t('Module Type'),
-    'geographical_settings'        => t('Geographic Settings'),
-    'education_alignment'          => t('Common Core State Standards'),
+    'educational_use' => t('Educational Use'),
+    'smarter_balanced_keyword' => t('Module Type'),
+    'geographical_settings' => t('Geographic Settings'),
+    'education_alignment' => t('Common Core State Standards'),
   );
 
   $view_filters = array();
@@ -1391,7 +1460,7 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
     }
   }
 
-  if (!empty($view_filters) ){
+  if (!empty($view_filters)) {
     $item_list_params = array(
       'items' => $view_filters,
       'type' => 'ul',
