@@ -434,8 +434,7 @@ FROM
         AND history2.state = 'needs_review'
       GROUP BY history2.nid
       HAVING count(history2.nid) > 1)
-    LEFT JOIN field_data_field_recent_reviewers r
-      ON r.field_recent_reviewers_target_id = f.uid AND n.nid = r.entity_id
+    LEFT JOIN {field_data_field_recent_reviewers} r ON r.field_recent_reviewers_target_id = f.uid AND n.nid = r.entity_id
 WHERE
   n.uid = :uid
   AND n.type IN ('resource')
