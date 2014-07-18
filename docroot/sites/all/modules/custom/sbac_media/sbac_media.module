@@ -1381,7 +1381,9 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
         'file_validate_size' => $allowed_size,
       );
       // File is temporarily saved.
+      error_log('uploading');
       $file = file_save_upload('field_content_module_picker', $validators, $directory, FILE_EXISTS_REPLACE);
+      error_log('uploading 22');
       if ($file) {
         // Open the zip and save the file.
         $real_path = drupal_realpath($file->uri);
