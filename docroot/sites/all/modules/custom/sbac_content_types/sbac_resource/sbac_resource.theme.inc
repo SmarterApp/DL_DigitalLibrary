@@ -1025,11 +1025,9 @@ function _sbac_resource_my_resources_links($fields) {
 
         break;
       case 'rejected':
-        $notification_url = drupal_get_path_alias('user/' . $user->uid);
-        $variables['buttons'][] = l('View Notification', $notification_url, array('absolute' => TRUE, 'fragment' => 'profile-notifications', 'attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['links'][] = l('View Notification', $notification_url, array('absolute' => TRUE, 'fragment' => 'profile-notifications', 'query' => array('destination' => arg(0))));
         $url = url('node/' . $nid . '/edit', array('absolute' => TRUE));
+        $variables['buttons'][] = l('Edit & Resubmit', $url, array('absolute' => TRUE, 'attributes' => array('class' => array('medium', 'button'))));
         $variables['links'][] = l('Edit & Resubmit', $url, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['text'] = t('Returned');
         break;
