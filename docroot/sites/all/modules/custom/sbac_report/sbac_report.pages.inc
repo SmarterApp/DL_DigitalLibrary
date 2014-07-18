@@ -226,6 +226,9 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
   if (isset($_GET['sort_rs'])) {
     $sort = $_GET['sort_rs'];
   }
+  if (isset($_SESSION['sbac_report_posted_rs'])) {
+    $limit = $_SESSION['sbac_report_posted_rs'];
+  }
   $opp_sort = ($sort == 'asc' ? 'desc' : 'asc');
   $url = '/reports?items_per_page_rs=';
   $data['table_title_query'] = $url . $limit . '&order_rs=title&sort_rs=' . $opp_sort;
@@ -531,6 +534,7 @@ function sbac_report_posted_resource_stats_pager_form($form, &$form_state, $data
  */
 function sbac_report_posted_resource_stats_pager_form_ajax($form, &$form_state) {
   $values = $form_state['values'];
+  $_SESSION['sbac_report_posted_rs'] = $values['limit_2'];
   $output = '<div id="posted-resources-stats">';
   $output .= sbac_report_build_resource_statistics($values['uid'], $values['date_range'], $values['limit_2']);
   $output .= '</div>';
