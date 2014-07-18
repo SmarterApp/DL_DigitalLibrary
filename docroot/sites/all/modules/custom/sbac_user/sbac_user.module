@@ -256,6 +256,8 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_school_name']['#disabled'] = TRUE;
     }
     else {
+      $form['field_first_name']['#disabled']  = TRUE;
+      $form['field_last_name']['#disabled']   = TRUE;
       $form['account']['name']['#type'] = 'hidden';
       $form['account']['pass']['#type'] = 'hidden';
       $form['account']['current_pass']['#type'] = 'hidden';

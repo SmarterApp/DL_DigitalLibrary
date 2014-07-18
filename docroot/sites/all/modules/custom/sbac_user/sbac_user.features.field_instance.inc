@@ -225,7 +225,7 @@ function sbac_user_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Enter the grades you are most comfortable teaching / supporting.',
+        'label_help_description' => 'Indicate the grade(s) in which you have expertise.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
@@ -257,7 +257,7 @@ function sbac_user_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'field_introduction',
-    'label' => 'About me',
+    'label' => 'Other Professional Experiences and Accomplishments',
     'profanity' => 1,
     'required' => 0,
     'settings' => array(
@@ -268,7 +268,7 @@ function sbac_user_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Enter something meaningful about you to share with others.',
+        'label_help_description' => 'Share other professional experiences, certifications, awards, and accomplishments.',
         'maxlength_js' => 300,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: <strong>@remaining</strong>',
@@ -276,7 +276,7 @@ function sbac_user_field_default_field_instances() {
         'rows' => 3,
       ),
       'type' => 'text_textarea',
-      'weight' => -2,
+      'weight' => 6,
     ),
   );
 
@@ -620,7 +620,7 @@ function sbac_user_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Please indicate the student groups you have experience teaching / supporting.',
+        'label_help_description' => 'Indicate the student population(s) in which you have expertise.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
@@ -750,7 +750,7 @@ function sbac_user_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => 1,
-        'label_help_description' => 'Please indicate the subject areas you are most comfortable teaching / supporting.',
+        'label_help_description' => 'Indicate the subject area(s) in which you have expertise.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
