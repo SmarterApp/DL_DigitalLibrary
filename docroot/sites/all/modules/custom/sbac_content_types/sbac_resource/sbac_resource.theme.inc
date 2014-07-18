@@ -702,6 +702,7 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
  */
 function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   $variables = array();
+  $thumbnail_pieces = array();
   if (isset($fields['nid']->raw)) {
     $class = 'grid-image lazy';
     if ($view_display == 'list') {
@@ -738,7 +739,7 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     $variables['mime-type'] = file_get_mimetype($url);
     $variables['file-type-icon'] = 'document'; //_sbac_resource_determine_file_type_icon($ext);
   }
-  if ($thumbnail_pieces[0] != 'na' && $thumbnail_pieces[1] != 'na') {
+  if (count($thumbnail_pieces) && $thumbnail_pieces[0] != 'na' && $thumbnail_pieces[1] != 'na') {
     return $variables;
   }
   else {
