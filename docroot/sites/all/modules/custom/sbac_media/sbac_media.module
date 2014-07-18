@@ -20,6 +20,7 @@ define('SBAC_MEDIA_100MB', 104857600);
 define('SBAC_MEDIA_HTML5_IN_PROGRESS', 1);
 define('SBAC_MEDIA_HTML5_FINISHED', 0);
 define('SBAC_MEDIA_HTML5_ERROR', 2);
+define('SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION', 'html5_modules');
 define('SBAC_MEDIA_HTML5_GOOGLE_URL', '//storage.googleapis.com/html5_modules/');
 
 /**
@@ -1236,7 +1237,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
  */
 function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
   try {
-    $bucket = 'html5_modules';
+    $bucket = SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION;
     $folder = variable_get('google_cdn_folder');
     $buffer = file_get_contents($file_to_upload);
 
@@ -1372,6 +1373,7 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
     $allowed_file_types = array('zip');
     $allowed_size = array(SBAC_MEDIA_100MB, 0);
     $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
+    error_log($directory);
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     if ($writable) {
       $validators = array(
@@ -1828,7 +1830,8 @@ function sbac_media_delete_media($js = FALSE) {
 function sbac_media_html5_delete_asynchronous($directory) {
   $google_directory = str_replace('private://', '', $directory);
   $gcs = sbac_media_get_google_cloud_storage();
-  $response = $gcs['service']->objects->listObjects('sbac_media', array('prefix' => 'local/' . $google_directory));
+  $folder = variable_get('google_cdn_folder');
+  $response = $gcs['service']->objects->listObjects(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, array('prefix' => $folder . '/' . $google_directory));
   if ($response && isset($response['modelData']) && isset($response['modelData']['items'])) {
     foreach ($response['modelData']['items'] as $object) {
       $url = urldecode($object['selfLink']);
