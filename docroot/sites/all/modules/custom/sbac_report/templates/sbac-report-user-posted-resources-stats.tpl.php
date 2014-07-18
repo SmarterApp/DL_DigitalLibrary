@@ -1,5 +1,5 @@
 <div
-  class="view view-contributed-resources view-id-posted_resource_stats">
+  class="view view-contributed-resources view-id-posted_resource_stats" id="posted-resources-stats">
   <div class="view-content">
     <table class="views-table cols-8">
       <thead>
@@ -27,10 +27,10 @@
           </a>
         </th>
         <th class="views-field views-field-created active">
-          <a href="<?php echo $data['table_created_query']; ?>" title="sort by Posted Date"class="active">Posted
+          <a href="<?php echo $data['table_posted_query']; ?>" title="sort by Posted Date"class="active">Posted
           <?php
-            if (isset($data['created_image'])) {
-              echo $data['created_image'];
+            if (isset($data['posted_image'])) {
+              echo $data['posted_image'];
             }
           ?>
           </a>
