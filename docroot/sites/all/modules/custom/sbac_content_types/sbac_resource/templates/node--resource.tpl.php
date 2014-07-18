@@ -137,6 +137,9 @@
   </div>
   <?php endif; ?>
 
+  <?php if(isset($edit_resubmit)): ?>
+    <p><?php print $edit_resubmit; ?></p>
+  <?php endif; ?>
   <?php if (isset($flag['resource']) && count($flag) > 0): ?>
     <div class="resource-flag-information <?php echo $flag['urgent_css']; ?>">
       <div class="flag-status"><?php echo $flag['status']; ?></div>
