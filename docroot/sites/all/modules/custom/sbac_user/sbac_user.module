@@ -317,8 +317,9 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
         'field_special_populations',
       );
       $form['field_privacy']['und2'] = array(
-        '#prefix' => '<div class="sbac-privacy-title">Visibility required</div>
+        '#prefix' => '<div class="sbac-privacy-container"><div class="sbac-privacy-title">Visibility required</div>
                       <div class="sbac-privacy-desc">These fields will be shown to all users in the Digital Library</div>',
+        '#suffix' => '</div>',
         '#type' => 'checkboxes',
         '#default_value' => $default_privacy,
         '#disabled' => TRUE,
@@ -335,12 +336,14 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
                                           <div class="sbac-privacy-cont-desc">'
                                             . $form['field_privacy']['und']['#description'] .
                                           '</div>';
-      $form['field_privacy']['und']['#prefix'] = '<div class="sbac-privacy-title">
-                                                    Visibility optional
-                                                  </div>
-                                                  <div class="sbac-privacy-desc">
-                                                    Select the personal information you would like visible to other Digital Library users.
-                                                  </div>';
+      $form['field_privacy']['und']['#prefix'] = '<div class="sbac-privacy-container">
+                                                    <div class="sbac-privacy-title">
+                                                      Visibility optional
+                                                    </div>
+                                                    <div class="sbac-privacy-desc">
+                                                      Select the personal information you would like visible to other Digital Library users.
+                                                    </div>';
+      $form['field_privacy']['und']['#suffix'] = '</div>';
       $form['field_privacy']['und']['#title'] = '';
       $form['field_privacy']['und']['#description'] = '';
     }
