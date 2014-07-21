@@ -216,7 +216,6 @@ function drush_sbac_resource_update_node_review_averages() {
 }
 
 function drush_sbac_resource_update_thumbnails() {
-  ini_set('memory_limit', '512M');
   $row = 0;
   $start_time = time();
   drush_print('Start time', $start_time);
