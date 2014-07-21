@@ -1825,8 +1825,14 @@ function sbac_resource_query_alter(&$query) {
           $length = strlen($filter_name);
           $number = substr($key, $length);
           if ($number == 0) {
-            $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.entity_id';
-            $tables[$key]['arguments'] = array();
+            if (strpos($filter_name, 'taxonomy_index_value_') !== FALSE) {
+              $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.nid';
+              $tables[$key]['arguments'] = array();
+            }
+            else {
+              $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.entity_id';
+              $tables[$key]['arguments'] = array();
+            }
           }
           else {
             unset($tables[$key]);
@@ -1857,12 +1863,11 @@ function sbac_resource_query_alter(&$query) {
                                 $field = $clause4['field'];
                                 foreach ($possible_filters as $filter_name) {
                                   if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
-                                    $result = preg_replace('/' . $filter_name . '[1-9]/', $filter_name . '0', $field);
                                     if (is_array($conditions4[0]['value'])) {
                                       array_push($conditions4[0]['value'], $clause4['value']);
                                     }
                                     else {
-                                      $value =  $conditions4[0]['value'];
+                                      $value = $conditions4[0]['value'];
                                       $conditions4[0]['value'] = array($value, $clause4['value']);
                                       $conditions4[0]['operator'] = 'IN';
                                     }
@@ -1871,6 +1876,21 @@ function sbac_resource_query_alter(&$query) {
                                 }
                               }
                             }
+                          }
+                        }
+                        else if (isset($clause3['field'])) {
+                          $field = $clause3['field'];
+                          $filter_name = 'taxonomy_index_value_';
+                          if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
+                            if (is_array($conditions3[0]['value'])) {
+                              array_push($conditions3[0]['value'], $clause3['value']);
+                            }
+                            else {
+                              $value = $conditions3[0]['value'];
+                              $conditions3[0]['value'] = array($value, $clause3['value']);
+                              $conditions3[0]['operator'] = 'IN';
+                            }
+                            unset($conditions3[$key3]);
                           }
                         }
                       }
@@ -1883,7 +1903,6 @@ function sbac_resource_query_alter(&$query) {
         }
       }
     }
-
     $query->groupBy("node.nid");
   }
 }
