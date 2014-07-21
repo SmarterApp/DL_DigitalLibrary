@@ -216,7 +216,9 @@ function drush_sbac_resource_update_node_review_averages() {
 }
 
 function drush_sbac_resource_update_thumbnails() {
+  ini_set('memory_limit', '512M');
   $row = 0;
+  drush_print('Start time', time());
 
   $max_nid = db_query("SELECT MAX(n.nid)
                        FROM   {node} n
@@ -247,4 +249,6 @@ function drush_sbac_resource_update_thumbnails() {
       unset($node);
     }
   }
+
+  drush_print('End time', time());
 }
