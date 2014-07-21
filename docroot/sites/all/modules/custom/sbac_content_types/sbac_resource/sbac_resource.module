@@ -1682,22 +1682,22 @@ function sbac_resource_query_alter(&$query) {
  * @param $key4
  * @param $possible_filters
  */
-//function sbac_resource_optimize_field_query(&$clause4, &$conditions4, &$key4, &$possible_filters) {
-//  $field = $clause4['field'];
-//  foreach ($possible_filters as $filter_name) {
-//    if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
-//      if (is_array($conditions4[0]['value'])) {
-//        array_push($conditions4[0]['value'], $clause4['value']);
-//      }
-//      else {
-//        $value = $conditions4[0]['value'];
-//        $conditions4[0]['value'] = array($value, $clause4['value']);
-//        $conditions4[0]['operator'] = 'IN';
-//      }
-//      unset($conditions4[$key4]);
-//    }
-//  }
-//}
+function sbac_resource_optimize_field_query(&$clause4, &$conditions4, &$key4, &$possible_filters) {
+  $field = $clause4['field'];
+  foreach ($possible_filters as $filter_name) {
+    if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
+      if (is_array($conditions4[0]['value'])) {
+        array_push($conditions4[0]['value'], $clause4['value']);
+      }
+      else {
+        $value = $conditions4[0]['value'];
+        $conditions4[0]['value'] = array($value, $clause4['value']);
+        $conditions4[0]['operator'] = 'IN';
+      }
+      unset($conditions4[$key4]);
+    }
+  }
+}
 
 /**
  * Removes OR statements and creates an IN for taxonomy_index only
@@ -1706,17 +1706,17 @@ function sbac_resource_query_alter(&$query) {
  * @param $conditions3
  * @param $key3
  */
-//function sbac_resource_optimize_taxonomy_query(&$clause3, &$conditions3, &$key3) {
-//  if (is_array($conditions3[0]['value'])) {
-//    array_push($conditions3[0]['value'], $clause3['value']);
-//  }
-//  else {
-//    $value = $conditions3[0]['value'];
-//    $conditions3[0]['value'] = array($value, $clause3['value']);
-//    $conditions3[0]['operator'] = 'IN';
-//  }
-//  unset($conditions3[$key3]);
-//}
+function sbac_resource_optimize_taxonomy_query(&$clause3, &$conditions3, &$key3) {
+  if (is_array($conditions3[0]['value'])) {
+    array_push($conditions3[0]['value'], $clause3['value']);
+  }
+  else {
+    $value = $conditions3[0]['value'];
+    $conditions3[0]['value'] = array($value, $clause3['value']);
+    $conditions3[0]['operator'] = 'IN';
+  }
+  unset($conditions3[$key3]);
+}
 
 /**
  * Get all users by the role name.
