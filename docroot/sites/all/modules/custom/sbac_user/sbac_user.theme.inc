@@ -40,6 +40,21 @@ function sbac_user_theme__theme() {
 
   $items['user_profile']['preprocess functions'][] = 'sbac_user_theme__preprocess_user_profile';
 
+  $items['user_setup_nav'] = array(
+    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'template' => 'user-setup-nav',
+    'variables' => array(
+      'page1' => NULL,
+      'page2' => NULL,
+      'page3' => NULL,
+    ),
+  );
+
+  $items['user_setup_preview'] = array(
+    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'template' => 'user-setup-preview',
+  );
+
   return $items;
 }
 
@@ -81,4 +96,65 @@ function sbac_user_theme__preprocess_user_login(&$vars) {
   // $vars['left_bottom_small'] = t('Find answers to common topics');
 
   $vars['form']['actions']['submit']['#value'] = t('Log into the Digital Library');
+}
+
+function sbac_user_preprocess_user_setup_nav(&$vars) {
+  $page = $vars['current_page'];
+  switch ($page) {
+    case 'page1':
+      $vars['page1']['nav'] = 'sbac-user-setup-nav-current-cont';
+      $vars['page1']['text'] = 'sbac-user-setup-nav-current-text';
+      break;
+    case 'page2':
+      $vars['page2']['nav'] = 'sbac-user-setup-nav-current-cont';
+      $vars['page2']['text'] = 'sbac-user-setup-nav-current-text';
+      break;
+    case 'page3':
+      $vars['page3']['nav'] = 'sbac-user-setup-nav-current-cont';
+      $vars['page3']['text'] = 'sbac-user-setup-nav-current-text';
+      break;
+  }
+}
+
+function sbac_user_preprocess_user_setup_preview(&$vars) {
+
+  function sbac_user_make_list($options) {
+    $list = '';
+    foreach ($options AS $idx => $tid) {
+      $term = taxonomy_term_load($tid);
+      $list .= '<li>' . $term->name . '</li>';
+    }
+    return $list;
+  }
+
+  $grades = '';
+  $subjects = '';
+  $populations = '';
+
+  $title_term = taxonomy_term_load($_SESSION['user_setup']['user_title']);
+  $vars['first_name'] = $_SESSION['user_setup']['first_name'];
+  $vars['title'] = $title_term->name . ($_SESSION['user_setup']['user_retired'] ? ' (Retired)' : '');
+  $vars['grades'] = '<ul>' . sbac_user_make_list($_SESSION['user_setup']['grade_options']) . '</ul>';
+  $vars['subjects'] = '<ul>' . sbac_user_make_list($_SESSION['user_setup']['subject_options']) . '</ul>';
+  $vars['population'] = '<ul>' . sbac_user_make_list($_SESSION['user_setup']['student_population_options']) . '</ul>';
+
+  // $vars['profile_picture'] = '';
+  if (isset($_SESSION['user_setup']['visibility_opt']['field_last_name'])) {
+    $vars['last_name'] = $_SESSION['user_setup']['last_name'];
+  }
+  else {
+   $vars['last_name'] = '';
+  }
+  if (isset($_SESSION['user_setup']['visibility_opt']['mail'])) {
+    $vars['email'] = l($_SESSION['user_setup']['mail'], 'mailto:' . $_SESSION['user_setup']['mail'], array('absolute' => TRUE));
+  }
+  else {$vars['email'] = '';
+
+  }
+  if (isset($_SESSION['user_setup']['about_me'])) {
+    $vars['about'] = $_SESSION['user_setup']['about_me'];
+  }
+  else {
+   $vars['about'] = '';
+  }
 }
