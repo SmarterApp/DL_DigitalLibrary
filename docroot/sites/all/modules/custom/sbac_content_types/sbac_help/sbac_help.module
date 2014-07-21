@@ -514,7 +514,7 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
           array(
             'nid'     => $tutorial['nid'],
             'title'   => $tutorial['title'],
-            'summary' => $tutorial['body'],
+            'summary' => strip_tags($tutorial['body']),
             'image'   => $tutorial['img_fid'],
             'img_alt' => $tutorial['img_alt'],
           )
