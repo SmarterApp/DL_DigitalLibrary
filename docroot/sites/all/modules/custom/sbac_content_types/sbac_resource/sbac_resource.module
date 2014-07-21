@@ -1837,7 +1837,7 @@ function sbac_resource_query_alter(&$query) {
     }
 
     foreach ($where as $key => $clause) {
-      if (isset($clause['field'])) {
+      if (isset($clause['field']) && is_object($clause['field'])) {
         $conditions =& $clause['field']->conditions();
         if ($conditions) {
           foreach ($conditions as $key1 => $clause1) {
