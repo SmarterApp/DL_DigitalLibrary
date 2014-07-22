@@ -500,11 +500,11 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
     '#prefix' => '<div class="welcome-modal-container">',
   );
 
-  $form['tutorial_header'] = array(
-    '#markup' => '<div class="sbac-tutorial-header-cont">',
-  );
-
   if (!($form_state['packages']['node'])) {
+    $form['tutorial_header'] = array(
+      '#markup' => '<div class="sbac-tutorial-header-cont">',
+    );
+
     $form['tutorial_topics'] = array(
       '#markup' => '<h2>Tutorial Topics</h2>',
     );
