@@ -52,8 +52,8 @@ class Hooks extends \devtools\Hooks {
     ) + $base;
 
     $items['section-get-content/ajax'] = array(
-        'delivery callback' => 'section_get_content',
-      ) + $items['section-get-content/nojs'];
+      'delivery callback' => 'section_get_content',
+    ) + $items['section-get-content/nojs'];
 
     return $items;
   }

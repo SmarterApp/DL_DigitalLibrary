@@ -22,8 +22,8 @@ function resource_feedback_page($node) {
     $tabs = array(
       'access about process' => array(
         'feedback' => array(
-          'about',  // about tab
-          'collaboration',
+          'about' => TRUE,
+          'collaboration' => TRUE,
         ),
       ),
       'access review comments' => array(
