@@ -13,6 +13,7 @@ function sbac_flag_moderation() {
   $result = sbac_flag_get_flags();
   $count = 0;
   $offset = 0;
+
   $list_output = sbac_flag_moderation_output($result, $count, $offset);
   $_SESSION['sbac-flag']['count'] = $count;
   $load_more_button = NULL;
@@ -44,10 +45,11 @@ function sbac_flag_load_more() {
   if ($offset) {
     $result = sbac_flag_get_flags();
     $count = 0;
-    $list_output = sbac_flag_moderation_output($result, $count, $offset);
+    $list_output = sbac_flag_moderation_output($result, $count, $offset, TRUE);
     if (isset($list_output['remove_button'])) {
       $remove_button = TRUE;
     }
+    $_SESSION['load_more']['moderation']['page'] = $offset;
   }
   $output = array('list_output' => $list_output['list_output'], 'offset' => $offset, 'remove_button' => $remove_button);
   print drupal_json_encode($output);
@@ -77,7 +79,7 @@ function sbac_flag_get_flags() {
  * @param $count
  * @return string
  */
-function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
+function sbac_flag_moderation_output($result, &$count, &$offset = NULL, $load_more_ajax = FALSE) {
   global $user;
   $list_output = '';
   $sorted_flags = array();
@@ -91,6 +93,11 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
     $start = 0;
     $end = SBAC_FLAG_MODERATION_COUNT;
     $offset = 1;
+  }
+
+  if (!$load_more_ajax && isset($_SESSION['load_more']['moderation']['page'])) {
+    $start = 0;
+    $end = $_SESSION['load_more']['moderation']['page'] * SBAC_FLAG_MODERATION_COUNT;
   }
 
   // Loop through all flags, determine access,

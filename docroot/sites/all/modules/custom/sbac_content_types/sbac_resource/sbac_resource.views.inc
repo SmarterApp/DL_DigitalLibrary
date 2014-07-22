@@ -14,11 +14,9 @@ function sbac_resource_views_query_alter(&$view, &$query) {
   if ($view->name == 'resources') {
     _sbac_resource_resources_view_query_alter($view, $query);
   }
-
   if ($view->name == 'my_resources') {
     _sbac_resource_my_resources_view_query_alter($view, $query);
   }
-
   if ($view->name == 'resource_review') {
     _sbac_resource_resource_review_view_query_alter($view, $query);
   }

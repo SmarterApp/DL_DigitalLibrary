@@ -180,6 +180,11 @@ function sbac_flag_moderation_access() {
   return FALSE;
 }
 
+/**
+ * Determine collaboration access.
+ *
+ * @return bool
+ */
 function sbac_flag_collaboration_access() {
   global $user;
   if ($user->uid) {
