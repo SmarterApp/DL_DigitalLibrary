@@ -1277,3 +1277,10 @@ function sbac_central_update_7087() {
   );
   module_enable($modules);
 }
+
+/**
+ * Enable entitycache module
+ */
+function sbac_central_update_7088() {
+  module_enable(array('entitycache'));
+}
