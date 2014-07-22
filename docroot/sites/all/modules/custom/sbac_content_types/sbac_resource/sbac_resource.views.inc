@@ -24,6 +24,35 @@ function sbac_resource_views_query_alter(&$view, &$query) {
   }
 }
 
+/*
+ * Implementation of hook_views_pre_build().
+ */
+function sbac_resource_views_pre_build(&$view){
+  // Make sure this is only for the specific view you want to modified
+  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+    if (isset($_SESSION['load_more'][$view->name]['page'])) {
+      $view->offset = 0;
+      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12; // 0 is 12, so add one.
+      drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-9219').offset().top}, 2000); });", array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
+    }
+  }
+}
+
+/**
+ * Implements hook_view_post_render().
+ *
+ * @param $view
+ * @param $output
+ * @param $cache
+ */
+function sbac_resource_views_post_render(&$view, &$output, &$cache) {
+  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+    if (isset($_POST['page'])) {
+      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
+    }
+  }
+}
+
 /**
  * Implements hook_views_default_views_alter().
  *

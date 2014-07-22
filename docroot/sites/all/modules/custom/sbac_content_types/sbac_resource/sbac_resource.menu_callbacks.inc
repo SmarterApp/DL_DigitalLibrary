@@ -19,7 +19,7 @@ function sbac_resource_digital_library_page() {
   sbac_resource_digital_library_apply_sorts($view);
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
-  // dpq($view->build_info['query']);
+  dpq($view->build_info['query']);
   $count = count($view->result);
   $view->destroy();
 
