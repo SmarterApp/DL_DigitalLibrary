@@ -220,11 +220,15 @@ function httprl_install_http_test($mode, $blocking = FALSE) {
     $available = FALSE;
     $lock_counter = 0;
     while (!$available && $lock_counter < 20) {
-      if (function_exists('openssl_random_pseudo_bytes')) {
-        $name = 'httprl_' . hash('sha512', openssl_random_pseudo_bytes(512));
+      // 512 bits = 64 bytes.
+      if (function_exists('drupal_random_bytes')) {
+        $name = 'httprl_' . hash('sha512', drupal_random_bytes(64));
+      }
+      elseif (function_exists('openssl_random_pseudo_bytes')) {
+        $name = 'httprl_' . hash('sha512', openssl_random_pseudo_bytes(64));
       }
       else {
-        $name = 'httprl_' . hash('sha512', mt_rand() . microtime(TRUE));
+        $name = 'httprl_' . hash('sha512', mt_rand() . microtime(TRUE) . serialize($_SERVER));
       }
       $available = lock_may_be_available($name);
       $lock_counter++;
@@ -282,6 +286,29 @@ function httprl_install_http_test($mode, $blocking = FALSE) {
       if (!$return) {
         $conf['httprl_server_addr'] == FALSE;
       }
+      elseif ($blocking == FALSE && httprl_variable_get('httprl_non_blocking_fclose_delay', HTTPRL_NON_BLOCKING_FCLOSE_DELAY) == 0) {
+        $conf['httprl_non_blocking_fclose_delay'] == 25;
+        $return = httprl_install_http_test($mode, $blocking);
+        if ($return) {
+          variable_set('httprl_non_blocking_fclose_delay', 25);
+        }
+        return $return;
+      }
+      return $return;
+    }
+    elseif ($blocking == FALSE && httprl_variable_get('httprl_non_blocking_fclose_delay', HTTPRL_NON_BLOCKING_FCLOSE_DELAY) == 0) {
+      $conf['httprl_non_blocking_fclose_delay'] == 25;
+      $return = httprl_install_http_test($mode, $blocking);
+      if ($return) {
+        $conf['httprl_non_blocking_fclose_delay'] == 5;
+        $return = httprl_install_http_test($mode, $blocking);
+        if ($return) {
+          variable_set('httprl_non_blocking_fclose_delay', 5);
+        }
+        else {
+          variable_set('httprl_non_blocking_fclose_delay', 25);
+        }
+      }
       return $return;
     }
     else {
@@ -289,6 +316,14 @@ function httprl_install_http_test($mode, $blocking = FALSE) {
     }
   }
   else {
+    // Set httprl_server_hostname to the HTTP_HOST.
+    if (   $_SERVER['HTTP_HOST'] !== 'default'
+        && ip2long($_SERVER['HTTP_HOST']) === FALSE
+        && variable_get('httprl_server_hostname', FALSE) != $_SERVER['HTTP_HOST']
+        ) {
+      variable_set('httprl_server_hostname', $_SERVER['HTTP_HOST']);
+    }
+
     return TRUE;
   }
 }
