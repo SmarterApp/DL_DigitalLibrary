@@ -8,7 +8,6 @@ dependencies[] = ctools
 dependencies[] = eck
 dependencies[] = features
 dependencies[] = file_entity
-dependencies[] = httprl
 dependencies[] = media
 dependencies[] = media_internet
 dependencies[] = number

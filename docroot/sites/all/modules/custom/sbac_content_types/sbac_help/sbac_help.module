@@ -146,8 +146,12 @@ function sbac_help_preprocess_welcome_tutorial_list(&$vars) {
   if (isset($vars['image'])) {
     $file = file_load($vars['image']);
     if ($file) {
-      $file_url = file_create_url($file->uri);
-      $vars['image'] = '<img src="' . $file_url . '" alt="' . $vars['img_alt'] . '">';
+      $tut_image = array(
+        'style_name' => 'welcome_tutorial',
+        'path' => $file->uri,
+        'alt' => $vars['img_alt'],
+      );
+      $vars['image'] = theme('image_style', $tut_image);
     }
   }
 }
@@ -165,8 +169,12 @@ function sbac_help_preprocess_welcome_tutorial_post(&$vars) {
   if (!empty($vars['node']->field_help_icon)) {
     $file = file_load($vars['node']->field_help_icon['und'][0]['fid']);
     if ($file) {
-      $file_url = file_create_url($file->uri);
-      $vars['image'] = '<img src="' . $file_url . '" alt="' . $vars['node']->field_help_icon['und'][0]['fid'] . '">';
+      $tut_image = array(
+        'style_name' => 'welcome_tutorial',
+        'path' => $file->uri,
+        'alt' => $vars['img_alt'],
+      );
+      $vars['image'] = theme('image_style', $tut_image);
     }
   }
   unset($vars['node']);

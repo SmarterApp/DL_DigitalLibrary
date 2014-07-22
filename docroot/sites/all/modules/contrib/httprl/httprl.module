@@ -133,6 +133,16 @@ define('HTTPRL_PR_MAX_STRING_LENGTH', 262144);
 define('HTTPRL_URL_INBOUND_ALTER', TRUE);
 
 /**
+ * What to set the server schema to when doing a self request.
+ */
+define('HTTPRL_SERVER_SCHEMA', 0);
+
+/**
+ * Wait X ms after finishing a non blocking request.
+ */
+define('HTTPRL_NON_BLOCKING_FCLOSE_DELAY', 0);
+
+/**
  * Implements hook_url_inbound_alter().
  */
 function httprl_url_inbound_alter(&$path, $original_path, $path_language) {
@@ -204,6 +214,20 @@ function httprl_cron() {
   else {
     db_query("DELETE FROM {semaphore} WHERE value = 'httprl' AND expire < %f", time() - $fuzz_factor);
   }
+
+  // Let expiration times vary by 60 minutes.
+  $fuzz_factor = 3600;
+
+  // Remove expired locks from the semaphore database table.
+  if (defined('VERSION') && substr(VERSION, 0, 1) >= 7) {
+    db_delete('semaphore')
+      ->condition('name', db_like('httprl_') . '%', 'LIKE')
+      ->condition('expire', REQUEST_TIME - $fuzz_factor, '<')
+      ->execute();
+  }
+  else {
+    db_query("DELETE FROM {semaphore} WHERE name LIKE 'httprl_%' AND expire < %f", time() - $fuzz_factor);
+  }
 }
 
 /**
@@ -223,6 +247,8 @@ function httprl_cron() {
  *   The request object.
  */
 function httprl_override_core($url, $options = array()) {
+  // Clear out older requests if needed.
+  httprl_send_request();
   // Queue up the request.
   httprl_request($url, $options);
   // Execute request.
@@ -234,10 +260,15 @@ function httprl_override_core($url, $options = array()) {
 /**
  * Helper function to build an URL for asynchronous requests to self.
  *
- * @param string $level
+ * @param int $level
  *   How deep to go when setting the base path.
+ * @param int $hostname_mode
+ *   Force a hostname type.
+ *
+ * @return string
+ *   URL pointing to this server.
  */
-function _httprl_build_drupal_root($level = 0) {
+function _httprl_build_drupal_root($level = 0, $hostname_mode = 0) {
   static $webroot;
   $root_path = '/';
   if ($level > 0) {
@@ -264,6 +295,7 @@ function _httprl_build_drupal_root($level = 0) {
       $root_path = array_pop($webroot_array) . '/' . $root_path;
     }
     $root_path = '/' . $root_path;
+    $root_path = str_replace('//', '/', $root_path);
   }
   else {
     if (!empty($GLOBALS['base_path'])) {
@@ -271,25 +303,29 @@ function _httprl_build_drupal_root($level = 0) {
     }
   }
 
-
   // Server auth.
   $auth = '';
   if (isset($_SERVER['AUTH_TYPE']) && $_SERVER['AUTH_TYPE'] == 'Basic') {
     $auth = $_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW'] . '@';
   }
+  // Use static for gethostbyname lookup.
+  static $dns_cache;
 
   // Get Host.
   $ip = httprl_variable_get('httprl_server_addr', FALSE);
-  if ($ip == -1) {
+  if ($ip == -1 || $hostname_mode == 1) {
     $ip = $_SERVER['HTTP_HOST'];
     // If the host is bad don't use it.
-    if (isset($_SERVER['argc']) || isset($_SERVER['argv'])) {
-      if (gethostbyname($_SERVER['HTTP_HOST']) == $_SERVER['HTTP_HOST']) {
+    if ((is_callable('drupal_is_cli') && drupal_is_cli()) || (!isset($_SERVER['SERVER_SOFTWARE']) && (php_sapi_name() == 'cli' || (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)))) {
+      if (!isset($dns_cache[$_SERVER['HTTP_HOST']])) {
+        $dns_cache[$_SERVER['HTTP_HOST']] = gethostbyname($_SERVER['HTTP_HOST']);
+      }
+      if ($dns_cache[$_SERVER['HTTP_HOST']] == $_SERVER['HTTP_HOST']) {
         $ip = '';
       }
     }
   }
-  if (empty($ip)) {
+  if (empty($ip) || $hostname_mode == 2) {
     $ip = empty($_SERVER['SERVER_ADDR']) ? '127.0.0.1' : $_SERVER['SERVER_ADDR'];
     // Check for IPv6. If IPv6 convert to IPv4 if possible.
     if (strpos($ip, ':') !== FALSE) {
@@ -301,14 +337,20 @@ function _httprl_build_drupal_root($level = 0) {
       }
       elseif (!empty($_SERVER['HTTP_HOST'])) {
         // Last option is to use the IP from the host name.
-        $ip = gethostbyname($_SERVER['HTTP_HOST']);
-        if (gethostbyname($_SERVER['HTTP_HOST']) == $_SERVER['HTTP_HOST']) {
+        if (!isset($dns_cache[$_SERVER['HTTP_HOST']])) {
+          $dns_cache[$_SERVER['HTTP_HOST']] = gethostbyname($_SERVER['HTTP_HOST']);
+        }
+        $ip = $dns_cache[$_SERVER['HTTP_HOST']];
+        if ($dns_cache[$_SERVER['HTTP_HOST']] == $_SERVER['HTTP_HOST']) {
           $ip = '';
         }
       }
     }
   }
-  if (empty($ip)) {
+  if ($hostname_mode == 3) {
+    $ip = httprl_variable_get('httprl_server_hostname', FALSE);
+  }
+  if (empty($ip) || $hostname_mode == 4) {
     $ip = '127.0.0.1';
   }
 
@@ -322,7 +364,16 @@ function _httprl_build_drupal_root($level = 0) {
   //   }
 
   // URL schema http or https.
+  $schema_var = httprl_variable_get('httprl_server_schema', HTTPRL_SERVER_SCHEMA);
+  if ($schema_var == 0) {
   $schema = httprl_get_server_schema() . '://';
+  }
+  elseif ($schema_var == 1) {
+    $schema = 'http://';
+  }
+  elseif ($schema_var == 2) {
+    $schema = 'https://';
+  }
 
   // Special handling if clean urls are disabled.
   if (!variable_get('clean_url', 0)) {
@@ -356,27 +407,42 @@ function httprl_build_url_self($path = '', $detect_schema = FALSE) {
 
     // If ran from the command line, the drupal root might be in a subdir. Test to
     // make sure we have the right directory.
-    if (isset($_SERVER['argc']) || isset($_SERVER['argv'])) {
+    if ((is_callable('drupal_is_cli') && drupal_is_cli()) || (!isset($_SERVER['SERVER_SOFTWARE']) && (php_sapi_name() == 'cli' || (is_numeric($_SERVER['argc']) && $_SERVER['argc'] > 0)))) {
       $level = 0;
       $found = FALSE;
+      $mode = 0;
       while (!$found) {
         // Trick due to not knowing the subdir.
         // http://stackoverflow.com/questions/8361355/get-apache-document-root-from-command-line-execution-no-browser/8415235#8415235
-        $headers = get_headers($drupal_root . 'httprl_async_function_callback');
+        // Issue http request and get the headers.
+        $override_function = httprl_variable_get('drupal_http_request_function', FALSE);
+        $GLOBALS['conf']['drupal_http_request_function'] = FALSE;
+        $test_request = drupal_http_request($drupal_root . 'httprl_async_function_callback');
+        $GLOBALS['conf']['drupal_http_request_function'] = $override_function;
+
+        // Look for the X-HTTPRL header.
+        $headers = isset($test_request->headers) ? $test_request->headers : array();
         if (!empty($headers)) {
-          foreach ($headers as $header) {
-            if (stripos($header, 'X-HTTPRL') !== FALSE) {
+          foreach ($headers as $key => $value) {
+            if (stripos($key, 'X-HTTPRL') !== FALSE || stripos($value, 'X-HTTPRL') !== FALSE) {
               $found = TRUE;
+              break;
             }
           }
         }
+        // If the header is not found, adjust sub dir and try again.
         if (!$found) {
           $level++;
-          $new_drupal_root = _httprl_build_drupal_root($level);
+          $new_drupal_root = _httprl_build_drupal_root($level, $mode);
           if ($new_drupal_root == $drupal_root) {
+            // If the header is not found, adjust hostname and try again.
+            $mode++;
+            $level = 0;
+            if ($mode > 4) {
             // Use no subdirectories if nothing worked.
             $drupal_root = _httprl_build_drupal_root();
             break;
+          }
           }
           $drupal_root = $new_drupal_root;
         }
@@ -1433,6 +1499,11 @@ function httprl_send_request($results = NULL) {
             @fclose($r);
             continue;
           }
+          // Close the stream if ID not found in $responses.
+          if (!array_key_exists($id, $responses)) {
+            @fclose($r);
+            continue;
+          }
           // Do not read from the non blocking sockets.
           if (empty($responses[$id]->options['blocking'])) {
             // Do post processing on the stream and close it.
@@ -1882,6 +1953,13 @@ function httprl_post_processing($id, &$responses, &$output, $time_left = NULL) {
 
   // Close file.
   if (isset($result->fp)) {
+    if (empty($responses[$id]->options['blocking'])) {
+      $ms_delay = httprl_variable_get('httprl_non_blocking_fclose_delay', HTTPRL_NON_BLOCKING_FCLOSE_DELAY);
+      if (!empty($ms_delay)) {
+        // Wait X ms before closing a non blocking connection.
+        usleep($ms_delay * 1000);
+      }
+    }
     @fclose($result->fp);
   }
 
@@ -2186,7 +2264,6 @@ function httprl_queue_background_callback(&$args, &$result = NULL) {
   return httprl_request($url, $options);
 }
 
-
 /**
  * Get a lock so background calls work.
  *
@@ -2210,13 +2287,26 @@ function httprl_acquire_lock(&$result) {
     $times[] = $result->options['global_timeout'];
   }
 
+  $time = max($times);
+  $name = $result->options['lock_name'];
+  return httprl_acquire_headless_lock($name, $time);
+}
+
+/**
+ * Get a floating lock so background calls work.
+ *
+ * @param string $name
+ *   Name of the lock to use.
+ * @param int $time
+ *   How long the lock will last.
+ */
+function httprl_acquire_headless_lock($name, $time = 60) {
   // Acquire lock for this run.
   $locked = FALSE;
   $lock_counter = 0;
-  $name = $result->options['lock_name'];
   while (!$locked && $lock_counter < 3) {
     // Set lock to maximum amount of time.
-    $locked = lock_acquire($name, max($times));
+    $locked = lock_acquire($name, $time);
     $lock_counter++;
   }
   if (!$locked) {
@@ -2622,6 +2712,11 @@ function httprl_print_empty(&$data, $level = 0) {
  *   Human readable HTML version of the data.
  */
 function httprl_pr($input) {
+  $output_plain_text = FALSE;
+  if (in_array('content-type: text/plain', array_map('strtolower', headers_list())) || (function_exists('drupal_is_cli') && drupal_is_cli())) {
+    $output_plain_text = TRUE;
+  }
+
   $old_setting = ini_set('mbstring.substitute_character', '"none"');
 
   // Get extra arguments passed in.
@@ -2665,12 +2760,15 @@ function httprl_pr($input) {
   }
 
   // Decide to use the original output or the translated one.
-  if (!empty($translated_size) && !empty($ratio) && $ratio < 0.5) {
+  if (!empty($translated_size) && !empty($ratio) && $ratio < 0.5 && !$output_plain_text) {
     $html_output = TRUE;
     $output = $translated;
   }
   else {
-    $output = '<pre>' . str_replace(array('<', '>'), array('&lt;', '&gt;'), $output) . '</pre>';
+    if (!$output_plain_text) {
+      $output = str_replace(array('<', '>'), array('&lt;', '&gt;'), $output);
+    }
+    $output = "<pre>\n" . $output . "\n</pre>";
   }
 
   // Remove extra new lines.
@@ -2688,6 +2786,9 @@ function httprl_pr($input) {
   $output = implode("\n", $output);
   if (!empty($html_output)) {
     $output = str_replace('    ', '&nbsp;&nbsp;&nbsp;&nbsp;', nl2br($output)) . '<br />';
+  }
+  else {
+    $output .= "\n";
   }
 
   ini_set('mbstring.substitute_character', $old_setting);
@@ -3047,9 +3148,12 @@ function httprl_drupal_get_private_key() {
  */
 function httprl_call_exit() {
   if (defined('VERSION') && substr(VERSION, 0, 1) >= 7 && drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+    // Do not write the session.
+    drupal_save_session(FALSE);
     drupal_exit();
   }
   else {
+    session_save_session(FALSE);
     exit;
   }
 }
@@ -3111,10 +3215,15 @@ function httprl_is_background_callback_capable() {
  *   Integer specifying the user ID to load.
  */
 function httprl_set_user($uid) {
-  global $user;
   $account = user_load($uid);
   if (!empty($account)) {
-    $user = $account;
+    $GLOBALS['user'] = $account;
+    if (defined('VERSION') && substr(VERSION, 0, 1) >= 7) {
+      drupal_save_session(FALSE);
+    }
+    else {
+      session_save_session(FALSE);
+    }
     return TRUE;
   }
 }
@@ -3143,7 +3252,7 @@ function httprl_set_q($q) {
  * @param $httprl_options
  *   Options to pass along to httprl_queue_background_callback.
  * @return
- *   Reference to the return varible OR NULL if $return is FALSE.
+ *   Reference to the return variable OR NULL if $return is FALSE.
  */
 function &httprl_qcinp($callback, $param_arr = array(), $return = TRUE, $httprl_options = array()) {
   $return_var = NULL;
@@ -3170,7 +3279,7 @@ function &httprl_qcinp($callback, $param_arr = array(), $return = TRUE, $httprl_
 }
 
 /**
- * Given an array of data, use mutiple processes to crunch it.
+ * Given an array of data, use multiple processes to crunch it.
  *
  * Similar to MapReduce.
  *
@@ -3274,7 +3383,7 @@ function httprl_is_array_assoc($array) {
 }
 
 /**
- * Merge mutiple associative arrays into one.
+ * Merge multiple associative arrays into one.
  *
  * @see http://stackoverflow.com/questions/2148694/how-to-combine-2-associative-arrays-in-php-such-that-we-do-not-overwrite-any-dup/2152054#2152054
  *

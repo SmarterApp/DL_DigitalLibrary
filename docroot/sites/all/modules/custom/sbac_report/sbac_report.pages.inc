@@ -404,71 +404,17 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   $src = '/misc/arrow-' . $sort . '.png'; // up / down image.
   $data[$order . '_image'] = '<img typeof="foaf:Image" src="' . $src . '" width="13" height="13" alt="sort ascending" title="sort ascending">';
 
-  $query = "
-SELECT
-  n.nid     AS nid,
-  n.title   AS node_title,
-  n.created AS node_created,
-  n.sticky  AS node_sticky,
-  CASE
-  WHEN history.state = 'needs_review' THEN 'Gate-Keeping Review'
-  WHEN history.state = 'rejected' THEN 'Returned'
-  WHEN history.state = 'published' AND n.sticky = 1 THEN 'Posted with Distinction'
-  WHEN history.state = 'published' AND n.sticky = 0 THEN 'Published'
-  WHEN history.state = 'approved' THEN 'Arbitration Review'
-  WHEN history.state = 'removed' THEN 'Removed'
-  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Gate-Keeping Review'
-  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 1 THEN 'Quality Criteria Review 1'
-  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 2 THEN 'Quality Criteria Review 2'
-  WHEN history.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 3 THEN 'Quality Criteria Review 3'
-  END       AS state
-FROM
-    {node} n
-    LEFT JOIN {node_revision} rev ON n.vid = rev.vid
-    INNER JOIN {workbench_moderation_node_history} history ON rev.vid = history.vid
-    LEFT JOIN {eck_feedback} f ON f.node_id = n.nid AND f.completed = 1 AND f.created > IFNULL((
-      SELECT
-        max(history2.stamp)
-      FROM {node} n2
-        LEFT JOIN {workbench_moderation_node_history} history2 ON history2.nid = n2.nid
-      WHERE
-        n2.nid = n.nid
-        AND history2.from_state = 'draft'
-        AND history2.state = 'needs_review'
-      GROUP BY history2.nid
-      HAVING count(history2.nid) > 1),0)
-    LEFT JOIN {field_data_field_recent_reviewers} r ON r.field_recent_reviewers_target_id = f.uid AND n.nid = r.entity_id
-WHERE
-  n.uid = :uid
-  AND n.type IN ('resource')
-  AND history.current <> '0'
-  AND history.state NOT IN ('draft')
-  AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
-GROUP BY n.nid ";
-  if ($order == 'state') {
-    $query .= "ORDER BY state " . $sort;
-  }
-  else {
-    $query .= "ORDER BY n.created " . $sort;
-  }
-
   $dates = explode('--', $date_range);
   $from_date = $dates[0];
   $to_date = $dates[1];
 
-  if ($limit == -1) {
-    $results = db_query($query, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
-  }
-  else {
-    $results = db_query_range($query, 0, $limit, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
-  }
-
+  $results = _sbac_resource_get_review_progress(NULL, $uid, $from_date, $to_date, $limit, $order, $sort)->fetchAll();
   $rows = array();
   foreach ($results as $row) {
     $resource = node_load($row->nid);
-    $title = truncate($row->node_title, 55, array('check_markup' => FALSE));
+    $title = truncate($row->title, 55, array('check_markup' => FALSE));
     $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => array('sec' => '1')));
-    $row->contribution_date = date('m/d/Y h:i a', $row->node_created);
+    $row->contribution_date = date('m/d/Y h:i a', $row->created);
     $rows[] = $row;
   }
 
