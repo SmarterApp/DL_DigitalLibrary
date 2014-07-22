@@ -32,6 +32,11 @@ function sbac_user_setup_callback($page = '1') {
   }
 }
 
+/**
+ * Returns an associated array of tid => name.
+ * @param  array  $vocab_name [description]
+ * @return array              [description]
+ */
 function sbac_user_form_setup_select_taxonomy_options($vocab_name) {
   if ($vocab = taxonomy_vocabulary_machine_name_load($vocab_name)) {
     $terms = taxonomy_get_tree($vocab->vid);
@@ -43,6 +48,13 @@ function sbac_user_form_setup_select_taxonomy_options($vocab_name) {
   }
 }
 
+/**
+ * Implements hook_form().
+ * Sets up the first page of the user setup form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_pi_form($form, &$form_state) {
   global $user;
   $account = user_load($user->uid);
@@ -63,10 +75,13 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     '#markup' => theme('image', array('path' => '' . $filepath)),
   );
 
-  $form['sbac_setup_profile_image'] = array(
-    '#type' => 'file',
-    '#name' => 'sbac_setup_profile_image',
+  $form['profile_image'] = array(
+    '#type' => 'managed_file',
     '#description' => t('Your Profile Portrait will be visible to others in the Digital Library.'),
+    '#default_value' => isset($_SESSION['user_setup']['profile_image']) ? $_SESSION['user_setup']['profile_image'] : '',
+    '#upload_validators' => array(
+      'file_validate_extensions' => array('png jpg jpeg gif'),
+    ),
   );
 
   $form['image_suffix'] = array(
@@ -152,14 +167,33 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     '#markup' => '</div>',
   );
 
+  $values = array();
+  foreach ($options AS $idx => $name) {
+    $values[] = array('value' => $idx);
+  }
+
   $form['next_form'] = array(
     '#type' => 'submit',
     '#value' => t('Next'),
+    '#states' => array(
+      'enabled' => array(
+        '#edit-user-title' => array(
+          $values,
+        ),
+      ),
+    ),
   );
 
   return $form;
 }
 
+/**
+ * Implements hook_form().
+ * Sets up page 2 of the profile setup form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_expertise_form($form, &$form_state) {
   $form = array();
 
@@ -242,6 +276,46 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
   $form['about_me'] = array(
     '#type' => 'textarea',
     '#default_value' => isset($_SESSION['user_setup']['about_me']) ? $_SESSION['user_setup']['about_me'] : '',
+    '#maxlength' => 300,
+    '#maxlength_js' => TRUE,
+    '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
+  );
+
+  /**
+   * Returns an array to conform to Drupal FAPI standard.
+   * @param  [type] $options [description]
+   * @return [type]          [description]
+   */
+  function sbac_get_multi_select_dependencies($options) {
+    $values = array();
+    foreach ($options AS $idx => $name) {
+      $values[] = array('value' => array((string) $idx));
+    }
+    return $values;
+  }
+
+  $form['is_complete'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'completed',
+    '#attributes' => array(
+      'class' => array(
+        'sbac-user-setup-hidden',
+        'hidden',
+      ),
+    ),
+    '#states' => array(
+      'checked' => array(
+        'select[name="subject_options[]"]' => array(
+          sbac_get_multi_select_dependencies($subject_options),
+        ),
+        'select[name="grade_options[]"]' => array(
+          sbac_get_multi_select_dependencies($grade_options),
+        ),
+        'select[name="student_population_options[]"]' => array(
+          sbac_get_multi_select_dependencies($student_population_options),
+        ),
+      ),
+    ),
   );
 
   $form['previous'] = array(
@@ -257,11 +331,25 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
   $form['next'] = array(
     '#type' => 'submit',
     '#value' => t('Next'),
+    '#states' => array(
+      'enabled' => array(
+        ':input[name="is_complete"]' => array(
+          'checked' => TRUE,
+        ),
+      ),
+    ),
   );
 
   return $form;
 }
 
+/**
+ * Implements hook_form().
+ * Sets up page 3 of profile setup.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_privacy_form($form, &$form_state) {
   $form = array();
 
@@ -282,13 +370,14 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
   $form['visibility_opt'] = array(
     '#type' => 'checkboxes',
     '#options' => array(
-      'field_image' => 'Photo',
+      'picture' => 'Photo',
       'field_last_name' => 'Last Name',
       'mail' => 'Email Address',
-      'field_school_s_' => 'School(s)',
-      'field_district_s_' => 'District(s)',
-      'field_about' => 'Other Professional Experiences and Accomplishments',
+      'field_school_name' => 'School(s)',
+      'field_district_name' => 'District(s)',
+      'field_introduction' => 'Other Professional Experiences and Accomplishments',
     ),
+    '#default_value' => (isset($_SESSION['user_setup']['visibility_opt']) ? array_values($_SESSION['user_setup']['visibility_opt']) : array()),
   );
 
   $form['visibility_req_title'] = array(
@@ -297,25 +386,20 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     '#description' => t('These fields will be shown to all users in the Digital Library.'),
   );
 
+  $visibility_options = array(
+    'First Name',
+    'Title',
+    'State(s)',
+    'Grade(s)',
+    'Subject(s)',
+    'Student Population(s)',
+  );
+
   $form['visibility_req'] = array(
     '#type' => 'checkboxes',
     '#disabled' => TRUE,
-    '#options' => array(
-      'First Name',
-      'Title',
-      'State(s)',
-      'Grade(s)',
-      'Subject(s)',
-      'Student Population(s)',
-    ),
-    '#default_value' => array(
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-    ),
+    '#options' => $visibility_options,
+    '#default_value' => array_keys($visibility_options),
   );
 
   $form['previous'] = array(
@@ -335,6 +419,13 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Implements hook_form().
+ * Sets up the profile setup preview.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_preview_form($form, &$form_state) {
   $form = array();
 
@@ -366,38 +457,43 @@ function sbac_user_setup_preview_form($form, &$form_state) {
   return $form;
 }
 
-function sbac_user_setup_pi_form_validate($form, &$form_state) {
-  dpm($_FILE);
-  $dir = 'private://setup-profile';
-  file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
-  $file = file_save_upload(
-    'sbac_setup_profile_image',
-    array(
-      'file_validate_is_image' => array(),
-      'file_validate_extensions' => array(),
-    ),
-    'private://setup-profile'
-  );
-  if ($file) {
-    dpm('what');
-  }
-  dpm($form_state);
-}
-
+/**
+ * Implements hook_form_submit().
+ * Progresses setup form to next page.
+ * [sbac_user_setup_pi_form_submit description]
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_pi_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Next') {
+    $_SESSION['user_setup']['profile_image'] = $form_state['input']['profile_image']['fid'];
     $_SESSION['user_setup']['user_title'] = $form_state['input']['user_title'];
     $_SESSION['user_setup']['user_retired'] = $form_state['input']['user_retired'];
     drupal_goto('sbac-user/setup/2');
   }
 }
 
+/**
+ * Implements hook_form_validate().
+ * Bypasses required fields to return to previous page.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_expertise_form_validate($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Previous') {
     drupal_goto('sbac-user/setup');
   }
 }
 
+/**
+ * Implements hook_form_submit().
+ * Progresses setup form to next page.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_expertise_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Next') {
     $_SESSION['user_setup']['subject_options'] = $form_state['input']['subject_options'];
@@ -408,12 +504,26 @@ function sbac_user_setup_expertise_form_submit($form, &$form_state) {
   }
 }
 
+/**
+ * Implements hook_form_validate().
+ * Bypasses required fields to return to previous page.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_privacy_form_validate($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Previous') {
     drupal_goto('sbac-user/setup/2');
   }
 }
 
+/**
+ * Implements hook_form_submit().
+ * Progresses setup form to next page.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
 function sbac_user_setup_privacy_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Preview') {
     $_SESSION['user_setup']['visibility_opt'] = $form_state['input']['visibility_opt'];
@@ -421,13 +531,48 @@ function sbac_user_setup_privacy_form_submit($form, &$form_state) {
   }
 }
 
-function sbac_user_setup_preview_form_validate($form, &$form_state) {
+/**
+ * Implements hook_form_submit().
+ * Submit handler for the profile setup preview form.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_user_setup_preview_form_submit($form, &$form_state) {
+  /**
+   * Sets up the tid values array.
+   * @param  array  $options [description]
+   * @return array           [description]
+   */
+  function sbac_user_setup_set_options($options) {
+    $values = array();
+    foreach ($options AS $idx => $tid) {
+      $values[] = array('tid' => $tid);
+    }
+    return $values;
+  }
+
   if ($form_state['clicked_button']['#value'] == 'Edit Profile') {
     drupal_goto('sbac-user/setup/3');
   }
+  else if ($form_state['clicked_button']['#value'] == 'Done') {
+    global $user;
+    $account = user_load($user->uid);
+
+    $updates = array();
+
+    $updates['field_position']['und'][0]['tid'] = $_SESSION['user_setup']['user_title'];
+    if ($_SESSION['user_setup']['user_retired']) {
+      $updates['field_retired']['und'][0]['value'] = 'I am currently retired';
+    }
+    $updates['field_subject_s_']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['subject_options']);
+    $updates['field_grade_level_s_']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['grade_options']);
+    $updates['field_special_populations']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['student_population_options']);
+    $updates['field_introduction']['und'][0]['value'] = $_SESSION['user_setup']['about_me'];
+    $updates['field_privacy']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['visibility_opt']);
+
+    user_save($account, $updates);
+    unset($_SESSION['user_setup']);
+    drupal_goto('');
+  }
 }
-
-function sbac_user_setup_preview_form_submit($form, &$form_state) {
-
-}
-

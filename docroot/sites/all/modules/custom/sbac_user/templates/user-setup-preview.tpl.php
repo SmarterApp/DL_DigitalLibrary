@@ -1,29 +1,9 @@
-<?php
-  // @TODO this template file needs to be cleaned up
-  hide($user_profile['summary']);
-  $cols = 12;
-  if ($user_profile['user_picture']['#markup']) {
-    $cols = 10;
-  }
-?>
 <div class="row first">
-  <?php if ($user_profile['user_picture']['#markup']): ?>
     <div class="column large-3 profile-pic">
       <?php
-        // display default photo if privacy on for picture
-        // we use field_first_name because field_privacy may not exist
-        if (isset($user_profile['field_first_name']['#object'])) {
-          if (!sbac_user_privacy_check('picture', $user_profile['field_first_name']['#object'])) {
-            $filepath = variable_get('user_picture_default', '');
-            $alt = t("@user's picture", array('@user' => format_username($user_profile['field_first_name']['#object'])));
-            $user_profile['user_picture']['#markup'] = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt));
-          }
-        }
-
-        echo drupal_render($user_profile['user_picture']);
+        echo $profile_picture;
       ?>
     </div>
-  <?php endif; ?>
 
   <div class="column large-9 user-profile">
     <div class="name clearfix">
@@ -36,31 +16,13 @@
     </div>
 
     <div class="profile-school">
+      <span class="profile-school-name">
+        <?php echo $school; ?>
+      </span>
       <?php
-        $school = $district = $state = '';
-        if (isset($user_profile['field_state']) && isset($user_profile['field_school_name']['#items'][0]['value']) && sbac_user_privacy_check('field_school_name', $user_profile['field_school_name']['#object'])) {
-          $school = $user_profile['field_school_name']['#items'][0]['value'];
-        }
-        if (isset($user_profile['field_district_name']) && sbac_user_privacy_check('field_district_name', $user_profile['field_district_name']['#object'])) {
-          $district = $user_profile['field_district_name']['#items'][0]['value'];
-        }
-        if (isset($user_profile['field_state'])) {
-          $state = $user_profile['field_state'][0]['#title'];// always shown
-        }
-
-         if ($school && $district && $state) {
-          echo t('!school in !district, !state', array(
-            '!school'    => $school,
-            '!district'  => $district,
-            '!state' => $state,
-          ));
-        } else {
-          echo $school;
-          echo ($district)? ' ' : '';
-          echo $district;
-          echo (($school || $district) && $state)? ', ' : '';
-          echo $state;
-        }
+        echo $district;
+        echo (($school || $district) && $state)? ', ' : '';
+        echo $state;
       ?>
     </div>
 
