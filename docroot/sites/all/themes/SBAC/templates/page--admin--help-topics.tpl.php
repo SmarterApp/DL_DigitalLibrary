@@ -176,9 +176,6 @@
           print render($page['bottom_menu']);
         }
         ?>
-      <?php if (isset($welcome_tutorial_modal_button)) : ?>
-        <?php echo $welcome_tutorial_modal_button; ?>
-      <?php endif; ?>
       <?php if ($user && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
       <ul class="footer-links inline-list right">
         <li>
