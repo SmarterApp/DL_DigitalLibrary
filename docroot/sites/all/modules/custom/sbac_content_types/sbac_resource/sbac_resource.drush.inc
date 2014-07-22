@@ -217,6 +217,8 @@ function drush_sbac_resource_update_node_review_averages() {
 
 function drush_sbac_resource_update_thumbnails() {
   $row = 0;
+  $start_time = time();
+  drush_print('Start time', $start_time);
 
   $max_nid = db_query("SELECT MAX(n.nid)
                        FROM   {node} n
@@ -247,4 +249,6 @@ function drush_sbac_resource_update_thumbnails() {
       unset($node);
     }
   }
+
+  drush_print('Start time was: ' . $start_time . ' End time is: ', time());
 }

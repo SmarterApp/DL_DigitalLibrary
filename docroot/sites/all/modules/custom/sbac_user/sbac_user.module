@@ -256,6 +256,8 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_school_name']['#disabled'] = TRUE;
     }
     else {
+      $form['field_first_name']['#disabled']  = TRUE;
+      $form['field_last_name']['#disabled']   = TRUE;
       $form['account']['name']['#type'] = 'hidden';
       $form['account']['pass']['#type'] = 'hidden';
       $form['account']['current_pass']['#type'] = 'hidden';
@@ -306,8 +308,43 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       );
 
       // form modifications to field_privacy
+      $default_privacy = array(
+        'field_first_name',
+        'field_position',
+        'field_state',
+        'field_grade_level_s_',
+        'field_subject_s_',
+        'field_special_populations',
+      );
+      $form['field_privacy']['und2'] = array(
+        '#prefix' => '<div class="sbac-privacy-container"><div class="sbac-privacy-title">Visibility required</div>
+                      <div class="sbac-privacy-desc">These fields will be shown to all users in the Digital Library</div>',
+        '#suffix' => '</div>',
+        '#type' => 'checkboxes',
+        '#default_value' => $default_privacy,
+        '#disabled' => TRUE,
+      );
+      foreach ($default_privacy AS $idx => $name) {
+        $form['field_privacy']['und2']['#options'][] = $form['field_privacy']['und']['#options'][$name];
+        $form['field_privacy']['und2']['#default_value'][] = $idx;
+        unset($form['field_privacy']['und']['#options'][$name]);
+      }
       $form['field_privacy']['und']['#after_build'][] = 'sbac_user_privacy_after_build';
-      $form['field_privacy']['und']['#theme_options']['description at top'] = $form['field_privacy']['und']['#description'];
+      $form['field_privacy']['#prefix'] = '<div class="sbac-privacy-cont-title">
+                                            Privacy
+                                          </div>
+                                          <div class="sbac-privacy-cont-desc">'
+                                            . $form['field_privacy']['und']['#description'] .
+                                          '</div>';
+      $form['field_privacy']['und']['#prefix'] = '<div class="sbac-privacy-container">
+                                                    <div class="sbac-privacy-title">
+                                                      Visibility optional
+                                                    </div>
+                                                    <div class="sbac-privacy-desc">
+                                                      Select the personal information you would like visible to other Digital Library users.
+                                                    </div>';
+      $form['field_privacy']['und']['#suffix'] = '</div>';
+      $form['field_privacy']['und']['#title'] = '';
       $form['field_privacy']['und']['#description'] = '';
     }
     $form['#validate'][] = 'sbac_user_profile_validate';

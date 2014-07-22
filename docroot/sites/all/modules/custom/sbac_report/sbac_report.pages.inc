@@ -226,6 +226,9 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
   if (isset($_GET['sort_rs'])) {
     $sort = $_GET['sort_rs'];
   }
+  if (isset($_SESSION['sbac_report_posted_rs'])) {
+    $limit = $_SESSION['sbac_report_posted_rs'];
+  }
   $opp_sort = ($sort == 'asc' ? 'desc' : 'asc');
   $url = '/reports?items_per_page_rs=';
   $data['table_title_query'] = $url . $limit . '&order_rs=title&sort_rs=' . $opp_sort;
@@ -344,7 +347,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
     $title = truncate($row->node_title, 55, array('check_markup' => FALSE));
     $row->title = l($title, 'node/' . $row->nid, array('attributes' => array('target' => '_blank')));
     $rows[] = array(
-      'title' => '<a href="http://google.com">' . $row->title . '</a>',
+      'title' => $row->title,
       'posted' => date('m/d/y', $row->node_created),
       'rating' => ($row->field_data_field_node_avg_rating_field_node_avg_rating_value
  ? sbac_resource_display_fivestar_rating($row->field_data_field_node_avg_rating_field_node_avg_rating_value) : 'No Rating'),
@@ -447,7 +450,7 @@ function sbac_report_posted_resource_stats_pager_form($form, &$form_state, $data
     '#value' => $data['date_range'],
   );
 
-  $form['limit'] = array(
+  $form['limit_2'] = array(
     '#title' => t('Display'),
     '#title_display' => 'before',
     '#attributes' => array('class' => array('form-items-per-page')),
@@ -477,8 +480,9 @@ function sbac_report_posted_resource_stats_pager_form($form, &$form_state, $data
  */
 function sbac_report_posted_resource_stats_pager_form_ajax($form, &$form_state) {
   $values = $form_state['values'];
+  $_SESSION['sbac_report_posted_rs'] = $values['limit_2'];
   $output = '<div id="posted-resources-stats">';
-  $output .= sbac_report_build_resource_statistics($values['uid'], $values['date_range'], $values['limit']);
+  $output .= sbac_report_build_resource_statistics($values['uid'], $values['date_range'], $values['limit_2']);
   $output .= '</div>';
   return $output;
 }
@@ -516,7 +520,7 @@ function sbac_report_resource_details_pager_form($form, &$form_state, $data) {
     '#default_value' => $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] ? $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] : 5,
     '#ajax' => array(
       'callback' => 'sbac_report_resource_details_pager_form_ajax',
-      'wrapper' => 'contributed-resources',
+      'wrapper' => 'contriubted-resource-details',
       'method' => 'replace',
     ),
   );
@@ -534,9 +538,8 @@ function sbac_report_resource_details_pager_form($form, &$form_state, $data) {
 function sbac_report_resource_details_pager_form_ajax($form, &$form_state) {
   $values = $form_state['values'];
   $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] = $values['limit'];
-  $output = '<div id="contributed-resources">';
+  $output = '<div id="contriubted-resource-details">';
   // Pass -1 as limit, summary should be "number of items per page" independent.
-  $output .= sbac_report_build_resource_summary($values['uid'], $values['date_range'], -1);
   $output .= sbac_report_build_resource_details($values['uid'], $values['date_range'], $values['limit']);
   $output .= '</div>';
   return $output;

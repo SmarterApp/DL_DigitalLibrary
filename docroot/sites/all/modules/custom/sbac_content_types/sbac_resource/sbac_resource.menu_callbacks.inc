@@ -39,6 +39,7 @@ function sbac_resource_digital_library_page() {
     clear_views_exposed_filter_cache($view->name, $display);
     sbac_resource_filter_user_tags($view);
     $digital_library_output = $view->preview();
+    // dpq($view->build_info['query']);
     $view->destroy();
     drupal_get_messages();
     $no_results = sbac_resource_no_search_results($search_string);
@@ -118,7 +119,7 @@ function sbac_resource_resource_review_page() {
   sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();
-//  dpq($view->build_info['query']);
+  // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
   $view->destroy();
 
