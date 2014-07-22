@@ -27,10 +27,19 @@ function sbac_resource_views_query_alter(&$view, &$query) {
  */
 function sbac_resource_views_pre_build(&$view){
   if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+    // Load the previous nodes
     if (isset($_SESSION['load_more'][$view->name]['page'])) {
       $view->offset = 0;
       $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12; // 0 is 12, so add one.
-      drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-9219').offset().top}, 2000); });", array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
+    }
+
+    // Scroll to node
+    if (isset($_SESSION['load_more']['moderation']['nid'])) {
+      drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-" . $_SESSION['load_more']['moderation']['nid'] . "').offset().top}, 2000); });", array(
+        'type' => 'inline',
+        'scope' => 'footer',
+        'weight' => 5
+      ));
     }
   }
 }

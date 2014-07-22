@@ -95,9 +95,19 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL, $load_mo
     $offset = 1;
   }
 
+  // Load previous nodes
   if (!$load_more_ajax && isset($_SESSION['load_more']['moderation']['page'])) {
     $start = 0;
     $end = $_SESSION['load_more']['moderation']['page'] * SBAC_FLAG_MODERATION_COUNT;
+  }
+
+  // Scroll to node
+  if (isset($_SESSION['load_more']['moderation']['nid'])) {
+    drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-" . $_SESSION['load_more']['moderation']['nid'] . "').offset().top}, 2000); });", array(
+      'type' => 'inline',
+      'scope' => 'footer',
+      'weight' => 5
+    ));
   }
 
   // Loop through all flags, determine access,
