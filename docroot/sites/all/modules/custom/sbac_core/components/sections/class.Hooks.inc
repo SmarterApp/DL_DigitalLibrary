@@ -35,6 +35,29 @@ class Hooks extends \devtools\Hooks {
     return $items;
   }
 
+  /**
+   * Extends hook_menu().
+   */
+  function hook_menu() {
+    $base = array(
+      'file' => 'sections.inc',
+      'file path' => $this->_path,
+    );
+
+    $items['section-get-content/nojs'] = array(
+      'title' => 'Get Section Content',
+      'page callback' => 'section_get_content',
+      'access arguments' => array('access content'),
+      'file' => 'sections.inc',
+    ) + $base;
+
+    $items['section-get-content/ajax'] = array(
+        'delivery callback' => 'section_get_content',
+      ) + $items['section-get-content/nojs'];
+
+    return $items;
+  }
+
   /*----------------------------------------------------------------------------
       MODULE HOOKS
   ----------------------------------------------------------------------------*/

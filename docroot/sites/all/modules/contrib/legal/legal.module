@@ -716,7 +716,7 @@ function legal_get_conditions($language = NULL) {
 
   if (!empty($language)) {
     $result = db_select('legal_conditions', 'lc')
-      ->fields('lc')
+      ->fields('lc', $keys)
       ->condition('language', $language)
       ->orderBy('version', 'DESC')
       ->orderBy('revision', 'DESC')
@@ -727,12 +727,13 @@ function legal_get_conditions($language = NULL) {
   }
   else {
     $result = db_select('legal_conditions', 'lc')
-      ->fields('lc')
+      ->fields('lc', $keys)
       ->orderBy('tc_id', 'DESC')
       ->execute()
       ->fetchAllAssoc('tc_id');
     $result = (array)array_shift($result);
   }
+
 
   foreach ($keys as $key) {
     $conditions[$key] = isset($result[$key]) ? $result[$key] : '';

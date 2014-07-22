@@ -56,6 +56,7 @@ scripts[] = js/custom.js
 
 regions[header]          = Header
 regions[sub-header]      = sub-header
+regions[feedback]      = feedback
 regions[search]      	 = search
 regions[toggle]      	 = toggle
 regions[filter]      	 = filter

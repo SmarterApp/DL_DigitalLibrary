@@ -1239,3 +1239,41 @@ function sbac_central_update_7084() {
     db_drop_table('cache_eck');
   }
 }
+
+/**
+ * Enable views content cache.
+ */
+function sbac_central_update_7085() {
+  $modules = array(
+    'views_content_cache',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Add an index into the legal conditions.
+ */
+function sbac_central_update_7086() {
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX version (version)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX revision (revision)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX language (language)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX multi (version, revision)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX entire (version, revision, language)");
+}
+
+/**
+ * Disable views ui, and taxonomy manager. Enable elysia_cron.
+ */
+function sbac_central_update_7087() {
+  $modules = array(
+    'views_ui',
+    'taxonomy_manager',
+  );
+  module_disable($modules);
+  unset($modules);
+
+  $modules = array(
+    'elysia_cron',
+  );
+  module_enable($modules);
+}

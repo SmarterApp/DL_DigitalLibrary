@@ -7,11 +7,26 @@
  */
 function sections_preprocess(&$vars) {
   $path = drupal_get_path('module', 'sbac_core') . '/components/sections/';
-
+  drupal_add_library('system', 'drupal.ajax');
   drupal_add_js($path . 'js/sections.js');
   drupal_add_css($path . 'css/sections.css');
 
   foreach ($vars['sections'] as $key => &$section) {
+    $section['use-ajax'] = 'use-ajax';
+    if ($section['title'] == 'About This Resource') {
+      $section['use-ajax'] = '';
+    }
+
+    if (!isset($section['source'])) {
+      $section['source'] = NULL;
+    }
+    if (!isset($section['tab'])) {
+      $section['tab'] = NULL;
+    }
+    if (!isset($section['nid'])) {
+      $section['nid'] = NULL;
+    }
+
     // remove properties
     if ($key{0} == '#') {
       unset($vars['sections'][$key]);
@@ -21,13 +36,51 @@ function sections_preprocess(&$vars) {
     $class = '';
     $class .= 'section-' . strtolower(str_replace(' ', '-', $section['title']));
     if (isset($section['class'])) {
-      $class = $section['class'];
+      $class .= ' ' . $section['class'];
     }
-
+    if (isset($section['content']) && $section['content'] != NULL) {
+      $class .= ' section-loaded';
+    }
     if (isset($section['disabled']) && $section['disabled']) {
       $class .= ' disabled';
     }
-
     $section['class'] = $class;
+    $section['id'] = 'section-' . strtolower(str_replace(' ', '-', $section['title']));
   }
+}
+
+/**
+ * Returns the sections content via ajax.
+ */
+function section_get_content() {
+  $output = array();
+  $content = null;
+  if (!isset($_GET['source']) || !isset($_GET['tab']) || !isset($_GET['nid']) || !isset($_GET['section_id'])) {
+    print ajax_render($output);
+  }
+
+  $source = $_GET['source'];
+  $tab = $_GET['tab'];
+  if ($source == 'people') {
+    if ($tab == 'notifications') {
+      $content = sbac_core_notifications_get_html_content();
+    }
+    elseif ($tab == 'favorites') {
+      $content = sbac_favorites_get_html_content();
+    }
+  }
+  else {
+    $node = node_load($_GET['nid']);
+    module_load_include('inc', 'sbac_core', '/components/sections/includes/class.Factory');
+    $factory = new \sbac_core\components\sections\Factory($node);
+    $section = $factory->get($source, $tab);
+    if ($section && $section->access()) {
+      $content = $section->getContent();
+    }
+  }
+
+  $output[] = ajax_command_invoke('#' . $_GET['section_id'], 'empty');
+  $output[] = ajax_command_append('#' . $_GET['section_id'], $content);
+  print ajax_render($output);
+  exit();
 }

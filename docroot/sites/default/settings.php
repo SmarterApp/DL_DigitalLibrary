@@ -610,10 +610,7 @@ $conf['google_cdn_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgf
 $conf['google_cdn_signed_url_expiry'] = 300;
 $conf['google_cdn_library_version'] = 2;
 
-error_reporting(E_ERROR);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
-ini_set('memory_limit', '196M');
+//ini_set('memory_limit', '196M');
 
 /**
  * Fast 404 settings:

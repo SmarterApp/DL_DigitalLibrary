@@ -104,6 +104,38 @@ function sbac_user_access_check() {
   return TRUE;
 }
 
+/**
+ * Implements hook_init().
+ *
+ * Dev did not have this anymore. Load Test branch did. Since this seems like
+ * funcitonality, I'm going to keep this in but comment it out for now.
+ *
+ */
+function sbac_user_init() {
+//global $user;
+//  if (!user_is_logged_in()) {
+//    variable_set('site_404', 'user');
+//  }
+//  else {
+//    variable_set('site_404', '');
+//  }
+
+  // Intercept page request to user/uid/edit with pass-reset-token query value and send to change-password instead.
+  // Is this the best place to do this? Can't seem to use hook_user_login() because there is no way to
+  // retrieve the pass-reset-token value.
+//  if (isset($_GET['pass-reset-token'])) {
+//    $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
+//
+//    if ($pass_reset && arg(0) == 'user' && arg(1) == $user->uid && arg(2) == 'edit') {
+//      drupal_goto('change-password', array('query' => array('pass-reset-token' => $_GET['pass-reset-token'])));
+//    }
+//  }
+//  // redirect any user not admin from the user/id/edit screen to user
+//  if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
+//    drupal_goto('user');
+//  }
+}
+
 /*
  * Implements hook_permission().
  */
@@ -884,6 +916,64 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
   }
 }
 
+// Load test version of hook_user_login.
+//function sbac_user_user_login(&$edit, $account) {
+//  // steev - trying to get redirect for auth'd users earlier in the process so
+//  // we avoid the db write later on
+//
+//  // check if the user has account data
+//  if(isset($account->data)){
+//    $account->data['login_count'] +=1;
+//    // steev - there has to be a way to avoid this write, its going to cane the performance.
+//    // perhaps we can store logins in memcache and write once per minute?
+//    db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($account->data), ':uid' => $account->uid));
+//    if (!isset($account->data['disable_help'])) {
+//      drupal_goto('user');
+//    }
+//    else {
+//      drupal_goto('digital-library-resources');
+//    }
+//  }
+//
+//
+//  /* count user logins and save them in an array in account->data */
+//  if (!$account->data) { // initialize for new users
+//    $account->data = array();
+//  }
+//  // Increment login count.
+//  if (!isset($account->data['login_count'])) {
+//    $account->data['login_count'] = 1;
+//  }
+//  // Log the time the user first logged in.
+//  if (!isset($account->data['first_login'])) {
+//    $account->data['first_login'] = time();
+//  }
+//  // Disable feedback flag.
+//  if(!isset($account->field_feedback_flag['und'][0])) {
+//    db_query('UPDATE {field_revision_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
+//  }
+//  // guest account
+//  if (isset($edit['sbac-share'])) {
+//    $account->data['disable_help'] = TRUE;
+//  }
+//
+//  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($account->data), ':uid' => $account->uid));
+//  user_cookie_save(array('sbac_just_logged_in'=> TRUE));
+//  /**
+//   * steev - this if statement needs to be changed so it redirects to digital-library-resources much earlier in the process
+//   */
+//  // $edit['sbac-share'] seems to indicate the user is a guest or something?
+//  // so this only executes if the user is not a guest
+//  if (!isset($edit['sbac-share'])) {
+//    if (!isset($account->data['disable_help'])) {
+//      drupal_goto('user');
+//    }
+//    else {
+//      drupal_goto('digital-library-resources');
+//    }
+//  }
+//}
+
 /**
  * Implements hook_user_login().
  *
@@ -1211,9 +1301,15 @@ function sbac_user_menu_alter(&$items) {
  * We are not using hook_username_alter and format_username because
  * it has far reaching effects and its just before demo time
  */
-function sbac_user_format_username($user) {
+function sbac_user_format_username($user_object) {
   $username = '';
+
+  global $user;
   $account = user_load($user->uid);
+  if (is_object($user_object)) {
+    $account = user_load($user_object->uid);
+  }
+
   if (sbac_user_privacy_check('field_first_name', $account) && isset($account->field_first_name['und'][0]['value']) && $account->field_first_name['und'][0]['value']) {
     $username = $account->field_first_name['und'][0]['value'];
   }
@@ -1262,6 +1358,49 @@ function sbac_user_cron() {
 }
 
 /**
+ * Implements hook_preprocess_page().
+ *
+ * @param $vars
+ */
+function sbac_user_preprocess_page(&$vars) {
+  if (isset($vars['user'])) {
+    $user = $vars['user'];
+    $account = user_load($user->uid, TRUE);
+    sbac_user_preprocess_username($vars, $account);
+    sbac_user_preprocess_favorites($vars, $account);
+    sbac_user_preprocess_notifications($vars, $account);
+    global $base_url;
+    $vars['home_url'] = $base_url;
+    if ($user->uid && in_array(SBAC_SHARE_GUEST, $account->roles)) {
+      $vars['home_url'] = '#';
+    }
+  }
+}
+
+/**
+ * @param $vars
+ * @param $user
+ */
+function sbac_user_preprocess_username(&$vars, $user) {
+  if (isset($user->picture->uri)) {
+    $uri = $user->picture->uri;
+    $path = drupal_realpath($uri);
+    if (file_exists($path)) {
+      $vars['user']->image_thumb = theme('image_style', array(
+        'path' => $user->picture->uri,
+        'style_name' => 'small',
+        'attributes' => array(
+          'class' => 'left'
+        )
+      ));
+    }
+  }
+  if (is_object($user)) {
+    $vars['user']->full_name = sbac_user_format_username($user);
+  }
+}
+
+/**
  * Implements hook_user_import_data().
  * @param  [type] $settings        [description]
  * @param  [type] $update_setting  [description]
@@ -1294,4 +1433,40 @@ function sbac_user_user_import_data($settings, $update_setting, $column_settings
   }
 
   return;
+}
+
+/**
+ * @param $vars
+ * @param $user
+ */
+function sbac_user_preprocess_favorites(&$vars, $user) {
+  $favorites_count = sbac_favorites_get_count($user->uid);
+  $text = t('Favorites');
+  if (!$favorites_count) {
+    $favorites_count = 0;
+  }
+  $text .= ' (<span>' . $favorites_count . '</span>)';
+  $vars['user']->favorites_link = l($text, 'user', array(
+    'html' => TRUE,
+    'fragment' => 'profile-favorites',
+    'attributes' => array('title' => 'Favorites'),
+  ));
+  $vars['user']->favorites_added = '<div class="sbac-favorites-menu-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+}
+
+/**
+ * @param $vars
+ * @param $user
+ */
+function sbac_user_preprocess_notifications(&$vars, $user) {
+  $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
+  $text = t('Notifications');
+  if ($taskit_counts['_no_role_'] != 0) {
+    $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
+  }
+  $vars['user']->notifications = l($text, 'user', array(
+    'html' => TRUE,
+    'fragment' => 'profile-notifications',
+    'attributes' => array('title' => 'Notifications'),
+  ));
 }

@@ -47,6 +47,31 @@ function sbac_resource_views_default_views_alter(&$views) {
       $views['help_topics']->display['page_1']->display_options['filters']['field_help_page_topic_tid']['value'][$resource_tutorial->tid] = $resource_tutorial->tid;
     }
   }
+
+  if (isset($views['workbench_moderation'])) {
+    $views['workbench_moderation']->disabled = TRUE;
+  }
+  if (isset($views['workbench_recent_content'])) {
+    $views['workbench_recent_content']->disabled = TRUE;
+  }
+  if (isset($views['workbench_edited'])) {
+    $views['workbench_edited']->disabled = TRUE;
+  }
+  if (isset($views['workbench_current_user'])) {
+    $views['workbench_current_user']->disabled = TRUE;
+  }
+  if (isset($views['legal_terms'])) {
+    $views['legal_terms']->disabled = TRUE;
+  }
+  if (isset($views['Maillog'])) {
+    $views['Maillog']->disabled = TRUE;
+  }
+  if (isset($views['media_default'])) {
+    $views['media_default']->disabled = TRUE;
+  }
+  if (isset($views['legal_users'])) {
+    $views['legal_users']->disabled = TRUE;
+  }
 }
 
 
@@ -582,6 +607,9 @@ function sbac_resource_views_data() {
  */
 function _sbac_resource_resources_view_query_alter(&$view, &$query) {
   $view->query->add_table('sbac_node_resource_state');
+  $view->query->add_field('sbac_node_resource_state', 'uid', 'sbac_node_resource_state_uid');
+  $view->query->add_field('sbac_node_resource_state', 'state', 'sbac_node_resource_state_state');
+  $view->query->add_field('sbac_node_resource_state', 'flag', 'sbac_node_resource_state_flag');
   $all_condition = db_and()->condition('sbac_node_resource_state.state', "published")->condition('sbac_node_resource_state.uid', 0);
   $view->query->add_where('AND', $all_condition);
 

@@ -76,10 +76,56 @@ function sbac_media_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-get-media'] = array(
+    'title' => 'Get Media',
+    'page callback' => 'sbac_media_get_url',
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
 /**
+ * Get the media url.
+ *
+ * @return bool|null|string
+ */
+function sbac_media_get_url() {
+  $media_id = arg(1);
+  if ($media_id) {
+    $media = sbac_media_get_item($media_id);
+    if ($media) {
+      if ($media->fid) {
+        $file = file_load($media->fid);
+        $url = file_create_url($file->uri);
+      }
+      else {
+        $url = sbac_media_create_embed_url($media);
+      }
+
+      $output['url'] = $url;
+      print drupal_json_encode($output);
+      exit;
+    }
+  }
+}
+
+/**
+ * Get the media object.
+ *
+ * @param $id
+ *   The eck_media id.
+ * @return mixed
+ */
+function sbac_media_get_item($id) {
+  if ($id) {
+    $sql = "SELECT * FROM {eck_media} WHERE id = :id";
+    return db_query($sql, array(':id' => $id))->fetchObject();
+  }
+}
+
+/**
+>>>>>>> sbac_load_test
  * Function to check if there are any downloadable files.
  *
  * @param $files
@@ -280,7 +326,10 @@ function sbac_media_download_contents($node) {
                   ini_set('memory_limit', '1024M');
                   try {
                     $target = str_replace('gs://', '', $file->uri);
+                    $target_path = explode('/', $target);
+                    $target_file = rawurlencode(array_pop($target_path));
                     $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
+                    $target = implode('/', $target_path) . '/' . $target_file;
                     if ($response) {
                       $target_path = explode('/', $target);
                       $target_file = rawurlencode(array_pop($target_path));

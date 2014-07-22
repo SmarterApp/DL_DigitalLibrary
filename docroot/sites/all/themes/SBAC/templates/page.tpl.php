@@ -1,18 +1,8 @@
-<?php
-global $user;
-?>
 <!-- Header and Nav -->
 <div class="page-wrap">
 <nav class="top-bar main-top clearfix">
   <ul class="title-area">
     <li class="name"><h1>
-        <?php
-        global $base_url;
-        $home_url = $base_url;
-        if (($user->uid && in_array(SBAC_SHARE_GUEST, $user->roles)) || (arg(0) == 'sbac-sso-error')) {
-          $home_url = '#';
-        }
-        ?>
         <a title="Smarter Balanced Assessment Consortium" href="<?php echo $home_url; ?>">
           <img src="<?php echo $logo; ?>" alt="Smarter Balanced Assessment Consortium Logo"/>
         </a>
@@ -23,81 +13,38 @@ global $user;
   <?php if ($user->uid && !in_array('guest', $user->roles)): ?>
     <ul class="inline-list right user-nav">
       <li class="user-info">
-        <a title='<?php echo sbac_user_format_username($user); ?>' data-dropdown="drop3" href="#">
+        <a title='<?php echo $user->full_name ?>' data-dropdown="drop3" href="#">
           <?php
-          $user_item = user_load($user->uid);
-          if (isset($user_item->picture->uri)) {
-            $uri = $user_item->picture->uri;
-            $path = drupal_realpath($uri);
-            if (file_exists($path)) {
-              echo theme('image_style', array(
-                'path' => $user_item->picture->uri,
-                'style_name' => 'small',
-                'attributes' => array(
-                  'class' => 'left'
-                )
-              ));
-            }
+          if (isset($user->picture->uri)) {
+            echo $user->image_thumb;
           }
-          echo sbac_user_format_username($user);
+          echo $user->full_name;
           ?>
         </a>
         <ul id="drop3" class="f-dropdown">
-          <li><?php echo l('Account', 'user/' . $user->uid, array('attributes' => array('title' => 'Account'))); ?></li>
+          <li><?php echo l('Account', 'user', array('attributes' => array('title' => 'Account'))); ?></li>
           <li><?php echo l('Logout', 'user/logout', array('attributes' => array('title' => 'Logout'))); ?></li>
         </ul>
       </li>
       <li class="notifications">
         <?php
-        $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
-        $text = t('Notifications');
-
-        if ($taskit_counts['_no_role_'] != 0) {
-          $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
-        }
-
-        echo l($text, 'user/' . $user->uid, array(
-            'html' => TRUE,
-            'fragment' => 'profile-notifications',
-            'attributes' => array('title' => 'Notifications'),
-          ));
+        echo $user->notifications;
         ?>
       </li>
       <li>
         <a title='Feedback' id="feedback-click" data-dropdown="feedback-dropdown" href="#">Feedback</a>
-        <?php
-        // set $class_feedback open if variable enable_feedback is on and the user hasn't disabled feedback flag on their profile yet, otherwise empty
-        $class_feedback = (variable_get('enable_feedback') == 1 && !$user_item->field_feedback_flag['und'][0]['value'] ? ' open' : '');
-        ?>
-        <div id="feedback-dropdown" class="f-dropdown content small<?php print $class_feedback; ?>">
-          <a href='#' title='Remove' id="disable-feedback" class="small right"> x </a>
-          <?php
-          $feedback_block = block_load('sbac_central', 'feedback-box');
-          $render_array = _block_get_renderable_array(_block_render_blocks(array($feedback_block)));
-          print render($render_array);
-          ?>
-        </div>
+        <?php print render($page['feedback']); ?>
       </li>
       <li>
         <div class="sbac-favorites-menu">
           <?php
-          $favorites_count = sbac_favorites_get_count($user->uid);
-          $text = t('Favorites');
-          if (!$favorites_count) {
-            $favorites_count = 0;
-          }
-          $text .= ' (<span>' . $favorites_count . '</span>)';
-          echo l($text, 'user/' . $user->uid, array(
-              'html' => TRUE,
-              'fragment' => 'profile-favorites',
-              'attributes' => array('title' => 'Favorites'),
-            ));
-          echo '<div class="sbac-favorites-menu-tooltip f-dropdown right" style="display:none;">Added to Favorites</div>';
+          echo $user->favorites_link;
+          echo $user->favorites_added;
           ?>
         </div>
       </li>
       <li>
-        <?php if ($help_dropdown) : ?>
+        <?php if (isset($help_dropdown)) : ?>
           <?php print $help_dropdown; ?>
         <?php endif; ?>
       </li>
@@ -125,7 +72,7 @@ global $user;
   <?php endif; ?>
 </div>
 
-<?php if (!in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
+<?php if ($user->uid && !in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
   <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
     <?php print render($page['filter']); ?>
   </div>
@@ -139,7 +86,7 @@ global $user;
   </div>
 <?php endif; ?>
 
-<?php if (!in_array(SBAC_SHARE_GUEST, $user->roles) && ($page['sub-header'] || $page['toggle'])): ?>
+<?php if ($user->uid && !in_array(SBAC_SHARE_GUEST, $user->roles) && ($page['sub-header'] || $page['toggle'])): ?>
   <div class="top-bar last-top">
     <div class="toggle right">
       <?php print render($page['toggle']); ?>
@@ -194,12 +141,12 @@ global $user;
 
       <?php print render($page['content']); ?>
     </div>
-    <?php if (!empty($page['sidebar_first'])): ?>
+    <?php if ($user->uid && !empty($page['sidebar_first'])): ?>
       <div id="sidebar-first" class="<?php print $sidebar_first_grid; ?> columns sidebar ">
         <?php print render($page['sidebar_first']); ?>
       </div>
     <?php endif; ?>
-    <?php if (!empty($page['sidebar_second'])): ?>
+    <?php if ($user->uid && !empty($page['sidebar_second'])): ?>
       <div id="sidebar-second" class="<?php print $sidebar_sec_grid; ?> columns sidebar">
         <?php print render($page['sidebar_second']); ?>
       </div>
@@ -246,62 +193,24 @@ global $user;
         print render($page['bottom_menu']);
       }
       ?>
+      <?php if (isset($welcome_tutorial_modal_button)) : ?>
+        <?php echo $welcome_tutorial_modal_button; ?>
+      <?php endif; ?>
       <?php if ($user && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
-        <ul class="footer-links inline-list right">
-          <li>
-            <?php if (user_is_logged_in() && !in_array('guest', $user->roles)) : ?>
-              <div class="footer-help">
-                <a title="Help Menu" class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
-                <ul id="drop2" class="f-dropdown" data-dropdown-content>
-                  <li><a title="Welcome Tutorial" href="#helpmodal" class="help-modal">Welcome Tutorial</a></li>
-                  <li><?php print l(t('Glossary'), 'glossary', array('absolute' => TRUE, 'attributes' => array('title' => 'Glossary'))); ?></li>
-                  <li><a title='Help Topics' href="help-topics">Help Topics</a></li>
-                </ul>
-              </div>
-            <?php endif; ?>
-          </li>
-          <li><a title="Terms of Service" class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
-        </ul>
+      <ul class="footer-links inline-list right">
+        <li>
+          <?php if (isset($help_dropdown_footer)) : ?>
+            <?php echo $help_dropdown_footer; ?>
+          <?php endif; ?>
+        </li>
+        <li><a title="Terms of Service" class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
+      </ul>
       <?php endif; ?>
     </div>
   </div>
 </div>
 
 <?php if (user_is_logged_in()) : ?>
-  <div style='display:none;'>
-    <div id="helpmodal">
-      <?php
-      if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) : ?>
-        <div class="sort-link"><a title="Reorganize Help" href="/admin/help-topics" class="small button radius">Reorganize Help</a></div>
-      <?php endif; ?>
-      <h2 class="helpmodal-title">Welcome to the Smarter Balanced Digital Library</h2>
-
-      <p class="helpmodal-desc">The Digital Library is an online, user-friendly, searchable library for educators that contains only high-quality vetted resources. It is interactive and allows educators from member states to use and rate
-        resources and collaborate. To learn more, click through the various welcome tutorials provided below:</p>
-      <?php print views_embed_view('help_topics', 'block'); ?>
-      <?php $form = drupal_get_form('sbac_help_disable_help'); ?>
-      <?php print drupal_render($form); ?>
-    </div>
-    <div id="resource-help-box">
-      <h2 class="resource-help-box-title">You're About to Create a Resource</h2>
-
-      <div id="resource-help-body">
-        <?php print views_embed_view('resource_tutorial', 'resource_tutorial'); ?>
-      </div>
-      <a title="Continue" class="otherClose button right" href="#">Continue</a>
-      <a title="Cancel" class="button right secondary backButton" href="#">Cancel</a>
-    </div>
-    <div id="current-help-topic-modal">
-      <a class="helpBack small button left">Back</a>
-
-      <h2><span id="sbac-help-title">Welcome to the Smarter Balanced Digital Library</span></h2>
-
-      <div id="current-help-topic">
-      </div>
-      <?php $form = drupal_get_form('sbac_help_disable_help'); ?>
-      <?php print drupal_render($form); ?>
-    </div>
-  </div>
   <?php if (isset($session_expire)): ?>
     <div class="sbac-sso-session-expire" style="display:none">
       <?php echo $session_expire; ?>

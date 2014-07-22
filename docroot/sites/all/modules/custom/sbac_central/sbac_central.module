@@ -21,6 +21,65 @@ function sbac_central_update_projects_alter(&$projects) {
   unset($projects['sbac_central']);
 }
 
+/**
+ * Implements hook_entity_info_alter().
+ */
+function sbac_central_entity_info_alter(&$entity_info) {
+  if (isset($entity_info['node']['entity cache'])) {
+    $entity_info['node']['entity cache'] = FALSE;
+    $entity_info['node']['controller class'] = 'NodeController';
+    $entity_info['node']['field cache'] = TRUE;
+  }
+  //Cant be cached.
+//  if (isset($entity_info['feedback']['entity cache'])) {
+//    $entity_info['feedback']['entity cache'] = FALSE;
+//    $entity_info['feedback']['controller class'] = 'EntityAPIController';
+//    $entity_info['feedback']['field cache'] = TRUE;
+//  }
+  //Cant be cached.
+//  if (isset($entity_info['review']['entity cache'])) {
+//    $entity_info['review']['entity cache'] = FALSE;
+//    $entity_info['review']['controller class'] = 'EntityAPIController';
+//    $entity_info['review']['field cache'] = TRUE;
+//  }
+  //Cant be cached.
+//  if (isset($entity_info['media']['entity cache'])) {
+//    $entity_info['media']['entity cache'] = FALSE;
+//    $entity_info['media']['controller class'] = 'EntityAPIController';
+//    $entity_info['media']['field cache'] = TRUE;
+//  }
+  //Cant be cached.
+//  if (isset($entity_info['flag']['entity cache'])) {
+//    $entity_info['flag']['entity cache'] = FALSE;
+//    $entity_info['flag']['controller class'] = 'EntityAPIController';
+//    $entity_info['flag']['field cache'] = TRUE;
+//  }
+  //Cant be cached.
+//  if (isset($entity_info['field_collection_item']['entity cache'])) {
+//    $entity_info['field_collection_item']['entity cache'] = FALSE;
+//    $entity_info['field_collection_item']['controller class'] = 'EntityAPIController';
+//    $entity_info['field_collection_item']['field cache'] = TRUE;
+//  }
+// Going to cache for now.
+//  if (isset($entity_info['file']['entity cache'])) {
+//    $entity_info['file']['entity cache'] = FALSE;
+//    $entity_info['file']['controller class'] = 'DrupalDefaultEntityController';
+//    $entity_info['file']['field cache'] = TRUE;
+//  }
+// Going to cache for now.
+//  if (isset($entity_info['taxonomy_vocabulary']['entity cache'])) {
+//    $entity_info['taxonomy_vocabulary']['entity cache'] = FALSE;
+//    $entity_info['taxonomy_vocabulary']['controller class'] = 'TaxonomyVocabularyController';
+//    $entity_info['taxonomy_vocabulary']['field cache'] = TRUE;
+//  }
+// Going to cache for now.
+//  if (isset($entity_info['user']['entity cache'])) {
+//    $entity_info['user']['entity cache'] = FALSE;
+//    $entity_info['user']['controller class'] = 'UserController';
+//    $entity_info['user']['field cache'] = TRUE;
+//  }
+}
+
 function sbac_central_menu() {
   $items = array();
 
@@ -31,20 +90,7 @@ function sbac_central_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/test'] = array(
-    'title'            => t('Admin Test'),
-    'page callback'    => 'sbac_central_dev_test',
-    'access arguments' => array('administer content'),
-    'type'             => MENU_CALLBACK,
-  );
-
   return $items;
-}
-
-function sbac_central_dev_test() {
-  global $drupal_hash_salt;
-  print $drupal_hash_salt;
-  return;
 }
 
 /**
@@ -425,10 +471,12 @@ function theme_sbac_central_taxonomy_overview_vocabularies($variables) {
 function sbac_central_block_info() {
   $blocks['feedback-box'] = array(
     'info' => t('Feedback Box'),
-    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
-    'cache' => DRUPAL_CACHE_GLOBAL,
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_CACHE_PER_USER,
     'weight' => -23,
-    'status' => 0,
+    'status' => 1,
+    'region' => 'feedback',
+    'pages' => '*'
   );
 
   return $blocks;
@@ -436,6 +484,7 @@ function sbac_central_block_info() {
 
 /**
  * Implements hook_block_view().
+ *
  */
 function sbac_central_block_view($delta = '') {
   $block = array();
@@ -443,14 +492,25 @@ function sbac_central_block_view($delta = '') {
   switch ($delta) {
     case 'feedback-box':
       $body = variable_get('feedback_block_body', array('value' => '', 'format' => 'full_html'));
-
       $block['subject'] = t('Feedback Block');
       $block['content'] = $body['value'];
-
       break;
   }
 
   return $block;
+}
+
+/**
+ * Implements hook_block_info_alter().
+ *
+ * @param $blocks
+ * @param $theme
+ * @param $code_blocks
+ */
+function sbac_central_block_info_alter(&$blocks, $theme, $code_blocks) {
+  if (isset($blocks['feedback-box']) && $theme == 'SBAC') {
+    $blocks['feedback-box']['region'] = 'feedback';
+  }
 }
 
 /**

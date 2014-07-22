@@ -456,7 +456,7 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_my_resources_links($vars['fields']);
+    $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
   }
   if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
     $variables = _sbac_resource_my_resources_admin_links($vars['fields']);
@@ -521,7 +521,7 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
   if (in_array('resource contributor', $user->roles) || in_array('DLRB Member', $user->roles)) {
-    $variables = _sbac_resource_my_resources_links($vars['fields']);
+    $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
   }
   if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
     $variables = _sbac_resource_my_resources_admin_links($vars['fields']);
@@ -854,7 +854,7 @@ function _sbac_resource_my_resources_admin_links($fields) {
  * @param $buttons
  * @param $text
  */
-function _sbac_resource_my_resources_links($fields) {
+function _sbac_resource_my_resources_links($fields, $row) {
   $variables = array();
   global $user;
   if (isset($fields['state']->raw)) {
@@ -982,9 +982,8 @@ function _sbac_resource_my_resources_links($fields) {
           $variables['text'] = t('In Review');
         }
 
-        $gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
-        $completed_gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
-        if (!$gate_keeper && !$completed_gate_keeper) {
+        // if there is no active or completed gate keeper.
+        if ($row->sbac_node_resource_state_uid == 0 && $row->sbac_node_resource_state_flag == 'gk_needs_review') {
           $variables['buttons'][] = l(t('Un-submit'), 'sbac-resource/nojs/unsubmit-resource-modal', array(
             'html' => TRUE,
             'query' => array(

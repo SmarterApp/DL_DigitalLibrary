@@ -6,13 +6,10 @@
  */
 
 /**
- * Implement hook_drush_cache_clear().
- *
- * @param $types
- *   List of cache types that can be cleared.
+ * Implements hook_drush_cache_clear().
  */
 function advagg_drush_cache_clear(&$types) {
-  // Add in Advanced CSS/JS Aggregation
+  // Add in Advanced CSS/JS Aggregation.
   $types['advagg'] = 'drush_advagg_smart_cache_flush';
 }
 
@@ -135,7 +132,7 @@ function drush_advagg_clear_db_cache() {
  */
 function drush_advagg_cron() {
   // Run AdvAgg cron job.
-  $output = advagg_cron();
+  $output = advagg_cron(TRUE);
 
   // Output results from running advagg_delete_stale_aggregates().
   list($css_files, $js_files) = $output[0];

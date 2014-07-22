@@ -269,9 +269,11 @@ function sbac_favorites_get_favorites_list($uid, $type = NULL) {
  */
 function sbac_favorites_module_implements_alter(&$implementations, $hook) {
   if ($hook == 'user_view') {
-    $group = $implementations['sbac_favorites'];
-    unset($implementations['sbac_favorites']);
-    $implementations['sbac_favorites'] = $group;
+    if (isset($implementations['sbac_favorites'])) {
+      $group = $implementations['sbac_favorites'];
+      unset($implementations['sbac_favorites']);
+      $implementations['sbac_favorites'] = $group;
+    }
   }
 }
 
@@ -297,6 +299,29 @@ function sbac_favorites_user_view($account, $view_mode, $langcode) {
     'class' => 'section-favorites',
     'weight' => -100,
   );
+}
+
+/**
+ * Get the HTML content for profile view.
+ *
+ * @return string
+ */
+function sbac_favorites_get_html_content() {
+  global $user;
+  $account = $user;
+  $favorites = sbac_favorites_get_favorites_list($account->uid);
+  $output = sbac_favorites_favorites_table($favorites);
+  $favorites_content  = '<div id="favorites">';
+  if ($favorites) {
+    $favorites_content .= '<div class="favorites-helpful-info">';
+    $favorites_content .= 'Drag and drop items in the list to reorder your favorites';
+    $favorites_content .= '</div>';
+  }
+  $favorites_content .= '<div id="favorites-table">';
+  $favorites_content .= $output;
+  $favorites_content .= '</div>';
+  $favorites_content .= '</div>';
+  return $favorites_content;
 }
 
 /**

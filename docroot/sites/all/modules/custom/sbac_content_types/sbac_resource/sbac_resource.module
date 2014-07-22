@@ -296,7 +296,7 @@ function sbac_resource_related_resources($nid) {
         if (count($related_resources) > 3) {
           drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.related_resources.js');
         }
-        $output .= sbac_share_create_resource_card($related_resources);
+        $output .= sbac_resource_create_resource_card($related_resources);
       }
       else {
         $output .= theme('sbac_resource_no_related_resources');
@@ -485,13 +485,11 @@ function sbac_resource_get_related_resources($baseline_node) {
     global $user;
     $account = $user;
     foreach ($related_resources as $nid => $total_score) {
-      $node = node_load($nid);
       // filter out resources that dont exist, or that the user does not have access to see.
-      if (!$node || _sbac_resource_determine_state_access($node, $account) == FALSE) {
+      if (_sbac_resource_determine_state_access_via_sql($nid, $account) == FALSE) {
         unset($related_resources[$nid]);
       }
     }
-
     arsort($related_resources);
   }
 
@@ -504,7 +502,7 @@ function sbac_resource_get_related_resources($baseline_node) {
  * @param $related_resources
  * @return string
  */
-function sbac_share_create_resource_card(&$related_resources) {
+function sbac_resource_create_resource_card(&$related_resources) {
   $class = '';
   if (count($related_resources) <= 3) {
     $class = 'static';
@@ -536,10 +534,9 @@ function sbac_share_create_resource_card(&$related_resources) {
       $fields['views'] = (isset($node->field_unique_views['und'][0]['value']) ? $node->field_unique_views['und'][0]['value'] : 0);
       $fields['downloads'] = (isset($node->field_asset_downloads['und'][0]['value']) ? $node->field_asset_downloads['und'][0]['value'] : 0);
       $fields['collaborators'] = 'N Collaborations';
-      $fields['subject'] = sbac_share_get_field_terms($node->field_subject);
-      $fields['grades'] = sbac_share_get_field_terms($node->field_grades);
-      $fields['media_types'] = sbac_share_get_field_terms($node->field_digital_media_type);
-
+      $fields['subject'] = sbac_resource_get_field_terms($node->field_subject);
+      $fields['grades'] = sbac_resource_get_field_terms($node->field_grades);
+      $fields['media_types'] = sbac_resource_get_field_terms($node->field_digital_media_type);
       $fields['rating'] = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($nid));
       $fields['rating_count'] = sbac_resource_get_rating_count($nid);
       $output .= '<li>' . theme('sbac_resource_card', array('fields' => $fields)) . '</li>';
@@ -557,11 +554,19 @@ function sbac_share_create_resource_card(&$related_resources) {
  * @return string
  *
  */
-function sbac_share_get_field_terms($field) {
+function sbac_resource_get_field_terms($field, $non_taxonomy = FALSE) {
   $term_names = array();
-  foreach ($field['und'] as $key => $tid) {
-    $term = taxonomy_term_load($tid['tid']);
-    $term_names[] = $term->name;
+  if ($non_taxonomy) {
+    foreach ($field as $tid) {
+      $term = taxonomy_term_load($tid);
+      $term_names[] = $term->name;
+    }
+  }
+  else {
+    foreach ($field['und'] as $key => $tid) {
+      $term = taxonomy_term_load($tid['tid']);
+      $term_names[] = $term->name;
+    }
   }
 
   $terms = '';
@@ -614,63 +619,6 @@ function sbac_resource_form_messages_access($node_type) {
     return user_access('administer site configuration');
   }
   return FALSE;
-}
-
-/**
- * Checks if the URL is accessible via GDV.
- */
-function sbac_resource_url_exists_ajax() {
-  $url = $_POST['url'];
-  $status = sbac_resource_url_exist($url);
-  $output = array('result' => $status);
-  print drupal_json_encode($output);
-  exit;
-}
-
-/**
- * Checks if the URL is accessible.
- *
- * @param $url
- * @return bool
- */
-function sbac_resource_url_exist($url) {
-  // Curl the google docs viewer url
-  // if response contains the wrong message
-  // then return false and output the no-preview image.
-
-  $google_url = 'http://docs.google.com/viewer';
-  if (isset($_SERVER['HTTPS'])) {
-    $google_url = 'https://docs.google.com/viewer';
-  }
-  $question_url = $google_url . '?url=' . urlencode($url) . '&embedded=true';
-
-  $header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
-  $header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
-  $header[] = "Cache-Control: max-age=0";
-  $header[] = "Connection: keep-alive";
-  $header[] = "Keep-Alive: 300";
-  $header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
-  $header[] = "Accept-Language: en-us,en;q=0.5";
-  $header[] = "Pragma: ";
-
-  global $base_url;
-  $curl = curl_init($question_url);
-  curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-  curl_setopt($curl, CURLOPT_REFERER, $base_url);
-  curl_setopt($curl, CURLOPT_ENCODING, "gzip,deflate");
-  curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-  $response = curl_exec($curl);
-  curl_close($curl);
-
-  $status = FALSE;
-  if (strpos($response, "gviewApp.displayError('BAD_REQUEST'") === FALSE) {
-    $status = TRUE;
-  }
-
-  return $status;
 }
 
 /**
@@ -800,7 +748,7 @@ function _sbac_resource_preview_content(&$vars) {
     $type = _sbac_resource_determine_type($media);
     $viewer['viewer_filename'] = $media->filename;
     if ($media->transcript) {
-      $viewer['viewer_filename'] .= ' (Transcipt Included)';
+      $viewer['viewer_filename'] .= ' (Transcript Included)';
     }
 
     $url = NULL;
@@ -875,6 +823,11 @@ function _sbac_resource_preview_content(&$vars) {
 /**
  * Creates the materials dropdown.
  *
+ * The drop down list of materials.
+ * No need to check for HTML5 since business logic
+ * states there can only be one and its handled in
+ * _sbac_resource_previou_content(&$vars)
+ *
  * @param $vars
  * @return array
  */
@@ -886,38 +839,12 @@ function _sbac_resource_preview_materials(&$vars) {
     foreach ($vars['document'] as $key => $media) {
       if (is_numeric($key)) {
         $type = _sbac_resource_determine_type($media);
-        $url = NULL;
-        if ($type == 'none') {
-          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
-        }
-        elseif ($media->fid) {
-          $file = file_load($media->fid);
-          if ($file) {
-            $url = file_create_url($file->uri);
-            if ($type == 'image') {
-              $url = image_style_url('resource_profile', $file->uri);
-            }
-          }
-        }
-        else {
-          $url = sbac_media_create_embed_url($media);
-        }
-
         $transcript = 0;
         if ($media->transcript) {
           $transcript = 1;
         }
-
-        // check to see whether its public scheme or not, if so not external
-        if ($media->fid) {
-          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript)));
-        }
-        else { // embedded media
-          if (strpos($media->embed_url, 'youtube')) {
-            $url .= '?rel=0';
-          }
-          $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript), 'absolute' => TRUE, 'external' => TRUE));
-        }
+        $url = 'sbac-get-media/' . $media->id;
+        $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript)));
       }
     }
   }
@@ -1277,7 +1204,10 @@ function sbac_resource_preprocess_page(&$vars) {
       );
       $reason_list = theme('item_list', array('items' => $reason_list_items));
       $message = '' . t('Possible reasons include:') . $reason_list . '';
-      $button = l('Browse Resources', 'digital-library-resources', array('attributes' => array('class' => array('medium', 'button'))));
+      $button = '';
+      if (user_is_logged_in()) {
+        $button = l('Browse Resources', 'digital-library-resources', array('attributes' => array('class' => array('medium', 'button'))));
+      }
       $vars['page']['content']['system_main']['main']['#markup'] = $message . $button;
     }
   }
@@ -1476,6 +1406,29 @@ function sbac_resource_node_load($nodes, $types) {
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
+      // Populate media items
+      $media_items = sbac_media_load_items($node->nid);
+      $node->document = $media_items;
+      if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
+        $html5_item = sbac_media_load_html5_item($node->nid);
+        if ($html5_item !== FALSE) {
+          $node->document['html5'] = $html5_item;
+        }
+      }
+
+      // Grab the alignemnt terms.
+      $sql  = 'SELECT r.*, a.field_education_alignment_tid ';
+      $sql .= 'FROM field_data_field_resource_reference r ';
+      $sql .= 'JOIN field_data_field_education_alignment a ON r.entity_id = a.entity_id ';
+      $sql .= 'WHERE field_resource_reference_target_id = :nid';
+      $result = db_query($sql, array(':nid' => $node->nid));
+      $terms = array();
+      foreach ($result as $row) {
+        $terms[]['tid'] = $row->field_education_alignment_tid;
+      }
+      $node->field_alignment_term = $terms;
+      unset($result);
+
       //make sure we are only viewing through the content/* path
       global $user;
       //update the raw data table
@@ -1492,35 +1445,17 @@ function sbac_resource_node_load($nodes, $types) {
       db_query($query);
       //send the denormed data to the node
       $query = "select sum(hits) as hits, count(distinct(uid)) as unique_hits from node_user_paradata where nid=" . $node->nid;
-      $result = db_query($query);
-      $thisrow = $result->fetchAssoc();
-      $node->field_total_views[LANGUAGE_NONE] = array(0 => array('value' => $thisrow['hits']));
-      $node->field_unique_views[LANGUAGE_NONE] = array(0 => array('value' => $thisrow['unique_hits']));
-      entity_save_field(array('field_total_views', 'field_unique_views'), $node, 'node', $node->nid);
-    }
-
-    // Load all media entities and attach them to the resource.
-    $load = FALSE;
-    // update.php
-    if (isset($_GET['op']) && isset($_GET['token']) && isset($_GET['id'])) {
-      $load = TRUE;
-    }
-    // drush scripts
-    if (arg(0) == 'digital-library-resources' && count($nodes) == 1) {
-      $load = TRUE;
-    }
-    // website.
-    if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && count($nodes) != 12 && $node->type == 'resource') {
-      $load = TRUE;
-    }
-
-    if ($load) {
-      $media_items = sbac_media_load_items($node->nid);
-      $node->document = $media_items;
-      if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
-        $html5_item = sbac_media_load_html5_item($node->nid);
-        if ($html5_item !== FALSE) {
-          $node->document['html5'] = $html5_item;
+      $result = db_query($query)->fetchAssoc();
+      $node->field_total_views[LANGUAGE_NONE] = array(0 => array('value' => $result['hits']));
+      $node->field_unique_views[LANGUAGE_NONE] = array(0 => array('value' => $result['unique_hits']));
+      if ($result) {
+        // Total Views Update
+        if (isset($result['hits']) && $result['hits']) {
+          db_query('UPDATE {field_data_field_total_views} SET field_total_views_value = :total_views WHERE entity_id = :entity_id', array(':total_views' => $result['hits'], ':entity_id' => $node->nid));
+        }
+        // Unique Views Update
+        if (isset($result['unique_hits']) && $result['unique_hits']) {
+          db_query('UPDATE {field_data_field_unique_views} SET field_unique_views_value = :unique_views WHERE entity_id = :entity_id', array(':unique_views' => $result['unique_hits'], ':entity_id' => $node->nid));
         }
       }
     }
@@ -2968,6 +2903,47 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
  * @param $op
  * @return bool
  */
+function _sbac_resource_determine_state_access_via_sql($nid, $account) {
+  $all_states = array();
+  $access = FALSE;
+  $sql  = "SELECT * FROM {field_data_field_view_permissions} p ";
+  $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
+  $state_permission = db_query($sql, array(':nid' => $nid))->fetchObject();
+  if ($state_permission->field_view_permissions_value == 1) {
+    $sql  = "SELECT * FROM {field_data_field_view_permissions_per_state} p ";
+    $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
+    $result = db_query($sql, array(':nid' => $nid));
+    foreach ($result as $row) {
+      $all_states[] = $row->field_view_permission_per_state_tid;
+    }
+  }
+  else {
+    $all_states = array();
+  }
+
+  // if the array is empty, then the user has access.
+  if (empty($all_states)) {
+    $access = TRUE;
+    return $access;
+  }
+  else {
+    $user = sbac_central_get_user_with_states($all_states, $account->uid);
+    if ($user) {
+      $access = TRUE;
+    }
+  }
+  return $access;
+}
+
+/**
+ * Given the node and account, see if the user has access
+ * to view given the state of the node.
+ *
+ * @param $node
+ * @param $account
+ * @param $op
+ * @return bool
+ */
 function _sbac_resource_determine_state_access($node, $account) {
   $all_states = array();
   $access = FALSE;
@@ -3130,6 +3106,21 @@ function sbac_resource_display_fivestar_rating($rating) {
       '#children' => '',
     ),
   ));
+}
+
+/**
+ * Gets URL from source.
+ *
+ * @param $nid
+ * @return null
+ */
+function sbac_resource_get_url_source($alias) {
+  $source = NULL;
+
+  $sql = "SELECT source FROM {url_alias} WHERE alias = :alias";
+  $source = db_query($sql, array(':alias' => $alias))->fetchField();
+
+  return $source;
 }
 
 /**
