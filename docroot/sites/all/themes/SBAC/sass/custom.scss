@@ -2429,7 +2429,7 @@ a.tabledrag-handle .handle {
 
     .welcome-container-left {
       float: left;
-      width: 70%;
+      width: 75%;
     }
 
     .welcome-container-image {
@@ -2460,19 +2460,20 @@ a.tabledrag-handle .handle {
       border-radius: (5px);
       border-top: 1px solid #F2F2F2;
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-      padding: 20px;      
+      padding: 20px;
+      margin-bottom: 20px;      
     }
 
     .welcome-tutorial-node-title {
       font-size: 18px;
       font-weight: bold;
       color: $dark-blue;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     .welcome-tutorial-back-button {
       background: url('../images/icons/back-blue.png') no-repeat left -6px;
-      margin-bottom: 20px;
+      margin: 20px 0 35px;
       padding-left: 30px;
 
       a {
