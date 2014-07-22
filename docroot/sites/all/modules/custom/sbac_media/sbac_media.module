@@ -1850,7 +1850,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
       $pos = strpos($url, 'html5/');
       $url = substr($url, $pos);
       error_log($url);
-      $deleted = $gcs['service']->objects->delete('sbac_media', 'local/' . $url);
+      $deleted = $gcs['service']->objects->delete('sbac_media', $folder . '/' . $url);
     }
   }
 }
