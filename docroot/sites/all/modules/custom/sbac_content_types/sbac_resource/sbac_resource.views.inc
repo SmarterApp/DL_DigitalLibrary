@@ -34,8 +34,8 @@ function sbac_resource_views_pre_build(&$view){
     }
 
     // Scroll to node
-    if (isset($_SESSION['load_more']['moderation']['nid'])) {
-      drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-" . $_SESSION['load_more']['moderation']['nid'] . "').offset().top}, 2000); });", array(
+    if (isset($_SESSION['load_more'][$view->name]['nid'])) {
+      drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-" . $_SESSION['load_more'][$view->name]['nid'] . "').offset().top}, 2000); });", array(
         'type' => 'inline',
         'scope' => 'footer',
         'weight' => 5

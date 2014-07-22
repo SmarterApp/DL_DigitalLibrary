@@ -1473,6 +1473,7 @@ function sbac_resource_node_load($nodes, $types) {
     return;
   }
 
+  // Save a variable for the nid that is loaded, used to scroll to loaded node
   if (isset($_SERVER['HTTP_REFERER']) && count($nodes) == 1) {
     global $base_url;
     $resource_node = array_pop($nodes);
