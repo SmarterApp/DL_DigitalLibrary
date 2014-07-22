@@ -1,6 +1,6 @@
 <div class='resource-card'>
-
   <div class="resource-top">
+    <span id="resource-<?php print $fields['nid']->raw; ?>"></span>
     <?php if (isset($fields['links'])): ?>
       <div class="dropdowns">
         <a href="#" data-dropdown="drop-<?php print $fields['nid']->raw; ?>"><i class='sbac-select'>options</i></a>
