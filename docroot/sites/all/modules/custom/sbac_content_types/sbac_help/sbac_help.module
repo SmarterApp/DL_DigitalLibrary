@@ -180,22 +180,6 @@ function sbac_help_preprocess_welcome_tutorial_post(&$vars) {
   unset($vars['node']);
 }
 
-/**
- * Unless disabled or first time user, trigger helper modal overlay
- */
-function sbac_help_init() {
-  drupal_add_js(drupal_get_path('module','sbac_help') . '/js/help.js');
-
-  global $user;
-  // added check to make sure not on path change-password
-  if (isset($_COOKIE['Drupal_visitor_sbac_just_logged_in']) && arg(0) != 'change-password') {
-    if (!isset($user->data['disable_help']) || (isset($user->data['disable_help']) && $user->data['disable_help'] == 0)) {
-      drupal_add_js("window.onload = function () { document.getElementById('sbac-help-welcome-tutorial').click(); };", array('type' => 'inline'));
-    }
-    // remove cookie moved to sbac_help_disable_help function to ensure its removed only when welcome modal is displayed
-  }
-}
-
 /*
  * Form to enable/disable helper modal
  */
@@ -495,6 +479,15 @@ function sbac_help_welcome_callback($js = FALSE, $node = FALSE) {
 function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
   $form = array();
   global $user;
+
+user_save(
+    $user,
+    array(
+      'data' => array(
+        'disable_recent' => time(),
+      )
+    )
+  );
 
   $form['container_prefix'] = array(
     '#prefix' => '<div class="welcome-modal-container">',
