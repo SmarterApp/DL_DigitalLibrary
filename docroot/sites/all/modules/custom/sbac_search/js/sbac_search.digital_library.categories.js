@@ -1,8 +1,5 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
-
-  var pager_count = 0;
-
   /**
    * Click functionality of the categories.
    *
@@ -332,6 +329,7 @@
   var ajax_request = null;
   var has_run_once = false;
   var clicked = false;
+  var pager_count = 0;
   Drupal.behaviors.sbac_search_load_more = {
     attach: function (context, settings) {
       // Change the button text
