@@ -10931,3 +10931,39 @@ button.radius, .button.radius {
 form#sbac-user-filter-form #edit-email {
   clear: both;
 }
+
+/* line 3916, ../sass/custom.scss */
+.page-sbac-user-setup .sbac-user-name-container .form-type-textfield {
+  display: inline-block;
+  float: left;
+  width: 45%;
+  height: 100px;
+  margin-right: 30px;
+  margin-bottom: 20px;
+}
+/* line 3927, ../sass/custom.scss */
+.page-sbac-user-setup .sbac-user-misc-container .form-item {
+  display: inline-block;
+  float: left;
+  width: 45%;
+  height: 100px;
+  margin-right: 30px;
+  margin-bottom: 20px;
+}
+/* line 3937, ../sass/custom.scss */
+.page-sbac-user-setup .sbac-user-email-container {
+  float: left;
+  clear: left;
+  width: 45%;
+}
+/* line 3943, ../sass/custom.scss */
+.page-sbac-user-setup .sbac-user-title-container {
+  float: left;
+  width: 45%;
+}
+/* line 3948, ../sass/custom.scss */
+.page-sbac-user-setup #edit-next-form {
+  clear: left;
+  display: block;
+  float: right;
+}

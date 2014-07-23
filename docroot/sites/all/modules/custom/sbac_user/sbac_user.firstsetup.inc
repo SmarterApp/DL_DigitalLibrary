@@ -122,8 +122,8 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     '#markup' => '</div>',
   );
 
-  $form['misc_container'] = array(
-    '#markup' => '<div class="sbac-user-misc-container">',
+  $form['email_container'] = array(
+    '#markup' => '<div class="sbac-user-email-container">',
   );
 
   $form['user_email_desc'] = array(
@@ -138,6 +138,14 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     '#type' => 'textfield',
     '#default_value' => $user->mail,
     '#disabled' => TRUE,
+  );
+
+  $form['email_container_close'] = array(
+    '#markup' => '</div>',
+  );
+
+  $form['title_container'] = array(
+    '#markup' => '<div class="sbac-user-title-container">',
   );
 
   $form['user_title_desc'] = array(
@@ -163,7 +171,7 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     '#default_value' => isset($_SESSION['user_setup']['user_retired']) ? $_SESSION['user_setup']['user_retired'] : '',
   );
 
-  $form['misc_container_close'] = array(
+  $form['title_container_close'] = array(
     '#markup' => '</div>',
   );
 

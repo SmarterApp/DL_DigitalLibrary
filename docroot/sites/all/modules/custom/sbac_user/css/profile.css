@@ -818,3 +818,13 @@ h2.name .field {
   position: absolute;
   top: 4px;
 }
+
+/* line 769, ../sass/profile.scss */
+.page-sbac-user-setup .sbac-user-name-container .form-type-textfield {
+  display: inline-block;
+  float: left;
+  width: 47%;
+  height: 100px;
+  margin-right: 30px;
+  margin-bottom: 20px;
+}
