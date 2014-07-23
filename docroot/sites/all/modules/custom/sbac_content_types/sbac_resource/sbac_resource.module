@@ -1540,6 +1540,10 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
     // published node. I bruce lee the publish status here.
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+
+    // unhide the node on the my-resources tab, if hidden
+    $node->field_is_hidden[LANGUAGE_NONE][0]['value'] = 0;
+    field_attach_update('node', $node);
   }
   elseif ($node->type == 'resource' && $new_state == 'removed') {
     $node->status = 0;

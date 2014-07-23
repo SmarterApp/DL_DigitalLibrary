@@ -1355,7 +1355,7 @@ function sbac_resource_delete_resource_modal_callback($js = FALSE) {
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
     $form_state = array(
-      'title' => t('You are about to delete this draft resource'),
+      'title' => t('You are about to delete this resource'),
       'ajax' => TRUE,
       'nid' => $_GET['nid'],
     );
@@ -1367,7 +1367,12 @@ function sbac_resource_delete_resource_modal_callback($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if (isset($_GET['nid'])) {
-          node_delete($_GET['nid']);
+          global $user;
+          $node = node_load($_GET['nid']);
+          if ($node && $node->uid == $user->uid) {
+            $node->field_is_hidden[LANGUAGE_NONE][0]['value'] = 1;
+            field_attach_update('node', $node);
+          }
           $url = 'my-resources';
           $output[] = ctools_ajax_command_redirect($url);
         }
@@ -2619,6 +2624,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_thumbnail_uri']['#access'] = FALSE;
   $form['field_recent_reviewers']['#access'] = FALSE;
   $form['field_recent_publishers']['#access'] = FALSE;
+  $form['field_is_hidden']['#access'] = FALSE;
 }
 
 /**

@@ -25,6 +25,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['title'] = 'Digital Library Resources';
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['group_by'] = TRUE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -77,52 +78,18 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'resource' => 'resource',
   );
+  $handler->display->display_options['filters']['type']['group'] = 1;
   /* Filter criterion: Workbench Moderation: Current */
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'workbench_moderation_node_history';
   $handler->display->display_options['filters']['current']['field'] = 'current';
   $handler->display->display_options['filters']['current']['value'] = '1';
-  /* Filter criterion: Workbench Moderation: State */
-  $handler->display->display_options['filters']['state']['id'] = 'state';
-  $handler->display->display_options['filters']['state']['table'] = 'workbench_moderation_node_history';
-  $handler->display->display_options['filters']['state']['field'] = 'state';
-  $handler->display->display_options['filters']['state']['value'] = array(
-    'draft' => 'draft',
-    'needs_review' => 'needs_review',
-    'being_reviewed' => 'being_reviewed',
-    'rejected' => 'rejected',
-    'approved' => 'approved',
-    'published' => 'published',
-    'removed' => 'removed',
-  );
-  $handler->display->display_options['filters']['state']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['state']['expose']['operator_id'] = 'state_op';
-  $handler->display->display_options['filters']['state']['expose']['label'] = 'Resource States';
-  $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
-  $handler->display->display_options['filters']['state']['expose']['identifier'] = 'state';
-  $handler->display->display_options['filters']['state']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['state']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-    31 => 0,
-  );
+  $handler->display->display_options['filters']['current']['group'] = 1;
   /* Filter criterion: Field: Grades (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
+  $handler->display->display_options['filters']['field_grades_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_grades_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['expose']['operator_id'] = 'field_grades_tid_op';
   $handler->display->display_options['filters']['field_grades_tid']['expose']['label'] = 'Grades';
@@ -154,6 +121,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
   $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
+  $handler->display->display_options['filters']['field_subject_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_subject_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['expose']['operator_id'] = 'field_subject_tid_op';
   $handler->display->display_options['filters']['field_subject_tid']['expose']['label'] = 'Subjects';
@@ -185,6 +153,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_focus_tid']['id'] = 'field_focus_tid';
   $handler->display->display_options['filters']['field_focus_tid']['table'] = 'field_data_field_focus';
   $handler->display->display_options['filters']['field_focus_tid']['field'] = 'field_focus_tid';
+  $handler->display->display_options['filters']['field_focus_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_focus_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_focus_tid']['expose']['operator_id'] = 'field_focus_tid_op';
   $handler->display->display_options['filters']['field_focus_tid']['expose']['label'] = 'Resource Type';
@@ -217,6 +186,15 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['uid']['table'] = 'node';
   $handler->display->display_options['filters']['uid']['field'] = 'uid';
   $handler->display->display_options['filters']['uid']['value'] = '';
+  $handler->display->display_options['filters']['uid']['group'] = 1;
+  /* Filter criterion: Content: Is hidden (field_is_hidden) */
+  $handler->display->display_options['filters']['field_is_hidden_value']['id'] = 'field_is_hidden_value';
+  $handler->display->display_options['filters']['field_is_hidden_value']['table'] = 'field_data_field_is_hidden';
+  $handler->display->display_options['filters']['field_is_hidden_value']['field'] = 'field_is_hidden_value';
+  $handler->display->display_options['filters']['field_is_hidden_value']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_is_hidden_value']['value'] = array(
+    1 => '1',
+  );
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
@@ -1300,7 +1278,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_intended_end_user_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_intended_end_user_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['vocabulary'] = 'intended_end_user';
-  /* Filter criterion: Field: Smarter Balanced Keyword(s) (field_smarter_balanced_keyword) */
+  /* Filter criterion: Field: Module Type (field_smarter_balanced_keyword) */
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['id'] = 'field_smarter_balanced_keyword_tid';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['table'] = 'field_data_field_smarter_balanced_keyword';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['field'] = 'field_smarter_balanced_keyword_tid';

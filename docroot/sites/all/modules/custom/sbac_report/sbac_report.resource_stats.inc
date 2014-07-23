@@ -196,7 +196,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
 
   unset($resources);
   unset($resource_filters);
-  
+
   // Open the file for writing ('a' puts pointer at end of file).
   $handle = fopen($context['sandbox']['file'], 'a');
 
@@ -317,7 +317,7 @@ function sbac_report_resource_statistics_finished_batch($success, $results, $ope
       $data = fgetcsv($handle);
       fclose($handle);
 
-      for ($i = 0; $i < $review_count -1; $i++) {
+      for ($i = 0; $i < $review_count - 1; $i++) {
         array_push($data, 'Reviewer/Rater Name');
         array_push($data, 'Reviewer/Rating Date');
         array_push($data, 'Reviewer/Rating Title');
@@ -830,7 +830,21 @@ SQL;
   }
 
   $sql = <<<SQL
-    select * from workbench_moderation_node_history where nid = :nid and current = 1
+SELECT
+  h.*,
+  IF(h.state = 'removed', CONCAT(f.field_first_name_value, ' ', l.field_last_name_value), '') AS removed_name,
+  IF(h.state = 'removed', u.mail, '') AS removed_mail,
+  IF(h.state = 'removed', c.field_posting_options_comment_value, '') AS removed_comment
+FROM {workbench_moderation_node_history} h
+  LEFT JOIN {field_data_field_first_name} f
+    ON f.entity_id = h.uid AND f.bundle = 'user'
+  LEFT JOIN {field_data_field_last_name} l
+    ON l.entity_id = h.uid AND l.bundle = 'user'
+  LEFT JOIN users u
+    ON h.uid = u.uid
+  LEFT JOIN field_data_field_posting_options_comment c
+    ON c.revision_id = h.vid
+WHERE h.current = 1 AND h.nid = :nid
 SQL;
   $query = sprintf($sql);
   $sql = NULL;
@@ -869,8 +883,7 @@ function get_users_for_resources_stats_report($resource, $feedback_reviews) {
     if (!is_null($value)) {
       $internal_authors[$value] = $value;
     }
-  }
-  catch (EntityMetadataWrapperException $e) {
+  } catch (EntityMetadataWrapperException $e) {
     print $e->getMessage();
   }
 
@@ -1563,7 +1576,39 @@ function set_report_columns() {
             'datasource' => 'resource_feedback',
             'index' => 'post'
           ),
-          array('changed', 'Post Date', 'fieldtype' => 'date', 'datasource' => 'resource_feedback', 'index' => 'post'),
+          array(
+            'changed',
+            'Post Date',
+            'fieldtype' => 'date',
+            'datasource' => 'resource_feedback',
+            'index' => 'post'
+          ),
+          array(
+            '',
+            'Removed Date',
+            'fieldtype' => 'date',
+            'datasource' => 'workbench_moderation',
+            'path' => array('stamp' => 'class')
+          ),
+          array(
+            '',
+            'Removed By: User\'s Name',
+            'datasource' => 'workbench_moderation',
+            'path' => array('removed_name' => 'class')
+
+          ),
+          array(
+            '',
+            'Removed By: User\'s Email',
+            'datasource' => 'workbench_moderation',
+            'path' => array('removed_mail' => 'class')
+          ),
+          array(
+            '',
+            'Reason for Removal',
+            'datasource' => 'workbench_moderation',
+            'path' => array('removed_comment' => 'class')
+          ),
           // users info
           array(
             'foreign',
