@@ -3280,6 +3280,12 @@ function sbac_resource_load_more_ajax() {
   if ($view == 'resources') {
     $themed_output = sbac_resource_digital_library_page($page);
   }
+  if ($view == 'resource_review') {
+    $themed_output = sbac_resource_resource_review_page($page);
+  }
+  if ($view == 'my_resources') {
+    $themed_output = sbac_resource_my_resources_page($page);
+  }
 
   $output['output'] = $themed_output;
   print drupal_json_encode($output);

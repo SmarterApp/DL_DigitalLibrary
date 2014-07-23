@@ -305,8 +305,49 @@
       if ($('.sbac-search-textbox').val() != '') {
         $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
       }
+    }
+  };
 
+  /**
+   * Handles ajax pager via hash in URL
+   *
+   * @type {{attach: Function}}
+   */
+  var ajax_request = null;
+  var has_run_once = false;
+  var clicked = false;
+  Drupal.behaviors.sbac_search_load_more = {
+    attach: function (context, settings) {
+      // Change the button text
       $('.pager-next a').html('Show More Resources').addClass('button');
+
+      // On click, add the hash in the URL.
+      $('.pager-next a').click( function() {
+        pager_count++;
+        window.location.hash = 'pager=' + pager_count;
+        clicked = true;
+      });
+
+      var hash = window.location.hash;
+      if (hash != '' && !has_run_once && !clicked) {
+        var pager = hash.replace('#pager=', '');
+        if (ajax_request == null) {
+          ajax_request = $.ajax({
+            type: 'POST',
+            url: "/sbac-resource/load-more",
+            data: {'view' : 'resource_review', 'page' : pager},
+            success: function(data) {
+              ajax_request = null;
+              var response = jQuery.parseJSON(data);
+              $('.row.digital-library').empty().append(response.output);
+              Drupal.attachBehaviors();
+              has_run_once = true;
+            },
+            error: function(data) {
+            }
+          });
+        }
+      }
     }
   };
 

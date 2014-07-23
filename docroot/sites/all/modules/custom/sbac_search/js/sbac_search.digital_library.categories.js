@@ -325,7 +325,7 @@
   };
 
   /**
-   * Clears all current filters.
+   * Handles ajax pager via hash in URL
    *
    * @type {{attach: Function}}
    */

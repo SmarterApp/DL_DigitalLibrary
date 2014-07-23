@@ -74,7 +74,7 @@ function sbac_resource_digital_library_page($page = NULL) {
  *
  * @return string
  */
-function sbac_resource_my_resources_page() {
+function sbac_resource_my_resources_page($page = NULL) {
   $no_results = NULL;
 
   (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] : $current_filters = '');
@@ -85,6 +85,9 @@ function sbac_resource_my_resources_page() {
   // Load up the view.
   $view = views_get_view('my_resources');
   $view->set_display($display);
+  if ($page) {
+    $view->items_per_page = ($page + 1) * 12;
+  }
   sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
   $my_resources_output = $view->preview();
@@ -109,7 +112,7 @@ function sbac_resource_my_resources_page() {
  *
  * @return string
  */
-function sbac_resource_resource_review_page() {
+function sbac_resource_resource_review_page($page = NULL) {
   $no_results = NULL;
   (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] : $current_filters = '');
   $display = sbac_resource_determine_grid_or_list();
@@ -119,6 +122,9 @@ function sbac_resource_resource_review_page() {
   // Load up the view.
   $view = views_get_view('resource_review');
   $view->set_display($display);
+  if ($page) {
+    $view->items_per_page = ($page + 1) * 12;
+  }
   sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();

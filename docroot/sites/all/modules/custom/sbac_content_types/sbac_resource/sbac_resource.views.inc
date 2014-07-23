@@ -26,7 +26,7 @@ function sbac_resource_views_query_alter(&$view, &$query) {
  * Implementation of hook_views_pre_build().
  */
 function sbac_resource_views_pre_build(&$view){
-  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+//  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
     // Load the previous nodes
 //    if (isset($_SESSION['load_more'][$view->name]['page'])) {
 //      $view->offset = 0;
@@ -41,7 +41,7 @@ function sbac_resource_views_pre_build(&$view){
 //        'weight' => 5
 //      ));
 //    }
-  }
+//  }
 }
 
 /**
