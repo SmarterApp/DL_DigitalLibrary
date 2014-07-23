@@ -2504,7 +2504,21 @@ function sbac_resource_block_view($delta = '') {
       if (strpos($previous_url, $base_url) !== FALSE) {
         $previous_url = str_replace($base_url, '', $previous_url);
       }
-      $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      $js = FALSE;
+      switch ($previous_url) {
+        case '/moderation':
+        case '/digital-library-resources':
+        case '/resource-review':
+        case '/my-resources':
+          $js = TRUE;
+          break;
+      }
+      if ($js) {
+        $block['content'] = '<span class="button" onclick="window.history.back(-1);">Back</span>';
+      }
+      else {
+        $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      }
       break;
     case 'sbac_resource_dl_sort_form':
       $block['subject'] = NULL;
@@ -3309,6 +3323,7 @@ function theme_sbac_resource_views_load_more_pager($vars) {
 
   if (isset($_POST['page'])) {
     $pager_page_array[0] = $_POST['page'];
+    $pager_total[0] += $_POST['page'];
   }
 
   $li_next = theme('pager_next',

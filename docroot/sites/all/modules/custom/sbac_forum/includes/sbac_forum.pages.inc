@@ -5,7 +5,7 @@
  *
  * @return HTML output from theme function.
  */
-function sbac_forum_main_landing_page() {
+function sbac_forum_main_landing_page($page = NULL) {
   // module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.views');
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
@@ -73,6 +73,9 @@ function sbac_forum_main_landing_page() {
   // Active
   $view = views_get_view('forum_list');
   $view->set_display($active_display);
+  if ($page) {
+    $view->items_per_page = ($page + 1) * 12;
+  }
   sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
   sbac_forum_listing_apply_sorts($view, $current_sorts, $default_sort);
   $view->pre_execute();
@@ -102,14 +105,17 @@ function sbac_forum_main_landing_page() {
     $forum_list_output .= $forum_list_empty_output;
   }
 
+  // Generate top nav form.
   $_SESSION[SBAC_FORUM_FILTER_RESULTS_COUNTER] = $count_values;
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   $subnav = drupal_get_form('sbac_forum_sub_nav_form', $count_values);
-  $output .= drupal_render($subnav);
 
+//  $output = '<div class="sbac-forum-container">';
+  $output .= drupal_render($subnav);
   $output .= '<div class="sbac-forum-main-container">';
   $output .= $forum_list_output;
   $output .= '</div>';
+//  $output .= '</div>';
 
   return $output;
 }
@@ -409,4 +415,17 @@ function sbac_forum_view_forum_page($term) {
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields));
   return $output;
+}
+
+/**
+ * Load more of the view data.
+ */
+function sbac_forum_load_more_ajax() {
+  $page = $_POST['page'];
+  $output = array();
+  module_load_include('inc', 'sbac_forum', 'sbac_forum.pages');
+  $themed_output = sbac_forum_main_landing_page($page);
+  $output['output'] = $themed_output;
+  print drupal_json_encode($output);
+  exit;
 }

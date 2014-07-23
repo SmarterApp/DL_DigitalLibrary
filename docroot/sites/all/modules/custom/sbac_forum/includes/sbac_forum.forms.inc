@@ -263,6 +263,9 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   $default = '';
   $options = array();
 
+  // Because of ajax, this can change, so hard code it.
+  $form['#action'] = url('forums');
+
   $resource_forums_classes = '';
   $resource_forums_count_text = '';
   $topic_forums_classes = '';
