@@ -18,7 +18,9 @@
   <div id="contributed-resources">
   <?php print $contributed_summary; ?>
   <?php if ($resource_statistics): ?>
-    <h2>Posted Resource Statistics</h2>
+    <h2>Feedback on Posted Resource(s)</h2>
+    <p><?php print t('Thank you for contributing to the Digital Library. The
+                  table below displays information about your posted resource(s).'); ?></p>
     <?php print $resource_statistics; ?>
   <?php endif; ?>
   <h2>Contributed Resource Status</h2>
