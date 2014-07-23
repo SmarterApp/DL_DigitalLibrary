@@ -17,6 +17,10 @@ function sbac_resource_digital_library_page($page = NULL) {
   $view->set_display($display);
   if ($page) {
     $view->items_per_page = ($page + 1) * 12;
+    $_SESSION['load_more'][$view->name]['page'] = $page;
+  }
+  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
+    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
   }
   sbac_resource_digital_library_apply_filters($view);
   sbac_resource_digital_library_apply_sorts($view);
@@ -87,6 +91,10 @@ function sbac_resource_my_resources_page($page = NULL) {
   $view->set_display($display);
   if ($page) {
     $view->items_per_page = ($page + 1) * 12;
+    $_SESSION['load_more'][$view->name]['page'] = $page;
+  }
+  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
+    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
   }
   sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
@@ -124,6 +132,10 @@ function sbac_resource_resource_review_page($page = NULL) {
   $view->set_display($display);
   if ($page) {
     $view->items_per_page = ($page + 1) * 12;
+    $_SESSION['load_more'][$view->name]['page'] = $page;
+  }
+  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
+    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
   }
   sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);

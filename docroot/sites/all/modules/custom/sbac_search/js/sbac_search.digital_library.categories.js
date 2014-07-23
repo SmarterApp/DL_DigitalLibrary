@@ -346,10 +346,41 @@
         });
       });
 
+      // Move and resize the modalBackdrop on resize of the window
+      modalBackdropResize = function(){
+        // Get our heights
+        var docHeight = $(document).height();
+        var docWidth = $(document).width();
+        var winHeight = $(window).height();
+        if( docHeight < winHeight ) docHeight = winHeight;
+        // Apply the changes
+        $('#modalBackdrop').css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+      };
+      $(window).bind('resize', modalBackdropResize);
+
       var hash = window.location.hash;
       if (hash != '' && !has_run_once && !clicked) {
         var pager = hash.replace('#pager=', '');
         if (ajax_request == null) {
+          // Get the docHeight and (ugly hack) add 50 pixels to make sure we dont have a *visible* border below our div
+          var docHeight = $(document).height() + 50;
+          var docWidth = $(document).width();
+          var winHeight = $(window).height();
+          var winWidth = $(window).width();
+          if( docHeight < winHeight ) docHeight = winHeight;
+
+          css = jQuery.extend({
+            position: 'absolute',
+            left: '0px',
+            margin: '0px',
+            background: '#000',
+            opacity: '.55'
+          }, {});
+
+          // Add opacity handling for IE.
+          css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
+          $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div>');
+          $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
           ajax_request = $.ajax({
             type: 'POST',
             url: "/sbac-resource/load-more",
@@ -359,6 +390,7 @@
               $('.row.digital-library').empty().append(response.output);
               Drupal.attachBehaviors();
               has_run_once = true;
+              $('#modalBackdrop').remove();
             },
             error: function(data) {
             }

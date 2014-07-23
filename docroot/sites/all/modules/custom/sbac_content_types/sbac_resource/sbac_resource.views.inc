@@ -52,11 +52,11 @@ function sbac_resource_views_pre_build(&$view){
  * @param $cache
  */
 function sbac_resource_views_post_render(&$view, &$output, &$cache) {
-//  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
-//    if (isset($_POST['page'])) {
-//      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
-//    }
-//  }
+  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+    if (isset($_POST['page'])) {
+      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
+    }
+  }
 }
 
 /**
