@@ -240,8 +240,7 @@ function sbac_help_preprocess_page(&$variables) {
   }
   if (isset($_SESSION['user_setup'])) {
     drupal_add_js("jQuery(document).ready( function () { jQuery('.user-nav').hide(); jQuery('.sub-top').hide();jQuery('.footer-links').hide();});", array('type' => 'inline'));
-
-
+    drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/profile.css');
   }
 }
 
