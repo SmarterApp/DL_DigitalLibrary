@@ -478,16 +478,16 @@ function sbac_help_welcome_callback($js = FALSE, $node = FALSE) {
  */
 function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
   $form = array();
-  global $user;
-
-user_save(
-    $user,
-    array(
-      'data' => array(
-        'disable_recent' => time(),
-      )
-    )
-  );
+  // global $user;
+  // $account = $user;
+  // user_save(
+  //   $account,
+  //   array(
+  //     'data' => array(
+  //       'disable_recent' => time(),
+  //     )
+  //   )
+  // );
 
   $form['container_prefix'] = array(
     '#prefix' => '<div class="welcome-modal-container">',
@@ -583,15 +583,16 @@ user_save(
 }
 
 function sbac_help_welcome_tutorial_list_form_submit($form, &$form_state) {
-  global $user;
-  user_save(
-    $user,
-    array(
-      'data' => array(
-        'disable_help' => (int) $form_state['values']['disable_tut'],
-      )
-    )
-  );
+  // global $user;
+  // $account = $user;
+  // user_save(
+  //   $account,
+  //   array(
+  //     'data' => array(
+  //       'disable_help' => (int) $form_state['values']['disable_tut'],
+  //     )
+  //   )
+  // );
 }
 
 /**
