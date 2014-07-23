@@ -752,23 +752,53 @@ h2.name .field {
   outline: none;
   text-decoration: none;
 }
+/* line 701, ../sass/profile.scss */
+.page-user .row.second .sbac-privacy-cont-title {
+  font-weight: bold;
+  margin: 15px 0;
+}
+/* line 706, ../sass/profile.scss */
+.page-user .row.second .sbac-privacy-cont-desc {
+  line-height: 1.5;
+  margin-bottom: 45px;
+}
+/* line 711, ../sass/profile.scss */
+.page-user .row.second .sbac-privacy-container {
+  width: 40%;
+  float: left;
+  padding-right: 10px;
+}
+/* line 716, ../sass/profile.scss */
+.page-user .row.second .sbac-privacy-container:first-child {
+  width: 55%;
+}
+/* line 721, ../sass/profile.scss */
+.page-user .row.second .sbac-privacy-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+/* line 726, ../sass/profile.scss */
+.page-user .row.second .sbac-privacy-desc {
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
 
 /*Favorites Tab*/
-/* line 703, ../sass/profile.scss */
+/* line 734, ../sass/profile.scss */
 #sbac-favorites-forum-table-drag-drop,
 #sbac-favorites-resource-table-drag-drop {
   margin-top: 10px;
   width: 100%;
 }
 
-/* line 710, ../sass/profile.scss */
+/* line 741, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons button,
 #edit-tab-container-forum-tab-buttons button {
   float: right;
   margin-left: 20px;
   padding-left: 40px;
 }
-/* line 717, ../sass/profile.scss */
+/* line 748, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons #sbac-favorites-forum-submit:before,
 #edit-tab-container-resource-tab-buttons #sbac-favorites-resource-submit:before,
 #edit-tab-container-forum-tab-buttons #sbac-favorites-forum-submit:before,
@@ -778,7 +808,7 @@ h2.name .field {
   position: absolute;
   top: 4px;
 }
-/* line 725, ../sass/profile.scss */
+/* line 756, ../sass/profile.scss */
 #edit-tab-container-resource-tab-buttons #sbac-favorites-forum-cancel:before,
 #edit-tab-container-resource-tab-buttons #sbac-favorites-resource-cancel:before,
 #edit-tab-container-forum-tab-buttons #sbac-favorites-forum-cancel:before,
