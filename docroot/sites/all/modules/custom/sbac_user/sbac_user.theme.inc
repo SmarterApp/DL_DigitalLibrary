@@ -40,6 +40,21 @@ function sbac_user_theme__theme() {
 
   $items['user_profile']['preprocess functions'][] = 'sbac_user_theme__preprocess_user_profile';
 
+  $items['user_setup_nav'] = array(
+    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'template' => 'user-setup-nav',
+    'variables' => array(
+      'page1' => NULL,
+      'page2' => NULL,
+      'page3' => NULL,
+    ),
+  );
+
+  $items['user_setup_preview'] = array(
+    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'template' => 'user-setup-preview',
+  );
+
   return $items;
 }
 
@@ -81,4 +96,112 @@ function sbac_user_theme__preprocess_user_login(&$vars) {
   // $vars['left_bottom_small'] = t('Find answers to common topics');
 
   $vars['form']['actions']['submit']['#value'] = t('Log into the Digital Library');
+}
+
+function sbac_user_preprocess_page(&$vars) {
+  global $user;
+  if (!$user->uid || isset($_SESSION['user_setup'])) {
+    return;
+  }
+  $disable_help = isset($user->data['disable_help']) ? $user->data['disable_help'] : 0;
+  $last_welcome = isset($user->data['disable_recent']) ? $user->data['disable_recent'] : 0;
+  $last_session = $user->login > $last_welcome;
+
+  if ((!$disable_help && $last_session) || !$last_welcome || isset($_SESSION['welcome-update'])) {
+    drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ * Generates the progress bar for the setup form.
+ * @param  [type] $vars [description]
+ * @return [type]       [description]
+ */
+function sbac_user_preprocess_user_setup_nav(&$vars) {
+  $page = $vars['current_page'];
+  switch ($page) {
+    case 'page1':
+      $vars['page1']['nav'] = 'sbac-user-setup-nav-current-cont';
+      $vars['page1']['text'] = 'sbac-user-setup-nav-current-text';
+      break;
+    case 'page2':
+      $vars['page2']['nav'] = 'sbac-user-setup-nav-current-cont';
+      $vars['page2']['text'] = 'sbac-user-setup-nav-current-text';
+      break;
+    case 'page3':
+      $vars['page3']['nav'] = 'sbac-user-setup-nav-current-cont';
+      $vars['page3']['text'] = 'sbac-user-setup-nav-current-text';
+      break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ * Sets the variables used for the template.
+ * @param  [type] $vars [description]
+ * @return [type]       [description]
+ */
+function sbac_user_preprocess_user_setup_preview(&$vars) {
+
+  global $user;
+  $account = user_load($user->uid);
+
+  /**
+   * Creates a list item in HTML.
+   * @param  array  $options [description]
+   * @return string          [description]
+   */
+  function sbac_user_make_list($options) {
+    $list = '';
+    foreach ($options AS $idx => $tid) {
+      $term = taxonomy_term_load($tid);
+      $list .= '<li>' . $term->name . '</li>';
+    }
+    return $list;
+  }
+
+  $vars['last_name'] = '';
+  $vars['email'] = '';
+  $vars['about'] = '';
+  $vars['district'] = '';
+  $vars['school'] = '';
+
+  $title_term = taxonomy_term_load($_SESSION['user_setup']['user_title']);
+  $vars['first_name'] = $_SESSION['user_setup']['first_name'];
+  $vars['title'] = $title_term->name . ($_SESSION['user_setup']['user_retired'] ? ' (Retired)' : '');
+  $vars['state'] = taxonomy_term_load($account->field_state['und'][0]['tid'])->name;
+  $vars['grades'] = '<ul>' . sbac_user_make_list($_SESSION['user_setup']['grade_options']) . '</ul>';
+  $vars['subjects'] = '<ul>' . sbac_user_make_list($_SESSION['user_setup']['subject_options']) . '</ul>';
+  $vars['population'] = '<ul>' . sbac_user_make_list($_SESSION['user_setup']['student_population_options']) . '</ul>';
+
+  if (isset($_SESSION['user_setup']['visibility_opt']['picture'])) {
+    $file = file_load($_SESSION['user_setup']['profile_image']);
+    if ($file) {
+      $vars['profile_picture'] = theme('image', array('path' => $file->uri));
+    }
+    else {
+      $filepath = variable_get('user_picture_default', '');
+      $vars['profile_picture'] = theme('image', array('path' => '' . $filepath));
+    }
+  }
+  else {
+    $filepath = variable_get('user_picture_default', '');
+    $vars['profile_picture'] = theme('image', array('path' => '' . $filepath));
+  }
+  if (isset($_SESSION['user_setup']['visibility_opt']['field_school_name'])) {
+    $vars['school'] = $account->field_school_name['und'][0]['value'];
+  }
+  if (isset($_SESSION['user_setup']['visibility_opt']['field_district_name']) && isset($account->field_district_name)) {
+    $vars['district'] = $account->field_district_name['und'][0]['value'];
+  }
+  if (isset($_SESSION['user_setup']['visibility_opt']['field_last_name'])) {
+    $vars['last_name'] = $_SESSION['user_setup']['last_name'];
+  }
+  if (isset($_SESSION['user_setup']['visibility_opt']['mail'])) {
+    $vars['email'] = l($_SESSION['user_setup']['mail'], 'mailto:' . $_SESSION['user_setup']['mail'], array('absolute' => TRUE));
+  }
+  if (isset($_SESSION['user_setup']['visibility_opt']['field_introduction'])) {
+    $vars['about'] = $_SESSION['user_setup']['about_me'];
+  }
 }

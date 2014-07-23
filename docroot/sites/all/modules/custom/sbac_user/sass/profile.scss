@@ -696,6 +696,37 @@ h2.name {
 	    }
 	  }
 	}
+
+// User Privacy Tab
+  .sbac-privacy-cont-title {
+    font-weight: bold;
+    margin: 15px 0;  
+  }
+
+  .sbac-privacy-cont-desc {
+    line-height: 1.5;
+    margin-bottom: 45px;
+  }
+
+  .sbac-privacy-container {
+    width: 40%;
+    float: left;
+    padding-right: 10px;
+
+    &:first-child {
+      width: 55%;
+    }
+  }
+
+  .sbac-privacy-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .sbac-privacy-desc {
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
 }
 
 /*Favorites Tab*/
@@ -730,7 +761,21 @@ h2.name {
 	}
 }
 
+// Setup New User Page
 
+.page-sbac-user-setup {
+  
+  .sbac-user-name-container {
+    .form-type-textfield {
+      display: inline-block;
+      float: left;
+      width: 47%;
+      height: 100px;
+      margin-right: 30px;
+      margin-bottom: 20px;
+    }
+  }
+}
 
 
 

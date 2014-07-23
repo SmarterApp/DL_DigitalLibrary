@@ -1183,7 +1183,8 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
       $path = str_replace($temp_path, '', $full_path);
       error_log($gcs_location . $path);
       $bytes_written = sbac_media_upload_htmm5_file($gcs, $gcs_location . $path, $full_path);
-      if ($bytes_written === FALSE) {
+      error_log('Bytes Written: ' . $bytes_written);
+      if ($bytes_written == NULL || $bytes_written == FALSE) {
         $error_uploading = TRUE;
         break;
       }
@@ -1235,6 +1236,7 @@ function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
     $folder = variable_get('google_cdn_folder');
     $buffer = file_get_contents($file_to_upload);
 
+    error_log("here");
     // Create the Storage Object
     $file = new Google_Service_Storage_StorageObject();
     $path  = str_replace('gs://', '', $gcs_location);
@@ -1244,13 +1246,14 @@ function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
     $post_body = array(
       'mimeType' => $mime_type,
       'data' => $buffer,
-      'uploadType' => ''
     );
-
+    error_log("here2");
     // Create the MediaFileUpload object
     $chunk_size_bytes = 1 * 1024 * 1024;
     $gcs['client']->setDefer(TRUE);
+    error_log("here3");
     $request = $gcs['service']->objects->insert($bucket, $file, $post_body);
+    error_log(print_r($request, TRUE));
     $media = new Google_Http_MediaFileUpload(
       $gcs['client'],
       $request,
@@ -1265,10 +1268,18 @@ function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
     // Send the content in chunks.
     $upload_result = FALSE;
     $pos = 0;
+    error_log("uploading");
+    error_log("pos = " . $pos);
+    error_log("file_size: " . $file_size);
     while (!$upload_result && $pos < $file_size) {
+      error_log("uploading2");
       $chunk = substr($buffer, $pos, $chunk_size_bytes);
+      error_log("uploading3");
+      error_log("chunk: " . $chunk);
       $upload_result = $media->nextChunk($chunk);
+      error_log("uploading4");
       $pos += $chunk_size_bytes;
+      error_log("uploading5");
     }
     // return the result
     if ($upload_result) {
@@ -1839,7 +1850,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
       $pos = strpos($url, 'html5/');
       $url = substr($url, $pos);
       error_log($url);
-      $deleted = $gcs['service']->objects->delete('sbac_media', 'local/' . $url);
+      $deleted = $gcs['service']->objects->delete('sbac_media', $folder . '/' . $url);
     }
   }
 }

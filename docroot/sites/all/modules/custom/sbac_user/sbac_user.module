@@ -92,6 +92,23 @@ function sbac_user_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-user/setup'] = array(
+    'title' => 'Welcome to the Smarter Balanced Library',
+    'page callback' => 'sbac_user_setup_callback',
+    'file' => 'sbac_user.firstsetup.inc',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sbac-user/setup/%'] = array(
+    'title' => 'Welcome to the Smarter Balanced Library',
+    'page callback' => 'sbac_user_setup_callback',
+    'page arguments' => array(2),
+    'file' => 'sbac_user.firstsetup.inc',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -919,11 +936,8 @@ function sbac_user_user_login(&$edit, $account) {
 
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-    if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
-      drupal_goto('user/' . $account->uid);
-    }
-    if (!isset($account->data['disable_help'])) {
-      drupal_goto('user/' . $account->uid);
+    if ($account->data['login_count'] == 1 || (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+      $_GET['destination'] = 'sbac-user/setup';
     }
     elseif (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
       $relay = $edit['sbac_sso_relay'];
