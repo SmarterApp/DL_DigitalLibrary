@@ -580,6 +580,7 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     $updates['field_privacy']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['visibility_opt']);
 
     user_save($account, $updates);
+    $_SESSION['welcome-update'] = TRUE;
     unset($_SESSION['user_setup']);
     drupal_goto('');
   }

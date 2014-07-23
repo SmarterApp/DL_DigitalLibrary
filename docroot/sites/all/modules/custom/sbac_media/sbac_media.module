@@ -1184,7 +1184,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
       error_log($gcs_location . $path);
       $bytes_written = sbac_media_upload_htmm5_file($gcs, $gcs_location . $path, $full_path);
       error_log('Bytes Written: ' . $bytes_written);
-      if ($bytes_written == FALSE) {
+      if ($bytes_written == NULL || $bytes_written == FALSE) {
         $error_uploading = TRUE;
         break;
       }

@@ -238,6 +238,11 @@ function sbac_help_preprocess_page(&$variables) {
   if ($user->uid) {
     $variables['help_dropdown'] = theme('help_dropdown');
   }
+  if (isset($_SESSION['user_setup'])) {
+    drupal_add_js("jQuery(document).ready( function () { jQuery('.user-nav').hide(); jQuery('.sub-top').hide();jQuery('.footer-links').hide();});", array('type' => 'inline'));
+
+
+  }
 }
 
 /**
@@ -485,8 +490,34 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
 
   $form['container_prefix'] = array(
-    '#prefix' => '<div class="welcome-modal-container">',
+    '#prefix' => '<div class="welcome-modal-container" id="welcome-modal-container">',
   );
+
+  if (($account->data['login_count'] == 1 && !$account->data['disable_recent']) || isset($_SESSION['welcome-update'])) {
+    $form ['profile_updated_container'] = array(
+      '#markup' => '<div class="sbac-welcome-update-cont">',
+    );
+
+    $form['profile_updated'] = array(
+      '#type' => 'item',
+      '#title' => t('Your profile has been updated. Thank you.'),
+      '#markup' => t(
+        'You can always change your profile settings on the <a href="@url">account screen</a>.',
+        array(
+          '@url' => url('users'),
+        )
+      ),
+    );
+
+    $form['close_update'] = array(
+      '#markup' => '<a href="#" id="sbac-welcome-close-update">x</a>',
+    );
+
+    $form['profile_updated_container_suffix'] = array(
+      '#markup' => '</div>',
+    );
+    unset($_SESSION['welcome-update']);
+  }
 
   if (!($form_state['packages']['node'])) {
     $form['tutorial_header'] = array(
