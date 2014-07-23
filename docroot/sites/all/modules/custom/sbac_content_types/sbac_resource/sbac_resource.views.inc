@@ -28,19 +28,19 @@ function sbac_resource_views_query_alter(&$view, &$query) {
 function sbac_resource_views_pre_build(&$view){
   if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
     // Load the previous nodes
-    if (isset($_SESSION['load_more'][$view->name]['page'])) {
-      $view->offset = 0;
-      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12; // 0 is 12, so add one.
-    }
-
-    // Scroll to node
-    if (isset($_SESSION['load_more'][$view->name]['nid'])) {
-      drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-" . $_SESSION['load_more'][$view->name]['nid'] . "').offset().top}, 2000); });", array(
-        'type' => 'inline',
-        'scope' => 'footer',
-        'weight' => 5
-      ));
-    }
+//    if (isset($_SESSION['load_more'][$view->name]['page'])) {
+//      $view->offset = 0;
+//      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12; // 0 is 12, so add one.
+//    }
+//
+//    // Scroll to node
+//    if (isset($_SESSION['load_more'][$view->name]['nid'])) {
+//      drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-" . $_SESSION['load_more'][$view->name]['nid'] . "').offset().top}, 2000); });", array(
+//        'type' => 'inline',
+//        'scope' => 'footer',
+//        'weight' => 5
+//      ));
+//    }
   }
 }
 
@@ -52,11 +52,11 @@ function sbac_resource_views_pre_build(&$view){
  * @param $cache
  */
 function sbac_resource_views_post_render(&$view, &$output, &$cache) {
-  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
-    if (isset($_POST['page'])) {
-      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
-    }
-  }
+//  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+//    if (isset($_POST['page'])) {
+//      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
+//    }
+//  }
 }
 
 /**

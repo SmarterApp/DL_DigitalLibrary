@@ -5,7 +5,7 @@
  *
  * @return string
  */
-function sbac_resource_digital_library_page() {
+function sbac_resource_digital_library_page($page = NULL) {
   $no_results = NULL;
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) ? $search_string = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] : $search_string = '');
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] : $current_filters = '');
@@ -15,11 +15,14 @@ function sbac_resource_digital_library_page() {
 
   $view = views_get_view('resources');
   $view->set_display($display);
+  if ($page) {
+    $view->items_per_page = ($page + 1) * 12;
+  }
   sbac_resource_digital_library_apply_filters($view);
   sbac_resource_digital_library_apply_sorts($view);
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
-  dpq($view->build_info['query']);
+  // dpq($view->build_info['query']);
   $count = count($view->result);
   $view->destroy();
 

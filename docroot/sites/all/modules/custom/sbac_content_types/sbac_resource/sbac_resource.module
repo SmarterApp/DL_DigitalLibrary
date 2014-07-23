@@ -168,6 +168,12 @@ function sbac_resource_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-resource/load-more'] = array(
+    'title' => 'Load More View Data',
+    'page callback' => 'sbac_resource_load_more_ajax',
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 
@@ -1318,6 +1324,10 @@ function sbac_resource_preprocess_html(&$vars) {
 function sbac_resource_theme_registry_alter(&$theme_registry) {
   if (isset($theme_registry['status_messages'])) {
     $theme_registry['status_messages']['function'] = 'sbac_resource_status_messages';
+  }
+  if (isset($theme_registry['views_load_more_pager'])) {
+    $theme_registry['views_load_more_pager']['function'] = 'theme_sbac_resource_views_load_more_pager';
+    $theme_registry['views_load_more_pager']['theme path'] = 'sites/all/modules/custom/sbac_content_types/sbac_resource';
   }
 }
 
@@ -3255,5 +3265,70 @@ function sbac_resource_image_style_create_derivative_alter(&$style, &$image_uri,
     if (strpos($derivative_uri, 'gs://') !== FALSE) {
       $derivative_uri = str_replace('gs://', 'private://', $derivative_uri);
     }
+  }
+}
+
+/**
+ * Load more of the view data.
+ */
+function sbac_resource_load_more_ajax() {
+  $view = $_POST['view'];
+  $page = $_POST['page'];
+  $output = array();
+  module_load_include('inc', 'sbac_resource', 'sbac_resource.menu_callbacks');
+  $themed_output = '';
+  if ($view == 'resources') {
+    $themed_output = sbac_resource_digital_library_page($page);
+  }
+
+  $output['output'] = $themed_output;
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Override views load more pager
+ *
+ * @param $vars
+ * @return string
+ */
+function theme_sbac_resource_views_load_more_pager($vars) {
+  global $pager_page_array, $pager_total;
+
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
+
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
+
+  if (isset($_POST['page'])) {
+    $pager_page_array[0] = $_POST['page'];
+  }
+
+  $li_next = theme('pager_next',
+    array(
+      'text' => (isset($tags[3]) ? $tags[3] : t($vars['more_button_text'])),
+      'element' => $element,
+      'interval' => 1,
+      'parameters' => $parameters,
+    )
+  );
+  if (empty($li_next)) {
+    $li_next = "&nbsp;";
+  }
+
+  if ($pager_total[$element] > 1) {
+    $items[] = array(
+      'class' => array('pager-next'),
+      'data' => $li_next,
+    );
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager', 'pager-load-more')),
+      )
+    );
   }
 }
