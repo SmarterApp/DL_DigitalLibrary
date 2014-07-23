@@ -29,14 +29,16 @@
   var pager_count = 0;
   Drupal.behaviors.sbac_flag_load_more = {
     attach: function (context, settings) {
-      $('#sbac-load-more').click( function() {
-        // On click, hash the url
-        pager_count++;
-        window.location.hash = 'pager=' + pager_count;
-        var pager = $(this).attr('offset');
-        clicked = true;
-        Drupal.behaviors.sbac_flag_load_more.load_more_content(pager);
-        return false;
+      $('#sbac-load-more').once('sbac-load-more-click', function () {
+        $(this).click( function() {
+          // On click, hash the url
+          pager_count++;
+          window.location.hash = 'pager=' + pager_count;
+          var pager = $(this).attr('offset');
+          clicked = true;
+          Drupal.behaviors.sbac_flag_load_more.load_more_content(pager);
+          return false;
+        });
       });
 
       var hash = window.location.hash;
@@ -53,7 +55,6 @@
           url: "/sbac-flag/load-more",
           data: {'offset' : offset},
           success: function(data) {
-            ajax_request = null;
             var response = jQuery.parseJSON(data);
             $('#sbac-flag-mod-cont').append(response.list_output);
             $('#sbac-load-more').attr('offset', response.offset);
