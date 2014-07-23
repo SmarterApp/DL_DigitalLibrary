@@ -478,16 +478,11 @@ function sbac_help_welcome_callback($js = FALSE, $node = FALSE) {
  */
 function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
   $form = array();
-  // global $user;
-  // $account = $user;
-  // user_save(
-  //   $account,
-  //   array(
-  //     'data' => array(
-  //       'disable_recent' => time(),
-  //     )
-  //   )
-  // );
+  global $user;
+  $account = $user;
+  $account->data['disable_recent'] = time();
+  $data = $account->data;
+  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
 
   $form['container_prefix'] = array(
     '#prefix' => '<div class="welcome-modal-container">',
@@ -583,16 +578,11 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
 }
 
 function sbac_help_welcome_tutorial_list_form_submit($form, &$form_state) {
-  // global $user;
-  // $account = $user;
-  // user_save(
-  //   $account,
-  //   array(
-  //     'data' => array(
-  //       'disable_help' => (int) $form_state['values']['disable_tut'],
-  //     )
-  //   )
-  // );
+  global $user;
+  $account = $user;
+  $account->data['disable_help'] = (int) $form_state['values']['disable_tut'];
+  $data = $account->data;
+  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
 }
 
 /**
@@ -600,15 +590,18 @@ function sbac_help_welcome_tutorial_list_form_submit($form, &$form_state) {
  * @return array of stdClass representing nodes.
  */
 function sbac_help_welcome_tutorial_topics() {
-  $welcome_term = array_pop(taxonomy_get_term_by_name('Welcome tutorial', 'help_page_topic'));
+  $ar_welcome = taxonomy_get_term_by_name('Welcome tutorial', 'help_page_topic');
+  $welcome_term = array_pop($ar_welcome);
   $roles = array();
   $topics = array();
 
   global $user;
   foreach ($user->roles AS $idx => $role) {
-    $roles[] = array_pop(taxonomy_get_term_by_name($role, 'sbac_user_roles'))->tid;
+    $ar_tid = taxonomy_get_term_by_name($role, 'sbac_user_roles');
+    $roles[] = array_pop($ar_tid)->tid;
   }
-  $roles[] = array_pop(taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles'))->tid;
+  $all_roles = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+  $roles[] = array_pop($all_roles)->tid;
 
   $query = 'SELECT    n.nid AS nid,
                       n.title AS title,
