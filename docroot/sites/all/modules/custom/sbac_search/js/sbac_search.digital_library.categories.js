@@ -419,6 +419,9 @@
               // Parse the response
               var response = jQuery.parseJSON(data);
               // Inject the content
+              if ($('.pwd-highlights-container').length) {
+                $('.pwd-highlights-container').remove();
+              }
               $('.row.digital-library').replaceWith(response.rendered_content);
               // Create fake setting to attach new view_dom_id to handlers.
               var dom_id = 'views_dom_id:' + response.view_dom_id;

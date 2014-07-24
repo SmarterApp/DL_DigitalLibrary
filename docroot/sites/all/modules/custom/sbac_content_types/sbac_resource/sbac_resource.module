@@ -2254,10 +2254,14 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   elseif (isset($node->document[0])) {
     $media = $node->document[0];
     if ($media->fid) {
-      $file = file_load($media->fid);
-      $url = file_create_url($file->uri);
-      $uri = $file->uri;
-      $exists = file_exists($uri);
+      $exists = FALSE;
+      $load_chk = pathinfo($media->filename, PATHINFO_EXTENSION);
+      if (_sbac_resource_determine_file_type_icon($load_chk) != 'video') {
+        $file = file_load($media->fid);
+        $url = file_create_url($file->uri);
+        $uri = $file->uri;
+        $exists = file_exists($uri);
+      }
       if (!$exists) {
         $url = $default_file;
         $uri = $default_file;

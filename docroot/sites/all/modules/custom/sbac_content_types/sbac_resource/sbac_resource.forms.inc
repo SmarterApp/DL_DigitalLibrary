@@ -3131,9 +3131,16 @@ function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_sta
   exit;
 }
 
+/**
+ * Sets value to determine posted with distinction
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_resource_digital_library_sort_form__pwd($form, $form_state) {
   $key = $form_state['values']['dl_pwd'];
   $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] = $key;
+  unset($_SESSION['load_more']['resources']['page']);
 
   ctools_include('ajax');
   $commands = array();
