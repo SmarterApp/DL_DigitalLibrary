@@ -57,6 +57,10 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
       'digital_library_output' => NULL,
       'no_results' => NULL,
       'smart_search_welcome' => NULL,
+      'pwd' => NULL,
+      'pwd_highlights' => NULL,
+      'pwd_hide' => NULL,
+      'pwd_showmore' => NULL,
     )
   );
 
@@ -278,6 +282,7 @@ function sbac_resource_views_view__resources__grid_view__preprocess(&$vars) {
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
   drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
+  $vars['exposed'] = '<div class="sbac-hide-exposed">' . $vars['exposed'] . '</div>';
 }
 
 /**
@@ -1044,7 +1049,7 @@ function _sbac_resource_my_resources_links($fields) {
         $url = url('node/' . $nid, array('absolute' => TRUE));
         $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['text'] = t('Arbitration');
+        $variables['text'] = t('Arbitration Review');
         break;
       case 'published':
         $variables['sticky'] = FALSE;

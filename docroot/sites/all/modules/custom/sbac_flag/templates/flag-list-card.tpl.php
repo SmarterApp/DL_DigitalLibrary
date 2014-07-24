@@ -1,4 +1,5 @@
 <div class="resource-card">
+  <span id="resource-<?php print $node->nid; ?>"></span>
   <div class="row">
     <?php if (isset($flag_content['eck_review']['title'])): ?>
       <div class="resource-title">

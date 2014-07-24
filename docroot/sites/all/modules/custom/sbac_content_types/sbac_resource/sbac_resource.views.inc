@@ -14,13 +14,26 @@ function sbac_resource_views_query_alter(&$view, &$query) {
   if ($view->name == 'resources') {
     _sbac_resource_resources_view_query_alter($view, $query);
   }
-
   if ($view->name == 'my_resources') {
     _sbac_resource_my_resources_view_query_alter($view, $query);
   }
-
   if ($view->name == 'resource_review') {
     _sbac_resource_resource_review_view_query_alter($view, $query);
+  }
+}
+
+/**
+ * Implements hook_view_post_render().
+ *
+ * @param $view
+ * @param $output
+ * @param $cache
+ */
+function sbac_resource_views_post_render(&$view, &$output, &$cache) {
+  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+    if (isset($_POST['page'])) {
+      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
+    }
   }
 }
 
@@ -280,6 +293,26 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
       $view->display_handler->set_option('sorts', $new_sorts);
     }
   }
+}
+
+/**
+ * Changes Digital Library output to display Distinct or mixed when provided.
+ * @param  [type] $view The view object.
+ */
+function sbac_resource_digital_library_apply_pwd(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+  $view_filters['sticky']['value'] = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] ? '1' : 'All';
+  $view->display_handler->set_option('filters', $view_filters);
+}
+
+function sbac_resource_digital_library_pwd_reel(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+  $view_filters['sticky']['value'] = '1';
+  $view->display_handler->set_option('filters', $view_filters);
+  $views_pager = $view->display_handler->get_option('pager');
+  $views_pager['type'] = 'some';
+  $views_pager['options']['items_per_page'] = 4;
+  $view->display_handler->set_option('pager', $views_pager);
 }
 
 /**

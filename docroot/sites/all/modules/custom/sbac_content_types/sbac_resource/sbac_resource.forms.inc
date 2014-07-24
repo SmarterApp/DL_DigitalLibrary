@@ -3039,12 +3039,18 @@ function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
 function sbac_resource_digital_library_sort_form($form, $form_state) {
   $form = array();
   $default = 'dl-newest'; // Hardcoded default. Change?
+  $pwd_only = 0;
 
   // If session var is set, make it the default.
   if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != ''
   ) {
     $default = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
+  }
+  if (isset($_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD]) &&
+    $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] != ''
+  ) {
+    $pwd_only = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD];
   }
 
   $options = array(
@@ -3082,6 +3088,20 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
     ),
   );
 
+  $form['dl_pwd'] = array(
+    '#prefix' => '<div id="sbac-pwd-check">',
+    '#suffix' => '</div>',
+    '#type' => 'checkbox',
+    '#title' => "Posted with Distinction Only",
+    '#default_value' => $pwd_only,
+    '#ajax' => array(
+      'callback' => '_sbac_resource_digital_library_sort_form__pwd',
+      'event' => 'change',
+      'wrapper' => 'sbac-pwd-check',
+      'progress' => array('type' => 'none'),
+    ),
+  );
+
   return $form;
 }
 
@@ -3098,11 +3118,23 @@ function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_sta
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['dl_sort_order'];
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['resources']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['dl_sort_order'];
 
   // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
+}
+
+function _sbac_resource_digital_library_sort_form__pwd($form, $form_state) {
+  $key = $form_state['values']['dl_pwd'];
+  $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] = $key;
+
   ctools_include('ajax');
   $commands = array();
   $commands[] = ctools_ajax_command_reload();
@@ -3186,6 +3218,7 @@ function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_sta
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['rr_sort_order'];
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['resource_review']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['rr_sort_order'];
@@ -3269,6 +3302,7 @@ function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state)
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['mr_sort_order'];
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['my_resources']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['mr_sort_order'];

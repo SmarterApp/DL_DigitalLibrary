@@ -168,6 +168,12 @@ function sbac_resource_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-resource/load-more'] = array(
+    'title' => 'Load More View Data',
+    'page callback' => 'sbac_resource_load_more_ajax',
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 
@@ -1319,6 +1325,10 @@ function sbac_resource_theme_registry_alter(&$theme_registry) {
   if (isset($theme_registry['status_messages'])) {
     $theme_registry['status_messages']['function'] = 'sbac_resource_status_messages';
   }
+  if (isset($theme_registry['views_load_more_pager'])) {
+    $theme_registry['views_load_more_pager']['function'] = 'theme_sbac_resource_views_load_more_pager';
+    $theme_registry['views_load_more_pager']['theme path'] = 'sites/all/modules/custom/sbac_content_types/sbac_resource';
+  }
 }
 
 /**
@@ -1471,6 +1481,35 @@ function sbac_status_messages($variables) {
 function sbac_resource_node_load($nodes, $types) {
   if (!in_array('resource', $types)) {
     return;
+  }
+
+  // Save a variable for the nid that is loaded, used to scroll to loaded node
+  if (isset($_SERVER['HTTP_REFERER']) && count($nodes) == 1) {
+    global $base_url;
+    $resource_node = array_pop($nodes);
+    $url = str_replace($base_url . '/', '', $_SERVER['HTTP_REFERER']);
+    if ($url == 'moderation' || $url == 'digital-library-resources' || $url == 'resource-review' || $url == 'my-resources' || $url == 'forums') {
+      switch ($url) {
+        case 'moderation':
+          $name = 'moderation';
+          break;
+        case 'digital-library-resources':
+          $name = 'resources';
+          break;
+        case 'resource-review':
+          $name = 'resource_review';
+          break;
+        case 'my-resources':
+          $name = 'my_resources';
+          break;
+        case 'forums':
+          $name = 'forums';
+          break;
+      }
+      if (isset($name)) {
+        $_SESSION['load_more'][$name]['nid'] = $resource_node->nid;
+      }
+    }
   }
 
   foreach ($nodes as $node) {
@@ -2469,7 +2508,21 @@ function sbac_resource_block_view($delta = '') {
       if (strpos($previous_url, $base_url) !== FALSE) {
         $previous_url = str_replace($base_url, '', $previous_url);
       }
-      $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      $js = FALSE;
+      switch ($previous_url) {
+        case '/moderation':
+        case '/digital-library-resources':
+        case '/resource-review':
+        case '/my-resources':
+          $js = TRUE;
+          break;
+      }
+      if ($js) {
+        $block['content'] = '<span class="button" onclick="window.history.back(-1);">Back</span>';
+      }
+      else {
+        $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      }
       break;
     case 'sbac_resource_dl_sort_form':
       $block['subject'] = NULL;
@@ -3230,5 +3283,97 @@ function sbac_resource_image_style_create_derivative_alter(&$style, &$image_uri,
     if (strpos($derivative_uri, 'gs://') !== FALSE) {
       $derivative_uri = str_replace('gs://', 'private://', $derivative_uri);
     }
+  }
+}
+
+/**
+ * Load more of the view data.
+ */
+function sbac_resource_load_more_ajax() {
+  $view = $_POST['view'];
+  $page = $_POST['page'];
+  module_load_include('inc', 'sbac_resource', 'sbac_resource.menu_callbacks');
+  $output = array();
+  if ($view == 'resources') {
+    $output = sbac_resource_digital_library_page($page, TRUE);
+  }
+  if ($view == 'resource_review') {
+    $output = sbac_resource_resource_review_page($page, TRUE);
+  }
+  if ($view == 'my_resources') {
+    $output = sbac_resource_my_resources_page($page, TRUE);
+  }
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Override views load more pager
+ *
+ * @param $vars
+ * @return string
+ */
+function theme_sbac_resource_views_load_more_pager($vars) {
+  global $pager_page_array, $pager_total;
+
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
+
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
+
+  global $base_url;
+  $referer = str_replace($base_url . '/', '', $_SERVER['HTTP_REFERER']);
+  $view_name = '';
+  switch ($referer) {
+    case 'digital-library-resources':
+      $view_name = 'resources';
+      break;
+    case 'resource-review':
+      $view_name = 'resource_review';
+      break;
+    case 'my-resources':
+      $view_name = 'my_resources';
+      break;
+  }
+
+  // Because we dynamically change the items per page, we need
+  // to update the global pager and tell it where on page X now.
+  if (isset($_POST['page'])) {
+    $pager_page_array[0] = $_POST['page'];
+    $pager_total[0] += $_POST['page'];
+    $_GET['q'] = $referer;
+  }
+  else if (isset($_SESSION['load_more'][$view_name]['page'])) {
+    $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
+    $pager_total[0] +=  $_SESSION['load_more'][$view_name]['page'];
+    $_GET['q'] = $referer;
+  }
+
+  $li_next = theme('pager_next',
+    array(
+      'text' => (isset($tags[3]) ? $tags[3] : t($vars['more_button_text'])),
+      'element' => $element,
+      'interval' => 1,
+      'parameters' => $parameters,
+    )
+  );
+  if (empty($li_next)) {
+    $li_next = "&nbsp;";
+  }
+
+  if ($pager_total[$element] > 1) {
+    $items[] = array(
+      'class' => array('pager-next'),
+      'data' => $li_next,
+    );
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager', 'pager-load-more')),
+      )
+    );
   }
 }
