@@ -49,6 +49,7 @@ function sbac_flag_load_more() {
     if (isset($list_output['remove_button'])) {
       $remove_button = TRUE;
     }
+    $_SESSION['load_more']['moderation']['page'] = $offset;
   }
   $output = array('list_output' => $list_output['list_output'], 'offset' => $offset, 'remove_button' => $remove_button);
   print drupal_json_encode($output);
@@ -83,7 +84,12 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL, $load_mo
   $list_output = '';
   $sorted_flags = array();
 
-  if ($offset) {
+  if (!$load_more_ajax && isset($_SESSION['load_more']['moderation']['page'])) {
+    $start = 0;
+    $end = $_SESSION['load_more']['moderation']['page'] * SBAC_FLAG_MODERATION_COUNT;
+    $offset = $_SESSION['load_more']['moderation']['page'] + 1;
+  }
+  else if ($offset) {
     $start = SBAC_FLAG_MODERATION_COUNT * $offset;
     $end = $start + SBAC_FLAG_MODERATION_COUNT;
     $offset++;
@@ -93,21 +99,6 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL, $load_mo
     $end = SBAC_FLAG_MODERATION_COUNT;
     $offset = 1;
   }
-
-  // Load previous nodes
-//  if (!$load_more_ajax && isset($_SESSION['load_more']['moderation']['page'])) {
-//    $start = 0;
-//    $end = $_SESSION['load_more']['moderation']['page'] * SBAC_FLAG_MODERATION_COUNT;
-//  }
-//
-//  // Scroll to node
-//  if (isset($_SESSION['load_more']['moderation']['nid'])) {
-//    drupal_add_js("jQuery('document').ready( function() { jQuery('html, body').animate({scrollTop: jQuery('#resource-" . $_SESSION['load_more']['moderation']['nid'] . "').offset().top}, 2000); });", array(
-//      'type' => 'inline',
-//      'scope' => 'footer',
-//      'weight' => 5
-//    ));
-//  }
 
   // Loop through all flags, determine access,
   // determine urgency then create output.
