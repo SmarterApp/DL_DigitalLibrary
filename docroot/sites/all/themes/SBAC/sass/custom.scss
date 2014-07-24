@@ -2411,6 +2411,42 @@ a.tabledrag-handle .handle {
       }
     }
 
+    .sbac-welcome-update-cont {
+      @include border-radius (12px);
+      padding: 10px 30px;
+      border: 1px solid $darkgreen;
+      background-color: rgba(237, 243, 224, 1);
+      font-weight: normal;
+      position: relative;
+      margin: 15px 0;
+
+      #edit-profile-updated {
+        margin: 10px 0;
+
+        label {
+          font-weight: bold;
+          font-size: 16px;
+        }
+
+        a {
+          color: $teal;
+          text-decoration: underline;
+        }
+      }
+
+      .ajax-processed {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        display: block;
+        background: url('../images/icons/icon-close.png') no-repeat right center;
+        background-size: 100%;
+        width: 30px;
+        height: 30px;
+        text-indent: -9999px;
+      }
+    }
+
     .welcome-modal-container {
       height: 600px;
       overflow-y: scroll;
