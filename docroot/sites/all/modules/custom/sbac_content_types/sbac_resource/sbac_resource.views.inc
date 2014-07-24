@@ -14,13 +14,26 @@ function sbac_resource_views_query_alter(&$view, &$query) {
   if ($view->name == 'resources') {
     _sbac_resource_resources_view_query_alter($view, $query);
   }
-
   if ($view->name == 'my_resources') {
     _sbac_resource_my_resources_view_query_alter($view, $query);
   }
-
   if ($view->name == 'resource_review') {
     _sbac_resource_resource_review_view_query_alter($view, $query);
+  }
+}
+
+/**
+ * Implements hook_view_post_render().
+ *
+ * @param $view
+ * @param $output
+ * @param $cache
+ */
+function sbac_resource_views_post_render(&$view, &$output, &$cache) {
+  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+    if (isset($_POST['page'])) {
+      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
+    }
   }
 }
 

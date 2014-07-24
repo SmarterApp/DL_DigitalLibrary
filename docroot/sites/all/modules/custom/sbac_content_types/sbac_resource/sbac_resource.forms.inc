@@ -3118,6 +3118,7 @@ function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_sta
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['dl_sort_order'];
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['resources']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['dl_sort_order'];
@@ -3217,6 +3218,7 @@ function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_sta
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['rr_sort_order'];
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['resource_review']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['rr_sort_order'];
@@ -3300,6 +3302,7 @@ function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state)
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['mr_sort_order'];
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['my_resources']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['mr_sort_order'];
