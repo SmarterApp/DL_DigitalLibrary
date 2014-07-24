@@ -301,7 +301,13 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
  */
 function sbac_resource_digital_library_apply_pwd(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
-  $view_filters['sticky']['value'] = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] ? '1' : 'All';
+  if (isset($_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD])) {
+    $view_filters['sticky']['value'] = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] ? '1' : 'All';
+  }
+  else {
+    $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] = '0';
+    $view_filters['sticky']['value'] = 'All';
+  }
   $view->display_handler->set_option('filters', $view_filters);
 }
 
