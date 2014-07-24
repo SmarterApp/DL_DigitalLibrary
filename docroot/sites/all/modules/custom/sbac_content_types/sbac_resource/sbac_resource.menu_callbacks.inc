@@ -5,16 +5,21 @@
  *
  * @return string
  */
-function sbac_resource_digital_library_page($page = NULL) {
+function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
   $no_results = NULL;
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) ? $search_string = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] : $search_string = '');
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] : $current_filters = '');
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
+  $output = array();
 
   $view = views_get_view('resources');
   $view->set_display($display);
+  if (isset($_POST['current_filters']) || isset($_POST['search_keywords'])) {
+    unset($_SESSION['load_more'][$view->name]);
+  }
+
   if ($page) {
     $view->items_per_page = ($page + 1) * 12;
     $_SESSION['load_more'][$view->name]['page'] = $page;
@@ -22,12 +27,22 @@ function sbac_resource_digital_library_page($page = NULL) {
   else if (isset($_SESSION['load_more'][$view->name]['page'])) {
     $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
   }
+
   sbac_resource_digital_library_apply_filters($view);
   sbac_resource_digital_library_apply_sorts($view);
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
   // dpq($view->build_info['query']);
   $count = count($view->result);
+  if ($ajax) {
+    $output['view_dom_id'] = $view->dom_id;
+    $output['view_display_id'] = $view->current_display;
+    $output['view_args'] = $view->args;
+    $output['view_name'] = $view->name;
+    $output['view_path'] = 'digital-library-resources';
+    $output['pager_element'] = 0;
+    $output['base_path'] = NULL;
+  }
   $view->destroy();
 
   // If we didn't find any results, we default to the user's filtered subject/grade items
@@ -70,7 +85,13 @@ function sbac_resource_digital_library_page($page = NULL) {
     }
   }
 
-  return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text));
+  if ($ajax) {
+    $output['rendered_content'] = theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text));
+    return $output;
+  }
+  else {
+    return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text));
+  }
 }
 
 /**

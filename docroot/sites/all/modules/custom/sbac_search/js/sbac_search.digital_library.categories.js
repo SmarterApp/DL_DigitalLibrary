@@ -16,6 +16,12 @@
         }
       );
 
+      $('#edit-dl-sort-order').once('searchfilterbutton', function(){
+        $(this).mousedown ( function () {
+          window.location.hash = '';
+        });
+      });
+
       $(document).click(function() {
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
@@ -369,6 +375,7 @@
           var winWidth = $(window).width();
           if( docHeight < winHeight ) docHeight = winHeight;
 
+          // Create CSS attributes
           css = jQuery.extend({
             position: 'absolute',
             left: '0px',
@@ -381,14 +388,33 @@
           css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
           $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div>');
           $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+
+          // Make the request
           ajax_request = $.ajax({
             type: 'POST',
             url: "/sbac-resource/load-more",
             data: {'view' : 'resources', 'page' : pager},
             success: function(data) {
+              // Parse the response
               var response = jQuery.parseJSON(data);
-              $('.row.digital-library').empty().append(response.output);
-              Drupal.attachBehaviors();
+              // Inject the content
+              $('.row.digital-library').replaceWith(response.rendered_content);
+              // Create fake setting to attach new view_dom_id to handlers.
+              var dom_id = 'views_dom_id:' + response.view_dom_id;
+              var setting = {};
+              setting[dom_id] = {
+                'pager_element' : response.pager_element,
+                'view_args' : response.view_args,
+                'view_base_path' : response.view_base_path,
+                'view_display_id' : response.view_display_id,
+                'view_dom_id' : response.view_dom_id,
+                'view_name' : response.view_name,
+                'view_path' : response.view_path
+              };
+
+              // Attach new behavior.
+              settings.views.ajaxViews = setting;
+              Drupal.attachBehaviors($('.row.digital-library'), settings);
               has_run_once = true;
               $('#modalBackdrop').remove();
             },
