@@ -338,7 +338,7 @@ h2.name .field {
 /* line 313, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text-long {
   clear: both;
-  padding-top: 1px;
+  padding-top: 0;
 }
 /* line 316, ../sass/profile.scss */
 .page-user .row.second #account .field-type-text-long textarea.error {
