@@ -305,6 +305,11 @@ function sbac_resource_digital_library_apply_pwd(&$view) {
   $view->display_handler->set_option('filters', $view_filters);
 }
 
+/**
+ * Apply the pager and sticky to the view.
+ *
+ * @param $view
+ */
 function sbac_resource_digital_library_pwd_reel(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
   $view_filters['sticky']['value'] = '1';
