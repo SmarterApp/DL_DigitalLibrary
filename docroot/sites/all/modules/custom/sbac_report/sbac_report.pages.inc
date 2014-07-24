@@ -290,7 +290,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
             WHERE ((node.uid = :uid))
               AND ((  (node.status = '1')
                 AND   (node.type IN ('resource'))
-                AND   (node.sticky <> '0')
+                -- AND   (node.sticky <> '0')
                 AND   (workbench_moderation_node_history.state IN ('published')) ))
               AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))
             GROUP BY  node_title,
@@ -350,7 +350,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
       'title' => $row->title,
       'posted' => date('m/d/y', $row->node_created),
       'rating' => ($row->field_data_field_node_avg_rating_field_node_avg_rating_value
- ? sbac_resource_display_fivestar_rating($row->field_data_field_node_avg_rating_field_node_avg_rating_value) : 'No Rating'),
+ ? sbac_resource_display_fivestar_rating($row->field_data_field_node_avg_rating_field_node_avg_rating_value) : 'No reviews'),
       'reviewers' => l(($row->number_reviewers ? $row->number_reviewers : '0'), 'node/' . $row->nid, array('fragment' => 'review-reviews')),
       'topics' => l(($row->field_forum_topic_count_value ? $row->field_forum_topic_count_value : '0'), 'node/' . $row->nid, array('fragment' => 'review-collaboration')),
       'posts' => ($row->field_forum_topic_comment_count_value? $row->field_forum_topic_comment_count_value : '0'),

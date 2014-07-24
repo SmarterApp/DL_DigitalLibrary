@@ -15,7 +15,7 @@
     $class = '';
     $text = '';
     $image = '';
-    if (isset($fields['sticky']) && $fields['sticky']->raw == 1) {
+    if (isset($fields['sticky']) && $fields['sticky']->raw == 1 && $fields['state']->raw == 'published') {
       $class = 'distinction';
       $text = 'Posted with Distinction';
       $image = '<a href="#" data-dropdown="distinction-drop-' . $fields['nid']->raw . '"><img src="/sites/all/themes/SBAC/images/icons/icon-distinction.png" alt="Posted With Distinction Logo"></a>
@@ -27,7 +27,7 @@
 
     <h3 class='resource-name <?php print $class; ?>'>
       <?php
-        print l(htmlspecialchars_decode($fields['title']->raw), $fields['path']->content);
+      print l(htmlspecialchars_decode($fields['title']->raw), $fields['path']->content);
       ?>
     </h3>
     <div class="shield-drop"><?php print $image; ?></div>
@@ -43,7 +43,7 @@
       <?php endif; ?>
     </div>
 
-		<?php if (isset($fields['favorites_link'])): ?>
+    <?php if (isset($fields['favorites_link'])): ?>
       <div class="favorites-link">
         <?php echo strtoupper($fields['favorites_link']); ?>
       </div>
@@ -57,8 +57,7 @@
   }
   ?>
 
-  <div
-    class="clearfix resoruce-bottom <?php print $class; ?> <?php (isset($fields['text']) ? print  strtolower(str_replace(' ', '-', $fields['text'])) : ''); ?>">
+  <div class="clearfix resoruce-bottom <?php print $class; ?> <?php (isset($fields['text']) ? print  strtolower(str_replace(' ', '-', $fields['text'])) : ''); ?>">
     <?php if (isset($fields['text']) && $fields['text'] != 'approved'): ?>
       <div class="resource-state-description">
         <p>
@@ -75,19 +74,22 @@
       }
     }
     ?>
-		
-		<?php if (isset($fields['subject']) || isset($fields['grades']) || isset($fields['media_types'])): ?>
+
+    <?php if (isset($fields['subject']) || isset($fields['grades']) || isset($fields['media_types'])): ?>
       <div class="paradata-info">
         <?php if (isset($fields['subject']) && $fields['subject']): ?>
-          <div class="info-item"><div class="field-subject">Subjects:</div><?php print $fields['subject']; ?></div>
+          <div class="info-item">
+            <div class="field-subject">Subjects:</div><?php print $fields['subject']; ?></div>
         <?php endif; ?>
 
         <?php if (isset($fields['grades']) && $fields['grades']): ?>
-          <div class="info-item"><div class="field-grades">Grades:</div><?php print $fields['grades']; ?></div>
+          <div class="info-item">
+            <div class="field-grades">Grades:</div><?php print $fields['grades']; ?></div>
         <?php endif; ?>
 
         <?php if (isset($fields['media_types']) && $fields['media_types']): ?>
-          <div class="info-item"><div class="field-media-types">Media Types:</div><?php print $fields['media_types']; ?></div>
+          <div class="info-item">
+            <div class="field-media-types">Media Types:</div><?php print $fields['media_types']; ?></div>
         <?php endif; ?>
       </div>
     <?php endif; ?>
@@ -111,7 +113,7 @@
           <a href="#" class="sbac-hover" data-dropdown="total-downloads-<?php echo $fields['nid']->raw; ?>">
             <img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statdownloads.png" alt="Downloads">
           </a>
-          <ul id ="total-downloads-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
+          <ul id="total-downloads-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
             <li>Downloads</li>
           </ul>
           <?php if (isset($fields['downloads']) && $fields['downloads']): ?>
@@ -133,7 +135,7 @@
             <ul id="rating-dropdown-<?php echo $fields['nid']->raw; ?>" class="f-dropdown" data-dropdown-content>
               <li>Rating</li>
             </ul>
-            <div class="field-content">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0'?>)</div>
+            <div class="field-content">(<?php isset($fields['rating_count']) ? print $fields['rating_count'] : '0' ?>)</div>
           </div>
         <?php endif; ?>
       </div>

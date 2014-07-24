@@ -646,6 +646,7 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
   $view->query->add_where('AND', $user_condition);
   $node_condition = db_or()->condition('node.uid', $user->uid);
   $view->query->add_where('AND', $node_condition);
+  $view->query->add_groupby('node.nid');
 
   if (!empty($view->custom_filters)) {
     if (!empty($view->custom_filters['resource-status'])) {

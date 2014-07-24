@@ -509,7 +509,7 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
     );
 
     $form['close_update'] = array(
-      '#markup' => '<a href="#" id="sbac-welcome-close-update">x</a>',
+      '#markup' => l('Dismiss', 'welcome-tutorial/nojs', array('attributes' => array('class' => 'use-ajax'))),
     );
 
     $form['profile_updated_container_suffix'] = array(
