@@ -3288,7 +3288,6 @@ function sbac_resource_image_style_create_derivative_alter(&$style, &$image_uri,
 function sbac_resource_load_more_ajax() {
   $view = $_POST['view'];
   $page = $_POST['page'];
-  $output = array();
   module_load_include('inc', 'sbac_resource', 'sbac_resource.menu_callbacks');
   $output = array();
   if ($view == 'resources') {
@@ -3300,7 +3299,6 @@ function sbac_resource_load_more_ajax() {
   if ($view == 'my_resources') {
     $output = sbac_resource_my_resources_page($page, TRUE);
   }
-
   print drupal_json_encode($output);
   exit;
 }

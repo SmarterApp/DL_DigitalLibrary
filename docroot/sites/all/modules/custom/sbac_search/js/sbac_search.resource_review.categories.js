@@ -17,6 +17,12 @@
         }
       );
 
+      $('#edit-dl-sort-order').once('searchfilterbutton', function(){
+        $(this).click ( function () {
+          window.location.hash = '';
+        });
+      });
+
       $(document).click(function () {
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
@@ -346,7 +352,21 @@
       // On click, add the hash in the URL.
       $('.pager-next a').once('pager-next-click', function () {
         $(this).click( function() {
-          pager_count++;
+          var href = $(this).attr('href');
+          var pos = href.indexOf('?');
+          if (pos > -1) {
+            var query = href.substring(pos);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+              var pair = vars[i].split("=");
+              if (pair[0] == 'page') {
+                pager_count = pair[1];
+              }
+            }
+          }
+          else {
+            pager_count++;
+          }
           window.location.hash = 'pager=' + pager_count;
           clicked = true;
         });
@@ -391,9 +411,26 @@
             url: "/sbac-resource/load-more",
             data: {'view' : 'resource_review', 'page' : pager},
             success: function(data) {
+              // Parse the response
               var response = jQuery.parseJSON(data);
-              $('.row.digital-library').empty().append(response.output);
-              Drupal.attachBehaviors();
+              // Inject the content
+              $('.row.digital-library').replaceWith(response.rendered_content);
+              // Create fake setting to attach new view_dom_id to handlers.
+              var dom_id = 'views_dom_id:' + response.view_dom_id;
+              var setting = {};
+              setting[dom_id] = {
+                'pager_element' : response.pager_element,
+                'view_args' : response.view_args,
+                'view_base_path' : response.view_base_path,
+                'view_display_id' : response.view_display_id,
+                'view_dom_id' : response.view_dom_id,
+                'view_name' : response.view_name,
+                'view_path' : response.view_path
+              };
+
+              // Attach new behavior.
+              settings.views.ajaxViews = setting;
+              Drupal.attachBehaviors($('.row.digital-library'), settings);
               has_run_once = true;
               $('#modalBackdrop').remove();
             },
