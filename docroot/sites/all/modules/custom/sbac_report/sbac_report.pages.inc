@@ -26,6 +26,7 @@ function sbac_report_individual() {
 
   $sne_details = '';
   $contributed_summary = '';
+  $resource_statistics = '';
   $contributed_details = '';
   $gate_keeping = '';
   $all_reviews = '';
@@ -39,7 +40,7 @@ function sbac_report_individual() {
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
     $sne_details = sbac_report_build_sne_details($uid, $state_tid);
   }
-  elseif (!sbac_report_select_other_users($account) || array_intersect($user->roles, $view_own_report)) {
+  elseif (!sbac_report_select_other_users($account) && array_intersect($user->roles, $view_own_report)) {
     $uid = $user->uid;
     $state_tid = $account->field_state['und'][0]['tid'];
     $name = $account->field_first_name['und'][0]['safe_value'] . ' ' . $account->field_last_name['und'][0]['safe_value'];
