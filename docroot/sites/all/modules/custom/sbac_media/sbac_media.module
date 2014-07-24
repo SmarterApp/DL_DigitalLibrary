@@ -637,8 +637,6 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_media_build_html5_section(&$form, &$form_state) {
-  error_log("WHAT THE CACHE");
-  watchdog('sbac-media', 'CACHE PROBLEM?');
   // Content Module Container.
   $form['field_content_module_container']['#tree'] = TRUE;
   $form['field_content_module_container'] = array(
@@ -1108,7 +1106,6 @@ function sbac_media_html5_element_upload($form, $form_state) {
   $valid = FALSE;
   drupal_get_messages(); // clear messages if they were some from before.
   $file_attributes = array();
-  error_log("WHAT IS GOING ON");
   sbac_media_save_temp_html5($file_attributes, $form, $form_state);
   if ($file_attributes) {
     // Check that the zip saved.
@@ -1267,17 +1264,10 @@ function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
     // Send the content in chunks.
     $upload_result = FALSE;
     $pos = 0;
-    error_log("uploading");
-    error_log("pos = " . $pos);
-    error_log("file_size: " . $file_size);
     while (!$upload_result && $pos < $file_size) {
-      error_log("uploading2");
       $chunk = substr($buffer, $pos, $chunk_size_bytes);
-      error_log("uploading3");
       $upload_result = $media->nextChunk($chunk);
-      error_log("uploading4");
       $pos += $chunk_size_bytes;
-      error_log("uploading5");
     }
     // return the result
     if ($upload_result) {
@@ -1375,23 +1365,15 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
   try {
     $allowed_file_types = array('zip');
     $allowed_size = array(SBAC_MEDIA_100MB, 0);
-    error_log($form['#node']->nid);
-    watchdog('sbac-media', $form['#node']->nid);
     $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
-    error_log($directory);
-    watchdog('sbac-media', $directory);
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-    error_log('writable: ' . $writable);
-    watchdog('sbac-media', $writable);
     if ($writable) {
       $validators = array(
         'file_validate_extensions' => $allowed_file_types,
         'file_validate_size' => $allowed_size,
       );
       // File is temporarily saved.
-      error_log('uploading');
       $file = file_save_upload('field_content_module_picker', $validators, $directory, FILE_EXISTS_REPLACE);
-      error_log('uploading 22');
       if ($file) {
         // Open the zip and save the file.
         $real_path = drupal_realpath($file->uri);
@@ -1860,9 +1842,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
  */
 function sbac_media_html5_delete_thumbnail($nid) {
   $thumbnail_dir = 'private://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
-  error_log($thumbnail_dir);
   if (file_exists($thumbnail_dir)) {
-    error_log('file existed, delete it');
     file_unmanaged_delete_recursive($thumbnail_dir);
   }
 }
