@@ -1180,7 +1180,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     // an actual foler.
     if (!$fileinfo->isDir()) {
       $full_path = $fileinfo->getPathname();
-      if (strpos($full_path, 'Thumbs.db') !== FALSE) {
+      if (strpos($full_path, 'Thumbs.db') !== FALSE || strpos($full_path, '.DS_Store') !== FALSE) {
         continue;
       }
       $path = str_replace($temp_path, '', $full_path);
