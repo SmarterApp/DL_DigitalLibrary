@@ -32,11 +32,20 @@
   <?php endif; ?>
   <div class='column large-12'>
     <?php if ($pwd): ?>
-        FOOBAR
+      <div class="pwd-highlights-header">
+        <div class="pwd-left">
+          <span class="pwd-title">
+            Posted with Distinction
+          </span>
+        </div>
+        <div class="pwd-right">
+          <?php print $pwd_showhide; ?>
+        </div>
+      </div>
     <?php endif; ?>
-      <?php print $digital_library_output; ?>
-      <?php if ($pwd): ?>
-        <?php print $pwd_showmore; ?>
-      <?php endif; ?>
+    <?php print $digital_library_output; ?>
+    <?php if ($pwd): ?>
+      <?php print $pwd_showmore; ?>
+    <?php endif; ?>
   </div>
 </div>

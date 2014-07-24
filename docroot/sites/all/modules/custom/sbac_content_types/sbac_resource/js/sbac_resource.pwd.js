@@ -23,20 +23,28 @@
 
   Drupal.behaviors.sbac_resource_show_pwd = {
     attach: function (context, settings) {
-
       $('#sbac-pwd-show-more').once('pwd-show-more', function() {
         $(this).click(function() {
+          window.location.hash = '';
           $('#edit-dl-pwd').click();
           return false;
         });
       });
       $('#sbac-pwd-show-fewer').once('pwd-show-fewer', function() {
         $(this).click(function() {
+          window.location.hash = '';
           $('#edit-dl-pwd').click();
           return false;
         });
       });
-    }
+      $('#sbac-pwd-hide-pwd').once('pwd-show-fewer', function() {
+        $(this).click(function() {
+          window.location.hash = '';
+          $('#edit-dl-pwd').click();
+          return false;
+        });
+      });
+    } 
   };
 
   Drupal.behaviors.sbac_resource_hide_checkbox = {

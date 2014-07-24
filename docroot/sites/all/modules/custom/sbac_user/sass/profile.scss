@@ -1,5 +1,7 @@
 @import "compass/css3/";
 
+$dark-blue: #04384e;
+
 @mixin global-button-negative {
   background: rgba(226, 226, 226, 1);
   border: 1px rgba(100, 100, 100, 1) solid;
@@ -310,7 +312,7 @@ h2.name {
     }
     .field-type-text-long {
       clear: both;
-      padding-top: 1px;
+      padding-top: 0;
       textarea.error {
         border: 2px solid red;
       }
@@ -764,21 +766,289 @@ h2.name {
 // Setup New User Page
 
 .page-sbac-user-setup {
+
+  .row {
+    max-width: 650px;
+    margin-top: 30px;
+
+    .main-container .columns {
+      padding: 0 40px;
+      background: #F2F2F2;
+      margin-bottom: -15px;
+      border-bottom-right-radius: 12px;
+      border-bottom-left-radius: 12px;
+    } 
+  }
+
+  #page-title {
+    background: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 22px;
+    color: $dark-blue;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+    padding: 20px 40px;
+    position: relative;
+    z-index: 3;  
+    margin: -15px -40px 20px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;  
+  }
+
+  .sbac-setup-profile-container {
+    overflow: auto;
+    margin-bottom: 30px;
+
+    .sbac-setup-dummy-img {
+      display: inline-block;
+      float: left;
+      width: 200px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .form-item-profile-image {
+      float: left;
+      width: 250px;
+      margin-left: 30px;
+      margin-top: 0;
+
+      .form-submit {
+        margin: 20px 0;
+      }
+
+      .description {
+        margin: 20px 0;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .sbac-user-setup-req-cont {
+    margin-bottom: 20px;
+  }
   
+  .sbac-user-setup-nav-cont {
+    margin-bottom: 40px;
+
+    .sbac-user-setup-nav-item  {
+      background: url('../images/tab-arrows-sprite.png') no-repeat center -5px;
+      display: inline-block;
+      width: 195px;
+      height: 50px;
+      text-align: center;
+      margin-right: -10px;
+
+      &.sbac-user-setup-nav-current-cont {
+        background-position: center -59px;
+      }
+    }
+
+    .sbac-user-nav-text {
+      font-size: 14px;
+      display: block;
+      margin-top: 18px;
+
+      &.sbac-user-setup-nav-current-text {
+        color: #fff;
+      }
+    }
+  }
+
   .sbac-user-name-container {
+    clear: left;
+
     .form-type-textfield {
       display: inline-block;
       float: left;
       width: 47%;
-      height: 100px;
+      margin-right: 30px;
+      margin-bottom: 20px;
+
+      &.form-item-last-name {
+        margin-right: 0;
+      }  
+    }
+  }
+
+  .sbac-user-misc-container {
+    .form-item {
+      display: inline-block;
+      float: left;
+      width: 47%;
       margin-right: 30px;
       margin-bottom: 20px;
     }
   }
+
+  .sbac-user-email-container {
+    float: left;
+    clear: left;
+    width: 47%;
+    margin-right: 30px;
+  }
+
+  .sbac-user-title-container {
+    float: left;
+    width: 47%;
+
+    select {
+      border: 1px #CECECE solid;
+      height: 35px;
+      width: 100%;
+      position: relative;
+      margin: 0;
+      font-size: 16px;
+      padding: 6px 5px 5px;
+    }
+  }
+
+  #edit-next-form, #edit-next {
+    clear: left;
+    display: block;
+    float: right;
+    background-image: url('../images/submit-arrow-next.png');
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding-right: 30px;
+  }
+
+  #edit-previous {
+    background-image: url('../images/submit-arrow-prev.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 30px;
+  }
+
+.sbac-setup-pg3-txt {
+  line-height: 1.5;
+  margin-bottom: 20px;
+  font-size: 13px;
 }
 
+.sbac-setup-pg3-container {
+  float: left;
+  width: 47%;
+  margin-right: 30px;
+  margin-bottom: 20px;
 
+  label {
+    font-size: 14px;
+  }
 
+  .description {
+    font-size: 13px;
+    line-height: 1.2;
+  }
 
+  &.last {
+    margin-right: 0;
+  }
+}
+
+#sbac-user-setup-privacy-form {
+  #edit-previous {
+    float: left;
+    clear: left;
+  }
+
+  #edit-next {
+    clear: none;
+    background-image: none;
+    padding-right: 18px;
+  }
+}
+
+  #sbac-user-setup-expertise-form {
+    .form-item {
+      margin: 0 0 10px;
+    }
+
+    .form-type-select {
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-size: 14px;
+    }
+
+    .description {
+      font-size: 13px;
+    }
+
+    .chzn-choices {
+      background-image: none;
+    }
+
+    .form-type-textarea {
+      margin-bottom: 30px;
+
+      textarea {
+        height: 225px;
+        margin-bottom: 10px;
+        box-shadow: none;
+        border-color: #aaa;
+      }
+
+      .counter {
+        text-align: right;
+        font-size: 12px;
+      }
+    }
+
+    .form-item-is-complete {
+      display: none;
+    }
+  }
+
+  #sbac-user-setup-preview-form {
+    #edit-edit-profile {
+      background-image: url('../images/submit-arrow-prev.png');
+      background-repeat: no-repeat;
+      background-position: left center;
+      padding-left: 30px;      
+    }
+
+    #edit-done {
+      float: right;
+      background-image: url('../images/checkmark.png');
+      background-repeat: no-repeat;
+      background-position: left center;
+      padding-left: 30px;  
+    }
+  }
+
+  .sbac-user-setup-preview {
+    background: #fff;
+    margin-bottom: 30px;
+    margin-top: 25px;
+    width: 440px;
+
+    .line {
+      display: none;
+    }
+
+    .profile-details {
+
+      .title {
+        border-color: #aaa;
+      }
+
+      li {
+        background-color: #F2F2F2;
+        border-radius: 2px;
+        display: inline-block;
+        font-size: 12px;
+        line-height: 22px;
+        margin-right: 7px;
+        margin-top: 7px;
+        padding: 0 5px;
+      }
+    }
+
+    .profile-pic {
+      padding: 0;
+    }
+  }
+}
 
 

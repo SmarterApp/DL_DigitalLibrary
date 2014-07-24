@@ -5,13 +5,14 @@
  *
  * @return string
  */
-function sbac_resource_digital_library_page() {
+function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
   $no_results = NULL;
   $digital_library_pwd = '';
   $pwd_showhide = '';
   $pwd_showmore = '<a href="#" id="sbac-pwd-show-fewer">Show Fewer</a>';;
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) ? $search_string = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] : $search_string = '');
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] : $current_filters = '');
+  $pwd_enabled = '';
   if (isset($_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD])) {
     $pwd_enabled = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] ? 'pwd-highlight' : '';
   }
@@ -19,9 +20,24 @@ function sbac_resource_digital_library_page() {
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
   drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.pwd.js');
+  $output = array();
 
   $view = views_get_view('resources');
   $view->set_display($display);
+  // Remove session load more attribute when search is applied.
+  if (isset($_POST['current_filters']) || isset($_POST['search_keywords'])) {
+    unset($_SESSION['load_more'][$view->name]);
+  }
+  // If pager in URL is provided, change pager
+  if ($page) {
+    $view->items_per_page = ($page + 1) * 12;
+    $_SESSION['load_more'][$view->name]['page'] = $page;
+  }
+  // If session is set, change pager.
+  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
+    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+  }
+
   sbac_resource_digital_library_apply_filters($view);
   sbac_resource_digital_library_apply_pwd($view);
   sbac_resource_digital_library_apply_sorts($view);
@@ -46,6 +62,15 @@ function sbac_resource_digital_library_page() {
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
   // dpq($view->build_info['query']);
   $count = count($view->result);
+  if ($ajax) {
+    $output['view_dom_id'] = $view->dom_id;
+    $output['view_display_id'] = $view->current_display;
+    $output['view_args'] = $view->args;
+    $output['view_name'] = $view->name;
+    $output['view_path'] = 'digital-library-resources';
+    $output['pager_element'] = 0;
+    $output['base_path'] = NULL;
+  }
   $view->destroy();
 
   // If we didn't find any results, we default to the user's filtered subject/grade items
@@ -89,7 +114,13 @@ function sbac_resource_digital_library_page() {
     }
   }
 
-  return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text, 'pwd' => $pwd_enabled, 'pwd_highlights' => $digital_library_pwd, 'pwd_showhide' => $pwd_showhide, 'pwd_showmore' => $pwd_showmore));
+  if ($ajax) {
+    $output['rendered_content'] = theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text, 'pwd' => $pwd_enabled, 'pwd_highlights' => $digital_library_pwd, 'pwd_showhide' => $pwd_showhide, 'pwd_showmore' => $pwd_showmore));
+    return $output;
+  }
+  else {
+    return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text, 'pwd' => $pwd_enabled, 'pwd_highlights' => $digital_library_pwd, 'pwd_showhide' => $pwd_showhide, 'pwd_showmore' => $pwd_showmore));
+  }
 }
 
 /**
@@ -97,7 +128,7 @@ function sbac_resource_digital_library_page() {
  *
  * @return string
  */
-function sbac_resource_my_resources_page() {
+function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   $no_results = NULL;
 
   (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] : $current_filters = '');
@@ -108,11 +139,35 @@ function sbac_resource_my_resources_page() {
   // Load up the view.
   $view = views_get_view('my_resources');
   $view->set_display($display);
+  // Remove session load more attribute when search is applied.
+  if (isset($_POST['current_filters']) || isset($_POST['search_keywords'])) {
+    unset($_SESSION['load_more'][$view->name]);
+  }
+  // If pager in URL is provided, change pager
+  if ($page) {
+    $view->items_per_page = ($page + 1) * 12;
+    $_SESSION['load_more'][$view->name]['page'] = $page;
+  }
+  // If session is set, change pager.
+  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
+    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+  }
   sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
   $my_resources_output = $view->preview();
   // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
+  $output = array();
+  if ($ajax) {
+    // Create the Drupal.settings attribute
+    $output['view_dom_id'] = $view->dom_id;
+    $output['view_display_id'] = $view->current_display;
+    $output['view_args'] = $view->args;
+    $output['view_name'] = $view->name;
+    $output['view_path'] = 'my-resources';
+    $output['pager_element'] = 0;
+    $output['base_path'] = NULL;
+  }
   $view->destroy();
 
   if (!$view->total_rows && $current_filters != '') {
@@ -124,7 +179,13 @@ function sbac_resource_my_resources_page() {
     $no_results = sbac_resource_no_search_results();
   }
   menu_set_active_item('my-resources');
-  return theme('my_resources', array('my_resources_output' => $my_resources_output, 'no_results' => $no_results));
+  if ($ajax) {
+    $output['rendered_content'] = theme('my_resources', array('my_resources_output' => $my_resources_output, 'no_results' => $no_results));
+    return $output;
+  }
+  else {
+    return theme('my_resources', array('my_resources_output' => $my_resources_output, 'no_results' => $no_results));
+  }
 }
 
 /**
@@ -132,7 +193,7 @@ function sbac_resource_my_resources_page() {
  *
  * @return string
  */
-function sbac_resource_resource_review_page() {
+function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   $no_results = NULL;
   (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] : $current_filters = '');
   $display = sbac_resource_determine_grid_or_list();
@@ -142,23 +203,52 @@ function sbac_resource_resource_review_page() {
   // Load up the view.
   $view = views_get_view('resource_review');
   $view->set_display($display);
+  // Remove session load more attribute when search is applied.
+  if (isset($_POST['current_filters']) || isset($_POST['search_keywords'])) {
+    unset($_SESSION['load_more'][$view->name]);
+  }
+  // If pager in URL is provided, change pager
+  if ($page) {
+    $view->items_per_page = ($page + 1) * 12;
+    $_SESSION['load_more'][$view->name]['page'] = $page;
+  }
+  // If session is set, change pager.
+  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
+    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+  }
   sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();
   // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
+  $output = array();
+  if ($ajax) {
+    // Create the Drupal.settings attribute
+    $output['view_dom_id'] = $view->dom_id;
+    $output['view_display_id'] = $view->current_display;
+    $output['view_args'] = $view->args;
+    $output['view_name'] = $view->name;
+    $output['view_path'] = 'resource-review';
+    $output['pager_element'] = 0;
+    $output['base_path'] = NULL;
+  }
   $view->destroy();
 
   if (!$view->total_rows && $current_filters != '') {
     // Reset variables
     $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
     $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
-
     // Set error message
     $no_results = sbac_resource_no_search_results();
   }
   menu_set_active_item('resource-review');
-  return theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
+  if ($ajax) {
+    $output['rendered_content'] = theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
+    return $output;
+  }
+  else {
+    return theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
+  }
 }
 
 /**
