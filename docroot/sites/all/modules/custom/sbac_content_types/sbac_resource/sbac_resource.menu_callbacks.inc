@@ -130,13 +130,14 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   $my_resources_output = $view->preview();
   // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
+  $output = array();
   if ($ajax) {
     // Create the Drupal.settings attribute
     $output['view_dom_id'] = $view->dom_id;
     $output['view_display_id'] = $view->current_display;
     $output['view_args'] = $view->args;
     $output['view_name'] = $view->name;
-    $output['view_path'] = 'digital-library-resources';
+    $output['view_path'] = 'my-resources';
     $output['pager_element'] = 0;
     $output['base_path'] = NULL;
   }
@@ -193,13 +194,14 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   $resource_review_output = $view->preview();
   // dpq($view->build_info['query']);
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
+  $output = array();
   if ($ajax) {
     // Create the Drupal.settings attribute
     $output['view_dom_id'] = $view->dom_id;
     $output['view_display_id'] = $view->current_display;
     $output['view_args'] = $view->args;
     $output['view_name'] = $view->name;
-    $output['view_path'] = 'digital-library-resources';
+    $output['view_path'] = 'resource-review';
     $output['pager_element'] = 0;
     $output['base_path'] = NULL;
   }

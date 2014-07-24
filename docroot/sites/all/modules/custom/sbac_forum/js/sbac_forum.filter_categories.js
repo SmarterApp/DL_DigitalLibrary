@@ -19,6 +19,12 @@
         }
       });
 
+      $('#edit-forum-sort-order').once('searchfilterbutton', function(){
+        $(this).click ( function () {
+          window.location.hash = '';
+        });
+      });
+
       $('#sbac-forum-filter-button').once('forum-filter-button', function () {
         $(this).click( function() {
           var isEdit = Drupal.settings.sbac_forum.isEdit;
@@ -282,27 +288,93 @@
       // On click, add the hash in the URL.
       $('.pager-next a').once('pager-next-click', function () {
         $(this).click( function() {
-          pager_count++;
+          var href = $(this).attr('href');
+          var pos = href.indexOf('?');
+          if (pos > -1) {
+            var query = href.substring(pos);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+              var pair = vars[i].split("=");
+              if (pair[0] == 'page') {
+                pager_count = pair[1];
+              }
+            }
+          }
+          else {
+            pager_count++;
+          }
           window.location.hash = 'pager=' + pager_count;
           clicked = true;
         });
       });
 
+      // Move and resize the modalBackdrop on resize of the window
+      modalBackdropResize = function(){
+        // Get our heights
+        var docHeight = $(document).height();
+        var docWidth = $(document).width();
+        var winHeight = $(window).height();
+        if( docHeight < winHeight ) docHeight = winHeight;
+        // Apply the changes
+        $('#modalBackdrop').css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+      };
+      $(window).bind('resize', modalBackdropResize);
+
       var hash = window.location.hash;
       if (hash != '' && !has_run_once && !clicked) {
         var pager = hash.replace('#pager=', '');
         if (ajax_request == null) {
+          // Get the docHeight and (ugly hack) add 50 pixels to make sure we dont have a *visible* border below our div
+          var docHeight = $(document).height() + 50;
+          var docWidth = $(document).width();
+          var winHeight = $(window).height();
+          var winWidth = $(window).width();
+          if( docHeight < winHeight ) docHeight = winHeight;
+
+          // Create CSS attributes
+          css = jQuery.extend({
+            position: 'absolute',
+            left: '0px',
+            margin: '0px',
+            background: '#000',
+            opacity: '.55'
+          }, {});
+
+          // Add opacity handling for IE.
+          css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
+          $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div>');
+          $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+
+
           ajax_request = $.ajax({
             type: 'POST',
             url: "/sbac-forum/load-more",
             data: {'page' : pager},
             success: function(data) {
+              // Parse the response
               var response = jQuery.parseJSON(data);
+              // Inject the content
               $('.sbac-forum-main-container').prev().remove();
               $('.sbac-forum-main-container').empty();
-              $('.sbac-forum-main-container').replaceWith(response.output);
-              Drupal.attachBehaviors();
+              $('.sbac-forum-main-container').replaceWith(response.rendered_content);
+              // Create fake setting to attach new view_dom_id to handlers.
+              var dom_id = 'views_dom_id:' + response.view_dom_id;
+              var setting = {};
+              setting[dom_id] = {
+                'pager_element' : response.pager_element,
+                'view_args' : response.view_args,
+                'view_base_path' : response.view_base_path,
+                'view_display_id' : response.view_display_id,
+                'view_dom_id' : response.view_dom_id,
+                'view_name' : response.view_name,
+                'view_path' : response.view_path
+              };
+
+              // Attach new behavior.
+              settings.views.ajaxViews = setting;
+              Drupal.attachBehaviors($('.row.digital-library'), settings);
               has_run_once = true;
+              $('#modalBackdrop').remove();
             },
             error: function(data) {
             }

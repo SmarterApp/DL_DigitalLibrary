@@ -241,9 +241,11 @@ function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
   switch ($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_RESOURCE:
       $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = '';
+      unset($_SESSION['load_more']['forums']['page']);
       break;
     case SBAC_FORUM_SUBNAV_TOPIC:
       $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = '';
+      unset($_SESSION['load_more']['forums']['page']);
       break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
       break;
