@@ -31,6 +31,9 @@
   </div>
   <?php endif; ?>
   <div class='column large-12'>
+    <?php if ($pwd): ?>
+        FOOBAR
+    <?php endif; ?>
       <?php print $digital_library_output; ?>
       <?php if ($pwd): ?>
         <?php print $pwd_showmore; ?>

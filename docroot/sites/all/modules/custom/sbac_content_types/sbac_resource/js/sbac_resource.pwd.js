@@ -7,6 +7,7 @@
       $('#sbac-pwd-show-hide').once('pwd-toggle-event', function() {
         $(this).click(function() {
           $('.pwd-collapsable').toggle();
+          $(this).toggleClass('toggle-closed');
           var text = $(this).text();
           if (text == 'Hide') {
             $(this).text('Show');

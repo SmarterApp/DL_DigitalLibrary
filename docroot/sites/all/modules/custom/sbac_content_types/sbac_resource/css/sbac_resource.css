@@ -3054,3 +3054,144 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 .page-digital-library-resources.list-view .rating-count .f-dropdown {
   left: 13px !important;
 }
+
+/* Posted With Distinction. */
+/* line 3000, ../sass/sbac_resource.scss */
+.front #sbac-resource-digital-library-sort-form .form-type-select {
+  display: block;
+}
+
+/* line 3006, ../sass/sbac_resource.scss */
+#sbac-pwd-check,
+#form-wrapper-dl-sort-element {
+  display: inline-block;
+}
+
+/* line 3011, ../sass/sbac_resource.scss */
+#sbac-pwd-check #edit-dl-pwd {
+  margin-top: 0;
+  margin-bottom: 0;
+  top: 0;
+}
+/* line 3016, ../sass/sbac_resource.scss */
+#sbac-pwd-check .form-item-dl-pwd {
+  margin: 0 0 0 38px;
+}
+/* line 3019, ../sass/sbac_resource.scss */
+#sbac-pwd-check .option {
+  color: #fff;
+  font-weight: normal;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+  font-size: 15px;
+}
+
+/* line 3040, ../sass/sbac_resource.scss */
+#main > .pwd-highlight {
+  padding-top: 22px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+  margin-bottom: 30px;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.3)), color-stop(100%, rgba(255, 255, 255, 0.2)));
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+  background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+}
+
+/* line 3045, ../sass/sbac_resource.scss */
+.pwd-highlights-container {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+  margin-bottom: 30px;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.3)), color-stop(100%, rgba(255, 255, 255, 0.2)));
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+  background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+}
+/* line 3048, ../sass/sbac_resource.scss */
+.pwd-highlights-container .pwd-highlights-header {
+  padding: 22px 18px;
+}
+/* line 3050, ../sass/sbac_resource.scss */
+.pwd-highlights-container .pwd-highlights-header .pwd-left {
+  display: inline-block;
+  width: 69%;
+}
+/* line 3054, ../sass/sbac_resource.scss */
+.pwd-highlights-container .pwd-highlights-header .pwd-right {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+}
+/* line 3058, ../sass/sbac_resource.scss */
+.pwd-highlights-container .pwd-highlights-header .pwd-right a {
+  color: #fff;
+  font-weight: normal;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+  padding-right: 14px;
+  background: url(../images/icon-toggle-up-wh.png) no-repeat 100% 50%;
+  font-size: 13px;
+}
+/* line 3061, ../sass/sbac_resource.scss */
+.pwd-highlights-container .pwd-highlights-header .pwd-right a.toggle-closed {
+  background-image: url(../images/icon-toggle-down-wh.png);
+}
+@media all and (min-width: 640px) and (max-width: 960px) {
+  /* line 3068, ../sass/sbac_resource.scss */
+  .pwd-highlights-container .pwd-collapsable {
+    padding-left: 4px;
+  }
+}
+@media all and (min-width: 1280px) {
+  /* line 3068, ../sass/sbac_resource.scss */
+  .pwd-highlights-container .pwd-collapsable {
+    padding-left: 5px;
+  }
+}
+/* line 3077, ../sass/sbac_resource.scss */
+.pwd-highlights-container .pwd-title {
+  color: #fff;
+  font-weight: normal;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+  font-size: 15px;
+  font-weight: bold;
+  background: url(../images/checkmark.png) no-repeat -8px 50%;
+  padding: 0 0 0 24px;
+}
+/* line 3086, ../sass/sbac_resource.scss */
+.pwd-highlights-container .rating-count .form-item {
+  margin: 0.25em;
+}
+
+/* line 3093, ../sass/sbac_resource.scss */
+#sbac-pwd-show-fewer,
+.pwd-highlights-container .pwd-footer-link {
+  clear: both;
+  display: block;
+  text-align: right;
+  color: #fff;
+  font-weight: normal;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+  padding: 0 18px 18px;
+}
+/* line 3099, ../sass/sbac_resource.scss */
+#sbac-pwd-show-fewer a,
+.pwd-highlights-container .pwd-footer-link a {
+  color: #fff;
+  font-weight: normal;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+  padding-right: 14px;
+  background: url(../images/icon-toggle-up-wh.png) no-repeat 100% 50%;
+  font-size: 13px;
+}
