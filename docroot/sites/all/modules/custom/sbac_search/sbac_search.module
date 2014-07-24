@@ -20,6 +20,7 @@ define('SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS', 'sbac-external-resources-filter
 
 define('SBAC_SEARCH_MY_RESOURCES_SORTS', 'sbac-my-resources-sorts');
 define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS', 'sbac-digital-library-sorts');
+define('SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD', 'sbac-digital-library-pwd');
 define('SBAC_SEARCH_RESOURCE_REVIEW_SORTS', 'sbac-resource-review-sorts');
 
 define('SBAC_SEARCH_MY_RESOURCES_COUNT', 'sbac-my-resources-count');

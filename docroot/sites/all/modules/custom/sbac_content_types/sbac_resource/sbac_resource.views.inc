@@ -283,6 +283,26 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
 }
 
 /**
+ * Changes Digital Library output to display Distinct or mixed when provided.
+ * @param  [type] $view The view object.
+ */
+function sbac_resource_digital_library_apply_pwd(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+  $view_filters['sticky']['value'] = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] ? '1' : 'All';
+  $view->display_handler->set_option('filters', $view_filters);
+}
+
+function sbac_resource_digital_library_pwd_reel(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+  $view_filters['sticky']['value'] = '1';
+  $view->display_handler->set_option('filters', $view_filters);
+  $views_pager = $view->display_handler->get_option('pager');
+  $views_pager['type'] = 'some';
+  $views_pager['options']['items_per_page'] = 4;
+  $view->display_handler->set_option('pager', $views_pager);
+}
+
+/**
  * Populates contextual filters with data if provided.
  *
  * @param $view

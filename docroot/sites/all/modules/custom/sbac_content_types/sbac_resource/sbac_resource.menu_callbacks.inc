@@ -7,16 +7,41 @@
  */
 function sbac_resource_digital_library_page() {
   $no_results = NULL;
+  $digital_library_pwd = '';
+  $pwd_showhide = '';
+  $pwd_showmore = '<a href="#" id="sbac-pwd-show-fewer">Show Fewer</a>';;
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) ? $search_string = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] : $search_string = '');
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] : $current_filters = '');
+  if (isset($_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD])) {
+    $pwd_enabled = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] ? 'pwd-highlight' : '';
+  }
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.pwd.js');
 
   $view = views_get_view('resources');
   $view->set_display($display);
   sbac_resource_digital_library_apply_filters($view);
+  sbac_resource_digital_library_apply_pwd($view);
   sbac_resource_digital_library_apply_sorts($view);
+  if (!$pwd_enabled) {
+    $pwd_view = views_get_view('resources');
+    $pwd_view->set_display($display);
+    sbac_resource_digital_library_apply_filters($pwd_view);
+    sbac_resource_digital_library_apply_sorts($pwd_view);
+    sbac_resource_digital_library_pwd_reel($pwd_view);
+    $digital_library_pwd = $pwd_view->preview();
+    if (!count($pwd_view->result)) {
+      $digital_library_pwd = '';
+      $pwd_showhide = '';
+      $pwd_showmore = '';
+    } else {
+      $pwd_showhide = '<a href="#" id="sbac-pwd-show-hide">Hide</a>';
+      $pwd_showmore = '<a href="#" id="sbac-pwd-show-more">Show More</a>';
+    }
+    $pwd_view->destroy();
+  }
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
   // dpq($view->build_info['query']);
@@ -38,6 +63,7 @@ function sbac_resource_digital_library_page() {
     // clear these in order to make sure out new filters kick in
     clear_views_exposed_filter_cache($view->name, $display);
     sbac_resource_filter_user_tags($view);
+    sbac_resource_digital_library_apply_pwd($view);
     $digital_library_output = $view->preview();
     // dpq($view->build_info['query']);
     $view->destroy();
@@ -63,7 +89,7 @@ function sbac_resource_digital_library_page() {
     }
   }
 
-  return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text));
+  return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text, 'pwd' => $pwd_enabled, 'pwd_highlights' => $digital_library_pwd, 'pwd_showhide' => $pwd_showhide, 'pwd_showmore' => $pwd_showmore));
 }
 
 /**

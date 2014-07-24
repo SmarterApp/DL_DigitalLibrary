@@ -57,6 +57,10 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
       'digital_library_output' => NULL,
       'no_results' => NULL,
       'smart_search_welcome' => NULL,
+      'pwd' => NULL,
+      'pwd_highlights' => NULL,
+      'pwd_hide' => NULL,
+      'pwd_showmore' => NULL,
     )
   );
 
@@ -278,6 +282,7 @@ function sbac_resource_views_view__resources__grid_view__preprocess(&$vars) {
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
   drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
+  $vars['exposed'] = '<div class="sbac-hide-exposed">' . $vars['exposed'] . '</div>';
 }
 
 /**

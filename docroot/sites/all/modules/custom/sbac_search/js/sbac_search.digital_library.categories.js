@@ -320,7 +320,13 @@
         $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
       }
 
-      $('.pager-next a').html('Show More Resources').addClass('button');
+      if ($('.pwd-highlight').length) {
+        var loadMoreButton = 'More Resources Posted With Distinction';
+      }
+      else {
+        var loadMoreButton = 'Show More Resources';
+      }
+      $('.pager-next a').html(loadMoreButton).addClass('button');
     }
   };
 
