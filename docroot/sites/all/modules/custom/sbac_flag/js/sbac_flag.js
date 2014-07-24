@@ -35,7 +35,7 @@
           var pager_count = $(this).attr('offset');
           window.location.hash = 'pager=' + pager_count;
           clicked = true;
-          Drupal.behaviors.sbac_flag_load_more.load_more_content(pager_count, true, false);
+          Drupal.behaviors.sbac_flag_load_more.load_more_content(pager_count, false, false);
           return false;
         });
       });
@@ -43,7 +43,7 @@
       var hash = window.location.hash;
       if (hash != '' && !has_run_once && !clicked) {
         var pager = hash.replace('#pager=', '');
-        Drupal.behaviors.sbac_flag_load_more.load_more_content(pager, false, true);
+        Drupal.behaviors.sbac_flag_load_more.load_more_content(pager, true, true);
         has_run_once = true;
       }
 
@@ -59,7 +59,7 @@
       };
       $(window).bind('resize', modalBackdropResize);
     },
-    load_more_content: function(offset, load_more, display_backdrop) {
+    load_more_content: function(offset, hash_load, display_backdrop) {
       if (ajax_request == null) {
         if (display_backdrop) {
           // Get the docHeight and (ugly hack) add 50 pixels to make sure we dont have a *visible* border below our div
@@ -87,10 +87,10 @@
         ajax_request = $.ajax({
           type: 'POST',
           url: "/sbac-flag/load-more",
-          data: {'offset' : offset},
+          data: {'offset' : offset, 'hash_load' : hash_load},
           success: function(data) {
             var response = jQuery.parseJSON(data);
-            if (load_more) {
+            if (!hash_load) {
               $('#sbac-flag-mod-cont').append(response.list_output);
             }
             else {
