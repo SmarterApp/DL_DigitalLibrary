@@ -366,7 +366,13 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
   );
 
   $form['privacy_desc'] = array(
+    '#prefix' => '<div class="sbac-setup-pg3-txt">',
+    '#suffix' => '</div>',
     '#markup' => t("Select the personal information and expertise you'd like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown on the next page. Note that no educators can access your full account and no information will be displayed publicly.")
+  );
+
+  $form['opt_container'] = array(
+    '#markup' => '<div class="sbac-setup-pg3-container">',
   );
 
   $form['visibility_opt_title'] = array(
@@ -386,6 +392,14 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
       'field_introduction' => 'Other Professional Experiences and Accomplishments',
     ),
     '#default_value' => (isset($_SESSION['user_setup']['visibility_opt']) ? array_values($_SESSION['user_setup']['visibility_opt']) : array()),
+  );
+
+  $form['opt_container_close'] = array(
+    '#markup' => '</div>',
+  );
+
+  $form['req_container'] = array(
+    '#markup' => '<div class="sbac-setup-pg3-container">',
   );
 
   $form['visibility_req_title'] = array(
@@ -408,6 +422,10 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     '#disabled' => TRUE,
     '#options' => $visibility_options,
     '#default_value' => array_keys($visibility_options),
+  );
+
+  $form['req_container_close'] = array(
+    '#markup' => '</div>',
   );
 
   $form['previous'] = array(
