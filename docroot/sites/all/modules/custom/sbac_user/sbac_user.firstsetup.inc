@@ -399,7 +399,7 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
   );
 
   $form['req_container'] = array(
-    '#markup' => '<div class="sbac-setup-pg3-container">',
+    '#markup' => '<div class="sbac-setup-pg3-container last">',
   );
 
   $form['visibility_req_title'] = array(

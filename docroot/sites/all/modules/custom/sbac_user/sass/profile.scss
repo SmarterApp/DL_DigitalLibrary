@@ -769,6 +769,7 @@ h2.name {
 
   .row {
     max-width: 650px;
+    margin-top: 30px;
 
     .main-container .columns {
       padding: 0 40px;
@@ -918,6 +919,45 @@ h2.name {
     padding-left: 30px;
   }
 
+.sbac-setup-pg3-txt {
+  line-height: 1.5;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.sbac-setup-pg3-container {
+  float: left;
+  width: 47%;
+  margin-right: 30px;
+  margin-bottom: 20px;
+
+  label {
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  &.last {
+    margin-right: 0;
+  }
+}
+
+#sbac-user-setup-privacy-form {
+  #edit-previous {
+    float: left;
+    clear: left;
+  }
+
+  #edit-next {
+    clear: none;
+    background-image: none;
+    padding-right: 18px;
+  }
+}
+
   #sbac-user-setup-expertise-form {
     .form-item {
       margin: 0 0 10px;
@@ -929,6 +969,10 @@ h2.name {
 
     label {
       font-size: 14px;
+    }
+
+    .description {
+      font-size: 13px;
     }
 
     .chzn-choices {
@@ -949,6 +993,60 @@ h2.name {
         text-align: right;
         font-size: 12px;
       }
+    }
+
+    .form-item-is-complete {
+      display: none;
+    }
+  }
+
+  #sbac-user-setup-preview-form {
+    #edit-edit-profile {
+      background-image: url('../images/submit-arrow-prev.png');
+      background-repeat: no-repeat;
+      background-position: left center;
+      padding-left: 30px;      
+    }
+
+    #edit-done {
+      float: right;
+      background-image: url('../images/checkmark.png');
+      background-repeat: no-repeat;
+      background-position: left center;
+      padding-left: 30px;  
+    }
+  }
+
+  .sbac-user-setup-preview {
+    background: #fff;
+    margin-bottom: 30px;
+    margin-top: 25px;
+    width: 440px;
+
+    .line {
+      display: none;
+    }
+
+    .profile-details {
+
+      .title {
+        border-color: #aaa;
+      }
+
+      li {
+        background-color: #F2F2F2;
+        border-radius: 2px;
+        display: inline-block;
+        font-size: 12px;
+        line-height: 22px;
+        margin-right: 7px;
+        margin-top: 7px;
+        padding: 0 5px;
+      }
+    }
+
+    .profile-pic {
+      padding: 0;
     }
   }
 }
