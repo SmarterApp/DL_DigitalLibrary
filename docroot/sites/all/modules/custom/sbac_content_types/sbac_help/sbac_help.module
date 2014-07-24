@@ -209,25 +209,6 @@ function sbac_help_disable_help() {
 }
 
 /**
- * Submit handler for form submit.
- *
- * @param $form
- * @param $form_state
- */
-function sbac_help_disable_help_submit($form, &$form_state) {
-  global $user;
-
-  user_save($user, array(
-    'data' => array(
-      'disable_help' => (int) $form_state['values']['disable_help'],
-    )
-  ));
-
-  // $url = $form_state['redirect'] = 'digital-library-resources';
-  // drupal_goto($url);
-}
-
-/**
  * Implements hook_preprocess_page().
  *
  * @param $variables
