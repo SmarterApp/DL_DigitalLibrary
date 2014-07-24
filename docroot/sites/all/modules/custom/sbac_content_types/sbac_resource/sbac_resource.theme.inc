@@ -1044,7 +1044,7 @@ function _sbac_resource_my_resources_links($fields) {
         $url = url('node/' . $nid, array('absolute' => TRUE));
         $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['text'] = t('Arbitration');
+        $variables['text'] = t('Arbitration Review');
         break;
       case 'published':
         $variables['sticky'] = FALSE;
