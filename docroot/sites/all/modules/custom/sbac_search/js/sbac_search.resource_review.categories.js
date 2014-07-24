@@ -17,7 +17,7 @@
         }
       );
 
-      $('#edit-dl-sort-order').once('searchfilterbutton', function(){
+      $('#edit-rr-sort-order').once('searchfilterbutton', function(){
         $(this).click ( function () {
           window.location.hash = '';
         });
