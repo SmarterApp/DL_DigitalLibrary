@@ -3215,17 +3215,24 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
   clear: both;
   display: block;
   margin-right: 18px;
+  padding: 0 18px 18px;
   text-align: right;
   color: #fff;
   font-weight: normal;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
-  padding: 0 18px 18px;
+  line-height: 1.3;
   padding-right: 14px;
   background: url(../images/icon-toggle-up-wh.png) no-repeat 100% 0;
   font-size: 13px;
 }
 
-/* line 3137, ../sass/sbac_resource.scss */
+/* line 3139, ../sass/sbac_resource.scss */
+.pwd-footer-link a,
+.pwd-footer-link a:hover {
+  background-image: url(../images/icon-toggle-down-wh.png);
+}
+
+/* line 3143, ../sass/sbac_resource.scss */
 .digital-library .view-filters {
   display: none;
 }
