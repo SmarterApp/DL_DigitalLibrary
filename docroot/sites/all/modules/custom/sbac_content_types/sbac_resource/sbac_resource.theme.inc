@@ -706,6 +706,10 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
  * @param $fields
  */
 function _sbac_resource_grid_image($fields, $view_display = 'grid') {
+  if ($fields['nid']->raw == 10084) {
+    $var = '';
+  }
+
   $variables = array();
   $thumbnail_pieces = array();
   if (isset($fields['nid']->raw)) {

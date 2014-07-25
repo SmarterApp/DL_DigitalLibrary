@@ -784,20 +784,28 @@ function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
   $html5 = FALSE;
   if (isset($vars['document']['html5'])) {
-    // Add required js and css files
-    drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
-    drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/moduleScript.js', array('scope' => 'footer'));
-    drupal_add_css(drupal_get_path('theme', 'SBAC'), '/js/fancybox/jquery.fancybox.css');
-    $html5 = TRUE;
-    $media = $vars['document']['html5'];
-    $file = file_load($media->fid);
-    $path_variables = explode('::', $media->document_id);
-    $folder = variable_get('google_cdn_folder');
+    $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " .$vars['nid'])->fetchObject();
+    if ($html5_progress && $html5_progress->status == SBAC_MEDIA_HTML5_FINISHED) {
+      // Add required js and css files
+      drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
+      drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/moduleScript.js', array('scope' => 'footer'));
+      drupal_add_css(drupal_get_path('theme', 'SBAC'), '/js/fancybox/jquery.fancybox.css');
+      $html5 = TRUE;
+      $media = $vars['document']['html5'];
+      $file = file_load($media->fid);
+      $path_variables = explode('::', $media->document_id);
+      $folder = variable_get('google_cdn_folder');
 
-    // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
-    $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid']/32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
-    $viewer['viewer_filename'] = ucwords($path_variables[1]);
-    $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+      // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
+      $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid']/32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
+      $viewer['viewer_filename'] = ucwords($path_variables[1]);
+      $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+    }
+    else {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview-html5.jpg';
+      $viewer['viewer_filename'] = 'Processing...';
+      $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
+    }
   }
 
   if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
