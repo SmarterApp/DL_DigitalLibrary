@@ -324,6 +324,7 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
         ),
       ),
     ),
+    '#after_build' => array('sbauc_user_is_complete_after_build'),
   );
 
   $form['previous'] = array(
@@ -626,4 +627,17 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     unset($_SESSION['user_setup']);
     drupal_goto('');
   }
+}
+
+/**
+ * Enables next button if options have values.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbauc_user_is_complete_after_build($form, &$form_state) {
+  if (!empty($form_state['values']['subject_options']) && !empty($form_state['values']['grade_options']) && !empty($form_state['values']['student_population_options'])) {
+    $form['#checked'] = TRUE;
+  }
+  return $form;
 }

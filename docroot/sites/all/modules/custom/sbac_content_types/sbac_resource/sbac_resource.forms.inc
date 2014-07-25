@@ -3703,6 +3703,13 @@ function _sbac_resource_my_resource_redirect() {
   drupal_goto('my-resources');
 }
 
+/**
+ * Displays the two subnav/tabs
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function sbac_resource_resource_review_subnav_form($form, &$form_state) {
   $form = array();
   $resource_tab_classes = '';
@@ -3754,14 +3761,31 @@ function sbac_resource_resource_review_subnav_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Submit handler for the resource tab
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_resource_sub_nav__set_resource__submit($form, &$form_state) {
   sbac_resource_set_active_subnav(SBAC_RESOURCE_SUBNAV_RESOURCES);
 }
 
+/**
+ * Submit handler for the resubmission tab
+ *
+ * @param $form
+ * @param $form_state
+ */
 function _sbac_resource_sub_nav__set_resubmission__submit($form, &$form_state) {
   sbac_resource_set_active_subnav(SBAC_RESOURCE_SUBNAV_RESUBMISSIONS);
 }
 
+/**
+ * Get the current active subnav/tab
+ *
+ * @return string
+ */
 function sbac_resource_get_active_subnav() {
   $active_subnav = SBAC_RESOURCE_SUBNAV_RESOURCES;
 
@@ -3773,6 +3797,11 @@ function sbac_resource_get_active_subnav() {
   return $active_subnav;
 }
 
+/**
+ * Set the current subnav/tab
+ *
+ * @param null $value
+ */
 function sbac_resource_set_active_subnav($value = NULL) {
   if (!empty($value)) {
     $_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE] = $value;
