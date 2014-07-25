@@ -832,6 +832,7 @@ SQL;
   $sql = <<<SQL
 SELECT
   h.*,
+  IF(h.state = 'removed', h.stamp, '') AS removed_date,
   IF(h.state = 'removed', CONCAT(f.field_first_name_value, ' ', l.field_last_name_value), '') AS removed_name,
   IF(h.state = 'removed', u.mail, '') AS removed_mail,
   IF(h.state = 'removed', c.field_posting_options_comment_value, '') AS removed_comment
@@ -1588,7 +1589,7 @@ function set_report_columns() {
             'Removed Date',
             'fieldtype' => 'date',
             'datasource' => 'workbench_moderation',
-            'path' => array('stamp' => 'class')
+            'path' => array('removed_date' => 'class')
           ),
           array(
             '',
