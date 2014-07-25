@@ -228,48 +228,51 @@
   Drupal.behaviors.sbac_resource_review_remove = {
     attach: function (context, settings) {
       // Remove's the individual filters.
-      $('#sbac-category-current-filters .current-filter').click( function() {
-        $('.selectedDiv').hide();
-        var reset_filters = $('#edit-reset-filters');
-        var search_button = $('#sbac-search-filter-button');
-        var current_filters = $('#sbac-search-current-filters');
-        var vid = $(this).children().attr('vid');
-        var tid = $(this).children().attr('tid');
-        var first_try = '::' + vid + ':' + tid;
-        var second_try = vid + ':' + tid;
-        if (current_filters.val() != '') {
-          var current_filters_string = current_filters.val();
-          var pos = current_filters_string.indexOf(first_try);
+      $('#sbac-category-current-filters .current-filter').once('cmod-cathide', function() {
+        $('#sbac-category-current-filters .current-filter').click(function () {
+          $('.selectedDiv').hide();
+          var reset_filters = $('#edit-reset-filters');
+          var search_button = $('#sbac-search-filter-button');
+          var current_filters = $('#sbac-search-current-filters');
+          var vid = $(this).children().attr('vid');
+          var tid = $(this).children().attr('tid');
+          var first_try = '::' + vid + ':' + tid;
+          var second_try = vid + ':' + tid;
+          if (current_filters.val() != '') {
+            var current_filters_string = current_filters.val();
+            var pos = current_filters_string.indexOf(first_try);
 
-          if (pos >= 0) {
-            var newvalue = current_filters_string.replace(first_try, '');
-            current_filters.val(newvalue);
-            $(this).remove();
-            $('.category-filter-' + vid + '-' + tid).removeClass('current');
-          }
-          else {
-            var pos2 = current_filters_string.indexOf(second_try);
-            if (pos2 >= 0) {
-              var newvalue = current_filters_string.replace(second_try, '');
+            if (pos >= 0) {
+              var newvalue = current_filters_string.replace(first_try, '');
               current_filters.val(newvalue);
               $(this).remove();
               $('.category-filter-' + vid + '-' + tid).removeClass('current');
             }
-          }
+            else {
+              var pos2 = current_filters_string.indexOf(second_try);
+              if (pos2 >= 0) {
+                var newvalue = current_filters_string.replace(second_try, '');
+                current_filters.val(newvalue);
+                $(this).remove();
+                $('.category-filter-' + vid + '-' + tid).removeClass('current');
+              }
+            }
 
-          if (current_filters.val() == '') {
-            $('.categories-current-filters').addClass('noshow');
-            reset_filters.addClass('js-hide');
-            search_button.addClass('js-hide');
-            $('.category-hide').text(Drupal.t('Show Categories'));
-            $('.category-hide').removeClass('active');
-            $('.category-hide').removeClass('js-hide');
-            $('.slideable').hide();
-            Drupal.settings.sbac_search.isEdit = 0;
-            $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
+            if (current_filters.val() == '') {
+              $('.categories-current-filters').addClass('noshow');
+              reset_filters.addClass('js-hide');
+              search_button.addClass('js-hide');
+              $('.category-hide').text(Drupal.t('Show Categories'));
+              $('.category-hide').removeClass('active');
+              $('.category-hide').removeClass('js-hide');
+              $('.slideable').hide();
+              Drupal.settings.sbac_search.isEdit = 0;
+              $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
+              $('#sbac-search-resource-review-form').submit();
+            }
           }
-        }
-        return false;
+          return false;
+        });
       });
     }
   };

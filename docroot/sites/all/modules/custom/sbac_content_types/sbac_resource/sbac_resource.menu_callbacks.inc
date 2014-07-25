@@ -9,7 +9,7 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
   $no_results = NULL;
   $digital_library_pwd = '';
   $pwd_showhide = '';
-  $pwd_showmore = '<a href="#" id="sbac-pwd-show-fewer">Show Fewer</a>';;
+  $pwd_showmore = '<a href="#" id="sbac-pwd-show-fewer">Show Fewer</a>';
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) ? $search_string = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] : $search_string = '');
   (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] : $current_filters = '');
   $pwd_enabled = '';
@@ -57,6 +57,9 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
       $pwd_showmore = '<a href="#" id="sbac-pwd-show-more">Show More</a>';
     }
     $pwd_view->destroy();
+  }
+  else {
+    $pwd_showhide = '<a href="#" id="sbac-pwd-hide-pwd">Hide</a>';
   }
   $digital_library_output = $view->preview();
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
@@ -152,7 +155,7 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   else if (isset($_SESSION['load_more'][$view->name]['page'])) {
     $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
   }
-  sbac_resource_my_resource_apply_filters($view);
+  // sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
   $my_resources_output = $view->preview();
   // dpq($view->build_info['query']);
