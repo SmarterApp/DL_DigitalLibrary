@@ -958,11 +958,19 @@ a.sbac-grid-layout {
   }
   #edit-resources-tab {
     margin-right: -3px;
-    @include border-radius(6px 0 0 6px);
+    @include border-radius(6px);
     border-top: 1px solid rgba(0,0,0,0.6);
     border-bottom: 1px solid rgba(255,255,255,0.3);
     @include background-image(linear-gradient(#03516D, #03516D 0%, #006082 30%, #006082));
   }
+
+  .with-resubmission {
+    #edit-resources-tab {
+      @include border-radius(6px 0 0 6px);
+    }
+  }
+
+
   #edit-resubmissions-tab {
     @include border-radius(0 6px 6px 0);
     border-top: 1px solid rgba(255,255,255,0.3);
