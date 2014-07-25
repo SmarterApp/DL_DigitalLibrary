@@ -212,6 +212,7 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   }
 }
 
+
 function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $ajax = FALSE, $resubmission_only = FALSE) {
   $display = sbac_resource_determine_grid_or_list();
   $view = views_get_view('resource_review');
@@ -226,10 +227,8 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
     $_SESSION['load_more'][$view->name]['page'] = $page;
   }
   // If session is set, change pager.
-  else {
-    if (isset($_SESSION['load_more'][$view->name]['page'])) {
-      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
-    }
+  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
+    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
   }
   sbac_resource_resource_review_apply_filters($view, TRUE);
   sbac_resource_resource_review_apply_sorts($view);

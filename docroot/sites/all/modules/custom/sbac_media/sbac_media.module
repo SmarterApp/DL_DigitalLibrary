@@ -677,7 +677,7 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
       );
 
       $form['field_content_module_container']['ajax_container']['subcontainer']['uploaded_file'] = array(
-        '#markup' => '<div class="columns large-11"><p class="uploaded-file">' . $html5_media_item->filename . "</p></div>",
+        '#markup' => '<div class="columns large-9"><p class="uploaded-file">' . $html5_media_item->filename . "</p></div>",
         '#weight' => -96,
       );
 
@@ -719,7 +719,7 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
       }
       else {
         $form['field_content_module_container']['ajax_container']['subcontainer']['delete_button'] = array(
-          '#markup' => 'Processing...',
+          '#markup' => '<div class="columns large-3">Processing...</div>',
           '#weight' => -95,
         );
       }
