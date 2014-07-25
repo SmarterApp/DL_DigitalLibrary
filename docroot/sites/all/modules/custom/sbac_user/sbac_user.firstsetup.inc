@@ -414,7 +414,7 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     'State(s)',
     'Grade(s)',
     'Subject(s)',
-    'Student Population(s)',
+    'Student Populations',
   );
 
   $form['visibility_req'] = array(
