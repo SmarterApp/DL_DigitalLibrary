@@ -170,6 +170,10 @@ function sbac_central_init() {
         break;
     }
   }
+  drupal_add_http_header('X-Frame-Options', 'SAMEORIGIN');
+  drupal_add_http_header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  drupal_add_http_header('X-Content-Type-Options', 'nosniff');
+  drupal_add_http_header('X-XSS-Protection', '1;mode=block');
 }
 
 /**
