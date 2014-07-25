@@ -218,7 +218,7 @@ function drush_sbac_resource_update_node_review_averages() {
 function drush_sbac_resource_update_thumbnails() {
 
   $current_limit = drush_memory_limit();
-  ini_set('memory_limit', '512M');
+  ini_set('memory_limit', '1048M');
 
   $row = 0;
   $start_time = time();
@@ -229,7 +229,7 @@ function drush_sbac_resource_update_thumbnails() {
                        WHERE  n.type = 'resource'
                       ")->fetchField();
 
-  $current_nid = 0;
+  $current_nid = 148356;
   $chunk_size = drush_get_option('chunk-size', 25);
   // drush_print(dt('Updating thumbnails for Resource nodes.'));
 
