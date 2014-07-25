@@ -7,7 +7,7 @@
  */
 function sections_preprocess(&$vars) {
   $path = drupal_get_path('module', 'sbac_core') . '/components/sections/';
-  if (strpos($_GET['q'], 'user') !== FALSE) {
+  if (strpos($_GET['q'], 'user') !== FALSE || strpos($_GET['q'], 'node') !== FALSE) {
     drupal_add_js($path . 'js/sections.js');
   }
   drupal_add_css($path . 'css/sections.css');
