@@ -2099,6 +2099,7 @@ a.tabledrag-handle .handle {
     border: 1px solid #ccc;
     overflow: hidden;
 		padding: 10px 30px 15px;
+    height: auto !important;
 
     .modal-header {
       background: none;
@@ -2122,8 +2123,8 @@ a.tabledrag-handle .handle {
       overflow: hidden;
       overflow-y:auto;
       width: auto !important;
-      height: auto !important;
-
+/*      height: auto !important;
+*/
 			p {
 				font-size: 16px;
 				line-height: 1.6;
@@ -2353,6 +2354,7 @@ a.tabledrag-handle .handle {
 #modalContent {
   .ctools-modal-content.sbac-welcome {
     padding: 0;
+    height: inherit !important;
 
     .modal-header {
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
