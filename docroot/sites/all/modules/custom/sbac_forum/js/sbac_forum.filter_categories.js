@@ -322,63 +322,65 @@
 
       var hash = window.location.hash;
       if (hash != '' && !has_run_once && !clicked) {
-        var pager = hash.replace('#pager=', '');
-        if (ajax_request == null) {
-          // Get the docHeight and (ugly hack) add 50 pixels to make sure we dont have a *visible* border below our div
-          var docHeight = $(document).height() + 50;
-          var docWidth = $(document).width();
-          var winHeight = $(window).height();
-          var winWidth = $(window).width();
-          if( docHeight < winHeight ) docHeight = winHeight;
+        if (hash.indexOf('#pager=') > -1) {
+          var pager = hash.replace('#pager=', '');
+          if (ajax_request == null) {
+            // Get the docHeight and (ugly hack) add 50 pixels to make sure we dont have a *visible* border below our div
+            var docHeight = $(document).height() + 50;
+            var docWidth = $(document).width();
+            var winHeight = $(window).height();
+            var winWidth = $(window).width();
+            if( docHeight < winHeight ) docHeight = winHeight;
 
-          // Create CSS attributes
-          css = jQuery.extend({
-            position: 'absolute',
-            left: '0px',
-            margin: '0px',
-            background: '#000',
-            opacity: '.55'
-          }, {});
+            // Create CSS attributes
+            css = jQuery.extend({
+              position: 'absolute',
+              left: '0px',
+              margin: '0px',
+              background: '#000',
+              opacity: '.55'
+            }, {});
 
-          // Add opacity handling for IE.
-          css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
-          $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div>');
-          $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+            // Add opacity handling for IE.
+            css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
+            $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div>');
+            $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
 
 
-          ajax_request = $.ajax({
-            type: 'POST',
-            url: "/sbac-forum/load-more",
-            data: {'page' : pager},
-            success: function(data) {
-              // Parse the response
-              var response = jQuery.parseJSON(data);
-              // Inject the content
-              $('.sbac-forum-main-container').prev().remove();
-              $('.sbac-forum-main-container').empty();
-              $('.sbac-forum-main-container').replaceWith(response.rendered_content);
-              // Create fake setting to attach new view_dom_id to handlers.
-              var dom_id = 'views_dom_id:' + response.view_dom_id;
-              var setting = {};
-              setting[dom_id] = {
-                'pager_element' : response.pager_element,
-                'view_args' : response.view_args,
-                'view_base_path' : response.view_base_path,
-                'view_display_id' : response.view_display_id,
-                'view_dom_id' : response.view_dom_id,
-                'view_name' : response.view_name,
-                'view_path' : response.view_path
-              };
+            ajax_request = $.ajax({
+              type: 'POST',
+              url: "/sbac-forum/load-more",
+              data: {'page' : pager},
+              success: function(data) {
+                // Parse the response
+                var response = jQuery.parseJSON(data);
+                // Inject the content
+                $('.sbac-forum-main-container').prev().remove();
+                $('.sbac-forum-main-container').empty();
+                $('.sbac-forum-main-container').replaceWith(response.rendered_content);
+                // Create fake setting to attach new view_dom_id to handlers.
+                var dom_id = 'views_dom_id:' + response.view_dom_id;
+                var setting = {};
+                setting[dom_id] = {
+                  'pager_element' : response.pager_element,
+                  'view_args' : response.view_args,
+                  'view_base_path' : response.view_base_path,
+                  'view_display_id' : response.view_display_id,
+                  'view_dom_id' : response.view_dom_id,
+                  'view_name' : response.view_name,
+                  'view_path' : response.view_path
+                };
 
-              // Attach new behavior.
-              settings.views.ajaxViews = setting;
-              Drupal.attachBehaviors($('.row.digital-library'), settings);
-              has_run_once = true;
-              $('#modalBackdrop').remove();
-            },
-            error: function(data) {
-            }
-          });
+                // Attach new behavior.
+                settings.views.ajaxViews = setting;
+                Drupal.attachBehaviors($('.row.digital-library'), settings);
+                has_run_once = true;
+                $('#modalBackdrop').remove();
+              },
+              error: function(data) {
+              }
+            });
+          }
         }
       }
     }

@@ -42,9 +42,11 @@
 
       var hash = window.location.hash;
       if (hash != '' && !has_run_once && !clicked) {
-        var pager = hash.replace('#pager=', '');
-        Drupal.behaviors.sbac_flag_load_more.load_more_content(pager, true, true);
-        has_run_once = true;
+        if (hash.indexOf('#pager=') > -1) {
+          var pager = hash.replace('#pager=', '');
+          Drupal.behaviors.sbac_flag_load_more.load_more_content(pager, true, true);
+          has_run_once = true;
+        }
       }
 
       // Move and resize the modalBackdrop on resize of the window
