@@ -1191,8 +1191,11 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     }
   }
 
+  error_log("COMPLETED SOMETHING");
   if (!$error_uploading) {
+    error_log("VALID");
     // Finish the progress indicator
+    error_log(print_r($file_attributes, TRUE));
     sbac_media_html5_finish_progress($file_attributes['nid']);
     // Remove local HTML5 directory
     $local_directory = "private://html5/" . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'];
@@ -1201,6 +1204,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     }
   }
   else {
+    error_log("BAD UPLOAD");
     // Set an error on the progress
     sbac_media_html5_error_progress($file_attributes['nid']);
     // Send notication to user who submitted HTML5 module
@@ -1317,7 +1321,8 @@ function sbac_media_move_html5_thumbnail($file_attributes) {
  * @param $nid
  */
 function sbac_media_html5_start_progress($nid) {
-  $query = 'INSERT INTO {sbac_html5_progress} VALUES(' . $nid . ',' . SBAC_MEDIA_HTML5_IN_PROGRESS .', ' . time() . ', 0)';
+  $query = 'INSERT INTO {sbac_html5_progress}
+  VALUES(' . $nid . ',' . SBAC_MEDIA_HTML5_IN_PROGRESS .', ' . time() . ', 0)';
   db_query($query);
 }
 
@@ -1327,7 +1332,9 @@ function sbac_media_html5_start_progress($nid) {
  * @param $nid
  */
 function sbac_media_html5_finish_progress($nid) {
-  $query = 'UPDATE {sbac_html5_progress} SET status = ' . SBAC_MEDIA_HTML5_FINISHED .', finish_time = ' . time() . ' WHERE nid = ' . $nid;
+  $query = 'UPDATE {sbac_html5_progress}
+  SET status = ' . SBAC_MEDIA_HTML5_FINISHED .', finish_time = ' . time() . '
+  WHERE nid = ' . $nid;
   db_query($query);
 }
 
@@ -1337,7 +1344,9 @@ function sbac_media_html5_finish_progress($nid) {
  * @param $nid
  */
 function sbac_media_html5_error_progress($nid) {
-  $query = 'UPDATE {sbac_html5_progress} SET status = ' . SBAC_MEDIA_HTML5_ERROR .', finish_time = ' . time() . ' WHERE nid = ' . $nid;
+  $query = 'UPDATE {sbac_html5_progress}
+  SET status = ' . SBAC_MEDIA_HTML5_ERROR .', finish_time = ' . time() . '
+  WHERE nid = ' . $nid;
   db_query($query);
 }
 
