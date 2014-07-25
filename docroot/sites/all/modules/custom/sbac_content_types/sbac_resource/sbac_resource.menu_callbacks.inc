@@ -212,7 +212,14 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   }
 }
 
-
+/**
+ * Generates the two tabs' (resources and resubmission) content
+ *
+ * @param null $page
+ * @param bool $ajax
+ * @param bool $resubmission_only
+ * @return array
+ */
 function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $ajax = FALSE, $resubmission_only = FALSE) {
   $display = sbac_resource_determine_grid_or_list();
   $view = views_get_view('resource_review');
@@ -258,6 +265,8 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
 /**
  * Menu Callback.
  *
+ * @param null $page
+ * @param bool $ajax
  * @return string
  */
 function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
@@ -266,12 +275,15 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
 
+  // Get the tabs' content
   $resource_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax);
   $resubmission_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax, TRUE);
 
+  // Save the count
   $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT] = $resource_tab['count'];
   $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] = $resubmission_tab['count'];
 
+  // If resubmission tab is empty, set the default tab to 'resources'
   if ($resubmission_tab['count'] == 0) {
     $active_tab = SBAC_RESOURCE_SUBNAV_RESOURCES;
   }
@@ -279,6 +291,7 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
     $active_tab = sbac_resource_get_active_subnav();
   }
 
+  // Get the active tab content
   $active_tab_content = array();
   switch ($active_tab) {
     case SBAC_RESOURCE_SUBNAV_RESOURCES:
