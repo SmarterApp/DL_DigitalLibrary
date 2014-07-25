@@ -36,6 +36,12 @@ define('SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME', 'sbac-smart-search-url
 define('SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS', 'sbac-smart-search-hide-filters');
 define('SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS', 'sbac-smart-search-show-status');
 
+define('SBAC_RESOURCE_SUBNAV_ACTIVE', 'sbac-forum-sub-nav-active');
+define('SBAC_RESOURCE_SUBNAV_RESOURCES', 'resource-review-resources');
+define('SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT', 'resource-review-resources-count');
+define('SBAC_RESOURCE_SUBNAV_RESUBMISSIONS', 'resource-review-resubmissions');
+define('SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT', 'resource-review-resubmissions-count');
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -714,7 +720,7 @@ function sbac_resource_preprocess_node(&$vars) {
     if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
       $vars['edit_link'] = l('Edit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
     }
-    if($vars['workbench_moderation']['current']->state == 'rejected' && in_array('resource contributor', $user->roles)){
+    if ($vars['workbench_moderation']['current']->state == 'rejected' && in_array('resource contributor', $user->roles)) {
       $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
     }
 
@@ -790,7 +796,7 @@ function _sbac_resource_preview_content(&$vars) {
     $folder = variable_get('google_cdn_folder');
 
     // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
-    $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid']/32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
+    $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid'] / 32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
     $viewer['viewer_filename'] = ucwords($path_variables[1]);
     $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
   }
@@ -1022,9 +1028,9 @@ function _sbac_resource_determine_card_image($ext) {
 /**
  * Generates the external (Primary and Secondary) URLs for the thumbnail to be
  * downloaded.
- * @param  string $url  URL targetted.
- * @param  string $uri  URI targetted.
- * @param  array  $opts [(Primary Option), (Secondary Option)]
+ * @param  string $url URL targetted.
+ * @param  string $uri URI targetted.
+ * @param  array $opts [(Primary Option), (Secondary Option)]
  * @return array        uri::url
  */
 function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
@@ -1058,7 +1064,7 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
 }
 
 /**
- * Uses the embed URL id to generate a thumbnail from the service. 
+ * Uses the embed URL id to generate a thumbnail from the service.
  * @param  Object $media Represents $node['document'][0]
  * @return array         [(Primary option), (Secondary option)]
  */
@@ -1106,9 +1112,9 @@ function _sbac_resource_embed_vid_thumb_url($media) {
 
 /**
  * Saves the thumbnail to private://thumbnail directory.
- * @param  array  $urls     [(Primary option), (Secondary option)]
+ * @param  array $urls [(Primary option), (Secondary option)]
  * @param  string $filename Filename or Title of ebmedded video
- * @param  int    $nid      Node ID.
+ * @param  int $nid Node ID.
  * @return string           uri::url
  */
 function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
@@ -1869,11 +1875,13 @@ function sbac_resource_query_alter(&$query) {
                             }
                           }
                         }
-                        else if (isset($clause3['field'])) {
-                          $field = $clause3['field'];
-                          $filter_name = 'taxonomy_index_value_';
-                          if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
-                            sbac_resource_optimize_taxonomy_query($clause3, $conditions3, $key3);
+                        else {
+                          if (isset($clause3['field'])) {
+                            $field = $clause3['field'];
+                            $filter_name = 'taxonomy_index_value_';
+                            if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
+                              sbac_resource_optimize_taxonomy_query($clause3, $conditions3, $key3);
+                            }
                           }
                         }
                       }
@@ -2358,6 +2366,16 @@ function sbac_resource_block_info() {
     'status' => 1,
   );
 
+  $blocks['sbac_resource_review_tabs'] = array(
+    'info' => t('Resource Review Tabs'),
+    'region' => 'sub-header',
+    'pages' => "resource-review*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -23,
+    'status' => 1,
+  );
+
   $blocks['sbac_resource_create_button'] = array(
     'info' => t('Create New Resource'),
     'region' => 'sub-header',
@@ -2462,6 +2480,11 @@ function sbac_resource_block_view($delta = '') {
       $block['content'] = sbac_resource_grid_list_button();
       break;
 
+    case 'sbac_resource_review_tabs':
+      $block['subject'] = NULL;
+      $block['content'] = drupal_render(drupal_get_form('sbac_resource_resource_review_subnav_form'));
+      break;
+
     case 'sbac_resource_back_button':
       $block['subject'] = NULL;
       $previous_url = $_SERVER['HTTP_REFERER'];
@@ -2499,7 +2522,10 @@ function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
   $blocks['workbench']['block']['status'] = FALSE;
 
   if (isset($blocks['sbac_resource']['sbac_resource_results_count']) && $theme == 'SBAC') {
-    $blocks['sbac_resource']['sbac_resource_results_count']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
+    $blocks['sbac_resource']['sbac_resource_results_count']['pages'] = "digital-library-resources*\nmy-resources*";
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_rr_sort_form']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_rr_sort_form']['pages'] = "";
   }
   if (isset($blocks['sbac_resource']['sbac_resource_create_button']) && $theme == 'SBAC') {
     $blocks['sbac_resource']['sbac_resource_create_button']['pages'] = "my-resources*";

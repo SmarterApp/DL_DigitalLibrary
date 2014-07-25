@@ -3661,3 +3661,82 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
 function _sbac_resource_my_resource_redirect() {
   drupal_goto('my-resources');
 }
+
+function sbac_resource_resource_review_subnav_form($form, &$form_state) {
+  $form = array();
+  $resource_tab_classes = '';
+  $resubmission_tab_classes = '';
+  $active_tab = sbac_resource_get_active_subnav();
+  switch ($active_tab) {
+    case SBAC_RESOURCE_SUBNAV_RESOURCES:
+      $resource_tab_classes = 'is-pressed';
+      break;
+    case SBAC_RESOURCE_SUBNAV_RESUBMISSIONS:
+      $resubmission_tab_classes = 'is-pressed';
+      break;
+    default:
+      break;
+  }
+
+  // Resources tab
+  $resource_tab_count_text = '';
+  if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT]) && !empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT])) {
+    $resource_tab_count_text = '(' . $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT] . ')';
+  }
+  $form['resources_tab'] = array(
+    '#prefix' => '<div class="forum-subnav-primary-wrapper">',
+    '#type' => 'submit',
+    '#value' => t('Resources') . ' ' . $resource_tab_count_text,
+    '#title' => t('Resources'),
+    '#attributes' => array(
+      'class' => array($resource_tab_classes),
+    ),
+    '#submit' => array('_sbac_resource_sub_nav__set_resource__submit'),
+  );
+
+  // Resubmissions tab
+  $resubmission_tab_count_text = '';
+  if (!empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT]) && $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] > 0) {
+    $resubmission_tab_count_text = '(' . $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] . ')';
+    $form['resubmissions_tab'] = array(
+      '#type' => 'submit',
+      '#value' => t('Resubmissions') . ' ' . $resubmission_tab_count_text,
+      '#title' => t('Resubmissions'),
+      '#attributes' => array(
+        'class' => array($resubmission_tab_classes),
+      ),
+      '#submit' => array('_sbac_resource_sub_nav__set_resubmission__submit'),
+      '#suffix' => '</div>',
+    );
+  }
+
+  return $form;
+}
+
+function _sbac_resource_sub_nav__set_resource__submit($form, &$form_state) {
+  sbac_resource_set_active_subnav(SBAC_RESOURCE_SUBNAV_RESOURCES);
+}
+
+function _sbac_resource_sub_nav__set_resubmission__submit($form, &$form_state) {
+  sbac_resource_set_active_subnav(SBAC_RESOURCE_SUBNAV_RESUBMISSIONS);
+}
+
+function sbac_resource_get_active_subnav() {
+  $active_subnav = SBAC_RESOURCE_SUBNAV_RESOURCES;
+
+  if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE])) {
+    if (!empty($_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE])) {
+      $active_subnav = $_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE];
+    }
+  }
+  return $active_subnav;
+}
+
+function sbac_resource_set_active_subnav($value = NULL) {
+  if (!empty($value)) {
+    $_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE] = $value;
+  }
+  else {
+    $_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE] = '';
+  }
+}

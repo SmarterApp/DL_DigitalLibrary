@@ -113,26 +113,62 @@ function sbac_resource_resource_review_page() {
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
 
-  // Load up the view.
-  $view = views_get_view('resource_review');
-  $view->set_display($display);
-  sbac_resource_resource_review_apply_filters($view);
-  sbac_resource_resource_review_apply_sorts($view);
-  $resource_review_output = $view->preview();
-  // dpq($view->build_info['query']);
-  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
-  $view->destroy();
+  // Resources tab
+  $resources_view = views_get_view('resource_review');
+  $resources_view->set_display($display);
+  sbac_resource_resource_review_apply_filters($resources_view, TRUE);
+  sbac_resource_resource_review_apply_sorts($resources_view);
+  $resources_view->resubmission_only = FALSE;
+  $resource_review_output = $resources_view->preview();
+  $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT] = $resources_view->total_rows;
+//  dpq($active_view->build_info['query']);
+  $resources_view->destroy();
 
-  if (!$view->total_rows && $current_filters != '') {
-    // Reset variables
-    $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
-    $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
+  // Resubmissions tab
+  $resubmissions_view = views_get_view('resource_review');
+  $resubmissions_view->set_display($display);
+  sbac_resource_resource_review_apply_filters($resubmissions_view, TRUE);
+  sbac_resource_resource_review_apply_sorts($resubmissions_view);
+  $resubmissions_view->resubmission_only = TRUE;
+  $resubmission_review_output = $resubmissions_view->preview();
+  $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] = $resubmissions_view->total_rows;
+  $resubmissions_view->destroy();
 
-    // Set error message
-    $no_results = sbac_resource_no_search_results();
+  $active_tab = sbac_resource_get_active_subnav();
+  // If the resubmission tab is empty, set 'resources' as the default tab
+  if (empty($active_tab) || empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT]) ||  $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] == 0) {
+    $active_tab = SBAC_RESOURCE_SUBNAV_RESOURCES;
+    sbac_resource_set_active_subnav(SBAC_RESOURCE_SUBNAV_RESOURCES);
   }
+
+  $output = '';
+  if ($active_tab == SBAC_RESOURCE_SUBNAV_RESOURCES) {
+    $output = $resource_review_output;
+    $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $resources_view->total_rows;
+    if (!$resources_view->total_rows && $current_filters != '') {
+      // Reset variables
+      $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+      $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
+
+      // Set error message
+      $no_results = sbac_resource_no_search_results();
+    }
+  }
+  elseif ($active_tab == SBAC_RESOURCE_SUBNAV_RESUBMISSIONS) {
+    $output = $resubmission_review_output;
+    $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $resubmissions_view->total_rows;
+    if (!$resubmissions_view->total_rows && $current_filters != '') {
+      // Reset variables
+      $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+      $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
+
+      // Set error message
+      $no_results = sbac_resource_no_search_results();
+    }
+  }
+
   menu_set_active_item('resource-review');
-  return theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
+  return theme('resource_review', array('resource_review_output' => $output, 'no_results' => $no_results));
 }
 
 /**
