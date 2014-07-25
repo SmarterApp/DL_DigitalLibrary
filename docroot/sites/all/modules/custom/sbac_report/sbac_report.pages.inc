@@ -53,7 +53,9 @@ function sbac_report_individual() {
   if (!empty($sne_details)) {
     // Pass -1 as limit, summary should be "number of items per page" independent.
     $contributed_summary = sbac_report_build_resource_summary($uid, $date_range, -1);
-    $resource_statistics = sbac_report_build_resource_statistics($uid, $date_range);
+    if (sbac_report_select_other_users($account)) {
+      $resource_statistics = sbac_report_build_resource_statistics($uid, $date_range);
+    }
     $contributed_details = sbac_report_build_resource_details($uid, $date_range);
 
     // Gate-Keeping Reviews.
