@@ -681,9 +681,9 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
         '#weight' => -96,
       );
 
-      $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " . $form['#node']->nid)->fetchObject();
+      $html5_progress = db_query('SELECT * FROM {sbac_html5_progress} WHERE nid = :nid', array(':nid' => $form['#node']->nid))->fetchObject();
       // If there is HTML5 progress record and its set to Finished or Error.
-      if (!$html5_progress || ($html5_progress->status == SBAC_MEDIA_HTML5_FINISHED || $html5_progress->status == SBAC_MEDIA_HTML5_ERROR)) {
+      if ($html5_progress && ($html5_progress->status == SBAC_MEDIA_HTML5_FINISHED || $html5_progress->status == SBAC_MEDIA_HTML5_ERROR)) {
         // Delete link.
         $delete_link = '<div class="columns large-1">'.l('<i class="general foundicon-trash"></i>', 'sbac-media/nojs/delete-media', array(
             'attributes' => array(
@@ -1163,7 +1163,6 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
   $temp_path = $file_attributes['html5_temp_path'];
   // Generate unique path for HTML5 module.
   $gcs_location = $file_attributes['gcs_location'];
-
   $gcs = sbac_media_get_google_cloud_storage();
 
   // Create recursive dir iterator which skips dot folders
@@ -1182,7 +1181,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
       }
       $path = str_replace($temp_path, '', $full_path);
       error_log($gcs_location . $path);
-      $bytes_written = sbac_media_upload_htmm5_file($gcs, $gcs_location . $path, $full_path);
+      $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
       error_log('Bytes Written: ' . $bytes_written);
       if ($bytes_written == NULL || $bytes_written == FALSE) {
         $error_uploading = TRUE;
@@ -1230,7 +1229,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
  *
  * @return bool
  */
-function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
+function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
   try {
     $bucket = SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION;
     $folder = variable_get('google_cdn_folder');
