@@ -155,7 +155,7 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   else if (isset($_SESSION['load_more'][$view->name]['page'])) {
     $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
   }
-  sbac_resource_my_resource_apply_filters($view);
+  // sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
   $my_resources_output = $view->preview();
   // dpq($view->build_info['query']);
