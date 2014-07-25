@@ -521,7 +521,7 @@ function sbac_report_resource_details_pager_form($form, &$form_state, $data) {
       15 => t('Up to 15'),
       -1 => t('All'),
     ),
-    '#default_value' => $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] ? $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] : 5,
+    '#default_value' => isset($_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER]) ? $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] : 5,
     '#ajax' => array(
       'callback' => 'sbac_report_resource_details_pager_form_ajax',
       'wrapper' => 'contriubted-resource-details',
