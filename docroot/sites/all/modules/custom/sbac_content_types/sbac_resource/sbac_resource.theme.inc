@@ -726,6 +726,12 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $url = $thumbnail_pieces[1];
       $ext = pathinfo($uri, PATHINFO_EXTENSION);
       $type = _sbac_resource_determine_extension($ext);
+      $real_path = drupal_realpath($uri);
+      if (!file_exists($real_path)) {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+
       if ($type != 'image') {
         $url = $default_file;
         $uri = $default_file;
