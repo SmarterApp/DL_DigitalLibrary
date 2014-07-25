@@ -3731,8 +3731,10 @@ function sbac_resource_resource_review_subnav_form($form, &$form_state) {
   if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT]) && !empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT])) {
     $resource_tab_count_text = '(' . $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT] . ')';
   }
-  $form['resources_tab'] = array(
-    '#prefix' => '<div class="forum-subnav-primary-wrapper">',
+  $form['container'] = array(
+    '#type' => 'container'
+  );
+  $form['container'] ['resources_tab'] = array(
     '#type' => 'submit',
     '#value' => t('Resources') . ' ' . $resource_tab_count_text,
     '#title' => t('Resources'),
@@ -3746,7 +3748,7 @@ function sbac_resource_resource_review_subnav_form($form, &$form_state) {
   $resubmission_tab_count_text = '';
   if (!empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT]) && $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] > 0) {
     $resubmission_tab_count_text = '(' . $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] . ')';
-    $form['resubmissions_tab'] = array(
+    $form['container'] ['resubmissions_tab'] = array(
       '#type' => 'submit',
       '#value' => t('Resubmissions') . ' ' . $resubmission_tab_count_text,
       '#title' => t('Resubmissions'),
@@ -3754,8 +3756,8 @@ function sbac_resource_resource_review_subnav_form($form, &$form_state) {
         'class' => array($resubmission_tab_classes),
       ),
       '#submit' => array('_sbac_resource_sub_nav__set_resubmission__submit'),
-      '#suffix' => '</div>',
     );
+    $form['container']['#attributes'] = array('class' => array('with-resubmission'));
   }
 
   return $form;
