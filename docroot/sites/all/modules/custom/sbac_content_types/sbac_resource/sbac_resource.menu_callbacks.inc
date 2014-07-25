@@ -34,8 +34,10 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
     $_SESSION['load_more'][$view->name]['page'] = $page;
   }
   // If session is set, change pager.
-  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
-    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+  else {
+    if (isset($_SESSION['load_more'][$view->name]['page'])) {
+      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+    }
   }
 
   sbac_resource_digital_library_apply_filters($view);
@@ -52,7 +54,8 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
       $digital_library_pwd = '';
       $pwd_showhide = '';
       $pwd_showmore = '';
-    } else {
+    }
+    else {
       $pwd_showhide = '<a href="#" id="sbac-pwd-show-hide">Hide</a>';
       $pwd_showmore = '<a href="#" id="sbac-pwd-show-more">Show More</a>';
     }
@@ -118,11 +121,27 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
   }
 
   if ($ajax) {
-    $output['rendered_content'] = theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text, 'pwd' => $pwd_enabled, 'pwd_highlights' => $digital_library_pwd, 'pwd_showhide' => $pwd_showhide, 'pwd_showmore' => $pwd_showmore));
+    $output['rendered_content'] = theme('digital_library', array(
+      'digital_library_output' => $digital_library_output,
+      'no_results' => $no_results,
+      'smart_search_welcome' => $smart_search_text,
+      'pwd' => $pwd_enabled,
+      'pwd_highlights' => $digital_library_pwd,
+      'pwd_showhide' => $pwd_showhide,
+      'pwd_showmore' => $pwd_showmore
+    ));
     return $output;
   }
   else {
-    return theme('digital_library', array('digital_library_output' => $digital_library_output, 'no_results' => $no_results, 'smart_search_welcome' => $smart_search_text, 'pwd' => $pwd_enabled, 'pwd_highlights' => $digital_library_pwd, 'pwd_showhide' => $pwd_showhide, 'pwd_showmore' => $pwd_showmore));
+    return theme('digital_library', array(
+      'digital_library_output' => $digital_library_output,
+      'no_results' => $no_results,
+      'smart_search_welcome' => $smart_search_text,
+      'pwd' => $pwd_enabled,
+      'pwd_highlights' => $digital_library_pwd,
+      'pwd_showhide' => $pwd_showhide,
+      'pwd_showmore' => $pwd_showmore
+    ));
   }
 }
 
@@ -152,8 +171,10 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
     $_SESSION['load_more'][$view->name]['page'] = $page;
   }
   // If session is set, change pager.
-  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
-    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+  else {
+    if (isset($_SESSION['load_more'][$view->name]['page'])) {
+      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+    }
   }
   // sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
@@ -191,19 +212,8 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   }
 }
 
-/**
- * Menu Callback.
- *
- * @return string
- */
-function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
-  $no_results = NULL;
-  (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] : $current_filters = '');
+function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $ajax = FALSE, $resubmission_only = FALSE) {
   $display = sbac_resource_determine_grid_or_list();
-  // Add appropriate JS.
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
-
-  // Load up the view.
   $view = views_get_view('resource_review');
   $view->set_display($display);
   // Remove session load more attribute when search is applied.
@@ -216,14 +226,17 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
     $_SESSION['load_more'][$view->name]['page'] = $page;
   }
   // If session is set, change pager.
-  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
-    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+  else {
+    if (isset($_SESSION['load_more'][$view->name]['page'])) {
+      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+    }
   }
-  sbac_resource_resource_review_apply_filters($view);
+  sbac_resource_resource_review_apply_filters($view, TRUE);
   sbac_resource_resource_review_apply_sorts($view);
+  $view->resubmission_only = $resubmission_only;
   $resource_review_output = $view->preview();
-  // dpq($view->build_info['query']);
-  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $view->total_rows;
+  $total_rows = $view->total_rows;
+  //  dpq($resource_review_output->build_info['query']);
   $output = array();
   if ($ajax) {
     // Create the Drupal.settings attribute
@@ -236,21 +249,63 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
     $output['base_path'] = NULL;
   }
   $view->destroy();
+  return array(
+    'output' => $resource_review_output,
+    'ajax_output' => $output,
+    'count' => $total_rows,
+  );
+}
 
-  if (!$view->total_rows && $current_filters != '') {
+/**
+ * Menu Callback.
+ *
+ * @return string
+ */
+function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
+  $no_results = NULL;
+  (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] : $current_filters = '');
+  // Add appropriate JS.
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
+
+  $resource_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax);
+  $resubmission_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax, TRUE);
+
+  $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT] = $resource_tab['count'];
+  $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] = $resubmission_tab['count'];
+
+  if ($resubmission_tab['count'] == 0) {
+    $active_tab = SBAC_RESOURCE_SUBNAV_RESOURCES;
+  }
+  else {
+    $active_tab = sbac_resource_get_active_subnav();
+  }
+
+  $active_tab_content = array();
+  switch ($active_tab) {
+    case SBAC_RESOURCE_SUBNAV_RESOURCES:
+      $active_tab_content = $resource_tab;
+      break;
+    case SBAC_RESOURCE_SUBNAV_RESUBMISSIONS:
+      $active_tab_content = $resubmission_tab;
+      break;
+  }
+  $resource_output = $active_tab_content['output'];
+  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $active_tab_content['count'];
+  if ($active_tab_content['count'] = 0 && $current_filters != '') {
     // Reset variables
     $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
     $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
     // Set error message
     $no_results = sbac_resource_no_search_results();
   }
+
   menu_set_active_item('resource-review');
   if ($ajax) {
-    $output['rendered_content'] = theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
-    return $output;
+    $active_tab_content['ajax_output']['rendered_content'] = theme('resource_review', array('resource_review_output' => $resource_output, 'no_results' => $no_results));
+    return $active_tab_content['ajax_output'];
   }
   else {
-    return theme('resource_review', array('resource_review_output' => $resource_review_output, 'no_results' => $no_results));
+    return theme('resource_review', array('resource_review_output' => $resource_output, 'no_results' => $no_results));
   }
 }
 
