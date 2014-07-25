@@ -1157,7 +1157,7 @@ function _sbac_resource_get_review_progress($nid = NULL, $uid = NULL, $from_date
   WHEN h.state = 'needs_review' THEN 'Gate-Keeping Review'
   WHEN h.state = 'rejected' THEN 'Returned'
   WHEN h.state = 'published' AND n.sticky = 1 THEN 'Posted with Distinction'
-  WHEN h.state = 'published' AND n.sticky = 0 THEN 'Published'
+  WHEN h.state = 'published' AND n.sticky = 0 THEN 'Posted'
   WHEN h.state = 'approved' THEN 'Arbitration Review'
   WHEN h.state = 'removed' THEN 'Removed'
   WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Gate-Keeping Review'
