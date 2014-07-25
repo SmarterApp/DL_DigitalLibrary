@@ -171,6 +171,19 @@ function sbac_central_init() {
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ * Adds security headers to all pages.
+ * @param  array $vars Template variables.
+ */
+function sbac_central_preprocess_page(&$vars) {
+  drupal_add_http_header('X-Frame-Options', 'SAMEORIGIN');
+  drupal_add_http_header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  drupal_add_http_header('X-Content-Type-Options', 'nosniff');
+  drupal_add_http_header('X-XSS-Protection', '1;mode=block');
+}
+
 /**
  * Determines the users most priveleged role.
  *
