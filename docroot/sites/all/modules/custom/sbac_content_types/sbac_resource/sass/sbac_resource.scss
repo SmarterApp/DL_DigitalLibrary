@@ -3128,10 +3128,16 @@ div[id*="edit-field-copyright-clearace-forms"] {
   clear: both;
   display: block;
   margin-right: 18px;
+  padding: 0 18px 18px;
   text-align: right;
   @include pwd-link;
-  padding: 0 18px 18px;
+  line-height: 1.3;
   @include toggle-wh;  
+}
+
+.pwd-footer-link a,
+.pwd-footer-link a:hover {
+  background-image: url(../images/icon-toggle-down-wh.png);
 }
 
 .digital-library .view-filters {
