@@ -36,7 +36,7 @@ function runModule() {
 		var widthRatio = ((availableWindowWidth/moduleWidth) >= 1) ? 1 : (availableWindowWidth/moduleWidth);
 		var resizeRatio = (heightRatio <= widthRatio) ? heightRatio : widthRatio;
 		window.firstLoad = true;
-		var loadURL = window.location.protocol + jQuery('#contentIframe').attr('src').toLowerCase().replace('coverpage.html','framescale.html');
+		var loadURL = window.location.protocol + jQuery('#contentIframe').attr('src').replace('CoverPage.html','frameScale.html');
 		pQuery.fancybox.open({
 			padding:0,
 			href: loadURL,
