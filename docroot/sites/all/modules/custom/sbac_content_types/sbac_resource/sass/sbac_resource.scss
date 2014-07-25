@@ -1445,9 +1445,23 @@ a.sbac-grid-layout {
 		line-height: 1.6;
   }
 
- .section-container.auto > section .content {
-     margin: 0 -45px;
-   }
+  .section-container {
+    &.auto {
+      &:before {
+        z-index: 3;
+      }
+      > {
+        section {
+          .content {
+            margin: 0 -45px;
+          }
+          .title a {
+            padding: 0 28px;
+          }
+        }
+      }
+    }
+  }
 
   .f-dropdown.open {
     top: 40px !important;
@@ -1817,6 +1831,7 @@ a.sbac-grid-layout {
 
 	.section-container {
 		section:last-child {
+      margin-top: -20px;
 			padding-bottom: 50px;
 		}
 	}
