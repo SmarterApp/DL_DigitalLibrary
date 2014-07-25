@@ -1,9 +1,11 @@
 <div id="profile-wrap">
 	<div class="col narrow">
-	  <?php foreach($node->resource_profile_left as $profile_field) { ?>
-	    <div class="title-tags"><?php echo $profile_field['title'] ?></div>
-	    <?php echo $profile_field['content'] ?>
-	  <?php } ?>
+    <?php if (isset($node->resource_profile_left)) { ?>
+      <?php foreach($node->resource_profile_left as $profile_field) { ?>
+        <div class="title-tags"><?php echo $profile_field['title'] ?></div>
+        <?php echo $profile_field['content'] ?>
+      <?php } ?>
+    <?php } ?>
 	</div>
 
 	<div class="col wide">

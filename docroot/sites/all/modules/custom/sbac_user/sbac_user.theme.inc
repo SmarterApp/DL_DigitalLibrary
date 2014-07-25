@@ -107,7 +107,7 @@ function sbac_user_preprocess_page(&$vars) {
   $last_welcome = isset($user->data['disable_recent']) ? $user->data['disable_recent'] : 0;
   $last_session = $user->login > $last_welcome;
 
-  if ((!$disable_help && $last_session) || !$last_welcome || isset($_SESSION['welcome-update'])) {
+  if (!$disable_help || (!$last_welcome && !$disable_help) || isset($_SESSION['welcome-update'])) {
     drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
   }
 }

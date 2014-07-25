@@ -7,6 +7,7 @@
       $('#sbac-pwd-show-hide').once('pwd-toggle-event', function() {
         $(this).click(function() {
           $('.pwd-collapsable').toggle();
+          $(this).toggleClass('toggle-closed');
           var text = $(this).text();
           if (text == 'Hide') {
             $(this).text('Show');
@@ -36,7 +37,14 @@
           return false;
         });
       });
-    }
+      $('#sbac-pwd-hide-pwd').once('pwd-show-fewer', function() {
+        $(this).click(function() {
+          window.location.hash = '';
+          $('#edit-dl-pwd').click();
+          return false;
+        });
+      });
+    } 
   };
 
   Drupal.behaviors.sbac_resource_hide_checkbox = {
