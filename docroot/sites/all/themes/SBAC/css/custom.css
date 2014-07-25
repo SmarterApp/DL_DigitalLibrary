@@ -9244,7 +9244,7 @@ a.tabledrag-handle .handle {
 /* line 2355, ../sass/custom.scss */
 #modalContent .ctools-modal-content.sbac-welcome {
   padding: 0;
-  height: inherit !important;
+  height: 650px !important;
 }
 /* line 2359, ../sass/custom.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header {
@@ -9345,7 +9345,7 @@ a.tabledrag-handle .handle {
 }
 /* line 2452, ../sass/custom.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container {
-  height: 600px;
+  height: 500px;
   overflow-y: scroll;
   padding: 10px 40px;
   background-color: #F2F2F2;
