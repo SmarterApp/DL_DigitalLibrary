@@ -324,7 +324,7 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
         ),
       ),
     ),
-    '#after_build' => array('sbauc_user_is_complete_after_build'),
+    '#after_build' => array('sbac_user_is_complete_after_build'),
   );
 
   $form['previous'] = array(
@@ -635,7 +635,7 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
  * @param  [type] $form_state [description]
  * @return [type]             [description]
  */
-function sbauc_user_is_complete_after_build($form, &$form_state) {
+function sbac_user_is_complete_after_build($form, &$form_state) {
   if (!empty($form_state['values']['subject_options']) && !empty($form_state['values']['grade_options']) && !empty($form_state['values']['student_population_options'])) {
     $form['#checked'] = TRUE;
   }
