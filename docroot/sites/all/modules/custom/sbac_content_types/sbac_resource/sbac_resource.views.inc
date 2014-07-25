@@ -707,10 +707,10 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
       foreach ($view->custom_filters['resource-status'] as $filter) {
         switch ($filter) {
           case 'gk':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND count(field_data_field_recent_reviewers.field_recent_reviewers_target_id) = 0)';
+            $filter_strings[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND count(field_data_field_recent_reviewers.field_recent_reviewers_target_id) = 1)';
             break;
           case 'qc':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND count(field_data_field_recent_reviewers.field_recent_reviewers_target_id) > 0)';
+            $filter_strings[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND count(field_data_field_recent_reviewers.field_recent_reviewers_target_id) > 1)';
             break;
           case 'draft':
             $filter_strings[] = '(workbench_moderation_node_history.state = \'draft\')';
