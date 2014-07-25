@@ -381,6 +381,13 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     '#description' => t('Select the personal information you would like visible to other Digital Library users.'),
   );
 
+  $visibility_dv = array();
+  if (isset($_SESSION['user_setup']['visibility_opt'])) {
+    foreach ($_SESSION['user_setup']['visibility_opt'] AS $idx => $val) {
+      $visibility_dv[] = $val['value'];
+    }
+  }
+
   $form['visibility_opt'] = array(
     '#type' => 'checkboxes',
     '#options' => array(
@@ -391,7 +398,7 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
       'field_district_name' => 'District(s)',
       'field_introduction' => 'Other Professional Experiences and Accomplishments',
     ),
-    '#default_value' => (isset($_SESSION['user_setup']['visibility_opt']) ? array_values($_SESSION['user_setup']['visibility_opt']) : array()),
+    '#default_value' => $visibility_dv,
   );
 
   $form['opt_container_close'] = array(
@@ -552,7 +559,22 @@ function sbac_user_setup_privacy_form_validate($form, &$form_state) {
  */
 function sbac_user_setup_privacy_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Preview') {
-    $_SESSION['user_setup']['visibility_opt'] = $form_state['input']['visibility_opt'];
+    foreach ($form_state['input']['visibility_opt'] AS $idx => $value) {
+      if ($value) {
+        $_SESSION['user_setup']['visibility_opt'][] = array('value' => $idx);
+      }
+    }
+    $visibility_options = array(
+      'field_first_name' => 'First Name',
+      'field_position' => 'Title',
+      'field-state' => 'State(s)',
+      'field-grade-level-s-' => 'Grade(s)',
+      'field-subject-s-' => 'Subject(s)',
+      'special-populations' => 'Student Populations',
+    );
+    foreach ($visibility_options AS $idx => $name) {
+      $_SESSION['user_setup']['visibility_opt'][] = array('value' => $idx);
+    }
     drupal_goto('sbac-user/setup/4');
   }
 }
@@ -586,6 +608,9 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     $account = user_load($user->uid);
 
     $updates = array();
+    foreach ($_SESSION['user_setup']['visibility_opt'] AS $name => $value) {
+      $updates['field_privacy']['und'][] = array('value' => $value);
+    }
 
     $updates['field_position']['und'][0]['tid'] = $_SESSION['user_setup']['user_title'];
     if ($_SESSION['user_setup']['user_retired']) {
@@ -595,7 +620,6 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     $updates['field_grade_level_s_']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['grade_options']);
     $updates['field_special_populations']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['student_population_options']);
     $updates['field_introduction']['und'][0]['value'] = $_SESSION['user_setup']['about_me'];
-    $updates['field_privacy']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['visibility_opt']);
 
     user_save($account, $updates);
     $_SESSION['welcome-update'] = TRUE;
