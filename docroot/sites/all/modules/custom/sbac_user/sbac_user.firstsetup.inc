@@ -637,7 +637,6 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
  */
 function sbauc_user_is_complete_after_build($form, &$form_state) {
   if (!empty($form_state['values']['subject_options']) && !empty($form_state['values']['grade_options']) && !empty($form_state['values']['student_population_options'])) {
-    dpm($form);
     $form['#checked'] = TRUE;
   }
   return $form;
