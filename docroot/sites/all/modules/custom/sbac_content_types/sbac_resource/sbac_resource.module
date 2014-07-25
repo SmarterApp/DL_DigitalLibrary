@@ -788,7 +788,6 @@ function _sbac_resource_preview_content(&$vars) {
     drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
     drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/moduleScript.js', array('scope' => 'footer'));
     drupal_add_css(drupal_get_path('theme', 'SBAC'), '/js/fancybox/jquery.fancybox.css');
-    $gcs = sbac_media_get_google_cloud_storage();
     $html5 = TRUE;
     $media = $vars['document']['html5'];
     $file = file_load($media->fid);
