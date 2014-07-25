@@ -368,7 +368,7 @@ a.sbac-grid-layout {
 }
 /* line 332, ../sass/sbac_resource.scss */
 .digital-library .resource-card .resoruce-bottom.approved, .page-digital-library-resources .resource-card .resoruce-bottom.approved, .node-resource .resource-card .resoruce-bottom.approved {
-  background-color: #c8e9f7;
+  background-color: #EFF9FD;
 }
 /* line 336, ../sass/sbac_resource.scss */
 .digital-library .resource-card .resoruce-bottom .paradata-numbers, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-numbers, .node-resource .resource-card .resoruce-bottom .paradata-numbers {
@@ -405,7 +405,7 @@ a.sbac-grid-layout {
 }
 /* line 363, ../sass/sbac_resource.scss */
 .digital-library .resource-card .resoruce-bottom .paradata-numbers .rating-count .form-item, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-numbers .rating-count .form-item, .node-resource .resource-card .resoruce-bottom .paradata-numbers .rating-count .form-item {
-  margin: 0 0.25em;
+  margin: 0.25em;
 }
 /* line 366, ../sass/sbac_resource.scss */
 .digital-library .resource-card .resoruce-bottom .paradata-numbers .rating-count .fivestar-widget-static .star, .page-digital-library-resources .resource-card .resoruce-bottom .paradata-numbers .rating-count .fivestar-widget-static .star, .node-resource .resource-card .resoruce-bottom .paradata-numbers .rating-count .fivestar-widget-static .star {
