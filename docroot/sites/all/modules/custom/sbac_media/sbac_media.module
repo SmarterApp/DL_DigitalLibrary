@@ -637,8 +637,6 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
  * @param $form_state
  */
 function sbac_media_build_html5_section(&$form, &$form_state) {
-  error_log("WHAT THE CACHE");
-  watchdog('sbac-media', 'CACHE PROBLEM?');
   // Content Module Container.
   $form['field_content_module_container']['#tree'] = TRUE;
   $form['field_content_module_container'] = array(
@@ -683,9 +681,9 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
         '#weight' => -96,
       );
 
-      $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " . $form['#node']->nid)->fetchObject();
+      $html5_progress = db_query('SELECT * FROM {sbac_html5_progress} WHERE nid = :nid', array(':nid' => $form['#node']->nid))->fetchObject();
       // If there is HTML5 progress record and its set to Finished or Error.
-      if (!$html5_progress || ($html5_progress->status == SBAC_MEDIA_HTML5_FINISHED || $html5_progress->status == SBAC_MEDIA_HTML5_ERROR)) {
+      if ($html5_progress && ($html5_progress->status == SBAC_MEDIA_HTML5_FINISHED || $html5_progress->status == SBAC_MEDIA_HTML5_ERROR)) {
         // Delete link.
         $delete_link = '<div class="columns large-1">'.l('<i class="general foundicon-trash"></i>', 'sbac-media/nojs/delete-media', array(
             'attributes' => array(
@@ -1108,7 +1106,6 @@ function sbac_media_html5_element_upload($form, $form_state) {
   $valid = FALSE;
   drupal_get_messages(); // clear messages if they were some from before.
   $file_attributes = array();
-  error_log("WHAT IS GOING ON");
   sbac_media_save_temp_html5($file_attributes, $form, $form_state);
   if ($file_attributes) {
     // Check that the zip saved.
@@ -1116,6 +1113,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
     if ($no_errors) {
       $valid = sbac_media_save_html5_record($file_attributes, $form_state);
       if ($valid) {
+        sbac_media_move_html5_thumbnail($file_attributes);
         // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
         $callback_options = array(
           array(
@@ -1166,7 +1164,6 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
   $temp_path = $file_attributes['html5_temp_path'];
   // Generate unique path for HTML5 module.
   $gcs_location = $file_attributes['gcs_location'];
-
   $gcs = sbac_media_get_google_cloud_storage();
 
   // Create recursive dir iterator which skips dot folders
@@ -1180,9 +1177,12 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     // an actual foler.
     if (!$fileinfo->isDir()) {
       $full_path = $fileinfo->getPathname();
+      if (strpos($full_path, 'Thumbs.db') !== FALSE || strpos($full_path, '.DS_Store') !== FALSE) {
+        continue;
+      }
       $path = str_replace($temp_path, '', $full_path);
       error_log($gcs_location . $path);
-      $bytes_written = sbac_media_upload_htmm5_file($gcs, $gcs_location . $path, $full_path);
+      $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
       error_log('Bytes Written: ' . $bytes_written);
       if ($bytes_written == NULL || $bytes_written == FALSE) {
         $error_uploading = TRUE;
@@ -1191,10 +1191,11 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     }
   }
 
+  error_log("COMPLETED SOMETHING");
   if (!$error_uploading) {
-    // Save thumbnail
-    sbac_media_move_html5_thumbnail($file_attributes);
+    error_log("VALID");
     // Finish the progress indicator
+    error_log(print_r($file_attributes, TRUE));
     sbac_media_html5_finish_progress($file_attributes['nid']);
     // Remove local HTML5 directory
     $local_directory = "private://html5/" . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'];
@@ -1203,6 +1204,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     }
   }
   else {
+    error_log("BAD UPLOAD");
     // Set an error on the progress
     sbac_media_html5_error_progress($file_attributes['nid']);
     // Send notication to user who submitted HTML5 module
@@ -1230,13 +1232,12 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
  *
  * @return bool
  */
-function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
+function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
   try {
     $bucket = SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION;
     $folder = variable_get('google_cdn_folder');
     $buffer = file_get_contents($file_to_upload);
 
-    error_log("here");
     // Create the Storage Object
     $file = new Google_Service_Storage_StorageObject();
     $path  = str_replace('gs://', '', $gcs_location);
@@ -1247,13 +1248,10 @@ function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
       'mimeType' => $mime_type,
       'data' => $buffer,
     );
-    error_log("here2");
     // Create the MediaFileUpload object
     $chunk_size_bytes = 1 * 1024 * 1024;
     $gcs['client']->setDefer(TRUE);
-    error_log("here3");
     $request = $gcs['service']->objects->insert($bucket, $file, $post_body);
-    error_log(print_r($request, TRUE));
     $media = new Google_Http_MediaFileUpload(
       $gcs['client'],
       $request,
@@ -1268,18 +1266,10 @@ function sbac_media_upload_htmm5_file($gcs, $gcs_location, $file_to_upload) {
     // Send the content in chunks.
     $upload_result = FALSE;
     $pos = 0;
-    error_log("uploading");
-    error_log("pos = " . $pos);
-    error_log("file_size: " . $file_size);
     while (!$upload_result && $pos < $file_size) {
-      error_log("uploading2");
       $chunk = substr($buffer, $pos, $chunk_size_bytes);
-      error_log("uploading3");
-      error_log("chunk: " . $chunk);
       $upload_result = $media->nextChunk($chunk);
-      error_log("uploading4");
       $pos += $chunk_size_bytes;
-      error_log("uploading5");
     }
     // return the result
     if ($upload_result) {
@@ -1331,7 +1321,8 @@ function sbac_media_move_html5_thumbnail($file_attributes) {
  * @param $nid
  */
 function sbac_media_html5_start_progress($nid) {
-  $query = 'INSERT INTO {sbac_html5_progress} VALUES(' . $nid . ',' . SBAC_MEDIA_HTML5_IN_PROGRESS .', ' . time() . ', 0)';
+  $query = 'INSERT INTO {sbac_html5_progress}
+  VALUES(' . $nid . ',' . SBAC_MEDIA_HTML5_IN_PROGRESS .', ' . time() . ', 0)';
   db_query($query);
 }
 
@@ -1341,7 +1332,9 @@ function sbac_media_html5_start_progress($nid) {
  * @param $nid
  */
 function sbac_media_html5_finish_progress($nid) {
-  $query = 'UPDATE {sbac_html5_progress} SET status = ' . SBAC_MEDIA_HTML5_FINISHED .', finish_time = ' . time() . ' WHERE nid = ' . $nid;
+  $query = 'UPDATE {sbac_html5_progress}
+  SET status = ' . SBAC_MEDIA_HTML5_FINISHED .', finish_time = ' . time() . '
+  WHERE nid = ' . $nid;
   db_query($query);
 }
 
@@ -1351,7 +1344,9 @@ function sbac_media_html5_finish_progress($nid) {
  * @param $nid
  */
 function sbac_media_html5_error_progress($nid) {
-  $query = 'UPDATE {sbac_html5_progress} SET status = ' . SBAC_MEDIA_HTML5_ERROR .', finish_time = ' . time() . ' WHERE nid = ' . $nid;
+  $query = 'UPDATE {sbac_html5_progress}
+  SET status = ' . SBAC_MEDIA_HTML5_ERROR .', finish_time = ' . time() . '
+  WHERE nid = ' . $nid;
   db_query($query);
 }
 
@@ -1377,23 +1372,15 @@ function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
   try {
     $allowed_file_types = array('zip');
     $allowed_size = array(SBAC_MEDIA_100MB, 0);
-    error_log($form['#node']->nid);
-    watchdog('sbac-media', $form['#node']->nid);
     $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
-    error_log($directory);
-    watchdog('sbac-media', $directory);
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-    error_log('writable: ' . $writable);
-    watchdog('sbac-media', $writable);
     if ($writable) {
       $validators = array(
         'file_validate_extensions' => $allowed_file_types,
         'file_validate_size' => $allowed_size,
       );
       // File is temporarily saved.
-      error_log('uploading');
       $file = file_save_upload('field_content_module_picker', $validators, $directory, FILE_EXISTS_REPLACE);
-      error_log('uploading 22');
       if ($file) {
         // Open the zip and save the file.
         $real_path = drupal_realpath($file->uri);
@@ -1842,15 +1829,17 @@ function sbac_media_delete_media($js = FALSE) {
 function sbac_media_html5_delete_asynchronous($directory) {
   $google_directory = str_replace('private://', '', $directory);
   $gcs = sbac_media_get_google_cloud_storage();
-  $folder = variable_get('google_cdn_folder');
-  $response = $gcs['service']->objects->listObjects(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, array('prefix' => $folder . '/' . $google_directory));
-  if ($response && isset($response['modelData']) && isset($response['modelData']['items'])) {
-    foreach ($response['modelData']['items'] as $object) {
-      $url = urldecode($object['selfLink']);
-      $pos = strpos($url, 'html5/');
-      $url = substr($url, $pos);
-      error_log($url);
-      $deleted = $gcs['service']->objects->delete('sbac_media', $folder . '/' . $url);
+  if ($gcs) {
+    $folder = variable_get('google_cdn_folder');
+    $response = $gcs['service']->objects->listObjects(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, array('prefix' => $folder . '/' . $google_directory));
+    if ($response && isset($response['modelData']) && isset($response['modelData']['items'])) {
+      foreach ($response['modelData']['items'] as $object) {
+        $url = urldecode($object['selfLink']);
+        $pos = strpos($url, 'html5/');
+        $url = substr($url, $pos);
+        error_log($folder . '/' . $url);
+        $deleted = $gcs['service']->objects->delete(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, $folder . '/' . $url);
+      }
     }
   }
 }
@@ -1862,9 +1851,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
  */
 function sbac_media_html5_delete_thumbnail($nid) {
   $thumbnail_dir = 'private://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
-  error_log($thumbnail_dir);
   if (file_exists($thumbnail_dir)) {
-    error_log('file existed, delete it');
     file_unmanaged_delete_recursive($thumbnail_dir);
   }
 }

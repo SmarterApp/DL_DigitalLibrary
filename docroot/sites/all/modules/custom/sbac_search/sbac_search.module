@@ -20,6 +20,7 @@ define('SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS', 'sbac-external-resources-filter
 
 define('SBAC_SEARCH_MY_RESOURCES_SORTS', 'sbac-my-resources-sorts');
 define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS', 'sbac-digital-library-sorts');
+define('SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD', 'sbac-digital-library-pwd');
 define('SBAC_SEARCH_RESOURCE_REVIEW_SORTS', 'sbac-resource-review-sorts');
 
 define('SBAC_SEARCH_MY_RESOURCES_COUNT', 'sbac-my-resources-count');
@@ -106,16 +107,19 @@ function sbac_resource_clear_library_page() {
         $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
         $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
         $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = '';
+        unset($_SESSION['load_more']['resources']['page']);
         drupal_goto($location);
         break;
       case 'my-resources':
         $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = '';
         $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = '';
+        unset($_SESSION['load_more']['my_resources']['page']);
         drupal_goto($location);
         break;
       case 'resource-review':
         $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
         $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = '';
+        unset($_SESSION['load_more']['resource_review']['page']);
         drupal_goto($location);
         break;
     }

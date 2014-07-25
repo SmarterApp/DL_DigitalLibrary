@@ -1,5 +1,7 @@
 @import "compass/css3/";
 
+$table-grey: #a1a4a8;
+$white: #fff;
 
 /* -----------------------------------------
     Variables and Mixins
@@ -145,6 +147,7 @@ i.icon-info {
     select {
       width: 85px;
 			font-size: 0.8em;
+			border: 1px solid #aaa;
     }
   }
 }
@@ -468,6 +471,50 @@ select#edit-limit {
 			text-align: left;
 			background: none repeat scroll 0 0 #FFFFFF;
 		}
+
+
+		.view-contributed-resources {
+			table {
+				border: none;
+			}
+
+			.sbac_report_reviews_empty {
+				visibility: hidden;
+				border: none;
+			}
+
+			.sbac_report_collaboration_activity {
+				border: none;
+				text-align: center;
+				background-color: $table-grey;
+				background-image: none;
+				text-transform: uppercase;
+				color: $white;
+				font-size: 12px;
+								border-radius: 12px 12px 0 0;
+
+			}
+
+			th {
+				text-align: center;
+
+				&.views-field-rating {
+					width: 100px;
+				}
+			}
+
+			td {
+				text-align: center;
+
+				a {
+					text-decoration: underline;
+				}
+
+				&.views-field-nid-active {
+					text-align: left;
+				}
+			}
+		}
 	}
 
 	.form-item-display {
@@ -482,6 +529,7 @@ select#edit-limit {
 		width: 85px;
 		margin-bottom: 30px;
 		font-size: 0.8em;
+		border: 1px solid #aaa;
 	}
 }
 

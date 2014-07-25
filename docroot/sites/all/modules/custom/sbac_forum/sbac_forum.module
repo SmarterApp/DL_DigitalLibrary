@@ -204,6 +204,14 @@ function sbac_forum_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+
+  $items['sbac-forum/load-more'] = array(
+    'title' => 'Load More Forum Data',
+    'page callback' => 'sbac_forum_load_more_ajax',
+    'access arguments' => array('access content'),
+    'file' => 'includes/sbac_forum.pages.inc',
+  );
+
   return $items;
 }
 

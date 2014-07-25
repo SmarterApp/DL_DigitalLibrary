@@ -1,6 +1,5 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
-
   /**
    * Click functionality of the categories.
    *
@@ -17,6 +16,12 @@
         }
       );
 
+      $('#edit-dl-sort-order').once('searchfilterbutton', function(){
+        $(this).click ( function () {
+          window.location.hash = '';
+        });
+      });
+
       $(document).click(function() {
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
@@ -26,7 +31,7 @@
       });
 
       $('#sbac-search-filter-button').once('searchfilterbutton', function(){
-        $('#sbac-search-filter-button').click(function() {
+        $(this).click(function() {
           var isEdit = Drupal.settings.sbac_search.isEdit;
 
           // The button is in edit state.
@@ -218,49 +223,51 @@
   Drupal.behaviors.sbac_remove_categories = {
     attach: function (context, settings) {
       // Remove's the individual filters.
-      $('#sbac-category-current-filters .current-filter').click( function() {
-        $('.selectedDiv').hide();
-        var reset_filters = $('#edit-reset-filters');
-        var search_button = $('#sbac-search-filter-button');
-        var current_filters = $('#sbac-search-current-filters');
-        var vid = $(this).children().attr('vid');
-        var tid = $(this).children().attr('tid');
-        var first_try = '::' + vid + ':' + tid;
-        var second_try = vid + ':' + tid;
-        if (current_filters.val() != '') {
-          var current_filters_string = current_filters.val();
-          var pos = current_filters_string.indexOf(first_try);
+      $('#sbac-category-current-filters .current-filter').once('cmod-cathide', function () {
+        $('#sbac-category-current-filters .current-filter').click(function () {
+          $('.selectedDiv').hide();
+          var reset_filters = $('#edit-reset-filters');
+          var search_button = $('#sbac-search-filter-button');
+          var current_filters = $('#sbac-search-current-filters');
+          var vid = $(this).children().attr('vid');
+          var tid = $(this).children().attr('tid');
+          var first_try = '::' + vid + ':' + tid;
+          var second_try = vid + ':' + tid;
+          if (current_filters.val() != '') {
+            var current_filters_string = current_filters.val();
+            var pos = current_filters_string.indexOf(first_try);
 
-          if (pos >= 0) {
-            var newvalue = current_filters_string.replace(first_try, '');
-            current_filters.val(newvalue);
-            $(this).remove();
-            $('.category-filter-' + vid + '-' + tid).removeClass('current');
-          }
-          else {
-            var pos2 = current_filters_string.indexOf(second_try);
-            if (pos2 >= 0) {
-              var newvalue = current_filters_string.replace(second_try, '');
+            if (pos >= 0) {
+              var newvalue = current_filters_string.replace(first_try, '');
               current_filters.val(newvalue);
               $(this).remove();
               $('.category-filter-' + vid + '-' + tid).removeClass('current');
             }
-          }
+            else {
+              var pos2 = current_filters_string.indexOf(second_try);
+              if (pos2 >= 0) {
+                var newvalue = current_filters_string.replace(second_try, '');
+                current_filters.val(newvalue);
+                $(this).remove();
+                $('.category-filter-' + vid + '-' + tid).removeClass('current');
+              }
+            }
 
-          if (current_filters.val() == '') {
-            $('.categories-current-filters').addClass('noshow');
-            reset_filters.addClass('js-hide');
-            search_button.addClass('js-hide');
-            $('.category-hide').text(Drupal.t('Show Categories'));
-            $('.category-hide').removeClass('active');
-            $('.category-hide').removeClass('js-hide');
-            $('.slideable').hide();
-            Drupal.settings.sbac_search.isEdit = 0;
-            $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
-            $('#sbac-search-digital-library-resources-form').submit();
+            if (current_filters.val() == '') {
+              $('.categories-current-filters').addClass('noshow');
+              reset_filters.addClass('js-hide');
+              search_button.addClass('js-hide');
+              $('.category-hide').text(Drupal.t('Show Categories'));
+              $('.category-hide').removeClass('active');
+              $('.category-hide').removeClass('js-hide');
+              $('.slideable').hide();
+              Drupal.settings.sbac_search.isEdit = 0;
+              $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
+              $('#sbac-search-digital-library-resources-form').submit();
+            }
           }
-        }
-        return false;
+          return false;
+        });
       });
     }
   };
@@ -319,10 +326,146 @@
       if ($('.sbac-search-textbox').val() != '') {
         $('.form-item-search-block-form').append('<span class="sbac-clear-search"></span>');
       }
-
-      $('.pager-next a').html('Show More Resources').addClass('button');
     }
   };
+
+
+  /**
+   * Handles ajax pager via hash in URL
+   *
+   * @type {{attach: Function}}
+   */
+  var ajax_request = null;
+  var has_run_once = false;
+  var clicked = false;
+  var pager_count = 0;
+  Drupal.behaviors.sbac_search_load_more = {
+    attach: function (context, settings) {
+      // Change the button text
+      if ($('.pwd-highlight').length) {
+        var loadMoreButton = 'More Resources Posted With Distinction';
+      }
+      else {
+        var loadMoreButton = 'Show More Resources';
+      }
+      $('.pager-next a').html(loadMoreButton).addClass('button');
+
+      // On click, add the hash in the URL.
+      $('.pager-next a').once('pager-next-click', function () {
+        $(this).click( function() {
+          var href = $(this).attr('href');
+          var pos = href.indexOf('?');
+          if (pos > -1) {
+            var query = href.substring(pos);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+              var pair = vars[i].split("=");
+              if (pair[0] == 'page') {
+                pager_count = pair[1];
+              }
+            }
+          }
+          else {
+            pager_count++;
+          }
+          window.location.hash = 'pager=' + pager_count;
+          clicked = true;
+        });
+      });
+
+      // Move and resize the modalBackdrop on resize of the window
+      modalBackdropResize = function(){
+        // Get our heights
+        var docHeight = $(document).height();
+        var docWidth = $(document).width();
+        var winHeight = $(window).height();
+        var winWidth = $(window).width();
+        if( docHeight < winHeight ) docHeight = winHeight;
+        // Apply the changes
+        $('#modalBackdrop').css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+      };
+      $(window).bind('resize', modalBackdropResize);
+
+      var hash = window.location.hash;
+      if (hash != '' && !has_run_once && !clicked) {
+        var pager = hash.replace('#pager=', '');
+        if (ajax_request == null) {
+          if (self.pageYOffset) { // all except Explorer
+            var wt = self.pageYOffset;
+          } else if (document.documentElement && document.documentElement.scrollTop) { // Explorer 6 Strict
+            var wt = document.documentElement.scrollTop;
+          } else if (document.body) { // all other Explorers
+            var wt = document.body.scrollTop;
+          }
+          // Get the docHeight and (ugly hack) add 50 pixels to make sure we dont have a *visible* border below our div
+          var docHeight = $(document).height() + 50;
+          var docWidth = $(document).width();
+          var winHeight = $(window).height();
+          var winWidth = $(window).width();
+          if( docHeight < winHeight ) docHeight = winHeight;
+
+          // Create CSS attributes
+          css = jQuery.extend({
+            position: 'absolute',
+            left: '0px',
+            margin: '0px',
+            background: '#000',
+            opacity: '.55'
+          }, {});
+
+          // Add opacity handling for IE.
+          css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
+          var img_location = '/sites/all/themes/sbac/images/foundation/orbit/loading.gif';
+          var img = '<img src="' + img_location + '" alt="Smiley face" height="42" width="42">';
+          $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div><div id="modalContent" style="z-index: 1001; position: absolute;">' + img + '</div>');
+          // Create our content div, get the dimensions, and hide it
+          var modalContent = $('#modalContent').css('top','-1000px');
+          var mdcTop = wt + ( winHeight / 2 ) - (  modalContent.outerHeight() / 2);
+          var mdcLeft = ( winWidth / 2 ) - ( modalContent.outerWidth() / 2);
+          $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+          modalContent.css({top: mdcTop + 'px', left: mdcLeft + 'px'});
+
+          // Make the request
+          ajax_request = $.ajax({
+            type: 'POST',
+            url: "/sbac-resource/load-more",
+            data: {'view' : 'resources', 'page' : pager},
+            success: function(data) {
+              // Parse the response
+              var response = jQuery.parseJSON(data);
+              // Inject the content
+              if ($('.pwd-highlights-container').length) {
+                $('.pwd-highlights-container').remove();
+              }
+              $('.row.digital-library').replaceWith(response.rendered_content);
+              // Create fake setting to attach new view_dom_id to handlers.
+              var dom_id = 'views_dom_id:' + response.view_dom_id;
+              var setting = {};
+              setting[dom_id] = {
+                'pager_element' : response.pager_element,
+                'view_args' : response.view_args,
+                'view_base_path' : response.view_base_path,
+                'view_display_id' : response.view_display_id,
+                'view_dom_id' : response.view_dom_id,
+                'view_name' : response.view_name,
+                'view_path' : response.view_path
+              };
+
+              // Attach new behavior.
+              settings.views.ajaxViews = setting;
+              Drupal.attachBehaviors($('.row.digital-library'), settings);
+              has_run_once = true;
+              $('#modalBackdrop').remove();
+              $('#modalContent').remove();
+            },
+            error: function(data) {
+            }
+          });
+        }
+      }
+    }
+  };
+
 
   Drupal.behaviors.sbac_search_clear = {
     attach: function (context, settings) {

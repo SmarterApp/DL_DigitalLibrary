@@ -174,6 +174,12 @@ function sbac_resource_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-resource/load-more'] = array(
+    'title' => 'Load More View Data',
+    'page callback' => 'sbac_resource_load_more_ajax',
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 
@@ -784,21 +790,28 @@ function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
   $html5 = FALSE;
   if (isset($vars['document']['html5'])) {
-    // Add required js and css files
-    drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
-    drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/moduleScript.js', array('scope' => 'footer'));
-    drupal_add_css(drupal_get_path('theme', 'SBAC'), '/js/fancybox/jquery.fancybox.css');
-    $gcs = sbac_media_get_google_cloud_storage();
-    $html5 = TRUE;
-    $media = $vars['document']['html5'];
-    $file = file_load($media->fid);
-    $path_variables = explode('::', $media->document_id);
-    $folder = variable_get('google_cdn_folder');
+    $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " .$vars['nid'])->fetchObject();
+    if ($html5_progress && $html5_progress->status == SBAC_MEDIA_HTML5_FINISHED) {
+      // Add required js and css files
+      drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
+      drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/moduleScript.js', array('scope' => 'footer'));
+      drupal_add_css(drupal_get_path('theme', 'SBAC'), '/js/fancybox/jquery.fancybox.css');
+      $html5 = TRUE;
+      $media = $vars['document']['html5'];
+      $file = file_load($media->fid);
+      $path_variables = explode('::', $media->document_id);
+      $folder = variable_get('google_cdn_folder');
 
-    // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
-    $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid'] / 32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
-    $viewer['viewer_filename'] = ucwords($path_variables[1]);
-    $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+      // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
+      $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid']/32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
+      $viewer['viewer_filename'] = ucwords($path_variables[1]);
+      $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+    }
+    else {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview-html5.jpg';
+      $viewer['viewer_filename'] = 'Processing...';
+      $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
+    }
   }
 
   if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
@@ -1325,6 +1338,10 @@ function sbac_resource_theme_registry_alter(&$theme_registry) {
   if (isset($theme_registry['status_messages'])) {
     $theme_registry['status_messages']['function'] = 'sbac_resource_status_messages';
   }
+  if (isset($theme_registry['views_load_more_pager'])) {
+    $theme_registry['views_load_more_pager']['function'] = 'theme_sbac_resource_views_load_more_pager';
+    $theme_registry['views_load_more_pager']['theme path'] = 'sites/all/modules/custom/sbac_content_types/sbac_resource';
+  }
 }
 
 /**
@@ -1478,6 +1495,35 @@ function sbac_resource_node_load($nodes, $types) {
   if (!in_array('resource', $types)) {
     return;
   }
+
+  // Save a variable for the nid that is loaded, used to scroll to loaded node
+//  if (isset($_SERVER['HTTP_REFERER']) && count($nodes) == 1) {
+//    global $base_url;
+//    $resource_node = array_pop($nodes);
+//    $url = str_replace($base_url . '/', '', $_SERVER['HTTP_REFERER']);
+//    if ($url == 'moderation' || $url == 'digital-library-resources' || $url == 'resource-review' || $url == 'my-resources' || $url == 'forums') {
+//      switch ($url) {
+//        case 'moderation':
+//          $name = 'moderation';
+//          break;
+//        case 'digital-library-resources':
+//          $name = 'resources';
+//          break;
+//        case 'resource-review':
+//          $name = 'resource_review';
+//          break;
+//        case 'my-resources':
+//          $name = 'my_resources';
+//          break;
+//        case 'forums':
+//          $name = 'forums';
+//          break;
+//      }
+//      if (isset($name)) {
+//        $_SESSION['load_more'][$name]['nid'] = $resource_node->nid;
+//      }
+//    }
+//  }
 
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
@@ -2223,10 +2269,14 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   elseif (isset($node->document[0])) {
     $media = $node->document[0];
     if ($media->fid) {
-      $file = file_load($media->fid);
-      $url = file_create_url($file->uri);
-      $uri = $file->uri;
-      $exists = file_exists($uri);
+      $exists = FALSE;
+      $load_chk = pathinfo($media->filename, PATHINFO_EXTENSION);
+      if (_sbac_resource_determine_file_type_icon($load_chk) != 'video') {
+        $file = file_load($media->fid);
+        $url = file_create_url($file->uri);
+        $uri = $file->uri;
+        $exists = file_exists($uri);
+      }
       if (!$exists) {
         $url = $default_file;
         $uri = $default_file;
@@ -2492,7 +2542,21 @@ function sbac_resource_block_view($delta = '') {
       if (strpos($previous_url, $base_url) !== FALSE) {
         $previous_url = str_replace($base_url, '', $previous_url);
       }
-      $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      $js = FALSE;
+      switch ($previous_url) {
+        case '/moderation':
+        case '/digital-library-resources':
+        case '/resource-review':
+        case '/my-resources':
+          $js = TRUE;
+          break;
+      }
+      if ($js) {
+        $block['content'] = '<span class="button" onclick="window.history.back(-1);">Back</span>';
+      }
+      else {
+        $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      }
       break;
     case 'sbac_resource_dl_sort_form':
       $block['subject'] = NULL;
@@ -3256,5 +3320,104 @@ function sbac_resource_image_style_create_derivative_alter(&$style, &$image_uri,
     if (strpos($derivative_uri, 'gs://') !== FALSE) {
       $derivative_uri = str_replace('gs://', 'private://', $derivative_uri);
     }
+  }
+}
+
+/**
+ * Load more of the view data.
+ */
+function sbac_resource_load_more_ajax() {
+  $view = $_POST['view'];
+  $page = $_POST['page'];
+  module_load_include('inc', 'sbac_resource', 'sbac_resource.menu_callbacks');
+  $output = array();
+  if ($view == 'resources') {
+    $output = sbac_resource_digital_library_page($page, TRUE);
+  }
+  if ($view == 'resource_review') {
+    $output = sbac_resource_resource_review_page($page, TRUE);
+  }
+  if ($view == 'my_resources') {
+    $output = sbac_resource_my_resources_page($page, TRUE);
+  }
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Override views load more pager
+ *
+ * @param $vars
+ * @return string
+ */
+function theme_sbac_resource_views_load_more_pager($vars) {
+  global $pager_page_array, $pager_total;
+
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
+
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
+
+  global $base_url;
+  $referer = str_replace($base_url . '/', '', $_SERVER['HTTP_REFERER']);
+  $view_name = '';
+  switch ($referer) {
+    case 'digital-library-resources':
+      $view_name = 'resources';
+      break;
+    case 'resource-review':
+      $view_name = 'resource_review';
+      break;
+    case 'my-resources':
+      $view_name = 'my_resources';
+      break;
+  }
+
+  // Because we dynamically change the items per page, we need
+  // to update the global pager and tell it where on page X now.
+  $old_url = NULL;
+  if (isset($_POST['page'])) {
+    $pager_page_array[0] = $_POST['page'];
+    $pager_total[0] += $_POST['page'];
+    $old_url = $_GET['q'];
+    $_GET['q'] = $referer;
+  }
+  else if (isset($_SESSION['load_more'][$view_name]['page'])) {
+    $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
+    $pager_total[0] +=  $_SESSION['load_more'][$view_name]['page'];
+    $old_url = $_GET['q'];
+    $_GET['q'] = $referer;
+  }
+
+  $li_next = theme('pager_next',
+    array(
+      'text' => (isset($tags[3]) ? $tags[3] : t($vars['more_button_text'])),
+      'element' => $element,
+      'interval' => 1,
+      'parameters' => $parameters,
+    )
+  );
+  if (empty($li_next)) {
+    $li_next = "&nbsp;";
+  }
+
+  if ($pager_total[$element] > 1) {
+    $items[] = array(
+      'class' => array('pager-next'),
+      'data' => $li_next,
+    );
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager', 'pager-load-more')),
+      )
+    );
+  }
+
+  if ($old_url) {
+    $_GET['q'] = $old_url;
   }
 }

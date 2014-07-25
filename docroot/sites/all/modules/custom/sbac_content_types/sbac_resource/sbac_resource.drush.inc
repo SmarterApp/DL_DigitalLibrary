@@ -216,18 +216,22 @@ function drush_sbac_resource_update_node_review_averages() {
 }
 
 function drush_sbac_resource_update_thumbnails() {
+
+  $current_limit = drush_memory_limit();
+  ini_set('memory_limit', '1048M');
+
   $row = 0;
   $start_time = time();
-  drush_print('Start time', $start_time);
+  // drush_print('Start time', $start_time);
 
   $max_nid = db_query("SELECT MAX(n.nid)
                        FROM   {node} n
                        WHERE  n.type = 'resource'
                       ")->fetchField();
 
-  $current_nid = 0;
+  $current_nid = 148356;
   $chunk_size = drush_get_option('chunk-size', 25);
-  drush_print(dt('Updating thumbnails for Resource nodes.'));
+  // drush_print(dt('Updating thumbnails for Resource nodes.'));
 
   while ($current_nid <= $max_nid) {
     $query = db_select('node', 'n');
@@ -251,4 +255,5 @@ function drush_sbac_resource_update_thumbnails() {
   }
 
   drush_print('Start time was: ' . $start_time . ' End time is: ', time());
+  ini_set('memory_limit', $current_limit);
 }

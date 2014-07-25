@@ -1401,6 +1401,34 @@ function sbac_resource_views_default_views() {
     27 => 0,
   );
   $handler->display->display_options['filters']['keys']['remove_score'] = TRUE;
+  /* Filter criterion: Content: Sticky */
+  $handler->display->display_options['filters']['sticky']['id'] = 'sticky';
+  $handler->display->display_options['filters']['sticky']['table'] = 'node';
+  $handler->display->display_options['filters']['sticky']['field'] = 'sticky';
+  $handler->display->display_options['filters']['sticky']['value'] = 'All';
+  $handler->display->display_options['filters']['sticky']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['sticky']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['sticky']['expose']['label'] = 'Sticky';
+  $handler->display->display_options['filters']['sticky']['expose']['operator'] = 'sticky_op';
+  $handler->display->display_options['filters']['sticky']['expose']['identifier'] = 'sticky';
+  $handler->display->display_options['filters']['sticky']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+  );
 
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
