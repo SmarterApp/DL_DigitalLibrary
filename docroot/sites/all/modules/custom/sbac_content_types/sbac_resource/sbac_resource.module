@@ -1062,13 +1062,13 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
         $url_option = $url;
         break;
       case 'no_img':
-        $url_option = 'public://file.png';
-        break;
-      case 'na':
         $url_option = 'na';
         break;
+      case 'na':
+        $url_option = 'public://file.png';
+        break;
       default:
-        $url_option = 'public://doc.png';
+        $url_option = 'public://file.png';
         break;
     }
     $urls[] = $url_option;
@@ -2270,19 +2270,18 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
     $media = $node->document[0];
     if ($media->fid) {
       $exists = FALSE;
-      $load_chk = pathinfo($media->filename, PATHINFO_EXTENSION);
-      if (_sbac_resource_determine_file_type_icon($load_chk) != 'video') {
+      $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
+      if (_sbac_resource_determine_file_type_icon($ext) != 'video') {
         $file = file_load($media->fid);
         $url = file_create_url($file->uri);
         $uri = $file->uri;
         $exists = file_exists($uri);
       }
-      if (!$exists) {
+      if (!$exists && $load_chk != 'video') {
         $url = $default_file;
         $uri = $default_file;
       }
       else {
-        $ext = pathinfo($file->filename, PATHINFO_EXTENSION);
         $thumb_opts = _sbac_resource_determine_card_image($ext);
         $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
         $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid);
