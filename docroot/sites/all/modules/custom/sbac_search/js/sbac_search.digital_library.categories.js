@@ -388,79 +388,81 @@
 
       var hash = window.location.hash;
       if (hash != '' && !has_run_once && !clicked) {
-        var pager = hash.replace('#pager=', '');
-        if (ajax_request == null) {
-          if (self.pageYOffset) { // all except Explorer
-            var wt = self.pageYOffset;
-          } else if (document.documentElement && document.documentElement.scrollTop) { // Explorer 6 Strict
-            var wt = document.documentElement.scrollTop;
-          } else if (document.body) { // all other Explorers
-            var wt = document.body.scrollTop;
-          }
-          // Get the docHeight and (ugly hack) add 50 pixels to make sure we dont have a *visible* border below our div
-          var docHeight = $(document).height() + 50;
-          var docWidth = $(document).width();
-          var winHeight = $(window).height();
-          var winWidth = $(window).width();
-          if( docHeight < winHeight ) docHeight = winHeight;
-
-          // Create CSS attributes
-          css = jQuery.extend({
-            position: 'absolute',
-            left: '0px',
-            margin: '0px',
-            background: '#000',
-            opacity: '.55'
-          }, {});
-
-          // Add opacity handling for IE.
-          css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
-          var img_location = '/sites/all/themes/sbac/images/foundation/orbit/loading.gif';
-          var img = '<img src="' + img_location + '" alt="Smiley face" height="42" width="42">';
-          $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div><div id="modalContent" style="z-index: 1001; position: absolute;">' + img + '</div>');
-          // Create our content div, get the dimensions, and hide it
-          var modalContent = $('#modalContent').css('top','-1000px');
-          var mdcTop = wt + ( winHeight / 2 ) - (  modalContent.outerHeight() / 2);
-          var mdcLeft = ( winWidth / 2 ) - ( modalContent.outerWidth() / 2);
-          $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
-          modalContent.css({top: mdcTop + 'px', left: mdcLeft + 'px'});
-
-          // Make the request
-          ajax_request = $.ajax({
-            type: 'POST',
-            url: "/sbac-resource/load-more",
-            data: {'view' : 'resources', 'page' : pager},
-            success: function(data) {
-              // Parse the response
-              var response = jQuery.parseJSON(data);
-              // Inject the content
-              if ($('.pwd-highlights-container').length) {
-                $('.pwd-highlights-container').remove();
-              }
-              $('.row.digital-library').replaceWith(response.rendered_content);
-              // Create fake setting to attach new view_dom_id to handlers.
-              var dom_id = 'views_dom_id:' + response.view_dom_id;
-              var setting = {};
-              setting[dom_id] = {
-                'pager_element' : response.pager_element,
-                'view_args' : response.view_args,
-                'view_base_path' : response.view_base_path,
-                'view_display_id' : response.view_display_id,
-                'view_dom_id' : response.view_dom_id,
-                'view_name' : response.view_name,
-                'view_path' : response.view_path
-              };
-
-              // Attach new behavior.
-              settings.views.ajaxViews = setting;
-              Drupal.attachBehaviors($('.row.digital-library'), settings);
-              has_run_once = true;
-              $('#modalBackdrop').remove();
-              $('#modalContent').remove();
-            },
-            error: function(data) {
+        if (hash.indexOf('#pager=') > -1) {
+          var pager = hash.replace('#pager=', '');
+          if (ajax_request == null) {
+            if (self.pageYOffset) { // all except Explorer
+              var wt = self.pageYOffset;
+            } else if (document.documentElement && document.documentElement.scrollTop) { // Explorer 6 Strict
+              var wt = document.documentElement.scrollTop;
+            } else if (document.body) { // all other Explorers
+              var wt = document.body.scrollTop;
             }
-          });
+            // Get the docHeight and (ugly hack) add 50 pixels to make sure we dont have a *visible* border below our div
+            var docHeight = $(document).height() + 50;
+            var docWidth = $(document).width();
+            var winHeight = $(window).height();
+            var winWidth = $(window).width();
+            if( docHeight < winHeight ) docHeight = winHeight;
+
+            // Create CSS attributes
+            css = jQuery.extend({
+              position: 'absolute',
+              left: '0px',
+              margin: '0px',
+              background: '#000',
+              opacity: '.55'
+            }, {});
+
+            // Add opacity handling for IE.
+            css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
+            var img_location = '/sites/all/themes/sbac/images/foundation/orbit/loading.gif';
+            var img = '<img src="' + img_location + '" alt="Smiley face" height="42" width="42">';
+            $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div><div id="modalContent" style="z-index: 1001; position: absolute;">' + img + '</div>');
+            // Create our content div, get the dimensions, and hide it
+            var modalContent = $('#modalContent').css('top','-1000px');
+            var mdcTop = wt + ( winHeight / 2 ) - (  modalContent.outerHeight() / 2);
+            var mdcLeft = ( winWidth / 2 ) - ( modalContent.outerWidth() / 2);
+            $('#modalBackdrop').css(css).css('top', 0).css('height', docHeight + 'px').css('width', docWidth + 'px').show();
+            modalContent.css({top: mdcTop + 'px', left: mdcLeft + 'px'});
+
+            // Make the request
+            ajax_request = $.ajax({
+              type: 'POST',
+              url: "/sbac-resource/load-more",
+              data: {'view' : 'resources', 'page' : pager},
+              success: function(data) {
+                // Parse the response
+                var response = jQuery.parseJSON(data);
+                // Inject the content
+                if ($('.pwd-highlights-container').length) {
+                  $('.pwd-highlights-container').remove();
+                }
+                $('.row.digital-library').replaceWith(response.rendered_content);
+                // Create fake setting to attach new view_dom_id to handlers.
+                var dom_id = 'views_dom_id:' + response.view_dom_id;
+                var setting = {};
+                setting[dom_id] = {
+                  'pager_element' : response.pager_element,
+                  'view_args' : response.view_args,
+                  'view_base_path' : response.view_base_path,
+                  'view_display_id' : response.view_display_id,
+                  'view_dom_id' : response.view_dom_id,
+                  'view_name' : response.view_name,
+                  'view_path' : response.view_path
+                };
+
+                // Attach new behavior.
+                settings.views.ajaxViews = setting;
+                Drupal.attachBehaviors($('.row.digital-library'), settings);
+                has_run_once = true;
+                $('#modalBackdrop').remove();
+                $('#modalContent').remove();
+              },
+              error: function(data) {
+              }
+            });
+          }
         }
       }
     }
