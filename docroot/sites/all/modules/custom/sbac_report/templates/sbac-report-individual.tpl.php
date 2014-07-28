@@ -23,7 +23,8 @@
                   table below displays information about your posted resource(s).'); ?></p>
     <?php print $resource_statistics; ?>
   <?php endif; ?>
-  <h2>Contributed Resource Status</h2>
+  <h2>Resource Submission Status</h2>
+  <p><?php print t('The table below displays the status of your submitted resource(s).'); ?></p>
   <?php print $contributed_details; ?>
   </div>
   <div style="clear:both;"></div>
