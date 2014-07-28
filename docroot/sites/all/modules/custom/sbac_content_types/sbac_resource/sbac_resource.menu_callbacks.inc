@@ -59,7 +59,9 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
       $pwd_showhide = '<a href="#" id="sbac-pwd-show-hide">Hide</a>';
       $pwd_showmore = '<a href="#" id="sbac-pwd-show-more">Show More</a>';
     }
+    // dpq($pwd_view->build_info['query']);
     $pwd_view->destroy();
+    clear_views_exposed_filter_cache($pwd_view->name, $display);
   }
   else {
     $pwd_showhide = '<a href="#" id="sbac-pwd-hide-pwd">Hide</a>';
