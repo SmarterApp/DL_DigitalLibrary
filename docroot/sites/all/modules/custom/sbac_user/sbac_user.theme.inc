@@ -111,7 +111,7 @@ function sbac_user_preprocess_page(&$vars) {
     drupal_goto('sbac-user/setup');
   }
 
-  if ((!$last_welcome && !$disable_help) || isset($_SESSION['welcome-update'])) {
+  if ((!$last_welcome && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
     drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
   }
 }
@@ -198,10 +198,10 @@ function sbac_user_preprocess_user_setup_preview(&$vars) {
     $filepath = variable_get('user_picture_default', '');
     $vars['profile_picture'] = theme('image', array('path' => '' . $filepath));
   }
-  if (in_array('field_school_name', $privacy)) {
+  if (in_array('field_school_name', $privacy) && isset($account->field_school_name['und'])) {
     $vars['school'] = $account->field_school_name['und'][0]['value'];
   }
-  if (in_array('field_district_name', $privacy) && isset($account->field_district_name)) {
+  if (in_array('field_district_name', $privacy) && isset($account->field_district_name['und'])) {
     $vars['district'] = $account->field_district_name['und'][0]['value'];
   }
   if (in_array('field_last_name', $privacy)) {
