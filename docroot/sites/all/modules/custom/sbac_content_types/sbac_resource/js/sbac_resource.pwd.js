@@ -3,7 +3,12 @@
 
   Drupal.behaviors.sbac_resource_pwd_toggle = {
     attach: function (context, settings) {
-
+      $(document).ready(function() {
+        alert($.cookie('sbac-pwd-reel-hide'));
+        if ($.cookie('sbac-pwd-reel-hide') == 0) {
+          $('#sbac-pwd-show-hide').click();
+        }
+      });
       $('#sbac-pwd-show-hide').once('pwd-toggle-event', function() {
         $(this).click(function() {
           $('.pwd-collapsable').toggle();
@@ -11,9 +16,11 @@
           var text = $(this).text();
           if (text == 'Hide') {
             $(this).text('Show');
+            $.cookie('sbac-pwd-reel-hide', 0);
           }
           else {
             $(this).text('Hide');
+            $.cookie('sbac-pwd-reel-hide', 1);
           }
           return false;
         });
