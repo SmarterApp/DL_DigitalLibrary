@@ -683,12 +683,6 @@ function _sbac_resource_resources_view_query_alter(&$view, &$query) {
  */
 function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
   global $user;
-  $view->query->add_table('sbac_node_resource_state');
-  $view->query->add_field('sbac_node_resource_state', 'uid', 'sbac_node_resource_state_uid');
-  $view->query->add_field('sbac_node_resource_state', 'state', 'sbac_node_resource_state_state');
-  $view->query->add_field('sbac_node_resource_state', 'flag', 'sbac_node_resource_state_flag');
-  $user_condition = db_and()->condition('sbac_node_resource_state.state', "author")->condition('sbac_node_resource_state.uid', $user->uid);
-  $view->query->add_where('AND', $user_condition);
   $node_condition = db_or()->condition('node.uid', $user->uid);
   $view->query->add_where('AND', $node_condition);
   $view->query->add_groupby('node.nid');
@@ -696,44 +690,46 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
   if (!empty($view->custom_filters)) {
     if (!empty($view->custom_filters['resource-status'])) {
       $join = new views_join();
-      $join->construct('eck_feedback', 'node', 'nid', 'node_id', "eck_feedback.created > IFNULL((SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1), 0)");
+      $join->construct('eck_feedback', 'node', 'nid', 'node_id', "eck_feedback.created > IFNULL((SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1), 0)", 'INNER');
       $query->add_table('eck_feedback', 'node', $join);
 
-      $join = new views_join();
-      $join->construct('field_data_field_recent_reviewers', 'node', 'nid', 'entity_id', 'eck_feedback.uid = field_data_field_recent_reviewers.field_recent_reviewers_target_id');
-      $query->add_table('field_data_field_recent_reviewers', 'node', $join);
-
-      $filter_strings = array();
+      $having = array();
+      $states = array();
       foreach ($view->custom_filters['resource-status'] as $filter) {
         switch ($filter) {
           case 'gk':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND count(field_data_field_recent_reviewers.field_recent_reviewers_target_id) = 1)';
+            $states[] = 'being_reviewed';
+            $having[] = 'max(eck_feedback.completed) = 0';
             break;
           case 'qc':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND count(field_data_field_recent_reviewers.field_recent_reviewers_target_id) > 1)';
+            $states[] = 'being_reviewed';
+            $having[] = 'max(eck_feedback.completed) = 1';
             break;
           case 'draft':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'draft\')';
+            $states[] = 'draft';
             break;
           case 'posted':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'published\')';
+            $states[] = 'published';
             break;
           case 'submitted':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'needs_review\')';
+            $states[] = 'needs_review';
             break;
           case 'artbitration':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'approved\')';
+            $states[] = 'approved';
             break;
           case 'returned':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'rejected\')';
+            $states[] = 'rejected';
             break;
           case 'removed':
-            $filter_strings[] = '(workbench_moderation_node_history.state = \'removed\')';
+            $states[] = 'removed';
             break;
         }
       }
-      if (!empty($filter_strings)) {
-        $query->add_having_expression(count($query->having), implode(' OR ', $filter_strings));
+      if(!empty($states)){
+        $view->query->add_where(count($view->query->where), 'workbench_moderation_node_history.state', $states);
+      }
+      if (!empty($having)) {
+        $query->add_having_expression(count($query->having), implode(' OR ', $having));
       }
     }
   }
@@ -797,9 +793,10 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
       _sbac_resource_resource_review_apply_stock_both_role($view);
     }
   }
-  if(isset($view->resubmission_only) && $view->resubmission_only === TRUE){
+  if (isset($view->resubmission_only) && $view->resubmission_only === TRUE) {
     $query->add_where_expression(count($query->where), "(SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1) IS NOT NULL");
-    $query->add_where(count($query->where), db_or()->condition('field_data_field_recent_reviewers.field_recent_reviewers_target_id', $user->uid)->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid));
+    $query->add_where(count($query->where), db_or()->condition('field_data_field_recent_reviewers.field_recent_reviewers_target_id', $user->uid)
+      ->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid));
   }
 }
 
