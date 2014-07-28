@@ -2655,6 +2655,21 @@ a.tabledrag-handle .handle {
   }
 }
 
+.page-user     {
+  .counter {
+    text-align: right;
+    margin: 10px 0;
+    font-size: 12px;
+    float: right;
+    padding: 10px 10px 10px 50px;
+
+      &.warning {
+        background-position: 8px 4px;
+      }
+    }
+}
+
+
 .page-admin-structure-types-manage-resource {
   .description {
     margin-bottom: 2.5em;

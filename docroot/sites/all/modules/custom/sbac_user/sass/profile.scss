@@ -382,10 +382,10 @@ h2.name {
       text-align: right;
 			float: right;
       /*border-top: 1px #aaa solid;*/
-      padding-top: 20px;
-			width: 67%;
+  		width: 67%;
+      margin-top: 0;
     }
-    .counter {
+/*    .counter {
       position: absolute;
       right: 5px;
       padding: 0;
@@ -396,7 +396,7 @@ h2.name {
         border: none;
         background: none;
       }
-    }
+    }*/
     .description {
       display: inline-block;
     }
@@ -460,6 +460,19 @@ h2.name {
 	.section-container.auto:before {
 		left: -55px;
 	}
+
+/*    .counter {
+      position: absolute;
+      right: 5px;
+      padding: 0;
+      margin: 0;
+      font-size: 12px;
+
+      &.warning {
+        border: none;
+        background: none;
+      }
+    }*/
 }
 
 .user-profile {
@@ -980,7 +993,8 @@ h2.name {
     }
 
     .form-type-textarea {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      overflow: auto;
 
       textarea {
         height: 225px;
@@ -992,6 +1006,10 @@ h2.name {
       .counter {
         text-align: right;
         font-size: 12px;
+        float: right;
+        background-position: 8px 4px;
+        margin: 6px 0;
+        padding: 10px 10px 10px 50px;
       }
     }
 
