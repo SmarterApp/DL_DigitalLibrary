@@ -666,7 +666,7 @@ a.sbac-grid-layout {
 
         .field-content {
           display: inline-block;
-					vertical-align: top;
+					vertical-align: middle;
         }
       }
 
@@ -730,11 +730,13 @@ a.sbac-grid-layout {
 		margin: 5px 0;
 	}
 }
+
 .page-digital-library-resources {
 
 	.view-display-id-list_view {
 
 	  .resource-card {
+
 	    .column.large-10 {
 				float: left;
 				height: 68px;
@@ -3052,7 +3054,16 @@ div[id*="edit-field-copyright-clearace-forms"] {
 		.f-dropdown {
 		left: 13px !important;
 		}
+    .form-item {
+      margin-left: 1em;
+    }
 	}
+  #main.large-12 {
+    padding: 0;
+    .view-resources.view-display-id-list_view {
+      padding: 0 15px;
+    }
+  }
 }
 
 /* Posted With Distinction. */
@@ -3069,10 +3080,17 @@ div[id*="edit-field-copyright-clearace-forms"] {
   }
 }
 
+#sbac-resource-digital-library-sort-form {
+  .form-item-error-holder {
+    float: none;
+  }
+}
+
 #sbac-pwd-check,
 #form-wrapper-dl-sort-element {
   display: inline-block;
 }
+
 
 #sbac-pwd-check {
   #edit-dl-pwd {
@@ -3114,7 +3132,7 @@ div[id*="edit-field-copyright-clearace-forms"] {
 
 .pwd-highlight {
   padding: 0 15px;
-  .column {
+  .large-12 {
     padding: 22px 0 0;
     @include pwd-background;
     .view {
