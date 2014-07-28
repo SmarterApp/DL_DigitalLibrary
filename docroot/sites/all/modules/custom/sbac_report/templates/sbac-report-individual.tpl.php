@@ -29,19 +29,19 @@
   <div style="clear:both;"></div>
   <h2><?php print t('Resource Reviews'); ?></h2>
   <h3><?php print t('Gate-Keeping Reviews'); ?></h3>
-  <p><?php print t('The table below includes decisions this reviewer made based
+  <p><?php print t('The table below includes decisions you made based
                   on the Gate-Keeping Criteria during the selected period of
-                  time, including the resources the reviewer accepted and
-                  moved forward to Quality Criteria Reviews and those the
-                  reviewer returned to the contributor(s).'); ?></p>
+                  time, including the resources you accepted and
+                  moved forward to Quality Criteria Reviews and those you
+                  returned to the contributor(s).'); ?></p>
   <?php print $gate_keeping; ?>
 
   <div style="clear:both;"></div>
   <h3><?php print t('Quality Criteria Reviews'); ?></h3>
   <p><?php print t('The table below includes the number of Quality Criteria Reviews
-                    the reviewer has started but not yet completed,
-                    and the total number Quality Criteria Reviews the reviewer
-                    has completed in the selected time period.'); ?></p>
+                    you have started but not yet completed,
+                    and the total number Quality Criteria Reviews you have
+                    completed in the selected time period.'); ?></p>
   <?php print $all_reviews; ?>
   <?php $help_link = l('help topics', 'help-topics') ;?>
   <h3><?php print t('Consistency Analysis of Quality Criteria Reviews'); ?></h3>

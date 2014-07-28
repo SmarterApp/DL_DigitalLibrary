@@ -935,21 +935,28 @@ function sbac_user_user_login(&$edit, $account) {
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
   if (!isset($edit['sbac-share'])) {
+    error_log("here we are1");
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
     if ($account->data['login_count'] == 1 || (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+      error_log("here we are1");
       $_GET['destination'] = 'sbac-user/setup';
+      error_log("here we are2");
     }
     elseif (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
+      error_log("here we are3");
       $relay = $edit['sbac_sso_relay'];
       $path = drupal_valid_path($relay);
       if ($path) {
+        error_log("here we are4");
         drupal_goto($relay);
       }
       else {
+        error_log("here we are5");
         drupal_goto('digital-library-resources');
       }
     }
     else {
+      error_log("here we are6");
       drupal_goto('digital-library-resources');
     }
   }
