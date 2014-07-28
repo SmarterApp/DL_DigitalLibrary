@@ -180,6 +180,13 @@ function sbac_resource_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-resource/update-thumbnail'] = array(
+    'title' => 'Update Resource Thumbnail',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_update_thumb_form'),
+    'access arguments' => array('configure sbac'),
+  );
+
   return $items;
 }
 
@@ -1062,7 +1069,7 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
         $url_option = $url;
         break;
       case 'no_img':
-        $url_option = 'na';
+        $url_option = 'no_img';
         break;
       case 'na':
         $url_option = 'public://file.png';
@@ -1130,7 +1137,7 @@ function _sbac_resource_embed_vid_thumb_url($media) {
  * @param  int $nid Node ID.
  * @return string           uri::url
  */
-function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
+function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) {
   $thumbnail_exists = FALSE;
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
@@ -1143,29 +1150,31 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
       $ext = explode('/', $type);
       $ext = array_pop($ext);
       $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
-      $filename = $filename . '.' . $ext;
+      if ($filename) {
+        $filename = $filename . '.' . $ext;
+        if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+          $download = system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
 
-      if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
-        $download = system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
-
-        if ($download) {
-          $uri_url['uri'] = $download->uri;
-          $uri_url['url'] = $url;
-          $thumbnail_exists = TRUE;
+          if ($download) {
+            $uri_url['uri'] = $download->uri;
+            $uri_url['url'] = $url;
+            $thumbnail_exists = TRUE;
+          }
+          else {
+            watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
+          }
         }
         else {
-          watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
+          watchdog('sbac_resource', 'Unable to make dir: ' . $dir, array(), WATCHDOG_NOTICE);
         }
       }
-      else {
-        watchdog('sbac_resource', 'Unable to make dir: ' . $dir, array(), WATCHDOG_NOTICE);
-      }
+    }
+    elseif ($url == 'no_img' && !$thumbnail_exists) {
+      $uri_url['uri'] = 'no_img';
+      $uri_url['url'] = 'no_img';
+      $thumbnail_exists = TRUE;
     }
     elseif ($url == 'na' && !$thumbnail_exists) {
-      $uri_url['uri'] = 'na';
-      $uri_url['url'] = 'na';
-    }
-    elseif ($url != 'na' && !$thumbnail_exists) {
       $uri_url['uri'] = $default_file;
       $uri_url['url'] = $default_file;
       $thumbnail_exists = TRUE;
@@ -2268,6 +2277,8 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   }
   elseif (isset($node->document[0])) {
     $media = $node->document[0];
+    $url = '';
+    $uri = '';
     if ($media->fid) {
       $exists = FALSE;
       $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
@@ -2277,13 +2288,14 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
         $uri = $file->uri;
         $exists = file_exists($uri);
       }
-      if (!$exists && $load_chk != 'video') {
-        $url = $default_file;
-        $uri = $default_file;
+      $thumb_opts = _sbac_resource_determine_card_image($ext);
+      $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
+      if (!$exists || ($thumb_opts[0] == 'no_img')) {
+        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, NULL, $nid);
+        $url = $thumb_url['url'];
+        $uri = $thumb_url['uri'];
       }
       else {
-        $thumb_opts = _sbac_resource_determine_card_image($ext);
-        $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
         $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid);
         $url = $thumb_url['url'];
         $uri = $thumb_url['uri'];
