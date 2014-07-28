@@ -1281,6 +1281,7 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
   }
   catch (Exception $e) {
     watchdog_exception('google_cdn', $e, 'HTML5 Upload Exception');
+    watchdog('google_cdn', 'Unable to upload file: ' . $folder . '/' . $path);
     return FALSE;
   }
 }

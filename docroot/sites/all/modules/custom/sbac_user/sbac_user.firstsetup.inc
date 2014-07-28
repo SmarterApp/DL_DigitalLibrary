@@ -13,6 +13,8 @@ function sbac_user_setup_callback($page = '1') {
     ),
   );
 
+  error_log("here we are 7");
+
   switch ($page) {
     case '1':
       return drupal_build_form('sbac_user_setup_pi_form', $form_state);
@@ -191,6 +193,8 @@ function sbac_user_setup_pi_form($form, &$form_state) {
       ),
     ),
   );
+
+  error_log('tada');
 
   return $form;
 }
