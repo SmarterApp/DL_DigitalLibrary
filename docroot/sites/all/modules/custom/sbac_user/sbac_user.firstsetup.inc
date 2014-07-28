@@ -13,6 +13,8 @@ function sbac_user_setup_callback($page = '1') {
     ),
   );
 
+  error_log("here we are 7");
+
   switch ($page) {
     case '1':
       return drupal_build_form('sbac_user_setup_pi_form', $form_state);
@@ -191,6 +193,8 @@ function sbac_user_setup_pi_form($form, &$form_state) {
       ),
     ),
   );
+
+  error_log('tada');
 
   return $form;
 }
@@ -560,6 +564,7 @@ function sbac_user_setup_privacy_form_validate($form, &$form_state) {
  */
 function sbac_user_setup_privacy_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Preview') {
+    $_SESSION['user_setup']['visibility_opt'] = array();
     foreach ($form_state['input']['visibility_opt'] AS $idx => $value) {
       if ($value) {
         $_SESSION['user_setup']['visibility_opt'][] = array('value' => $idx);

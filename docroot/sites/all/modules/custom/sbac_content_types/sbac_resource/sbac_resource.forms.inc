@@ -3812,3 +3812,63 @@ function sbac_resource_set_active_subnav($value = NULL) {
     $_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE] = '';
   }
 }
+
+/**
+ * Form to update resource thumbnails.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_resource_update_thumb_form($form, &$form_state) {
+  $form = array();
+
+  $form['node_id'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Resource nid',
+    '#required' => TRUE,
+    '#description' => t('Enter the Node ID to be updated.'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Update Thumbnail',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_validate().
+ * Ensures that the node ID is a valid resource node.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_resource_update_thumb_form_validate($form, &$form_state) {
+  if (!is_numeric($form_state['values']['node_id'])) {
+    form_set_error('node_id', t('Please enter a number value.'));
+  }
+  $query = db_select('node', 'node');
+  $query->fields('node', array('type'));
+  $query->condition('nid', $form_state['values']['node_id'], '=');
+  $result = $query->execute()->fetchAssoc();
+  if (array_pop($result) != 'resource') {
+    form_set_error('node_id', t($form_state['values']['node_id'] . ' is not a resource node type.'));
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ * Updates the resource node's thumbnail.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_resource_update_thumb_form_submit($form, &$form_state) {
+  if ($node = node_load($form_state['values']['node_id'])) {
+    sbac_resource_determine_thumbnail_uri($node);
+    entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+    $path = drupal_get_path_alias('node/' . $node->nid);
+    drupal_goto($path);
+  }
+}

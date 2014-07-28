@@ -111,7 +111,7 @@ function sbac_user_preprocess_page(&$vars) {
     drupal_goto('sbac-user/setup');
   }
 
-  if ((!$last_welcome && !$disable_help) || isset($_SESSION['welcome-update'])) {
+  if ((!$last_welcome && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
     drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
   }
 }
@@ -179,7 +179,12 @@ function sbac_user_preprocess_user_setup_preview(&$vars) {
   $vars['subjects'] = '<ul>' . sbac_user_make_list($_SESSION['user_setup']['subject_options']) . '</ul>';
   $vars['population'] = '<ul>' . sbac_user_make_list($_SESSION['user_setup']['student_population_options']) . '</ul>';
 
-  if (isset($_SESSION['user_setup']['visibility_opt']['picture'])) {
+  $privacy = array();
+  foreach ($_SESSION['user_setup']['visibility_opt'] AS $row) {
+    $privacy[] = $row['value'];
+  }
+
+  if (in_array('picture', $privacy)) {
     $file = file_load($_SESSION['user_setup']['profile_image']);
     if ($file) {
       $vars['profile_picture'] = theme('image', array('path' => $file->uri));
@@ -193,19 +198,19 @@ function sbac_user_preprocess_user_setup_preview(&$vars) {
     $filepath = variable_get('user_picture_default', '');
     $vars['profile_picture'] = theme('image', array('path' => '' . $filepath));
   }
-  if (isset($_SESSION['user_setup']['visibility_opt']['field_school_name'])) {
+  if (in_array('field_school_name', $privacy) && isset($account->field_school_name['und'])) {
     $vars['school'] = $account->field_school_name['und'][0]['value'];
   }
-  if (isset($_SESSION['user_setup']['visibility_opt']['field_district_name']) && isset($account->field_district_name)) {
+  if (in_array('field_district_name', $privacy) && isset($account->field_district_name['und'])) {
     $vars['district'] = $account->field_district_name['und'][0]['value'];
   }
-  if (isset($_SESSION['user_setup']['visibility_opt']['field_last_name'])) {
+  if (in_array('field_last_name', $privacy)) {
     $vars['last_name'] = $_SESSION['user_setup']['last_name'];
   }
-  if (isset($_SESSION['user_setup']['visibility_opt']['mail'])) {
+  if (in_array('mail', $privacy)) {
     $vars['email'] = l($_SESSION['user_setup']['mail'], 'mailto:' . $_SESSION['user_setup']['mail'], array('absolute' => TRUE));
   }
-  if (isset($_SESSION['user_setup']['visibility_opt']['field_introduction'])) {
+  if (in_array('field_introduction', $privacy)) {
     $vars['about'] = $_SESSION['user_setup']['about_me'];
   }
 }

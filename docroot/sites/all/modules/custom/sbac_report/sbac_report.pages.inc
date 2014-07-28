@@ -293,7 +293,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
             WHERE ((node.uid = :uid))
               AND ((  (node.status = '1')
                 AND   (node.type IN ('resource'))
-                -- AND   (node.sticky <> '0')
+                AND   (workbench_moderation_node_history.current = 1)
                 AND   (workbench_moderation_node_history.state IN ('published')) ))
               AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))
             GROUP BY  node_title,
