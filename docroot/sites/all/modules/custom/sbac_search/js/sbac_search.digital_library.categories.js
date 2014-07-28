@@ -251,6 +251,8 @@
                 $(this).remove();
                 $('.category-filter-' + vid + '-' + tid).removeClass('current');
               }
+              $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
+              Drupal.settings.sbac_search.isEdit = 0;
             }
 
             if (current_filters.val() == '') {

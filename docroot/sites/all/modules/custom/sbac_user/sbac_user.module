@@ -908,6 +908,13 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
  * @param $account
  */
 function sbac_user_user_login(&$edit, $account) {
+  if (!isset($edit['sbac-share'])) {
+    // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
+    if ($account->data['login_count'] == 1 || (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+      drupal_goto('sbac-user/setup');
+    }
+  }
+
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -935,11 +942,7 @@ function sbac_user_user_login(&$edit, $account) {
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
   if (!isset($edit['sbac-share'])) {
-    // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-    if ($account->data['login_count'] == 1 || (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
-      $_GET['destination'] = 'sbac-user/setup';
-    }
-    elseif (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
+    if (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
       $relay = $edit['sbac_sso_relay'];
       $path = drupal_valid_path($relay);
       if ($path) {

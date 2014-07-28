@@ -560,6 +560,7 @@ function sbac_user_setup_privacy_form_validate($form, &$form_state) {
  */
 function sbac_user_setup_privacy_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Preview') {
+    $_SESSION['user_setup']['visibility_opt'] = array();
     foreach ($form_state['input']['visibility_opt'] AS $idx => $value) {
       if ($value) {
         $_SESSION['user_setup']['visibility_opt'][] = array('value' => $idx);

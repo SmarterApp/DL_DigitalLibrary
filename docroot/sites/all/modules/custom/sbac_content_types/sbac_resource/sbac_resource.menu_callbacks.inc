@@ -59,7 +59,9 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
       $pwd_showhide = '<a href="#" id="sbac-pwd-show-hide">Hide</a>';
       $pwd_showmore = '<a href="#" id="sbac-pwd-show-more">Show More</a>';
     }
+    // dpq($pwd_view->build_info['query']);
     $pwd_view->destroy();
+    clear_views_exposed_filter_cache($pwd_view->name, $display);
   }
   else {
     $pwd_showhide = '<a href="#" id="sbac-pwd-hide-pwd">Hide</a>';
@@ -176,7 +178,7 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
       $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
     }
   }
-  // sbac_resource_my_resource_apply_filters($view);
+  sbac_resource_my_resource_apply_filters($view);
   sbac_resource_my_resource_apply_sorts($view);
   $my_resources_output = $view->preview();
   // dpq($view->build_info['query']);

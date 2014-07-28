@@ -229,7 +229,7 @@ function drush_sbac_resource_update_thumbnails() {
                        WHERE  n.type = 'resource'
                       ")->fetchField();
 
-  $current_nid = 148356;
+  $current_nid = 0;
   $chunk_size = drush_get_option('chunk-size', 25);
   // drush_print(dt('Updating thumbnails for Resource nodes.'));
 

@@ -1209,7 +1209,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     sbac_media_html5_error_progress($file_attributes['nid']);
     // Send notication to user who submitted HTML5 module
     // and needs to know about the problem.
-    if ($task = taskit_get_object('html5UploadError')) {
+    if ($task = taskit_get_object('html5_upload_error')) {
       $task->addVisibility($task::VISIBILITY_USER);
       $task->addEntity('node', $file_attributes['nid']);
       $task->addOwningUser($file_attributes['uid']);
@@ -1281,6 +1281,7 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
   }
   catch (Exception $e) {
     watchdog_exception('google_cdn', $e, 'HTML5 Upload Exception');
+    watchdog('google_cdn', 'Unable to upload file: ' . $folder . '/' . $path);
     return FALSE;
   }
 }
