@@ -306,7 +306,7 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   }
   $resource_output = $active_tab_content['output'];
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $active_tab_content['count'];
-  if ($active_tab_content['count'] = 0 && $current_filters != '') {
+  if (0 == $active_tab_content['count'] && '' != $current_filters) {
     // Reset variables
     $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
     $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
