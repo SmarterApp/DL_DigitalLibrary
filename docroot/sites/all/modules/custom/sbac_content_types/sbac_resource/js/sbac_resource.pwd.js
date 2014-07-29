@@ -41,6 +41,7 @@
         $(this).click(function() {
           window.location.hash = '';
           $('#edit-dl-pwd').click();
+          window.scrollTo(0, 0);
           return false;
         });
       });
