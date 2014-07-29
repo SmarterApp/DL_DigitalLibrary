@@ -6,6 +6,8 @@
       if ($.cookie('sbac-pwd-reel-hide') == 1) {
         // $('#sbac-pwd-show-hide').click();
         $('.pwd-collapsable').hide();
+        $('#sbac-pwd-show-hide').toggleClass('toggle-closed');
+        $('#sbac-pwd-show-hide').text('Show');
       };
       $('#sbac-pwd-show-hide').once('pwd-toggle-event', function() {
         $(this).click(function() {
