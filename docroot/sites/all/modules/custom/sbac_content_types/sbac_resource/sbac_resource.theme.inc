@@ -1266,7 +1266,7 @@ function _sbac_resource_resource_review_links($fields, $row) {
       case 'approved':
         // what state is approved?
         // -- post_needs_review, post_being_reviewed
-        if ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_flag == 'post_being_reviewed') {
+        if ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_state == 'post_being_reviewed') {
           $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post', 'query' => array('destination' => arg(0))));
           $link = l('Continue Review', $url);
           $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
