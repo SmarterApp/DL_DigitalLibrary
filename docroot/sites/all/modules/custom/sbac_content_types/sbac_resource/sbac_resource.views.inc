@@ -690,7 +690,7 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
   if (!empty($view->custom_filters)) {
     if (!empty($view->custom_filters['resource-status'])) {
       $join = new views_join();
-      $join->construct('eck_feedback', 'node', 'nid', 'node_id', "eck_feedback.created > IFNULL((SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1), 0)", 'INNER');
+      $join->construct('eck_feedback', 'node', 'nid', 'node_id', "eck_feedback.created > IFNULL((SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1), 0)");
       $query->add_table('eck_feedback', 'node', $join);
 
       $having = array();
