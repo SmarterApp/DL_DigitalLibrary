@@ -1144,48 +1144,61 @@ function _sbac_resource_my_resources_links($fields) {
  * @return \DatabaseStatementInterface|null
  */
 function _sbac_resource_get_review_progress($nid = NULL, $uid = NULL, $from_date = NULL, $to_date = NULL, $limit = NULL, $order = NULL, $order_direction = 'ASC') {
-  $query = db_select('node', 'n');
+  $query = db_select('node', 'n1');
   // get the history
-  $query->innerJoin('workbench_moderation_node_history', 'h', 'h.nid = n.nid');
+  $query->innerJoin('workbench_moderation_node_history', 'h1', 'h1.nid = n1.nid');
   // get the feedback. Make sure we're only getting the completed feedback since the submission/resubmission
-  $query->leftJoin('eck_feedback', 'f', "f.node_id = n.nid AND f.completed = 1 AND f.created > IFNULL((SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = n.nid AND h2.from_state = 'draft' and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1), 0)");
-  // get the reviewers
-  $query->leftJoin('field_data_field_recent_reviewers', 'r', 'r.field_recent_reviewers_target_id = f.uid AND n.nid = r.entity_id');
-  $query->fields('n', array('nid', 'title', 'created', 'sticky'));
+  $query->fields('n1', array('nid', 'title', 'created', 'sticky'));
   $query->addExpression("
   CASE
-  WHEN h.state = 'needs_review' THEN 'Gate-Keeping Review'
-  WHEN h.state = 'rejected' THEN 'Returned'
-  WHEN h.state = 'published' AND n.sticky = 1 THEN 'Posted with Distinction'
-  WHEN h.state = 'published' AND n.sticky = 0 THEN 'Posted'
-  WHEN h.state = 'approved' THEN 'Arbitration Review'
-  WHEN h.state = 'removed' THEN 'Removed'
-  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Gate-Keeping Review'
-  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 1 THEN 'Quality Criteria Review 1'
-  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 2 THEN 'Quality Criteria Review 2'
-  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 3 THEN 'Quality Criteria Review 3'
+  WHEN h1.state = 'needs_review' THEN 'Submitted'
+  WHEN h1.state = 'rejected' THEN 'Returned'
+  WHEN h1.state = 'published' AND n1.sticky = 1 THEN 'Posted with Distinction'
+  WHEN h1.state = 'published' AND n1.sticky = 0 THEN 'Posted'
+  WHEN h1.state = 'approved' THEN 'Arbitration Review'
+  WHEN h1.state = 'removed' THEN 'Removed'
+  WHEN h1.state = 'being_reviewed' THEN (
+    SELECT
+      CASE
+      WHEN count(*) = 0 THEN 'Gate-Keeping Review'
+      WHEN count(*) = 1 THEN 'Quality Criteria Review 1'
+      WHEN count(*) = 2 THEN 'Quality Criteria Review 2'
+      WHEN count(*) > 2 THEN 'Quality Criteria Review 3'
+      END AS state
+    FROM eck_feedback f3
+    WHERE
+      f3.created > IFNULL((
+                            SELECT
+                              max(h4.stamp)
+                            FROM node n4 LEFT JOIN workbench_moderation_node_history h4
+                                ON h4.nid = n4.nid
+                            WHERE n4.nid = n1.nid AND h4.from_state = 'draft' AND h4.state = 'needs_review'
+                            GROUP BY h4.nid
+                            HAVING COUNT(h4.nid) > 1), 0)
+      AND f3.completed = 1
+      AND f3.node_id = n1.nid)
   END", 'state');
-  $query->condition('n.type', 'resource');
-  $query->condition('h.state', array('draft'), 'NOT IN');
-  $query->condition('h.current', 1);
+  $query->condition('n1.type', 'resource');
+  $query->condition('h1.state', array('draft'), 'NOT IN');
+  $query->condition('h1.current', 1);
   if ($uid) {
-    $query->condition('n.uid', $uid);
+    $query->condition('n1.uid', $uid);
   }
   if ($nid) {
-    $query->condition('n.nid', $nid);
+    $query->condition('n1.nid', $nid);
   }
-  $query->groupBy('n.nid');
+  $query->groupBy('n1.nid');
   if ($order && $order == 'state') {
     $query->orderBy('state', $order_direction);
   }
   else {
-    $query->orderBy('n.created', $order_direction);
+    $query->orderBy('n1.created', $order_direction);
   }
   if ($limit && $limit != -1) {
     $query->range(0, $limit);
   }
   if ($from_date && $to_date) {
-    $query->where("DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date", array(':from_date' => $from_date, ':to_date' => $to_date));
+    $query->where("DATE_FORMAT((DATE_ADD('19700101', INTERVAL n1.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date", array(':from_date' => $from_date, ':to_date' => $to_date));
   }
 //  dpq($query);
   return $query->execute();
