@@ -147,7 +147,6 @@ function sbac_user_preprocess_user_setup_nav(&$vars) {
  * @return [type]       [description]
  */
 function sbac_user_preprocess_user_setup_preview(&$vars) {
-
   global $user;
   $account = user_load($user->uid);
 
@@ -185,7 +184,7 @@ function sbac_user_preprocess_user_setup_preview(&$vars) {
   }
 
   if (in_array('picture', $privacy)) {
-    $file = file_load($_SESSION['user_setup']['profile_image']);
+    $file = file_load($_SESSION['user_setup']['temp_profile_image']);
     if ($file) {
       $vars['profile_picture'] = theme('image', array('path' => $file->uri));
     }
