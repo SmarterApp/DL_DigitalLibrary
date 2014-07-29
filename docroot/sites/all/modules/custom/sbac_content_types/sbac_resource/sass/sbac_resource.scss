@@ -938,7 +938,6 @@ a.sbac-grid-layout {
 	.resource-card {
 		.column.large-4 {
 			width: 26%;
-
 			.resource-button {
 				margin-top: 10px;
 				margin-bottom: 0;
@@ -949,21 +948,30 @@ a.sbac-grid-layout {
   #sbac-resource-resource-review-subnav-form {
     padding-left: 25px;
     float: left;
-
     button {
       padding: 11px 18px;
       height: auto;
       line-height: 1;
-      border-width: 1px 0;
       min-width: 208px;
+      border-top: 1px solid rgba(255,255,255,0.3);
+      border-right: 1px solid rgba(0,0,0,0.6);
+      border-bottom: 1px solid rgba(0,0,0,0.6);
+      @include background-image(linear-gradient(#F2F2F2, #F4F4F4 15%, #F9F9F9 100%, #F9F9F9));
+      color: #464B54;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.6);
+      &.is-pressed {
+        border-top: 1px solid rgba(0,0,0,0.6);
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+        border-width: 1px 0;
+        @include background-image(linear-gradient(#03516D, #03516D 0%, #006082 30%, #006082));
+        color: #fff;
+        text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+      }
     }
   }
   #edit-resources-tab {
     margin-right: -3px;
     @include border-radius(6px);
-    border-top: 1px solid rgba(0,0,0,0.6);
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-    @include background-image(linear-gradient(#03516D, #03516D 0%, #006082 30%, #006082));
   }
 
   .with-resubmission {
@@ -972,18 +980,11 @@ a.sbac-grid-layout {
     }
   }
 
-
   #edit-resubmissions-tab {
     @include border-radius(0 6px 6px 0);
-    border-top: 1px solid rgba(255,255,255,0.3);
-    border-right: 1px solid rgba(0,0,0,0.6);
-    border-bottom: 1px solid rgba(0,0,0,0.6);
-    @include background-image(linear-gradient(#F2F2F2, #F4F4F4 15%, #F9F9F9 100%, #F9F9F9));
-    color: #464B54;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6);
   }
 }
-
 
 .no-ie8compat .digital-library .resource-card h3 {
   /*padding-right: 10px;*/
