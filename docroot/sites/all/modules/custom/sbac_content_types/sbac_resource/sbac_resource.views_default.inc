@@ -1519,7 +1519,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_unique_views']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_unique_views']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_unique_views']['settings'] = array(
-    'thousand_separator' => ' ',
+    'thousand_separator' => ',',
     'prefix_suffix' => 0,
   );
   /* Field: Content: Thumbnail URI */
@@ -1631,7 +1631,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_unique_views']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_unique_views']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_unique_views']['settings'] = array(
-    'thousand_separator' => ' ',
+    'thousand_separator' => ',',
     'prefix_suffix' => 0,
   );
   /* Field: Content: Thumbnail URI */
