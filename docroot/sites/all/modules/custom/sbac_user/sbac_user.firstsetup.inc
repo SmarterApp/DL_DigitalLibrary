@@ -109,15 +109,6 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     ),
   );
 
-//  $form['profile_image'] = array(
-//    '#type' => 'file',
-//    '#description' => t('Your Profile Portrait will be visible to others in the Digital Library.'),
-//    '#default_value' => $default,
-//    '#upload_validators' => array(
-//      'file_validate_extensions' => array('png jpg jpeg gif'),
-//    ),
-//  );
-
   $form['image_suffix'] = array(
     '#markup' => '</div>',
   );
