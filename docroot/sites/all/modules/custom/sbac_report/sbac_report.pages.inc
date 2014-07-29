@@ -53,7 +53,7 @@ function sbac_report_individual() {
   if (!empty($sne_details)) {
     // Pass -1 as limit, summary should be "number of items per page" independent.
     $contributed_summary = sbac_report_build_resource_summary($uid, $date_range, -1);
-    if (sbac_report_select_other_users($account)) {
+    if (sbac_report_select_other_users($account) || array_intersect($user->roles, $view_own_report)) {
       $resource_statistics = sbac_report_build_resource_statistics($uid, $date_range);
     }
     $contributed_details = sbac_report_build_resource_details($uid, $date_range);
@@ -464,7 +464,7 @@ function sbac_report_posted_resource_stats_pager_form($form, &$form_state, $data
       15 => t('Up to 15'),
       -1 => t('All'),
     ),
-    '#default_value' => $_SESSION['sbac_report_posted_rs'] ? $_SESSION['sbac_report_posted_rs'] : 5,
+    '#default_value' => isset($_SESSION['sbac_report_posted_rs']) ? $_SESSION['sbac_report_posted_rs'] : 5,
     '#ajax' => array(
       'callback' => 'sbac_report_posted_resource_stats_pager_form_ajax',
       'wrapper' => 'posted-resources-stats',
