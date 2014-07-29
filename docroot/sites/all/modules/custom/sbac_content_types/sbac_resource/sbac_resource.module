@@ -1187,8 +1187,9 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
 }
 
 /**
- * Taken from system.module, over riding it to remove the drupal_set_messages that the user did
- * not want to see. Instead of looping through the $_SESSION variable to string compare and unset.
+ * Taken from system.module (system_retrieve_file), over riding it to remove the
+ * drupal_set_messages that the user did not want to see. Instead of looping
+ * through the $_SESSION variable to string compare and unset.
  *
  * @param $url
  * @param null $destination
@@ -1219,7 +1220,6 @@ function sbac_resource_system_retrieve_file($url, $destination = NULL, $managed 
   if (!$local) {
     // drupal_set_message(t('@remote could not be saved to @path.', array('@remote' => $url, '@path' => $path)), 'error');
   }
-
   return $local;
 }
 
