@@ -1088,7 +1088,8 @@ h2.name .field {
   background: #fff;
   margin-bottom: 30px;
   margin-top: 25px;
-  width: 440px;
+  /*    width: 440px;
+  */
 }
 /* line 1044, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .line {
@@ -1112,4 +1113,21 @@ h2.name .field {
 /* line 1066, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .profile-pic {
   padding: 0;
+  margin: 0 20px 20px 0;
+}
+/* line 1071, ../sass/profile.scss */
+.page-sbac-user-setup .sbac-user-setup-preview .introduction {
+  font-size: 14px;
+  line-height: 1.5;
+}
+/* line 1076, ../sass/profile.scss */
+.page-sbac-user-setup .sbac-user-setup-preview .user-profile {
+  width: 100%;
+  float: none !important;
+  padding: 0;
+}
+/* line 1082, ../sass/profile.scss */
+.page-sbac-user-setup .sbac-user-setup-preview .name.clearfix:after {
+  clear: none;
+  display: inline;
 }
