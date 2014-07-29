@@ -100,9 +100,11 @@ function sbac_user_theme__preprocess_user_login(&$vars) {
 
 function sbac_user_preprocess_page(&$vars) {
   global $user;
-  if (!$user->uid || (!isset($_SESSION['user_setup']) && !isset($_SESSION['welcome-update']))) {
+
+  if (!$user->uid) {
     return;
   }
+
   $disable_help = isset($user->data['disable_help']) ? $user->data['disable_help'] : 0;
   $last_welcome = isset($user->data['disable_recent']) ? $user->data['disable_recent'] : 0;
   $last_session = $user->login > $last_welcome;
@@ -111,7 +113,7 @@ function sbac_user_preprocess_page(&$vars) {
     drupal_goto('sbac-user/setup');
   }
 
-  if ((!$last_welcome && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
+  if (isset($_SESSION['welcome-update']) || (!$disable_help && $last_session && !isset($_SESSION['user_setup']))) {
     drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
   }
 }
