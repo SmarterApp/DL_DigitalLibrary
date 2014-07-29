@@ -15,7 +15,6 @@ function sbac_resource_views_query_alter(&$view, &$query) {
     _sbac_resource_resources_view_query_alter($view, $query);
   }
   if ($view->name == 'my_resources') {
-    sbac_resource_my_resource_apply_filters($view);
     _sbac_resource_my_resources_view_query_alter($view, $query);
   }
   if ($view->name == 'resource_review') {
@@ -694,39 +693,33 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
       $query->add_table('eck_feedback', 'node', $join);
 
       $having = array();
-      $states = array();
       foreach ($view->custom_filters['resource-status'] as $filter) {
         switch ($filter) {
           case 'gk':
-            $states[] = 'being_reviewed';
-            $having[] = 'max(eck_feedback.completed) = 0';
+            $having[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND max(eck_feedback.completed) = 0)';
             break;
           case 'qc':
-            $states[] = 'being_reviewed';
-            $having[] = 'max(eck_feedback.completed) = 1';
+            $having[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND max(eck_feedback.completed) = 1)';
             break;
           case 'draft':
-            $states[] = 'draft';
+            $having[] = '(workbench_moderation_node_history.state = \'draft\')';
             break;
           case 'posted':
-            $states[] = 'published';
+            $having[] = '(workbench_moderation_node_history.state = \'published\')';
             break;
           case 'submitted':
-            $states[] = 'needs_review';
+            $having[] = '(workbench_moderation_node_history.state = \'needs_review\')';
             break;
           case 'artbitration':
-            $states[] = 'approved';
+            $having[] = '(workbench_moderation_node_history.state = \'approved\')';
             break;
           case 'returned':
-            $states[] = 'rejected';
+            $having[] = '(workbench_moderation_node_history.state = \'rejected\')';
             break;
           case 'removed':
-            $states[] = 'removed';
+            $having[] = '(workbench_moderation_node_history.state = \'removed\')';
             break;
         }
-      }
-      if(!empty($states)){
-        $view->query->add_where(count($view->query->where), 'workbench_moderation_node_history.state', $states);
       }
       if (!empty($having)) {
         $query->add_having_expression(count($query->having), implode(' OR ', $having));
