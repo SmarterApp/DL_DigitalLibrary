@@ -484,7 +484,7 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
       '#markup' => t(
         'You can always change your profile settings on the <a href="@url">account screen</a>.',
         array(
-          '@url' => url('users'),
+          '@url' => url('user/' . $user->uid),
         )
       ),
     );
