@@ -100,9 +100,11 @@ function sbac_user_theme__preprocess_user_login(&$vars) {
 
 function sbac_user_preprocess_page(&$vars) {
   global $user;
+
   if (!$user->uid || (!isset($_SESSION['user_setup']) && !isset($_SESSION['welcome-update']))) {
     return;
   }
+
   $disable_help = isset($user->data['disable_help']) ? $user->data['disable_help'] : 0;
   $last_welcome = isset($user->data['disable_recent']) ? $user->data['disable_recent'] : 0;
   $last_session = $user->login > $last_welcome;
@@ -147,7 +149,6 @@ function sbac_user_preprocess_user_setup_nav(&$vars) {
  * @return [type]       [description]
  */
 function sbac_user_preprocess_user_setup_preview(&$vars) {
-
   global $user;
   $account = user_load($user->uid);
 
@@ -185,7 +186,7 @@ function sbac_user_preprocess_user_setup_preview(&$vars) {
   }
 
   if (in_array('picture', $privacy)) {
-    $file = file_load($_SESSION['user_setup']['profile_image']);
+    $file = file_load($_SESSION['user_setup']['temp_profile_image']);
     if ($file) {
       $vars['profile_picture'] = theme('image', array('path' => $file->uri));
     }
