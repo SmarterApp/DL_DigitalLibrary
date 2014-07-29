@@ -68,21 +68,55 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     '#markup' => '<div class="sbac-setup-profile-container">',
   );
 
-  $filepath = variable_get('user_picture_default', '');
-  $form['dummy_image'] = array(
-    '#prefix' => '<div class="sbac-setup-dummy-img">',
-    '#suffix' => '</div>',
-    '#markup' => theme('image', array('path' => '' . $filepath)),
+  $file_path = variable_get('user_picture_default', '');
+  $default = '';
+  if (isset($_SESSION['user_setup']['temp_profile_image'])) {
+    $profile_file = file_load($_SESSION['user_setup']['temp_profile_image']);
+    $file_path = file_create_url($profile_file->uri);
+    $default = $_SESSION['user_setup']['temp_profile_image'];
+  }
+
+  $form['field_file_container']['#tree'] = TRUE;
+  $form['field_file_container'] = array(
+    '#prefix'=>'<div id="sbac-user-profile-file-container">',
+    '#suffix'=>'</div>',
   );
 
-  $form['profile_image'] = array(
-    '#type' => 'managed_file',
+  $form['field_file_container']['dummy_image'] = array(
+    '#prefix' => '<div class="sbac-setup-dummy-img">',
+    '#suffix' => '</div>',
+    '#markup' => theme('image', array('path' => '' . $file_path)),
+  );
+
+  $form['field_file_container']['field_file_upload'] = array(
+    '#type' => 'file',
+    '#title' => t('Upload2'),
+    '#title_display' => 'invisible',
     '#description' => t('Your Profile Portrait will be visible to others in the Digital Library.'),
-    '#default_value' => isset($_SESSION['user_setup']['profile_image']) ? $_SESSION['user_setup']['profile_image'] : '',
-    '#upload_validators' => array(
-      'file_validate_extensions' => array('png jpg jpeg gif'),
+    '#size' => 22,
+    '#upload_location' => 'public://',
+  );
+
+  $form['field_file_container']['field_file_upload_button'] = array(
+    '#type' => 'submit',
+    '#value' => 'Upload File',
+    '#description' => t('Your Profile Portrait will be visible to others in the Digital Library.'),
+    '#ajax'=> array(
+      'callback'=>'sbac_user_widget_form_element_upload',
+      'wrapper'=> 'sbac-user-profile-file-container',
+      'method'=> 'replace',
+      'effect'=> 'fade',
     ),
   );
+
+//  $form['profile_image'] = array(
+//    '#type' => 'file',
+//    '#description' => t('Your Profile Portrait will be visible to others in the Digital Library.'),
+//    '#default_value' => $default,
+//    '#upload_validators' => array(
+//      'file_validate_extensions' => array('png jpg jpeg gif'),
+//    ),
+//  );
 
   $form['image_suffix'] = array(
     '#markup' => '</div>',
@@ -492,6 +526,69 @@ function sbac_user_setup_preview_form($form, &$form_state) {
 }
 
 /**
+ * Handle the upload button and the temporary picture location.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_user_widget_form_element_upload(&$form, &$form_state) {
+  $errors = form_get_errors();
+  if ($errors && !isset($errors['user_title'])) {
+    // if the user has an error on user_title, don't worry about it
+    // when the user clicks upload picture but, if that is not
+    // the error, then return the container
+    form_set_error($errors, t('There was a problem with the upload'));
+    return $form['field_file_container'];
+  }
+
+  // save the file
+  sbac_user_widget_save_media($form, $form_state);
+
+  // Update the view
+  if (isset($_SESSION['user_setup']['temp_profile_image'])) {
+    $file = file_load($_SESSION['user_setup']['temp_profile_image']);
+    if ($file) {
+      $file_path = file_create_url($file->uri);
+      $form['field_file_container']['dummy_image'] = array(
+        '#prefix' => '<div class="sbac-setup-dummy-img">',
+        '#suffix' => '</div>',
+        '#markup' => theme('image', array('path' => '' . $file_path)),
+      );
+    }
+  }
+
+  return $form['field_file_container'];
+}
+
+/**
+ * Save the media item.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_user_widget_save_media(&$form, &$form_state) {
+  global $user;
+  $allowed_file_types = array('png jpg jpeg');
+  // First param is file limit. second param is limit for total size for all uploads for user.
+  $allowed_size = array(SBAC_MEDIA_100MB, 0);
+  $directory = "public://temp_profile_pictures/" . $user->uid;
+  $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+  if ($writable) {
+    $validators = array(
+      'file_validate_extensions' => $allowed_file_types,
+      'file_validate_size' => $allowed_size,
+    );
+    $file = file_save_upload('field_file_upload', $validators, $directory, FILE_EXISTS_REPLACE);
+    if ($file) {
+      $file->status = FILE_STATUS_PERMANENT;
+      file_save($file);
+      $_SESSION['user_setup']['temp_profile_image'] = $file->fid;
+    }
+  }
+}
+
+/**
  * Implements hook_form_submit().
  * Progresses setup form to next page.
  * [sbac_user_setup_pi_form_submit description]
@@ -623,11 +720,36 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     $updates['field_special_populations']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['student_population_options']);
     $updates['field_introduction']['und'][0]['value'] = $_SESSION['user_setup']['about_me'];
 
-    user_save($account, $updates);
-    $_SESSION['welcome-update'] = TRUE;
-    unset($_SESSION['user_setup']);
-    drupal_goto('');
+    $account = user_save($account, $updates);
+    if ($account !== FALSE) {
+      if (isset($_SESSION['user_setup']['temp_profile_image'])) {
+        sbac_user_save_temp_image($account);
+      }
+      $_SESSION['welcome-update'] = TRUE;
+      unset($_SESSION['user_setup']);
+      drupal_goto('');
+    }
   }
+}
+
+function sbac_user_save_temp_image($account) {
+  $file = file_load($_SESSION['user_setup']['temp_profile_image']);
+  $hashdir = sbac_user_util_compute_hash_dir($account->uid);
+  $new_uri = sbac_user_util_compute_new_path($file->uri, $hashdir);
+  $new_uri = str_replace('temp_profile_pictures', 'pictures', $new_uri);
+  $old_absolute_path = drupal_realpath($file->uri);
+  $new_absolute_path = sbac_user_util_compute_new_path($old_absolute_path, $hashdir);
+  $new_absolute_path = str_replace('temp_profile_pictures', 'pictures', $new_absolute_path);
+  $res = sbac_user_util_move_file($old_absolute_path, $new_absolute_path);
+  if (!$res) {
+    drupal_set_message(t('Error moving your profile image.'));
+  }
+  $file->uri = $new_uri;
+  file_save($file);
+  // Update account record
+  db_query("UPDATE {users} SET picture = :fid WHERE uid = :uid", array(':fid' => $file->fid, ':uid' => $account->uid));
+  // remove temp_user_profile image
+  file_unmanaged_delete_recursive($old_absolute_path);
 }
 
 /**
