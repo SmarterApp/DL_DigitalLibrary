@@ -1606,15 +1606,6 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
     $node->field_is_hidden[LANGUAGE_NONE][0]['value'] = 0;
     field_attach_update('node', $node);
   }
-  elseif ($node->type == 'resource' && $new_state == 'removed') {
-    $node->status = 0;
-    // Delete resource forum and topics
-    if ($forum_id = sbac_forum_get_resource_forum_id($node->nid)) {
-      sbac_forum_delete_resource_forum($forum_id);
-    }
-    // Delete favorite
-    db_delete('sbac_favorites')->condition('type', 'node')->condition('id', $node->nid)->execute();
-  }
 
   // issue, i need to create records for everyone during state transitions, could limit this to "being_reviewed" and "approved".
   // need to put logic in that loops around users for a given role and creates records based on feedback states.
