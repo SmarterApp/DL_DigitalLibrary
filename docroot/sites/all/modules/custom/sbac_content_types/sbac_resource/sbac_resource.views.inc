@@ -821,7 +821,7 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
         $vocabulary = taxonomy_vocabulary_load($vid);
         $term = taxonomy_term_load($tid);
         if ($vocabulary && $term) {
-          if ($vocabulary->machine_name = 'resource_states') {
+          if ('resource_states' == $vocabulary->machine_name) {
 
             if (isset($roles['rp'])) {
               switch ($term->name) {

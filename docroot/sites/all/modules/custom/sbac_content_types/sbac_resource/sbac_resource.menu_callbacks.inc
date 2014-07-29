@@ -239,7 +239,7 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
   else if (isset($_SESSION['load_more'][$view->name]['page'])) {
     $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
   }
-  sbac_resource_resource_review_apply_filters($view, TRUE);
+  sbac_resource_resource_review_apply_filters($view);
   sbac_resource_resource_review_apply_sorts($view);
   $view->resubmission_only = $resubmission_only;
   $resource_review_output = $view->preview();
@@ -256,6 +256,7 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
     $output['pager_element'] = 0;
     $output['base_path'] = NULL;
   }
+  clear_views_exposed_filter_cache($view, $display);
   $view->destroy();
   return array(
     'output' => $resource_review_output,
