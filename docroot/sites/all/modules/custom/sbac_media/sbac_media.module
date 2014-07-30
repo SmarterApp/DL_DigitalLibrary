@@ -1122,6 +1122,10 @@ function sbac_media_html5_element_upload($form, $form_state) {
         // Bail out here if background callbacks are disabled.
         if (!httprl_is_background_callback_capable()) {
           watchdog('sbac-media', 'HTTPRL is not capable of making a background request.');
+          // rebuild the form, output.
+          $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
+          $form['#node']->document['html5'] = $html5_media_item;
+          sbac_media_build_html5_section($form, $form_state);
           return $form['field_content_module_container'];
         }
 

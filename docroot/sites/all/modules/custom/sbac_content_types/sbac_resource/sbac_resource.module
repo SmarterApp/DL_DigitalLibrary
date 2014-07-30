@@ -1946,6 +1946,19 @@ function sbac_resource_query_alter(&$query) {
       }
     }
 
+//    $pos = strrpos($table['condition'], $table['alias']);
+//    if ($pos !== FALSE) {
+//      $join_condition = substr($table['condition'], $pos);
+//      if ($join_condition) {
+//        $join_condition = str_replace($key, $filter_name . '0', $join_condition);
+//        $tables[$filter_name . '0']['condition'] .= ' AND ' . $join_condition;
+//        $merged = array_merge($tables[$filter_name . '0']['arguments'], $table['arguments']);
+//        $tables[$filter_name . '0']['arguments'] = $merged;
+//        unset($tables[$key]);
+//        $removed_tables[] = $key;
+//      }
+//    }
+
     foreach ($where as $key => $clause) {
       if (isset($clause['field']) && is_object($clause['field'])) {
         $conditions =& $clause['field']->conditions();
