@@ -1133,14 +1133,6 @@ function sbac_media_html5_element_upload($form, $form_state) {
         $callback_options = array(
           array(
             'function' => 'sbac_media_html5_upload_asynchronous',
-            // Setup options array.
-            'options' => array(
-              'timeout' => 1200,
-              'global_timeout' => 1200,
-              'context' => array(
-                'uid' => 1,
-              ),
-            ),
           ),
           $file_attributes,
         );
