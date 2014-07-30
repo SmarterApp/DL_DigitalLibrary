@@ -2699,7 +2699,9 @@ function sbac_resource_clean_text(&$form_state) {
 /**
  * Determines if the display is grid / list.
  *
- * @param string $page can be 'dl', 'mr' or 'rr' (for each page).
+ * @param string
+ *   $page can be 'dl', 'mr' or 'rr' (for each page).
+ *
  * @return string
  */
 function sbac_resource_determine_grid_or_list() {
