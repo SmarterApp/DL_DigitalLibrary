@@ -163,6 +163,7 @@ function _sbac_resource_clean_workbench_moderation($form, $form_state) {
  * @param $form_state
  */
 function sbac_resource_save_and_close(&$form, &$form_state) {
+  $node = $form_state['node'];
   sbac_resource_clean_text($form_state);
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
@@ -191,17 +192,33 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
       }
     }
 
+    $task_type = '';
     switch ($chosen_option) {
       case 0:
         $form_state['values']['sticky'] = 0;
         $form_state['values']['workbench_moderation_state_new'] = 'published';
+        if ('removed' == $node->workbench_moderation['current']->state) {
+          $task_type = 'resource_reposted';
+        }
+        elseif ('published' == $node->workbench_moderation['current']->state && 1 == $node->sticky) {
+          $task_type = 'resource_demoted';
+        }
         break;
       case 1:
         $form_state['values']['sticky'] = 1;
         $form_state['values']['workbench_moderation_state_new'] = 'published';
+        if ('removed' == $node->workbench_moderation['current']->state) {
+          $task_type = 'resource_reposted';
+        }
+        elseif ('published' == $node->workbench_moderation['current']->state && 0 == $node->sticky) {
+          $task_type = 'resource_promoted';
+        }
         break;
       case 2:
         $form_state['values']['workbench_moderation_state_new'] = 'removed';
+        if ('published' == $node->workbench_moderation['current']->state) {
+          $task_type = 'removed_resource';
+        }
         break;
       case 3:
         $form_state['values']['workbench_moderation_state_new'] = 'published';
@@ -210,13 +227,13 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
         $form_state['values']['workbench_moderation_state_new'] = 'published';
     }
 
-    if (isset($_SESSION['sbac-posting-option-comment']) && $_SESSION['sbac-posting-option-comment']) {
-      // Create notificaton for contributor.
-      if ($task = taskit_get_object('posting_action')) {
+    if (!empty($task_type)) {
+      if ($task = taskit_get_object($task_type)) {
         global $user;
-        $node = $form_state['node'];
         $task->addVisibility($task::VISIBILITY_USER);
         $task->addEntity('node', $node->nid);
+        // TODO: Figure out a way to keep a history of the comments. Right now it's just reading the current comment.
+//            $task->addEntity('feedback', $form_state['values']['field_posting_options_comment']['und'][0]['value']);
         $task->addOwningUser($node->uid);
         $task->addTriggeringUser($user->uid);
         $task->save();
