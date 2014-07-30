@@ -1107,12 +1107,16 @@ function sbac_media_html5_element_upload($form, $form_state) {
   drupal_get_messages(); // clear messages if they were some from before.
   $file_attributes = array();
   sbac_media_save_temp_html5($file_attributes, $form, $form_state);
+  error_log(print_r($file_attributes, TRUE));
   if ($file_attributes) {
     // Check that the zip saved.
     $no_errors = sbac_media_check_zip($file_attributes, $form, $form_state);
+    error_log('no errors: ' . $no_errors);
     if ($no_errors) {
       $valid = sbac_media_save_html5_record($file_attributes, $form_state);
+      error_log('valid: ' . $valid);
       if ($valid) {
+        error_log('move thumbnail');
         sbac_media_move_html5_thumbnail($file_attributes);
         // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
         $callback_options = array(
@@ -1130,6 +1134,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
         httprl_queue_background_callback($callback_options);
         // Execute request.
         httprl_send_request();
+        error_log('executing request');
       }
       // rebuild the form, output.
       $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
@@ -1159,6 +1164,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
  * @param $file_attributes
  */
 function sbac_media_html5_upload_asynchronous($file_attributes) {
+  error_log('here we are');
   $error_uploading = FALSE;
   sbac_media_html5_start_progress($file_attributes['nid']);
   $temp_path = $file_attributes['html5_temp_path'];

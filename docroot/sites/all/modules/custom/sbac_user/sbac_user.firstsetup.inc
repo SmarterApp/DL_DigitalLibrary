@@ -205,6 +205,10 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     $values[] = array('value' => $idx);
   }
 
+  $form['hover_div_pi'] = array(
+    '#markup' => '<div id="sbac-setup-hover-pi" data-dropdown="pi-form-drop"></div>',
+  );
+
   $form['next_form'] = array(
     '#type' => 'submit',
     '#value' => t('Next'),
@@ -215,6 +219,12 @@ function sbac_user_setup_pi_form($form, &$form_state) {
         ),
       ),
     ),
+  );
+
+  $form['dropdown'] = array(
+    '#markup' => '<div id="pi-form-drop" data-dropdown-content class="f-dropdown content">
+                    <p>Please complete the <span class="sbac-user-setup-bold">required fields</span> (<span class="sbac-user-setup-req-marker">*</span>).</p>
+                  </div>',
   );
 
   return $form;
@@ -362,6 +372,10 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
     ),
   );
 
+  $form['hover_div_pi'] = array(
+    '#markup' => '<div id="sbac-setup-hover-expertise" data-dropdown="pi-form-drop"></div>',
+  );
+
   $form['next'] = array(
     '#type' => 'submit',
     '#value' => t('Next'),
@@ -372,6 +386,12 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
         ),
       ),
     ),
+  );
+
+  $form['dropdown'] = array(
+    '#markup' => '<div id="expertise-form-drop" data-dropdown-content class="f-dropdown content">
+                    <p>Please complete the <span class="sbac-user-setup-bold">required fields</span> (<span class="sbac-user-setup-req-marker">*</span>).</p>
+                  </div>',
   );
 
   return $form;
