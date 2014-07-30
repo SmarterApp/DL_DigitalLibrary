@@ -222,7 +222,7 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
  * @param bool $resubmission_only
  * @return array
  */
-function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $ajax = FALSE, $resubmission_only = FALSE) {
+function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $ajax = FALSE, $resubmission_only = FALSE, $apply_filter = TRUE, $apply_sort = TRUE) {
   $display = sbac_resource_determine_grid_or_list();
   $view = views_get_view('resource_review');
   $view->set_display($display);
@@ -236,11 +236,17 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
     $_SESSION['load_more'][$view->name]['page'] = $page;
   }
   // If session is set, change pager.
-  else if (isset($_SESSION['load_more'][$view->name]['page'])) {
-    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+  else {
+    if (isset($_SESSION['load_more'][$view->name]['page'])) {
+      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+    }
   }
-  sbac_resource_resource_review_apply_filters($view);
-  sbac_resource_resource_review_apply_sorts($view);
+  if ($apply_filter === TRUE) {
+    sbac_resource_resource_review_apply_filters($view);
+  }
+  if ($apply_sort === TRUE) {
+    sbac_resource_resource_review_apply_sorts($view);
+  }
   $view->resubmission_only = $resubmission_only;
   $resource_review_output = $view->preview();
   $total_rows = $view->total_rows;
@@ -266,6 +272,14 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
 }
 
 /**
+ * Menu callback
+ */
+function sbac_resource_resource_review_page_reset() {
+  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+  drupal_goto('resource-review');
+}
+
+/**
  * Menu Callback.
  *
  * @param null $page
@@ -279,20 +293,19 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
 
   // Get the tabs' content
+  $resubmission_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax, TRUE, FALSE, FALSE); // get the baseline count
+  $_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] = FALSE;
+  if ($resubmission_tab['count'] > 0) {
+    $_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] = TRUE;
+    $resubmission_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax, TRUE);
+  }
   $resource_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax);
-  $resubmission_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax, TRUE);
 
   // Save the count
   $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT] = $resource_tab['count'];
   $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] = $resubmission_tab['count'];
 
-  // If resubmission tab is empty, set the default tab to 'resources'
-  if ($resubmission_tab['count'] == 0) {
-    $active_tab = SBAC_RESOURCE_SUBNAV_RESOURCES;
-  }
-  else {
-    $active_tab = sbac_resource_get_active_subnav();
-  }
+  $active_tab = sbac_resource_get_active_subnav();
 
   // Get the active tab content
   $active_tab_content = array();
@@ -306,9 +319,7 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   }
   $resource_output = $active_tab_content['output'];
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $active_tab_content['count'];
-  if (0 == $active_tab_content['count'] && '' != $current_filters) {
-    // Reset variables
-    $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+  if (0 == $active_tab_content['count']) {
     $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
     // Set error message
     $no_results = sbac_resource_no_search_results();
