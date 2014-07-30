@@ -942,6 +942,22 @@ h2.name {
     }
   }
 
+  // Tooltip dropdown
+  #sbac-setup-hover-pi {
+    padding: 10px;
+    position: absolute;
+    right: 45px;
+    bottom: 22px;
+    z-index: 200;
+    height: 30px;
+    width: 80px;
+  }
+
+  #pi-form-drop {
+    top: 773px !important;
+    left: 500px !important;
+  }
+
   #edit-next-form, #edit-next {
     clear: left;
     display: block;
