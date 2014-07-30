@@ -40,6 +40,7 @@
       $('#sbac-pwd-show-fewer').once('pwd-show-fewer', function() {
         $(this).click(function() {
           window.location.hash = '';
+          $.cookie('sbac-pwd-reel-hide', 1);
           $('#edit-dl-pwd').click();
           window.scrollTo(0, 0);
           return false;
@@ -48,6 +49,7 @@
       $('#sbac-pwd-hide-pwd').once('pwd-show-fewer', function() {
         $(this).click(function() {
           window.location.hash = '';
+          $.cookie('sbac-pwd-reel-hide', 1);
           $('#edit-dl-pwd').click();
           return false;
         });
