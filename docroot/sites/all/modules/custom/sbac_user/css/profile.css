@@ -1158,3 +1158,7 @@ h2.name .field {
   clear: none;
   display: inline;
 }
+/* line 1114, ../sass/profile.scss */
+.page-sbac-user-setup .sbac-user-setup-preview .profile-details {
+  clear: both;
+}
