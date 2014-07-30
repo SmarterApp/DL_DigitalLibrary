@@ -306,7 +306,9 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] = $resubmission_tab['count'];
 
   $active_tab = sbac_resource_get_active_subnav();
-
+  if($_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] === FALSE){
+    $active_tab = SBAC_RESOURCE_SUBNAV_RESOURCES;
+  }
   // Get the active tab content
   $active_tab_content = array();
   switch ($active_tab) {
