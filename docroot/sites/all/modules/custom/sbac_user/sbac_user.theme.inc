@@ -126,6 +126,8 @@ function sbac_user_preprocess_page(&$vars) {
  */
 function sbac_user_preprocess_user_setup_nav(&$vars) {
   $page = $vars['current_page'];
+  drupal_add_js(drupal_get_path('module', 'sbac_user') . '/js/sbac_user.firstsetup.js');
+
   switch ($page) {
     case 'page1':
       $vars['page1']['nav'] = 'sbac-user-setup-nav-current-cont';
