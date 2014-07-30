@@ -1116,6 +1116,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
       $valid = sbac_media_save_html5_record($file_attributes, $form_state);
       error_log('valid: ' . $valid);
       if ($valid) {
+        error_log('move thumbnail');
         sbac_media_move_html5_thumbnail($file_attributes);
         // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
         $callback_options = array(
@@ -1133,6 +1134,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
         httprl_queue_background_callback($callback_options);
         // Execute request.
         httprl_send_request();
+        error_log('executing request');
       }
       // rebuild the form, output.
       $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
