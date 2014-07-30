@@ -289,12 +289,12 @@
     clearAllCategories: function() {
       var current_filters = $('#sbac-search-current-filters');
       $('.categories-current-filters').addClass('noshow');
-      $('#sbac-category-current-filters .current-filter').remove();
-      $('.category-filter-list ul li').removeClass('current');
       current_filters.val('');
-      $('.selectedDiv').hide();
-      $('.category-hide').removeClass('js-hide');
-      window.location.href = 'sbac-search/clear-all?location=digital-library-resources';
+      $('#sbac-search-filter-button').hide();
+      $('#edit-reset-filters').hide();
+      $('.slideable').hide();
+      Drupal.settings.sbac_search.isEdit = 0;
+      $('#sbac-search-digital-library-resources-form').submit();
       return false;
     }
   };
