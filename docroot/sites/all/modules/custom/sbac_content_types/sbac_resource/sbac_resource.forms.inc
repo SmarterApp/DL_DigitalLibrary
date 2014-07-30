@@ -3725,28 +3725,35 @@ function sbac_resource_resource_review_subnav_form($form, &$form_state) {
     default:
       break;
   }
-
-  // Resources tab
-  $resource_tab_count_text = '';
-  if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT]) && !empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT])) {
-    $resource_tab_count_text = '(' . $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT] . ')';
-  }
   $form['container'] = array(
     '#type' => 'container'
   );
-  $form['container'] ['resources_tab'] = array(
-    '#type' => 'submit',
-    '#value' => t('Resources') . ' ' . $resource_tab_count_text,
-    '#title' => t('Resources'),
-    '#attributes' => array(
-      'class' => array($resource_tab_classes),
-    ),
-    '#submit' => array('_sbac_resource_sub_nav__set_resource__submit'),
-  );
+
+  $resource_tab_count_text = '0';
+  if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT]) && !empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT])) {
+    $resource_tab_count_text = $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT];
+  }
+  // Resources tab
+  if (!isset($_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB]) || $_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] === FALSE) {
+    $form['container'] ['resources_tab'] = array(
+      '#markup' => '<h3 class="left" style="color:#fff"><span>' . $resource_tab_count_text . '</span>' . t(' Resources') . '</h3>',
+    );
+  }
+  else {
+    $form['container'] ['resources_tab'] = array(
+      '#type' => 'submit',
+      '#value' => t('Resources') . ' (' . $resource_tab_count_text . ')',
+      '#title' => t('Resources'),
+      '#attributes' => array(
+        'class' => array($resource_tab_classes),
+      ),
+      '#submit' => array('_sbac_resource_sub_nav__set_resource__submit'),
+    );
+  }
 
   // Resubmissions tab
-  $resubmission_tab_count_text = '';
-  if (!empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT]) && $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] > 0) {
+  if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB]) && $_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] === TRUE) {
+    $resubmission_tab_count_text = '';
     $resubmission_tab_count_text = '(' . $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] . ')';
     $form['container'] ['resubmissions_tab'] = array(
       '#type' => 'submit',
