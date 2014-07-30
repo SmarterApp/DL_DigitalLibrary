@@ -609,7 +609,9 @@ function sbac_user_widget_save_media(&$form, &$form_state) {
  */
 function sbac_user_setup_pi_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Next') {
-    $_SESSION['user_setup']['profile_image'] = $form_state['input']['profile_image']['fid'];
+    if (isset($form_state['input']['profile_image']['fid'])) {
+      $_SESSION['user_setup']['profile_image'] = $form_state['input']['profile_image']['fid'];
+    }
     $_SESSION['user_setup']['user_title'] = $form_state['input']['user_title'];
     $_SESSION['user_setup']['user_retired'] = $form_state['input']['user_retired'];
     drupal_goto('sbac-user/setup/2');
