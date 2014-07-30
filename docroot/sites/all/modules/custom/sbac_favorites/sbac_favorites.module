@@ -244,7 +244,8 @@ function sbac_favorites_get_favorites_list($uid, $type = NULL) {
   if ($type) {
     $query->condition('sf.type', $type);
     if ($type == 'node') {
-      $query->innerJoin('node', 'n', 'n.nid = sf.id'); // make sure the node hasn't been deleted
+      $query->innerJoin('node', 'n', 'n.nid = sf.id'); // make sure the node hasn't been hard deleted
+      $query->innerJoin('workbench_moderation_node_history', 'h', 'n.nid = h.nid AND h.current = 1 AND h.state <> \'removed\''); // make sure the node is not soft deleted
     }
     elseif ($type == 'term') {
       $query->innerJoin('taxonomy_term_data', 'term', 'term.tid = sf.id');
