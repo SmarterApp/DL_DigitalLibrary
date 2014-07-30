@@ -997,21 +997,63 @@ h2.name .field {
   padding: 6px 5px 5px;
 }
 /* line 946, ../sass/profile.scss */
-.page-sbac-user-setup #sbac-setup-hover-pi {
+.page-sbac-user-setup #sbac-setup-hover-pi, .page-sbac-user-setup #sbac-setup-hover-expertise {
   padding: 10px;
   position: absolute;
   right: 45px;
-  bottom: 22px;
+  bottom: 40px;
   z-index: 200;
   height: 30px;
   width: 80px;
 }
 /* line 956, ../sass/profile.scss */
-.page-sbac-user-setup #pi-form-drop {
-  top: 773px !important;
-  left: 500px !important;
+.page-sbac-user-setup #sbac-setup-hover-pi {
+  bottom: 22px;
 }
-/* line 961, ../sass/profile.scss */
+/* line 960, ../sass/profile.scss */
+.page-sbac-user-setup #pi-form-drop, .page-sbac-user-setup #expertise-form-drop {
+  top: 790px !important;
+  left: 425px !important;
+  max-width: 300px;
+}
+/* line 965, ../sass/profile.scss */
+.page-sbac-user-setup #pi-form-drop:before, .page-sbac-user-setup #expertise-form-drop:before {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 8px solid white;
+  border-bottom: 0;
+  bottom: -8px;
+  top: auto;
+  left: 140px;
+}
+/* line 975, ../sass/profile.scss */
+.page-sbac-user-setup #pi-form-drop:after, .page-sbac-user-setup #expertise-form-drop:after {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 8px solid #ccc;
+  border-bottom: 0;
+  bottom: -9px;
+  top: auto;
+  left: 140px;
+}
+/* line 985, ../sass/profile.scss */
+.page-sbac-user-setup #pi-form-drop p, .page-sbac-user-setup #expertise-form-drop p {
+  font-size: 16px;
+}
+/* line 988, ../sass/profile.scss */
+.page-sbac-user-setup #pi-form-drop p .sbac-user-setup-bold, .page-sbac-user-setup #expertise-form-drop p .sbac-user-setup-bold {
+  font-size: 14px;
+  font-weight: bold;
+}
+/* line 993, ../sass/profile.scss */
+.page-sbac-user-setup #pi-form-drop p .sbac-user-setup-req-marker, .page-sbac-user-setup #expertise-form-drop p .sbac-user-setup-req-marker {
+  color: red;
+}
+/* line 999, ../sass/profile.scss */
+.page-sbac-user-setup #pi-form-drop {
+  top: 686px !important;
+}
+/* line 1003, ../sass/profile.scss */
 .page-sbac-user-setup #edit-next-form, .page-sbac-user-setup #edit-next {
   clear: left;
   display: block;
@@ -1021,83 +1063,83 @@ h2.name .field {
   background-position: center right;
   padding-right: 30px;
 }
-/* line 971, ../sass/profile.scss */
+/* line 1013, ../sass/profile.scss */
 .page-sbac-user-setup #edit-previous {
   background-image: url("../images/submit-arrow-prev.png");
   background-repeat: no-repeat;
   background-position: left center;
   padding-left: 30px;
 }
-/* line 978, ../sass/profile.scss */
+/* line 1020, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-setup-pg3-txt {
   line-height: 1.5;
   margin-bottom: 20px;
   font-size: 13px;
 }
-/* line 984, ../sass/profile.scss */
+/* line 1026, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-setup-pg3-container {
   float: left;
   width: 47%;
   margin-right: 30px;
   margin-bottom: 20px;
 }
-/* line 990, ../sass/profile.scss */
+/* line 1032, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-setup-pg3-container label {
   font-size: 14px;
 }
-/* line 994, ../sass/profile.scss */
+/* line 1036, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-setup-pg3-container .description {
   font-size: 13px;
   line-height: 1.2;
 }
-/* line 999, ../sass/profile.scss */
+/* line 1041, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-setup-pg3-container.last {
   margin-right: 0;
 }
-/* line 1005, ../sass/profile.scss */
+/* line 1047, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-privacy-form #edit-previous {
   float: left;
   clear: left;
 }
-/* line 1010, ../sass/profile.scss */
+/* line 1052, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-privacy-form #edit-next {
   clear: none;
   background-image: none;
   padding-right: 18px;
 }
-/* line 1018, ../sass/profile.scss */
+/* line 1060, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form .form-item {
   margin: 0 0 10px;
 }
-/* line 1022, ../sass/profile.scss */
+/* line 1064, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form .form-type-select {
   margin-bottom: 30px;
 }
-/* line 1026, ../sass/profile.scss */
+/* line 1068, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form label {
   font-size: 14px;
 }
-/* line 1030, ../sass/profile.scss */
+/* line 1072, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form .description {
   font-size: 13px;
 }
-/* line 1034, ../sass/profile.scss */
+/* line 1076, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form .chzn-choices {
   background-image: none;
 }
-/* line 1038, ../sass/profile.scss */
+/* line 1080, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form .form-type-textarea {
   margin-bottom: 20px;
   overflow: auto;
 }
-/* line 1042, ../sass/profile.scss */
+/* line 1084, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form .form-type-textarea textarea {
   height: 225px;
   margin-bottom: 10px;
   box-shadow: none;
   border-color: #aaa;
 }
-/* line 1049, ../sass/profile.scss */
+/* line 1091, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form .form-type-textarea .counter {
   text-align: right;
   font-size: 12px;
@@ -1106,18 +1148,18 @@ h2.name .field {
   margin: 6px 0;
   padding: 10px 10px 10px 50px;
 }
-/* line 1059, ../sass/profile.scss */
+/* line 1101, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-expertise-form .form-item-is-complete {
   display: none;
 }
-/* line 1065, ../sass/profile.scss */
+/* line 1107, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-preview-form #edit-edit-profile {
   background-image: url("../images/submit-arrow-prev.png");
   background-repeat: no-repeat;
   background-position: left center;
   padding-left: 30px;
 }
-/* line 1072, ../sass/profile.scss */
+/* line 1114, ../sass/profile.scss */
 .page-sbac-user-setup #sbac-user-setup-preview-form #edit-done {
   float: right;
   background-image: url("../images/checkmark.png");
@@ -1125,7 +1167,7 @@ h2.name .field {
   background-position: left center;
   padding-left: 30px;
 }
-/* line 1081, ../sass/profile.scss */
+/* line 1123, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview {
   background: #fff;
   margin-bottom: 30px;
@@ -1133,15 +1175,15 @@ h2.name .field {
   /*    width: 440px;
   */
 }
-/* line 1087, ../sass/profile.scss */
+/* line 1129, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .line {
   display: none;
 }
-/* line 1093, ../sass/profile.scss */
+/* line 1135, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .profile-details .title {
   border-color: #aaa;
 }
-/* line 1097, ../sass/profile.scss */
+/* line 1139, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .profile-details li {
   background-color: #F2F2F2;
   border-radius: 2px;
@@ -1152,28 +1194,28 @@ h2.name .field {
   margin-top: 7px;
   padding: 0 5px;
 }
-/* line 1109, ../sass/profile.scss */
+/* line 1151, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .profile-pic {
   padding: 0;
   margin: 0 20px 20px 0;
 }
-/* line 1114, ../sass/profile.scss */
+/* line 1156, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .introduction {
   font-size: 14px;
   line-height: 1.5;
 }
-/* line 1119, ../sass/profile.scss */
+/* line 1161, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .user-profile {
   width: 100%;
   float: none !important;
   padding: 0;
 }
-/* line 1125, ../sass/profile.scss */
+/* line 1167, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .name.clearfix:after {
   clear: none;
   display: inline;
 }
-/* line 1130, ../sass/profile.scss */
+/* line 1172, ../sass/profile.scss */
 .page-sbac-user-setup .sbac-user-setup-preview .profile-details {
   clear: both;
 }

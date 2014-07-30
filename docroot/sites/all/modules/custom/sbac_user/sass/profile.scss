@@ -943,19 +943,61 @@ h2.name {
   }
 
   // Tooltip dropdown
-  #sbac-setup-hover-pi {
+  #sbac-setup-hover-pi, #sbac-setup-hover-expertise {
     padding: 10px;
     position: absolute;
     right: 45px;
-    bottom: 22px;
+    bottom: 40px;
     z-index: 200;
     height: 30px;
     width: 80px;
   }
 
+  #sbac-setup-hover-pi {
+    bottom: 22px;
+  }
+
+  #pi-form-drop, #expertise-form-drop {
+    top: 790px !important;
+    left: 425px !important;
+    max-width: 300px;
+
+    &:before {
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 8px solid white;
+      border-bottom: 0;
+      bottom: -8px;
+      top: auto;
+      left: 140px;
+    }
+
+    &:after {
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 8px solid #ccc;
+      border-bottom: 0;
+      bottom: -9px;
+      top: auto;
+      left: 140px;
+    }
+
+    p {
+      font-size: 16px;
+
+      .sbac-user-setup-bold {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .sbac-user-setup-req-marker {
+        color: red;
+      }
+    }
+  }
+
   #pi-form-drop {
-    top: 773px !important;
-    left: 500px !important;
+    top: 686px !important;
   }
 
   #edit-next-form, #edit-next {
