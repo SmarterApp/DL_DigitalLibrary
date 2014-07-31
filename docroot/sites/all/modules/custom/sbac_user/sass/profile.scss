@@ -942,21 +942,100 @@ h2.name {
     }
   }
 
+  // Tooltip dropdown
+  #sbac-setup-hover-pi, #sbac-setup-hover-expertise {
+    padding: 10px;
+    position: absolute;
+    right: 45px;
+    bottom: 40px;
+    z-index: 200;
+    height: 30px;
+    width: 80px;
+  }
+
+  #sbac-setup-hover-pi {
+    bottom: 22px;
+  }
+
+  #pi-form-drop, #expertise-form-drop {
+    top: 790px !important;
+    left: 425px !important;
+    max-width: 300px;
+
+    &:before {
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 8px solid white;
+      border-bottom: 0;
+      bottom: -8px;
+      top: auto;
+      left: 140px;
+    }
+
+    &:after {
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 8px solid #ccc;
+      border-bottom: 0;
+      bottom: -9px;
+      top: auto;
+      left: 140px;
+    }
+
+    p {
+      font-size: 16px;
+
+      .sbac-user-setup-bold {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .sbac-user-setup-req-marker {
+        color: red;
+      }
+    }
+  }
+
+  #pi-form-drop {
+    top: 686px !important;
+  }
+
   #edit-next-form, #edit-next {
     clear: left;
     display: block;
     float: right;
-    background-image: url('../images/submit-arrow-next.png');
-    background-repeat: no-repeat;
-    background-position: center right;
-    padding-right: 30px;
+
+    &:after {
+      background-image: url('../images/submit-arrow-next.png');
+      background-repeat: no-repeat;
+      background-position: center right;
+      content: " ";
+      display: inline-block;
+      width: 25px;
+      height: 18px;
+      margin-left: 12px;
+      margin-top: -2px;
+      vertical-align: middle;
+      margin-right: -10px;
+    }
   }
 
-  #edit-previous {
-    background-image: url('../images/submit-arrow-prev.png');
-    background-repeat: no-repeat;
-    background-position: left center;
+  #edit-previous, #edit-edit-profile {
     padding-left: 30px;
+
+    &:before {
+      background-image: url('../images/submit-arrow-prev.png');
+      background-repeat: no-repeat;
+      background-position: left center; 
+      content: " ";
+      display: inline-block;
+      width: 25px;
+      height: 18px;
+      margin-left: -20px;
+      margin-top: -2px;
+      vertical-align: middle;
+      margin-right: 10px;     
+    }
   }
 
 .sbac-setup-pg3-txt {
@@ -993,8 +1072,11 @@ h2.name {
 
   #edit-next {
     clear: none;
-    background-image: none;
     padding-right: 18px;
+
+    &:after {
+      display: none;
+    }
   }
 }
 
@@ -1046,19 +1128,24 @@ h2.name {
   }
 
   #sbac-user-setup-preview-form {
-    #edit-edit-profile {
-      background-image: url('../images/submit-arrow-prev.png');
-      background-repeat: no-repeat;
-      background-position: left center;
-      padding-left: 30px;      
-    }
-
     #edit-done {
       float: right;
-      background-image: url('../images/checkmark.png');
-      background-repeat: no-repeat;
-      background-position: left center;
+
       padding-left: 30px;  
+
+      &:before {
+        background-image: url('../images/checkmark.png');
+        background-repeat: no-repeat;
+        background-position: left center;
+        content: " ";
+        display: inline-block;
+        width: 25px;
+        height: 23px;
+        margin-left: -20px;
+        margin-top: -2px;
+        vertical-align: middle;
+        margin-right: 10px;    
+      }
     }
   }
 

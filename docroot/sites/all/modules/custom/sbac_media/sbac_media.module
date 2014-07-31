@@ -1137,9 +1137,6 @@ function sbac_media_html5_element_upload($form, $form_state) {
             'options' => array(
               'timeout' => 1200,
               'global_timeout' => 1200,
-              'context' => array(
-                'uid' => 1,
-              ),
             ),
           ),
           $file_attributes,
@@ -1147,7 +1144,18 @@ function sbac_media_html5_element_upload($form, $form_state) {
         // Queue up the request.
         httprl_queue_background_callback($callback_options);
         // Execute request.
-        httprl_send_request();
+        $response = httprl_send_request();
+        error_log(print_r($response));
+        if ($response === FALSE || count($response) > 0) {
+          if ($response === FALSE) {
+            watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
+          }
+          else {
+            // Display the response back, usually this is a good thing, not an error
+            $result = array_shift(array_values($response));
+            watchdog('SBAC Media', $result->error , NULL, WATCHDOG_ERROR);
+          }
+        }
         error_log('executing request');
       }
       // rebuild the form, output.
