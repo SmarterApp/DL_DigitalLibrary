@@ -1940,7 +1940,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             }
           }
           // Get the last 3 QC
-          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY id DESC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
+          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY changed ASC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
 
           // check for QC feedbacks first
           $qc_entities = entity_load('feedback', $qc_ids);
