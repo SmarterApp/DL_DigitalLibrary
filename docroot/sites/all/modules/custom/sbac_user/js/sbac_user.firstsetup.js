@@ -15,18 +15,18 @@
       }
       else {
         $('#edit-next-form').prop('disabled', true);
-        $('#sbac-setup-hover-pi').css('z-index', 9999);
+        $('#sbac-setup-hover-pi-button').css('z-index', 9999);
       }
 
       //  When user hovers over invisible div, toggle the popup to show if the 
       //  submit button is disabled.
-      $('#sbac-setup-hover-pi').hover(
+      $('#sbac-setup-hover-pi-button').hover(
         function() {
           if ($('#edit-next-form').prop('disabled')) {
             $('#pi-form-drop').addClass('open');
           }
           else {
-            $('#sbac-setup-hover-pi').css('z-index', -9999);
+            $('#sbac-setup-hover-pi-button').css('z-index', -9999);
           }
         },
         function() {
@@ -43,7 +43,7 @@
           $('#edit-next-form').prop('disabled', false);
         }
         else {
-          $('#sbac-setup-hover-pi').css('z-index', 9999);
+          $('#sbac-setup-hover-pi-button').css('z-index', 9999);
           $('#edit-next-form').prop('disabled', true);
         }
       });

@@ -200,11 +200,13 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     '#markup' => '</div>',
   );
 
-  $form['hover_div_pi'] = array(
-    '#markup' => '<div id="sbac-setup-hover-pi" data-dropdown="pi-form-drop"></div>',
-  );
+  // $form['hover_div_pi'] = array(
+  //   '#markup' => '<div id="sbac-setup-hover-pi" data-dropdown="pi-form-drop"></div>',
+  // );
 
   $form['next_form'] = array(
+    '#prefix' => '<div id="sbac-setup-hover-pi-button" data-dropdown="pi-form-drop">',
+    '#suffix' => '</div>',
     '#type' => 'submit',
     '#value' => t('Next'),
   );
