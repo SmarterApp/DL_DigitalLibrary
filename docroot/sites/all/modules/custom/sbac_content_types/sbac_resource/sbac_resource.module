@@ -2595,7 +2595,7 @@ function sbac_resource_block_view($delta = '') {
 
     case 'sbac_resource_review_tabs':
       $block['subject'] = NULL;
-      $block['content'] = drupal_render(drupal_get_form('sbac_resource_resource_review_subnav_form'));
+      $block['content'] = drupal_get_form('sbac_resource_resource_review_subnav_form');
       break;
 
     case 'sbac_resource_back_button':

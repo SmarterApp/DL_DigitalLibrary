@@ -222,7 +222,7 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
  * @param bool $resubmission_only
  * @return array
  */
-function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $ajax = FALSE, $resubmission_only = FALSE, $apply_filter = TRUE, $apply_sort = TRUE) {
+function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $ajax = FALSE, $resubmission_only = FALSE, $apply_filter = TRUE) {
   $display = sbac_resource_determine_grid_or_list();
   $view = views_get_view('resource_review');
   $view->set_display($display);
@@ -241,13 +241,12 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
       $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
     }
   }
+  $view->apply_filter = $apply_filter;
+  $view->resubmission_only = $resubmission_only;
   if ($apply_filter === TRUE) {
     sbac_resource_resource_review_apply_filters($view);
   }
-  if ($apply_sort === TRUE) {
-    sbac_resource_resource_review_apply_sorts($view);
-  }
-  $view->resubmission_only = $resubmission_only;
+  sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();
   $total_rows = $view->total_rows;
   //  dpq($resource_review_output->build_info['query']);
@@ -293,9 +292,9 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
 
   // Get the tabs' content
-  $resubmission_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax, TRUE, FALSE, FALSE); // get the baseline count
+  $resubmission_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax, TRUE, FALSE);
   $_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] = FALSE;
-  if ($resubmission_tab['count'] > 0) {
+  if (0 < $resubmission_tab['count']) {
     $_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] = TRUE;
     $resubmission_tab = _sbac_resource_resource_review_page_setup_resource_tab($page, $ajax, TRUE);
   }
@@ -306,9 +305,6 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] = $resubmission_tab['count'];
 
   $active_tab = sbac_resource_get_active_subnav();
-  if($_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] === FALSE){
-    $active_tab = SBAC_RESOURCE_SUBNAV_RESOURCES;
-  }
   // Get the active tab content
   $active_tab_content = array();
   switch ($active_tab) {
