@@ -1162,6 +1162,9 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
       $type = $finfo->buffer(file_get_contents($url));
       $ext = explode('/', $type);
       $ext = array_pop($ext);
+      if (_sbac_resource_determine_file_type_icon($ext) != 'image') {
+        $ext = 'png';
+      }
       $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
       if ($filename) {
         $filename = $filename . '.' . $ext;

@@ -290,10 +290,14 @@ function drush_sbac_resource_update_failed_thumbnails() {
   // drush_print(dt('Updating thumbnails for Resource nodes.'));
 
   while ($current_nid <= $max_nid) {
+
+    $db_or = db_or()->condition('ft.field_thumbnail_uri_value', array('::', 'public://file.png::public://file.png', 'no_img::no_img'), 'IN')
+                    ->condition('ft.field_thumbnail_uri_value', '%x-empty%', 'LIKE');
+
     $query = db_select('field_data_field_thumbnail_uri', 'ft');
     $query->fields('ft', array('entity_id'))
       ->condition('ft.entity_id', $current_nid, '>')
-      ->condition('ft.field_thumbnail_uri_value', array('::', 'public://file.png::public://file.png', 'no_img::no_img'), 'IN')
+      ->condition($db_or)
       ->orderBy('ft.entity_id')
       ->range(0, $chunk_size);
     $nids = $query->execute()->fetchCol();
