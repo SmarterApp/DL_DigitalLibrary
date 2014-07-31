@@ -714,7 +714,8 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $class = 'list-image lazy';
     }
 
-    $default_file = 'public://file.png';
+    // $default_file = 'public://file.png';
+    $default_file = 'no_img';
     $uri = NULL;
     $url = NULL;
     if (isset($fields['field_thumbnail_uri'])) {

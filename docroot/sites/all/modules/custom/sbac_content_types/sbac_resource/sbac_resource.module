@@ -1083,10 +1083,11 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
         $url_option = 'no_img';
         break;
       case 'na':
-        $url_option = 'public://file.png';
+        // $url_option = 'public://file.png';
+        $url_option = 'no_img';
         break;
       default:
-        $url_option = 'public://file.png';
+        $url_option = 'no_img';
         break;
     }
     $urls[] = $url_option;
@@ -1138,7 +1139,7 @@ function _sbac_resource_embed_vid_thumb_url($media) {
         break;
     }
   }
-  return array($url, 'public://file.png');
+  return array($url, 'no_img');
 }
 
 /**
@@ -1152,7 +1153,8 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
   $thumbnail_exists = FALSE;
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
-  $default_file = 'public://file.png';
+  // $default_file = 'public://file.png';
+  $default_file = 'no_img';
 
   foreach ($urls as $url) {
     if (url_is_external($url) && !$thumbnail_exists) {
@@ -2301,7 +2303,8 @@ function sbac_resource_node_delete($node) {
  * @param $node
  */
 function sbac_resource_determine_thumbnail_uri(&$node) {
-  $default_file = 'public://file.png';
+  // $default_file = 'public://file.png';
+  $default_file = 'no_img';
   $nid = $node->nid;
   $media_items = sbac_media_load_items($node->nid);
   $node->document = $media_items;
