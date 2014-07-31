@@ -1144,7 +1144,17 @@ function sbac_media_html5_element_upload($form, $form_state) {
         // Queue up the request.
         httprl_queue_background_callback($callback_options);
         // Execute request.
-        httprl_send_request();
+        $response = httprl_send_request();
+        if ($response === FALSE || count($response) > 0) {
+          if ($response === FALSE) {
+            watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
+          }
+          else {
+            // Display the error message of only the first one
+            $result = array_shift(array_values($response));
+            watchdog('SBAC Media', $result->error , NULL, WATCHDOG_ERROR);
+          }
+        }
         error_log('executing request');
       }
       // rebuild the form, output.
