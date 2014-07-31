@@ -69,6 +69,7 @@
       //  submit button is disabled.
       $('#sbac-setup-hover-expertise').hover(
         function() {
+          sbac_user_check_fields();
           if ($('#edit-next').prop('disabled')) {
             $('#expertise-form-drop').addClass('open');
           }
