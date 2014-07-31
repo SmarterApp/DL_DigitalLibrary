@@ -313,6 +313,7 @@ a.sbac-grid-layout {
 		.resource-top {
     	padding: 10px 15px;
 			position: relative;
+      min-height: 280px;
     }
 
     .resoruce-bottom {
@@ -1723,6 +1724,7 @@ a.sbac-grid-layout {
 
     .resource-card {
       max-width: 290px;
+      min-width: 290px;
     }
 
     li {
