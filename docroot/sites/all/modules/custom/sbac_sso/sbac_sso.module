@@ -86,7 +86,6 @@ function sbac_sso_menu() {
 function sbac_sso_menu_alter(&$items) {
   if (isset($_ENV['AH_SITE_ENVIRONMENT']) &&
     ($_ENV['AH_SITE_ENVIRONMENT'] == 'dev' ||
-      $_ENV['AH_SITE_ENVIRONMENT'] == 'test' ||
       $_ENV['AH_SITE_ENVIRONMENT'] == 'stage3' ||
       $_ENV['AH_SITE_ENVIRONMENT'] == 'stage2' ||
       $_ENV['AH_SITE_ENVIRONMENT'] == 'prod')
