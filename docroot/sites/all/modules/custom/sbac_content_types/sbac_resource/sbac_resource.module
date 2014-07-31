@@ -1083,10 +1083,11 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
         $url_option = 'no_img';
         break;
       case 'na':
-        $url_option = 'public://file.png';
+        // $url_option = 'public://file.png';
+        $url_option = 'no_img';
         break;
       default:
-        $url_option = 'public://file.png';
+        $url_option = 'no_img';
         break;
     }
     $urls[] = $url_option;
@@ -1138,7 +1139,7 @@ function _sbac_resource_embed_vid_thumb_url($media) {
         break;
     }
   }
-  return array($url, 'public://file.png');
+  return array($url, 'no_img');
 }
 
 /**
@@ -1152,7 +1153,8 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
   $thumbnail_exists = FALSE;
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
-  $default_file = 'public://file.png';
+  // $default_file = 'public://file.png';
+  $default_file = 'no_img';
 
   foreach ($urls as $url) {
     if (url_is_external($url) && !$thumbnail_exists) {
@@ -2301,7 +2303,8 @@ function sbac_resource_node_delete($node) {
  * @param $node
  */
 function sbac_resource_determine_thumbnail_uri(&$node) {
-  $default_file = 'public://file.png';
+  // $default_file = 'public://file.png';
+  $default_file = 'no_img';
   $nid = $node->nid;
   $media_items = sbac_media_load_items($node->nid);
   $node->document = $media_items;
@@ -3426,6 +3429,9 @@ function theme_sbac_resource_views_load_more_pager($vars) {
 
   global $base_url;
   $referer = str_replace($base_url . '/', '', $_SERVER['HTTP_REFERER']);
+  if (!$referer) {
+    $referer = str_replace($base_url . '/', '', $_GET['q']);
+  }
   $view_name = '';
   switch ($referer) {
     case 'digital-library-resources':
@@ -3438,20 +3444,19 @@ function theme_sbac_resource_views_load_more_pager($vars) {
       $view_name = 'my_resources';
       break;
   }
-  $max_page = $pager_total[0];
 
   // Because we dynamically change the items per page, we need
   // to update the global pager and tell it where on page X now.
   $old_url = NULL;
   if (isset($_POST['page'])) {
     $pager_page_array[0] = $_POST['page'];
-    $pager_total[0] += $_POST['page'];
+    //$pager_total[0] -= $_POST['page'];
     $old_url = $_GET['q'];
     $_GET['q'] = $referer;
   }
   else if (isset($_SESSION['load_more'][$view_name]['page'])) {
     $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
-    $pager_total[0] +=  $_SESSION['load_more'][$view_name]['page'];
+    //$pager_total[0] -=  $_SESSION['load_more'][$view_name]['page'];
     $old_url = $_GET['q'];
     $_GET['q'] = $referer;
   }
@@ -3464,7 +3469,7 @@ function theme_sbac_resource_views_load_more_pager($vars) {
       'parameters' => $parameters,
     )
   );
-  if (($pager_page_array[0] + 1) == $max_page) {
+  if (empty($li_next)) {
     $li_next = "&nbsp;";
   }
 

@@ -293,7 +293,7 @@ function drush_sbac_resource_update_failed_thumbnails() {
     $query = db_select('field_data_field_thumbnail_uri', 'ft');
     $query->fields('ft', array('entity_id'))
       ->condition('ft.entity_id', $current_nid, '>')
-      ->condition('ft.field_thumbnail_uri_value', array('::', 'public://file.png::public://file.png', 'na::na', '', 'no_img::no_img'), 'IN')
+      ->condition('ft.field_thumbnail_uri_value', array('::', 'public://file.png::public://file.png', 'no_img::no_img'), 'IN')
       ->orderBy('ft.entity_id')
       ->range(0, $chunk_size);
     $nids = $query->execute()->fetchCol();

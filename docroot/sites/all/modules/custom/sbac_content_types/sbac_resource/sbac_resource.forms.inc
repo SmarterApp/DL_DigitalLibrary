@@ -369,6 +369,34 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
     return $form;
   }
 
+  if ($form_state['html5'] && isset($_SESSION['file_attributes'])) {
+    $html5_progress = db_query('SELECT * FROM {sbac_html5_progress} WHERE nid = :nid', array(':nid' => $form['#node']->nid))->fetchObject();
+    if (!$html5_progress) {
+      error_log("TRYING TO REUPLOAD");
+      // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
+      $callback_options = array(
+        array(
+          'function' => 'sbac_media_html5_upload_asynchronous',
+          // Setup options array.
+          'options' => array(
+            'timeout' => 1200,
+            'global_timeout' => 1200,
+          ),
+        ),
+        $_SESSION['file_attributes'],
+      );
+      // Queue up the request.
+      httprl_queue_background_callback($callback_options);
+      // Execute request.
+      $response = httprl_send_request();
+      error_log(print_r($response));
+      if ($response === FALSE) {
+        watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
+      }
+    }
+    unset($_SESSION['file_attributes']);
+  }
+
   $duplicates = FALSE;
   $active_tab = $form_state['values']['additional_settings__active_tab'];
   if ($active_tab == 'edit-group_materials') {
@@ -1940,7 +1968,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             }
           }
           // Get the last 3 QC
-          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY id DESC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
+          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY changed ASC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
 
           // check for QC feedbacks first
           $qc_entities = entity_load('feedback', $qc_ids);

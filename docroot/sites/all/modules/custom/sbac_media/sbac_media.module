@@ -1146,17 +1146,11 @@ function sbac_media_html5_element_upload($form, $form_state) {
         // Execute request.
         $response = httprl_send_request();
         error_log(print_r($response));
-        if ($response === FALSE || count($response) > 0) {
-          if ($response === FALSE) {
-            watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
-          }
-          else {
-            // Display the response back, usually this is a good thing, not an error
-            $result = array_shift(array_values($response));
-            watchdog('SBAC Media', $result->error , NULL, WATCHDOG_ERROR);
-          }
+        if ($response === FALSE) {
+          watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
         }
         error_log('executing request');
+        $_SESSION['file_attributes'] = $file_attributes;
       }
       // rebuild the form, output.
       $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
