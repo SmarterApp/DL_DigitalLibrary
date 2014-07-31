@@ -1004,17 +1004,38 @@ h2.name {
     clear: left;
     display: block;
     float: right;
-    background-image: url('../images/submit-arrow-next.png');
-    background-repeat: no-repeat;
-    background-position: center right;
-    padding-right: 30px;
+
+    &:after {
+      background-image: url('../images/submit-arrow-next.png');
+      background-repeat: no-repeat;
+      background-position: center right;
+      content: " ";
+      display: inline-block;
+      width: 25px;
+      height: 18px;
+      margin-left: 12px;
+      margin-top: -2px;
+      vertical-align: middle;
+      margin-right: -10px;
+    }
   }
 
-  #edit-previous {
-    background-image: url('../images/submit-arrow-prev.png');
-    background-repeat: no-repeat;
-    background-position: left center;
+  #edit-previous, #edit-edit-profile {
     padding-left: 30px;
+
+    &:before {
+      background-image: url('../images/submit-arrow-prev.png');
+      background-repeat: no-repeat;
+      background-position: left center; 
+      content: " ";
+      display: inline-block;
+      width: 25px;
+      height: 18px;
+      margin-left: -20px;
+      margin-top: -2px;
+      vertical-align: middle;
+      margin-right: 10px;     
+    }
   }
 
 .sbac-setup-pg3-txt {
@@ -1051,8 +1072,11 @@ h2.name {
 
   #edit-next {
     clear: none;
-    background-image: none;
     padding-right: 18px;
+
+    &:after {
+      display: none;
+    }
   }
 }
 
@@ -1104,19 +1128,24 @@ h2.name {
   }
 
   #sbac-user-setup-preview-form {
-    #edit-edit-profile {
-      background-image: url('../images/submit-arrow-prev.png');
-      background-repeat: no-repeat;
-      background-position: left center;
-      padding-left: 30px;      
-    }
-
     #edit-done {
       float: right;
-      background-image: url('../images/checkmark.png');
-      background-repeat: no-repeat;
-      background-position: left center;
+
       padding-left: 30px;  
+
+      &:before {
+        background-image: url('../images/checkmark.png');
+        background-repeat: no-repeat;
+        background-position: left center;
+        content: " ";
+        display: inline-block;
+        width: 25px;
+        height: 23px;
+        margin-left: -20px;
+        margin-top: -2px;
+        vertical-align: middle;
+        margin-right: 10px;    
+      }
     }
   }
 
