@@ -1145,6 +1145,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
         httprl_queue_background_callback($callback_options);
         // Execute request.
         $response = httprl_send_request();
+        error_log(print_r($response));
         if ($response === FALSE || count($response) > 0) {
           if ($response === FALSE) {
             watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
