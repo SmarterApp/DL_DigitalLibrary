@@ -1,12 +1,12 @@
 <?php
 namespace taskit\sbac_core;
-      
+
 require_once('class.BaseTask.inc');
 
 class RemovedResource extends \taskit\sbac_core\BaseTask {
   public function display($entities, $accounts) {
-    $node     = node_load(current($entities['node']));
-    $account  = user_load(current($accounts));
+    $node = node_load(current($entities['node']));
+    $account = user_load(current($accounts));
 
     if ($node && $account) {
       $this->setTaskUrl('node/' . $node->nid);
@@ -19,6 +19,11 @@ class RemovedResource extends \taskit\sbac_core\BaseTask {
       if (!empty($entities['feedback'])) {
         $feedback = entity_load_single('flag', current($entities['feedback']));
         $output[] = '<div class="taskit-content-toggle">' . $feedback->moderation_comment . '</div>';
+      }
+      elseif (!empty($node->field_posting_options_comment[LANGUAGE_NONE])) {
+        // TODO: This is a known bug as field_posting_options_comment is always the current value. We want the revision value at the time of removal. We'll revisit this later
+        $details = $node->field_posting_options_comment['und'][0]['value'];
+        $output[] = '<div class="taskit-content-toggle">' . $details . '</div>';
       }
       $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
       if ($flags) {
