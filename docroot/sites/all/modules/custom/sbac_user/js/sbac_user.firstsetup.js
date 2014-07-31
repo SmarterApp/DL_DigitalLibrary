@@ -67,7 +67,7 @@
 
       //  When user hovers over invisible div, toggle the popup to show if the 
       //  submit button is disabled.
-      $('#sbac-setup-hover-expertise').hover(
+      $('#sbac-setup-hover-expertise-button').hover(
         function() {
           sbac_user_check_fields();
           if ($('#edit-next').prop('disabled')) {

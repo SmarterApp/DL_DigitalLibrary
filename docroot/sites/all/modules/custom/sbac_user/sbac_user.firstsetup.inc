@@ -322,11 +322,13 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
     ),
   );
 
-  $form['hover_div_pi'] = array(
-    '#markup' => '<div id="sbac-setup-hover-expertise" data-dropdown="pi-form-drop"></div>',
-  );
+  // $form['hover_div_pi'] = array(
+  //   '#markup' => '<div id="sbac-setup-hover-expertise" data-dropdown="expertise-form-drop"></div>',
+  // );
 
   $form['next'] = array(
+    '#prefix' => '<div id="sbac-setup-hover-expertise-button" data-dropdown="expertise-form-drop">',
+    '#suffix' => '</div>',
     '#type' => 'submit',
     '#value' => t('Next'),
   );
