@@ -1151,7 +1151,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
             watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
           }
           else {
-            // Display the error message of only the first one
+            // Display the response back, usually this is a good thing, not an error
             $result = array_shift(array_values($response));
             watchdog('SBAC Media', $result->error , NULL, WATCHDOG_ERROR);
           }
