@@ -434,7 +434,7 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     ),
   );
 
-  $form['next'] = array(
+  $form['next3'] = array(
     '#type' => 'submit',
     '#value' => t('Preview'),
   );
