@@ -689,7 +689,7 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
   if (!empty($view->custom_filters)) {
     if (!empty($view->custom_filters['resource-status'])) {
       $join = new views_join();
-      $join->construct('eck_feedback', 'node', 'nid', 'node_id', "eck_feedback.created > IFNULL((SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1), 0)");
+      $join->construct('eck_feedback', 'node', 'nid', 'node_id', "eck_feedback.created > IFNULL((SELECT max(h2.stamp) FROM workbench_moderation_node_history h2 WHERE h2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' and h2.stamp > (SELECT max(h3.stamp) FROM workbench_moderation_node_history h3 WHERE h3.nid = node.nid AND h3.state = 'rejected')), 0)");
       $query->add_table('eck_feedback', 'node', $join);
 
       $having = array();
@@ -787,7 +787,7 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
     }
   }
   if (isset($view->resubmission_only) && $view->resubmission_only === TRUE) {
-    $query->add_where_expression(count($query->where), "(SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1) IS NOT NULL");
+    $query->add_where_expression(count($query->where), "(SELECT max(h2.stamp) FROM workbench_moderation_node_history h2 WHERE h2.nid = node.nid AND h2.from_state = 'draft' and h2.state = 'needs_review' AND h2.stamp > (SELECT max(h3.stamp) FROM workbench_moderation_node_history h3 WHERE h3.nid = node.nid AND h3.state = 'rejected')) IS NOT NULL");
     $query->add_where(count($query->where), db_or()->condition('field_data_field_recent_reviewers.field_recent_reviewers_target_id', $user->uid)
       ->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid));
   }

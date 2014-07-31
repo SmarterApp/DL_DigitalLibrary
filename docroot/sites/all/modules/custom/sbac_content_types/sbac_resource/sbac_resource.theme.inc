@@ -1171,9 +1171,16 @@ function _sbac_resource_get_review_progress($nid = NULL, $uid = NULL, $from_date
       f3.created > IFNULL((
                             SELECT
                               max(h4.stamp)
-                            FROM node n4 LEFT JOIN workbench_moderation_node_history h4
-                                ON h4.nid = n4.nid
-                            WHERE n4.nid = n1.nid AND h4.from_state = 'draft' AND h4.state = 'needs_review'
+                            FROM workbench_moderation_node_history h4
+                            WHERE h4.nid = n1.nid
+                            AND h4.from_state = 'draft'
+                            AND h4.state = 'needs_review'
+                            AND h4.stamp > (
+                              SELECT
+                                max(h5.stamp)
+                              FROM workbench_moderation_node_history h5
+                              WHERE h5.state = 'rejected' AND h5.nid = n1.nid
+                            )
                             GROUP BY h4.nid
                             HAVING COUNT(h4.nid) > 1), 0)
       AND f3.completed = 1
