@@ -105,6 +105,7 @@
           url: "/sbac-flag/load-more",
           data: {'offset' : offset, 'hash_load' : hash_load},
           success: function(data) {
+            ajax_request = null;
             var response = jQuery.parseJSON(data);
             if (!hash_load) {
               $('#sbac-flag-mod-cont').append(response.list_output);
