@@ -249,7 +249,7 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
   sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();
   $total_rows = $view->total_rows;
-  //  dpq($resource_review_output->build_info['query']);
+//    dpq($view->build_info['query']);
   $output = array();
   if ($ajax) {
     // Create the Drupal.settings attribute
@@ -304,7 +304,12 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT] = $resource_tab['count'];
   $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] = $resubmission_tab['count'];
 
-  $active_tab = sbac_resource_get_active_subnav();
+  if ($_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] === FALSE) {
+    $active_tab = SBAC_RESOURCE_SUBNAV_RESOURCES;
+  }
+  else {
+    $active_tab = sbac_resource_get_active_subnav();
+  }
   // Get the active tab content
   $active_tab_content = array();
   switch ($active_tab) {
