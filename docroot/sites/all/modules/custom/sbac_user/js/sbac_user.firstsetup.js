@@ -26,7 +26,7 @@
             $('#pi-form-drop').addClass('open');
           }
           else {
-            $('#sbac-setup-hover-pi-button').css('z-index', -9999);
+            $('#sbac-setup-hover-pi-button').removeAttr('data-dropdown');
           }
         },
         function() {
@@ -40,10 +40,11 @@
       //  based on their choice.
       $('#edit-user-title').change(function() {
         if ($('#edit-user-title').val() != '') {
+          $('#sbac-setup-hover-pi-button').removeAttr('data-dropdown');
           $('#edit-next-form').prop('disabled', false);
         }
         else {
-          $('#sbac-setup-hover-pi-button').css('z-index', 9999);
+          $('#sbac-setup-hover-pi-button').attr('data-dropdown', 'pi-form-drop');
           $('#edit-next-form').prop('disabled', true);
         }
       });

@@ -205,8 +205,8 @@ function sbac_user_setup_pi_form($form, &$form_state) {
   // );
 
   $form['next_form'] = array(
-    '#prefix' => '<div id="sbac-setup-hover-pi-button" data-dropdown="pi-form-drop">',
-    '#suffix' => '</div>',
+    // '#prefix' => '<div id="sbac-setup-hover-pi-button" data-dropdown="pi-form-drop">',
+    // '#suffix' => '</div>',
     '#type' => 'submit',
     '#value' => t('Next'),
   );
@@ -329,8 +329,6 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
   // );
 
   $form['next'] = array(
-    '#prefix' => '<div id="sbac-setup-hover-expertise-button" data-dropdown="expertise-form-drop">',
-    '#suffix' => '</div>',
     '#type' => 'submit',
     '#value' => t('Next'),
   );
