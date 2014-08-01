@@ -200,25 +200,15 @@ function sbac_user_setup_pi_form($form, &$form_state) {
     '#markup' => '</div>',
   );
 
-  $values = array();
-  foreach ($options AS $idx => $name) {
-    $values[] = array('value' => $idx);
-  }
-
-  $form['hover_div_pi'] = array(
-    '#markup' => '<div id="sbac-setup-hover-pi" data-dropdown="pi-form-drop"></div>',
-  );
+  // $form['hover_div_pi'] = array(
+  //   '#markup' => '<div id="sbac-setup-hover-pi" data-dropdown="pi-form-drop"></div>',
+  // );
 
   $form['next_form'] = array(
+    '#prefix' => '<div id="sbac-setup-hover-pi-button" data-dropdown="pi-form-drop">',
+    '#suffix' => '</div>',
     '#type' => 'submit',
     '#value' => t('Next'),
-    '#states' => array(
-      'enabled' => array(
-        '#edit-user-title' => array(
-          $values,
-        ),
-      ),
-    ),
   );
 
   $form['dropdown'] = array(
@@ -324,44 +314,6 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
     '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
   );
 
-  /**
-   * Returns an array to conform to Drupal FAPI standard.
-   * @param  [type] $options [description]
-   * @return [type]          [description]
-   */
-  function sbac_get_multi_select_dependencies($options) {
-    $values = array();
-    foreach ($options AS $idx => $name) {
-      $values[] = array('value' => array((string) $idx));
-    }
-    return $values;
-  }
-
-  $form['is_complete'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'completed',
-    '#attributes' => array(
-      'class' => array(
-        'sbac-user-setup-hidden',
-        'hidden',
-      ),
-    ),
-    '#states' => array(
-      'checked' => array(
-        'select[name="subject_options[]"]' => array(
-          sbac_get_multi_select_dependencies($subject_options),
-        ),
-        'select[name="grade_options[]"]' => array(
-          sbac_get_multi_select_dependencies($grade_options),
-        ),
-        'select[name="student_population_options[]"]' => array(
-          sbac_get_multi_select_dependencies($student_population_options),
-        ),
-      ),
-    ),
-    '#after_build' => array('sbac_user_is_complete_after_build'),
-  );
-
   $form['previous'] = array(
     '#type' => 'submit',
     '#value' => t('Previous'),
@@ -372,20 +324,15 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
     ),
   );
 
-  $form['hover_div_pi'] = array(
-    '#markup' => '<div id="sbac-setup-hover-expertise" data-dropdown="pi-form-drop"></div>',
-  );
+  // $form['hover_div_pi'] = array(
+  //   '#markup' => '<div id="sbac-setup-hover-expertise" data-dropdown="expertise-form-drop"></div>',
+  // );
 
   $form['next'] = array(
+    '#prefix' => '<div id="sbac-setup-hover-expertise-button" data-dropdown="expertise-form-drop">',
+    '#suffix' => '</div>',
     '#type' => 'submit',
     '#value' => t('Next'),
-    '#states' => array(
-      'enabled' => array(
-        ':input[name="is_complete"]' => array(
-          'checked' => TRUE,
-        ),
-      ),
-    ),
   );
 
   $form['dropdown'] = array(
@@ -491,7 +438,7 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     ),
   );
 
-  $form['next'] = array(
+  $form['next3'] = array(
     '#type' => 'submit',
     '#value' => t('Preview'),
   );

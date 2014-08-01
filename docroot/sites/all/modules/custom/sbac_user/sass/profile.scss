@@ -946,15 +946,15 @@ h2.name {
   #sbac-setup-hover-pi, #sbac-setup-hover-expertise {
     padding: 10px;
     position: absolute;
-    right: 45px;
+    right: 40px;
     bottom: 40px;
     z-index: 200;
-    height: 30px;
-    width: 80px;
+    height: 36px;
+    width: 100px;
   }
 
   #sbac-setup-hover-pi {
-    bottom: 22px;
+    bottom: 20px;
   }
 
   #pi-form-drop, #expertise-form-drop {
@@ -1070,9 +1070,10 @@ h2.name {
     clear: left;
   }
 
-  #edit-next {
+  #edit-next3 {
     clear: none;
     padding-right: 18px;
+    float: right;
 
     &:after {
       display: none;
