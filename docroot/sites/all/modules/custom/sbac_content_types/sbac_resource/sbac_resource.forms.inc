@@ -1342,8 +1342,6 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                   ->propertyCondition('completed', 1)
                   ->propertyCondition('type', array('qc', 'gate_keeper'), 'IN')
                   ->propertyCondition('node_id', $node->nid)
-                  ->propertyCondition('current', 1)
-                  ->propertyCondition('status', 1)
                   ->execute();
                 if (isset($feedbacks['feedback'])) {
                   foreach ($feedbacks['feedback'] as $feedback) {
