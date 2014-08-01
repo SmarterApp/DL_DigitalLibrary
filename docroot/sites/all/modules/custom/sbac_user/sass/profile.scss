@@ -1000,23 +1000,26 @@ h2.name {
     top: 686px !important;
   }
 
-  #edit-next-form, #edit-next {
+ #edit-next, #sbac-setup-hover-pi-button {
     clear: left;
     display: block;
     float: right;
 
-    &:after {
-      background-image: url('../images/submit-arrow-next.png');
-      background-repeat: no-repeat;
-      background-position: center right;
-      content: " ";
-      display: inline-block;
-      width: 25px;
-      height: 18px;
-      margin-left: 12px;
-      margin-top: -2px;
-      vertical-align: middle;
-      margin-right: -10px;
+
+    #edit-next-form {
+      &:after {
+        background-image: url('../images/submit-arrow-next.png');
+        background-repeat: no-repeat;
+        background-position: center right;
+        content: " ";
+        display: inline-block;
+        width: 25px;
+        height: 18px;
+        margin-left: 12px;
+        margin-top: -2px;
+        vertical-align: middle;
+        margin-right: -10px;
+      }
     }
   }
 
