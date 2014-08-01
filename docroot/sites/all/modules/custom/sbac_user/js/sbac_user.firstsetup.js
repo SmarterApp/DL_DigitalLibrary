@@ -40,6 +40,7 @@
       //  based on their choice.
       $('#edit-user-title').change(function() {
         if ($('#edit-user-title').val() != '') {
+          $('#sbac-setup-hover-pi-button').css('z-index', -9999);
           $('#edit-next-form').prop('disabled', false);
         }
         else {
