@@ -1166,7 +1166,7 @@ function _sbac_resource_get_review_progress($nid = NULL, $uid = NULL, $from_date
       WHEN count(*) = 0 THEN 'Gate-Keeping Review'
       WHEN count(*) = 1 THEN 'Quality Criteria Review 1'
       WHEN count(*) = 2 THEN 'Quality Criteria Review 2'
-      WHEN count(*) > 2 THEN 'Quality Criteria Review 3'
+      WHEN count(*) = 3 THEN 'Quality Criteria Review 3'
       END AS state
     FROM eck_feedback f3
     WHERE
@@ -1182,9 +1182,7 @@ function _sbac_resource_get_review_progress($nid = NULL, $uid = NULL, $from_date
                                 max(h5.stamp)
                               FROM workbench_moderation_node_history h5
                               WHERE h5.state = 'rejected' AND h5.nid = n1.nid
-                            )
-                            GROUP BY h4.nid
-                            HAVING COUNT(h4.nid) > 1), 0)
+                            )), 0)
       AND f3.completed = 1
       AND f3.node_id = n1.nid)
   END", 'state');
