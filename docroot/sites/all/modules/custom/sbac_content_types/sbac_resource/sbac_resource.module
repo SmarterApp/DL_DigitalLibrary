@@ -3423,29 +3423,26 @@ function sbac_resource_load_more_ajax() {
  */
 function theme_sbac_resource_views_load_more_pager($vars) {
   global $pager_page_array, $pager_total;
-
   drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
-
   $tags = $vars['tags'];
   $element = $vars['element'];
   $parameters = $vars['parameters'];
 
   global $base_url;
-  $referer = str_replace($base_url . '/', '', $_SERVER['HTTP_REFERER']);
-  if (!$referer) {
-    $referer = str_replace($base_url . '/', '', $_GET['q']);
-  }
+  $referer = str_replace($base_url . '/', '', $_GET['q']);
   $view_name = '';
-  switch ($referer) {
-    case 'digital-library-resources':
-      $view_name = 'resources';
-      break;
-    case 'resource-review':
-      $view_name = 'resource_review';
-      break;
-    case 'my-resources':
-      $view_name = 'my_resources';
-      break;
+  if ($referer) {
+    switch ($referer) {
+      case 'digital-library-resources':
+        $view_name = 'resources';
+        break;
+      case 'resource-review':
+        $view_name = 'resource_review';
+        break;
+      case 'my-resources':
+        $view_name = 'my_resources';
+        break;
+    }
   }
 
   // Because we dynamically change the items per page, we need
@@ -3453,15 +3450,17 @@ function theme_sbac_resource_views_load_more_pager($vars) {
   $old_url = NULL;
   if (isset($_POST['page'])) {
     $pager_page_array[0] = $_POST['page'];
-    //$pager_total[0] -= $_POST['page'];
     $old_url = $_GET['q'];
-    $_GET['q'] = $referer;
+    if ($referer) {
+      $_GET['q'] = $referer;
+    }
   }
   else if (isset($_SESSION['load_more'][$view_name]['page'])) {
     $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
-    //$pager_total[0] -=  $_SESSION['load_more'][$view_name]['page'];
     $old_url = $_GET['q'];
-    $_GET['q'] = $referer;
+    if ($referer) {
+      $_GET['q'] = $referer;
+    }
   }
 
   $li_next = theme('pager_next',
