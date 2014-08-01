@@ -162,13 +162,22 @@ class Qc extends Base {
   public function getReviewTeaser($content_callback) {
     $form = array();
 
-    $query = "  SELECT    id
-                FROM      eck_feedback
-                WHERE     type = 'qc'
-                AND       status = 1
-                AND       completed = 1
-                AND       node_id = :node_id
-             ";
+    $query = "
+SELECT
+	f.id
+FROM {eck_feedback} f
+WHERE f.node_id = :node_id
+      AND f.created >
+          (
+	          SELECT
+		          max(f2.created)
+	          FROM {eck_feedback} f2
+	          WHERE
+		          f2.node_id = :node_id
+		          AND f2.type = 'gate_keeper'
+		          AND f2.completed = 1
+          )
+      AND f.type = 'qc'";
 
     $result = db_query($query, array(':node_id' => $this->_resource->nid));
 
