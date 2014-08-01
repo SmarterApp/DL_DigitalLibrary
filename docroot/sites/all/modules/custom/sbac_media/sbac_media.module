@@ -1116,9 +1116,6 @@ function sbac_media_html5_element_upload($form, $form_state) {
       $valid = sbac_media_save_html5_record($file_attributes, $form_state);
       error_log('valid: ' . $valid);
       if ($valid) {
-        error_log('move thumbnail');
-        sbac_media_move_html5_thumbnail($file_attributes);
-
         // Bail out here if background callbacks are disabled.
         if (!httprl_is_background_callback_capable()) {
           watchdog('sbac-media', 'HTTPRL is not capable of making a background request.');
@@ -1151,6 +1148,9 @@ function sbac_media_html5_element_upload($form, $form_state) {
         }
         error_log('executing request');
         $_SESSION['file_attributes'] = $file_attributes;
+
+        error_log('move thumbnail');
+        sbac_media_move_html5_thumbnail($file_attributes);
       }
       // rebuild the form, output.
       $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
@@ -1504,14 +1504,14 @@ function sbac_media_save_html5_record(&$file_attributes, $form_state) {
   $return = entity_save('media', $media);
 
   // Delete old thumbnail image if any
-  if (!empty($node->field_thumbnail_uri[LANGUAGE_NONE])) {
-    $thumbnail_uri = $node->field_thumbnail_uri[LANGUAGE_NONE][0]['value'];
-    $thumbnail_pieces = explode('::', $thumbnail_uri);
-    $uri = $thumbnail_pieces[0];
-    $image_path = image_style_path('resource_image_grid', $uri);
-    $real_path = drupal_realpath($image_path);
-    file_unmanaged_delete($real_path);
-  }
+//  if (!empty($node->field_thumbnail_uri[LANGUAGE_NONE])) {
+//    $thumbnail_uri = $node->field_thumbnail_uri[LANGUAGE_NONE][0]['value'];
+//    $thumbnail_pieces = explode('::', $thumbnail_uri);
+//    $uri = $thumbnail_pieces[0];
+//    $image_path = image_style_path('resource_image_grid', $uri);
+//    $real_path = drupal_realpath($image_path);
+//    file_unmanaged_delete($real_path);
+//  }
 
   return $return;
 }
