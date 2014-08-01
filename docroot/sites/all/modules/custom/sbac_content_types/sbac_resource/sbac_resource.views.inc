@@ -15,6 +15,7 @@ function sbac_resource_views_query_alter(&$view, &$query) {
     _sbac_resource_resources_view_query_alter($view, $query);
   }
   if ($view->name == 'my_resources') {
+    sbac_resource_my_resource_apply_filters($view);
     _sbac_resource_my_resources_view_query_alter($view, $query);
   }
   if ($view->name == 'resource_review') {
