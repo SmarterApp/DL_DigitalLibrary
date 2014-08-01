@@ -1265,7 +1265,9 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
     $path  = str_replace('gs://', '', $gcs_location);
     $path = trim($path, '/');
     $file->setName($folder . '/' . $path);
-    $mime_type = mime_content_type($file_to_upload);
+    error_log("file to upload: " . $file_to_upload);
+    $mime_type = file_get_mimetype($file_to_upload);
+    error_log('mime_type: ' . $mime_type);
     $post_body = array(
       'mimeType' => $mime_type,
       'data' => $buffer,
