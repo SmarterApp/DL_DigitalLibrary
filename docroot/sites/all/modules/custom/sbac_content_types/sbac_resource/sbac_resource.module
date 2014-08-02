@@ -36,6 +36,13 @@ define('SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME', 'sbac-smart-search-url
 define('SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS', 'sbac-smart-search-hide-filters');
 define('SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS', 'sbac-smart-search-show-status');
 
+define('SBAC_RESOURCE_SUBNAV_ACTIVE', 'sbac-resource-sub-nav-active');
+define('SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB', 'resource-review-show-resubmission-tab');
+define('SBAC_RESOURCE_SUBNAV_RESOURCES', 'resource-review-resources');
+define('SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT', 'resource-review-resources-count');
+define('SBAC_RESOURCE_SUBNAV_RESUBMISSIONS', 'resource-review-resubmissions');
+define('SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT', 'resource-review-resubmissions-count');
+
 /**
  * Implements hook_update_projects_alter().
  *
@@ -135,6 +142,16 @@ function sbac_resource_menu() {
     'file' => 'sbac_resource.menu_callbacks.inc',
   );
 
+  $items['resource-review-reset'] = array(
+    'title' => 'Resource Review Reset',
+    'description' => 'Resource Review Reset',
+    'page callback' => 'sbac_resource_resource_review_page_reset',
+    'access callback' => 'sbac_resource_resource_review_access_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
   $items['dlr-smart-search'] = array(
     'title' => 'Digital Library Resources',
     'page callback' => 'sbac_resource_smart_search_page',
@@ -166,6 +183,19 @@ function sbac_resource_menu() {
     'title' => 'URL Exists',
     'page callback' => 'sbac_resource_url_exists_ajax',
     'access arguments' => array('access content'),
+  );
+
+  $items['sbac-resource/load-more'] = array(
+    'title' => 'Load More View Data',
+    'page callback' => 'sbac_resource_load_more_ajax',
+    'access arguments' => array('access content'),
+  );
+
+  $items['sbac-resource/update-thumbnail'] = array(
+    'title' => 'Update Resource Thumbnail',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_update_thumb_form'),
+    'access arguments' => array('configure sbac'),
   );
 
   return $items;
@@ -662,7 +692,7 @@ function sbac_resource_preprocess_node(&$vars) {
     if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
       $vars['edit_link'] = l('Edit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
     }
-    if($vars['workbench_moderation']['current']->state == 'rejected' && in_array('resource contributor', $user->roles)){
+    if ($vars['workbench_moderation']['current']->state == 'rejected' && in_array('resource contributor', $user->roles)) {
       $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
     }
 
@@ -726,21 +756,28 @@ function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
   $html5 = FALSE;
   if (isset($vars['document']['html5'])) {
-    // Add required js and css files
-    drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
-    drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/moduleScript.js', array('scope' => 'footer'));
-    drupal_add_css(drupal_get_path('theme', 'SBAC'), '/js/fancybox/jquery.fancybox.css');
-    $gcs = sbac_media_get_google_cloud_storage();
-    $html5 = TRUE;
-    $media = $vars['document']['html5'];
-    $file = file_load($media->fid);
-    $path_variables = explode('::', $media->document_id);
-    $folder = variable_get('google_cdn_folder');
+    $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " .$vars['nid'])->fetchObject();
+    if ($html5_progress && $html5_progress->status == SBAC_MEDIA_HTML5_FINISHED) {
+      // Add required js and css files
+      drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
+      drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/moduleScript.js', array('scope' => 'footer'));
+      drupal_add_css(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.css');
+      $html5 = TRUE;
+      $media = $vars['document']['html5'];
+      $file = file_load($media->fid);
+      $path_variables = explode('::', $media->document_id);
+      $folder = variable_get('google_cdn_folder');
 
-    // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
-    $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid']/32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
-    $viewer['viewer_filename'] = ucwords($path_variables[1]);
-    $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+      // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
+      $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid']/32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
+      $viewer['viewer_filename'] = ucwords($path_variables[1]);
+      $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+    }
+    else {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview-html5.jpg';
+      $viewer['viewer_filename'] = 'Processing...';
+      $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
+    }
   }
 
   if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
@@ -949,9 +986,9 @@ function _sbac_resource_determine_card_image($ext) {
 /**
  * Generates the external (Primary and Secondary) URLs for the thumbnail to be
  * downloaded.
- * @param  string $url  URL targetted.
- * @param  string $uri  URI targetted.
- * @param  array  $opts [(Primary Option), (Secondary Option)]
+ * @param  string $url URL targetted.
+ * @param  string $uri URI targetted.
+ * @param  array $opts [(Primary Option), (Secondary Option)]
  * @return array        uri::url
  */
 function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
@@ -970,13 +1007,14 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
         $url_option = $url;
         break;
       case 'no_img':
-        $url_option = 'public://file.png';
+        $url_option = 'no_img';
         break;
       case 'na':
-        $url_option = 'na';
+        // $url_option = 'public://file.png';
+        $url_option = 'no_img';
         break;
       default:
-        $url_option = 'public://doc.png';
+        $url_option = 'no_img';
         break;
     }
     $urls[] = $url_option;
@@ -985,7 +1023,7 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
 }
 
 /**
- * Uses the embed URL id to generate a thumbnail from the service. 
+ * Uses the embed URL id to generate a thumbnail from the service.
  * @param  Object $media Represents $node['document'][0]
  * @return array         [(Primary option), (Secondary option)]
  */
@@ -1028,21 +1066,22 @@ function _sbac_resource_embed_vid_thumb_url($media) {
         break;
     }
   }
-  return array($url, 'public://file.png');
+  return array($url, 'no_img');
 }
 
 /**
  * Saves the thumbnail to private://thumbnail directory.
- * @param  array  $urls     [(Primary option), (Secondary option)]
+ * @param  array $urls [(Primary option), (Secondary option)]
  * @param  string $filename Filename or Title of ebmedded video
- * @param  int    $nid      Node ID.
+ * @param  int $nid Node ID.
  * @return string           uri::url
  */
-function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
+function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) {
   $thumbnail_exists = FALSE;
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
-  $default_file = 'public://file.png';
+  // $default_file = 'public://file.png';
+  $default_file = 'no_img';
 
   foreach ($urls as $url) {
     if (url_is_external($url) && !$thumbnail_exists) {
@@ -1050,30 +1089,35 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
       $type = $finfo->buffer(file_get_contents($url));
       $ext = explode('/', $type);
       $ext = array_pop($ext);
+      if (_sbac_resource_determine_file_type_icon($ext) != 'image') {
+        $ext = 'png';
+      }
       $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
-      $filename = $filename . '.' . $ext;
+      if ($filename) {
+        $filename = $filename . '.' . $ext;
+        if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+          $download = sbac_resource_system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
 
-      if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
-        $download = system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
-
-        if ($download) {
-          $uri_url['uri'] = $download->uri;
-          $uri_url['url'] = $url;
-          $thumbnail_exists = TRUE;
+          if ($download) {
+            $uri_url['uri'] = $download->uri;
+            $uri_url['url'] = $url;
+            $thumbnail_exists = TRUE;
+          }
+          else {
+            watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
+          }
         }
         else {
-          watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
+          watchdog('sbac_resource', 'Unable to make dir: ' . $dir, array(), WATCHDOG_NOTICE);
         }
       }
-      else {
-        watchdog('sbac_resource', 'Unable to make dir: ' . $dir, array(), WATCHDOG_NOTICE);
-      }
+    }
+    elseif ($url == 'no_img' && !$thumbnail_exists) {
+      $uri_url['uri'] = 'no_img';
+      $uri_url['url'] = 'no_img';
+      $thumbnail_exists = TRUE;
     }
     elseif ($url == 'na' && !$thumbnail_exists) {
-      $uri_url['uri'] = 'na';
-      $uri_url['url'] = 'na';
-    }
-    elseif ($url != 'na' && !$thumbnail_exists) {
       $uri_url['uri'] = $default_file;
       $uri_url['url'] = $default_file;
       $thumbnail_exists = TRUE;
@@ -1083,6 +1127,43 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename, $nid) {
     }
   }
   return $uri_url;
+}
+
+/**
+ * Taken from system.module (system_retrieve_file), over riding it to remove the
+ * drupal_set_messages that the user did not want to see. Instead of looping
+ * through the $_SESSION variable to string compare and unset.
+ *
+ * @param $url
+ * @param null $destination
+ * @param bool $managed
+ * @param int $replace
+ * @return bool|null|stdClass|string
+ */
+function sbac_resource_system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
+  $parsed_url = parse_url($url);
+  if (!isset($destination)) {
+    $path = file_build_uri(drupal_basename($parsed_url['path']));
+  }
+  else {
+    if (is_dir(drupal_realpath($destination))) {
+      // Prevent URIs with triple slashes when glueing parts together.
+      $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
+    }
+    else {
+      $path = $destination;
+    }
+  }
+  $result = drupal_http_request($url);
+  if ($result->code != 200) {
+    // drupal_set_message(t('HTTP error @errorcode occurred when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url)), 'error');
+    return FALSE;
+  }
+  $local = $managed ? file_save_data($result->data, $path, $replace) : file_unmanaged_save_data($result->data, $path, $replace);
+  if (!$local) {
+    // drupal_set_message(t('@remote could not be saved to @path.', array('@remote' => $url, '@path' => $path)), 'error');
+  }
+  return $local;
 }
 
 /**
@@ -1249,6 +1330,10 @@ function sbac_resource_theme_registry_alter(&$theme_registry) {
   if (isset($theme_registry['status_messages'])) {
     $theme_registry['status_messages']['function'] = 'sbac_resource_status_messages';
   }
+  if (isset($theme_registry['views_load_more_pager'])) {
+    $theme_registry['views_load_more_pager']['function'] = 'theme_sbac_resource_views_load_more_pager';
+    $theme_registry['views_load_more_pager']['theme path'] = 'sites/all/modules/custom/sbac_content_types/sbac_resource';
+  }
 }
 
 /**
@@ -1403,6 +1488,35 @@ function sbac_resource_node_load($nodes, $types) {
     return;
   }
 
+  // Save a variable for the nid that is loaded, used to scroll to loaded node
+//  if (isset($_SERVER['HTTP_REFERER']) && count($nodes) == 1) {
+//    global $base_url;
+//    $resource_node = array_pop($nodes);
+//    $url = str_replace($base_url . '/', '', $_SERVER['HTTP_REFERER']);
+//    if ($url == 'moderation' || $url == 'digital-library-resources' || $url == 'resource-review' || $url == 'my-resources' || $url == 'forums') {
+//      switch ($url) {
+//        case 'moderation':
+//          $name = 'moderation';
+//          break;
+//        case 'digital-library-resources':
+//          $name = 'resources';
+//          break;
+//        case 'resource-review':
+//          $name = 'resource_review';
+//          break;
+//        case 'my-resources':
+//          $name = 'my_resources';
+//          break;
+//        case 'forums':
+//          $name = 'forums';
+//          break;
+//      }
+//      if (isset($name)) {
+//        $_SESSION['load_more'][$name]['nid'] = $resource_node->nid;
+//      }
+//    }
+//  }
+
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
@@ -1475,15 +1589,10 @@ function sbac_resource_workbench_moderation_transition($node, $previous_state, $
     // published node. I bruce lee the publish status here.
     db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
     db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
-  }
-  elseif ($node->type == 'resource' && $new_state == 'removed') {
-    $node->status = 0;
-    // Delete resource forum and topics
-    if ($forum_id = sbac_forum_get_resource_forum_id($node->nid)) {
-      sbac_forum_delete_resource_forum($forum_id);
-    }
-    // Delete favorite
-    db_delete('sbac_favorites')->condition('type', 'node')->condition('id', $node->nid)->execute();
+
+    // unhide the node on the my-resources tab, if hidden
+    $node->field_is_hidden[LANGUAGE_NONE][0]['value'] = 0;
+    field_attach_update('node', $node);
   }
 
   // issue, i need to create records for everyone during state transitions, could limit this to "being_reviewed" and "approved".
@@ -1777,6 +1886,19 @@ function sbac_resource_query_alter(&$query) {
       }
     }
 
+//    $pos = strrpos($table['condition'], $table['alias']);
+//    if ($pos !== FALSE) {
+//      $join_condition = substr($table['condition'], $pos);
+//      if ($join_condition) {
+//        $join_condition = str_replace($key, $filter_name . '0', $join_condition);
+//        $tables[$filter_name . '0']['condition'] .= ' AND ' . $join_condition;
+//        $merged = array_merge($tables[$filter_name . '0']['arguments'], $table['arguments']);
+//        $tables[$filter_name . '0']['arguments'] = $merged;
+//        unset($tables[$key]);
+//        $removed_tables[] = $key;
+//      }
+//    }
+
     foreach ($where as $key => $clause) {
       if (isset($clause['field']) && is_object($clause['field'])) {
         $conditions =& $clause['field']->conditions();
@@ -1800,11 +1922,13 @@ function sbac_resource_query_alter(&$query) {
                             }
                           }
                         }
-                        else if (isset($clause3['field'])) {
-                          $field = $clause3['field'];
-                          $filter_name = 'taxonomy_index_value_';
-                          if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
-                            sbac_resource_optimize_taxonomy_query($clause3, $conditions3, $key3);
+                        else {
+                          if (isset($clause3['field'])) {
+                            $field = $clause3['field'];
+                            $filter_name = 'taxonomy_index_value_';
+                            if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
+                              sbac_resource_optimize_taxonomy_query($clause3, $conditions3, $key3);
+                            }
                           }
                         }
                       }
@@ -2117,7 +2241,8 @@ function sbac_resource_node_delete($node) {
  * @param $node
  */
 function sbac_resource_determine_thumbnail_uri(&$node) {
-  $default_file = 'public://file.png';
+  // $default_file = 'public://file.png';
+  $default_file = 'no_img';
   $nid = $node->nid;
   $media_items = sbac_media_load_items($node->nid);
   $node->document = $media_items;
@@ -2145,19 +2270,25 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   }
   elseif (isset($node->document[0])) {
     $media = $node->document[0];
+    $url = '';
+    $uri = '';
     if ($media->fid) {
-      $file = file_load($media->fid);
-      $url = file_create_url($file->uri);
-      $uri = $file->uri;
-      $exists = file_exists($uri);
-      if (!$exists) {
-        $url = $default_file;
-        $uri = $default_file;
+      $exists = FALSE;
+      $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
+      if (_sbac_resource_determine_file_type_icon($ext) != 'video') {
+        $file = file_load($media->fid);
+        $url = file_create_url($file->uri);
+        $uri = $file->uri;
+        $exists = file_exists($uri);
+      }
+      $thumb_opts = _sbac_resource_determine_card_image($ext);
+      $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
+      if (!$exists || ($thumb_opts[0] == 'no_img')) {
+        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, NULL, $nid);
+        $url = $thumb_url['url'];
+        $uri = $thumb_url['uri'];
       }
       else {
-        $ext = pathinfo($file->filename, PATHINFO_EXTENSION);
-        $thumb_opts = _sbac_resource_determine_card_image($ext);
-        $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
         $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid);
         $url = $thumb_url['url'];
         $uri = $thumb_url['uri'];
@@ -2289,6 +2420,16 @@ function sbac_resource_block_info() {
     'status' => 1,
   );
 
+  $blocks['sbac_resource_review_tabs'] = array(
+    'info' => t('Resource Review Tabs'),
+    'region' => 'sub-header',
+    'pages' => "resource-review*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -23,
+    'status' => 1,
+  );
+
   $blocks['sbac_resource_create_button'] = array(
     'info' => t('Create New Resource'),
     'region' => 'sub-header',
@@ -2393,6 +2534,11 @@ function sbac_resource_block_view($delta = '') {
       $block['content'] = sbac_resource_grid_list_button();
       break;
 
+    case 'sbac_resource_review_tabs':
+      $block['subject'] = NULL;
+      $block['content'] = drupal_get_form('sbac_resource_resource_review_subnav_form');
+      break;
+
     case 'sbac_resource_back_button':
       $block['subject'] = NULL;
       $previous_url = $_SERVER['HTTP_REFERER'];
@@ -2400,7 +2546,21 @@ function sbac_resource_block_view($delta = '') {
       if (strpos($previous_url, $base_url) !== FALSE) {
         $previous_url = str_replace($base_url, '', $previous_url);
       }
-      $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      $js = FALSE;
+      switch ($previous_url) {
+        case '/moderation':
+        case '/digital-library-resources':
+        case '/resource-review':
+        case '/my-resources':
+          $js = TRUE;
+          break;
+      }
+      if ($js) {
+        $block['content'] = '<span class="button" onclick="window.history.back(-1);">Back</span>';
+      }
+      else {
+        $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      }
       break;
     case 'sbac_resource_dl_sort_form':
       $block['subject'] = NULL;
@@ -2430,7 +2590,10 @@ function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
   $blocks['workbench']['block']['status'] = FALSE;
 
   if (isset($blocks['sbac_resource']['sbac_resource_results_count']) && $theme == 'SBAC') {
-    $blocks['sbac_resource']['sbac_resource_results_count']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
+    $blocks['sbac_resource']['sbac_resource_results_count']['pages'] = "digital-library-resources*\nmy-resources*";
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_rr_sort_form']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_rr_sort_form']['pages'] = "";
   }
   if (isset($blocks['sbac_resource']['sbac_resource_create_button']) && $theme == 'SBAC') {
     $blocks['sbac_resource']['sbac_resource_create_button']['pages'] = "my-resources*";
@@ -2501,7 +2664,9 @@ function sbac_resource_clean_text(&$form_state) {
 /**
  * Determines if the display is grid / list.
  *
- * @param string $page can be 'dl', 'mr' or 'rr' (for each page).
+ * @param string
+ *   $page can be 'dl', 'mr' or 'rr' (for each page).
+ *
  * @return string
  */
 function sbac_resource_determine_grid_or_list() {
@@ -3217,5 +3382,106 @@ function sbac_resource_image_style_create_derivative_alter(&$style, &$image_uri,
     if (strpos($derivative_uri, 'gs://') !== FALSE) {
       $derivative_uri = str_replace('gs://', 'private://', $derivative_uri);
     }
+  }
+}
+
+/**
+ * Load more of the view data.
+ */
+function sbac_resource_load_more_ajax() {
+  $view = $_POST['view'];
+  $page = $_POST['page'];
+  module_load_include('inc', 'sbac_resource', 'sbac_resource.menu_callbacks');
+  $output = array();
+  if ($view == 'resources') {
+    $output = sbac_resource_digital_library_page($page, TRUE);
+  }
+  if ($view == 'resource_review') {
+    $output = sbac_resource_resource_review_page($page, TRUE);
+  }
+  if ($view == 'my_resources') {
+    $output = sbac_resource_my_resources_page($page, TRUE);
+  }
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Override views load more pager
+ *
+ * @param $vars
+ * @return string
+ */
+function theme_sbac_resource_views_load_more_pager($vars) {
+  global $pager_page_array, $pager_total;
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
+
+  global $base_url;
+  $referer = str_replace($base_url . '/', '', $_GET['q']);
+  $view_name = '';
+  if ($referer) {
+    switch ($referer) {
+      case 'digital-library-resources':
+        $view_name = 'resources';
+        break;
+      case 'resource-review':
+        $view_name = 'resource_review';
+        break;
+      case 'my-resources':
+        $view_name = 'my_resources';
+        break;
+    }
+  }
+
+  // Because we dynamically change the items per page, we need
+  // to update the global pager and tell it where on page X now.
+  $old_url = NULL;
+  if (isset($_POST['page'])) {
+    $pager_page_array[0] = $_POST['page'];
+    $old_url = $_GET['q'];
+    if ($referer) {
+      $_GET['q'] = $referer;
+    }
+  }
+  else if (isset($_SESSION['load_more'][$view_name]['page'])) {
+    $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
+    $old_url = $_GET['q'];
+    if ($referer) {
+      $_GET['q'] = $referer;
+    }
+  }
+
+  $li_next = theme('pager_next',
+    array(
+      'text' => (isset($tags[3]) ? $tags[3] : t($vars['more_button_text'])),
+      'element' => $element,
+      'interval' => 1,
+      'parameters' => $parameters,
+    )
+  );
+  if (empty($li_next)) {
+    $li_next = "&nbsp;";
+  }
+
+  if ($pager_total[$element] > 1) {
+    $items[] = array(
+      'class' => array('pager-next'),
+      'data' => $li_next,
+    );
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager', 'pager-load-more')),
+      )
+    );
+  }
+
+  if ($old_url) {
+    $_GET['q'] = $old_url;
   }
 }

@@ -104,6 +104,7 @@ function sbac_resource_field_group_info() {
       7 => 'field_recent_reviewers',
       8 => 'field_unique_downloads',
       9 => 'field_recent_publishers',
+      10 => 'field_is_hidden',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

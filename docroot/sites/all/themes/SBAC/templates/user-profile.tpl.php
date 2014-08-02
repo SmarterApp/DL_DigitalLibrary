@@ -19,7 +19,6 @@
   			    $user_profile['user_picture']['#markup'] = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt));
   			  }
   			}
-
 		    echo drupal_render($user_profile['user_picture']);
 			?>
 		</div>

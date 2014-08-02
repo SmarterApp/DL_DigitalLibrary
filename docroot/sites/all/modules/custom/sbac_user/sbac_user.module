@@ -92,7 +92,64 @@ function sbac_user_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-user/setup'] = array(
+    'title' => 'Welcome to the Smarter Balanced Library',
+    'page callback' => 'sbac_user_setup_callback',
+    'file' => 'sbac_user.firstsetup.inc',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sbac-user/setup/%'] = array(
+    'title' => 'Welcome to the Smarter Balanced Library',
+    'page callback' => 'sbac_user_setup_callback',
+    'page arguments' => array(2),
+    'file' => 'sbac_user.firstsetup.inc',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sbac-user/make_new/%'] = array(
+    'title' => 'Warn User',
+    'page callback' => 'sbac_user_make_new',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Create the user record.
+ *
+ * @param array $response
+ *   The response from SAML.
+ * @param array $user_attributes
+ *   The response from the tenancy chain.
+ *
+ * @return bool|stdClass
+ */
+function sbac_user_make_new($email) {
+  $new_user = new stdClass();
+  $new_user->uid = 0;
+  $new_user->cache = 0;
+  $edit['name'] = $email . '@me.com';
+  $edit['pass'] = 'password';
+  $edit['mail'] = $email . '@me.com';
+  $edit['init'] = $email . '@me.com';
+  $edit['timezone'] = date_default_timezone(TRUE);
+  $edit['status'] = 1;
+  $edit['field_first_name']['und'][0]['value'] = 'Beatle';
+  $edit['field_last_name']['und'][0]['value'] = 'Juice';
+  $edit['field_state']['und'][0]['tid'] = 34;
+  $role_id = user_role_load_by_name('basic end user');
+  $edit['roles'] = array(DRUPAL_AUTHENTICATED_RID => 'Authenticated User', $role_id->rid => $role_id->name);
+  $edit['field_district']['und'][0]['value'] = 'Law';
+  $edit['field_institution']['und'][0]['value'] = 'Sbac';
+  $uuid = uniqid();
+  $edit['field_sso_uuid']['und'][0]['value'] = md5($uuid);
+  user_save($new_user, $edit);
 }
 
 /**
@@ -885,22 +942,20 @@ function sbac_user_mail($key, &$message, $params) {
 function sbac_user_entity_update($entity, $type) {
   // UGLY WORKAROUND WARNING: this hook is called twice for some reason, don't know why.
   // on 2nd call the image was already hashed so preg_match will fail and cause this to skip.
-  if ($type == 'file' && isset($entity->source) && $entity->source == 'picture_upload' &&
-      preg_match('/public\:\/\/pictures\/picture-/', $entity->uri)) {
-    $userid = sbac_user_util_parse_user_id($entity->filename);
-    $hashdir = sbac_user_util_compute_hash_dir($userid);
-
-    $new_uri = sbac_user_util_compute_new_path($entity->uri, $hashdir);
-    $old_absolute_path = drupal_realpath($entity->uri);
-    $new_absolute_path = sbac_user_util_compute_new_path($old_absolute_path, $hashdir);
-
-    $res = sbac_user_util_move_file($old_absolute_path, $new_absolute_path);
-    if (!$res) {
-      drupal_set_message(t('Error moving image to hashed directory.'));
-    }
-    $entity->uri = $new_uri;
-    field_attach_update($type, $entity); // save changes to db
-  }
+//  if ($type == 'file' && isset($entity->source) && $entity->source == 'picture_upload' &&
+//      preg_match('/public\:\/\/pictures\/picture-/', $entity->uri)) {
+//    $userid = sbac_user_util_parse_user_id($entity->filename);
+//    $hashdir = sbac_user_util_compute_hash_dir($userid);
+//    $new_uri = sbac_user_util_compute_new_path($entity->uri, $hashdir);
+//    $old_absolute_path = drupal_realpath($entity->uri);
+//    $new_absolute_path = sbac_user_util_compute_new_path($old_absolute_path, $hashdir);
+//    $res = sbac_user_util_move_file($old_absolute_path, $new_absolute_path);
+//    if (!$res) {
+//      drupal_set_message(t('Error moving image to hashed directory.'));
+//    }
+//    $entity->uri = $new_uri;
+//    field_attach_update($type, $entity); // save changes to db
+//  }
 }
 
 /**
@@ -981,6 +1036,13 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
  * @param $account
  */
 function sbac_user_user_login(&$edit, $account) {
+  if (!isset($edit['sbac-share'])) {
+    // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
+    if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+      drupal_goto('sbac-user/setup');
+    }
+  }
+
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -1008,14 +1070,7 @@ function sbac_user_user_login(&$edit, $account) {
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
   if (!isset($edit['sbac-share'])) {
-    // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-    if ($account->data['login_count'] == 1 && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
-      drupal_goto('user/' . $account->uid);
-    }
-    if (!isset($account->data['disable_help'])) {
-      drupal_goto('user/' . $account->uid);
-    }
-    elseif (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
+    if (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
       $relay = $edit['sbac_sso_relay'];
       $path = drupal_valid_path($relay);
       if ($path) {

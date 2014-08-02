@@ -26,6 +26,7 @@ function sbac_report_individual() {
 
   $sne_details = '';
   $contributed_summary = '';
+  $resource_statistics = '';
   $contributed_details = '';
   $gate_keeping = '';
   $all_reviews = '';
@@ -39,7 +40,7 @@ function sbac_report_individual() {
   if (!empty($uid) && !empty($date_range) && !empty($state_tid)) {
     $sne_details = sbac_report_build_sne_details($uid, $state_tid);
   }
-  elseif (!sbac_report_select_other_users($account) || array_intersect($user->roles, $view_own_report)) {
+  elseif (!sbac_report_select_other_users($account) && array_intersect($user->roles, $view_own_report)) {
     $uid = $user->uid;
     $state_tid = $account->field_state['und'][0]['tid'];
     $name = $account->field_first_name['und'][0]['safe_value'] . ' ' . $account->field_last_name['und'][0]['safe_value'];
@@ -52,7 +53,9 @@ function sbac_report_individual() {
   if (!empty($sne_details)) {
     // Pass -1 as limit, summary should be "number of items per page" independent.
     $contributed_summary = sbac_report_build_resource_summary($uid, $date_range, -1);
-    $resource_statistics = sbac_report_build_resource_statistics($uid, $date_range);
+    if (sbac_report_select_other_users($account) || array_intersect($user->roles, $view_own_report)) {
+      $resource_statistics = sbac_report_build_resource_statistics($uid, $date_range);
+    }
     $contributed_details = sbac_report_build_resource_details($uid, $date_range);
 
     // Gate-Keeping Reviews.
@@ -290,7 +293,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
             WHERE ((node.uid = :uid))
               AND ((  (node.status = '1')
                 AND   (node.type IN ('resource'))
-                AND   (node.sticky <> '0')
+                AND   (workbench_moderation_node_history.current = 1)
                 AND   (workbench_moderation_node_history.state IN ('published')) ))
               AND ((DATE_FORMAT((DATE_ADD('19700101', INTERVAL node.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date))
             GROUP BY  node_title,
@@ -350,7 +353,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
       'title' => $row->title,
       'posted' => date('m/d/y', $row->node_created),
       'rating' => ($row->field_data_field_node_avg_rating_field_node_avg_rating_value
- ? sbac_resource_display_fivestar_rating($row->field_data_field_node_avg_rating_field_node_avg_rating_value) : 'No Rating'),
+ ? sbac_resource_display_fivestar_rating($row->field_data_field_node_avg_rating_field_node_avg_rating_value) : 'No reviews'),
       'reviewers' => l(($row->number_reviewers ? $row->number_reviewers : '0'), 'node/' . $row->nid, array('fragment' => 'review-reviews')),
       'topics' => l(($row->field_forum_topic_count_value ? $row->field_forum_topic_count_value : '0'), 'node/' . $row->nid, array('fragment' => 'review-collaboration')),
       'posts' => ($row->field_forum_topic_comment_count_value? $row->field_forum_topic_comment_count_value : '0'),
@@ -461,6 +464,7 @@ function sbac_report_posted_resource_stats_pager_form($form, &$form_state, $data
       15 => t('Up to 15'),
       -1 => t('All'),
     ),
+    '#default_value' => isset($_SESSION['sbac_report_posted_rs']) ? $_SESSION['sbac_report_posted_rs'] : 5,
     '#ajax' => array(
       'callback' => 'sbac_report_posted_resource_stats_pager_form_ajax',
       'wrapper' => 'posted-resources-stats',
@@ -517,7 +521,7 @@ function sbac_report_resource_details_pager_form($form, &$form_state, $data) {
       15 => t('Up to 15'),
       -1 => t('All'),
     ),
-    '#default_value' => $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] ? $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] : 5,
+    '#default_value' => isset($_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER]) ? $_SESSION[SBAC_REPORT_RESOURCE_DETAILS_PAGER] : 5,
     '#ajax' => array(
       'callback' => 'sbac_report_resource_details_pager_form_ajax',
       'wrapper' => 'contriubted-resource-details',

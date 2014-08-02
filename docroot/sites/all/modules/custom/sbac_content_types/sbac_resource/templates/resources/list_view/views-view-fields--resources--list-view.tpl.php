@@ -1,4 +1,5 @@
 <div class="resource-card">
+  <span id="resource-<?php print $fields['nid']->raw; ?>"></span>
   <div class="row clearfix">
     <div class="column large-2">
       <?php if (isset($fields['image'])): ?>

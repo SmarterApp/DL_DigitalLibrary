@@ -57,6 +57,10 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
       'digital_library_output' => NULL,
       'no_results' => NULL,
       'smart_search_welcome' => NULL,
+      'pwd' => NULL,
+      'pwd_highlights' => NULL,
+      'pwd_hide' => NULL,
+      'pwd_showmore' => NULL,
     )
   );
 
@@ -278,6 +282,7 @@ function sbac_resource_views_view__resources__grid_view__preprocess(&$vars) {
   ctools_modal_add_js();
   drupal_add_library('system', 'drupal.ajax');
   drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
+  $vars['exposed'] = '<div class="sbac-hide-exposed">' . $vars['exposed'] . '</div>';
 }
 
 /**
@@ -709,7 +714,8 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $class = 'list-image lazy';
     }
 
-    $default_file = 'public://file.png';
+    // $default_file = 'public://file.png';
+    $default_file = 'no_img';
     $uri = NULL;
     $url = NULL;
     if (isset($fields['field_thumbnail_uri'])) {
@@ -721,6 +727,12 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $url = $thumbnail_pieces[1];
       $ext = pathinfo($uri, PATHINFO_EXTENSION);
       $type = _sbac_resource_determine_extension($ext);
+      $real_path = drupal_realpath($uri);
+      if (!file_exists($real_path)) {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+
       if ($type != 'image') {
         $url = $default_file;
         $uri = $default_file;
@@ -731,16 +743,18 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $uri = $default_file;
     }
 
-    $variables['image'] = theme('image_style', array(
-      'style_name' => 'resource_image_grid',
-      'path' => $uri,
-      'attributes' => array('class' => $class),
-      'alt' => 'Resource thumbnail image'
-    ));
-    $variables['mime-type'] = file_get_mimetype($url);
-    $variables['file-type-icon'] = 'document'; //_sbac_resource_determine_file_type_icon($ext);
+    if ($uri != 'no_img' && $url != 'no_img') {
+      $variables['image'] = theme('image_style', array(
+        'style_name' => 'resource_image_grid',
+        'path' => $uri,
+        'attributes' => array('class' => $class),
+        'alt' => 'Resource thumbnail image'
+      ));
+      $variables['mime-type'] = file_get_mimetype($url);
+      $variables['file-type-icon'] = 'document'; //_sbac_resource_determine_file_type_icon($ext);
+    }
   }
-  if (count($thumbnail_pieces) && $thumbnail_pieces[0] != 'na' && $thumbnail_pieces[1] != 'na') {
+  if (count($thumbnail_pieces) && $uri != 'no_img' && $url != 'no_img') {
     return $variables;
   }
   else {
@@ -868,14 +882,14 @@ function _sbac_resource_my_resources_links($fields, $row) {
       case 'draft':
         $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-        $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
-          'html' => TRUE,
-          'attributes' => array(
-            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource-button-' . $nid,
-            'id' => 'sbac-resource-modal-delete-resource-button-' . $nid,
-          ),
-          'query' => array('nid' => $nid),
-        ));
+//        $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+//          'html' => TRUE,
+//          'attributes' => array(
+//            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource-button-' . $nid,
+//            'id' => 'sbac-resource-modal-delete-resource-button-' . $nid,
+//          ),
+//          'query' => array('nid' => $nid),
+//        ));
 
         // JS to properly size the modal when submit resource is clicked.
         $js_settings = array(
@@ -891,16 +905,16 @@ function _sbac_resource_my_resources_links($fields, $row) {
 
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
-          'html' => TRUE,
-          'query' => array(
-            'nid' => $nid
-          ),
-          'attributes' => array(
-            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource-link-' . $nid,
-            'id' => 'sbac-resource-modal-delete-resource-link-' . $nid,
-          )
-        ));
+//        $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+//          'html' => TRUE,
+//          'query' => array(
+//            'nid' => $nid
+//          ),
+//          'attributes' => array(
+//            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource-link-' . $nid,
+//            'id' => 'sbac-resource-modal-delete-resource-link-' . $nid,
+//          )
+//        ));
 
         // JS to properly size the modal when submit resource is clicked.
         $js_settings = array(
@@ -1043,7 +1057,7 @@ function _sbac_resource_my_resources_links($fields, $row) {
         $url = url('node/' . $nid, array('absolute' => TRUE));
         $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['text'] = t('In Review');
+        $variables['text'] = t('Arbitration Review');
         break;
       case 'published':
         $variables['sticky'] = FALSE;
@@ -1132,48 +1146,66 @@ function _sbac_resource_my_resources_links($fields, $row) {
  * @return \DatabaseStatementInterface|null
  */
 function _sbac_resource_get_review_progress($nid = NULL, $uid = NULL, $from_date = NULL, $to_date = NULL, $limit = NULL, $order = NULL, $order_direction = 'ASC') {
-  $query = db_select('node', 'n');
+  $query = db_select('node', 'n1');
   // get the history
-  $query->innerJoin('workbench_moderation_node_history', 'h', 'h.nid = n.nid');
+  $query->innerJoin('workbench_moderation_node_history', 'h1', 'h1.nid = n1.nid');
   // get the feedback. Make sure we're only getting the completed feedback since the submission/resubmission
-  $query->leftJoin('eck_feedback', 'f', "f.node_id = n.nid AND f.completed = 1 AND f.created > IFNULL((SELECT max(h2.stamp) FROM node n2 LEFT JOIN workbench_moderation_node_history h2 on h2.nid = n2.nid WHERE n2.nid = n.nid AND h2.from_state = 'draft' and h2.state = 'needs_review' GROUP BY h2.nid HAVING count(h2.nid) > 1), 0)");
-  // get the reviewers
-  $query->leftJoin('field_data_field_recent_reviewers', 'r', 'r.field_recent_reviewers_target_id = f.uid AND n.nid = r.entity_id');
-  $query->fields('n', array('nid', 'title', 'created', 'sticky'));
+  $query->fields('n1', array('nid', 'title', 'created', 'sticky'));
   $query->addExpression("
   CASE
-  WHEN h.state = 'needs_review' THEN 'Gate-Keeping Review'
-  WHEN h.state = 'rejected' THEN 'Returned'
-  WHEN h.state = 'published' AND n.sticky = 1 THEN 'Posted with Distinction'
-  WHEN h.state = 'published' AND n.sticky = 0 THEN 'Published'
-  WHEN h.state = 'approved' THEN 'Arbitration Review'
-  WHEN h.state = 'removed' THEN 'Removed'
-  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 0 THEN 'Gate-Keeping Review'
-  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 1 THEN 'Quality Criteria Review 1'
-  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 2 THEN 'Quality Criteria Review 2'
-  WHEN h.state = 'being_reviewed' AND count(r.field_recent_reviewers_target_id) = 3 THEN 'Quality Criteria Review 3'
+  WHEN h1.state = 'needs_review' THEN 'Submitted'
+  WHEN h1.state = 'rejected' THEN 'Returned'
+  WHEN h1.state = 'published' AND n1.sticky = 1 THEN 'Posted with Distinction'
+  WHEN h1.state = 'published' AND n1.sticky = 0 THEN 'Posted'
+  WHEN h1.state = 'approved' THEN 'Arbitration Review'
+  WHEN h1.state = 'removed' THEN 'Removed'
+  WHEN h1.state = 'being_reviewed' THEN (
+    SELECT
+      CASE
+      WHEN count(*) = 0 THEN 'Gate-Keeping Review'
+      WHEN count(*) = 1 THEN 'Quality Criteria Review 1'
+      WHEN count(*) = 2 THEN 'Quality Criteria Review 2'
+      WHEN count(*) = 3 THEN 'Quality Criteria Review 3'
+      END AS state
+    FROM eck_feedback f3
+    WHERE
+      f3.created > IFNULL((
+                            SELECT
+                              max(h4.stamp)
+                            FROM workbench_moderation_node_history h4
+                            WHERE h4.nid = n1.nid
+                            AND h4.from_state = 'draft'
+                            AND h4.state = 'needs_review'
+                            AND h4.stamp > (
+                              SELECT
+                                max(h5.stamp)
+                              FROM workbench_moderation_node_history h5
+                              WHERE h5.state = 'rejected' AND h5.nid = n1.nid
+                            )), 0)
+      AND f3.completed = 1
+      AND f3.node_id = n1.nid)
   END", 'state');
-  $query->condition('n.type', 'resource');
-  $query->condition('h.state', array('draft'), 'NOT IN');
-  $query->condition('h.current', 1);
+  $query->condition('n1.type', 'resource');
+  $query->condition('h1.state', array('draft'), 'NOT IN');
+  $query->condition('h1.current', 1);
   if ($uid) {
-    $query->condition('n.uid', $uid);
+    $query->condition('n1.uid', $uid);
   }
   if ($nid) {
-    $query->condition('n.nid', $nid);
+    $query->condition('n1.nid', $nid);
   }
-  $query->groupBy('n.nid');
+  $query->groupBy('n1.nid');
   if ($order && $order == 'state') {
     $query->orderBy('state', $order_direction);
   }
   else {
-    $query->orderBy('n.created', $order_direction);
+    $query->orderBy('n1.created', $order_direction);
   }
   if ($limit && $limit != -1) {
     $query->range(0, $limit);
   }
   if ($from_date && $to_date) {
-    $query->where("DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date", array(':from_date' => $from_date, ':to_date' => $to_date));
+    $query->where("DATE_FORMAT((DATE_ADD('19700101', INTERVAL n1.created SECOND) + INTERVAL -28800 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date", array(':from_date' => $from_date, ':to_date' => $to_date));
   }
 //  dpq($query);
   return $query->execute();
@@ -1241,7 +1273,7 @@ function _sbac_resource_resource_review_links($fields, $row) {
       case 'approved':
         // what state is approved?
         // -- post_needs_review, post_being_reviewed
-        if ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_flag == 'post_being_reviewed') {
+        if ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_state == 'post_being_reviewed') {
           $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post', 'query' => array('destination' => arg(0))));
           $link = l('Continue Review', $url);
           $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));

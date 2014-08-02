@@ -127,6 +127,21 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Posting Action.'),
         'class' => 'PostingAction',
       ),
+      array(
+        'name' => 'resource_reposted',
+        'description' => t('Resource Reposted'),
+        'class' => 'ResourceReposted',
+      ),
+      array(
+        'name' => 'resource_promoted',
+        'description' => t('Resource Promoted'),
+        'class' => 'ResourcePromoted',
+      ),
+      array(
+        'name' => 'resource_demoted',
+        'description' => t('Resource Demoted'),
+        'class' => 'ResourceDemoted',
+      ),
       // resource is flagged
       array(
         'name' => 'resource_flagged',

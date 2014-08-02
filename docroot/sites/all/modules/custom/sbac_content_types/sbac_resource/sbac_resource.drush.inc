@@ -51,6 +51,19 @@ function sbac_resource_drush_command() {
     'callback' => 'drush_sbac_resource_update_thumbnails',
   );
 
+  $items['sbac-resource-update-failed-thumbnails'] = array(
+    'description' => 'Update the resource failed thumbnails.',
+    'examples' => array(
+      'drush sbac-resource-update-failed-thumbnails',
+    ),
+    'options' => array(
+      'chunk-size' => array(
+        'description' => 'Number of entities to process at once.',
+      ),
+    ),
+    'callback' => 'drush_sbac_resource_update_failed_thumbnails',
+  );
+
   return $items;
 }
 
@@ -149,8 +162,10 @@ function drush_sbac_resource_update_review_averages() {
   drush_print("Throughput: $throughput entities /sec");
 }
 
-
-
+/**
+ * Update thumbnails URI for resource cards.
+ * @return [type] [description]
+ */
 function drush_sbac_resource_update_node_review_averages() {
   $start = time();
   $row = 0;
@@ -216,9 +231,12 @@ function drush_sbac_resource_update_node_review_averages() {
 }
 
 function drush_sbac_resource_update_thumbnails() {
+  $current_limit = drush_memory_limit();
+  ini_set('memory_limit', '1048M');
+
   $row = 0;
   $start_time = time();
-  drush_print('Start time', $start_time);
+  // drush_print('Start time', $start_time);
 
   $max_nid = db_query("SELECT MAX(n.nid)
                        FROM   {node} n
@@ -227,7 +245,7 @@ function drush_sbac_resource_update_thumbnails() {
 
   $current_nid = 0;
   $chunk_size = drush_get_option('chunk-size', 25);
-  drush_print(dt('Updating thumbnails for Resource nodes.'));
+  // drush_print(dt('Updating thumbnails for Resource nodes.'));
 
   while ($current_nid <= $max_nid) {
     $query = db_select('node', 'n');
@@ -250,5 +268,52 @@ function drush_sbac_resource_update_thumbnails() {
     }
   }
 
-  drush_print('Start time was: ' . $start_time . ' End time is: ', time());
+
+  ini_set('memory_limit', $current_limit);
+}
+
+function drush_sbac_resource_update_failed_thumbnails() {
+  $current_limit = drush_memory_limit();
+  ini_set('memory_limit', '1048M');
+
+  $row = 0;
+  $start_time = time();
+  // drush_print('Start time', $start_time);
+
+  $max_nid = db_query("SELECT MAX(n.nid)
+                       FROM   {node} n
+                       WHERE  n.type = 'resource'
+                      ")->fetchField();
+
+  $current_nid = 0;
+  $chunk_size = drush_get_option('chunk-size', 25);
+  // drush_print(dt('Updating thumbnails for Resource nodes.'));
+
+  while ($current_nid <= $max_nid) {
+
+    $db_or = db_or()->condition('ft.field_thumbnail_uri_value', array('::', 'public://file.png::public://file.png', 'no_img::no_img'), 'IN')
+                    ->condition('ft.field_thumbnail_uri_value', '%x-empty%', 'LIKE');
+
+    $query = db_select('field_data_field_thumbnail_uri', 'ft');
+    $query->fields('ft', array('entity_id'))
+      ->condition('ft.entity_id', $current_nid, '>')
+      ->condition($db_or)
+      ->orderBy('ft.entity_id')
+      ->range(0, $chunk_size);
+    $nids = $query->execute()->fetchCol();
+
+    foreach ($nids as $nid) {
+      $node = node_load($nid);
+      if ($node) {
+        $current_nid = $nid;
+        sbac_resource_determine_thumbnail_uri($node);
+        entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+        drush_print($node->nid . ' updated.');
+      }
+      unset($node);
+    }
+  }
+
+
+  ini_set('memory_limit', $current_limit);
 }
