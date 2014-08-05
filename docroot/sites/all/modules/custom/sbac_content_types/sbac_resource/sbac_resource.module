@@ -1520,16 +1520,6 @@ function sbac_resource_node_load($nodes, $types) {
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
-      // Populate media items
-      $media_items = sbac_media_load_items($node->nid);
-      $node->document = $media_items;
-      if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
-        $html5_item = sbac_media_load_html5_item($node->nid);
-        if ($html5_item !== FALSE) {
-          $node->document['html5'] = $html5_item;
-        }
-      }
-
       // Grab the alignemnt terms.
       $sql  = 'SELECT r.*, a.field_education_alignment_tid ';
       $sql .= 'FROM field_data_field_resource_reference r ';
@@ -1570,6 +1560,31 @@ function sbac_resource_node_load($nodes, $types) {
         // Unique Views Update
         if (isset($result['unique_hits']) && $result['unique_hits']) {
           db_query('UPDATE {field_data_field_unique_views} SET field_unique_views_value = :unique_views WHERE entity_id = :entity_id', array(':unique_views' => $result['unique_hits'], ':entity_id' => $node->nid));
+        }
+      }
+    }
+    // Load all media entities and attach them to the resource.
+    $load = FALSE;
+    // update.php
+    if (isset($_GET['op']) && isset($_GET['token']) && isset($_GET['id'])) {
+      $load = TRUE;
+    }
+    // drush scripts
+    if (arg(0) == 'digital-library-resources' && count($nodes) == 1) {
+      $load = TRUE;
+    }
+    // website.
+    if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && count($nodes) != 12 && $node->type == 'resource') {
+      $load = TRUE;
+    }
+
+    if ($load) {
+      $media_items = sbac_media_load_items($node->nid);
+      $node->document = $media_items;
+      if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
+        $html5_item = sbac_media_load_html5_item($node->nid);
+        if ($html5_item !== FALSE) {
+          $node->document['html5'] = $html5_item;
         }
       }
     }

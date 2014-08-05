@@ -279,30 +279,6 @@ function sbac_favorites_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Implements hook_user_view().
- *
- * @param $account
- * @param $view_mode
- * @param $langcode
- */
-function sbac_favorites_user_view($account, $view_mode, $langcode) {
-  // we don't want to add tabs on any other view modes
-  if ($view_mode !== 'full') {
-    return;
-  }
-
-  $output = render(drupal_get_form('sbac_favorites_user_favorites', $account));
-
-  $account->content['sections']['favorites'] = array(
-    'title' => t('Favorites'),
-    'content' => $output,
-    'disabled' => FALSE,
-    'class' => 'section-favorites',
-    'weight' => -100,
-  );
-}
-
-/**
  * Get the HTML content for profile view.
  *
  * @return string
@@ -310,8 +286,7 @@ function sbac_favorites_user_view($account, $view_mode, $langcode) {
 function sbac_favorites_get_html_content() {
   global $user;
   $account = $user;
-  $favorites = sbac_favorites_get_favorites_list($account->uid);
-  $output = sbac_favorites_favorites_table($favorites);
+  $output = render(drupal_get_form('sbac_favorites_user_favorites', $account));
   $favorites_content  = '<div id="favorites">';
   if ($favorites) {
     $favorites_content .= '<div class="favorites-helpful-info">';
