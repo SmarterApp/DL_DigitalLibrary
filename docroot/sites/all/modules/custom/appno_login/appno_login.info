@@ -1,6 +1,0 @@
-name = Appno Login
-description = High performance solution for recording user logins to memcache
-core = 7.x
-package = Appnovation
-version = 7.x-1.0
-project = appno_login

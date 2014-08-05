@@ -1,6 +1,0 @@
-<?php
-/**
- * Use hook_user_login to record to memcache each time a user logs in
- * then use cron to flush the memcache records to the db every 60s (configurable)
- */
-
