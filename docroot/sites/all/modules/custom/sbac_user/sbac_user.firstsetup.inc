@@ -58,6 +58,8 @@ function sbac_user_form_setup_select_taxonomy_options($vocab_name) {
 function sbac_user_setup_pi_form($form, &$form_state) {
   global $user;
   $account = user_load($user->uid);
+  drupal_add_js(drupal_get_path('module', 'sbac_user') . '/js/sbac_user.firstsetup_p1.js');
+
   $form = array();
 
   $form['setup_nav'] = array(
@@ -228,6 +230,8 @@ function sbac_user_setup_pi_form($form, &$form_state) {
  * @return [type]             [description]
  */
 function sbac_user_setup_expertise_form($form, &$form_state) {
+  drupal_add_js(drupal_get_path('module', 'sbac_user') . '/js/sbac_user.firstsetup_p2.js');
+
   $form = array();
 
   $form['setup_nav'] = array(

@@ -106,7 +106,6 @@ function sbac_user_theme__preprocess_user_login(&$vars) {
  */
 function sbac_user_preprocess_user_setup_nav(&$vars) {
   $page = $vars['current_page'];
-  drupal_add_js(drupal_get_path('module', 'sbac_user') . '/js/sbac_user.firstsetup.js');
 
   switch ($page) {
     case 'page1':
