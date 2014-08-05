@@ -7,10 +7,6 @@
       /**
        * SBAC User Setup - Page 2
        */
-
-      // On page load, if there are no selections, disable the submit button and
-      // put hoverover on top.
-      sbac_user_check_fields();
       function sbac_user_check_fields() {
         if ($('#edit_subject_options_chzn .search-choice').length == 0 || $('#edit_grade_options_chzn .search-choice').length == 0 || $('#edit_student_population_options_chzn .search-choice').length == 0) {
           $('#edit-next').prop('disabled', true);
@@ -20,6 +16,10 @@
           $('#sbac-setup-hover-expertise').css('z-index', -9999);
         }
       }
+
+      // On page load, if there are no selections, disable the submit button and
+      // put hoverover on top.
+      sbac_user_check_fields();
 
       //  When user hovers over invisible div, toggle the popup to show if the 
       //  submit button is disabled.
@@ -40,27 +40,19 @@
         }
       );
 
-      $('#edit_subject_options_chzn :input').blur(function() {
+      $('.chzn-container').hover(function() {
         sbac_user_check_fields();
       });
 
-      $('#edit_grade_options_chzn :input').blur(function() {
+      $('#edit-subject-options').change(function() {
         sbac_user_check_fields();
       });
 
-      $('#edit_student_population_options_chzn :input').blur(function() {
+      $('#edit-grade-options').change(function() {
         sbac_user_check_fields();
       });
 
-      $('#edit-next').hover(function() {
-        sbac_user_check_fields();
-      });
-
-      $('.active-result').click(function() {
-        sbac_user_check_fields();
-      });
-
-      $('.chzn-container').mouseout(function() {
+      $('#edit-student-population-options').change(function() {
         sbac_user_check_fields();
       });
 
