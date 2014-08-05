@@ -288,6 +288,7 @@ function sbac_help_form_alter(&$form, &$form_state, $form_id) {
     );
     $js_settings = array('sbac-resource-help-modal' => array('modalSize' => array('type' => 'fixed', 'width' => 1000, 'height' => 600)));
     drupal_add_js($js_settings, 'setting');
+    drupal_add_js(drupal_get_path('module', 'sbac_help') . '/js/sbac_help.resource.js');
   }
 }
 
