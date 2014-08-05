@@ -3256,7 +3256,7 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------------
     Help modal
   ------------------------------------------------ */
-#helpmodal .helpmodal-title,
+/*#helpmodal .helpmodal-title,
 #helpmodal .helpmodal-desc {
   text-align: center;
 }
@@ -3266,6 +3266,46 @@ a.tabledrag-handle .handle {
 #sbac-help-title {
   text-align: center;
 }
+*/
+.page-node-add-resource {
+	
+	.ctools-modal-content {
+		padding: 10px 21px 15px !important;
+		
+		.modal-header {
+			padding: 0;
+			
+			.modal-title {
+				width: 100%;
+				padding-bottom: 0 !important;
+
+				h2.resource-help-box-title {
+					text-align: center;
+				}
+			}
+		}
+
+		.modal-content {
+			padding: 0 !important;
+			height: auto !important;
+		}
+	}
+}
+
+#sbac-help-resource-help-form {
+	p {
+		font-size: 14px !important;
+	}
+	
+	button {
+		margin-right: 20px;
+	}
+	
+	button[id*='edit-submit'] {
+		margin-right: 25px;
+	}
+}
+
 
 /*Add Selected Standards - comfirmation modal*/
 #alignment-page .standards-browser {
