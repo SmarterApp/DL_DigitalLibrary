@@ -14,7 +14,7 @@ function sections_preprocess(&$vars) {
 
   foreach ($vars['sections'] as $key => &$section) {
     $section['use-ajax'] = 'use-ajax';
-    if ($section['title'] == 'About This Resource') {
+    if (isset($section['title']) && $section['title'] == 'About This Resource') {
       $section['use-ajax'] = '';
     }
 

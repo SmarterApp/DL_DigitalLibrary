@@ -1083,6 +1083,25 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
   // $default_file = 'public://file.png';
   $default_file = 'no_img';
 
+  // If the resource has a thumbnail already defined, do not bother downloading.
+  $haystack = array(
+    'no_img::no_img',
+    $default_file . '::' . $default_file,
+  );
+
+  $query = db_select('field_data_field_thumbnail_uri', 'ft');
+  $query->fields('ft', array('field_thumbnail_uri_value'));
+  $query->condition('entity_id', $nid, '=');
+  $result = $query->execute()->fetchAssoc();
+  $result = array_pop($result);
+  if (!in_array($result, $haystack)) {
+    $result_array = explode('::', $result);
+    return array(
+      'uri' => $result_array[0],
+      'url' => $result_array[1],
+    );
+  }
+
   foreach ($urls as $url) {
     if (url_is_external($url) && !$thumbnail_exists) {
       $finfo = new finfo(FILEINFO_MIME_TYPE);
